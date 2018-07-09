@@ -34,9 +34,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testFunctionCreate
+     * testFunctionCreate.
      *
-     * @return  void
+     * @return void
      */
     public function testFunctionCreate()
     {
@@ -48,9 +48,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testStaticCreate
+     * testStaticCreate.
      *
-     * @return  void
+     * @return void
      */
     public function testStaticCreate()
     {
@@ -74,9 +74,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testStringAccess
+     * testStringAccess.
      *
-     * @return  void
+     * @return void
      */
     public function testStringAccess()
     {
@@ -92,9 +92,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testEncodingAccess
+     * testEncodingAccess.
      *
-     * @return  void
+     * @return void
      */
     public function testEncodingAccess()
     {
@@ -110,9 +110,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testCallProxy
+     * testCallProxy.
      *
-     * @return  void
+     * @return void
      */
     public function testCallProxy()
     {
@@ -139,7 +139,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testOffsetGet
+     * testOffsetGet.
      *
      * @param     $expected
      * @param int $offset
@@ -154,9 +154,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * offsetGetProvider
+     * offsetGetProvider.
      *
-     * @return  array
+     * @return array
      */
     public function offsetGetProvider()
     {
@@ -171,14 +171,14 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testOffsetSet
+     * testOffsetSet.
      *
      * @param     $string
      * @param     $replace
      * @param int $offset
      * @param     $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider offsetSetProvider
      */
@@ -192,9 +192,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * offsetSetProvider
+     * offsetSetProvider.
      *
-     * @return  array
+     * @return array
      */
     public function offsetSetProvider()
     {
@@ -206,13 +206,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testOffsetUnset
+     * testOffsetUnset.
      *
      * @param     $string
      * @param int $offset
      * @param     $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider offsetUnsetProvider
      */
@@ -226,9 +226,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * offsetUnsetProvider
+     * offsetUnsetProvider.
      *
-     * @return  array
+     * @return array
      */
     public function offsetUnsetProvider()
     {
@@ -245,9 +245,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testOffsetExists
+     * testOffsetExists.
      *
-     * @return  void
+     * @return void
      */
     public function testOffsetExists()
     {
@@ -265,9 +265,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testCount
+     * testCount.
      *
-     * @return  void
+     * @return void
      */
     public function testCount()
     {
@@ -278,9 +278,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testGetIterator
+     * testGetIterator.
      *
-     * @return  void
+     * @return void
      */
     public function testGetIterator()
     {
@@ -290,12 +290,12 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testToLowerCase
+     * testToLowerCase.
      *
      * @param $string
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider toLowerCaseProvider
      */
@@ -310,9 +310,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * toLowerCaseProvider
+     * toLowerCaseProvider.
      *
-     * @return  array
+     * @return array
      */
     public function toLowerCaseProvider()
     {
@@ -324,12 +324,12 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testToUpperCase
+     * testToUpperCase.
      *
      * @param $string
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider toUpperCaseProvider
      */
@@ -344,9 +344,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * toUpperCaseProvider
+     * toUpperCaseProvider.
      *
-     * @return  array
+     * @return array
      */
     public function toUpperCaseProvider()
     {
@@ -358,13 +358,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testLength
+     * testLength.
      *
      * @param             $string
      * @param int         $expected
      * @param string|null $encoding
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider lengthProvider
      */
@@ -377,9 +377,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * lengthProvider
+     * lengthProvider.
      *
-     * @return  array
+     * @return array
      */
     public function lengthProvider()
     {
@@ -397,15 +397,15 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testReplace
+     * testReplace.
      *
-     * @param        $string
-     * @param        $search
-     * @param        $replacement
-     * @param        $expected
-     * @param int    $count
+     * @param     $string
+     * @param     $search
+     * @param     $replacement
+     * @param     $expected
+     * @param int $count
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider replaceProvider
      */
@@ -421,9 +421,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * replaceProvider
+     * replaceProvider.
      *
-     * @return  array
+     * @return array
      */
     public function replaceProvider()
     {
@@ -450,7 +450,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testChop
+     * testChop.
      *
      * @param       $string
      * @param int   $length
@@ -466,7 +466,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testCompare
+     * testCompare.
      *
      * @param     $str1
      * @param     $str2
@@ -488,7 +488,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testCompare
+     * testCompare.
      *
      * @param     $str1
      * @param     $str2
@@ -510,7 +510,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testReverse
+     * testReverse.
      *
      * @param $string
      * @param $expected
@@ -528,7 +528,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testSubstrReplace
+     * testSubstrReplace.
      *
      * @param       $expected
      * @param mixed $string
@@ -560,11 +560,11 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testLtrim
+     * testLtrim.
      *
-     * @param      $string
+     * @param   $string
      * @param null|$charlist
-     * @param      $expected
+     * @param   $expected
      *
      * @dataProvider \Windwalker\String\Test\MbstringTest::ltrimProvider
      */
@@ -579,13 +579,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testRtrim
+     * testRtrim.
      *
-     * @param      $string
+     * @param   $string
      * @param null|$charlist
-     * @param      $expected
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider \Windwalker\String\Test\MbstringTest::rtrimProvider
      */
@@ -600,13 +600,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testTrim
+     * testTrim.
      *
-     * @param      $string
+     * @param   $string
      * @param null|$charlist
-     * @param      $expected
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider \Windwalker\String\Test\MbstringTest::trimProvider
      */
@@ -621,7 +621,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testUcfirst
+     * testUcfirst.
      *
      * @param $string
      * @param $expected
@@ -639,7 +639,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testLcfirst
+     * testLcfirst.
      *
      * @param $string
      * @param $expected
@@ -657,12 +657,12 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testUpperCaseWords
+     * testUpperCaseWords.
      *
      * @param $string
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider \Windwalker\String\Test\MbstringTest::ucwordsProvider
      */
@@ -677,7 +677,7 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testSubstrCount
+     * testSubstrCount.
      *
      * @param      $string
      * @param      $search
@@ -694,13 +694,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testIndexOf
+     * testIndexOf.
      *
      * @param     $string
      * @param     $search
      * @param int $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider indexOfProvider
      */
@@ -712,9 +712,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * indexOfProvider
+     * indexOfProvider.
      *
-     * @return  array
+     * @return array
      */
     public function indexOfProvider()
     {
@@ -729,13 +729,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testIndexOf
+     * testIndexOf.
      *
      * @param     $string
      * @param     $search
      * @param int $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider indexOfLastProvider
      */
@@ -747,9 +747,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * indexOfProvider
+     * indexOfProvider.
      *
-     * @return  array
+     * @return array
      */
     public function indexOfLastProvider()
     {
@@ -764,13 +764,13 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testExplode
+     * testExplode.
      *
      * @param       $string
      * @param       $delimiter
      * @param array $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider explodeProvider
      */
@@ -782,9 +782,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * explodeProvider
+     * explodeProvider.
      *
-     * @return  array
+     * @return array
      */
     public function explodeProvider()
     {
@@ -795,9 +795,9 @@ class StringObjectTest extends TestCase
     }
 
     /**
-     * testApply
+     * testApply.
      *
-     * @return  void
+     * @return void
      */
     public function testApply()
     {

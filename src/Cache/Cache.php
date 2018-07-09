@@ -16,7 +16,7 @@ use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
 
 /**
- * Class Cache
+ * Class Cache.
  *
  * @since 2.0
  */
@@ -25,14 +25,14 @@ class Cache implements CacheInterface, \ArrayAccess
     /**
      * Property storage.
      *
-     * @var  CacheItemPoolInterface
+     * @var CacheItemPoolInterface
      */
     protected $storage = null;
 
     /**
      * Property handler.
      *
-     * @var  SerializerInterface
+     * @var SerializerInterface
      */
     protected $serializer = null;
 
@@ -50,13 +50,14 @@ class Cache implements CacheInterface, \ArrayAccess
 
     /**
      * Here we pass in a cache key to be fetched from the cache.
-     * A CacheItem object will be constructed and returned to us
+     * A CacheItem object will be constructed and returned to us.
      *
-     * @param   string $key The unique key of this item in the cache
-     *
-     * @return  mixed  The cached value or null if not exists.
+     * @param string $key The unique key of this item in the cache
      *
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return mixed The cached value or null if not exists.
+     *
      * @since   2.0
      */
     public function get($key)
@@ -78,8 +79,9 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param int|null $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
      *                      then the library may set a default value for it or let the driver take care of that.
      *
-     * @return  CacheItemInterface  Return CacheItem to chaining.
      * @throws \Exception
+     *
+     * @return CacheItemInterface Return CacheItem to chaining.
      */
     public function set($key, $val, $ttl = null)
     {
@@ -93,12 +95,13 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * Remove an item from the cache by its unique key
+     * Remove an item from the cache by its unique key.
      *
      * @param string $key The unique cache key of the item to remove
      *
-     * @return static
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return static
      */
     public function remove($key)
     {
@@ -108,9 +111,9 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * This will wipe out the entire cache's keys
+     * This will wipe out the entire cache's keys.
      *
-     * @return boolean The result of the empty operation
+     * @return bool The result of the empty operation
      */
     public function clear()
     {
@@ -118,13 +121,14 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * Obtain multiple CacheItems by their unique keys
+     * Obtain multiple CacheItems by their unique keys.
      *
      * @param array $keys A list of keys that can obtained in a single operation.
      *
+     * @throws \Psr\Cache\InvalidArgumentException
+     *
      * @return array An array of CacheItem classes.
      *               The resulting array must use the CacheItem's key as the associative key for the array.
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function getMultiple(array $keys)
     {
@@ -138,8 +142,9 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param int|null $ttl   Optional. The TTL value of this item. If no value is sent and the driver supports TTL
      *                        then the library may set a default value for it or let the driver take care of that.
      *
-     * @return static Return self to support chaining.
      * @throws \Exception
+     *
+     * @return static Return self to support chaining.
      */
     public function setMultiple(array $items, $ttl = null)
     {
@@ -151,12 +156,13 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * Remove multiple cache items in a single operation
+     * Remove multiple cache items in a single operation.
      *
      * @param array $keys The array of keys to be removed
      *
-     * @return static Return self to support chaining.
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      */
     public function removeMultiple(array $keys)
     {
@@ -171,8 +177,9 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string   $key      The key of the item to fetch.
      * @param callable $callable The callback to fetch data.
      *
-     * @return  mixed
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return mixed
      */
     public function call($key, $callable)
     {
@@ -196,9 +203,9 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * getStorage
+     * getStorage.
      *
-     * @return  CacheItemPoolInterface
+     * @return CacheItemPoolInterface
      */
     public function getStorage()
     {
@@ -206,11 +213,11 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * setStorage
+     * setStorage.
      *
-     * @param   CacheItemPoolInterface $storage
+     * @param CacheItemPoolInterface $storage
      *
-     * @return  Cache  Return self to support chaining.
+     * @return Cache Return self to support chaining.
      */
     public function setStorage($storage)
     {
@@ -220,12 +227,13 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * exists
+     * exists.
      *
      * @param string $key
      *
-     * @return  bool
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return bool
      */
     public function exists($key)
     {
@@ -233,9 +241,9 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * getHandler
+     * getHandler.
      *
-     * @return  SerializerInterface
+     * @return SerializerInterface
      */
     public function getSerializer()
     {
@@ -243,11 +251,11 @@ class Cache implements CacheInterface, \ArrayAccess
     }
 
     /**
-     * setHandler
+     * setHandler.
      *
-     * @param   SerializerInterface $serializer
+     * @param SerializerInterface $serializer
      *
-     * @return  Cache  Return self to support chaining.
+     * @return Cache Return self to support chaining.
      */
     public function setSerializer($serializer)
     {
@@ -261,8 +269,9 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key.
      *
-     * @return  boolean
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -274,8 +283,9 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key.
      *
-     * @return  mixed The value to return.
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return mixed The value to return.
      */
     public function offsetGet($offset)
     {
@@ -288,8 +298,9 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param mixed $offset Offset key.
      * @param mixed $value  The value to set.
      *
-     * @return  void
      * @throws \Exception
+     *
+     * @return void
      */
     public function offsetSet($offset, $value)
     {
@@ -301,8 +312,9 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key to unset.
      *
-     * @return  void
      * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetUnset($offset)
     {

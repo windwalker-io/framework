@@ -13,7 +13,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 
 /**
- * Class AbstractCacheStorage
+ * Class AbstractCacheStorage.
  *
  * @since 2.0
  */
@@ -22,36 +22,36 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
     /**
      * The Time To Live of an item.
      *
-     * @var  integer
+     * @var int
      */
     protected $ttl = 900;
 
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
     /**
      * Property differed.
      *
-     * @var  CacheItemInterface[]
+     * @var CacheItemInterface[]
      */
     protected $differed = [];
 
     /**
      * Property commiting.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $commiting = false;
 
     /**
      * Constructor.
      *
-     * @param   int   $ttl     The Time To Live (TTL) of an item
-     * @param   mixed $options An options array, or an object that implements \ArrayAccess
+     * @param int   $ttl     The Time To Live (TTL) of an item
+     * @param mixed $options An options array, or an object that implements \ArrayAccess
      *
      * @since   2.0
      */
@@ -62,14 +62,15 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
     }
 
     /**
-     * getItems
+     * getItems.
      *
      * @param array $keys
      *
-     * @return array|CacheItemInterface A traversable collection of Cache Items in the same order as the $keys
-     *                       parameter, keyed by the cache keys of each item. If no items are found
-     *                       an empty Traversable collection will be returned.
      * @throws InvalidArgumentException
+     *
+     * @return array|CacheItemInterface A traversable collection of Cache Items in the same order as the $keys
+     *                                  parameter, keyed by the cache keys of each item. If no items are found
+     *                                  an empty Traversable collection will be returned.
      */
     public function getItems(array $keys = [])
     {
@@ -106,14 +107,14 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
      * such situation use CacheItemInterface::isHit() instead.
      *
      * @param string $key
-     *    The key for which to check existence.
+     *                    The key for which to check existence.
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return bool
-     *  True if item exists in the cache, false otherwise.
+     *              True if item exists in the cache, false otherwise.
      */
     public function hasItem($key)
     {
@@ -128,21 +129,21 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
      * such situation use CacheItemInterface::isHit() instead.
      *
      * @param string $key
-     *    The key for which to check existence.
+     *                    The key for which to check existence.
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return bool
-     *  True if item exists in the cache, false otherwise.
+     *              True if item exists in the cache, false otherwise.
      */
     abstract public function exists($key);
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      */
     public function getOptions()
     {
@@ -150,11 +151,11 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOptions($options)
     {
@@ -167,10 +168,10 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
      * Sets a cache item to be persisted later.
      *
      * @param CacheItemInterface $item
-     *   The cache item to save.
+     *                                 The cache item to save.
      *
      * @return bool
-     *   False if the item could not be queued or if a commit was attempted and failed. True otherwise.
+     *              False if the item could not be queued or if a commit was attempted and failed. True otherwise.
      */
     public function saveDeferred(CacheItemInterface $item)
     {
@@ -187,7 +188,7 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
      * Persists any deferred cache items.
      *
      * @return bool
-     *   True if all not-yet-saved items were successfully saved or there were none. False otherwise.
+     *              True if all not-yet-saved items were successfully saved or there were none. False otherwise.
      */
     public function commit()
     {

@@ -18,7 +18,7 @@ class Foo
     /**
      * Property bar.
      *
-     * @var  Bar
+     * @var Bar
      */
     public $bar = null;
 

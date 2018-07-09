@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -14,7 +14,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of Stream
+ * Test class of Stream.
  *
  * @since 2.1
  */
@@ -30,7 +30,7 @@ class StringStreamTest extends AbstractBaseTestCase
     /**
      * Property tmp.
      *
-     * @var  string
+     * @var string
      */
     public $tmpnam;
 
@@ -59,10 +59,11 @@ class StringStreamTest extends AbstractBaseTestCase
     }
 
     /**
-     * testConstruct
+     * testConstruct.
      *
-     * @return  void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function testConstruct()
     {

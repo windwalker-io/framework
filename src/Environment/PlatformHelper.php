@@ -23,9 +23,9 @@ class PlatformHelper
     protected static $platform;
 
     /**
-     * isWindows
+     * isWindows.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isWindows()
     {
@@ -33,9 +33,9 @@ class PlatformHelper
     }
 
     /**
-     * isLinux
+     * isLinux.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isLinux()
     {
@@ -43,9 +43,9 @@ class PlatformHelper
     }
 
     /**
-     * isUnix
+     * isUnix.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isUnix()
     {
@@ -53,9 +53,9 @@ class PlatformHelper
     }
 
     /**
-     * getServer
+     * getServer.
      *
-     * @return  Platform
+     * @return Platform
      */
     public static function getPlatform()
     {
@@ -67,11 +67,11 @@ class PlatformHelper
     }
 
     /**
-     * Method to set property server
+     * Method to set property server.
      *
-     * @param   Platform $platform
+     * @param Platform $platform
      *
-     * @return  void
+     * @return void
      */
     public static function setPlatform($platform)
     {

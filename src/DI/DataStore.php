@@ -25,14 +25,14 @@ class DataStore
     /**
      * Property shared.
      *
-     * @var  bool
+     * @var bool
      */
     protected $shared = true;
 
     /**
      * Property protected.
      *
-     * @var  bool
+     * @var bool
      */
     protected $protected = false;
 
@@ -46,9 +46,9 @@ class DataStore
     /**
      * Class init.
      *
-     * @param  callable $callback  The callback handler of this data.
-     * @param  boolean  $shared    Is this a shared data?
-     * @param  boolean  $protected Is this aprotected data?
+     * @param callable $callback  The callback handler of this data.
+     * @param bool     $shared    Is this a shared data?
+     * @param bool     $protected Is this aprotected data?
      */
     public function __construct($callback, $shared = false, $protected = false)
     {
@@ -62,9 +62,9 @@ class DataStore
      * Get instance of this DataStore.
      *
      * @param Container $container
-     * @param boolean   $forceNew
+     * @param bool      $forceNew
      *
-     * @return  mixed
+     * @return mixed
      */
     public function get($container, $forceNew = false)
     {
@@ -80,9 +80,9 @@ class DataStore
     }
 
     /**
-     * Method to get property Callback
+     * Method to get property Callback.
      *
-     * @return  callable
+     * @return callable
      */
     public function getCallback()
     {
@@ -90,12 +90,13 @@ class DataStore
     }
 
     /**
-     * Method to set property callback
+     * Method to set property callback.
      *
-     * @param   callable $callback
+     * @param callable $callback
      *
-     * @throws  \InvalidArgumentException
-     * @return  static  Return self to support chaining.
+     * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      */
     public function setCallback($callback)
     {
@@ -116,11 +117,11 @@ class DataStore
     }
 
     /**
-     * Method to get property Shared
+     * Method to get property Shared.
      *
-     * @param   boolean $shared
+     * @param bool $shared
      *
-     * @return  boolean
+     * @return bool
      */
     public function isShared($shared = null)
     {
@@ -132,11 +133,11 @@ class DataStore
     }
 
     /**
-     * Method to get property Protected
+     * Method to get property Protected.
      *
-     * @param   boolean $protected
+     * @param bool $protected
      *
-     * @return  boolean
+     * @return bool
      */
     public function isProtected($protected = null)
     {
@@ -148,9 +149,9 @@ class DataStore
     }
 
     /**
-     * Method to get property Instance
+     * Method to get property Instance.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getInstance()
     {
@@ -158,11 +159,11 @@ class DataStore
     }
 
     /**
-     * Method to set property instance
+     * Method to set property instance.
      *
-     * @param   mixed $instance
+     * @param mixed $instance
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setInstance($instance)
     {

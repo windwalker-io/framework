@@ -25,7 +25,7 @@ class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInter
     /**
      * Property logger.
      *
-     * @var  LoggerAwareInterface
+     * @var LoggerAwareInterface
      */
     protected $logger;
 
@@ -42,7 +42,7 @@ class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInter
     /**
      * Call next middleware.
      *
-     * @param  \stdClass $data
+     * @param \stdClass $data
      *
      * @return mixed
      */
@@ -73,7 +73,7 @@ class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInter
     }
 
     /**
-     * Sets a logger instance on the object
+     * Sets a logger instance on the object.
      *
      * @param LoggerInterface $logger
      *

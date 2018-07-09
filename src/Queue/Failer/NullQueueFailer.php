@@ -16,24 +16,23 @@ namespace Windwalker\Queue\Failer;
 class NullQueueFailer implements QueueFailerInterface
 {
     /**
-     * add
+     * add.
      *
      * @param string $connection
      * @param string $queue
      * @param string $body
      * @param string $exception
      *
-     * @return  int|string
+     * @return int|string
      */
     public function add($connection, $queue, $body, $exception)
     {
-        return null;
     }
 
     /**
-     * all
+     * all.
      *
-     * @return  array
+     * @return array
      */
     public function all()
     {
@@ -41,11 +40,11 @@ class NullQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * get
+     * get.
      *
      * @param mixed $conditions
      *
-     * @return  array
+     * @return array
      */
     public function get($conditions)
     {
@@ -53,11 +52,11 @@ class NullQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * remove
+     * remove.
      *
      * @param mixed $conditions
      *
-     * @return  bool
+     * @return bool
      */
     public function remove($conditions)
     {
@@ -65,9 +64,9 @@ class NullQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * clear
+     * clear.
      *
-     * @return  bool
+     * @return bool
      */
     public function clear()
     {

@@ -28,42 +28,42 @@ class Benchmark
     /**
      * Property profiler.
      *
-     * @var  Profiler
+     * @var Profiler
      */
     protected $profiler = null;
 
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name;
 
     /**
      * Property times.
      *
-     * @var  int
+     * @var int
      */
     protected $times = 100;
 
     /**
      * Property tasks.
      *
-     * @var  array
+     * @var array
      */
     protected $tasks = [];
 
     /**
      * Property results.
      *
-     * @var  array
+     * @var array
      */
     protected $results = [];
 
     /**
      * Property timeFormat.
      *
-     * @var integer
+     * @var int
      */
     protected $format = 1;
 
@@ -83,7 +83,7 @@ class Benchmark
      */
     public function __construct($name = null, Profiler $profiler = null, $times = 100)
     {
-        $name = $name ?: 'benchmark-' . uniqid();
+        $name = $name ?: 'benchmark-'.uniqid();
 
         $this->profiler = $profiler ?: new Profiler($name);
         $this->name = $name;
@@ -91,11 +91,11 @@ class Benchmark
     }
 
     /**
-     * setTimeFormat
+     * setTimeFormat.
      *
      * @param int $format
      *
-     * @return  $this
+     * @return $this
      */
     public function setTimeFormat($format = self::SECOND)
     {
@@ -105,13 +105,14 @@ class Benchmark
     }
 
     /**
-     * addTask
+     * addTask.
      *
      * @param string   $name
      * @param callable $callback
      *
      * @throws \InvalidArgumentException
-     * @return  static
+     *
+     * @return static
      */
     public function addTask($name, $callback)
     {
@@ -125,11 +126,11 @@ class Benchmark
     }
 
     /**
-     * run
+     * run.
      *
-     * @param integer $times
+     * @param int $times
      *
-     * @return  $this
+     * @return $this
      */
     public function execute($times = null)
     {
@@ -143,25 +144,25 @@ class Benchmark
     }
 
     /**
-     * runTask
+     * runTask.
      *
      * @param string   $name
      * @param callable $callback
-     * @param integer  $times
+     * @param int      $times
      *
-     * @return  $this
+     * @return $this
      */
     protected function run($name, $callback, $times)
     {
-        $this->profiler->mark($name . '-start');
+        $this->profiler->mark($name.'-start');
 
         foreach (range(1, $times) as $row) {
             call_user_func($callback);
         }
 
-        $this->profiler->mark($name . '-end');
+        $this->profiler->mark($name.'-end');
 
-        $time = $this->profiler->getTimeBetween($name . '-start', $name . '-end');
+        $time = $this->profiler->getTimeBetween($name.'-start', $name.'-end');
 
         $time = $time * $this->format;
 
@@ -171,11 +172,11 @@ class Benchmark
     }
 
     /**
-     * Method to get property Results
+     * Method to get property Results.
      *
      * @param string $sort Null, desc or asc.
      *
-     * @return  array
+     * @return array
      */
     public function getResults($sort = null)
     {
@@ -189,28 +190,26 @@ class Benchmark
     }
 
     /**
-     * Method to get property Results
+     * Method to get property Results.
      *
      * @param string $name
      *
-     * @return  integer
+     * @return int
      */
     public function getResult($name)
     {
         if (!empty($this->results[$name])) {
             return $this->results[$name];
         }
-
-        return null;
     }
 
     /**
-     * renderResult
+     * renderResult.
      *
      * @param string $name
      * @param bool   $round
      *
-     * @return  string
+     * @return string
      */
     public function renderOne($name, $round = false)
     {
@@ -241,17 +240,17 @@ class Benchmark
                 break;
         }
 
-        return $name . ' => ' . $result . ' ' . $unit;
+        return $name.' => '.$result.' '.$unit;
     }
 
     /**
-     * renderResult
+     * renderResult.
      *
      * @param bool   $round
      * @param string $sort
      * @param bool   $html
      *
-     * @return  string
+     * @return string
      */
     public function render($round = false, $sort = null, $html = false)
     {
@@ -267,9 +266,9 @@ class Benchmark
     }
 
     /**
-     * Method to get property Times
+     * Method to get property Times.
      *
-     * @return  int
+     * @return int
      */
     public function getTimes()
     {
@@ -277,11 +276,11 @@ class Benchmark
     }
 
     /**
-     * Method to set property times
+     * Method to set property times.
      *
-     * @param   int $times
+     * @param int $times
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTimes($times)
     {
@@ -291,9 +290,9 @@ class Benchmark
     }
 
     /**
-     * Method to get property RenderHandler
+     * Method to get property RenderHandler.
      *
-     * @return  \Closure
+     * @return \Closure
      */
     public function getRenderOneHandler()
     {
@@ -301,11 +300,11 @@ class Benchmark
     }
 
     /**
-     * Method to set property renderHandler
+     * Method to set property renderHandler.
      *
-     * @param   \Closure $renderOneHandler
+     * @param \Closure $renderOneHandler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRenderOneHandler(\Closure $renderOneHandler)
     {

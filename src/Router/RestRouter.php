@@ -16,38 +16,38 @@ class RestRouter extends SingleActionRouter
     /**
      * An array of HTTP Method => controller suffix pairs for routing the request.
      *
-     * @var  array
+     * @var array
      */
     protected $suffixMap = [
-        'GET' => 'Get',
-        'POST' => 'Create',
-        'PUT' => 'Update',
-        'PATCH' => 'Update',
-        'DELETE' => 'Delete',
-        'HEAD' => 'Head',
-        'LINK' => 'Link',
-        'UNLINK' => 'Unlink',
+        'GET'     => 'Get',
+        'POST'    => 'Create',
+        'PUT'     => 'Update',
+        'PATCH'   => 'Update',
+        'DELETE'  => 'Delete',
+        'HEAD'    => 'Head',
+        'LINK'    => 'Link',
+        'UNLINK'  => 'Unlink',
         'OPTIONS' => 'Options',
     ];
 
     /**
      * Property customMethod.
      *
-     * @var  string
+     * @var string
      */
     protected $customMethod = null;
 
     /**
-     * A boolean allowing to pass _method as parameter in POST requests
+     * A boolean allowing to pass _method as parameter in POST requests.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $allowCustomMethod = false;
 
     /**
-     * Get the property to allow or not method in POST request
+     * Get the property to allow or not method in POST request.
      *
-     * @return  boolean
+     * @return bool
      */
     public function isAllowCustomMethod()
     {
@@ -57,10 +57,10 @@ class RestRouter extends SingleActionRouter
     /**
      * Set a controller class suffix for a given HTTP method.
      *
-     * @param   string $method The HTTP method for which to set the class suffix.
-     * @param   string $suffix The class suffix to use when fetching the controller name for a given request.
+     * @param string $method The HTTP method for which to set the class suffix.
+     * @param string $suffix The class suffix to use when fetching the controller name for a given request.
      *
-     * @return  static  Returns itself to support chaining.
+     * @return static Returns itself to support chaining.
      */
     public function setHttpMethodSuffix($method, $suffix)
     {
@@ -70,11 +70,11 @@ class RestRouter extends SingleActionRouter
     }
 
     /**
-     * Set to allow or not method in POST request
+     * Set to allow or not method in POST request.
      *
-     * @param   boolean $value A boolean to allow or not method in POST request
+     * @param bool $value A boolean to allow or not method in POST request
      *
-     * @return  static
+     * @return static
      */
     public function allowCustomMethod($value)
     {
@@ -84,9 +84,9 @@ class RestRouter extends SingleActionRouter
     }
 
     /**
-     * getCustomMethod
+     * getCustomMethod.
      *
-     * @return  string
+     * @return string
      */
     public function getCustomMethod()
     {
@@ -94,11 +94,11 @@ class RestRouter extends SingleActionRouter
     }
 
     /**
-     * setCustomMethod
+     * setCustomMethod.
      *
-     * @param   string $customMethod
+     * @param string $customMethod
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCustomMethod($customMethod)
     {
@@ -112,7 +112,7 @@ class RestRouter extends SingleActionRouter
      *
      * @param string $method
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -142,11 +142,11 @@ class RestRouter extends SingleActionRouter
     /**
      * Parse the given route and return the name of a controller mapped to the given route.
      *
-     * @param   string $route The route string for which to find and execute a controller.
-     * @param   string $method
-     * @param   array  $options
+     * @param string $route   The route string for which to find and execute a controller.
+     * @param string $method
+     * @param array  $options
      *
-     * @return  string  The controller name for the given route excluding prefix.
+     * @return string The controller name for the given route excluding prefix.
      *
      * @since   2.0
      */

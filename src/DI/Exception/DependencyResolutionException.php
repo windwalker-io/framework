@@ -9,7 +9,7 @@
 namespace Windwalker\DI\Exception;
 
 /**
- * Exception class for handling errors in resolving a dependency
+ * Exception class for handling errors in resolving a dependency.
  *
  * @since  2.0
  */

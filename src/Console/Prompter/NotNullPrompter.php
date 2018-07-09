@@ -18,7 +18,7 @@ class NotNullPrompter extends ValidatePrompter
     /**
      * Retry times.
      *
-     * @var  int
+     * @var int
      *
      * @since  2.0
      */
@@ -27,7 +27,7 @@ class NotNullPrompter extends ValidatePrompter
     /**
      * If this property set to true, application will be closed when validate fail.
      *
-     * @var  boolean
+     * @var bool
      *
      * @since  2.0
      */
@@ -36,7 +36,7 @@ class NotNullPrompter extends ValidatePrompter
     /**
      * Returning message if valid fail.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -45,7 +45,7 @@ class NotNullPrompter extends ValidatePrompter
     /**
      * Returning message if valid fail and close.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -54,14 +54,14 @@ class NotNullPrompter extends ValidatePrompter
     /**
      * Get callable handler.
      *
-     * @return  callable  The validate callback.
+     * @return callable The validate callback.
      *
      * @since   2.0
      */
     public function getHandler()
     {
         return function ($value) {
-            return (!is_null($value) && $value !== '');
+            return !is_null($value) && $value !== '';
         };
     }
 }

@@ -11,25 +11,25 @@ namespace Windwalker\Authentication\Method;
 use Windwalker\Authentication\Credential;
 
 /**
- * Interface MethodInterface
+ * Interface MethodInterface.
  *
  * @since  2.0
  */
 interface MethodInterface
 {
     /**
-     * authenticate
+     * authenticate.
      *
      * @param Credential $credential
      *
-     * @return  integer
+     * @return int
      */
     public function authenticate(Credential $credential);
 
     /**
-     * getResult
+     * getResult.
      *
-     * @return  integer
+     * @return int
      */
     public function getStatus();
 }

@@ -12,24 +12,25 @@ use Windwalker\IO\Cli\Color\ColorProcessor;
 use Windwalker\IO\Cli\Color\ColorProcessorInterface;
 
 /**
- * Simple Cli Output
+ * Simple Cli Output.
  *
  * @since 2.0
  */
 class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 {
     /**
-     * Color processing object
+     * Color processing object.
      *
-     * @var    ColorProcessorInterface
+     * @var ColorProcessorInterface
+     *
      * @since  2.0
      */
     protected $processor;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param   ColorProcessorInterface $processor The output processor.
+     * @param ColorProcessorInterface $processor The output processor.
      *
      * @since   2.0
      */
@@ -39,16 +40,16 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
     }
 
     /**
-     * Write a string to standard output
+     * Write a string to standard output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
-     * @return  CliOutput  Instance of $this to allow chaining.
+     * @return CliOutput Instance of $this to allow chaining.
      */
     public function out($text = '', $nl = true)
     {
-        fwrite($this->outputStream, $this->getProcessor()->process($text) . ($nl ? "\n" : null));
+        fwrite($this->outputStream, $this->getProcessor()->process($text).($nl ? "\n" : null));
 
         return $this;
     }
@@ -56,25 +57,26 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
     /**
      * Write a string to standard error output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
      * @since   2.0
+     *
      * @return $this
      */
     public function err($text = '', $nl = true)
     {
-        fwrite($this->errorStream, $this->processor->process($text) . ($nl ? "\n" : null));
+        fwrite($this->errorStream, $this->processor->process($text).($nl ? "\n" : null));
 
         return $this;
     }
 
     /**
-     * Set a processor
+     * Set a processor.
      *
-     * @param   ColorProcessorInterface $processor The output processor.
+     * @param ColorProcessorInterface $processor The output processor.
      *
-     * @return  CliOutput  Instance of $this to allow chaining.
+     * @return CliOutput Instance of $this to allow chaining.
      *
      * @since   2.0
      */
@@ -86,12 +88,13 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
     }
 
     /**
-     * Get a processor
+     * Get a processor.
      *
-     * @return  ColorProcessorInterface
+     * @throws \RuntimeException
+     *
+     * @return ColorProcessorInterface
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function getProcessor()
     {

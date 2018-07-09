@@ -5,11 +5,10 @@
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
  */
-
-$autoload = __DIR__ . '/../../../../vendor/autoload.php';
+$autoload = __DIR__.'/../../../../vendor/autoload.php';
 
 if (!is_file($autoload)) {
-    $autoload = __DIR__ . '/../../vendor/autoload.php';
+    $autoload = __DIR__.'/../../vendor/autoload.php';
 }
 
 include_once $autoload;
@@ -25,7 +24,7 @@ $console->setName('Example Console')
     ->setUsage('console.php <commands> <arguments> [-h|--help] [-q|--quiet]')
     ->setDescription('Hello World')
     ->setHelp(
-        <<<HELP
+        <<<'HELP'
 Hello, this is an example console, if you want to do something, see above:
 
 $ foo bar -h => foo bar --help

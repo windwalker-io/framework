@@ -9,43 +9,43 @@
 namespace Windwalker\Crypt;
 
 /**
- * Interface CryptInterface
+ * Interface CryptInterface.
  *
  * @since  3.0
  */
 interface CryptInterface
 {
     /**
-     * encrypt
+     * encrypt.
      *
      * @param string $string
      * @param string $key
      * @param string $iv
      *
-     * @return  string
+     * @return string
      */
     public function encrypt($string, $key = null, $iv = null);
 
     /**
-     * decrypt
+     * decrypt.
      *
      * @param string $string
      * @param string $key
      * @param string $iv
      *
-     * @return  string
+     * @return string
      */
     public function decrypt($string, $key = null, $iv = null);
 
     /**
-     * match
+     * match.
      *
      * @param string $string
      * @param string $encrypted
      * @param string $key
      * @param string $iv
      *
-     * @return  boolean
+     * @return bool
      */
     public function verify($string, $encrypted, $key = null, $iv = null);
 }

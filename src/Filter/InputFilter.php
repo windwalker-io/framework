@@ -11,7 +11,7 @@ namespace Windwalker\Filter;
 use Windwalker\Filter\Cleaner\CleanerInterface;
 
 /**
- * Class Filter
+ * Class Filter.
  *
  * @since 2.0
  */
@@ -52,21 +52,21 @@ class InputFilter implements \Serializable
     /**
      * Property handlers.
      *
-     * @var  CleanerInterface[]|callable[]
+     * @var CleanerInterface[]|callable[]
      */
     protected $handlers = [];
 
     /**
      * Property unknownHandler.
      *
-     * @var  callable
+     * @var callable
      */
     protected $defaultHandler = null;
 
     /**
      * Property htmlCleaner.
      *
-     * @var  HtmlCleaner
+     * @var HtmlCleaner
      */
     protected $htmlCleaner = null;
 
@@ -83,12 +83,12 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * clean
+     * clean.
      *
      * @param string                 $source
      * @param string|callable|object $filter
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($source, $filter = 'string')
     {
@@ -117,11 +117,11 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * getHandlers
+     * getHandlers.
      *
      * @param string $name
      *
-     * @return  \callable
+     * @return \callable
      */
     public function getHandler($name)
     {
@@ -129,13 +129,14 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * setHandlers
+     * setHandlers.
      *
-     * @param   string                         $name
-     * @param   CleanerInterface[]|\callable[] $handler
+     * @param string                         $name
+     * @param CleanerInterface[]|\callable[] $handler
      *
-     * @throws  \InvalidArgumentException
-     * @return  static  Return self to support chaining.
+     * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      *
      * @deprecated Use addHandler() instead.
      */
@@ -145,13 +146,14 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * setHandlers
+     * setHandlers.
      *
-     * @param   string                         $name
-     * @param   CleanerInterface[]|\callable[] $handler
+     * @param string                         $name
+     * @param CleanerInterface[]|\callable[] $handler
      *
-     * @throws  \InvalidArgumentException
-     * @return  static  Return self to support chaining.
+     * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      */
     public function addHandler($name, $handler)
     {
@@ -167,9 +169,9 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * gethtmlCleaner
+     * gethtmlCleaner.
      *
-     * @return  \Windwalker\Filter\HtmlCleaner
+     * @return \Windwalker\Filter\HtmlCleaner
      */
     public function getHtmlCleaner()
     {
@@ -177,11 +179,11 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * sethtmlCleaner
+     * sethtmlCleaner.
      *
-     * @param   \Windwalker\Filter\HtmlCleaner $htmlCleaner
+     * @param \Windwalker\Filter\HtmlCleaner $htmlCleaner
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setHtmlCleaner($htmlCleaner)
     {
@@ -191,9 +193,9 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * getDefaultHandler
+     * getDefaultHandler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getDefaultHandler()
     {
@@ -201,11 +203,11 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * setDefaultHandler
+     * setDefaultHandler.
      *
-     * @param   callable $defaultHandler
+     * @param callable $defaultHandler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDefaultHandler($defaultHandler)
     {
@@ -215,9 +217,9 @@ class InputFilter implements \Serializable
     }
 
     /**
-     * loadDefaultHandlers
+     * loadDefaultHandlers.
      *
-     * @return  void
+     * @return void
      */
     protected function loadDefaultHandlers()
     {
@@ -349,7 +351,7 @@ class InputFilter implements \Serializable
     /**
      * Method to serialize the Filter.
      *
-     * @return  string  The serialized Filter.
+     * @return string The serialized Filter.
      *
      * @since   2.0
      */
@@ -365,9 +367,9 @@ class InputFilter implements \Serializable
     /**
      * Method to unserialize the Filter.
      *
-     * @param   string $input The serialized Filter.
+     * @param string $input The serialized Filter.
      *
-     * @return  static  The Filter object.
+     * @return static The Filter object.
      *
      * @since   2.0
      */

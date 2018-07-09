@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,19 +11,19 @@ namespace Windwalker\Validator\Test;
 use Windwalker\Validator\Rule\EqualsValidator;
 
 /**
- * Test class of EqualsValidator
+ * Test class of EqualsValidator.
  *
  * @since 2.0
  */
 class EqualsValidatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * getInstance
+     * getInstance.
      *
      * @param string $compare
      * @param bool   $strict
      *
-     * @return  EqualsValidator
+     * @return EqualsValidator
      */
     protected function getInstance($compare, $strict = false)
     {

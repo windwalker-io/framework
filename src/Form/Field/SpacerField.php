@@ -24,16 +24,16 @@ class SpacerField extends AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'spacer';
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     public function prepare(&$attrs)
     {
@@ -42,9 +42,9 @@ class SpacerField extends AbstractField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */
@@ -53,19 +53,19 @@ class SpacerField extends AbstractField
         return array_merge(
             parent::getAccessors(),
             [
-                'hr' => 'hr',
+                'hr'          => 'hr',
                 'description' => 'description',
-                'tag' => 'tag',
+                'tag'         => 'tag',
             ]
         );
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed
+     * @return mixed
      */
     public function buildInput($attrs)
     {

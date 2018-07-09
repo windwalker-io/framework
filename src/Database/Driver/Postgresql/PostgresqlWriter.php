@@ -11,7 +11,7 @@ namespace Windwalker\Database\Driver\Postgresql;
 use Windwalker\Database\Driver\Pdo\PdoWriter;
 
 /**
- * Class PostgresqlWriter
+ * Class PostgresqlWriter.
  *
  * @since 2.1
  */

@@ -18,11 +18,11 @@ use Windwalker\Dom\Builder\HtmlBuilder;
 class HtmlElement extends DomElement
 {
     /**
-     * toString
+     * toString.
      *
-     * @param boolean $forcePair
+     * @param bool $forcePair
      *
-     * @return  string
+     * @return string
      */
     public function toString($forcePair = false)
     {

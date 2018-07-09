@@ -18,7 +18,7 @@ class EdgeFileCache implements EdgeCacheInterface
     /**
      * Property path.
      *
-     * @var  string
+     * @var string
      */
     protected $path;
 
@@ -33,11 +33,11 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * isExpired
+     * isExpired.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  boolean
+     * @return bool
      */
     public function isExpired($path)
     {
@@ -51,11 +51,11 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * getCacheKey
+     * getCacheKey.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function getCacheKey($path)
     {
@@ -63,23 +63,23 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * getCacheFile
+     * getCacheFile.
      *
-     * @param   string $key
+     * @param string $key
      *
-     * @return  string
+     * @return string
      */
     public function getCacheFile($key)
     {
-        return $this->path . '/~' . $key;
+        return $this->path.'/~'.$key;
     }
 
     /**
-     * load
+     * load.
      *
      * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function load($path)
     {
@@ -87,12 +87,12 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * store
+     * store.
      *
      * @param string $path
      * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function store($path, $value)
     {
@@ -108,11 +108,11 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * Remove an item from the cache by its unique key
+     * Remove an item from the cache by its unique key.
      *
      * @param string $path The path to remove.
      *
-     * @return  static
+     * @return static
      */
     public function remove($path)
     {

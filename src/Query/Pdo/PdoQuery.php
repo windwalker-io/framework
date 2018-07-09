@@ -11,7 +11,7 @@ namespace Windwalker\Query\Pdo;
 use Windwalker\Query\Query;
 
 /**
- * Class PdoQuery
+ * Class PdoQuery.
  *
  * @since 2.0
  */

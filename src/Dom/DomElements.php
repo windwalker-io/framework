@@ -18,14 +18,14 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     /**
      * Property elements.
      *
-     * @var  HtmlElement[]|mixed[]
+     * @var HtmlElement[]|mixed[]
      */
     protected $elements = [];
 
     /**
      * Property strict.
      *
-     * @var boolean
+     * @var bool
      */
     protected $strict = false;
 
@@ -33,7 +33,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      * Class init.
      *
      * @param array|mixed $elements
-     * @param boolean     $strict
+     * @param bool        $strict
      */
     public function __construct($elements = [], $strict = false)
     {
@@ -48,7 +48,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     /**
      * Convert all elements to string.
      *
-     * @return  string
+     * @return string
      */
     public function __toString()
     {
@@ -62,9 +62,9 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
-     * @return  \Traversable
+     * @return \Traversable
      */
     public function getIterator()
     {
@@ -72,11 +72,11 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
      *
-     * @param  mixed $offset An offset to check for.
+     * @param mixed $offset An offset to check for.
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function offsetExists($offset)
     {
@@ -84,7 +84,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
      *
      * @param mixed $offset The offset to retrieve.
      *
@@ -93,14 +93,14 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     public function offsetGet($offset)
     {
         if (!$this->strict && !$this->offsetExists($offset)) {
-            return null;
+            return;
         }
 
         return $this->elements[$offset];
     }
 
     /**
-     * Offset to set
+     * Offset to set.
      *
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value  The value to set.
@@ -119,7 +119,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
      *
      * @param mixed $offset The offset to unset.
      *
@@ -135,7 +135,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
      *
      * @return int The custom count as an integer.
      */
@@ -145,9 +145,9 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Method to get property Strict
+     * Method to get property Strict.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getStrict()
     {
@@ -155,11 +155,11 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Method to set property strict
+     * Method to set property strict.
      *
-     * @param   boolean $strict
+     * @param bool $strict
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setStrict($strict)
     {
@@ -169,9 +169,9 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Method to get property Elements
+     * Method to get property Elements.
      *
-     * @return  \mixed[]|HtmlElement[]
+     * @return \mixed[]|HtmlElement[]
      */
     public function getElements()
     {
@@ -179,11 +179,11 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
     }
 
     /**
-     * Method to set property elements
+     * Method to set property elements.
      *
-     * @param   \mixed[]|HtmlElement[] $elements
+     * @param \mixed[]|HtmlElement[] $elements
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setElements($elements)
     {

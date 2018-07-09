@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Data\Test;
 use Windwalker\Data\Data;
 
 /**
- * Test class of Data
+ * Test class of Data.
  *
  * @since 2.0
  */
@@ -36,16 +36,16 @@ class DataTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getTestData
+     * getTestData.
      *
-     * @return  array
+     * @return array
      */
     protected function getTestData()
     {
         return [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -92,9 +92,9 @@ class DataTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testExists
+     * testExists.
      *
-     * @return  void
+     * @return void
      */
     public function testExists()
     {
@@ -215,9 +215,9 @@ class DataTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testDump
+     * testDump.
      *
-     * @return  void
+     * @return void
      */
     public function testDump()
     {
@@ -227,9 +227,9 @@ class DataTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Method to test map()
+     * Method to test map().
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Data\Data::map
      */
@@ -250,9 +250,9 @@ class DataTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Method to test walk()
+     * Method to test walk().
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Data\Data::walk
      */
@@ -265,7 +265,7 @@ class DataTest extends \PHPUnit\Framework\TestCase
 
         $data->walk(
             function (&$value, $key, $userdata) {
-                $value = $userdata . ':' . $key . ':' . strtoupper($value);
+                $value = $userdata.':'.$key.':'.strtoupper($value);
             },
             'prefix'
         );
@@ -274,9 +274,9 @@ class DataTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testClone
+     * testClone.
      *
-     * @return  void
+     * @return void
      */
     public function testClone()
     {

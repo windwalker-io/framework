@@ -25,9 +25,9 @@ class CurlTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param   RequestInterface $request The request object to store request params.
+     * @param RequestInterface $request The request object to store request params.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since    2.1
      */
@@ -59,14 +59,15 @@ class CurlTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param   string $content   The complete server response, including headers
-     *                            as a string if the response has no errors.
-     * @param   array  $info      The cURL request information.
+     * @param string $content The complete server response, including headers
+     *                        as a string if the response has no errors.
+     * @param array  $info    The cURL request information.
      *
-     * @return  Response
+     * @throws \UnexpectedValueException
+     *
+     * @return Response
      *
      * @since   2.0
-     * @throws  \UnexpectedValueException
      */
     public function getResponse($content, $info)
     {
@@ -115,11 +116,11 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
-     * createHandle
+     * createHandle.
      *
      * @param RequestInterface $request
      *
-     * @return  resource
+     * @return resource
      *
      * @since  3.2
      */
@@ -160,8 +161,7 @@ class CurlTransport extends AbstractTransport
             // If the data is a scalar value simply add it to the cURL post fields.
             if (is_scalar($data) || strpos($request->getHeaderLine('Content-Type'), 'multipart/form-data') === 0) {
                 $options[CURLOPT_POSTFIELDS] = $data;
-            } else // Otherwise we need to encode the value first.
-            {
+            } else { // Otherwise we need to encode the value first.
                 $options[CURLOPT_POSTFIELDS] = http_build_query($data);
             }
 
@@ -230,10 +230,11 @@ class CurlTransport extends AbstractTransport
     /**
      * Use stream to download file.
      *
-     * @param   RequestInterface       $request The request object to store request params.
-     * @param   string|StreamInterface $dest    The dest path to store file.
+     * @param RequestInterface       $request The request object to store request params.
+     * @param string|StreamInterface $dest    The dest path to store file.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
+     *
      * @since   2.1
      */
     public function download(RequestInterface $request, $dest)
@@ -250,9 +251,9 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
-     * Method to check if HTTP transport layer available for using
+     * Method to check if HTTP transport layer available for using.
      *
-     * @return  boolean  True if available else false
+     * @return bool True if available else false
      *
      * @since   2.1
      */
@@ -262,11 +263,11 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
-     * setCABundleToOptions
+     * setCABundleToOptions.
      *
      * @param array $options
      *
-     * @return  array
+     * @return array
      *
      * @since  3.4.2
      */

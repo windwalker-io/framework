@@ -20,11 +20,11 @@ use Windwalker\IO\Cli\Output\ColorfulOutputInterface;
 class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {
     /**
-     * set Arguments
+     * set Arguments.
      *
      * @param array $args
      *
-     * @return  IO
+     * @return IO
      */
     public function setArguments(array $args)
     {
@@ -34,9 +34,9 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * shiftArgument
+     * shiftArgument.
      *
-     * @return  string
+     * @return string
      */
     public function shiftArgument()
     {
@@ -44,11 +44,11 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * unshiftArgument
+     * unshiftArgument.
      *
      * @param string $arg
      *
-     * @return  IOInterface
+     * @return IOInterface
      */
     public function unshiftArgument($arg)
     {
@@ -58,11 +58,11 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * pushArgument
+     * pushArgument.
      *
      * @param string $arg
      *
-     * @return  IOInterface
+     * @return IOInterface
      */
     public function pushArgument($arg)
     {
@@ -72,9 +72,9 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * popArgument
+     * popArgument.
      *
-     * @return  string
+     * @return string
      */
     public function popArgument()
     {
@@ -82,14 +82,14 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * addColor
+     * addColor.
      *
-     * @param   string $name    The color name.
-     * @param   string $fg      Foreground color.
-     * @param   string $bg      Background color.
-     * @param   array  $options Style options.
+     * @param string $name    The color name.
+     * @param string $fg      Foreground color.
+     * @param string $bg      Background color.
+     * @param array  $options Style options.
      *
-     * @return  static
+     * @return static
      */
     public function addColor($name, $fg, $bg, $options = [])
     {
@@ -101,11 +101,11 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * useColor
+     * useColor.
      *
-     * @param boolean $bool
+     * @param bool $bool
      *
-     * @return  IOInterface
+     * @return IOInterface
      */
     public function useColor($bool = true)
     {
@@ -117,9 +117,9 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * __clone
+     * __clone.
      *
-     * @return  void
+     * @return void
      */
     public function __clone()
     {
@@ -128,9 +128,9 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * getOutStream
+     * getOutStream.
      *
-     * @return  resource
+     * @return resource
      */
     public function getOutputStream()
     {
@@ -138,11 +138,11 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * setOutStream
+     * setOutStream.
      *
-     * @param   resource $outStream
+     * @param resource $outStream
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOutputStream($outStream)
     {
@@ -152,9 +152,9 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * Method to get property ErrorStream
+     * Method to get property ErrorStream.
      *
-     * @return  resource
+     * @return resource
      */
     public function getErrorStream()
     {
@@ -162,11 +162,11 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * Method to set property errorStream
+     * Method to set property errorStream.
      *
-     * @param   resource $errorStream
+     * @param resource $errorStream
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setErrorStream($errorStream)
     {
@@ -176,9 +176,9 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * getInputStream
+     * getInputStream.
      *
-     * @return  resource
+     * @return resource
      */
     public function getInputStream()
     {
@@ -186,11 +186,11 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
     }
 
     /**
-     * setInputStream
+     * setInputStream.
      *
-     * @param   resource $inputStream
+     * @param resource $inputStream
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setInputStream($inputStream)
     {

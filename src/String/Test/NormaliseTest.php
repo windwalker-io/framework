@@ -9,16 +9,16 @@ namespace Windwalker\String\Tests;
 use Windwalker\String\StringNormalise;
 
 /**
- * StringNormaliseTest
+ * StringNormaliseTest.
  *
  * @since  2.0
  */
-class StringNormaliseTest extends \PHPUnit\Framework\TestCase
+class NormaliseTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Method to seed data to testFromCamelCase.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -39,7 +39,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testFromCamelCase.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -56,7 +56,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToCamelCase.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -75,7 +75,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToDashSeparated.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -97,7 +97,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToSpaceSeparated.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -119,7 +119,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToUnderscoreSeparated.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -141,7 +141,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToVariable.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -160,7 +160,7 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToKey.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -179,13 +179,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::fromCamelCase(string, false).
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::fromCamelcase
      * @dataProvider  seedTestFromCamelCase_nongrouped
+     *
      * @since         2.0
      */
     public function testFromCamelCase_nongrouped($expected, $input)
@@ -196,13 +197,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::fromCamelCase(string, true).
      *
-     * @param   string $input    The input value for the method.
-     * @param   string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::fromCamelcase
      * @dataProvider  seedTestFromCamelCase
+     *
      * @since         2.0
      */
     public function testFromCamelCase_grouped($input, $expected)
@@ -213,13 +215,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::toCamelCase().
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::toCamelcase
      * @dataProvider  seedTestToCamelCase
+     *
      * @since         2.0
      */
     public function testToCamelCase($expected, $input)
@@ -230,13 +233,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::toDashSeparated().
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::toDashSeparated
      * @dataProvider  seedTestToDashSeparated
+     *
      * @since         2.0
      */
     public function testToDashSeparated($expected, $input)
@@ -247,13 +251,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::toSpaceSeparated().
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::toSpaceSeparated
      * @dataProvider  seedTestToSpaceSeparated
+     *
      * @since         2.0
      */
     public function testToSpaceSeparated($expected, $input)
@@ -264,13 +269,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::toUnderscoreSeparated().
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::toUnderscoreSeparated
      * @dataProvider  seedTestToUnderscoreSeparated
+     *
      * @since         2.0
      */
     public function testToUnderscoreSeparated($expected, $input)
@@ -281,13 +287,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::toVariable().
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::toVariable
      * @dataProvider  seedTestToVariable
+     *
      * @since         2.0
      */
     public function testToVariable($expected, $input)
@@ -298,13 +305,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringNormalise::toKey().
      *
-     * @param   string $expected The expected value from the method.
-     * @param   string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringNormalise::toKey
      * @dataProvider  seedTestToKey
+     *
      * @since         2.0
      */
     public function testToKey($expected, $input)

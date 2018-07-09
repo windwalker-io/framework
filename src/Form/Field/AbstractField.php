@@ -39,49 +39,49 @@ abstract class AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = '';
 
     /**
      * Property element.
      *
-     * @var  string
+     * @var string
      */
     protected $element = 'input';
 
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
     /**
      * Property fieldName.
      *
-     * @var  string
+     * @var string
      */
     protected $fieldName = null;
 
     /**
      * Property group.
      *
-     * @var  string
+     * @var string
      */
     protected $group = null;
 
     /**
      * Property fieldset.
      *
-     * @var  string
+     * @var string
      */
     protected $fieldset = null;
 
     /**
      * Property control.
      *
-     * @var  string
+     * @var string
      */
     protected $control = null;
 
@@ -95,49 +95,49 @@ abstract class AbstractField
     /**
      * Property value.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $value = null;
 
     /**
      * Property attributes.
      *
-     * @var  string[]
+     * @var string[]
      */
     protected $attributes = [];
 
     /**
      * Property required.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $required = false;
 
     /**
      * Property $validator.
      *
-     * @var  ValidatorComposite
+     * @var ValidatorComposite
      */
     protected $validator = null;
 
     /**
      * Property filter.
      *
-     * @var  FilterComposite
+     * @var FilterComposite
      */
     protected $filter = null;
 
     /**
      * Property attrs.
      *
-     * @var  array
+     * @var array
      */
     protected $attrs = [];
 
     /**
      * The value of false.
      *
-     * @var  array
+     * @var array
      */
     protected $falseValue = [
         'disabled',
@@ -151,7 +151,7 @@ abstract class AbstractField
     /**
      * The value of true.
      *
-     * @var  array
+     * @var array
      */
     protected $trueValue = [
         'true',
@@ -162,7 +162,7 @@ abstract class AbstractField
     /**
      * Property form.
      *
-     * @var  Form
+     * @var Form
      */
     protected $form;
 
@@ -210,9 +210,9 @@ abstract class AbstractField
     }
 
     /**
-     * getInput
+     * getInput.
      *
-     * @return  string
+     * @return string
      */
     public function renderInput()
     {
@@ -226,11 +226,11 @@ abstract class AbstractField
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed
+     * @return mixed
      */
     public function buildInput($attrs)
     {
@@ -238,18 +238,18 @@ abstract class AbstractField
     }
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     abstract public function prepare(&$attrs);
 
     /**
-     * prepareAttributes
+     * prepareAttributes.
      *
-     * @return  array
+     * @return array
      */
     public function prepareAttributes()
     {
@@ -263,13 +263,13 @@ abstract class AbstractField
     }
 
     /**
-     * getLabel
+     * getLabel.
      *
-     * @return  string
+     * @return string
      */
     public function renderLabel()
     {
-        $attrs['id'] = $this->getAttribute('labelId', $this->getId() . '-label');
+        $attrs['id'] = $this->getAttribute('labelId', $this->getId().'-label');
         $attrs['class'] = $this->getAttribute('labelClass');
         $attrs['for'] = $this->getAttribute('for', $this->getId());
         $attrs['title'] = $this->getAttribute('description');
@@ -283,16 +283,16 @@ abstract class AbstractField
         $label = $this->getLabel();
 
         if ($this->required) {
-            $label = '<span class="windwalker-input-required-hint">*</span> ' . $label;
+            $label = '<span class="windwalker-input-required-hint">*</span> '.$label;
         }
 
         return (string) new HtmlElement('label', $label, $attrs);
     }
 
     /**
-     * renderView
+     * renderView.
      *
-     * @return  string
+     * @return string
      */
     public function renderView()
     {
@@ -300,7 +300,7 @@ abstract class AbstractField
     }
 
     /**
-     * render
+     * render.
      *
      * @param array $options
      *
@@ -308,8 +308,8 @@ abstract class AbstractField
      */
     public function render(array $options = [])
     {
-        $attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
-        $attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
+        $attrs['id'] = $this->getAttribute('controlId', $this->getId().'-control');
+        $attrs['class'] = $this->type.'-field '.$this->getAttribute('controlClass');
 
         $attrs = array_merge($attrs, (array) $this->getAttribute('controlAttribs'));
 
@@ -320,15 +320,15 @@ abstract class AbstractField
         $label = !empty($options['no_label']) ? '' : $this->renderLabel();
         $input = $this->renderInput();
 
-        return $this->wrapElements(new HtmlElement('div', $label . $input, $attrs));
+        return $this->wrapElements(new HtmlElement('div', $label.$input, $attrs));
     }
 
     /**
-     * wrapElements
+     * wrapElements.
      *
      * @param string $html
      *
-     * @return  string
+     * @return string
      *
      * @since  3.3.2
      */
@@ -348,9 +348,9 @@ abstract class AbstractField
     }
 
     /**
-     * getLabel
+     * getLabel.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getLabel()
     {
@@ -358,21 +358,21 @@ abstract class AbstractField
     }
 
     /**
-     * getId
+     * getId.
      *
-     * @return  string
+     * @return string
      */
     public function getId()
     {
-        $control = $this->control ? $this->control . '/' : '';
+        $control = $this->control ? $this->control.'/' : '';
 
-        return 'input-' . preg_replace('/[^A-Z0-9_]+/i', '-', $control . $this->getName(true));
+        return 'input-'.preg_replace('/[^A-Z0-9_]+/i', '-', $control.$this->getName(true));
     }
 
     /**
-     * validate
+     * validate.
      *
-     * @return  ValidateResult
+     * @return ValidateResult
      */
     public function validate()
     {
@@ -398,9 +398,9 @@ abstract class AbstractField
     }
 
     /**
-     * checkRequired
+     * checkRequired.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function checkRequired()
     {
@@ -418,9 +418,9 @@ abstract class AbstractField
     }
 
     /**
-     * checkRule
+     * checkRule.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function checkRule()
     {
@@ -428,9 +428,9 @@ abstract class AbstractField
     }
 
     /**
-     * filter
+     * filter.
      *
-     * @return  static
+     * @return static
      */
     public function filter()
     {
@@ -450,36 +450,36 @@ abstract class AbstractField
     }
 
     /**
-     * prepareStore
+     * prepareStore.
      *
-     * @return  void
+     * @return void
      */
     public function prepareStore()
     {
     }
 
     /**
-     * Method to get property Name
+     * Method to get property Name.
      *
      * @param bool $withGroup
      *
-     * @return  string
+     * @return string
      */
     public function getName($withGroup = false)
     {
         $group = $withGroup ? $this->getGroup() : '';
 
-        $group = $group ? $group . '/' : '';
+        $group = $group ? $group.'/' : '';
 
-        return $group . $this->name;
+        return $group.$this->name;
     }
 
     /**
-     * Method to set property name
+     * Method to set property name.
      *
-     * @param   null $name
+     * @param null $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setName($name)
     {
@@ -491,11 +491,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property FieldName
+     * Method to get property FieldName.
      *
      * @param bool $refresh
      *
-     * @return  string
+     * @return string
      */
     public function getFieldName($refresh = false)
     {
@@ -511,23 +511,23 @@ abstract class AbstractField
 
             $names = array_map(
                 function ($value) {
-                    return '[' . $value . ']';
+                    return '['.$value.']';
                 },
                 $names
             );
 
-            $this->fieldName = $control . implode('', $names);
+            $this->fieldName = $control.implode('', $names);
         }
 
         return $this->fieldName;
     }
 
     /**
-     * Method to set property fieldName
+     * Method to set property fieldName.
      *
-     * @param   null $fieldName
+     * @param null $fieldName
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFieldName($fieldName)
     {
@@ -537,9 +537,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Group
+     * Method to get property Group.
      *
-     * @return  null
+     * @return null
      */
     public function getGroup()
     {
@@ -547,11 +547,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property group
+     * Method to set property group.
      *
-     * @param   null $group
+     * @param null $group
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setGroup($group)
     {
@@ -565,9 +565,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Fieldset
+     * Method to get property Fieldset.
      *
-     * @return  null
+     * @return null
      */
     public function getFieldset()
     {
@@ -575,11 +575,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property fieldset
+     * Method to set property fieldset.
      *
-     * @param   null $fieldset
+     * @param null $fieldset
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFieldset($fieldset)
     {
@@ -589,9 +589,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Value
+     * Method to get property Value.
      *
-     * @return  null
+     * @return null
      */
     public function getValue()
     {
@@ -599,9 +599,9 @@ abstract class AbstractField
     }
 
     /**
-     * getRawValue
+     * getRawValue.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getRawValue()
     {
@@ -609,11 +609,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property value
+     * Method to set property value.
      *
-     * @param   null $value
+     * @param null $value
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setValue($value)
     {
@@ -623,11 +623,11 @@ abstract class AbstractField
     }
 
     /**
-     * description
+     * description.
      *
-     * @param   string $desc
+     * @param string $desc
      *
-     * @return  static
+     * @return static
      */
     public function description($desc)
     {
@@ -637,11 +637,11 @@ abstract class AbstractField
     }
 
     /**
-     * defaultValue
+     * defaultValue.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function defaultValue($value)
     {
@@ -651,9 +651,9 @@ abstract class AbstractField
     }
 
     /**
-     * getDefaultValue
+     * getDefaultValue.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getDefaultValue()
     {
@@ -661,12 +661,13 @@ abstract class AbstractField
     }
 
     /**
-     * addValidator
+     * addValidator.
      *
      * @param ValidatorInterface|callable $validator
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function addValidator($validator)
     {
@@ -680,12 +681,13 @@ abstract class AbstractField
     }
 
     /**
-     * addValidators
+     * addValidators.
      *
      * @param ValidatorInterface[]|callable[] $validators
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function addValidators(array $validators)
     {
@@ -701,12 +703,13 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property rule
+     * Method to set property rule.
      *
-     * @param   string|ValidatorInterface $validator
+     * @param string|ValidatorInterface $validator
      *
-     * @return  static  Return self to support chaining.
      * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      *
      * @deprecated  Use addValidator() instead.
      */
@@ -718,9 +721,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Rule
+     * Method to get property Rule.
      *
-     * @return  ValidatorInterface
+     * @return ValidatorInterface
      */
     public function getValidator()
     {
@@ -732,9 +735,9 @@ abstract class AbstractField
     }
 
     /**
-     * resetValidators
+     * resetValidators.
      *
-     * @return  static
+     * @return static
      */
     public function resetValidators()
     {
@@ -744,12 +747,13 @@ abstract class AbstractField
     }
 
     /**
-     * addFilter
+     * addFilter.
      *
-     * @param  FilterInterface|callable $filter
+     * @param FilterInterface|callable $filter
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function addFilter($filter)
     {
@@ -763,11 +767,11 @@ abstract class AbstractField
     }
 
     /**
-     * addFilters
+     * addFilters.
      *
      * @param FilterInterface[]|callable[] $filters
      *
-     * @return  static
+     * @return static
      */
     public function addFilters(array $filters)
     {
@@ -783,11 +787,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property filter
+     * Method to set property filter.
      *
-     * @param   string|FilterInterface|callable $filter
+     * @param string|FilterInterface|callable $filter
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @deprecated  Use addFilter() instead.
      */
@@ -799,9 +803,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Filter
+     * Method to get property Filter.
      *
-     * @return  string|FilterInterface|callable
+     * @return string|FilterInterface|callable
      */
     public function getFilter()
     {
@@ -813,9 +817,9 @@ abstract class AbstractField
     }
 
     /**
-     * resetFilters
+     * resetFilters.
      *
-     * @return  static
+     * @return static
      */
     public function resetFilters()
     {
@@ -825,11 +829,11 @@ abstract class AbstractField
     }
 
     /**
-     * handleXml
+     * handleXml.
      *
      * @param \SimpleXMLElement $xml
      *
-     * @return  void
+     * @return void
      */
     protected function handleXml(\SimpleXMLElement $xml)
     {
@@ -860,9 +864,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Control
+     * Method to get property Control.
      *
-     * @return  string
+     * @return string
      */
     public function getControl()
     {
@@ -870,11 +874,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property control
+     * Method to set property control.
      *
-     * @param   string $control
+     * @param string $control
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setControl($control)
     {
@@ -888,11 +892,11 @@ abstract class AbstractField
     }
 
     /**
-     * label
+     * label.
      *
      * @param string $label
      *
-     * @return  static
+     * @return static
      */
     public function label($label)
     {
@@ -902,11 +906,11 @@ abstract class AbstractField
     }
 
     /**
-     * required
+     * required.
      *
      * @param bool $value
      *
-     * @return  static
+     * @return static
      */
     public function required($value = true)
     {
@@ -918,11 +922,11 @@ abstract class AbstractField
     }
 
     /**
-     * disabled
+     * disabled.
      *
      * @param bool $value
      *
-     * @return  static
+     * @return static
      */
     public function disabled($value = true)
     {
@@ -932,11 +936,11 @@ abstract class AbstractField
     }
 
     /**
-     * readonly
+     * readonly.
      *
      * @param bool $value
      *
-     * @return  static
+     * @return static
      */
     public function readonly($value = true)
     {
@@ -946,11 +950,11 @@ abstract class AbstractField
     }
 
     /**
-     * class
+     * class.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      *
      * @deprecated  Use class() instead.
      */
@@ -962,12 +966,12 @@ abstract class AbstractField
     }
 
     /**
-     * addClassName
+     * addClassName.
      *
      * @param string $to
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      *
      * @TODO  Use Accessors and magic call to handle all attributes.
      */
@@ -981,7 +985,7 @@ abstract class AbstractField
     }
 
     /**
-     * removeClass
+     * removeClass.
      *
      * @param string       $from
      * @param string|array $value
@@ -1000,12 +1004,12 @@ abstract class AbstractField
     }
 
     /**
-     * getAttribute
+     * getAttribute.
      *
      * @param string $name
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getAttribute($name, $default = null)
     {
@@ -1013,12 +1017,12 @@ abstract class AbstractField
     }
 
     /**
-     * getAttribute
+     * getAttribute.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function setAttribute($name, $value)
     {
@@ -1041,12 +1045,12 @@ abstract class AbstractField
     }
 
     /**
-     * set
+     * set.
      *
      * @param string $attr
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function set($attr, $value)
     {
@@ -1056,12 +1060,12 @@ abstract class AbstractField
     }
 
     /**
-     * attr
+     * attr.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  static|mixed
+     * @return static|mixed
      */
     public function attr($name, $value = null)
     {
@@ -1079,12 +1083,12 @@ abstract class AbstractField
     }
 
     /**
-     * controlAttr
+     * controlAttr.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  static|mixed
+     * @return static|mixed
      */
     public function controlAttr($name, $value = null)
     {
@@ -1102,12 +1106,12 @@ abstract class AbstractField
     }
 
     /**
-     * labelAttr
+     * labelAttr.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  static|mixed
+     * @return static|mixed
      */
     public function labelAttr($name, $value = null)
     {
@@ -1125,31 +1129,31 @@ abstract class AbstractField
     }
 
     /**
-     * append
+     * append.
      *
      * @param string $attr
      * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function appendAttribute($attr, $value)
     {
-        $this->setAttribute($attr, trim($this->getAttribute($attr) . $value));
+        $this->setAttribute($attr, trim($this->getAttribute($attr).$value));
 
         return $this;
     }
 
     /**
-     * prependAttribute
+     * prependAttribute.
      *
      * @param string $attr
      * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function prependAttribute($attr, $value)
     {
-        $this->setAttribute($attr, trim($value . $this->getAttribute($attr)));
+        $this->setAttribute($attr, trim($value.$this->getAttribute($attr)));
 
         return $this;
     }
@@ -1190,7 +1194,7 @@ abstract class AbstractField
     /**
      * Get all attributes.
      *
-     * @return  array The return values of all attributes.
+     * @return array The return values of all attributes.
      */
     public function getAttributes()
     {
@@ -1203,7 +1207,7 @@ abstract class AbstractField
      * @param string $attr  The attribute name.
      * @param string $value The value to set as default.
      *
-     * @return  void
+     * @return void
      */
     public function def($attr, $value)
     {
@@ -1211,9 +1215,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  string
+     * @return string
      */
     public function getType()
     {
@@ -1221,11 +1225,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property type
+     * Method to set property type.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function type($type)
     {
@@ -1235,9 +1239,9 @@ abstract class AbstractField
     }
 
     /**
-     * Method to get property Form
+     * Method to get property Form.
      *
-     * @return  Form
+     * @return Form
      */
     public function getForm()
     {
@@ -1245,11 +1249,11 @@ abstract class AbstractField
     }
 
     /**
-     * Method to set property form
+     * Method to set property form.
      *
-     * @param   Form $form
+     * @param Form $form
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setForm($form)
     {
@@ -1261,9 +1265,9 @@ abstract class AbstractField
     /**
      * Escape html string.
      *
-     * @param   string $text
+     * @param string $text
      *
-     * @return  string
+     * @return string
      *
      * @since  2.1.9
      */
@@ -1273,9 +1277,9 @@ abstract class AbstractField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */
@@ -1285,16 +1289,16 @@ abstract class AbstractField
             'class',
             'labelClass',
             'controlClass',
-            'wraps'
+            'wraps',
         ];
     }
 
     /**
-     * wrap
+     * wrap.
      *
      * @param HtmlElement $element
      *
-     * @return  static
+     * @return static
      *
      * @since  3.3.2
      */
@@ -1306,14 +1310,14 @@ abstract class AbstractField
     }
 
     /**
-     * __call
+     * __call.
      *
-     * @param   string $method
-     * @param   array  $args
-     *
-     * @return  mixed
+     * @param string $method
+     * @param array  $args
      *
      * @throws \BadMethodCallException
+     *
+     * @return mixed
      */
     public function __call($method, $args)
     {

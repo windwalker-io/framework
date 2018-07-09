@@ -33,8 +33,8 @@ class AbstractSessionHandlerTestCase extends AbstractSessionTestCase
 
         $this->options = [
             'expire_time' => 20,
-            'force_ssl' => true,
-            'security' => 'security',
+            'force_ssl'   => true,
+            'security'    => 'security',
         ];
 
         parent::setUp();

@@ -26,21 +26,21 @@ class ListField extends AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'list';
 
     /**
      * Property options.
      *
-     * @var  Option[]
+     * @var Option[]
      */
     protected $options = [];
 
     /**
      * Property currentGroup.
      *
-     * @var  string
+     * @var string
      */
     protected $currentGroup;
 
@@ -66,11 +66,11 @@ class ListField extends AbstractField
     }
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     public function prepare(&$attrs)
     {
@@ -86,9 +86,9 @@ class ListField extends AbstractField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */
@@ -97,7 +97,7 @@ class ListField extends AbstractField
         return array_merge(
             parent::getAccessors(),
             [
-                'size' => 'size',
+                'size'     => 'size',
                 'onchange' => 'onchange',
                 'multiple' => 'multiple',
             ]
@@ -105,11 +105,11 @@ class ListField extends AbstractField
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed|void
+     * @return mixed|void
      */
     public function buildInput($attrs)
     {
@@ -119,9 +119,9 @@ class ListField extends AbstractField
     }
 
     /**
-     * getOptions
+     * getOptions.
      *
-     * @return  array|Option[]
+     * @return array|Option[]
      */
     public function getOptions()
     {
@@ -129,11 +129,11 @@ class ListField extends AbstractField
     }
 
     /**
-     * setOptions
+     * setOptions.
      *
      * @param array|Option[] $options
      *
-     * @return  static
+     * @return static
      */
     public function setOptions($options, $group = null)
     {
@@ -147,12 +147,12 @@ class ListField extends AbstractField
     }
 
     /**
-     * addOption
+     * addOption.
      *
      * @param Option $option
      * @param string $group
      *
-     * @return  static
+     * @return static
      */
     public function addOption(Option $option, $group = null)
     {
@@ -168,7 +168,7 @@ class ListField extends AbstractField
     }
 
     /**
-     * option
+     * option.
      *
      * @param string $text
      * @param string $value
@@ -185,12 +185,12 @@ class ListField extends AbstractField
     }
 
     /**
-     * optionGroup
+     * optionGroup.
      *
      * @param string   $name
      * @param \Closure $callback
      *
-     * @return  static
+     * @return static
      */
     public function group($name, \Closure $callback)
     {
@@ -204,9 +204,9 @@ class ListField extends AbstractField
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @return  array|Option[]
+     * @return array|Option[]
      */
     protected function prepareOptions()
     {
@@ -214,13 +214,14 @@ class ListField extends AbstractField
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
      * @param string|\SimpleXMLElement $xml
      * @param Option[]                 $options
      *
      * @throws \InvalidArgumentException
-     * @return  void
+     *
+     * @return void
      */
     protected function handleOptions($xml, $options = [])
     {
@@ -283,9 +284,9 @@ class ListField extends AbstractField
     }
 
     /**
-     * getValue
+     * getValue.
      *
-     * @return  array
+     * @return array
      */
     public function getValue()
     {

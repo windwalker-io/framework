@@ -28,7 +28,7 @@ class StubApplication extends AbstractApplication
      * Method to run the application routines.  Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -40,9 +40,9 @@ class StubApplication extends AbstractApplication
     /**
      * Method to close the application.
      *
-     * @param   integer|string $message The exit code (optional; default is 0).
+     * @param int|string $message The exit code (optional; default is 0).
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */

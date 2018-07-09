@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Compare\Test;
 use Windwalker\Compare\Compare;
 
 /**
- * Test class of Compare
+ * Test class of Compare.
  *
  * @since 2.0
  */
@@ -160,7 +160,7 @@ class CompareTest extends \PHPUnit\Framework\TestCase
     {
         $this->instance->setHandler(
             function ($compare1, $compare2, $operator) {
-                return strtoupper($compare1 . ' ' . $operator . ' ' . $compare2);
+                return strtoupper($compare1.' '.$operator.' '.$compare2);
             }
         );
 
@@ -171,7 +171,7 @@ class CompareTest extends \PHPUnit\Framework\TestCase
         $this->instance->setHandler(
             function ($compare1, $compare2, $operator, $quote1, $quote2) use ($self) {
                 return strtoupper(
-                    $self->quote($compare1, $quote1) . ' ' . $operator . ' ' . $self->quote($compare2, $quote2)
+                    $self->quote($compare1, $quote1).' '.$operator.' '.$self->quote($compare2, $quote2)
                 );
             }
         );

@@ -11,7 +11,7 @@ namespace Windwalker\Dom;
 use Windwalker\Dom\Builder\DomBuilder;
 
 /**
- * Class XmlElement
+ * Class XmlElement.
  *
  * @since 2.0
  */
@@ -20,26 +20,26 @@ class DomElement implements \ArrayAccess
     /**
      * Element tag name.
      *
-     * @var  string
+     * @var string
      */
     protected $name;
 
     /**
      * Element attributes.
      *
-     * @var  array
+     * @var array
      */
     protected $attribs;
 
     /**
      * Element content.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $content;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $name    Element tag name.
      * @param mixed  $content Element content.
@@ -57,11 +57,11 @@ class DomElement implements \ArrayAccess
     }
 
     /**
-     * toString
+     * toString.
      *
-     * @param boolean $forcePair
+     * @param bool $forcePair
      *
-     * @return  string
+     * @return string
      */
     public function toString($forcePair = false)
     {
@@ -69,11 +69,11 @@ class DomElement implements \ArrayAccess
     }
 
     /**
-     * Alias of toString()
+     * Alias of toString().
      *
-     * @param boolean $forcePair
+     * @param bool $forcePair
      *
-     * @return  string
+     * @return string
      */
     public function render($forcePair = false)
     {
@@ -83,7 +83,7 @@ class DomElement implements \ArrayAccess
     /**
      * Convert this object to string.
      *
-     * @return  string
+     * @return string
      */
     public function __toString()
     {
@@ -99,7 +99,7 @@ class DomElement implements \ArrayAccess
     /**
      * Get content.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getContent()
     {
@@ -109,9 +109,9 @@ class DomElement implements \ArrayAccess
     /**
      * Set content.
      *
-     * @param   mixed $content Element content.
+     * @param mixed $content Element content.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setContent($content)
     {
@@ -126,7 +126,7 @@ class DomElement implements \ArrayAccess
      * @param string $name    Attribute name.
      * @param mixed  $default Default value.
      *
-     * @return  string The attribute value.
+     * @return string The attribute value.
      */
     public function getAttribute($name, $default = null)
     {
@@ -143,7 +143,7 @@ class DomElement implements \ArrayAccess
      * @param string $name  Attribute name.
      * @param string $value The value to set into attribute.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setAttribute($name, $value)
     {
@@ -155,7 +155,7 @@ class DomElement implements \ArrayAccess
     /**
      * Get all attributes.
      *
-     * @return  array All attributes.
+     * @return array All attributes.
      */
     public function getAttributes()
     {
@@ -165,9 +165,9 @@ class DomElement implements \ArrayAccess
     /**
      * Set all attributes.
      *
-     * @param   array $attribs All attributes.
+     * @param array $attribs All attributes.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setAttributes($attribs)
     {
@@ -179,7 +179,7 @@ class DomElement implements \ArrayAccess
     /**
      * Get element tag name.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -189,9 +189,9 @@ class DomElement implements \ArrayAccess
     /**
      * Set element tag name.
      *
-     * @param   string $name Set element tag name.
+     * @param string $name Set element tag name.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setName($name)
     {
@@ -201,12 +201,12 @@ class DomElement implements \ArrayAccess
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
      *
      * @param mixed $offset An offset to check for.
      *
-     * @return boolean True on success or false on failure.
-     *                 The return value will be casted to boolean if non-boolean was returned.
+     * @return bool True on success or false on failure.
+     *              The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists($offset)
     {
@@ -214,7 +214,7 @@ class DomElement implements \ArrayAccess
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
      *
      * @param mixed $offset The offset to retrieve.
      *
@@ -223,14 +223,14 @@ class DomElement implements \ArrayAccess
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            return null;
+            return;
         }
 
         return $this->attribs[$offset];
     }
 
     /**
-     * Offset to set
+     * Offset to set.
      *
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value  The value to set.
@@ -243,7 +243,7 @@ class DomElement implements \ArrayAccess
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
      *
      * @param mixed $offset The offset to unset.
      *

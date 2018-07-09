@@ -18,21 +18,21 @@ abstract class GlobalContainer
     /**
      * Property compilers.
      *
-     * @var  callable[]
+     * @var callable[]
      */
     protected static $compilers = [];
 
     /**
      * Property extensions.
      *
-     * @var  array
+     * @var array
      */
     protected static $extensions = [];
 
     /**
      * Property cachePath.
      *
-     * @var  string
+     * @var string
      */
     protected static $cachePath;
 
@@ -58,12 +58,12 @@ abstract class GlobalContainer
     protected static $escapedTags = [];
 
     /**
-     * addCompiler
+     * addCompiler.
      *
      * @param string   $name
      * @param callable $compiler
      *
-     * @return  void
+     * @return void
      */
     public static function addCompiler($name, $compiler)
     {
@@ -75,27 +75,25 @@ abstract class GlobalContainer
     }
 
     /**
-     * getCompiler
+     * getCompiler.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  callable
+     * @return callable
      */
     public static function getCompiler($name)
     {
         if (!empty(static::$compilers[$name])) {
             return static::$compilers[$name];
         }
-
-        return null;
     }
 
     /**
-     * removeCompiler
+     * removeCompiler.
      *
      * @param string $name
      *
-     * @return  void
+     * @return void
      */
     public static function removeCompiler($name)
     {
@@ -105,9 +103,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property Compilers
+     * Method to get property Compilers.
      *
-     * @return  callable[]
+     * @return callable[]
      */
     public static function getCompilers()
     {
@@ -115,11 +113,11 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   callable[] $compilers
+     * @param callable[] $compilers
      *
-     * @return  void
+     * @return void
      */
     public static function setCompilers(array $compilers)
     {
@@ -127,12 +125,12 @@ abstract class GlobalContainer
     }
 
     /**
-     * addExtension
+     * addExtension.
      *
      * @param string   $name
      * @param callable $extension
      *
-     * @return  void
+     * @return void
      */
     public static function addExtension($name, $extension)
     {
@@ -144,27 +142,25 @@ abstract class GlobalContainer
     }
 
     /**
-     * getExtension
+     * getExtension.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  callable
+     * @return callable
      */
     public static function getExtension($name)
     {
         if (!empty(static::$extensions[$name])) {
             return static::$extensions[$name];
         }
-
-        return null;
     }
 
     /**
-     * removeExtension
+     * removeExtension.
      *
      * @param string $name
      *
-     * @return  void
+     * @return void
      */
     public static function removeExtension($name)
     {
@@ -174,9 +170,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property Extensions
+     * Method to get property Extensions.
      *
-     * @return  array
+     * @return array
      */
     public static function getExtensions()
     {
@@ -184,11 +180,11 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   array $extensions
+     * @param array $extensions
      *
-     * @return  void
+     * @return void
      */
     public static function setExtensions($extensions)
     {
@@ -196,9 +192,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property CachePath
+     * Method to get property CachePath.
      *
-     * @return  string
+     * @return string
      */
     public static function getCachePath()
     {
@@ -206,11 +202,11 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property cachePath
+     * Method to set property cachePath.
      *
-     * @param   string $cachePath
+     * @param string $cachePath
      *
-     * @return  void
+     * @return void
      */
     public static function setCachePath($cachePath)
     {
@@ -218,9 +214,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property RawTags
+     * Method to get property RawTags.
      *
-     * @return  array
+     * @return array
      */
     public static function getRawTags()
     {
@@ -228,7 +224,7 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property rawTags
+     * Method to set property rawTags.
      *
      * @param string $start
      * @param string $end
@@ -239,9 +235,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property ContentTags
+     * Method to get property ContentTags.
      *
-     * @return  array
+     * @return array
      */
     public static function getContentTags()
     {
@@ -249,7 +245,7 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property contentTags
+     * Method to set property contentTags.
      *
      * @param string $start
      * @param string $end
@@ -260,9 +256,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property EscapedTags
+     * Method to get property EscapedTags.
      *
-     * @return  array
+     * @return array
      */
     public static function getEscapedTags()
     {
@@ -270,7 +266,7 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property escapedTags
+     * Method to set property escapedTags.
      *
      * @param string $start
      * @param string $end

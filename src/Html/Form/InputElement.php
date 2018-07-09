@@ -18,7 +18,7 @@ use Windwalker\Dom\HtmlElement;
 class InputElement extends HtmlElement
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $type
      * @param string $name

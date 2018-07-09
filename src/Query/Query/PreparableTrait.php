@@ -9,7 +9,7 @@
 namespace Windwalker\Query\Query;
 
 /**
- * Class PreparableTrait
+ * Class PreparableTrait.
  *
  * @since 2.0
  */
@@ -18,7 +18,8 @@ trait PreparableTrait
     /**
      * Holds key / value pair of bound objects.
      *
-     * @var    mixed
+     * @var mixed
+     *
      * @since  2.0
      */
     protected $bounded = [];
@@ -28,16 +29,16 @@ trait PreparableTrait
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param   string|integer $key             The key that will be used in your SQL query to reference the value.
-     *                                          Usually of the form ':key', but can also be an integer.
-     * @param   mixed          &$value          The value that will be bound. The value is passed by reference to
-     *                                          support output parameters such as those possible with stored
-     *                                          procedures.
-     * @param   integer        $dataType        Constant corresponding to a SQL datatype.
-     * @param   integer        $length          The length of the variable. Usually required for OUTPUT parameters.
-     * @param   array          $driverOptions   Optional driver options to be used.
+     * @param string|int $key           The key that will be used in your SQL query to reference the value.
+     *                                  Usually of the form ':key', but can also be an integer.
+     * @param mixed      &$value        The value that will be bound. The value is passed by reference to
+     *                                  support output parameters such as those possible with stored
+     *                                  procedures.
+     * @param int        $dataType      Constant corresponding to a SQL datatype.
+     * @param int        $length        The length of the variable. Usually required for OUTPUT parameters.
+     * @param array      $driverOptions Optional driver options to be used.
      *
-     * @return  static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -76,9 +77,9 @@ trait PreparableTrait
      * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then
      * that item is returned.
      *
-     * @param   mixed $key The bounded variable key to retrieve.
+     * @param mixed $key The bounded variable key to retrieve.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -91,7 +92,5 @@ trait PreparableTrait
                 return $this->bounded[$key];
             }
         }
-
-        return null;
     }
 }

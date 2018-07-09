@@ -34,12 +34,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Bind the data into this object.
      *
-     * @param   mixed   $values       The data array or object.
-     * @param   boolean $replaceNulls Replace null or not.
-     *
-     * @return  static Return self to support chaining.
+     * @param mixed $values       The data array or object.
+     * @param bool  $replaceNulls Replace null or not.
      *
      * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      */
     public function bind($values, $replaceNulls = false)
     {
@@ -84,8 +84,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *        use (array) to convert object to array. This action will make protected property contains in array
      *        and start with \0 of property name. Use `get_object_vars()` instead.
      *
-     * @throws  \InvalidArgumentException
-     * @return  static Return self to support chaining.
+     * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      */
     public function set($field, $value = null)
     {
@@ -104,8 +105,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      * @param string $field   The field to get.
      * @param mixed  $default The default value if not exists.
      *
-     * @throws  \InvalidArgumentException
-     * @return  mixed The value we want ot get.
+     * @throws \InvalidArgumentException
+     *
+     * @return mixed The value we want ot get.
      */
     public function get($field, $default = null)
     {
@@ -121,7 +123,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *
      * @param string $field The field name to check.
      *
-     * @return  boolean True if exists.
+     * @return bool True if exists.
      */
     public function exists($field)
     {
@@ -139,8 +141,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      * @param string $field The field to set.
      * @param mixed  $value The value to set.
      *
-     * @return  void
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function __set($field, $value = null)
     {
@@ -148,11 +151,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * __isset
+     * __isset.
      *
-     * @param   string $field
+     * @param string $field
      *
-     * @return  boolean
+     * @return bool
      */
     public function __isset($field)
     {
@@ -164,7 +167,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *
      * @param string $field The field to get.
      *
-     * @return  mixed The value we want ot get.
+     * @return mixed The value we want ot get.
      */
     public function __get($field)
     {
@@ -172,11 +175,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * __unset
+     * __unset.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  void
+     * @return void
      */
     public function __unset($name)
     {
@@ -184,7 +187,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable An instance of an object implementing Iterator or Traversable
      */
@@ -198,7 +201,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *
      * @param mixed $offset Offset key.
      *
-     * @return  boolean
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -210,8 +213,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *
      * @param mixed $offset Offset key.
      *
-     * @throws  \InvalidArgumentException
-     * @return  mixed The value to return.
+     * @throws \InvalidArgumentException
+     *
+     * @return mixed The value to return.
      */
     public function offsetGet($offset)
     {
@@ -224,8 +228,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      * @param mixed $offset Offset key.
      * @param mixed $value  The value to set.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetSet($offset, $value)
     {
@@ -237,8 +242,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *
      * @param mixed $offset Offset key to unset.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetUnset($offset)
     {
@@ -253,7 +259,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Count this object.
      *
-     * @return  int
+     * @return int
      */
     public function count()
     {
@@ -263,7 +269,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Is this object empty?
      *
-     * @return  boolean
+     * @return bool
      */
     public function isNull()
     {
@@ -273,7 +279,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Is this object has properties?
      *
-     * @return  boolean
+     * @return bool
      */
     public function notNull()
     {
@@ -281,9 +287,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * Dump all data as array
+     * Dump all data as array.
      *
-     * @return  array
+     * @return array
      */
     public function dump()
     {
@@ -293,9 +299,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Mapping all elements and return new instance.
      *
-     * @param   callable $callback Callback to handle every element.
+     * @param callable $callback Callback to handle every element.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   3.1.3
      */
@@ -307,10 +313,10 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Apply a user supplied function to every member of this object.
      *
-     * @param   callable $callback Callback to handle every element.
-     * @param   mixed    $userdata This will be passed as the third parameter to the callback.
+     * @param callable $callback Callback to handle every element.
+     * @param mixed    $userdata This will be passed as the third parameter to the callback.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -326,9 +332,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * keys
+     * keys.
      *
-     * @return  array
+     * @return array
      */
     public function keys()
     {
@@ -336,11 +342,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * diff
+     * diff.
      *
      * @param array|DataInterface $array
      *
-     * @return  array
+     * @return array
      */
     public function diff($array)
     {
@@ -350,11 +356,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * diffKeys
+     * diffKeys.
      *
      * @param array|DataInterface $array
      *
-     * @return  array
+     * @return array
      */
     public function diffKeys($array)
     {
@@ -364,11 +370,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * intersect
+     * intersect.
      *
      * @param array|DataInterface $array
      *
-     * @return  array
+     * @return array
      */
     public function intersect($array)
     {
@@ -378,11 +384,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * intersectKeys
+     * intersectKeys.
      *
      * @param array|DataInterface $array
      *
-     * @return  array
+     * @return array
      */
     public function intersectKeys($array)
     {
@@ -392,11 +398,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * remove
+     * remove.
      *
      * @param array|string $fields
      *
-     * @return  static
+     * @return static
      */
     public function except($fields)
     {
@@ -412,12 +418,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * only
+     * only.
      *
      * @param array|string $fields
      *
-     *
-     * @return  static
+     * @return static
      */
     public function only($fields)
     {
@@ -437,9 +442,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * sum
+     * sum.
      *
-     * @return  float|int
+     * @return float|int
      */
     public function sum()
     {
@@ -447,9 +452,9 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * avg
+     * avg.
      *
-     * @return  float|int
+     * @return float|int
      */
     public function avg()
     {
@@ -457,12 +462,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
-     * contains
+     * contains.
      *
      * @param mixed $value
      * @param bool  $strict
      *
-     * @return  bool
+     * @return bool
      */
     public function contains($value, $strict = false)
     {
@@ -472,7 +477,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * Clone this object.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0.9
      */

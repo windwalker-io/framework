@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Validator\Rule\CallbackValidator;
 
 /**
- * Test class of \Windwalker\Validator\Rule\CallbackValidator
+ * Test class of \Windwalker\Validator\Rule\CallbackValidator.
  *
  * @since 3.2
  */

@@ -8,7 +8,6 @@
 
 namespace Windwalker\Queue\Driver;
 
-use Windwalker\DateTime\Chronos;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -21,7 +20,7 @@ class PdoQueueDriver implements QueueDriverInterface
     /**
      * Property db.
      *
-     * @var  \PDO
+     * @var \PDO
      */
     protected $pdo;
 
@@ -35,14 +34,14 @@ class PdoQueueDriver implements QueueDriverInterface
     /**
      * Property queue.
      *
-     * @var  string
+     * @var string
      */
     protected $queue;
 
     /**
      * Property timeout.
      *
-     * @var  int
+     * @var int
      */
     protected $timeout;
 
@@ -63,28 +62,29 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
-     * @return int|string
      * @throws \Exception
+     *
+     * @return int|string
      */
     public function push(QueueMessage $message)
     {
         $time = new \DateTimeImmutable('now');
 
         $data = [
-            ':queue' => $message->getQueueName() ?: $this->queue,
-            ':body' => json_encode($message),
-            ':attempts' => 0,
-            ':created' => $time->format('Y-m-d H:i:s'),
+            ':queue'      => $message->getQueueName() ?: $this->queue,
+            ':body'       => json_encode($message),
+            ':attempts'   => 0,
+            ':created'    => $time->format('Y-m-d H:i:s'),
             ':visibility' => $time->modify(sprintf('+%dseconds', $message->getDelay()))->format('Y-m-d H:i:s'),
-            ':reserved' => null,
+            ':reserved'   => null,
         ];
 
-        $sql = 'INSERT INTO ' . $this->table .
-            ' (queue, body, attempts, created, visibility, reserved)' .
+        $sql = 'INSERT INTO '.$this->table.
+            ' (queue, body, attempts, created, visibility, reserved)'.
             ' VALUES (:queue, :body, :attempts, :created, :visibility, :reserved)';
 
         $this->pdo->prepare($sql)->execute($data);
@@ -93,14 +93,15 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
-     * @return QueueMessage
      * @throws \Exception
      * @throws \InvalidArgumentException
      * @throws \Throwable
+     *
+     * @return QueueMessage
      */
     public function pop($queue = null)
     {
@@ -108,9 +109,9 @@ class PdoQueueDriver implements QueueDriverInterface
 
         $now = new \DateTimeImmutable('now');
 
-        $sql = 'SELECT * FROM ' . $this->table .
-            ' WHERE queue = :queue AND visibility < :visibility' .
-            ' AND (reserved IS NULL OR reserved < :reserved)' .
+        $sql = 'SELECT * FROM '.$this->table.
+            ' WHERE queue = :queue AND visibility < :visibility'.
+            ' AND (reserved IS NULL OR reserved < :reserved)'.
             ' FOR UPDATE';
 
         $this->pdo->beginTransaction();
@@ -120,7 +121,7 @@ class PdoQueueDriver implements QueueDriverInterface
         $stat->bindValue(':visibility', $now->format('Y-m-d H:i:s'), \PDO::PARAM_STR);
         $stat->bindValue(
             ':reserved',
-            $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'),
+            $now->modify('-'.$this->timeout.'seconds')->format('Y-m-d H:i:s'),
             \PDO::PARAM_STR
         );
 
@@ -132,12 +133,12 @@ class PdoQueueDriver implements QueueDriverInterface
             if (!$data) {
                 $this->pdo->commit();
 
-                return null;
+                return;
             }
 
             $data['attempts']++;
 
-            $sql = 'UPDATE ' . $this->table . ' SET reserved = :reserved, attempts = :attempts WHERE id = :id';
+            $sql = 'UPDATE '.$this->table.' SET reserved = :reserved, attempts = :attempts WHERE id = :id';
 
             $stat = $this->pdo->prepare($sql);
             $stat->bindValue(':reserved', $now->format('Y-m-d H:i:s'));
@@ -149,9 +150,11 @@ class PdoQueueDriver implements QueueDriverInterface
             $this->pdo->commit();
         } catch (\Exception $e) {
             $this->pdo->rollBack();
+
             throw $e;
         } catch (\Throwable $t) {
             $this->pdo->rollBack();
+
             throw $t;
         }
 
@@ -167,7 +170,7 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -177,7 +180,7 @@ class PdoQueueDriver implements QueueDriverInterface
     {
         $queue = $message->getQueueName() ?: $this->queue;
 
-        $sql = 'DELETE FROM ' . $this->table .
+        $sql = 'DELETE FROM '.$this->table.
             ' WHERE id = :id AND queue = :queue';
 
         $stat = $this->pdo->prepare($sql);
@@ -190,29 +193,30 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *
-     * @return static
      * @throws \Exception
+     *
+     * @return static
      */
     public function release(QueueMessage $message)
     {
         $queue = $message->getQueueName() ?: $this->queue;
 
         $time = new \DateTimeImmutable('now');
-        $time = $time->modify('+' . $message->getDelay() . 'seconds');
+        $time = $time->modify('+'.$message->getDelay().'seconds');
 
         $values = [
-            'id' => $message->getId(),
-            'queue' => $queue,
-            'reserved' => null,
+            'id'         => $message->getId(),
+            'queue'      => $queue,
+            'reserved'   => null,
             'visibility' => $time->format('Y-m-d H:i:s'),
         ];
 
-        $sql = 'UPDATE ' . $this->table .
-            ' SET reserved = :reserved, visibility = :visibility' .
+        $sql = 'UPDATE '.$this->table.
+            ' SET reserved = :reserved, visibility = :visibility'.
             ' WHERE id = :id AND queue = :queue';
 
         $stat = $this->pdo->prepare($sql);
@@ -223,9 +227,9 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * Method to get property Table
+     * Method to get property Table.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getTable()
     {
@@ -233,11 +237,11 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   mixed $table
+     * @param mixed $table
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTable($table)
     {
@@ -247,9 +251,9 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @return  \PDO
+     * @return \PDO
      */
     public function getPdo()
     {
@@ -257,11 +261,11 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   \PDO $pdo
+     * @param \PDO $pdo
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPdo(\PDO $pdo)
     {
@@ -273,7 +277,7 @@ class PdoQueueDriver implements QueueDriverInterface
     /**
      * Reconnect database to avoid long connect issues.
      *
-     * @return  static
+     * @return static
      */
     public function reconnect()
     {

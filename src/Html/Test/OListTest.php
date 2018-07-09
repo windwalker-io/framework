@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Html\Enum\ListItem;
 use Windwalker\Html\Enum\OList;
 
 /**
- * Test class of OList
+ * Test class of OList.
  *
  * @since 2.1
  */
@@ -47,9 +47,9 @@ class OListTest extends AbstractDomTestCase
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateList()
     {
@@ -69,7 +69,7 @@ class OListTest extends AbstractDomTestCase
 
         $list = new OList($items);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <ol>
 	<li>Remember, with great power, comes great responsibility</li>
 	<li>Life was like a box of chocolates.</li>
@@ -94,7 +94,7 @@ HTML;
         $list->addItem(new ListItem('123'))
             ->addItem('ABC');
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <ol>
 	<li>123</li>
 	<li>ABC</li>
@@ -105,9 +105,9 @@ HTML;
     }
 
     /**
-     * testSetItems
+     * testSetItems.
      *
-     * @return  void
+     * @return void
      */
     public function testSetItems()
     {
@@ -120,7 +120,7 @@ HTML;
         $list = new OList();
         $list->setItems($items);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <ol>
 	<li>Remember, with great power, comes great responsibility</li>
 	<li>Life was like a box of chocolates.</li>

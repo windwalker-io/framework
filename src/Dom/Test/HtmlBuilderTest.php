@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,16 +12,16 @@ use Windwalker\Dom\Builder\HtmlBuilder;
 use Windwalker\Dom\Helper\DomHelper;
 
 /**
- * Test class of HtmlBuilder
+ * Test class of HtmlBuilder.
  *
  * @since 2.0
  */
 class HtmlBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * domTestCase
+     * domTestCase.
      *
-     * @return  array
+     * @return array
      */
     public function domTestCase()
     {
@@ -58,7 +58,7 @@ class HtmlBuilderTest extends \PHPUnit\Framework\TestCase
 				</ul>',
                 'ul',
                 HtmlBuilder::create('option', 'Yes', ['value' => 1])
-                . HtmlBuilder::create('option', 'No', ['value' => 0]),
+                .HtmlBuilder::create('option', 'No', ['value' => 0]),
                 ['id' => 'foo', 'class' => 'bar'],
                 false,
             ],
@@ -100,12 +100,12 @@ class HtmlBuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test create().
      *
-     * @param string  $name
-     * @param string  $expect
-     * @param string  $tag
-     * @param string  $content
-     * @param array   $attribs
-     * @param boolean $forcePaired
+     * @param string $name
+     * @param string $expect
+     * @param string $tag
+     * @param string $content
+     * @param array  $attribs
+     * @param bool   $forcePaired
      *
      * @return void
      *
@@ -118,26 +118,26 @@ class HtmlBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             DomHelper::minify($expect),
             DomHelper::minify(HtmlBuilder::create($tag, $content, $attribs, $forcePaired)),
-            'Dom build case fail: ' . $name
+            'Dom build case fail: '.$name
         );
     }
 
     /**
-     * testPrepareAttributes
+     * testPrepareAttributes.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Dom\Builder\HtmlBuilder::buildAttributes
      */
     public function testBuildAttributes()
     {
         $attrs = [
-            'foo' => 'bar',
-            'data' => true,
-            'bar' => false,
-            'empty' => '',
+            'foo'      => 'bar',
+            'data'     => true,
+            'bar'      => false,
+            'empty'    => '',
             'selected' => true,
-            'checked' => false,
+            'checked'  => false,
         ];
 
         $this->assertEquals(' foo="bar" data empty="" selected="selected"', HtmlBuilder::buildAttributes($attrs));

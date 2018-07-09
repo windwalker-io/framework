@@ -18,21 +18,21 @@ class PhpFileSerializer implements SerializerInterface
     /**
      * Encode data.
      *
-     * @param   mixed $data
+     * @param mixed $data
      *
-     * @return  string
+     * @return string
      */
     public function serialize($data)
     {
-        return "<?php \n\nreturn " . var_export($data, true) . ';';
+        return "<?php \n\nreturn ".var_export($data, true).';';
     }
 
     /**
      * Decode data.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  mixed
+     * @return mixed
      */
     public function unserialize($data)
     {

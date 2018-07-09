@@ -18,9 +18,9 @@ interface DescriptorInterface
     /**
      * Add an item to describe.
      *
-     * @param   mixed $item The item you want to describe.
+     * @param mixed $item The item you want to describe.
      *
-     * @return  DescriptorInterface  Return this object to support chaining.
+     * @return DescriptorInterface Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -29,7 +29,7 @@ interface DescriptorInterface
     /**
      * Render all items description.
      *
-     * @return  string  Rendered result.
+     * @return string Rendered result.
      *
      * @since   2.0
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project.  @codingStandardsIgnoreStart
+ * Part of Windwalker project.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -18,9 +18,10 @@ use Windwalker\Uri\Uri;
 class UriTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Object under test
+     * Object under test.
      *
-     * @var    Uri
+     * @var Uri
+     *
      * @since  2.0
      */
     protected $object;
@@ -29,7 +30,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -41,7 +42,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the __toString method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::__toString
@@ -57,7 +58,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the parse method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::parse
@@ -88,7 +89,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the toString method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::toString
@@ -121,7 +122,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setVar method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setVar
@@ -139,7 +140,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the hasVar method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::hasVar
@@ -160,7 +161,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getVar method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getVar
@@ -186,7 +187,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the delVar method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::delVar
@@ -209,7 +210,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setQuery method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setQuery
@@ -241,7 +242,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getQuery method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getQuery
@@ -262,7 +263,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getScheme method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getScheme
@@ -278,7 +279,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setScheme method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setScheme
@@ -296,7 +297,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getUser method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getUser
@@ -312,7 +313,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setUser method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setUser
@@ -330,7 +331,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getPass method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getPass
@@ -346,7 +347,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setPass method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setPass
@@ -364,7 +365,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getHost method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getHost
@@ -380,7 +381,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setHost method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setHost
@@ -398,7 +399,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getPort method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getPort
@@ -414,7 +415,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setPort method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setPort
@@ -432,7 +433,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getPath method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getPath
@@ -448,7 +449,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setPath method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setPath
@@ -466,7 +467,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getFragment method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::getFragment
@@ -482,7 +483,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setFragment method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::setFragment
@@ -500,7 +501,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the isSSL method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @covers  \Windwalker\Uri\Uri::isSSL

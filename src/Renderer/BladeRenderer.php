@@ -28,7 +28,7 @@ class BladeRenderer extends AbstractEngineRenderer
     /**
      * Property blade.
      *
-     * @var  BladeEnvironment
+     * @var BladeEnvironment
      */
     protected $engine = null;
 
@@ -70,17 +70,17 @@ class BladeRenderer extends AbstractEngineRenderer
     /**
      * Property customCompiler.
      *
-     * @var  callable[]
+     * @var callable[]
      */
     protected $customCompilers = [];
 
     /**
-     * render
+     * render.
      *
      * @param string $file
      * @param array  $data
      *
-     * @return  string
+     * @return string
      */
     public function render($file, $data = [])
     {
@@ -96,11 +96,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Blade
+     * Method to get property Blade.
      *
      * @param bool $new
      *
-     * @return  BladeEnvironment
+     * @return BladeEnvironment
      */
     public function getEngine($new = false)
     {
@@ -140,11 +140,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property blade
+     * Method to set property blade.
      *
-     * @param   BladeEnvironment $blade
+     * @param BladeEnvironment $blade
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setEngine($blade)
     {
@@ -158,9 +158,9 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Filesystem
+     * Method to get property Filesystem.
      *
-     * @return  Filesystem
+     * @return Filesystem
      */
     public function getFilesystem()
     {
@@ -172,11 +172,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property filesystem
+     * Method to set property filesystem.
      *
-     * @param   Filesystem $filesystem
+     * @param Filesystem $filesystem
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFilesystem($filesystem)
     {
@@ -186,9 +186,9 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Finder
+     * Method to get property Finder.
      *
-     * @return  FileViewFinder
+     * @return FileViewFinder
      */
     public function getFinder()
     {
@@ -200,11 +200,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property finder
+     * Method to set property finder.
      *
-     * @param   FileViewFinder $finder
+     * @param FileViewFinder $finder
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFinder($finder)
     {
@@ -214,9 +214,9 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Resolver
+     * Method to get property Resolver.
      *
-     * @return  EngineResolver
+     * @return EngineResolver
      */
     public function getResolver()
     {
@@ -237,11 +237,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property resolver
+     * Method to set property resolver.
      *
-     * @param   EngineResolver $resolver
+     * @param EngineResolver $resolver
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setResolver($resolver)
     {
@@ -251,9 +251,9 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Dispatcher
+     * Method to get property Dispatcher.
      *
-     * @return  Dispatcher
+     * @return Dispatcher
      */
     public function getDispatcher()
     {
@@ -265,11 +265,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property dispatcher
+     * Method to set property dispatcher.
      *
-     * @param   Dispatcher $dispatcher
+     * @param Dispatcher $dispatcher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDispatcher($dispatcher)
     {
@@ -279,9 +279,9 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Compiler
+     * Method to get property Compiler.
      *
-     * @return  CompilerEngine
+     * @return CompilerEngine
      */
     public function getCompiler()
     {
@@ -303,11 +303,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property compiler
+     * Method to set property compiler.
      *
-     * @param   CompilerEngine $compiler
+     * @param CompilerEngine $compiler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCompiler($compiler)
     {
@@ -317,12 +317,12 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * addCustomCompiler
+     * addCustomCompiler.
      *
-     * @param   string   $name
-     * @param   callable $compiler
+     * @param string   $name
+     * @param callable $compiler
      *
-     * @return  static
+     * @return static
      */
     public function addCustomCompiler($name, $compiler)
     {
@@ -336,9 +336,9 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property CustomCompiler
+     * Method to get property CustomCompiler.
      *
-     * @return  \callable[]
+     * @return \callable[]
      */
     public function getCustomCompilers()
     {
@@ -346,11 +346,11 @@ class BladeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property customCompiler
+     * Method to set property customCompiler.
      *
-     * @param   \callable[] $customCompilers
+     * @param \callable[] $customCompilers
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCustomCompilers(array $customCompilers)
     {

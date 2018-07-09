@@ -18,7 +18,7 @@ class HtmlBuilder extends DomBuilder
     /**
      * Unpaired elements.
      *
-     * @var  array
+     * @var array
      */
     protected static $unpairedElements = [
         'img',
@@ -39,13 +39,13 @@ class HtmlBuilder extends DomBuilder
     /**
      * Property trueValueMapping.
      *
-     * @var  array
+     * @var array
      */
     protected static $trueValueMapping = [
         'readonly' => 'readonly',
         'disabled' => 'disabled',
         'multiple' => 'true',
-        'checked' => 'checked',
+        'checked'  => 'checked',
         'selected' => 'selected',
     ];
 
@@ -57,7 +57,7 @@ class HtmlBuilder extends DomBuilder
      * @param array  $attribs   Element attributes.
      * @param bool   $forcePair Force pair it.
      *
-     * @return  string Created element string.
+     * @return string Created element string.
      */
     public static function create($name, $content = '', $attribs = [], $forcePair = false)
     {
@@ -67,11 +67,11 @@ class HtmlBuilder extends DomBuilder
     }
 
     /**
-     * buildAttributes
+     * buildAttributes.
      *
      * @param array $attribs
      *
-     * @return  string
+     * @return string
      */
     public static function buildAttributes($attribs)
     {
@@ -81,11 +81,11 @@ class HtmlBuilder extends DomBuilder
     }
 
     /**
-     * mapAttrValues
+     * mapAttrValues.
      *
      * @param array $attribs
      *
-     * @return  mixed
+     * @return mixed
      */
     protected static function mapAttrValues($attribs)
     {

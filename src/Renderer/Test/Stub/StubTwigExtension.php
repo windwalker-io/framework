@@ -62,9 +62,9 @@ class StubTwigExtension extends \Twig_Extension
     }
 
     /**
-     * flower
+     * flower.
      *
-     * @return  string
+     * @return string
      */
     public function flower()
     {
@@ -72,9 +72,9 @@ class StubTwigExtension extends \Twig_Extension
     }
 
     /**
-     * armor
+     * armor.
      *
-     * @return  string
+     * @return string
      */
     public function armor()
     {

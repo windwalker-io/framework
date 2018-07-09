@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
- * Test class of MysqlTable
+ * Test class of MysqlTable.
  *
  * @since 2.0
  */
@@ -23,14 +23,14 @@ class MysqlTableTest extends AbstractMysqlTestCase
     /**
      * Property builder.
      *
-     * @var  string
+     * @var string
      */
     protected $builder = 'Windwalker\Query\Mysql\MysqlQueryGrammar';
 
     /**
-     * getBuilder
+     * getBuilder.
      *
-     * @return  string
+     * @return string
      */
     protected function getBuilder()
     {
@@ -142,9 +142,9 @@ class MysqlTableTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testStrictModeCreate
+     * testStrictModeCreate.
      *
-     * @return  void
+     * @return void
      */
     public function testStrictMode()
     {
@@ -335,9 +335,9 @@ class MysqlTableTest extends AbstractMysqlTestCase
     }
 
     /**
-     * Method to test modifyColumn()
+     * Method to test modifyColumn().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Database\Driver\Mysql\MysqlTable::modifyColumn
      */
@@ -361,9 +361,9 @@ class MysqlTableTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testChangeColumn
+     * testChangeColumn.
      *
-     * @return  void
+     * @return void
      */
     public function testChangeColumn()
     {
@@ -439,7 +439,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
     }
 
     /**
-     * Destructor
+     * Destructor.
      */
     public function __destruct()
     {
@@ -447,9 +447,9 @@ class MysqlTableTest extends AbstractMysqlTestCase
     }
 
     /**
-     * tearDownAfterClass
+     * tearDownAfterClass.
      *
-     * @return  void
+     * @return void
      */
     public static function tearDownAfterClass()
     {

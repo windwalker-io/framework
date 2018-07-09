@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Router\Route;
 use Windwalker\Uri\Uri;
 
 /**
- * Test class of TrieMatcher
+ * Test class of TrieMatcher.
  *
  * @since 2.0
  */
@@ -50,9 +50,9 @@ class TrieMatcherTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * metchCases
+     * metchCases.
      *
-     * @return  array
+     * @return array
      */
     public function matchCases()
     {
@@ -154,7 +154,7 @@ class TrieMatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testMatch()
     {
-        $routes = file_get_contents(__DIR__ . '/../fixtures/trie.txt');
+        $routes = file_get_contents(__DIR__.'/../fixtures/trie.txt');
 
         $routes = explode("\n", trim($routes));
 
@@ -180,11 +180,11 @@ class TrieMatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test match().
      *
-     * @param string  $url
-     * @param string  $pattern
-     * @param string  $method
-     * @param boolean $expected
-     * @param integer $line
+     * @param string $url
+     * @param string $pattern
+     * @param string $method
+     * @param bool   $expected
+     * @param int    $line
      *
      * @return void
      *
@@ -201,17 +201,17 @@ class TrieMatcherTest extends \PHPUnit\Framework\TestCase
         $port = $uri->getPort() ?: 80;
 
         $config = [
-            'name' => 'flower',
-            'pattern' => $pattern,
+            'name'      => 'flower',
+            'pattern'   => $pattern,
             'variables' => [
                 '_controller' => 'FlowerController',
-                'id' => 1,
+                'id'          => 1,
             ],
-            'method' => ['GET', 'PUT'],
-            'host' => 'windwalker.com',
-            'scheme' => 'http',
-            'port' => 80,
-            'sslPort' => 443,
+            'method'       => ['GET', 'PUT'],
+            'host'         => 'windwalker.com',
+            'scheme'       => 'http',
+            'port'         => 80,
+            'sslPort'      => 443,
             'requirements' => [
                 'id' => '\d+',
             ],
@@ -231,12 +231,12 @@ class TrieMatcherTest extends \PHPUnit\Framework\TestCase
                 $uri->getPath(),
                 $method,
                 [
-                    'host' => $host,
+                    'host'   => $host,
                     'scheme' => $scheme,
-                    'port' => $port,
+                    'port'   => $port,
                 ]
             );
 
-        $this->assertEquals($expected, !empty($result), 'Match fail, case on line: ' . $line);
+        $this->assertEquals($expected, !empty($result), 'Match fail, case on line: '.$line);
     }
 }

@@ -22,28 +22,27 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
     /**
      * Property args.
      *
-     * @var  array
+     * @var array
      */
     public $args = [];
 
     /**
      * Property select.
      *
-     * @var  array
+     * @var array
      */
     public $select = [];
 
     /**
      * Do find action, this method should be override by sub class.
      *
-     * @param array   $conditions Where conditions, you can use array or Compare object.
-     * @param array   $orders     Order sort, can ba string, array or object.
-     * @param integer $start      Limit start number.
-     * @param integer $limit      Limit rows.
+     * @param array $conditions Where conditions, you can use array or Compare object.
+     * @param array $orders     Order sort, can ba string, array or object.
+     * @param int   $start      Limit start number.
+     * @param int   $limit      Limit rows.
+     * @param       $key
      *
-     * @param         $key
-     *
-     * @return  mixed Found rows data set.
+     * @return mixed Found rows data set.
      */
     protected function doFind(array $conditions, array $orders, $start, $limit, $key)
     {
@@ -57,7 +56,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      *
      * @param mixed $dataset The data set contains data we want to store.
      *
-     * @return  mixed  Data set data with inserted id.
+     * @return mixed Data set data with inserted id.
      */
     protected function doCreate($dataset)
     {
@@ -67,12 +66,12 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
     /**
      * Do update action, this method should be override by sub class.
      *
-     * @param mixed $dataset      Data set contain data we want to update.
-     * @param array $condFields   The where condition tell us record exists or not, if not set,
-     *                            will use primary key instead.
-     * @param bool  $updateNulls  Update empty fields or not.
+     * @param mixed $dataset     Data set contain data we want to update.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     protected function doUpdate($dataset, array $condFields, $updateNulls = false)
     {
@@ -85,7 +84,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      * @param mixed $data       The data we want to update to every rows.
      * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
-     * @return  boolean
+     * @return bool
      */
     protected function doUpdateBatch($data, array $conditions)
     {
@@ -98,7 +97,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      * @param mixed $dataset    Data set contain data we want to update.
      * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     protected function doFlush($dataset, array $conditions)
     {
@@ -110,7 +109,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      *
      * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
-     * @return  boolean Will be always true.
+     * @return bool Will be always true.
      */
     protected function doDelete(array $conditions)
     {
@@ -122,7 +121,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      *
      * @param string $table Table name.
      *
-     * @return  array
+     * @return array
      */
     public function getFields($table = null)
     {
@@ -130,11 +129,11 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
     }
 
     /**
-     * select
+     * select.
      *
-     * @param   string|array $column
+     * @param string|array $column
      *
-     * @return  static
+     * @return static
      */
     public function select($column)
     {

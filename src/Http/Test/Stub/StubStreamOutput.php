@@ -22,35 +22,35 @@ class StubStreamOutput extends StreamOutput
     /**
      * Property message.
      *
-     * @var  Response
+     * @var Response
      */
     public $message;
 
     /**
      * Property status.
      *
-     * @var  integer
+     * @var int
      */
     public $status;
 
     /**
      * Property others.
      *
-     * @var  array
+     * @var array
      */
     public $others = [];
 
     /**
      * Property output.
      *
-     * @var  string
+     * @var string
      */
     public $output;
 
     /**
      * Property waiting.
      *
-     * @var  int
+     * @var int
      */
     public $waiting;
 
@@ -63,13 +63,13 @@ class StubStreamOutput extends StreamOutput
     }
 
     /**
-     * header
+     * header.
      *
-     * @param string  $string
-     * @param bool    $replace
-     * @param integer $code
+     * @param string $string
+     * @param bool   $replace
+     * @param int    $code
      *
-     * @return  static
+     * @return static
      */
     public function header($string, $replace = true, $code = null)
     {
@@ -91,11 +91,11 @@ class StubStreamOutput extends StreamOutput
     }
 
     /**
-     * sendBody
+     * sendBody.
      *
      * @param ResponseInterface $response
      *
-     * @return  void
+     * @return void
      */
     public function sendBody(ResponseInterface $response)
     {
@@ -107,7 +107,7 @@ class StubStreamOutput extends StreamOutput
     }
 
     /**
-     * checkHeaderSent
+     * checkHeaderSent.
      *
      * @param string $filename
      * @param int    $linenum
@@ -120,9 +120,9 @@ class StubStreamOutput extends StreamOutput
     }
 
     /**
-     * delay
+     * delay.
      *
-     * @return  void
+     * @return void
      */
     public function delay()
     {

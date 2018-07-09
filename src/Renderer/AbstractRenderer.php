@@ -11,7 +11,7 @@ namespace Windwalker\Renderer;
 use Windwalker\Structure\Structure;
 
 /**
- * Class AbstractRenderer
+ * Class AbstractRenderer.
  *
  * @property-read  Structure $config  Config data.
  *
@@ -22,14 +22,14 @@ abstract class AbstractRenderer implements RendererInterface
     /**
      * Property paths.
      *
-     * @var  \SplPriorityQueue
+     * @var \SplPriorityQueue
      */
     protected $paths = null;
 
     /**
      * Property config.
      *
-     * @var  Structure
+     * @var Structure
      */
     protected $config = [];
 
@@ -51,9 +51,9 @@ abstract class AbstractRenderer implements RendererInterface
     /**
      * Method to escape output.
      *
-     * @param   string $output The output to escape.
+     * @param string $output The output to escape.
      *
-     * @return  string  The escaped output.
+     * @return string The escaped output.
      *
      * @see     ViewInterface::escape()
      * @since   2.0
@@ -65,12 +65,12 @@ abstract class AbstractRenderer implements RendererInterface
     }
 
     /**
-     * finFile
+     * finFile.
      *
      * @param string $file
      * @param string $ext
      *
-     * @return  string
+     * @return string
      */
     public function findFile($file, $ext = '')
     {
@@ -78,23 +78,21 @@ abstract class AbstractRenderer implements RendererInterface
 
         $file = str_replace('.', '/', $file);
 
-        $ext = $ext ? '.' . trim($ext, '.') : '';
+        $ext = $ext ? '.'.trim($ext, '.') : '';
 
         foreach ($paths as $path) {
-            $filePath = $path . '/' . $file . $ext;
+            $filePath = $path.'/'.$file.$ext;
 
             if (is_file($filePath)) {
                 return realpath($filePath);
             }
         }
-
-        return null;
     }
 
     /**
-     * getPaths
+     * getPaths.
      *
-     * @return  \SplPriorityQueue
+     * @return \SplPriorityQueue
      */
     public function getPaths()
     {
@@ -102,11 +100,11 @@ abstract class AbstractRenderer implements RendererInterface
     }
 
     /**
-     * setPaths
+     * setPaths.
      *
-     * @param   \SplPriorityQueue $paths
+     * @param \SplPriorityQueue $paths
      *
-     * @return  AbstractRenderer  Return self to support chaining.
+     * @return AbstractRenderer Return self to support chaining.
      */
     public function setPaths($paths)
     {
@@ -126,12 +124,12 @@ abstract class AbstractRenderer implements RendererInterface
     }
 
     /**
-     * addPath
+     * addPath.
      *
-     * @param string  $path
-     * @param integer $priority
+     * @param string $path
+     * @param int    $priority
      *
-     * @return  static
+     * @return static
      */
     public function addPath($path, $priority = 100)
     {
@@ -141,9 +139,9 @@ abstract class AbstractRenderer implements RendererInterface
     }
 
     /**
-     * dumpPaths
+     * dumpPaths.
      *
-     * @return  array
+     * @return array
      */
     public function dumpPaths()
     {
@@ -159,11 +157,11 @@ abstract class AbstractRenderer implements RendererInterface
     }
 
     /**
-     * __get
+     * __get.
      *
      * @param string $name
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __get($name)
     {
@@ -171,6 +169,6 @@ abstract class AbstractRenderer implements RendererInterface
             return $this->$name;
         }
 
-        throw new \UnexpectedValueException('Property ' . $name . ' not extists.');
+        throw new \UnexpectedValueException('Property '.$name.' not extists.');
     }
 }

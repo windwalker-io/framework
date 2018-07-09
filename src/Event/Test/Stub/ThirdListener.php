@@ -19,9 +19,9 @@ class ThirdListener
     /**
      * Listen to onSomething.
      *
-     * @param   Event $event The event.
+     * @param Event $event The event.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

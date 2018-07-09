@@ -20,7 +20,7 @@ use Windwalker\Query\Query;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
- * Class DatabaseDriver
+ * Class DatabaseDriver.
  *
  * @since 2.0
  */
@@ -29,7 +29,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The name of the database driver.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $name;
@@ -37,7 +38,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The name of the database.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $database;
@@ -45,7 +47,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The database connection resource.
      *
-     * @var    resource|object
+     * @var resource|object
+     *
      * @since  2.0
      */
     protected $connection;
@@ -53,7 +56,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The number of SQL statements executed by the database driver.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $count = 0;
@@ -61,7 +65,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The database connection cursor from the last query.
      *
-     * @var    resource|object
+     * @var resource|object
+     *
      * @since  2.0
      */
     protected $cursor;
@@ -69,7 +74,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The database driver debugging state.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     protected $debug = false;
@@ -77,7 +83,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Passed in upon instantiation and saved.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $options;
@@ -85,7 +92,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The current SQL statement to execute.
      *
-     * @var    mixed
+     * @var mixed
+     *
      * @since  2.0
      */
     protected $query;
@@ -93,7 +101,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * The common database table prefix.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $tablePrefix;
@@ -101,7 +110,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Property reader.
      *
-     * @var  AbstractReader
+     * @var AbstractReader
      */
     protected $reader;
 
@@ -122,7 +131,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Property databases.
      *
-     * @var  AbstractDatabase[]
+     * @var AbstractDatabase[]
      */
     protected $databases = [];
 
@@ -136,31 +145,32 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Property lastQuery.
      *
-     * @var  string
+     * @var string
      */
     protected $lastQuery;
 
     /**
      * Property middlewares.
      *
-     * @var  ChainBuilder
+     * @var ChainBuilder
      */
     protected $middlewares;
 
     /**
      * Property independentQuery.
      *
-     * @var  Query
+     * @var Query
      */
     protected static $independentQuery;
 
     /**
      * Constructor.
      *
-     * @param   null  $connection The database connection instance.
-     * @param   array $options    List of options used to configure the connection
+     * @param null  $connection The database connection instance.
+     * @param array $options    List of options used to configure the connection
      *
      * @throws \ReflectionException
+     *
      * @since   2.0
      */
     public function __construct($connection = null, $options = [])
@@ -180,9 +190,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getConnection
+     * getConnection.
      *
-     * @return  resource|object
+     * @return resource|object
      */
     public function &getConnection()
     {
@@ -190,11 +200,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * setConnection
+     * setConnection.
      *
-     * @param   resource $connection
+     * @param resource $connection
      *
-     * @return  AbstractDatabaseDriver  Return self to support chaining.
+     * @return AbstractDatabaseDriver Return self to support chaining.
      */
     public function setConnection($connection)
     {
@@ -206,10 +216,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Execute the SQL statement.
      *
-     * @return  resource|false  Return Resource to do more or false if query failure.
+     * @throws \RuntimeException
+     *
+     * @return resource|false Return Resource to do more or false if query failure.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function execute()
     {
@@ -241,16 +252,16 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * connect
+     * connect.
      *
-     * @return  static
+     * @return static
      */
     abstract public function connect();
 
     /**
      * Disconnects the database.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -259,29 +270,31 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Execute the SQL statement.
      *
-     * @return  resource|false  A database cursor resource on success, boolean false on failure.
+     * @throws \RuntimeException
+     *
+     * @return resource|false A database cursor resource on success, boolean false on failure.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     abstract protected function doExecute();
 
     /**
      * Select a database for use.
      *
-     * @param   string $database The name of the database to select for use.
+     * @param string $database The name of the database to select for use.
      *
-     * @return  boolean  True if the database was successfully selected.
+     * @throws \RuntimeException
+     *
+     * @return bool True if the database was successfully selected.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     abstract public function select($database);
 
     /**
-     * Get the version of the database connector
+     * Get the version of the database connector.
      *
-     * @return  string  The database connector version.
+     * @return string The database connector version.
      *
      * @since   2.0
      */
@@ -290,25 +303,25 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Method to free up the memory used for the result set.
      *
-     * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+     * @param mixed $cursor The optional result set cursor from which to fetch the row.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
     abstract public function freeResult($cursor = null);
 
     /**
-     * getDatabaseList
+     * getDatabaseList.
      *
-     * @return  mixed
+     * @return mixed
      */
     abstract public function listDatabases();
 
     /**
-     * getCursor
+     * getCursor.
      *
-     * @return  resource
+     * @return resource
      */
     public function getCursor()
     {
@@ -318,18 +331,19 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Get the current query object or a new Query object.
      *
-     * @param   boolean $new False to return the current query object, True to return a new Query object.
+     * @param bool $new False to return the current query object, True to return a new Query object.
      *
-     * @return  Query  The current query object or a new object extending the Query class.
+     * @throws \RuntimeException
+     *
+     * @return Query The current query object or a new object extending the Query class.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function getQuery($new = false)
     {
         if ($new) {
             // Derive the class name from the driver.
-            $class = '\\Windwalker\\Query\\' . ucfirst($this->name) . '\\' . ucfirst($this->name) . 'Query';
+            $class = '\\Windwalker\\Query\\'.ucfirst($this->name).'\\'.ucfirst($this->name).'Query';
 
             // Make sure we have a query class for this driver.
             if (!class_exists($class)) {
@@ -344,12 +358,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getTable
+     * getTable.
      *
      * @param string $name
      * @param bool   $new
      *
-     * @return  AbstractTable
+     * @return AbstractTable
      */
     public function getTable($name, $new = false)
     {
@@ -363,7 +377,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getTable
+     * getTable.
      *
      * @param string $name
      * @param bool   $new
@@ -392,7 +406,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getReader
+     * getReader.
      *
      * @param Query $query
      * @param bool  $new
@@ -415,7 +429,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getWriter
+     * getWriter.
      *
      * @param bool $new
      *
@@ -433,10 +447,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getWriter
+     * getWriter.
      *
-     * @param boolean $nested
-     * @param bool    $new
+     * @param bool $nested
+     * @param bool $new
      *
      * @return AbstractTransaction
      */
@@ -456,11 +470,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getIterator
+     * getIterator.
      *
      * @param string $class
      *
-     * @return  DataIterator
+     * @return DataIterator
      */
     public function getIterator($class = 'stdClass')
     {
@@ -470,7 +484,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Gets the name of the database used by this conneciton.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -482,7 +496,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Get the common table prefix for the database driver.
      *
-     * @return  string  The common database table prefix.
+     * @return string The common database table prefix.
      *
      * @since   2.0
      */
@@ -495,10 +509,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      * This function replaces a string identifier <var>$prefix</var> with the string held is the
      * <var>tablePrefix</var> class variable.
      *
-     * @param   string $sql    The SQL statement to prepare.
-     * @param   string $prefix The common table prefix.
+     * @param string $sql    The SQL statement to prepare.
+     * @param string $prefix The common table prefix.
      *
-     * @return  string  The processed SQL statement.
+     * @return string The processed SQL statement.
      *
      * @since   2.0
      */
@@ -551,7 +565,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
                 $l = $k - 1;
 
-                while ($l >= 0 && $sql{$l} === '\\') {
+                while ($l >= 0 && $sql[$l] === '\\') {
                     $l--;
                     $escaped = !$escaped;
                 }
@@ -583,9 +597,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Splits a string of multiple queries into an array of individual queries.
      *
-     * @param   string $sql Input SQL string with which to split into individual queries.
+     * @param string $sql Input SQL string with which to split into individual queries.
      *
-     * @return  array  The queries from the input string separated into an array.
+     * @return array The queries from the input string separated into an array.
      *
      * @since   2.0
      */
@@ -632,9 +646,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Sets the database debugging state for the driver.
      *
-     * @param   boolean $level True to enable debugging.
+     * @param bool $level True to enable debugging.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -648,9 +662,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Sets the SQL statement string for later execution.
      *
-     * @param   mixed $query The SQL statement to set either as a Query object or a string.
+     * @param mixed $query The SQL statement to set either as a Query object or a string.
      *
-     * @return  AbstractDatabaseDriver  This object to support method chaining.
+     * @return AbstractDatabaseDriver This object to support method chaining.
      *
      * @since   2.0
      */
@@ -662,12 +676,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * loadAll
+     * loadAll.
      *
      * @param string $key
      * @param string $class
      *
-     * @return  mixed
+     * @return mixed
      */
     public function loadAll($key = null, $class = '\\stdClass')
     {
@@ -683,11 +697,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * loadOne
+     * loadOne.
      *
      * @param string $class
      *
-     * @return  mixed
+     * @return mixed
      */
     public function loadOne($class = '\\stdClass')
     {
@@ -703,9 +717,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * loadResult
+     * loadResult.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function loadResult()
     {
@@ -713,9 +727,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * loadColumn
+     * loadColumn.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function loadColumn()
     {
@@ -723,9 +737,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getIndependentQuery
+     * getIndependentQuery.
      *
-     * @return  Query
+     * @return Query
      */
     private function getIndependentQuery()
     {
@@ -737,11 +751,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * quoteName
+     * quoteName.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function quoteName($text)
     {
@@ -749,11 +763,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * qn
+     * qn.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function qn($text)
     {
@@ -761,12 +775,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * quote
+     * quote.
      *
      * @param string $text
      * @param bool   $escape
      *
-     * @return  string
+     * @return string
      */
     public function quote($text, $escape = true)
     {
@@ -774,12 +788,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * q
+     * q.
      *
      * @param string $text
      * @param bool   $escape
      *
-     * @return  string
+     * @return string
      */
     public function q($text, $escape = true)
     {
@@ -787,12 +801,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * escape
+     * escape.
      *
      * @param string $text
      * @param bool   $extra
      *
-     * @return  string
+     * @return string
      */
     public function escape($text, $extra = true)
     {
@@ -800,12 +814,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * e
+     * e.
      *
      * @param string $text
      * @param bool   $extra
      *
-     * @return  string
+     * @return string
      */
     public function e($text, $extra = true)
     {
@@ -813,9 +827,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to get property Name
+     * Method to get property Name.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -823,9 +837,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      */
     public function getOptions()
     {
@@ -833,11 +847,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOptions($options)
     {
@@ -847,11 +861,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to set property database
+     * Method to set property database.
      *
-     * @param   string $database
+     * @param string $database
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDatabaseName($database)
     {
@@ -863,13 +877,14 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * addMiddleware
+     * addMiddleware.
      *
-     * @param  MiddlewareInterface|callable $middleware
-     *
-     * @return  static
+     * @param MiddlewareInterface|callable $middleware
      *
      * @throws \ReflectionException
+     *
+     * @return static
+     *
      * @since   3.0
      */
     public function addMiddleware($middleware)
@@ -880,9 +895,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to get property Middlewares
+     * Method to get property Middlewares.
      *
-     * @return  ChainBuilder
+     * @return ChainBuilder
      *
      * @since   3.0
      */
@@ -892,11 +907,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to set property middlewares
-     *
-     * @return  static  Return self to support chaining.
+     * Method to set property middlewares.
      *
      * @throws \ReflectionException
+     *
+     * @return static Return self to support chaining.
+     *
      * @since   3.0
      */
     public function resetMiddlewares()
@@ -908,9 +924,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * Method to get property LastQuery
+     * Method to get property LastQuery.
      *
-     * @return  string
+     * @return string
      */
     public function getLastQuery()
     {
@@ -918,9 +934,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getDateFormat
+     * getDateFormat.
      *
-     * @return  string
+     * @return string
      *
      * @since   3.2.7
      */
@@ -930,9 +946,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * getNullDate
+     * getNullDate.
      *
-     * @return  string
+     * @return string
      *
      * @since   3.2.7
      */

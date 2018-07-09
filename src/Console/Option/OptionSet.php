@@ -18,16 +18,16 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Property options.
      *
-     * @var  Option[]
+     * @var Option[]
      */
     protected $options = [];
 
     /**
      * Add a new option.
      *
-     * @param   Option $option Option object.
+     * @param Option $option Option object.
      *
-     * @return  OptionSet Return self to support chaining.
+     * @return OptionSet Return self to support chaining.
      *
      * @since   2.0
      */
@@ -39,7 +39,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable An instance of an object implementing Iterator or Traversable
      *
@@ -53,9 +53,9 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Find option by name or alias.
      *
-     * @param   string $name The name or alias.
+     * @param string $name The name or alias.
      *
-     * @return  Option  The found option object.
+     * @return Option The found option object.
      *
      * @since   2.0
      */
@@ -66,16 +66,14 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
                 return $option;
             }
         }
-
-        return null;
     }
 
     /**
      * Is a option exists?
      *
-     * @param   mixed $name Option name.
+     * @param mixed $name Option name.
      *
-     * @return  boolean True if option exists.
+     * @return bool True if option exists.
      *
      * @since   2.0
      */
@@ -87,9 +85,9 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Get an option by name.
      *
-     * @param   mixed $name Option name to get option.
+     * @param mixed $name Option name to get option.
      *
-     * @return  Option|null  Return option object if exists.
+     * @return Option|null Return option object if exists.
      *
      * @since   2.0
      */
@@ -101,10 +99,10 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Set a new option.
      *
-     * @param   string $name   No use here, we use option name.
-     * @param   Option $option The option object to set in this set.
+     * @param string $name   No use here, we use option name.
+     * @param Option $option The option object to set in this set.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -118,9 +116,9 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Remove an option.
      *
-     * @param   string $name Option name to remove from this set.
+     * @param string $name Option name to remove from this set.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -136,7 +134,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Count options.
      *
-     * @return  integer  Number of options.
+     * @return int Number of options.
      *
      * @since   2.0
      */
@@ -146,7 +144,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     }
 
     /**
-     * Serialize this object
+     * Serialize this object.
      *
      * @return string
      *
@@ -160,9 +158,9 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Un serialize this object.
      *
-     * @param   string $data Serialized data.
+     * @param string $data Serialized data.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -174,7 +172,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     /**
      * Convert to array.
      *
-     * @return  Option[]
+     * @return Option[]
      *
      * @since   2.0
      */

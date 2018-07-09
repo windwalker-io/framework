@@ -18,7 +18,7 @@ class HtmlResponse extends TextResponse
     /**
      * Content type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'text/html';
 }

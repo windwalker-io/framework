@@ -9,25 +9,25 @@
 namespace Windwalker\DI;
 
 /**
- * Interface ContainerAwareInterface
+ * Interface ContainerAwareInterface.
  */
 interface ContainerAwareInterface
 {
     /**
      * Get the DI container.
      *
-     * @return  Container
+     * @throws \UnexpectedValueException May be thrown if the container has not been set.
      *
-     * @throws  \UnexpectedValueException May be thrown if the container has not been set.
+     * @return Container
      */
     public function getContainer();
 
     /**
      * Set the DI container.
      *
-     * @param   Container $container The DI container.
+     * @param Container $container The DI container.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function setContainer(Container $container);
 }

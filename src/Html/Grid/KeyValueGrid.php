@@ -22,7 +22,7 @@ class KeyValueGrid extends Grid
     const ROW = 'row';
 
     /**
-     * create
+     * create.
      *
      * @param array $attribs
      *
@@ -46,13 +46,13 @@ class KeyValueGrid extends Grid
     }
 
     /**
-     * addHeader
+     * addHeader.
      *
      * @param string $keyTitle
      * @param string $valueTitle
      * @param array  $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addHeader($keyTitle = 'Key', $valueTitle = 'Value', $attribs = [])
     {
@@ -64,7 +64,7 @@ class KeyValueGrid extends Grid
     }
 
     /**
-     * addItem
+     * addItem.
      *
      * @param string $key
      * @param string $value
@@ -89,12 +89,12 @@ class KeyValueGrid extends Grid
     }
 
     /**
-     * addItems
+     * addItems.
      *
      * @param string $items
      * @param array  $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addItems($items = null, $attribs = [])
     {
@@ -109,12 +109,12 @@ class KeyValueGrid extends Grid
     }
 
     /**
-     * addTitle
+     * addTitle.
      *
      * @param string $name
      * @param array  $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addTitle($name, $attribs = [])
     {
@@ -126,21 +126,21 @@ class KeyValueGrid extends Grid
     }
 
     /**
-     * configureRows
+     * configureRows.
      *
-     * @param   array    $items
-     * @param   callable $handler
+     * @param array    $items
+     * @param callable $handler
      *
-     * @return  static
+     * @return static
      */
     public function configure($items, $handler)
     {
         if (!is_callable($handler)) {
-            throw new \InvalidArgumentException(__METHOD__ . ' Handler should be callable.');
+            throw new \InvalidArgumentException(__METHOD__.' Handler should be callable.');
         }
 
         if (!$items instanceof \Traversable && !is_array($items)) {
-            throw new \InvalidArgumentException(__METHOD__ . ' items should be array or iterator.');
+            throw new \InvalidArgumentException(__METHOD__.' items should be array or iterator.');
         }
 
         foreach ($items as $key => $item) {
@@ -151,13 +151,13 @@ class KeyValueGrid extends Grid
     }
 
     /**
-     * getValue
+     * getValue.
      *
      * @param array  $options
      * @param string $name
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function getValue(array $options, $name, $default = null)
     {

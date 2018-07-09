@@ -23,7 +23,6 @@ class CommandNotFoundException extends \RuntimeException
      * @var AbstractCommand
      *
      * @since  2.0
-     *
      */
     protected $command;
 
@@ -39,9 +38,9 @@ class CommandNotFoundException extends \RuntimeException
     /**
      * Exception constructor.
      *
-     * @param   string          $message  The Exception message to throw.
-     * @param   AbstractCommand $command  Current command to provide information for debug.
-     * @param   string          $argument The last argument to auto complete.
+     * @param string          $message  The Exception message to throw.
+     * @param AbstractCommand $command  Current command to provide information for debug.
+     * @param string          $argument The last argument to auto complete.
      *
      * @since  2.0
      */
@@ -56,9 +55,9 @@ class CommandNotFoundException extends \RuntimeException
     /**
      * Argument setter.
      *
-     * @param   string $argument The last argument to auto complete.
+     * @param string $argument The last argument to auto complete.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -82,9 +81,9 @@ class CommandNotFoundException extends \RuntimeException
     /**
      * Command setter.
      *
-     * @param   AbstractCommand $command Current command to provide information for debug.
+     * @param AbstractCommand $command Current command to provide information for debug.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -96,7 +95,7 @@ class CommandNotFoundException extends \RuntimeException
     /**
      * Command getter.
      *
-     * @return AbstractCommand  $command  Current command to provide information for debug.
+     * @return AbstractCommand $command  Current command to provide information for debug.
      *
      * @since  2.0
      */

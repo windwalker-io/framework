@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Structure\Test\Format;
 use Windwalker\Structure\Format\XmlFormat;
 
 /**
- * Test class of XmlFormat
+ * Test class of XmlFormat.
  *
  * @since 2.0
  */

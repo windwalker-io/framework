@@ -20,10 +20,10 @@ class JsonFormat implements FormatInterface
     /**
      * Converts an object into a JSON formatted string.
      *
-     * @param   object $struct  Data source object.
-     * @param   array  $options Options used by the formatter.
+     * @param object $struct  Data source object.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  string
+     * @return string
      */
     public static function structToString($struct, array $options = [])
     {
@@ -38,10 +38,10 @@ class JsonFormat implements FormatInterface
     /**
      * Parse a JSON formatted string and convert it into an object.
      *
-     * @param   string $data    JSON formatted string to convert.
-     * @param   array  $options Options used by the formatter.
+     * @param string $data    JSON formatted string to convert.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  object   Data object.
+     * @return object Data object.
      */
     public static function stringToStruct($data, array $options = [])
     {
@@ -57,9 +57,9 @@ class JsonFormat implements FormatInterface
     }
 
     /**
-     * prettyPrint
+     * prettyPrint.
      *
-     * @return  bool|int
+     * @return bool|int
      */
     public static function prettyPrint()
     {

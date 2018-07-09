@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Data\DataSet;
 use Windwalker\DataMapper\DataMapper;
 
 /**
- * Test class of DataMapper
+ * Test class of DataMapper.
  *
  * @since 2.0
  */
@@ -30,8 +30,9 @@ class DataMapperTest extends DatabaseTest
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
      * @throws \Exception
+     *
+     * @return void
      */
     protected function setUp()
     {
@@ -45,9 +46,10 @@ class DataMapperTest extends DatabaseTest
     /**
      * Method to test find().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\DataMapper\AbstractDataMapper::find
      */
     public function testFind()
@@ -134,9 +136,9 @@ class DataMapperTest extends DatabaseTest
     }
 
     /**
-     * testFindColumn
+     * testFindColumn.
      *
-     * @return  void
+     * @return void
      */
     public function testFindColumn()
     {
@@ -204,10 +206,10 @@ class DataMapperTest extends DatabaseTest
     {
         // Create from array
         $data = [
-            'title' => 'Foo flower',
-            'state' => 1,
+            'title'   => 'Foo flower',
+            'state'   => 1,
             'meaning' => '',
-            'params' => '',
+            'params'  => '',
         ];
 
         $newData = $this->instance->createOne($data);
@@ -220,10 +222,10 @@ class DataMapperTest extends DatabaseTest
         // Create from Data
         $data = new Data(
             [
-                'title' => 'Foo flower',
-                'state' => 1,
+                'title'   => 'Foo flower',
+                'state'   => 1,
                 'meaning' => '',
-                'params' => '',
+                'params'  => '',
             ]
         );
 
@@ -417,9 +419,10 @@ class DataMapperTest extends DatabaseTest
     /**
      * Method to test getPrimaryKey().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\DataMapper\AbstractDataMapper::getKeyName
      */
     public function testGetKeyName()

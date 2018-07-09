@@ -1,15 +1,14 @@
 <?php
 /**
- * Part of Windwalker project.  @codingStandardsIgnoreStart
+ * Part of Windwalker project.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-include_once __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../../../../vendor/autoload.php';
 
 class Application extends \Windwalker\Application\AbstractWebApplication
 {
@@ -32,7 +31,7 @@ $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create(
             show($request->getBody());
             $body = $response->getBody()->__toString();
 
-            $body = ">>>AAA\n" . $body . "\n<<<AAA";
+            $body = ">>>AAA\n".$body."\n<<<AAA";
 
             $response->getBody()->rewind();
             $response->getBody()->write($body);
@@ -42,7 +41,7 @@ $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create(
         function (Request $request, Response $response, $next = null) {
             $body = $response->getBody()->__toString();
 
-            $body = ">>>BBB\n" . $body . "\n<<<BBB";
+            $body = ">>>BBB\n".$body."\n<<<BBB";
 
             $response->getBody()->rewind();
             $response->getBody()->write($body);

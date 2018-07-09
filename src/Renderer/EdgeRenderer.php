@@ -29,37 +29,37 @@ class EdgeRenderer extends AbstractEngineRenderer
     /**
      * Property compiler.
      *
-     * @var  EdgeCompilerInterface
+     * @var EdgeCompilerInterface
      */
     protected $compiler;
 
     /**
      * Property loader.
      *
-     * @var  EdgeLoaderInterface
+     * @var EdgeLoaderInterface
      */
     protected $loader;
 
     /**
      * Property cache.
      *
-     * @var  EdgeCacheInterface
+     * @var EdgeCacheInterface
      */
     protected $cache;
 
     /**
      * Property extensions.
      *
-     * @var  callable[]
+     * @var callable[]
      */
     protected $extensions = [];
 
     /**
-     * Method to get property Engine
+     * Method to get property Engine.
      *
-     * @param   boolean $new
+     * @param bool $new
      *
-     * @return  Edge
+     * @return Edge
      */
     public function getEngine($new = false)
     {
@@ -85,11 +85,11 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property engine
+     * Method to set property engine.
      *
-     * @param   Edge $engine
+     * @param Edge $engine
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setEngine($engine)
     {
@@ -103,13 +103,14 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * render
+     * render.
      *
      * @param string $file
      * @param array  $data
      *
-     * @return  string
      * @throws \Windwalker\Edge\Exception\EdgeException
+     *
+     * @return string
      */
     public function render($file, $data = [])
     {
@@ -125,9 +126,9 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Compiler
+     * Method to get property Compiler.
      *
-     * @return  EdgeCompilerInterface
+     * @return EdgeCompilerInterface
      */
     public function getCompiler()
     {
@@ -139,11 +140,11 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property compiler
+     * Method to set property compiler.
      *
-     * @param   EdgeCompilerInterface $compiler
+     * @param EdgeCompilerInterface $compiler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCompiler($compiler)
     {
@@ -153,9 +154,9 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Loader
+     * Method to get property Loader.
      *
-     * @return  EdgeLoaderInterface
+     * @return EdgeLoaderInterface
      */
     public function getLoader()
     {
@@ -167,11 +168,11 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property loader
+     * Method to set property loader.
      *
-     * @param   EdgeLoaderInterface $loader
+     * @param EdgeLoaderInterface $loader
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setLoader($loader)
     {
@@ -181,9 +182,9 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Cache
+     * Method to get property Cache.
      *
-     * @return  EdgeCacheInterface
+     * @return EdgeCacheInterface
      */
     public function getCache()
     {
@@ -199,11 +200,11 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property cache
+     * Method to set property cache.
      *
-     * @param   EdgeCacheInterface $cache
+     * @param EdgeCacheInterface $cache
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCache($cache)
     {
@@ -213,9 +214,9 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Extensions
+     * Method to get property Extensions.
      *
-     * @return  EdgeExtensionInterface[]
+     * @return EdgeExtensionInterface[]
      */
     public function getExtensions()
     {
@@ -223,11 +224,11 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   EdgeExtensionInterface[] $extensions
+     * @param EdgeExtensionInterface[] $extensions
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setExtensions($extensions)
     {
@@ -237,10 +238,10 @@ class EdgeRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * addExtension
+     * addExtension.
      *
-     * @param   EdgeExtensionInterface $extension
-     * @param   string                 $name
+     * @param EdgeExtensionInterface $extension
+     * @param string                 $name
      *
      * @return static
      */

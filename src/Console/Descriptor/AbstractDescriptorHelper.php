@@ -36,8 +36,8 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
     /**
      * The class constructor.
      *
-     * @param   DescriptorInterface $CommandDescriptor Command descriptor.
-     * @param   DescriptorInterface $optionDescriptor  Option descriptor.
+     * @param DescriptorInterface $CommandDescriptor Command descriptor.
+     * @param DescriptorInterface $optionDescriptor  Option descriptor.
      *
      * @since   2.0
      */
@@ -52,7 +52,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
     /**
      * Command descriptor getter.
      *
-     * @return  DescriptorInterface
+     * @return DescriptorInterface
      *
      * @since   2.0
      */
@@ -64,9 +64,9 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
     /**
      * Command descriptor setter.
      *
-     * @param   DescriptorInterface $CommandDescriptor Command descriptor.
+     * @param DescriptorInterface $CommandDescriptor Command descriptor.
      *
-     * @return  $this Support chaining.
+     * @return $this Support chaining.
      *
      * @since   2.0
      */
@@ -92,9 +92,9 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
     /**
      * Option descriptor setter.
      *
-     * @param   DescriptorInterface $optionDescriptor Option descriptor.
+     * @param DescriptorInterface $optionDescriptor Option descriptor.
      *
-     * @return  $this  Support chaining.
+     * @return $this Support chaining.
      *
      * @since   2.0
      */

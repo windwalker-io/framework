@@ -20,16 +20,16 @@ class WebEnvironment extends Environment
     /**
      * Property client.
      *
-     * @var  Browser
+     * @var Browser
      */
     public $browser;
 
     /**
-     * create
+     * create.
      *
      * @param array|null $server
      *
-     * @return  static
+     * @return static
      */
     public static function create(array $server = null)
     {
@@ -53,9 +53,9 @@ class WebEnvironment extends Environment
     }
 
     /**
-     * Method to get property Browser
+     * Method to get property Browser.
      *
-     * @return  Browser
+     * @return Browser
      */
     public function getBrowser()
     {
@@ -63,11 +63,11 @@ class WebEnvironment extends Environment
     }
 
     /**
-     * Method to set property Browser
+     * Method to set property Browser.
      *
-     * @param   Browser $browser
+     * @param Browser $browser
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setBrowser($browser)
     {

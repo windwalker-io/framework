@@ -18,7 +18,7 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
     /**
      * Property separator.
      *
-     * @var  string
+     * @var string
      */
     protected $separator;
 
@@ -36,9 +36,9 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
     }
 
     /**
-     * Method to get property Separator
+     * Method to get property Separator.
      *
-     * @return  string
+     * @return string
      */
     public function getSeparator()
     {
@@ -46,11 +46,11 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
     }
 
     /**
-     * Method to set property separator
+     * Method to set property separator.
      *
-     * @param   string $separator
+     * @param string $separator
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSeparator($separator)
     {
@@ -60,11 +60,11 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
     }
 
     /**
-     * normalizeName
+     * normalizeName.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  string
+     * @return string
      */
     protected function normalizeName($name)
     {
@@ -76,7 +76,7 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
 
         $path = preg_replace('#/{2,}#', '/', str_replace($this->separator, '/', $name));
 
-        return $path . '.twig';
+        return $path.'.twig';
     }
 
     /**

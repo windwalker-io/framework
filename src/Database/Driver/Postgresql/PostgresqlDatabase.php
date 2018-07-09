@@ -12,16 +12,16 @@ use Windwalker\Database\Command\AbstractDatabase;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
- * Class PostgresqlDatabase
+ * Class PostgresqlDatabase.
  *
  * @since 2.0
  */
 class PostgresqlDatabase extends AbstractDatabase
 {
     /**
-     * select
+     * select.
      *
-     * @return  static
+     * @return static
      */
     public function select()
     {
@@ -33,12 +33,12 @@ class PostgresqlDatabase extends AbstractDatabase
     }
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * @param bool   $ifNotExists
      * @param string $charset
      *
-     * @return  static
+     * @return static
      */
     public function create($ifNotExists = false, $charset = 'utf8')
     {
@@ -54,11 +54,11 @@ class PostgresqlDatabase extends AbstractDatabase
     }
 
     /**
-     * dropDatabase
+     * dropDatabase.
      *
      * @param bool $ifExists
      *
-     * @return  static
+     * @return static
      */
     public function drop($ifExists = false)
     {
@@ -72,9 +72,9 @@ class PostgresqlDatabase extends AbstractDatabase
 
         $query = $this->db->getQuery(true);
 
-        $query->select('pg_terminate_backend(' . $pid . ')')
+        $query->select('pg_terminate_backend('.$pid.')')
             ->from('pg_stat_activity')
-            ->where('datname = ' . $query->quote($this->getName()));
+            ->where('datname = '.$query->quote($this->getName()));
 
         $this->db->setQuery($query)->execute();
 
@@ -86,12 +86,12 @@ class PostgresqlDatabase extends AbstractDatabase
     }
 
     /**
-     * renameDatabase
+     * renameDatabase.
      *
-     * @param string  $newName
-     * @param boolean $returnNew
+     * @param string $newName
+     * @param bool   $returnNew
      *
-     * @return  static
+     * @return static
      */
     public function rename($newName, $returnNew = true)
     {
@@ -104,9 +104,9 @@ class PostgresqlDatabase extends AbstractDatabase
 
         $query = $this->db->getQuery(true);
 
-        $query->select('pg_terminate_backend(' . $pid . ')')
+        $query->select('pg_terminate_backend('.$pid.')')
             ->from('pg_stat_activity')
-            ->where('datname = ' . $query->quote($this->getName()));
+            ->where('datname = '.$query->quote($this->getName()));
 
         $this->db->setQuery($query)->execute();
 

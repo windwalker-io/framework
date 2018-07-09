@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Router\Route;
 use Windwalker\Router\Router;
 
 /**
- * Test class of Router
+ * Test class of Router.
  *
  * @since 2.0
  */
@@ -75,7 +75,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     {
         $routes = [
             'flower/(id)/(alias)' => ['_controller' => 'FlowerController'],
-            'flower/(id)/sakura' => ['_controller' => 'SakuraController'],
+            'flower/(id)/sakura'  => ['_controller' => 'SakuraController'],
         ];
 
         $this->instance->addMaps($routes);
@@ -146,9 +146,9 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testHasAndGetRoute
+     * testHasAndGetRoute.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Router\Router::hasRoute
      * @covers \Windwalker\Router\Router::getRoutes
@@ -267,9 +267,9 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGroup
+     * testGroup.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Router\Router::group
      */

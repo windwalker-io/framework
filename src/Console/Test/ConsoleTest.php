@@ -16,7 +16,7 @@ use Windwalker\Console\Test\Stubs\FooCommand;
 use Windwalker\Test\TestHelper;
 
 /**
- * Class ConsoleTest
+ * Class ConsoleTest.
  *
  * @since  2.0
  */
@@ -56,9 +56,9 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetAndSetLogger
+     * testGetAndSetLogger.
      *
-     * @return  void
+     * @return void
      */
     public function testGetAndSetLogger()
     {
@@ -74,9 +74,9 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetAndSetConfig
+     * testGetAndSetConfig.
      *
-     * @return  void
+     * @return void
      */
     public function testGetAndSetConfig()
     {
@@ -88,9 +88,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     /**
      * Nested call the command.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      */
     public function testNestedCall()
@@ -109,10 +110,11 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testExecuteByPath
+     * testExecuteByPath.
      *
-     * @return  void
      * @throws \Exception
+     *
+     * @return void
      */
     public function testExecuteByPath()
     {
@@ -128,9 +130,9 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetCommand
+     * testGetCommand.
      *
-     * @return  void
+     * @return void
      */
     public function testGetCommand()
     {
@@ -148,9 +150,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     /**
      * Test autoexit.
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @since  2.0
      */
     public function testSetAutoExit()
@@ -179,9 +182,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     /**
      * test construct.
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @since  2.0
      */
     public function testConstruct()
@@ -196,9 +200,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     /**
      * Test doExecute.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      */
     public function testDoExecute()
@@ -326,9 +331,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     /**
      * Test set code.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      */
     public function testSetHandler()

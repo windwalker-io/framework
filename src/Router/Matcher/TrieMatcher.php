@@ -22,14 +22,14 @@ class TrieMatcher extends AbstractMatcher
     /**
      * Property tree.
      *
-     * @var  array
+     * @var array
      */
     protected $tree = [];
 
     /**
      * Property vars.
      *
-     * @var  array
+     * @var array
      */
     protected $vars = [];
 
@@ -43,7 +43,7 @@ class TrieMatcher extends AbstractMatcher
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
@@ -54,7 +54,7 @@ class TrieMatcher extends AbstractMatcher
      * @param string $method
      * @param array  $options
      *
-     * @return  Route|false
+     * @return Route|false
      */
     public function match($route, $method = 'GET', $options = [])
     {
@@ -81,13 +81,13 @@ class TrieMatcher extends AbstractMatcher
     }
 
     /**
-     * matchSegment
+     * matchSegment.
      *
      * @param array $segments
      * @param array $node
      * @param int   $level
      *
-     * @return  bool|Route
+     * @return bool|Route
      */
     protected function matchSegment($segments, $node, $level = 1)
     {
@@ -104,7 +104,7 @@ class TrieMatcher extends AbstractMatcher
 
             // Start with a '(' is a regex
             if ($regex[0] === '(') {
-                preg_match(chr(1) . $regex . chr(1), $segment, $match);
+                preg_match(chr(1).$regex.chr(1), $segment, $match);
 
                 if (!$match) {
                     continue;
@@ -147,11 +147,11 @@ class TrieMatcher extends AbstractMatcher
     }
 
     /**
-     * buildTree
+     * buildTree.
      *
      * @param bool $refresh
      *
-     * @return  static
+     * @return static
      */
     protected function buildTree($refresh = false)
     {
@@ -166,7 +166,7 @@ class TrieMatcher extends AbstractMatcher
             // Compile this route
             $regex = TrieCompiler::compile($pattern, $routeItem->getRequirements());
 
-            $regex = trim($regex, chr(1) . '^$');
+            $regex = trim($regex, chr(1).'^$');
 
             // Make sure no other '/' is the path separator
             $regex = str_replace('[^/]', '{:PLACEHOLDER:}', $regex);
@@ -203,9 +203,9 @@ class TrieMatcher extends AbstractMatcher
     }
 
     /**
-     * clear
+     * clear.
      *
-     * @return  void
+     * @return void
      */
     public function clear()
     {
@@ -213,9 +213,9 @@ class TrieMatcher extends AbstractMatcher
     }
 
     /**
-     * Method to get property Tree
+     * Method to get property Tree.
      *
-     * @return  array
+     * @return array
      */
     public function getTree()
     {
@@ -223,11 +223,11 @@ class TrieMatcher extends AbstractMatcher
     }
 
     /**
-     * Method to set property tree
+     * Method to set property tree.
      *
-     * @param   array $tree
+     * @param array $tree
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTree($tree)
     {

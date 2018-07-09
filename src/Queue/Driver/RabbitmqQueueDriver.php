@@ -24,21 +24,21 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     /**
      * Property client.
      *
-     * @var  AMQPStreamConnection
+     * @var AMQPStreamConnection
      */
     protected $client;
 
     /**
      * Property queue.
      *
-     * @var  string
+     * @var string
      */
     protected $queue;
 
     /**
      * Property channel.
      *
-     * @var  AMQPChannel
+     * @var AMQPChannel
      */
     protected $channel;
 
@@ -57,7 +57,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
@@ -89,7 +89,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -105,7 +105,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
         $result = $this->channel->basic_get($queue, false);
 
         if (!$result) {
-            return null;
+            return;
         }
 
         $message = new QueueMessage();
@@ -128,7 +128,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -142,7 +142,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *
@@ -160,11 +160,11 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * queueDeclare
+     * queueDeclare.
      *
      * @param string $queue
      *
-     * @return  void
+     * @return void
      */
     protected function queueDeclare($queue)
     {
@@ -172,12 +172,13 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * getAMQPConnection
+     * getAMQPConnection.
      *
      * @param array $options
      *
-     * @return  AMQPStreamConnection
      * @throws \DomainException
+     *
+     * @return AMQPStreamConnection
      */
     public function getAMQPConnection(array $options)
     {
@@ -186,9 +187,9 @@ class RabbitmqQueueDriver implements QueueDriverInterface
         }
 
         $defaultOptions = [
-            'host' => 'localhost',
-            'port' => 5672,
-            'user' => 'guest',
+            'host'     => 'localhost',
+            'port'     => 5672,
+            'user'     => 'guest',
             'password' => 'guest',
         ];
 

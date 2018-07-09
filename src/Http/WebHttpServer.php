@@ -36,49 +36,49 @@ class WebHttpServer extends HttpServer
     /**
      * Property uri.
      *
-     * @var  PsrUri
+     * @var PsrUri
      */
     protected $psrUri;
 
     /**
      * Property uriData.
      *
-     * @var  UriData
+     * @var UriData
      */
     protected $uriData;
 
     /**
      * Property cachable.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $cachable;
 
     /**
      * Property mimeType.
      *
-     * @var  string
+     * @var string
      */
     protected $contentType = 'text/html';
 
     /**
      * Property charSet.
      *
-     * @var  string
+     * @var string
      */
     protected $charSet = 'utf-8';
 
     /**
      * Property modifiedDate.
      *
-     * @var  \DateTime
+     * @var \DateTime
      */
     protected $modifiedDate;
 
     /**
      * Property compressor.
      *
-     * @var  HttpCompressor
+     * @var HttpCompressor
      */
     protected $compressor;
 
@@ -106,7 +106,7 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * listen
+     * listen.
      *
      * @param callable $errorHandler
      */
@@ -118,11 +118,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * execute
+     * execute.
      *
      * @param callable $nextHandler
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function execute($nextHandler = null)
     {
@@ -139,7 +139,7 @@ class WebHttpServer extends HttpServer
         if (!$response->hasHeader('content-type')) {
             $response = $response->withHeader(
                 'content-type',
-                $this->getContentType() . '; charset=' . $this->getCharSet()
+                $this->getContentType().'; charset='.$this->getCharSet()
             );
         }
 
@@ -147,22 +147,22 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * prepareCache
+     * prepareCache.
      *
      * @param ResponseInterface $response
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function prepareCache(ResponseInterface $response)
     {
-        /** @var MessageInterface|ResponseInterface $response */
+        /* @var MessageInterface|ResponseInterface $response */
 
         // Force cachable
         if ($this->getCachable() === static::CACHE_ENABLE) {
             // Expires.
             $response = $response->withoutHeader('Expires')->withHeader(
                 'Expires',
-                gmdate('D, d M Y H:i:s', time() + 900) . ' GMT'
+                gmdate('D, d M Y H:i:s', time() + 900).' GMT'
             );
 
             // Last modified.
@@ -171,7 +171,7 @@ class WebHttpServer extends HttpServer
 
                 $response = $response->withoutHeader('Last-Modified')->withHeader(
                     'Last-Modified',
-                    $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT'
+                    $this->modifiedDate->format('D, d M Y H:i:s').' GMT'
                 );
             }
         } elseif ($this->getCachable() === static::CACHE_DISABLE) {
@@ -183,7 +183,7 @@ class WebHttpServer extends HttpServer
             // Always modified.
             $response = $response->withoutHeader('Last-Modified')->withHeader(
                 'Last-Modified',
-                gmdate('D, d M Y H:i:s') . ' GMT'
+                gmdate('D, d M Y H:i:s').' GMT'
             );
             $response = $response->withoutHeader('Cache-Control')->withHeader(
                 'Cache-Control',
@@ -200,10 +200,10 @@ class WebHttpServer extends HttpServer
     /**
      * Method to load the system URI strings for the application.
      *
-     * @param   string $requestUri   An optional request URI to use instead of detecting one from the
-     *                               server environment variables.
+     * @param string $requestUri An optional request URI to use instead of detecting one from the
+     *                           server environment variables.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -232,7 +232,7 @@ class WebHttpServer extends HttpServer
         $this->uriData->full = rtrim($original->__toString(), '/');
         $this->uriData->current = rtrim($original->withQuery('')->withFragment('')->__toString(), '/');
         $this->uriData->script = $scriptName;
-        $this->uriData->root = $host . $path;
+        $this->uriData->root = $host.$path;
         $this->uriData->host = $host;
         $this->uriData->path = $path;
 
@@ -254,10 +254,10 @@ class WebHttpServer extends HttpServer
     /**
      * Get system Uri object.
      *
-     * @param   string $requestUri The request uri string.
-     * @param   bool   $refresh    Refresh the uri.
+     * @param string $requestUri The request uri string.
+     * @param bool   $refresh    Refresh the uri.
      *
-     * @return  PsrUri  The system Uri object.
+     * @return PsrUri The system Uri object.
      *
      * @since   2.0
      */
@@ -287,9 +287,9 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to get property MimeType
+     * Method to get property MimeType.
      *
-     * @return  string
+     * @return string
      */
     public function getContentType()
     {
@@ -297,11 +297,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to set property mimeType
+     * Method to set property mimeType.
      *
-     * @param   string $contentType
+     * @param string $contentType
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setContentType($contentType)
     {
@@ -311,9 +311,9 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to get property CharSet
+     * Method to get property CharSet.
      *
-     * @return  string
+     * @return string
      */
     public function getCharSet()
     {
@@ -321,11 +321,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to set property charSet
+     * Method to set property charSet.
      *
-     * @param   string $charSet
+     * @param string $charSet
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCharSet($charSet)
     {
@@ -335,9 +335,9 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to get property ModifiedDate
+     * Method to get property ModifiedDate.
      *
-     * @return  \DateTime
+     * @return \DateTime
      */
     public function getModifiedDate()
     {
@@ -345,11 +345,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to set property modifiedDate
+     * Method to set property modifiedDate.
      *
-     * @param   \DateTime $modifiedDate
+     * @param \DateTime $modifiedDate
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setModifiedDate(\DateTime $modifiedDate)
     {
@@ -359,9 +359,9 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to get property UriData
+     * Method to get property UriData.
      *
-     * @return  UriData
+     * @return UriData
      */
     public function getUriData()
     {
@@ -369,11 +369,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to set property uriData
+     * Method to set property uriData.
      *
-     * @param   array|UriData $uriData
+     * @param array|UriData $uriData
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setUriData($uriData)
     {
@@ -387,11 +387,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * __get
+     * __get.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __get($name)
     {
@@ -403,13 +403,13 @@ class WebHttpServer extends HttpServer
             return $this->compressor;
         }
 
-        throw new \OutOfRangeException('Property: ' . $name . ' not exists.');
+        throw new \OutOfRangeException('Property: '.$name.' not exists.');
     }
 
     /**
-     * Method to get property Compressor
+     * Method to get property Compressor.
      *
-     * @return  HttpCompressor
+     * @return HttpCompressor
      */
     public function getCompressor()
     {
@@ -417,11 +417,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to set property compressor
+     * Method to set property compressor.
      *
-     * @param   HttpCompressor $compressor
+     * @param HttpCompressor $compressor
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCompressor(HttpCompressor $compressor)
     {
@@ -431,9 +431,9 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to get property Cachable
+     * Method to get property Cachable.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getCachable()
     {
@@ -441,11 +441,11 @@ class WebHttpServer extends HttpServer
     }
 
     /**
-     * Method to set property cachable
+     * Method to set property cachable.
      *
-     * @param   boolean $cachable
+     * @param bool $cachable
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function cachable($cachable = self::CACHE_CUSTOM_HEADER)
     {
@@ -457,7 +457,7 @@ class WebHttpServer extends HttpServer
     /**
      * Create Compressor object.
      *
-     * @param  string $acceptEncoding The HTTP_ACCEPT_ENCODING param, the common is "gzip, deflate".
+     * @param string $acceptEncoding The HTTP_ACCEPT_ENCODING param, the common is "gzip, deflate".
      *
      * @return HttpCompressor
      */

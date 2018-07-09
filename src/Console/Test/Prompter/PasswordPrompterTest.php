@@ -12,7 +12,7 @@ use Windwalker\Console\Test\Prompter\Stubs\FakePasswordPrompter;
 use Windwalker\Test\TestEnvironment;
 
 /**
- * Class PasswordPrompterTest
+ * Class PasswordPrompterTest.
  *
  * @since  2.0
  */
@@ -36,7 +36,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
     /**
      * Test prompter ask.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */

@@ -16,46 +16,46 @@ namespace Windwalker\Queue\Failer;
 interface QueueFailerInterface
 {
     /**
-     * add
+     * add.
      *
      * @param string $connection
      * @param string $queue
      * @param string $body
      * @param string $exception
      *
-     * @return  int|string
+     * @return int|string
      */
     public function add($connection, $queue, $body, $exception);
 
     /**
-     * all
+     * all.
      *
-     * @return  array
+     * @return array
      */
     public function all();
 
     /**
-     * get
+     * get.
      *
      * @param mixed $conditions
      *
-     * @return  array
+     * @return array
      */
     public function get($conditions);
 
     /**
-     * remove
+     * remove.
      *
      * @param mixed $conditions
      *
-     * @return  bool
+     * @return bool
      */
     public function remove($conditions);
 
     /**
-     * clear
+     * clear.
      *
-     * @return  bool
+     * @return bool
      */
     public function clear();
 }

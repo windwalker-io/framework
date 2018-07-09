@@ -12,7 +12,7 @@ use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Option\Option;
 
 /**
- * Class OptionTest
+ * Class OptionTest.
  *
  * @since  2.0
  */
@@ -28,7 +28,7 @@ class OptionTest extends \PHPUnit\Framework\TestCase
     /**
      * Test command instance.
      *
-     * @var  RootCommand
+     * @var RootCommand
      */
     protected $command;
 
@@ -94,9 +94,9 @@ class OptionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testHasAlias
+     * testHasAlias.
      *
-     * @return  void
+     * @return void
      */
     public function testHasAlias()
     {
@@ -163,11 +163,11 @@ class OptionTest extends \PHPUnit\Framework\TestCase
     /**
      * Test get value.
      *
-     * @param   array $inputs The input option.
+     * @param array $inputs The input option.
      *
      * @dataProvider  optionProvider
      *
-     * @return  void
+     * @return void
      *
      * @since         2.0
      */

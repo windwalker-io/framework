@@ -26,27 +26,25 @@ class Credential implements \ArrayAccess
     }
 
     /**
-     * __get
+     * __get.
      *
      * @param string $name
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __get($name)
     {
         if (isset($this->$name)) {
             return $this->$name;
         }
-
-        return null;
     }
 
     /**
-     * bind
+     * bind.
      *
      * @param array|object $values
      *
-     * @return  static
+     * @return static
      */
     public function bind($values = [])
     {
@@ -70,7 +68,7 @@ class Credential implements \ArrayAccess
      *
      * @param mixed $offset Offset key.
      *
-     * @return  boolean
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -82,8 +80,9 @@ class Credential implements \ArrayAccess
      *
      * @param mixed $offset Offset key.
      *
-     * @throws  \InvalidArgumentException
-     * @return  mixed The value to return.
+     * @throws \InvalidArgumentException
+     *
+     * @return mixed The value to return.
      */
     public function offsetGet($offset)
     {
@@ -96,8 +95,9 @@ class Credential implements \ArrayAccess
      * @param mixed $offset Offset key.
      * @param mixed $value  The value to set.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetSet($offset, $value)
     {
@@ -109,8 +109,9 @@ class Credential implements \ArrayAccess
      *
      * @param mixed $offset Offset key to unset.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetUnset($offset)
     {

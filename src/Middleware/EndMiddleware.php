@@ -18,9 +18,9 @@ class EndMiddleware extends AbstractMiddleware
     /**
      * Set next middleware.
      *
-     * @param   object $callable The middleware object.
+     * @param object $callable The middleware object.
      *
-     * @return  EndMiddleware  Return self to support chaining.
+     * @return EndMiddleware Return self to support chaining.
      */
     public function setNext($callable)
     {
@@ -30,17 +30,16 @@ class EndMiddleware extends AbstractMiddleware
     /**
      * Get next middleware.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getNext()
     {
-        return null;
     }
 
     /**
      * Call next middleware.
      *
-     * @param  array $data
+     * @param array $data
      *
      * @return mixed
      */

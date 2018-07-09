@@ -9,7 +9,7 @@
 namespace Windwalker\IO;
 
 /**
- * Windwalker Input Files Class
+ * Windwalker Input Files Class.
  *
  * @since  2.0
  */
@@ -18,7 +18,8 @@ class FilesInput extends Input
     /**
      * The pivoted data from a $_FILES or compatible array.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $decodedData = [];
@@ -26,10 +27,10 @@ class FilesInput extends Input
     /**
      * Prepare source.
      *
-     * @param   array   $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-     * @param   boolean $reference If set to true, he source in first argument will be reference.
+     * @param array $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param bool  $reference If set to true, he source in first argument will be reference.
      *
-     * @return  void
+     * @return void
      */
     public function prepareSource(&$source = null, $reference = false)
     {
@@ -39,10 +40,10 @@ class FilesInput extends Input
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name      The name of the input property (usually the name of the files INPUT tag) to get.
-     * @param   mixed  $default   The default value to return if the named property does not exist.
-     * @param   string $filter    The filter to apply to the value.
-     * @param   string $separator The symbol to separate path.
+     * @param string $name      The name of the input property (usually the name of the files INPUT tag) to get.
+     * @param mixed  $default   The default value to return if the named property does not exist.
+     * @param string $filter    The filter to apply to the value.
+     * @param string $separator The symbol to separate path.
      *
      * @return mixed The filtered input value.
      *
@@ -75,9 +76,9 @@ class FilesInput extends Input
     /**
      * Method to decode a data array.
      *
-     * @param   array $data The data array to decode.
+     * @param array $data The data array to decode.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -94,20 +95,20 @@ class FilesInput extends Input
         }
 
         return [
-            'name' => $data[0],
-            'type' => $data[1],
+            'name'     => $data[0],
+            'type'     => $data[1],
             'tmp_name' => $data[2],
-            'error' => $data[3],
-            'size' => $data[4],
+            'error'    => $data[3],
+            'size'     => $data[4],
         ];
     }
 
     /**
-     * Sets a value
+     * Sets a value.
      *
-     * @param   string $name      Name of the value to set.
-     * @param   mixed  $value     Value to assign to the input.
-     * @param   string $separator Symbol to separate path.
+     * @param string $name      Name of the value to set.
+     * @param mixed  $value     Value to assign to the input.
+     * @param string $separator Symbol to separate path.
      *
      * @since   2.0
      */

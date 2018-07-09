@@ -21,12 +21,11 @@ class StubDeamon extends AbstractDaemonApplication
      * Method to run the application routines.  Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
     protected function doExecute()
     {
-        return;
     }
 }

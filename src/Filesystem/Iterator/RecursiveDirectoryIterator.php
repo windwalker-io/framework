@@ -20,8 +20,8 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
      *
      * We remove . and .. when fetching folders' path.
      *
-     * @return  \SplFileInfo  The filename, file information, or $this depending on the set flags.
-     *          See the: http://www.php.net/manual/en/class.filesystemiterator.php#filesystemiterator.constants
+     * @return \SplFileInfo The filename, file information, or $this depending on the set flags.
+     *                      See the: http://www.php.net/manual/en/class.filesystemiterator.php#filesystemiterator.constants
      *
      * @since  2.0
      */
@@ -29,7 +29,7 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
     {
         $name = $this->getPathname();
 
-        $endletters = DIRECTORY_SEPARATOR . '.';
+        $endletters = DIRECTORY_SEPARATOR.'.';
 
         if (substr($name, -2) == $endletters) {
             $name = substr($name, 0, -2);

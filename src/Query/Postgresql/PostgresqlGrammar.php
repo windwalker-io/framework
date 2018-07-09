@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
 /**
- * Class PostgresqlQueryGrammar
+ * Class PostgresqlQueryGrammar.
  *
  * @since 2.0
  */
@@ -34,16 +34,16 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     /**
      * Property query.
      *
-     * @var  Query
+     * @var Query
      */
     public static $query = null;
 
     /**
-     * showDatabases
+     * showDatabases.
      *
      * @param array|string $where
      *
-     * @return  string
+     * @return string
      */
     public static function listDatabases($where = null)
     {
@@ -51,17 +51,17 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $where[] = 'datistemplate = false';
         $where = new QueryElement('WHERE', $where, ' AND ');
 
-        return 'SELECT datname FROM pg_database ' . $where . ';';
+        return 'SELECT datname FROM pg_database '.$where.';';
     }
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * @param string $name
      * @param string $encoding
      * @param string $owner
      *
-     * @return  string
+     * @return string
      */
     public static function createDatabase($name, $encoding = null, $owner = null)
     {
@@ -70,18 +70,18 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         return static::build(
             'CREATE DATABASE',
             $query->quoteName($name),
-            $encoding ? 'ENCODING ' . $query->quote($encoding) : null,
-            $owner ? 'OWNER ' . $query->quoteName($owner) : null
+            $encoding ? 'ENCODING '.$query->quote($encoding) : null,
+            $owner ? 'OWNER '.$query->quoteName($owner) : null
         );
     }
 
     /**
-     * dropTable
+     * dropTable.
      *
      * @param string $db
      * @param bool   $ifExist
      *
-     * @return  string
+     * @return string
      */
     public static function dropDatabase($db, $ifExist = false)
     {
@@ -95,11 +95,11 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * showTableColumn
+     * showTableColumn.
      *
      * @param string $table
      *
-     * @return  string
+     * @return string
      */
     public static function showTableColumns($table)
     {
@@ -129,7 +129,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
         // General
         $query->where(
-            'attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $query->quote($table) . '
+            'attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='.$query->quote($table).'
 	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
 	nspname = \'public\'))'
         )
@@ -140,12 +140,12 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * showDbTables
+     * showDbTables.
      *
      * @param string $dbname
      * @param string $where
      *
-     * @return  string
+     * @return string
      */
     public static function showDbTables($dbname, $where = null)
     {
@@ -153,9 +153,9 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
         $query->select('table_name AS "Name"')
             ->from('information_schema.tables')
-            ->where('table_type=' . $query->quote('BASE TABLE'))
+            ->where('table_type='.$query->quote('BASE TABLE'))
             ->where(
-                'table_schema NOT IN (' . $query->quote('pg_catalog') . ', ' . $query->quote('information_schema') . ')'
+                'table_schema NOT IN ('.$query->quote('pg_catalog').', '.$query->quote('information_schema').')'
             )
             ->order('table_name ASC');
 
@@ -167,7 +167,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * createTable
+     * createTable.
      *
      * @param string       $name
      * @param array        $columns
@@ -204,15 +204,15 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         }
 
         if ($pks) {
-            $cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
+            $cols[] = 'PRIMARY KEY '.static::buildIndexDeclare(null, (array) $pks, null);
         }
 
         $indexes = [];
 
         foreach ($keys as $key) {
             $define = [
-                'type' => 'INDEX',
-                'name' => null,
+                'type'    => 'INDEX',
+                'name'    => null,
                 'columns' => [],
                 'comment' => '',
             ];
@@ -223,7 +223,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
             $define = array_merge($define, $key);
 
-            $indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare(
+            $indexes[] = 'CREATE '.$define['type'].' '.static::buildIndexDeclare(
                 $define['name'],
                 $define['columns'],
                 $name
@@ -232,28 +232,28 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
         $indexes = implode(";\n", $indexes);
 
-        $cols = "(\n" . implode(",\n", $cols) . "\n)";
+        $cols = "(\n".implode(",\n", $cols)."\n)";
 
         return static::build(
             'CREATE TABLE',
             $ifNotExists ? 'IF NOT EXISTS' : null,
             $query->quoteName($name),
             $cols,
-            $inherits ? 'INHERITS (' . implode(',', $query->quoteName((array) $inherits)) . ')' : null,
-            $tablespace ? 'TABLESPACE ' . $query->quoteName($tablespace) : null,
+            $inherits ? 'INHERITS ('.implode(',', $query->quoteName((array) $inherits)).')' : null,
+            $tablespace ? 'TABLESPACE '.$query->quoteName($tablespace) : null,
             ";\n",
             $indexes ? $indexes : null
         );
     }
 
     /**
-     * dropTable
+     * dropTable.
      *
      * @param string $table
      * @param bool   $ifExists
      * @param string $option
      *
-     * @return  string
+     * @return string
      */
     public static function dropTable($table, $ifExists = false, $option = '')
     {
@@ -268,7 +268,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * comment
+     * comment.
      *
      * @param string $object
      * @param string $table
@@ -282,15 +282,15 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $query = static::getQuery();
 
         return static::build(
-            'COMMENT ON ' . $object,
-            $query->quoteName($table) . '.' . $query->quoteName($column),
+            'COMMENT ON '.$object,
+            $query->quoteName($table).'.'.$query->quoteName($column),
             'IS',
             $query->quote($comment)
         );
     }
 
     /**
-     * alterColumn
+     * alterColumn.
      *
      * @param string $operation
      * @param string $table
@@ -299,7 +299,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      * @param bool   $notNull
      * @param null   $default
      *
-     * @return  string
+     * @return string
      */
     public static function alterColumn($operation, $table, $column, $type = null, $notNull = false, $default = null)
     {
@@ -314,12 +314,12 @@ class PostgresqlGrammar extends AbstractQueryGrammar
             implode(' TO ', $column),
             $type,
             $notNull ? 'NOT NULL' : null,
-            !is_null($default) ? 'SET DEFAULT ' . $query->quote($default) : null
+            !is_null($default) ? 'SET DEFAULT '.$query->quote($default) : null
         );
     }
 
     /**
-     * Add column
+     * Add column.
      *
      * @param string $table
      * @param string $column
@@ -327,7 +327,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      * @param bool   $allowNull
      * @param string $default
      *
-     * @return  string
+     * @return string
      */
     public static function addColumn($table, $column, $type = 'text', $allowNull = false, $default = null)
     {
@@ -340,18 +340,18 @@ class PostgresqlGrammar extends AbstractQueryGrammar
             $query->quoteName($column),
             $type,
             $allowNull ? null : 'NOT NULL',
-            $default ? 'DEFAULT' . $query->quote($default) : null
+            $default ? 'DEFAULT'.$query->quote($default) : null
         );
     }
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string $table
      * @param string $oldColumn
      * @param string $newColumn
      *
-     * @return  string
+     * @return string
      */
     public static function renameColumn($table, $oldColumn, $newColumn)
     {
@@ -361,12 +361,12 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * dropColumn
+     * dropColumn.
      *
      * @param string $table
      * @param string $column
      *
-     * @return  string
+     * @return string
      */
     public static function dropColumn($table, $column)
     {
@@ -381,7 +381,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param string       $table
      * @param string       $type
@@ -402,11 +402,10 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * buildIndexDeclare
+     * buildIndexDeclare.
      *
      * @param string $name
      * @param array  $columns
-     *
      * @param        $table
      *
      * @return string
@@ -421,7 +420,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
                 $cols[] = $query->quoteName($val);
             } else {
                 if (!is_numeric($val)) {
-                    $string = is_string($val) ? ' ' . $query->quote($val) : '';
+                    $string = is_string($val) ? ' '.$query->quote($val) : '';
 
                     throw new \InvalidArgumentException(
                         sprintf(
@@ -432,21 +431,21 @@ class PostgresqlGrammar extends AbstractQueryGrammar
                     );
                 }
 
-                $cols[] = $query->quoteName($key) . '(' . $val . ')';
+                $cols[] = $query->quoteName($key).'('.$val.')';
             }
         }
 
-        $cols = '(' . implode(', ', $cols) . ')';
+        $cols = '('.implode(', ', $cols).')';
 
         return static::build(
             $name ? $query->quoteName($name) : null,
-            $table ? 'ON ' . $query->quoteName($table) : null,
+            $table ? 'ON '.$query->quoteName($table) : null,
             $cols
         );
     }
 
     /**
-     * dropIndex
+     * dropIndex.
      *
      * @param string $name
      * @param bool   $ifExists
@@ -467,14 +466,14 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * dropConstraint
+     * dropConstraint.
      *
      * @param string $table
      * @param string $name
      * @param bool   $ifExists
      * @param string $action
      *
-     * @return  string
+     * @return string
      */
     public static function dropConstraint($table, $name, $ifExists = false, $action = null)
     {
@@ -491,9 +490,9 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * build
+     * build.
      *
-     * @return  string
+     * @return string
      */
     public static function build()
     {
@@ -513,11 +512,11 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * getQuery
+     * getQuery.
      *
      * @param bool $new
      *
-     * @return  Query
+     * @return Query
      */
     public static function getQuery($new = false)
     {
@@ -529,14 +528,14 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string $table
      * @param string $oldColumn
      * @param string $newColumn
      * @param string $type
      *
-     * @return  string
+     * @return string
      */
     public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text')
     {

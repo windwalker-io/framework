@@ -13,7 +13,7 @@ use Windwalker\Database\Iterator\DataIterator;
 use Windwalker\Query\Query;
 
 /**
- * Class DatabaseReader
+ * Class DatabaseReader.
  *
  * @since 2.0
  */
@@ -22,14 +22,14 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Property driver.
      *
-     * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @var \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     protected $db;
 
     /**
      * Property cursor.
      *
-     * @var  resource
+     * @var resource
      */
     protected $cursor;
 
@@ -44,11 +44,11 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * setQuery
+     * setQuery.
      *
      * @param Query $query
      *
-     * @return  $this
+     * @return $this
      */
     public function setQuery($query)
     {
@@ -58,9 +58,9 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @return  static
+     * @return static
      */
     public function execute()
     {
@@ -76,9 +76,9 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * getIterator
+     * getIterator.
      *
-     * @return  DataIterator
+     * @return DataIterator
      */
     public function getIterator()
     {
@@ -90,10 +90,11 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Method to get the first field of the first row of the result set from the database query.
      *
-     * @return  mixed  The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadResult()
     {
@@ -114,12 +115,13 @@ abstract class AbstractReader implements \IteratorAggregate
      * Method to get an array of values from the <var>$offset</var> field in each row of the result set from
      * the database query.
      *
-     * @param   integer $offset The row offset to use to build the result array.
+     * @param int $offset The row offset to use to build the result array.
      *
-     * @return  mixed  The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadColumn($offset = 0)
     {
@@ -140,10 +142,11 @@ abstract class AbstractReader implements \IteratorAggregate
      * Method to get the first row of the result set from the database query as an array.  Columns are indexed
      * numerically so the first column in the result set would be accessible via <var>$row[0]</var>, etc.
      *
-     * @return  mixed  The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadArray()
     {
@@ -163,12 +166,13 @@ abstract class AbstractReader implements \IteratorAggregate
      * NOTE: Choosing to key the result array by a non-unique field can result in unwanted
      * behavior and should be avoided.
      *
-     * @param   string $key The name of a field on which to key the result array.
+     * @param string $key The name of a field on which to key the result array.
      *
-     * @return  mixed   The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadArrayList($key = null)
     {
@@ -193,10 +197,11 @@ abstract class AbstractReader implements \IteratorAggregate
      * Method to get the first row of the result set from the database query as an associative array
      * of ['field' => 'value'].
      *
-     * @return  mixed  The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadAssoc()
     {
@@ -214,12 +219,13 @@ abstract class AbstractReader implements \IteratorAggregate
      * of ['field_name' => 'row_value'].  The array of rows can optionally be keyed by a field name, but defaults to
      * a sequential numeric array.
      *
-     * @param   string $key The name of a field on which to key the result array.
+     * @param string $key The name of a field on which to key the result array.
      *
-     * @return  mixed   The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadAssocList($key = null)
     {
@@ -243,12 +249,13 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Method to get the first row of the result set from the database query as an object.
      *
-     * @param   string $class The class name to use for the returned row object.
+     * @param string $class The class name to use for the returned row object.
      *
-     * @return  mixed  The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadObject($class = 'stdClass')
     {
@@ -270,13 +277,14 @@ abstract class AbstractReader implements \IteratorAggregate
      * NOTE: Choosing to key the result array by a non-unique field name can result in unwanted
      * behavior and should be avoided.
      *
-     * @param   string $key   The name of a field on which to key the result array.
-     * @param   string $class The class name to use for the returned row objects.
+     * @param string $key   The name of a field on which to key the result array.
+     * @param string $class The class name to use for the returned row objects.
      *
-     * @return  mixed  The return value or null if the query failed.
+     * @throws \RuntimeException
+     *
+     * @return mixed The return value or null if the query failed.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function loadObjectList($key = null, $class = 'stdClass')
     {
@@ -300,9 +308,9 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * count
+     * count.
      *
-     * @param  resource $cursor
+     * @param resource $cursor
      *
      * @return mixed
      */
@@ -311,7 +319,7 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Method to fetch a row from the result set cursor as an array.
      *
-     * @return  mixed  Either the next row from the result set or false if there are no more rows.
+     * @return mixed Either the next row from the result set or false if there are no more rows.
      *
      * @since   2.0
      */
@@ -320,7 +328,7 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Method to fetch a row from the result set cursor as an associative array.
      *
-     * @return  mixed  Either the next row from the result set or false if there are no more rows.
+     * @return mixed Either the next row from the result set or false if there are no more rows.
      *
      * @since   2.0
      */
@@ -329,9 +337,9 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Method to fetch a row from the result set cursor as an object.
      *
-     * @param   string $class Unused, only necessary so method signature will be the same as parent.
+     * @param string $class Unused, only necessary so method signature will be the same as parent.
      *
-     * @return  mixed   Either the next row from the result set or false if there are no more rows.
+     * @return mixed Either the next row from the result set or false if there are no more rows.
      *
      * @since   2.0
      */
@@ -341,7 +349,7 @@ abstract class AbstractReader implements \IteratorAggregate
      * Get the number of affected rows for the previous executed SQL statement.
      * Only applicable for DELETE, INSERT, or UPDATE statements.
      *
-     * @param  resource $cursor
+     * @param resource $cursor
      *
      * @return int The number of affected rows.
      *
@@ -352,14 +360,14 @@ abstract class AbstractReader implements \IteratorAggregate
     /**
      * Method to get the auto-incremented value from the last INSERT statement.
      *
-     * @return  string  The value of the auto-increment field from the last inserted row.
+     * @return string The value of the auto-increment field from the last inserted row.
      *
      * @since   2.0
      */
     abstract public function insertId();
 
     /**
-     * freeResult
+     * freeResult.
      *
      * @return $this
      */
@@ -371,9 +379,9 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @return \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     public function getDriver()
     {
@@ -381,11 +389,11 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
+     * @param \Windwalker\Database\Driver\AbstractDatabaseDriver $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver($db)
     {
@@ -395,9 +403,9 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Cursor
+     * Method to get property Cursor.
      *
-     * @return  resource
+     * @return resource
      */
     public function getCursor()
     {
@@ -405,11 +413,11 @@ abstract class AbstractReader implements \IteratorAggregate
     }
 
     /**
-     * Method to set property cursor
+     * Method to set property cursor.
      *
-     * @param   resource $cursor
+     * @param resource $cursor
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCursor($cursor)
     {

@@ -9,7 +9,7 @@
 namespace Windwalker\DataMapper;
 
 /**
- * DataMapper Interface
+ * DataMapper Interface.
  */
 interface DataMapperInterface
 {
@@ -20,18 +20,18 @@ interface DataMapperInterface
      * - `$mapper->find(array('id' => 5), 'date', 20, 10);`
      * - `$mapper->find(null, 'id', 0, 1);`
      *
-     * @param mixed   $conditions Where conditions, you can use array or Compare object.
-     *                            Example:
-     *                            - `array('id' => 5)` => id = 5
-     *                            - `new GteCompare('id', 20)` => 'id >= 20'
-     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param mixed   $order      Order sort, can ba string, array or object.
-     *                            Example:
-     *                            - `id ASC` => ORDER BY id ASC
-     *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-     * @param integer $start      Limit start number.
-     * @param integer $limit      Limit rows.
-     * @param string  $key        The index key.
+     * @param mixed  $conditions Where conditions, you can use array or Compare object.
+     *                           Example:
+     *                           - `array('id' => 5)` => id = 5
+     *                           - `new GteCompare('id', 20)` => 'id >= 20'
+     *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed  $order      Order sort, can ba string, array or object.
+     *                           Example:
+     *                           - `id ASC` => ORDER BY id ASC
+     *                           - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     * @param int    $start      Limit start number.
+     * @param int    $limit      Limit rows.
+     * @param string $key        The index key.
      *
      * @return mixed Found rows data set.
      */
@@ -42,13 +42,13 @@ interface DataMapperInterface
      *
      * Same as `$mapper->find(null, 'id', $start, $limit);`
      *
-     * @param mixed   $order Order sort, can ba string, array or object.
-     *                       Example:
-     *                       - 'id ASC' => ORDER BY id ASC
-     *                       - array('catid DESC', 'id') => ORDER BY catid DESC, id
-     * @param integer $start Limit start number.
-     * @param integer $limit Limit rows.
-     * @param string  $key   The index key.
+     * @param mixed  $order Order sort, can ba string, array or object.
+     *                      Example:
+     *                      - 'id ASC' => ORDER BY id ASC
+     *                      - array('catid DESC', 'id') => ORDER BY catid DESC, id
+     * @param int    $start Limit start number.
+     * @param int    $limit Limit rows.
+     * @param string $key   The index key.
      *
      * @return mixed Found rows data set.
      */
@@ -76,23 +76,23 @@ interface DataMapperInterface
     /**
      * Find column as an array.
      *
-     * @param string  $column     The column we want to select.
-     * @param mixed   $conditions Where conditions, you can use array or Compare object.
-     *                            Example:
-     *                            - `array('id' => 5)` => id = 5
-     *                            - `new GteCompare('id', 20)` => 'id >= 20'
-     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param mixed   $order      Order sort, can ba string, array or object.
-     *                            Example:
-     *                            - `id ASC` => ORDER BY id ASC
-     *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-     * @param integer $start      Limit start number.
-     * @param integer $limit      Limit rows.
-     * @param string  $key        The index key.
-     *
-     * @return  mixed
+     * @param string $column     The column we want to select.
+     * @param mixed  $conditions Where conditions, you can use array or Compare object.
+     *                           Example:
+     *                           - `array('id' => 5)` => id = 5
+     *                           - `new GteCompare('id', 20)` => 'id >= 20'
+     *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed  $order      Order sort, can ba string, array or object.
+     *                           Example:
+     *                           - `id ASC` => ORDER BY id ASC
+     *                           - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     * @param int    $start      Limit start number.
+     * @param int    $limit      Limit rows.
+     * @param string $key        The index key.
      *
      * @throws \InvalidArgumentException
+     *
+     * @return mixed
      */
     public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null);
 
@@ -101,7 +101,7 @@ interface DataMapperInterface
      *
      * @param mixed $dataset The data set contains data we want to store.
      *
-     * @return  mixed  Data set data with inserted id.
+     * @return mixed Data set data with inserted id.
      */
     public function create($dataset);
 
@@ -110,7 +110,7 @@ interface DataMapperInterface
      *
      * @param mixed $data Send a data in and store.
      *
-     * @return  mixed Data with inserted id.
+     * @return mixed Data with inserted id.
      */
     public function createOne($data);
 
@@ -121,7 +121,7 @@ interface DataMapperInterface
      * @param array $condFields The where condition tell us record exists or not, if not set,
      *                          will use primary key instead.
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     public function update($dataset, $condFields = null);
 
@@ -139,7 +139,7 @@ interface DataMapperInterface
      *                          - `new GteCompare('id', 20)` => 'id >= 20'
      *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     public function updateBatch($data, $conditions = []);
 
@@ -150,7 +150,7 @@ interface DataMapperInterface
      * @param array $condFields The where condition tell us record exists or not, if not set,
      *                          will use primary key instead.
      *
-     * @return  mixed Updated data.
+     * @return mixed Updated data.
      */
     public function updateOne($data, $condFields = null);
 
@@ -164,7 +164,7 @@ interface DataMapperInterface
      *                          - `new GteCompare('id', 20)` => 'id >= 20'
      *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     public function flush($dataset, $conditions = []);
 
@@ -176,7 +176,7 @@ interface DataMapperInterface
      * @param array $condFields The where condition tell us record exists or not, if not set,
      *                          will use primary key instead.
      *
-     * @return  mixed Saved data set.
+     * @return mixed Saved data set.
      */
     public function save($dataset, $condFields = null);
 
@@ -187,20 +187,20 @@ interface DataMapperInterface
      * @param array $condFields The where condition tell us record exists or not, if not set,
      *                          will use primary key instead.
      *
-     * @return  mixed Saved data.
+     * @return mixed Saved data.
      */
     public function saveOne($data, $condFields = null);
 
     /**
      * Delete records by where conditions.
      *
-     * @param mixed $conditions   Where conditions, you can use array or Compare object.
-     *                            Example:
-     *                            - `array('id' => 5)` => id = 5
-     *                            - `new GteCompare('id', 20)` => 'id >= 20'
-     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed $conditions Where conditions, you can use array or Compare object.
+     *                          Example:
+     *                          - `array('id' => 5)` => id = 5
+     *                          - `new GteCompare('id', 20)` => 'id >= 20'
+     *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @return  boolean Will be always true.
+     * @return bool Will be always true.
      */
     public function delete($conditions);
 }

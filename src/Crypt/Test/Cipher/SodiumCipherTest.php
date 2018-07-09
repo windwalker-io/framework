@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Crypt\Cipher\SodiumCipher;
 
 /**
- * Test class of Cipher3DES
+ * Test class of Cipher3DES.
  *
  * @since 2.0
  */

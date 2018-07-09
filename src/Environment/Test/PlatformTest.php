@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Environment\Test;
 use Windwalker\Environment\Platform;
 
 /**
- * Test class of Server
+ * Test class of Server.
  *
  * @since 2.0
  */
@@ -27,35 +27,35 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     /**
      * Property os.
      *
-     * @var boolean
+     * @var bool
      */
     protected $os;
 
     /**
      * Property isWin.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $isWin;
 
     /**
      * Property isMac.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $isMac;
 
     /**
      * Property isUnix.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $isUnix;
 
     /**
      * Property isLinux.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $isLinux;
 
@@ -92,9 +92,9 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getOSTestData
+     * getOSTestData.
      *
-     * @return  array
+     * @return array
      */
     public function getIsWinTestData()
     {
@@ -116,9 +116,9 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getOSTestData
+     * getOSTestData.
      *
-     * @return  array
+     * @return array
      */
     public function getIsUnixTestData()
     {
@@ -140,9 +140,9 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getOSTestData
+     * getOSTestData.
      *
-     * @return  array
+     * @return array
      */
     public function getIsLinuxTestData()
     {
@@ -180,8 +180,8 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test isWin().
      *
-     * @param string  $os
-     * @param boolean $value
+     * @param string $os
+     * @param bool   $value
      *
      * @return void
      *
@@ -200,8 +200,8 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test isUnix().
      *
-     * @param string  $os
-     * @param boolean $value
+     * @param string $os
+     * @param bool   $value
      *
      * @return void
      *
@@ -220,8 +220,8 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test isLinux().
      *
-     * @param string  $os
-     * @param boolean $value
+     * @param string $os
+     * @param bool   $value
      *
      * @return void
      *

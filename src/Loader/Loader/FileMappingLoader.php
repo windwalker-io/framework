@@ -9,7 +9,7 @@
 namespace Windwalker\Loader\Loader;
 
 /**
- * Class FileMappingLoader
+ * Class FileMappingLoader.
  *
  * @since 2.0
  */
@@ -18,17 +18,17 @@ class FileMappingLoader extends AbstractLoader
     /**
      * Property maps.
      *
-     * @var  array
+     * @var array
      */
     protected $maps = [];
 
     /**
-     * addMap
+     * addMap.
      *
      * @param string $class
      * @param string $path
      *
-     * @return  FileMappingLoader
+     * @return FileMappingLoader
      */
     public function addMap($class, $path)
     {

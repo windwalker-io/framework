@@ -9,7 +9,7 @@
 namespace Windwalker\Language\Localise;
 
 /**
- * Class ZhCNLocalise
+ * Class ZhCNLocalise.
  *
  * @since 2.0
  */

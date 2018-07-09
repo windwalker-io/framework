@@ -39,21 +39,21 @@ class DualIterator implements \Iterator
     /**
      * Property lhs.
      *
-     * @var  \Iterator
+     * @var \Iterator
      */
     private $lhs;
 
     /**
      * Property rhs.
      *
-     * @var  \Iterator
+     * @var \Iterator
      */
     private $rhs;
 
     /**
      * Property flags.
      *
-     * @var  int
+     * @var int
      */
     private $flags;
 
@@ -113,7 +113,7 @@ class DualIterator implements \Iterator
     }
 
     /**
-     * Rewind both inner iterators
+     * Rewind both inner iterators.
      *
      * @return void
      */
@@ -126,7 +126,7 @@ class DualIterator implements \Iterator
     /**
      * Is valid.
      *
-     * @return boolean whether both inner iterators are valid
+     * @return bool whether both inner iterators are valid
      */
     public function valid()
     {
@@ -149,7 +149,7 @@ class DualIterator implements \Iterator
             case self::CURRENT_RHS:
                 return $this->rhs->current();
             case self::CURRENT_0:
-                return null;
+                return;
         }
     }
 
@@ -169,12 +169,12 @@ class DualIterator implements \Iterator
             case self::CURRENT_RHS:
                 return $this->rhs->key();
             case self::CURRENT_0:
-                return null;
+                return;
         }
     }
 
     /**
-     * Move both inner iterators forward
+     * Move both inner iterators forward.
      *
      * @return void
      */
@@ -187,8 +187,8 @@ class DualIterator implements \Iterator
     /**
      * Are Identical.
      *
-     * @return boolean Whether both inner iterators are valid and have identical
-     *                 current and key values or both are non valid.
+     * @return bool Whether both inner iterators are valid and have identical
+     *              current and key values or both are non valid.
      */
     public function areIdentical()
     {
@@ -201,8 +201,8 @@ class DualIterator implements \Iterator
     /**
      * Are equal.
      *
-     * @return boolean whether both inner iterators are valid and have equal current
-     * and key values or both are non valid.
+     * @return bool whether both inner iterators are valid and have equal current
+     *              and key values or both are non valid.
      */
     public function areEqual()
     {
@@ -217,9 +217,9 @@ class DualIterator implements \Iterator
      *
      * @param \Iterator $lhs       Left  Hand Side Iterator
      * @param \Iterator $rhs       Right Hand Side Iterator
-     * @param boolean   $identical Whether to use areEqual() or areIdentical()
+     * @param bool      $identical Whether to use areEqual() or areIdentical()
      *
-     * @return boolean whether both iterators are equal/identical
+     * @return bool whether both iterators are equal/identical
      *
      * @note If one implements RecursiveIterator the other must do as well.
      *       And if both do then a recursive comparison is being used.
@@ -234,7 +234,7 @@ class DualIterator implements \Iterator
                 return false;
             }
         } else {
-            $it = new DualIterator($lhs, $rhs, self::CURRENT_0 | self::KEY_0);
+            $it = new self($lhs, $rhs, self::CURRENT_0 | self::KEY_0);
         }
 
         if ($identical) {

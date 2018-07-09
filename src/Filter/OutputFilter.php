@@ -11,24 +11,24 @@ namespace Windwalker\Filter;
 use Windwalker\Filter\Unicode\UnicodeHelper;
 
 /**
- * Windwalker Output Filter
+ * Windwalker Output Filter.
  *
  * @since  2.0
  */
 class OutputFilter
 {
     /**
-     * Makes an object safe to display in forms
+     * Makes an object safe to display in forms.
      *
      * Object parameters that are non-string, array, object or start with underscore
      * will be converted
      *
-     * @param   object  &$mixed         An object to be parsed
-     * @param   integer $quote_style    The optional quote style for the htmlspecialchars function
-     * @param   mixed   $exclude_keys   An optional string single field name or array of field names not
-     *                                  to be parsed (eg, for a textarea)
+     * @param object &$mixed       An object to be parsed
+     * @param int    $quote_style  The optional quote style for the htmlspecialchars function
+     * @param mixed  $exclude_keys An optional string single field name or array of field names not
+     *                             to be parsed (eg, for a textarea)
      *
-     * @return  object
+     * @return object
      */
     public static function objectHTMLSafe(&$mixed, $quote_style = ENT_QUOTES, $exclude_keys = '')
     {
@@ -54,9 +54,9 @@ class OutputFilter
     /**
      * This method processes a string and replaces all instances of & with &amp; in links only.
      *
-     * @param   string $input String to process
+     * @param string $input String to process
      *
-     * @return  string  Processed string
+     * @return string Processed string
      */
     public static function linkXHTMLSafe($input)
     {
@@ -67,7 +67,7 @@ class OutputFilter
             function ($m) {
                 $rx = '&(?!amp;)';
 
-                return preg_replace('#' . $rx . '#', '&amp;', $m[0]);
+                return preg_replace('#'.$rx.'#', '&amp;', $m[0]);
             },
             $input
         );
@@ -77,9 +77,9 @@ class OutputFilter
      * This method processes a string and replaces all accented UTF-8 characters by unaccented
      * ASCII-7 "equivalents", whitespaces are replaced by hyphens and the string is lowercase.
      *
-     * @param   string $string String to process
+     * @param string $string String to process
      *
-     * @return  string  Processed string
+     * @return string Processed string
      *
      * @since   2.0
      */
@@ -105,9 +105,9 @@ class OutputFilter
     /**
      * This method implements unicode slugs instead of transliteration.
      *
-     * @param   string $string String to process
+     * @param string $string String to process
      *
-     * @return  string  Processed string
+     * @return string Processed string
      *
      * @since   2.0
      */
@@ -137,11 +137,11 @@ class OutputFilter
     }
 
     /**
-     * Replaces &amp; with & for XHTML compliance
+     * Replaces &amp; with & for XHTML compliance.
      *
-     * @param   string $text Text to process
+     * @param string $text Text to process
      *
-     * @return  string  Processed string.
+     * @return string Processed string.
      */
     public static function ampReplace($text)
     {
@@ -156,11 +156,11 @@ class OutputFilter
     }
 
     /**
-     * Cleans text of all formatting and scripting code
+     * Cleans text of all formatting and scripting code.
      *
-     * @param   string &$text Text to clean
+     * @param string &$text Text to clean
      *
-     * @return  string  Cleaned text.
+     * @return string Cleaned text.
      */
     public static function cleanText(&$text)
     {
@@ -178,11 +178,11 @@ class OutputFilter
     }
 
     /**
-     * Strip img-tags from string
+     * Strip img-tags from string.
      *
-     * @param   string $string Sting to be cleaned.
+     * @param string $string Sting to be cleaned.
      *
-     * @return  string  Cleaned string
+     * @return string Cleaned string
      */
     public static function stripImages($string)
     {
@@ -190,11 +190,11 @@ class OutputFilter
     }
 
     /**
-     * Strip iframe-tags from string
+     * Strip iframe-tags from string.
      *
-     * @param   string $string Sting to be cleaned.
+     * @param string $string Sting to be cleaned.
      *
-     * @return  string  Cleaned string
+     * @return string Cleaned string
      */
     public static function stripIframes($string)
     {
@@ -202,11 +202,11 @@ class OutputFilter
     }
 
     /**
-     * stripScript
+     * stripScript.
      *
      * @param string $string
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function stripScript($string)
     {
@@ -214,11 +214,11 @@ class OutputFilter
     }
 
     /**
-     * stripStyle
+     * stripStyle.
      *
      * @param string $string
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function stripStyle($string)
     {
@@ -226,11 +226,11 @@ class OutputFilter
     }
 
     /**
-     * stripLinks
+     * stripLinks.
      *
-     * @param   string $string
+     * @param string $string
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function stripLinks($string)
     {

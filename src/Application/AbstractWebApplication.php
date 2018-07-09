@@ -41,7 +41,8 @@ abstract class AbstractWebApplication extends AbstractApplication
     /**
      * The application environment object.
      *
-     * @var    WebEnvironment
+     * @var WebEnvironment
+     *
      * @since  2.0
      */
     protected $environment;
@@ -49,42 +50,42 @@ abstract class AbstractWebApplication extends AbstractApplication
     /**
      * Property browser.
      *
-     * @var  Browser
+     * @var Browser
      */
     protected $browser;
 
     /**
      * Property platform.
      *
-     * @var  Platform
+     * @var Platform
      */
     protected $platform;
 
     /**
      * Property server.
      *
-     * @var  WebHttpServer
+     * @var WebHttpServer
      */
     protected $server;
 
     /**
      * Property finalHandler.
      *
-     * @var  callable
+     * @var callable
      */
     protected $finalHandler;
 
     /**
      * Class constructor.
      *
-     * @param   Request        $request       An optional argument to provide dependency injection for the Http request
-     *                                        object.
-     * @param   Structure      $config        An optional argument to provide dependency injection for the
-     *                                        application's
-     *                                        config object.
-     * @param   WebEnvironment $environment   An optional argument to provide dependency injection for the
-     *                                        application's
-     *                                        environment object.
+     * @param Request        $request     An optional argument to provide dependency injection for the Http request
+     *                                    object.
+     * @param Structure      $config      An optional argument to provide dependency injection for the
+     *                                    application's
+     *                                    config object.
+     * @param WebEnvironment $environment An optional argument to provide dependency injection for the
+     *                                    application's
+     *                                    environment object.
      *
      * @since   2.0
      */
@@ -111,7 +112,7 @@ abstract class AbstractWebApplication extends AbstractApplication
     /**
      * Execute the application.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -138,7 +139,7 @@ abstract class AbstractWebApplication extends AbstractApplication
      * Method to run the application routines. Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.0
      */
@@ -150,11 +151,11 @@ abstract class AbstractWebApplication extends AbstractApplication
     /**
      * Method as the Psr7 WebHttpServer handler.
      *
-     * @param  Request  $request  The Psr7 ServerRequest to get request params.
-     * @param  Response $response The Psr7 Response interface to prepare respond data.
-     * @param  callable $next     The next handler to support middleware pattern.
+     * @param Request  $request  The Psr7 ServerRequest to get request params.
+     * @param Response $response The Psr7 Response interface to prepare respond data.
+     * @param callable $next     The next handler to support middleware pattern.
      *
-     * @return  Response  The returned response object.
+     * @return Response The returned response object.
      *
      * @since   3.0
      */
@@ -163,7 +164,7 @@ abstract class AbstractWebApplication extends AbstractApplication
     /**
      * Magic method to render output.
      *
-     * @return  string  Rendered string.
+     * @return string Rendered string.
      *
      * @since   2.0
      */
@@ -183,10 +184,10 @@ abstract class AbstractWebApplication extends AbstractApplication
      * or "303 See Other" code in the header pointing to the new location. If the headers have already been
      * sent this will be accomplished using a JavaScript statement.
      *
-     * @param   string      $url  The URL to redirect to. Can only be http/https URL
-     * @param   boolean|int $code True if the page is 301 Permanently Moved, otherwise 303 See Other is assumed.
+     * @param string   $url  The URL to redirect to. Can only be http/https URL
+     * @param bool|int $code True if the page is 301 Permanently Moved, otherwise 303 See Other is assumed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -210,13 +211,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 
             // We just need the prefix since we have a path relative to the root.
             if ($url[0] === '/') {
-                $url = $prefix . $url;
+                $url = $prefix.$url;
             } else {
                 // It's relative to where we are now, so lets add that.
                 $parts = explode('/', $uri->toString(['path']));
                 array_pop($parts);
-                $path = implode('/', $parts) . '/';
-                $url = $prefix . $path . $url;
+                $path = implode('/', $parts).'/';
+                $url = $prefix.$path.$url;
             }
         }
 
@@ -229,8 +230,8 @@ abstract class AbstractWebApplication extends AbstractApplication
                 && !ApplicationHelper::isAscii($url)) {
                 $html = '<html><head>';
                 $html .= '<meta http-equiv="content-type" content="text/html; charset='
-                    . $this->server->getCharSet() . '" />';
-                $html .= '<script>document.location.href=\'' . $url . '\';</script>';
+                    .$this->server->getCharSet().'" />';
+                $html .= '<script>document.location.href=\''.$url.'\';</script>';
                 $html .= '</head><body></body></html>';
 
                 echo $html;
@@ -244,9 +245,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property Environment
+     * Method to get property Environment.
      *
-     * @return  \Windwalker\Environment\WebEnvironment
+     * @return \Windwalker\Environment\WebEnvironment
      *
      * @since   2.0
      */
@@ -256,11 +257,11 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to set property environment
+     * Method to set property environment.
      *
-     * @param   \Windwalker\Environment\WebEnvironment $environment
+     * @param \Windwalker\Environment\WebEnvironment $environment
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -272,9 +273,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property FinalHandler
+     * Method to get property FinalHandler.
      *
-     * @return  callable
+     * @return callable
      *
      * @since   3.0
      */
@@ -284,11 +285,11 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to set property finalHandler
+     * Method to set property finalHandler.
      *
-     * @param   callable $finalHandler
+     * @param callable $finalHandler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   3.0
      */
@@ -303,10 +304,9 @@ abstract class AbstractWebApplication extends AbstractApplication
      * Method to check to see if headers have already been sent.
      * We wrap headers_sent() function with this method for testing reason.
      *
-     * @return  boolean  True if the headers have already been sent.
+     * @return bool True if the headers have already been sent.
      *
      * @see     headers_sent()
-     *
      * @since   3.0
      */
     public function checkHeadersSent()
@@ -315,9 +315,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property Server
+     * Method to get property Server.
      *
-     * @return  WebHttpServer
+     * @return WebHttpServer
      *
      * @since   3.0
      */
@@ -327,11 +327,11 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to set property server
+     * Method to set property server.
      *
-     * @param   WebHttpServer $server
+     * @param WebHttpServer $server
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   3.0
      */
@@ -343,9 +343,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property Request
+     * Method to get property Request.
      *
-     * @return  Request
+     * @return Request
      *
      * @since   3.0
      */
@@ -355,9 +355,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property Uri
+     * Method to get property Uri.
      *
-     * @return  UriData
+     * @return UriData
      *
      * @since   3.0
      */
@@ -367,9 +367,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property Browser
+     * Method to get property Browser.
      *
-     * @return  Browser
+     * @return Browser
      *
      * @since   3.0
      */
@@ -379,9 +379,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     }
 
     /**
-     * Method to get property Platform
+     * Method to get property Platform.
      *
-     * @return  Platform
+     * @return Platform
      *
      * @since   3.0
      */
@@ -393,9 +393,9 @@ abstract class AbstractWebApplication extends AbstractApplication
     /**
      * is utilized for reading data from inaccessible members.
      *
-     * @param   $name  string
+     * @param   $name string
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __get($name)
     {
@@ -416,7 +416,7 @@ abstract class AbstractWebApplication extends AbstractApplication
         ];
 
         if (in_array(strtolower($name), $getters, true)) {
-            $method = 'get' . ucfirst($name);
+            $method = 'get'.ucfirst($name);
 
             return $this->$method();
         }

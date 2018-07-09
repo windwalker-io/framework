@@ -20,7 +20,7 @@ interface ProfilerAwareInterface
      *
      * If profiler not exists, a NullProfiler will instead.
      *
-     * @return  ProfilerInterface
+     * @return ProfilerInterface
      *
      * @since   2.1.1
      */
@@ -29,9 +29,9 @@ interface ProfilerAwareInterface
     /**
      * Set Profiler.
      *
-     * @param   ProfilerInterface $profiler $ths profiler to set into this object.
+     * @param ProfilerInterface $profiler $ths profiler to set into this object.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.1.1
      */

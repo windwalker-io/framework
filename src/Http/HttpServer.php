@@ -25,45 +25,45 @@ class HttpServer
     /**
      * The callback to handle server task.
      *
-     * @var  callable
+     * @var callable
      */
     protected $handler;
 
     /**
      * Request object to contain request data.
      *
-     * @var  ServerRequestInterface
+     * @var ServerRequestInterface
      */
     protected $request;
 
     /**
      * The response object to wrap body and headers.
      *
-     * @var  ResponseInterface
+     * @var ResponseInterface
      */
     protected $response;
 
     /**
      * The output emitter.
      *
-     * @var  OutputInterface
+     * @var OutputInterface
      */
     protected $output;
 
     /**
-     * Create a Server instance
+     * Create a Server instance.
      *
      * Creates a server instance from the callback and the following
      * PHP environmental values:
      *
-     * @param   callable $handler The server handler.
-     * @param   array    $server  The server variable. Typically this will be the $_SERVER superglobal.
-     * @param   array    $query   The GET uri query. Typically this will be the $_GET superglobal.
-     * @param   array    $body    The POST body. Typically this will be the $_POST superglobal.
-     * @param   array    $cookies The cookies. Typically this will be the $_COOKIE superglobal
-     * @param   array    $files   The uploaded file data. Typically this will be the $_FILES superglobal.
+     * @param callable $handler The server handler.
+     * @param array    $server  The server variable. Typically this will be the $_SERVER superglobal.
+     * @param array    $query   The GET uri query. Typically this will be the $_GET superglobal.
+     * @param array    $body    The POST body. Typically this will be the $_POST superglobal.
+     * @param array    $cookies The cookies. Typically this will be the $_COOKIE superglobal
+     * @param array    $files   The uploaded file data. Typically this will be the $_FILES superglobal.
      *
-     * @return  static  The Server instance.
+     * @return static The Server instance.
      */
     public static function createFromGlobals(
         $handler = null,
@@ -79,19 +79,19 @@ class HttpServer
     }
 
     /**
-     * Create a Server instance from an existing request object
+     * Create a Server instance from an existing request object.
      *
      * Provided a callback, an existing request object, and optionally an
      * existing response object, create and return the Server instance.
      *
      * If no Response object is provided, one will be created.
      *
-     * @param   callable               $handler  The server handler.
-     * @param   ServerRequestInterface $request  The Request object.
-     * @param   ResponseInterface      $response The Response object.
-     * @param   OutputInterface        $output   The Output emitter object.
+     * @param callable               $handler  The server handler.
+     * @param ServerRequestInterface $request  The Request object.
+     * @param ResponseInterface      $response The Response object.
+     * @param OutputInterface        $output   The Output emitter object.
      *
-     * @return  static  The Server instance.
+     * @return static The Server instance.
      */
     public static function create(
         $handler = null,
@@ -103,17 +103,17 @@ class HttpServer
     }
 
     /**
-     * Create a Server instance from an existing request object
+     * Create a Server instance from an existing request object.
      *
      * Provided a callback, an existing request object, and optionally an
      * existing response object, create and return the Server instance.
      *
      * If no Response object is provided, one will be created.
      *
-     * @param   callable               $handler  The server handler.
-     * @param   ServerRequestInterface $request  The Request object.
-     * @param   ResponseInterface      $response The Response object.
-     * @param   OutputInterface        $output   The Output emitter object.
+     * @param callable               $handler  The server handler.
+     * @param ServerRequestInterface $request  The Request object.
+     * @param ResponseInterface      $response The Response object.
+     * @param OutputInterface        $output   The Output emitter object.
      */
     public function __construct(
         $handler = null,
@@ -130,7 +130,7 @@ class HttpServer
     /**
      * Execute the server.
      *
-     * @param   callable $errorHandler The error handler callback.
+     * @param callable $errorHandler The error handler callback.
      */
     public function listen($errorHandler = null)
     {
@@ -148,9 +148,9 @@ class HttpServer
     }
 
     /**
-     * Method to get property Handler
+     * Method to get property Handler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getHandler()
     {
@@ -158,11 +158,11 @@ class HttpServer
     }
 
     /**
-     * Method to set property handler
+     * Method to set property handler.
      *
-     * @param   callable $handler
+     * @param callable $handler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setHandler($handler)
     {
@@ -172,9 +172,9 @@ class HttpServer
     }
 
     /**
-     * Method to get property Request
+     * Method to get property Request.
      *
-     * @return  ServerRequestInterface
+     * @return ServerRequestInterface
      */
     public function getRequest()
     {
@@ -182,11 +182,11 @@ class HttpServer
     }
 
     /**
-     * Method to set property request
+     * Method to set property request.
      *
-     * @param   ServerRequestInterface $request
+     * @param ServerRequestInterface $request
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRequest($request)
     {
@@ -196,9 +196,9 @@ class HttpServer
     }
 
     /**
-     * Method to get property Output
+     * Method to get property Output.
      *
-     * @return  OutputInterface
+     * @return OutputInterface
      */
     public function getOutput()
     {
@@ -210,11 +210,11 @@ class HttpServer
     }
 
     /**
-     * Method to set property output
+     * Method to set property output.
      *
-     * @param   Output $output
+     * @param Output $output
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOutput($output)
     {
@@ -224,9 +224,9 @@ class HttpServer
     }
 
     /**
-     * Method to get property Response
+     * Method to get property Response.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function getResponse()
     {
@@ -234,11 +234,11 @@ class HttpServer
     }
 
     /**
-     * Method to set property response
+     * Method to set property response.
      *
-     * @param   ResponseInterface $response
+     * @param ResponseInterface $response
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setResponse($response)
     {

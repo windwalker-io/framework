@@ -27,14 +27,14 @@ abstract class AbstractConsole
     /**
      * Property io.
      *
-     * @var  IOInterface
+     * @var IOInterface
      */
     public $io = null;
 
     /**
      * Property config.
      *
-     * @var  Structure
+     * @var Structure
      */
     protected $config = null;
 
@@ -48,9 +48,9 @@ abstract class AbstractConsole
     /**
      * Class constructor.
      *
-     * @param   IOInterface $io       An optional argument to provide dependency injection for the application's
-     *                                IO object.
-     * @param   Structure   $config   An optional argument to provide dependency injection for the config object.
+     * @param IOInterface $io     An optional argument to provide dependency injection for the application's
+     *                            IO object.
+     * @param Structure   $config An optional argument to provide dependency injection for the config object.
      *
      * @since   2.0
      */
@@ -77,10 +77,10 @@ abstract class AbstractConsole
     /**
      * Write a string to standard output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
-     * @return  static  Instance of $this to allow chaining.
+     * @return static Instance of $this to allow chaining.
      *
      * @since   2.0
      */
@@ -94,7 +94,7 @@ abstract class AbstractConsole
     /**
      * Get a value from standard input.
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      *
      * @since   2.0
      */
@@ -104,9 +104,9 @@ abstract class AbstractConsole
     }
 
     /**
-     * getIo
+     * getIo.
      *
-     * @return  IOInterface
+     * @return IOInterface
      */
     public function getIO()
     {
@@ -114,11 +114,11 @@ abstract class AbstractConsole
     }
 
     /**
-     * setIo
+     * setIo.
      *
-     * @param   IOInterface $io
+     * @param IOInterface $io
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setIO($io)
     {
@@ -130,9 +130,9 @@ abstract class AbstractConsole
     /**
      * Method to close the application.
      *
-     * @param   integer|string $message The exit code (optional; default is 0).
+     * @param int|string $message The exit code (optional; default is 0).
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -145,9 +145,9 @@ abstract class AbstractConsole
      * Method to run the application routines.  Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @param   AbstractCommand $command The Command object to execute, default will be rootCommand.
+     * @param AbstractCommand $command The Command object to execute, default will be rootCommand.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -156,7 +156,7 @@ abstract class AbstractConsole
     /**
      * Execute the application.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -177,7 +177,7 @@ abstract class AbstractConsole
     /**
      * Prepare execute hook.
      *
-     * @return  void
+     * @return void
      */
     protected function prepareExecute()
     {
@@ -186,9 +186,9 @@ abstract class AbstractConsole
     /**
      * Pose execute hook.
      *
-     * @param   mixed $result Executed return value.
+     * @param mixed $result Executed return value.
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function postExecute($result = null)
     {
@@ -198,10 +198,10 @@ abstract class AbstractConsole
     /**
      * Returns a property of the object or the default value if the property is not set.
      *
-     * @param   string $key     The name of the property.
-     * @param   mixed  $default The default value (optional) if none is set.
+     * @param string $key     The name of the property.
+     * @param mixed  $default The default value (optional) if none is set.
      *
-     * @return  mixed   The value of the configuration.
+     * @return mixed The value of the configuration.
      *
      * @since   2.0
      */
@@ -216,7 +216,7 @@ abstract class AbstractConsole
      * Called at the end of the static::__construct method.
      * This is for developers to inject initialisation code for their application classes.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -227,10 +227,10 @@ abstract class AbstractConsole
     /**
      * Modifies a property of the object, creating it if it does not already exist.
      *
-     * @param   string $key   The name of the property.
-     * @param   mixed  $value The value of the property to set (optional).
+     * @param string $key   The name of the property.
+     * @param mixed  $value The value of the property to set (optional).
      *
-     * @return  mixed   Previous value of the property
+     * @return mixed Previous value of the property
      *
      * @since   2.0
      */
@@ -244,9 +244,9 @@ abstract class AbstractConsole
     /**
      * Sets the configuration for the application.
      *
-     * @param   Structure $config A structure object holding the configuration.
+     * @param Structure $config A structure object holding the configuration.
      *
-     * @return  static  Returns itself to support chaining.
+     * @return static Returns itself to support chaining.
      *
      * @since   2.0
      */
@@ -258,9 +258,9 @@ abstract class AbstractConsole
     }
 
     /**
-     * Method to get property Config
+     * Method to get property Config.
      *
-     * @return  Structure
+     * @return Structure
      */
     public function getConfig()
     {
@@ -268,11 +268,11 @@ abstract class AbstractConsole
     }
 
     /**
-     * Method to set property config
+     * Method to set property config.
      *
-     * @param   Structure $config
+     * @param Structure $config
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setConfig($config)
     {
@@ -301,11 +301,11 @@ abstract class AbstractConsole
     }
 
     /**
-     * Method to set property descriptor
+     * Method to set property descriptor.
      *
-     * @param   DescriptorHelperInterface $descriptor
+     * @param DescriptorHelperInterface $descriptor
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDescriptor(DescriptorHelperInterface $descriptor)
     {
@@ -315,11 +315,11 @@ abstract class AbstractConsole
     }
 
     /**
-     * describeCommand
+     * describeCommand.
      *
      * @param AbstractCommand $command
      *
-     * @return  string
+     * @return string
      */
     public function describeCommand(AbstractCommand $command)
     {

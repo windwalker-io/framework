@@ -5,7 +5,6 @@
  * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 $model = UserModel::create();
 
 // All
@@ -14,8 +13,8 @@ $items = $model->getItems();
 // Where Conditions
 $model->setScope(
     'activated', function ($query, $model) {
-    $query->where('activated >= 1');
-}
+        $query->where('activated >= 1');
+    }
 );
 
 $items = $model->reset()
@@ -34,5 +33,5 @@ foreach ($model as $user) {
 }
 
 // Get Pagination
-$pagination       = $model->pagination();
+$pagination = $model->pagination();
 $simplePagination = $model->simplePagination();

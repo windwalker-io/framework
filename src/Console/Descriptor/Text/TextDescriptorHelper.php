@@ -26,7 +26,7 @@ class TextDescriptorHelper extends AbstractDescriptorHelper
      *
      * @since  2.0
      */
-    protected $template = <<<EOF
+    protected $template = <<<'EOF'
 
 <comment>%s</comment> - version: %s
 ------------------------------------------------------------
@@ -45,11 +45,11 @@ EOF;
     /**
      * Describe a command detail.
      *
-     * @param   AbstractCommand $command The command to described.
+     * @param AbstractCommand $command The command to described.
      *
-     * @return  string  Return the described text.
+     * @throws \RuntimeException
      *
-     * @throws  \RuntimeException
+     * @return string Return the described text.
      *
      * @since  2.0
      */
@@ -63,7 +63,7 @@ EOF;
             $optionDescriptor->addItem($option);
         }
 
-        $render['option'] = count($options) ? "\n\nOptions:\n\n" . $optionDescriptor->render() : '';
+        $render['option'] = count($options) ? "\n\nOptions:\n\n".$optionDescriptor->render() : '';
 
         // Describe Commands
         $commands = $command->getChildren();
@@ -73,7 +73,7 @@ EOF;
             $commandDescriptor->addItem($cmd);
         }
 
-        $render['command'] = count($commands) ? "\nCommands:\n\n" . $commandDescriptor->render() : '';
+        $render['command'] = count($commands) ? "\nCommands:\n\n".$commandDescriptor->render() : '';
 
         // Render Help template
         /** @var Console $console */
@@ -104,7 +104,7 @@ EOF;
         }
 
         $description = implode("\n", $description);
-        $description = $description ? $description . "\n" : '';
+        $description = $description ? $description."\n" : '';
 
         $template = sprintf(
             $this->template,

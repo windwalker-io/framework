@@ -22,7 +22,7 @@ class ValidatorHelper extends AbstractFormElementHelper
     /**
      * Property fieldNamespaces.
      *
-     * @var  \SplPriorityQueue
+     * @var \SplPriorityQueue
      */
     protected static $namespaces = null;
 
@@ -34,12 +34,12 @@ class ValidatorHelper extends AbstractFormElementHelper
     protected static $defaultNamespace = 'Windwalker\\Validator\\Rule';
 
     /**
-     * createRule
+     * createRule.
      *
      * @param string            $rule
      * @param \SplPriorityQueue $namespaces
      *
-     * @return  ValidatorInterface
+     * @return ValidatorInterface
      */
     public static function create($rule, \SplPriorityQueue $namespaces = null)
     {
@@ -54,7 +54,7 @@ class ValidatorHelper extends AbstractFormElementHelper
         $namespaces = $namespaces ?: static::getNamespaces();
 
         foreach ($namespaces as $namespace) {
-            $class = $namespace . '\\' . ucfirst($rule) . 'Validator';
+            $class = $namespace.'\\'.ucfirst($rule).'Validator';
 
             if (class_exists($class)) {
                 return new $class();

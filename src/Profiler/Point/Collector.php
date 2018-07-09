@@ -18,14 +18,14 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
     /**
      * Class init.
      *
-     * @param  array $data
+     * @param array $data
      */
     public function __construct($data = [])
     {
@@ -35,10 +35,10 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Get a value.
      *
-     * @param   string $name    The data name you want to get.
-     * @param   mixed  $default The default value if not exists.
+     * @param string $name    The data name you want to get.
+     * @param mixed  $default The default value if not exists.
      *
-     * @return  mixed  The found value or default.
+     * @return mixed The found value or default.
      */
     public function get($name, $default = null)
     {
@@ -50,12 +50,12 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     }
 
     /**
-     * set
+     * set.
      *
-     * @param   string $name
-     * @param   mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function set($name, $value)
     {
@@ -67,7 +67,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Get all data.
      *
-     * @return  array
+     * @return array
      */
     public function getData()
     {
@@ -75,11 +75,11 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     }
 
     /**
-     * setData
+     * setData.
      *
      * @param array $data
      *
-     * @return  static
+     * @return static
      */
     public function setData(array $data)
     {
@@ -91,7 +91,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Count the number of arguments.
      *
-     * @return  integer  The number of arguments.
+     * @return int The number of arguments.
      *
      * @since   2.0
      */
@@ -103,9 +103,9 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Tell if the given event argument exists.
      *
-     * @param   string $name The argument name.
+     * @param string $name The argument name.
      *
-     * @return  boolean  True if it exists, false otherwise.
+     * @return bool True if it exists, false otherwise.
      *
      * @since   2.0
      */
@@ -117,9 +117,9 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Get an event argument value.
      *
-     * @param   string $name The argument name.
+     * @param string $name The argument name.
      *
-     * @return  mixed  The argument value or null if not existing.
+     * @return mixed The argument value or null if not existing.
      *
      * @since   2.0
      */
@@ -131,12 +131,12 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Set the value of an event argument.
      *
-     * @param   string $name  The argument name.
-     * @param   mixed  $value The argument value.
+     * @param string $name  The argument name.
+     * @param mixed  $value The argument value.
      *
-     * @return  void
+     * @throws \InvalidArgumentException If the argument name is null.
      *
-     * @throws  \InvalidArgumentException  If the argument name is null.
+     * @return void
      *
      * @since   2.0
      */
@@ -152,9 +152,9 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     /**
      * Remove an event argument.
      *
-     * @param   string $name The argument name.
+     * @param string $name The argument name.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -166,7 +166,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable An instance of an object implementing Iterator
      */

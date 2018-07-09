@@ -30,31 +30,31 @@ abstract class AbstractMatcher implements MatcherInterface
     /**
      * Property count.
      *
-     * @var  int
+     * @var int
      */
     protected $count = 0;
 
     /**
      * Property debug.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $debug = false;
 
     /**
      * Property routeMaps.
      *
-     * @var  array
+     * @var array
      */
     protected $routeMaps = [];
 
     /**
-     * build
+     * build.
      *
      * @param Route $route
      * @param array $data
      *
-     * @return  string
+     * @return string
      */
     public function build(Route $route, $data = [])
     {
@@ -68,7 +68,7 @@ abstract class AbstractMatcher implements MatcherInterface
      * @param string $method
      * @param array  $options
      *
-     * @return  Route|false
+     * @return Route|false
      */
     abstract public function match($route, $method = 'GET', $options = []);
 
@@ -78,7 +78,7 @@ abstract class AbstractMatcher implements MatcherInterface
      * @param string $route
      * @param Route  $routeItem
      *
-     * @return  Route|false
+     * @return Route|false
      */
     public function matchRoute($route, Route $routeItem)
     {
@@ -106,11 +106,11 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * Set Routes
+     * Set Routes.
      *
      * @param Route[] $routes
      *
-     * @return  static
+     * @return static
      */
     public function setRoutes(array $routes)
     {
@@ -120,9 +120,9 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * Method to get property RouteMaps
+     * Method to get property RouteMaps.
      *
-     * @return  array
+     * @return array
      */
     public function getRouteMaps()
     {
@@ -130,11 +130,11 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * Method to set property routeMaps
+     * Method to set property routeMaps.
      *
-     * @param   array $routeMaps
+     * @param array $routeMaps
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRouteMaps($routeMaps)
     {
@@ -144,13 +144,13 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * matchOptions
+     * matchOptions.
      *
      * @param Route  $route
      * @param string $method
      * @param array  $options
      *
-     * @return  bool
+     * @return bool
      */
     protected function matchOptions(Route $route, $method, $options)
     {
@@ -198,14 +198,14 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * checkType
+     * checkType.
      *
      * @param string $name
      * @param mixed  $value
      * @param string $type
      * @param string $class
      *
-     * @return  boolean
+     * @return bool
      */
     protected function checkType($name, $value, $type = 'string', $class = null)
     {
@@ -239,11 +239,11 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * buildRouteMaps
+     * buildRouteMaps.
      *
      * @param bool $refresh
      *
-     * @return  static
+     * @return static
      */
     protected function buildRouteMaps($refresh = false)
     {
@@ -259,9 +259,9 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * Method to get property Count
+     * Method to get property Count.
      *
-     * @return  int
+     * @return int
      */
     public function getCount()
     {
@@ -269,9 +269,9 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * Method to get property Debug
+     * Method to get property Debug.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getDebug()
     {
@@ -279,11 +279,11 @@ abstract class AbstractMatcher implements MatcherInterface
     }
 
     /**
-     * Method to set property debug
+     * Method to set property debug.
      *
-     * @param   boolean $debug
+     * @param bool $debug
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDebug($debug)
     {

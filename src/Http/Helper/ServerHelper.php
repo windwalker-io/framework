@@ -18,15 +18,15 @@ use Psr\Http\Message\UploadedFileInterface;
 abstract class ServerHelper
 {
     /**
-     * Access a value in an array, returning a default value if not found
+     * Access a value in an array, returning a default value if not found.
      *
      * Will also do a case-insensitive search if a case sensitive search fails.
      *
-     * @param   array  $servers Server values to search.
-     * @param   string $name    The name we want to search.
-     * @param   mixed  $default Default value if not found.
+     * @param array  $servers Server values to search.
+     * @param string $name    The name we want to search.
+     * @param mixed  $default Default value if not found.
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function getValue(array $servers, $name, $default = null)
     {
@@ -42,9 +42,9 @@ abstract class ServerHelper
      *
      * Every file should be an UploadedFileInterface object.
      *
-     * @param   array $files Files array.
+     * @param array $files Files array.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function validateUploadedFiles(array $files)
     {
@@ -68,7 +68,7 @@ abstract class ServerHelper
      *
      * If this function not available, we will use native code to implement this function.
      *
-     * @return  array|false
+     * @return array|false
      */
     public static function getAllHeaders()
     {
@@ -92,7 +92,7 @@ abstract class ServerHelper
      *
      * If this function not available, we will use native code to implement this function.
      *
-     * @return  array
+     * @return array
      *
      * @link  http://php.net/manual/en/function.getallheaders.php#99814
      */
@@ -105,8 +105,8 @@ abstract class ServerHelper
         $out = [];
 
         foreach ($_SERVER as $key => $value) {
-            if (substr($key, 0, 5) == "HTTP_") {
-                $key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
+            if (substr($key, 0, 5) == 'HTTP_') {
+                $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
 
                 $out[$key] = $value;
             } else {
@@ -118,7 +118,7 @@ abstract class ServerHelper
     }
 
     /**
-     * parseFormData
+     * parseFormData.
      *
      * @param string $input
      *
@@ -182,11 +182,11 @@ abstract class ServerHelper
                     file_put_contents($tempFile, $content);
 
                     $content = [
-                        'name' => $fileName,
-                        'type' => $headers['content-type'],
+                        'name'     => $fileName,
+                        'type'     => $headers['content-type'],
                         'tmp_name' => $tempFile,
-                        'error' => 0,
-                        'size' => filesize($tempFile),
+                        'error'    => 0,
+                        'size'     => filesize($tempFile),
                     ];
 
                     static::setByPath($files, $fieldName, $content);
@@ -201,20 +201,20 @@ abstract class ServerHelper
         }
 
         return [
-            'data' => $data,
+            'data'  => $data,
             'files' => $files,
         ];
     }
 
     /**
-     * setByPath
+     * setByPath.
      *
      * @param mixed  &$data
      * @param string $path
      * @param mixed  $value
      * @param string $separator
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */

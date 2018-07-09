@@ -18,9 +18,9 @@ class ForeverFileStorage extends FileStorage
     /**
      * Check whether or not the cached data by id has expired.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean  True if the data has expired.
+     * @return bool True if the data has expired.
      *
      * @since   3.2
      */

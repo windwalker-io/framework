@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 use Windwalker\Uri\PsrUri;
 
 /**
- * Test class of ServerRequest
+ * Test class of ServerRequest.
  *
  * @since 2.1
  */
@@ -49,10 +49,11 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testConstruct
+     * testConstruct.
      *
-     * @return  void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function testConstruct()
     {

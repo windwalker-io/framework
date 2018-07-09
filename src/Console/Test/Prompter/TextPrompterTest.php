@@ -13,7 +13,7 @@ use Windwalker\Console\Prompter\AbstractPrompter;
 use Windwalker\Console\Prompter\TextPrompter;
 
 /**
- * Class TextPrompterTest
+ * Class TextPrompterTest.
  *
  * @since  2.0
  */
@@ -37,13 +37,13 @@ class TextPrompterTest extends AbstractPrompterTest
     /**
      * Test prompter ask.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
     public function testAsk()
     {
-        $this->setStream("y");
+        $this->setStream('y');
 
         $this->instance->ask();
 
@@ -53,7 +53,7 @@ class TextPrompterTest extends AbstractPrompterTest
         );
 
         // Ask by invoke
-        $this->setStream("n");
+        $this->setStream('n');
 
         /** @var $prompter AbstractPrompter */
         $prompter = $this->instance;
@@ -64,7 +64,7 @@ class TextPrompterTest extends AbstractPrompterTest
         // Set as default in command getArgument
         $command = new Command('test', $prompter->getIO());
 
-        $this->setStream("fly");
+        $this->setStream('fly');
 
         $this->io->setTestOutput('');
 

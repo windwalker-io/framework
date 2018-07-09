@@ -9,7 +9,7 @@
 namespace Windwalker\Console\Prompter;
 
 /**
- * Class BooleanPrompter
+ * Class BooleanPrompter.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class BooleanPrompter extends TextPrompter
     /**
      * Aliases of true.
      *
-     * @var  array
+     * @var array
      *
      * @since  2.0
      */
@@ -27,7 +27,7 @@ class BooleanPrompter extends TextPrompter
     /**
      * Aliases of false.
      *
-     * @var  array
+     * @var array
      *
      * @since  2.0
      */
@@ -36,7 +36,7 @@ class BooleanPrompter extends TextPrompter
     /**
      * Retry times.
      *
-     * @var  int
+     * @var int
      *
      * @since  2.0
      */
@@ -45,10 +45,10 @@ class BooleanPrompter extends TextPrompter
     /**
      * Show prompt to ask user.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @return  boolean  The value that use input.
+     * @return bool The value that use input.
      *
      * @since   2.0
      */
@@ -74,7 +74,7 @@ class BooleanPrompter extends TextPrompter
     /**
      * Get true value alias.
      *
-     * @return  array  Aliases.
+     * @return array Aliases.
      *
      * @since   2.0
      */
@@ -86,9 +86,9 @@ class BooleanPrompter extends TextPrompter
     /**
      * Set true value alias.
      *
-     * @param   array $trueAlias Alias you want to set.
+     * @param array $trueAlias Alias you want to set.
      *
-     * @return  BooleanPrompter  Return self to support chaining.
+     * @return BooleanPrompter Return self to support chaining.
      *
      * @since   2.0
      */
@@ -102,7 +102,7 @@ class BooleanPrompter extends TextPrompter
     /**
      * Get aliases of false value.
      *
-     * @return  array  Aliases.
+     * @return array Aliases.
      *
      * @since   2.0
      */
@@ -114,9 +114,9 @@ class BooleanPrompter extends TextPrompter
     /**
      * Set aliases of false value.
      *
-     * @param   array $falseAlias Alias you want to set.
+     * @param array $falseAlias Alias you want to set.
      *
-     * @return  BooleanPrompter  Return self to support chaining.
+     * @return BooleanPrompter Return self to support chaining.
      *
      * @since   2.0
      */

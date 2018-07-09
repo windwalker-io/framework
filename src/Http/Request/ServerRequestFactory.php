@@ -41,15 +41,15 @@ class ServerRequestFactory
      *
      * @see fromServer()
      *
-     * @param  array $server     The $_SERVER superglobal variable.
-     * @param  array $query      The $_GET superglobal variable.
-     * @param  array $parsedBody The $_POST superglobal variable.
-     * @param  array $cookies    The $_COOKIE superglobal variable.
-     * @param  array $files      The $_FILES superglobal variable.
-     *
-     * @return ServerRequestInterface
+     * @param array $server     The $_SERVER superglobal variable.
+     * @param array $query      The $_GET superglobal variable.
+     * @param array $parsedBody The $_POST superglobal variable.
+     * @param array $cookies    The $_COOKIE superglobal variable.
+     * @param array $files      The $_FILES superglobal variable.
      *
      * @throws \InvalidArgumentException for invalid file values
+     *
+     * @return ServerRequestInterface
      */
     public static function createFromGlobals(
         array $server = [],
@@ -95,7 +95,7 @@ class ServerRequestFactory
     }
 
     /**
-     * createFromUri
+     * createFromUri.
      *
      * @param string $uri
      * @param string $script
@@ -105,7 +105,7 @@ class ServerRequestFactory
      * @param array  $cookies
      * @param array  $files
      *
-     * @return  ServerRequestInterface
+     * @return ServerRequestInterface
      */
     public static function createFromUri(
         $uri,
@@ -122,7 +122,7 @@ class ServerRequestFactory
             $server['SCRIPT_NAME'] = $script;
         }
 
-        $server['SCRIPT_NAME'] = '/' . ltrim($server['SCRIPT_NAME'], '/');
+        $server['SCRIPT_NAME'] = '/'.ltrim($server['SCRIPT_NAME'], '/');
 
         $request = static::createFromGlobals($server, $query, $parsedBody, $cookies, $files);
 
@@ -132,9 +132,9 @@ class ServerRequestFactory
     /**
      * Prepare the $_SERVER variables.
      *
-     * @param   array $server The $_SERVER superglobal variable.
+     * @param array $server The $_SERVER superglobal variable.
      *
-     * @return  array
+     * @return array
      */
     public static function prepareServers(array $server)
     {
@@ -157,16 +157,16 @@ class ServerRequestFactory
     }
 
     /**
-     * Normalize uploaded files
+     * Normalize uploaded files.
      *
      * Transforms each value into an UploadedFileInterface instance, and ensures
      * that nested arrays are normalized.
      *
-     * @param   array $files THe $_FILES superglobal variable.
+     * @param array $files THe $_FILES superglobal variable.
      *
-     * @return  UploadedFileInterface[]
+     * @throws \InvalidArgumentException for unrecognized values
      *
-     * @throws  \InvalidArgumentException for unrecognized values
+     * @return UploadedFileInterface[]
      */
     public static function prepareFiles(array $files)
     {
@@ -202,9 +202,9 @@ class ServerRequestFactory
     /**
      * Get headers from $_SERVER.
      *
-     * @param   array $server The $_SERVER superglobal variable.
+     * @param array $server The $_SERVER superglobal variable.
      *
-     * @return  array
+     * @return array
      */
     public static function prepareHeaders(array $server)
     {
@@ -223,7 +223,7 @@ class ServerRequestFactory
 
             if ($value && strpos($key, 'CONTENT_') === 0) {
                 $name = substr($key, 8);
-                $name = 'content-' . strtolower($name);
+                $name = 'content-'.strtolower($name);
 
                 $headers[$name] = $value;
 
@@ -235,12 +235,12 @@ class ServerRequestFactory
     }
 
     /**
-     * Marshal the URI from the $_SERVER array and headers
+     * Marshal the URI from the $_SERVER array and headers.
      *
-     * @param   array $server  The $_SERVER superglobal.
-     * @param   array $headers The headers variable from server.
+     * @param array $server  The $_SERVER superglobal.
+     * @param array $headers The headers variable from server.
      *
-     * @return  PsrUri  Prepared Uri object.
+     * @return PsrUri Prepared Uri object.
      */
     public static function prepareUri(array $server, array $headers)
     {
@@ -288,12 +288,12 @@ class ServerRequestFactory
     }
 
     /**
-     * Marshal the host and port from HTTP headers and/or the PHP environment
+     * Marshal the host and port from HTTP headers and/or the PHP environment.
      *
-     * @param   string $host    The uri host.
-     * @param   string $port    The request port.
-     * @param   array  $server  The $_SERVER superglobal.
-     * @param   array  $headers The headers variable from server.
+     * @param string $host    The uri host.
+     * @param string $port    The request port.
+     * @param array  $server  The $_SERVER superglobal.
+     * @param array  $headers The headers variable from server.
      */
     public static function getHostAndPortFromHeaders(&$host, &$port, array $server, array $headers)
     {
@@ -318,10 +318,10 @@ class ServerRequestFactory
         }
 
         // Handle Ipv6
-        $host = '[' . $server['SERVER_ADDR'] . ']';
+        $host = '['.$server['SERVER_ADDR'].']';
         $port = $port ?: 80;
 
-        if ($port . ']' === substr($host, strrpos($host, ':') + 1)) {
+        if ($port.']' === substr($host, strrpos($host, ':') + 1)) {
             // The last digit of the IPv6-Address has been taken as port
             // Unset the port so the default port can be used
             $port = null;
@@ -385,11 +385,11 @@ class ServerRequestFactory
     }
 
     /**
-     * Strip the query string from a path
+     * Strip the query string from a path.
      *
-     * @param   string $path The uri path.
+     * @param string $path The uri path.
      *
-     * @return  string  The path striped.
+     * @return string The path striped.
      */
     public static function stripQueryString($path)
     {
@@ -403,7 +403,7 @@ class ServerRequestFactory
     }
 
     /**
-     * Marshal the host and port from the request header
+     * Marshal the host and port from the request header.
      *
      * @param string $host
      * @param string $port
@@ -429,9 +429,9 @@ class ServerRequestFactory
      * If an element is array, will call getFlattenFileData() to normalize them to
      * a standard nested file list.
      *
-     * @param   array $value $_FILES  struct.
+     * @param array $value $_FILES  struct.
      *
-     * @return  UploadedFileInterface|UploadedFileInterface[]
+     * @return UploadedFileInterface|UploadedFileInterface[]
      */
     private static function createUploadedFile(array $value)
     {
@@ -455,9 +455,9 @@ class ServerRequestFactory
      * Loops through all nested files and returns a normalized array of
      * UploadedFileInterface instances.
      *
-     * @param   array $files The file spec array.
+     * @param array $files The file spec array.
      *
-     * @return  UploadedFileInterface[]
+     * @return UploadedFileInterface[]
      */
     protected static function getFlattenFileData(array $files = [])
     {
@@ -466,10 +466,10 @@ class ServerRequestFactory
         foreach (array_keys($files['tmp_name']) as $key) {
             $file = [
                 'tmp_name' => $files['tmp_name'][$key],
-                'size' => $files['size'][$key],
-                'error' => $files['error'][$key],
-                'name' => $files['name'][$key],
-                'type' => $files['type'][$key],
+                'size'     => $files['size'][$key],
+                'error'    => $files['error'][$key],
+                'name'     => $files['name'][$key],
+                'type'     => $files['type'][$key],
             ];
 
             $return[$key] = self::createUploadedFile($file);
@@ -479,11 +479,11 @@ class ServerRequestFactory
     }
 
     /**
-     * Return HTTP protocol version (X.Y)
+     * Return HTTP protocol version (X.Y).
      *
-     * @param   array $server The $_SERVER supperglobal.
+     * @param array $server The $_SERVER supperglobal.
      *
-     * @return  string  Protocol version.
+     * @return string Protocol version.
      */
     private static function getProtocolVersion(array $server)
     {

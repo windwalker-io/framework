@@ -32,14 +32,14 @@ class Authentication implements AuthenticationInterface
     /**
      * Property results.
      *
-     * @var  integer[]
+     * @var int[]
      */
     protected $results = [];
 
     /**
      * Property methods.
      *
-     * @var  MethodInterface[]
+     * @var MethodInterface[]
      */
     protected $methods = [];
 
@@ -61,11 +61,11 @@ class Authentication implements AuthenticationInterface
     }
 
     /**
-     * authenticate
+     * authenticate.
      *
      * @param Credential $credential
      *
-     * @return  bool|Credential
+     * @return bool|Credential
      */
     public function authenticate(Credential $credential)
     {
@@ -89,12 +89,12 @@ class Authentication implements AuthenticationInterface
     }
 
     /**
-     * addMethod
+     * addMethod.
      *
      * @param string          $name
      * @param MethodInterface $method
      *
-     * @return  static
+     * @return static
      */
     public function addMethod($name, MethodInterface $method)
     {
@@ -104,27 +104,25 @@ class Authentication implements AuthenticationInterface
     }
 
     /**
-     * getMethod
+     * getMethod.
      *
      * @param string $name
      *
-     * @return  MethodInterface
+     * @return MethodInterface
      */
     public function getMethod($name)
     {
         if (isset($this->methods[$name])) {
             return $this->methods[$name];
         }
-
-        return null;
     }
 
     /**
-     * removeMethod
+     * removeMethod.
      *
      * @param string $name
      *
-     * @return  $this
+     * @return $this
      */
     public function removeMethod($name)
     {
@@ -136,9 +134,9 @@ class Authentication implements AuthenticationInterface
     }
 
     /**
-     * Method to get property Results
+     * Method to get property Results.
      *
-     * @return  integer[]
+     * @return int[]
      */
     public function getResults()
     {
@@ -146,9 +144,9 @@ class Authentication implements AuthenticationInterface
     }
 
     /**
-     * Method to get property Credential
+     * Method to get property Credential.
      *
-     * @return  Credential
+     * @return Credential
      */
     public function getCredential()
     {

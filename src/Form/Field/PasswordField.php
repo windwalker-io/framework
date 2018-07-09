@@ -18,16 +18,16 @@ class PasswordField extends TextField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'password';
 
     /**
-     * prepare
+     * prepare.
      *
      * @param array $attrs
      *
-     * @return  array|void
+     * @return array|void
      */
     public function prepare(&$attrs)
     {

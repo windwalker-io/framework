@@ -20,14 +20,14 @@ class EdgeFileLoader implements EdgeLoaderInterface
     /**
      * Property extensions.
      *
-     * @var  array
+     * @var array
      */
     protected $extensions = ['.edge.php', '.blade.php'];
 
     /**
      * Property paths.
      *
-     * @var  array
+     * @var array
      */
     protected $paths = [];
 
@@ -42,11 +42,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * find
+     * find.
      *
      * @param string $key
      *
-     * @return  string
+     * @return string
      */
     public function find($key)
     {
@@ -56,8 +56,8 @@ class EdgeFileLoader implements EdgeLoaderInterface
 
         foreach ($this->paths as $path) {
             foreach ($this->extensions as $ext) {
-                if (is_file($path . '/' . $key . $ext)) {
-                    $filePath = $path . '/' . $key . $ext;
+                if (is_file($path.'/'.$key.$ext)) {
+                    $filePath = $path.'/'.$key.$ext;
 
                     break 2;
                 }
@@ -67,18 +67,18 @@ class EdgeFileLoader implements EdgeLoaderInterface
         if ($filePath === null) {
             $paths = implode(" |\n ", $this->paths);
 
-            throw new LayoutNotFoundException('View file not found: ' . $key . ".\n (Paths: " . $paths . ')', 13001);
+            throw new LayoutNotFoundException('View file not found: '.$key.".\n (Paths: ".$paths.')', 13001);
         }
 
         return $filePath;
     }
 
     /**
-     * loadFile
+     * loadFile.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function load($path)
     {
@@ -86,11 +86,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * addPath
+     * addPath.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  static
+     * @return static
      */
     public function addPath($path)
     {
@@ -100,11 +100,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * prependPath
+     * prependPath.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  static
+     * @return static
      */
     public function prependPath($path)
     {
@@ -114,11 +114,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * normalize
+     * normalize.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     protected function normalize($path)
     {
@@ -126,9 +126,9 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * Method to get property Paths
+     * Method to get property Paths.
      *
-     * @return  array
+     * @return array
      */
     public function getPaths()
     {
@@ -136,11 +136,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * Method to set property paths
+     * Method to set property paths.
      *
-     * @param   array $paths
+     * @param array $paths
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPaths($paths)
     {
@@ -150,11 +150,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * addExtension
+     * addExtension.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static
+     * @return static
      */
     public function addFileExtension($name)
     {
@@ -164,9 +164,9 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * Method to get property Extensions
+     * Method to get property Extensions.
      *
-     * @return  array
+     * @return array
      */
     public function getExtensions()
     {
@@ -174,11 +174,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   array $extensions
+     * @param array $extensions
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setExtensions($extensions)
     {

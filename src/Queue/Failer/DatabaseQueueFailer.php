@@ -21,14 +21,14 @@ class DatabaseQueueFailer implements QueueFailerInterface
     /**
      * Property db.
      *
-     * @var  AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
      */
     protected $db;
 
     /**
      * Property table.
      *
-     * @var  string
+     * @var string
      */
     protected $table;
 
@@ -45,9 +45,9 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * isSupported
+     * isSupported.
      *
-     * @return  bool
+     * @return bool
      */
     public function isSupported()
     {
@@ -55,14 +55,14 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * add
+     * add.
      *
      * @param string $connection
      * @param string $queue
      * @param string $body
      * @param string $exception
      *
-     * @return  int|string
+     * @return int|string
      */
     public function add($connection, $queue, $body, $exception)
     {
@@ -81,11 +81,12 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * all
+     * all.
      *
-     * @return  array
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     public function all()
     {
@@ -98,11 +99,11 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * get
+     * get.
      *
      * @param mixed $conditions
      *
-     * @return  array
+     * @return array
      */
     public function get($conditions)
     {
@@ -117,11 +118,11 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * remove
+     * remove.
      *
      * @param mixed $conditions
      *
-     * @return  bool
+     * @return bool
      */
     public function remove($conditions)
     {
@@ -137,9 +138,9 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * clear
+     * clear.
      *
-     * @return  bool
+     * @return bool
      */
     public function clear()
     {
@@ -149,9 +150,9 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * Method to get property Table
+     * Method to get property Table.
      *
-     * @return  string
+     * @return string
      */
     public function getTable()
     {
@@ -159,11 +160,11 @@ class DatabaseQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   string $table
+     * @param string $table
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTable($table)
     {

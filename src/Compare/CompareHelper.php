@@ -23,9 +23,9 @@ class CompareHelper
      * @param mixed  $compare2 The compare2 calue.
      * @param bool   $strict   Use strict compare.
      *
-     * @return  boolean
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return bool
      */
     public static function compare($compare1, $operator, $compare2, $strict = false)
     {
@@ -83,7 +83,7 @@ class CompareHelper
                 break;
 
             default:
-                throw new \InvalidArgumentException('Invalid compare operator: ' . $operator);
+                throw new \InvalidArgumentException('Invalid compare operator: '.$operator);
         }
     }
 
@@ -92,9 +92,9 @@ class CompareHelper
      *
      * @param mixed $array THe value to convert.
      *
-     * @return  array
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     protected static function toArray($array)
     {

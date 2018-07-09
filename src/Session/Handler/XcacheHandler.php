@@ -9,19 +9,20 @@
 namespace Windwalker\Session\Handler;
 
 /**
- * Class XcacheHandler
+ * Class XcacheHandler.
  *
  * @since 2.0
  */
 class XcacheHandler extends AbstractHandler
 {
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param   array $options Optional parameters.
+     * @param array $options Optional parameters.
      *
      * @since   2.0
-     * @throws  \RuntimeException
+     *
+     * @throws \RuntimeException
      */
     public function __construct($options = [])
     {
@@ -35,61 +36,61 @@ class XcacheHandler extends AbstractHandler
     /**
      * Test to see if the SessionHandler is available.
      *
-     * @return boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
     public static function isSupported()
     {
-        return (extension_loaded('xcache'));
+        return extension_loaded('xcache');
     }
 
     /**
      * Read the data for a particular session identifier from the SessionHandler backend.
      *
-     * @param   string $id The session identifier.
+     * @param string $id The session identifier.
      *
-     * @return  string  The session data.
+     * @return string The session data.
      *
      * @since   2.0
      */
     public function read($id)
     {
         // Check if id exists
-        if (!xcache_isset($this->prefix . $id)) {
+        if (!xcache_isset($this->prefix.$id)) {
             return false;
         }
 
-        return (string) xcache_get($this->prefix . $id);
+        return (string) xcache_get($this->prefix.$id);
     }
 
     /**
      * Write session data to the SessionHandler backend.
      *
-     * @param   string $id           The session identifier.
-     * @param   string $session_data The session data.
+     * @param string $id           The session identifier.
+     * @param string $session_data The session data.
      *
-     * @return  boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
     public function write($id, $session_data)
     {
-        return xcache_set($this->prefix . $id, $session_data, ini_get("session.gc_maxlifetime"));
+        return xcache_set($this->prefix.$id, $session_data, ini_get('session.gc_maxlifetime'));
     }
 
     /**
      * Destroy the data for a particular session identifier in the SessionHandler backend.
      *
-     * @param   string $id The session identifier.
+     * @param string $id The session identifier.
      *
-     * @return  boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
     public function destroy($id)
     {
-        $sess_id = $this->prefix . $id;
+        $sess_id = $this->prefix.$id;
 
         if (!xcache_isset($sess_id)) {
             return true;

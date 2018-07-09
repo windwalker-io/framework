@@ -24,28 +24,28 @@ class ValidatorComposite extends AbstractValidator
     /**
      * Property validators.
      *
-     * @var  ValidatorInterface[]
+     * @var ValidatorInterface[]
      */
     protected $validators = [];
 
     /**
      * Property errors.
      *
-     * @var  array
+     * @var array
      */
     protected $errors = [];
 
     /**
      * Property results.
      *
-     * @var  bool[]
+     * @var bool[]
      */
     protected $results = [];
 
     /**
      * Property mode.
      *
-     * @var  int
+     * @var int
      */
     protected $mode;
 
@@ -62,11 +62,11 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
@@ -101,11 +101,11 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * validateOne
+     * validateOne.
      *
      * @param mixed $value
      *
-     * @return  bool
+     * @return bool
      */
     public function validateOne($value)
     {
@@ -113,11 +113,11 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * validateAll
+     * validateAll.
      *
      * @param mixed $value
      *
-     * @return  bool
+     * @return bool
      */
     public function validateAll($value)
     {
@@ -125,12 +125,12 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * match
+     * match.
      *
      * @param mixed $value
      * @param int   $mode
      *
-     * @return  bool
+     * @return bool
      */
     protected function match($value, $mode)
     {
@@ -146,12 +146,13 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * addValidator
+     * addValidator.
      *
      * @param ValidatorInterface|callable $validator
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function addValidator($validator)
     {
@@ -169,9 +170,9 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to get property Validators
+     * Method to get property Validators.
      *
-     * @return  ValidatorInterface[]
+     * @return ValidatorInterface[]
      */
     public function getValidators()
     {
@@ -179,11 +180,11 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to set property validators
+     * Method to set property validators.
      *
-     * @param   ValidatorInterface[] $validators
+     * @param ValidatorInterface[] $validators
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setValidators(array $validators)
     {
@@ -199,9 +200,9 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to get property Errors
+     * Method to get property Errors.
      *
-     * @return  array
+     * @return array
      */
     public function getErrors()
     {
@@ -209,11 +210,11 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to set property errors
+     * Method to set property errors.
      *
-     * @param   array $errors
+     * @param array $errors
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setErrors($errors)
     {
@@ -223,9 +224,9 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to get property Results
+     * Method to get property Results.
      *
-     * @return  bool[]
+     * @return bool[]
      */
     public function getResults()
     {
@@ -233,9 +234,9 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to get property Mode
+     * Method to get property Mode.
      *
-     * @return  int
+     * @return int
      */
     public function getMode()
     {
@@ -243,11 +244,11 @@ class ValidatorComposite extends AbstractValidator
     }
 
     /**
-     * Method to set property mode
+     * Method to set property mode.
      *
-     * @param   int $mode
+     * @param int $mode
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setMode($mode)
     {

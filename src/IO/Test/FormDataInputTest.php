@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\IO\FormDataInput;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of FormDataInput
+ * Test class of FormDataInput.
  *
  * @since 2.1.7
  */
@@ -49,10 +49,12 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\FormDataInput::__construct method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\FormDataInput::__construct
+     *
      * @since   2.0
      */
     public function test__construct()
@@ -80,7 +82,7 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
 
         $_SERVER['CONTENT_TYPE'] = 'multipart/form-data; boundary=----WebKitFormBoundary8zi5vcW6H9OgqKSj';
 
-        $GLOBALS['HTTP_RAW_POST_DATA'] = <<<DATA
+        $GLOBALS['HTTP_RAW_POST_DATA'] = <<<'DATA'
 ------WebKitFormBoundary8zi5vcW6H9OgqKSj
 Content-Disposition: form-data; name="flower"
 

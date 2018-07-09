@@ -18,7 +18,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
     /**
      * Waiting described items.
      *
-     * @var  array
+     * @var array
      *
      * @since  2.0
      */
@@ -27,9 +27,9 @@ abstract class AbstractDescriptor implements DescriptorInterface
     /**
      * Add a item to describe.
      *
-     * @param   mixed $item The item you want to describe.
+     * @param mixed $item The item you want to describe.
      *
-     * @return  DescriptorInterface  Return this object to support chaining.
+     * @return DescriptorInterface Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -43,9 +43,9 @@ abstract class AbstractDescriptor implements DescriptorInterface
     /**
      * Render an item description.
      *
-     * @param   mixed $item The item to br described.
+     * @param mixed $item The item to br described.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -54,7 +54,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
     /**
      * Render all items description.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */

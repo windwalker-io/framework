@@ -18,7 +18,7 @@ class FilterComposite implements FilterInterface
     /**
      * Property filters.
      *
-     * @var  FilterInterface[]
+     * @var FilterInterface[]
      */
     protected $filters = [];
 
@@ -33,11 +33,11 @@ class FilterComposite implements FilterInterface
     }
 
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($text)
     {
@@ -53,18 +53,19 @@ class FilterComposite implements FilterInterface
     }
 
     /**
-     * addFilter
+     * addFilter.
      *
-     * @param   FilterInterface|callable $filter
+     * @param FilterInterface|callable $filter
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function addFilter($filter)
     {
         if (!$filter instanceof FilterInterface) {
             if (!is_callable($filter)) {
-                throw new \InvalidArgumentException('Filter should be callable or ' . FilterInterface::class);
+                throw new \InvalidArgumentException('Filter should be callable or '.FilterInterface::class);
             }
 
             $filter = new CallbackFilter($filter);
@@ -76,9 +77,9 @@ class FilterComposite implements FilterInterface
     }
 
     /**
-     * Method to get property Filters
+     * Method to get property Filters.
      *
-     * @return  FilterInterface[]
+     * @return FilterInterface[]
      */
     public function getFilters()
     {
@@ -86,11 +87,11 @@ class FilterComposite implements FilterInterface
     }
 
     /**
-     * Method to set property filters
+     * Method to set property filters.
      *
-     * @param   FilterInterface[] $filters
+     * @param FilterInterface[] $filters
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFilters($filters)
     {

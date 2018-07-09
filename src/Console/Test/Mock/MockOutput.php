@@ -20,15 +20,15 @@ class MockOutput extends CliOutput
     /**
      * Property output.
      *
-     * @var  string
+     * @var string
      */
     public $output = '';
 
     /**
      * Write a string to standard output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
      * @since   2.0
      *
@@ -36,7 +36,7 @@ class MockOutput extends CliOutput
      */
     public function out($text = '', $nl = true)
     {
-        $this->output .= $this->processor->process($text) . ($nl ? "\n" : null);
+        $this->output .= $this->processor->process($text).($nl ? "\n" : null);
 
         return $this;
     }
@@ -44,8 +44,8 @@ class MockOutput extends CliOutput
     /**
      * Write a string to standard error output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
      * @since   2.0
      *
@@ -53,7 +53,7 @@ class MockOutput extends CliOutput
      */
     public function err($text = '', $nl = true)
     {
-        $this->output .= $this->processor->process($text) . ($nl ? "\n" : null);
+        $this->output .= $this->processor->process($text).($nl ? "\n" : null);
 
         return $this;
     }
@@ -73,7 +73,7 @@ class MockOutput extends CliOutput
     /**
      * Set test outpur.
      *
-     * @param   string $output The output string.
+     * @param string $output The output string.
      *
      * @return $this
      *

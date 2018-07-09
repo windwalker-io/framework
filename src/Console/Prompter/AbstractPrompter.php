@@ -24,14 +24,14 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * Property question.
      *
-     * @var  string
+     * @var string
      */
     protected $question = null;
 
     /**
      * The input object.
      *
-     * @var  IOInterface
+     * @var IOInterface
      *
      * @since  2.0
      */
@@ -40,7 +40,7 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * The default value.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $default = null;
 
@@ -49,7 +49,7 @@ abstract class AbstractPrompter implements PrompterInterface
      *
      * Replace this resource help us easily test this class.
      *
-     * @var  resource
+     * @var resource
      *
      * @since  2.0
      */
@@ -58,9 +58,9 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * Constructor.
      *
-     * @param   string      $question The question you want to ask.
-     * @param               $default  $default   The default value.
-     * @param   IOInterface $io       The input object.
+     * @param string      $question The question you want to ask.
+     * @param             $default  $default   The default value.
+     * @param IOInterface $io       The input object.
      *
      * @since   2.0
      */
@@ -76,7 +76,7 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * Method to initialise something customize.
      *
-     * @return  void
+     * @return void
      */
     protected function init()
     {
@@ -86,10 +86,10 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * Show prompt to ask user.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
@@ -98,9 +98,9 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * Get a value from standard input.
      *
-     * @param   string $question The question you want to ask user.
+     * @param string $question The question you want to ask user.
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      *
      * @since   2.0
      */
@@ -120,10 +120,10 @@ abstract class AbstractPrompter implements PrompterInterface
     /**
      * Proxy to ask method.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
@@ -133,9 +133,9 @@ abstract class AbstractPrompter implements PrompterInterface
     }
 
     /**
-     * Method to get property Io
+     * Method to get property Io.
      *
-     * @return  \Windwalker\Console\IO\IOInterface
+     * @return \Windwalker\Console\IO\IOInterface
      */
     public function getIO()
     {
@@ -143,11 +143,11 @@ abstract class AbstractPrompter implements PrompterInterface
     }
 
     /**
-     * Method to set property io
+     * Method to set property io.
      *
-     * @param   \Windwalker\Console\IO\IOInterface $io
+     * @param \Windwalker\Console\IO\IOInterface $io
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setIO($io)
     {

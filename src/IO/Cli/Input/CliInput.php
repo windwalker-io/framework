@@ -12,7 +12,7 @@ use Windwalker\IO\Filter\NullFilter;
 use Windwalker\IO\Input;
 
 /**
- * Windwalker Input CLI Class
+ * Windwalker Input CLI Class.
  *
  * @since  2.0
  */
@@ -21,7 +21,8 @@ class CliInput extends Input implements CliInputInterface
     /**
      * The executable that was called to run the CLI script.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     public $calledScript;
@@ -30,7 +31,8 @@ class CliInput extends Input implements CliInputInterface
      * The additional arguments passed to the script that are not associated
      * with a specific argument name.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     public $args = [];
@@ -38,17 +40,17 @@ class CliInput extends Input implements CliInputInterface
     /**
      * Property inputStream.
      *
-     * @var  resource
+     * @var resource
      */
     protected $inputStream = STDIN;
 
     /**
      * Prepare source.
      *
-     * @param   array   $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-     * @param   boolean $reference If set to true, he source in first argument will be reference.
+     * @param array $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param bool  $reference If set to true, he source in first argument will be reference.
      *
-     * @return  void
+     * @return void
      */
     public function prepareSource(&$source = null, $reference = false)
     {
@@ -59,7 +61,7 @@ class CliInput extends Input implements CliInputInterface
     /**
      * Method to serialize the input.
      *
-     * @return  string  The serialized input.
+     * @return string The serialized input.
      *
      * @since   2.0
      */
@@ -80,10 +82,10 @@ class CliInput extends Input implements CliInputInterface
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name      Name of the value to get.
-     * @param   mixed  $default   Default value to return if variable does not exist.
-     * @param   string $filter    Filter to apply to the value.
-     * @param   string $separator Symbol to separate path.
+     * @param string $name      Name of the value to get.
+     * @param mixed  $default   Default value to return if variable does not exist.
+     * @param string $filter    Filter to apply to the value.
+     * @param string $separator Symbol to separate path.
      *
      * @return mixed The filtered input value.
      *
@@ -97,7 +99,7 @@ class CliInput extends Input implements CliInputInterface
     /**
      * Gets an array of values from the request.
      *
-     * @return  mixed  The filtered input data.
+     * @return mixed The filtered input data.
      *
      * @since   2.0
      */
@@ -109,9 +111,9 @@ class CliInput extends Input implements CliInputInterface
     /**
      * Method to unserialize the input.
      *
-     * @param   string $input The serialized input.
+     * @param string $input The serialized input.
      *
-     * @return  Input  The input object.
+     * @return Input The input object.
      *
      * @since   2.0
      */
@@ -124,12 +126,12 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * getArgument
+     * getArgument.
      *
-     * @param integer $offset
-     * @param mixed   $default
+     * @param int   $offset
+     * @param mixed $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getArgument($offset, $default = null)
     {
@@ -137,12 +139,12 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * setArgument
+     * setArgument.
      *
-     * @param integer $offset
-     * @param mixed   $value
+     * @param int   $offset
+     * @param mixed $value
      *
-     * @return  CliInput
+     * @return CliInput
      */
     public function setArgument($offset, $value)
     {
@@ -152,9 +154,9 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * Initialise the options and arguments
+     * Initialise the options and arguments.
      *
-     * @param   array $source
+     * @param array $source
      *
      * @since   2.0
      */
@@ -229,7 +231,7 @@ class CliInput extends Input implements CliInputInterface
     /**
      * Get a value from standard input.
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      */
     public function in()
     {
@@ -237,9 +239,9 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * getInputStream
+     * getInputStream.
      *
-     * @return  resource
+     * @return resource
      */
     public function getInputStream()
     {
@@ -247,11 +249,11 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * setInputStream
+     * setInputStream.
      *
-     * @param   resource $inputStream
+     * @param resource $inputStream
      *
-     * @return  CliInput  Return self to support chaining.
+     * @return CliInput Return self to support chaining.
      */
     public function setInputStream($inputStream)
     {
@@ -261,9 +263,9 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * getCalledScript
+     * getCalledScript.
      *
-     * @return  string
+     * @return string
      */
     public function getCalledScript()
     {
@@ -271,11 +273,11 @@ class CliInput extends Input implements CliInputInterface
     }
 
     /**
-     * setCalledScript
+     * setCalledScript.
      *
-     * @param   string $calledScript
+     * @param string $calledScript
      *
-     * @return  CliInput  Return self to support chaining.
+     * @return CliInput Return self to support chaining.
      */
     public function setCalledScript($calledScript)
     {

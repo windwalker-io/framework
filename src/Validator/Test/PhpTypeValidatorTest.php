@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Validator\Rule\PhpTypeValidator;
 
 /**
- * Test class of \Windwalker\Validator\Rule\PhpTypeValidator
+ * Test class of \Windwalker\Validator\Rule\PhpTypeValidator.
  *
  * @since 3.2
  */

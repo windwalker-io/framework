@@ -20,7 +20,7 @@ class PhpTypeValidator extends AbstractValidator
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type;
 
@@ -35,11 +35,11 @@ class PhpTypeValidator extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
@@ -69,16 +69,16 @@ class PhpTypeValidator extends AbstractValidator
                 return is_float($value);
 
             case 'real':
-                return is_real($value);
+                return is_float($value);
 
             case 'int':
-                return is_integer($value);
+                return is_int($value);
 
             case 'long':
-                return is_long($value);
+                return is_int($value);
 
             case 'nan':
-                return is_long($value);
+                return is_int($value);
         }
 
         if (class_exists($type)) {
@@ -89,9 +89,9 @@ class PhpTypeValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  string
+     * @return string
      */
     public function getType()
     {
@@ -99,11 +99,11 @@ class PhpTypeValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property type
+     * Method to set property type.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setType($type)
     {
@@ -113,7 +113,7 @@ class PhpTypeValidator extends AbstractValidator
     }
 
     /**
-     * formatMessage
+     * formatMessage.
      *
      * @param string $message
      * @param mixed  $value

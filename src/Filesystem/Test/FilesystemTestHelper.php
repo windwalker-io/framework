@@ -18,25 +18,25 @@ use Windwalker\Filesystem\Path;
 class FilesystemTestHelper
 {
     /**
-     * listFiles
+     * listFiles.
      *
      * @param \Iterator|array $files
      *
-     * @return  void
+     * @return void
      */
     public static function listFiles($files)
     {
         foreach ($files as $file) {
-            echo $file . "\n";
+            echo $file."\n";
         }
     }
 
     /**
-     * cleanPaths
+     * cleanPaths.
      *
      * @param array $paths
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function cleanPaths($paths)
     {
@@ -50,55 +50,55 @@ class FilesystemTestHelper
     }
 
     /**
-     * getFilesRescurive
+     * getFilesRescurive.
      *
      * @param string $folder
      *
-     * @return  array
+     * @return array
      */
     public static function getFilesRecursive($folder = 'dest')
     {
         return [
-            __DIR__ . '/' . $folder . '/file2.txt',
-            __DIR__ . '/' . $folder . '/folder1/level2/file3',
-            __DIR__ . '/' . $folder . '/folder1/path1',
-            __DIR__ . '/' . $folder . '/folder2/file2.html',
+            __DIR__.'/'.$folder.'/file2.txt',
+            __DIR__.'/'.$folder.'/folder1/level2/file3',
+            __DIR__.'/'.$folder.'/folder1/path1',
+            __DIR__.'/'.$folder.'/folder2/file2.html',
         ];
     }
 
     /**
-     * getFilesRescurive
+     * getFilesRescurive.
      *
      * @param string $folder
      *
-     * @return  array
+     * @return array
      */
     public static function getFoldersRecursive($folder = 'dest')
     {
         return [
-            __DIR__ . '/' . $folder . '/folder1',
-            __DIR__ . '/' . $folder . '/folder1/level2',
-            __DIR__ . '/' . $folder . '/folder2',
+            __DIR__.'/'.$folder.'/folder1',
+            __DIR__.'/'.$folder.'/folder1/level2',
+            __DIR__.'/'.$folder.'/folder2',
         ];
     }
 
     /**
-     * getFilesRescurive
+     * getFilesRescurive.
      *
      * @param string $folder
      *
-     * @return  array
+     * @return array
      */
     public static function getItemsRecursive($folder = 'dest')
     {
         return [
-            __DIR__ . '/' . $folder . '/file2.txt',
-            __DIR__ . '/' . $folder . '/folder1',
-            __DIR__ . '/' . $folder . '/folder1/level2',
-            __DIR__ . '/' . $folder . '/folder1/level2/file3',
-            __DIR__ . '/' . $folder . '/folder1/path1',
-            __DIR__ . '/' . $folder . '/folder2',
-            __DIR__ . '/' . $folder . '/folder2/file2.html',
+            __DIR__.'/'.$folder.'/file2.txt',
+            __DIR__.'/'.$folder.'/folder1',
+            __DIR__.'/'.$folder.'/folder1/level2',
+            __DIR__.'/'.$folder.'/folder1/level2/file3',
+            __DIR__.'/'.$folder.'/folder1/path1',
+            __DIR__.'/'.$folder.'/folder2',
+            __DIR__.'/'.$folder.'/folder2/file2.html',
         ];
     }
 }

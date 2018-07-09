@@ -9,18 +9,18 @@
 namespace Windwalker\Language\Localise;
 
 /**
- * Class ZhTWLocalise
+ * Class ZhTWLocalise.
  *
  * @since 2.0
  */
 class ZhTWLocalise implements LocaliseInterface
 {
     /**
-     * getPluralSuffixes
+     * getPluralSuffixes.
      *
      * @param int $count
      *
-     * @return  string
+     * @return string
      */
     public function getPluralSuffix($count = 1)
     {

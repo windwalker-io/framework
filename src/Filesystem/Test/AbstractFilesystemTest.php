@@ -33,9 +33,9 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
     protected static $src;
 
     /**
-     * setUpBeforeClass
+     * setUpBeforeClass.
      *
-     * @return  void
+     * @return void
      */
     public static function setUpBeforeClass()
     {
@@ -43,9 +43,9 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * tearDownAfterClass
+     * tearDownAfterClass.
      *
-     * @return  void
+     * @return void
      */
     public static function tearDownAfterClass()
     {
@@ -55,7 +55,7 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * __desctuct
+     * __desctuct.
      */
     public function __destruct()
     {
@@ -65,22 +65,22 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * setUp
+     * setUp.
      *
-     * @return  void
+     * @return void
      */
     protected function setUp()
     {
-        static::$dest = __DIR__ . '/dest';
-        static::$src = __DIR__ . '/files';
+        static::$dest = __DIR__.'/dest';
+        static::$src = __DIR__.'/files';
 
         Filesystem::copy(static::$src, static::$dest);
     }
 
     /**
-     * tearDown
+     * tearDown.
      *
-     * @return  void
+     * @return void
      */
     protected function tearDown()
     {

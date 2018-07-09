@@ -11,7 +11,7 @@ namespace Windwalker\Structure\Format;
 use Windwalker\Structure\StructureHelper;
 
 /**
- * PHP class format handler for Structure
+ * PHP class format handler for Structure.
  *
  * @since  2.0
  */
@@ -21,10 +21,10 @@ class PhpFormat implements FormatInterface
      * Converts an object into a php class string.
      * - NOTE: Only one depth level is supported.
      *
-     * @param   object $struct  Data Source Object
-     * @param   array  $options Parameters used by the formatter
+     * @param object $struct  Data Source Object
+     * @param array  $options Parameters used by the formatter
      *
-     * @return  string
+     * @return string
      */
     public static function structToString($struct, array $options = [])
     {
@@ -44,7 +44,7 @@ class PhpFormat implements FormatInterface
         $str = "<?php\n";
 
         if ($header) {
-            $str .= $header . "\n";
+            $str .= $header."\n";
         }
 
         $str .= "\nreturn [\n";
@@ -62,10 +62,10 @@ class PhpFormat implements FormatInterface
     /**
      * Parse a PHP class formatted string and convert it into an object.
      *
-     * @param   string $data    PHP Class formatted string to convert.
-     * @param   array  $options Options used by the formatter.
+     * @param string $data    PHP Class formatted string to convert.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  object   Data object.
+     * @return object Data object.
      */
     public static function stringToStruct($data, array $options = [])
     {
@@ -75,9 +75,9 @@ class PhpFormat implements FormatInterface
     /**
      * Method to get an array as an exported string.
      *
-     * @param   array $a The array to get as a string.
+     * @param array $a The array to get as a string.
      *
-     * @return  string
+     * @return string
      */
     protected static function getArrayString($a, $level = 2)
     {
@@ -86,18 +86,18 @@ class PhpFormat implements FormatInterface
 
         foreach ($a as $k => $v) {
             $s .= $i ? ",\n" : '';
-            $s .= str_repeat('    ', $level) . "'" . $k . "' => ";
+            $s .= str_repeat('    ', $level)."'".$k."' => ";
 
             if (is_array($v) || is_object($v)) {
                 $s .= static::getArrayString((array) $v, $level + 1);
             } else {
-                $s .= "'" . addslashes($v) . "'";
+                $s .= "'".addslashes($v)."'";
             }
 
             $i++;
         }
 
-        $s .= "\n" . str_repeat('    ', $level - 1) . ']';
+        $s .= "\n".str_repeat('    ', $level - 1).']';
 
         return $s;
     }

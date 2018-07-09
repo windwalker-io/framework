@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 
 /**
- * Test class of Container
+ * Test class of Container.
  *
  * @since 2.0
  */
@@ -122,11 +122,11 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testSetProtect
+     * testSetProtect.
      *
      * @expectedException \OutOfBoundsException
      *
-     * @return  void
+     * @return void
      */
     public function testSetAsProtect()
     {
@@ -169,9 +169,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetFromParent
+     * testGetFromParent.
      *
-     * @return  void
+     * @return void
      */
     public function testGetFromParent()
     {
@@ -418,9 +418,10 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      *
      * @see  https://github.com/ventoviro/windwalker/issues/318
      *
-     * @return  void
      * @throws \ReflectionException
      * @throws \Windwalker\DI\Exception\DependencyResolutionException
+     *
+     * @return void
      */
     public function testNewInstanceWithNoDefaultValueAvailable()
     {
@@ -456,7 +457,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->instance->extend(
             'Hello',
             function ($value, $container) {
-                return $value . '~~~!!!';
+                return $value.'~~~!!!';
             }
         );
 
@@ -464,9 +465,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testFork
+     * testFork.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\DI\Container::fork
      */
@@ -507,9 +508,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testArrayAccess
+     * testArrayAccess.
      *
-     * @return  void
+     * @return void
      */
     public function testArrayAccess()
     {

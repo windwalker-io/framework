@@ -22,56 +22,56 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Property clientFilename.
      *
-     * @var  string
+     * @var string
      */
     protected $clientFilename;
 
     /**
      * Property clientMediaType.
      *
-     * @var  string
+     * @var string
      */
     protected $clientMediaType;
 
     /**
      * Property error.
      *
-     * @var  integer
+     * @var int
      */
     protected $error;
 
     /**
      * Property file.
      *
-     * @var  string
+     * @var string
      */
     protected $file;
 
     /**
      * Property moved.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $moved = false;
 
     /**
      * Property size.
      *
-     * @var  integer
+     * @var int
      */
     protected $size;
 
     /**
      * Property stream.
      *
-     * @var  StreamInterface
+     * @var StreamInterface
      */
     protected $stream;
 
     /**
      * PHP_SAPI store to support test mock.
      *
-     * @var  string
+     * @var string
      */
     protected $sapi;
 
@@ -79,8 +79,8 @@ class UploadedFile implements UploadedFileInterface
      * Class init.
      *
      * @param string|resource|StreamInterface $file            The file source.
-     * @param integer                         $size            The file size.
-     * @param integer                         $error           The upload error status.
+     * @param int                             $size            The file size.
+     * @param int                             $error           The upload error status.
      * @param string                          $clientFilename  The client filename.
      * @param string                          $clientMediaType The file media type.
      *
@@ -144,10 +144,10 @@ class UploadedFile implements UploadedFileInterface
      * If the moveTo() method has been called previously, this method MUST raise
      * an exception.
      *
-     * @return  StreamInterface  Stream representation of the uploaded file.
-     *
      * @throws \RuntimeException in cases when no stream is available or can be
      *                           created.
+     *
+     * @return StreamInterface Stream representation of the uploaded file.
      */
     public function getStream()
     {
@@ -192,11 +192,11 @@ class UploadedFile implements UploadedFileInterface
      * @see http://php.net/is_uploaded_file
      * @see http://php.net/move_uploaded_file
      *
-     * @param   string $targetPath Path to which to move the uploaded file.
+     * @param string $targetPath Path to which to move the uploaded file.
      *
-     * @throws  \InvalidArgumentException if the $path specified is invalid.
-     * @throws  \RuntimeException         on any error during the move operation, or on
-     *                                    the second or subsequent call to the method.
+     * @throws \InvalidArgumentException if the $path specified is invalid.
+     * @throws \RuntimeException         on any error during the move operation, or on
+     *                                   the second or subsequent call to the method.
      */
     public function moveTo($targetPath)
     {
@@ -230,7 +230,7 @@ class UploadedFile implements UploadedFileInterface
      * the file in the $_FILES array if available, as PHP calculates this based
      * on the actual size transmitted.
      *
-     * @return   int|null  The file size in bytes or null if unknown.
+     * @return int|null The file size in bytes or null if unknown.
      */
     public function getSize()
     {
@@ -250,7 +250,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @see      http://php.net/manual/en/features.file-upload.errors.php
      *
-     * @return   int  One of PHP's UPLOAD_ERR_XXX constants.
+     * @return int One of PHP's UPLOAD_ERR_XXX constants.
      */
     public function getError()
     {
@@ -267,8 +267,8 @@ class UploadedFile implements UploadedFileInterface
      * Implementations SHOULD return the value stored in the "name" key of
      * the file in the $_FILES array.
      *
-     * @return   string|null  The filename sent by the client or null if none
-     *                        was provided.
+     * @return string|null The filename sent by the client or null if none
+     *                     was provided.
      */
     public function getClientFilename()
     {
@@ -285,8 +285,8 @@ class UploadedFile implements UploadedFileInterface
      * Implementations SHOULD return the value stored in the "type" key of
      * the file in the $_FILES array.
      *
-     * @return   string|null  The media type sent by the client or null if none
-     *                        was provided.
+     * @return string|null The media type sent by the client or null if none
+     *                     was provided.
      */
     public function getClientMediaType()
     {
@@ -294,7 +294,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * Write internal stream to given path
+     * Write internal stream to given path.
      *
      * @param string $path
      */
@@ -303,7 +303,7 @@ class UploadedFile implements UploadedFileInterface
         $handle = fopen($path, Stream::MODE_READ_WRITE_RESET);
 
         if ($handle === false) {
-            throw new \RuntimeException('Unable to write to path: ' . $path);
+            throw new \RuntimeException('Unable to write to path: '.$path);
         }
 
         $this->stream->rewind();
@@ -316,9 +316,9 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * Method to get property Sapi
+     * Method to get property Sapi.
      *
-     * @return  string
+     * @return string
      */
     public function getSapi()
     {
@@ -326,11 +326,11 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * Method to set property sapi
+     * Method to set property sapi.
      *
-     * @param   string $sapi
+     * @param string $sapi
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSapi($sapi)
     {

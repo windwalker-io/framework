@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -14,7 +14,7 @@ use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Test\Stub\StubStreamOutput;
 
 /**
- * Test class of StreamHelper
+ * Test class of StreamHelper.
  *
  * @since 3.0
  */
@@ -46,7 +46,7 @@ class StreamHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testCopyTo()
     {
-        $dest = __DIR__ . '/test.txt';
+        $dest = __DIR__.'/test.txt';
 
         StreamHelper::copyTo($src = new Stream(__FILE__, Stream::MODE_READ_ONLY_FROM_BEGIN), $dest);
 

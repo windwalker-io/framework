@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Html\Option;
 use Windwalker\Html\Select\RadioList;
 
 /**
- * Test class of RadioList
+ * Test class of RadioList.
  *
  * @since 2.0
  */
@@ -30,9 +30,9 @@ class RadioListTest extends AbstractDomTestCase
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      *
      * Windwalker\Html\Select\SelectList::toString
      */
@@ -51,7 +51,7 @@ class RadioListTest extends AbstractDomTestCase
             false
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <span class="radio-inputs input-select">
 	<input class="opt" value="Asia/Tokyo" type="radio" name="form[timezone]" id="input-form-timezone-asia-tokyo" />
 	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
@@ -71,9 +71,9 @@ HTML;
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      *
      * Windwalker\Html\Select\SelectList::toString
      */
@@ -92,7 +92,7 @@ HTML;
             false
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <span class="radio-inputs input-select">
 	<input class="opt" value="Asia/Tokyo" type="radio" name="form[timezone]" id="input-form-timezone-asia-tokyo" disabled="disabled" readonly="readonly" />
 	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>

@@ -13,7 +13,7 @@ use Windwalker\Console\Test\Mock\MockIO;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Class AbstractPrompterTest
+ * Class AbstractPrompterTest.
  *
  * @since 2.0
  */
@@ -29,7 +29,7 @@ abstract class AbstractPrompterTest extends AbstractBaseTestCase
     /**
      * Property memory.
      *
-     * @var  resource
+     * @var resource
      */
     protected $memory = STDIN;
 
@@ -58,12 +58,12 @@ abstract class AbstractPrompterTest extends AbstractBaseTestCase
      *
      * @param string $text
      *
-     * @return  $this
+     * @return $this
      */
     protected function setStream($text)
     {
         $this->memory = fopen('php://memory', 'r+', false);
-        fputs($this->memory, $text);
+        fwrite($this->memory, $text);
         rewind($this->memory);
 
         $this->instance->getIO()->setInputStream($this->memory);

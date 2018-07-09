@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Router\Test;
 use Windwalker\Router\RouteHelper;
 
 /**
- * Test class of RouteHelper
+ * Test class of RouteHelper.
  *
  * @since 2.0
  */
@@ -31,9 +31,9 @@ class RouteHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Method to test normalise()
+     * Method to test normalise().
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Router\RouteHelper::normalise
      */
@@ -43,18 +43,18 @@ class RouteHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetVariables
+     * testGetVariables.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Router\RouteHelper::getVariables
      */
     public function testGetVariables()
     {
         $array = [
-            0 => 5,
-            'id' => 5,
-            1 => 'foo',
+            0     => 5,
+            'id'  => 5,
+            1     => 'foo',
             'bar' => 'foo',
         ];
 

@@ -8,7 +8,6 @@ namespace Windwalker\Event\Test;
 
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\Event;
-use Windwalker\Event\EventImmutable;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\ListenerPriority;
 use Windwalker\Event\Test\Stub\EmptyListener;
@@ -27,7 +26,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Object under tests.
      *
-     * @var    Dispatcher
+     * @var Dispatcher
      *
      * @since  2.0
      */
@@ -36,9 +35,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setEvent method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::setEvent
+     *
      * @since   2.0
      */
     public function testSetEvent()
@@ -58,9 +58,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addEvent method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addEvent
+     *
      * @since   2.0
      */
     public function testAddEvent()
@@ -80,9 +81,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the hasEvent method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::hasEvent
+     *
      * @since   2.0
      */
     public function testHasEvent()
@@ -97,9 +99,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getEvent method when the event doesn't exist.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::getEvent
+     *
      * @since   2.0
      */
     public function testGetEventNonExisting()
@@ -111,9 +114,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the removeEvent method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::removeEvent
+     *
      * @since   2.0
      */
     public function testRemoveEvent()
@@ -138,9 +142,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getEvents method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::getEvents
+     *
      * @since   2.0
      */
     public function testGetEvents()
@@ -157,8 +162,8 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
 
         $expected = [
             'onBeforeTest' => $event1,
-            'onTest' => $event2,
-            'onAfterTest' => $event3,
+            'onTest'       => $event2,
+            'onAfterTest'  => $event3,
         ];
 
         $this->assertSame($expected, $this->instance->getEvents());
@@ -167,9 +172,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the clearEvents method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::clearEvents
+     *
      * @since   2.0
      */
     public function testClearEvents()
@@ -193,9 +199,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the countEvents method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::countEvents
+     *
      * @since   2.0
      */
     public function testCountEvents()
@@ -217,9 +224,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      * Test the addListener method with an empty listener (no methods).
      * It shouldn't be registered to any event.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
+     *
      * @since   2.0
      */
     public function testAddListenerEmpty()
@@ -236,9 +244,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
+     *
      * @since   2.0
      */
     public function testAddListener()
@@ -301,9 +310,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method by specifying the events and priorities.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
+     *
      * @since   2.0
      */
     public function testAddListenerSpecifiedPriorities()
@@ -314,8 +324,8 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
             $listener,
             [
                 'onBeforeSomething' => ListenerPriority::MIN,
-                'onSomething' => ListenerPriority::ABOVE_NORMAL,
-                'onAfterSomething' => ListenerPriority::HIGH,
+                'onSomething'       => ListenerPriority::ABOVE_NORMAL,
+                'onAfterSomething'  => ListenerPriority::HIGH,
             ]
         );
 
@@ -340,9 +350,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method by specifying the events and priorities.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::listen
+     *
      * @since   2.0
      */
     public function testAddSingleListener()
@@ -361,9 +372,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method by specifying less events than its methods.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
+     *
      * @since   2.0
      */
     public function testAddListenerLessEvents()
@@ -374,7 +386,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
             $listener,
             [
                 'onBeforeSomething' => ListenerPriority::NORMAL,
-                'onAfterSomething' => ListenerPriority::HIGH,
+                'onAfterSomething'  => ListenerPriority::HIGH,
             ]
         );
 
@@ -386,9 +398,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method with a closure listener.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
+     *
      * @since   2.0
      */
     public function testAddClosureListener()
@@ -399,7 +412,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->instance->addListener(
             $listener,
             [
-                'onSomething' => ListenerPriority::HIGH,
+                'onSomething'      => ListenerPriority::HIGH,
                 'onAfterSomething' => ListenerPriority::NORMAL,
             ]
         );
@@ -418,10 +431,11 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method with a closure listener without specified event.
      *
-     * @return  void
+     * @return void
      *
      * @covers             Windwalker\Event\Dispatcher::addListener
      * @expectedException  \InvalidArgumentException
+     *
      * @since              2.0
      */
     public function testAddClosureListenerNoEventsException()
@@ -437,9 +451,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      *
      * @expectedException  \InvalidArgumentException
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
+     *
      * @since   2.0
      */
     public function testAddListenerInvalidListenerException()
@@ -450,9 +465,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getListenerPriority method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::getListenerPriority
+     *
      * @since   2.0
      */
     public function testGetListenerPriority()
@@ -474,9 +490,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getListeners method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::getListeners
+     *
      * @since   2.0
      */
     public function testGetListeners()
@@ -513,9 +530,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the hasListener method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::hasListener
+     *
      * @since   2.0
      */
     public function testHasListener()
@@ -530,9 +548,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the removeListener method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::removeListener
+     *
      * @since   2.0
      */
     public function testRemoveListeners()
@@ -566,9 +585,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the clearListeners method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::clearListeners
+     *
      * @since   2.0
      */
     public function testClearListeners()
@@ -618,9 +638,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the clearListeners method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::clearListeners
+     *
      * @since   2.0
      */
     public function testCountListeners()
@@ -642,9 +663,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the triggerEvent method with no listeners listening to the event.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::triggerEvent
+     *
      * @since   2.0
      */
     public function testTriggerEventNoListeners()
@@ -659,9 +681,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      * Test the trigger event method with listeners having the same priority.
      * We expect the listener to be called in the order they were added.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::triggerEvent
+     *
      * @since   2.0
      */
     public function testTriggerEventSamePriority()
@@ -703,9 +726,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the trigger event method with listeners having different priorities.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::triggerEvent
+     *
      * @since   2.0
      */
     public function testTriggerEventDifferentPriorities()
@@ -747,9 +771,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the trigger event method with a listener stopping the event propagation.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::triggerEvent
+     *
      * @since   2.0
      */
     public function testTriggerEventStopped()
@@ -782,9 +807,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the triggerEvent method with a previously registered event.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Event\Dispatcher::triggerEvent
+     *
      * @since   2.0
      */
     public function testTriggerEventRegistered()
@@ -806,9 +832,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testTriggerEventReference
+     * testTriggerEventReference.
      *
-     * @return  void
+     * @return void
      */
     public function testTriggerEventReference()
     {
@@ -829,7 +855,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      *
      * This method is called before a test is executed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

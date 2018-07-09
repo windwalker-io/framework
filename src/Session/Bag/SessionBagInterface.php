@@ -9,59 +9,59 @@
 namespace Windwalker\Session\Bag;
 
 /**
- * Interface SessionBagInterface
+ * Interface SessionBagInterface.
  */
 interface SessionBagInterface
 {
     /**
-     * setData
+     * setData.
      *
      * @param array $data
      *
-     * @return  void
+     * @return void
      */
     public function setData(array &$data);
 
     /**
-     * get
+     * get.
      *
      * @param string $key
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function get($key, $default);
 
     /**
-     * set
+     * set.
      *
      * @param string $key
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function set($key, $value);
 
     /**
-     * has
+     * has.
      *
      * @param string $name
      *
-     * @return  bool
+     * @return bool
      */
     public function has($name);
 
     /**
-     * all
+     * all.
      *
-     * @return  array
+     * @return array
      */
     public function all();
 
     /**
-     * clean
+     * clean.
      *
-     * @return  static
+     * @return static
      */
     public function clear();
 }

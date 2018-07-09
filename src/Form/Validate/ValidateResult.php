@@ -26,7 +26,7 @@ class ValidateResult
     /**
      * Property success.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $result = self::STATUS_SUCCESS;
 
@@ -47,9 +47,9 @@ class ValidateResult
     /**
      * Class init.
      *
-     * @param integer|boolean $result
-     * @param string          $message
-     * @param AbstractField   $field
+     * @param int|bool      $result
+     * @param string        $message
+     * @param AbstractField $field
      */
     public function __construct($result = self::STATUS_SUCCESS, $message = null, AbstractField $field = null)
     {
@@ -59,9 +59,9 @@ class ValidateResult
     }
 
     /**
-     * isSuccess
+     * isSuccess.
      *
-     * @return  boolean
+     * @return bool
      */
     public function isSuccess()
     {
@@ -73,9 +73,9 @@ class ValidateResult
     }
 
     /**
-     * isFailure
+     * isFailure.
      *
-     * @return  boolean
+     * @return bool
      */
     public function isFailure()
     {
@@ -83,9 +83,9 @@ class ValidateResult
     }
 
     /**
-     * Method to get property Message
+     * Method to get property Message.
      *
-     * @return  string
+     * @return string
      */
     public function getMessage()
     {
@@ -93,11 +93,11 @@ class ValidateResult
     }
 
     /**
-     * Method to set property message
+     * Method to set property message.
      *
-     * @param   string $message
+     * @param string $message
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setMessage($message)
     {
@@ -107,9 +107,9 @@ class ValidateResult
     }
 
     /**
-     * Method to get property Field
+     * Method to get property Field.
      *
-     * @return  AbstractField
+     * @return AbstractField
      */
     public function getField()
     {
@@ -117,11 +117,11 @@ class ValidateResult
     }
 
     /**
-     * Method to set property field
+     * Method to set property field.
      *
-     * @param   AbstractField $field
+     * @param AbstractField $field
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setField(AbstractField $field)
     {
@@ -131,9 +131,9 @@ class ValidateResult
     }
 
     /**
-     * Method to get property Result
+     * Method to get property Result.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getResult()
     {
@@ -141,11 +141,11 @@ class ValidateResult
     }
 
     /**
-     * Method to set property result
+     * Method to set property result.
      *
-     * @param   boolean $result
+     * @param bool $result
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setResult($result)
     {

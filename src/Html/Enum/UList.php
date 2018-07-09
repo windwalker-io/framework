@@ -18,7 +18,7 @@ class UList extends AbstractHtmlList
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'ul';
 }

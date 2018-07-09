@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,16 +11,16 @@ namespace Windwalker\Dom\Test;
 use Windwalker\Dom\Builder\DomBuilder;
 
 /**
- * Test class of DomBuilder
+ * Test class of DomBuilder.
  *
  * @since 2.0
  */
 class DomBuilderTest extends AbstractDomTestCase
 {
     /**
-     * domTestCase
+     * domTestCase.
      *
-     * @return  array
+     * @return array
      */
     public function domTestCase()
     {
@@ -57,7 +57,7 @@ class DomBuilderTest extends AbstractDomTestCase
 				</field>',
                 'field',
                 DomBuilder::create('option', 'Yes', ['value' => 1])
-                . DomBuilder::create('option', 'No', ['value' => 0]),
+                .DomBuilder::create('option', 'No', ['value' => 0]),
                 ['id' => 'foo', 'class' => 'bar'],
                 false,
             ],
@@ -75,12 +75,12 @@ class DomBuilderTest extends AbstractDomTestCase
     /**
      * Method to test create().
      *
-     * @param string  $name
-     * @param string  $expect
-     * @param string  $tag
-     * @param string  $content
-     * @param array   $attribs
-     * @param boolean $forcePaired
+     * @param string $name
+     * @param string $expect
+     * @param string $tag
+     * @param string $content
+     * @param array  $attribs
+     * @param bool   $forcePaired
      *
      * @return void
      *
@@ -93,7 +93,7 @@ class DomBuilderTest extends AbstractDomTestCase
         $this->assertDomFormatEquals(
             $expect,
             DomBuilder::create($tag, $content, $attribs, $forcePaired),
-            'Dom build case fail: ' . $name
+            'Dom build case fail: '.$name
         );
     }
 
@@ -110,21 +110,21 @@ class DomBuilderTest extends AbstractDomTestCase
     }
 
     /**
-     * testPrepareAttributes
+     * testPrepareAttributes.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Dom\Builder\DomBuilder::buildAttributes
      */
     public function testBuildAttributes()
     {
         $attrs = [
-            'foo' => 'bar',
-            'data' => true,
-            'bar' => false,
-            'empty' => '',
+            'foo'      => 'bar',
+            'data'     => true,
+            'bar'      => false,
+            'empty'    => '',
             'selected' => true,
-            'checked' => false,
+            'checked'  => false,
         ];
 
         $this->assertEquals(' foo="bar" data empty="" selected', DomBuilder::buildAttributes($attrs));

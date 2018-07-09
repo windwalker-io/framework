@@ -11,7 +11,7 @@ namespace Windwalker\Console\Test\Stubs\Foo\Aaa;
 use Windwalker\Console\Command\Command;
 
 /**
- * Class BbbCommand
+ * Class BbbCommand.
  *
  * @since  2.0
  */
@@ -30,7 +30,7 @@ class BbbCommand extends Command
     }
 
     /**
-     * doExecute
+     * doExecute.
      *
      * @return int
      *

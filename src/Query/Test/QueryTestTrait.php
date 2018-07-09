@@ -9,16 +9,16 @@
 namespace Windwalker\Query\Test;
 
 /**
- * QueryTestTrait
+ * QueryTestTrait.
  *
  * @since  3.2.7
  */
 trait QueryTestTrait
 {
     /**
-     * testSuffix
+     * testSuffix.
      *
-     * @return  void
+     * @return void
      */
     public function testSuffix()
     {
@@ -35,9 +35,9 @@ trait QueryTestTrait
     }
 
     /**
-     * testForUpdate
+     * testForUpdate.
      *
-     * @return  void
+     * @return void
      */
     public function testForUpdate()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,16 +12,16 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Uri\PsrUri;
 
 /**
- * Test class of PsrUri
+ * Test class of PsrUri.
  *
  * @since 2.1
  */
 class PsrUriTest extends AbstractBaseTestCase
 {
     /**
-     * testConstruct
+     * testConstruct.
      *
-     * @return  void
+     * @return void
      */
     public function testConstruct()
     {
@@ -38,9 +38,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testToString
+     * testToString.
      *
-     * @return  void
+     * @return void
      */
     public function testToString()
     {
@@ -50,9 +50,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithScheme
+     * testWithScheme.
      *
-     * @return  void
+     * @return void
      */
     public function testWithScheme()
     {
@@ -67,9 +67,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithUserInfo
+     * testWithUserInfo.
      *
-     * @return  void
+     * @return void
      */
     public function testWithUserInfo()
     {
@@ -89,9 +89,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithHost
+     * testWithHost.
      *
-     * @return  void
+     * @return void
      */
     public function testWithHost()
     {
@@ -103,9 +103,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithPort
+     * testWithPort.
      *
-     * @return  void
+     * @return void
      */
     public function testWithPort()
     {
@@ -120,9 +120,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithPath
+     * testWithPath.
      *
-     * @return  void
+     * @return void
      */
     public function testWithPath()
     {
@@ -152,9 +152,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithQuery
+     * testWithQuery.
      *
-     * @return  void
+     * @return void
      */
     public function testWithQuery()
     {
@@ -171,9 +171,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testWithFragment
+     * testWithFragment.
      *
-     * @return  void
+     * @return void
      */
     public function testWithFragment()
     {
@@ -189,22 +189,22 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * authorityProvider
+     * authorityProvider.
      *
-     * @return  array
+     * @return array
      */
     public function authorityProvider()
     {
         return [
-            'host-only' => ['http://foo.com/bar', 'foo.com'],
-            'host-port' => ['http://foo.com:3000/bar', 'foo.com:3000'],
-            'user-host' => ['http://me@foo.com/bar', 'me@foo.com'],
+            'host-only'      => ['http://foo.com/bar', 'foo.com'],
+            'host-port'      => ['http://foo.com:3000/bar', 'foo.com:3000'],
+            'user-host'      => ['http://me@foo.com/bar', 'me@foo.com'],
             'user-host-port' => ['http://me@foo.com:3000/bar', 'me@foo.com:3000'],
         ];
     }
 
     /**
-     * testAuthority
+     * testAuthority.
      *
      * @dataProvider authorityProvider
      *
@@ -220,11 +220,11 @@ class PsrUriTest extends AbstractBaseTestCase
     public function queryStringsForEncoding()
     {
         return [
-            'key-only' => ['k^ey', 'k%5Eey'],
-            'key-value' => ['k^ey=valu`', 'k%5Eey=valu%60'],
-            'array-key-only' => ['key[]', 'key%5B%5D'],
+            'key-only'        => ['k^ey', 'k%5Eey'],
+            'key-value'       => ['k^ey=valu`', 'k%5Eey=valu%60'],
+            'array-key-only'  => ['key[]', 'key%5B%5D'],
             'array-key-value' => ['key[]=valu`', 'key%5B%5D=valu%60'],
-            'complex' => ['k^ey&key[]=valu`&f<>=`bar', 'k%5Eey&key%5B%5D=valu%60&f%3C%3E=%60bar'],
+            'complex'         => ['k^ey&key[]=valu`&f<>=`bar', 'k%5Eey&key%5B%5D=valu%60&f%3C%3E=%60bar'],
         ];
     }
 
@@ -246,9 +246,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFragmentEncoded
+     * testFragmentEncoded.
      *
-     * @return  void
+     * @return void
      */
     public function testFragmentEncoded()
     {
@@ -264,9 +264,9 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * seedInvalidArguments
+     * seedInvalidArguments.
      *
-     * @return  array
+     * @return array
      */
     public function seedInvalidArguments()
     {
@@ -280,15 +280,15 @@ class PsrUriTest extends AbstractBaseTestCase
         ];
 
         $values = [
-            'null' => null,
-            'true' => true,
-            'false' => false,
-            'zero' => 0,
-            'int' => 1,
+            'null'       => null,
+            'true'       => true,
+            'false'      => false,
+            'zero'       => 0,
+            'int'        => 1,
             'zero-float' => 0.0,
-            'float' => 1.1,
-            'array' => ['value'],
-            'object' => (object) ['value' => 'value'],
+            'float'      => 1.1,
+            'array'      => ['value'],
+            'object'     => (object) ['value' => 'value'],
         ];
 
         $combinations = [];
@@ -305,12 +305,12 @@ class PsrUriTest extends AbstractBaseTestCase
     }
 
     /**
-     * testPassingInvalidValueToWithMethodRaisesException
+     * testPassingInvalidValueToWithMethodRaisesException.
      *
      * @param $method
      * @param $value
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider seedInvalidArguments
      */

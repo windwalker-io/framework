@@ -9,36 +9,36 @@
 namespace Windwalker\IO\Cli\Input;
 
 /**
- * Interface CliInputInterface
+ * Interface CliInputInterface.
  */
 interface CliInputInterface
 {
     /**
      * Get a value from standard input.
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      */
     public function in();
 
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name    Name of the value to get.
-     * @param   mixed  $default Default value to return if variable does not exist.
+     * @param string $name    Name of the value to get.
+     * @param mixed  $default Default value to return if variable does not exist.
      *
-     * @return  mixed  The filtered input value.
+     * @return mixed The filtered input value.
      *
      * @since   2.0
      */
     public function get($name, $default = null);
 
     /**
-     * Sets a value
+     * Sets a value.
      *
-     * @param   string $name  Name of the value to set.
-     * @param   mixed  $value Value to assign to the input.
+     * @param string $name  Name of the value to set.
+     * @param mixed  $value Value to assign to the input.
      *
-     * @return  CliInputInterface
+     * @return CliInputInterface
      *
      * @since   2.0
      */
@@ -47,26 +47,26 @@ interface CliInputInterface
     /**
      * Gets an array of values from the request.
      *
-     * @return  mixed  The filtered input data.
+     * @return mixed The filtered input data.
      *
      * @since   2.0
      */
     public function all();
 
     /**
-     * getArgument
+     * getArgument.
      *
-     * @param integer $offset
-     * @param mixed   $default
+     * @param int   $offset
+     * @param mixed $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getArgument($offset, $default = null);
 
     /**
-     * getCalledScript
+     * getCalledScript.
      *
-     * @return  string
+     * @return string
      */
     public function getCalledScript();
 }

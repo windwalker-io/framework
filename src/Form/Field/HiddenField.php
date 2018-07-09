@@ -18,16 +18,16 @@ class HiddenField extends AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'hidden';
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     public function prepare(&$attrs)
     {

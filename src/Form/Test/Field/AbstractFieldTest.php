@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -18,7 +18,7 @@ use Windwalker\Validator\Rule\EmailValidator;
 use Windwalker\Validator\Rule\IpValidator;
 
 /**
- * Test class of AbstractField
+ * Test class of AbstractField.
  *
  * @since 2.0
  */
@@ -44,7 +44,7 @@ class AbstractFieldTest extends AbstractDomTestCase
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
+                'class'       => 'stub-flower',
             ]
         );
     }
@@ -68,7 +68,7 @@ class AbstractFieldTest extends AbstractDomTestCase
      */
     public function testRenderInput()
     {
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="flower" id="input-flower" class="stub-flower" />
 HTML;
 
@@ -77,7 +77,7 @@ HTML;
         // Control
         $this->instance->setControl('windwalker');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" />
 HTML;
 
@@ -86,7 +86,7 @@ HTML;
         // Default value
         $this->instance->setAttribute('default', 'default-value');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="default-value" />
 HTML;
 
@@ -95,7 +95,7 @@ HTML;
         // Value
         $this->instance->setValue('sakura');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" />
 HTML;
 
@@ -104,7 +104,7 @@ HTML;
         // Group
         $this->instance->setGroup('foo/bar');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="windwalker[foo][bar][flower]" id="input-windwalker-foo-bar-flower" class="stub-flower" value="sakura" />
 HTML;
 
@@ -112,13 +112,13 @@ HTML;
     }
 
     /**
-     * testCreateByXml
+     * testCreateByXml.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateByXml()
     {
-        $xml = <<<XML
+        $xml = <<<'XML'
 <field
 	name="flower"
 	type="stub"
@@ -131,7 +131,7 @@ XML;
 
         $field = new StubField(simplexml_load_string($xml));
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="flower" id="input-flower" class="stub-flower" value="default-value" />
 HTML;
 
@@ -163,7 +163,7 @@ HTML;
      */
     public function testRenderLabel()
     {
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <label id="input-flower-label" for="input-flower">Flower</label>
 HTML;
 
@@ -199,7 +199,7 @@ HTML;
         $this->instance->setAttribute('controlClass', 'control-group');
         $this->instance->setAttribute('attribs', ['data-test-element' => true]);
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="input-windwalker-flower-control" class="stub-field control-group">
 	<label id="input-windwalker-flower-label" for="input-windwalker-flower">Flower</label>
 	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
@@ -208,7 +208,7 @@ HTML;
 
         $this->assertHtmlFormatEquals($expect, $this->instance->render());
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="input-windwalker-flower-control" class="stub-field control-group">
 	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
 </div>
@@ -263,7 +263,7 @@ HTML;
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
+                'class'       => 'stub-flower',
             ],
             null,
             new IpValidator()
@@ -293,8 +293,8 @@ HTML;
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
-                'required' => true,
+                'class'       => 'stub-flower',
+                'required'    => true,
             ]
         );
 
@@ -335,7 +335,7 @@ HTML;
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
+                'class'       => 'stub-flower',
             ],
             InputFilter::CMD
         );
@@ -424,7 +424,7 @@ HTML;
     {
         $this->instance->setGroup('wind');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="wind[flower]" id="input-wind-flower" class="stub-flower" />
 HTML;
 
@@ -432,7 +432,7 @@ HTML;
 
         $this->instance->setGroup('wind/walker');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <input type="text" name="wind[walker][flower]" id="input-wind-walker-flower" class="stub-flower" />
 HTML;
 
@@ -573,9 +573,9 @@ HTML;
     }
 
     /**
-     * testAddClass
+     * testAddClass.
      *
-     * @return  void
+     * @return void
      */
     public function testAddClass()
     {
@@ -593,9 +593,9 @@ HTML;
     }
 
     /**
-     * testRemoveClass
+     * testRemoveClass.
      *
-     * @return  void
+     * @return void
      */
     public function testRemoveClass()
     {
@@ -628,8 +628,8 @@ HTML;
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
-                'required' => true,
+                'class'       => 'stub-flower',
+                'required'    => true,
             ]
         );
 
@@ -681,12 +681,12 @@ HTML;
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
-                'required' => 'true',
-                'disabled' => true,
-                'case1' => 'yes',
-                'case2' => '1',
-                'false' => 'false',
+                'class'       => 'stub-flower',
+                'required'    => 'true',
+                'disabled'    => true,
+                'case1'       => 'yes',
+                'case2'       => '1',
+                'false'       => 'false',
             ]
         );
 
@@ -711,13 +711,13 @@ HTML;
             'Flower',
             [
                 'placeholder' => 'The Flower',
-                'class' => 'stub-flower',
-                'required' => 'false',
-                'disabled' => false,
-                'case1' => 'no',
-                'case2' => 'none',
-                'case3' => '0',
-                'true' => 'yes',
+                'class'       => 'stub-flower',
+                'required'    => 'false',
+                'disabled'    => false,
+                'case1'       => 'no',
+                'case2'       => 'none',
+                'case3'       => '0',
+                'true'        => 'yes',
             ]
         );
 

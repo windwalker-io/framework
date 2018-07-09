@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Renderer\TwigRenderer;
 
 /**
- * Test class of TwigRenderer
+ * Test class of TwigRenderer.
  *
  * @since 2.0
  */
@@ -41,7 +41,7 @@ class TwigRendererTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        static::$path = realpath(__DIR__ . '/Tmpl/twig');
+        static::$path = realpath(__DIR__.'/Tmpl/twig');
 
         if (!static::$path) {
             throw new \RuntimeException('Path not exists');
@@ -71,7 +71,7 @@ class TwigRendererTest extends AbstractDomTestCase
     {
         $html = $this->instance->render('default');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="global">
 	<p> (_global/global) Lorem ipsum dolor sit amet</p>
 	<p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
@@ -96,7 +96,7 @@ HTML;
 
         $html = $this->instance->render('default_dot');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="global">
 	<p> (_global/global) Lorem ipsum dolor sit amet</p>
 	<p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
@@ -149,7 +149,7 @@ HTML;
 
         $html = $this->instance->render('ext-test.twig');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 <p>Suspendisse finibus fermentum massa ut tempus. Sed in pulvinar dolor.</p>
 <ul>

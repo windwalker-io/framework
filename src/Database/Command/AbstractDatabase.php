@@ -11,7 +11,7 @@ namespace Windwalker\Database\Command;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
- * Class DatabaseDatabase
+ * Class DatabaseDatabase.
  *
  * @since 2.0
  */
@@ -20,21 +20,21 @@ abstract class AbstractDatabase
     /**
      * Property database.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
     /**
      * Property driver.
      *
-     * @var  AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
      */
     protected $db;
 
     /**
      * Property tablesCache.
      *
-     * @var  array
+     * @var array
      */
     protected $tableCache = [];
 
@@ -52,35 +52,35 @@ abstract class AbstractDatabase
     }
 
     /**
-     * select
+     * select.
      *
-     * @return  static
+     * @return static
      */
     abstract public function select();
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * @param bool   $ifNotExists
      * @param string $charset
      *
-     * @return  static
+     * @return static
      */
     abstract public function create($ifNotExists = false, $charset = null);
 
     /**
-     * dropDatabase
+     * dropDatabase.
      *
      * @param bool $ifExists
      *
-     * @return  static
+     * @return static
      */
     abstract public function drop($ifExists = false);
 
     /**
-     * exists
+     * exists.
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists()
     {
@@ -90,22 +90,22 @@ abstract class AbstractDatabase
     }
 
     /**
-     * renameDatabase
+     * renameDatabase.
      *
-     * @param string  $newName
-     * @param boolean $returnNew
+     * @param string $newName
+     * @param bool   $returnNew
      *
-     * @return  static
+     * @return static
      */
     abstract public function rename($newName, $returnNew = true);
 
     /**
-     * getTable
+     * getTable.
      *
      * @param string $name
      * @param bool   $new
      *
-     * @return  AbstractTable
+     * @return AbstractTable
      */
     public function getTable($name, $new = false)
     {
@@ -121,7 +121,7 @@ abstract class AbstractDatabase
      *
      * @param bool $refresh
      *
-     * @return  array  An array of all the tables in the database.
+     * @return array An array of all the tables in the database.
      *
      * @since   2.0
      */
@@ -131,9 +131,9 @@ abstract class AbstractDatabase
     }
 
     /**
-     * getTableDetails
+     * getTableDetails.
      *
-     * @param  boolean $refresh
+     * @param bool $refresh
      *
      * @return \stdClass[]
      */
@@ -153,11 +153,11 @@ abstract class AbstractDatabase
     }
 
     /**
-     * getTableDetail
+     * getTableDetail.
      *
      * @param bool $table
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getTableDetail($table)
     {
@@ -173,11 +173,11 @@ abstract class AbstractDatabase
     }
 
     /**
-     * tableExists
+     * tableExists.
      *
      * @param string $table
      *
-     * @return  boolean
+     * @return bool
      */
     public function tableExists($table)
     {
@@ -185,9 +185,9 @@ abstract class AbstractDatabase
     }
 
     /**
-     * Method to get property Table
+     * Method to get property Table.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -195,11 +195,11 @@ abstract class AbstractDatabase
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setName($name)
     {
@@ -209,9 +209,9 @@ abstract class AbstractDatabase
     }
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @return \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     public function getDriver()
     {
@@ -219,11 +219,11 @@ abstract class AbstractDatabase
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
+     * @param \Windwalker\Database\Driver\AbstractDatabaseDriver $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver($db)
     {
@@ -233,9 +233,9 @@ abstract class AbstractDatabase
     }
 
     /**
-     * resetCache
+     * resetCache.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {

@@ -19,7 +19,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Object under tests.
      *
-     * @var    ListenersQueue
+     * @var ListenersQueue
      *
      * @since  2.0
      */
@@ -28,7 +28,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the add method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -61,7 +61,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test adding an existing listener will have no effect.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -79,7 +79,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getPriority method when the listener wasn't added.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -99,7 +99,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the remove method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -141,7 +141,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      * All listeners with the same priority must be sorted in the order
      * they were added.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -197,7 +197,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getIterator method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -255,7 +255,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test that ListenersPriorityQueue is not a heap.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -287,7 +287,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the count method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -309,7 +309,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      *
      * This method is called before a test is executed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

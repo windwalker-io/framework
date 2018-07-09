@@ -21,7 +21,7 @@ class FieldHelper extends AbstractFormElementHelper
     /**
      * Property fieldNamespaces.
      *
-     * @var  \SplPriorityQueue
+     * @var \SplPriorityQueue
      */
     protected static $namespaces = null;
 
@@ -33,14 +33,14 @@ class FieldHelper extends AbstractFormElementHelper
     protected static $defaultNamespace = 'Windwalker\\Form\\Field';
 
     /**
-     * createField
+     * createField.
      *
      * @param string|AbstractField|\SimpleXMLElement $field
      * @param \SplPriorityQueue                      $namespaces
      *
      * @throws \InvalidArgumentException
      *
-     * @return  AbstractField
+     * @return AbstractField
      */
     public static function create($field, \SplPriorityQueue $namespaces = null)
     {
@@ -62,12 +62,12 @@ class FieldHelper extends AbstractFormElementHelper
     }
 
     /**
-     * createByXml
+     * createByXml.
      *
      * @param \SimpleXmlElement $xml
      * @param \SplPriorityQueue $namespaces
      *
-     * @return  AbstractField
+     * @return AbstractField
      */
     public static function createByXml(\SimpleXMLElement $xml, \SplPriorityQueue $namespaces = null)
     {
@@ -81,26 +81,26 @@ class FieldHelper extends AbstractFormElementHelper
 
         if (!class_exists($class)) {
             // Fallback to TextField
-            $class = static::$defaultNamespace . '\\TextField';
+            $class = static::$defaultNamespace.'\\TextField';
         }
 
         return new $class($xml);
     }
 
     /**
-     * findFieldClass
+     * findFieldClass.
      *
      * @param string            $name
      * @param \SplPriorityQueue $namespaces
      *
-     * @return  string|bool
+     * @return string|bool
      */
     public static function findFieldClass($name, \SplPriorityQueue $namespaces = null)
     {
         $namespaces = $namespaces ?: static::getNamespaces();
 
         foreach ($namespaces as $namespace) {
-            $class = trim($namespace, '\\') . '\\' . ucfirst($name) . 'Field';
+            $class = trim($namespace, '\\').'\\'.ucfirst($name).'Field';
 
             if (class_exists($class)) {
                 return $class;

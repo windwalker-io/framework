@@ -9,16 +9,17 @@
 namespace Windwalker\DI;
 
 /**
- * Container Aware Trait
+ * Container Aware Trait.
  *
  * @since 2.0
  */
 trait ContainerAwareTrait
 {
     /**
-     * DI Container
+     * DI Container.
      *
-     * @var    Container
+     * @var Container
+     *
      * @since  2.0
      */
     protected $container;
@@ -26,11 +27,11 @@ trait ContainerAwareTrait
     /**
      * Get the DI container.
      *
-     * @return  Container
+     * @throws \UnexpectedValueException May be thrown if the container has not been set.
+     *
+     * @return Container
      *
      * @since   2.0
-     *
-     * @throws  \UnexpectedValueException May be thrown if the container has not been set.
      */
     public function getContainer()
     {
@@ -38,15 +39,15 @@ trait ContainerAwareTrait
             return $this->container;
         }
 
-        throw new \UnexpectedValueException('Container not set in ' . get_called_class());
+        throw new \UnexpectedValueException('Container not set in '.get_called_class());
     }
 
     /**
      * Set the DI container.
      *
-     * @param   Container $container The DI container.
+     * @param Container $container The DI container.
      *
-     * @return  mixed  Returns itself to support chaining.
+     * @return mixed Returns itself to support chaining.
      *
      * @since   2.0
      */

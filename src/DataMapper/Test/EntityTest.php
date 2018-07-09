@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\DataMapper\Entity\Entity;
 use Windwalker\DataMapper\Test\Stub\StubEntity;
 
 /**
- * Test class of Entity
+ * Test class of Entity.
  *
  * @since 2.0
  */
@@ -37,9 +37,9 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getTestFields
+     * getTestFields.
      *
-     * @return  array
+     * @return array
      */
     protected function getTestFields()
     {
@@ -51,19 +51,19 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getTestData
+     * getTestData.
      *
-     * @return  array
+     * @return array
      */
     protected function getTestData()
     {
         return [
-            'id' => 5,
-            'title' => 'Sakura',
+            'id'      => 5,
+            'title'   => 'Sakura',
             'content' => 'foo',
             'created' => '2014-08-17',
-            'user' => 255,
-            'params' => '{}',
+            'user'    => 255,
+            'params'  => '{}',
         ];
     }
 
@@ -78,9 +78,9 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test__construct
+     * test__construct.
      *
-     * @return  void
+     * @return void
      */
     public function test__construct()
     {
@@ -146,9 +146,9 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testAccessor
+     * testAccessor.
      *
-     * @return  void
+     * @return void
      */
     public function testAccessor()
     {
@@ -158,9 +158,9 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testMutator
+     * testMutator.
      *
-     * @return  void
+     * @return void
      */
     public function testMutator()
     {
@@ -172,9 +172,9 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testJsonSerialize
+     * testJsonSerialize.
      *
-     * @return  void
+     * @return void
      */
     public function testJsonSerialize()
     {

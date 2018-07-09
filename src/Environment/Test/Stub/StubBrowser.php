@@ -20,9 +20,9 @@ class StubBrowser extends Browser
     /**
      * Allows public access to protected method.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -34,9 +34,9 @@ class StubBrowser extends Browser
     /**
      * Allows public access to protected method.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -48,9 +48,9 @@ class StubBrowser extends Browser
     /**
      * Allows public access to protected method.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -62,9 +62,9 @@ class StubBrowser extends Browser
     /**
      * Allows public access to protected method.
      *
-     * @param   string $acceptEncoding The accept encoding string to parse.
+     * @param string $acceptEncoding The accept encoding string to parse.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -76,9 +76,9 @@ class StubBrowser extends Browser
     /**
      * Allows public access to protected method.
      *
-     * @param   string $acceptLanguage The accept language string to parse.
+     * @param string $acceptLanguage The accept language string to parse.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -90,9 +90,9 @@ class StubBrowser extends Browser
     /**
      * Allows public access to protected method.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -104,11 +104,12 @@ class StubBrowser extends Browser
     /**
      * Method for inspecting protected variables.
      *
-     * @param   string $name The name of the property.
-     *
-     * @return  mixed  The value of the class variable.
+     * @param string $name The name of the property.
      *
      * @throws \Exception
+     *
+     * @return mixed The value of the class variable.
+     *
      * @since   2.0
      */
     public function getProperty($name)
@@ -116,16 +117,16 @@ class StubBrowser extends Browser
         if (property_exists($this, $name)) {
             return $this->$name;
         } else {
-            throw new \Exception('Undefined or private property: ' . __CLASS__ . '::' . $name);
+            throw new \Exception('Undefined or private property: '.__CLASS__.'::'.$name);
         }
     }
 
     /**
-     * loadClientInformation()
+     * loadClientInformation().
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -135,9 +136,9 @@ class StubBrowser extends Browser
     }
 
     /**
-     * fetchConfigurationData()
+     * fetchConfigurationData().
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -147,11 +148,11 @@ class StubBrowser extends Browser
     }
 
     /**
-     * loadSystemURIs()
+     * loadSystemURIs().
      *
-     * @param   string $ua The user-agent string to parse.
+     * @param string $ua The user-agent string to parse.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */

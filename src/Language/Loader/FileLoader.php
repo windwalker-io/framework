@@ -9,7 +9,7 @@
 namespace Windwalker\Language\Loader;
 
 /**
- * Class FileLoader
+ * Class FileLoader.
  *
  * @since 2.0
  */
@@ -32,14 +32,14 @@ class FileLoader extends AbstractLoader
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'file';
 
     /**
      * Property paths.
      *
-     * @var  null
+     * @var null
      */
     protected $paths = null;
 
@@ -65,12 +65,13 @@ class FileLoader extends AbstractLoader
     }
 
     /**
-     * load
+     * load.
      *
      * @param string $file
      *
      * @throws \RuntimeException
-     * @return  null|string
+     *
+     * @return null|string
      */
     public function load($file)
     {
@@ -78,7 +79,7 @@ class FileLoader extends AbstractLoader
             if (!$found = $this->findFile($file)) {
                 $paths = array_values(iterator_to_array(clone $this->paths));
 
-                $paths = implode(" / ", $paths);
+                $paths = implode(' / ', $paths);
 
                 throw new \RuntimeException(sprintf('Language file: %s not found. Paths in queue: %s', $file, $paths));
             }
@@ -90,16 +91,16 @@ class FileLoader extends AbstractLoader
     }
 
     /**
-     * findFile
+     * findFile.
      *
      * @param string $file
      *
-     * @return  boolean|string
+     * @return bool|string
      */
     protected function findFile($file)
     {
         foreach (clone $this->paths as $path) {
-            $filePath = $path . '/' . $file;
+            $filePath = $path.'/'.$file;
 
             if (is_file($filePath)) {
                 return $filePath;

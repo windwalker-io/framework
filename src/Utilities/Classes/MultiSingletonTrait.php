@@ -18,33 +18,31 @@ trait MultiSingletonTrait
     /**
      * Property instances.
      *
-     * @var  array
+     * @var array
      */
     protected static $instances = [];
 
     /**
-     * getInstance
+     * getInstance.
      *
      * @param string $name
      *
-     * @return  static
+     * @return static
      */
     public static function getInstance($name)
     {
         if (!empty(static::$instances[$name])) {
             return static::$instances[$name];
         }
-
-        return null;
     }
 
     /**
-     * setInstance
+     * setInstance.
      *
      * @param string $name
      * @param object $instance
      *
-     * @return  mixed
+     * @return mixed
      */
     protected static function setInstance($name, $instance)
     {
@@ -52,11 +50,11 @@ trait MultiSingletonTrait
     }
 
     /**
-     * hasInstance
+     * hasInstance.
      *
      * @param string $name
      *
-     * @return  bool
+     * @return bool
      */
     protected static function hasInstance($name)
     {

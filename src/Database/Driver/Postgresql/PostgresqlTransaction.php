@@ -11,24 +11,24 @@ namespace Windwalker\Database\Driver\Postgresql;
 use Windwalker\Database\Driver\Pdo\PdoTransaction;
 
 /**
- * Class PostgresqlTransaction
+ * Class PostgresqlTransaction.
  *
  * @since 2.0
  */
 class PostgresqlTransaction extends PdoTransaction
 {
     /**
-     * start
+     * start.
      *
-     * @return  static
+     * @return static
      */
     public function start()
     {
         if (!$this->nested || !$this->depth) {
             parent::start();
         } else {
-            $savepoint = 'SP_' . $this->depth;
-            $this->db->setQuery('SAVEPOINT ' . $this->db->quoteName($savepoint));
+            $savepoint = 'SP_'.$this->depth;
+            $this->db->setQuery('SAVEPOINT '.$this->db->quoteName($savepoint));
 
             if ($this->db->execute()) {
                 $this->depth++;
@@ -39,17 +39,17 @@ class PostgresqlTransaction extends PdoTransaction
     }
 
     /**
-     * rollback
+     * rollback.
      *
-     * @return  static
+     * @return static
      */
     public function rollback()
     {
         if (!$this->nested || $this->depth <= 1) {
             parent::rollback();
         } else {
-            $savepoint = 'SP_' . ($this->depth - 1);
-            $this->db->setQuery('ROLLBACK TO SAVEPOINT ' . $this->db->quoteName($savepoint));
+            $savepoint = 'SP_'.($this->depth - 1);
+            $this->db->setQuery('ROLLBACK TO SAVEPOINT '.$this->db->quoteName($savepoint));
 
             if ($this->db->execute()) {
                 $this->depth--;

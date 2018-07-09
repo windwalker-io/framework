@@ -29,7 +29,7 @@ class DataSet implements
     /**
      * The data store.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
@@ -51,7 +51,8 @@ class DataSet implements
      * @param array $dataset An array of multiple data.
      *
      * @throws \InvalidArgumentException
-     * @return  DataSet Return self to support chaining.
+     *
+     * @return DataSet Return self to support chaining.
      */
     public function bind($dataset)
     {
@@ -84,9 +85,9 @@ class DataSet implements
      * The result array will contain an entry for each object in the list (compared to __call which may not).
      * The keys of the objects and the result array are maintained.
      *
-     * @param   string $property The name of the data property.
+     * @param string $property The name of the data property.
      *
-     * @return  array  An associative array of the values.
+     * @return array An associative array of the values.
      */
     public function __get($property)
     {
@@ -98,9 +99,9 @@ class DataSet implements
      *
      * Example: $array = isset($objectList->foo);
      *
-     * @param   string $property The name of the property.
+     * @param string $property The name of the property.
      *
-     * @return  boolean  True if the property is set in any of the objects in the data set.
+     * @return bool True if the property is set in any of the objects in the data set.
      */
     public function __isset($property)
     {
@@ -123,10 +124,10 @@ class DataSet implements
      * This will set the 'foo' property to 'bar' in all of the objects
      * (or a value determined by custom property setters in the Data).
      *
-     * @param   string $property The name of the property.
-     * @param   mixed  $value    The value to give the data property.
+     * @param string $property The name of the property.
+     * @param mixed  $value    The value to give the data property.
      *
-     * @return  void
+     * @return void
      */
     public function __set($property, $value)
     {
@@ -140,9 +141,9 @@ class DataSet implements
      *
      * This will unset all of the 'foo' properties in the list of Data\Object's.
      *
-     * @param   string $property The name of the property.
+     * @param string $property The name of the property.
      *
-     * @return  void
+     * @return void
      */
     public function __unset($property)
     {
@@ -157,7 +158,7 @@ class DataSet implements
      *
      * @param mixed $offset Property key.
      *
-     * @return  boolean
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -169,7 +170,7 @@ class DataSet implements
      *
      * @param mixed $offset Property key.
      *
-     * @return  mixed The value of this property.
+     * @return mixed The value of this property.
      */
     public function offsetGet($offset)
     {
@@ -179,7 +180,7 @@ class DataSet implements
     /**
      * Clears the objects in the data set.
      *
-     * @return  DataSet  Returns itself to allow chaining.
+     * @return DataSet Returns itself to allow chaining.
      */
     public function clear()
     {
@@ -189,12 +190,12 @@ class DataSet implements
     }
 
     /**
-     * Set value to property
+     * Set value to property.
      *
      * @param mixed $offset Property key.
      * @param mixed $value  Property value to set.
      *
-     * @return  void
+     * @return void
      */
     public function offsetSet($offset, $value)
     {
@@ -206,7 +207,7 @@ class DataSet implements
      *
      * @param mixed $offset Key to unset.
      *
-     * @return  void
+     * @return void
      */
     public function offsetUnset($offset)
     {
@@ -214,32 +215,32 @@ class DataSet implements
     }
 
     /**
-     * get
+     * get.
      *
      * @param string $name
      *
-     * @return  mixed|null
+     * @return mixed|null
      */
     public function get($name)
     {
         if (empty($this->data[$name])) {
-            return null;
+            return;
         }
 
         return $this->data[$name];
     }
 
     /**
-     * set
+     * set.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function set($name, $value)
     {
-        if (!$value instanceof Data && !$value instanceof DataSet) {
+        if (!$value instanceof Data && !$value instanceof self) {
             $value = new Data($value);
         }
 
@@ -266,12 +267,12 @@ class DataSet implements
     }
 
     /**
-     * setColumn
+     * setColumn.
      *
      * @param string $column
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function setColumn($column, $value)
     {
@@ -287,7 +288,7 @@ class DataSet implements
     /**
      * Get the data store for iterate.
      *
-     * @return  \Traversable The data to be iterator.
+     * @return \Traversable The data to be iterator.
      */
     public function getIterator()
     {
@@ -297,7 +298,7 @@ class DataSet implements
     /**
      * Serialize data.
      *
-     * @return  string Serialized data string.
+     * @return string Serialized data string.
      */
     public function serialize()
     {
@@ -309,7 +310,7 @@ class DataSet implements
      *
      * @param string $serialized THe serialized data string.
      *
-     * @return  DataSet Support chaining.
+     * @return DataSet Support chaining.
      */
     public function unserialize($serialized)
     {
@@ -321,7 +322,7 @@ class DataSet implements
     /**
      * Count data.
      *
-     * @return  int
+     * @return int
      */
     public function count()
     {
@@ -331,7 +332,7 @@ class DataSet implements
     /**
      * Serialize to json format.
      *
-     * @return  string Encoded json string.
+     * @return string Encoded json string.
      */
     public function jsonSerialize()
     {
@@ -341,7 +342,7 @@ class DataSet implements
     /**
      * Is this data set empty?
      *
-     * @return  boolean Tru if empty.
+     * @return bool Tru if empty.
      */
     public function isNull()
     {
@@ -351,7 +352,7 @@ class DataSet implements
     /**
      * Is this data set has properties?
      *
-     * @return  boolean True is exists.
+     * @return bool True is exists.
      */
     public function notNull()
     {
@@ -381,12 +382,11 @@ class DataSet implements
      *
      * This method will rename to map() after 3.2.
      *
-     * @param   callable $callback
+     * @param callable $callback
      *
-     * @return  static
+     * @return static
      *
      * @since       3.1.3
-     *
      * @deprecated  Use map() instead.
      */
     public function mapping($callback)
@@ -395,12 +395,12 @@ class DataSet implements
     }
 
     /**
-     * mapColumn
+     * mapColumn.
      *
      * @param string   $field
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      */
     public function mapColumn($field, callable $callback)
     {
@@ -416,9 +416,9 @@ class DataSet implements
     /**
      * Mapping all elements.
      *
-     * @param   callable $callback
+     * @param callable $callback
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   3.1.3
      */
@@ -430,10 +430,10 @@ class DataSet implements
     /**
      * Apply a user supplied function to every member of this object.
      *
-     * @param   callable $callback Callback to handle every element.
-     * @param   mixed    $userdata This will be passed as the third parameter to the callback.
+     * @param callable $callback Callback to handle every element.
+     * @param mixed    $userdata This will be passed as the third parameter to the callback.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -447,9 +447,9 @@ class DataSet implements
     /**
      * Sort Dataset by key.
      *
-     * @param   integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     * @param int $flags You may modify the behavior of the sort using the optional parameter flags.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -461,11 +461,11 @@ class DataSet implements
     }
 
     /**
-     * Sort DataSet by key in reverse order
+     * Sort DataSet by key in reverse order.
      *
-     * @param   integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     * @param int $flags You may modify the behavior of the sort using the optional parameter flags.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -479,9 +479,9 @@ class DataSet implements
     /**
      * Sort data.
      *
-     * @param integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     * @param int $flags You may modify the behavior of the sort using the optional parameter flags.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   3.0
      */
@@ -495,9 +495,9 @@ class DataSet implements
     /**
      * Sort Data in reverse order.
      *
-     * @param integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     * @param int $flags You may modify the behavior of the sort using the optional parameter flags.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   3.0
      */
@@ -509,11 +509,11 @@ class DataSet implements
     }
 
     /**
-     * Sort DataSet by keys using a user-defined comparison function
+     * Sort DataSet by keys using a user-defined comparison function.
      *
-     * @param   callable $callable The compare function used for the sort.
+     * @param callable $callable The compare function used for the sort.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -527,7 +527,7 @@ class DataSet implements
     /**
      * Shuffle this DataSet to random orders.
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -541,9 +541,9 @@ class DataSet implements
     /**
      * Push element to last.
      *
-     * @param   Data|mixed $data Data to push.
+     * @param Data|mixed $data Data to push.
      *
-     * @return  static
+     * @return static
      */
     public function push($data)
     {
@@ -555,7 +555,7 @@ class DataSet implements
     /**
      * Pop the last element.
      *
-     * @return  Data
+     * @return Data
      */
     public function pop()
     {
@@ -565,7 +565,7 @@ class DataSet implements
     /**
      * Shift the first element.
      *
-     * @return  Data
+     * @return Data
      *
      * @since   3.0
      */
@@ -577,9 +577,9 @@ class DataSet implements
     /**
      * Unshift the first element.
      *
-     * @param   Data|mixed $data Data to push.
+     * @param Data|mixed $data Data to push.
      *
-     * @return  static
+     * @return static
      *
      * @since   3.0
      */
@@ -591,13 +591,13 @@ class DataSet implements
     }
 
     /**
-     * splice
+     * splice.
      *
      * @param int   $offset
      * @param int   $length
      * @param mixed $replacement
      *
-     * @return  static
+     * @return static
      */
     public function splice($offset, $length = null, $replacement = null)
     {
@@ -605,11 +605,11 @@ class DataSet implements
     }
 
     /**
-     * sum
+     * sum.
      *
      * @param string|int $field
      *
-     * @return  float|int
+     * @return float|int
      */
     public function sum($field)
     {
@@ -617,11 +617,11 @@ class DataSet implements
     }
 
     /**
-     * avg
+     * avg.
      *
      * @param string|int $field
      *
-     * @return  float|int
+     * @return float|int
      */
     public function avg($field)
     {
@@ -629,13 +629,13 @@ class DataSet implements
     }
 
     /**
-     * contains
+     * contains.
      *
      * @param string $field
      * @param mixed  $value
      * @param bool   $strict
      *
-     * @return  bool
+     * @return bool
      */
     public function contains($field, $value, $strict = false)
     {
@@ -643,12 +643,12 @@ class DataSet implements
     }
 
     /**
-     * containsAll
+     * containsAll.
      *
      * @param mixed $value
      * @param bool  $strict
      *
-     * @return  bool
+     * @return bool
      */
     public function containsAll($value, $strict = false)
     {
@@ -656,11 +656,11 @@ class DataSet implements
     }
 
     /**
-     * keyBy
+     * keyBy.
      *
      * @param string|int $field
      *
-     * @return  static
+     * @return static
      */
     public function keyBy($field)
     {
@@ -668,11 +668,11 @@ class DataSet implements
     }
 
     /**
-     * remove
+     * remove.
      *
      * @param array|string $fields
      *
-     * @return  static
+     * @return static
      */
     public function except($fields)
     {
@@ -686,11 +686,11 @@ class DataSet implements
     }
 
     /**
-     * only
+     * only.
      *
      * @param array|string $fields
      *
-     * @return  static
+     * @return static
      */
     public function only($fields)
     {
@@ -706,7 +706,7 @@ class DataSet implements
     /**
      * Clone this class.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0.9
      */
@@ -728,10 +728,9 @@ class DataSet implements
     /**
      * Return all the keys of this DataSet.
      *
-     * @return  array
+     * @return array
      *
      * @since       2.0.9
-     *
      * @deprecated  Use keys().
      */
     public function getKeys()
@@ -742,7 +741,7 @@ class DataSet implements
     /**
      * Return all the keys of this DataSet.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.2
      */

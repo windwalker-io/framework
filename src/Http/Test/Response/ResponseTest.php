@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\Stream;
 
 /**
- * Test class of Response
+ * Test class of Response.
  *
  * @since 2.1
  */
@@ -59,7 +59,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         // Test with params
         $body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
         $headers = [
-            'X-Foo' => ['Flower', 'Sakura'],
+            'X-Foo'        => ['Flower', 'Sakura'],
             'Content-Type' => 'application/json',
         ];
 

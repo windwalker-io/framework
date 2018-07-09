@@ -25,7 +25,6 @@ use Windwalker\Edge\Loader\EdgeStringLoader;
  * This is a modified version of Laravel Blade engine.
  *
  * @see    https://github.com/illuminate/view/blob/master/Factory.php
- *
  * @since  3.0
  */
 class Edge
@@ -35,21 +34,21 @@ class Edge
     /**
      * Property globals.
      *
-     * @var  array
+     * @var array
      */
     protected $globals = [];
 
     /**
      * Property extensions.
      *
-     * @var  EdgeExtensionInterface[]
+     * @var EdgeExtensionInterface[]
      */
     protected $extensions = [];
 
     /**
      * Property sections.
      *
-     * @var  array
+     * @var array
      */
     protected $sections;
 
@@ -84,21 +83,21 @@ class Edge
     /**
      * Property loader.
      *
-     * @var  EdgeLoaderInterface
+     * @var EdgeLoaderInterface
      */
     protected $loader;
 
     /**
      * Property compiler.
      *
-     * @var  EdgeCompilerInterface
+     * @var EdgeCompilerInterface
      */
     protected $compiler;
 
     /**
      * Property cacheHandler.
      *
-     * @var  EdgeCacheInterface
+     * @var EdgeCacheInterface
      */
     protected $cache;
 
@@ -115,7 +114,7 @@ class Edge
         EdgeCacheInterface $cache = null
     ) {
         // Simple fix for Blade escape
-        include_once __DIR__ . '/compat.php';
+        include_once __DIR__.'/compat.php';
 
         $this->loader = $loader ?: new EdgeStringLoader();
         $this->compiler = $compiler ?: new EdgeCompiler();
@@ -123,14 +122,15 @@ class Edge
     }
 
     /**
-     * render
+     * render.
      *
      * @param string $__layout
      * @param array  $__data
      * @param array  $__more
      *
-     * @return string
      * @throws EdgeException
+     *
+     * @return string
      */
     public function render($__layout, $__data = [], $__more = [])
     {
@@ -162,18 +162,18 @@ class Edge
             if ($this->cache instanceof EdgeFileCache) {
                 include $this->cache->getCacheFile($this->cache->getCacheKey($__path));
             } else {
-                eval(' ?>' . $this->cache->load($__path) . '<?php ');
+                eval(' ?>'.$this->cache->load($__path).'<?php ');
             }
         } catch (\Exception $e) {
             ob_clean();
             $this->wrapException($e, $__path, $__layout);
 
-            return null;
+            return;
         } catch (\Throwable $e) {
             ob_clean();
             $this->wrapException($e, $__path, $__layout);
 
-            return null;
+            return;
         }
 
         $result = ltrim(ob_get_clean());
@@ -186,7 +186,7 @@ class Edge
     }
 
     /**
-     * wrapException
+     * wrapException.
      *
      * @param \Exception|\Throwable $e
      * @param string                $path
@@ -206,7 +206,7 @@ class Edge
     /**
      * Normalize a view name.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return string
      */
@@ -218,11 +218,11 @@ class Edge
     }
 
     /**
-     * escape
+     * escape.
      *
-     * @param  string $string
+     * @param string $string
      *
-     * @return  string
+     * @return string
      */
     public function escape($string)
     {
@@ -232,8 +232,8 @@ class Edge
     /**
      * Start injecting content into a section.
      *
-     * @param  string $section
-     * @param  string $content
+     * @param string $section
+     * @param string $content
      *
      * @return void
      */
@@ -251,8 +251,8 @@ class Edge
     /**
      * Inject inline content into a section.
      *
-     * @param  string $section
-     * @param  string $content
+     * @param string $section
+     * @param string $content
      *
      * @return void
      */
@@ -278,10 +278,11 @@ class Edge
     /**
      * Stop injecting content into a section.
      *
-     * @param  bool $overwrite
+     * @param bool $overwrite
+     *
+     * @throws \InvalidArgumentException
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
     public function stopSection($overwrite = false)
     {
@@ -303,8 +304,9 @@ class Edge
     /**
      * Stop injecting content into a section and append it.
      *
-     * @return string
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     public function appendSection()
     {
@@ -326,8 +328,8 @@ class Edge
     /**
      * Append content to a given section.
      *
-     * @param  string $section
-     * @param  string $content
+     * @param string $section
+     * @param string $content
      *
      * @return void
      */
@@ -343,8 +345,8 @@ class Edge
     /**
      * Get the string contents of a section.
      *
-     * @param  string $section
-     * @param  string $default
+     * @param string $section
+     * @param string $default
      *
      * @return string
      */
@@ -368,8 +370,8 @@ class Edge
     /**
      * Start injecting content into a push section.
      *
-     * @param  string $section
-     * @param  string $content
+     * @param string $section
+     * @param string $content
      *
      * @return void
      */
@@ -387,8 +389,9 @@ class Edge
     /**
      * Stop injecting content into a push section.
      *
-     * @return string
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     public function stopPush()
     {
@@ -406,8 +409,8 @@ class Edge
     /**
      * Append content to a given push section.
      *
-     * @param  string $section
-     * @param  string $content
+     * @param string $section
+     * @param string $content
      *
      * @return void
      */
@@ -427,8 +430,8 @@ class Edge
     /**
      * Get the string contents of a push section.
      *
-     * @param  string $section
-     * @param  string $default
+     * @param string $section
+     * @param string $default
      *
      * @return string
      */
@@ -444,13 +447,14 @@ class Edge
     /**
      * Get the rendered contents of a partial from a loop.
      *
-     * @param  string $view
-     * @param  array  $data
-     * @param  string $iterator
-     * @param  string $empty
+     * @param string $view
+     * @param array  $data
+     * @param string $iterator
+     * @param string $empty
+     *
+     * @throws EdgeException
      *
      * @return string
-     * @throws EdgeException
      */
     public function renderEach($view, $data, $iterator, $empty = 'raw|')
     {
@@ -538,7 +542,7 @@ class Edge
     }
 
     /**
-     * prepareDirectives
+     * prepareDirectives.
      *
      * @param EdgeCompilerInterface $compiler
      *
@@ -560,12 +564,12 @@ class Edge
     }
 
     /**
-     * arrayExcept
+     * arrayExcept.
      *
      * @param array $array
      * @param array $fields
      *
-     * @return  array
+     * @return array
      */
     public function arrayExcept(array $array, array $fields)
     {
@@ -579,7 +583,7 @@ class Edge
     }
 
     /**
-     * Method to get property Globals
+     * Method to get property Globals.
      *
      * @param bool $withExtensions
      *
@@ -603,12 +607,12 @@ class Edge
     }
 
     /**
-     * addGlobal
+     * addGlobal.
      *
-     * @param   string $name
-     * @param   string $value
+     * @param string $name
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function addGlobal($name, $value)
     {
@@ -634,11 +638,11 @@ class Edge
     }
 
     /**
-     * Method to set property globals
+     * Method to set property globals.
      *
-     * @param   array $globals
+     * @param array $globals
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setGlobals($globals)
     {
@@ -648,9 +652,9 @@ class Edge
     }
 
     /**
-     * Method to get property Compiler
+     * Method to get property Compiler.
      *
-     * @return  EdgeCompilerInterface
+     * @return EdgeCompilerInterface
      */
     public function getCompiler()
     {
@@ -658,11 +662,11 @@ class Edge
     }
 
     /**
-     * Method to set property compiler
+     * Method to set property compiler.
      *
-     * @param   EdgeCompilerInterface $compiler
+     * @param EdgeCompilerInterface $compiler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCompiler(EdgeCompilerInterface $compiler)
     {
@@ -672,9 +676,9 @@ class Edge
     }
 
     /**
-     * Method to get property Loader
+     * Method to get property Loader.
      *
-     * @return  EdgeLoaderInterface
+     * @return EdgeLoaderInterface
      */
     public function getLoader()
     {
@@ -682,11 +686,11 @@ class Edge
     }
 
     /**
-     * Method to set property loader
+     * Method to set property loader.
      *
-     * @param   EdgeLoaderInterface $loader
+     * @param EdgeLoaderInterface $loader
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setLoader(EdgeLoaderInterface $loader)
     {
@@ -696,7 +700,7 @@ class Edge
     }
 
     /**
-     * addExtension
+     * addExtension.
      *
      * @param EdgeExtensionInterface $extension
      * @param string                 $name
@@ -715,11 +719,11 @@ class Edge
     }
 
     /**
-     * removeExtension
+     * removeExtension.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static
+     * @return static
      */
     public function removeExtension($name)
     {
@@ -731,11 +735,11 @@ class Edge
     }
 
     /**
-     * hasExtension
+     * hasExtension.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasExtension($name)
     {
@@ -743,25 +747,23 @@ class Edge
     }
 
     /**
-     * getExtension
+     * getExtension.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  EdgeExtensionInterface
+     * @return EdgeExtensionInterface
      */
     public function getExtension($name)
     {
         if ($this->hasExtension($name)) {
             return $this->extensions[$name];
         }
-
-        return null;
     }
 
     /**
-     * Method to get property Extensions
+     * Method to get property Extensions.
      *
-     * @return  Extension\EdgeExtensionInterface[]
+     * @return Extension\EdgeExtensionInterface[]
      */
     public function getExtensions()
     {
@@ -769,11 +771,11 @@ class Edge
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   Extension\EdgeExtensionInterface[] $extensions
+     * @param Extension\EdgeExtensionInterface[] $extensions
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setExtensions($extensions)
     {
@@ -783,9 +785,9 @@ class Edge
     }
 
     /**
-     * Method to get property Cache
+     * Method to get property Cache.
      *
-     * @return  EdgeCacheInterface
+     * @return EdgeCacheInterface
      */
     public function getCache()
     {
@@ -793,11 +795,11 @@ class Edge
     }
 
     /**
-     * Method to set property cache
+     * Method to set property cache.
      *
-     * @param   EdgeCacheInterface $cache
+     * @param EdgeCacheInterface $cache
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCache(EdgeCacheInterface $cache)
     {

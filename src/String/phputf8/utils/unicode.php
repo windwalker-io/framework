@@ -15,15 +15,16 @@
  * Returns false if the input string isn't a valid UTF-8 octet sequence
  * and raises a PHP error at level E_USER_WARNING
  * Note: this function has been modified slightly in this library to
- * trigger errors on encountering bad bytes
+ * trigger errors on encountering bad bytes.
+ *
  * @author  <hsivonen@iki.fi>
  *
  * @param string UTF-8 encoded string
  *
  * @return mixed array of unicode code points or FALSE if UTF-8 invalid
+ *
  * @see     utf8_from_unicode
  * @see     http://hsivonen.iki.fi/php-utf8/
- * @package utf8
  */
 function utf8_to_unicode($str)
 {
@@ -37,7 +38,7 @@ function utf8_to_unicode($str)
     $len = strlen($str);
 
     for ($i = 0; $i < $len; $i++) {
-        $in = ord($str{$i});
+        $in = ord($str[$i]);
 
         if ($mState == 0) {
             // When mState is zero we expect either a US-ASCII character or a
@@ -93,8 +94,8 @@ function utf8_to_unicode($str)
                                      * octet of a multi-octet sequence.
                                      */
                                     trigger_error(
-                                        'utf8_to_unicode: Illegal sequence identifier ' .
-                                        'in UTF-8 at byte ' . $i,
+                                        'utf8_to_unicode: Illegal sequence identifier '.
+                                        'in UTF-8 at byte '.$i,
                                         E_USER_WARNING
                                     );
 
@@ -115,7 +116,7 @@ function utf8_to_unicode($str)
                 $tmp = ($tmp & 0x0000003F) << $shift;
                 $mUcs4 |= $tmp;
 
-                /**
+                /*
                  * End of the multi-octet sequence. mUcs4 now contains the final
                  * Unicode codepoint to be output
                  */
@@ -133,8 +134,8 @@ function utf8_to_unicode($str)
                         // Codepoints outside the Unicode range are illegal
                         ($mUcs4 > 0x10FFFF)) {
                         trigger_error(
-                            'utf8_to_unicode: Illegal sequence or codepoint ' .
-                            'in UTF-8 at byte ' . $i,
+                            'utf8_to_unicode: Illegal sequence or codepoint '.
+                            'in UTF-8 at byte '.$i,
                             E_USER_WARNING
                         );
 
@@ -152,13 +153,13 @@ function utf8_to_unicode($str)
                     $mBytes = 1;
                 }
             } else {
-                /**
+                /*
                  *((0xC0 & (*in) != 0x80) && (mState != 0))
                  * Incomplete multi-octet sequence.
                  */
                 trigger_error(
-                    'utf8_to_unicode: Incomplete multi-octet ' .
-                    '   sequence in UTF-8 at byte ' . $i,
+                    'utf8_to_unicode: Incomplete multi-octet '.
+                    '   sequence in UTF-8 at byte '.$i,
                     E_USER_WARNING
                 );
 
@@ -181,52 +182,53 @@ function utf8_to_unicode($str)
  * and raises a PHP error at level E_USER_WARNING
  * Note: this function has been modified slightly in this library to use
  * output buffering to concatenate the UTF-8 string (faster) as well as
- * reference the array by it's keys
+ * reference the array by it's keys.
  *
  * @param array of unicode code points representing a string
  *
  * @return mixed UTF-8 string or FALSE if array contains invalid code points
+ *
  * @author  <hsivonen@iki.fi>
+ *
  * @see     utf8_to_unicode
  * @see     http://hsivonen.iki.fi/php-utf8/
- * @package utf8
  */
 function utf8_from_unicode($arr)
 {
     ob_start();
 
     foreach (array_keys($arr) as $k) {
-        # ASCII range (including control chars)
+        // ASCII range (including control chars)
         if (($arr[$k] >= 0) && ($arr[$k] <= 0x007f)) {
             echo chr($arr[$k]);
-            # 2 byte sequence
+        // 2 byte sequence
         } else {
             if ($arr[$k] <= 0x07ff) {
                 echo chr(0xc0 | ($arr[$k] >> 6));
                 echo chr(0x80 | ($arr[$k] & 0x003f));
-                # Byte order mark (skip)
+            // Byte order mark (skip)
             } else {
                 if ($arr[$k] == 0xFEFF) {
                     // nop -- zap the BOM
 
-                    # Test for illegal surrogates
+                    // Test for illegal surrogates
                 } else {
                     if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) {
                         // found a surrogate
                         trigger_error(
-                            'utf8_from_unicode: Illegal surrogate ' .
-                            'at index: ' . $k . ', value: ' . $arr[$k],
+                            'utf8_from_unicode: Illegal surrogate '.
+                            'at index: '.$k.', value: '.$arr[$k],
                             E_USER_WARNING
                         );
 
                         return false;
-                        # 3 byte sequence
+                    // 3 byte sequence
                     } else {
                         if ($arr[$k] <= 0xffff) {
                             echo chr(0xe0 | ($arr[$k] >> 12));
                             echo chr(0x80 | (($arr[$k] >> 6) & 0x003f));
                             echo chr(0x80 | ($arr[$k] & 0x003f));
-                            # 4 byte sequence
+                        // 4 byte sequence
                         } else {
                             if ($arr[$k] <= 0x10ffff) {
                                 echo chr(0xf0 | ($arr[$k] >> 18));
@@ -235,8 +237,8 @@ function utf8_from_unicode($arr)
                                 echo chr(0x80 | ($arr[$k] & 0x3f));
                             } else {
                                 trigger_error(
-                                    'utf8_from_unicode: Codepoint out of Unicode range ' .
-                                    'at index: ' . $k . ', value: ' . $arr[$k],
+                                    'utf8_from_unicode: Codepoint out of Unicode range '.
+                                    'at index: '.$k.', value: '.$arr[$k],
                                     E_USER_WARNING
                                 );
 

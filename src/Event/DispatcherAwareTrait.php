@@ -9,7 +9,7 @@
 namespace Windwalker\Event;
 
 /**
- * Class DispatcherAwareTrait
+ * Class DispatcherAwareTrait.
  *
  * @since 2.0
  */
@@ -18,17 +18,17 @@ trait DispatcherAwareTrait
     /**
      * Property dispatcher.
      *
-     * @var  Dispatcher
+     * @var Dispatcher
      */
     protected $dispatcher = null;
 
     /**
      * Trigger an event.
      *
-     * @param   EventInterface|string $event The event object or name.
-     * @param   array                 $args  The arguments.
+     * @param EventInterface|string $event The event object or name.
+     * @param array                 $args  The arguments.
      *
-     * @return  EventInterface  The event after being passed through all listeners.
+     * @return EventInterface The event after being passed through all listeners.
      *
      * @since   2.0
      */
@@ -38,9 +38,9 @@ trait DispatcherAwareTrait
     }
 
     /**
-     * getDispatcher
+     * getDispatcher.
      *
-     * @return  DispatcherInterface
+     * @return DispatcherInterface
      */
     public function getDispatcher()
     {
@@ -48,11 +48,11 @@ trait DispatcherAwareTrait
     }
 
     /**
-     * setDispatcher
+     * setDispatcher.
      *
-     * @param   DispatcherInterface $dispatcher
+     * @param DispatcherInterface $dispatcher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDispatcher(DispatcherInterface $dispatcher)
     {

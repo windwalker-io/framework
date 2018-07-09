@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,7 +15,7 @@ use Windwalker\Middleware\Test\Stub\StubOthelloMiddleware;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of Middleware
+ * Test class of Middleware.
  *
  * @since 2.0
  */
@@ -76,7 +76,7 @@ class MiddlewareTest extends AbstractBaseTestCase
 
         $othello->setNext(new EndMiddleware());
 
-        $expected = <<<EOF
+        $expected = <<<'EOF'
 >>> Caesar
 >>> Othello
 <<< Othello
@@ -87,9 +87,9 @@ EOF;
     }
 
     /**
-     * testExecuteWithData
+     * testExecuteWithData.
      *
-     * @return  void
+     * @return void
      */
     public function testExecuteWithData()
     {
@@ -98,7 +98,7 @@ EOF;
         $othello->setNext($dm = new StubDataMiddleware());
         $dm->setNext(new EndMiddleware());
 
-        $expected = <<<EOF
+        $expected = <<<'EOF'
 >>> Caesar
 >>> Othello
 >>> Hamlet

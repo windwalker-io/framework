@@ -18,14 +18,14 @@ class PdoQueueFailer implements QueueFailerInterface
     /**
      * Property db.
      *
-     * @var  \PDO
+     * @var \PDO
      */
     protected $pdo;
 
     /**
      * Property table.
      *
-     * @var  string
+     * @var string
      */
     protected $table;
 
@@ -42,9 +42,9 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * isSupported
+     * isSupported.
      *
-     * @return  bool
+     * @return bool
      */
     public function isSupported()
     {
@@ -58,22 +58,22 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * add
+     * add.
      *
      * @param string $connection
      * @param string $queue
      * @param string $body
      * @param string $exception
      *
-     * @return  int|string
+     * @return int|string
      */
     public function add($connection, $queue, $body, $exception)
     {
         // For B/C
         $created = (new \DateTime('now'))->format('Y-m-d H:i:s');
 
-        $sql = 'INSERT INTO ' . $this->table .
-            ' (connection, queue, body, exception, created)' .
+        $sql = 'INSERT INTO '.$this->table.
+            ' (connection, queue, body, exception, created)'.
             ' VALUES (:connection, :queue, :body, :exception, :created)';
 
         $stat = $this->pdo->prepare($sql);
@@ -89,15 +89,16 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * all
+     * all.
      *
-     * @return  array
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     public function all()
     {
-        $sql = 'SELECT * FROM ' . $this->table;
+        $sql = 'SELECT * FROM '.$this->table;
 
         $stat = $this->pdo->query($sql);
 
@@ -105,15 +106,15 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * get
+     * get.
      *
      * @param mixed $conditions
      *
-     * @return  array
+     * @return array
      */
     public function get($conditions)
     {
-        $sql = 'SELECT * FROM ' . $this->table .
+        $sql = 'SELECT * FROM '.$this->table.
             ' WHERE id = :id';
 
         $stat = $this->pdo->prepare($sql);
@@ -124,15 +125,15 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * remove
+     * remove.
      *
      * @param mixed $conditions
      *
-     * @return  bool
+     * @return bool
      */
     public function remove($conditions)
     {
-        $sql = 'DELETE FROM ' . $this->table .
+        $sql = 'DELETE FROM '.$this->table.
             ' WHERE id = :id';
 
         $stat = $this->pdo->prepare($sql);
@@ -142,21 +143,21 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * clear
+     * clear.
      *
-     * @return  bool
+     * @return bool
      */
     public function clear()
     {
-        $sql = 'TRUNCATE TABLE ' . $this->table;
+        $sql = 'TRUNCATE TABLE '.$this->table;
 
         return $this->pdo->prepare($sql)->execute();
     }
 
     /**
-     * Method to get property Table
+     * Method to get property Table.
      *
-     * @return  string
+     * @return string
      */
     public function getTable()
     {
@@ -164,11 +165,11 @@ class PdoQueueFailer implements QueueFailerInterface
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   string $table
+     * @param string $table
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTable($table)
     {

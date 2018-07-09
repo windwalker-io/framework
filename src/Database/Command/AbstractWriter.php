@@ -13,7 +13,7 @@ use Windwalker\Database\Query\QueryHelper;
 use Windwalker\Query\Query;
 
 /**
- * Class DatabaseWriter
+ * Class DatabaseWriter.
  *
  * @since 2.0
  */
@@ -22,14 +22,14 @@ abstract class AbstractWriter
     /**
      * Property driver.
      *
-     * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @var \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     protected $db;
 
     /**
      * Property cursor.
      *
-     * @var  resource
+     * @var resource
      */
     protected $cursor;
 
@@ -46,12 +46,13 @@ abstract class AbstractWriter
     /**
      * Inserts a row into a table based on an object's properties.
      *
-     * @param   string       $table The name of the database table to insert into.
-     * @param   array|object &$data A reference to an object whose public properties match the table fields.
-     * @param   string       $key   The name of the primary key. If provided the object property is updated.
+     * @param string       $table The name of the database table to insert into.
+     * @param array|object &$data A reference to an object whose public properties match the table fields.
+     * @param string       $key   The name of the primary key. If provided the object property is updated.
      *
      * @throws \InvalidArgumentException
-     * @return  static
+     *
+     * @return static
      *
      * @since   2.0
      */
@@ -122,14 +123,14 @@ abstract class AbstractWriter
     /**
      * Updates a row in a table based on an object's properties.
      *
-     * @param   string       $table       The name of the database table to update.
-     * @param   array|object $data        A reference to an object whose public properties match the table fields.
-     * @param   array        $key         The name of the primary key.
-     * @param   boolean      $updateNulls True to update null fields or false to ignore them.
+     * @param string       $table       The name of the database table to update.
+     * @param array|object $data        A reference to an object whose public properties match the table fields.
+     * @param array        $key         The name of the primary key.
+     * @param bool         $updateNulls True to update null fields or false to ignore them.
      *
      * @throws \InvalidArgumentException
      *
-     * @return  boolean  True on success.
+     * @return bool True on success.
      *
      * @since   2.0
      */
@@ -168,7 +169,7 @@ abstract class AbstractWriter
 
             // Set the primary key to the WHERE clause instead of a field to update.
             if (in_array($k, $key)) {
-                $query->where($query->quoteName($k) . '=' . $query->quote($v));
+                $query->where($query->quoteName($k).'='.$query->quote($v));
 
                 continue;
             }
@@ -182,13 +183,12 @@ abstract class AbstractWriter
                     // If the value is null and we do not want to update nulls then ignore this field.
                     continue;
                 }
-            } else // The field is not null so we prep it for update.
-            {
+            } else { // The field is not null so we prep it for update.
                 $val = $query->quote($v);
             }
 
             // Add the field to be updated.
-            $query->set($query->quoteName($k) . '=' . $val);
+            $query->set($query->quoteName($k).'='.$val);
         }
 
         // Set the query and execute the update.
@@ -198,22 +198,22 @@ abstract class AbstractWriter
     }
 
     /**
-     * save
+     * save.
      *
-     * @param   string  $table       The name of the database table to update.
-     * @param   array   &$data       A reference to an object whose public properties match the table fields.
-     * @param   string  $key         The name of the primary key.
-     * @param   boolean $updateNulls True to update null fields or false to ignore them.
-     *
-     * @return  bool|static
+     * @param string $table       The name of the database table to update.
+     * @param array  &$data       A reference to an object whose public properties match the table fields.
+     * @param string $key         The name of the primary key.
+     * @param bool   $updateNulls True to update null fields or false to ignore them.
      *
      * @throws \InvalidArgumentException
+     *
+     * @return bool|static
      */
     public function saveOne($table, &$data, $key, $updateNulls = false)
     {
         if (is_array($key) || is_object($key)) {
             throw new \InvalidArgumentException(
-                __NAMESPACE__ . '::save() dose not support multiple keys, please give me only one key.'
+                __NAMESPACE__.'::save() dose not support multiple keys, please give me only one key.'
             );
         }
 
@@ -231,14 +231,15 @@ abstract class AbstractWriter
     }
 
     /**
-     * insertMultiple
+     * insertMultiple.
      *
-     * @param   string $table    The name of the database table to update.
-     * @param   array  &$dataSet A reference to an object whose public properties match the table fields.
-     * @param   array  $key      The name of the primary key.
+     * @param string $table    The name of the database table to update.
+     * @param array  &$dataSet A reference to an object whose public properties match the table fields.
+     * @param array  $key      The name of the primary key.
      *
      * @throws \InvalidArgumentException
-     * @return  mixed
+     *
+     * @return mixed
      */
     public function insertMultiple($table, &$dataSet, $key = null)
     {
@@ -254,15 +255,16 @@ abstract class AbstractWriter
     }
 
     /**
-     * updateMultiple
+     * updateMultiple.
      *
-     * @param   string  $table       The name of the database table to update.
-     * @param   array   $dataSet     A reference to an object whose public properties match the table fields.
-     * @param   array   $key         The name of the primary key.
-     * @param   boolean $updateNulls True to update null fields or false to ignore them.
+     * @param string $table       The name of the database table to update.
+     * @param array  $dataSet     A reference to an object whose public properties match the table fields.
+     * @param array  $key         The name of the primary key.
+     * @param bool   $updateNulls True to update null fields or false to ignore them.
      *
      * @throws \InvalidArgumentException
-     * @return  mixed
+     *
+     * @return mixed
      */
     public function updateMultiple($table, $dataSet, $key, $updateNulls = false)
     {
@@ -278,15 +280,16 @@ abstract class AbstractWriter
     }
 
     /**
-     * saveMultiple
+     * saveMultiple.
      *
-     * @param   string  $table       The name of the database table to update.
-     * @param   array   $dataSet     A reference to an object whose public properties match the table fields.
-     * @param   array   $key         The name of the primary key.
-     * @param   boolean $updateNulls True to update null fields or false to ignore them.
+     * @param string $table       The name of the database table to update.
+     * @param array  $dataSet     A reference to an object whose public properties match the table fields.
+     * @param array  $key         The name of the primary key.
+     * @param bool   $updateNulls True to update null fields or false to ignore them.
      *
      * @throws \InvalidArgumentException
-     * @return  mixed
+     *
+     * @return mixed
      */
     public function saveMultiple($table, $dataSet, $key, $updateNulls = false)
     {
@@ -312,7 +315,7 @@ abstract class AbstractWriter
      *                           - `new GteCompare('id', 20)` => 'id >= 20'
      *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @return  boolean True if update success.
+     * @return bool True if update success.
      */
     public function updateBatch($table, $data, $conditions = [])
     {
@@ -348,12 +351,12 @@ abstract class AbstractWriter
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param string $table
      * @param array  $conditions
      *
-     * @return  boolean
+     * @return bool
      */
     public function delete($table, array $conditions = [])
     {
@@ -373,7 +376,7 @@ abstract class AbstractWriter
      * Get the number of affected rows for the previous executed SQL statement.
      * Only applicable for DELETE, INSERT, or UPDATE statements.
      *
-     * @return  integer  The number of affected rows.
+     * @return int The number of affected rows.
      *
      * @since   2.0
      */
@@ -386,7 +389,7 @@ abstract class AbstractWriter
     /**
      * Method to get the auto-incremented value from the last INSERT statement.
      *
-     * @return  string  The value of the auto-increment field from the last inserted row.
+     * @return string The value of the auto-increment field from the last inserted row.
      *
      * @since   2.0
      */
@@ -396,11 +399,11 @@ abstract class AbstractWriter
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param   string|Query $query
+     * @param string|Query $query
      *
-     * @return  static
+     * @return static
      */
     public function execute($query)
     {
@@ -412,9 +415,9 @@ abstract class AbstractWriter
     }
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @return \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     public function getDriver()
     {
@@ -422,11 +425,11 @@ abstract class AbstractWriter
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
+     * @param \Windwalker\Database\Driver\AbstractDatabaseDriver $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver($db)
     {
@@ -436,9 +439,9 @@ abstract class AbstractWriter
     }
 
     /**
-     * Method to get property Cursor
+     * Method to get property Cursor.
      *
-     * @return  resource
+     * @return resource
      */
     public function getCursor()
     {
@@ -446,11 +449,11 @@ abstract class AbstractWriter
     }
 
     /**
-     * Method to set property cursor
+     * Method to set property cursor.
      *
-     * @param   resource $cursor
+     * @param resource $cursor
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCursor($cursor)
     {

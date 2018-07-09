@@ -19,7 +19,7 @@ use Windwalker\Queue\QueueMessage;
 class SyncQueueDriver implements QueueDriverInterface
 {
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
@@ -37,7 +37,7 @@ class SyncQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -49,7 +49,7 @@ class SyncQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -61,7 +61,7 @@ class SyncQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *

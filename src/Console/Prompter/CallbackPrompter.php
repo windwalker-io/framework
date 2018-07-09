@@ -22,7 +22,7 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * The callable handler.
      *
-     * @var  callable
+     * @var callable
      *
      * @since  2.0
      */
@@ -31,7 +31,7 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Retry times.
      *
-     * @var  int
+     * @var int
      *
      * @since  2.0
      */
@@ -40,7 +40,7 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * If this property set to true, application will be closed when validate fail.
      *
-     * @var  boolean
+     * @var bool
      *
      * @since  2.0
      */
@@ -49,7 +49,7 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Returning message if valid fail.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -58,7 +58,7 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Returning message if valid fail and close.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -67,10 +67,10 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Constructor.
      *
-     * @param   string      $question The question you want to ask.
-     * @param   callable    $handler  The callback handler.
-     * @param   mixed       $default  $default   The default value.
-     * @param   IOInterface $io       The input object.
+     * @param string      $question The question you want to ask.
+     * @param callable    $handler  The callback handler.
+     * @param mixed       $default  $default   The default value.
+     * @param IOInterface $io       The input object.
      *
      * @since   2.0
      */
@@ -86,12 +86,12 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Show prompt to ask user.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @throws  \LogicException
+     * @throws \LogicException
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
@@ -130,9 +130,9 @@ class CallbackPrompter extends AbstractPrompter
      * This function should contain a param that is the value which from user input,
      * and must return TRUE or FALSE means validate success or fail.
      *
-     * @param   callable $handler The validate callback.
+     * @param callable $handler The validate callback.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */
@@ -146,7 +146,7 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Get callable handler.
      *
-     * @return  callable  The validate callback.
+     * @return callable The validate callback.
      *
      * @since   2.0
      */
@@ -158,9 +158,9 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Set attempt number.
      *
-     * @param   int $attempt Retry times.
+     * @param int $attempt Retry times.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */
@@ -174,9 +174,9 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * Set message when validate fail.
      *
-     * @param   string $noValidMessage Validate fail message.
+     * @param string $noValidMessage Validate fail message.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */
@@ -190,10 +190,10 @@ class CallbackPrompter extends AbstractPrompter
     /**
      * If validate fail, whether close application or not.
      *
-     * @param   boolean $failToClose TRUE or FALSE, if is NULL, will be getter of $failToClose property.
-     * @param   string  $message     Message when close.
+     * @param bool   $failToClose TRUE or FALSE, if is NULL, will be getter of $failToClose property.
+     * @param string $message     Message when close.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */

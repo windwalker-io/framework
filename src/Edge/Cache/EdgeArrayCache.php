@@ -18,16 +18,16 @@ class EdgeArrayCache implements EdgeCacheInterface
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
     /**
-     * isExpired
+     * isExpired.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  boolean
+     * @return bool
      */
     public function isExpired($path)
     {
@@ -35,11 +35,11 @@ class EdgeArrayCache implements EdgeCacheInterface
     }
 
     /**
-     * getCacheKey
+     * getCacheKey.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function getCacheKey($path)
     {
@@ -47,11 +47,11 @@ class EdgeArrayCache implements EdgeCacheInterface
     }
 
     /**
-     * get
+     * get.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function load($path)
     {
@@ -60,17 +60,15 @@ class EdgeArrayCache implements EdgeCacheInterface
         if (isset($this->data[$key])) {
             return $this->data[$key];
         }
-
-        return null;
     }
 
     /**
-     * store
+     * store.
      *
-     * @param   string $path
-     * @param   string $value
+     * @param string $path
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function store($path, $value)
     {
@@ -82,11 +80,11 @@ class EdgeArrayCache implements EdgeCacheInterface
     }
 
     /**
-     * remove
+     * remove.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  static
+     * @return static
      */
     public function remove($path)
     {
@@ -98,9 +96,9 @@ class EdgeArrayCache implements EdgeCacheInterface
     }
 
     /**
-     * Method to get property Data
+     * Method to get property Data.
      *
-     * @return  array
+     * @return array
      */
     public function getData()
     {
@@ -108,11 +106,11 @@ class EdgeArrayCache implements EdgeCacheInterface
     }
 
     /**
-     * Method to set property data
+     * Method to set property data.
      *
-     * @param   array $data
+     * @param array $data
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setData($data)
     {

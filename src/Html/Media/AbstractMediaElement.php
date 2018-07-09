@@ -28,7 +28,7 @@ abstract class AbstractMediaElement extends HtmlElement
     /**
      * Property hint.
      *
-     * @var  string
+     * @var string
      */
     protected $hint;
 
@@ -45,11 +45,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * Quick create for PHP 5.3
+     * Quick create for PHP 5.3.
      *
      * @param array $attribs
      *
-     * @return  static
+     * @return static
      */
     public static function create($attribs = [])
     {
@@ -57,27 +57,27 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * toString
+     * toString.
      *
-     * @param boolean $forcePair
+     * @param bool $forcePair
      *
-     * @return  string
+     * @return string
      */
     public function toString($forcePair = false)
     {
         $content = $this->content;
 
-        $content = $content . $this->hint;
+        $content = $content.$this->hint;
 
         return HtmlBuilder::create($this->name, $content, $this->attribs, $forcePair);
     }
 
     /**
-     * setMainSource
+     * setMainSource.
      *
-     * @param  string $src
+     * @param string $src
      *
-     * @return  static
+     * @return static
      */
     public function setMainSource($src)
     {
@@ -87,19 +87,19 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * addSource
+     * addSource.
      *
      * @param string $type
      * @param string $src
      * @param string $media
      *
-     * @return  $this
+     * @return $this
      */
     public function addSource($type, $src, $media = null)
     {
         $this->content[] = new HtmlElement('source', null, [
-            'src' => $src,
-            'type' => $this->name . '/' . strtolower($type),
+            'src'   => $src,
+            'type'  => $this->name.'/'.strtolower($type),
             'media' => $media,
         ]);
 
@@ -107,12 +107,12 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * addOggSource
+     * addOggSource.
      *
      * @param string $src
      * @param string $media
      *
-     * @return  static
+     * @return static
      */
     public function addOggSource($src, $media = null)
     {
@@ -120,9 +120,9 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * Method to get property Hint
+     * Method to get property Hint.
      *
-     * @return  string
+     * @return string
      */
     public function getNoSupportHint()
     {
@@ -130,11 +130,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * Method to set property hint
+     * Method to set property hint.
      *
-     * @param   string $hint
+     * @param string $hint
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setNoSupportHint($hint)
     {
@@ -144,11 +144,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * autoplay
+     * autoplay.
      *
-     * @param   boolean $bool
+     * @param bool $bool
      *
-     * @return  static
+     * @return static
      */
     public function autoplay($bool)
     {
@@ -158,11 +158,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * controls
+     * controls.
      *
-     * @param   boolean $bool
+     * @param bool $bool
      *
-     * @return  static
+     * @return static
      */
     public function controls($bool)
     {
@@ -172,11 +172,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * loop
+     * loop.
      *
-     * @param   boolean $bool
+     * @param bool $bool
      *
-     * @return  static
+     * @return static
      */
     public function loop($bool)
     {
@@ -186,11 +186,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * muted
+     * muted.
      *
-     * @param   boolean $bool
+     * @param bool $bool
      *
-     * @return  static
+     * @return static
      */
     public function muted($bool)
     {
@@ -200,11 +200,11 @@ abstract class AbstractMediaElement extends HtmlElement
     }
 
     /**
-     * preload
+     * preload.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  static
+     * @return static
      */
     public function preload($data)
     {

@@ -11,16 +11,16 @@ namespace Windwalker\Database\Driver\Pdo;
 use Windwalker\Database\Command\AbstractTransaction;
 
 /**
- * Class PdoTransaction
+ * Class PdoTransaction.
  *
  * @since 2.0
  */
 class PdoTransaction extends AbstractTransaction
 {
     /**
-     * start
+     * start.
      *
-     * @return  static
+     * @return static
      */
     public function start()
     {
@@ -34,9 +34,9 @@ class PdoTransaction extends AbstractTransaction
     }
 
     /**
-     * commit
+     * commit.
      *
-     * @return  static
+     * @return static
      */
     public function commit()
     {
@@ -50,9 +50,9 @@ class PdoTransaction extends AbstractTransaction
     }
 
     /**
-     * rollback
+     * rollback.
      *
-     * @return  static
+     * @return static
      */
     public function rollback()
     {

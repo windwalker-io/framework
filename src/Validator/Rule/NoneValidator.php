@@ -18,11 +18,11 @@ use Windwalker\Validator\AbstractValidator;
 class NoneValidator extends AbstractValidator
 {
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {

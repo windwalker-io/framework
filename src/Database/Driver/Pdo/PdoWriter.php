@@ -11,7 +11,7 @@ namespace Windwalker\Database\Driver\Pdo;
 use Windwalker\Database\Command\AbstractWriter;
 
 /**
- * Class PdoWriter
+ * Class PdoWriter.
  *
  * @since 2.0
  */

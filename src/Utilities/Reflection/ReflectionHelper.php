@@ -9,7 +9,7 @@
 namespace Windwalker\Utilities\Reflection;
 
 /**
- * Reflection
+ * Reflection.
  *
  * @method  static mixed              getConstant ($object, $name)
  * @method  static array              getConstants ($object)
@@ -73,8 +73,9 @@ class ReflectionHelper
      *
      * @param string|object $class The class name.
      *
-     * @return  \ReflectionClass Reflection instance.
      * @throws \ReflectionException
+     *
+     * @return \ReflectionClass Reflection instance.
      */
     public static function get($class)
     {
@@ -82,13 +83,13 @@ class ReflectionHelper
     }
 
     /**
-     * getReflection
+     * getReflection.
      *
      * @param string|object $class The class or object to get reflection.
      *
-     * @return  \ReflectionClass Reflection instance.
-     *
      * @throws \ReflectionException
+     *
+     * @return \ReflectionClass Reflection instance.
      */
     protected static function getReflection($class)
     {
@@ -100,8 +101,9 @@ class ReflectionHelper
      *
      * @param string|object $class The class or object to get reflection.
      *
-     * @return  string The class file path.
      * @throws \ReflectionException
+     *
+     * @return string The class file path.
      */
     public static function getPath($class)
     {
@@ -111,12 +113,12 @@ class ReflectionHelper
     }
 
     /**
-     * getPackageNamespace
+     * getPackageNamespace.
      *
      * @param string|object $class
      * @param int           $backwards
      *
-     * @return  string
+     * @return string
      */
     public static function getNamespaceBackwards($class, $backwards = 3)
     {
@@ -139,8 +141,9 @@ class ReflectionHelper
      * @param string $name The method name.
      * @param array  $args The arguments of this methods.
      *
-     * @return  mixed  Return value from reflection class.
      * @throws \ReflectionException
+     *
+     * @return mixed Return value from reflection class.
      */
     public static function __callStatic($name, $args)
     {

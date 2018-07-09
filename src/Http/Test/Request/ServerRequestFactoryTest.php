@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -14,7 +14,7 @@ use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\UploadedFile;
 
 /**
- * Test class of ServerRequestFactory
+ * Test class of ServerRequestFactory.
  *
  * @since 3.0
  */
@@ -66,9 +66,9 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * apacheRequestHeaders
+     * apacheRequestHeaders.
      *
-     * @return  array
+     * @return array
      */
     public function apacheRequestHeaders()
     {
@@ -78,9 +78,9 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * apacheRequestHeadersEmpty
+     * apacheRequestHeadersEmpty.
      *
-     * @return  array
+     * @return array
      */
     public function apacheRequestHeadersEmpty()
     {
@@ -99,10 +99,10 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
         $files = [
             [
                 'tmp_name' => 'php://temp',
-                'size' => 123,
-                'error' => 0,
-                'name' => 'foo_name',
-                'type' => 'foo_type',
+                'size'     => 123,
+                'error'    => 0,
+                'name'     => 'foo_name',
+                'type'     => 'foo_type',
             ],
         ];
 
@@ -138,10 +138,10 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'second' => [
                 'tmp_name' => 'php://temp',
-                'size' => 456,
-                'error' => 0,
-                'name' => 'second_name',
-                'type' => 'second_type',
+                'size'     => 456,
+                'error'    => 0,
+                'name'     => 'second_name',
+                'type'     => 'second_type',
             ],
         ];
 
@@ -162,18 +162,18 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
     public function testPrepareHeaders()
     {
         $headers = [
-            'HTTP_X_FOO' => 'foo',
-            'HTTP_X_BAR' => 'bar',
+            'HTTP_X_FOO'    => 'foo',
+            'HTTP_X_BAR'    => 'bar',
             'HTTP_X_FLOWER' => 'Sakura',
-            'CONTENT_YOO' => 'baz',
-            'CONTENT_BIRD' => 'fly',
+            'CONTENT_YOO'   => 'baz',
+            'CONTENT_BIRD'  => 'fly',
         ];
 
         $expected = [
-            'x-foo' => 'foo',
-            'x-bar' => 'bar',
-            'x-flower' => 'Sakura',
-            'content-yoo' => 'baz',
+            'x-foo'        => 'foo',
+            'x-bar'        => 'bar',
+            'x-flower'     => 'Sakura',
+            'content-yoo'  => 'baz',
             'content-bird' => 'fly',
         ];
 
@@ -199,20 +199,20 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * prepareUri_Provider
+     * prepareUri_Provider.
      *
-     * @return  array
+     * @return array
      */
     public function prepareUri_Provider()
     {
         return [
             '#apache-normal' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
+                    'HTTPS'        => 'off',
+                    'SERVER_NAME'  => 'example.com',
+                    'SERVER_PORT'  => '8080',
                     'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'REQUEST_URI'  => '/foo/bar?a=wrong',
                 ],
                 [],
                 'http://example.com:8080/foo/bar?a=b&c=d',
@@ -220,11 +220,11 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#apache-fragment' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
+                    'HTTPS'        => 'off',
+                    'SERVER_NAME'  => 'example.com',
+                    'SERVER_PORT'  => '8080',
                     'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar#test?a=b&c=d',
+                    'REQUEST_URI'  => '/foo/bar#test?a=b&c=d',
                 ],
                 [],
                 'http://example.com:8080/foo/bar?a=b&c=d#test',
@@ -232,11 +232,11 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#apache-https' => [
                 [
-                    'HTTPS' => 'on',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
+                    'HTTPS'        => 'on',
+                    'SERVER_NAME'  => 'example.com',
+                    'SERVER_PORT'  => '8080',
                     'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'REQUEST_URI'  => '/foo/bar?a=wrong',
                 ],
                 [],
                 'https://example.com:8080/foo/bar?a=b&c=d',
@@ -244,11 +244,11 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#apache-x-forwarded' => [
                 [
-                    'HTTPS' => '',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
+                    'HTTPS'        => '',
+                    'SERVER_NAME'  => 'example.com',
+                    'SERVER_PORT'  => '8080',
                     'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'REQUEST_URI'  => '/foo/bar?a=wrong',
                 ],
                 [
                     'x-forwarded-proto' => 'https',
@@ -258,11 +258,11 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#apache-header-host' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => '',
-                    'SERVER_PORT' => '8080',
+                    'HTTPS'        => 'off',
+                    'SERVER_NAME'  => '',
+                    'SERVER_PORT'  => '8080',
                     'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'REQUEST_URI'  => '/foo/bar?a=wrong',
                 ],
                 [
                     'host' => 'example.com',
@@ -273,12 +273,12 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#apache-ipv6' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => '[2001:db8:a0b:12f0::1]',
-                    'SERVER_ADDR' => '2001:db8:a0b:12f0::1',
-                    'SERVER_PORT' => 8080,
+                    'HTTPS'        => 'off',
+                    'SERVER_NAME'  => '[2001:db8:a0b:12f0::1]',
+                    'SERVER_ADDR'  => '2001:db8:a0b:12f0::1',
+                    'SERVER_PORT'  => 8080,
                     'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'REQUEST_URI'  => '/foo/bar?a=wrong',
                 ],
                 [],
                 'http://[2001:db8:a0b:12f0::1]:8080/foo/bar?a=b&c=d',
@@ -286,13 +286,13 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#iis-rewritten' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
+                    'HTTPS'               => 'off',
+                    'SERVER_NAME'         => 'example.com',
                     'IIS_WasUrlRewritten' => '1',
-                    'UNENCODED_URL' => 'flower/sakura',
-                    'SERVER_PORT' => '8080',
-                    'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'UNENCODED_URL'       => 'flower/sakura',
+                    'SERVER_PORT'         => '8080',
+                    'QUERY_STRING'        => '?a=b&c=d',
+                    'REQUEST_URI'         => '/foo/bar?a=wrong',
                 ],
                 [],
                 'http://example.com:8080/flower/sakura?a=b&c=d',
@@ -300,11 +300,11 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#iis-x-rewrite' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
-                    'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'HTTPS'              => 'off',
+                    'SERVER_NAME'        => 'example.com',
+                    'SERVER_PORT'        => '8080',
+                    'QUERY_STRING'       => '?a=b&c=d',
+                    'REQUEST_URI'        => '/foo/bar?a=wrong',
                     'HTTP_X_REWRITE_URL' => '/flower/sakura?a=wrong',
                 ],
                 [],
@@ -313,12 +313,12 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#iis-origin-url' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
-                    'QUERY_STRING' => '?a=b&c=d',
-                    'REQUEST_URI' => '/foo/bar?a=wrong',
-                    'HTTP_X_REWRITE_URL' => '/flower/sakura?a=wrong',
+                    'HTTPS'               => 'off',
+                    'SERVER_NAME'         => 'example.com',
+                    'SERVER_PORT'         => '8080',
+                    'QUERY_STRING'        => '?a=b&c=d',
+                    'REQUEST_URI'         => '/foo/bar?a=wrong',
+                    'HTTP_X_REWRITE_URL'  => '/flower/sakura?a=wrong',
                     'HTTP_X_ORIGINAL_URL' => '/flower/olive?a=wrong',
                 ],
                 [],
@@ -327,10 +327,10 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#orig-path-info' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
-                    'QUERY_STRING' => '?a=b&c=d',
+                    'HTTPS'          => 'off',
+                    'SERVER_NAME'    => 'example.com',
+                    'SERVER_PORT'    => '8080',
+                    'QUERY_STRING'   => '?a=b&c=d',
                     'ORIG_PATH_INFO' => '/flower/rose',
                 ],
                 [],
@@ -339,9 +339,9 @@ class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             '#no-path' => [
                 [
-                    'HTTPS' => 'off',
-                    'SERVER_NAME' => 'example.com',
-                    'SERVER_PORT' => '8080',
+                    'HTTPS'        => 'off',
+                    'SERVER_NAME'  => 'example.com',
+                    'SERVER_PORT'  => '8080',
                     'QUERY_STRING' => '?a=b&c=d',
                 ],
                 [],

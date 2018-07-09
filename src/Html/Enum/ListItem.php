@@ -18,7 +18,7 @@ use Windwalker\Dom\HtmlElement;
 class ListItem extends HtmlElement
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param mixed $content Element content.
      * @param array $attribs Element attributes.

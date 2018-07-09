@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,7 +15,7 @@ use Windwalker\Filesystem\Folder;
 use Windwalker\Renderer\BladeRenderer;
 
 /**
- * Test class of BladeRenderer
+ * Test class of BladeRenderer.
  *
  * @since 2.0
  */
@@ -43,15 +43,15 @@ class BladeRendererTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        static::$path = realpath(__DIR__ . '/Tmpl/blade');
+        static::$path = realpath(__DIR__.'/Tmpl/blade');
 
         if (!static::$path) {
             throw new \RuntimeException('Path not exists');
         }
 
-        Folder::create(__DIR__ . '/cache');
+        Folder::create(__DIR__.'/cache');
 
-        $this->instance = new BladeRenderer(static::$path, ['cache_path' => __DIR__ . '/cache']);
+        $this->instance = new BladeRenderer(static::$path, ['cache_path' => __DIR__.'/cache']);
     }
 
     /**
@@ -62,15 +62,15 @@ class BladeRendererTest extends AbstractDomTestCase
      */
     protected function tearDown()
     {
-        Filesystem::delete(__DIR__ . '/cache');
+        Filesystem::delete(__DIR__.'/cache');
     }
 
     /**
-     * Destructor
+     * Destructor.
      */
     public function __destruct()
     {
-        Filesystem::delete(__DIR__ . '/cache');
+        Filesystem::delete(__DIR__.'/cache');
     }
 
     /**
@@ -84,7 +84,7 @@ class BladeRendererTest extends AbstractDomTestCase
     {
         $html = $this->instance->render('hello');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <html>
 <body>
 	This is the master sidebar.
@@ -101,9 +101,9 @@ HTML;
     }
 
     /**
-     * testAddCompilers
+     * testAddCompilers.
      *
-     * @return  void
+     * @return void
      */
     public function testAddCompilers()
     {
@@ -114,7 +114,7 @@ HTML;
             }
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <html>
 <body>
 	This is the master sidebar.

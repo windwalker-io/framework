@@ -20,7 +20,7 @@ class CallbackValidator extends AbstractValidator
     /**
      * Property handler.
      *
-     * @var  callable
+     * @var callable
      */
     protected $handler;
 
@@ -35,11 +35,11 @@ class CallbackValidator extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
@@ -53,9 +53,9 @@ class CallbackValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Handler
+     * Method to get property Handler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getHandler()
     {
@@ -63,11 +63,11 @@ class CallbackValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property handler
+     * Method to set property handler.
      *
-     * @param   callable $handler
+     * @param callable $handler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setHandler(callable $handler)
     {

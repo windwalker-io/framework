@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -11,7 +11,7 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\Iterator\DataIterator;
 
 /**
- * Test class of DataIterator
+ * Test class of DataIterator.
  *
  * @since 3.0
  */
@@ -32,7 +32,7 @@ class DataIteratorTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-//		$this->instance = new DataIterator;
+        //		$this->instance = new DataIterator;
     }
 
     /**

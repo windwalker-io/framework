@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Language\Test;
 use Windwalker\Language\Language;
 
 /**
- * Test class of Language
+ * Test class of Language.
  *
  * @since 2.0
  */
@@ -34,8 +34,8 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     {
         $this->instance = new Language();
 
-        $this->instance->load(__DIR__ . '/fixtures/ini/en-GB.ini', 'ini')
-            ->load(__DIR__ . '/fixtures/ini/zh-TW.ini', 'ini');
+        $this->instance->load(__DIR__.'/fixtures/ini/en-GB.ini', 'ini')
+            ->load(__DIR__.'/fixtures/ini/zh-TW.ini', 'ini');
     }
 
     /**
@@ -67,9 +67,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test translate().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::translate
      */
     public function testTranslate()
@@ -89,9 +90,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test plural().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::plural
      */
     public function testPlural()
@@ -110,9 +112,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test sprintf().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::sprintf
      */
     public function testSprintf()
@@ -143,9 +146,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test addString().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::addString
      */
     public function testAddString()
@@ -160,16 +164,17 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test addStrings().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::addStrings
      * @TODO   Implement testAddStrings().
      */
     public function testAddStrings()
     {
         $strings = [
-            'foo' => 'bar',
+            'foo'  => 'bar',
             'wind' => 'walker',
         ];
 
@@ -182,9 +187,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test setDebug().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::setDebug
      */
     public function testSetDebug()
@@ -288,9 +294,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test getOrphans().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::getOrphans
      */
     public function testGetOrphans()
@@ -310,12 +317,12 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
         $position = $orphans['a.key.not.exists']['position'];
         $ref = new \ReflectionMethod($this, __FUNCTION__);
-        $this->assertEquals(__METHOD__, $position['class'] . '::' . $position['function']);
+        $this->assertEquals(__METHOD__, $position['class'].'::'.$position['function']);
         $this->assertEquals(__FILE__, $position['file']);
         $this->assertEquals($ref->getStartLine(), $position['line']);
 
         $called = $orphans['a.key.not.exists']['called'];
-        $this->assertEquals('Windwalker\Language\Language::translate', $called['class'] . '::' . $called['function']);
+        $this->assertEquals('Windwalker\Language\Language::translate', $called['class'].'::'.$called['function']);
 
         // Wrap in a function
         $this->instance->setTraceLevelOffset(1);
@@ -325,20 +332,21 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
         $position = $orphans['another.key.not.exists']['position'];
         $ref = new \ReflectionMethod($this, __FUNCTION__);
-        $this->assertEquals(__METHOD__, $position['class'] . '::' . $position['function']);
+        $this->assertEquals(__METHOD__, $position['class'].'::'.$position['function']);
         $this->assertEquals(__FILE__, $position['file']);
         $this->assertEquals($ref->getStartLine(), $position['line']);
 
         $called = $orphans['another.key.not.exists']['called'];
-        $this->assertEquals(__CLASS__ . '::translate', $called['class'] . '::' . $called['function']);
+        $this->assertEquals(__CLASS__.'::translate', $called['class'].'::'.$called['function']);
     }
 
     /**
      * Method to test getUsed().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::getUsed
      */
     public function testGetUsed()
@@ -440,12 +448,13 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * translate
+     * translate.
      *
-     * @param   string $text
+     * @param string $text
      *
-     * @return  string
      * @throws \ReflectionException
+     *
+     * @return string
      */
     public function translate($text)
     {

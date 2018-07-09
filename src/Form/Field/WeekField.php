@@ -18,7 +18,7 @@ class WeekField extends AbstractHtml5Field
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'week';
 }

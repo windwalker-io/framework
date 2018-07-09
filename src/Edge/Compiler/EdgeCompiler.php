@@ -16,7 +16,6 @@ use Windwalker\Edge\Compiler\Concern\CompileComponentTrait;
  * This is a modified version of Laravel Blade engine.
  *
  * @see    https://github.com/illuminate/view/blob/master/Compilers/BladeCompiler.php
- *
  * @since  3.0
  */
 class EdgeCompiler implements EdgeCompilerInterface
@@ -26,14 +25,14 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * All custom "directive" handlers.
      *
-     * @var  \callable[]
+     * @var \callable[]
      */
     protected $directives = [];
 
     /**
      * Property parsers.
      *
-     * @var  \callable[]
+     * @var \callable[]
      */
     protected $parsers = [];
 
@@ -113,11 +112,11 @@ class EdgeCompiler implements EdgeCompilerInterface
     ];
 
     /**
-     * compile
+     * compile.
      *
      * @param string $value
      *
-     * @return  string
+     * @return string
      */
     public function compile($value)
     {
@@ -145,7 +144,7 @@ class EdgeCompiler implements EdgeCompilerInterface
         // template inheritance via the extends keyword that should be appended.
         if (count($this->footer) > 0) {
             $result = ltrim($result, PHP_EOL)
-                . PHP_EOL . implode(PHP_EOL, array_reverse($this->footer));
+                .PHP_EOL.implode(PHP_EOL, array_reverse($this->footer));
         }
 
         return $result;
@@ -154,7 +153,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Store the verbatim blocks and replace them with a temporary placeholder.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -174,14 +173,14 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Replace the raw placeholders with the original code stored in the raw blocks.
      *
-     * @param  string $result
+     * @param string $result
      *
      * @return string
      */
     protected function restoreVerbatimBlocks($result)
     {
         $result = preg_replace_callback(
-            '/' . preg_quote($this->verbatimPlaceholder) . '/',
+            '/'.preg_quote($this->verbatimPlaceholder).'/',
             function () {
                 return array_shift($this->verbatimBlocks);
             },
@@ -196,7 +195,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Parse the tokens from the template.
      *
-     * @param  array $token
+     * @param array $token
      *
      * @return string
      */
@@ -216,7 +215,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile Blade comments into valid PHP.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -230,7 +229,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile Blade echos into valid PHP.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -251,7 +250,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     protected function getEchoMethods()
     {
         $methods = [
-            'compileRawEchos' => strlen(stripcslashes($this->rawTags[0])),
+            'compileRawEchos'     => strlen(stripcslashes($this->rawTags[0])),
             'compileEscapedEchos' => strlen(stripcslashes($this->escapedTags[0])),
             'compileRegularEchos' => strlen(stripcslashes($this->contentTags[0])),
         ];
@@ -284,8 +283,6 @@ class EdgeCompiler implements EdgeCompilerInterface
                 if ($method2 === 'compileEscapedEchos') {
                     return 1;
                 }
-
-                return null;
             }
         );
 
@@ -293,11 +290,11 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * compileParsers
+     * compileParsers.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  string
+     * @return string
      */
     protected function compileParsers($value)
     {
@@ -311,7 +308,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile Blade statements that start with "@".
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return mixed
      */
@@ -325,29 +322,29 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * compileStatement
+     * compileStatement.
      *
      * @param array $match
      *
-     * @return  string
+     * @return string
      */
     protected function compileStatement(array $match)
     {
         if (strpos($match[1], '@') !== false) {
-            $match[0] = isset($match[3]) ? $match[1] . $match[3] : $match[1];
+            $match[0] = isset($match[3]) ? $match[1].$match[3] : $match[1];
         } elseif (isset($this->directives[$match[1]])) {
             $match[0] = call_user_func($this->directives[$match[1]], isset($match[3]) ? $match[3] : null);
-        } elseif (method_exists($this, $method = 'compile' . ucfirst($match[1]))) {
+        } elseif (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
             $match[0] = $this->$method(isset($match[3]) ? $match[3] : null);
         }
 
-        return isset($match[3]) ? $match[0] : $match[0] . $match[2];
+        return isset($match[3]) ? $match[0] : $match[0].$match[2];
     }
 
     /**
      * Compile the "raw" echo statements.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -356,12 +353,12 @@ class EdgeCompiler implements EdgeCompilerInterface
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->rawTags[0], $this->rawTags[1]);
 
         $callback = function ($matches) {
-            $whitespace = empty($matches[3]) ? '' : $matches[3] . $matches[3];
+            $whitespace = empty($matches[3]) ? '' : $matches[3].$matches[3];
 
             return $matches[1] ? substr(
                 $matches[0],
                 1
-            ) : '<?php echo ' . $this->compileEchoDefaults($matches[2]) . '; ?>' . $whitespace;
+            ) : '<?php echo '.$this->compileEchoDefaults($matches[2]).'; ?>'.$whitespace;
         };
 
         return preg_replace_callback($pattern, $callback, $value);
@@ -370,7 +367,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the "regular" echo statements.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -379,11 +376,11 @@ class EdgeCompiler implements EdgeCompilerInterface
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->contentTags[0], $this->contentTags[1]);
 
         $callback = function ($matches) {
-            $whitespace = empty($matches[3]) ? '' : $matches[3] . $matches[3];
+            $whitespace = empty($matches[3]) ? '' : $matches[3].$matches[3];
 
             $wrapped = sprintf($this->echoFormat, $this->compileEchoDefaults($matches[2]));
 
-            return $matches[1] ? substr($matches[0], 1) : '<?php echo ' . $wrapped . '; ?>' . $whitespace;
+            return $matches[1] ? substr($matches[0], 1) : '<?php echo '.$wrapped.'; ?>'.$whitespace;
         };
 
         return preg_replace_callback($pattern, $callback, $value);
@@ -392,7 +389,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the escaped echo statements.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -401,11 +398,11 @@ class EdgeCompiler implements EdgeCompilerInterface
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->escapedTags[0], $this->escapedTags[1]);
 
         $callback = function ($matches) {
-            $whitespace = empty($matches[3]) ? '' : $matches[3] . $matches[3];
+            $whitespace = empty($matches[3]) ? '' : $matches[3].$matches[3];
 
-            return $matches[1] ? $matches[0] : '<?php echo e(' . $this->compileEchoDefaults(
+            return $matches[1] ? $matches[0] : '<?php echo e('.$this->compileEchoDefaults(
                 $matches[2]
-            ) . '); ?>' . $whitespace;
+            ).'); ?>'.$whitespace;
         };
 
         return preg_replace_callback($pattern, $callback, $value);
@@ -414,7 +411,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the default values for the echo statement.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -426,7 +423,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Strip the parentheses from the given expression.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -442,7 +439,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the each statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -454,7 +451,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the yield statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -466,7 +463,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the show statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -478,7 +475,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the section statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -490,7 +487,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the append statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -502,7 +499,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end-section statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -514,7 +511,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the stop statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -526,7 +523,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the overwrite statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -538,7 +535,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the unless statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -550,7 +547,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end unless statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -562,7 +559,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the else statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -574,7 +571,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the for statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -586,7 +583,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the foreach statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -598,7 +595,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the break statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -610,7 +607,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the continue statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -622,13 +619,13 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the forelse statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
     protected function compileForelse($expression)
     {
-        $empty = '$__empty_' . ++$this->forelseCounter;
+        $empty = '$__empty_'.++$this->forelseCounter;
 
         return "<?php {$empty} = true; foreach{$expression}: {$empty} = false; ?>";
     }
@@ -636,7 +633,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the if statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -648,7 +645,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the else-if statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -660,13 +657,13 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the forelse statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
     protected function compileEmpty($expression)
     {
-        $empty = '$__empty_' . $this->forelseCounter--;
+        $empty = '$__empty_'.$this->forelseCounter--;
 
         return "<?php endforeach; if ({$empty}): ?>";
     }
@@ -674,7 +671,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the has section statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -686,7 +683,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the while statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -698,7 +695,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end-while statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -710,7 +707,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end-for statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -722,7 +719,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end-for-each statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -734,7 +731,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end-if statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -746,7 +743,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the end-for-else statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -758,7 +755,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the raw PHP statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -770,7 +767,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile end-php statement into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -782,7 +779,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the unset statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -794,7 +791,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the extends statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -814,7 +811,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the include statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -830,7 +827,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the include statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -846,7 +843,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the stack statements into the content.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -858,7 +855,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the push statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -870,7 +867,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Compile the endpush statements into valid PHP.
      *
-     * @param  string $expression
+     * @param string $expression
      *
      * @return string
      */
@@ -882,8 +879,8 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Register a handler for custom directives.
      *
-     * @param  string   $name
-     * @param  callable $handler
+     * @param string   $name
+     * @param callable $handler
      *
      * @return static
      */
@@ -905,11 +902,11 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * Method to set property directives
+     * Method to set property directives.
      *
-     * @param   callable[] $directives
+     * @param callable[] $directives
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDirectives(array $directives)
     {
@@ -919,11 +916,11 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * parser
+     * parser.
      *
-     * @param   callable $handler
+     * @param callable $handler
      *
-     * @return  static
+     * @return static
      */
     public function parser($handler)
     {
@@ -933,11 +930,11 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * Method to set property parsers
+     * Method to set property parsers.
      *
-     * @param   \callable[] $parsers
+     * @param \callable[] $parsers
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setParsers($parsers)
     {
@@ -947,9 +944,9 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * getParsers
+     * getParsers.
      *
-     * @return  \callable[]
+     * @return \callable[]
      */
     public function getParsers()
     {
@@ -969,8 +966,8 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Sets the raw tags used for the compiler.
      *
-     * @param  string $openTag
-     * @param  string $closeTag
+     * @param string $openTag
+     * @param string $closeTag
      *
      * @return void
      */
@@ -982,9 +979,9 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Sets the content tags used for the compiler.
      *
-     * @param  string $openTag
-     * @param  string $closeTag
-     * @param  bool   $escaped
+     * @param string $openTag
+     * @param string $closeTag
+     * @param bool   $escaped
      *
      * @return void
      */
@@ -998,8 +995,8 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Sets the escaped content tags used for the compiler.
      *
-     * @param  string $openTag
-     * @param  string $closeTag
+     * @param string $openTag
+     * @param string $closeTag
      *
      * @return void
      */
@@ -1031,7 +1028,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Gets the tags used for the compiler.
      *
-     * @param  bool $escaped
+     * @param bool $escaped
      *
      * @return array
      */
@@ -1045,7 +1042,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Set the echo format to be used by the compiler.
      *
-     * @param  string $format
+     * @param string $format
      *
      * @return void
      */

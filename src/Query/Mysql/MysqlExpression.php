@@ -11,7 +11,7 @@ namespace Windwalker\Query\Mysql;
 use Windwalker\Query\QueryExpression;
 
 /**
- * Class MysqlExpression
+ * Class MysqlExpression.
  *
  * @since 2.0
  */
@@ -20,25 +20,25 @@ class MysqlExpression extends QueryExpression
     /**
      * Concatenates an array of column names or values.
      *
-     * @param   array  $values    An array of values to concatenate.
-     * @param   string $separator As separator to place between each value.
+     * @param array  $values    An array of values to concatenate.
+     * @param string $separator As separator to place between each value.
      *
-     * @return  string  The concatenated values.
+     * @return string The concatenated values.
      *
      * @since   2.0
      */
     public function concatenate($values, $separator = null)
     {
         if ($separator) {
-            $concat_string = 'CONCAT_WS(' . $this->query->quote($separator);
+            $concat_string = 'CONCAT_WS('.$this->query->quote($separator);
 
             foreach ($values as $value) {
-                $concat_string .= ', ' . $value;
+                $concat_string .= ', '.$value;
             }
 
-            return $concat_string . ')';
+            return $concat_string.')';
         } else {
-            return 'CONCAT(' . implode(',', $values) . ')';
+            return 'CONCAT('.implode(',', $values).')';
         }
     }
 }

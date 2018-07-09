@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Renderer\Twig\GlobalContainer;
 use Windwalker\Renderer\TwigRenderer;
 
 /**
- * Test class of GlobalContainer
+ * Test class of GlobalContainer.
  *
  * @since 2.0
  */
@@ -31,11 +31,11 @@ class GlobalContainerTest extends AbstractDomTestCase
     {
         GlobalContainer::addExtension('stub', new StubTwigExtension());
 
-        $renderer = new TwigRenderer(__DIR__ . '/../Tmpl/twig');
+        $renderer = new TwigRenderer(__DIR__.'/../Tmpl/twig');
 
         $html = $renderer->render('ext-test.twig');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 <p>Suspendisse finibus fermentum massa ut tempus. Sed in pulvinar dolor.</p>
 <ul>

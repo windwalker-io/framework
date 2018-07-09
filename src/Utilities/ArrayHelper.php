@@ -11,10 +11,9 @@ namespace Windwalker\Utilities;
 use Windwalker\String\Utf8String;
 
 /**
- * The ArrayHelper class
+ * The ArrayHelper class.
  *
  * @since       2.0
- *
  * @deprecated  This class will be rewrite, use Arr class instead.
  */
 class ArrayHelper
@@ -22,10 +21,10 @@ class ArrayHelper
     /**
      * Utility function to map an array to a stdClass object.
      *
-     * @param   array  $array The array to map.
-     * @param   string $class Name of the class to create
+     * @param array  $array The array to map.
+     * @param string $class Name of the class to create
      *
-     * @return  object   The object mapped from the given array
+     * @return object The object mapped from the given array
      *
      * @since   2.0
      */
@@ -47,10 +46,10 @@ class ArrayHelper
     /**
      * Utility function to convert all types to an array.
      *
-     * @param   mixed $data      The data to convert.
-     * @param   bool  $recursive Recursive if data is nested.
+     * @param mixed $data      The data to convert.
+     * @param bool  $recursive Recursive if data is nested.
      *
-     * @return  array  The converted array.
+     * @return array The converted array.
      */
     public static function toArray($data, $recursive = false)
     {
@@ -75,12 +74,12 @@ class ArrayHelper
     }
 
     /**
-     * Extracts a column from an array of arrays or objects
+     * Extracts a column from an array of arrays or objects.
      *
-     * @param   array  $array The source array
-     * @param   string $index The index of the column or name of object property
+     * @param array  $array The source array
+     * @param string $index The index of the column or name of object property
      *
-     * @return  array  Column of values from the source array
+     * @return array Column of values from the source array
      *
      * @since   2.0
      */
@@ -100,14 +99,14 @@ class ArrayHelper
     }
 
     /**
-     * Utility function to return a value from a named array or a specified default
+     * Utility function to return a value from a named array or a specified default.
      *
-     * @param   array  $source  A named array or object.
-     * @param   string $name    The key to search for
-     * @param   mixed  $default The default value to give if no key found
-     * @param   string $type    Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
+     * @param array  $source  A named array or object.
+     * @param string $name    The key to search for
+     * @param mixed  $default The default value to give if no key found
+     * @param string $type    Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
      *
-     * @return  mixed  The value from the source array
+     * @return mixed The value from the source array
      *
      * @since   2.0
      */
@@ -177,11 +176,11 @@ class ArrayHelper
     /**
      * Set a value into array or object.
      *
-     * @param   mixed  &$array An array to set value.
-     * @param   string $key    Array key to store this value.
-     * @param   mixed  $value  Value which to set into array or object.
+     * @param mixed  &$array An array to set value.
+     * @param string $key    Array key to store this value.
+     * @param mixed  $value  Value which to set into array or object.
      *
-     * @return  mixed Result array or object.
+     * @return mixed Result array or object.
      */
     public static function setValue(&$array, $key, $value)
     {
@@ -215,9 +214,9 @@ class ArrayHelper
      *     '6000' => 'Used'
      * );
      *
-     * @param   array $array The source array.
+     * @param array $array The source array.
      *
-     * @return  array  The inverted array.
+     * @return array The inverted array.
      *
      * @since   2.0
      */
@@ -244,9 +243,9 @@ class ArrayHelper
     /**
      * Method to determine if an array is an associative array.
      *
-     * @param   array $array An array to test.
+     * @param array $array An array to test.
      *
-     * @return  boolean  True if the array is an associative array.
+     * @return bool True if the array is an associative array.
      *
      * @since   2.0
      */
@@ -266,11 +265,11 @@ class ArrayHelper
     /**
      * Re-group an array to create a reverse lookup of an array of scalars, arrays or objects.
      *
-     * @param   array  $source The source array.
-     * @param   string $key    Where the elements of the source array are objects or arrays, the key to pivot on.
+     * @param array  $source The source array.
+     * @param string $key    Where the elements of the source array are objects or arrays, the key to pivot on.
      *
-     * @return  array  An array of arrays grouped either on the value of the keys, or an individual key of an object or
-     *                 array.
+     * @return array An array of arrays grouped either on the value of the keys, or an individual key of an object or
+     *               array.
      *
      * @since   2.0
      */
@@ -349,11 +348,11 @@ class ArrayHelper
      *             (
      *                 [value] => bbb
      *                 [text] => bbb
-     *             )
+     *             ).
      *
-     * @param   array $array An array with two level.
+     * @param array $array An array with two level.
      *
-     * @return  array An pivoted array.
+     * @return array An pivoted array.
      */
     public static function pivot($array)
     {
@@ -371,16 +370,16 @@ class ArrayHelper
     }
 
     /**
-     * Utility function to sort an array of objects on a given field
+     * Utility function to sort an array of objects on a given field.
      *
-     * @param   array $a             An array of objects
-     * @param   mixed $k             The key (string) or a array of key to sort on
-     * @param   mixed $direction     Direction (integer) or an array of direction to sort in [1 = Ascending] [-1 =
-     *                               Descending]
-     * @param   mixed $caseSensitive Boolean or array of booleans to let sort occur case sensitive or insensitive
-     * @param   mixed $locale        Boolean or array of booleans to let sort occur using the locale language or not
+     * @param array $a             An array of objects
+     * @param mixed $k             The key (string) or a array of key to sort on
+     * @param mixed $direction     Direction (integer) or an array of direction to sort in [1 = Ascending] [-1 =
+     *                             Descending]
+     * @param mixed $caseSensitive Boolean or array of booleans to let sort occur case sensitive or insensitive
+     * @param mixed $locale        Boolean or array of booleans to let sort occur using the locale language or not
      *
-     * @return  array  The sorted array of objects
+     * @return array The sorted array of objects
      *
      * @since   2.0
      */
@@ -439,11 +438,11 @@ class ArrayHelper
     }
 
     /**
-     * Multidimensional array safe unique test
+     * Multidimensional array safe unique test.
      *
-     * @param   array $array The array to make unique.
+     * @param array $array The array to make unique.
      *
-     * @return  array
+     * @return array
      *
      * @see     http://php.net/manual/en/function.array-unique.php
      * @since   2.0
@@ -461,11 +460,11 @@ class ArrayHelper
      * An improved array_search that allows for partial matching
      * of strings values in associative arrays.
      *
-     * @param   string  $needle        The text to search for within the array.
-     * @param   array   $haystack      Associative array to search in to find $needle.
-     * @param   boolean $caseSensitive True to search case sensitive, false otherwise.
+     * @param string $needle        The text to search for within the array.
+     * @param array  $haystack      Associative array to search in to find $needle.
+     * @param bool   $caseSensitive True to search case sensitive, false otherwise.
      *
-     * @return  mixed    Returns the matching array $key if found, otherwise false.
+     * @return mixed Returns the matching array $key if found, otherwise false.
      *
      * @since   2.0
      */
@@ -486,7 +485,7 @@ class ArrayHelper
      * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
      * keys to arrays rather than overwriting the value in the first array with the duplicate
      * value in the second array, as array_merge does. I.e., with array_merge_recursive,
-     * this happens (documented behavior):
+     * this happens (documented behavior):.
      *
      * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
      *     => array('key' => array('org value', 'new value'));
@@ -501,11 +500,11 @@ class ArrayHelper
      * Parameters are passed by reference, though only for performance reasons. They're not
      * altered by this function.
      *
-     * @param   array   &$array1   Array to be merge.
-     * @param   array   &$array2   Array to be merge.
-     * @param   boolean $recursive Recursive merge, default is true.
+     * @param array &$array1   Array to be merge.
+     * @param array &$array2   Array to be merge.
+     * @param bool  $recursive Recursive merge, default is true.
      *
-     * @return  array Merged array.
+     * @return array Merged array.
      *
      * @since   2.0
      *
@@ -518,7 +517,7 @@ class ArrayHelper
 
         foreach ($array2 as $key => &$value) {
             if ($recursive && is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = static::merge($merged [$key], $value);
+                $merged[$key] = static::merge($merged[$key], $value);
             } else {
                 $merged[$key] = $value;
             }
@@ -536,7 +535,7 @@ class ArrayHelper
      * @param mixed  $path      The key path.
      * @param string $separator Separator of paths.
      *
-     * @return  mixed Found value, null if not exists.
+     * @return mixed Found value, null if not exists.
      *
      * @since   2.0
      */
@@ -545,7 +544,7 @@ class ArrayHelper
         $nodes = array_values(array_filter(explode($separator, $path), 'strlen'));
 
         if (empty($nodes)) {
-            return null;
+            return;
         }
 
         $dataTmp = $data;
@@ -558,7 +557,7 @@ class ArrayHelper
             } elseif (is_array($dataTmp) && isset($dataTmp[$arg])) {
                 $dataTmp = $dataTmp[$arg];
             } else {
-                return null;
+                return;
             }
         }
 
@@ -566,7 +565,7 @@ class ArrayHelper
     }
 
     /**
-     * setByPath
+     * setByPath.
      *
      * @param mixed  &$data
      * @param string $path
@@ -574,7 +573,7 @@ class ArrayHelper
      * @param string $separator
      * @param string $storeType
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -591,9 +590,9 @@ class ArrayHelper
          *
          * @param string $type
          *
-         * @return  array
-         *
          * @throws \InvalidArgumentException
+         *
+         * @return array
          */
         $createStore = function ($type) {
             if (strtolower($type) === 'array') {
@@ -636,13 +635,13 @@ class ArrayHelper
     }
 
     /**
-     * removeByPath
+     * removeByPath.
      *
      * @param array|object $data
      * @param string       $path
      * @param string       $separator
      *
-     * @return  bool
+     * @return bool
      */
     public static function removeByPath(&$data, $path, $separator = '.')
     {
@@ -688,10 +687,10 @@ class ArrayHelper
     /**
      * Recursive dump variables and limit by level.
      *
-     * @param   mixed $data  The variable you want to dump.
-     * @param   int   $level The level number to limit recursive loop.
+     * @param mixed $data  The variable you want to dump.
+     * @param int   $level The level number to limit recursive loop.
      *
-     * @return  string  Dumped data.
+     * @return string Dumped data.
      *
      * @since   2.0
      */
@@ -715,7 +714,7 @@ class ArrayHelper
         if (in_array($type, $recursiveType)) {
             // If type is object, try to get properties by Reflection.
             if ($type === 'object') {
-                $output = get_class($data) . ' ' . ucfirst($type);
+                $output = get_class($data).' '.ucfirst($type);
                 $ref = new \ReflectionObject($data);
                 $properties = $ref->getProperties();
 
@@ -725,13 +724,13 @@ class ArrayHelper
                     $pType = $property->getName();
 
                     if ($property->isProtected()) {
-                        $pType .= ":protected";
+                        $pType .= ':protected';
                     } elseif ($property->isPrivate()) {
-                        $pType .= ":" . $property->class . ":private";
+                        $pType .= ':'.$property->class.':private';
                     }
 
                     if ($property->isStatic()) {
-                        $pType .= ":static";
+                        $pType .= ':static';
                     }
 
                     $elements[$pType] = $property->getValue($data);
@@ -775,11 +774,11 @@ class ArrayHelper
     /**
      * Method to recursively convert data to one dimension array.
      *
-     * @param   array|object $array     The array or object to convert.
-     * @param   string       $separator The key separator.
-     * @param   string       $prefix    Last level key prefix.
+     * @param array|object $array     The array or object to convert.
+     * @param string       $separator The key separator.
+     * @param string       $prefix    Last level key prefix.
      *
-     * @return  array
+     * @return array
      */
     public static function flatten($array, $separator = '.', $prefix = '')
     {
@@ -792,7 +791,7 @@ class ArrayHelper
         }
 
         foreach ($array as $k => $v) {
-            $key = $prefix ? $prefix . $separator . $k : $k;
+            $key = $prefix ? $prefix.$separator.$k : $k;
 
             if (is_object($v) || is_array($v)) {
                 $return = array_merge($return, static::flatten($v, $separator, $key));
@@ -807,16 +806,16 @@ class ArrayHelper
     /**
      * Query a two-dimensional array values to get second level array.
      *
-     * @param   array          $array         An array to query.
-     * @param   array|callable $queries       Query strings or callback, may contain Comparison Operators: '>', '>=',
-     *                                        '<', '<='. Example: array(
-     *                                        'id'          => 6,   // Get all elements where id=6
-     *                                        'published >' => 0    // Get all elements where published>0
-     *                                        );
-     * @param   boolean        $strict        Use strict to compare equals.
-     * @param   boolean        $keepKey       Keep origin array keys.
+     * @param array          $array   An array to query.
+     * @param array|callable $queries Query strings or callback, may contain Comparison Operators: '>', '>=',
+     *                                '<', '<='. Example: array(
+     *                                'id'          => 6,   // Get all elements where id=6
+     *                                'published >' => 0    // Get all elements where published>0
+     *                                );
+     * @param bool           $strict  Use strict to compare equals.
+     * @param bool           $keepKey Keep origin array keys.
      *
-     * @return  array  An new two-dimensional array queried.
+     * @return array An new two-dimensional array queried.
      *
      * @since   2.0
      */
@@ -852,11 +851,11 @@ class ArrayHelper
     /**
      * Check an array match our query.
      *
-     * @param   array   $array   An array to query.
-     * @param   array   $queries Query strings or callback, may contain Comparison Operators: '>', '>=', '<', '<='.
-     * @param   boolean $strict  Use strict to compare equals.
+     * @param array $array   An array to query.
+     * @param array $queries Query strings or callback, may contain Comparison Operators: '>', '>=', '<', '<='.
+     * @param bool  $strict  Use strict to compare equals.
      *
-     * @return  bool
+     * @return bool
      */
     public static function match($array, array $queries, $strict = false)
     {
@@ -899,10 +898,10 @@ class ArrayHelper
     /**
      * Convert an Array or Object keys to new name by an array index.
      *
-     * @param   mixed $origin Array or Object to convert.
-     * @param   mixed $map    Array or Object index for convert.
+     * @param mixed $origin Array or Object to convert.
+     * @param mixed $map    Array or Object index for convert.
      *
-     * @return  mixed Mapped array or object.
+     * @return mixed Mapped array or object.
      */
     public static function mapKey($origin, $map = [])
     {

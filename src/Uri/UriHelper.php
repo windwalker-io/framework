@@ -9,7 +9,7 @@
 namespace Windwalker\Uri;
 
 /**
- * Uri Helper
+ * Uri Helper.
  *
  * This class provides an UTF-8 safe version of parse_url().
  *
@@ -36,9 +36,9 @@ class UriHelper
     /**
      * Build a query from a array (reverse of the PHP parse_str()).
      *
-     * @param   array $params The array of key => value pairs to return as a query string.
+     * @param array $params The array of key => value pairs to return as a query string.
      *
-     * @return  string  The resulting query string.
+     * @return string The resulting query string.
      *
      * @see     parse_str()
      * @since   2.0
@@ -49,11 +49,11 @@ class UriHelper
     }
 
     /**
-     * Does a UTF-8 safe version of PHP parse_url function
+     * Does a UTF-8 safe version of PHP parse_url function.
      *
-     * @param   string $url URL to parse
+     * @param string $url URL to parse
      *
-     * @return  mixed  Associative array or false if badly formed URL.
+     * @return mixed Associative array or false if badly formed URL.
      *
      * @see     http://us3.php.net/manual/en/function.parse-url.php
      * @since   2.0
@@ -82,7 +82,7 @@ class UriHelper
             '%5B',
             '%5D',
         ];
-        $replacements = ['!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "$", ",", "/", "?", "#", "[", "]"];
+        $replacements = ['!', '*', "'", '(', ')', ';', ':', '@', '&', '=', '$', ',', '/', '?', '#', '[', ']'];
 
         // Create encoded URL with special URL characters decoded so it can be parsed
         // All other characters will be encoded
@@ -102,11 +102,11 @@ class UriHelper
     }
 
     /**
-     * parseQuery
+     * parseQuery.
      *
-     * @param   string $query
+     * @param string $query
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function parseQuery($query)
     {
@@ -116,11 +116,11 @@ class UriHelper
     }
 
     /**
-     * filterScheme
+     * filterScheme.
      *
-     * @param   string $scheme
+     * @param string $scheme
      *
-     * @return  string
+     * @return string
      */
     public static function filterScheme($scheme)
     {
@@ -139,9 +139,9 @@ class UriHelper
      *
      * Ensures that the values in the query string are properly urlencoded.
      *
-     * @param   string $query
+     * @param string $query
      *
-     * @return  string
+     * @return string
      */
     public static function filterQuery($query)
     {
@@ -173,9 +173,9 @@ class UriHelper
     /**
      * Split a query value into a key/value tuple.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  array  A value with exactly two elements, key and value
+     * @return array A value with exactly two elements, key and value
      */
     public static function splitQueryValue($value)
     {
@@ -191,14 +191,14 @@ class UriHelper
     /**
      * Filter a query string key or value, or a fragment.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  string
+     * @return string
      */
     public static function filterQueryOrFragment($value)
     {
         return preg_replace_callback(
-            '/(?:[^' . static::CHAR_UNRESERVED . static::CHAR_SUB_DELIMS . '%:@\/\?]+|%(?![A-Fa-f0-9]{2}))/',
+            '/(?:[^'.static::CHAR_UNRESERVED.static::CHAR_SUB_DELIMS.'%:@\/\?]+|%(?![A-Fa-f0-9]{2}))/',
             function ($matches) {
                 return rawurlencode($matches[0]);
             },
@@ -209,9 +209,9 @@ class UriHelper
     /**
      * Filter a fragment value to ensure it is properly encoded.
      *
-     * @param   string $fragment
+     * @param string $fragment
      *
-     * @return  string
+     * @return string
      */
     public static function filterFragment($fragment)
     {
@@ -229,14 +229,14 @@ class UriHelper
     /**
      * Filters the path of a URI to ensure it is properly encoded.
      *
-     * @param  string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public static function filterPath($path)
     {
         return preg_replace_callback(
-            '/(?:[^' . self::CHAR_UNRESERVED . ':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
+            '/(?:[^'.self::CHAR_UNRESERVED.':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
             function ($matches) {
                 return rawurlencode($matches[0]);
             },
@@ -246,15 +246,15 @@ class UriHelper
 
     /**
      * Resolves //, ../ and ./ from a path and returns
-     * the result. Eg:
+     * the result. Eg:.
      *
      * /foo/bar/../boo.php    => /foo/boo.php
      * /foo/bar/../../boo.php => /boo.php
      * /foo/bar/.././/boo.php => /foo/boo.php
      *
-     * @param   string $path The URI path to clean.
+     * @param string $path The URI path to clean.
      *
-     * @return  string  Cleaned and resolved URI path.
+     * @return string Cleaned and resolved URI path.
      *
      * @since   2.0
      */
@@ -283,11 +283,11 @@ class UriHelper
     }
 
     /**
-     * decode
+     * decode.
      *
-     * @param   string $string
+     * @param string $string
      *
-     * @return  array|string
+     * @return array|string
      */
     public static function decode($string)
     {
@@ -303,11 +303,11 @@ class UriHelper
     }
 
     /**
-     * encode
+     * encode.
      *
-     * @param   string $string
+     * @param string $string
      *
-     * @return  array|string
+     * @return array|string
      */
     public static function encode($string)
     {

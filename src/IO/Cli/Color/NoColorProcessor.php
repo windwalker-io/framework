@@ -16,9 +16,10 @@ namespace Windwalker\IO\Cli\Color;
 class NoColorProcessor extends ColorProcessor
 {
     /**
-     * Flag to remove color codes from the output
+     * Flag to remove color codes from the output.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     public $noColors = true;

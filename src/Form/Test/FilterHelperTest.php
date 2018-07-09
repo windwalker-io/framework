@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,16 +11,16 @@ namespace Windwalker\Form\Test;
 use Windwalker\Form\FilterHelper;
 
 /**
- * Test class of FilterHelper
+ * Test class of FilterHelper.
  *
  * @since 2.0
  */
 class FilterHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * setUp
+     * setUp.
      *
-     * @return  void
+     * @return void
      */
     protected function setUp()
     {
@@ -28,9 +28,9 @@ class FilterHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * tearDown
+     * tearDown.
      *
-     * @return  void
+     * @return void
      */
     protected function tearDown()
     {
@@ -62,9 +62,9 @@ class FilterHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testCreateByClassName
+     * testCreateByClassName.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateByClassName()
     {

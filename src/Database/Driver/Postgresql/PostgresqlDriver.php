@@ -20,14 +20,14 @@ class PostgresqlDriver extends PdoDriver
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'postgresql';
 
     /**
      * Is this driver supported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported()
     {
@@ -37,10 +37,11 @@ class PostgresqlDriver extends PdoDriver
     /**
      * Constructor.
      *
-     * @param   \PDO  $connection The pdo connection object.
-     * @param   array $options    List of options used to configure the connection
+     * @param \PDO  $connection The pdo connection object.
+     * @param array $options    List of options used to configure the connection
      *
      * @throws \ReflectionException
+     *
      * @since   2.1
      */
     public function __construct(\PDO $connection = null, $options = [])
@@ -55,10 +56,10 @@ class PostgresqlDriver extends PdoDriver
      * This function replaces a string identifier <var>$prefix</var> with the string held is the
      * <var>tablePrefix</var> class variable.
      *
-     * @param   string $sql    The SQL statement to prepare.
-     * @param   string $prefix The common table prefix.
+     * @param string $sql    The SQL statement to prepare.
+     * @param string $prefix The common table prefix.
      *
-     * @return  string  The processed SQL statement.
+     * @return string The processed SQL statement.
      *
      * @since   2.1
      */

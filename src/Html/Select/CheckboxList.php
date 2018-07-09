@@ -20,14 +20,14 @@ class CheckboxList extends AbstractInputList
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'checkbox';
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @return  void
+     * @return void
      */
     public function prepareOptions()
     {
@@ -35,16 +35,16 @@ class CheckboxList extends AbstractInputList
 
         // Prepare array name
         foreach ($this->content as $key => $option) {
-            $option[0]->setAttribute('name', $option[0]->getAttribute('name') . '[]');
+            $option[0]->setAttribute('name', $option[0]->getAttribute('name').'[]');
         }
     }
 
     /**
-     * isChecked
+     * isChecked.
      *
-     * @param  Option $option
+     * @param Option $option
      *
-     * @return  bool
+     * @return bool
      */
     protected function isChecked(Option $option)
     {

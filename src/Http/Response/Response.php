@@ -26,23 +26,23 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
     /**
      * Property statusCode.
      *
-     * @var  int
+     * @var int
      */
     protected $statusCode = 200;
 
     /**
      * Property reasonPhrase.
      *
-     * @var  string
+     * @var string
      */
     protected $reasonPhrase;
 
     /**
      * Constructor.
      *
-     * @param  string $body    The body data.
-     * @param  int    $status  The status code.
-     * @param  array  $headers The custom headers.
+     * @param string $body    The body data.
+     * @param int    $status  The status code.
+     * @param array  $headers The custom headers.
      */
     public function __construct($body = 'php://memory', $status = 200, array $headers = [])
     {
@@ -102,13 +102,14 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
      *                             provided status code; if none is provided, implementations MAY
      *                             use the defaults as suggested in the HTTP specification.
      *
-     * @return static
      * @throws \InvalidArgumentException For invalid status code arguments.
+     *
+     * @return static
      */
     public function withStatus($code, $reasonPhrase = '')
     {
         if (!ResponseHelper::validateStatus($code)) {
-            throw new \InvalidArgumentException('Invalid status code: ' . $code);
+            throw new \InvalidArgumentException('Invalid status code: '.$code);
         }
 
         $new = clone $this;
@@ -130,7 +131,7 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
      * @link http://tools.ietf.org/html/rfc7231#section-6
      * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
      *
-     * @return  string  Reason phrase; must return an empty string if none present.
+     * @return string Reason phrase; must return an empty string if none present.
      */
     public function getReasonPhrase()
     {

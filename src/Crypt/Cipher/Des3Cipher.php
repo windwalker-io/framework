@@ -16,7 +16,8 @@ namespace Windwalker\Crypt\Cipher;
 class Des3Cipher extends AbstractOpensslCipher
 {
     /**
-     * @var    integer  The openssl cipher method.
+     * @var int The openssl cipher method.
+     *
      * @see    http://php.net/manual/en/function.openssl-get-cipher-methods.php
      * @since  3.0
      */
@@ -25,7 +26,7 @@ class Des3Cipher extends AbstractOpensslCipher
     /**
      * Property mode.
      *
-     * @var  string
+     * @var string
      */
     protected $mode = 'cbc';
 }

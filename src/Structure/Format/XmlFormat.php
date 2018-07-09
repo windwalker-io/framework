@@ -20,10 +20,10 @@ class XmlFormat implements FormatInterface
      * -    If more than two levels of nested groups are necessary, since INI is not
      * useful, XML or another format should be used.
      *
-     * @param   mixed $struct  Data source object.
-     * @param   array $options Options used by the formatter.
+     * @param mixed $struct  Data source object.
+     * @param array $options Options used by the formatter.
      *
-     * @return  string  XML formatted string.
+     * @return string XML formatted string.
      *
      * @since   2.0
      */
@@ -33,7 +33,7 @@ class XmlFormat implements FormatInterface
         $nodeName = (isset($options['nodeName'])) ? $options['nodeName'] : 'node';
 
         // Create the root node.
-        $root = simplexml_load_string('<' . $rootName . ' />');
+        $root = simplexml_load_string('<'.$rootName.' />');
 
         // Iterate over the object members.
         static::getXmlChildren($root, $struct, $nodeName);
@@ -44,10 +44,10 @@ class XmlFormat implements FormatInterface
     /**
      * Parse a XML formatted string and convert it into an object.
      *
-     * @param   string $data    XML formatted string to convert.
-     * @param   array  $options Options used by the formatter.
+     * @param string $data    XML formatted string to convert.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  object   Data object.
+     * @return object Data object.
      *
      * @since   2.0
      */
@@ -66,11 +66,11 @@ class XmlFormat implements FormatInterface
     }
 
     /**
-     * Method to get a PHP native value for a SimpleXMLElement object. -- called recursively
+     * Method to get a PHP native value for a SimpleXMLElement object. -- called recursively.
      *
-     * @param   object $node SimpleXMLElement object for which to get the native value.
+     * @param object $node SimpleXMLElement object for which to get the native value.
      *
-     * @return  mixed  Native value of the SimpleXMLElement object.
+     * @return mixed Native value of the SimpleXMLElement object.
      */
     protected static function getValueFromNode($node)
     {
@@ -120,13 +120,13 @@ class XmlFormat implements FormatInterface
     }
 
     /**
-     * Method to build a level of the XML string -- called recursively
+     * Method to build a level of the XML string -- called recursively.
      *
-     * @param   \SimpleXMLElement $node     SimpleXMLElement object to attach children.
-     * @param   object            $var      Object that represents a node of the XML document.
-     * @param   string            $nodeName The name to use for node elements.
+     * @param \SimpleXMLElement $node     SimpleXMLElement object to attach children.
+     * @param object            $var      Object that represents a node of the XML document.
+     * @param string            $nodeName The name to use for node elements.
      *
-     * @return  void
+     * @return void
      */
     protected static function getXmlChildren(\SimpleXMLElement $node, $var, $nodeName)
     {

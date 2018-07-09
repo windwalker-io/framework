@@ -9,7 +9,7 @@
 namespace Windwalker\Event;
 
 /**
- * Class ListenerPriorityQueue
+ * Class ListenerPriorityQueue.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * The inner priority queue.
      *
-     * @var    \SplPriorityQueue
+     * @var \SplPriorityQueue
      *
      * @since  2.0
      */
@@ -30,7 +30,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
      * recreate the queue or to see if the queue contains
      * a given listener.
      *
-     * @var    \SplObjectStorage
+     * @var \SplObjectStorage
      *
      * @since  2.0
      */
@@ -41,7 +41,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
      * the internal priority as an array because
      * SplPriorityQueue dequeues elements with the same priority.
      *
-     * @var    integer
+     * @var int
      *
      * @since  2.0
      */
@@ -61,10 +61,10 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Add a listener with the given priority only if not already present.
      *
-     * @param   \Closure|object $listener The listener.
-     * @param   integer         $priority The listener priority.
+     * @param \Closure|object $listener The listener.
+     * @param int             $priority The listener priority.
      *
-     * @return  ListenersQueue  This method is chainable.
+     * @return ListenersQueue This method is chainable.
      *
      * @since   2.0
      */
@@ -84,9 +84,9 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Remove a listener from the queue.
      *
-     * @param   \Closure|object $listener The listener.
+     * @param \Closure|object $listener The listener.
      *
-     * @return  ListenersQueue  This method is chainable.
+     * @return ListenersQueue This method is chainable.
      *
      * @since   2.0
      */
@@ -110,9 +110,9 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Tell if the listener exists in the queue.
      *
-     * @param   \Closure|object $listener The listener.
+     * @param \Closure|object $listener The listener.
      *
-     * @return  boolean  True if it exists, false otherwise.
+     * @return bool True if it exists, false otherwise.
      *
      * @since   2.0
      */
@@ -124,10 +124,10 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Get the priority of the given listener.
      *
-     * @param   \Closure|object $listener The listener.
-     * @param   mixed           $default  The default value to return if the listener doesn't exist.
+     * @param \Closure|object $listener The listener.
+     * @param mixed           $default  The default value to return if the listener doesn't exist.
      *
-     * @return  mixed  The listener priority if it exists, null otherwise.
+     * @return mixed The listener priority if it exists, null otherwise.
      *
      * @since   2.0
      */
@@ -143,7 +143,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Get all listeners contained in this queue, sorted according to their priority.
      *
-     * @return  object[]  An array of listeners.
+     * @return object[] An array of listeners.
      *
      * @since   2.0
      */
@@ -164,7 +164,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Get the inner queue with its cursor on top of the heap.
      *
-     * @return  \SplPriorityQueue  The inner queue.
+     * @return \SplPriorityQueue The inner queue.
      *
      * @since   2.0
      */
@@ -183,7 +183,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
     /**
      * Count the number of listeners in the queue.
      *
-     * @return  integer  The number of listeners in the queue.
+     * @return int The number of listeners in the queue.
      *
      * @since   2.0
      */

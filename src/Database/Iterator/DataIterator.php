@@ -11,7 +11,7 @@ namespace Windwalker\Database\Iterator;
 use Windwalker\Database\Command\AbstractReader;
 
 /**
- * Class DataIterator
+ * Class DataIterator.
  *
  * @since 2.0
  */
@@ -20,14 +20,14 @@ class DataIterator implements \Countable, \Iterator
     /**
      * Property reader.
      *
-     * @var  AbstractReader
+     * @var AbstractReader
      */
     protected $reader = null;
 
     /**
      * Property key.
      *
-     * @var  int
+     * @var int
      */
     protected $key = -1;
 
@@ -41,7 +41,7 @@ class DataIterator implements \Countable, \Iterator
     /**
      * Property class.
      *
-     * @var  string
+     * @var string
      */
     protected $class;
 
@@ -70,7 +70,7 @@ class DataIterator implements \Countable, \Iterator
     }
 
     /**
-     * Return the current element
+     * Return the current element.
      *
      * @return mixed Can return any type.
      */
@@ -80,7 +80,7 @@ class DataIterator implements \Countable, \Iterator
     }
 
     /**
-     * Move forward to next element
+     * Move forward to next element.
      *
      * @return void Any returned value is ignored.
      */
@@ -95,7 +95,7 @@ class DataIterator implements \Countable, \Iterator
     }
 
     /**
-     * Return the key of the current element
+     * Return the key of the current element.
      *
      * @return mixed scalar on success, or null on failure.
      */
@@ -105,10 +105,10 @@ class DataIterator implements \Countable, \Iterator
     }
 
     /**
-     * Checks if current position is valid
+     * Checks if current position is valid.
      *
-     * @return boolean The return value will be casted to boolean and then evaluated.
-     *       Returns true on success or false on failure.
+     * @return bool The return value will be casted to boolean and then evaluated.
+     *              Returns true on success or false on failure.
      */
     public function valid()
     {
@@ -116,7 +116,7 @@ class DataIterator implements \Countable, \Iterator
     }
 
     /**
-     * Rewind the Iterator to the first element
+     * Rewind the Iterator to the first element.
      *
      * @return void Any returned value is ignored.
      */
@@ -125,7 +125,7 @@ class DataIterator implements \Countable, \Iterator
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
      *
      * @return int The custom count as an integer.
      */

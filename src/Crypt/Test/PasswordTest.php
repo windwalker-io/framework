@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Crypt\Test;
 use Windwalker\Crypt\Password;
 
 /**
- * Test class of Password
+ * Test class of Password.
  *
  * @since 2.0
  */
@@ -157,7 +157,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
 
         // PHP7 will auto generate salt
         if (version_compare(PHP_VERSION, 7, '<')) {
-            $this->assertEquals(crypt('windwalker', $prefix . '10$sakurasakurasakurasaku$'), $pass);
+            $this->assertEquals(crypt('windwalker', $prefix.'10$sakurasakurasakurasaku$'), $pass);
         }
 
         $this->assertTrue($this->instance->verify('windwalker', $pass));
@@ -169,9 +169,9 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testCreateArgon2
+     * testCreateArgon2.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateArgon2()
     {
@@ -192,9 +192,9 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testCreateArgon2
+     * testCreateArgon2.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateScrypt()
     {

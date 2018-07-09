@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Path;
 use Windwalker\Test\TestEnvironment;
 
 /**
- * Test class of Folder
+ * Test class of Folder.
  *
  * @since 2.0
  */
@@ -33,7 +33,7 @@ class FolderTest extends AbstractFilesystemTest
         Folder::copy(static::$src, static::$dest);
 
         $this->assertTrue(is_dir(static::$dest));
-        $this->assertFileExists(static::$dest . '/folder1/level2/file3');
+        $this->assertFileExists(static::$dest.'/folder1/level2/file3');
     }
 
     /**
@@ -45,20 +45,20 @@ class FolderTest extends AbstractFilesystemTest
      */
     public function testCreate()
     {
-        Folder::create(static::$dest . '/flower');
+        Folder::create(static::$dest.'/flower');
 
-        $this->assertTrue(is_dir(static::$dest . '/flower'));
+        $this->assertTrue(is_dir(static::$dest.'/flower'));
 
-        Folder::create(static::$dest . '/foo/bar');
+        Folder::create(static::$dest.'/foo/bar');
 
-        $this->assertTrue(is_dir(static::$dest . '/foo/bar'));
+        $this->assertTrue(is_dir(static::$dest.'/foo/bar'));
 
-        Folder::create(static::$dest . '/yoo', 0775);
+        Folder::create(static::$dest.'/yoo', 0775);
 
         if (TestEnvironment::isWindows()) {
-            $this->assertEquals(777, Path::getPermissions(static::$dest . '/yoo'));
+            $this->assertEquals(777, Path::getPermissions(static::$dest.'/yoo'));
         } else {
-            $this->assertEquals(775, Path::getPermissions(static::$dest . '/yoo'));
+            $this->assertEquals(775, Path::getPermissions(static::$dest.'/yoo'));
         }
     }
 
@@ -71,11 +71,11 @@ class FolderTest extends AbstractFilesystemTest
      */
     public function testDelete()
     {
-        Folder::create(static::$dest . '/flower');
+        Folder::create(static::$dest.'/flower');
 
-        Folder::delete(static::$dest . '/flower');
+        Folder::delete(static::$dest.'/flower');
 
-        $this->assertFalse(is_dir(static::$dest . '/flower'));
+        $this->assertFalse(is_dir(static::$dest.'/flower'));
     }
 
     /**
@@ -87,7 +87,7 @@ class FolderTest extends AbstractFilesystemTest
      */
     public function testMove()
     {
-        $dest2 = __DIR__ . '/dest2';
+        $dest2 = __DIR__.'/dest2';
 
         if (is_dir($dest2)) {
             Folder::delete($dest2);
@@ -96,7 +96,7 @@ class FolderTest extends AbstractFilesystemTest
         Folder::move(static::$dest, $dest2);
 
         $this->assertTrue(is_dir($dest2));
-        $this->assertFileExists($dest2 . '/folder1/level2/file3');
+        $this->assertFileExists($dest2.'/folder1/level2/file3');
 
         Folder::delete($dest2);
     }
@@ -110,22 +110,22 @@ class FolderTest extends AbstractFilesystemTest
      */
     public function testFiles()
     {
-        $files = Folder::files(__DIR__ . '/dest/folder1/level2', true);
+        $files = Folder::files(__DIR__.'/dest/folder1/level2', true);
 
         $this->assertEquals(
-            FilesystemTestHelper::cleanPaths([__DIR__ . '/dest/folder1/level2/file3']),
+            FilesystemTestHelper::cleanPaths([__DIR__.'/dest/folder1/level2/file3']),
             FilesystemTestHelper::cleanPaths($files)
         );
 
         // No full name
-        $files = Folder::files(__DIR__ . '/dest/folder1/level2', true, Folder::PATH_BASENAME);
+        $files = Folder::files(__DIR__.'/dest/folder1/level2', true, Folder::PATH_BASENAME);
 
         $this->assertEquals(
             FilesystemTestHelper::cleanPaths(['file3']),
             FilesystemTestHelper::cleanPaths($files)
         );
 
-        $files = Folder::files(__DIR__ . '/dest/folder1', true, Folder::PATH_RELATIVE);
+        $files = Folder::files(__DIR__.'/dest/folder1', true, Folder::PATH_RELATIVE);
 
         $this->assertEquals(
             FilesystemTestHelper::cleanPaths(['level2/file3', 'path1']),
@@ -152,15 +152,15 @@ class FolderTest extends AbstractFilesystemTest
      */
     public function testItems()
     {
-        $items = Folder::items(static::$dest . '/folder1/level2', true);
+        $items = Folder::items(static::$dest.'/folder1/level2', true);
 
         $this->assertEquals(
-            FilesystemTestHelper::cleanPaths([static::$dest . '/folder1/level2/file3']),
+            FilesystemTestHelper::cleanPaths([static::$dest.'/folder1/level2/file3']),
             FilesystemTestHelper::cleanPaths($items)
         );
 
         // No full name
-        $items = Folder::items(static::$dest . '/folder1/level2', true, Folder::PATH_BASENAME);
+        $items = Folder::items(static::$dest.'/folder1/level2', true, Folder::PATH_BASENAME);
 
         $this->assertEquals(
             FilesystemTestHelper::cleanPaths(['file3']),
@@ -187,15 +187,15 @@ class FolderTest extends AbstractFilesystemTest
      */
     public function testFolders()
     {
-        $folders = Folder::folders(static::$dest . '/folder1', true);
+        $folders = Folder::folders(static::$dest.'/folder1', true);
 
         $this->assertEquals(
-            FilesystemTestHelper::cleanPaths([static::$dest . '/folder1/level2']),
+            FilesystemTestHelper::cleanPaths([static::$dest.'/folder1/level2']),
             FilesystemTestHelper::cleanPaths($folders)
         );
 
         // No full name
-        $folders = Folder::folders(static::$dest . '/folder1', true, Folder::PATH_BASENAME);
+        $folders = Folder::folders(static::$dest.'/folder1', true, Folder::PATH_BASENAME);
 
         $this->assertEquals(
             FilesystemTestHelper::cleanPaths(['level2']),
@@ -233,8 +233,8 @@ class FolderTest extends AbstractFilesystemTest
 
         $this->assertEquals($tree[0]['relative'], 'folder1');
         $this->assertEquals($tree[1]['parent'], 1);
-        $this->assertEquals($tree[1]['relative'], 'folder1' . DIRECTORY_SEPARATOR . 'level2');
-        $this->assertEquals($tree[2]['fullname'], Path::clean(static::$dest . '/folder2'));
+        $this->assertEquals($tree[1]['relative'], 'folder1'.DIRECTORY_SEPARATOR.'level2');
+        $this->assertEquals($tree[2]['fullname'], Path::clean(static::$dest.'/folder2'));
     }
 
     /**

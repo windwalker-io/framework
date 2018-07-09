@@ -11,7 +11,7 @@ namespace Windwalker\Router\Matcher;
 use Windwalker\Router\Route;
 
 /**
- * Interface MatcherInterface
+ * Interface MatcherInterface.
  *
  * @since  2.0
  */
@@ -24,26 +24,26 @@ interface MatcherInterface
      * @param string $method
      * @param array  $options
      *
-     * @return  Route|false
+     * @return Route|false
      */
     public function match($route, $method = 'GET', $options = []);
 
     /**
-     * build
+     * build.
      *
      * @param Route $route
      * @param array $data
      *
-     * @return  string
+     * @return string
      */
     public function build(Route $route, $data = []);
 
     /**
-     * Set Routes
+     * Set Routes.
      *
      * @param Route[] $routes
      *
-     * @return  static
+     * @return static
      */
     public function setRoutes(array $routes);
 }

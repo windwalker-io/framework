@@ -21,26 +21,26 @@ class SelectList extends HtmlElement
     /**
      * Property selected.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $selected = null;
 
     /**
      * Element content.
      *
-     * @var  Option[]
+     * @var Option[]
      */
     protected $content;
 
     /**
      * Property multiple.
      *
-     * @var  bool
+     * @var bool
      */
     protected $multiple;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string     $name
      * @param mixed|null $options
@@ -59,11 +59,11 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * Quick create for PHP 5.3
+     * Quick create for PHP 5.3.
      *
-     * @param   array $attribs
+     * @param array $attribs
      *
-     * @return  static
+     * @return static
      */
     public static function create($name, $attribs = [])
     {
@@ -71,12 +71,12 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * addOption
+     * addOption.
      *
      * @param Option $option
      * @param string $group
      *
-     * @return  static
+     * @return static
      */
     public function addOption(Option $option, $group = null)
     {
@@ -94,14 +94,14 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * option
+     * option.
      *
      * @param string $text
      * @param string $value
      * @param array  $attribs
      * @param string $group
      *
-     * @return  SelectList
+     * @return SelectList
      */
     public function option($text = null, $value = null, $attribs = [], $group = null)
     {
@@ -109,11 +109,11 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * toString
+     * toString.
      *
      * @param bool $forcePair
      *
-     * @return  string
+     * @return string
      */
     public function toString($forcePair = false)
     {
@@ -123,7 +123,7 @@ class SelectList extends HtmlElement
         $this->prepareOptions();
 
         if ($this->multiple) {
-            $this->setAttribute('name', $this->getAttribute('name') . '[]');
+            $this->setAttribute('name', $this->getAttribute('name').'[]');
         }
 
         $html = parent::toString($forcePair);
@@ -135,9 +135,9 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @return  void
+     * @return void
      */
     protected function prepareOptions()
     {
@@ -161,11 +161,11 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * checkSelected
+     * checkSelected.
      *
      * @param mixed $value
      *
-     * @return  bool
+     * @return bool
      */
     protected function checkSelected($value)
     {
@@ -179,9 +179,9 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * Method to get property Selected
+     * Method to get property Selected.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getSelected()
     {
@@ -189,11 +189,11 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * Method to set property selected
+     * Method to set property selected.
      *
-     * @param   mixed $selected
+     * @param mixed $selected
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSelected($selected)
     {
@@ -203,9 +203,9 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * __clone
+     * __clone.
      *
-     * @return  void
+     * @return void
      */
     public function __clone()
     {
@@ -213,9 +213,9 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * Method to get property Multiple
+     * Method to get property Multiple.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getMultiple()
     {
@@ -223,11 +223,11 @@ class SelectList extends HtmlElement
     }
 
     /**
-     * Method to set property multiple
+     * Method to set property multiple.
      *
-     * @param   boolean $multiple
+     * @param bool $multiple
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setMultiple($multiple)
     {

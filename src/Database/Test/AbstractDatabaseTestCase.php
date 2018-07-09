@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Test\TestHelper;
 
 /**
- * Class DatabaseTestCase
+ * Class DatabaseTestCase.
  *
  * @since 2.0
  */
@@ -23,14 +23,14 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     /**
      * Property db.
      *
-     * @var  AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
      */
     protected static $dbo = null;
 
     /**
      * Property db.
      *
-     * @var  AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
      */
     protected $db = null;
 
@@ -44,7 +44,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     /**
      * Property quote.
      *
-     * @var  array
+     * @var array
      */
     protected static $quote = ['"', '"'];
 
@@ -65,15 +65,16 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     /**
      * Property debug.
      *
-     * @var  boolean
+     * @var bool
      */
     protected static $debug = true;
 
     /**
-     * setUpBeforeClass
+     * setUpBeforeClass.
      *
      * @throws \LogicException
-     * @return  void
+     *
+     * @return void
      */
     public static function setUpBeforeClass()
     {
@@ -84,7 +85,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
         static::$dsn = $dsn = TestDsnResolver::getDsn(static::$driver);
 
         if (!$dsn) {
-            static::markTestSkipped('DSN of driver ' . static::$driver . ' not available');
+            static::markTestSkipped('DSN of driver '.static::$driver.' not available');
         }
 
         static::$dbname = $dbname = isset($dsn['dbname']) ? $dsn['dbname'] : null;
@@ -105,11 +106,11 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
             $db = self::$dbo = DatabaseFactory::getDbo(
                 static::$driver,
                 [
-                    'host' => isset($dsn['host']) ? $dsn['host'] : null,
-                    'user' => isset($dsn['user']) ? $dsn['user'] : null,
+                    'host'     => isset($dsn['host']) ? $dsn['host'] : null,
+                    'user'     => isset($dsn['user']) ? $dsn['user'] : null,
                     'password' => isset($dsn['pass']) ? $dsn['pass'] : null,
-                    'port' => isset($dsn['port']) ? $dsn['port'] : null,
-                    'prefix' => isset($dsn['prefix']) ? $dsn['prefix'] : null,
+                    'port'     => isset($dsn['port']) ? $dsn['port'] : null,
+                    'prefix'   => isset($dsn['prefix']) ? $dsn['prefix'] : null,
                 ]
             );
         } catch (\RangeException $e) {
@@ -132,29 +133,29 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     }
 
     /**
-     * getInstallSql
+     * getInstallSql.
      *
-     * @return  string
+     * @return string
      */
     protected static function getSetupSql()
     {
-        return file_get_contents(__DIR__ . '/Stub/' . static::$driver . '.sql');
+        return file_get_contents(__DIR__.'/Stub/'.static::$driver.'.sql');
     }
 
     /**
-     * getTearDownSql
+     * getTearDownSql.
      *
-     * @return  string
+     * @return string
      */
     protected static function getTearDownSql()
     {
-        return 'DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname);
+        return 'DROP DATABASE IF EXISTS '.self::$dbo->quoteName(static::$dbname);
     }
 
     /**
-     * setupFixtures
+     * setupFixtures.
      *
-     * @return  void
+     * @return void
      */
     protected static function setupFixtures()
     {
@@ -164,9 +165,9 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     }
 
     /**
-     * tearDownFixtures
+     * tearDownFixtures.
      *
-     * @return  void
+     * @return void
      */
     protected function tearDownFixtures()
     {
@@ -176,9 +177,9 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     }
 
     /**
-     * tearDownAfterClass
+     * tearDownAfterClass.
      *
-     * @return  void
+     * @return void
      */
     public static function tearDownAfterClass()
     {
@@ -210,7 +211,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
      *
      * This method is called before a test is executed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

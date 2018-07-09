@@ -18,7 +18,7 @@ class OList extends AbstractHtmlList
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'ol';
 }

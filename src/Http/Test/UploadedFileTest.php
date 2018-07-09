@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Http\UploadedFile;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of UploadedFile
+ * Test class of UploadedFile.
  *
  * @since 2.1
  */
@@ -22,7 +22,7 @@ class UploadedFileTest extends AbstractBaseTestCase
     /**
      * Property tmpFile.
      *
-     * @var  string
+     * @var string
      */
     protected $tmpFile;
 
@@ -78,7 +78,7 @@ class UploadedFileTest extends AbstractBaseTestCase
         $stream->write('Foo bar!');
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $this->tmpFile = $to = sys_get_temp_dir().'/windwalker-'.uniqid();
 
         $this->assertFalse(is_file($to));
 
@@ -91,11 +91,11 @@ class UploadedFileTest extends AbstractBaseTestCase
         $this->assertEquals($stream->__toString(), $contents);
 
         // Send string
-        $uploadFile = sys_get_temp_dir() . '/upload-' . uniqid();
+        $uploadFile = sys_get_temp_dir().'/upload-'.uniqid();
         file_put_contents($uploadFile, 'Foo bar!');
         $upload = new UploadedFile($uploadFile, 0, UPLOAD_ERR_OK);
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $this->tmpFile = $to = sys_get_temp_dir().'/windwalker-'.uniqid();
 
         $this->assertFalse(is_file($to));
 
@@ -111,9 +111,9 @@ class UploadedFileTest extends AbstractBaseTestCase
     }
 
     /**
-     * testMoveInNotCli
+     * testMoveInNotCli.
      *
-     * @return  void
+     * @return void
      */
     public function testMoveInNotCli()
     {
@@ -123,7 +123,7 @@ class UploadedFileTest extends AbstractBaseTestCase
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
         $upload->setSapi('cgi');
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $this->tmpFile = $to = sys_get_temp_dir().'/windwalker-'.uniqid();
 
         $this->assertFalse(is_file($to));
 
@@ -136,12 +136,12 @@ class UploadedFileTest extends AbstractBaseTestCase
         $this->assertEquals($stream->__toString(), $contents);
 
         // Send string
-        $uploadFile = sys_get_temp_dir() . '/upload-' . uniqid();
+        $uploadFile = sys_get_temp_dir().'/upload-'.uniqid();
         file_put_contents($uploadFile, 'Foo bar!');
         $upload = new UploadedFile($uploadFile, 0, UPLOAD_ERR_OK);
         $upload->setSapi('cgi');
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $this->tmpFile = $to = sys_get_temp_dir().'/windwalker-'.uniqid();
 
         $this->assertFalse(is_file($to));
 

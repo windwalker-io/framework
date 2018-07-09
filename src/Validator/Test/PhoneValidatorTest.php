@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Validator\Test;
 use Windwalker\Validator\Rule\PhoneValidator;
 
 /**
- * Test class of PhoneValidator
+ * Test class of PhoneValidator.
  *
  * @since 2.0
  */
@@ -46,9 +46,9 @@ class PhoneValidatorTest extends AbstractValidateTestCase
     }
 
     /**
-     * testCase
+     * testCase.
      *
-     * @return  array
+     * @return array
      */
     public function validateCase()
     {

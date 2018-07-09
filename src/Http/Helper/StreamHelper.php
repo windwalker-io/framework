@@ -25,17 +25,17 @@ abstract class StreamHelper
     /**
      * Property outputClass for test use.
      *
-     * @var  StreamOutput
+     * @var StreamOutput
      */
     public static $outputObject;
 
     /**
      * Copy stream to another stream.
      *
-     * @param   StreamInterface $src  Source stream.
-     * @param   StreamInterface $dest Target stream.
+     * @param StreamInterface $src  Source stream.
+     * @param StreamInterface $dest Target stream.
      *
-     * @return  void
+     * @return void
      */
     public static function copy(StreamInterface $src, StreamInterface $dest)
     {
@@ -51,10 +51,10 @@ abstract class StreamHelper
     /**
      * Copy a stream to target resource.
      *
-     * @param   StreamInterface $src  The source stream to copy.
-     * @param   string          $dest The target stream, if is a path or resource, will auto create Stream object.
+     * @param StreamInterface $src  The source stream to copy.
+     * @param string          $dest The target stream, if is a path or resource, will auto create Stream object.
      *
-     * @return  void
+     * @return void
      */
     public static function copyTo(StreamInterface $src, $dest)
     {
@@ -68,11 +68,11 @@ abstract class StreamHelper
     /**
      * Copy a stream to target resource.
      *
-     * @param   string          $src  The source stream to copy, if is a path or resource, will auto create Stream
-     *                                object.
-     * @param   StreamInterface $dest The target stream.
+     * @param string          $src  The source stream to copy, if is a path or resource, will auto create Stream
+     *                              object.
+     * @param StreamInterface $dest The target stream.
      *
-     * @return  void
+     * @return void
      */
     public static function copyFrom($src, StreamInterface $dest)
     {
@@ -86,12 +86,12 @@ abstract class StreamHelper
     /**
      * A simple method to quickly send attachment stream download.
      *
-     * @param   string|resource|StreamInterface $source    The file source, can be file path or resource.
-     * @param   ResponseInterface               $response  A custom Response object to contain your headers.
-     * @param   array                           $options   Options to provide some settings, currently supports
-     *                                                     "delay" and "filename".
+     * @param string|resource|StreamInterface $source   The file source, can be file path or resource.
+     * @param ResponseInterface               $response A custom Response object to contain your headers.
+     * @param array                           $options  Options to provide some settings, currently supports
+     *                                                  "delay" and "filename".
      *
-     * @return  void
+     * @return void
      */
     public static function sendAttachment($source, ResponseInterface $response = null, $options = [])
     {

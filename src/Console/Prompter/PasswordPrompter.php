@@ -18,7 +18,7 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Returning message if valid fail.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -36,7 +36,7 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Is stty available?
      *
-     * @var boolean
+     * @var bool
      *
      * @since  2.0
      */
@@ -45,7 +45,7 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Is Windows OS?
      *
-     * @var  boolean
+     * @var bool
      *
      * @since  2.0
      */
@@ -56,7 +56,7 @@ class PasswordPrompter extends CallbackPrompter
      *
      * @see    https://github.com/Seldaek/hidden-input
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -65,13 +65,13 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Initialise this class.
      *
-     * @return  void
+     * @return void
      */
     protected function init()
     {
         $this->win = defined('PHP_WINDOWS_VERSION_BUILD');
 
-        $this->hiddenExe = __DIR__ . '/../bin/hiddeninput.exe';
+        $this->hiddenExe = __DIR__.'/../bin/hiddeninput.exe';
 
         // Default handler
         $closure = function ($value) {
@@ -84,10 +84,10 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Show prompt to ask user.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
@@ -99,11 +99,11 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Get a value from standard input.
      *
-     * @param   string $question The question you want to ask user.
+     * @param string $question The question you want to ask user.
      *
-     * @throws  \RuntimeException
+     * @throws \RuntimeException
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      *
      * @since   2.0
      */
@@ -171,9 +171,9 @@ class PasswordPrompter extends CallbackPrompter
     /**
      * Find which shell we use (only in UNIX & LINUX).
      *
-     * @return  string  Shell name.
+     * @throws \RuntimeException
      *
-     * @throws  \RuntimeException
+     * @return string Shell name.
      *
      * @since   2.0
      */
@@ -192,14 +192,12 @@ class PasswordPrompter extends CallbackPrompter
                 return $shell;
             }
         }
-
-        return null;
     }
 
     /**
      * Find stty (only in UNIX & LINUX).
      *
-     * @return  boolean  Stty exists or not.
+     * @return bool Stty exists or not.
      *
      * @since   2.0
      */

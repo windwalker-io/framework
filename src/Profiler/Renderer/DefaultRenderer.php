@@ -11,7 +11,7 @@ namespace Windwalker\Profiler\Renderer;
 use Windwalker\Profiler\ProfilerInterface;
 
 /**
- * Class DefaultRenderer
+ * Class DefaultRenderer.
  *
  * @since 2.0
  */
@@ -20,9 +20,9 @@ class DefaultRenderer implements ProfilerRendererInterface
     /**
      * Render the profiler.
      *
-     * @param   ProfilerInterface $profiler The profiler to render.
+     * @param ProfilerInterface $profiler The profiler to render.
      *
-     * @return  string  The rendered profiler.
+     * @return string The rendered profiler.
      */
     public function render(ProfilerInterface $profiler)
     {
@@ -40,7 +40,7 @@ class DefaultRenderer implements ProfilerRendererInterface
             $tmpl = '%s %.3f seconds (+%.3f); %0.2f MB (%s%0.3f) - %s';
 
             if (PHP_SAPI !== 'cli') {
-                $tmpl = '<code>' . $tmpl . '</code>';
+                $tmpl = '<code>'.$tmpl.'</code>';
             }
 
             $render[] = sprintf(

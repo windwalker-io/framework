@@ -23,13 +23,13 @@ class AbstractDomTestCase extends AbstractBaseTestCase
     /**
      * Asserts that two variables are equal.
      *
-     * @param  mixed   $expected
-     * @param  mixed   $actual
-     * @param  string  $message
-     * @param  float   $delta
-     * @param  integer $maxDepth
-     * @param  boolean $canonicalize
-     * @param  boolean $ignoreCase
+     * @param mixed  $expected
+     * @param mixed  $actual
+     * @param string $message
+     * @param float  $delta
+     * @param int    $maxDepth
+     * @param bool   $canonicalize
+     * @param bool   $ignoreCase
      */
     public function assertDomStringEqualsDomString(
         $expected,
@@ -54,13 +54,13 @@ class AbstractDomTestCase extends AbstractBaseTestCase
     /**
      * Asserts that two variables are equal.
      *
-     * @param  mixed   $expected
-     * @param  mixed   $actual
-     * @param  string  $message
-     * @param  float   $delta
-     * @param  integer $maxDepth
-     * @param  boolean $canonicalize
-     * @param  boolean $ignoreCase
+     * @param mixed  $expected
+     * @param mixed  $actual
+     * @param string $message
+     * @param float  $delta
+     * @param int    $maxDepth
+     * @param bool   $canonicalize
+     * @param bool   $ignoreCase
      */
     public function assertDomFormatEquals(
         $expected,
@@ -85,13 +85,13 @@ class AbstractDomTestCase extends AbstractBaseTestCase
     /**
      * Asserts that two variables are equal.
      *
-     * @param  mixed   $expected
-     * @param  mixed   $actual
-     * @param  string  $message
-     * @param  float   $delta
-     * @param  integer $maxDepth
-     * @param  boolean $canonicalize
-     * @param  boolean $ignoreCase
+     * @param mixed  $expected
+     * @param mixed  $actual
+     * @param string $message
+     * @param float  $delta
+     * @param int    $maxDepth
+     * @param bool   $canonicalize
+     * @param bool   $ignoreCase
      */
     public function assertHtmlFormatEquals(
         $expected,

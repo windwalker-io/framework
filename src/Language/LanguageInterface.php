@@ -9,44 +9,44 @@
 namespace Windwalker\Language;
 
 /**
- * Interface LanguageInterface
+ * Interface LanguageInterface.
  */
 interface LanguageInterface
 {
     /**
-     * translate
+     * translate.
      *
      * @param string $key
      *
-     * @return  string
+     * @return string
      */
     public function translate($key);
 
     /**
-     * plural
+     * plural.
      *
      * @param string $string
      * @param int    $count
      *
-     * @return  string
+     * @return string
      */
     public function plural($string, $count = 1);
 
     /**
-     * sprintf
+     * sprintf.
      *
      * @param string $key
      *
-     * @return  mixed
+     * @return mixed
      */
     public function sprintf($key);
 
     /**
-     * exists
+     * exists.
      *
      * @param string $key
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists($key);
 }

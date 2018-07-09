@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\IO\Filter\NullFilter;
 
 /**
- * Class PsrInput
+ * Class PsrInput.
  *
  * @property    Input          $get
  * @property    Input          $post
@@ -33,11 +33,11 @@ use Windwalker\IO\Filter\NullFilter;
 class PsrInput extends Input
 {
     /**
-     * Create Input from Psr ServerRequest
+     * Create Input from Psr ServerRequest.
      *
-     * @param   ServerRequestInterface $request
+     * @param ServerRequestInterface $request
      *
-     * @return  static
+     * @return static
      */
     public static function create(ServerRequestInterface $request)
     {
@@ -45,7 +45,7 @@ class PsrInput extends Input
         $query = $request->getQueryParams();
         $post = $request->getParsedBody();
 
-        $input = new PsrInput(array_merge($query, $post));
+        $input = new self(array_merge($query, $post));
         $input->setMethod($request->getMethod());
 
         $filter = $input->getFilter() instanceof NullFilter ? null : $input->getFilter();

@@ -21,14 +21,14 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
     /**
      * Property instance.
      *
-     * @var  ContainerAwareTrait
+     * @var ContainerAwareTrait
      */
     protected $instance = null;
 
     /**
-     * setUp
+     * setUp.
      *
-     * @return  void
+     * @return void
      */
     protected function setUp()
     {
@@ -36,9 +36,9 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests calling getContainer() without a Container object set
+     * Tests calling getContainer() without a Container object set.
      *
-     * @return  void
+     * @return void
      *
      * @expectedException   \UnexpectedValueException
      */
@@ -48,9 +48,9 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests calling getContainer() with a Container object set
+     * Tests calling getContainer() with a Container object set.
      *
-     * @return  void
+     * @return void
      */
     public function testGetAndSetContainer()
     {

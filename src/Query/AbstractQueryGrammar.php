@@ -9,7 +9,7 @@
 namespace Windwalker\Query;
 
 /**
- * Class QueryGrammar
+ * Class QueryGrammar.
  *
  * @since 2.0
  */
@@ -18,39 +18,39 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
     /**
      * Property query.
      *
-     * @var  Query
+     * @var Query
      */
     public static $query = null;
 
     /**
      * Property instance.
      *
-     * @var  QueryGrammarInterface[]
+     * @var QueryGrammarInterface[]
      */
     protected static $instance = [];
 
     /**
-     * getInstance
+     * getInstance.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  QueryGrammarInterface
+     * @return QueryGrammarInterface
      */
     public static function getInstance($name)
     {
         if (!isset(static::$instance[strtolower($name)])) {
             $name = ucfirst($name);
 
-            static::$instance[strtolower($name)] = sprintf(__NAMESPACE__ . '\%s\%sGrammar', $name, $name);
+            static::$instance[strtolower($name)] = sprintf(__NAMESPACE__.'\%s\%sGrammar', $name, $name);
         }
 
         return static::$instance[strtolower($name)];
     }
 
     /**
-     * build
+     * build.
      *
-     * @return  string
+     * @return string
      */
     public static function build()
     {
@@ -70,11 +70,11 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
     }
 
     /**
-     * getQuery
+     * getQuery.
      *
      * @param bool $new
      *
-     * @return  Query
+     * @return Query
      */
     public static function getQuery($new = false)
     {

@@ -11,14 +11,14 @@ namespace Windwalker\Filesystem\Path;
 use Windwalker\Filesystem\Filesystem;
 
 /**
- * A Path locator class
+ * A Path locator class.
  *
  * @since  2.0
  */
 class PathLocator implements PathLocatorInterface, \IteratorAggregate
 {
     /**
-     * Path prefix
+     * Path prefix.
      *
      * @var string
      *
@@ -27,7 +27,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     protected $prefix = '';
 
     /**
-     * A variable to store paths
+     * A variable to store paths.
      *
      * @var array
      *
@@ -38,7 +38,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Constructor to handle path.
      *
-     * @param   string $path Path to parse.
+     * @param string $path Path to parse.
      *
      * @since   2.0
      */
@@ -50,9 +50,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Replace with a new path.
      *
-     * @param   string $path Path to parse.
+     * @param string $path Path to parse.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -66,9 +66,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Get file iterator of current dir.
      *
-     * @param  boolean $recursive True to resursive.
+     * @param bool $recursive True to resursive.
      *
-     * @return  \FilesystemIterator|\RecursiveIteratorIterator  File & dir iterator.
+     * @return \FilesystemIterator|\RecursiveIteratorIterator File & dir iterator.
      */
     public function getIterator($recursive = false)
     {
@@ -79,9 +79,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Get folder iterator of current dir.
      *
-     * @param  boolean $recursive True to resursive.
+     * @param bool $recursive True to resursive.
      *
-     * @return  \CallbackFilterIterator  Iterator only include dirs.
+     * @return \CallbackFilterIterator Iterator only include dirs.
      */
     public function getFolders($recursive = false)
     {
@@ -89,11 +89,11 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     }
 
     /**
-     * Get file iterator of current dir
+     * Get file iterator of current dir.
      *
-     * @param  boolean $recursive True to resursive.
+     * @param bool $recursive True to resursive.
      *
-     * @return  \CallbackFilterIterator  Iterator only include files.
+     * @return \CallbackFilterIterator Iterator only include files.
      */
     public function getFiles($recursive = false)
     {
@@ -103,17 +103,17 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Find one file and return.
      *
-     * @param  mixed   $condition       Finding condition, that can be a string, a regex or a callback function.
-     *                                  Callback example:
-     *                                  <code>
-     *                                  function($current, $key, $iterator)
-     *                                  {
-     *                                  return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-     *                                  }
-     *                                  </code>
-     * @param  boolean $recursive       True to resursive.
+     * @param mixed $condition Finding condition, that can be a string, a regex or a callback function.
+     *                         Callback example:
+     *                         <code>
+     *                         function($current, $key, $iterator)
+     *                         {
+     *                         return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+     *                         }
+     *                         </code>
+     * @param bool  $recursive True to resursive.
      *
-     * @return  \SplFileInfo  Finded file info object.
+     * @return \SplFileInfo Finded file info object.
      *
      * @since  2.0
      */
@@ -125,17 +125,17 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Find all files which matches condition.
      *
-     * @param  mixed   $condition       Finding condition, that can be a string, a regex or a callback function.
-     *                                  Callback example:
-     *                                  <code>
-     *                                  function($current, $key, $iterator)
-     *                                  {
-     *                                  return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-     *                                  }
-     *                                  </code>
-     * @param  boolean $recursive       True to resursive.
+     * @param mixed $condition Finding condition, that can be a string, a regex or a callback function.
+     *                         Callback example:
+     *                         <code>
+     *                         function($current, $key, $iterator)
+     *                         {
+     *                         return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+     *                         }
+     *                         </code>
+     * @param bool  $recursive True to resursive.
      *
-     * @return  \CallbackFilterIterator  Finded files or paths iterator.
+     * @return \CallbackFilterIterator Finded files or paths iterator.
      *
      * @since  2.0
      */
@@ -147,10 +147,10 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Using a closure function to filter file.
      *
-     * @param  \Closure $callback  A callback function to filter file.
-     * @param  boolean  $recursive True to recursive.
+     * @param \Closure $callback  A callback function to filter file.
+     * @param bool     $recursive True to recursive.
      *
-     * @return  \CallbackFilterIterator  Filtered file or path iteator.
+     * @return \CallbackFilterIterator Filtered file or path iteator.
      *
      * @see    http://www.php.net/manual/en/class.callbackfilteriterator.php
      * @since  2.0
@@ -163,10 +163,10 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Normalize path, remove not necessary elements.
      *
-     * @param  string $path         A given path to normalize.
-     * @param  bool   $returnString Return string or array.
+     * @param string $path         A given path to normalize.
+     * @param bool   $returnString Return string or array.
      *
-     * @return  string|array  Normalized path.
+     * @return string|array Normalized path.
      *
      * @since  2.0
      */
@@ -192,9 +192,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Clean path and remove dots.
      *
-     * @param   string $path A given path to parse.
+     * @param string $path A given path to parse.
      *
-     * @return  string  Cleaned path.
+     * @return string Cleaned path.
      *
      * @since  2.0
      */
@@ -210,9 +210,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Remove dots from path.
      *
-     * @param  string|array $path A given path to remove dots.
+     * @param string|array $path A given path to remove dots.
      *
-     * @return  string|array  Cleaned path.
+     * @return string|array Cleaned path.
      *
      * @since  2.0
      */
@@ -253,7 +253,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Detect is current path a dir?
      *
-     * @return  boolean  True if is a dir.
+     * @return bool True if is a dir.
      *
      * @since  2.0
      */
@@ -265,7 +265,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Detect is current path a file?
      *
-     * @return  boolean  True if is a file.
+     * @return bool True if is a file.
      *
      * @since  2.0
      */
@@ -277,7 +277,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Detect is current path exists?
      *
-     * @return  boolean  True if exists.
+     * @return bool True if exists.
      *
      * @since  2.0
      */
@@ -290,9 +290,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      * Set a prefix, when this object convert to string,
      * prefix will auto add to the front of path.
      *
-     * @param   string $prefix Prefix string to set.
+     * @param string $prefix Prefix string to set.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -306,9 +306,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Get a child path of given name.
      *
-     * @param   string $name Child name.
+     * @param string $name Child name.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -324,9 +324,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Get a parent path of given condition.
      *
-     * @param   bool|int|string $condition Parent condition.
+     * @param bool|int|string $condition Parent condition.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -369,9 +369,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Append a new path before current path.
      *
-     * @param   string $path Path to append.
+     * @param string $path Path to append.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -391,9 +391,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Append a new path before current path.
      *
-     * @param   string $path Path to append.
+     * @param string $path Path to append.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -413,9 +413,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Is this path subdir of given path?
      *
-     * @param  string $parent Given path to detect.
+     * @param string $parent Given path to detect.
      *
-     * @return  boolean  Is subdir or not.
+     * @return bool Is subdir or not.
      *
      * @since  2.0
      */
@@ -441,7 +441,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Convert this object to string.
      *
-     * @return  string  Path name.
+     * @return string Path name.
      *
      * @since  2.0
      */
@@ -450,7 +450,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
         $path = $this->compact($this->paths);
 
         if ($this->prefix) {
-            $path = rtrim($this->prefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . trim($path, DIRECTORY_SEPARATOR);
+            $path = rtrim($this->prefix, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.trim($path, DIRECTORY_SEPARATOR);
         }
 
         $path = $this->removeDots($path);
@@ -461,9 +461,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Explode path by DIRECTORY_SEPARATOR.
      *
-     * @param   string $path Path to extract.
+     * @param string $path Path to extract.
      *
-     * @return  array  Extracted path array.
+     * @return array Extracted path array.
      *
      * @since  2.0
      */
@@ -475,9 +475,9 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Implode path by DIRECTORY_SEPARATOR.
      *
-     * @param   string $path Path to compact.
+     * @param string $path Path to compact.
      *
-     * @return  array  Compacted path array.
+     * @return array Compacted path array.
      *
      * @since  2.0
      */

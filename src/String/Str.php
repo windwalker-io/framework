@@ -26,7 +26,7 @@ class Str
     const ENCODING_US_ASCII = 'US-ASCII';
 
     /**
-     * at
+     * at.
      *
      * @param string $string
      * @param int    $pos
@@ -46,7 +46,7 @@ class Str
     }
 
     /**
-     * between
+     * between.
      *
      * @param string      $string
      * @param string      $start
@@ -54,7 +54,7 @@ class Str
      * @param int         $offset
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function between(
         $string,
@@ -83,11 +83,11 @@ class Str
     }
 
     /**
-     * collapseWhitespaces
+     * collapseWhitespaces.
      *
      * @param string $string
      *
-     * @return  string
+     * @return string
      */
     public static function collapseWhitespaces($string)
     {
@@ -97,7 +97,7 @@ class Str
     }
 
     /**
-     * contains
+     * contains.
      *
      * @param string $string
      * @param string $search
@@ -122,7 +122,7 @@ class Str
     }
 
     /**
-     * endsWith
+     * endsWith.
      *
      * @param string $string
      * @param string $search
@@ -157,12 +157,12 @@ class Str
     }
 
     /**
-     * startsWith
+     * startsWith.
      *
-     * @param string  $string
-     * @param string  $target
-     * @param boolean $caseSensitive
-     * @param string  $encoding
+     * @param string $string
+     * @param string $target
+     * @param bool   $caseSensitive
+     * @param string $encoding
      *
      * @return bool
      */
@@ -183,13 +183,13 @@ class Str
     }
 
     /**
-     * ensureLeft
+     * ensureLeft.
      *
      * @param string      $string
      * @param string      $search
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function ensureLeft($string, $search, $encoding = null)
     {
@@ -197,17 +197,17 @@ class Str
             return $string;
         }
 
-        return $search . $string;
+        return $search.$string;
     }
 
     /**
-     * ensureRight
+     * ensureRight.
      *
      * @param string      $string
      * @param string      $search
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function ensureRight($string, $search, $encoding = null)
     {
@@ -215,16 +215,16 @@ class Str
             return $string;
         }
 
-        return $string . $search;
+        return $string.$search;
     }
 
     /**
-     * hasLowerCase
+     * hasLowerCase.
      *
      * @param string      $string
      * @param string|null $encoding
      *
-     * @return  bool
+     * @return bool
      */
     public static function hasLowerCase($string, $encoding = null)
     {
@@ -232,12 +232,12 @@ class Str
     }
 
     /**
-     * hasUpperCase
+     * hasUpperCase.
      *
      * @param string      $string
      * @param string|null $encoding
      *
-     * @return  bool
+     * @return bool
      */
     public static function hasUpperCase($string, $encoding = null)
     {
@@ -245,14 +245,14 @@ class Str
     }
 
     /**
-     * match
+     * match.
      *
      * @param string      $pattern
      * @param string      $string
      * @param string|null $option
      * @param string|null $encoding
      *
-     * @return  bool
+     * @return bool
      */
     public static function match($pattern, $string, $option = 'msr', $encoding = null)
     {
@@ -270,14 +270,14 @@ class Str
     }
 
     /**
-     * insert
+     * insert.
      *
      * @param string      $string
      * @param string      $insert
      * @param int         $position
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function insert($string, $insert, $position, $encoding = null)
     {
@@ -292,15 +292,15 @@ class Str
         $left = Mbstring::substr($string, 0, $position, $encoding);
         $right = Mbstring::substr($string, $position, $length, $encoding);
 
-        return $left . $insert . $right;
+        return $left.$insert.$right;
     }
 
     /**
-     * isLowerCase
+     * isLowerCase.
      *
      * @param string $string
      *
-     * @return  bool
+     * @return bool
      */
     public static function isLowerCase($string)
     {
@@ -308,11 +308,11 @@ class Str
     }
 
     /**
-     * isUpperCase
+     * isUpperCase.
      *
      * @param string $string
      *
-     * @return  bool
+     * @return bool
      */
     public static function isUpperCase($string)
     {
@@ -320,13 +320,13 @@ class Str
     }
 
     /**
-     * first
+     * first.
      *
      * @param string      $string
      * @param int         $length
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function first($string, $length = 1, $encoding = null)
     {
@@ -340,13 +340,13 @@ class Str
     }
 
     /**
-     * last
+     * last.
      *
      * @param string      $string
      * @param int         $length
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function last($string, $length = 1, $encoding = null)
     {
@@ -360,13 +360,13 @@ class Str
     }
 
     /**
-     * intersectLeft
+     * intersectLeft.
      *
      * @param string      $string1
      * @param string      $string2
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function intersectLeft($string1, $string2, $encoding = null)
     {
@@ -388,13 +388,13 @@ class Str
     }
 
     /**
-     * intersectRight
+     * intersectRight.
      *
      * @param string      $string1
      * @param string      $string2
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function intersectRight($string1, $string2, $encoding = null)
     {
@@ -406,7 +406,7 @@ class Str
             $char = Mbstring::substr($string1, -$i, 1, $encoding);
 
             if ($char === Mbstring::substr($string2, -$i, 1, $encoding)) {
-                $intersect = $char . $intersect;
+                $intersect = $char.$intersect;
             } else {
                 break;
             }
@@ -416,7 +416,7 @@ class Str
     }
 
     /**
-     * intersect
+     * intersect.
      *
      * @see https://en.wikipedia.org/wiki/Longest_common_substring_problem
      * @see https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring#PHP
@@ -425,7 +425,7 @@ class Str
      * @param string      $string2
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function intersect($string1, $string2, $encoding = null)
     {
@@ -464,14 +464,14 @@ class Str
     }
 
     /**
-     * pad
+     * pad.
      *
      * @param string      $string
      * @param int         $length
      * @param string      $substring
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function pad(
         $string,
@@ -487,14 +487,14 @@ class Str
     }
 
     /**
-     * padLeft
+     * padLeft.
      *
      * @param string      $string
      * @param int         $length
      * @param string      $substring
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function padLeft(
         $string,
@@ -508,14 +508,14 @@ class Str
     }
 
     /**
-     * padRight
+     * padRight.
      *
      * @param string      $string
      * @param int         $length
      * @param string      $substring
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function padRight(
         $string,
@@ -529,7 +529,7 @@ class Str
     }
 
     /**
-     * doPad
+     * doPad.
      *
      * @param string      $string
      * @param int         $left
@@ -537,7 +537,7 @@ class Str
      * @param string      $substring
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     private static function doPad(
         $string,
@@ -557,18 +557,18 @@ class Str
         $leftStr = Mbstring::substr(str_repeat($substring, (int) ceil($left / $padLength)), 0, $left, $encoding);
         $rightStr = Mbstring::substr(str_repeat($substring, (int) ceil($right / $padLength)), 0, $right, $encoding);
 
-        return $leftStr . $string . $rightStr;
+        return $leftStr.$string.$rightStr;
     }
 
     /**
-     * removeChar
+     * removeChar.
      *
      * @param string      $string
      * @param int         $offset
      * @param int|null    $length
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function removeChar($string, $offset, $length = null, $encoding = null)
     {
@@ -584,13 +584,13 @@ class Str
     }
 
     /**
-     * removeLeft
+     * removeLeft.
      *
      * @param string      $string
      * @param string      $search
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function removeLeft($string, $search, $encoding = null)
     {
@@ -612,13 +612,13 @@ class Str
     }
 
     /**
-     * removeRight
+     * removeRight.
      *
      * @param string      $string
      * @param string      $search
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function removeRight($string, $search, $encoding = null)
     {
@@ -640,14 +640,14 @@ class Str
     }
 
     /**
-     * slice
+     * slice.
      *
      * @param string      $string
      * @param int         $start
      * @param int|null    $end
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function slice($string, $start, $end = null, $encoding = null)
     {
@@ -667,14 +667,14 @@ class Str
     }
 
     /**
-     * substring
+     * substring.
      *
      * @param string      $string
      * @param int         $start
      * @param int|null    $end
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function substring($string, $start, $end = null, $encoding = null)
     {
@@ -695,12 +695,12 @@ class Str
     }
 
     /**
-     * surround
+     * surround.
      *
      * @param string       $string
      * @param string|array $substring
      *
-     * @return  string
+     * @return string
      */
     public static function surround($string, $substring = ['"', '"'])
     {
@@ -710,16 +710,16 @@ class Str
             $substring[1] = $substring[0];
         }
 
-        return $substring[0] . $string . $substring[1];
+        return $substring[0].$string.$substring[1];
     }
 
     /**
-     * toggleCase
+     * toggleCase.
      *
      * @param string      $string
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function toggleCase($string, $encoding = null)
     {
@@ -739,7 +739,7 @@ class Str
     }
 
     /**
-     * truncate
+     * truncate.
      *
      * @param string      $string
      * @param int         $length
@@ -747,7 +747,7 @@ class Str
      * @param bool        $wordBreak
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function truncate(
         $string,
@@ -769,17 +769,17 @@ class Str
             $result = Mbstring::substr($result, 0, $position, $encoding);
         }
 
-        return $result . $suffix;
+        return $result.$suffix;
     }
 
     /**
-     * map
+     * map.
      *
      * @param string      $string
      * @param callable    $callback
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function map($string, callable $callback, $encoding = null)
     {
@@ -797,13 +797,13 @@ class Str
     }
 
     /**
-     * filter
+     * filter.
      *
      * @param string      $string
      * @param callable    $callback
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function filter($string, callable $callback, $encoding = null)
     {
@@ -823,13 +823,13 @@ class Str
     }
 
     /**
-     * reject
+     * reject.
      *
      * @param string      $string
      * @param callable    $callback
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function reject($string, callable $callback, $encoding = null)
     {

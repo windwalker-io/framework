@@ -29,21 +29,19 @@ class Command extends AbstractCommand
         $output = $this->console->describeCommand($this);
 
         $this->out($output);
-
-        return;
     }
 
     /**
      * Add an argument(sub command) setting. This method in Command use 'self' instead 'static' to make sure every sub
      * command add Command class as arguments.
      *
-     * @param   string|AbstractCommand $command       The argument name or Console object.
-     *                                                If we just send a string, the object will auto create.
-     * @param   null                   $description   Console description.
-     * @param   array                  $options       Console options.
-     * @param   \Closure               $code          The closure to execute.
+     * @param string|AbstractCommand $command     The argument name or Console object.
+     *                                            If we just send a string, the object will auto create.
+     * @param null                   $description Console description.
+     * @param array                  $options     Console options.
+     * @param \Closure               $code        The closure to execute.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */

@@ -9,7 +9,7 @@
 namespace Windwalker\Http;
 
 if (!interface_exists('Http\Client\HttpClient')) {
-    include_once __DIR__ . '/HttpPlugClientInterface.php';
+    include_once __DIR__.'/HttpPlugClientInterface.php';
 }
 
 use Http\Client\HttpClient as HttpPlugClientInterface;
@@ -32,22 +32,22 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
     /**
      * Property transport.
      *
-     * @var  TransportInterface
+     * @var TransportInterface
      */
     protected $transport;
 
     /**
      * Class init.
      *
-     * @param  array              $options   The options of this client object.
-     * @param  TransportInterface $transport The Transport handler, default is CurlTransport.
+     * @param array              $options   The options of this client object.
+     * @param TransportInterface $transport The Transport handler, default is CurlTransport.
      */
     public function __construct($options = [], TransportInterface $transport = null)
     {
@@ -65,7 +65,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      * @param mixed         $data    The request body data, can be an array of POST data.
      * @param array         $headers The headers array.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function request($method, $url, $data = null, $headers = [])
     {
@@ -82,7 +82,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      * @param mixed         $data    The request body data, can be an array of POST data.
      * @param array         $headers The headers array.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function download($url, $dest, $data = null, $headers = [])
     {
@@ -91,7 +91,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
         $transport = $this->getTransport();
 
         if (!$transport::isSupported()) {
-            throw new \RangeException(get_class($transport) . ' driver not supported.');
+            throw new \RangeException(get_class($transport).' driver not supported.');
         }
 
         return $transport->download($request, $dest);
@@ -100,16 +100,16 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Send a request to remote.
      *
-     * @param   RequestInterface $request The Psr Request object.
+     * @param RequestInterface $request The Psr Request object.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function send(RequestInterface $request)
     {
         $transport = $this->getTransport();
 
         if (!$transport::isSupported()) {
-            throw new \RangeException(get_class($transport) . ' driver not supported.');
+            throw new \RangeException(get_class($transport).' driver not supported.');
         }
 
         return $transport->request($request);
@@ -118,10 +118,10 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the OPTIONS command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -133,10 +133,10 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the HEAD command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -148,11 +148,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the GET command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   mixed  $data    Either an associative array or a string to be sent with the request.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param mixed  $data    Either an associative array or a string to be sent with the request.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -164,11 +164,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the POST command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   mixed  $data    Either an associative array or a string to be sent with the request.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request
+     * @param string $url     Path to the resource.
+     * @param mixed  $data    Either an associative array or a string to be sent with the request.
+     * @param array  $headers An array of name-value pairs to include in the header of the request
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -180,11 +180,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the PUT command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   mixed  $data    Either an associative array or a string to be sent with the request.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param mixed  $data    Either an associative array or a string to be sent with the request.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -196,11 +196,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the DELETE command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   mixed  $data    Either an associative array or a string to be sent with the request.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param mixed  $data    Either an associative array or a string to be sent with the request.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -212,10 +212,10 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the TRACE command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -227,11 +227,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Method to send the PATCH command to the server.
      *
-     * @param   string $url     Path to the resource.
-     * @param   mixed  $data    Either an associative array or a string to be sent with the request.
-     * @param   array  $headers An array of name-value pairs to include in the header of the request.
+     * @param string $url     Path to the resource.
+     * @param mixed  $data    Either an associative array or a string to be sent with the request.
+     * @param array  $headers An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -243,10 +243,10 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Get option value.
      *
-     * @param   string $name    Option name.
-     * @param   mixed  $default The default value if not exists.
+     * @param string $name    Option name.
+     * @param mixed  $default The default value if not exists.
      *
-     * @return  mixed  The found value or default value.
+     * @return mixed The found value or default value.
      */
     public function getOption($name, $default = null)
     {
@@ -260,10 +260,10 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Set option value.
      *
-     * @param   string $name  Option name.
-     * @param   mixed  $value The value you want to set in.
+     * @param string $name  Option name.
+     * @param mixed  $value The value you want to set in.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOption($name, $value)
     {
@@ -273,9 +273,9 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      */
     public function getOptions()
     {
@@ -283,11 +283,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOptions($options)
     {
@@ -305,9 +305,9 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     }
 
     /**
-     * Method to get property Transport
+     * Method to get property Transport.
      *
-     * @return  TransportInterface
+     * @return TransportInterface
      */
     public function getTransport()
     {
@@ -315,11 +315,11 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     }
 
     /**
-     * Method to set property transport
+     * Method to set property transport.
      *
-     * @param   TransportInterface $transport
+     * @param TransportInterface $transport
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTransport(TransportInterface $transport)
     {
@@ -331,15 +331,16 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     /**
      * Prepare Request object to send request.
      *
-     * @param   RequestInterface $request The Psr Request object.
-     * @param   string           $method  The method type.
-     * @param   string|object    $url     The URL to request, may be string or Uri object.
-     * @param   mixed            $data    The request body data, can be an array of POST data.
-     * @param   array            $headers The headers array.
+     * @param RequestInterface $request The Psr Request object.
+     * @param string           $method  The method type.
+     * @param string|object    $url     The URL to request, may be string or Uri object.
+     * @param mixed            $data    The request body data, can be an array of POST data.
+     * @param array            $headers The headers array.
      *
-     * @return  RequestInterface
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
+     *
+     * @return RequestInterface
      */
     protected function prepareRequest(RequestInterface $request, $method, $url, $data, $headers)
     {
@@ -362,7 +363,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
             $data = UriHelper::buildQuery($data);
         }
 
-        /** @var RequestInterface $request */
+        /* @var RequestInterface $request */
         $request->getBody()->write((string) $data);
 
         $request = $request->withRequestTarget((string) new PsrUri($url))
@@ -386,10 +387,10 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      *
      * @param RequestInterface $request
      *
-     * @return ResponseInterface
-     *
      * @throws \Http\Client\Exception If an error happens during processing the request.
      * @throws \Exception             If processing the request is impossible (eg. bad configuration).
+     *
+     * @return ResponseInterface
      */
     public function sendRequest(RequestInterface $request)
     {

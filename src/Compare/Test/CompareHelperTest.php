@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Compare\Test;
 use Windwalker\Compare\CompareHelper;
 
 /**
- * Test class of CompareHelper
+ * Test class of CompareHelper.
  *
  * @since 2.0
  */
@@ -22,9 +22,9 @@ class CompareHelperTest extends \PHPUnit\Framework\TestCase
     const NOT_STRICT = false;
 
     /**
-     * getCompareData
+     * getCompareData.
      *
-     * @return  array
+     * @return array
      */
     public function getCompareData()
     {

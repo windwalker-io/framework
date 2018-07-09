@@ -28,7 +28,7 @@ class StubCli extends AbstractCliApplication
      * Method to run the application routines.  Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -40,9 +40,9 @@ class StubCli extends AbstractCliApplication
     /**
      * Method to close the application.
      *
-     * @param   integer|string $message The exit code (optional; default is 0).
+     * @param int|string $message The exit code (optional; default is 0).
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */

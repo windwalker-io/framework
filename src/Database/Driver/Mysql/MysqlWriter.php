@@ -11,7 +11,7 @@ namespace Windwalker\Database\Driver\Mysql;
 use Windwalker\Database\Driver\Pdo\PdoWriter;
 
 /**
- * Class MysqlWriter
+ * Class MysqlWriter.
  *
  * @since 2.0
  */

@@ -9,7 +9,7 @@
 namespace Windwalker\Profiler\Point;
 
 /**
- * Class ProfilerItem
+ * Class ProfilerItem.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class Point implements PointInterface
     /**
      * The profile point name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
@@ -26,7 +26,7 @@ class Point implements PointInterface
      * The elapsed time in seconds since
      * the first point in the profiler it belongs to was marked.
      *
-     * @var  float
+     * @var float
      */
     protected $time = null;
 
@@ -34,24 +34,24 @@ class Point implements PointInterface
      * The allocated amount of memory in bytes
      * since the first point in the profiler it belongs to was marked.
      *
-     * @var  integer
+     * @var int
      */
     protected $memory = null;
 
     /**
      * Property data.
      *
-     * @var  CollectorInterface
+     * @var CollectorInterface
      */
     protected $data = [];
 
     /**
      * Constructor.
      *
-     * @param   string  $name   The point name.
-     * @param   float   $timing The time in seconds.
-     * @param   integer $memory The allocated amount of memory in bytes
-     * @param   mixed   $data   The collector data.
+     * @param string $name   The point name.
+     * @param float  $timing The time in seconds.
+     * @param int    $memory The allocated amount of memory in bytes
+     * @param mixed  $data   The collector data.
      */
     public function __construct($name, $timing = 0.0, $memory = 0, $data = [])
     {
@@ -65,10 +65,10 @@ class Point implements PointInterface
     /**
      * Create a point of current information.
      *
-     * @param   string $name The point name.
-     * @param   mixed  $data The collector data.
+     * @param string $name The point name.
+     * @param mixed  $data The collector data.
      *
-     * @return  static
+     * @return static
      */
     public static function current($name, $data = [])
     {
@@ -78,7 +78,7 @@ class Point implements PointInterface
     /**
      * Get the name of this profile point.
      *
-     * @return  string  The name of this profile point.
+     * @return string The name of this profile point.
      */
     public function getName()
     {
@@ -89,7 +89,7 @@ class Point implements PointInterface
      * Get the elapsed time in seconds since the first
      * point in the profiler it belongs to was marked.
      *
-     * @return  float  The time in seconds.
+     * @return float The time in seconds.
      */
     public function getTime()
     {
@@ -102,7 +102,7 @@ class Point implements PointInterface
      *
      * @param bool $megaBytes
      *
-     * @return  integer  The amount of allocated memory in B.
+     * @return int The amount of allocated memory in B.
      */
     public function getMemory($megaBytes = false)
     {
@@ -110,9 +110,9 @@ class Point implements PointInterface
     }
 
     /**
-     * Method to get property Data
+     * Method to get property Data.
      *
-     * @return  CollectorInterface
+     * @return CollectorInterface
      */
     public function getData()
     {
@@ -120,11 +120,11 @@ class Point implements PointInterface
     }
 
     /**
-     * Method to set property data
+     * Method to set property data.
      *
-     * @param   array|CollectorInterface $data
+     * @param array|CollectorInterface $data
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setData($data)
     {

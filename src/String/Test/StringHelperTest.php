@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\String\Test;
 use Windwalker\String\StringHelper;
 
 /**
- * Test class of String
+ * Test class of String.
  *
  * @since 2.0
  */
@@ -81,7 +81,7 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -89,11 +89,11 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     {
         return [
             // Note: string, style, number, expected
-            'First default increment' => ['title', null, 0, 'title (2)'],
-            'Second default increment' => ['title(2)', null, 0, 'title(3)'],
-            'First dash increment' => ['title', 'dash', 0, 'title-2'],
-            'Second dash increment' => ['title-2', 'dash', 0, 'title-3'],
-            'Set default increment' => ['title', null, 4, 'title (4)'],
+            'First default increment'           => ['title', null, 0, 'title (2)'],
+            'Second default increment'          => ['title(2)', null, 0, 'title(3)'],
+            'First dash increment'              => ['title', 'dash', 0, 'title-2'],
+            'Second dash increment'             => ['title-2', 'dash', 0, 'title-3'],
+            'Set default increment'             => ['title', null, 4, 'title (4)'],
             'Unknown style fallback to default' => ['title', 'foo', 0, 'title (2)'],
         ];
     }
@@ -101,15 +101,16 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string   String to increment.
-     * @param   string $style    Default of Dash.
-     * @param   string $number   Number to increment.
-     * @param   string $expected Expected value.
+     * @param string $string   String to increment.
+     * @param string $style    Default of Dash.
+     * @param string $number   Number to increment.
+     * @param string $expected Expected value.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringHelper::increment
      * @dataProvider  seedTestIncrement
+     *
      * @since         2.0
      */
     public function testIncrement($string, $style, $number, $expected)
@@ -121,9 +122,9 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testAt
+     * testAt.
      *
-     * @return  void
+     * @return void
      */
     public function testAt()
     {
@@ -135,9 +136,9 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testEndsWith
+     * testEndsWith.
      *
-     * @return  void
+     * @return void
      */
     public function testEndsWith()
     {
@@ -151,9 +152,9 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testStartsWith
+     * testStartsWith.
      *
-     * @return  void
+     * @return void
      */
     public function testStartsWith()
     {
@@ -167,9 +168,9 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testCollapseWhitespace
+     * testCollapseWhitespace.
      *
-     * @return  void
+     * @return void
      */
     public function testCollapseWhitespace()
     {

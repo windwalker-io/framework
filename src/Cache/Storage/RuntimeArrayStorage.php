@@ -21,16 +21,16 @@ class RuntimeArrayStorage extends AbstractCacheStorage
     /**
      * Property storage.
      *
-     * @var  array
+     * @var array
      */
     protected static $store = [];
 
     /**
      * Method to determine whether a storage entry has been set for a key.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists($key)
     {
@@ -39,12 +39,13 @@ class RuntimeArrayStorage extends AbstractCacheStorage
 
     /**
      * Here we pass in a cache key to be fetched from the cache.
-     * A CacheItem object will be constructed and returned to us
+     * A CacheItem object will be constructed and returned to us.
      *
      * @param string $key The unique key of this item in the cache
      *
-     * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
      * @throws \Exception
+     *
+     * @return CacheItemInterface The newly populated CacheItem class representing the stored data in the cache
      */
     public function getItem($key)
     {
@@ -80,7 +81,7 @@ class RuntimeArrayStorage extends AbstractCacheStorage
     }
 
     /**
-     * Remove an item from the cache by its unique key
+     * Remove an item from the cache by its unique key.
      *
      * @param string $key The unique cache key of the item to remove
      *
@@ -96,7 +97,7 @@ class RuntimeArrayStorage extends AbstractCacheStorage
     }
 
     /**
-     * This will wipe out the entire cache's keys
+     * This will wipe out the entire cache's keys.
      *
      * @return static Return self to support chaining
      */

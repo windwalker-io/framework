@@ -20,7 +20,7 @@ class StubDataMiddleware extends AbstractMiddleware
     /**
      * Call next middleware.
      *
-     * @param  \stdClass $data
+     * @param \stdClass $data
      *
      * @return mixed
      */

@@ -20,14 +20,14 @@ class Option extends HtmlElement
     /**
      * Property value.
      *
-     * @var  string
+     * @var string
      */
     protected $value = '';
 
     /**
      * Property attributes.
      *
-     * @var  string
+     * @var string
      */
     protected $attributes = [];
 
@@ -46,9 +46,9 @@ class Option extends HtmlElement
     }
 
     /**
-     * Method to get property Value
+     * Method to get property Value.
      *
-     * @return  string
+     * @return string
      */
     public function getValue()
     {
@@ -56,11 +56,11 @@ class Option extends HtmlElement
     }
 
     /**
-     * Method to set property value
+     * Method to set property value.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setValue($value)
     {

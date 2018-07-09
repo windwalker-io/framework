@@ -9,7 +9,7 @@
 namespace Windwalker\Language\Format;
 
 /**
- * Class IniFormat
+ * Class IniFormat.
  *
  * @since 2.0
  */
@@ -18,16 +18,16 @@ class PhpFormat extends AbstractFormat
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'php';
 
     /**
-     * parse
+     * parse.
      *
      * @param array $array
      *
-     * @return  array
+     * @return array
      */
     public function parse($array)
     {

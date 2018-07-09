@@ -14,14 +14,14 @@
  * Note: it's not fast and gets slower if $search / $replace is array
  * Notes: it's based on the assumption that the lower and uppercase
  * versions of a UTF-8 character will have the same length in bytes
- * which is currently true given the hash table to strtolower
+ * which is currently true given the hash table to strtolower.
  *
  * @param string
  *
  * @return string
+ *
  * @see     http://www.php.net/str_ireplace
  * @see     utf8_strtolower
- * @package utf8
  */
 function utf8_ireplace($search, $replace, $str, $count = null)
 {
@@ -38,7 +38,7 @@ function utf8_ireplace($search, $replace, $str, $count = null)
         $lstr = utf8_strtolower($str);
         $i = 0;
         $matched = 0;
-        while (preg_match('/(.*)' . $search . '/Us', $lstr, $matches)) {
+        while (preg_match('/(.*)'.$search.'/Us', $lstr, $matches)) {
             if ($i === $count) {
                 break;
             }
@@ -66,4 +66,3 @@ function utf8_ireplace($search, $replace, $str, $count = null)
         return $str;
     }
 }
-

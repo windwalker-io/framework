@@ -50,12 +50,12 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * bind
+     * bind.
      *
      * @param array $array
      * @param int   $priority
      *
-     * @return  static
+     * @return static
      */
     public function bind(array $array = [], $priority = self::NORMAL)
     {
@@ -67,11 +67,11 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * register
+     * register.
      *
      * @param array $items
      *
-     * @return  static
+     * @return static
      */
     public function insertArray(array $items)
     {
@@ -83,13 +83,13 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * Insert a value with a given priority
+     * Insert a value with a given priority.
      *
      * Utilizes {@var $serial} to ensure that values of equal priority are
      * emitted in the same order in which they are inserted.
      *
-     * @param  mixed $datum
-     * @param  mixed $priority
+     * @param mixed $datum
+     * @param mixed $priority
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * Serialize to an array
+     * Serialize to an array.
      *
      * Array will be priority => data pairs
      *
@@ -123,7 +123,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * Serialize
+     * Serialize.
      *
      * @return string
      */
@@ -143,9 +143,9 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * Deserialize
+     * Deserialize.
      *
-     * @param  string $data
+     * @param string $data
      *
      * @return void
      */
@@ -157,7 +157,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * merge
+     * merge.
      *
      * @return static;
      */
@@ -183,12 +183,12 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * compare
+     * compare.
      *
      * @param mixed $priority1
      * @param mixed $priority2
      *
-     * @return  int
+     * @return int
      */
     public function compare($priority1, $priority2)
     {
@@ -213,9 +213,9 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * Method to get property Serial
+     * Method to get property Serial.
      *
-     * @return  int
+     * @return int
      */
     public function getSerial()
     {
@@ -223,11 +223,11 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
     }
 
     /**
-     * Method to set property serial
+     * Method to set property serial.
      *
-     * @param   int $serial
+     * @param int $serial
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSerial($serial)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Language\Test\Loader;
 use Windwalker\Language\Loader\FileLoader;
 
 /**
- * Test class of FileLoader
+ * Test class of FileLoader.
  *
  * @since 2.0
  */
@@ -54,7 +54,7 @@ class FileLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function testLoad()
     {
-        $data = <<<DATA
+        $data = <<<'DATA'
 {
 	"windwalker" : {
 		"language-test" : {
@@ -65,6 +65,6 @@ class FileLoaderTest extends \PHPUnit\Framework\TestCase
 }
 DATA;
 
-        $this->assertJsonStringEqualsJsonString($this->instance->load(__DIR__ . '/../fixtures/json/en-GB.json'), $data);
+        $this->assertJsonStringEqualsJsonString($this->instance->load(__DIR__.'/../fixtures/json/en-GB.json'), $data);
     }
 }

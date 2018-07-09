@@ -9,7 +9,7 @@
 namespace Windwalker\Loader\Loader;
 
 /**
- * Class Psr4Loader
+ * Class Psr4Loader.
  *
  * @note  This class based on PHP-FIG example class.
  *       See: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
@@ -41,11 +41,11 @@ class Psr4Loader extends AbstractLoader
     public function addNamespace($prefix, $base_dir, $prepend = false)
     {
         // Normalize namespace prefix
-        $prefix = trim($prefix, '\\') . '\\';
+        $prefix = trim($prefix, '\\').'\\';
 
         // Normalize the base directory with a trailing separator
-        $base_dir = rtrim($base_dir, '/') . DIRECTORY_SEPARATOR;
-        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR) . '/';
+        $base_dir = rtrim($base_dir, '/').DIRECTORY_SEPARATOR;
+        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR).'/';
 
         // Initialize the namespace prefix array
         if (isset($this->prefixes[$prefix]) === false) {
@@ -118,8 +118,8 @@ class Psr4Loader extends AbstractLoader
             // Replace namespace separators with directory separators
             // in the relative class name, append with .php
             $file = $base_dir
-                . str_replace('\\', DIRECTORY_SEPARATOR, $relative_class)
-                . '.php';
+                .str_replace('\\', DIRECTORY_SEPARATOR, $relative_class)
+                .'.php';
 
             // If the mapped file exists, require it
             if (is_file($file)) {

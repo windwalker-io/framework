@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Http\Test\Stub\StubContentTypeResponse;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of AbstractContentTypeResponse
+ * Test class of AbstractContentTypeResponse.
  *
  * @since 3.0
  */
@@ -47,9 +47,9 @@ class AbstractContentTypeResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testConstruct
+     * testConstruct.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::__construct
      */
@@ -78,11 +78,12 @@ class AbstractContentTypeResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testNormalizeContentType
-     *
-     * @return  void
+     * testNormalizeContentType.
      *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::normalizeContentType
      */
     public function testNormalizeContentType()

@@ -16,13 +16,13 @@ namespace Windwalker\Crypt;
 class CryptHelper
 {
     /**
-     * limitInteger
+     * limitInteger.
      *
-     * @param integer $int
-     * @param integer $min
-     * @param integer $max
+     * @param int $int
+     * @param int $min
+     * @param int $max
      *
-     * @return  integer
+     * @return int
      */
     public static function limitInteger($int, $min = null, $max = null)
     {
@@ -40,13 +40,13 @@ class CryptHelper
     }
 
     /**
-     * repeatToLength
+     * repeatToLength.
      *
-     * @param string  $string
-     * @param integer $length
-     * @param bool    $cut
+     * @param string $string
+     * @param int    $length
+     * @param bool   $cut
      *
-     * @return  string
+     * @return string
      */
     public static function repeatToLength($string, $length, $cut = false)
     {
@@ -66,10 +66,11 @@ class CryptHelper
     /**
      * Generate random bytes.
      *
-     * @param   integer $length Length of the random data to generate
+     * @param int $length Length of the random data to generate
      *
      * @note    This method is based on Joomla Crypt.
-     * @return  string  Random binary data
+     *
+     * @return string Random binary data
      *
      * @since   2.0
      */
@@ -121,7 +122,7 @@ class CryptHelper
              * Collect any entropy available from the PHP system and filesystem.
              * If we have ssl data that isn't strong, we use it once.
              */
-            $entropy = mt_rand() . uniqid(mt_rand(), true) . $sslStr;
+            $entropy = mt_rand().uniqid(mt_rand(), true).$sslStr;
             $entropy .= implode('', @fstat(fopen(__FILE__, 'r')));
             $entropy .= memory_get_usage();
             $sslStr = '';
@@ -140,16 +141,16 @@ class CryptHelper
                 $samples = 3;
                 $duration = 0;
 
-                for ($pass = 0; $pass < $samples; ++$pass) {
+                for ($pass = 0; $pass < $samples; $pass++) {
                     $microStart = microtime(true) * 1000000;
                     $hash = sha1(mt_rand(), true);
 
-                    for ($count = 0; $count < 50; ++$count) {
+                    for ($count = 0; $count < 50; $count++) {
                         $hash = sha1($hash, true);
                     }
 
                     $microEnd = microtime(true) * 1000000;
-                    $entropy .= $microStart . $microEnd;
+                    $entropy .= $microStart.$microEnd;
 
                     if ($microStart >= $microEnd) {
                         $microEnd += 1000000;
@@ -172,15 +173,15 @@ class CryptHelper
                  */
                 $iter = $bytes * (int) ceil(8 / $bitsPerRound);
 
-                for ($pass = 0; $pass < $iter; ++$pass) {
+                for ($pass = 0; $pass < $iter; $pass++) {
                     $microStart = microtime(true);
                     $hash = sha1(mt_rand(), true);
 
-                    for ($count = 0; $count < $rounds; ++$count) {
+                    for ($count = 0; $count < $rounds; $count++) {
                         $hash = sha1($hash, true);
                     }
 
-                    $entropy .= $microStart . microtime(true);
+                    $entropy .= $microStart.microtime(true);
                 }
             }
 
@@ -195,11 +196,11 @@ class CryptHelper
     }
 
     /**
-     * mb safe string length calculator
+     * mb safe string length calculator.
      *
-     * @param   string $binaryString The binary string return from crypt().
+     * @param string $binaryString The binary string return from crypt().
      *
-     * @return  integer  String length.
+     * @return int String length.
      *
      * @since   2.0.4
      */

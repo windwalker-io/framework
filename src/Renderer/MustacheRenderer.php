@@ -30,12 +30,12 @@ class MustacheRenderer extends AbstractEngineRenderer
     protected $loader;
 
     /**
-     * render
+     * render.
      *
      * @param string $file
      * @param array  $data
      *
-     * @return  string
+     * @return string
      */
     public function render($file, $data = [])
     {
@@ -49,12 +49,12 @@ class MustacheRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * findFile
+     * findFile.
      *
      * @param string $file
      * @param string $ext
      *
-     * @return  string
+     * @return string
      */
     public function findFile($file, $ext = '')
     {
@@ -64,11 +64,11 @@ class MustacheRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Engine
+     * Method to get property Engine.
      *
-     * @param   boolean $new
+     * @param bool $new
      *
-     * @return  \Mustache_Engine
+     * @return \Mustache_Engine
      */
     public function getEngine($new = false)
     {
@@ -80,11 +80,11 @@ class MustacheRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property engine
+     * Method to set property engine.
      *
-     * @param   \Mustache_Engine $engine
+     * @param \Mustache_Engine $engine
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setEngine($engine)
     {
@@ -98,11 +98,11 @@ class MustacheRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Loader
+     * Method to get property Loader.
      *
      * @param string $path
      *
-     * @return  \Mustache_Loader
+     * @return \Mustache_Loader
      */
     public function getLoader($path = null)
     {
@@ -120,11 +120,11 @@ class MustacheRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property loader
+     * Method to set property loader.
      *
-     * @param   \Mustache_Loader $loader
+     * @param \Mustache_Loader $loader
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setLoader($loader)
     {

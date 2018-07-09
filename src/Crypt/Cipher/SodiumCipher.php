@@ -20,21 +20,21 @@ class SodiumCipher extends AbstractCipher
     /**
      * Property key.
      *
-     * @var  string
+     * @var string
      */
     protected $key;
 
     /**
      * Property iv.
      *
-     * @var  string
+     * @var string
      */
     protected $nonce;
 
     /**
      * Property ignoreMemzero.
      *
-     * @var  bool
+     * @var bool
      */
     protected $ignoreMemzero = false;
 
@@ -42,11 +42,9 @@ class SodiumCipher extends AbstractCipher
      * Constructor.
      *
      * @param string $key
-     *
      * @param array  $options
      *
      * @since  3.2
-     *
      */
     public function __construct($key = null, array $options = [])
     {
@@ -60,12 +58,13 @@ class SodiumCipher extends AbstractCipher
     /**
      * Method to decrypt a data string.
      *
-     * @param   string $data  The encrypted string to decrypt.
-     * @param   string $key   The private key.
-     * @param   string $nonce The public key.
+     * @param string $data  The encrypted string to decrypt.
+     * @param string $key   The private key.
+     * @param string $nonce The public key.
      *
-     * @return  string  The decrypted data string.
      * @throws \RuntimeException
+     *
+     * @return string The decrypted data string.
      *
      * @since    3.2
      */
@@ -86,14 +85,15 @@ class SodiumCipher extends AbstractCipher
     /**
      * Method to encrypt a data string.
      *
-     * @param   string $data  The data string to encrypt.
-     * @param   string $key   The private key.
-     * @param   string $nonce The public key.
+     * @param string $data  The data string to encrypt.
+     * @param string $key   The private key.
+     * @param string $nonce The public key.
      *
-     * @return  string  The encrypted data string.
+     * @throws \InvalidArgumentException
+     *
+     * @return string The encrypted data string.
      *
      * @since   3.2
-     * @throws  \InvalidArgumentException
      */
     public function encrypt($data, $key = null, $nonce = null)
     {
@@ -110,11 +110,11 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * getIVKey
-     *
-     * @return  string
+     * getIVKey.
      *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     public function getNonce()
     {
@@ -126,9 +126,9 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * getNonceSize
+     * getNonceSize.
      *
-     * @return  int
+     * @return int
      */
     public static function getNonceSize()
     {
@@ -136,9 +136,9 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * getKeySize
+     * getKeySize.
      *
-     * @return  int
+     * @return int
      */
     public static function getKeySize()
     {
@@ -146,11 +146,11 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * genRandomBytes
+     * genRandomBytes.
      *
      * @param int $size
      *
-     * @return  string
+     * @return string
      */
     public static function genRandomBytes($size = SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
     {
@@ -162,11 +162,11 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * Method to set property ignoreMemzero
+     * Method to set property ignoreMemzero.
      *
-     * @param   bool $bool
+     * @param bool $bool
      *
-     * @return  $this|bool
+     * @return $this|bool
      */
     public function ignoreMemzero($bool = null)
     {
@@ -180,13 +180,13 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * doEncrypt
+     * doEncrypt.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string
+     * @return string
      */
     protected function doEncrypt($data, $key, $iv)
     {
@@ -200,13 +200,13 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * doDecrypt
+     * doDecrypt.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string
+     * @return string
      */
     protected function doDecrypt($data, $key, $iv)
     {
@@ -220,13 +220,13 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * randomPseudoBytes
+     * randomPseudoBytes.
      *
      * @param int $size
      *
-     * @return  string
-     *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     protected function randomPseudoBytes($size = SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
     {
@@ -234,9 +234,9 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * getIVSize
+     * getIVSize.
      *
-     * @return  integer
+     * @return int
      */
     public function getIVSize()
     {
@@ -244,9 +244,9 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * canMemzero
+     * canMemzero.
      *
-     * @return  bool
+     * @return bool
      */
     public function canMemzero()
     {
@@ -254,18 +254,19 @@ class SodiumCipher extends AbstractCipher
     }
 
     /**
-     * memzero
+     * memzero.
      *
      * @param mixed $data
      *
-     * @return  void
      * @throws \LogicException
+     *
+     * @return void
      */
     public function memzero(&$data)
     {
         if (!$this->canMemzero() && !$this->ignoreMemzero) {
             throw new \LogicException(
-                'sodium_memzero() only supports after php 7.2 or ext-libsodium installed. ' .
+                'sodium_memzero() only supports after php 7.2 or ext-libsodium installed. '.
                 'You can disable memory wiping by SodiumCipher::ignoreMemzero(true) but it is not recommended.'
             );
         }

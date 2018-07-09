@@ -12,7 +12,7 @@ use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
 
 /**
- * Class OptionSet Test
+ * Class OptionSet Test.
  *
  * @since  2.0
  */
@@ -54,9 +54,9 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test OffsetGet
+     * test OffsetGet.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
@@ -66,9 +66,9 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test OffsetGet
+     * test OffsetGet.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
@@ -80,9 +80,9 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test OffsetSet
+     * test OffsetSet.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
@@ -94,9 +94,9 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test OffsetUnset
+     * test OffsetUnset.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
@@ -114,9 +114,9 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test OffsetExists
+     * test OffsetExists.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */

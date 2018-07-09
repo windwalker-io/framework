@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\Mysql\MysqlDriver;
 
 /**
- * Test class of DatabaseFactory
+ * Test class of DatabaseFactory.
  *
  * @since 2.0
  */
@@ -41,7 +41,7 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
         $this->resetDatabaseFactory();
 
         // Using custom resource
-        $options['resource'] = new \PDO('mysql:host=' . $options['host'] . ';', $options['user'], $options['password']);
+        $options['resource'] = new \PDO('mysql:host='.$options['host'].';', $options['user'], $options['password']);
 
         $db = DatabaseFactory::getDbo('mysql', $options);
 
@@ -51,9 +51,10 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test setDefaultDbo().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Database\DatabaseFactory::setDefaultDbo
      */
     public function testSetDefaultDbo()
@@ -97,9 +98,9 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getOptions
+     * getOptions.
      *
-     * @return  array
+     * @return array
      */
     public static function getOptions()
     {
@@ -111,8 +112,8 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
         }
 
         $options = [
-            'host' => $dsn['host'],
-            'user' => $dsn['user'],
+            'host'     => $dsn['host'],
+            'user'     => $dsn['user'],
             'password' => $dsn['pass'],
         ];
 
@@ -120,9 +121,9 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * resetDatabaseFactory
+     * resetDatabaseFactory.
      *
-     * @return  void
+     * @return void
      */
     public static function resetDatabaseFactory()
     {

@@ -21,14 +21,14 @@ abstract class AbstractPostgresqlTestCase extends AbstractDatabaseTestCase
     /**
      * Property driver.
      *
-     * @var  string
+     * @var string
      */
     protected static $driver = 'postgresql';
 
     /**
      * Property quote.
      *
-     * @var  array
+     * @var array
      */
     protected static $quote = ['"', '"'];
 

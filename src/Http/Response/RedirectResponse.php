@@ -21,9 +21,9 @@ class RedirectResponse extends Response
     /**
      * Constructor.
      *
-     * @param  string|UriInterface $uri     The redirect uri.
-     * @param  int                 $status  The status code.
-     * @param  array               $headers The custom headers.
+     * @param string|UriInterface $uri     The redirect uri.
+     * @param int                 $status  The status code.
+     * @param array               $headers The custom headers.
      */
     public function __construct($uri, $status = 303, array $headers = [])
     {

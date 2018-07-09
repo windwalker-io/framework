@@ -11,7 +11,7 @@ namespace Windwalker\Console\Test\Prompter\Stubs;
 use Windwalker\Console\Prompter\PasswordPrompter;
 
 /**
- * Class Fake Password Prompter
+ * Class Fake Password Prompter.
  *
  * @since 2.0
  */
@@ -20,7 +20,7 @@ class FakePasswordPrompter extends PasswordPrompter
     /**
      * We dont't test bash because it break test process in IDE.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -30,9 +30,9 @@ class FakePasswordPrompter extends PasswordPrompter
     }
 
     /**
-     * canTestStty
+     * canTestStty.
      *
-     * @return  boolean
+     * @return bool
      */
     public function canTestStty()
     {

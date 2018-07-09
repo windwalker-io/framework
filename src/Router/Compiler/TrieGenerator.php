@@ -25,12 +25,12 @@ abstract class TrieGenerator
     protected static $vars = [];
 
     /**
-     * generate
+     * generate.
      *
      * @param string $pattern
      * @param array  $queries
      *
-     * @return  mixed|string
+     * @return mixed|string
      */
     public static function generate($pattern, array $queries = [])
     {
@@ -50,11 +50,11 @@ abstract class TrieGenerator
             if (is_array($var) || is_object($var)) {
                 $var = implode('/', (array) $var);
 
-                $key2 = '*' . $key;
+                $key2 = '*'.$key;
 
                 $replace[$key2] = $var;
             } else {
-                $key2 = ':' . $key;
+                $key2 = ':'.$key;
 
                 $replace[$key2] = $var;
             }
@@ -69,7 +69,7 @@ abstract class TrieGenerator
         $queries = http_build_query($queries);
 
         if ($queries) {
-            $pattern = rtrim($pattern, '/') . '/?' . $queries;
+            $pattern = rtrim($pattern, '/').'/?'.$queries;
         }
 
         return $pattern;

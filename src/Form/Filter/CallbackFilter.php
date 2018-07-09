@@ -18,7 +18,7 @@ class CallbackFilter implements FilterInterface
     /**
      * Property handler.
      *
-     * @var  callable
+     * @var callable
      */
     protected $handler;
 
@@ -33,11 +33,11 @@ class CallbackFilter implements FilterInterface
     }
 
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  string
+     * @return string
      */
     public function clean($text)
     {
@@ -51,9 +51,9 @@ class CallbackFilter implements FilterInterface
     }
 
     /**
-     * Method to get property Handler
+     * Method to get property Handler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getHandler()
     {
@@ -61,11 +61,11 @@ class CallbackFilter implements FilterInterface
     }
 
     /**
-     * Method to set property handler
+     * Method to set property handler.
      *
-     * @param   callable $handler
+     * @param callable $handler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setHandler(callable $handler)
     {

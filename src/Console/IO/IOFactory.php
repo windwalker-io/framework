@@ -23,9 +23,9 @@ class IOFactory
     public static $io;
 
     /**
-     * getIO
+     * getIO.
      *
-     * @return  IO
+     * @return IO
      */
     public static function getIO()
     {

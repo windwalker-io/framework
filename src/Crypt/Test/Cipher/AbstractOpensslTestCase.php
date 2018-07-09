@@ -21,7 +21,7 @@ abstract class AbstractOpensslTestCase extends \PHPUnit\Framework\TestCase
     /**
      * Property key.
      *
-     * @var  string
+     * @var string
      */
     protected $key = 'foo';
 
@@ -102,24 +102,24 @@ abstract class AbstractOpensslTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * rawEncrypt
+     * rawEncrypt.
      *
-     * @param string  $data
-     * @param string  $key
-     * @param integer $type
-     * @param integer $mode
+     * @param string $data
+     * @param string $key
+     * @param int    $type
+     * @param int    $mode
      *
-     * @return  string
+     * @return string
      */
     protected function rawEncrypt($data, $key, $type, $mode)
     {
-        $size = openssl_cipher_iv_length($type . '-' . $mode);
+        $size = openssl_cipher_iv_length($type.'-'.$mode);
 
         $iv = CryptHelper::genRandomBytes($size);
 
         // Encrypt the data.
-        $encrypted = openssl_encrypt($data, $type . '-' . $mode, $key, OPENSSL_RAW_DATA, $iv);
+        $encrypted = openssl_encrypt($data, $type.'-'.$mode, $key, OPENSSL_RAW_DATA, $iv);
 
-        return $iv . $encrypted;
+        return $iv.$encrypted;
     }
 }

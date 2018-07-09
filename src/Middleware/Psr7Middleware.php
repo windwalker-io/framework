@@ -21,11 +21,11 @@ class Psr7Middleware extends CallbackMiddleware implements Psr7InvokableInterfac
     /**
      * Middleware logic to be invoked.
      *
-     * @param   Request                      $request  The request.
-     * @param   Response                     $response The response.
-     * @param   callable|MiddlewareInterface $next     The next middleware.
+     * @param Request                      $request  The request.
+     * @param Response                     $response The response.
+     * @param callable|MiddlewareInterface $next     The next middleware.
      *
-     * @return  Response
+     * @return Response
      */
     public function __invoke(Request $request, Response $response, $next = null)
     {

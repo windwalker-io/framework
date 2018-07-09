@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\String\Mbstring;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 
 /**
- * Test class of String
+ * Test class of String.
  *
  * @since 2.0
  */
@@ -24,7 +24,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -44,7 +44,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -65,7 +65,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -85,7 +85,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -103,7 +103,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -120,7 +120,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -137,7 +137,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -151,7 +151,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -178,7 +178,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -196,7 +196,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -214,7 +214,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -232,7 +232,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -250,7 +250,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -266,7 +266,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -282,7 +282,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -307,7 +307,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -324,7 +324,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -344,7 +344,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -364,7 +364,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -376,7 +376,7 @@ class MbstringTest extends TestCase
             ['   Би шил ', null, 'Би шил'],
             ["\t\n\r\x0BБи шил\t\n\r\x0B", null, 'Би шил'],
             ["\x0B\t\n\rБи шил\r\x0B\t\n", "\t\n\x0B", "\rБи шил\r"],
-            ["\x09Би шил\x0A", "\x09\x0A", "Би шил"],
+            ["\x09Би шил\x0A", "\x09\x0A", 'Би шил'],
             ['1234abc56789', '0123456789', 'abc'],
         ];
     }
@@ -384,7 +384,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -400,9 +400,9 @@ class MbstringTest extends TestCase
     }
 
     /**
-     * lcfirstProvider
+     * lcfirstProvider.
      *
-     * @return  array
+     * @return array
      */
     public function lcfirstProvider()
     {
@@ -418,7 +418,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -436,7 +436,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -451,7 +451,7 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -465,7 +465,7 @@ class MbstringTest extends TestCase
             ['george Мога Ž Ψυχοφθόρα ฉันกินกระจกได้ 我能吞下玻璃而不伤身体 ', true],
             ["\xFF ABC", false],
             ["\xFa ABC", false],
-            ["0xfffd ABC", true],
+            ['0xfffd ABC', true],
             ['', true],
         ];
     }
@@ -473,37 +473,37 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
     public function unicodeToUtf8Provider()
     {
         return [
-            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
+            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", 'Тест системы'],
+            ["\u00dcberpr\u00fcfung der Systemumstellung", 'Überprüfung der Systemumstellung'],
         ];
     }
 
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
     public function unicodeToUtf16Provider()
     {
         return [
-            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
+            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", 'Тест системы'],
+            ["\u00dcberpr\u00fcfung der Systemumstellung", 'Überprüfung der Systemumstellung'],
         ];
     }
 
     /**
-     * testCallStatic
+     * testCallStatic.
      *
-     * @return  void
+     * @return void
      */
     public function testCallStatic()
     {
@@ -515,12 +515,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $string   @todo
-     * @param   boolean $expected @todo
+     * @param string $string   @todo
+     * @param bool   $expected @todo
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  isAsciiProvider
+     *
      * @since         2.0
      */
     public function testIsAscii($string, $expected)
@@ -534,14 +535,15 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $expect   @todo
-     * @param   string  $haystack @todo
-     * @param   string  $needle   @todo
-     * @param   integer $offset   @todo
+     * @param string $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param int    $offset   @todo
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  strposProvider
+     *
      * @since         2.0
      */
     public function testStrpos($expect, $haystack, $needle, $offset = 0)
@@ -553,14 +555,15 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $expect   @todo
-     * @param   string  $haystack @todo
-     * @param   string  $needle   @todo
-     * @param   integer $offset   @todo
+     * @param string $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param int    $offset   @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strrposProvider
+     *
      * @since         2.0
      */
     public function testStrrpos($expect, $haystack, $needle, $offset = 0)
@@ -572,14 +575,15 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string   $expect @todo
-     * @param   string   $string @todo
-     * @param   string   $start  @todo
-     * @param   bool|int $length @todo
+     * @param string   $expect @todo
+     * @param string   $string @todo
+     * @param string   $start  @todo
+     * @param bool|int $length @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  substrProvider
+     *
      * @since         2.0
      */
     public function testSubstr($expect, $string, $start, $length = null)
@@ -591,12 +595,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strtolowerProvider
+     *
      * @since         2.0
      */
     public function testStrtolower($string, $expect)
@@ -608,12 +613,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strtoupperProvider
+     *
      * @since         2.0
      */
     public function testStrtoupper($string, $expect)
@@ -625,12 +631,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strlenProvider
+     *
      * @since         2.0
      */
     public function testStrlen($string, $expect)
@@ -642,15 +649,16 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $search  @todo
-     * @param   string  $replace @todo
-     * @param   string  $subject @todo
-     * @param   integer $count   @todo
-     * @param   string  $expect  @todo
+     * @param string $search  @todo
+     * @param string $replace @todo
+     * @param string $subject @todo
+     * @param int    $count   @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strIreplaceProvider
+     *
      * @since         2.0
      */
     public function testStr_ireplace($search, $replace, $subject, $count, $expect)
@@ -662,13 +670,14 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string       @todo
-     * @param   int    $split_length @todo
-     * @param   string $expect       @todo
+     * @param string $string       @todo
+     * @param int    $split_length @todo
+     * @param string $expect       @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strSplitProvider
+     *
      * @since         2.0
      */
     public function testStr_split($string, $split_length, $expect)
@@ -680,14 +689,15 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string1 @todo
-     * @param   string $string2 @todo
-     * @param   string $locale  @todo
-     * @param   string $expect  @todo
+     * @param string $string1 @todo
+     * @param string $string2 @todo
+     * @param string $locale  @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strcasecmpProvider
+     *
      * @since         2.0
      */
     public function testStrcasecmp($string1, $string2, $expect)
@@ -704,14 +714,15 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string1 @todo
-     * @param   string $string2 @todo
-     * @param   string $locale  @todo
-     * @param   string $expect  @todo
+     * @param string $string1 @todo
+     * @param string $string2 @todo
+     * @param string $locale  @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strcmpProvider
+     *
      * @since         2.0
      */
     public function testStrcmp($string1, $string2, $expect)
@@ -728,15 +739,16 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $haystack @todo
-     * @param   string  $needles  @todo
-     * @param   integer $start    @todo
-     * @param   integer $len      @todo
-     * @param   string  $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needles  @todo
+     * @param int    $start    @todo
+     * @param int    $len      @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strcspnProvider
+     *
      * @since         2.0
      */
     public function testStrcspn($haystack, $needles, $start, $len, $expect)
@@ -748,13 +760,14 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $haystack @todo
-     * @param   string $needle   @todo
-     * @param   string $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  stristrProvider
+     *
      * @since         2.0
      */
     public function testStristr($haystack, $needle, $expect)
@@ -766,12 +779,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strrevProvider
+     *
      * @since         2.0
      */
     public function testStrrev($string, $expect)
@@ -783,15 +797,16 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $subject @todo
-     * @param   string  $mask    @todo
-     * @param   integer $start   @todo
-     * @param   integer $length  @todo
-     * @param   string  $expect  @todo
+     * @param string $subject @todo
+     * @param string $mask    @todo
+     * @param int    $start   @todo
+     * @param int    $length  @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  strspnProvider
+     *
      * @since         2.0
      */
     public function testStrspn($subject, $mask, $start, $length, $expect)
@@ -803,15 +818,16 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string  $expect      @todo
-     * @param   string  $string      @todo
-     * @param   string  $replacement @todo
-     * @param   integer $start       @todo
-     * @param   integer $length      @todo
+     * @param string $expect      @todo
+     * @param string $string      @todo
+     * @param string $replacement @todo
+     * @param int    $start       @todo
+     * @param int    $length      @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  substrReplaceProvider
+     *
      * @since         2.0
      */
     public function testSubstrReplace($expect, $string, $replacement, $start, $length)
@@ -823,13 +839,14 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string   @todo
-     * @param   string $charlist @todo
-     * @param   string $expect   @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  ltrimProvider
+     *
      * @since         2.0
      */
     public function testLtrim($string, $charlist, $expect)
@@ -846,13 +863,14 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string   @todo
-     * @param   string $charlist @todo
-     * @param   string $expect   @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  rtrimProvider
+     *
      * @since         2.0
      */
     public function testRtrim($string, $charlist, $expect)
@@ -869,13 +887,14 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string   @todo
-     * @param   string $charlist @todo
-     * @param   string $expect   @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  trimProvider
+     *
      * @since         2.0
      */
     public function testTrim($string, $charlist, $expect)
@@ -892,12 +911,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  ucfirstProvider
+     *
      * @since         2.0
      */
     public function testUcfirst($string, $expect)
@@ -907,12 +927,12 @@ class MbstringTest extends TestCase
     }
 
     /**
-     * testLcfirst
+     * testLcfirst.
      *
      * @param string $string
      * @param string $expect
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  lcfirstProvider
      */
@@ -925,12 +945,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  ucwordsProvider
+     *
      * @since         2.0
      */
     public function testUcwords($string, $expect)
@@ -940,7 +961,7 @@ class MbstringTest extends TestCase
     }
 
     /**
-     * testSubstr_count
+     * testSubstr_count.
      *
      * @param $string
      * @param $search
@@ -955,9 +976,9 @@ class MbstringTest extends TestCase
     }
 
     /**
-     * substr_countProvider
+     * substr_countProvider.
      *
-     * @return  array
+     * @return array
      */
     public function substrCountProvider()
     {
@@ -976,14 +997,15 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $source        @todo
-     * @param   string $from_encoding @todo
-     * @param   string $to_encoding   @todo
-     * @param   string $expect        @todo
+     * @param string $source        @todo
+     * @param string $from_encoding @todo
+     * @param string $to_encoding   @todo
+     * @param string $expect        @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  convertEncodingProvider
+     *
      * @since         2.0
      */
     public function testConvertEncoding($source, $from_encoding, $to_encoding, $expect)
@@ -995,12 +1017,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  isUtf8Provider
+     *
      * @since         2.0
      */
     public function testValid($string, $expect)
@@ -1012,12 +1035,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  unicodeToUtf8Provider
+     *
      * @since         2.0
      */
     public function testUnicodeToUtf8($string, $expect)
@@ -1029,12 +1053,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  unicodeToUtf16Provider
+     *
      * @since         2.0
      */
     public function testUnicodeToUtf16($string, $expect)
@@ -1046,12 +1071,13 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @dataProvider  isUtf8Provider
+     *
      * @since         2.0
      */
     public function testCompliant($string, $expect)
@@ -1061,9 +1087,9 @@ class MbstringTest extends TestCase
     }
 
     /**
-     * testShuffle
+     * testShuffle.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider providerTestShuffle
      */
@@ -1086,9 +1112,9 @@ class MbstringTest extends TestCase
     }
 
     /**
-     * providerTestShuffle
+     * providerTestShuffle.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestShuffle()
     {

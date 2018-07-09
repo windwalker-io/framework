@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Input\CliInput;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of CliInput
+ * Test class of CliInput.
  *
  * @since 2.0
  */
@@ -79,42 +79,43 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             'bar',
             $this->instance->get('foo'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertEquals(
             true,
             $this->instance->get('a'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertEquals(
             true,
             $this->instance->get('b'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertEquals(
             ['blah'],
             $this->instance->args,
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         // Default filter
         $this->assertEquals(
             'flower sakura',
             $this->instance->get('g'),
-            'Default filter should be string. Line: ' . __LINE__
+            'Default filter should be string. Line: '.__LINE__
         );
     }
 
     /**
      * Test the Windwalker\IO\Cli::get method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Cli\Input\CliInput::get
      * @covers  \Windwalker\IO\Cli\Input\CliInput::parseArguments
+     *
      * @since   2.0
      */
     public function testParseLongArguments()
@@ -126,34 +127,35 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
         $this->assertThat(
             $this->instance->get('ab'),
             $this->identicalTo('cd'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertThat(
             $this->instance->get('ef'),
             $this->identicalTo('1'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertThat(
             $this->instance->get('gh'),
             $this->identicalTo('bam'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertEmpty(
             $this->instance->args,
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
     }
 
     /**
      * Test the Windwalker\IO\Cli::get method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Cli\Input\CliInput::get
      * @covers  \Windwalker\IO\Cli\Input\CliInput::parseArguments
+     *
      * @since   2.0
      */
     public function testParseShortArguments()
@@ -165,31 +167,31 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
         $this->assertThat(
             $this->instance->get('a'),
             $this->identicalTo('1'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertThat(
             $this->instance->get('b'),
             $this->identicalTo('1'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertThat(
             $this->instance->get('c'),
             $this->identicalTo('1'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertThat(
             $this->instance->get('e'),
             $this->identicalTo('f'),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         $this->assertThat(
             $this->instance->args,
             $this->equalTo(['foobar', 'ghijk']),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
     }
 
@@ -216,7 +218,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Test inputs:
+     * Test inputs:.
      *
      * php test.php --foo --bar=baz
      * php test.php -abc
@@ -286,15 +288,15 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
                     '--s',
                 ],
                 [
-                    'foo' => true,
-                    'bar' => 'baz',
-                    'funny' => 'spam=eggs',
+                    'foo'        => true,
+                    'bar'        => 'baz',
+                    'funny'      => 'spam=eggs',
                     'also-funny' => 'spam=eggs',
-                    'a' => true,
-                    'b' => true,
-                    'c' => true,
-                    'k' => 'value',
-                    's' => 'overwrite',
+                    'a'          => true,
+                    'b'          => true,
+                    'c'          => true,
+                    'k'          => 'value',
+                    's'          => 'overwrite',
                 ],
                 [
                     'plain-arg',
@@ -308,9 +310,9 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
                 ['test.php', '--key', 'value', '-abc', 'not-c-value'],
                 [
                     'key' => 'value',
-                    'a' => true,
-                    'b' => true,
-                    'c' => true,
+                    'a'   => true,
+                    'b'   => true,
+                    'c'   => true,
                 ],
                 [
                     'not-c-value',
@@ -322,10 +324,10 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
                 ['test.php', '--key1', 'value1', '-a', '--key2', '-b', 'b-value', '--c'],
                 [
                     'key1' => 'value1',
-                    'a' => true,
+                    'a'    => true,
                     'key2' => true,
-                    'b' => 'b-value',
-                    'c' => true,
+                    'b'    => 'b-value',
+                    'c'    => true,
                 ],
                 [],
             ],
@@ -335,9 +337,10 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Cli::get method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Cli\Input\CliInput::get
+     *
      * @since   2.0
      */
     public function testGetFromServer()
@@ -346,14 +349,14 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(
             'Windwalker\\IO\\Input',
             $this->instance->server,
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
 
         // Test the get method.
         $this->assertThat(
             $this->instance->server->get('PHP_SELF', null, InputFilter::STRING),
             $this->identicalTo($_SERVER['PHP_SELF']),
-            'Line: ' . __LINE__ . '.'
+            'Line: '.__LINE__.'.'
         );
     }
 

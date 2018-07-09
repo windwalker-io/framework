@@ -9,99 +9,99 @@
 namespace Windwalker\IO\Cli;
 
 /**
- * Class IOInterface
+ * Class IOInterface.
  *
  * @since 2.0
  */
 interface IOInterface
 {
     /**
-     * Write a string to standard output
+     * Write a string to standard output.
      *
-     * @param   string $text The text to display.
+     * @param string $text The text to display.
      *
-     * @return  IOInterface  Instance of $this to allow chaining.
+     * @return IOInterface Instance of $this to allow chaining.
      */
     public function out($text = '');
 
     /**
      * Get a value from standard input.
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      */
     public function in();
 
     /**
      * Write a string to standard error output.
      *
-     * @param   string $text The text to display.
+     * @param string $text The text to display.
      *
-     * @return  IOInterface
+     * @return IOInterface
      */
     public function err($text = '');
 
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name    Name of the value to get.
-     * @param   mixed  $default Default value to return if variable does not exist.
+     * @param string $name    Name of the value to get.
+     * @param mixed  $default Default value to return if variable does not exist.
      *
-     * @return  mixed  The filtered input value.
+     * @return mixed The filtered input value.
      *
      * @since   2.0
      */
     public function getOption($name, $default = null);
 
     /**
-     * Sets a value
+     * Sets a value.
      *
-     * @param   string $name  Name of the value to set.
-     * @param   mixed  $value Value to assign to the input.
+     * @param string $name  Name of the value to set.
+     * @param mixed  $value Value to assign to the input.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
     public function setOption($name, $value);
 
     /**
-     * getOptions
+     * getOptions.
      *
-     * @return  string[]
+     * @return string[]
      */
     public function getOptions();
 
     /**
-     * getArgument
+     * getArgument.
      *
-     * @param integer $offset
-     * @param mixed   $default
+     * @param int   $offset
+     * @param mixed $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getArgument($offset, $default = null);
 
     /**
-     * setArgument
+     * setArgument.
      *
-     * @param integer $offset
-     * @param mixed   $value
+     * @param int   $offset
+     * @param mixed $value
      *
-     * @return  IOInterface
+     * @return IOInterface
      */
     public function setArgument($offset, $value);
 
     /**
-     * getArguments
+     * getArguments.
      *
-     * @return  string[]
+     * @return string[]
      */
     public function getArguments();
 
     /**
-     * getExecuted
+     * getExecuted.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getCalledScript();
 }

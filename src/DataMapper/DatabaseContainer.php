@@ -21,16 +21,16 @@ class DatabaseContainer
     /**
      * Property db.
      *
-     * @var  AbstractDatabaseDriver|callable
+     * @var AbstractDatabaseDriver|callable
      */
     protected static $db;
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @param string  $driver
-     * @param array   $option
-     * @param boolean $forceNew
+     * @param string $driver
+     * @param array  $option
+     * @param bool   $forceNew
      *
      * @return AbstractDatabaseDriver
      */
@@ -48,11 +48,11 @@ class DatabaseContainer
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   AbstractDatabaseDriver|callable $db
+     * @param AbstractDatabaseDriver|callable $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public static function setDb($db)
     {

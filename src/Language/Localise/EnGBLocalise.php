@@ -9,18 +9,18 @@
 namespace Windwalker\Language\Localise;
 
 /**
- * Class EnGBLocalise
+ * Class EnGBLocalise.
  *
  * @since 2.0
  */
 class EnGBLocalise implements LocaliseInterface
 {
     /**
-     * getPluralSuffixes
+     * getPluralSuffixes.
      *
      * @param int $count
      *
-     * @return  string
+     * @return string
      */
     public function getPluralSuffix($count = 1)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -14,7 +14,7 @@ use Windwalker\Html\Enum\DListDescription;
 use Windwalker\Html\Enum\DListTitle;
 
 /**
- * Test class of DList
+ * Test class of DList.
  *
  * @since 2.1
  */
@@ -48,9 +48,9 @@ class DListTest extends AbstractDomTestCase
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateList()
     {
@@ -73,7 +73,7 @@ class DListTest extends AbstractDomTestCase
 
         $list = new DList($items);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <dl>
 	<dt>Spider Man</dt>
 	<dd>Remember, with great power, comes great responsibility</dd>
@@ -103,7 +103,7 @@ HTML;
         $list->addTitle(new DListTitle('123'))
             ->addDesc('ABC');
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <dl>
 	<dt>123</dt>
 	<dd>ABC</dd>
@@ -114,9 +114,9 @@ HTML;
     }
 
     /**
-     * testSetItems
+     * testSetItems.
      *
-     * @return  void
+     * @return void
      */
     public function testSetItems()
     {
@@ -132,7 +132,7 @@ HTML;
         $list = new DList();
         $list->setItems($items);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <dl>
 	<dt>Spider Man</dt>
 	<dd>Remember, with great power, comes great responsibility</dd>
@@ -149,9 +149,9 @@ HTML;
     }
 
     /**
-     * testAddDescription
+     * testAddDescription.
      *
-     * @return  void
+     * @return void
      */
     public function testAddDescription()
     {
@@ -166,7 +166,7 @@ HTML;
                 ['class' => 'nav-item']
             );
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <dl>
 	<dt>Spider Man</dt>
 	<dd>Remember, with great power, comes great responsibility</dd>

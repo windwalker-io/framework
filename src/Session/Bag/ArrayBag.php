@@ -18,21 +18,19 @@ class ArrayBag extends SessionBag implements SessionBagInterface
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
     /**
-     * setData
+     * setData.
      *
      * @param array $data
      *
-     * @return  void
+     * @return void
      */
     public function setData(array &$data)
     {
         $this->data = [];
-
-        return;
     }
 }

@@ -27,13 +27,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     public $collection;
 
     /**
-     * setUp description
+     * setUp description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  setUpReturn
+     * @return string setUpReturn
      *
      * @since  2.0
      */
@@ -45,7 +45,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     /**
      * Data provider for testClean() method.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -74,11 +74,11 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
             'paths with key' => [
                 [
                     'root' => '/',
-                    'foo' => '/var/www/foo',
+                    'foo'  => '/var/www/foo',
                 ],
                 [
                     'root' => new PathLocator('/'),
-                    'foo' => new PathLocator('/var/www/foo'),
+                    'foo'  => new PathLocator('/var/www/foo'),
                 ],
             ],
         ];
@@ -87,7 +87,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     /**
      * Data provider for testClean() method.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -96,13 +96,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
         return [
             'no rescurive' => [
                 [
-                    __DIR__ . '/files/folder1',
-                    __DIR__ . '/files/folder2',
+                    __DIR__.'/files/folder1',
+                    __DIR__.'/files/folder2',
                 ],
 
                 [
-                    Path::clean(__DIR__ . '/files/folder1'),
-                    Path::clean(__DIR__ . '/files/folder2'),
+                    Path::clean(__DIR__.'/files/folder1'),
+                    Path::clean(__DIR__.'/files/folder2'),
                 ],
 
                 false,
@@ -127,13 +127,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * name description
+     * name description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  nameReturn
+     * @return string nameReturn
      *
      * @since  2.0
      */
@@ -142,14 +142,14 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
         return [
             'no rescurive' => [
                 [
-                    __DIR__ . '/files/folder1',
-                    __DIR__ . '/files/folder2',
-                    __DIR__ . '/files/file2.txt',
+                    __DIR__.'/files/folder1',
+                    __DIR__.'/files/folder2',
+                    __DIR__.'/files/file2.txt',
                 ],
 
                 [
-                    Path::clean(__DIR__ . '/files/folder1'),
-                    Path::clean(__DIR__ . '/files/folder2'),
+                    Path::clean(__DIR__.'/files/folder1'),
+                    Path::clean(__DIR__.'/files/folder2'),
                 ],
 
                 false,
@@ -157,14 +157,14 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 
             'rescurive' => [
                 [
-                    __DIR__ . '/files',
+                    __DIR__.'/files',
                 ],
 
                 [
-                    Path::clean(__DIR__ . '/files/folder1'),
-                    Path::clean(__DIR__ . '/files/folder1/path1'),
-                    Path::clean(__DIR__ . '/files/folder2/file2.html'),
-                    Path::clean(__DIR__ . '/files/file2.txt'),
+                    Path::clean(__DIR__.'/files/folder1'),
+                    Path::clean(__DIR__.'/files/folder1/path1'),
+                    Path::clean(__DIR__.'/files/folder2/file2.html'),
+                    Path::clean(__DIR__.'/files/file2.txt'),
                 ],
 
                 true,
@@ -173,13 +173,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test__construct description
+     * test__construct description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  test__constructReturn
+     * @return string test__constructReturn
      *
      * @since  2.0
      */
@@ -193,13 +193,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testAddPaths description
+     * testAddPaths description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  testAddPathsReturn
+     * @return string testAddPathsReturn
      *
      * @dataProvider  getPathData
      *
@@ -215,13 +215,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * addPath description
+     * addPath description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  addPathReturn
+     * @return string addPathReturn
      *
      * @since  2.0
      */
@@ -235,13 +235,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * removePath description
+     * removePath description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  removePathReturn
+     * @return string removePathReturn
      *
      * @since  2.0
      */
@@ -259,13 +259,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getPaths description
+     * getPaths description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  getPathsReturn
+     * @return string getPathsReturn
      *
      * @dataProvider  getPathData
      *
@@ -283,13 +283,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getPath description
+     * getPath description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  getPathReturn
+     * @return string getPathReturn
      *
      * @since  2.0
      */
@@ -305,13 +305,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getIterator description
+     * getIterator description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  getIteratorReturn
+     * @return string getIteratorReturn
      *
      * @dataProvider  getIteratorData
      *
@@ -335,13 +335,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testDiresctoryIterator description
+     * testDiresctoryIterator description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  testDiresctoryIteratorReturn
+     * @return string testDiresctoryIteratorReturn
      *
      * @since  2.0
      */
@@ -351,13 +351,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * setPrefix description
+     * setPrefix description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  setPrefixReturn
+     * @return string setPrefixReturn
      *
      * @since  2.0
      */
@@ -384,13 +384,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * find description
+     * find description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  findReturn
+     * @return string findReturn
      *
      * @since  2.0
      */
@@ -399,13 +399,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * findAll description
+     * findAll description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  findAllReturn
+     * @return string findAllReturn
      *
      * @since  2.0
      */
@@ -414,13 +414,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * toArray description
+     * toArray description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  toArrayReturn
+     * @return string toArrayReturn
      *
      * @since  2.0
      */
@@ -429,13 +429,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getFiles description
+     * getFiles description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  getFilesReturn
+     * @return string getFilesReturn
      *
      * @since  2.0
      */
@@ -444,13 +444,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getFolders description
+     * getFolders description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  getFoldersReturn
+     * @return string getFoldersReturn
      *
      * @since  2.0
      */
@@ -459,13 +459,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * appendAll description
+     * appendAll description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  appendAllReturn
+     * @return string appendAllReturn
      *
      * @since  2.0
      */
@@ -474,13 +474,13 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * prependAll description
+     * prependAll description.
      *
      * @param  string
      * @param  string
      * @param  string
      *
-     * @return  string  prependAllReturn
+     * @return string prependAllReturn
      *
      * @since  2.0
      */

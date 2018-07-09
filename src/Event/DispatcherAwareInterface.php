@@ -9,23 +9,23 @@
 namespace Windwalker\Event;
 
 /**
- * Interface DispatcherAwareInterface
+ * Interface DispatcherAwareInterface.
  */
 interface DispatcherAwareInterface
 {
     /**
-     * getDispatcher
+     * getDispatcher.
      *
-     * @return  DispatcherInterface
+     * @return DispatcherInterface
      */
     public function getDispatcher();
 
     /**
-     * setDispatcher
+     * setDispatcher.
      *
-     * @param   DispatcherInterface $dispatcher
+     * @param DispatcherInterface $dispatcher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDispatcher(DispatcherInterface $dispatcher);
 }

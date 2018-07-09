@@ -18,7 +18,8 @@ class ExpressionWrapper
     /**
      * Property content.
      *
-     * @var  mixed
+     * @var mixed
+     *
      * @since  3.3
      */
     protected $content;
@@ -40,9 +41,9 @@ class ExpressionWrapper
     }
 
     /**
-     * __toString
+     * __toString.
      *
-     * @return  string
+     * @return string
      *
      * @since  3.3
      */
@@ -60,9 +61,9 @@ class ExpressionWrapper
     }
 
     /**
-     * Method to get property Content
+     * Method to get property Content.
      *
-     * @return  string
+     * @return string
      *
      * @since  3.3
      */
@@ -72,11 +73,11 @@ class ExpressionWrapper
     }
 
     /**
-     * Method to set property content
+     * Method to set property content.
      *
-     * @param   string $content
+     * @param string $content
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since  3.3
      */

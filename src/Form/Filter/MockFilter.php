@@ -16,11 +16,11 @@ namespace Windwalker\Form\Filter;
 class MockFilter implements FilterInterface
 {
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($text)
     {

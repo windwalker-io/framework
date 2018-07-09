@@ -9,7 +9,7 @@
 namespace Windwalker\Middleware;
 
 /**
- * Middleware Interface
+ * Middleware Interface.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ interface MiddlewareInterface
     /**
      * Call next middleware.
      *
-     * @param  mixed $data
+     * @param mixed $data
      *
      * @return mixed
      */
@@ -27,16 +27,16 @@ interface MiddlewareInterface
     /**
      * Get next middleware.
      *
-     * @return  mixed|MiddlewareInterface
+     * @return mixed|MiddlewareInterface
      */
     public function getNext();
 
     /**
      * Set next middleware.
      *
-     * @param   object|MiddlewareInterface $callable The middleware object.
+     * @param object|MiddlewareInterface $callable The middleware object.
      *
-     * @return  MiddlewareInterface  Return self to support chaining.
+     * @return MiddlewareInterface Return self to support chaining.
      */
     public function setNext($callable);
 }

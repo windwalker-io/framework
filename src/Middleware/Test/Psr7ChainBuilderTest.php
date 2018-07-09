@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -17,7 +17,7 @@ use Windwalker\Middleware\Psr7InvokableInterface;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of Psr7ChainBuilder
+ * Test class of Psr7ChainBuilder.
  *
  * @since 3.0
  */
@@ -34,8 +34,9 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     protected function setUp()
     {
@@ -53,11 +54,11 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
     }
 
     /**
-     * getHandler
+     * getHandler.
      *
-     * @param   string $string
+     * @param string $string
      *
-     * @return  \Closure
+     * @return \Closure
      */
     protected function getHandler($string)
     {
@@ -76,9 +77,10 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
     /**
      * Method to test create().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Middleware\Chain\Psr7ChainBuilder::execute
      */
     public function testExecute()
@@ -89,11 +91,11 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
 
         $res = $chain->execute(new ServerRequest(), new Response());
 
-        $data = "
+        $data = '
 >>> Caesar
 >>> Othello
 <<< Othello
-<<< Caesar";
+<<< Caesar';
 
         $this->assertStringSafeEquals($data, $res->getBody()->__toString());
 
@@ -107,11 +109,11 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
 
         $res = $chain->execute(new ServerRequest(), new Response());
 
-        $data = "
+        $data = '
 >>> Othello
 >>> Caesar
 <<< Caesar
-<<< Othello";
+<<< Othello';
 
         $this->assertStringSafeEquals($data, $res->getBody()->__toString());
     }

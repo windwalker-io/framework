@@ -9,7 +9,7 @@
 namespace Windwalker\Renderer;
 
 /**
- * Class PhpRenderer
+ * Class PhpRenderer.
  *
  * @since 2.0
  */
@@ -18,42 +18,42 @@ class PhpRenderer extends AbstractRenderer
     /**
      * Property block.
      *
-     * @var  array
+     * @var array
      */
     protected $block = [];
 
     /**
      * Property blockQueue.
      *
-     * @var  \SplQueue
+     * @var \SplQueue
      */
     protected $blockQueue = null;
 
     /**
      * Property currentBlock.
      *
-     * @var  string
+     * @var string
      */
     protected $currentBlock = null;
 
     /**
      * Property extends.
      *
-     * @var  string
+     * @var string
      */
     protected $extend = null;
 
     /**
      * Property parent.
      *
-     * @var  PhpRenderer
+     * @var PhpRenderer
      */
     protected $parent = null;
 
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = null;
 
@@ -65,13 +65,14 @@ class PhpRenderer extends AbstractRenderer
     protected $file;
 
     /**
-     * render
+     * render.
      *
      * @param string $file
      * @param array  $__data
      *
-     * @throws  \UnexpectedValueException
-     * @return  string
+     * @throws \UnexpectedValueException
+     *
+     * @return string
      */
     public function render($file, $__data = null)
     {
@@ -84,7 +85,7 @@ class PhpRenderer extends AbstractRenderer
         if (!$__filePath) {
             $__paths = $this->dumpPaths();
 
-            $__paths = "\n " . implode(" |\n ", $__paths);
+            $__paths = "\n ".implode(" |\n ", $__paths);
 
             throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
         }
@@ -126,12 +127,12 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * finFile
+     * finFile.
      *
      * @param string $file
      * @param string $ext
      *
-     * @return  string
+     * @return string
      */
     public function findFile($file, $ext = 'php')
     {
@@ -139,12 +140,12 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * load
+     * load.
      *
      * @param string $file
      * @param array  $data
      *
-     * @return  string
+     * @return string
      */
     public function load($file, $data = null)
     {
@@ -156,25 +157,25 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * prepareData
+     * prepareData.
      *
-     * @param   array &$data
+     * @param array &$data
      *
-     * @return  void
+     * @return void
      */
     protected function prepareData(&$data)
     {
     }
 
     /**
-     * getParent
+     * getParent.
      *
-     * @return  mixed|null
+     * @return mixed|null
      */
     public function parent()
     {
         if (!$this->extend) {
-            return null;
+            return;
         }
 
         if (!$this->parent) {
@@ -187,9 +188,9 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * createSelf
+     * createSelf.
      *
-     * @return  static
+     * @return static
      */
     protected function createSelf()
     {
@@ -197,13 +198,13 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * extend
+     * extend.
      *
      * @param string $name
      *
-     * @return  void
-     *
      * @throws \LogicException
+     *
+     * @return void
      */
     public function extend($name)
     {
@@ -215,11 +216,11 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * getBlock
+     * getBlock.
      *
      * @param string $name
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getBlock($name)
     {
@@ -227,12 +228,12 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * setBlock
+     * setBlock.
      *
      * @param string $name
      * @param string $content
      *
-     * @return  PhpRenderer  Return self to support chaining.
+     * @return PhpRenderer Return self to support chaining.
      */
     public function setBlock($name, $content = '')
     {
@@ -242,9 +243,9 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * setBlock
+     * setBlock.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return void
      */
@@ -259,9 +260,9 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * endblock
+     * endblock.
      *
-     * @return  void
+     * @return void
      */
     public function endblock()
     {
@@ -281,9 +282,9 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * getBlockQueue
+     * getBlockQueue.
      *
-     * @return  \SplQueue
+     * @return \SplQueue
      */
     public function getBlockQueue()
     {
@@ -295,9 +296,9 @@ class PhpRenderer extends AbstractRenderer
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {

@@ -40,49 +40,49 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * Property full.
      *
-     * @var  string
+     * @var string
      */
     public $full;
 
     /**
      * Property current.
      *
-     * @var  string
+     * @var string
      */
     public $current;
 
     /**
      * Property script.
      *
-     * @var  string
+     * @var string
      */
     public $script;
 
     /**
      * Property root.
      *
-     * @var  string
+     * @var string
      */
     public $root;
 
     /**
      * Property route.
      *
-     * @var  string
+     * @var string
      */
     public $route;
 
     /**
      * Property host.
      *
-     * @var  string
+     * @var string
      */
     public $host;
 
     /**
      * Property path.
      *
-     * @var  string
+     * @var string
      */
     public $path;
 
@@ -103,12 +103,12 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * __call
+     * __call.
      *
-     * @param   string $name
-     * @param   array  $args
+     * @param string $name
+     * @param array  $args
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __call($name, $args)
     {
@@ -120,15 +120,15 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
             return $this->$name;
         }
 
-        throw new \BadMethodCallException('Method: ' . __CLASS__ . '::' . $name . '() not found.');
+        throw new \BadMethodCallException('Method: '.__CLASS__.'::'.$name.'() not found.');
     }
 
     /**
-     * createUri
+     * createUri.
      *
-     * @param   string $uri
+     * @param string $uri
      *
-     * @return  Uri
+     * @return Uri
      */
     public static function createUri($uri)
     {
@@ -136,11 +136,11 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * createPsrUri
+     * createPsrUri.
      *
-     * @param   string $uri
+     * @param string $uri
      *
-     * @return  PsrUri
+     * @return PsrUri
      */
     public static function createPsrUri($uri)
     {
@@ -148,20 +148,20 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * addPrefix
+     * addPrefix.
      *
-     * @param   string $name
-     * @param   string $url
+     * @param string $name
+     * @param string $url
      *
-     * @return  string
+     * @return string
      */
     public function addPrefix($name, $url)
     {
-        return $this->$name . '/' . $url;
+        return $this->$name.'/'.$url;
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return Traversable An instance of an object implementing Iterator or Traversable
      */
@@ -171,12 +171,12 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
      *
      * @param mixed $offset An offset to check for.
      *
-     * @return boolean True on success or false on failure.
-     *                 The return value will be casted to boolean if non-boolean was returned.
+     * @return bool True on success or false on failure.
+     *              The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists($offset)
     {
@@ -184,7 +184,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
      *
      * @param mixed $offset The offset to retrieve.
      *
@@ -196,7 +196,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Offset to set
+     * Offset to set.
      *
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value  The value to set.
@@ -209,7 +209,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
      *
      * @param mixed $offset The offset to unset.
      *
@@ -221,7 +221,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
      *
      * @return int The custom count as an integer.
      *             The return value is cast to an integer.

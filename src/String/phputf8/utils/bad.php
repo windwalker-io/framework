@@ -12,29 +12,29 @@
  * byte index in the string
  * PCRE Pattern to locate bad bytes in a UTF-8 string
  * Comes from W3 FAQ: Multilingual Forms
- * Note: modified to include full ASCII range including control chars
+ * Note: modified to include full ASCII range including control chars.
+ *
  * @see     http://www.w3.org/International/questions/qa-forms-utf-8
  *
  * @param string
  *
  * @return mixed integer byte index or FALSE if no bad found
- * @package utf8
  */
 function utf8_bad_find($str)
 {
     $UTF8_BAD =
-        '([\x00-\x7F]' .                          # ASCII (including control chars)
-        '|[\xC2-\xDF][\x80-\xBF]' .               # non-overlong 2-byte
-        '|\xE0[\xA0-\xBF][\x80-\xBF]' .           # excluding overlongs
-        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' .    # straight 3-byte
-        '|\xED[\x80-\x9F][\x80-\xBF]' .           # excluding surrogates
-        '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .        # planes 1-3
-        '|[\xF1-\xF3][\x80-\xBF]{3}' .            # planes 4-15
-        '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .        # plane 16
-        '|(.{1}))';                              # invalid byte
+        '([\x00-\x7F]'.                          // ASCII (including control chars)
+        '|[\xC2-\xDF][\x80-\xBF]'.               // non-overlong 2-byte
+        '|\xE0[\xA0-\xBF][\x80-\xBF]'.           // excluding overlongs
+        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    // straight 3-byte
+        '|\xED[\x80-\x9F][\x80-\xBF]'.           // excluding surrogates
+        '|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        // planes 1-3
+        '|[\xF1-\xF3][\x80-\xBF]{3}'.            // planes 4-15
+        '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        // plane 16
+        '|(.{1}))';                              // invalid byte
     $pos = 0;
     $badList = [];
-    while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
+    while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
         $bytes = strlen($matches[0]);
         if (isset($matches[2])) {
             return $pos;
@@ -52,29 +52,29 @@ function utf8_bad_find($str)
  * byte index in the string
  * PCRE Pattern to locate bad bytes in a UTF-8 string
  * Comes from W3 FAQ: Multilingual Forms
- * Note: modified to include full ASCII range including control chars
+ * Note: modified to include full ASCII range including control chars.
+ *
  * @see     http://www.w3.org/International/questions/qa-forms-utf-8
  *
  * @param string
  *
  * @return mixed array of integers or FALSE if no bad found
- * @package utf8
  */
 function utf8_bad_findall($str)
 {
     $UTF8_BAD =
-        '([\x00-\x7F]' .                          # ASCII (including control chars)
-        '|[\xC2-\xDF][\x80-\xBF]' .               # non-overlong 2-byte
-        '|\xE0[\xA0-\xBF][\x80-\xBF]' .           # excluding overlongs
-        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' .    # straight 3-byte
-        '|\xED[\x80-\x9F][\x80-\xBF]' .           # excluding surrogates
-        '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .        # planes 1-3
-        '|[\xF1-\xF3][\x80-\xBF]{3}' .            # planes 4-15
-        '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .        # plane 16
-        '|(.{1}))';                              # invalid byte
+        '([\x00-\x7F]'.                          // ASCII (including control chars)
+        '|[\xC2-\xDF][\x80-\xBF]'.               // non-overlong 2-byte
+        '|\xE0[\xA0-\xBF][\x80-\xBF]'.           // excluding overlongs
+        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    // straight 3-byte
+        '|\xED[\x80-\x9F][\x80-\xBF]'.           // excluding surrogates
+        '|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        // planes 1-3
+        '|[\xF1-\xF3][\x80-\xBF]{3}'.            // planes 4-15
+        '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        // plane 16
+        '|(.{1}))';                              // invalid byte
     $pos = 0;
     $badList = [];
-    while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
+    while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
         $bytes = strlen($matches[0]);
         if (isset($matches[2])) {
             $badList[] = $pos;
@@ -94,28 +94,28 @@ function utf8_bad_findall($str)
  * Strips out any bad bytes from a UTF-8 string and returns the rest
  * PCRE Pattern to locate bad bytes in a UTF-8 string
  * Comes from W3 FAQ: Multilingual Forms
- * Note: modified to include full ASCII range including control chars
+ * Note: modified to include full ASCII range including control chars.
+ *
  * @see     http://www.w3.org/International/questions/qa-forms-utf-8
  *
  * @param string
  *
  * @return string
- * @package utf8
  */
 function utf8_bad_strip($str)
 {
     $UTF8_BAD =
-        '([\x00-\x7F]' .                          # ASCII (including control chars)
-        '|[\xC2-\xDF][\x80-\xBF]' .               # non-overlong 2-byte
-        '|\xE0[\xA0-\xBF][\x80-\xBF]' .           # excluding overlongs
-        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' .    # straight 3-byte
-        '|\xED[\x80-\x9F][\x80-\xBF]' .           # excluding surrogates
-        '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .        # planes 1-3
-        '|[\xF1-\xF3][\x80-\xBF]{3}' .            # planes 4-15
-        '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .        # plane 16
-        '|(.{1}))';                              # invalid byte
+        '([\x00-\x7F]'.                          // ASCII (including control chars)
+        '|[\xC2-\xDF][\x80-\xBF]'.               // non-overlong 2-byte
+        '|\xE0[\xA0-\xBF][\x80-\xBF]'.           // excluding overlongs
+        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    // straight 3-byte
+        '|\xED[\x80-\x9F][\x80-\xBF]'.           // excluding surrogates
+        '|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        // planes 1-3
+        '|[\xF1-\xF3][\x80-\xBF]{3}'.            // planes 4-15
+        '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        // plane 16
+        '|(.{1}))';                              // invalid byte
     ob_start();
-    while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
+    while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
         if (!isset($matches[2])) {
             echo $matches[0];
         }
@@ -133,29 +133,29 @@ function utf8_bad_strip($str)
  * recommended is replacement char
  * PCRE Pattern to locate bad bytes in a UTF-8 string
  * Comes from W3 FAQ: Multilingual Forms
- * Note: modified to include full ASCII range including control chars
+ * Note: modified to include full ASCII range including control chars.
+ *
  * @see     http://www.w3.org/International/questions/qa-forms-utf-8
  *
  * @param string to search
  * @param string to replace bad bytes with (defaults to '?') - use ASCII
  *
  * @return string
- * @package utf8
  */
 function utf8_bad_replace($str, $replace = '?')
 {
     $UTF8_BAD =
-        '([\x00-\x7F]' .                          # ASCII (including control chars)
-        '|[\xC2-\xDF][\x80-\xBF]' .               # non-overlong 2-byte
-        '|\xE0[\xA0-\xBF][\x80-\xBF]' .           # excluding overlongs
-        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' .    # straight 3-byte
-        '|\xED[\x80-\x9F][\x80-\xBF]' .           # excluding surrogates
-        '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .        # planes 1-3
-        '|[\xF1-\xF3][\x80-\xBF]{3}' .            # planes 4-15
-        '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .        # plane 16
-        '|(.{1}))';                              # invalid byte
+        '([\x00-\x7F]'.                          // ASCII (including control chars)
+        '|[\xC2-\xDF][\x80-\xBF]'.               // non-overlong 2-byte
+        '|\xE0[\xA0-\xBF][\x80-\xBF]'.           // excluding overlongs
+        '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    // straight 3-byte
+        '|\xED[\x80-\x9F][\x80-\xBF]'.           // excluding surrogates
+        '|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        // planes 1-3
+        '|[\xF1-\xF3][\x80-\xBF]{3}'.            // planes 4-15
+        '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        // plane 16
+        '|(.{1}))';                              // invalid byte
     ob_start();
-    while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
+    while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
         if (!isset($matches[2])) {
             echo $matches[0];
         } else {
@@ -170,7 +170,7 @@ function utf8_bad_replace($str, $replace = '?')
 }
 
 //--------------------------------------------------------------------
-/**
+/*
  * Return code from utf8_bad_identify() when a five octet sequence is detected.
  * Note: 5 octets sequences are valid UTF-8 but are not supported by Unicode so
  * do not represent a useful character
@@ -179,7 +179,7 @@ function utf8_bad_replace($str, $replace = '?')
  */
 define('UTF8_BAD_5OCTET', 1);
 
-/**
+/*
  * Return code from utf8_bad_identify() when a six octet sequence is detected.
  * Note: 6 octets sequences are valid UTF-8 but are not supported by Unicode so
  * do not represent a useful character
@@ -188,7 +188,7 @@ define('UTF8_BAD_5OCTET', 1);
  */
 define('UTF8_BAD_6OCTET', 2);
 
-/**
+/*
  * Return code from utf8_bad_identify().
  * Invalid octet for use as start of multi-byte UTF-8 sequence
  * @see     utf8_bad_identify
@@ -196,7 +196,7 @@ define('UTF8_BAD_6OCTET', 2);
  */
 define('UTF8_BAD_SEQID', 3);
 
-/**
+/*
  * Return code from utf8_bad_identify().
  * From Unicode 3.1, non-shortest form is illegal
  * @see     utf8_bad_identify
@@ -204,7 +204,7 @@ define('UTF8_BAD_SEQID', 3);
  */
 define('UTF8_BAD_NONSHORT', 4);
 
-/**
+/*
  * Return code from utf8_bad_identify().
  * From Unicode 3.2, surrogate characters are illegal
  * @see     utf8_bad_identify
@@ -212,7 +212,7 @@ define('UTF8_BAD_NONSHORT', 4);
  */
 define('UTF8_BAD_SURROGATE', 5);
 
-/**
+/*
  * Return code from utf8_bad_identify().
  * Codepoints outside the Unicode range are illegal
  * @see     utf8_bad_identify
@@ -220,7 +220,7 @@ define('UTF8_BAD_SURROGATE', 5);
  */
 define('UTF8_BAD_UNIOUTRANGE', 6);
 
-/**
+/*
  * Return code from utf8_bad_identify().
  * Incomplete multi-octet sequence
  * Note: this is kind of a "catch-all"
@@ -232,15 +232,16 @@ define('UTF8_BAD_SEQINCOMPLETE', 7);
 //--------------------------------------------------------------------
 /**
  * Reports on the type of bad byte found in a UTF-8 string. Returns a
- * status code on the first bad byte found
+ * status code on the first bad byte found.
+ *
  * @author  <hsivonen@iki.fi>
  *
  * @param string UTF-8 encoded string
  *
  * @return mixed integer constant describing problem or FALSE if valid UTF-8
+ *
  * @see     utf8_bad_explain
  * @see     http://hsivonen.iki.fi/php-utf8/
- * @package utf8
  */
 function utf8_bad_identify($str, &$i)
 {
@@ -252,7 +253,7 @@ function utf8_bad_identify($str, &$i)
     $len = strlen($str);
 
     for ($i = 0; $i < $len; $i++) {
-        $in = ord($str{$i});
+        $in = ord($str[$i]);
 
         if ($mState == 0) {
             // When mState is zero we expect either a US-ASCII character or a
@@ -315,7 +316,7 @@ function utf8_bad_identify($str, &$i)
                 $tmp = ($tmp & 0x0000003F) << $shift;
                 $mUcs4 |= $tmp;
 
-                /**
+                /*
                  * End of the multi-octet sequence. mUcs4 now contains the final
                  * Unicode codepoint to be output
                  */
@@ -325,11 +326,11 @@ function utf8_bad_identify($str, &$i)
                         ((3 == $mBytes) && ($mUcs4 < 0x0800)) ||
                         ((4 == $mBytes) && ($mUcs4 < 0x10000))) {
                         return UTF8_BAD_NONSHORT;
-                        // From Unicode 3.2, surrogate characters are illegal
+                    // From Unicode 3.2, surrogate characters are illegal
                     } else {
                         if (($mUcs4 & 0xFFFFF800) == 0xD800) {
                             return UTF8_BAD_SURROGATE;
-                            // Codepoints outside the Unicode range are illegal
+                        // Codepoints outside the Unicode range are illegal
                         } else {
                             if ($mUcs4 > 0x10FFFF) {
                                 return UTF8_BAD_UNIOUTRANGE;
@@ -373,8 +374,8 @@ function utf8_bad_identify($str, &$i)
  * @param int return code from utf8_bad_identify
  *
  * @return mixed string message or FALSE if return code unknown
+ *
  * @see     utf8_bad_identify
- * @package utf8
  */
 function utf8_bad_explain($code)
 {
@@ -408,7 +409,7 @@ function utf8_bad_explain($code)
             break;
     }
 
-    trigger_error('Unknown error code: ' . $code, E_USER_WARNING);
+    trigger_error('Unknown error code: '.$code, E_USER_WARNING);
 
     return false;
 }

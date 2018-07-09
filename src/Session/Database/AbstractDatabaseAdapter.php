@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Database;
 
 /**
- * Class AbstractDatabaseAdapter
+ * Class AbstractDatabaseAdapter.
  *
  * @since 2.0
  */
@@ -18,18 +18,18 @@ abstract class AbstractDatabaseAdapter
     /**
      * Property db.
      *
-     * @var  object
+     * @var object
      */
     protected $db = null;
 
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [
-        'table' => 'windwalker_sessions',
-        'id_col' => 'id',
+        'table'    => 'windwalker_sessions',
+        'id_col'   => 'id',
         'data_col' => 'data',
         'time_col' => 'time',
     ];
@@ -48,46 +48,46 @@ abstract class AbstractDatabaseAdapter
     }
 
     /**
-     * read
+     * read.
      *
      * @param string|int $id
      *
-     * @return  string
+     * @return string
      */
     abstract public function read($id);
 
     /**
-     * write
+     * write.
      *
      * @param string|int $id
      * @param string     $data
      *
-     * @return  boolean
+     * @return bool
      */
     abstract public function write($id, $data);
 
     /**
-     * destroy
+     * destroy.
      *
      * @param string|int $id
      *
-     * @return  boolean
+     * @return bool
      */
     abstract public function destroy($id);
 
     /**
-     * gc
+     * gc.
      *
      * @param string $past
      *
-     * @return  bool
+     * @return bool
      */
     abstract public function gc($past);
 
     /**
-     * getDb
+     * getDb.
      *
-     * @return  object
+     * @return object
      */
     public function getDb()
     {
@@ -95,11 +95,11 @@ abstract class AbstractDatabaseAdapter
     }
 
     /**
-     * setDb
+     * setDb.
      *
-     * @param   object $db
+     * @param object $db
      *
-     * @return  AbstractDatabaseAdapter  Return self to support chaining.
+     * @return AbstractDatabaseAdapter Return self to support chaining.
      */
     public function setDb($db)
     {

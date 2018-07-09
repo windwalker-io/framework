@@ -5,11 +5,10 @@
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-include_once __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../../../../vendor/autoload.php';
 
 $request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER,
@@ -25,7 +24,7 @@ $server = \Zend\Diactoros\Server::createServerFromRequest(
         ResponseInterface $response,
         $done
     ) {
-        $response->getBody()->write("Hello world!");
+        $response->getBody()->write('Hello world!');
 
         show($request->getUri());
     },

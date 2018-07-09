@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -9,7 +9,7 @@
 namespace Windwalker\Test\Test;
 
 /**
- * Test class of TestHelper
+ * Test class of TestHelper.
  *
  * @since 2.0
  */

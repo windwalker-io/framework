@@ -31,9 +31,9 @@ class MockIO extends IO
     }
 
     /**
-     * getOutputStream
+     * getOutputStream.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getTestOutput()
     {
@@ -41,9 +41,9 @@ class MockIO extends IO
     }
 
     /**
-     * getOutputStream
+     * getOutputStream.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function setTestOutput($output)
     {
@@ -51,11 +51,11 @@ class MockIO extends IO
     }
 
     /**
-     * setOutput
+     * setOutput.
      *
      * @param CliOutputInterface $output
      *
-     * @return  static
+     * @return static
      */
     public function setOutput(CliOutputInterface $output)
     {

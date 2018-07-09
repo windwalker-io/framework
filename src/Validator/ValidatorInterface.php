@@ -20,14 +20,14 @@ interface ValidatorInterface
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     public function validate($value);
 
     /**
      * Get error message.
      *
-     * @return  string
+     * @return string
      */
     public function getError();
 }

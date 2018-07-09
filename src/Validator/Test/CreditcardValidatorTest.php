@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Validator\Test;
 use Windwalker\Validator\Rule\CreditcardValidator;
 
 /**
- * Test class of CreditcardValidator
+ * Test class of CreditcardValidator.
  *
  * @since 2.0
  */
@@ -36,11 +36,11 @@ class CreditcardValidatorTest extends AbstractValidateTestCase
     }
 
     /**
-     * testCase
+     * testCase.
      *
      * These fake numbers were generated from: http://www.getcreditcardnumbers.com/
      *
-     * @return  array
+     * @return array
      */
     public function validateCase()
     {

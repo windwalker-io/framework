@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,7 +15,7 @@ use Windwalker\Profiler\Renderer\DefaultRenderer;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of Profiler
+ * Test class of Profiler.
  *
  * @since 2.0
  */
@@ -52,9 +52,10 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the constructor.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Profiler\Profiler::__construct
+     *
      * @since   2.0
      */
     public function test__construct()
@@ -69,7 +70,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
         $pointTwo = new Point('two', 1, 1);
         $points = [
             'start' => $pointOne,
-            'two' => $pointTwo,
+            'two'   => $pointTwo,
         ];
 
         $profiler = new Profiler('bar', $renderer, $points, false);
@@ -204,9 +205,10 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test getMemoryPeakBytes().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Profiler\Profiler::getMemoryPeakBytes
      */
     public function testGetMemoryPeakBytes()
@@ -235,9 +237,10 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test setRenderer().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Profiler\Profiler::setRenderer
      */
     public function testGetAndSetRenderer()
@@ -266,7 +269,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
 
         $profiler = new Profiler('test', null, [$first, $second]);
 
-        $expected = <<<RESULT
+        $expected = <<<'RESULT'
 test 0.000 seconds (+0.000); 0.00 MB (0.000) - start
 test 5.000 seconds (+5.000); 0.00 MB (+0.001) - stop
 RESULT;
@@ -308,9 +311,9 @@ RESULT;
         $third = new Point('third', 2.5, 2000);
 
         $points = [
-            'test' => $first,
+            'test'   => $first,
             'second' => $second,
-            'third' => $third,
+            'third'  => $third,
         ];
 
         // Create a profiler and inject the points.

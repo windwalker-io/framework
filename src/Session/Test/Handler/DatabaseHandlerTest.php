@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Session\Database\WindwalkerAdapter;
 use Windwalker\Session\Handler\DatabaseHandler;
 
 /**
- * Test class of DatabaseHandler
+ * Test class of DatabaseHandler.
  *
  * @since 2.0
  */
@@ -35,9 +35,9 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
     protected $instance;
 
     /**
-     * setUpBeforeClass
+     * setUpBeforeClass.
      *
-     * @return  void
+     * @return void
      */
     public static function setUpBeforeClass()
     {
@@ -53,9 +53,9 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * tearDownAfterClass
+     * tearDownAfterClass.
      *
-     * @return  void
+     * @return void
      */
     public static function tearDownAfterClass()
     {
@@ -97,9 +97,10 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
     /**
      * Method to test read().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Session\Handler\DatabaseHandler::read
      */
     public function testReadAndWrite()

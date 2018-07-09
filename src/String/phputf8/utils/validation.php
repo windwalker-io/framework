@@ -10,15 +10,16 @@
 /**
  * Tests a string as to whether it's valid UTF-8 and supported by the
  * Unicode standard
- * Note: this function has been modified to simple return true or false
+ * Note: this function has been modified to simple return true or false.
+ *
  * @author  <hsivonen@iki.fi>
  *
  * @param string UTF-8 encoded string
  *
- * @return boolean true if valid
+ * @return bool true if valid
+ *
  * @see     http://hsivonen.iki.fi/php-utf8/
  * @see     utf8_compliant
- * @package utf8
  */
 function utf8_is_valid($str)
 {
@@ -30,7 +31,7 @@ function utf8_is_valid($str)
     $len = strlen($str);
 
     for ($i = 0; $i < $len; $i++) {
-        $in = ord($str{$i});
+        $in = ord($str[$i]);
 
         if ($mState == 0) {
             // When mState is zero we expect either a US-ASCII character or a
@@ -101,7 +102,7 @@ function utf8_is_valid($str)
                 $tmp = ($tmp & 0x0000003F) << $shift;
                 $mUcs4 |= $tmp;
 
-                /**
+                /*
                  * End of the multi-octet sequence. mUcs4 now contains the final
                  * Unicode codepoint to be output
                  */
@@ -127,7 +128,7 @@ function utf8_is_valid($str)
                     $mBytes = 1;
                 }
             } else {
-                /**
+                /*
                  *((0xC0 & (*in) != 0x80) && (mState != 0))
                  * Incomplete multi-octet sequence.
                  */
@@ -150,14 +151,14 @@ function utf8_is_valid($str)
  * is to validate user input, you place yourself at the risk that
  * attackers will be able to inject 5 and 6 byte sequences (which
  * may or may not be a significant risk, depending on what you are
- * are doing)
+ * are doing).
+ *
  * @see     utf8_is_valid
  * @see     http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
  *
  * @param string UTF-8 string to check
  *
- * @return boolean TRUE if string is valid UTF-8
- * @package utf8
+ * @return bool TRUE if string is valid UTF-8
  */
 function utf8_compliant($str)
 {
@@ -168,6 +169,5 @@ function utf8_compliant($str)
     // modifier is used, then it's valid UTF-8. If the UTF-8 is somehow
     // invalid, nothing at all will match, even if the string contains
     // some valid sequences
-    return (preg_match('/^.{1}/us', $str, $ar) == 1);
+    return preg_match('/^.{1}/us', $str, $ar) == 1;
 }
-

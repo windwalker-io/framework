@@ -22,7 +22,7 @@ class TestDomHelper
      *
      * @param string $buffer
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function minify($buffer)
     {

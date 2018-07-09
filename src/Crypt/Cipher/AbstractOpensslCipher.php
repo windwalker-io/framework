@@ -33,11 +33,9 @@ class AbstractOpensslCipher extends AbstractCipher
      * Constructor.
      *
      * @param string $key
-     *
      * @param array  $options
      *
      * @since  2.0
-     *
      */
     public function __construct($key = null, array $options = [])
     {
@@ -49,13 +47,13 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * doEncrypt
+     * doEncrypt.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string
+     * @return string
      */
     protected function doEncrypt($data, $key, $iv)
     {
@@ -63,13 +61,13 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * doDecrypt
+     * doDecrypt.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string
+     * @return string
      */
     protected function doDecrypt($data, $key, $iv)
     {
@@ -77,9 +75,9 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * getIVSize
+     * getIVSize.
      *
-     * @return  integer
+     * @return int
      */
     public function getIVSize()
     {
@@ -87,13 +85,13 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * randomPseudoBytes
+     * randomPseudoBytes.
      *
      * @param int $size
      *
-     * @return  string
-     *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     protected function randomPseudoBytes($size = null)
     {
@@ -109,9 +107,9 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * Method to get property Mode
+     * Method to get property Mode.
      *
-     * @return  int
+     * @return int
      */
     public function getMode()
     {
@@ -119,11 +117,11 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * Method to set property mode
+     * Method to set property mode.
      *
-     * @param   int $mode
+     * @param int $mode
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setMode($mode)
     {
@@ -133,9 +131,9 @@ class AbstractOpensslCipher extends AbstractCipher
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  string
+     * @return string
      */
     public function getMethod()
     {
@@ -143,6 +141,6 @@ class AbstractOpensslCipher extends AbstractCipher
             return $this->method;
         }
 
-        return $this->method . '-' . $this->mode;
+        return $this->method.'-'.$this->mode;
     }
 }

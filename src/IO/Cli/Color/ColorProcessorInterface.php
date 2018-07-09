@@ -18,9 +18,9 @@ interface ColorProcessorInterface
     /**
      * Process the provided output into a string.
      *
-     * @param   string $output
+     * @param string $output
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -29,21 +29,21 @@ interface ColorProcessorInterface
     /**
      * Add a style.
      *
-     * @param   string     $name  The style name.
-     * @param   ColorStyle $style The color style.
+     * @param string     $name  The style name.
+     * @param ColorStyle $style The color style.
      *
-     * @return  ColorProcessor  Instance of $this to allow chaining.
+     * @return ColorProcessor Instance of $this to allow chaining.
      *
      * @since   2.0
      */
     public function addStyle($name, ColorStyle $style);
 
     /**
-     * Method to set property noColors
+     * Method to set property noColors.
      *
-     * @param   boolean $noColors
+     * @param bool $noColors
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setNoColors($noColors);
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Language\Test\Loader;
 use Windwalker\Language\Loader\PhpLoader;
 
 /**
- * Test class of PhpLoader
+ * Test class of PhpLoader.
  *
  * @since 2.0
  */
@@ -54,7 +54,7 @@ class PhpLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function testLoad()
     {
-        $data = $this->instance->load(__DIR__ . '/../fixtures/php/en-GB.php');
+        $data = $this->instance->load(__DIR__.'/../fixtures/php/en-GB.php');
 
         $this->assertArrayHasKey('WINDWALKER_LANGUAGE_TEST_FLOWER', $data);
     }

@@ -29,9 +29,9 @@ class StubWeb extends AbstractWebApplication
     /**
      * Method to close the application.
      *
-     * @param   integer|string $message The exit code (optional; default is 0).
+     * @param int|string $message The exit code (optional; default is 0).
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -43,11 +43,11 @@ class StubWeb extends AbstractWebApplication
     /**
      * Method as the Psr7 WebHttpServer handler.
      *
-     * @param  Request  $request  The Psr7 ServerRequest to get request params.
-     * @param  Response $response The Psr7 Response interface to [re[are respond data.
-     * @param  callable $next     The next handler to support middleware pattern.
+     * @param Request  $request  The Psr7 ServerRequest to get request params.
+     * @param Response $response The Psr7 Response interface to [re[are respond data.
+     * @param callable $next     The next handler to support middleware pattern.
      *
-     * @return  Response  The returned response object.
+     * @return Response The returned response object.
      *
      * @since   3.0
      */
@@ -62,10 +62,9 @@ class StubWeb extends AbstractWebApplication
      * Method to check to see if headers have already been sent.
      * We wrap headers_sent() function with this method for testing reason.
      *
-     * @return  boolean  True if the headers have already been sent.
+     * @return bool True if the headers have already been sent.
      *
      * @see     headers_sent()
-     *
      * @since   3.0
      */
     public function checkHeadersSent()

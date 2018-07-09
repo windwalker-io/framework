@@ -16,14 +16,14 @@ namespace Windwalker\Test\Helper;
 class TestStringHelper
 {
     /**
-     * remove spaces
+     * remove spaces.
      *
      * See: http://stackoverflow.com/questions/3760816/remove-new-lines-from-string
      * And: http://stackoverflow.com/questions/9558110/php-remove-line-break-or-cr-lf-with-no-success
      *
      * @param string $string
      *
-     * @return  string
+     * @return string
      */
     public static function clean($string)
     {
@@ -33,11 +33,11 @@ class TestStringHelper
     }
 
     /**
-     * Convert CRLF to EOL
+     * Convert CRLF to EOL.
      *
      * @param string $string
      *
-     * @return  string
+     * @return string
      */
     public static function removeCRLF($string)
     {
@@ -45,12 +45,12 @@ class TestStringHelper
     }
 
     /**
-     * quote
+     * quote.
      *
      * @param string       $string
      * @param array|string $quote
      *
-     * @return  string
+     * @return string
      */
     public static function quote($string, $quote = ['"', '"'])
     {
@@ -60,6 +60,6 @@ class TestStringHelper
             $quote[1] = $quote[0];
         }
 
-        return $quote[0] . $string . $quote[1];
+        return $quote[0].$string.$quote[1];
     }
 }

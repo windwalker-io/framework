@@ -18,14 +18,14 @@ class IpValidator extends RegexValidator
     /**
      * The regular expression to use in testing value.
      *
-     * @var  string
+     * @var string
      */
     protected $regex = '^((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))*$';
 
     /**
      * The regular expression modifiers to use when testing a value.
      *
-     * @var  string
+     * @var string
      */
     protected $modifiers = 'i';
 }

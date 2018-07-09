@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -17,7 +17,7 @@ use Windwalker\Uri\PsrUri;
 use Windwalker\Uri\UriHelper;
 
 /**
- * Test class of CurlTransport
+ * Test class of CurlTransport.
  *
  * @since 2.1
  */
@@ -26,7 +26,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [
         'options' => [],
@@ -42,14 +42,14 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     /**
      * Property downloadFile.
      *
-     * @var  string
+     * @var string
      */
     protected $destFile;
 
     /**
-     * setUpBeforeClass
+     * setUpBeforeClass.
      *
-     * @return  void
+     * @return void
      */
     public static function setUpBeforeClass()
     {
@@ -67,14 +67,14 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         if (!$this->instance->isSupported()) {
-            $this->markTestSkipped(get_class($this->instance) . ' driver not supported.');
+            $this->markTestSkipped(get_class($this->instance).' driver not supported.');
         }
 
-        $this->destFile = __DIR__ . '/downloaded.tmp';
+        $this->destFile = __DIR__.'/downloaded.tmp';
     }
 
     /**
-     * createRequest
+     * createRequest.
      *
      * @param StreamInterface $stream
      *
@@ -86,9 +86,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testRequestGet
+     * testRequestGet.
      *
-     * @return  void
+     * @return void
      */
     public function testRequestGet()
     {
@@ -104,7 +104,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 
         $request = $this->createRequest();
 
-        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar&baz[3]=yoo'))
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL.'?foo=bar&baz[3]=yoo'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
@@ -114,9 +114,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testBadDomainGet
+     * testBadDomainGet.
      *
-     * @return  void
+     * @return void
      *
      * @expectedException  \RuntimeException
      */
@@ -131,15 +131,15 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testBadPathGet
+     * testBadPathGet.
      *
-     * @return  void
+     * @return void
      */
     public function testBadPathGet()
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL) . '/wrong.php'))
+        $request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL).'/wrong.php'))
             ->withMethod('POST');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -151,9 +151,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testRequestPost
+     * testRequestPost.
      *
-     * @return  void
+     * @return void
      */
     public function testRequestPost()
     {
@@ -172,9 +172,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testRequestPut
+     * testRequestPut.
      *
-     * @return  void
+     * @return void
      */
     public function testRequestPut()
     {
@@ -194,9 +194,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testRequestCredentials
+     * testRequestCredentials.
      *
-     * @return  void
+     * @return void
      */
     public function testRequestCredentials()
     {
@@ -217,15 +217,15 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testRequestPostScalar
+     * testRequestPostScalar.
      *
-     * @return  void
+     * @return void
      */
     public function testRequestPostScalar()
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar'))
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL.'?foo=bar'))
             ->withMethod('POST');
 
         $request->getBody()->write('flower=sakura');
@@ -239,9 +239,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testDownload
+     * testDownload.
      *
-     * @return  void
+     * @return void
      */
     public function testDownload()
     {
@@ -251,7 +251,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 
         $request = $this->createRequest(new Stream());
 
-        $src = dirname(WINDWALKER_TEST_HTTP_URL) . '/download_stub.txt';
+        $src = dirname(WINDWALKER_TEST_HTTP_URL).'/download_stub.txt';
 
         $request = $request->withUri(new PsrUri($src))
             ->withMethod('GET');
@@ -262,9 +262,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * unlinkDownloaded
+     * unlinkDownloaded.
      *
-     * @return  void
+     * @return void
      */
     protected function unlinkDownloaded()
     {

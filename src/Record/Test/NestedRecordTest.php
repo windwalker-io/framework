@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Record\NestedRecord;
 use Windwalker\Utilities\ArrayHelper;
 
 /**
- * Test class of NestedRecord
+ * Test class of NestedRecord.
  *
  * @since 2.0
  */
@@ -27,10 +27,11 @@ class NestedRecordTest extends AbstractMysqlTestCase
     protected $instance;
 
     /**
-     * setUpBeforeClass
+     * setUpBeforeClass.
      *
-     * @return  void
      * @throws \Exception
+     *
+     * @return void
      */
     public static function setUpBeforeClass()
     {
@@ -45,8 +46,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
      * @throws \Exception
+     *
+     * @return void
      */
     protected function setUp()
     {
@@ -56,9 +58,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testRoot
+     * testRoot.
      *
-     * @return  void
+     * @return void
      */
     public function testRoot()
     {
@@ -81,9 +83,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test check().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
@@ -98,9 +101,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test check().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
@@ -115,9 +119,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test setLocation().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::setLocation
      */
     public function testSetLocationAndStore()
@@ -264,9 +269,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test move().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::move
      */
     public function testMove()
@@ -281,9 +287,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test moveByReference().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::moveByReference
      */
     public function testMoveByReference()
@@ -298,9 +305,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test delete().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @expectedException \RuntimeException
      *
      * @covers \Windwalker\Record\NestedRecord::delete
@@ -359,9 +367,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     /**
      * Method to test rebuildPath().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::rebuildPath
      */
     public function testRebuildPath()
@@ -388,9 +397,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * listAll
+     * listAll.
      *
-     * @return  array
+     * @return array
      */
     protected function listAll()
     {
@@ -398,9 +407,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * showAll
+     * showAll.
      *
-     * @return  void
+     * @return void
      */
     protected function showAll()
     {

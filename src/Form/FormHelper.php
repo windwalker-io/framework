@@ -16,11 +16,11 @@ namespace Windwalker\Form;
 class FormHelper
 {
     /**
-     * encode
+     * encode.
      *
      * @param string $html
      *
-     * @return  string
+     * @return string
      */
     public static function encode($html)
     {
@@ -33,7 +33,7 @@ class FormHelper
      * @param array  $data      The data to convert.
      * @param string $separator The key separator.
      *
-     * @return  string[] Dumped array.
+     * @return string[] Dumped array.
      */
     public static function flatten($data, $separator = '.')
     {
@@ -52,14 +52,14 @@ class FormHelper
      * @param array        &$array    The result array, it is pass by reference.
      * @param string       $prefix    Last level key prefix.
      *
-     * @return  void
+     * @return void
      */
     protected static function toFlatten($separator = '_', $data = null, &$array = [], $prefix = '')
     {
         $data = (array) $data;
 
         foreach ($data as $k => $v) {
-            $key = $prefix ? $prefix . $separator . $k : $k;
+            $key = $prefix ? $prefix.$separator.$k : $k;
 
             if (is_object($v) || is_array($v)) {
                 static::toFlatten($separator, $v, $array, $key);
@@ -78,12 +78,12 @@ class FormHelper
      * @param mixed  $paths     The key path.
      * @param string $separator Separator of paths.
      *
-     * @return  mixed Found value, null if not exists.
+     * @return mixed Found value, null if not exists.
      */
     public static function getByPath($data, $paths, $separator = '/')
     {
         if (empty($paths)) {
-            return null;
+            return;
         }
 
         $args = is_array($paths) ? $paths : explode($separator, $paths);
@@ -96,7 +96,7 @@ class FormHelper
             } elseif (is_array($dataTmp) && isset($dataTmp[$arg])) {
                 $dataTmp = $dataTmp[$arg];
             } else {
-                return null;
+                return;
             }
         }
 
@@ -104,7 +104,7 @@ class FormHelper
     }
 
     /**
-     * setByPath
+     * setByPath.
      *
      * @param mixed  &$data
      * @param string $paths
@@ -112,7 +112,7 @@ class FormHelper
      * @param string $separator
      * @param string $type
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -129,9 +129,9 @@ class FormHelper
          *
          * @param $type
          *
-         * @return  array
-         *
          * @throws \InvalidArgumentException
+         *
+         * @return array
          */
         $createStore = function ($type) {
             if (strtolower($type) === 'array') {

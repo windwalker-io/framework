@@ -9,25 +9,25 @@
 namespace Windwalker\Cache\Serializer;
 
 /**
- * Interface DataHandlerInterface
+ * Interface DataHandlerInterface.
  */
 interface SerializerInterface
 {
     /**
      * Encode data.
      *
-     * @param   mixed $data
+     * @param mixed $data
      *
-     * @return  string
+     * @return string
      */
     public function serialize($data);
 
     /**
      * Decode data.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  mixed
+     * @return mixed
      */
     public function unserialize($data);
 }

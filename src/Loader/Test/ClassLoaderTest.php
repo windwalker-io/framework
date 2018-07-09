@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Loader\Test\Mock\MockPsr0Loader;
 use Windwalker\Loader\Test\Mock\MockPsr4Loader;
 
 /**
- * Test class of ClassLoader
+ * Test class of ClassLoader.
  *
  * @since 2.0
  */
@@ -118,15 +118,15 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $psr0 = $this->instance->getPsr0Loader();
 
         // Test 1 prefix
-        $this->instance->addPsr0('Psr0', __DIR__ . '/fixtures');
+        $this->instance->addPsr0('Psr0', __DIR__.'/fixtures');
 
         $psr0->loadClass('Psr0\Flower\Sakura');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Flower/Sakura.php', $psr0->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Psr0/Flower/Sakura.php', $psr0->getLastRequired());
 
         $psr0->loadClass('Psr0_Olive_Peace');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Olive/Peace.php', $psr0->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Psr0/Olive/Peace.php', $psr0->getLastRequired());
 
         $psr0 = $this->instance->unregister()
             ->setPsr0Loader(new MockPsr0Loader())
@@ -134,11 +134,11 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
             ->getPsr0Loader();
 
         // Test 2 prefix
-        $this->instance->addPsr0('Psr0\Flower', __DIR__ . '/fixtures');
+        $this->instance->addPsr0('Psr0\Flower', __DIR__.'/fixtures');
 
         $psr0->loadClass('Psr0\Flower\Sakura');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Flower/Sakura.php', $psr0->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Psr0/Flower/Sakura.php', $psr0->getLastRequired());
 
         $psr0->loadClass('Psr0_Olive_Peace');
 
@@ -150,15 +150,15 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
             ->getPsr0Loader();
 
         // Test 0 prefix
-        $this->instance->addPsr0('', __DIR__ . '/fixtures');
+        $this->instance->addPsr0('', __DIR__.'/fixtures');
 
         $psr0->loadClass('Psr0\Flower\Sakura');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Flower/Sakura.php', $psr0->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Psr0/Flower/Sakura.php', $psr0->getLastRequired());
 
         $psr0->loadClass('Psr0_Olive_Peace');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Olive/Peace.php', $psr0->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Psr0/Olive/Peace.php', $psr0->getLastRequired());
     }
 
     /**
@@ -174,11 +174,11 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $psr4 = $this->instance->getPsr4Loader();
 
         // Test 1 prefix
-        $this->instance->addPsr4('Psr4', __DIR__ . '/fixtures');
+        $this->instance->addPsr4('Psr4', __DIR__.'/fixtures');
 
         $psr4->loadClass('Psr4\Rose\Love');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Rose/Love.php', $psr4->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Rose/Love.php', $psr4->getLastRequired());
 
         $psr4 = $this->instance->unregister()
             ->setPsr4Loader(new MockPsr4Loader())
@@ -186,18 +186,18 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
             ->getPsr4Loader();
 
         // Test 2 prefix
-        $this->instance->addPsr4('Psr4\\Rose', __DIR__ . '/fixtures/Rose');
+        $this->instance->addPsr4('Psr4\\Rose', __DIR__.'/fixtures/Rose');
 
         $psr4->loadClass('Psr4\Rose\Love');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Rose/Love.php', $psr4->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Rose/Love.php', $psr4->getLastRequired());
 
         // Test as Psr0 prefix
-        $this->instance->addPsr4('Psr0', __DIR__ . '/fixtures/Psr0');
+        $this->instance->addPsr4('Psr0', __DIR__.'/fixtures/Psr0');
 
         $psr4->loadClass('Psr0\Flower\Sakura');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Flower/Sakura.php', $psr4->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Psr0/Flower/Sakura.php', $psr4->getLastRequired());
     }
 
     /**
@@ -212,16 +212,16 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         /** @var MockFileMappingLoader $map */
         $map = $this->instance->getFilesLoader();
 
-        $this->instance->addMap('Sun\Flower\Sunflower', __DIR__ . '/fixtures/Sunflower.php');
+        $this->instance->addMap('Sun\Flower\Sunflower', __DIR__.'/fixtures/Sunflower.php');
 
         $map->loadClass('Sun\Flower\Sunflower');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/Sunflower.php', $map->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/Sunflower.php', $map->getLastRequired());
 
-        $this->instance->addMap('WindTalker', __DIR__ . '/fixtures/WindTalker.php');
+        $this->instance->addMap('WindTalker', __DIR__.'/fixtures/WindTalker.php');
 
         $map->loadClass('WindTalker');
 
-        $this->assertFileEquals(__DIR__ . '/fixtures/WindTalker.php', $map->getLastRequired());
+        $this->assertFileEquals(__DIR__.'/fixtures/WindTalker.php', $map->getLastRequired());
     }
 }

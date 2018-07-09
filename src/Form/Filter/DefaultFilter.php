@@ -20,14 +20,14 @@ class DefaultFilter implements FilterInterface
     /**
      * Property filter.
      *
-     * @var  InputFilter
+     * @var InputFilter
      */
     protected static $filter = null;
 
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = null;
 
@@ -44,11 +44,11 @@ class DefaultFilter implements FilterInterface
     }
 
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($text)
     {
@@ -60,9 +60,9 @@ class DefaultFilter implements FilterInterface
     }
 
     /**
-     * getFilter
+     * getFilter.
      *
-     * @return  InputFilter
+     * @return InputFilter
      */
     protected static function getFilter()
     {
@@ -74,11 +74,11 @@ class DefaultFilter implements FilterInterface
     }
 
     /**
-     * Method to set property filter
+     * Method to set property filter.
      *
-     * @param   InputFilter $filter
+     * @param InputFilter $filter
      *
-     * @return  void
+     * @return void
      */
     public static function setFilter(InputFilter $filter)
     {
@@ -86,9 +86,9 @@ class DefaultFilter implements FilterInterface
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  string
+     * @return string
      */
     public function getType()
     {
@@ -96,11 +96,11 @@ class DefaultFilter implements FilterInterface
     }
 
     /**
-     * Method to set property type
+     * Method to set property type.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setType($type)
     {

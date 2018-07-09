@@ -18,11 +18,11 @@ use Windwalker\Form\Filter\FilterInterface;
 class StubFilter implements FilterInterface
 {
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($text)
     {

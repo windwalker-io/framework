@@ -12,7 +12,7 @@ use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
 
 /**
- * Class XcacheStorage
+ * Class XcacheStorage.
  *
  * @since 2.0
  */
@@ -21,10 +21,11 @@ class XcacheStorage extends AbstractCacheStorage
     /**
      * Constructor.
      *
-     * @param   int   $ttl     The Time To Live (TTL) of an item
-     * @param   mixed $options An options array, or an object that implements \ArrayAccess
+     * @param int   $ttl     The Time To Live (TTL) of an item
+     * @param mixed $options An options array, or an object that implements \ArrayAccess
      *
      * @throws \RuntimeException
+     *
      * @since   2.0
      */
     public function __construct($ttl = null, $options = [])
@@ -39,9 +40,9 @@ class XcacheStorage extends AbstractCacheStorage
     /**
      * Method to determine whether a storage entry has been set for a key.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists($key)
     {
@@ -50,12 +51,13 @@ class XcacheStorage extends AbstractCacheStorage
 
     /**
      * Here we pass in a cache key to be fetched from the cache.
-     * A CacheItem object will be constructed and returned to us
+     * A CacheItem object will be constructed and returned to us.
      *
      * @param string $key The unique key of this item in the cache
      *
-     * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
      * @throws \Exception
+     *
+     * @return CacheItemInterface The newly populated CacheItem class representing the stored data in the cache
      */
     public function getItem($key)
     {
@@ -88,7 +90,7 @@ class XcacheStorage extends AbstractCacheStorage
     }
 
     /**
-     * Remove an item from the cache by its unique key
+     * Remove an item from the cache by its unique key.
      *
      * @param string $key The unique cache key of the item to remove
      *
@@ -102,7 +104,7 @@ class XcacheStorage extends AbstractCacheStorage
     }
 
     /**
-     * This will wipe out the entire cache's keys
+     * This will wipe out the entire cache's keys.
      *
      * @return static Return self to support chaining
      */

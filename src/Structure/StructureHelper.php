@@ -9,7 +9,7 @@
 namespace Windwalker\Structure;
 
 /**
- * Class StructureHelper
+ * Class StructureHelper.
  *
  * @since 2.0
  */
@@ -18,25 +18,25 @@ class StructureHelper
     /**
      * Property objectStorage.
      *
-     * @var  \SplObjectStorage
+     * @var \SplObjectStorage
      */
     private static $objectStorage;
 
     /**
-     * Load the contents of a file into the structure
+     * Load the contents of a file into the structure.
      *
-     * @param   string $file    Path to file to load
-     * @param   string $format  Format of the file [optional: defaults to JSON]
-     * @param   array  $options Options used by the formatter
+     * @param string $file    Path to file to load
+     * @param string $format  Format of the file [optional: defaults to JSON]
+     * @param array  $options Options used by the formatter
      *
-     * @return  array  Return parsed array.
+     * @return array Return parsed array.
      *
      * @since   2.1
      */
     public static function loadFile($file, $format = Format::JSON, $options = [])
     {
         if (!is_file($file)) {
-            throw new \InvalidArgumentException('No such file: ' . $file);
+            throw new \InvalidArgumentException('No such file: '.$file);
         }
 
         if (strtolower($format) == Format::PHP) {
@@ -49,13 +49,13 @@ class StructureHelper
     }
 
     /**
-     * Load a string into the structure
+     * Load a string into the structure.
      *
-     * @param   string $data    String to load into the structure
-     * @param   string $format  Format of the string
-     * @param   array  $options Options used by the formatter
+     * @param string $data    String to load into the structure
+     * @param string $format  Format of the string
+     * @param array  $options Options used by the formatter
      *
-     * @return  array  Return parsed array.
+     * @return array Return parsed array.
      *
      * @since   2.1
      */
@@ -68,13 +68,13 @@ class StructureHelper
     }
 
     /**
-     * Get a namespace in a given string format
+     * Get a namespace in a given string format.
      *
-     * @param   array|object $data    The structure data to convert to markup string.
-     * @param   string       $format  Format to return the string in
-     * @param   mixed        $options Parameters used by the formatter, see formatters for more info
+     * @param array|object $data    The structure data to convert to markup string.
+     * @param string       $format  Format to return the string in
+     * @param mixed        $options Parameters used by the formatter, see formatters for more info
      *
-     * @return  string  Namespace in string format
+     * @return string Namespace in string format
      *
      * @since   2.1
      */
@@ -86,13 +86,13 @@ class StructureHelper
     }
 
     /**
-     * getFormatClass
+     * getFormatClass.
      *
      * @param string $format
      *
-     * @return  string|\Windwalker\Structure\Format\FormatInterface
+     * @throws \DomainException
      *
-     * @throws  \DomainException
+     * @return string|\Windwalker\Structure\Format\FormatInterface
      *
      * @since   2.1
      */
@@ -117,9 +117,9 @@ class StructureHelper
     /**
      * Method to determine if an array is an associative array.
      *
-     * @param   array $array An array to test.
+     * @param array $array An array to test.
      *
-     * @return  boolean  True if the array is an associative array.
+     * @return bool True if the array is an associative array.
      */
     public static function isAssociativeArray($array)
     {
@@ -135,13 +135,13 @@ class StructureHelper
     }
 
     /**
-     * getValue
+     * getValue.
      *
      * @param array  $array
      * @param string $name
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function getValue(array $array, $name, $default = null)
     {
@@ -151,10 +151,10 @@ class StructureHelper
     /**
      * Utility function to map an array to a stdClass object.
      *
-     * @param   array  $array The array to map.
-     * @param   string $class Name of the class to create
+     * @param array  $array The array to map.
+     * @param string $class Name of the class to create
      *
-     * @return  object   The object mapped from the given array
+     * @return object The object mapped from the given array
      *
      * @since   2.0
      */
@@ -182,7 +182,7 @@ class StructureHelper
      * @param mixed  $path      The key path.
      * @param string $separator Separator of paths.
      *
-     * @return  mixed Found value, null if not exists.
+     * @return mixed Found value, null if not exists.
      *
      * @since   2.1
      */
@@ -191,7 +191,7 @@ class StructureHelper
         $nodes = static::getPathNodes($path, $separator);
 
         if (empty($nodes)) {
-            return null;
+            return;
         }
 
         $dataTmp = $data;
@@ -204,7 +204,7 @@ class StructureHelper
             } elseif (is_array($dataTmp) && isset($dataTmp[$arg])) {
                 $dataTmp = $dataTmp[$arg];
             } else {
-                return null;
+                return;
             }
         }
 
@@ -212,14 +212,14 @@ class StructureHelper
     }
 
     /**
-     * setByPath
+     * setByPath.
      *
      * @param mixed  &$data
      * @param string $path
      * @param mixed  $value
      * @param string $separator
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.1
      */
@@ -254,13 +254,13 @@ class StructureHelper
     }
 
     /**
-     * removeByPath
+     * removeByPath.
      *
      * @param array  $data
      * @param string $path
      * @param string $separator
      *
-     * @return  bool
+     * @return bool
      */
     public static function removeByPath(array &$data, $path, $separator = '.')
     {
@@ -300,7 +300,7 @@ class StructureHelper
      * @param string $path
      * @param string $separator
      *
-     * @return  array
+     * @return array
      */
     public static function getPathNodes($path, $separator = '.')
     {
@@ -310,11 +310,11 @@ class StructureHelper
     /**
      * Method to recursively convert data to one dimension array.
      *
-     * @param   array|object $array     The array or object to convert.
-     * @param   string       $separator The key separator.
-     * @param   string       $prefix    Last level key prefix.
+     * @param array|object $array     The array or object to convert.
+     * @param string       $separator The key separator.
+     * @param string       $prefix    Last level key prefix.
      *
-     * @return  array
+     * @return array
      */
     public static function flatten($array, $separator = '.', $prefix = '')
     {
@@ -327,7 +327,7 @@ class StructureHelper
         }
 
         foreach ($array as $k => $v) {
-            $key = $prefix ? $prefix . $separator . $k : $k;
+            $key = $prefix ? $prefix.$separator.$k : $k;
 
             if (is_object($v) || is_array($v)) {
                 $return = array_merge($return, static::flatten($v, $separator, $key));
@@ -342,10 +342,10 @@ class StructureHelper
     /**
      * Utility function to convert all types to an array.
      *
-     * @param   mixed $data      The data to convert.
-     * @param   bool  $recursive Recursive if data is nested.
+     * @param mixed $data      The data to convert.
+     * @param bool  $recursive Recursive if data is nested.
      *
-     * @return  array  The converted array.
+     * @return array The converted array.
      */
     public static function toArray($data, $recursive = false)
     {
@@ -370,11 +370,11 @@ class StructureHelper
     }
 
     /**
-     * dumpObjectValues
+     * dumpObjectValues.
      *
-     * @param   mixed $object
+     * @param mixed $object
      *
-     * @return  array
+     * @return array
      */
     public static function dumpObjectValues($object)
     {
@@ -388,12 +388,12 @@ class StructureHelper
     }
 
     /**
-     * doDump
+     * doDump.
      *
-     * @param   array $data
-     * @param   mixed $object
+     * @param array $data
+     * @param mixed $object
      *
-     * @return  void
+     * @return void
      */
     private static function doDump(&$data, $object)
     {

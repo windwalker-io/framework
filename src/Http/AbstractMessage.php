@@ -22,28 +22,28 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * Property protocol.
      *
-     * @var  string
+     * @var string
      */
     protected $protocol = '1.1';
 
     /**
      * The headers value store.
      *
-     * @var  array
+     * @var array
      */
     protected $headers = [];
 
     /**
      * A header names store to support case-insensitive match.
      *
-     * @var  array
+     * @var array
      */
     protected $headerNames = [];
 
     /**
      * Property stream.
      *
-     * @var  StreamInterface
+     * @var StreamInterface
      */
     protected $stream;
 
@@ -123,8 +123,8 @@ abstract class AbstractMessage implements MessageInterface
      * exact case in which headers were originally specified.
      *
      * @return array Returns an associative array of the message's headers. Each
-     *     key MUST be a header name, and each value MUST be an array of strings
-     *     for that header.
+     *               key MUST be a header name, and each value MUST be an array of strings
+     *               for that header.
      */
     public function getHeaders()
     {
@@ -137,8 +137,8 @@ abstract class AbstractMessage implements MessageInterface
      * @param string $name Case-insensitive header field name.
      *
      * @return bool Returns true if any header names match the given header
-     *     name using a case-insensitive string comparison. Returns false if
-     *     no matching header name is found in the message.
+     *              name using a case-insensitive string comparison. Returns false if
+     *              no matching header name is found in the message.
      */
     public function hasHeader($name)
     {
@@ -157,8 +157,8 @@ abstract class AbstractMessage implements MessageInterface
      * @param string $name Case-insensitive header field name.
      *
      * @return string[] An array of string values as provided for the given
-     *    header. If the header does not appear in the message, this method MUST
-     *    return an empty array.
+     *                  header. If the header does not appear in the message, this method MUST
+     *                  return an empty array.
      */
     public function getHeader($name)
     {
@@ -188,8 +188,8 @@ abstract class AbstractMessage implements MessageInterface
      * @param string $name Case-insensitive header field name.
      *
      * @return string A string of values as provided for the given header
-     *    concatenated together using a comma. If the header does not appear in
-     *    the message, this method MUST return an empty string.
+     *                concatenated together using a comma. If the header does not appear in
+     *                the message, this method MUST return an empty string.
      */
     public function getHeaderLine($name)
     {
@@ -215,8 +215,9 @@ abstract class AbstractMessage implements MessageInterface
      * @param string          $name  Case-insensitive header field name.
      * @param string|string[] $value Header value(s).
      *
-     * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
+     *
+     * @return static
      */
     public function withHeader($name, $value)
     {
@@ -241,8 +242,9 @@ abstract class AbstractMessage implements MessageInterface
      * @param string $name  Case-insensitive header field name to add.
      * @param mixed  $value Header value(s).
      *
-     * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
+     *
+     * @return static
      */
     public function withAddedHeader($name, $value)
     {
@@ -253,7 +255,7 @@ abstract class AbstractMessage implements MessageInterface
         }
 
         if (!HeaderHelper::isValidName($name)) {
-            throw new \InvalidArgumentException('Invalid header name: ' . $name);
+            throw new \InvalidArgumentException('Invalid header name: '.$name);
         }
 
         $new = clone $this;
@@ -319,8 +321,9 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @param StreamInterface $body Body.
      *
-     * @return static
      * @throws \InvalidArgumentException When the body is not valid.
+     *
+     * @return static
      */
     public function withBody(StreamInterface $body)
     {
@@ -332,11 +335,11 @@ abstract class AbstractMessage implements MessageInterface
     }
 
     /**
-     * createHeader
+     * createHeader.
      *
      * @param string $name
      *
-     * @return  static
+     * @return static
      */
     protected function createHeader($name)
     {
@@ -353,11 +356,11 @@ abstract class AbstractMessage implements MessageInterface
     }
 
     /**
-     * getHeaderName
+     * getHeaderName.
      *
      * @param string $name
      *
-     * @return  string
+     * @return string
      */
     protected function getHeaderName($name)
     {

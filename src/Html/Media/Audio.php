@@ -18,17 +18,17 @@ class Audio extends AbstractMediaElement
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'audio';
 
     /**
-     * addMp3Source
+     * addMp3Source.
      *
      * @param string $src
      * @param string $media
      *
-     * @return  static
+     * @return static
      */
     public function addMp3Source($src, $media = null)
     {
@@ -36,12 +36,12 @@ class Audio extends AbstractMediaElement
     }
 
     /**
-     * addWavSource
+     * addWavSource.
      *
      * @param string $src
      * @param string $media
      *
-     * @return  static
+     * @return static
      */
     public function addWavSource($src, $media = null)
     {

@@ -18,14 +18,14 @@ class NativeBridge implements SessionBridgeInterface
     /**
      * Property started.
      *
-     * @var boolean
+     * @var bool
      */
     protected static $started = false;
 
     /**
      * Property closed.
      *
-     * @var boolean
+     * @var bool
      */
     protected static $closed = false;
 
@@ -47,9 +47,9 @@ class NativeBridge implements SessionBridgeInterface
     /**
      * Starts the session.
      *
-     * @return  bool  True if started.
-     *
      * @throws \RuntimeException If something goes wrong starting the session.
+     *
+     * @return bool True if started.
      */
     public function start()
     {
@@ -78,7 +78,7 @@ class NativeBridge implements SessionBridgeInterface
     /**
      * Checks if the session is started.
      *
-     * @return  bool  True if started, false otherwise.
+     * @return bool True if started, false otherwise.
      */
     public function isStarted()
     {
@@ -86,9 +86,9 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * Returns the session ID
+     * Returns the session ID.
      *
-     * @return  string  The session ID or empty.
+     * @return string The session ID or empty.
      */
     public function getId()
     {
@@ -96,11 +96,11 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * Sets the session ID
+     * Sets the session ID.
      *
-     * @param   string $id Set the session id
+     * @param string $id Set the session id
      *
-     * @return  void
+     * @return void
      */
     public function setId($id)
     {
@@ -108,9 +108,9 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * Returns the session name
+     * Returns the session name.
      *
-     * @return  mixed   The session name.
+     * @return mixed The session name.
      */
     public function getName()
     {
@@ -118,11 +118,11 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * Sets the session name
+     * Sets the session name.
      *
-     * @param   string $name Set the name of the session
+     * @param string $name Set the name of the session
      *
-     * @return  void
+     * @return void
      */
     public function setName($name)
     {
@@ -144,15 +144,15 @@ class NativeBridge implements SessionBridgeInterface
      * Note regenerate+destroy should not clear the session data in memory
      * only delete the session data from persistent storage.
      *
-     * @param   bool $destroy    Destroy session when regenerating?
-     * @param   int  $lifetime   Sets the cookie lifetime for the session cookie. A null value
-     *                           will leave the system settings unchanged, 0 sets the cookie
-     *                           to expire with browser session. Time is in seconds, and is
-     *                           not a Unix timestamp.
+     * @param bool $destroy  Destroy session when regenerating?
+     * @param int  $lifetime Sets the cookie lifetime for the session cookie. A null value
+     *                       will leave the system settings unchanged, 0 sets the cookie
+     *                       to expire with browser session. Time is in seconds, and is
+     *                       not a Unix timestamp.
      *
-     * @return  bool  True if session regenerated, false if error
+     * @throws \RuntimeException If an error occurs while regenerating this storage
      *
-     * @throws  \RuntimeException  If an error occurs while regenerating this storage
+     * @return bool True if session regenerated, false if error
      */
     public function restart($destroy = false, $lifetime = null)
     {
@@ -177,11 +177,11 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * regenerate
+     * regenerate.
      *
      * @param bool $destroy
      *
-     * @return  bool
+     * @return bool
      */
     public function regenerate($destroy = false)
     {
@@ -196,10 +196,10 @@ class NativeBridge implements SessionBridgeInterface
      * a real PHP session would interfere with testing, in which case it
      * it should actually persist the session data if required.
      *
-     * @return  void
-     *
      * @throws \RuntimeException If the session is saved without being started, or if the session
      *                           is already closed.
+     *
+     * @return void
      */
     public function save()
     {
@@ -212,7 +212,7 @@ class NativeBridge implements SessionBridgeInterface
     /**
      * Clear all session data in memory.
      *
-     * @return  void
+     * @return void
      */
     public function destroy()
     {
@@ -227,9 +227,9 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * getCookieParams
+     * getCookieParams.
      *
-     * @return  array
+     * @return array
      */
     public function getCookieParams()
     {
@@ -239,17 +239,17 @@ class NativeBridge implements SessionBridgeInterface
     /**
      * Set session cookie parameters, this method should call before session started.
      *
-     * @param   integer $lifetime   Lifetime of the session cookie, defined in seconds.
-     * @param   string  $path       Path on the domain where the cookie will work. Use a single
-     *                              slash ('/') for all paths on the domain.
-     * @param   string  $domain     Cookie domain, for example 'www.php.net'. To make cookies
-     *                              visible on all sub domains then the domain must be prefixed
-     *                              with a dot like '.php.net'.
-     * @param   boolean $secure     If true cookie will only be sent over secure connections.
-     * @param   boolean $httponly   If set to true then PHP will attempt to send the httponly
-     *                              flag when setting the session cookie.
+     * @param int    $lifetime Lifetime of the session cookie, defined in seconds.
+     * @param string $path     Path on the domain where the cookie will work. Use a single
+     *                         slash ('/') for all paths on the domain.
+     * @param string $domain   Cookie domain, for example 'www.php.net'. To make cookies
+     *                         visible on all sub domains then the domain must be prefixed
+     *                         with a dot like '.php.net'.
+     * @param bool   $secure   If true cookie will only be sent over secure connections.
+     * @param bool   $httponly If set to true then PHP will attempt to send the httponly
+     *                         flag when setting the session cookie.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -263,9 +263,9 @@ class NativeBridge implements SessionBridgeInterface
     }
 
     /**
-     * getStorage
+     * getStorage.
      *
-     * @return  array
+     * @return array
      */
     public function &getStorage()
     {

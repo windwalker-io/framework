@@ -18,16 +18,16 @@ class EmailField extends TextField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'email';
 
     /**
-     * prepare
+     * prepare.
      *
      * @param array $attrs
      *
-     * @return  array|void
+     * @return array|void
      */
     public function prepare(&$attrs)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Renderer\PhpRenderer;
 
 /**
- * Test class of PhpRenderer
+ * Test class of PhpRenderer.
  *
  * @since 2.0
  */
@@ -40,7 +40,7 @@ class PhpRendererTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        static::$path = realpath(__DIR__ . '/Tmpl/php');
+        static::$path = realpath(__DIR__.'/Tmpl/php');
 
         if (!static::$path) {
             throw new \RuntimeException('Path not exists');
@@ -70,7 +70,7 @@ class PhpRendererTest extends AbstractDomTestCase
     {
         $html = $this->instance->render('default');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="default">
 	Default
 </div>
@@ -90,11 +90,11 @@ HTML;
     {
         $file = $this->instance->findFile('flower');
 
-        $this->assertEquals(realpath(static::$path . '/flower.php'), $file);
+        $this->assertEquals(realpath(static::$path.'/flower.php'), $file);
 
         $file = $this->instance->findFile('foo/bar');
 
-        $this->assertEquals(realpath(static::$path . '/foo/bar.php'), $file);
+        $this->assertEquals(realpath(static::$path.'/foo/bar.php'), $file);
     }
 
     /**
@@ -108,7 +108,7 @@ HTML;
     {
         $html = $this->instance->render('extend1');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eleifend, ante vitae vestibulum tempus
 </p>
@@ -128,7 +128,7 @@ HTML;
     {
         $html = $this->instance->render('foo/extend2');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>
 Lorem ipsum dolor sit amet,
 <span>Vivamus tincidunt consectetur finibus.</span>
@@ -143,7 +143,7 @@ HTML;
         // Render twice
         $html = $this->instance->render('foo/extend3');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>
 Lorem ipsum dolor sit amet,
 <span>Sed tempor urna quis varius luctus.</span>
@@ -155,15 +155,15 @@ HTML;
     }
 
     /**
-     * testExtendMultiLevels
+     * testExtendMultiLevels.
      *
-     * @return  void
+     * @return void
      */
     public function testExtendMultiLevels()
     {
         $html = $this->instance->render('foo/extend3');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>
 Lorem ipsum dolor sit amet,
 <span>Sed tempor urna quis varius luctus.</span>
@@ -175,15 +175,15 @@ HTML;
     }
 
     /**
-     * testExtendWithParent
+     * testExtendWithParent.
      *
-     * @return  void
+     * @return void
      */
     public function testExtendWithParent()
     {
         $html = $this->instance->render('foo/extend-with-parent');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <p>
 Lorem ipsum dolor sit amet,
 <span>Vivamus tincidunt consectetur finibus.</span>
@@ -196,15 +196,15 @@ HTML;
     }
 
     /**
-     * testLoad
+     * testLoad.
      *
-     * @return  void
+     * @return void
      */
     public function testLoad()
     {
         $html = $this->instance->render('include1');
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="flower">
 	<h1>BAR</h1>
 	<p>Quisque egestas posuere enim non dapibus.</p>
@@ -215,21 +215,21 @@ HTML;
     }
 
     /**
-     * testLoadWithData
+     * testLoadWithData.
      *
-     * @return  void
+     * @return void
      */
     public function testLoadWithData()
     {
         $data = [
-            'class' => 'flower',
-            'title' => 'Sakura',
+            'class'   => 'flower',
+            'title'   => 'Sakura',
             'content' => 'Nulla sollicitudin vel augue quis aliquet.',
         ];
 
         $html = $this->instance->render('data1', $data);
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <div id="data" class="flower">
 	<h1>Sakura</h1>
 	<p>Morbi suscipit ante massa</p>

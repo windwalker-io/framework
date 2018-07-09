@@ -19,18 +19,18 @@ class RecursiveDualIterator extends \RecursiveIteratorIterator
      * Used to keep end of recursion equality. That is en leaving a nesting
      * level we need to check whether both child iterators are at their end.
      *
-     * @var boolean
+     * @var bool
      */
     protected $equal = false;
 
     /**
-     * Construct from RecursiveDualIterator
+     * Construct from RecursiveDualIterator.
      *
      * @param RecursiveDualIterator $it    RecursiveDualIterator
-     * @param integer               $mode  Should be LEAVES_ONLY
-     * @param integer               $flags Should be 0
+     * @param int                   $mode  Should be LEAVES_ONLY
+     * @param int                   $flags Should be 0
      */
-    public function __construct(RecursiveDualIterator $it, $mode = self::LEAVES_ONLY, $flags = 0)
+    public function __construct(self $it, $mode = self::LEAVES_ONLY, $flags = 0)
     {
         parent::__construct($it);
     }
@@ -48,7 +48,7 @@ class RecursiveDualIterator extends \RecursiveIteratorIterator
     }
 
     /**
-     * Calculate $equal
+     * Calculate $equal.
      *
      * @see $equal
      *
@@ -61,10 +61,10 @@ class RecursiveDualIterator extends \RecursiveIteratorIterator
     }
 
     /**
-     * Are Identical
+     * Are Identical.
      *
-     * @return boolean Whether both inner iterators are valid and have identical
-     *                 current and key values or both are non valid.
+     * @return bool Whether both inner iterators are valid and have identical
+     *              current and key values or both are non valid.
      */
     public function areIdentical()
     {
@@ -74,8 +74,8 @@ class RecursiveDualIterator extends \RecursiveIteratorIterator
     /**
      * Are equal.
      *
-     * @return boolean Whether both inner iterators are valid and have equal current
-     *                 and key values or both are non valid.
+     * @return bool Whether both inner iterators are valid and have equal current
+     *              and key values or both are non valid.
      */
     public function areEqual()
     {

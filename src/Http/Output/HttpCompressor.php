@@ -28,29 +28,29 @@ class HttpCompressor
     /**
      * Property acceptEncoding.
      *
-     * @var  string
+     * @var string
      */
     protected $acceptEncoding;
 
     /**
      * Property encoding.
      *
-     * @var  array
+     * @var array
      */
     protected $encodings;
 
     /**
      * Property encodedBy.
      *
-     * @var  string
+     * @var string
      */
     protected $encodedBy = 'Windwalker';
 
     /**
      * Compressor constructor.
      *
-     * @param  string $acceptEncoding   The Accept-Encoding value, most is "gzip, deflate".
-     *                                  Keep null to get it from globals.
+     * @param string $acceptEncoding The Accept-Encoding value, most is "gzip, deflate".
+     *                               Keep null to get it from globals.
      */
     public function __construct($acceptEncoding = null)
     {
@@ -60,7 +60,7 @@ class HttpCompressor
     /**
      * Method to check zlib supported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported()
     {
@@ -70,7 +70,7 @@ class HttpCompressor
     /**
      * Method to parse Accept-Encoding to an array thar we can use it when compressing data.
      *
-     * @return  void
+     * @return void
      */
     protected function parseEncodings()
     {
@@ -81,11 +81,11 @@ class HttpCompressor
      * Checks the accept encoding of the browser and compresses the data before
      * sending it to the client if possible.
      *
-     * @param   ResponseInterface $response The Response object contains the data we want to encode.
+     * @param ResponseInterface $response The Response object contains the data we want to encode.
      *
-     * @return  ResponseInterface  Return Response object.
+     * @throws CompressException
      *
-     * @throws  CompressException
+     * @return ResponseInterface Return Response object.
      *
      * @since   3.0
      */
@@ -95,8 +95,8 @@ class HttpCompressor
 
         // Supported compression encodings.
         $supported = [
-            'x-gzip' => FORCE_GZIP,
-            'gzip' => FORCE_GZIP,
+            'x-gzip'  => FORCE_GZIP,
+            'gzip'    => FORCE_GZIP,
             'deflate' => FORCE_DEFLATE,
         ];
 
@@ -138,22 +138,22 @@ class HttpCompressor
     /**
      * Compress raw data.
      *
-     * @param string $data       The data to encode.
-     * @param int    $encoding   The encoding mode. Can be FORCE_GZIP (the default) or FORCE_DEFLATE.
-     * @param int    $level      The level of compression. Can be given as 0 for no compression up to 9
-     *                           for maximum compression. If not given, the default compression level will
-     *                           be the default compression level of the zlib library.
+     * @param string $data     The data to encode.
+     * @param int    $encoding The encoding mode. Can be FORCE_GZIP (the default) or FORCE_DEFLATE.
+     * @param int    $level    The level of compression. Can be given as 0 for no compression up to 9
+     *                         for maximum compression. If not given, the default compression level will
+     *                         be the default compression level of the zlib library.
      *
-     * @return  string
+     * @throws CompressException
      *
-     * @throws  CompressException
+     * @return string
      */
     public function encode($data, $encoding = FORCE_GZIP, $level = 4)
     {
         // Verify that the server supports gzip compression before we attempt to gzip encode the data.
         if (!static::isSupported()) {
             throw new CompressException(
-                'Your system does not support HTTP compression, please check zlib has benn enabled' .
+                'Your system does not support HTTP compression, please check zlib has benn enabled'.
                 ' or zlib.output_compression in php.ini has set to "On".'
             );
         }
@@ -171,9 +171,9 @@ class HttpCompressor
     }
 
     /**
-     * Method to get property AcceptEncoding
+     * Method to get property AcceptEncoding.
      *
-     * @return  string
+     * @return string
      */
     public function getAcceptEncoding()
     {
@@ -185,11 +185,11 @@ class HttpCompressor
     }
 
     /**
-     * Method to set property acceptEncoding
+     * Method to set property acceptEncoding.
      *
-     * @param   string $acceptEncoding
+     * @param string $acceptEncoding
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setAcceptEncoding($acceptEncoding)
     {
@@ -202,7 +202,7 @@ class HttpCompressor
      * Method to check to see if headers have already been sent.
      * We wrap headers_sent() function with this method for testing reason.
      *
-     * @return  boolean  True if the headers have already been sent.
+     * @return bool True if the headers have already been sent.
      *
      * @see     headers_sent()
      * @since   2.0
@@ -216,20 +216,20 @@ class HttpCompressor
      * Method to check the current client connection status to ensure that it is alive.
      * We wrap connection_status() function with this method for testing reason.
      *
-     * @return  boolean  True if the connection is valid and normal.
+     * @return bool True if the connection is valid and normal.
      *
      * @see     connection_status()
      * @since   2.0
      */
     public function checkConnectionAlive()
     {
-        return (connection_status() === CONNECTION_NORMAL);
+        return connection_status() === CONNECTION_NORMAL;
     }
 
     /**
-     * Method to get property EncodedBy
+     * Method to get property EncodedBy.
      *
-     * @return  string
+     * @return string
      */
     public function getEncodedBy()
     {
@@ -237,11 +237,11 @@ class HttpCompressor
     }
 
     /**
-     * Method to set property encodedBy
+     * Method to set property encodedBy.
      *
-     * @param   string $encodedBy
+     * @param string $encodedBy
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setEncodedBy($encodedBy)
     {

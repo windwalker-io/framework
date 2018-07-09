@@ -12,7 +12,7 @@ use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
 
 /**
- * Class RedisStorage
+ * Class RedisStorage.
  *
  * @since 2.0
  */
@@ -21,23 +21,23 @@ class RedisStorage extends AbstractDriverCacheStorage
     /**
      * Property defaultHost.
      *
-     * @var  string
+     * @var string
      */
     protected $defaultHost = '127.0.0.1';
 
     /**
      * Property defaultPort.
      *
-     * @var  int
+     * @var int
      */
     protected $defaultPort = 6379;
 
     /**
      * Class init.
      *
-     * @param   \Memcached $driver  The cache storage driver.
-     * @param   int        $ttl     The Time To Live (TTL) of an item
-     * @param   mixed      $options An options array, or an object that implements \ArrayAccess
+     * @param \Memcached $driver  The cache storage driver.
+     * @param int        $ttl     The Time To Live (TTL) of an item
+     * @param mixed      $options An options array, or an object that implements \ArrayAccess
      *
      * @throws \RuntimeException
      */
@@ -53,9 +53,9 @@ class RedisStorage extends AbstractDriverCacheStorage
     /**
      * Method to determine whether a storage entry has been set for a key.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists($key)
     {
@@ -66,12 +66,13 @@ class RedisStorage extends AbstractDriverCacheStorage
 
     /**
      * Here we pass in a cache key to be fetched from the cache.
-     * A CacheItem object will be constructed and returned to us
+     * A CacheItem object will be constructed and returned to us.
      *
      * @param string $key The unique key of this item in the cache
      *
-     * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
      * @throws \Exception
+     *
+     * @return CacheItemInterface The newly populated CacheItem class representing the stored data in the cache
      */
     public function getItem($key)
     {
@@ -116,7 +117,7 @@ class RedisStorage extends AbstractDriverCacheStorage
     }
 
     /**
-     * Remove an item from the cache by its unique key
+     * Remove an item from the cache by its unique key.
      *
      * @param string $key The unique cache key of the item to remove
      *
@@ -132,7 +133,7 @@ class RedisStorage extends AbstractDriverCacheStorage
     }
 
     /**
-     * This will wipe out the entire cache's keys
+     * This will wipe out the entire cache's keys.
      *
      * @return static Return self to support chaining
      */
@@ -144,9 +145,9 @@ class RedisStorage extends AbstractDriverCacheStorage
     }
 
     /**
-     * connect
+     * connect.
      *
-     * @return  static
+     * @return static
      */
     protected function connect()
     {
@@ -156,7 +157,7 @@ class RedisStorage extends AbstractDriverCacheStorage
         }
 
         if (($this->defaultHost === 'localhost' || filter_var($this->defaultHost, FILTER_VALIDATE_IP))) {
-            $this->driver->connect('tcp://' . $this->defaultHost . ':' . $this->defaultPort, $this->defaultPort);
+            $this->driver->connect('tcp://'.$this->defaultHost.':'.$this->defaultPort, $this->defaultPort);
         } else {
             $this->driver->connect($this->defaultHost, null);
         }

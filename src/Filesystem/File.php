@@ -11,18 +11,18 @@ namespace Windwalker\Filesystem;
 use Windwalker\Filesystem\Exception\FilesystemException;
 
 /**
- * A File handling class
+ * A File handling class.
  *
  * @since  2.0
  */
 class File
 {
     /**
-     * Strips the last extension off of a file name
+     * Strips the last extension off of a file name.
      *
-     * @param   string $file The file name
+     * @param string $file The file name
      *
-     * @return  string  The file name without the extension
+     * @return string The file name without the extension
      *
      * @since   2.0
      */
@@ -32,11 +32,11 @@ class File
     }
 
     /**
-     * getExtension
+     * getExtension.
      *
-     * @param   string $file The file path to get extension.
+     * @param string $file The file path to get extension.
      *
-     * @return  string  The ext of file path.
+     * @return string The ext of file path.
      *
      * @since   2.0
      */
@@ -48,9 +48,9 @@ class File
     /**
      * Get file name from a path.
      *
-     * @param   string $path The file path to get basename.
+     * @param string $path The file path to get basename.
      *
-     * @return  string  The file name.
+     * @return string The file name.
      *
      * @since   2.0
      */
@@ -61,19 +61,19 @@ class File
         $ext = pathinfo($path, PATHINFO_EXTENSION);
 
         if ($ext) {
-            $name .= '.' . $ext;
+            $name .= '.'.$ext;
         }
 
         return $name;
     }
 
     /**
-     * Makes the file name safe to use
+     * Makes the file name safe to use.
      *
-     * @param   string $file       The name of the file [not full path]
-     * @param   array  $stripChars Array of regex (by default will remove any leading periods)
+     * @param string $file       The name of the file [not full path]
+     * @param array  $stripChars Array of regex (by default will remove any leading periods)
      *
-     * @return  string  The sanitised string
+     * @return string The sanitised string
      *
      * @since   2.0
      */
@@ -90,15 +90,16 @@ class File
     }
 
     /**
-     * Copies a file
+     * Copies a file.
      *
-     * @param   string $src   The path to the source file
-     * @param   string $dest  The path to the destination file
-     * @param   bool   $force Force copy.
+     * @param string $src   The path to the source file
+     * @param string $dest  The path to the destination file
+     * @param bool   $force Force copy.
      *
      * @throws \UnexpectedValueException
      * @throws Exception\FilesystemException
-     * @return  boolean  True on success
+     *
+     * @return bool True on success
      *
      * @since   2.0
      */
@@ -106,7 +107,7 @@ class File
     {
         // Check src path
         if (!is_readable($src)) {
-            throw new \UnexpectedValueException(__METHOD__ . ': Cannot find or read file: ' . $src);
+            throw new \UnexpectedValueException(__METHOD__.': Cannot find or read file: '.$src);
         }
 
         // Check folder exists
@@ -121,26 +122,27 @@ class File
             if ($force) {
                 Filesystem::delete($dest);
             } else {
-                throw new FilesystemException($dest . ' has exists, copy failed.');
+                throw new FilesystemException($dest.' has exists, copy failed.');
             }
         }
 
-        if (!@ copy($src, $dest)) {
-            throw new FilesystemException(__METHOD__ . ': Copy failed.');
+        if (!@copy($src, $dest)) {
+            throw new FilesystemException(__METHOD__.': Copy failed.');
         }
 
         return true;
     }
 
     /**
-     * Delete a file or array of files
+     * Delete a file or array of files.
      *
-     * @param   mixed $files The file name or an array of file names
+     * @param mixed $files The file name or an array of file names
      *
-     * @return  boolean  True on success
+     * @throws FilesystemException
+     *
+     * @return bool True on success
      *
      * @since   2.0
-     * @throws  FilesystemException
      */
     public static function delete($files)
     {
@@ -157,7 +159,7 @@ class File
             // as long as the owner is either the webserver or the ftp
             // TODO: Remove exception and use PHP7 throwable
             if (@!unlink($file)) {
-                throw new FilesystemException(__METHOD__ . ': Failed deleting ' . basename($file));
+                throw new FilesystemException(__METHOD__.': Failed deleting '.basename($file));
             }
         }
 
@@ -165,14 +167,15 @@ class File
     }
 
     /**
-     * Moves a file
+     * Moves a file.
      *
-     * @param   string $src   The path to the source file
-     * @param   string $dest  The path to the destination file
-     * @param   bool   $force Force move it.
+     * @param string $src   The path to the source file
+     * @param string $dest  The path to the destination file
+     * @param bool   $force Force move it.
      *
      * @throws Exception\FilesystemException
-     * @return  boolean  True on success
+     *
+     * @return bool True on success
      *
      * @since   2.0
      */
@@ -188,7 +191,7 @@ class File
             if ($force) {
                 Filesystem::delete($dest);
             } else {
-                throw new FilesystemException('File: ' . $dest . ' exists, move failed.');
+                throw new FilesystemException('File: '.$dest.' exists, move failed.');
             }
         }
 
@@ -199,23 +202,24 @@ class File
             Folder::create($dir);
         }
 
-        if (!@ rename($src, $dest)) {
-            throw new FilesystemException(__METHOD__ . ': Rename failed.');
+        if (!@rename($src, $dest)) {
+            throw new FilesystemException(__METHOD__.': Rename failed.');
         }
 
         return true;
     }
 
     /**
-     * Write contents to a file
+     * Write contents to a file.
      *
-     * @param   string $file   The full file path
-     * @param   string $buffer The buffer to write
+     * @param string $file   The full file path
+     * @param string $buffer The buffer to write
      *
-     * @return  boolean  True on success
+     * @throws FilesystemException
+     *
+     * @return bool True on success
      *
      * @since   2.0
-     * @throws  FilesystemException
      */
     public static function write($file, $buffer)
     {
@@ -232,15 +236,16 @@ class File
     }
 
     /**
-     * Moves an uploaded file to a destination folder
+     * Moves an uploaded file to a destination folder.
      *
-     * @param   string $src  The name of the php (temporary) uploaded file
-     * @param   string $dest The path (including filename) to move the uploaded file to
+     * @param string $src  The name of the php (temporary) uploaded file
+     * @param string $dest The path (including filename) to move the uploaded file to
      *
-     * @return  boolean  True on success
+     * @throws FilesystemException
+     *
+     * @return bool True on success
      *
      * @since   2.0
-     * @throws  FilesystemException
      */
     public static function upload($src, $dest)
     {
@@ -259,11 +264,11 @@ class File
             if (Path::setPermissions($dest)) {
                 return true;
             } else {
-                throw new FilesystemException(__METHOD__ . ': Failed to change file permissions.');
+                throw new FilesystemException(__METHOD__.': Failed to change file permissions.');
             }
         }
 
-        throw new FilesystemException(__METHOD__ . ': Failed to move file.');
+        throw new FilesystemException(__METHOD__.': Failed to move file.');
     }
 
     /**
@@ -272,7 +277,7 @@ class File
      * @param string $path        The file path to check.
      * @param bool   $inSensitive Insensitive file name case.
      *
-     * @return  bool
+     * @return bool
      */
     public static function exists($path, $inSensitive = false)
     {
@@ -285,7 +290,7 @@ class File
         if (!$exists) {
             $lowerfile = strtolower($path);
 
-            foreach (glob(dirname($path) . '/*') as $file) {
+            foreach (glob(dirname($path).'/*') as $file) {
                 if (strtolower($file) === $lowerfile) {
                     return true;
                 }
@@ -298,7 +303,7 @@ class File
     public static function fixCase($path, $filename = null)
     {
         if ($filename !== null) {
-            $path .= DIRECTORY_SEPARATOR . $filename;
+            $path .= DIRECTORY_SEPARATOR.$filename;
         }
     }
 }

@@ -9,7 +9,7 @@
 namespace Windwalker\Router;
 
 /**
- * Class Route
+ * Class Route.
  *
  * @since 2.0
  */
@@ -18,42 +18,42 @@ class Route implements \IteratorAggregate
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
     /**
      * Property pattern.
      *
-     * @var  string
+     * @var string
      */
     protected $pattern = null;
 
     /**
      * Property regex.
      *
-     * @var  string
+     * @var string
      */
     protected $regex = null;
 
     /**
      * Property allowMethods.
      *
-     * @var  array
+     * @var array
      */
     protected $allowMethods = [];
 
     /**
      * Property variables.
      *
-     * @var  array
+     * @var array
      */
     protected $variables = [];
 
     /**
      * Property requirements.
      *
-     * @var  array
+     * @var array
      */
     public $requirements = [];
 
@@ -67,42 +67,42 @@ class Route implements \IteratorAggregate
     /**
      * Property scheme.
      *
-     * @var  string
+     * @var string
      */
     protected $scheme = '';
 
     /**
      * Property port.
      *
-     * @var integer
+     * @var int
      */
     protected $port;
 
     /**
      * Property sslPort.
      *
-     * @var integer
+     * @var int
      */
     protected $sslPort;
 
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
     /**
      * Property ssl.
      *
-     * @var boolean
+     * @var bool
      */
     protected $ssl = false;
 
     /**
      * Property extra.
      *
-     * @var  array
+     * @var array
      */
     protected $extra = [];
 
@@ -126,9 +126,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getPattern
+     * getPattern.
      *
-     * @return  string
+     * @return string
      */
     public function getPattern()
     {
@@ -136,11 +136,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * setPattern
+     * setPattern.
      *
-     * @param   string $pattern
+     * @param string $pattern
      *
-     * @return  Route  Return self to support chaining.
+     * @return Route Return self to support chaining.
      */
     public function setPattern($pattern)
     {
@@ -150,9 +150,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getRegex
+     * getRegex.
      *
-     * @return  string
+     * @return string
      */
     public function getRegex()
     {
@@ -160,11 +160,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * setRegex
+     * setRegex.
      *
-     * @param   string $regex
+     * @param string $regex
      *
-     * @return  Route  Return self to support chaining.
+     * @return Route Return self to support chaining.
      */
     public function setRegex($regex)
     {
@@ -174,9 +174,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getMethod
+     * getMethod.
      *
-     * @return  string
+     * @return string
      */
     public function getAllowMethods()
     {
@@ -184,11 +184,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * setMethod
+     * setMethod.
      *
-     * @param   array|string $methods
+     * @param array|string $methods
      *
-     * @return  Route  Return self to support chaining.
+     * @return Route Return self to support chaining.
      */
     public function setAllowMethods($methods)
     {
@@ -202,9 +202,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getVariables
+     * getVariables.
      *
-     * @return  array
+     * @return array
      */
     public function getVariables()
     {
@@ -212,11 +212,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * setVariables
+     * setVariables.
      *
-     * @param   array $variables
+     * @param array $variables
      *
-     * @return  Route  Return self to support chaining.
+     * @return Route Return self to support chaining.
      */
     public function setVariables($variables)
     {
@@ -226,9 +226,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -236,11 +236,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * setName
+     * setName.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  Route  Return self to support chaining.
+     * @return Route Return self to support chaining.
      */
     public function setName($name)
     {
@@ -250,9 +250,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      */
     public function getOptions()
     {
@@ -260,11 +260,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOptions($options)
     {
@@ -281,34 +281,34 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  array
+     * @return array
      */
     public function prepareOptions($options)
     {
         $defaultOptions = [
             'requirements' => [],
-            'options' => [],
-            'host' => null,
-            'scheme' => null,
-            'port' => null,
-            'sslPort' => null,
-            'extra' => [],
+            'options'      => [],
+            'host'         => null,
+            'scheme'       => null,
+            'port'         => null,
+            'sslPort'      => null,
+            'extra'        => [],
         ];
 
         return array_merge($defaultOptions, (array) $options);
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @param   string $name
-     * @param   mixed  $default
+     * @param string $name
+     * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getOption($name, $default = null)
     {
@@ -320,12 +320,12 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   string $name
-     * @param   mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOption($name, $value)
     {
@@ -335,9 +335,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property SslPort
+     * Method to get property SslPort.
      *
-     * @return  int
+     * @return int
      */
     public function getSslPort()
     {
@@ -345,11 +345,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property sslPort
+     * Method to set property sslPort.
      *
-     * @param   int $sslPort
+     * @param int $sslPort
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSslPort($sslPort)
     {
@@ -359,9 +359,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Port
+     * Method to get property Port.
      *
-     * @return  int
+     * @return int
      */
     public function getPort()
     {
@@ -369,11 +369,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property port
+     * Method to set property port.
      *
-     * @param   int $port
+     * @param int $port
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPort($port)
     {
@@ -383,9 +383,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Scheme
+     * Method to get property Scheme.
      *
-     * @return  string
+     * @return string
      */
     public function getScheme()
     {
@@ -393,11 +393,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property scheme
+     * Method to set property scheme.
      *
-     * @param   string $scheme
+     * @param string $scheme
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setScheme($scheme)
     {
@@ -409,9 +409,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Host
+     * Method to get property Host.
      *
-     * @return  string
+     * @return string
      */
     public function getHost()
     {
@@ -419,11 +419,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property host
+     * Method to set property host.
      *
-     * @param   string $host
+     * @param string $host
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setHost($host)
     {
@@ -433,9 +433,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Requirements
+     * Method to get property Requirements.
      *
-     * @return  array
+     * @return array
      */
     public function getRequirements()
     {
@@ -443,11 +443,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property requirements
+     * Method to set property requirements.
      *
-     * @param   array $requirements
+     * @param array $requirements
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRequirements($requirements)
     {
@@ -457,9 +457,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Ssl
+     * Method to get property Ssl.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getSSL()
     {
@@ -467,11 +467,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property ssl
+     * Method to set property ssl.
      *
-     * @param   boolean $ssl
+     * @param bool $ssl
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSSL($ssl)
     {
@@ -481,9 +481,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Extra
+     * Method to get property Extra.
      *
-     * @return  array
+     * @return array
      */
     public function getExtraValues()
     {
@@ -491,11 +491,11 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Method to set property extra
+     * Method to set property extra.
      *
-     * @param   array $extra
+     * @param array $extra
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setExtraValues(array $extra)
     {
@@ -505,12 +505,12 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getExtra
+     * getExtra.
      *
      * @param string $name
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getExtra($name, $default = null)
     {
@@ -522,12 +522,12 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * setExtra
+     * setExtra.
      *
-     * @param   string $name
-     * @param   mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function setExtra($name, $value)
     {
@@ -537,7 +537,7 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable An instance of an object implementing Iterator or Traversable
      */
@@ -547,9 +547,9 @@ class Route implements \IteratorAggregate
     }
 
     /**
-     * getAllData
+     * getAllData.
      *
-     * @return  array
+     * @return array
      */
     public function getAllData()
     {

@@ -22,14 +22,14 @@ class YamlFormat implements FormatInterface
     /**
      * The YAML parser class.
      *
-     * @var  \Symfony\Component\Yaml\Parser;
+     * @var \Symfony\Component\Yaml\Parser;
      */
     protected static $parser;
 
     /**
      * The YAML dumper class.
      *
-     * @var  \Symfony\Component\Yaml\Dumper;
+     * @var \Symfony\Component\Yaml\Dumper;
      */
     protected static $dumper;
 
@@ -37,10 +37,10 @@ class YamlFormat implements FormatInterface
      * Converts an object into a YAML formatted string.
      * We use json_* to convert the passed object to an array.
      *
-     * @param   object $struct  Data source object.
-     * @param   array  $options Options used by the formatter.
+     * @param object $struct  Data source object.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  string  YAML formatted string.
+     * @return string YAML formatted string.
      *
      * @since   2.0
      */
@@ -56,10 +56,10 @@ class YamlFormat implements FormatInterface
      * Parse a YAML formatted string and convert it into an object.
      * We use the json_* methods to convert the parsed YAML array to an object.
      *
-     * @param   string $data    YAML formatted string to convert.
-     * @param   array  $options Options used by the formatter.
+     * @param string $data    YAML formatted string to convert.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  object  Data object.
+     * @return object Data object.
      *
      * @since   2.0
      */
@@ -69,9 +69,9 @@ class YamlFormat implements FormatInterface
     }
 
     /**
-     * getParser
+     * getParser.
      *
-     * @return  \Symfony\Component\Yaml\Parser
+     * @return \Symfony\Component\Yaml\Parser
      */
     public static function getParser()
     {
@@ -83,11 +83,11 @@ class YamlFormat implements FormatInterface
     }
 
     /**
-     * setParser
+     * setParser.
      *
-     * @param   \Symfony\Component\Yaml\Parser $parser
+     * @param \Symfony\Component\Yaml\Parser $parser
      *
-     * @return  YamlFormat  Return self to support chaining.
+     * @return YamlFormat Return self to support chaining.
      */
     public static function setParser($parser)
     {
@@ -95,9 +95,9 @@ class YamlFormat implements FormatInterface
     }
 
     /**
-     * getDumper
+     * getDumper.
      *
-     * @return  \Symfony\Component\Yaml\Dumper
+     * @return \Symfony\Component\Yaml\Dumper
      */
     public static function getDumper()
     {
@@ -109,11 +109,11 @@ class YamlFormat implements FormatInterface
     }
 
     /**
-     * setDumper
+     * setDumper.
      *
-     * @param   \Symfony\Component\Yaml\Dumper $dumper
+     * @param \Symfony\Component\Yaml\Dumper $dumper
      *
-     * @return  YamlFormat  Return self to support chaining.
+     * @return YamlFormat Return self to support chaining.
      */
     public static function setDumper($dumper)
     {

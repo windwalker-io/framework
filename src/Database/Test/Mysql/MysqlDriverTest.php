@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Database\Test\Mysql;
 use Windwalker\Query\Mysql\MysqlQuery;
 
 /**
- * Test class of MysqlDriver
+ * Test class of MysqlDriver.
  *
  * @since 2.0
  */
@@ -329,7 +329,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
     public function testReplacePrefix()
     {
         $this->assertEquals(
-            'SELECT * FROM ' . static::$dsn['prefix'] . 'flower WHERE id = 1',
+            'SELECT * FROM '.static::$dsn['prefix'].'flower WHERE id = 1',
             $this->db->replacePrefix('SELECT * FROM #__flower WHERE id = 1')
         );
     }
@@ -343,7 +343,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
      */
     public function testSplitSql()
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT * FROM ww_flower WHERE id = 1;
 SELECT * FROM ww_flower WHERE id = 2;
 SELECT * FROM ww_flower WHERE id = 3;
@@ -493,7 +493,7 @@ SQL;
         $name = '#__flower';
 
         $this->assertEquals(
-            static::$quote[0] . $name . static::$quote[1],
+            static::$quote[0].$name.static::$quote[1],
             $this->db->quoteName($name)
         );
     }
@@ -510,7 +510,7 @@ SQL;
         $name = '#__flower';
 
         $this->assertEquals(
-            static::$quote[0] . $name . static::$quote[1],
+            static::$quote[0].$name.static::$quote[1],
             $this->db->qn($name)
         );
     }
@@ -527,7 +527,7 @@ SQL;
         $text = "Simon can't fly.\nSakura is flower.";
 
         $this->assertEquals(
-            "'" . $this->db->escape($text) . "'",
+            "'".$this->db->escape($text)."'",
             $this->db->quote($text)
         );
     }
@@ -544,7 +544,7 @@ SQL;
         $text = "Simon can't fly.\nSakura is flower.";
 
         $this->assertEquals(
-            "'" . $this->db->escape($text) . "'",
+            "'".$this->db->escape($text)."'",
             $this->db->q($text)
         );
     }

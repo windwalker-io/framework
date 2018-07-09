@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Dom\DomElements;
 use Windwalker\Dom\Helper\DomHelper;
 
 /**
- * Test class of DomElements
+ * Test class of DomElements.
  *
  * @since 2.0
  */
@@ -63,7 +63,7 @@ class DomElementsTest extends \PHPUnit\Framework\TestCase
      */
     public function test__toString()
     {
-        $expect = <<<DOM
+        $expect = <<<'DOM'
 <option>foo</option>
 <option>bar</option>
 <rdf:metaData>

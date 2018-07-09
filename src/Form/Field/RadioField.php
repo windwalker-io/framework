@@ -20,16 +20,16 @@ class RadioField extends ListField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'radio';
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed|void
+     * @return mixed|void
      */
     public function buildInput($attrs)
     {

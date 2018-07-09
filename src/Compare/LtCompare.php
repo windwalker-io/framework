@@ -9,7 +9,7 @@
 namespace Windwalker\Compare;
 
 /**
- * Class LtCompare
+ * Class LtCompare.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class LtCompare extends Compare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = '<';
 }

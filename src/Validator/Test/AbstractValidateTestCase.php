@@ -35,13 +35,13 @@ abstract class AbstractValidateTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testValidate
+     * testValidate.
      *
-     * @param string  $name
-     * @param string  $input
-     * @param boolean $expect
+     * @param string $name
+     * @param string $input
+     * @param bool   $expect
      *
-     * @return  void
+     * @return void
      *
      * @cover  \Windwalker\Validator\Rule\AlnumValidator
      *
@@ -52,12 +52,12 @@ abstract class AbstractValidateTestCase extends \PHPUnit\Framework\TestCase
         if ($expect) {
             $this->assertTrue(
                 $this->instance->validate($input),
-                'Validate case: ' . $name . ' should be TRUE but FALSE. Input: ' . $input
+                'Validate case: '.$name.' should be TRUE but FALSE. Input: '.$input
             );
         } else {
             $this->assertFalse(
                 $this->instance->validate($input),
-                'Validate case: ' . $name . ' should be FALSE but TRUE. Input: ' . $input
+                'Validate case: '.$name.' should be FALSE but TRUE. Input: '.$input
             );
         }
     }

@@ -20,14 +20,14 @@ class RegexValidator extends AbstractValidator
     /**
      * The regular expression to use in testing value.
      *
-     * @var  string
+     * @var string
      */
     protected $regex;
 
     /**
      * The regular expression modifiers to use when testing a value.
      *
-     * @var  string
+     * @var string
      */
     protected $modifiers = '';
 
@@ -44,9 +44,9 @@ class RegexValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Regex
+     * Method to get property Regex.
      *
-     * @return  string
+     * @return string
      */
     public function getRegex()
     {
@@ -54,11 +54,11 @@ class RegexValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property regex
+     * Method to set property regex.
      *
-     * @param   string $regex
+     * @param string $regex
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRegex($regex)
     {
@@ -68,9 +68,9 @@ class RegexValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Modifiers
+     * Method to get property Modifiers.
      *
-     * @return  string
+     * @return string
      */
     public function getModifiers()
     {
@@ -78,11 +78,11 @@ class RegexValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property modifiers
+     * Method to set property modifiers.
      *
-     * @param   string $modifiers
+     * @param string $modifiers
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setModifiers($modifiers)
     {
@@ -92,11 +92,11 @@ class RegexValidator extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
@@ -105,6 +105,6 @@ class RegexValidator extends AbstractValidator
         }
 
         // Test the value against the regular expression.
-        return (bool) preg_match(chr(1) . $this->regex . chr(1) . $this->modifiers, (string) $value);
+        return (bool) preg_match(chr(1).$this->regex.chr(1).$this->modifiers, (string) $value);
     }
 }

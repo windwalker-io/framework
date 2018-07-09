@@ -15,7 +15,7 @@ use Windwalker\Language\Loader\LoaderInterface;
 use Windwalker\Language\Localise\LocaliseInterface;
 
 /**
- * Class Language
+ * Class Language.
  *
  * @since 2.0
  */
@@ -24,42 +24,42 @@ class Language implements LanguageInterface
     /**
      * Property strings.
      *
-     * @var  string[]
+     * @var string[]
      */
     protected $strings = [];
 
     /**
      * Property used.
      *
-     * @var  string[]
+     * @var string[]
      */
     protected $used = [];
 
     /**
      * Property orphans.
      *
-     * @var  string[]
+     * @var string[]
      */
     protected $orphans = [];
 
     /**
      * Property debug.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $debug = false;
 
     /**
      * Property loader.
      *
-     * @var  LoaderInterface[]
+     * @var LoaderInterface[]
      */
     protected $loaders = [];
 
     /**
      * Property format.
      *
-     * @var  FormatInterface[]
+     * @var FormatInterface[]
      */
     protected $formats = [];
 
@@ -73,35 +73,35 @@ class Language implements LanguageInterface
     /**
      * Property defaultLocale.
      *
-     * @var  string
+     * @var string
      */
     protected $defaultLocale = null;
 
     /**
      * Property localise.
      *
-     * @var  LocaliseInterface[]
+     * @var LocaliseInterface[]
      */
     protected $localises = [];
 
     /**
      * Property traces.
      *
-     * @var  array
+     * @var array
      */
     protected $trace = [];
 
     /**
      * Property defaultBacktraceLevel.
      *
-     * @var  integer
+     * @var int
      */
     protected $traceLevelOffset = 0;
 
     /**
      * Property normalizeHandler.
      *
-     * @var  callable
+     * @var callable
      */
     protected $normalizeHandler = ['Windwalker\\Language\\LanguageNormalize', 'toLanguageKey'];
 
@@ -125,13 +125,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * load
+     * load.
      *
      * @param string $file
      * @param string $format
      * @param string $loader
      *
-     * @return  $this
+     * @return $this
      */
     public function load($file, $format = 'ini', $loader = 'file')
     {
@@ -149,12 +149,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * translate
+     * translate.
      *
      * @param string $key
      *
-     * @return  string
      * @throws \ReflectionException
+     *
+     * @return string
      */
     public function translate($key)
     {
@@ -165,7 +166,7 @@ class Language implements LanguageInterface
 
             // In debug mode, we notice user this is a translated string.
             if ($this->debug) {
-                $string = '**' . $string . '**';
+                $string = '**'.$string.'**';
             }
 
             // Store used keys
@@ -180,20 +181,21 @@ class Language implements LanguageInterface
         if ($this->debug) {
             $this->orphans[$normalizeKey] = $this->backtrace($normalizeKey, $this->traceLevelOffset + 2);
 
-            $key = '??' . $key . '??';
+            $key = '??'.$key.'??';
         }
 
         return $key;
     }
 
     /**
-     * plural
+     * plural.
      *
      * @param string $string
      * @param int    $count
      *
-     * @return  string
      * @throws \ReflectionException
+     *
+     * @return string
      */
     public function plural($string, $count = 1)
     {
@@ -203,7 +205,7 @@ class Language implements LanguageInterface
         $suffix = $localise->getPluralSuffix((int) $count);
 
         if ($suffix || $suffix == 0) {
-            $key = $string . '_' . $suffix;
+            $key = $string.'_'.$suffix;
 
             if ($this->exists($key)) {
                 $string = $key;
@@ -220,7 +222,7 @@ class Language implements LanguageInterface
             $suffix = $localise->getPluralSuffix((int) $count);
 
             if ($suffix || $suffix == 0) {
-                $key = $string . '_' . $suffix;
+                $key = $string.'_'.$suffix;
 
                 if ($this->exists($key)) {
                     $string = $key;
@@ -256,12 +258,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * sprintf
+     * sprintf.
      *
      * @param string $key
      *
-     * @return  mixed
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function sprintf($key)
     {
@@ -277,12 +280,12 @@ class Language implements LanguageInterface
     }
 
     /**
-     * exists
+     * exists.
      *
      * @param string $key
      * @param bool   $normalize
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists($key, $normalize = true)
     {
@@ -294,12 +297,12 @@ class Language implements LanguageInterface
     }
 
     /**
-     * addString
+     * addString.
      *
      * @param string $key
      * @param string $string
      *
-     * @return  $this
+     * @return $this
      */
     public function addString($key, $string)
     {
@@ -309,11 +312,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * addStrings
+     * addStrings.
      *
      * @param string[] $strings
      *
-     * @return  $this
+     * @return $this
      */
     public function addStrings($strings)
     {
@@ -325,11 +328,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setDebug
+     * setDebug.
      *
-     * @param   boolean $debug
+     * @param bool $debug
      *
-     * @return  Language  Return self to support chaining.
+     * @return Language Return self to support chaining.
      */
     public function setDebug($debug)
     {
@@ -339,12 +342,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getLoader
+     * getLoader.
      *
      * @param string $name
      *
-     * @throws  \DomainException
-     * @return  LoaderInterface
+     * @throws \DomainException
+     *
+     * @return LoaderInterface
      */
     public function getLoader($name)
     {
@@ -352,7 +356,7 @@ class Language implements LanguageInterface
             $class = sprintf('Windwalker\\Language\\Loader\\%sLoader', ucfirst($name));
 
             if (!class_exists($class)) {
-                throw new \DomainException('Format ' . $name . ' not support. Class: ' . $class . ' not found');
+                throw new \DomainException('Format '.$name.' not support. Class: '.$class.' not found');
             }
 
             $this->loaders[$name] = new $class();
@@ -362,12 +366,12 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setLoader
+     * setLoader.
      *
-     * @param   string          $name
-     * @param   LoaderInterface $loader
+     * @param string          $name
+     * @param LoaderInterface $loader
      *
-     * @return  Language  Return self to support chaining.
+     * @return Language Return self to support chaining.
      */
     public function setLoader($name, LoaderInterface $loader)
     {
@@ -380,13 +384,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setLoaders
+     * setLoaders.
      *
      * @param LoaderInterface|LoaderInterface[] $loaders
      *
-     * @return  void
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function setLoaders($loaders)
     {
@@ -400,12 +404,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getFormat
+     * getFormat.
      *
      * @param string $name
      *
      * @throws \DomainException
-     * @return  FormatInterface
+     *
+     * @return FormatInterface
      */
     public function getFormat($name)
     {
@@ -413,7 +418,7 @@ class Language implements LanguageInterface
             $class = sprintf('Windwalker\\Language\\Format\\%sFormat', $name);
 
             if (!class_exists($class)) {
-                throw new \DomainException('Format ' . $name . ' not support. Class: ' . $class . ' not found');
+                throw new \DomainException('Format '.$name.' not support. Class: '.$class.' not found');
             }
 
             $this->formats[$name] = new $class();
@@ -423,12 +428,12 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setFormat
+     * setFormat.
      *
-     * @param   string          $name
-     * @param   FormatInterface $format
+     * @param string          $name
+     * @param FormatInterface $format
      *
-     * @return  Language  Return self to support chaining.
+     * @return Language Return self to support chaining.
      */
     public function setFormat($name, FormatInterface $format)
     {
@@ -441,13 +446,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setFormats
+     * setFormats.
      *
      * @param FormatInterface|FormatInterface[] $formats
      *
-     * @return  void
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function setFormats($formats)
     {
@@ -461,9 +466,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getOrphans
+     * getOrphans.
      *
-     * @return  \string[]
+     * @return \string[]
      */
     public function getOrphans()
     {
@@ -471,9 +476,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getUsed
+     * getUsed.
      *
-     * @return  \string[]
+     * @return \string[]
      */
     public function getUsed()
     {
@@ -481,9 +486,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getLocale
+     * getLocale.
      *
-     * @return  string
+     * @return string
      */
     public function getLocale()
     {
@@ -491,11 +496,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setLocale
+     * setLocale.
      *
-     * @param   string $locale
+     * @param string $locale
      *
-     * @return  Language  Return self to support chaining.
+     * @return Language Return self to support chaining.
      */
     public function setLocale($locale)
     {
@@ -507,9 +512,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * Method to get property DefaultLocale
+     * Method to get property DefaultLocale.
      *
-     * @return  string
+     * @return string
      */
     public function getDefaultLocale()
     {
@@ -517,11 +522,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * Method to set property defaultLocale
+     * Method to set property defaultLocale.
      *
-     * @param   string $defaultLocale
+     * @param string $defaultLocale
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDefaultLocale($defaultLocale)
     {
@@ -531,12 +536,12 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setLocalise
+     * setLocalise.
      *
-     * @param   string            $locale
-     * @param   LocaliseInterface $localise
+     * @param string            $locale
+     * @param LocaliseInterface $localise
      *
-     * @return  Language  Return self to support chaining.
+     * @return Language Return self to support chaining.
      */
     public function setLocalise($locale = 'en-GB', LocaliseInterface $localise = null)
     {
@@ -548,11 +553,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getLocalise
+     * getLocalise.
      *
      * @param string $locale
      *
-     * @return  LocaliseInterface
+     * @return LocaliseInterface
      */
     protected function getLocalise($locale = 'en-GB')
     {
@@ -574,12 +579,13 @@ class Language implements LanguageInterface
     }
 
     /**
-     * normalize
+     * normalize.
      *
      * @param string $string
      *
      * @throws \UnexpectedValueException
-     * @return  mixed
+     *
+     * @return mixed
      */
     public function normalize($string)
     {
@@ -593,9 +599,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * getNormalizeHandler
+     * getNormalizeHandler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getNormalizeHandler()
     {
@@ -603,11 +609,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * setNormalizeHandler
+     * setNormalizeHandler.
      *
-     * @param   callable $normalizeHandler
+     * @param callable $normalizeHandler
      *
-     * @return  Language  Return self to support chaining.
+     * @return Language Return self to support chaining.
      */
     public function setNormalizeHandler($normalizeHandler)
     {
@@ -617,13 +623,14 @@ class Language implements LanguageInterface
     }
 
     /**
-     * backTrace
+     * backTrace.
      *
      * @param string $string
      * @param int    $level
      *
-     * @return  array
      * @throws \ReflectionException
+     *
+     * @return array
      */
     protected function backtrace($string, $level = 1)
     {
@@ -633,19 +640,19 @@ class Language implements LanguageInterface
 
         $info = [
             'position' => null,
-            'called' => null,
-            'args' => [],
+            'called'   => null,
+            'args'     => [],
         ];
 
         if (function_exists('debug_backtrace')) {
             $defaultTrace = [
-                'file' => null,
-                'line' => null,
+                'file'     => null,
+                'line'     => null,
                 'function' => null,
-                'class' => null,
-                'object' => null,
-                'type' => null,
-                'args' => [],
+                'class'    => null,
+                'object'   => null,
+                'type'     => null,
+                'args'     => [],
             ];
 
             $trace = debug_backtrace();
@@ -663,10 +670,10 @@ class Language implements LanguageInterface
                 }
 
                 $info['position'] = [
-                    'file' => $ref ? $ref->getFileName() : $traceData['file'],
-                    'class' => $traceData['class'],
+                    'file'     => $ref ? $ref->getFileName() : $traceData['file'],
+                    'class'    => $traceData['class'],
                     'function' => $traceData['function'],
-                    'line' => $ref ? $ref->getStartLine() : $traceData['line'],
+                    'line'     => $ref ? $ref->getStartLine() : $traceData['line'],
                 ];
             }
 
@@ -674,11 +681,11 @@ class Language implements LanguageInterface
                 $traceData = array_merge($defaultTrace, $trace[$level - 1]);
 
                 $info['called'] = [
-                    'file' => $traceData['file'],
-                    'class' => $traceData['class'],
+                    'file'     => $traceData['file'],
+                    'class'    => $traceData['class'],
                     'function' => $traceData['function'],
-                    'line' => $traceData['line'],
-                    'args' => $traceData['args'],
+                    'line'     => $traceData['line'],
+                    'args'     => $traceData['args'],
                 ];
 
                 $info['args'] = $traceData['args'];
@@ -689,9 +696,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * Method to get property Trace
+     * Method to get property Trace.
      *
-     * @return  array
+     * @return array
      */
     public function getTrace()
     {
@@ -699,9 +706,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * Method to get property TraceLevelOffset
+     * Method to get property TraceLevelOffset.
      *
-     * @return  int
+     * @return int
      */
     public function getTraceLevelOffset()
     {
@@ -709,11 +716,11 @@ class Language implements LanguageInterface
     }
 
     /**
-     * Method to set property traceLevelOffset
+     * Method to set property traceLevelOffset.
      *
-     * @param   int $traceLevelOffset
+     * @param int $traceLevelOffset
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTraceLevelOffset($traceLevelOffset)
     {

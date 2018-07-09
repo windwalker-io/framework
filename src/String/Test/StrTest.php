@@ -19,10 +19,10 @@ use Windwalker\String\Str;
 class StrTest extends TestCase
 {
     /**
-     * testGetChar
+     * testGetChar.
      *
-     * @param    $pos
-     * @param    $expected
+     * @param   $pos
+     * @param   $expected
      *
      * @dataProvider getCharProvider
      */
@@ -32,9 +32,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * getCharProvider
+     * getCharProvider.
      *
-     * @return  array
+     * @return array
      */
     public function getCharProvider()
     {
@@ -50,14 +50,14 @@ class StrTest extends TestCase
     }
 
     /**
-     * testBetween
+     * testBetween.
      *
      * @param $string
      * @param $expected
      * @param $left
      * @param $right
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider betweenProvider
      */
@@ -67,9 +67,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * betweenProvider
+     * betweenProvider.
      *
-     * @return  array
+     * @return array
      */
     public function betweenProvider()
     {
@@ -85,9 +85,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testCollapseWhitespace
+     * testCollapseWhitespace.
      *
-     * @return  void
+     * @return void
      */
     public function testCollapseWhitespace()
     {
@@ -97,12 +97,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testContains
+     * testContains.
      *
-     * @param      $expected
-     * @param      $string
-     * @param      $search
-     * @param      $caseSensitive
+     * @param   $expected
+     * @param   $string
+     * @param   $search
+     * @param   $caseSensitive
      *
      * @dataProvider  containsProvider
      */
@@ -112,9 +112,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * containsProvider
+     * containsProvider.
      *
-     * @return  array
+     * @return array
      */
     public function containsProvider()
     {
@@ -131,9 +131,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testEndsWith
+     * testEndsWith.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider endsWithProvider
      */
@@ -143,9 +143,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * endsWithProvider
+     * endsWithProvider.
      *
-     * @return  array
+     * @return array
      */
     public function endsWithProvider()
     {
@@ -164,7 +164,7 @@ class StrTest extends TestCase
     }
 
     /**
-     * testStartsWith
+     * testStartsWith.
      *
      * @param   $string
      * @param   $search
@@ -179,9 +179,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * endsWithProvider
+     * endsWithProvider.
      *
-     * @return  array
+     * @return array
      */
     public function estartsWithProvider()
     {
@@ -200,7 +200,7 @@ class StrTest extends TestCase
     }
 
     /**
-     * testEnsureLeft
+     * testEnsureLeft.
      *
      * @param $string
      * @param $search
@@ -214,9 +214,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * ensureLeftProvider
+     * ensureLeftProvider.
      *
-     * @return  array
+     * @return array
      */
     public function ensureLeftProvider()
     {
@@ -232,13 +232,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testEnsureRight
+     * testEnsureRight.
      *
      * @param $string
      * @param $search
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider ensureRightProvider
      */
@@ -248,9 +248,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * ensureRightProvider
+     * ensureRightProvider.
      *
-     * @return  array
+     * @return array
      */
     public function ensureRightProvider()
     {
@@ -266,12 +266,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testHasLowerCase
+     * testHasLowerCase.
      *
      * @param   $string
      * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider hasLowerCaseProvider
      */
@@ -281,9 +281,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * hasLowerCaseProvider
+     * hasLowerCaseProvider.
      *
-     * @return  array
+     * @return array
      */
     public function hasLowerCaseProvider()
     {
@@ -297,12 +297,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testHasUpperCase
+     * testHasUpperCase.
      *
      * @param   $string
      * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider hasUpperCaseProvider
      */
@@ -312,9 +312,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * hasUpperCaseProvider
+     * hasUpperCaseProvider.
      *
-     * @return  array
+     * @return array
      */
     public function hasUpperCaseProvider()
     {
@@ -328,14 +328,14 @@ class StrTest extends TestCase
     }
 
     /**
-     * testInsert
+     * testInsert.
      *
-     * @param    $string
-     * @param    $insert
-     * @param    $position
-     * @param    $expected
+     * @param   $string
+     * @param   $insert
+     * @param   $position
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider insertProvider
      */
@@ -345,9 +345,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * insertProvider
+     * insertProvider.
      *
-     * @return  array
+     * @return array
      */
     public function insertProvider()
     {
@@ -360,12 +360,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testIsLowerCase
+     * testIsLowerCase.
      *
      * @param   $string
      * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  isLowerCaseProvider
      */
@@ -375,9 +375,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * isLowerCase
+     * isLowerCase.
      *
-     * @return  array
+     * @return array
      */
     public function isLowerCaseProvider()
     {
@@ -391,7 +391,7 @@ class StrTest extends TestCase
     }
 
     /**
-     * testIsUpperCase
+     * testIsUpperCase.
      *
      * @param   $string
      * @param   $expected
@@ -404,9 +404,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * isUpperCaseProvider
+     * isUpperCaseProvider.
      *
-     * @return  array
+     * @return array
      */
     public function isUpperCaseProvider()
     {
@@ -420,13 +420,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testFirst
+     * testFirst.
      *
-     * @param    $string
-     * @param    $length
-     * @param    $expected
+     * @param   $string
+     * @param   $length
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider firstProvider
      */
@@ -436,9 +436,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * firstProvider
+     * firstProvider.
      *
-     * @return  array
+     * @return array
      */
     public function firstProvider()
     {
@@ -457,13 +457,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testLast
+     * testLast.
      *
-     * @param    $string
-     * @param    $length
-     * @param    $expected
+     * @param   $string
+     * @param   $length
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider lastProvider
      */
@@ -473,9 +473,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * lastProvider
+     * lastProvider.
      *
-     * @return  array
+     * @return array
      */
     public function lastProvider()
     {
@@ -494,9 +494,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testIntersectLeft
+     * testIntersectLeft.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider intersectLeftProvider
      */
@@ -506,9 +506,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * intersectLeftProvider
+     * intersectLeftProvider.
      *
-     * @return  array
+     * @return array
      */
     public function intersectLeftProvider()
     {
@@ -526,13 +526,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testIntersectRight
+     * testIntersectRight.
      *
      * @param $string1
      * @param $string2
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider intersectRightProvider
      */
@@ -542,9 +542,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * intersectRightProvider
+     * intersectRightProvider.
      *
-     * @return  array
+     * @return array
      */
     public function intersectRightProvider()
     {
@@ -562,13 +562,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testIntersect
+     * testIntersect.
      *
      * @param $string1
      * @param $string2
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider intersectProvider
      */
@@ -578,9 +578,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * intersectProvider
+     * intersectProvider.
      *
-     * @return  array
+     * @return array
      */
     public function intersectProvider()
     {
@@ -598,12 +598,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testPad
+     * testPad.
      *
-     * @param    $string
-     * @param    $substring
-     * @param    $length
-     * @param    $expected
+     * @param   $string
+     * @param   $substring
+     * @param   $length
+     * @param   $expected
      *
      * @dataProvider padProvider
      */
@@ -613,9 +613,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * padProvider
+     * padProvider.
      *
-     * @return  array
+     * @return array
      */
     public function padProvider()
     {
@@ -631,14 +631,14 @@ class StrTest extends TestCase
     }
 
     /**
-     * testPadLeft
+     * testPadLeft.
      *
-     * @param    $string
-     * @param    $substring
-     * @param    $length
-     * @param    $expected
+     * @param   $string
+     * @param   $substring
+     * @param   $length
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider padLeftProvider
      */
@@ -648,9 +648,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * padLeftProvider
+     * padLeftProvider.
      *
-     * @return  array
+     * @return array
      */
     public function padLeftProvider()
     {
@@ -666,14 +666,14 @@ class StrTest extends TestCase
     }
 
     /**
-     * testPadRight
+     * testPadRight.
      *
-     * @param    $string
-     * @param    $substring
-     * @param    $length
-     * @param    $expected
+     * @param   $string
+     * @param   $substring
+     * @param   $length
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider padRightProvider
      */
@@ -683,9 +683,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * padRightProvider
+     * padRightProvider.
      *
-     * @return  array
+     * @return array
      */
     public function padRightProvider()
     {
@@ -701,13 +701,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testRemove
+     * testRemove.
      *
-     * @param    $string
-     * @param    $offset
-     * @param    $expected
+     * @param   $string
+     * @param   $offset
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider removeProvider
      */
@@ -717,9 +717,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * removeProvider
+     * removeProvider.
      *
-     * @return  array
+     * @return array
      */
     public function removeProvider()
     {
@@ -736,13 +736,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testRemoveLeft
+     * testRemoveLeft.
      *
      * @param $string
      * @param $search
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider removeLeftProvider
      */
@@ -752,9 +752,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * removeRightProvider
+     * removeRightProvider.
      *
-     * @return  array
+     * @return array
      */
     public function removeLeftProvider()
     {
@@ -771,9 +771,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testRemoveRight
+     * testRemoveRight.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider removeRightProvider
      */
@@ -783,9 +783,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * removeRightProvider
+     * removeRightProvider.
      *
-     * @return  array
+     * @return array
      */
     public function removeRightProvider()
     {
@@ -802,12 +802,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testSlice
+     * testSlice.
      *
-     * @param    $string
-     * @param    $start
-     * @param    $end
-     * @param    $expected
+     * @param   $string
+     * @param   $start
+     * @param   $end
+     * @param   $expected
      *
      * @dataProvider sliceProvider
      */
@@ -817,9 +817,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * sliceProvider
+     * sliceProvider.
      *
-     * @return  array
+     * @return array
      */
     public function sliceProvider()
     {
@@ -841,14 +841,14 @@ class StrTest extends TestCase
     }
 
     /**
-     * testSubstring
+     * testSubstring.
      *
-     * @param    $string
-     * @param    $start
-     * @param    $end
-     * @param    $expected
+     * @param   $string
+     * @param   $start
+     * @param   $end
+     * @param   $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider substringProvider
      */
@@ -858,9 +858,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * substringProvider
+     * substringProvider.
      *
-     * @return  array
+     * @return array
      */
     public function substringProvider()
     {
@@ -882,13 +882,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testSurround
+     * testSurround.
      *
      * @param              $string
      * @param              $expected
      * @param string|array $substring
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider surroundProvider
      */
@@ -902,9 +902,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * surroundProvider
+     * surroundProvider.
      *
-     * @return  array
+     * @return array
      */
     public function surroundProvider()
     {
@@ -917,12 +917,12 @@ class StrTest extends TestCase
     }
 
     /**
-     * testToggleCase
+     * testToggleCase.
      *
      * @param $string
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider toggleCaseProvider
      */
@@ -932,9 +932,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * toggleCaseProvider
+     * toggleCaseProvider.
      *
-     * @return  array
+     * @return array
      */
     public function toggleCaseProvider()
     {
@@ -948,13 +948,13 @@ class StrTest extends TestCase
     }
 
     /**
-     * testTruncate
+     * testTruncate.
      *
-     * @param    $string
-     * @param    $length
-     * @param    $wordBreak
-     * @param    $expected
-     * @param    $suffix
+     * @param   $string
+     * @param   $length
+     * @param   $wordBreak
+     * @param   $expected
+     * @param   $suffix
      *
      * @dataProvider truncateProvider
      */
@@ -969,9 +969,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * truncateProvider
+     * truncateProvider.
      *
-     * @return  array
+     * @return array
      */
     public function truncateProvider()
     {
@@ -990,9 +990,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testMap
+     * testMap.
      *
-     * @return  void
+     * @return void
      */
     public function testMap()
     {
@@ -1011,9 +1011,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testFilter
+     * testFilter.
      *
-     * @return  void
+     * @return void
      */
     public function testFilter()
     {
@@ -1032,9 +1032,9 @@ class StrTest extends TestCase
     }
 
     /**
-     * testReject
+     * testReject.
      *
-     * @return  void
+     * @return void
      */
     public function testReject()
     {

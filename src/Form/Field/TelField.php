@@ -18,7 +18,7 @@ class TelField extends AbstractHtml5Field
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'tel';
 }

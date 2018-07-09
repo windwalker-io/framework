@@ -5,8 +5,7 @@
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
  */
-
-include_once __DIR__ . '/../../../vendor/autoload.php';
+include_once __DIR__.'/../../../vendor/autoload.php';
 
 var_dump(
     [
@@ -17,7 +16,7 @@ var_dump(
 );
 
 /**
- * Encrypt a message
+ * Encrypt a message.
  *
  * @param string $message - message to encrypt
  * @param string $key     - encryption key
@@ -31,7 +30,7 @@ function safeEncrypt($message, $key)
     );
 
     $cipher =
-        $nonce .
+        $nonce.
         \Sodium\crypto_secretbox(
             $message,
             $nonce,
@@ -44,7 +43,7 @@ function safeEncrypt($message, $key)
 }
 
 /**
- * Decrypt a message
+ * Decrypt a message.
  *
  * @param string $encrypted - message encrypted with safeEncrypt()
  * @param string $key       - encryption key
@@ -75,4 +74,3 @@ $message = 'We are all living in a yellow submarine';
 
 echo $ciphertext = safeEncrypt($message, $key);
 $plaintext = safeDecrypt($ciphertext, $key);
-

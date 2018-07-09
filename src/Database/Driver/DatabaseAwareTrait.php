@@ -9,21 +9,21 @@
 namespace Windwalker\Database\Driver;
 
 /**
- * DatabseAwareTrait
+ * DatabseAwareTrait.
  */
 trait DatabaseAwareTrait
 {
     /**
      * Property db.
      *
-     * @var  AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
      */
     protected $db = null;
 
     /**
-     * getDb
+     * getDb.
      *
-     * @return  AbstractDatabaseDriver
+     * @return AbstractDatabaseDriver
      */
     public function getDb()
     {
@@ -31,11 +31,11 @@ trait DatabaseAwareTrait
     }
 
     /**
-     * setDb
+     * setDb.
      *
-     * @param   AbstractDatabaseDriver $db
+     * @param AbstractDatabaseDriver $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDb($db)
     {

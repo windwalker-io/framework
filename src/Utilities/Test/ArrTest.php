@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of ww4 project.  @codingStandardsIgnoreStart
+ * Part of ww4 project.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2016 LYRASOFT.
  * @license    Please see LICENSE file.
@@ -23,13 +23,13 @@ class ArrTest extends TestCase
     use BaseAssertionTrait;
 
     /**
-     * testToArray
+     * testToArray.
      *
      * @param $input
      * @param $recursive
      * @param $expect
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  providerTestToArray
      */
@@ -39,9 +39,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * Data provider for object inputs
+     * Data provider for object inputs.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -82,9 +82,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testToObject
+     * testToObject.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider providerTestToObject
      */
@@ -94,9 +94,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * providerTestToObject
+     * providerTestToObject.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestToObject()
     {
@@ -104,13 +104,13 @@ class ArrTest extends TestCase
             'single object' => [
                 [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 (object) [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 'Should turn array into single object',
             ],
@@ -118,35 +118,35 @@ class ArrTest extends TestCase
                 [
                     'first' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 (object) [
                     'first' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should turn multiple dimension array into nested objects',
@@ -154,13 +154,13 @@ class ArrTest extends TestCase
             'single object with class' => [
                 [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 (object) [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 'Should turn array into single object',
             ],
@@ -168,35 +168,35 @@ class ArrTest extends TestCase
                 [
                     'first' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 (object) [
                     'first' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should turn multiple dimension array into nested objects',
@@ -205,14 +205,14 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testDef
+     * testDef.
      *
      * @param array|object $array
      * @param string       $key
      * @param string       $value
      * @param mixed        $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider providerTestDef
      */
@@ -227,9 +227,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * providerTestDef
+     * providerTestDef.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestDef()
     {
@@ -262,9 +262,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testHas
+     * testHas.
      *
-     * @return  void
+     * @return void
      */
     public function testHas()
     {
@@ -277,9 +277,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testCollapse
+     * testCollapse.
      *
-     * @return  void
+     * @return void
      */
     public function testCollapse()
     {
@@ -307,21 +307,21 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testFlatten
+     * testFlatten.
      *
-     * @return  void
+     * @return void
      */
     public function testFlatten()
     {
         $array = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
                 'cornflower' => 'elegant',
-                'pos3' => [
+                'pos3'       => [
                     'olive',
                 ],
             ],
@@ -364,7 +364,7 @@ class ArrTest extends TestCase
         );
 
         $expected = [
-            'Apple.0' => ['name' => 'iPhone 6S', 'brand' => 'Apple'],
+            'Apple.0'   => ['name' => 'iPhone 6S', 'brand' => 'Apple'],
             'Samsung.0' => ['name' => 'Galaxy S7', 'brand' => 'Samsung'],
         ];
 
@@ -372,16 +372,16 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testGet
+     * testGet.
      *
-     * @return  void
+     * @return void
      */
     public function testGet()
     {
         $data = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -404,8 +404,8 @@ class ArrTest extends TestCase
 
         $data = (object) [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => (object) [
+            'olive'  => 'peace',
+            'pos1'   => (object) [
                 'sunflower' => 'love',
             ],
             'pos2' => new \ArrayObject(
@@ -430,9 +430,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testSet
+     * testSet.
      *
-     * @return  void
+     * @return void
      */
     public function testSet()
     {
@@ -476,7 +476,7 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testRemove
+     * testRemove.
      *
      * @param array|object $array
      * @param array|object $expected
@@ -498,9 +498,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * providerTestRemove
+     * providerTestRemove.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestRemove()
     {
@@ -563,17 +563,17 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testKeep
+     * testKeep.
      *
-     * @return  void
+     * @return void
      */
     public function testOnly()
     {
         $array = [
-            'Lycoris' => 'energetic',
+            'Lycoris'   => 'energetic',
             'Sunflower' => 'worship',
-            'Zinnia' => 'robust',
-            'Lily' => 'love',
+            'Zinnia'    => 'robust',
+            'Lily'      => 'love',
         ];
 
         self::assertEquals(
@@ -602,32 +602,32 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testFind
+     * testFind.
      *
-     * @return  void
+     * @return void
      */
     public function testFind()
     {
         $data = [
             [
-                'id' => 1,
+                'id'    => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object) ['foo' => 'bar'],
+                'data'  => (object) ['foo' => 'bar'],
             ],
             [
-                'id' => 2,
+                'id'    => 2,
                 'title' => 'Macbeth',
-                'data' => [],
+                'data'  => [],
             ],
             [
-                'id' => 3,
+                'id'    => 3,
                 'title' => 'Othello',
-                'data' => 123,
+                'data'  => 123,
             ],
             [
-                'id' => 4,
+                'id'    => 4,
                 'title' => 'Hamlet',
-                'data' => true,
+                'data'  => true,
             ],
         ];
 
@@ -688,32 +688,32 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testFindFirst
+     * testFindFirst.
      *
-     * @return  void
+     * @return void
      */
     public function testFindFirst()
     {
         $data = [
             [
-                'id' => 1,
+                'id'    => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object) ['foo' => 'bar'],
+                'data'  => (object) ['foo' => 'bar'],
             ],
             [
-                'id' => 2,
+                'id'    => 2,
                 'title' => 'Macbeth',
-                'data' => [],
+                'data'  => [],
             ],
             [
-                'id' => 3,
+                'id'    => 3,
                 'title' => 'Othello',
-                'data' => 123,
+                'data'  => 123,
             ],
             [
-                'id' => 4,
+                'id'    => 4,
                 'title' => 'Hamlet',
-                'data' => true,
+                'data'  => true,
             ],
         ];
 
@@ -737,32 +737,32 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testReject
+     * testReject.
      *
-     * @return  void
+     * @return void
      */
     public function testReject()
     {
         $data = [
             [
-                'id' => 1,
+                'id'    => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object) ['foo' => 'bar'],
+                'data'  => (object) ['foo' => 'bar'],
             ],
             [
-                'id' => 2,
+                'id'    => 2,
                 'title' => 'Macbeth',
-                'data' => [],
+                'data'  => [],
             ],
             [
-                'id' => 3,
+                'id'    => 3,
                 'title' => 'Othello',
-                'data' => 123,
+                'data'  => 123,
             ],
             [
-                'id' => 4,
+                'id'    => 4,
                 'title' => 'Hamlet',
-                'data' => true,
+                'data'  => true,
             ],
         ];
 
@@ -777,15 +777,15 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testTakeout
+     * testTakeout.
      *
-     * @return  void
+     * @return void
      */
     public function testTakeout()
     {
         $array = [
-            'one' => 1,
-            'two' => 2,
+            'one'   => 1,
+            'two'   => 2,
             'three' => 3,
         ];
 
@@ -801,8 +801,8 @@ class ArrTest extends TestCase
         self::assertEquals(['one' => 1, 'two' => ['three' => 3]], $array);
 
         $array = [
-            'one' => 1,
-            'two' => 2,
+            'one'   => 1,
+            'two'   => 2,
             'three' => 3,
         ];
 
@@ -810,8 +810,8 @@ class ArrTest extends TestCase
         self::assertEquals(['one' => 1, 'two' => 2, 'three' => 3], $array);
 
         $array = (object) [
-            'one' => 1,
-            'two' => 2,
+            'one'   => 1,
+            'two'   => 2,
             'three' => 3,
         ];
 
@@ -819,14 +819,14 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testSort
+     * testSort.
      *
      * @param $data
      * @param $expected
      * @param $condition
      * @param $descending
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider providerTestSort
      */
@@ -838,9 +838,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * providerTestSort
+     * providerTestSort.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestSort()
     {
@@ -909,12 +909,12 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testInvert
+     * testInvert.
      *
      * @param $data
      * @param $expected
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider providerTestInvert
      */
@@ -924,9 +924,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * providerTestInvert
+     * providerTestInvert.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestInvert()
     {
@@ -934,7 +934,7 @@ class ArrTest extends TestCase
             'Case 1' => [
                 [
                     'Sakura' => ['1000', '1500', '1750'],
-                    'Olive' => ['3000', '4000', '5000', '6000'],
+                    'Olive'  => ['3000', '4000', '5000', '6000'],
                 ],
                 [
                     '1000' => 'Sakura',
@@ -948,9 +948,9 @@ class ArrTest extends TestCase
             ],
             'Case 2' => [
                 [
-                    'Sakura' => [1000, 1500, 1750],
-                    'Olive' => [2750, 3000, 4000, 5000, 6000],
-                    'Sunflower' => [2000, 2500],
+                    'Sakura'      => [1000, 1500, 1750],
+                    'Olive'       => [2750, 3000, 4000, 5000, 6000],
+                    'Sunflower'   => [2000, 2500],
                     'Unspecified' => [],
                 ],
                 [
@@ -968,8 +968,8 @@ class ArrTest extends TestCase
             ],
             'Case 3' => [
                 [
-                    'Sakura' => [1000, 1500, 1750],
-                    'valueNotAnArray' => 2750,
+                    'Sakura'             => [1000, 1500, 1750],
+                    'valueNotAnArray'    => 2750,
                     'withNonScalarValue' => [2000, [1000, 3000]],
                 ],
                 [
@@ -998,7 +998,7 @@ class ArrTest extends TestCase
     }
 
     /**
-     * seedTestTranspose
+     * seedTestTranspose.
      *
      * @return array
      */
@@ -1008,7 +1008,7 @@ class ArrTest extends TestCase
             [
                 // data
                 [
-                    'Jones' => [123, 223],
+                    'Jones'  => [123, 223],
                     'Arthur' => ['Lancelot', 'Jessica'],
                 ],
                 // expected
@@ -1021,9 +1021,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testIsAssociative
+     * testIsAssociative.
      *
-     * @return  void
+     * @return void
      */
     public function testIsAssociative()
     {
@@ -1033,41 +1033,41 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testAccessible
+     * testAccessible.
      *
-     * @return  void
+     * @return void
      */
     public function testAccessible()
     {
         self::assertTrue(Arr::accessible([]));
         self::assertTrue(Arr::accessible(new \ArrayObject()));
 
-//		$array = new class implements \ArrayAccess
-//		{
-//			public function offsetExists($offset)
-//			{
-//			}
+        //		$array = new class implements \ArrayAccess
+        //		{
+        //			public function offsetExists($offset)
+        //			{
+        //			}
 //
-//			public function offsetGet($offset)
-//			{
-//			}
+        //			public function offsetGet($offset)
+        //			{
+        //			}
 //
-//			public function offsetSet($offset, $value)
-//			{
-//			}
+        //			public function offsetSet($offset, $value)
+        //			{
+        //			}
 //
-//			public function offsetUnset($offset)
-//			{
-//			}
-//		};
+        //			public function offsetUnset($offset)
+        //			{
+        //			}
+        //		};
 
-//		self::assertTrue(Arr::accessible($array));
+        //		self::assertTrue(Arr::accessible($array));
         self::assertFalse(Arr::accessible(new \EmptyIterator()));
         self::assertFalse(Arr::accessible(new \stdClass()));
     }
 
     /**
-     * testGroup
+     * testGroup.
      *
      * @param $source
      * @param $key
@@ -1082,9 +1082,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * providerTestGroup
+     * providerTestGroup.
      *
-     * @return  array
+     * @return array
      */
     public function providerTestGroup()
     {
@@ -1199,9 +1199,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testUnique
+     * testUnique.
      *
-     * @return  void
+     * @return void
      */
     public function testUnique()
     {
@@ -1223,37 +1223,37 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testMerge
+     * testMerge.
      *
-     * @return  void
+     * @return void
      */
     public function testMergeRecursive()
     {
         $data1 = [
             'green' => 'Hulk',
-            'red' => 'empty',
+            'red'   => 'empty',
             'human' => [
-                'dark' => 'empty',
+                'dark'  => 'empty',
                 'black' => [
-                    'male' => 'empty',
-                    'female' => 'empty',
+                    'male'      => 'empty',
+                    'female'    => 'empty',
                     'no-gender' => 'empty',
                 ],
             ],
         ];
 
         $data2 = [
-            'ai' => 'Jarvis',
+            'ai'    => 'Jarvis',
             'agent' => 'Phil Coulson',
-            'red' => [
-                'left' => 'Pepper',
+            'red'   => [
+                'left'  => 'Pepper',
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
+                'dark'  => 'Nick Fury',
                 'black' => [
                     'female' => 'Black Widow',
-                    'male' => 'Loki',
+                    'male'   => 'Loki',
                 ],
             ],
         ];
@@ -1263,18 +1263,18 @@ class ArrTest extends TestCase
         ];
 
         $expected = [
-            'ai' => 'Jarvis',
+            'ai'    => 'Jarvis',
             'agent' => 'Phil Coulson',
             'green' => 'Hulk',
-            'red' => [
-                'left' => 'Pepper',
+            'red'   => [
+                'left'  => 'Pepper',
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
+                'dark'  => 'Nick Fury',
                 'black' => [
-                    'male' => 'Loki',
-                    'female' => 'Black Widow',
+                    'male'      => 'Loki',
+                    'female'    => 'Black Widow',
                     'no-gender' => 'empty',
                 ],
             ],
@@ -1292,9 +1292,9 @@ class ArrTest extends TestCase
     }
 
     /**
-     * testDump
+     * testDump.
      *
-     * @return  void
+     * @return void
      */
     public function testDump()
     {
@@ -1311,7 +1311,7 @@ class ArrTest extends TestCase
             ['max' => ['level' => ['test' => ['no' => 'show']]]],
         ];
 
-        $expected = <<<OUT
+        $expected = <<<'OUT'
 Array
 (
     [0] => 1
@@ -1346,9 +1346,9 @@ OUT;
     }
 
     /**
-     * testShow
+     * testShow.
      *
-     * @return  void
+     * @return void
      */
     public function testShow()
     {
@@ -1361,7 +1361,7 @@ OUT;
             4,
         ];
 
-        $expected = <<<OUT
+        $expected = <<<'OUT'
 [Value 1]
 test
 
@@ -1406,19 +1406,19 @@ OUT;
     }
 
     /**
-     * testMap
+     * testMap.
      *
-     * @return  void
+     * @return void
      */
     public function testMap()
     {
         $data = [
             'green' => 'Hulk',
-            'red' => [
+            'red'   => [
                 'left' => 'Pepper',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
+                'dark'  => 'Nick Fury',
                 'black' => [
                     'male' => 'Loki',
                 ],
@@ -1427,11 +1427,11 @@ OUT;
 
         $expected = [
             'green' => 'Hulk #',
-            'red' => [
+            'red'   => [
                 'left' => 'Pepper #',
             ],
             'human' => [
-                'dark' => 'Nick Fury #',
+                'dark'  => 'Nick Fury #',
                 'black' => [
                     'male' => 'Loki #',
                 ],
@@ -1440,7 +1440,7 @@ OUT;
 
         $expected2 = [
             'green@' => 'Hulk #',
-            'red' => [
+            'red'    => [
                 'left@' => 'Pepper #',
             ],
             'human' => [
@@ -1456,7 +1456,7 @@ OUT;
             Arr::map(
                 $data,
                 function ($value, $key) {
-                    return $value . ' #';
+                    return $value.' #';
                 },
                 true
             )
@@ -1469,7 +1469,7 @@ OUT;
                 function ($value, &$key) {
                     $key .= '@';
 
-                    return $value . ' #';
+                    return $value.' #';
                 },
                 true
             )

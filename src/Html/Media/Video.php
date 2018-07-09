@@ -18,17 +18,17 @@ class Video extends AbstractMediaElement
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'video';
 
     /**
-     * addMp4Source
+     * addMp4Source.
      *
      * @param string $src
      * @param string $media
      *
-     * @return  static
+     * @return static
      */
     public function addMp4Source($src, $media = null)
     {
@@ -36,12 +36,12 @@ class Video extends AbstractMediaElement
     }
 
     /**
-     * addWebMSource
+     * addWebMSource.
      *
      * @param string $src
      * @param string $media
      *
-     * @return  static
+     * @return static
      */
     public function addWebMSource($src, $media = null)
     {
@@ -49,11 +49,11 @@ class Video extends AbstractMediaElement
     }
 
     /**
-     * poster
+     * poster.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  static
+     * @return static
      */
     public function poster($data)
     {
@@ -63,11 +63,11 @@ class Video extends AbstractMediaElement
     }
 
     /**
-     * height
+     * height.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  static
+     * @return static
      */
     public function height($data)
     {
@@ -77,11 +77,11 @@ class Video extends AbstractMediaElement
     }
 
     /**
-     * width
+     * width.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  static
+     * @return static
      */
     public function width($data)
     {

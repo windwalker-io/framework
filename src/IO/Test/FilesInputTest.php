@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\IO\FilesInput;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of FilesInput
+ * Test class of FilesInput.
  *
  * @since 2.0
  */
@@ -49,10 +49,12 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\FilesInput::__construct method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\FilesInput::__construct
+     *
      * @since   2.0
      */
     public function test__construct()
@@ -66,10 +68,12 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\FilesInput::get method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\FilesInput::get
+     *
      * @since   2.0
      */
     public function testGet()
@@ -78,29 +82,29 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
 
         $data = [
             'myfile' => [
-                'name' => 'n',
-                'type' => 'ty',
+                'name'     => 'n',
+                'type'     => 'ty',
                 'tmp_name' => 'tm',
-                'error' => 'e',
-                'size' => 's',
+                'error'    => 'e',
+                'size'     => 's',
             ],
             'myfile2' => [
-                'name' => 'nn',
-                'type' => 'ttyy',
+                'name'     => 'nn',
+                'type'     => 'ttyy',
                 'tmp_name' => 'ttmm',
-                'error' => 'ee',
-                'size' => 'ss',
+                'error'    => 'ee',
+                'size'     => 'ss',
             ],
         ];
 
         TestHelper::setValue($this->instance, 'data', $data);
 
         $expected = [
-            'name' => 'n',
-            'type' => 'ty',
+            'name'     => 'n',
+            'type'     => 'ty',
             'tmp_name' => 'tm',
-            'error' => 'e',
-            'size' => 's',
+            'error'    => 'e',
+            'size'     => 's',
         ];
 
         $this->assertEquals($expected, $this->instance->get('myfile'));
@@ -108,23 +112,23 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
         $data2 = [
             'foo' => [
                 'name' => [
-                    'myfile' => 'n',
+                    'myfile'  => 'n',
                     'myfile2' => 'nn',
                 ],
                 'type' => [
-                    'myfile' => 'ty',
+                    'myfile'  => 'ty',
                     'myfile2' => 'ttyy',
                 ],
                 'tmp_name' => [
-                    'myfile' => 'tm',
+                    'myfile'  => 'tm',
                     'myfile2' => 'ttmm',
                 ],
                 'error' => [
-                    'myfile' => 'e',
+                    'myfile'  => 'e',
                     'myfile2' => 'ee',
                 ],
                 'size' => [
-                    'myfile' => 's',
+                    'myfile'  => 's',
                     'myfile2' => 'ss',
                 ],
             ],
@@ -141,10 +145,12 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\FilesInput::decodeData method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\FilesInput::decodeData
+     *
      * @since   2.0
      */
     public function testDecodeData()
@@ -154,11 +160,11 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
         $decoded = TestHelper::invoke($this->instance, 'decodeData', $data);
 
         $expected = [
-            'name' => 'n',
-            'type' => 'ty',
+            'name'     => 'n',
+            'type'     => 'ty',
             'tmp_name' => 'tm',
-            'error' => 'e',
-            'size' => 's',
+            'error'    => 'e',
+            'size'     => 's',
         ];
 
         $this->assertEquals($expected, $decoded);
@@ -169,19 +175,19 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
         $decoded = TestHelper::invoke($this->instance, 'decodeData', $data);
 
         $expectedFirst = [
-            'name' => 'first',
-            'type' => 'first',
+            'name'     => 'first',
+            'type'     => 'first',
             'tmp_name' => 'first',
-            'error' => 'first',
-            'size' => 'first',
+            'error'    => 'first',
+            'size'     => 'first',
         ];
 
         $expectedSecond = [
-            'name' => 'second',
-            'type' => 'second',
+            'name'     => 'second',
+            'type'     => 'second',
             'tmp_name' => 'second',
-            'error' => 'second',
-            'size' => 'second',
+            'error'    => 'second',
+            'size'     => 'second',
         ];
 
         $expected = [$expectedFirst, $expectedSecond];
@@ -192,9 +198,10 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\FilesInput::set method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\FilesInput::set
+     *
      * @since   2.0
      */
     public function testSet()

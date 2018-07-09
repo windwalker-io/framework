@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,14 +11,15 @@ namespace Windwalker\Utilities\Test;
 use Windwalker\String\Utf8String;
 
 /**
- * Test class of String
+ * Test class of String.
  *
  * @since 2.0
  */
 class Utf8StringTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var    String
+     * @var string
+     *
      * @since  2.0
      */
     protected $object;
@@ -46,7 +47,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -66,7 +67,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -87,7 +88,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -107,7 +108,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -125,7 +126,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -139,7 +140,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -153,7 +154,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -167,7 +168,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -186,7 +187,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -203,7 +204,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -256,7 +257,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -322,7 +323,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -338,7 +339,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -354,7 +355,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -369,7 +370,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -394,7 +395,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -411,7 +412,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -431,7 +432,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -451,7 +452,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -463,7 +464,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
             ['   Би шил ', null, 'Би шил'],
             ["\t\n\r\x0BБи шил\t\n\r\x0B", null, 'Би шил'],
             ["\x0B\t\n\rБи шил\r\x0B\t\n", "\t\n\x0B", "\rБи шил\r"],
-            ["\x09Би шил\x0A", "\x09\x0A", "Би шил"],
+            ["\x09Би шил\x0A", "\x09\x0A", 'Би шил'],
             ['1234abc56789', '0123456789', 'abc'],
         ];
     }
@@ -471,7 +472,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -490,7 +491,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -508,7 +509,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -523,7 +524,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -536,7 +537,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
             ["foo\xF7bar", false],
             ['george Мога Ž Ψυχοφθόρα ฉันกินกระจกได้ 我能吞下玻璃而不伤身体 ', true],
             ["\xFF ABC", false],
-            ["0xfffd ABC", true],
+            ['0xfffd ABC', true],
             ['', true],
         ];
     }
@@ -544,43 +545,44 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
     public function seedTestUnicodeToUtf8()
     {
         return [
-            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
+            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", 'Тест системы'],
+            ["\u00dcberpr\u00fcfung der Systemumstellung", 'Überprüfung der Systemumstellung'],
         ];
     }
 
     /**
      * Test...
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
     public function seedTestUnicodeToUtf16()
     {
         return [
-            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
+            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", 'Тест системы'],
+            ["\u00dcberpr\u00fcfung der Systemumstellung", 'Überprüfung der Systemumstellung'],
         ];
     }
 
     /**
      * Test...
      *
-     * @param   string  $string   @todo
-     * @param   boolean $expected @todo
+     * @param string $string   @todo
+     * @param bool   $expected @todo
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\Utf8String::is_ascii
      * @dataProvider  seedTestIs_ascii
+     *
      * @since         2.0
      */
     public function testIs_ascii($string, $expected)
@@ -594,15 +596,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string  $expect   @todo
-     * @param   string  $haystack @todo
-     * @param   string  $needle   @todo
-     * @param   integer $offset   @todo
+     * @param string $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param int    $offset   @todo
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\Utf8String::strpos
      * @dataProvider  seedTestStrpos
+     *
      * @since         2.0
      */
     public function testStrpos($expect, $haystack, $needle, $offset = 0)
@@ -614,15 +617,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string  $expect   @todo
-     * @param   string  $haystack @todo
-     * @param   string  $needle   @todo
-     * @param   integer $offset   @todo
+     * @param string $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param int    $offset   @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strrpos
      * @dataProvider  seedTestGetStrrpos
+     *
      * @since         2.0
      */
     public function testStrrpos($expect, $haystack, $needle, $offset = 0)
@@ -634,15 +638,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string   $expect @todo
-     * @param   string   $string @todo
-     * @param   string   $start  @todo
-     * @param   bool|int $length @todo
+     * @param string   $expect @todo
+     * @param string   $string @todo
+     * @param string   $start  @todo
+     * @param bool|int $length @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::substr
      * @dataProvider  seedTestSubstr
+     *
      * @since         2.0
      */
     public function testSubstr($expect, $string, $start, $length = false)
@@ -654,13 +659,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strtolower
      * @dataProvider  seedTestStrtolower
+     *
      * @since         2.0
      */
     public function testStrtolower($string, $expect)
@@ -672,13 +678,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strtoupper
      * @dataProvider  seedTestStrtoupper
+     *
      * @since         2.0
      */
     public function testStrtoupper($string, $expect)
@@ -690,13 +697,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strlen
      * @dataProvider  seedTestStrlen
+     *
      * @since         2.0
      */
     public function testStrlen($string, $expect)
@@ -708,16 +716,17 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string  $search  @todo
-     * @param   string  $replace @todo
-     * @param   string  $subject @todo
-     * @param   integer $count   @todo
-     * @param   string  $expect  @todo
+     * @param string $search  @todo
+     * @param string $replace @todo
+     * @param string $subject @todo
+     * @param int    $count   @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::str_ireplace
      * @dataProvider  seedTestStr_ireplace
+     *
      * @since         2.0
      */
     public function testStr_ireplace($search, $replace, $subject, $count, $expect)
@@ -729,14 +738,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string       @todo
-     * @param   string $split_length @todo
-     * @param   string $expect       @todo
+     * @param string $string       @todo
+     * @param string $split_length @todo
+     * @param string $expect       @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::str_split
      * @dataProvider  seedTestStr_split
+     *
      * @since         2.0
      */
     public function testStr_split($string, $split_length, $expect)
@@ -748,22 +758,23 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string1 @todo
-     * @param   string $string2 @todo
-     * @param   string $locale  @todo
-     * @param   string $expect  @todo
+     * @param string $string1 @todo
+     * @param string $string2 @todo
+     * @param string $locale  @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strcasecmp
      * @dataProvider  seedTestStrcasecmp
+     *
      * @since         2.0
      */
     public function testStrcasecmp($string1, $string2, $locale, $expect)
     {
         // Convert the $locale param to a string if it is an array
         if (is_array($locale)) {
-            $locale = "'" . implode("', '", $locale) . "'";
+            $locale = "'".implode("', '", $locale)."'";
         }
 
         if (substr(php_uname(), 0, 6) === 'Darwin' && $locale != false) {
@@ -784,22 +795,23 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string1 @todo
-     * @param   string $string2 @todo
-     * @param   string $locale  @todo
-     * @param   string $expect  @todo
+     * @param string $string1 @todo
+     * @param string $string2 @todo
+     * @param string $locale  @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strcmp
      * @dataProvider  seedTestStrcmp
+     *
      * @since         2.0
      */
     public function testStrcmp($string1, $string2, $locale, $expect)
     {
         // Convert the $locale param to a string if it is an array
         if (is_array($locale)) {
-            $locale = "'" . implode("', '", $locale) . "'";
+            $locale = "'".implode("', '", $locale)."'";
         }
 
         if (substr(php_uname(), 0, 6) === 'Darwin' && $locale != false) {
@@ -821,16 +833,17 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string  $haystack @todo
-     * @param   string  $needles  @todo
-     * @param   integer $start    @todo
-     * @param   integer $len      @todo
-     * @param   string  $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needles  @todo
+     * @param int    $start    @todo
+     * @param int    $len      @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strcspn
      * @dataProvider  seedTestStrcspn
+     *
      * @since         2.0
      */
     public function testStrcspn($haystack, $needles, $start, $len, $expect)
@@ -842,14 +855,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $haystack @todo
-     * @param   string $needle   @todo
-     * @param   string $expect   @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::stristr
      * @dataProvider  seedTestStristr
+     *
      * @since         2.0
      */
     public function testStristr($haystack, $needle, $expect)
@@ -861,13 +875,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strrev
      * @dataProvider  seedTestStrrev
+     *
      * @since         2.0
      */
     public function testStrrev($string, $expect)
@@ -879,16 +894,17 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string  $subject @todo
-     * @param   string  $mask    @todo
-     * @param   integer $start   @todo
-     * @param   integer $length  @todo
-     * @param   string  $expect  @todo
+     * @param string $subject @todo
+     * @param string $mask    @todo
+     * @param int    $start   @todo
+     * @param int    $length  @todo
+     * @param string $expect  @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::strspn
      * @dataProvider  seedTestStrspn
+     *
      * @since         2.0
      */
     public function testStrspn($subject, $mask, $start, $length, $expect)
@@ -900,16 +916,17 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string  $expect      @todo
-     * @param   string  $string      @todo
-     * @param   string  $replacement @todo
-     * @param   integer $start       @todo
-     * @param   integer $length      @todo
+     * @param string $expect      @todo
+     * @param string $string      @todo
+     * @param string $replacement @todo
+     * @param int    $start       @todo
+     * @param int    $length      @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::substr_replace
      * @dataProvider  seedTestSubstr_replace
+     *
      * @since         2.0
      */
     public function testSubstr_replace($expect, $string, $replacement, $start, $length)
@@ -921,14 +938,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string   @todo
-     * @param   string $charlist @todo
-     * @param   string $expect   @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::ltrim
      * @dataProvider  seedTestLtrim
+     *
      * @since         2.0
      */
     public function testLtrim($string, $charlist, $expect)
@@ -945,14 +963,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string   @todo
-     * @param   string $charlist @todo
-     * @param   string $expect   @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::rtrim
      * @dataProvider  seedTestRtrim
+     *
      * @since         2.0
      */
     public function testRtrim($string, $charlist, $expect)
@@ -969,14 +988,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string   @todo
-     * @param   string $charlist @todo
-     * @param   string $expect   @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::trim
      * @dataProvider  seedTestTrim
+     *
      * @since         2.0
      */
     public function testTrim($string, $charlist, $expect)
@@ -993,15 +1013,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string       @todo
-     * @param   string $delimiter    @todo
-     * @param   string $newDelimiter @todo
-     * @param   string $expect       @todo
+     * @param string $string       @todo
+     * @param string $delimiter    @todo
+     * @param string $newDelimiter @todo
+     * @param string $expect       @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::ucfirst
      * @dataProvider  seedTestUcfirst
+     *
      * @since         2.0
      */
     public function testUcfirst($string, $delimiter, $newDelimiter, $expect)
@@ -1013,13 +1034,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::ucwords
      * @dataProvider  seedTestUcwords
+     *
      * @since         2.0
      */
     public function testUcwords($string, $expect)
@@ -1031,15 +1053,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $source        @todo
-     * @param   string $from_encoding @todo
-     * @param   string $to_encoding   @todo
-     * @param   string $expect        @todo
+     * @param string $source        @todo
+     * @param string $from_encoding @todo
+     * @param string $to_encoding   @todo
+     * @param string $expect        @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::transcode
      * @dataProvider  seedTestTranscode
+     *
      * @since         2.0
      */
     public function testTranscode($source, $from_encoding, $to_encoding, $expect)
@@ -1051,13 +1074,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::valid
      * @dataProvider  seedTestValid
+     *
      * @since         2.0
      */
     public function testValid($string, $expect)
@@ -1069,13 +1093,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::unicode_to_utf8
      * @dataProvider  seedTestUnicodeToUtf8
+     *
      * @since         2.0
      */
     public function testUnicodeToUtf8($string, $expect)
@@ -1087,13 +1112,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::unicode_to_utf16
      * @dataProvider  seedTestUnicodeToUtf16
+     *
      * @since         2.0
      */
     public function testUnicodeToUtf16($string, $expect)
@@ -1105,13 +1131,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
     /**
      * Test...
      *
-     * @param   string $string @todo
-     * @param   string $expect @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
-     * @return  array
+     * @return array
      *
      * @covers        \Windwalker\String\Utf8String::compliant
      * @dataProvider  seedTestValid
+     *
      * @since         2.0
      */
     public function testCompliant($string, $expect)

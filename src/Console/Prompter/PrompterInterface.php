@@ -20,10 +20,10 @@ interface PrompterInterface
     /**
      * Show prompt to ask user.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
@@ -32,12 +32,11 @@ interface PrompterInterface
     /**
      * Proxy to ask method.
      *
-     * @param   string $default Default value.
+     * @param string $default Default value.
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
     public function __invoke($default = '');
 }
-

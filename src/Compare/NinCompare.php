@@ -9,7 +9,7 @@
 namespace Windwalker\Compare;
 
 /**
- * Class NotinCompare
+ * Class NotinCompare.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class NinCompare extends InCompare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = 'NOT IN';
 }

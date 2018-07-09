@@ -21,21 +21,21 @@ class StubOutput extends Output
     /**
      * Property message.
      *
-     * @var  Response
+     * @var Response
      */
     public $message;
 
     /**
      * Property status.
      *
-     * @var  integer
+     * @var int
      */
     public $status;
 
     /**
      * Property others.
      *
-     * @var  array
+     * @var array
      */
     public $others = [];
 
@@ -48,13 +48,13 @@ class StubOutput extends Output
     }
 
     /**
-     * header
+     * header.
      *
-     * @param string  $string
-     * @param bool    $replace
-     * @param integer $code
+     * @param string $string
+     * @param bool   $replace
+     * @param int    $code
      *
-     * @return  static
+     * @return static
      */
     public function header($string, $replace = true, $code = null)
     {

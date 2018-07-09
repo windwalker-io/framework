@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Query\Test\QueryTestTrait;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of SqliteQuery
+ * Test class of SqliteQuery.
  *
  * @since 2.0
  */
@@ -51,9 +51,9 @@ class SqliteQueryTest extends AbstractQueryTestCase
     }
 
     /**
-     * getQuery
+     * getQuery.
      *
-     * @return  SqliteQuery
+     * @return SqliteQuery
      */
     protected function getQuery()
     {
@@ -96,9 +96,10 @@ class SqliteQueryTest extends AbstractQueryTestCase
     /**
      * Method to test clear().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClear()
@@ -116,9 +117,10 @@ class SqliteQueryTest extends AbstractQueryTestCase
     /**
      * Method to test clear().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearClause()
@@ -161,7 +163,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
                 if ($clause != $clause2) {
                     $this->assertNotNull(
                         TestHelper::getValue($query, $clause2),
-                        $clause2 . ' Should not be NULL if we clear ' . $clause . '.'
+                        $clause2.' Should not be NULL if we clear '.$clause.'.'
                     );
                 }
             }
@@ -171,9 +173,10 @@ class SqliteQueryTest extends AbstractQueryTestCase
     /**
      * Method to test clear().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearType()
@@ -216,15 +219,15 @@ class SqliteQueryTest extends AbstractQueryTestCase
             $query->clear($type);
 
             // Check the type has been cleared.
-            $this->assertNull(TestHelper::getValue($query, 'type'), 'Query property: ' . $type . ' should be null.');
+            $this->assertNull(TestHelper::getValue($query, 'type'), 'Query property: '.$type.' should be null.');
 
-            $this->assertNull(TestHelper::getValue($query, $type), $type . ' should be null.');
+            $this->assertNull(TestHelper::getValue($query, $type), $type.' should be null.');
 
             // Now check the claues have not been affected.
             foreach ($clauses as $clause) {
                 $this->assertNotNull(
                     TestHelper::getValue($query, $clause),
-                    $clause . ' should exists if we clear ' . $type
+                    $clause.' should exists if we clear '.$type
                 );
             }
         }
@@ -245,7 +248,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->values('1, 2, 3');
 
         $this->assertEquals(
-            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            'INSERT INTO foo'.PHP_EOL.'(a, b, c) VALUES '.PHP_EOL.'(1, 2, 3)',
             trim((string) $query)
         );
 
@@ -255,7 +258,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->values('1, 2, 3');
 
         $this->assertEquals(
-            'INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            'INSERT INTO foo'.PHP_EOL.'(a,b,c) VALUES '.PHP_EOL.'(1, 2, 3)',
             trim((string) $query)
         );
     }
@@ -302,7 +305,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->where('flower = "sakura"');
 
         $this->assertEquals(
-            'DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
+            'DELETE '.PHP_EOL.'FROM foo'.PHP_EOL.'WHERE flower = "sakura"',
             trim((string) $query)
         );
     }
@@ -322,7 +325,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
         }
 
         $this->assertEquals(
-            'foo "\'\'_-!@#$%^&*() ' . "\n \t \r" . ' ',
+            'foo "\'\'_-!@#$%^&*() '."\n \t \r".' ',
             $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0")
         );
     }
@@ -355,7 +358,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->select('*')
             ->from('foo');
 
-        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo', trim((string) $query));
+        $this->assertEquals('SELECT *'.PHP_EOL.'FROM foo', trim((string) $query));
 
         // Subquery
         $query = $this->getQuery()
@@ -364,7 +367,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->from($query, 'b');
 
         $this->assertEquals(
-            'SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b',
+            'SELECT *'.PHP_EOL.'FROM foo AS a,'.PHP_EOL.'(SELECT *'.PHP_EOL.'FROM foo) AS b',
             trim((string) $query)
         );
 
@@ -373,7 +376,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->select('*')
             ->from(['foo', 'bar']);
 
-        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo,bar', trim((string) $query));
+        $this->assertEquals('SELECT *'.PHP_EOL.'FROM foo,bar', trim((string) $query));
     }
 
     /**
@@ -415,7 +418,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->group('a.id');
 
         $this->assertEquals(
-            'SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id',
+            'SELECT a.*'.PHP_EOL.'FROM foo AS a'.PHP_EOL.'GROUP BY a.id',
             trim((string) $query)
         );
     }
@@ -435,7 +438,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->having('aid = "sun"');
 
         $this->assertEquals(
-            'SELECT a.id AS aid' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'HAVING aid = "sun"',
+            'SELECT a.id AS aid'.PHP_EOL.'FROM foo AS a'.PHP_EOL.'HAVING aid = "sun"',
             trim((string) $query)
         );
     }
@@ -991,7 +994,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->values('1, 2, 3');
 
         $this->assertEquals(
-            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            'INSERT INTO foo'.PHP_EOL.'(a, b, c) VALUES '.PHP_EOL.'(1, 2, 3)',
             trim((string) $query)
         );
 
@@ -1001,7 +1004,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->values(['1, 2, 3', '1, 2, 3', '1, 2, 3']);
 
         $this->assertEquals(
-            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3),' . PHP_EOL . '(1, 2, 3),' . PHP_EOL . '(1, 2, 3)',
+            'INSERT INTO foo'.PHP_EOL.'(a, b, c) VALUES '.PHP_EOL.'(1, 2, 3),'.PHP_EOL.'(1, 2, 3),'.PHP_EOL.'(1, 2, 3)',
             trim((string) $query)
         );
 
@@ -1017,7 +1020,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             );
 
         $this->assertEquals(
-            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1,2,3),' . PHP_EOL . '(1,2,3),' . PHP_EOL . '(1,2,3)',
+            'INSERT INTO foo'.PHP_EOL.'(a, b, c) VALUES '.PHP_EOL.'(1,2,3),'.PHP_EOL.'(1,2,3),'.PHP_EOL.'(1,2,3)',
             trim((string) $query)
         );
     }
@@ -1056,7 +1059,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
             ->where('flower = "sakura"');
 
         $this->assertEquals(
-            'DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
+            'DELETE '.PHP_EOL.'FROM foo'.PHP_EOL.'WHERE flower = "sakura"',
             trim((string) $query)
         );
     }
@@ -1177,16 +1180,16 @@ class SqliteQueryTest extends AbstractQueryTestCase
     {
         $result = $this->instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
 
-        $sql = 'SELECT ' . $this->instance->qn('foo') . ' FROM ' . $this->instance->qn('#__bar') .
-            ' WHERE ' . $this->instance->qn('id') . ' = 10';
+        $sql = 'SELECT '.$this->instance->qn('foo').' FROM '.$this->instance->qn('#__bar').
+            ' WHERE '.$this->instance->qn('id').' = 10';
 
         $this->assertEquals($sql, $result);
 
         $result = $this->instance->format('SELECT %n FROM %n WHERE %n = %t OR %3$n = %Z', 'id', '#__foo', 'date');
 
-        $sql = 'SELECT ' . $this->instance->qn('id') . ' FROM ' . $this->instance->qn('#__foo') .
-            ' WHERE ' . $this->instance->qn('date') . ' = ' . $this->instance->expression('current_timestamp') .
-            ' OR ' . $this->instance->qn('date') . ' = ' . $this->instance->nullDate(true);
+        $sql = 'SELECT '.$this->instance->qn('id').' FROM '.$this->instance->qn('#__foo').
+            ' WHERE '.$this->instance->qn('date').' = '.$this->instance->expression('current_timestamp').
+            ' OR '.$this->instance->qn('date').' = '.$this->instance->nullDate(true);
 
         $this->assertEquals($sql, $result);
     }

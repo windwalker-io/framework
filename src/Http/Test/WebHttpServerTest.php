@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -19,7 +19,7 @@ use Windwalker\Http\WebHttpServer;
 date_default_timezone_set('UTC');
 
 /**
- * Test class of WebHttpServer
+ * Test class of WebHttpServer.
  *
  * @since 3.0
  */
@@ -46,10 +46,10 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * createServer
+     * createServer.
      *
-     * @param   callable          $handler
-     * @param   ResponseInterface $response
+     * @param callable          $handler
+     * @param ResponseInterface $response
      *
      * @return WebHttpServer
      */
@@ -258,12 +258,12 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
             function () {
             }, ServerRequestFactory::createFromGlobals(
             [
-                'HTTPS' => 'off',
-                'SERVER_NAME' => 'example.com',
-                'SERVER_PORT' => '8080',
+                'HTTPS'        => 'off',
+                'SERVER_NAME'  => 'example.com',
+                'SERVER_PORT'  => '8080',
                 'QUERY_STRING' => '?a=b&c=d',
-                'REQUEST_URI' => '/flower/sakura/index.php/foo/bar?a=wrong',
-                'SCRIPT_NAME' => '/flower/sakura/index.php',
+                'REQUEST_URI'  => '/flower/sakura/index.php/foo/bar?a=wrong',
+                'SCRIPT_NAME'  => '/flower/sakura/index.php',
             ]
         )
         );

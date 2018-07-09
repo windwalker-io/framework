@@ -21,14 +21,14 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
     /**
      * Constructor.
      *
-     * @param   array|\ArrayAccess $options Client options object.
+     * @param array|\ArrayAccess $options Client options object.
      *
      * @since   2.1
      */
@@ -40,9 +40,9 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param   RequestInterface $request The request object to send.
+     * @param RequestInterface $request The request object to send.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -53,7 +53,7 @@ abstract class AbstractTransport implements TransportInterface
             ->withQuery('')
             ->withFragment('');
 
-        $uri = $uri . $request->getRequestTarget();
+        $uri = $uri.$request->getRequestTarget();
 
         $request = $request->withRequestTarget($uri);
 
@@ -63,9 +63,9 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param   RequestInterface $request The request object to store request params.
+     * @param RequestInterface $request The request object to store request params.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -74,10 +74,10 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Get option value.
      *
-     * @param   string $name    Option name.
-     * @param   mixed  $default The default value if not exists.
+     * @param string $name    Option name.
+     * @param mixed  $default The default value if not exists.
      *
-     * @return  mixed  The found value or default value.
+     * @return mixed The found value or default value.
      */
     public function getOption($name, $default = null)
     {
@@ -91,10 +91,10 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Set option value.
      *
-     * @param   string $name  Option name.
-     * @param   mixed  $value The value you want to set in.
+     * @param string $name  Option name.
+     * @param mixed  $value The value you want to set in.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOption($name, $value)
     {
@@ -104,9 +104,9 @@ abstract class AbstractTransport implements TransportInterface
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      */
     public function getOptions()
     {
@@ -114,11 +114,11 @@ abstract class AbstractTransport implements TransportInterface
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOptions($options)
     {

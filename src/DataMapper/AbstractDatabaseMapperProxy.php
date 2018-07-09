@@ -66,42 +66,42 @@ class AbstractDatabaseMapperProxy
     /**
      * Property table.
      *
-     * @var  string
+     * @var string
      */
     protected static $table;
 
     /**
      * Property alias.
      *
-     * @var  string
+     * @var string
      */
     protected static $alias;
 
     /**
      * Property keys.
      *
-     * @var  array|string
+     * @var array|string
      */
     protected static $keys;
 
     /**
      * Property dataClass.
      *
-     * @var  string
+     * @var string
      */
     protected static $dataClass;
 
     /**
      * Property dataSetClass.
      *
-     * @var  string
+     * @var string
      */
     protected static $dataSetClass;
 
     /**
      * Property instances.
      *
-     * @var  DataMapper[]
+     * @var DataMapper[]
      */
     protected static $instances = [];
 
@@ -111,8 +111,9 @@ class AbstractDatabaseMapperProxy
      * @param $name      string
      * @param $arguments array
      *
-     * @return mixed
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function __call($name, $arguments)
     {
@@ -127,8 +128,9 @@ class AbstractDatabaseMapperProxy
      * @param $name      string
      * @param $arguments array
      *
-     * @return mixed
      * @throws \Exception
+     *
+     * @return mixed
      */
     public static function __callStatic($name, $arguments)
     {
@@ -138,23 +140,24 @@ class AbstractDatabaseMapperProxy
     }
 
     /**
-     * initialise
+     * initialise.
      *
      * @param DatabaseMapperInterface $mapper
      *
-     * @return  void
+     * @return void
      */
     protected static function init(DatabaseMapperInterface $mapper)
     {
     }
 
     /**
-     * getInstance
+     * getInstance.
      *
-     * @param   string $table
+     * @param string $table
      *
-     * @return  DatabaseMapperInterface
      * @throws \Exception
+     *
+     * @return DatabaseMapperInterface
      */
     public static function getInstance($table = null)
     {
@@ -164,14 +167,15 @@ class AbstractDatabaseMapperProxy
     }
 
     /**
-     * createDataMapper
+     * createDataMapper.
      *
-     * @param   string                 $table Table name.
-     * @param   string|array           $keys  Primary key, default will be `id`.
-     * @param   AbstractDatabaseDriver $db    Database adapter.
+     * @param string                 $table Table name.
+     * @param string|array           $keys  Primary key, default will be `id`.
+     * @param AbstractDatabaseDriver $db    Database adapter.
+     *
+     * @throws \Exception
      *
      * @return DataMapper
-     * @throws \Exception
      */
     public static function createDataMapper($table = null, $keys = null, $db = null)
     {
@@ -202,12 +206,12 @@ class AbstractDatabaseMapperProxy
     }
 
     /**
-     * setDataMapper
+     * setDataMapper.
      *
      * @param string                  $table
      * @param DatabaseMapperInterface $mapper
      *
-     * @return  void
+     * @return void
      */
     public static function setDataMapper($table, DatabaseMapperInterface $mapper)
     {
@@ -215,9 +219,9 @@ class AbstractDatabaseMapperProxy
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  void
+     * @return void
      */
     public static function reset()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -16,7 +16,7 @@ use Windwalker\Http\Response\XmlResponse;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of EmptyResponse
+ * Test class of EmptyResponse.
  *
  * @since 3.0
  */
@@ -33,9 +33,9 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
     }
 
     /**
-     * testOutput
+     * testOutput.
      *
-     * @return  void
+     * @return void
      */
     public function testHtmlOutput()
     {
@@ -46,9 +46,9 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
     }
 
     /**
-     * testOutput
+     * testOutput.
      *
-     * @return  void
+     * @return void
      */
     public function testEmptyOutput()
     {
@@ -65,9 +65,9 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
     }
 
     /**
-     * testOutput
+     * testOutput.
      *
-     * @return  void
+     * @return void
      */
     public function testJsonOutput()
     {
@@ -86,9 +86,9 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
     }
 
     /**
-     * testOutput
+     * testOutput.
      *
-     * @return  void
+     * @return void
      */
     public function testXmlOutput()
     {
@@ -105,7 +105,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
         $this->assertEquals(['application/xml; charset=utf-8'], $response->getHeader('Content-Type'));
 
         $xml = new \DOMDocument();
-        $xml->loadXML("<root />");
+        $xml->loadXML('<root />');
 
         $child = $xml->createElement('foo', 'bar');
         $child->setAttribute('flower', 'sakura');
@@ -121,9 +121,9 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
     }
 
     /**
-     * testRedirectOutput
+     * testRedirectOutput.
      *
-     * @return  void
+     * @return void
      */
     public function testRedirectOutput()
     {

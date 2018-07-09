@@ -12,7 +12,7 @@ use Windwalker\Router\Matcher\MatcherInterface;
 use Windwalker\Router\Matcher\SequentialMatcher;
 
 /**
- * Class SingleActionRouter
+ * Class SingleActionRouter.
  *
  * @since 2.0
  */
@@ -21,7 +21,7 @@ class SingleActionRouter extends Router
     /**
      * Property requests.
      *
-     * @var  array
+     * @var array
      */
     protected $variables = [];
 
@@ -39,39 +39,41 @@ class SingleActionRouter extends Router
     }
 
     /**
-     * addRoute
+     * addRoute.
      *
      * @param string $pattern
      * @param string $controller
      *
-     * @throws  \LogicException
-     * @throws  \InvalidArgumentException
-     * @return  static
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function addMap($pattern, $controller = null)
     {
         if (!is_string($controller)) {
             throw new \InvalidArgumentException(
-                'Please give me controller name string. ' . ucfirst(gettype($controller)) . ' given.'
+                'Please give me controller name string. '.ucfirst(gettype($controller)).' given.'
             );
         }
 
         if ($pattern instanceof Route) {
-            throw new \LogicException('Do not use Route object in ' . get_called_class());
+            throw new \LogicException('Do not use Route object in '.get_called_class());
         }
 
         return parent::addRoute(null, $pattern, ['_controller' => $controller]);
     }
 
     /**
-     * parseRoute
+     * parseRoute.
      *
      * @param string $route
      * @param string $method
      * @param array  $options
      *
-     * @throws  \UnexpectedValueException
-     * @return  array|boolean
+     * @throws \UnexpectedValueException
+     *
+     * @return array|bool
      */
     public function match($route, $method = 'GET', $options = [])
     {
@@ -93,9 +95,9 @@ class SingleActionRouter extends Router
     }
 
     /**
-     * getRequests
+     * getRequests.
      *
-     * @return  array
+     * @return array
      */
     public function getVariables()
     {
@@ -103,11 +105,11 @@ class SingleActionRouter extends Router
     }
 
     /**
-     * setRequests
+     * setRequests.
      *
-     * @param   array $variables
+     * @param array $variables
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setVariables($variables)
     {

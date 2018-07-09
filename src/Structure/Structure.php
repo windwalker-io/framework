@@ -9,7 +9,7 @@
 namespace Windwalker\Structure;
 
 /**
- * Structure class
+ * Structure class.
  *
  * @since  2.0
  */
@@ -18,14 +18,15 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Property separator.
      *
-     * @var  string
+     * @var string
      */
     protected $separator = '.';
 
     /**
      * Structure data store.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $data = [];
@@ -33,15 +34,15 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Property ignoreValues.
      *
-     * @var  array
+     * @var array
      */
     protected $ignoreValues = [null];
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param   mixed  $data   The data to bind to the new Structure object.
-     * @param   string $format The format of input, only work when first argument is string.
+     * @param mixed  $data   The data to bind to the new Structure object.
+     * @param string $format The format of input, only work when first argument is string.
      *
      * @since   2.0
      */
@@ -62,7 +63,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Magic function to clone the structure object.
      *
-     * @return  Structure
+     * @return Structure
      *
      * @since   2.0
      */
@@ -74,7 +75,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Magic function to render this object as a string using default args of toString method.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -93,7 +94,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      * Implementation for the JsonSerializable interface.
      * Allows us to pass Structure objects to json_encode.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -105,10 +106,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Sets a default value if not already assigned.
      *
-     * @param   string $path  The name of the parameter.
-     * @param   mixed  $value An optional value for the parameter.
+     * @param string $path  The name of the parameter.
+     * @param mixed  $value An optional value for the parameter.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -123,9 +124,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Check if a structure path exists.
      *
-     * @param   string $path Structure path (e.g. foo.content.showauthor)
+     * @param string $path Structure path (e.g. foo.content.showauthor)
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -137,10 +138,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Get a structure value.
      *
-     * @param   string $path    Structure path (e.g. foo.content.showauthor)
-     * @param   mixed  $default Optional default value, returned if the internal value is null.
+     * @param string $path    Structure path (e.g. foo.content.showauthor)
+     * @param mixed  $default Optional default value, returned if the internal value is null.
      *
-     * @return  mixed  Value of entry or null
+     * @return mixed Value of entry or null
      *
      * @since   2.0
      */
@@ -152,11 +153,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * remove
+     * remove.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  static
+     * @return static
      */
     public function remove($path)
     {
@@ -168,7 +169,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Reset all data.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {
@@ -178,11 +179,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Load an array or object of values into the default namespace
+     * Load an array or object of values into the default namespace.
      *
-     * @param  array|object $data    The value to load into structure.
-     * @param  boolean      $raw     Set to false that we will convert all object to array.
-     * @param  array        $options The options to bind data.
+     * @param array|object $data    The value to load into structure.
+     * @param bool         $raw     Set to false that we will convert all object to array.
+     * @param array        $options The options to bind data.
      *
      * @return static Return this object to support chaining.
      */
@@ -194,13 +195,13 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Load the contents of a file into the structure
+     * Load the contents of a file into the structure.
      *
-     * @param   string $file    Path to file to load
-     * @param   string $format  Format of the file [optional: defaults to JSON]
-     * @param   array  $options Options used by the formatter
+     * @param string $file    Path to file to load
+     * @param string $format  Format of the file [optional: defaults to JSON]
+     * @param array  $options Options used by the formatter
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -214,13 +215,13 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Load a string into the structure
+     * Load a string into the structure.
      *
-     * @param   string $data    String to load into the structure
-     * @param   string $format  Format of the string
-     * @param   array  $options Options used by the formatter
+     * @param string $data    String to load into the structure
+     * @param string $format  Format of the string
+     * @param array  $options Options used by the formatter
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -236,11 +237,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Merge a structure data into this object.
      *
-     * @param   Structure|mixed $source  Source structure data to merge.
-     * @param   boolean         $raw     Set to false to convert all object to array.
-     * @param   array           $options Options to bind data.
+     * @param Structure|mixed $source  Source structure data to merge.
+     * @param bool            $raw     Set to false to convert all object to array.
+     * @param array           $options Options to bind data.
      *
-     * @return  static  Return this object to support chaining.
+     * @return static Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -258,12 +259,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Merge a structure data to a node.
      *
-     * @param   string    $path    The path to merge as root.
-     * @param   Structure $source  Source structure data to merge.
-     * @param   boolean   $raw     Set to false to convert all object to array.
-     * @param   array     $options Options to bind data.
+     * @param string    $path    The path to merge as root.
+     * @param Structure $source  Source structure data to merge.
+     * @param bool      $raw     Set to false to convert all object to array.
+     * @param array     $options Options to bind data.
      *
-     * @return  static
+     * @return static
      */
     public function mergeTo($path, $source, $raw = false, array $options = [])
     {
@@ -271,12 +272,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
         $data = [];
 
-        $tmp =& $data;
+        $tmp = &$data;
 
         foreach ($nodes as $node) {
             $tmp[$node] = [];
 
-            $tmp =& $tmp[$node];
+            $tmp = &$tmp[$node];
         }
 
         if ($source instanceof self) {
@@ -291,11 +292,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * extract
+     * extract.
      *
      * @param string $path
      *
-     * @return  static
+     * @return static
      */
     public function extract($path)
     {
@@ -303,9 +304,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * getRaw
+     * getRaw.
      *
-     * @return  array
+     * @return array
      */
     public function getRaw()
     {
@@ -315,9 +316,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Checks whether an offset exists in the iterator.
      *
-     * @param   mixed $offset The array offset.
+     * @param mixed $offset The array offset.
      *
-     * @return  boolean  True if the offset exists, false otherwise.
+     * @return bool True if the offset exists, false otherwise.
      *
      * @since   2.0
      */
@@ -329,9 +330,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Gets an offset in the iterator.
      *
-     * @param   mixed $offset The array offset.
+     * @param mixed $offset The array offset.
      *
-     * @return  mixed  The array value if it exists, null otherwise.
+     * @return mixed The array value if it exists, null otherwise.
      *
      * @since   2.0
      */
@@ -343,10 +344,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Sets an offset in the iterator.
      *
-     * @param   mixed $offset The array offset.
-     * @param   mixed $value  The array value.
+     * @param mixed $offset The array offset.
+     * @param mixed $value  The array value.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -358,9 +359,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Unsets an offset in the iterator.
      *
-     * @param   mixed $offset The array offset.
+     * @param mixed $offset The array offset.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -372,10 +373,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Set a structure value and convert object to array.
      *
-     * @param   string $path  Structure Path (e.g. foo.content.showauthor)
-     * @param   mixed  $value Value of entry.
+     * @param string $path  Structure Path (e.g. foo.content.showauthor)
+     * @param mixed  $value Value of entry.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -393,10 +394,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Set a structure value.
      *
-     * @param   string $path  Structure Path (e.g. foo.content.showauthor)
-     * @param   mixed  $value Value of entry.
+     * @param string $path  Structure Path (e.g. foo.content.showauthor)
+     * @param mixed  $value Value of entry.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.1
      */
@@ -408,9 +409,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Transforms a namespace to an array
+     * Transforms a namespace to an array.
      *
-     * @return  array  An associative array holding the namespace data
+     * @return array An associative array holding the namespace data
      *
      * @since   2.0
      */
@@ -420,11 +421,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Transforms a namespace to an object
+     * Transforms a namespace to an object.
      *
-     * @param   string $class The class of object.
+     * @param string $class The class of object.
      *
-     * @return  object   An an object holding the namespace data
+     * @return object An an object holding the namespace data
      *
      * @since   2.0
      */
@@ -434,12 +435,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Get a namespace in a given string format
+     * Get a namespace in a given string format.
      *
-     * @param   string $format  Format to return the string in
-     * @param   mixed  $options Parameters used by the formatter, see formatters for more info
+     * @param string $format  Format to return the string in
+     * @param mixed  $options Parameters used by the formatter, see formatters for more info
      *
-     * @return  string   Namespace in string format
+     * @return string Namespace in string format
      *
      * @since   2.0
      */
@@ -451,12 +452,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Method to recursively bind data to a parent object.
      *
-     * @param   array   $parent  The parent object on which to attach the data values.
-     * @param   mixed   $data    An array or object of data to bind to the parent object.
-     * @param   boolean $raw     Set to false to convert all object to array.
-     * @param   array   $options The options to bind data.
+     * @param array $parent  The parent object on which to attach the data values.
+     * @param mixed $data    An array or object of data to bind to the parent object.
+     * @param bool  $raw     Set to false to convert all object to array.
+     * @param array $options The options to bind data.
      *
-     * @return  void
+     * @return void
      */
     protected function bindData(&$parent, $data, $raw = false, array $options = [])
     {
@@ -491,9 +492,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Method to recursively convert an object of data to an array.
      *
-     * @param   mixed $data An object of data to return as an array.
+     * @param mixed $data An object of data to return as an array.
      *
-     * @return  array  Array representation of the input object.
+     * @return array Array representation of the input object.
      *
      * @since   2.0
      */
@@ -521,7 +522,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @param string $separator The key separator.
      *
-     * @return  string[] Dumped array.
+     * @return string[] Dumped array.
      */
     public function flatten($separator = '.')
     {
@@ -529,9 +530,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Method to get property Separator
+     * Method to get property Separator.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.1
      */
@@ -541,11 +542,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Method to set property separator
+     * Method to set property separator.
      *
-     * @param   string $separator
+     * @param string $separator
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.1
      */
@@ -557,12 +558,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Push value to a path in structure
+     * Push value to a path in structure.
      *
-     * @param   string $path  Parent structure Path (e.g. windwalker.content.showauthor)
-     * @param   mixed  $value Value of entry, one or more elements.
+     * @param string $path  Parent structure Path (e.g. windwalker.content.showauthor)
+     * @param mixed  $value Value of entry, one or more elements.
      *
-     * @return  integer  the new number of elements in the array.
+     * @return int the new number of elements in the array.
      *
      * @since   2.1
      */
@@ -604,10 +605,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Prepend value to a path in structure.
      *
-     * @param   string $path  Parent structure Path (e.g. windwalker.content.showauthor)
-     * @param   mixed  $value Value of entry, one or more elements.
+     * @param string $path  Parent structure Path (e.g. windwalker.content.showauthor)
+     * @param mixed  $value Value of entry, one or more elements.
      *
-     * @return  integer  the new number of elements in the array.
+     * @return int the new number of elements in the array.
      *
      * @since   2.1
      */
@@ -649,9 +650,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * To remove first element from the path of this structure.
      *
-     * @param   string $path The structure path.
+     * @param string $path The structure path.
      *
-     * @return  mixed  The shifted value, or null if array is empty.
+     * @return mixed The shifted value, or null if array is empty.
      */
     public function shift($path)
     {
@@ -681,9 +682,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * To remove last element from the path of this structure.
      *
-     * @param   string $path The structure path.
+     * @param string $path The structure path.
      *
-     * @return  mixed  The shifted value, or &null; if array is empty.
+     * @return mixed The shifted value, or &null; if array is empty.
      */
     public function pop($path)
     {
@@ -718,7 +719,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      * You can wrap this iterator by RecursiveIteratorIterator that will support recursive foreach.
      * Example: `foreach (new \RecursiveIteratorIterator($structure) as $value)`
      *
-     * @return  \RecursiveArrayIterator  This object represented as an RecursiveArrayIterator.
+     * @return \RecursiveArrayIterator This object represented as an RecursiveArrayIterator.
      *
      * @see     IteratorAggregate::getIterator()
      * @since   2.1
@@ -729,9 +730,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Count elements of the data object
+     * Count elements of the data object.
      *
-     * @return  integer  The custom count as an integer.
+     * @return int The custom count as an integer.
      *
      * @link    http://php.net/manual/en/countable.count.php
      * @since   2.1
@@ -742,9 +743,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Method to get property IgnoreValues
+     * Method to get property IgnoreValues.
      *
-     * @return  array
+     * @return array
      */
     public function getIgnoreValues()
     {
@@ -752,11 +753,11 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     }
 
     /**
-     * Method to set property ignoreValues
+     * Method to set property ignoreValues.
      *
-     * @param   array $ignoreValues
+     * @param array $ignoreValues
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setIgnoreValues($ignoreValues)
     {

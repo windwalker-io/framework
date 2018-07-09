@@ -58,34 +58,35 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Property alias.
      *
-     * @var  string
+     * @var string
      */
     protected $alias;
 
     /**
      * Property query.
      *
-     * @var  QueryInterface
+     * @var QueryInterface
      */
     protected $query;
 
     /**
      * Property queryHelper.
      *
-     * @var  QueryHelper
+     * @var QueryHelper
      */
     protected $queryHelper;
 
     /**
-     * newRelation
+     * newRelation.
      *
      * @param string                 $alias
      * @param string                 $table
      * @param string                 $keys
      * @param AbstractDatabaseDriver $db
      *
-     * @return  static
      * @throws \Exception
+     *
+     * @return static
      */
     public static function newRelation($alias = null, $table = null, $keys = null, $db = null)
     {
@@ -97,9 +98,9 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Constructor.
      *
-     * @param   string                 $table Table name.
-     * @param   string|array           $keys  Primary key, default will be `id`.
-     * @param   AbstractDatabaseDriver $db    Database adapter.
+     * @param string                 $table Table name.
+     * @param string|array           $keys  Primary key, default will be `id`.
+     * @param AbstractDatabaseDriver $db    Database adapter.
      *
      * @throws \Exception
      */
@@ -111,11 +112,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * Method to set property alias
+     * Method to set property alias.
      *
-     * @param   string $alias
+     * @param string $alias
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function alias($alias)
     {
@@ -127,14 +128,15 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Do find action.
      *
-     * @param   array   $conditions Where conditions, you can use array or Compare object.
-     * @param   array   $orders     Order sort, can ba string, array or object.
-     * @param   integer $start      Limit start number.
-     * @param   integer $limit      Limit rows.
-     * @param   string  $key        The index key.
+     * @param array  $conditions Where conditions, you can use array or Compare object.
+     * @param array  $orders     Order sort, can ba string, array or object.
+     * @param int    $start      Limit start number.
+     * @param int    $limit      Limit rows.
+     * @param string $key        The index key.
      *
-     * @return  mixed  Found rows data set.
      * @throws \Exception
+     *
+     * @return mixed Found rows data set.
      */
     protected function doFind(array $conditions, array $orders, $start, $limit, $key)
     {
@@ -149,15 +151,16 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * getFindQuery
+     * getFindQuery.
      *
-     * @param   array   $conditions Where conditions, you can use array or Compare object.
-     * @param   array   $orders     Order sort, can ba string, array or object.
-     * @param   integer $start      Limit start number.
-     * @param   integer $limit      Limit rows.
+     * @param array $conditions Where conditions, you can use array or Compare object.
+     * @param array $orders     Order sort, can ba string, array or object.
+     * @param int   $start      Limit start number.
+     * @param int   $limit      Limit rows.
+     *
+     * @throws \Exception
      *
      * @return QueryInterface
-     * @throws \Exception
      */
     protected function getFindQuery(array $conditions, array $orders, $start, $limit)
     {
@@ -177,7 +180,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
             foreach ($conditions as $key => $value) {
                 if (!is_numeric($key)) {
-                    $key = strpos($key, '.') !== false ? $key : $alias . '.' . $key;
+                    $key = strpos($key, '.') !== false ? $key : $alias.'.'.$key;
                 }
 
                 $conds[$key] = $value;
@@ -188,7 +191,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             // Add dot to orders
             $orders = array_map(
                 function ($value) use ($alias) {
-                    return strpos($value, '.') !== false ? $value : $alias . '.' . $value;
+                    return strpos($value, '.') !== false ? $value : $alias.'.'.$value;
                 },
                 $orders
             );
@@ -232,12 +235,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Do create action.
      *
-     * @param  mixed $dataset The data set contains data we want to store.
-     *
-     * @return mixed
+     * @param mixed $dataset The data set contains data we want to store.
      *
      * @throws \Exception
      * @throws \Throwable
+     *
+     * @return mixed
      */
     protected function doCreate($dataset)
     {
@@ -291,15 +294,15 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Do update action.
      *
-     * @param   mixed $dataset      Data set contain data we want to update.
-     * @param   array $condFields   The where condition tell us record exists or not, if not set,
-     *                              will use primary key instead.
-     * @param   bool  $updateNulls  Update empty fields or not.
-     *
-     * @return  mixed
+     * @param mixed $dataset     Data set contain data we want to update.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
      * @throws \Exception
      * @throws \Throwable
+     *
+     * @return mixed
      */
     protected function doUpdate($dataset, array $condFields, $updateNulls = false)
     {
@@ -344,13 +347,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Do updateAll action.
      *
-     * @param   mixed $data       The data we want to update to every rows.
-     * @param   mixed $conditions Where conditions, you can use array or Compare object.
-     *
-     * @return  boolean
+     * @param mixed $data       The data we want to update to every rows.
+     * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
      * @throws \Exception
      * @throws \Throwable
+     *
+     * @return bool
      */
     protected function doUpdateBatch($data, array $conditions)
     {
@@ -376,13 +379,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Do flush action, this method should be override by sub class.
      *
-     * @param   mixed $dataset    Data set contain data we want to update.
-     * @param   mixed $conditions Where conditions, you can use array or Compare object.
-     *
-     * @return  mixed
+     * @param mixed $dataset    Data set contain data we want to update.
+     * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
      * @throws \Exception
      * @throws \Throwable
+     *
+     * @return mixed
      */
     protected function doFlush($dataset, array $conditions)
     {
@@ -414,12 +417,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Do delete action, this method should be override by sub class.
      *
-     * @param   mixed $conditions Where conditions, you can use array or Compare object.
-     *
-     * @return  boolean
+     * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
      * @throws \Exception
      * @throws \Throwable
+     *
+     * @return bool
      */
     protected function doDelete(array $conditions)
     {
@@ -445,23 +448,23 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Find column as an array.
      *
-     * @param string  $column     The column we want to select.
-     * @param mixed   $conditions Where conditions, you can use array or Compare object.
-     *                            Example:
-     *                            - `array('id' => 5)` => id = 5
-     *                            - `new GteCompare('id', 20)` => 'id >= 20'
-     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param mixed   $order      Order sort, can ba string, array or object.
-     *                            Example:
-     *                            - `id ASC` => ORDER BY id ASC
-     *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-     * @param integer $start      Limit start number.
-     * @param integer $limit      Limit rows.
-     * @param string  $key        The index key.
-     *
-     * @return  mixed
+     * @param string $column     The column we want to select.
+     * @param mixed  $conditions Where conditions, you can use array or Compare object.
+     *                           Example:
+     *                           - `array('id' => 5)` => id = 5
+     *                           - `new GteCompare('id', 20)` => 'id >= 20'
+     *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed  $order      Order sort, can ba string, array or object.
+     *                           Example:
+     *                           - `id ASC` => ORDER BY id ASC
+     *                           - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     * @param int    $start      Limit start number.
+     * @param int    $limit      Limit rows.
+     * @param string $key        The index key.
      *
      * @throws \InvalidArgumentException
+     *
+     * @return mixed
      */
     public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null)
     {
@@ -477,7 +480,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Get DB adapter.
      *
-     * @return  AbstractDatabaseDriver Db adapter.
+     * @return AbstractDatabaseDriver Db adapter.
      */
     public function getDb()
     {
@@ -487,9 +490,9 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     /**
      * Set db adapter.
      *
-     * @param   AbstractDatabaseDriver $db Db adapter.
+     * @param AbstractDatabaseDriver $db Db adapter.
      *
-     * @return  DataMapper  Return self to support chaining.
+     * @return DataMapper Return self to support chaining.
      */
     public function setDb(AbstractDatabaseDriver $db)
     {
@@ -521,11 +524,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 continue;
             }
 
-            if (strtolower($field->Null) === 'no' && $field->Default === null
+            if (strtolower($field->null) === 'no' && $field->Default === null
                 && $field->Key !== 'PRI' && $this->getKeyName() !== $field->Field) {
                 $type = $field->Type;
 
-                list($type,) = explode('(', $type, 2);
+                list($type) = explode('(', $type, 2);
                 $type = strtolower($type);
 
                 $field->Default = $this->db->getTable($table)->getDataType()->getDefaultValue($type);
@@ -545,7 +548,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *
      * @param Entity $entity
      *
-     * @return  Entity
+     * @return Entity
      */
     protected function validValue(Entity $entity)
     {
@@ -572,7 +575,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
             if ($value === null) {
                 // This field is null and the db column is not nullable, use db default value.
-                if (strtolower($detail->Null) === 'no') {
+                if (strtolower($detail->null) === 'no') {
                     $entity[$field] = $detail->Default;
                 }
             } else {
@@ -592,11 +595,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * castForStore
+     * castForStore.
      *
      * @param Entity $entity
      *
-     * @return  Entity
+     * @return Entity
      */
     public function castForStore(Entity $entity)
     {
@@ -655,7 +658,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * Method to get property Query
+     * Method to get property Query.
      *
      * @param bool $new
      *
@@ -671,11 +674,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * Method to set property query
+     * Method to set property query.
      *
-     * @param   QueryInterface $query
+     * @param QueryInterface $query
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setQuery(QueryInterface $query)
     {
@@ -685,9 +688,9 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * Method to get property QueryHelper
+     * Method to get property QueryHelper.
      *
-     * @return  QueryHelper
+     * @return QueryHelper
      */
     public function getQueryHelper()
     {
@@ -703,11 +706,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * Method to set property queryHelper
+     * Method to set property queryHelper.
      *
-     * @param   QueryHelper $queryHelper
+     * @param QueryHelper $queryHelper
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setQueryHelper(QueryHelper $queryHelper)
     {
@@ -717,9 +720,9 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {
@@ -730,17 +733,17 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * join
+     * join.
      *
-     * @param string  $joinType
-     * @param string  $alias
-     * @param string  $table
-     * @param mixed   $condition
-     * @param boolean $prefix
+     * @param string $joinType
+     * @param string $alias
+     * @param string $table
+     * @param mixed  $condition
+     * @param bool   $prefix
      *
-     * @return  static
+     * @return static
      */
-    public function join($joinType = 'LEFT', $alias, $table, $condition = null, $prefix = null)
+    public function join($joinType, $alias, $table, $condition = null, $prefix = null)
     {
         $this->getQueryHelper()->addTable($alias, $table, $condition, $joinType, $prefix);
 
@@ -748,12 +751,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
-     * __call
+     * __call.
      *
-     * @param   string $name
-     * @param   array  $args
+     * @param string $name
+     * @param array  $args
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __call($name, $args)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,16 +11,16 @@ namespace Windwalker\Form\Test;
 use Windwalker\Form\FieldHelper;
 
 /**
- * Test class of FieldHelper
+ * Test class of FieldHelper.
  *
  * @since 2.0
  */
 class FieldHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * setUp
+     * setUp.
      *
-     * @return  void
+     * @return void
      */
     protected function setUp()
     {
@@ -28,9 +28,9 @@ class FieldHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * tearDown
+     * tearDown.
      *
-     * @return  void
+     * @return void
      */
     protected function tearDown()
     {
@@ -46,7 +46,7 @@ class FieldHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreate()
     {
-        $xml = <<<XML
+        $xml = <<<'XML'
 <field
 	name="flower"
 	type="text"
@@ -62,7 +62,7 @@ XML;
         $this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $field);
 
         // Add namespace
-        $xml = <<<XML
+        $xml = <<<'XML'
 <field
 	name="flower"
 	type="stub"

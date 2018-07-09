@@ -20,21 +20,21 @@ class LengthValidator extends AbstractValidator
     /**
      * Property min.
      *
-     * @var  int
+     * @var int
      */
     protected $min;
 
     /**
      * Property max.
      *
-     * @var  int
+     * @var int
      */
     protected $max;
 
     /**
      * Property utf8.
      *
-     * @var  bool
+     * @var bool
      */
     protected $utf8;
 
@@ -63,11 +63,11 @@ class LengthValidator extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {

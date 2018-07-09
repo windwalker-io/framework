@@ -2,16 +2,16 @@
 
 return [
     'flower' => 'sakura',
-    'olive' => 'peace',
-    'pos1' => [
-        'sunflower' => 'love'
+    'olive'  => 'peace',
+    'pos1'   => [
+        'sunflower' => 'love',
     ],
     'pos2' => [
-        'cornflower' => 'elegant'
+        'cornflower' => 'elegant',
     ],
     'array' => [
         '0' => 'A',
         '1' => 'B',
-        '2' => 'C'
+        '2' => 'C',
     ],
 ];

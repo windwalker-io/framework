@@ -18,12 +18,12 @@ use Windwalker\Http\Helper\HeaderHelper;
 class PsrHeaderInput extends Input
 {
     /**
-     * prepareSource
+     * prepareSource.
      *
      * @param array $source
      * @param bool  $reference
      *
-     * @return  void
+     * @return void
      */
     public function prepareSource(&$source = null, $reference = false)
     {
@@ -39,10 +39,10 @@ class PsrHeaderInput extends Input
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name      Name of the value to get.
-     * @param   mixed  $default   Default value to return if variable does not exist.
-     * @param   string $filter    Filter to apply to the value.
-     * @param   string $separator Separator for path.
+     * @param string $name      Name of the value to get.
+     * @param mixed  $default   Default value to return if variable does not exist.
+     * @param string $filter    Filter to apply to the value.
+     * @param string $separator Separator for path.
      *
      * @return mixed The filtered input value.
      *
@@ -56,11 +56,11 @@ class PsrHeaderInput extends Input
     }
 
     /**
-     * Sets a value
+     * Sets a value.
      *
-     * @param   string $name      Name of the value to set.
-     * @param   mixed  $value     Value to assign to the input.
-     * @param   string $separator Symbol to separate path.
+     * @param string $name      Name of the value to set.
+     * @param mixed  $value     Value to assign to the input.
+     * @param string $separator Symbol to separate path.
      *
      * @since   2.0
      */

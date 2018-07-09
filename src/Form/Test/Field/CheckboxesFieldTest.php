@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Form\Field\CheckboxesField;
 use Windwalker\Html\Option;
 
 /**
- * Test class of TextField
+ * Test class of TextField.
  *
  * @since 2.0
  */
@@ -75,7 +75,7 @@ class CheckboxesFieldTest extends AbstractDomTestCase
      */
     public function testRender()
     {
-        $html = <<<HTML
+        $html = <<<'HTML'
 <span id="input-flower" class="checkbox-inputs stub-flower" data-test-element>
 	<input class="opt" value="Asia/Tokyo" name="flower[]" type="checkbox" id="input-flower-asia-tokyo" disabled="disabled" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
@@ -95,7 +95,7 @@ HTML;
 
         $this->instance->setValue('UTC');
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <span id="input-flower" class="checkbox-inputs stub-flower" data-test-element>
 	<input class="opt" value="Asia/Tokyo" name="flower[]" type="checkbox" id="input-flower-asia-tokyo" disabled="disabled" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>

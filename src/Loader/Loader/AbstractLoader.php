@@ -9,7 +9,7 @@
 namespace Windwalker\Loader\Loader;
 
 /**
- * AbstractLoader
+ * AbstractLoader.
  */
 abstract class AbstractLoader
 {
@@ -47,11 +47,11 @@ abstract class AbstractLoader
     abstract public function loadClass($className);
 
     /**
-     * normalizeClass
+     * normalizeClass.
      *
      * @param string $class
      *
-     * @return  string
+     * @return string
      */
     public static function normalizeClass($class)
     {
@@ -61,19 +61,19 @@ abstract class AbstractLoader
     }
 
     /**
-     * normalizePath
+     * normalizePath.
      *
      * @param string $path
      * @param bool   $endSlash
      *
-     * @return  string
+     * @return string
      */
     public static function normalizePath($path, $endSlash = true)
     {
-        $path = rtrim($path, '/') . DIRECTORY_SEPARATOR;
+        $path = rtrim($path, '/').DIRECTORY_SEPARATOR;
         $path = rtrim($path, DIRECTORY_SEPARATOR);
 
-        $path = $endSlash ? $path . DIRECTORY_SEPARATOR : $path;
+        $path = $endSlash ? $path.DIRECTORY_SEPARATOR : $path;
 
         return $path;
     }

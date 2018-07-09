@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Filesystem\Test;
 use Windwalker\Filesystem\Path;
 
 /**
- * Test class of Path
+ * Test class of Path.
  *
  * @since 2.0
  */
@@ -20,7 +20,7 @@ class PathTest extends AbstractFilesystemTest
     /**
      * Data provider for testClean() method.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -28,16 +28,16 @@ class PathTest extends AbstractFilesystemTest
     {
         return [
             // Input Path, Directory Separator, Expected Output
-            'Nothing to do.' => ['/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'],
-            'One backslash.' => ['/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
-            'Two and one backslashes.' => ['/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
+            'Nothing to do.'                                => ['/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'],
+            'One backslash.'                                => ['/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
+            'Two and one backslashes.'                      => ['/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
             'Mixed backslashes and double forward slashes.' => [
                 '/var\\/www//foo\\bar/baz',
                 '/',
                 '/var/www/foo/bar/baz',
             ],
-            'UNC path.' => ['\\\\www\\docroot', '\\', '\\\\www\\docroot'],
-            'UNC path with forward slash.' => ['\\\\www/docroot', '\\', '\\\\www\\docroot'],
+            'UNC path.'                               => ['\\\\www\\docroot', '\\', '\\\\www\\docroot'],
+            'UNC path with forward slash.'            => ['\\\\www/docroot', '\\', '\\\\www\\docroot'],
             'UNC path with UNIX directory separator.' => ['\\\\www/docroot', '/', '/www/docroot'],
         ];
     }
@@ -109,9 +109,9 @@ class PathTest extends AbstractFilesystemTest
     /**
      * Method to test clean().
      *
-     * @param   string $input
-     * @param   string $ds
-     * @param   string $expected
+     * @param string $input
+     * @param string $ds
+     * @param string $expected
      *
      * @return void
      *
@@ -144,7 +144,7 @@ class PathTest extends AbstractFilesystemTest
     }
 
     /**
-     * testExistsInsensitive
+     * testExistsInsensitive.
      *
      * @param string $path
      * @param bool   $sExists
@@ -160,30 +160,30 @@ class PathTest extends AbstractFilesystemTest
     }
 
     /**
-     * existsProvider
+     * existsProvider.
      *
-     * @return  array
+     * @return array
      */
     public function existsProvider()
     {
         return [
             [
-                __DIR__ . '/case/Flower/saKura/test.txt',
+                __DIR__.'/case/Flower/saKura/test.txt',
                 false,
                 true,
             ],
             [
-                __DIR__ . '/case/Flower/saKura/TEST.txt',
+                __DIR__.'/case/Flower/saKura/TEST.txt',
                 true,
                 true,
             ],
             [
-                __DIR__ . '/case/Flower/sakura',
+                __DIR__.'/case/Flower/sakura',
                 false,
                 true,
             ],
             [
-                __DIR__ . '/case/Flower/Olive',
+                __DIR__.'/case/Flower/Olive',
                 false,
                 false,
             ],
@@ -191,14 +191,14 @@ class PathTest extends AbstractFilesystemTest
     }
 
     /**
-     * testFixCase
+     * testFixCase.
      *
-     * @return  void
+     * @return void
      */
     public function testFixCase()
     {
-        $path = __DIR__ . '/case/Flower/saKura/test.txt';
+        $path = __DIR__.'/case/Flower/saKura/test.txt';
 
-        self::assertEquals(Path::clean(__DIR__ . '/case/Flower/saKura/TEST.txt'), Path::fixCase($path));
+        self::assertEquals(Path::clean(__DIR__.'/case/Flower/saKura/TEST.txt'), Path::fixCase($path));
     }
 }

@@ -11,7 +11,7 @@ namespace Windwalker\Query\Oracle;
 use Windwalker\Query\Query;
 
 /**
- * Class OracleQuery
+ * Class OracleQuery.
  *
  * @since 2.0
  */
@@ -20,7 +20,8 @@ class OracleQuery extends Query implements Query\PreparableInterface
     /**
      * The name of the database driver.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     public $name = 'oracle';
@@ -31,15 +32,17 @@ class OracleQuery extends Query implements Query\PreparableInterface
      * same character is used for both sides of the quoted name, else the first character will be
      * used for the opening quote and the second for the closing quote.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nameQuote = '"';
 
     /**
-     * Returns the current dateformat
+     * Returns the current dateformat.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $dateFormat = 'RRRR-MM-DD HH24:MI:SS';
@@ -47,7 +50,8 @@ class OracleQuery extends Query implements Query\PreparableInterface
     /**
      * The limit for the result set.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $limit;
@@ -55,18 +59,19 @@ class OracleQuery extends Query implements Query\PreparableInterface
     /**
      * The offset for the result set.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $offset;
 
     /**
-     * escape
+     * escape.
      *
      * @param string $text
      * @param bool   $extra
      *
-     * @return  mixed|string
+     * @return mixed|string
      */
     public function escape($text, $extra = false)
     {
@@ -86,11 +91,12 @@ class OracleQuery extends Query implements Query\PreparableInterface
      * automatically by the __toString() method if it detects that the
      * query implements the LimitableInterface.
      *
-     * @param   string  $query  The query in string format
-     * @param   integer $limit  The limit for the result set
-     * @param   integer $offset The offset for the result set
+     * @param string $query  The query in string format
+     * @param int    $limit  The limit for the result set
+     * @param int    $offset The offset for the result set
      *
      * @return string
+     *
      * @since   2.0
      */
     public function processLimit($query, $limit, $offset = null)
@@ -101,18 +107,18 @@ class OracleQuery extends Query implements Query\PreparableInterface
 		              FROM (
 		                  SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum
 		                  FROM (
-		                      ' . $query . '
+		                      '.$query.'
 		                  ) windwalker1
 		              ) windwalker2';
 
             // Check if the limit value is greater than zero.
             if ($limit > 0) {
                 $query .= ' WHERE windwalker2.windwalker_db_rownum BETWEEN '
-                    . ($offset + 1) . ' AND ' . ($offset + $limit);
+                    .($offset + 1).' AND '.($offset + $limit);
             } else {
                 // Check if there is an offset and then use this.
                 if ($offset) {
-                    $query .= ' WHERE windwalker2.windwalker_db_rownum > ' . ($offset + 1);
+                    $query .= ' WHERE windwalker2.windwalker_db_rownum > '.($offset + 1);
                 }
             }
         }
@@ -127,8 +133,8 @@ class OracleQuery extends Query implements Query\PreparableInterface
      * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
      * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
      *
-     * @param   integer $limit  The limit for the result set
-     * @param   integer $offset The offset for the result set
+     * @param int $limit  The limit for the result set
+     * @param int $offset The offset for the result set
      *
      * @return OracleQuery Returns this object to allow chaining.
      *
@@ -143,9 +149,9 @@ class OracleQuery extends Query implements Query\PreparableInterface
     }
 
     /**
-     * getDateFormat
+     * getDateFormat.
      *
-     * @return  string
+     * @return string
      */
     public function getDateFormat()
     {
@@ -153,11 +159,11 @@ class OracleQuery extends Query implements Query\PreparableInterface
     }
 
     /**
-     * setDateFormat
+     * setDateFormat.
      *
-     * @param   string $dateFormat
+     * @param string $dateFormat
      *
-     * @return  OracleQuery  Return self to support chaining.
+     * @return OracleQuery Return self to support chaining.
      */
     public function setDateFormat($dateFormat)
     {

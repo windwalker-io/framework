@@ -22,30 +22,30 @@ interface DatabaseMapperInterface extends DataMapperInterface
      *
      * @param string $table Table name.
      *
-     * @return  array
+     * @return array
      */
     public function getFields($table = null);
 
     /**
      * Get table name.
      *
-     * @return  string Table name.
+     * @return string Table name.
      */
     public function getTable();
 
     /**
      * Get DB adapter.
      *
-     * @return  AbstractDatabaseDriver Db adapter.
+     * @return AbstractDatabaseDriver Db adapter.
      */
     public function getDb();
 
     /**
      * Set db adapter.
      *
-     * @param   AbstractDatabaseDriver $db Db adapter.
+     * @param AbstractDatabaseDriver $db Db adapter.
      *
-     * @return  DataMapper  Return self to support chaining.
+     * @return DataMapper Return self to support chaining.
      */
     public function setDb(AbstractDatabaseDriver $db);
 }

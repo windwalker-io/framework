@@ -23,21 +23,21 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     /**
      * Property client.
      *
-     * @var  Pheanstalk
+     * @var Pheanstalk
      */
     protected $client;
 
     /**
      * Property queue.
      *
-     * @var  string
+     * @var string
      */
     protected $queue;
 
     /**
      * Property timeout.
      *
-     * @var  int
+     * @var int
      */
     protected $timeout;
 
@@ -57,7 +57,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
@@ -76,7 +76,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -89,7 +89,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
         $job = $this->client->watchOnly($queue)->reserve(0);
 
         if (!$job instanceof Job) {
-            return null;
+            return;
         }
 
         $message = new QueueMessage();
@@ -104,7 +104,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -120,7 +120,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *
@@ -138,12 +138,13 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * getPheanstalk
+     * getPheanstalk.
      *
      * @param string $host
      *
-     * @return  Pheanstalk
      * @throws \DomainException
+     *
+     * @return Pheanstalk
      */
     public function getPheanstalk($host = null)
     {

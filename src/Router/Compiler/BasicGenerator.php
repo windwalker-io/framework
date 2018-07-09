@@ -16,12 +16,12 @@ namespace Windwalker\Router\Compiler;
 abstract class BasicGenerator
 {
     /**
-     * generate
+     * generate.
      *
      * @param string $pattern
      * @param array  $data
      *
-     * @return  mixed|string
+     * @return mixed|string
      */
     public static function generate($pattern, array $data = [])
     {
@@ -32,16 +32,16 @@ abstract class BasicGenerator
     }
 
     /**
-     * replaceOptionalSegments
+     * replaceOptionalSegments.
      *
      * @param string $route
      * @param array  &$data
      *
-     * @return  mixed
+     * @return mixed
      */
     protected static function replaceOptionalSegments($route, &$data)
     {
-        preg_match(chr(1) . '\(/([a-z][a-zA-Z0-9_,]*)\)' . chr(1), $route, $matches);
+        preg_match(chr(1).'\(/([a-z][a-zA-Z0-9_,]*)\)'.chr(1), $route, $matches);
 
         if (!$matches) {
             return $route;
@@ -55,7 +55,7 @@ abstract class BasicGenerator
             }
         }
 
-        $segments = $segments ? '/(' . implode(')/(', $segments) . ')' : '';
+        $segments = $segments ? '/('.implode(')/(', $segments).')' : '';
 
         $route = str_replace($matches[0], $segments, $route);
 
@@ -63,16 +63,16 @@ abstract class BasicGenerator
     }
 
     /**
-     * replaceSegments
+     * replaceSegments.
      *
      * @param string $route
      * @param array  &$data
      *
-     * @return  mixed|string
+     * @return mixed|string
      */
     protected static function replaceAllSegments($route, &$data)
     {
-        preg_match_all(chr(1) . '\(([a-z][a-zA-Z0-9_]*)\)' . chr(1), $route, $matches, PREG_SET_ORDER);
+        preg_match_all(chr(1).'\(([a-z][a-zA-Z0-9_]*)\)'.chr(1), $route, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
             if (isset($data[$match[1]])) {
@@ -85,23 +85,23 @@ abstract class BasicGenerator
         $queries = http_build_query($data);
 
         if ($queries) {
-            $route = rtrim($route, '/') . '?' . $queries;
+            $route = rtrim($route, '/').'?'.$queries;
         }
 
         return $route;
     }
 
     /**
-     * replaceWildCards
+     * replaceWildCards.
      *
      * @param string $route
      * @param array  &$data
      *
-     * @return  mixed
+     * @return mixed
      */
     protected static function replaceWildCards($route, &$data)
     {
-        preg_match_all(chr(1) . '\(\*([a-z][a-zA-Z0-9_]*)\)' . chr(1), $route, $matches, PREG_SET_ORDER);
+        preg_match_all(chr(1).'\(\*([a-z][a-zA-Z0-9_]*)\)'.chr(1), $route, $matches, PREG_SET_ORDER);
 
         if (!$matches) {
             return $route;

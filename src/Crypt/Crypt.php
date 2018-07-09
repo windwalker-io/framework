@@ -27,14 +27,14 @@ class Crypt implements CryptInterface
     /**
      * Property public.
      *
-     * @var  string
+     * @var string
      */
     protected $iv;
 
     /**
      * Property private.
      *
-     * @var  null|string
+     * @var null|string
      */
     protected $key;
 
@@ -59,15 +59,15 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * encrypt
+     * encrypt.
      *
      * @param string $string
      * @param string $key
      * @param string $iv
      *
-     * @return  string
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     public function encrypt($string, $key = null, $iv = null)
     {
@@ -78,13 +78,13 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * decrypt
+     * decrypt.
      *
      * @param string $string
      * @param string $key
      * @param string $iv
      *
-     * @return  string
+     * @return string
      */
     public function decrypt($string, $key = null, $iv = null)
     {
@@ -95,24 +95,24 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * match
+     * match.
      *
      * @param string $string
      * @param string $encrypted
      * @param string $key
      * @param string $iv
      *
-     * @return  boolean
+     * @return bool
      */
     public function verify($string, $encrypted, $key = null, $iv = null)
     {
-        return ($string === $this->decrypt($encrypted, $key, $iv));
+        return $string === $this->decrypt($encrypted, $key, $iv);
     }
 
     /**
-     * Method to get property Public
+     * Method to get property Public.
      *
-     * @return  string
+     * @return string
      */
     public function getIV()
     {
@@ -120,11 +120,11 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * Method to set property public
+     * Method to set property public.
      *
-     * @param   string $iv
+     * @param string $iv
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setIV($iv)
     {
@@ -134,9 +134,9 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * Method to get property Private
+     * Method to get property Private.
      *
-     * @return  null|string
+     * @return null|string
      */
     public function getKey()
     {
@@ -148,12 +148,13 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * Method to set property private
+     * Method to set property private.
      *
-     * @param   null|string $key
+     * @param null|string $key
      *
      * @throws \InvalidArgumentException
-     * @return  static  Return self to support chaining.
+     *
+     * @return static Return self to support chaining.
      */
     public function setKey($key)
     {
@@ -167,9 +168,9 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * Method to get property Cipher
+     * Method to get property Cipher.
      *
-     * @return  CipherInterface
+     * @return CipherInterface
      */
     public function getCipher()
     {
@@ -177,11 +178,11 @@ class Crypt implements CryptInterface
     }
 
     /**
-     * Method to set property cipher
+     * Method to set property cipher.
      *
-     * @param   CipherInterface $cipher
+     * @param CipherInterface $cipher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCipher($cipher)
     {

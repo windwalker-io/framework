@@ -9,10 +9,10 @@
 /*
  * When Password Test are not implement, we test it manually.
  */
-$autoload = __DIR__ . '/../../../../vendor/autoload.php';
+$autoload = __DIR__.'/../../../../vendor/autoload.php';
 
 if (!is_file($autoload)) {
-    $autoload = __DIR__ . '/../../vendor/autoload.php';
+    $autoload = __DIR__.'/../../vendor/autoload.php';
 }
 
 include_once $autoload;

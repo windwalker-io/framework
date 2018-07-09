@@ -70,7 +70,8 @@ class Browser
     /**
      * The detected platform on which the web client runs.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $device;
@@ -78,7 +79,8 @@ class Browser
     /**
      * True if the web client is a mobile device.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     protected $mobile = false;
@@ -86,7 +88,8 @@ class Browser
     /**
      * The detected rendering engine used by the web client.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $engine;
@@ -94,7 +97,8 @@ class Browser
     /**
      * The detected browser used by the web client.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $browser;
@@ -102,7 +106,8 @@ class Browser
     /**
      * The detected browser version used by the web client.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $browserVersion;
@@ -110,7 +115,8 @@ class Browser
     /**
      * The priority order detected accepted languages for the client.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $languages = [];
@@ -118,7 +124,8 @@ class Browser
     /**
      * The priority order detected accepted encodings for the client.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $encodings = [];
@@ -126,7 +133,8 @@ class Browser
     /**
      * The web client's user agent string.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $userAgent;
@@ -134,7 +142,8 @@ class Browser
     /**
      * The web client's accepted encoding string.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $acceptEncoding;
@@ -142,7 +151,8 @@ class Browser
     /**
      * The web client's accepted languages string.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $acceptLanguage;
@@ -150,7 +160,8 @@ class Browser
     /**
      * True if the web client is a robot.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     protected $robot = false;
@@ -158,7 +169,8 @@ class Browser
     /**
      * An array of flags determining whether or not a detection routine has been run.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $detection = [];
@@ -166,7 +178,8 @@ class Browser
     /**
      * Property server.
      *
-     * @var    array
+     * @var array
+     *
      * @since  3.0
      */
     protected $server;
@@ -174,8 +187,8 @@ class Browser
     /**
      * Class constructor.
      *
-     * @param   string $userAgent The optional user-agent string to parse.
-     * @param   array  $server    The server properties, typically is $_SERVER superglobal.
+     * @param string $userAgent The optional user-agent string to parse.
+     * @param array  $server    The server properties, typically is $_SERVER superglobal.
      *
      * @since   2.0
      */
@@ -204,9 +217,9 @@ class Browser
     /**
      * Detects the client browser and version in a user agent string.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -245,7 +258,7 @@ class Browser
         // If we detected a known browser let's attempt to determine the version.
         if ($this->browser) {
             // Build the REGEX pattern to match the browser version string within the user agent string.
-            $pattern = '#(?<browser>Version|' . $patternBrowser . ')[/: ]+(?<version>[0-9.|a-zA-Z.]*)#';
+            $pattern = '#(?<browser>Version|'.$patternBrowser.')[/: ]+(?<version>[0-9.|a-zA-Z.]*)#';
 
             // Attempt to find version strings in the user agent string.
             $matches = [];
@@ -279,9 +292,9 @@ class Browser
     /**
      * Method to detect the accepted response encoding by the client.
      *
-     * @param   string $acceptEncoding The client accept encoding string to parse.
+     * @param string $acceptEncoding The client accept encoding string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -297,9 +310,9 @@ class Browser
     /**
      * Detects the client rendering engine in a user agent string.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -335,9 +348,9 @@ class Browser
     /**
      * Method to detect the accepted languages by the client.
      *
-     * @param   mixed $acceptLanguage The client accept language string to parse.
+     * @param mixed $acceptLanguage The client accept language string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -353,9 +366,9 @@ class Browser
     /**
      * Detects the client platform in a user agent string.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -456,9 +469,9 @@ class Browser
     /**
      * Determines if the browser is a robot or not.
      *
-     * @param   string $userAgent The user-agent string to parse.
+     * @param string $userAgent The user-agent string to parse.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -474,11 +487,11 @@ class Browser
     }
 
     /**
-     * getPlatform
+     * getPlatform.
      *
      * @param bool $refresh
      *
-     * @return  int
+     * @return int
      */
     public function getDevice($refresh = false)
     {
@@ -490,11 +503,11 @@ class Browser
     }
 
     /**
-     * getMobile
+     * getMobile.
      *
      * @param bool $refresh
      *
-     * @return  boolean
+     * @return bool
      */
     public function isMobile($refresh = false)
     {
@@ -506,11 +519,11 @@ class Browser
     }
 
     /**
-     * getEngine
+     * getEngine.
      *
      * @param bool $refresh
      *
-     * @return  string
+     * @return string
      */
     public function getEngine($refresh = false)
     {
@@ -522,11 +535,11 @@ class Browser
     }
 
     /**
-     * getBrowser
+     * getBrowser.
      *
      * @param bool $refresh
      *
-     * @return  int
+     * @return int
      */
     public function getBrowser($refresh = false)
     {
@@ -538,11 +551,11 @@ class Browser
     }
 
     /**
-     * getBrowserVersion
+     * getBrowserVersion.
      *
      * @param bool $refresh
      *
-     * @return  string
+     * @return string
      */
     public function getBrowserVersion($refresh = false)
     {
@@ -554,11 +567,11 @@ class Browser
     }
 
     /**
-     * getLanguages
+     * getLanguages.
      *
      * @param bool $refresh
      *
-     * @return  array
+     * @return array
      */
     public function getLanguages($refresh = false)
     {
@@ -570,11 +583,11 @@ class Browser
     }
 
     /**
-     * getEncodings
+     * getEncodings.
      *
      * @param bool $refresh
      *
-     * @return  array
+     * @return array
      */
     public function getEncodings($refresh = false)
     {
@@ -586,9 +599,9 @@ class Browser
     }
 
     /**
-     * getUserAgent
+     * getUserAgent.
      *
-     * @return  string
+     * @return string
      */
     public function getUserAgent()
     {
@@ -596,11 +609,11 @@ class Browser
     }
 
     /**
-     * setUserAgent
+     * setUserAgent.
      *
-     * @param   string $userAgent
+     * @param string $userAgent
      *
-     * @return  Browser  Return self to support chaining.
+     * @return Browser Return self to support chaining.
      */
     public function setUserAgent($userAgent)
     {
@@ -610,11 +623,11 @@ class Browser
     }
 
     /**
-     * getRobot
+     * getRobot.
      *
      * @param bool $refresh
      *
-     * @return  boolean
+     * @return bool
      */
     public function isRobot($refresh = false)
     {
@@ -628,12 +641,12 @@ class Browser
     /**
      * Determine if we are using a secure (SSL) connection.
      *
-     * @return  boolean  True if using SSL, false if not.
+     * @return bool True if using SSL, false if not.
      *
      * @since   2.0
      */
     public function isSSLConnection()
     {
-        return (!empty($this->server['HTTPS']) && strtolower($this->server['HTTPS']) !== 'off');
+        return !empty($this->server['HTTPS']) && strtolower($this->server['HTTPS']) !== 'off';
     }
 }

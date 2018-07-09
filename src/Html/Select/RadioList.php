@@ -18,7 +18,7 @@ class RadioList extends AbstractInputList
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'radio';
 }

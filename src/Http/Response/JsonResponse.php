@@ -18,17 +18,17 @@ class JsonResponse extends TextResponse
     /**
      * Content type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'application/json';
 
     /**
      * Constructor.
      *
-     * @param  string $json    The JSON body data.
-     * @param  int    $status  The status code.
-     * @param  array  $headers The custom headers.
-     * @param  int    $options Json encode options.
+     * @param string $json    The JSON body data.
+     * @param int    $status  The status code.
+     * @param array  $headers The custom headers.
+     * @param int    $options Json encode options.
      */
     public function __construct($json = '', $status = 200, array $headers = [], $options = 0)
     {
@@ -42,10 +42,10 @@ class JsonResponse extends TextResponse
     /**
      * Encode json.
      *
-     * @param   mixed $data    The dat to convert.
-     * @param   int   $options The json_encode() options flag.
+     * @param mixed $data    The dat to convert.
+     * @param int   $options The json_encode() options flag.
      *
-     * @return  string  Encoded json.
+     * @return string Encoded json.
      */
     protected function encode($data, $options = 0)
     {
@@ -71,12 +71,13 @@ class JsonResponse extends TextResponse
     }
 
     /**
-     * withContent
+     * withContent.
      *
-     * @param   mixed $content
+     * @param mixed $content
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function withContent($content)
     {

@@ -15,7 +15,6 @@ use Windwalker\Crypt\CryptHelper;
  * The McryptCipher class.
  *
  * @since       2.0
- *
  * @deprecated  PHP7 already deprecated mcrypt extension
  */
 abstract class AbstractMcryptCipher implements CipherInterface
@@ -45,7 +44,8 @@ abstract class AbstractMcryptCipher implements CipherInterface
      * Constructor.
      *
      * @since   2.0
-     * @throws  \RuntimeException
+     *
+     * @throws \RuntimeException
      */
     public function __construct()
     {
@@ -57,11 +57,11 @@ abstract class AbstractMcryptCipher implements CipherInterface
     /**
      * Method to decrypt a data string.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string  The decrypted data string.
+     * @return string The decrypted data string.
      *
      * @since    2.0
      */
@@ -94,14 +94,15 @@ abstract class AbstractMcryptCipher implements CipherInterface
     /**
      * Method to encrypt a data string.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string  The encrypted data string.
+     * @throws \InvalidArgumentException
+     *
+     * @return string The encrypted data string.
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
      */
     public function encrypt($data, $key = null, $iv = null)
     {
@@ -119,13 +120,13 @@ abstract class AbstractMcryptCipher implements CipherInterface
         // Encrypt the data.
         $encrypted = mcrypt_encrypt($this->type, $key, $data, $this->mode, $iv);
 
-        return base64_encode($iv . $encrypted);
+        return base64_encode($iv.$encrypted);
     }
 
     /**
-     * getIVKey
+     * getIVKey.
      *
-     * @return  string
+     * @return string
      */
     public function getIVKey()
     {
@@ -139,9 +140,9 @@ abstract class AbstractMcryptCipher implements CipherInterface
     }
 
     /**
-     * getIVSize
+     * getIVSize.
      *
-     * @return  integer
+     * @return int
      */
     public function getIVSize()
     {

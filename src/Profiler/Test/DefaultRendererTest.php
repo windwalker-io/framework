@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Profiler\Profiler;
 use Windwalker\Profiler\Renderer\DefaultRenderer;
 
 /**
- * Test class of DefaultRenderer
+ * Test class of DefaultRenderer.
  *
  * @since 2.0
  */

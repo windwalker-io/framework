@@ -9,7 +9,7 @@
 namespace Windwalker\IO;
 
 /**
- * Windwalker Input JSON Class
+ * Windwalker Input JSON Class.
  *
  * This class decodes a JSON string from the raw request data and makes it available via
  * the standard Input interface.
@@ -21,10 +21,10 @@ class JsonInput extends FormDataInput
     /**
      * Prepare source.
      *
-     * @param   array   $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-     * @param   boolean $reference If set to true, he source in first argument will be reference.
+     * @param array $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param bool  $reference If set to true, he source in first argument will be reference.
      *
-     * @return  void
+     * @return void
      */
     public function prepareSource(&$source = null, $reference = false)
     {
