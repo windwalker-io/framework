@@ -283,7 +283,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
                 $this->bridge->getName(),
                 '',
                 time() - 42000,
-                $this->getOption('cookie_path'),
+                $this->getOption('cookie_path') ?: '/',
                 $this->getOption('cookie_domain')
             );
         }
