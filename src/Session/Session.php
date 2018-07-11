@@ -235,6 +235,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
      */
     protected function doStart()
     {
+        $this->registerHandler();
+
         $this->bridge->start();
 
         $this->prepareBagsData($this->bags);
@@ -309,9 +311,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
         if ($this->state !== static::STATE_DESTROYED) {
             throw new \RuntimeException('Session not destroyed, cannot restart.');
         }
-
-        // Re-register the session handler after a session has been destroyed, to avoid PHP bug
-        $this->registerHandler();
 
         $result = $this->doStart();
 
