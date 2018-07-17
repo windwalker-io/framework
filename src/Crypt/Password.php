@@ -12,6 +12,8 @@ namespace Windwalker\Crypt;
  * The SimplePassword class.
  *
  * @since  2.0
+ *
+ * @deprecated  Use php5 password_hash() instead.
  */
 class Password implements HasherInterface
 {
