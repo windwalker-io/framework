@@ -62,20 +62,16 @@ class QueryHelper
         $tableStorage['name'] = $table;
         $tableStorage['join'] = strtoupper($joinType);
 
-        if (is_array($condition)) {
-            $condition = [$condition];
-        }
+        $condition = trim((string) new QueryElement('', (array) $condition, ' AND '));
 
-        if ($condition) {
-            $condition = (string) new QueryElement('', $condition, ' AND ');
-        } else {
+        if (!$condition) {
             $tableStorage['join'] = 'FROM';
         }
 
         // Remove too many spaces
         $condition = preg_replace('/\s(?=\s)/', '', $condition);
 
-        $tableStorage['condition'] = trim($condition);
+        $tableStorage['condition'] = $condition;
         $tableStorage['prefix'] = $prefix;
 
         $this->tables[$alias] = $tableStorage;
