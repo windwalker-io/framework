@@ -410,11 +410,7 @@ abstract class AbstractField
 
         $value = (string) $this->value;
 
-        if ($this->value || $value === '0') {
-            return true;
-        }
-
-        return false;
+        return $this->value || $value === '0';
     }
 
     /**
