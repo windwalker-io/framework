@@ -670,7 +670,8 @@ ORDER BY t.relname, i.relname;'
             $query->select($this->db->quoteName($name))
                 ->from('pg_class AS s')
                 ->leftJoin(
-                    "pg_depend d ON d.objid=s.oid AND d.classid='pg_class'::regclass AND d.refclassid='pg_class'::regclass"
+                    "pg_depend d ON d.objid=s.oid AND d.classid='pg_class'::regclass "
+                    . "AND d.refclassid='pg_class'::regclass"
                 )
                 ->leftJoin('pg_class t ON t.oid=d.refobjid')
                 ->leftJoin('pg_namespace n ON n.oid=t.relnamespace')
