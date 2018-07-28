@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //--------------------------------------------------------------------
 /**
  * Takes an UTF-8 string and returns an array of ints representing the

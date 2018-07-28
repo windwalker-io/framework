@@ -740,7 +740,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *
      * @return  static
      */
-    public function join($joinType = 'LEFT', $alias, $table, $condition = null, $prefix = null)
+    public function join($joinType, $alias, $table, $condition = null, $prefix = null)
     {
         $this->getQueryHelper()->addTable($alias, $table, $condition, $joinType, $prefix);
 

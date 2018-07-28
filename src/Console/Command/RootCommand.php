@@ -39,7 +39,7 @@ class RootCommand extends Command
         $this->setName($file)
             ->description('The default application command')
             ->help(
-            // @TODO: Complete the help.
+                // @TODO: Complete the help.
                 <<<HELP
 Welcome to Windwalker Console.
 HELP

@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //--------------------------------------------------------------------
 /**
  * Used internally. Builds a PCRE pattern from the $UTF8_SPECIAL_CHARS

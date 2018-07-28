@@ -243,28 +243,28 @@ class PostgresqlTable extends AbstractTable
         );
 
         $sql .= ";\n" . PostgresqlGrammar::build(
+            'ALTER TABLE ' . $query->quoteName($this->getName()),
+            'ALTER COLUMN',
+            $query->quoteName($name),
+            $allowNull ? 'DROP' : 'SET',
+            'NOT NULL'
+        );
+
+        if ($default !== null) {
+            $sql .= ";\n" . PostgresqlGrammar::build(
                 'ALTER TABLE ' . $query->quoteName($this->getName()),
                 'ALTER COLUMN',
                 $query->quoteName($name),
-                $allowNull ? 'DROP' : 'SET',
-                'NOT NULL'
+                'SET DEFAULT' . $query->quote($default)
             );
-
-        if (!is_null($default)) {
-            $sql .= ";\n" . PostgresqlGrammar::build(
-                    'ALTER TABLE ' . $query->quoteName($this->getName()),
-                    'ALTER COLUMN',
-                    $query->quoteName($name),
-                    'SET DEFAULT' . $query->quote($default)
-                );
         }
 
         $sql .= ";\n" . PostgresqlGrammar::comment(
-                'COLUMN',
-                $this->getName(),
-                $name,
-                $comment
-            );
+            'COLUMN',
+            $this->getName(),
+            $name,
+            $comment
+        );
 
         DatabaseHelper::batchQuery($this->db, $sql);
 
@@ -329,37 +329,37 @@ class PostgresqlTable extends AbstractTable
 
         // Not NULL
         $sql .= ";\n" . PostgresqlGrammar::build(
+            'ALTER TABLE ' . $query->quoteName($this->getName()),
+            'ALTER COLUMN',
+            $query->quoteName($oldName),
+            $allowNull ? 'DROP' : 'SET',
+            'NOT NULL'
+        );
+
+        // Default
+        if ($default !== null) {
+            $sql .= ";\n" . PostgresqlGrammar::build(
                 'ALTER TABLE ' . $query->quoteName($this->getName()),
                 'ALTER COLUMN',
                 $query->quoteName($oldName),
-                $allowNull ? 'DROP' : 'SET',
-                'NOT NULL'
+                'SET DEFAULT' . $query->quote($default)
             );
-
-        // Default
-        if (!is_null($default)) {
-            $sql .= ";\n" . PostgresqlGrammar::build(
-                    'ALTER TABLE ' . $query->quoteName($this->getName()),
-                    'ALTER COLUMN',
-                    $query->quoteName($oldName),
-                    'SET DEFAULT' . $query->quote($default)
-                );
         }
 
         // Comment
         $sql .= ";\n" . PostgresqlGrammar::comment(
-                'COLUMN',
-                $this->getName(),
-                $oldName,
-                $comment
-            );
+            'COLUMN',
+            $this->getName(),
+            $oldName,
+            $comment
+        );
 
         // Rename
         $sql .= ";\n" . PostgresqlGrammar::renameColumn(
-                $this->getName(),
-                $oldName,
-                $name
-            );
+            $this->getName(),
+            $oldName,
+            $name
+        );
 
         DatabaseHelper::batchQuery($this->db, $sql);
 
@@ -397,7 +397,7 @@ class PostgresqlTable extends AbstractTable
             PostgresqlType::DECIMAL,
         ];
 
-        if (in_array($originType, $textTypes) && in_array($type, $numericTypes)) {
+        if (in_array($originType, $textTypes, true) && in_array($type, $numericTypes, true)) {
             return sprintf('USING trim(%s)::%s', $this->db->quoteName($column), $type);
         }
 

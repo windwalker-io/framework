@@ -53,7 +53,7 @@ class CallbackValidatorTest extends TestCase
      *
      * @covers \Windwalker\Validator\Rule\CallbackValidator::__construct
      */
-    public function test__construct()
+    public function testConstruct()
     {
         $v = new CallbackValidator(
             function ($value) {

@@ -8,6 +8,8 @@
 
 namespace Windwalker\String;
 
+// phpcs:disable
+
 @ini_set('default_charset', 'UTF-8');
 
 /**

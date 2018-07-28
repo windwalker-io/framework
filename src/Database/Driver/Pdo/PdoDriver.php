@@ -123,7 +123,8 @@ class PdoDriver extends AbstractDatabaseDriver
         } catch (\PDOException $e) {
             throw new \RuntimeException(
                 'Could not connect to PDO: ' . $e->getMessage() . '. DSN: ' . $dsn,
-                $e->getCode(), $e
+                $e->getCode(),
+                $e
             );
         }
 

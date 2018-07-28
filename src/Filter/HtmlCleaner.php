@@ -420,8 +420,8 @@ class HtmlCleaner
             // Remove all "non-regular" attribute names
             // AND blacklisted attributes
             if ((!preg_match('/[a-z]*$/i', $attrSubSet[0]))
-                || (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]), $this->attrBlacklist))
-                        || (substr($attrSubSet[0], 0, 2) === 'on')))) {
+                || ($this->xssAuto && (in_array(strtolower($attrSubSet[0]), $this->attrBlacklist, true)
+                        || (strpos($attrSubSet[0], 'on') === 0)))) {
                 continue;
             }
 
@@ -439,13 +439,11 @@ class HtmlCleaner
                 // Strip double quotes
                 $attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
 
-                // Convert single quotes from either side to doubles (Single quotes shouldn't be used to pad attr values)
-                if ((substr($attrSubSet[1], 0, 1) == "'") && (substr(
-                            $attrSubSet[1],
-                            (strlen($attrSubSet[1]) - 1),
-                            1
-                        ) == "'")) {
-                    $attrSubSet[1] = substr($attrSubSet[1], 1, (strlen($attrSubSet[1]) - 2));
+                // Convert single quotes from either side to doubles
+                // (Single quotes shouldn't be used to pad attr values)
+                if ((strpos($attrSubSet[1], "'") === 0)
+                    && (substr($attrSubSet[1], strlen($attrSubSet[1]) - 1, 1) === "'")) {
+                    $attrSubSet[1] = substr($attrSubSet[1], 1, -1);
                 }
 
                 // Strip slashes
@@ -460,7 +458,7 @@ class HtmlCleaner
             }
 
             // Is our attribute in the user input array?
-            $attrFound = in_array(strtolower($attrSubSet[0]), $this->attrArray);
+            $attrFound = in_array(strtolower($attrSubSet[0]), $this->attrArray, true);
 
             // If the tag is allowed lets keep it
             if ((!$attrFound && $this->attrMethod) || ($attrFound && !$this->attrMethod)) {

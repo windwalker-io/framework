@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //--------------------------------------------------------------------
 /**
  * Tests a string as to whether it's valid UTF-8 and supported by the

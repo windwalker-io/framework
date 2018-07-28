@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //--------------------------------------------------------------------
 /**
  * Given a string and a character index in the string, in

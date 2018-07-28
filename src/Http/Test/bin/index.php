@@ -6,6 +6,8 @@
  * @license    GNU General Public License version 2 or later.
  */
 
+// phpcs:disable
+
 use Psr\Http\Message\ResponseInterface;
 
 include_once __DIR__ . '/../../../../vendor/autoload.php';

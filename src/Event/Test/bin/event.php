@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 $event = new \Windwalker\Event\Event('Aaa');

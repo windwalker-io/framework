@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //--------------------------------------------------------------------
 /**
  * Tests whether a string contains only 7bit ASCII bytes.

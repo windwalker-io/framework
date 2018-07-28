@@ -60,12 +60,15 @@ class SqlservExpression extends QueryExpression
     /**
      * Gets the current date and time.
      *
+     * phpcs:disable
+     *
      * @return  string
      *
      * @since   2.0
      */
     public function current_timestamp()
     {
+        // phpcs:enable
         return 'GETDATE()';
     }
 

@@ -6,11 +6,15 @@
  * @license    GNU General Public License version 2 or later;
  */
 
+// phpcs:disable
+
 namespace Windwalker\Http;
 
 if (!interface_exists('Http\Client\HttpClient')) {
     include_once __DIR__ . '/HttpPlugClientInterface.php';
 }
+
+// phpcs:enable
 
 use Http\Client\HttpClient as HttpPlugClientInterface;
 use Psr\Http\Message\RequestInterface;

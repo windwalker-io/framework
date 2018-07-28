@@ -100,4 +100,3 @@ interface CacheStorageInterface
      */
     public function commit();
 }
-

@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 use Windwalker\Middleware\Chain\ChainBuilder;
 use Windwalker\Middleware\Middleware;
 

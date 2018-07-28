@@ -21,11 +21,12 @@ use Windwalker\String\StringInflector;
  * @see    DataMapper
  * @see    AbstractDataMapper
  *
+ * phpcs:disable
+ *
  * @method  static DataSet|Data[]  find($conditions = [], $order = null, $start = null, $limit = null, $key = null)
  * @method  static DataSet|Data[]  findAll($order = null, $start = null, $limit = null, $key = null)
  * @method  static Data            findOne($conditions = [], $order = null)
- * @method  static array           findColumn($column, $conditions = [], $order = null, $start = null, $limit = null,
- *          $key = null)
+ * @method  static array           findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null)
  * @method  static DataSet|Data[]  create($dataset)
  * @method  static Data            createOne($data)
  * @method  static DataSet|Data[]  update($dataset, $condFields = null, $updateNulls = false)
@@ -54,10 +55,11 @@ use Windwalker\String\StringInflector;
  * @method  static DataMapper  select($columns)
  * @method  static DataMapper  where($conditions, ...$args)
  * @method  static DataMapper  orWhere($conditions)
- * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0,
- *          $driverOptions = [])
+ * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  * @method  static DataMapper  forUpdate()
  * @method  static DataMapper  suffix(string $string)
+ *
+ * phpcs:enable
  *
  * @since  3.0
  */

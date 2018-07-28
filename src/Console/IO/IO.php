@@ -17,7 +17,7 @@ use Windwalker\IO\Cli\Output\ColorfulOutputInterface;
  *
  * @since  2.0
  */
-class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
+class IO extends WindwalkerIO implements IOInterface
 {
     /**
      * set Arguments

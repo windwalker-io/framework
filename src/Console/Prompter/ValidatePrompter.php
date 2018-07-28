@@ -36,7 +36,7 @@ class ValidatePrompter extends CallbackPrompter
      *
      * @since   2.0
      */
-    function __construct($question = null, $options = [], $default = null, IOInterface $io = null)
+    public function __construct($question = null, $options = [], $default = null, IOInterface $io = null)
     {
         $this->options = $options;
 

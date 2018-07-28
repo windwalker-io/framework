@@ -170,14 +170,14 @@ class QueryHelper
             // NULL
             if ($value === null && $allowNulls) {
                 $query->where($query->format('%n IS NULL', $key));
-            } // If using Compare class, we convert it to string.
-            elseif ($value instanceof Compare) {
+            } elseif ($value instanceof Compare) {
+                // If using Compare class, we convert it to string.
                 $query->where((string) static::buildCompare($key, $value, $query));
-            } // If key is numeric, just send value to query where.
-            elseif (is_numeric($key)) {
+            } elseif (is_numeric($key)) {
+                // If key is numeric, just send value to query where.
                 $query->where($value);
-            } // If is array or object, we use "IN" condition.
-            elseif (is_array($value) || is_object($value)) {
+            } elseif (is_array($value) || is_object($value)) {
+                // If is array or object, we use "IN" condition.
                 if ($value instanceof \Traversable) {
                     $value = iterator_to_array($value);
                 } elseif (is_object($value)) {
@@ -187,8 +187,8 @@ class QueryHelper
                 $value = array_map([$query, 'quote'], $value);
 
                 $query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
-            } // Otherwise, we use equal condition.
-            else {
+            } else {
+                // Otherwise, we use equal condition.
                 $query->where($query->format('%n = %q', $key, $value));
             }
         }

@@ -121,8 +121,8 @@ class PasswordPrompter extends CallbackPrompter
             $this->io->out();
 
             return $value;
-        } // Using stty help us test this class.
-        elseif ($this->findStty()) {
+        } elseif ($this->findStty()) {
+            // Using stty help us test this class.
             if ($question) {
                 $this->io->out()->out($question, false);
             }
@@ -143,8 +143,9 @@ class PasswordPrompter extends CallbackPrompter
             $this->io->out();
 
             return rtrim($value);
-        } // For linux & Unix system
-        else {
+        } else {
+            // For linux & Unix system
+
             // Find shell.
             $shell = $this->findShell();
 

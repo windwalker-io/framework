@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //---------------------------------------------------------------
 /**
  * UTF-8 aware alternative to strrev

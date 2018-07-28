@@ -4,6 +4,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 namespace Windwalker\String\Tests;
 
 use Windwalker\String\StringNormalise;

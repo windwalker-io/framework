@@ -6,6 +6,8 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+// phpcs:disable
+
 namespace Windwalker\Http\Test;
 
 use Psr\Http\Message\ResponseInterface;

@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// phpcs:disable
+
 //---------------------------------------------------------------
 /**
  * Replacement for str_pad. $padStr may contain multi-byte characters.

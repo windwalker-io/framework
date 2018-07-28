@@ -170,8 +170,8 @@ class TestHelper
             $property->setAccessible(true);
 
             $property->setValue($object, $value);
-        } elseif (get_parent_class($object)) // Hrm, maybe dealing with a private property in the parent class.
-        {
+        } elseif (get_parent_class($object)) {
+            // Hrm, maybe dealing with a private property in the parent class.
             $property = new \ReflectionProperty(get_parent_class($object), $propertyName);
             $property->setAccessible(true);
 

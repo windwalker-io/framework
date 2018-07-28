@@ -40,4 +40,3 @@ interface PrompterInterface
      */
     public function __invoke($default = '');
 }
-

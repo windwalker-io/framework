@@ -51,9 +51,9 @@ class MysqlTable extends AbstractTable
                 $column->getType() . $column->getLength(),
                 $column->getSigned() ? '' : 'UNSIGNED',
                 $column->getAllowNull() ? '' : 'NOT NULL',
-                $column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue(
-                        $column->getDefault()
-                    ) : '',
+                $column->getDefault() !== false
+                    ? 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault())
+                    : '',
                 $column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
                 $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : '',
                 $column->getSuffix()

@@ -58,7 +58,7 @@ class ValidatorCompositeTest extends TestCase
      *
      * @covers \Windwalker\Validator\ValidatorComposite::__construct
      */
-    public function test__construct()
+    public function testConstruct()
     {
         $v = new ValidatorComposite(
             [

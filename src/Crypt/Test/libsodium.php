@@ -8,6 +8,8 @@
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
+// phpcs:disable
+
 var_dump(
     [
         \Sodium\library_version_major(),
@@ -23,6 +25,7 @@ var_dump(
  * @param string $key     - encryption key
  *
  * @return string
+ * @throws SodiumException
  */
 function safeEncrypt($message, $key)
 {

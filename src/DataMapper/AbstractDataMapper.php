@@ -281,7 +281,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
         $result = $dataset[0];
 
         if (!$result) {
-            $result = new $this->dataClass();
+            $class = $this->dataClass;
+            $result = new $class();
         }
 
         // Event
@@ -620,8 +621,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
             ]
         );
 
-        $createDataset = new $this->datasetClass();
-        $updateDataset = new $this->datasetClass();
+        $datasetClass = $this->datasetClass;
+
+        $createDataset = new $datasetClass();
+        $updateDataset = new $datasetClass();
 
         foreach ($dataset as $k => $data) {
             if (!($data instanceof $this->dataClass)) {
@@ -866,7 +869,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
      */
     protected function bindData($data)
     {
-        $object = new $this->dataClass();
+        $dataClass = $this->dataClass;
+        $object = new $dataClass();
 
         if ($object instanceof DataInterface) {
             return $object->bind($data);
@@ -891,7 +895,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
      */
     protected function bindDataset($dataset)
     {
-        $object = new $this->datasetClass();
+        $datasetClass = $this->datasetClass;
+        $object = new $datasetClass();
 
         if ($object instanceof DataSetInterface) {
             return $object->bind($dataset);

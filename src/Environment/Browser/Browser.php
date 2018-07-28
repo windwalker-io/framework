@@ -265,8 +265,8 @@ class Browser
                     if ($key) {
                         $this->browserVersion = $matches['version'][$key];
                     }
-                } // We only have a Version or a browser so use what we have.
-                else {
+                } else {
+                    // We only have a Version or a browser so use what we have.
                     $this->browserVersion = $matches['version'][0];
                 }
             }
@@ -309,6 +309,7 @@ class Browser
             // Attempt to detect the client engine -- starting with the most popular ... for now.
             $this->engine = self::ENGINE_TRIDENT;
         }
+
         if (stripos($userAgent, 'Edge') !== false) {
             $this->engine = self::ENGINE_EDGE_HTML;
         } elseif (stripos($userAgent, 'AppleWebKit') !== false || stripos($userAgent, 'blackberry') !== false) {
@@ -364,7 +365,6 @@ class Browser
         // Attempt to detect the client platform.
         switch (true) {
             case stripos($userAgent, 'Windows') !== false:
-
                 $this->device = self::DEVICE_WINDOWS;
 
                 // Let's look at the specific mobile options in the Windows space.
@@ -379,7 +379,6 @@ class Browser
                 break;
 
             case stripos($userAgent, 'iPhone') !== false:
-
                 // Interestingly 'iPhone' is present in all iOS devices so far including iPad and iPods.
                 $this->mobile = true;
                 $this->device = self::DEVICE_IPHONE;
@@ -394,7 +393,6 @@ class Browser
                 break;
 
             case stripos($userAgent, 'iPad') !== false:
-
                 // In case where iPhone is not mentioned in iPad user agent string
                 $this->mobile = true;
                 $this->device = self::DEVICE_IPAD;
@@ -402,7 +400,6 @@ class Browser
                 break;
 
             case stripos($userAgent, 'iPod') !== false:
-
                 // In case where iPhone is not mentioned in iPod user agent string
                 $this->mobile = true;
                 $this->device = self::DEVICE_IPOD;
@@ -410,21 +407,18 @@ class Browser
                 break;
 
             case preg_match('/macintosh|mac os x/i', $userAgent):
-
                 // This has to come after the iPhone check because mac strings are also present in iOS devices.
                 $this->device = self::DEVICE_MAC;
 
                 break;
 
             case stripos($userAgent, 'Blackberry') !== false:
-
                 $this->mobile = true;
                 $this->device = self::DEVICE_BLACKBERRY;
 
                 break;
 
             case stripos($userAgent, 'Android') !== false:
-
                 $this->mobile = true;
                 $this->device = self::DEVICE_ANDROID;
                 /*
@@ -443,7 +437,6 @@ class Browser
                 break;
 
             case stripos($userAgent, 'Linux') !== false:
-
                 $this->device = self::DEVICE_LINUX;
 
                 break;

@@ -111,9 +111,8 @@ abstract class DatabaseFactory
         $resource = isset($options['resource']) ? $options['resource'] : null;
 
         // Derive the class name from the driver.
-        $class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\' . ucfirst(
-                strtolower($options['driver'])
-            ) . 'Driver';
+        $class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\'
+            . ucfirst(strtolower($options['driver'])) . 'Driver';
 
         // If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
         if (!class_exists($class)) {

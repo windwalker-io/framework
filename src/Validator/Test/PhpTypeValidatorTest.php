@@ -54,7 +54,7 @@ class PhpTypeValidatorTest extends TestCase
      * @covers \Windwalker\Validator\Rule\PhpTypeValidator::__construct
      * @covers \Windwalker\Validator\Rule\PhpTypeValidator::getType
      */
-    public function test__construct()
+    public function testConstruct()
     {
         self::assertEquals('array', $this->instance->getType());
     }
