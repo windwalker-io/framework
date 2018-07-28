@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI\Annotation;
@@ -19,7 +19,7 @@ use Windwalker\DI\Exception\DependencyResolutionException;
  *
  * @Target({"PROPERTY"})
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.4.4
  */
 class Inject
 {
@@ -61,7 +61,7 @@ class Inject
      * @throws \ReflectionException
      * @throws \Windwalker\DI\Exception\DependencyResolutionException
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.4
      */
     public function resolveInjectable(Container $container, $class)
     {

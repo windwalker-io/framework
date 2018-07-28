@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI\Test\Annotation;
@@ -11,7 +11,7 @@ namespace Windwalker\DI\Test\Annotation;
 /**
  * The StubService class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.4.4
  */
 class StubService
 {
@@ -35,7 +35,7 @@ class StubService
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.4
      */
     public function run()
     {
@@ -47,7 +47,7 @@ class StubService
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.4
      */
     public function getCounter()
     {

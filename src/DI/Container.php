@@ -1003,7 +1003,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  AnnotationReader
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.4
      * @throws AnnotationException
      */
     public function getAnnotationReader()
@@ -1020,7 +1020,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  PhpDocReader
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.4
      */
     public function getDocReader()
     {

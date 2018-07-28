@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI\Test\Annotation;
@@ -13,7 +13,7 @@ use Windwalker\DI\Annotation\Inject;
 /**
  * The StubInject class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.4.4
  */
 class StubInject
 {

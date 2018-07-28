@@ -441,7 +441,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      * @throws \ReflectionException
      * @throws \Windwalker\DI\Exception\DependencyResolutionException
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.4
      */
     public function testNewInstanceWithPropertyAnnotations()
     {
