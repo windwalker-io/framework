@@ -9,6 +9,8 @@
 namespace Windwalker\DI\Test;
 
 use Windwalker\DI\Container;
+use Windwalker\DI\Test\Annotation\StubInject;
+use Windwalker\DI\Test\Annotation\StubService;
 use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 
@@ -429,6 +431,34 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $obj = $container->newInstance('ArrayIterator');
 
         $this->assertInstanceOf('ArrayIterator', $obj);
+    }
+
+    /**
+     * testNewInstanceWithPropertyAnnotations
+     *
+     * @return  void
+     *
+     * @throws \ReflectionException
+     * @throws \Windwalker\DI\Exception\DependencyResolutionException
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function testNewInstanceWithPropertyAnnotations()
+    {
+        $container = new Container();
+
+        $container->share('stub', function () {
+            return new StubService();
+        });
+
+        /** @var StubInject $obj */
+        $obj = $container->newInstance(StubInject::class);
+
+        self::assertInstanceOf(StubService::class, $obj->foo);
+        self::assertAttributeInstanceOf(StubService::class, 'bar', $obj);
+        self::assertInstanceOf(StubService::class, $obj->baz);
+        self::assertInstanceOf(StubService::class, $obj->yoo);
+        self::assertEquals(4, $obj->yoo->getCounter());
     }
 
     /**

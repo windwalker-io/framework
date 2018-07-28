@@ -8,14 +8,20 @@
 
 namespace Windwalker\DI;
 
+use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use PhpDocReader\PhpDocReader;
+use Psr\Container\ContainerInterface;
 use Windwalker\DI\Exception\DependencyResolutionException;
+use Windwalker\DI\Annotation\Inject;
 
 /**
  * The DI Container.
  *
  * @since 2.0
  */
-class Container implements \ArrayAccess, \IteratorAggregate, \Countable
+class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
     const FORCE_NEW = true;
 
@@ -61,6 +67,20 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     protected $args = [];
 
     /**
+     * Property annotationReader.
+     *
+     * @var AnnotationReader
+     */
+    protected $annotationReader;
+
+    /**
+     * Property docReader.
+     *
+     * @var PhpDocReader
+     */
+    protected $docReader;
+
+    /**
      * Constructor for the DI Container
      *
      * @param   Container   $parent   Parent for hierarchical containers.
@@ -72,6 +92,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     {
         $this->parent = $parent;
         $this->children = $children;
+
+        // Load Inject Annotation first to make sure AnnotationReader can autoload it.
+        new Inject();
     }
 
     /**
@@ -276,19 +299,70 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
         // If there are no parameters, just return a new object.
         if (null === $constructor) {
-            return new $class();
+            $instance = new $class();
+        } else {
+            try {
+                $args = array_merge($this->whenCreating($class)->getArguments(), $args);
+
+                $newInstanceArgs = $this->getMethodArgs($constructor, $args);
+            } catch (DependencyResolutionException $e) {
+                throw new DependencyResolutionException(
+                    $e->getMessage() . ' / Target class: ' . $class,
+                    $e->getCode(),
+                    $e
+                );
+            }
+
+            // Create a callable for the dataStore
+            $instance = $reflection->newInstanceArgs($newInstanceArgs);
+        }
+
+        if (!class_exists(AnnotationReader::class) || !class_exists(PhpDocReader::class)) {
+            return $instance;
         }
 
         try {
-            $args = array_merge($this->whenCreating($class)->getArguments(), $args);
-
-            $newInstanceArgs = $this->getMethodArgs($constructor, $args);
-        } catch (DependencyResolutionException $e) {
-            throw new DependencyResolutionException($e->getMessage() . ' / Target class: ' . $class, $e->getCode(), $e);
+            $reader = $this->getAnnotationReader();
+        } catch (AnnotationException $e) {
+            throw new DependencyResolutionException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
 
-        // Create a callable for the dataStore
-        return $reflection->newInstanceArgs($newInstanceArgs);
+        $properties = $reflection->getProperties();
+
+        foreach ($properties as $property) {
+            $inject = $reader->getPropertyAnnotation($property, Inject::class);
+
+            if ($inject instanceof Inject) {
+                try {
+                    $varClass = $this->getDocReader()->getPropertyClass($property);
+                } catch (\PhpDocReader\AnnotationException $e) {
+                    throw new DependencyResolutionException(
+                        $e->getMessage(),
+                        $e->getCode(),
+                        $e
+                    );
+                }
+
+                if ($property->isProtected() || $property->isPrivate()) {
+                    $property->setAccessible(true);
+                }
+
+                $property->setValue(
+                    $instance,
+                    $inject->resolveInjectable($this, $varClass)
+                );
+
+                if ($property->isProtected() || $property->isPrivate()) {
+                    $property->setAccessible(false);
+                }
+            }
+        }
+
+        return $instance;
     }
 
     /**
@@ -495,7 +569,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     {
         $store = $this->getRaw($key);
 
-        if (is_null($store)) {
+        if ($store === null) {
             throw new \UnexpectedValueException(sprintf('The requested key %s does not exist to extend.', $key));
         }
 
@@ -643,7 +717,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
         if (isset($this->dataStore[$key])) {
             return $this->dataStore[$key];
-        } elseif ($this->parent instanceof Container) {
+        }
+
+        if ($this->parent instanceof Container) {
             return $this->parent->getRaw($key);
         }
 
@@ -904,5 +980,54 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     public function count()
     {
         return count($this->dataStore);
+    }
+
+    /**
+     * Returns true if the container can return an entry for the given identifier.
+     * Returns false otherwise.
+     *
+     * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
+     * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
+     *
+     * @param string $id Identifier of the entry to look for.
+     *
+     * @return bool
+     */
+    public function has($id)
+    {
+        return $this->exists($id);
+    }
+
+    /**
+     * Method to get property AnnotationReader
+     *
+     * @return  AnnotationReader
+     *
+     * @since  __DEPLOY_VERSION__
+     * @throws AnnotationException
+     */
+    public function getAnnotationReader()
+    {
+        if (!$this->annotationReader) {
+            $this->annotationReader = new AnnotationReader();
+        }
+
+        return $this->annotationReader;
+    }
+
+    /**
+     * Method to get property DocReader
+     *
+     * @return  PhpDocReader
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getDocReader()
+    {
+        if (!$this->docReader) {
+            $this->docReader = new PhpDocReader();
+        }
+
+        return $this->docReader;
     }
 }

@@ -15,6 +15,7 @@
         "psr/log": "~1.0",
         "psr/http-message": "~1.0",
         "psr/cache": "~1.0",
+        "psr/container": "^1.0",
         "composer/ca-bundle": "^1.1"
     },
     "require-dev": {
@@ -25,12 +26,16 @@
         "illuminate/view": "5.2.*",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0",
-        "paragonie/sodium_compat": "~1.0"
+        "paragonie/sodium_compat": "~1.0",
+        "doctrine/annotations": "~1.0",
+        "php-di/phpdoc-reader": "~2.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~3.0 if you require YAML support.",
         "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation.",
         "paragonie/sodium_compat": "Install paragonie/sodium_compat if you want to SodiumCipher.",
+        "doctrine/annotations": "Install ~1.0 to support DI annotations injectable.",
+        "php-di/phpdoc-reader": "Install ~2.0 to support DI annotations injectable.",
         "ext-libsodium": "Install php-libsodium if you want to use SodiumCipher with higher performance and use Argon2 or Scrypt password hash."
     },
     "autoload": {
