@@ -593,21 +593,21 @@ class PostgresqlTable extends AbstractTable
         $this->db->setQuery(
             '
 SELECT
-	t.relname AS table_name,
-	i.relname AS index_name,
-	a.attname AS column_name,
-	ix.indisunique AS is_unique,
-	ix.indisprimary AS is_primary
+    t.relname AS table_name,
+    i.relname AS index_name,
+    a.attname AS column_name,
+    ix.indisunique AS is_unique,
+    ix.indisprimary AS is_primary
 FROM pg_class AS t,
-	pg_class AS i,
-	pg_index AS ix,
-	pg_attribute AS a
+    pg_class AS i,
+    pg_index AS ix,
+    pg_attribute AS a
 WHERE t.oid = ix.indrelid
-	AND i.oid = ix.indexrelid
-	AND a.attrelid = t.oid
-	AND a.attnum = ANY(ix.indkey)
-	AND t.relkind = \'r\'
-	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->getName())) . '
+    AND i.oid = ix.indexrelid
+    AND a.attrelid = t.oid
+    AND a.attnum = ANY(ix.indkey)
+    AND t.relkind = \'r\'
+    AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->getName())) . '
 ORDER BY t.relname, i.relname;'
         );
 

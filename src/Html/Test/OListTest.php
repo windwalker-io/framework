@@ -71,9 +71,9 @@ class OListTest extends AbstractDomTestCase
 
         $html = <<<HTML
 <ol>
-	<li>Remember, with great power, comes great responsibility</li>
-	<li>Life was like a box of chocolates.</li>
-	<li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
+    <li>Remember, with great power, comes great responsibility</li>
+    <li>Life was like a box of chocolates.</li>
+    <li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
 </ol>
 HTML;
 
@@ -96,8 +96,8 @@ HTML;
 
         $html = <<<HTML
 <ol>
-	<li>123</li>
-	<li>ABC</li>
+    <li>123</li>
+    <li>ABC</li>
 </ol>
 HTML;
 
@@ -122,9 +122,9 @@ HTML;
 
         $html = <<<HTML
 <ol>
-	<li>Remember, with great power, comes great responsibility</li>
-	<li>Life was like a box of chocolates.</li>
-	<li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
+    <li>Remember, with great power, comes great responsibility</li>
+    <li>Life was like a box of chocolates.</li>
+    <li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
 </ol>
 HTML;
 

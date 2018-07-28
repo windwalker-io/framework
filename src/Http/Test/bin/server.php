@@ -20,7 +20,7 @@ $server = \Windwalker\Http\WebHttpServer::create(
     function ($request, ResponseInterface $response, $finalHandler) {
         // $response = $response->withHeader('Content-Type', 'application/json');
 
-//	$response->getBody()->write('Hello World!');
+//    $response->getBody()->write('Hello World!');
 
         $response = new \Windwalker\Http\Response\HtmlResponse('<root><f>中文 World!</f></root>');
 

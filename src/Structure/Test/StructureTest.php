@@ -279,20 +279,20 @@ class StructureTest extends AbstractBaseTestCase
     {
         // Test recursive merge
         $object1 = '{
-			"foo" : "foo value",
-			"bar" : {
-				"bar1" : "bar value 1",
-				"bar2" : "bar value 2",
-				"bar3" : "bar value 3"
-			}
-		}';
+            "foo" : "foo value",
+            "bar" : {
+                "bar1" : "bar value 1",
+                "bar2" : "bar value 2",
+                "bar3" : "bar value 3"
+            }
+        }';
         $object2 = '{
-			"foo" : "foo value",
-			"bar" : {
-				"bar2" : "new bar value 2",
-				"bar3" : null
-			}
-		}';
+            "foo" : "foo value",
+            "bar" : {
+                "bar2" : "new bar value 2",
+                "bar3" : null
+            }
+        }';
 
         $structure1 = new Structure(json_decode($object1));
         $structure2 = new Structure(json_decode($object2));
@@ -334,20 +334,20 @@ class StructureTest extends AbstractBaseTestCase
     {
         // Test recursive merge
         $object1 = '{
-			"foo" : "foo value",
-			"bar" : {
-				"bar1" : "bar value 1",
-				"bar2" : "bar value 2",
-				"bar3" : "bar value 3"
-			}
-		}';
+            "foo" : "foo value",
+            "bar" : {
+                "bar1" : "bar value 1",
+                "bar2" : "bar value 2",
+                "bar3" : "bar value 3"
+            }
+        }';
         $object2 = '{
-			"foo" : "foo value",
-			"bar" : {
-				"bar2" : "new bar value 2",
-				"bar3" : ""
-			}
-		}';
+            "foo" : "foo value",
+            "bar" : {
+                "bar2" : "new bar value 2",
+                "bar3" : ""
+            }
+        }';
 
         $structure1 = new Structure(json_decode($object1));
         $structure2 = new Structure(json_decode($object2));

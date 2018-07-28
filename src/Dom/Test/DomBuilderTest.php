@@ -52,9 +52,9 @@ class DomBuilderTest extends AbstractDomTestCase
             [
                 'case4',
                 '<field id="foo" class="bar">
-					<option value="1">Yes</option>
-					<option value="0">No</option>
-				</field>',
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </field>',
                 'field',
                 DomBuilder::create('option', 'Yes', ['value' => 1])
                 . DomBuilder::create('option', 'No', ['value' => 0]),

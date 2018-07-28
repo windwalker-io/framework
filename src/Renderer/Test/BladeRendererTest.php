@@ -87,12 +87,12 @@ class BladeRendererTest extends AbstractDomTestCase
         $expect = <<<HTML
 <html>
 <body>
-	This is the master sidebar.
+    This is the master sidebar.
 
-	<p>This is appended to the master sidebar.</p>
-	<div class="container">
-		<p>This is my body content.</p>
-	</div>
+    <p>This is appended to the master sidebar.</p>
+    <div class="container">
+        <p>This is my body content.</p>
+    </div>
 </body>
 </html>
 HTML;
@@ -117,12 +117,12 @@ HTML;
         $expect = <<<HTML
 <html>
 <body>
-	This is the master sidebar.
+    This is the master sidebar.
 
-	<p>This is appended to the master sidebar.</p>
-	<div class="container">
-		<p>THIS IS MY BODY CONTENT.</p>
-	</div>
+    <p>This is appended to the master sidebar.</p>
+    <div class="container">
+        <p>THIS IS MY BODY CONTENT.</p>
+    </div>
 </body>
 </html>
 HTML;

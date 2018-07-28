@@ -67,8 +67,8 @@ class AudioTest extends AbstractDomTestCase
         $html = <<<HTML
 <audio class="foo" autoplay controls loop muted preload="metadata">
     <source src="foo.wav" type="audio/wav" />
-	<source src="foo.ogg" type="audio/ogg" />
-	<source src="foo.mp3" type="audio/mpeg" media="screen and (min-width:320px)" />
+    <source src="foo.ogg" type="audio/ogg" />
+    <source src="foo.mp3" type="audio/mpeg" media="screen and (min-width:320px)" />
 </audio>
 HTML;
 

@@ -48,13 +48,13 @@ class FieldHelperTest extends \PHPUnit\Framework\TestCase
     {
         $xml = <<<XML
 <field
-	name="flower"
-	type="text"
-	label="Flower"
-	description=""
-	class="stub-flower"
-	default="default-value"
-	/>
+    name="flower"
+    type="text"
+    label="Flower"
+    description=""
+    class="stub-flower"
+    default="default-value"
+    />
 XML;
 
         $field = FieldHelper::create($xml);
@@ -64,13 +64,13 @@ XML;
         // Add namespace
         $xml = <<<XML
 <field
-	name="flower"
-	type="stub"
-	label="Flower"
-	description=""
-	class="stub-flower"
-	default="default-value"
-	/>
+    name="flower"
+    type="stub"
+    label="Flower"
+    description=""
+    class="stub-flower"
+    default="default-value"
+    />
 XML;
 
         // Get default

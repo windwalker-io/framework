@@ -73,10 +73,10 @@ class TwigRendererTest extends AbstractDomTestCase
 
         $expect = <<<HTML
 <div id="global">
-	<p> (_global/global) Lorem ipsum dolor sit amet</p>
-	<p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
-	<p> (foo/bar) Phasellus vitae bibendum neque, quis suscipit urna. Fusce eu odio ante.</p>
-	<p> (_global/global) Suspendisse finibus fermentum massa ut tempus. </p>
+    <p> (_global/global) Lorem ipsum dolor sit amet</p>
+    <p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
+    <p> (foo/bar) Phasellus vitae bibendum neque, quis suscipit urna. Fusce eu odio ante.</p>
+    <p> (_global/global) Suspendisse finibus fermentum massa ut tempus. </p>
 </div>
 HTML;
 
@@ -98,10 +98,10 @@ HTML;
 
         $expect = <<<HTML
 <div id="global">
-	<p> (_global/global) Lorem ipsum dolor sit amet</p>
-	<p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
-	<p> (foo/bar) Phasellus vitae bibendum neque, quis suscipit urna. Fusce eu odio ante.</p>
-	<p> (_global/global) Suspendisse finibus fermentum massa ut tempus. </p>
+    <p> (_global/global) Lorem ipsum dolor sit amet</p>
+    <p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
+    <p> (foo/bar) Phasellus vitae bibendum neque, quis suscipit urna. Fusce eu odio ante.</p>
+    <p> (_global/global) Suspendisse finibus fermentum massa ut tempus. </p>
 </div>
 HTML;
 
@@ -153,9 +153,9 @@ HTML;
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 <p>Suspendisse finibus fermentum massa ut tempus. Sed in pulvinar dolor.</p>
 <ul>
-	<li>peace</li>
-	<li>sakura</li>
-	<li>Iron Man</li>
+    <li>peace</li>
+    <li>sakura</li>
+    <li>Iron Man</li>
 </ul>
 HTML;
 

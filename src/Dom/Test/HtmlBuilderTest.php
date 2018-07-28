@@ -53,9 +53,9 @@ class HtmlBuilderTest extends \PHPUnit\Framework\TestCase
             [
                 'case4_ul',
                 '<ul id="foo" class="bar">
-					<option value="1">Yes</option>
-					<option value="0">No</option>
-				</ul>',
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </ul>',
                 'ul',
                 HtmlBuilder::create('option', 'Yes', ['value' => 1])
                 . HtmlBuilder::create('option', 'No', ['value' => 0]),
@@ -109,7 +109,7 @@ class HtmlBuilderTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
-     * @covers       Windwalker\Dom\Builder\HtmlBuilder::create
+     * @covers       \Windwalker\Dom\Builder\HtmlBuilder::create
      *
      * @dataProvider domTestCase
      */

@@ -39,9 +39,9 @@ class GlobalContainerTest extends AbstractDomTestCase
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 <p>Suspendisse finibus fermentum massa ut tempus. Sed in pulvinar dolor.</p>
 <ul>
-	<li>peace</li>
-	<li>sakura</li>
-	<li>Iron Man</li>
+    <li>peace</li>
+    <li>sakura</li>
+    <li>Iron Man</li>
 </ul>
 HTML;
 

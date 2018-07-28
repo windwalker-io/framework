@@ -56,12 +56,12 @@ class FileLoaderTest extends \PHPUnit\Framework\TestCase
     {
         $data = <<<DATA
 {
-	"windwalker" : {
-		"language-test" : {
-			"sakura" : "Sakura",
-			"olive" : "Olive"
-		}
-	}
+    "windwalker" : {
+        "language-test" : {
+            "sakura" : "Sakura",
+            "olive" : "Olive"
+        }
+    }
 }
 DATA;
 

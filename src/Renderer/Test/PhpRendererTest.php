@@ -72,7 +72,7 @@ class PhpRendererTest extends AbstractDomTestCase
 
         $expect = <<<HTML
 <div id="default">
-	Default
+    Default
 </div>
 HTML;
 
@@ -206,8 +206,8 @@ HTML;
 
         $expect = <<<HTML
 <div id="flower">
-	<h1>BAR</h1>
-	<p>Quisque egestas posuere enim non dapibus.</p>
+    <h1>BAR</h1>
+    <p>Quisque egestas posuere enim non dapibus.</p>
 </div>
 HTML;
 
@@ -231,8 +231,8 @@ HTML;
 
         $expect = <<<HTML
 <div id="data" class="flower">
-	<h1>Sakura</h1>
-	<p>Morbi suscipit ante massa</p>
+    <h1>Sakura</h1>
+    <p>Morbi suscipit ante massa</p>
 </div>
 HTML;
 

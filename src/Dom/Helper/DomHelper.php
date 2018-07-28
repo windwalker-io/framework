@@ -28,10 +28,10 @@ class DomHelper
     {
         $search = [
             // Strip whitespaces after tags, except space
-            '/\>[^\S ]+/s',
+            '/\>[^\S]+/s',
 
             // Strip whitespaces before tags, except space
-            '/[^\S ]+\</s',
+            '/[^\S]+\</s',
 
             // Shorten multiple whitespace sequences
             '/(\s)+/s',

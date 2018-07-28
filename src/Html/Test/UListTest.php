@@ -71,9 +71,9 @@ class UListTest extends AbstractDomTestCase
 
         $html = <<<HTML
 <ul>
-	<li>Remember, with great power, comes great responsibility</li>
-	<li>Life was like a box of chocolates.</li>
-	<li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
+    <li>Remember, with great power, comes great responsibility</li>
+    <li>Life was like a box of chocolates.</li>
+    <li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
 </ul>
 HTML;
 
@@ -96,8 +96,8 @@ HTML;
 
         $html = <<<HTML
 <ul>
-	<li>123</li>
-	<li>ABC</li>
+    <li>123</li>
+    <li>ABC</li>
 </ul>
 HTML;
 
@@ -122,9 +122,9 @@ HTML;
 
         $html = <<<HTML
 <ul>
-	<li>Remember, with great power, comes great responsibility</li>
-	<li>Life was like a box of chocolates.</li>
-	<li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
+    <li>Remember, with great power, comes great responsibility</li>
+    <li>Life was like a box of chocolates.</li>
+    <li class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</li>
 </ul>
 HTML;
 

@@ -75,14 +75,14 @@ class DListTest extends AbstractDomTestCase
 
         $html = <<<HTML
 <dl>
-	<dt>Spider Man</dt>
-	<dd>Remember, with great power, comes great responsibility</dd>
+    <dt>Spider Man</dt>
+    <dd>Remember, with great power, comes great responsibility</dd>
 
-	<dt>Forrest Gump</dt>
-	<dd>Life was like a box of chocolates.</dd>
+    <dt>Forrest Gump</dt>
+    <dd>Life was like a box of chocolates.</dd>
 
-	<dt>Inception</dt>
-	<dd class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</dd>
+    <dt>Inception</dt>
+    <dd class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</dd>
 </dl>
 HTML;
 
@@ -105,8 +105,8 @@ HTML;
 
         $html = <<<HTML
 <dl>
-	<dt>123</dt>
-	<dd>ABC</dd>
+    <dt>123</dt>
+    <dd>ABC</dd>
 </dl>
 HTML;
 
@@ -134,14 +134,14 @@ HTML;
 
         $html = <<<HTML
 <dl>
-	<dt>Spider Man</dt>
-	<dd>Remember, with great power, comes great responsibility</dd>
+    <dt>Spider Man</dt>
+    <dd>Remember, with great power, comes great responsibility</dd>
 
-	<dt>Forrest Gump</dt>
-	<dd>Life was like a box of chocolates.</dd>
+    <dt>Forrest Gump</dt>
+    <dd>Life was like a box of chocolates.</dd>
 
-	<dt>Inception</dt>
-	<dd class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</dd>
+    <dt>Inception</dt>
+    <dd class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</dd>
 </dl>
 HTML;
 
@@ -168,14 +168,14 @@ HTML;
 
         $html = <<<HTML
 <dl>
-	<dt>Spider Man</dt>
-	<dd>Remember, with great power, comes great responsibility</dd>
+    <dt>Spider Man</dt>
+    <dd>Remember, with great power, comes great responsibility</dd>
 
-	<dt>Forrest Gump</dt>
-	<dd>Life was like a box of chocolates.</dd>
+    <dt>Forrest Gump</dt>
+    <dd>Life was like a box of chocolates.</dd>
 
-	<dt>Inception</dt>
-	<dd class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</dd>
+    <dt>Inception</dt>
+    <dd class="nav-item">You mustn’t be afraid to dream a little bigger,darling.</dd>
 </dl>
 HTML;
 

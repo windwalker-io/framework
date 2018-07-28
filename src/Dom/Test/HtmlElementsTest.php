@@ -65,9 +65,9 @@ class HtmlElementsTest extends \PHPUnit\Framework\TestCase
         $expect = <<<DOM
 <p>foo</p>
 <table>
-	<tr>
-		<td>bar</td>
-	</tr>
+    <tr>
+        <td>bar</td>
+    </tr>
 </table>
 <div id="fly">yoo</div>
 DOM;

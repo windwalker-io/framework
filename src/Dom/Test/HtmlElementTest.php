@@ -53,9 +53,9 @@ class HtmlElementTest extends \PHPUnit\Framework\TestCase
             [
                 'case4_ul',
                 '<ul id="foo" class="bar">
-					<option value="1">Yes</option>
-					<option value="0">No</option>
-				</ul>',
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </ul>',
                 'ul',
                 new HtmlElement('option', 'Yes', ['value' => 1])
                 . new HtmlElement('option', 'No', ['value' => 0]),

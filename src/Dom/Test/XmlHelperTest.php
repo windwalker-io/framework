@@ -34,31 +34,31 @@ class XmlHelperTest extends \PHPUnit\Framework\TestCase
     {
         $xml = <<<XML
 <root>
-	<field
-		name="List"
-		type="list"
-		label="List"
-		description="list desc"
-		class="sun"
-		default="b"
+    <field
+        name="List"
+        type="list"
+        label="List"
+        description="list desc"
+        class="sun"
+        default="b"
 
-		required="true"
-		disabled="false"
+        required="true"
+        disabled="false"
 
-		boolTrue1="1"
-		boolTrue2="yes"
-		boolTrue3="true"
+        boolTrue1="1"
+        boolTrue2="yes"
+        boolTrue3="true"
 
-		boolFalse1="0"
-		boolFalse2="no"
-		boolFalse3="null"
-		boolFalse4="none"
-		boolFalse5="disabled"
-		>
-		<option></option>
-		<option value="y">Yes</option>
-		<option value="n">No</option>
-	</field>
+        boolFalse1="0"
+        boolFalse2="no"
+        boolFalse3="null"
+        boolFalse4="none"
+        boolFalse5="disabled"
+        >
+        <option></option>
+        <option value="y">Yes</option>
+        <option value="n">No</option>
+    </field>
 </root>
 XML;
 

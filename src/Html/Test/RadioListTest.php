@@ -53,17 +53,17 @@ class RadioListTest extends AbstractDomTestCase
 
         $expect = <<<HTML
 <span class="radio-inputs input-select">
-	<input class="opt" value="Asia/Tokyo" type="radio" name="form[timezone]" id="input-form-timezone-asia-tokyo" />
-	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
+    <input class="opt" value="Asia/Tokyo" type="radio" name="form[timezone]" id="input-form-timezone-asia-tokyo" />
+    <label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" type="radio" name="form[timezone]" id="input-form-timezone-asia-taipei" />
-	<label id="input-form-timezone-asia-taipei-label" for="input-form-timezone-asia-taipei">Asia - Taipei</label>
+    <input value="Asia/Taipei" type="radio" name="form[timezone]" id="input-form-timezone-asia-taipei" />
+    <label id="input-form-timezone-asia-taipei-label" for="input-form-timezone-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" type="radio" name="form[timezone]" id="input-form-timezone-asia-paris" />
-	<label id="input-form-timezone-asia-paris-label" for="input-form-timezone-asia-paris">Europe - Paris</label>
+    <input value="Asia/Paris" type="radio" name="form[timezone]" id="input-form-timezone-asia-paris" />
+    <label id="input-form-timezone-asia-paris-label" for="input-form-timezone-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" checked="checked" type="radio" name="form[timezone]" id="input-form-timezone-utc" />
-	<label id="input-form-timezone-utc-label" for="input-form-timezone-utc">UTC</label>
+    <input value="UTC" checked="checked" type="radio" name="form[timezone]" id="input-form-timezone-utc" />
+    <label id="input-form-timezone-utc-label" for="input-form-timezone-utc">UTC</label>
 </span>
 HTML;
 
@@ -94,17 +94,17 @@ HTML;
 
         $expect = <<<HTML
 <span class="radio-inputs input-select">
-	<input class="opt" value="Asia/Tokyo" type="radio" name="form[timezone]" id="input-form-timezone-asia-tokyo" disabled="disabled" readonly="readonly" />
-	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
+    <input class="opt" value="Asia/Tokyo" type="radio" name="form[timezone]" id="input-form-timezone-asia-tokyo" disabled="disabled" readonly="readonly" />
+    <label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" type="radio" name="form[timezone]" id="input-form-timezone-asia-taipei" disabled="disabled" readonly="readonly" />
-	<label id="input-form-timezone-asia-taipei-label" for="input-form-timezone-asia-taipei">Asia - Taipei</label>
+    <input value="Asia/Taipei" type="radio" name="form[timezone]" id="input-form-timezone-asia-taipei" disabled="disabled" readonly="readonly" />
+    <label id="input-form-timezone-asia-taipei-label" for="input-form-timezone-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" type="radio" name="form[timezone]" id="input-form-timezone-asia-paris" disabled="disabled" readonly="readonly" />
-	<label id="input-form-timezone-asia-paris-label" for="input-form-timezone-asia-paris">Europe - Paris</label>
+    <input value="Asia/Paris" type="radio" name="form[timezone]" id="input-form-timezone-asia-paris" disabled="disabled" readonly="readonly" />
+    <label id="input-form-timezone-asia-paris-label" for="input-form-timezone-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" checked="checked" type="radio" name="form[timezone]" id="input-form-timezone-utc" disabled="disabled" readonly="readonly" />
-	<label id="input-form-timezone-utc-label" for="input-form-timezone-utc">UTC</label>
+    <input value="UTC" checked="checked" type="radio" name="form[timezone]" id="input-form-timezone-utc" disabled="disabled" readonly="readonly" />
+    <label id="input-form-timezone-utc-label" for="input-form-timezone-utc">UTC</label>
 </span>
 HTML;
 

@@ -674,7 +674,7 @@ class OracleQueryTest extends AbstractQueryTestCase
             ->limit(3);
 
         $sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM ( SELECT * FROM foo
-		WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum BETWEEN 1 AND 3';
+        WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum BETWEEN 1 AND 3';
 
         $this->assertEquals($this->format($sql), $this->format((string) $query));
 
@@ -686,7 +686,7 @@ class OracleQueryTest extends AbstractQueryTestCase
             ->limit(0, 3);
 
         $sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM
-		( SELECT * FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum > 4';
+        ( SELECT * FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum > 4';
 
         $this->assertEquals($this->format($sql), $this->format((string) $query));
     }
@@ -707,7 +707,7 @@ class OracleQueryTest extends AbstractQueryTestCase
             ->order('id');
 
         $sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM
-		( SELECT * FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum BETWEEN 1 AND 3';
+        ( SELECT * FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum BETWEEN 1 AND 3';
 
         $this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3)));
 
@@ -718,7 +718,7 @@ class OracleQueryTest extends AbstractQueryTestCase
             ->order('id');
 
         $sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM ( SELECT *
-		FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum > 4';
+        FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum > 4';
 
         $this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 0, 3)));
     }

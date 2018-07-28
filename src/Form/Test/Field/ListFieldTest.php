@@ -77,9 +77,9 @@ class ListFieldTest extends AbstractDomTestCase
     {
         $html = <<<HTML
 <select name="flower" id="input-flower" class="stub-flower" size="10" disabled="disabled" onchange="return false;" data-test-element>
-	<option value="" selected="selected"></option>
-	<option value="Yes">1</option>
-	<option value="No">0</option>
+    <option value="" selected="selected"></option>
+    <option value="Yes">1</option>
+    <option value="No">0</option>
 </select>
 HTML;
 
@@ -89,9 +89,9 @@ HTML;
 
         $html = <<<HTML
 <select name="flower" id="input-flower" class="stub-flower" size="10" disabled="disabled" onchange="return false;" data-test-element>
-	<option value="" selected="selected"></option>
-	<option value="Yes">1</option>
-	<option value="No">0</option>
+    <option value="" selected="selected"></option>
+    <option value="Yes">1</option>
+    <option value="No">0</option>
 </select>
 HTML;
 
@@ -101,9 +101,9 @@ HTML;
 
         $html = <<<HTML
 <select name="flower[]" id="input-flower" class="stub-flower" size="10" disabled="disabled" onchange="return false;" multiple="true" data-test-element>
-	<option value="" selected="selected"></option>
-	<option value="Yes">1</option>
-	<option value="No">0</option>
+    <option value="" selected="selected"></option>
+    <option value="Yes">1</option>
+    <option value="No">0</option>
 </select>
 HTML;
 
@@ -139,16 +139,16 @@ HTML;
 
         $html = <<<HTML
 <select name="timezone" id="input-timezone">
-	<optgroup label="Asia">
-		<option class="opt" value="Asia/Tokyo">Tokyo</option>
-		<option value="Asia/Taipei">Taipei</option>
-	</optgroup>
+    <optgroup label="Asia">
+        <option class="opt" value="Asia/Tokyo">Tokyo</option>
+        <option value="Asia/Taipei">Taipei</option>
+    </optgroup>
 
-	<optgroup label="Europe">
-		<option value="Europe/Paris">Paris</option>
-	</optgroup>
+    <optgroup label="Europe">
+        <option value="Europe/Paris">Paris</option>
+    </optgroup>
 
-	<option value="UTC">UTC</option>
+    <option value="UTC">UTC</option>
 </select>
 HTML;
 

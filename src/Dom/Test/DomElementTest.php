@@ -53,9 +53,9 @@ class DomElementTest extends AbstractDomTestCase
             [
                 'case4',
                 '<field id="foo" class="bar">
-					<option value="1">Yes</option>
-					<option value="0">No</option>
-				</field>',
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </field>',
                 'field',
                 [
                     new DomElement('option', 'Yes', ['value' => 1]),

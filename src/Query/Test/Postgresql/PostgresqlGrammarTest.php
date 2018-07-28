@@ -110,17 +110,17 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
     {
         $expected = <<<SQL
 SELECT attr.attname AS "column_name",
-	pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type",
-	CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",
-	attrdef.adsrc AS "Default",
-	pg_catalog.col_description(attr.attrelid, attr.attnum) AS "Comment"
+    pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type",
+    CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",
+    attrdef.adsrc AS "Default",
+    pg_catalog.col_description(attr.attrelid, attr.attnum) AS "Comment"
 FROM pg_catalog.pg_attribute AS attr
-	LEFT JOIN pg_catalog.pg_class       AS class   ON class.oid = attr.attrelid
-	LEFT JOIN pg_catalog.pg_type        AS typ     ON typ.oid = attr.atttypid
-	LEFT JOIN pg_catalog.pg_attrdef     AS attrdef ON attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum
+    LEFT JOIN pg_catalog.pg_class       AS class   ON class.oid = attr.attrelid
+    LEFT JOIN pg_catalog.pg_type        AS typ     ON typ.oid = attr.atttypid
+    LEFT JOIN pg_catalog.pg_attrdef     AS attrdef ON attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum
 WHERE attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='foo'
-	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-	nspname = 'public')) AND attr.attnum > 0 AND NOT attr.attisdropped
+    AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+    nspname = 'public')) AND attr.attnum > 0 AND NOT attr.attisdropped
 ORDER BY attr.attnum
 SQL;
 

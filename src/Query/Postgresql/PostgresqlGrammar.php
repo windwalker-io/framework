@@ -130,8 +130,8 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         // General
         $query->where(
             'attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $query->quote($table) . '
-	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-	nspname = \'public\'))'
+    AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+    nspname = \'public\'))'
         )
             ->where('attr.attnum > 0 AND NOT attr.attisdropped')
             ->order('attr.attnum');

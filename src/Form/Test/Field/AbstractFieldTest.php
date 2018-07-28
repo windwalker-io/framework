@@ -120,13 +120,13 @@ HTML;
     {
         $xml = <<<XML
 <field
-	name="flower"
-	type="stub"
-	label="Flower"
-	description=""
-	class="stub-flower"
-	default="default-value"
-	/>
+    name="flower"
+    type="stub"
+    label="Flower"
+    description=""
+    class="stub-flower"
+    default="default-value"
+    />
 XML;
 
         $field = new StubField(simplexml_load_string($xml));
@@ -201,8 +201,8 @@ HTML;
 
         $expect = <<<HTML
 <div id="input-windwalker-flower-control" class="stub-field control-group">
-	<label id="input-windwalker-flower-label" for="input-windwalker-flower">Flower</label>
-	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
+    <label id="input-windwalker-flower-label" for="input-windwalker-flower">Flower</label>
+    <input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
 </div>
 HTML;
 
@@ -210,7 +210,7 @@ HTML;
 
         $expect = <<<HTML
 <div id="input-windwalker-flower-control" class="stub-field control-group">
-	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
+    <input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
 </div>
 HTML;
 

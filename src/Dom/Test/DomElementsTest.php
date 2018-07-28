@@ -67,9 +67,9 @@ class DomElementsTest extends \PHPUnit\Framework\TestCase
 <option>foo</option>
 <option>bar</option>
 <rdf:metaData>
-	<rdf:name>
-	Simon
-	</rdf:name>
+    <rdf:name>
+    Simon
+    </rdf:name>
 </rdf:metaData>
 DOM;
 
