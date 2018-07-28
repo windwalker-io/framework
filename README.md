@@ -3,6 +3,7 @@
 # Windwalker Framework   [![Analytics](https://ga-beacon.appspot.com/UA-48372917-1/windwalker/readme)](https://github.com/igrigorik/ga-beacon)
 
 [![Build Status](https://travis-ci.org/ventoviro/windwalker.svg?branch=staging)](https://travis-ci.org/ventoviro/windwalker) 
+[![CircleCI](https://circleci.com/gh/ventoviro/windwalker.svg?style=svg)](https://circleci.com/gh/ventoviro/windwalker) 
 [![Latest Stable Version](https://poser.pugx.org/windwalker/framework/version.svg)](https://packagist.org/packages/windwalker/framework) 
 [![Latest Unstable Version](https://poser.pugx.org/windwalker/framework/v/unstable.svg)](//packagist.org/packages/windwalker/framework) 
 [![Total Downloads](https://poser.pugx.org/windwalker/framework/downloads.svg)](https://packagist.org/packages/windwalker/framework) 
