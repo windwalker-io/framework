@@ -1,0 +1,28 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+jobs:
+    build:
+        environment:
+            VENDOR: /home/circleci/.composer/vendor
+
+        docker:
+        # specify the version you desire here
+        - image: circleci/php:7.0.30-apache-stretch-node-browsers
+
+        # Specify service dependencies here if necessary
+        # CircleCI maintains a library of pre-built images
+        # documented at https://circleci.com/docs/2.0/circleci-images/
+        # - image: circleci/mysql:9.4
+
+        working_directory: ~/repo
+
+        steps:
+        - checkout
+
+        # run tests!
+        - run: composer global require lyrasoft/cli
+        - run: $VENDOR/bin/lyra sniffer sync
+        - run: $VENDOR/bin/phpcs src --standard=$VENDOR/lyrasoft/cli/tmp/development-tools/Sniffer/Windwalker --runtime-set ignore_warnings_on_exit -n --extensions=php

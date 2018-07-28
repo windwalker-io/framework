@@ -3,6 +3,7 @@
 !.gitignre
 !.editorconfig
 !/.travis.yml
+!/.circleci
 
 # Composer #
 vendor/*
