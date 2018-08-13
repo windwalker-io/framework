@@ -17,6 +17,7 @@ if (!interface_exists('Http\Client\HttpClient')) {
 // phpcs:enable
 
 use Http\Client\HttpClient as HttpPlugClientInterface;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Windwalker\Http\Request\Request;
@@ -31,7 +32,7 @@ use Windwalker\Uri\UriHelper;
  *
  * @since  2.1
  */
-class HttpClient implements HttpClientInterface, HttpPlugClientInterface
+class HttpClient implements HttpClientInterface, HttpPlugClientInterface, ClientInterface
 {
     /**
      * Property options.
@@ -108,7 +109,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      *
      * @return  ResponseInterface
      */
-    public function send(RequestInterface $request)
+    public function send(RequestInterface $request): ResponseInterface
     {
         $transport = $this->getTransport();
 
