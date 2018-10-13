@@ -6,7 +6,8 @@
     "homepage": "https://github.com/ventoviro/windwalker-cache",
     "license": "LGPL-2.0-or-later",
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=5.5.9",
+        "ext-json": "*"
     },
     "require-dev": {
         "windwalker/test": "~3.0"
