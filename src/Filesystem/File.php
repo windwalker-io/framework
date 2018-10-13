@@ -90,6 +90,22 @@ class File
     }
 
     /**
+     * Make file name safe with UTF8 name.
+     *
+     * @param string $file The file name.
+     *
+     * @return  false|string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function makeUtf8Safe($file)
+    {
+        $file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
+
+        return mb_ereg_replace("([\.]{2,})", '', $file);
+    }
+
+    /**
      * Copies a file
      *
      * @param   string $src   The path to the source file
