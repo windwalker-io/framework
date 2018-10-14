@@ -8,7 +8,8 @@
     "require": {
         "php": ">=5.5.9",
         "windwalker/database": "~3.0",
-        "windwalker/data": "~3.0"
+        "windwalker/data": "~3.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "windwalker/test": "~3.0",

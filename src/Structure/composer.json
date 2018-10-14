@@ -10,7 +10,8 @@
     },
     "require-dev": {
         "windwalker/test": "~3.0",
-        "symfony/yaml": "3.*"
+        "symfony/yaml": "3.*",
+        "ext-json": "*"
     },
     "minimum-stability": "beta",
     "suggest": {

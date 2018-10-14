@@ -16,7 +16,9 @@
         "psr/http-message": "~1.0",
         "psr/cache": "~1.0",
         "psr/container": "^1.0",
-        "composer/ca-bundle": "^1.1"
+        "composer/ca-bundle": "^1.1",
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
