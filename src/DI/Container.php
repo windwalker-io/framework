@@ -381,7 +381,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     {
         $methodArgs = [];
 
-        foreach ($method->getParameters() as $param) {
+        foreach ($method->getParameters() as $i => $param) {
             $dependency = $param->getClass();
             $dependencyVarName = $param->getName();
 
@@ -418,10 +418,30 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
                 }
             }
 
+            // Handler ...$args
+            if ($param->isVariadic()) {
+                $trailing = [];
+
+                foreach ($args as $key => $value) {
+                    if (is_numeric($key)) {
+                        $trailing[] = $value;
+                    }
+                }
+
+                $trailing = array_slice($trailing, $i);
+                $methodArgs = array_merge($methodArgs, $trailing);
+                continue;
+            }
+
             // If an arg provided, use it.
             if (array_key_exists($dependencyVarName, $args)) {
                 $methodArgs[] = $args[$dependencyVarName];
 
+                continue;
+            }
+
+            if (array_key_exists($i, $args)) {
+                $methodArgs[] = $args[$i];
                 continue;
             }
 
