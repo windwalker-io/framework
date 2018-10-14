@@ -96,7 +96,7 @@ class File
      *
      * @return  false|string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.5
      */
     public static function makeUtf8Safe($file)
     {

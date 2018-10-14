@@ -1532,7 +1532,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  Query
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.5
      */
     public function whereIn($column, array $values)
     {
@@ -1551,7 +1551,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  Query
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.5
      */
     public function whereNotIn($column, array $values)
     {
