@@ -8,6 +8,7 @@
 
 namespace Windwalker\Query;
 
+use http\Exception\InvalidArgumentException;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
@@ -1521,6 +1522,44 @@ class Query implements QueryInterface, PreparableInterface
         $this->where->append($conditions);
 
         return $this;
+    }
+
+    /**
+     * whereIn
+     *
+     * @param string $column
+     * @param array  $values
+     *
+     * @return  Query
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function whereIn($column, array $values)
+    {
+        if ($values === []) {
+            throw new \InvalidArgumentException('Values for IN() is empty');
+        }
+
+        return $this->where('%n %r', $column, new QueryElement('IN()', $this->quote($values)));
+    }
+
+    /**
+     * whereNotIn
+     *
+     * @param string $column
+     * @param array  $values
+     *
+     * @return  Query
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function whereNotIn($column, array $values)
+    {
+        if ($values === []) {
+            throw new \InvalidArgumentException('Values for NOT IN() is empty');
+        }
+
+        return $this->where('%n %r', $column, new QueryElement('NOT IN()', $this->quote($values)));
     }
 
     /**

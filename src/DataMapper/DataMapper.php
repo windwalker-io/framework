@@ -40,6 +40,8 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  limit($limit = null, $offset = null)
  * @method  $this  select($columns)
  * @method  $this  where($conditions, ...$args)
+ * @method  $this  whereIn($column, array $values)
+ * @method  $this  whereNotIn($column, array $values)
  * @method  $this  orWhere($conditions)
  * @method  $this  clear($clause = null)
  * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
@@ -766,6 +768,8 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             'limit',
             'select',
             'where',
+            'whereIn',
+            'whereNotIn',
             'orWhere',
             'bind',
             'clear',
