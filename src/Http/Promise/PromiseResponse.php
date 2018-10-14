@@ -94,7 +94,7 @@ class PromiseResponse extends Response
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.5
      */
     public function reject($e)
     {
