@@ -419,7 +419,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             }
 
             // Handler ...$args
-            if ($param->isVariadic()) {
+            if (PHP_VERSION_ID >= 50600 && $param->isVariadic()) {
                 $trailing = [];
 
                 foreach ($args as $key => $value) {
