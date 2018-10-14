@@ -56,7 +56,7 @@ class PromiseResponse extends Response
      *
      * @since  3.4
      */
-    public function reject(callable $callback)
+    public function fail(callable $callback)
     {
         $this->rejectCallables[] = $callback;
 
@@ -80,10 +80,28 @@ class PromiseResponse extends Response
             }
         } catch (\Exception $e) {
             foreach ($this->rejectCallables as $reject) {
-                $reject($e);
+                $e = $reject($e);
             }
         }
 
         return $value;
+    }
+
+    /**
+     * reject
+     *
+     * @param \Exception|\Throwable $e
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function reject($e)
+    {
+        foreach ($this->rejectCallables as $reject) {
+            $e = $reject($e);
+        }
+
+        return $e;
     }
 }
