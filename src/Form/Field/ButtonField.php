@@ -14,6 +14,7 @@ use Windwalker\Dom\HtmlElement;
  * The ButtonField class.
  *
  * @method  mixed|$this  text(string | integer $value = null)
+ * @method  mixed|$this  buttonType(string | integer $value = null)
  *
  * @since  2.1.8
  */
@@ -70,6 +71,7 @@ class ButtonField extends AbstractField
             parent::getAccessors(),
             [
                 'text' => 'text',
+                'buttonType' => 'type'
             ]
         );
     }
