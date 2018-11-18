@@ -607,9 +607,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     public function save($dataset, $condFields = null, $updateNulls = false)
     {
         // Handling conditions
-        $condFields = $condFields ?: $this->getKeyName(true);
-
-        $condFields = (array) $condFields;
+        $key = $condFields ? array_values($condFields)[0] : $this->getKeyName();
 
         // Event
         $this->triggerEvent(
@@ -617,6 +615,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
             [
                 'dataset' => &$dataset,
                 'condFields' => &$condFields,
+                'key' => &$key,
                 'updateNulls' => &$updateNulls,
             ]
         );
@@ -631,19 +630,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
                 $data = $this->bindData($data);
             }
 
-            $update = true;
-
-            // If one field not matched, use insert.
-            foreach ($condFields as $field) {
-                if (!$data->$field) {
-                    $update = false;
-
-                    break;
-                }
-            }
-
             // Do save
-            if ($update) {
+            if ($data->$key) {
                 $updateDataset[] = $data;
             } else {
                 $createDataset[] = $data;
