@@ -359,6 +359,61 @@ abstract class AbstractDataMapper implements DataMapperInterface
     }
 
     /**
+     * Find column as an array.
+     *
+     * @param mixed   $conditions Where conditions, you can use array or Compare object.
+     *                            Example:
+     *                            - `array('id' => 5)` => id = 5
+     *                            - `new GteCompare('id', 20)` => 'id >= 20'
+     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed   $order      Order sort, can ba string, array or object.
+     *                            Example:
+     *                            - `id ASC` => ORDER BY id ASC
+     *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     *
+     * @return  mixed
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function findResult($conditions = [], $order = null)
+    {
+        // Event
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__),
+            [
+                'conditions' => &$conditions,
+                'order' => &$order
+            ]
+        );
+
+        $data = $this->findOne($conditions, $order);
+
+        $result = null;
+
+        if ($data->notNull()) {
+            // Get first
+            if (is_object($data) && !is_iterable($data)) {
+                $data = get_object_vars($data);
+            }
+
+            foreach ($data as $datum) {
+                $result = $datum;
+                break;
+            }
+        }
+
+        // Event
+        $this->triggerEvent(
+            'onAfter' . ucfirst(__FUNCTION__),
+            [
+                'result' => &$result,
+            ]
+        );
+
+        return $result;
+    }
+
+    /**
      * Create records by data set.
      *
      * @param mixed $dataset The data set contains data we want to store.
