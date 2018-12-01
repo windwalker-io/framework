@@ -54,6 +54,8 @@ use Windwalker\String\StringInflector;
  * @method  static DataMapper  rightJoin($alias, $table, $condition = null, $prefix = null)
  * @method  static DataMapper  select($columns)
  * @method  static DataMapper  where($conditions, ...$args)
+ * @method  static DataMapper  whereIn($column, array $values)
+ * @method  static DataMapper  whereNotIn($column, array $values)
  * @method  static DataMapper  orWhere($conditions)
  * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  * @method  static DataMapper  forUpdate()
