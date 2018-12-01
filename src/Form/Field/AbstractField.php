@@ -212,14 +212,16 @@ abstract class AbstractField
     /**
      * getInput
      *
+     * @param array $options
+     *
      * @return  string
      */
-    public function renderInput()
+    public function renderInput(array $options = [])
     {
         $attrs = $this->prepareAttributes();
 
         if ($this->form && $this->form->getRenderer()) {
-            return $this->form->getRenderer()->renderInput($this, $attrs);
+            return $this->form->getRenderer()->renderInput($this, $attrs, $options);
         }
 
         return $this->buildInput($attrs);
@@ -265,9 +267,11 @@ abstract class AbstractField
     /**
      * getLabel
      *
+     * @param array $options
+     *
      * @return  string
      */
-    public function renderLabel()
+    public function renderLabel(array $options = [])
     {
         $attrs['id'] = $this->getAttribute('labelId', $this->getId() . '-label');
         $attrs['class'] = $this->getAttribute('labelClass');
@@ -277,7 +281,7 @@ abstract class AbstractField
         $attrs = array_merge($attrs, (array) $this->getAttribute('labelAttribs'));
 
         if ($this->form && $this->form->getRenderer()) {
-            return $this->form->getRenderer()->renderLabel($this, $attrs);
+            return $this->form->getRenderer()->renderLabel($this, $attrs, $options);
         }
 
         $label = $this->getLabel();
@@ -317,8 +321,8 @@ abstract class AbstractField
             return $this->wrapElements($this->form->getRenderer()->renderField($this, $attrs, $options));
         }
 
-        $label = !empty($options['no_label']) ? '' : $this->renderLabel();
-        $input = $this->renderInput();
+        $label = !empty($options['no_label']) ? '' : $this->renderLabel($options);
+        $input = $this->renderInput($options);
 
         return $this->wrapElements(new HtmlElement('div', $label . $input, $attrs));
     }
