@@ -11,6 +11,7 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Query\Query;
 use Windwalker\Test\TestHelper;
 
 /**

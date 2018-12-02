@@ -52,4 +52,25 @@ trait QueryTestTrait
 
         $this->assertEquals($this->format($sql), $this->format($query));
     }
+
+    /**
+     * testAlias
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function testQueryAlias()
+    {
+        $query = $this->getQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('a = b')
+            ->order('id')
+            ->alias('foo');
+
+        $sql = '(SELECT * FROM foo WHERE a = b ORDER BY id) AS foo';
+
+        self::assertEquals($this->format($sql), $this->format($query));
+    }
 }

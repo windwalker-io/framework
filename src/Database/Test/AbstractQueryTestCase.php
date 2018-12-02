@@ -29,37 +29,6 @@ abstract class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
     protected static $quote = ['"', '"'];
 
     /**
-     * getQuery
-     *
-     * @return  Query
-     */
-    protected function getQuery()
-    {
-        return new Query();
-    }
-
-    /**
-     * testAlias
-     *
-     * @return  void
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function testQueryAlias()
-    {
-        $query = $this->getQuery()
-            ->select('*')
-            ->from('foo')
-            ->where('a = b')
-            ->order('id')
-            ->alias('foo');
-
-        $sql = '(SELECT * FROM foo WHERE a = b ORDER BY id) AS foo';
-
-        self::assertEquals($this->format($sql), $this->format($query));
-    }
-
-    /**
      * quote
      *
      * @param string $text
