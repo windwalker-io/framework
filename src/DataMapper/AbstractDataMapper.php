@@ -607,7 +607,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     public function save($dataset, $condFields = null, $updateNulls = false)
     {
         // Handling conditions
-        $key = $condFields ? array_values($condFields)[0] : $this->getKeyName();
+        $key = $condFields ? array_values((array) $condFields)[0] : $this->getKeyName();
 
         // Event
         $this->triggerEvent(
