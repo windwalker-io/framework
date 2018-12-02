@@ -146,7 +146,7 @@ class SqliteQuery extends Query
      *
      * @param   string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
      *
-     * @return  SqliteQuery  Returns this object to allow chaining.
+     * @return  static  Returns this object to allow chaining.
      *
      * @since   2.0
      */

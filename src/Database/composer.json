@@ -8,7 +8,8 @@
     "require": {
         "php": ">=5.5.9",
         "psr/log": "1.*@stable",
-        "windwalker/query": "~3.0"
+        "windwalker/query": "~3.0",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "windwalker/utilities": "~3.0",

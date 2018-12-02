@@ -8,6 +8,7 @@
 
 namespace Windwalker\Database\Test;
 
+use Windwalker\Query\Query;
 use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 
@@ -16,7 +17,7 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
  *
  * @since  2.1
  */
-class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
+abstract class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
 {
     use BaseAssertionTrait;
 
@@ -26,6 +27,37 @@ class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
      * @var  array
      */
     protected static $quote = ['"', '"'];
+
+    /**
+     * getQuery
+     *
+     * @return  Query
+     */
+    protected function getQuery()
+    {
+        return new Query();
+    }
+
+    /**
+     * testAlias
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function testQueryAlias()
+    {
+        $query = $this->getQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('a = b')
+            ->order('id')
+            ->alias('foo');
+
+        $sql = '(SELECT * FROM foo WHERE a = b ORDER BY id) AS foo';
+
+        self::assertEquals($this->format($sql), $this->format($query));
+    }
 
     /**
      * quote

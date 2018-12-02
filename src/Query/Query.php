@@ -264,6 +264,13 @@ class Query implements QueryInterface, PreparableInterface
     protected $bounded = [];
 
     /**
+     * Property alias.
+     *
+     * @var string
+     */
+    protected $alias;
+
+    /**
      * Class constructor.
      *
      * @param   \PDO $connection The PDO connection object to help us escape string.
@@ -412,6 +419,10 @@ class Query implements QueryInterface, PreparableInterface
 
         if ($this->suffix) {
             $query .= ' ' . (string) $this->suffix;
+        }
+
+        if ($this->type === 'select' && $this->alias !== null) {
+            $query = sprintf('(%s) AS %s', $query, $this->alias);
         }
 
         return $query;
@@ -574,6 +585,10 @@ class Query implements QueryInterface, PreparableInterface
                 $this->union = null;
                 break;
 
+            case 'alias':
+                $this->alias = null;
+                break;
+
             default:
                 $this->type = null;
                 $this->select = null;
@@ -597,6 +612,7 @@ class Query implements QueryInterface, PreparableInterface
                 $this->limit = 0;
                 $this->suffix = null;
                 $this->bounded = [];
+                $this->alias = null;
                 break;
         }
 
@@ -1766,6 +1782,22 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
+     * Method to set property alias
+     *
+     * @param   string $alias
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since   3.4.8
+     */
+    public function alias($alias)
+    {
+        $this->alias = (string) $alias;
+
+        return $this;
+    }
+
+    /**
      * Find and replace sprintf-like tokens in a format string.
      * Each token takes one of the following forms:
      *     %%       - A literal percent character.
@@ -2179,6 +2211,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param   string $string
      *
      * @return  string
+     * @throws  \Exception
      */
     public function validDatetime($string)
     {

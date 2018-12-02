@@ -10,6 +10,7 @@ namespace Windwalker\Query\Test\Postgresql;
 
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
+use Windwalker\Query\Query;
 
 /**
  * Test class of PostgresqlGrammar

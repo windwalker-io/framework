@@ -9,7 +9,8 @@
         "php": ">=5.5.9",
         "windwalker/database": "~3.0",
         "windwalker/data": "~3.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "windwalker/test": "~3.0",

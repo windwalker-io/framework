@@ -18,7 +18,8 @@
         "psr/container": "^1.0",
         "composer/ca-bundle": "^1.1",
         "ext-json": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",

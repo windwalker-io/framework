@@ -10,6 +10,8 @@ namespace Windwalker\Query\Test\Mysql;
 
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Mysql\MysqlGrammar;
+use Windwalker\Query\Mysql\MysqlQuery;
+use Windwalker\Query\Query;
 
 /**
  * Test class of MysqlGrammar
