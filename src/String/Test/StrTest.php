@@ -2,7 +2,7 @@
 /**
  * Part of ww4 project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    Please see LICENSE file.
  */
 

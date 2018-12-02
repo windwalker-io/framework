@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 Asikart.com.
+ * @copyright  Copyright (C) 2019 Asikart.com.
  * @license    LGPL-2.0-or-later
  */
 
