@@ -43,7 +43,7 @@ abstract class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.8
      */
     public function testQueryAlias()
     {
