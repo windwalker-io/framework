@@ -33,18 +33,20 @@ interface FormRendererInterface
      *
      * @param AbstractField $field
      * @param array         $attribs
+     * @param array         $options
      *
      * @return string
      */
-    public function renderLabel(AbstractField $field, array $attribs = []);
+    public function renderLabel(AbstractField $field, array $attribs = [], array $options = []);
 
     /**
      * renderInput
      *
      * @param AbstractField $field
      * @param array         $attribs
+     * @param array         $options
      *
      * @return string
      */
-    public function renderInput(AbstractField $field, array $attribs = []);
+    public function renderInput(AbstractField $field, array $attribs = [], array $options = []);
 }
