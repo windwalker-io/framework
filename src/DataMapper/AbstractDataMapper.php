@@ -386,6 +386,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
             ]
         );
 
+        $classBak = $this->getDataClass();
+        $this->setDataClass(Data::class);
         $data = $this->findOne($conditions, $order);
 
         $result = null;
@@ -401,6 +403,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
                 break;
             }
         }
+
+        $this->setDataClass($classBak);
 
         // Event
         $this->triggerEvent(
