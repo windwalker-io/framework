@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
- * @license    LGPL-2.0-or-later
+ * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
+ * @license    GNU Lesser General Public License version 3 or later.
  */
 
 namespace Windwalker\Dom\SimpleXml;
@@ -20,7 +20,7 @@ class XmlHelper
      *
      * @var  array
      */
-    static protected $falseValue = [
+    protected static $falseValue = [
         'disabled',
         'false',
         'null',
@@ -34,7 +34,7 @@ class XmlHelper
      *
      * @var  array
      */
-    static protected $trueValue = [
+    protected static $trueValue = [
         'true',
         'yes',
         '1',
