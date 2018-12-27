@@ -1,6 +1,7 @@
 language: php
 
-dist: xenial
+sudo: true
+dist: trusty
 
 php:
   - 5.5
