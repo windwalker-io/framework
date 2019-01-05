@@ -81,3 +81,19 @@ if (!function_exists('show')) {
         }
     }
 }
+
+if (!function_exists('is_stringable')) {
+    /**
+     * is_stringable
+     *
+     * @param mixed $var
+     *
+     * @return  bool
+     *
+     * @since  3.5
+     */
+    function is_stringable($var)
+    {
+        return (is_scalar($var) && !is_bool($var)) || (is_object($var) && method_exists($var, '__toString'));
+    }
+}

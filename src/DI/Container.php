@@ -265,7 +265,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      * @param array  $args
      * @param bool   $protected
      *
-     * @return object
+     * @return mixed
      *
      * @since   3.0
      */
