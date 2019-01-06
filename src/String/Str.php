@@ -847,4 +847,23 @@ class Str
             $encoding
         );
     }
+
+    /**
+     * Quote a string.
+     *
+     * @param   string $string The string to quote.
+     * @param   array  $quote  The quote symbol.
+     *
+     * @return  string Quoted string.
+     */
+    public static function wrap(string $string, $quote = ['"', '"']): string
+    {
+        $quote = (array) $quote;
+
+        if (empty($quote[1])) {
+            $quote[1] = $quote[0];
+        }
+
+        return $quote[0] . $string . $quote[1];
+    }
 }
