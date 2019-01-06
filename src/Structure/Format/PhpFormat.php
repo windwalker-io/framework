@@ -29,6 +29,7 @@ class PhpFormat implements FormatInterface
     public static function structToString($struct, array $options = [])
     {
         $header = StructureHelper::getValue($options, 'header');
+        $asArray = StructureHelper::getValue($options, 'as_array');
 
         // Build the object variables string
         $vars = '';
@@ -41,19 +42,28 @@ class PhpFormat implements FormatInterface
             }
         }
 
-        $str = "<?php\n";
+        if (!$asArray) {
+            $str = "<?php\n";
 
-        if ($header) {
-            $str .= $header . "\n";
+            if ($header) {
+                $str .= $header . "\n";
+            }
+
+            $str .= "\nreturn [\n";
+        } else {
+            $str = "[\n";
         }
 
-        $str .= "\nreturn [\n";
         $str .= $vars;
-        $str .= "];\n";
+        $str .= ']';
 
-        // Use the closing tag if set to true in parameters.
-        if (StructureHelper::getValue($options, 'closingtag', false)) {
-            $str .= "\n?>";
+        if (!$asArray) {
+            $str .= ";\n";
+
+            // Use the closing tag if set to true in parameters.
+            if (StructureHelper::getValue($options, 'closingtag', false)) {
+                $str .= "\n?>";
+            }
         }
 
         return $str;

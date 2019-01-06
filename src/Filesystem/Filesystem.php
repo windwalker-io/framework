@@ -207,6 +207,53 @@ abstract class Filesystem
     }
 
     /**
+     * Support node style double star finder.
+     *
+     * @param string $pattern
+     * @param int    $flags
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function glob(string $pattern, int $flags = 0): array
+    {
+        $pattern = Path::clean($pattern);
+
+        if (strpos($pattern, '**') === false) {
+            $files = glob($pattern, $flags);
+        } else {
+            $position = strpos($pattern, '**');
+            $rootPattern = substr($pattern, 0, $position - 1);
+            $restPattern = substr($pattern, $position + 2);
+            $patterns = array($rootPattern.$restPattern);
+            $rootPattern .= DIRECTORY_SEPARATOR . '*';
+
+            while($dirs = glob($rootPattern, GLOB_ONLYDIR)) {
+                $rootPattern .= DIRECTORY_SEPARATOR . '*';
+
+                foreach($dirs as $dir) {
+                    $patterns[] = $dir . $restPattern;
+                }
+            }
+
+            $files = array();
+
+            foreach($patterns as $pat) {
+                $files[] = static::glob($pat, $flags);
+            }
+
+            $files = array_merge(...$files);
+        }
+
+        $files = array_unique($files);
+
+        sort($files);
+
+        return $files;
+    }
+
+    /**
      * Find all files which matches condition.
      *
      * @param  string  $path        The directory path.
