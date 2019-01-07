@@ -62,7 +62,7 @@ class PostgresqlDatabase extends AbstractDatabase
      */
     public function drop($ifExists = false)
     {
-        if ($this->getName() == $this->db->getDatabase()->getName()) {
+        if ($this->getName() === $this->db->getDatabase()->getName()) {
             $this->db->disconnect();
             $this->db->setDatabaseName(null);
             $this->db->connect();

@@ -57,6 +57,28 @@ class Arr
     }
 
     /**
+     * toIterable
+     *
+     * @param mixed $iterable
+     *
+     * @return  iterable
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function toIterable($iterable): iterable
+    {
+        if (is_iterable($iterable)) {
+            return $iterable;
+        }
+
+        if (is_object($iterable)) {
+            return get_object_vars($iterable);
+        }
+
+        return (array) $iterable;
+    }
+
+    /**
      * Utility function to map an array to a stdClass object.
      *
      * @param   array  $array The array to map.

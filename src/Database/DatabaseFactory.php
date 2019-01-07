@@ -104,11 +104,11 @@ abstract class DatabaseFactory
     {
         // Sanitize the database connector options.
         $options['driver'] = preg_replace('/[^A-Z0-9_\.-]/i', '', $driver);
-        $options['database'] = (isset($options['database'])) ? $options['database'] : null;
-        $options['select'] = (isset($options['select'])) ? $options['select'] : true;
+        $options['database'] = $options['database'] ?? null;
+        $options['select'] = $options['select'] ?? true;
 
         // Use custom Resource
-        $resource = isset($options['resource']) ? $options['resource'] : null;
+        $resource = $options['resource'] ?? null;
 
         // Derive the class name from the driver.
         $class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\'
@@ -132,5 +132,18 @@ abstract class DatabaseFactory
         }
 
         return $instance;
+    }
+
+    /**
+     * reset
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function reset(): void
+    {
+        static::$instances = [];
+        static::$db = null;
     }
 }

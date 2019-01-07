@@ -337,7 +337,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
                 throw new \RuntimeException('Database Query Class not found.');
             }
 
-            return new $class($this->getConnection());
+            return new $class($this);
         } else {
             return $this->query;
         }
@@ -495,6 +495,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      * This function replaces a string identifier <var>$prefix</var> with the string held is the
      * <var>tablePrefix</var> class variable.
      *
+     * @see https://stackoverflow.com/a/31745275
+     *
      * @param   string $sql    The SQL statement to prepare.
      * @param   string $prefix The common table prefix.
      *
@@ -504,78 +506,24 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public function replacePrefix($sql, $prefix = '#__')
     {
-        $startPos = 0;
-        $literal = '';
+        $array = [];
 
-        $sql = trim($sql);
-        $n = strlen($sql);
-
-        while ($startPos < $n) {
-            $ip = strpos($sql, $prefix, $startPos);
-
-            if ($ip === false) {
-                break;
-            }
-
-            $j = strpos($sql, "'", $startPos);
-            $k = strpos($sql, '"', $startPos);
-
-            if (($k !== false) && (($k < $j) || ($j === false))) {
-                $quoteChar = '"';
-                $j = $k;
-            } else {
-                $quoteChar = "'";
-            }
-
-            if ($j === false) {
-                $j = $n;
-            }
-
-            $literal .= str_replace($prefix, $this->tablePrefix, substr($sql, $startPos, $j - $startPos));
-            $startPos = $j;
-
-            $j = $startPos + 1;
-
-            if ($j >= $n) {
-                break;
-            }
-
-            // Quote comes first, find end of quote
-            while (true) {
-                $k = strpos($sql, $quoteChar, $j);
-                $escaped = false;
-
-                if ($k === false) {
-                    break;
+        if ($number = preg_match_all('#((?<![\\\])[\'"])((?:.(?!(?<![\\\])\1))*.?)\1#i', $sql, $matches)) {
+            for ($i = 0; $i < $number; $i++) {
+                if (!empty($matches[0][$i])) {
+                    $array[$i] = trim($matches[0][$i]);
+                    $sql = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
                 }
-
-                $l = $k - 1;
-
-                while ($l >= 0 && $sql{$l} === '\\') {
-                    $l--;
-                    $escaped = !$escaped;
-                }
-
-                if ($escaped) {
-                    $j = $k + 1;
-                    continue;
-                }
-
-                break;
             }
-
-            if ($k === false) {
-                // Error in the query - no end quote; ignore it
-                break;
-            }
-
-            $literal .= substr($sql, $startPos, $k - $startPos + 1);
-            $startPos = $k + 1;
         }
 
-        if ($startPos < $n) {
-            $literal .= substr($sql, $startPos, $n - $startPos);
+        $sql = str_replace($prefix, $this->tablePrefix, $sql);
+
+        foreach ($array as $key => $js) {
+            $sql = str_replace('<#encode:' . $key . ':code#>', $js, $sql);
         }
+
+        return $sql;
 
         return $literal;
     }

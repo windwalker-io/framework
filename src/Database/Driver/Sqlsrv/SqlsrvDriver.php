@@ -2,27 +2,27 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
- * @license    LGPL-2.0-or-later
+ * @copyright  Copyright (C) 2019 ${ORGANIZATION}.
+ * @license    __LICENSE__
  */
 
-namespace Windwalker\Database\Driver\Mysql;
+namespace Windwalker\Database\Driver\Sqlsrv;
 
 use Windwalker\Database\Driver\Pdo\PdoDriver;
 
 /**
- * Class MysqlDriver
+ * The SqlsrvDriver class.
  *
- * @since 2.0
+ * @since  __DEPLOY_VERSION__
  */
-class MysqlDriver extends PdoDriver
+class SqlsrvDriver extends PdoDriver
 {
     /**
      * Property name.
      *
      * @var  string
      */
-    protected $name = 'mysql';
+    protected $name = 'sqlsrv';
 
     /**
      * Is this driver supported.
@@ -31,7 +31,7 @@ class MysqlDriver extends PdoDriver
      */
     public static function isSupported()
     {
-        return in_array('mysql', \PDO::getAvailableDrivers(), true);
+        return in_array('sqlsrv', \PDO::getAvailableDrivers(), true);
     }
 
     /**
@@ -45,8 +45,9 @@ class MysqlDriver extends PdoDriver
      */
     public function __construct(\PDO $connection = null, $options = [])
     {
-        $options['driver'] = 'mysql';
-        $options['charset'] = (isset($options['charset'])) ? $options['charset'] : 'utf8';
+        $options['driver']  = 'sqlsrv';
+//        $options['select']  = $options['select'] ?? true;
+        $options['charset'] = $options['charset'] ?? 'utf8';
 
         parent::__construct($connection, $options);
     }

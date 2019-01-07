@@ -6,11 +6,11 @@
  * @license    LGPL-2.0-or-later
  */
 
-namespace Windwalker\Query\Test\Sqlserv;
+namespace Windwalker\Query\Test\Sqlsrv;
 
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Query;
-use Windwalker\Query\Sqlserv\SqlservQuery;
+use Windwalker\Query\Sqlsrv\SqlsrvQuery;
 use Windwalker\Query\Test\QueryTestTrait;
 use Windwalker\Test\TestHelper;
 
@@ -19,14 +19,14 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class SqlservQueryTest extends AbstractQueryTestCase
+class SqlsrvQueryTest extends AbstractQueryTestCase
 {
     use QueryTestTrait;
 
     /**
      * Test instance.
      *
-     * @var SqlservQuery
+     * @var SqlsrvQuery
      */
     protected $instance;
 
@@ -54,11 +54,11 @@ class SqlservQueryTest extends AbstractQueryTestCase
     /**
      * getQuery
      *
-     * @return  SqlservQuery
+     * @return  SqlsrvQuery
      */
     protected function getQuery()
     {
-        return new SqlservQuery();
+        return new SqlsrvQuery();
     }
 
     /**
@@ -1211,7 +1211,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
      */
     public function testGetName()
     {
-        $this->assertEquals('sqlserv', $this->instance->getName());
+        $this->assertEquals('sqlsrv', $this->instance->getName());
     }
 
     /**

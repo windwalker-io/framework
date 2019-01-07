@@ -8,7 +8,7 @@
 
 namespace Windwalker\Query;
 
-use http\Exception\InvalidArgumentException;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
@@ -28,7 +28,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The database driver.
      *
-     * @var    \PDO
+     * @var    AbstractDatabaseDriver|\PDO
      * @since  2.0
      */
     protected $connection = null;
@@ -273,13 +273,13 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Class constructor.
      *
-     * @param   \PDO $connection The PDO connection object to help us escape string.
+     * @param   AbstractDatabaseDriver|\PDO $connection The PDO connection object to help us escape string.
      *
      * @since   2.0
      */
-    public function __construct(\PDO &$connection = null)
+    public function __construct($connection = null)
     {
-        $this->connection = &$connection ?: ConnectionContainer::getConnection($this->name);
+        $this->connection = $connection ?: ConnectionContainer::getConnection($this->name);
     }
 
     /**
@@ -2027,9 +2027,9 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Method to get property Connection
      *
-     * @return  \PDO
+     * @return  AbstractDatabaseDriver|\PDO
      */
-    public function &getConnection()
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -2037,13 +2037,13 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Method to set property connection
      *
-     * @param   \PDO $connection
+     * @param   AbstractDatabaseDriver|\PDO $connection
      *
      * @return  static  Return self to support chaining.
      */
-    public function setConnection(&$connection)
+    public function setConnection($connection)
     {
-        $this->connection = &$connection;
+        $this->connection = $connection;
 
         return $this;
     }
@@ -2053,22 +2053,27 @@ class Query implements QueryInterface, PreparableInterface
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param   string|integer|array $key            The key that will be used in your SQL query to reference the
+     * @param   string|integer|array  $key           The key that will be used in your SQL query to reference the
      *                                               value. Usually of the form ':key', but can also be an integer.
      * @param   mixed                &$value         The value that will be bound. The value is passed by reference to
      *                                               support output parameters such as those possible with stored
      *                                               procedures.
-     * @param   integer              $dataType       Constant corresponding to a SQL datatype.
-     * @param   integer              $length         The length of the variable. Usually required for OUTPUT
+     * @param   integer               $dataType      Constant corresponding to a SQL datatype.
+     * @param   integer               $length        The length of the variable. Usually required for OUTPUT
      *                                               parameters.
-     * @param   array                $driverOptions  Optional driver options to be used.
+     * @param   array                 $driverOptions Optional driver options to be used.
      *
      * @return  static
      *
      * @since   2.0
      */
-    public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
-    {
+    public function bind(
+        $key = null,
+        &$value = null,
+        $dataType = \PDO::PARAM_STR,
+        $length = null,
+        $driverOptions = null
+    ) {
         // If is array, loop for all elements.
         if (is_array($key)) {
             foreach ($key as $k => $v) {

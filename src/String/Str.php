@@ -8,6 +8,8 @@
 
 namespace Windwalker\String;
 
+use Windwalker\Utilities\Arr;
+
 /**
  * The StringHelper class.
  *
@@ -24,6 +26,29 @@ class Str
     const ENCODING_UTF8 = 'UTF-8';
 
     const ENCODING_US_ASCII = 'US-ASCII';
+
+    /**
+     * Convert all to string.
+     *
+     * @param mixed $data The data to convert.
+     * @param bool  $dump If is array or object, will dump it if this argument set to TRUE.
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function toString($data, bool $dump = true): string
+    {
+        if (is_array($data)) {
+            $data = $dump ? Arr::dump($data) : 'Array()';
+        }
+
+        if (is_object($data)) {
+            $data = $dump ? Arr::dump($data) : sprintf('[Object %s]', get_class($data));
+        }
+
+        return (string) $data;
+    }
 
     /**
      * at

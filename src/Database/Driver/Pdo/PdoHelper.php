@@ -35,9 +35,16 @@ class PdoHelper
     {
         // Parse DSN to array
         $dsn = str_replace(';', "\n", $dsn);
-        $dsn = parse_ini_string($dsn);
 
-        return $dsn;
+        $values = [];
+
+        foreach (explode("\n", $dsn) as $value) {
+            [$k, $v] = explode('=', trim($value));
+
+            $values[$k] = $v;
+        }
+
+        return $values;
     }
 
     /**
@@ -53,7 +60,7 @@ class PdoHelper
     {
         self::$options = $options;
 
-        if (!is_callable([get_called_class(), $driver])) {
+        if (!is_callable([static::class, $driver])) {
             throw new \DomainException('The ' . $driver . ' driver is not supported.');
         }
 
@@ -174,16 +181,26 @@ class PdoHelper
      *
      * @return  array
      */
-    protected static function mssql()
+    protected static function sqlsrv()
     {
         return [
-            'mssql:host={HOST};port={PORT};dbname={DBNAME}',
+            'sqlsrv:Server={HOST},{PORT};Database={DBNAME}',
             [
                 '{HOST}' => static::getOption('host', 'localhost'),
                 '{PORT}' => static::getOption('port', 1433),
                 '{DBNAME}' => static::getOption('database'),
             ],
         ];
+    }
+
+    /**
+     * mssql
+     *
+     * @return  array
+     */
+    protected static function mssql()
+    {
+        return self::sqlsrv();
     }
 
     /**
