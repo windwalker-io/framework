@@ -11,6 +11,7 @@ namespace Windwalker\Database\Driver\Sqlsrv;
 use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Schema;
+use Windwalker\Query\Sqlsrv\SqlsrvGrammar;
 
 /**
  * The SqlsrvTable class.
@@ -22,14 +23,111 @@ class SqlsrvTable extends AbstractTable
     /**
      * create
      *
-     * @param   callable|Schema $callback
+     * @param   callable|Schema $schema
      * @param   bool            $ifNotExists
      * @param   array           $options
      *
      * @return  static
      */
-    public function create($callback, $ifNotExists = true, $options = [])
+    public function create($schema, $ifNotExists = true, $options = [])
     {
+        $defaultOptions = [
+            'auto_increment' => 1,
+            'sequences' => [],
+        ];
+
+        $options = array_merge($defaultOptions, $options);
+        $schema = $this->callSchema($schema);
+        $columns = [];
+        $comments = [];
+        $primary = [];
+
+        foreach ($schema->getColumns() as $column) {
+            $column = $this->prepareColumn($column);
+
+            $columns[$column->getName()] = SqlsrvGrammar::build(
+                $column->getType() . $column->getLength(),
+                $column->getAllowNull() ? null : 'NOT NULL',
+                $column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
+            );
+
+            // Comment
+            if ($column->getComment()) {
+                $comments[$column->getName()] = $column->getComment();
+            }
+
+            // Primary
+            if ($column->isPrimary()) {
+                $primary[] = $column->getName();
+            }
+        }
+
+        $keys = [];
+        $keyComments = [];
+
+        foreach ($schema->getIndexes() as $index) {
+            $keys[$index->getName()] = [
+                'type' => strtoupper($index->getType()),
+                'name' => $index->getName(),
+                'columns' => $index->getColumns(),
+            ];
+
+            if ($index->getComment()) {
+                $keyComments[$index->getName()] = $index->getComment();
+            }
+        }
+
+        $options['comments'] = $comments;
+        $options['key_comments'] = $keyComments;
+
+//        $inherits = isset($options['inherits']) ? $options['inherits'] : null;
+//        $tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
+
+        $query = SqlsrvGrammar::createTable(
+            $this->getName(),
+            $columns,
+            $primary,
+            $keys,
+//            $inherits,
+            $ifNotExists
+//            $tablespace
+        );
+
+//        $comments = isset($options['comments']) ? $options['comments'] : [];
+//        $keyComments = isset($options['key_comments']) ? $options['key_comments'] : [];
+//
+//        // Comments
+//        foreach ($comments as $name => $comment) {
+//            $query .= ";\n" . SqlsrvGrammar::comment('COLUMN', $this->getName(), $name, $comment);
+//        }
+//
+//        foreach ($keyComments as $name => $comment) {
+//            $query .= ";\n" . SqlsrvGrammar::comment('INDEX', 'public', $name, $comment);
+//        }
+show($query);
+        $this->db->setQuery($query)->execute();
+
+        return $this->reset();
+    }
+
+    /**
+     * prepareColumn
+     *
+     * @param Column $column
+     *
+     * @return  Column
+     */
+    protected function prepareColumn(Column $column)
+    {
+        if ($column->getType() === SqlsrvType::FLOAT && strpos($column->getLength(), ',') !== false) {
+            $column->length(24);
+        }
+
+        if ($column->getType() === SqlsrvType::DOUBLE && strpos($column->getLength(), ',') !== false) {
+            $column->length(53);
+        }
+
+        return parent::prepareColumn($column);
     }
 
     /**

@@ -43,6 +43,7 @@ class MysqlType extends DataType
     public static $typeDefinitions = [
         self::BOOLEAN => [1, 0, 'bool'],
         self::INTEGER => [11, 0, 'int'],
+        self::BIGINT => [20, 0, 'int'],
         self::ENUM => [null, '', 'string'],
         self::SET => [null, '', 'string'],
         self::DATETIME => [null, '1000-01-01 00:00:00', 'string'],

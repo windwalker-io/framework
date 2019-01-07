@@ -100,13 +100,88 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      * createTable
      *
      * @param string $name
-     * @param array $columns
+     * @param array  $columns
+     *
+     * @param array  $pks
+     * @param array  $keys
+     * @param bool   $ifNotExists
      *
      * @return  string
      */
-    public static function createTable($name, $columns)
-    {
+    public static function createTable(
+        $name,
+        $columns,
+        $pks = [],
+        $keys = [],
+        $ifNotExists = true
+    ) {
+        $query = static::getQuery();
+        $cols = [];
 
+        foreach ($columns as $cName => $details) {
+            $details = (array) $details;
+
+            array_unshift($details, $query->quoteName($cName));
+
+            $cols[] = call_user_func_array([get_called_class(), 'build'], $details);
+        }
+
+        if (!is_array($keys)) {
+            throw new \InvalidArgumentException('Keys should be an array');
+        }
+
+        if ($pks) {
+            $cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
+        }
+
+        $indexes = [];
+
+        foreach ($keys as $key) {
+            $define = [
+                'type' => 'INDEX',
+                'name' => null,
+                'columns' => [],
+                'comment' => '',
+            ];
+
+            if (!is_array($key)) {
+                throw new \InvalidArgumentException('Every key data should be an array with "type", "name", "columns"');
+            }
+
+            $define = array_merge($define, $key);
+
+            $indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare(
+                $define['name'],
+                $define['columns'],
+                $name
+            );
+        }
+
+        $indexes = implode(";\n", $indexes) . ';';
+
+        $cols = "(\n" . implode(",\n", $cols) . "\n)";
+
+        $sql = static::build(
+            'CREATE TABLE',
+            $query->quoteName($name),
+            $cols,
+            ";\n",
+            $indexes ? $indexes : null
+        );
+
+        if ($ifNotExists) {
+            self::getQuery(true)->format(
+                "if not exists (select * from sysobjects where name=%q and xtype='U')\n$sql\ngo;",
+                $name
+            );
+        }
+
+        static::build(
+            $sql,
+            $indexes ? $indexes : null
+        );
+
+        return $sql;
     }
 
     /**
@@ -175,7 +250,56 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      */
     public static function addIndex($table, $type, $columns, $name)
     {
+        $cols = static::buildIndexDeclare($name, $columns, $table);
 
+        return static::build(
+            'CREATE',
+            strtoupper($type),
+            $cols
+        );
+    }
+
+    /**
+     * buildIndexDeclare
+     *
+     * @param string $name
+     * @param array  $columns
+     * @param string $table
+     *
+     * @return string
+     */
+    public static function buildIndexDeclare($name, $columns, $table = null)
+    {
+        $query = static::getQuery();
+        $cols = [];
+
+        foreach ((array) $columns as $key => $val) {
+            if (is_numeric($key)) {
+                $cols[] = $query->quoteName($val);
+            } else {
+                if (!is_numeric($val)) {
+                    $string = is_string($val) ? ' ' . $query->quote($val) : '';
+
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Index length should be number, (%s)%s given.',
+                            gettype($val),
+                            $string
+                        )
+                    );
+                }
+
+                $cols[] = $query->quoteName($key) . '(' . $val . ')';
+            }
+        }
+
+        $cols = '(' . implode(', ', $cols) . ')';
+
+        return static::build(
+            $name ? $query->quoteName($name) : null,
+            $table ? 'ON ' . $query->quoteName($table) : null,
+            $cols
+        );
     }
 
     /**

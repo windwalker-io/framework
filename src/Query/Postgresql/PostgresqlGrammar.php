@@ -406,8 +406,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      *
      * @param string $name
      * @param array  $columns
-     *
-     * @param        $table
+     * @param string $table
      *
      * @return string
      */

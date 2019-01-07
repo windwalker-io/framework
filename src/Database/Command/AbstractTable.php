@@ -559,11 +559,12 @@ abstract class AbstractTable
 
         $length = $length ? '(' . $length . ')' : null;
 
+        $column->type($type);
+
         // Prepare default value
         $this->prepareDefaultValue($column);
 
-        return $column->type($type)
-            ->length($length);
+        return $column->length($length);
     }
 
     /**

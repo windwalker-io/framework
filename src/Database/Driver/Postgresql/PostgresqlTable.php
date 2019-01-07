@@ -12,6 +12,7 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
@@ -24,8 +25,9 @@ class PostgresqlTable extends AbstractTable
     /**
      * create
      *
-     * @param bool  $ifNotExists
-     * @param array $options
+     * @param callable|Schema $schema
+     * @param bool            $ifNotExists
+     * @param array           $options
      *
      * @return  static
      */
