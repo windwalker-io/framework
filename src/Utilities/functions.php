@@ -92,7 +92,7 @@ if (!function_exists('is_stringable')) {
      *
      * @since  3.5
      */
-    function is_stringable($var)
+    function is_stringable($var): bool
     {
         return (is_scalar($var) && !is_bool($var)) || (is_object($var) && method_exists($var, '__toString'));
     }
