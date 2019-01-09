@@ -263,8 +263,18 @@ class PdoDriver extends AbstractDatabaseDriver
 
         try {
             if ($prepare) {
+                // Set query string into PDO, but keep query object in $this->query
+                // that we can bind params when execute().
+                $this->cursor = $this->connection->prepare($query, $this->driverOptions);
+
+                if (!($this->cursor instanceof \PDOStatement)) {
+                    throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
+                }
+
                 // Bind the variables:
-                if ($this->query instanceof PreparableInterface && count($bounded = &$this->query->getBounded())) {
+                if ($this->query instanceof PreparableInterface) {
+                    $bounded = &$this->query->getBounded();
+
                     foreach ($bounded as $key => $data) {
                         $this->cursor->bindParam(
                             $key,
@@ -274,15 +284,7 @@ class PdoDriver extends AbstractDatabaseDriver
                             $data->driverOptions
                         );
                     }
-
-                    if (!($this->cursor instanceof \PDOStatement)) {
-                        throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
-                    }
                 }
-
-                // Set query string into PDO, but keep query object in $this->query
-                // that we can bind params when execute().
-                $this->cursor = $this->connection->prepare($query, $this->driverOptions);
 
                 $this->cursor->execute();
             } else {
