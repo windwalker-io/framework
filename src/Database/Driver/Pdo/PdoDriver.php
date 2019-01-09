@@ -249,34 +249,45 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Execute the SQL statement.
      *
-     * @throws \RuntimeException
+     * @param bool $prepare
+     *
      * @return  \PDOStatement|false  A database cursor resource on success, boolean false on failure.
      *
+     * @throws \RuntimeException
      * @since   2.0
      */
-    public function doExecute()
+    public function doExecute(bool $prepare = true)
     {
         // Replace prefix
         $query = $this->replacePrefix((string) $this->query);
 
-        // Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
-        $this->cursor = $this->connection->prepare($query, $this->driverOptions);
-
-        if (!($this->cursor instanceof \PDOStatement)) {
-            throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
-        }
-
-        // Bind the variables:
-        if ($this->query instanceof PreparableInterface) {
-            $bounded = &$this->query->getBounded();
-
-            foreach ($bounded as $key => $data) {
-                $this->cursor->bindParam($key, $data->value, $data->dataType, $data->length, $data->driverOptions);
-            }
-        }
-
         try {
-            $this->cursor->execute();
+            if ($prepare) {
+                // Bind the variables:
+                if ($this->query instanceof PreparableInterface && count($bounded = &$this->query->getBounded())) {
+                    foreach ($bounded as $key => $data) {
+                        $this->cursor->bindParam(
+                            $key,
+                            $data->value,
+                            $data->dataType,
+                            $data->length,
+                            $data->driverOptions
+                        );
+                    }
+
+                    if (!($this->cursor instanceof \PDOStatement)) {
+                        throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
+                    }
+                }
+
+                // Set query string into PDO, but keep query object in $this->query
+                // that we can bind params when execute().
+                $this->cursor = $this->connection->prepare($query, $this->driverOptions);
+
+                $this->cursor->execute();
+            } else {
+                $this->connection->exec($query);
+            }
         } catch (\PDOException $e) {
             $msg = $e->getMessage();
 
@@ -287,7 +298,7 @@ class PdoDriver extends AbstractDatabaseDriver
             throw new \PDOException($msg, (int) $e->getCode(), $e);
         }
 
-        $this->lastQuery = $this->cursor->queryString;
+        $this->lastQuery = $this->cursor->queryString ?? $query;
 
         return $this->cursor;
     }

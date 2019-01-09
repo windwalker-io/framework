@@ -206,13 +206,23 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Execute the SQL statement.
      *
+     * @param   mixed $query The SQL statement to set either as a Query object or a string.
+     *
      * @return  resource|false  Return Resource to do more or false if query failure.
      *
      * @since   2.0
      * @throws  \RuntimeException
      */
-    public function execute()
+    public function execute($query = null)
     {
+        $prepare = true;
+
+        if ($query !== null) {
+            $this->setQuery($query);
+
+            $prepare = false;
+        }
+
         $this->connect();
 
         if (!$this->connection) {
@@ -222,22 +232,36 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         // Increment the query counter.
         $this->count++;
 
-        if ($this->middlewares) {
-            // Prepare middleware data
-            $data = new \stdClass();
-            $data->debug = &$this->debug;
-            $data->query = &$this->query;
-            $data->sql = $this->replacePrefix((string) $this->query);
-            $data->db = $this;
+//        if ($this->middlewares) {
+//            // Prepare middleware data
+//            $data = new \stdClass();
+//            $data->debug = &$this->debug;
+//            $data->query = &$this->query;
+//            $data->sql = $this->replacePrefix((string) $this->query);
+//            $data->db = $this;
+//
+//            if ($this->query instanceof PreparableInterface) {
+//                $data->bounded = $this->query->getBounded();
+//            }
+//
+//            return $this->middlewares->execute($data);
+//        }
 
-            if ($this->query instanceof PreparableInterface) {
-                $data->bounded = $this->query->getBounded();
-            }
+        return $this->doExecute($prepare);
+    }
 
-            return $this->middlewares->execute($data);
-        }
-
-        return $this->doExecute();
+    /**
+     * Sets the SQL statement string for later execution.
+     *
+     * @param   mixed $query The SQL statement to set either as a Query object or a string.
+     *
+     * @return  AbstractDatabaseDriver  This object to support method chaining.
+     *
+     * @since   2.0
+     */
+    public function prepare($query)
+    {
+        return $this->setQuery($query);
     }
 
     /**
@@ -259,12 +283,14 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Execute the SQL statement.
      *
+     * @param bool $prepare
+     *
      * @return  resource|false  A database cursor resource on success, boolean false on failure.
      *
+     * @throws \RuntimeException
      * @since   2.0
-     * @throws  \RuntimeException
      */
-    abstract protected function doExecute();
+    abstract protected function doExecute(bool $prepare = true);
 
     /**
      * Select a database for use.

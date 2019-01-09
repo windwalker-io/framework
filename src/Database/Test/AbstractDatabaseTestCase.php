@@ -164,7 +164,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     {
         $queries = static::getSetupSql();
 
-        self::$dbo->setQuery($queries)->execute();
+        self::$dbo->execute($queries);
 
 //        DatabaseHelper::batchQuery(static::$dbo, $queries);
     }
