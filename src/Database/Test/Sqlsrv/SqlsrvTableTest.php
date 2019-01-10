@@ -131,9 +131,9 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
         );
 
         $columns = $table->getColumnDetails();
-
-        $this->assertEquals('int(11) unsigned', $columns['id']->Type);
-        $this->assertEquals('varchar(190)', $columns['name']->Type);
+show($columns);
+        $this->assertEquals('int', $columns['id']->Type);
+        $this->assertEquals('nvarchar(190)', $columns['name']->Type);
         $this->assertEquals('UNI', $columns['alias']->Key);
         $this->assertEquals('float(10,2) unsigned', $columns['float']->Type);
         $this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['created']->Default);

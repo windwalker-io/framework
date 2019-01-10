@@ -151,6 +151,33 @@ show($query);
      */
     public function getColumnDetails($refresh = false)
     {
+        $details = [];
+        $table = $this->db->replacePrefix((string) $this->name);
+
+        $query = $this->db->getQuery(true);
+        $query->select([
+            'column_name AS Field',
+            'data_type AS Type',
+            'is_nullable AS ' . $query->quote('Null'),
+            'column_default AS ' . $query->quote('Default')
+        ])->from('information_schema.columns')
+            ->where('table_name = %q', $table);
+
+        $fields = $this->db->setQuery($query)->loadAll();
+
+        // If we only want the type as the value add just that to the list.
+        // If we want the whole field data object add that to the list.
+        foreach ($fields as $field) {
+            $field->Default = preg_replace(
+                "/(^(\(\(|\('|\(N'|\()|(('\)|(?<!\()\)\)|\))$))/i",
+                '',
+                $field->Default
+            );
+
+            $details[$field->Field] = $field;
+        }
+
+        return $details;
     }
 
     /**
