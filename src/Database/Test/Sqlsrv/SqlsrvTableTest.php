@@ -122,6 +122,11 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
                 $schema->varchar('name')->length(190)->allowNull(false);
                 $schema->varchar('alias')->length(190);
                 $schema->float('float');
+                $schema->text('intro');
+                $schema->longtext('full');
+                $schema->integer('num')->length(5);
+                $schema->tinyint('state')->length(2);
+                $schema->decimal('price')->length('20,6');
                 $schema->datetime('created')->defaultValue(null);
 
                 $schema->addIndex('name', 'idx_name')->comment('Test');
@@ -131,11 +136,11 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
         );
 
         $columns = $table->getColumnDetails();
-show($columns);
-        $this->assertEquals('int', $columns['id']->Type);
+
+        $this->assertEquals('int(10)', $columns['id']->Type);
         $this->assertEquals('nvarchar(190)', $columns['name']->Type);
         $this->assertEquals('UNI', $columns['alias']->Key);
-        $this->assertEquals('float(10,2) unsigned', $columns['float']->Type);
+        $this->assertEquals('real(24)', $columns['float']->Type);
         $this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['created']->Default);
 
         $this->assertTrue($table->hasIndex('idx_cloud_float'));

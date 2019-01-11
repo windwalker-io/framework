@@ -127,7 +127,17 @@ show($query);
             $column->length(53);
         }
 
-        return parent::prepareColumn($column);
+        $column = parent::prepareColumn($column);
+
+        if ($column->getType() === SqlsrvType::INTEGER) {
+            $column->length(null);
+        }
+
+        if ($column->getType() === SqlsrvType::SMALLINT) {
+            $column->length(null);
+        }
+
+        return $column;
     }
 
     /**
@@ -159,15 +169,37 @@ show($query);
             'column_name AS Field',
             'data_type AS Type',
             'is_nullable AS ' . $query->quote('Null'),
-            'column_default AS ' . $query->quote('Default')
+            'column_default AS ' . $query->quote('Default'),
+            'character_maximum_length',
+            'numeric_precision',
+            'numeric_scale',
         ])->from('information_schema.columns')
             ->where('table_name = %q', $table);
 
         $fields = $this->db->setQuery($query)->loadAll();
 
-        // If we only want the type as the value add just that to the list.
-        // If we want the whole field data object add that to the list.
+        $keys = $this->getIndexes();
+
         foreach ($fields as $field) {
+            // Type & Length
+            $length = ((int) $field->character_maximum_length) > 0
+                ? $field->character_maximum_length
+                : null;
+
+            if ($field->numeric_precision) {
+                $length = $field->numeric_precision;
+
+                if ($field->numeric_scale) {
+                    $length .= ',' . $field->numeric_scale;
+                }
+            }
+
+            if ($length) {
+                $field->Type .= '(' . $length . ')';
+            }
+
+            // Default
+            // Parse ('foo') as foo
             $field->Default = preg_replace(
                 "/(^(\(\(|\('|\(N'|\()|(('\)|(?<!\()\)\)|\))$))/i",
                 '',
@@ -175,6 +207,31 @@ show($query);
             );
 
             $details[$field->Field] = $field;
+
+            // TODO: Add AI info
+            if (strpos($field->Default, 'nextval') !== false) {
+//                $field->Extra = 'auto_increment';
+            }
+
+            // Find key
+            $index = null;
+
+            foreach ($keys as $key) {
+                if ($key->Column_name == $field->Field) {
+                    $index = $key;
+                    break;
+                }
+            }
+
+            if ($index) {
+                if ($index->Is_primary) {
+                    $field->Key = 'PRI';
+                } elseif (!$index->Non_unique) {
+                    $field->Key = 'UNI';
+                } else {
+                    $field->Key = 'MUL';
+                }
+            }
         }
 
         return $details;
@@ -287,5 +344,55 @@ show($query);
      */
     public function getIndexes()
     {
+        $query = $this->db->getQuery(true);
+        $table = $this->db->replacePrefix($this->name);
+
+        $query->select([
+            'tbl.name AS table_name',
+            'col.name AS column_name',
+            'idx.name AS index_name',
+            'idx.*'
+        ])
+            ->from('sys.columns AS col')
+            ->leftJoin(
+                'sys.tables AS tbl',
+                'col.object_id = tbl.object_id'
+            )
+            ->leftJoin(
+                'sys.index_columns AS ic',
+                'col.column_id = ic.column_id AND ic.object_id = tbl.object_id'
+            )
+            ->leftJoin(
+                'sys.indexes AS idx',
+                'idx.object_id = tbl.object_id AND idx.index_id = ic.index_id'
+            )
+            ->where('tbl.name = %q', $table);
+
+        $indexes = $this->db->setQuery($query)->loadAll();
+
+        $keys = [];
+
+        foreach ($indexes as $index) {
+            $key = new \stdClass();
+
+            $key->Table = $table;
+            $key->Is_primary = $index->is_primary_key;
+            $key->Non_unique = !$index->is_unique;
+            $key->Key_name = $index->index_name;
+            $key->Column_name = $index->column_name;
+            $key->Collation = 'A';
+            $key->Cardinality = 0;
+            $key->Sub_part = null;
+            $key->Packed = null;
+            $key->Null = null;
+            $key->Index_type = 'BTREE';
+            // TODO: Finish comments query
+            $key->Comment = null;
+            $key->Index_comment = null;
+
+            $keys[] = $key;
+        }
+
+        return $keys;
     }
 }
