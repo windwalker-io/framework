@@ -517,6 +517,32 @@ SQL;
      */
     public function dropIndex($name)
     {
+        if (strtolower($name) === 'identity') {
+            throw new \LogicException('Unable to remove identity.');
+        }
+
+        if (strtolower($name) === 'primary') {
+            $sql = <<<SQL
+DECLARE @table NVARCHAR(512), @sql NVARCHAR(MAX);
+
+SELECT @table = N%q;
+
+SELECT @sql = 'ALTER TABLE ' + @table 
+    + ' DROP CONSTRAINT ' + name + ';'
+    FROM sys.key_constraints
+    WHERE [type] = 'PK'
+    AND [parent_object_id] = OBJECT_ID(@table);
+
+EXEC sp_executeSQL @sql;
+SQL;
+
+            $this->db->execute(
+                $this->db->getQuery(true)->format($sql, $this->db->replacePrefix($this->getName()))
+            );
+
+            return $this->reset();
+        }
+
         if (!$this->hasIndex($name)) {
             return $this;
         }
@@ -560,7 +586,9 @@ SQL;
                 'sys.indexes AS idx',
                 'idx.object_id = tbl.object_id AND idx.index_id = ic.index_id'
             )
-            ->where('tbl.name = %q', $table);
+            ->where('tbl.name = %q', $table)
+
+            ->where('(idx.name IS NOT NULL OR col.is_identity = 1 OR idx.is_primary_key = 1)');
 
         $indexes = $this->db->prepare($query)->loadAll();
 
@@ -587,7 +615,7 @@ SQL;
 
             $keys[] = $key;
         }
-show($indexes, $keys);
+
         return $keys;
     }
 }

@@ -188,12 +188,21 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      * dropTable
      *
      * @param string $table
+     * @param bool   $ifExists
+     * @param string $option
      *
      * @return  string
      */
-    public static function dropTable($table)
+    public static function dropTable($table, $ifExists = false, $option = '')
     {
+        $query = static::getQuery();
 
+        return static::build(
+            'DROP TABLE',
+            $ifExists ? 'IF EXISTS' : null,
+            $query->quoteName($table),
+            $option
+        );
     }
 
     /**

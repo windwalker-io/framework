@@ -383,6 +383,20 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     }
 
     /**
+     * testDrop
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function testDrop()
+    {
+        $this->db->getTable('#__strict')->drop(true);
+
+        self::assertFalse(in_array('ww_strict', $this->db->getDatabase()->getTables(true)));
+    }
+
+    /**
      * Destructor
      */
     public function __destruct()
