@@ -123,7 +123,7 @@ class SqlsrvGrammar extends AbstractQueryGrammar
 
             array_unshift($details, $query->quoteName($cName));
 
-            $cols[] = call_user_func_array([get_called_class(), 'build'], $details);
+            $cols[] = call_user_func_array([static::class, 'build'], $details);
         }
 
         if (!is_array($keys)) {

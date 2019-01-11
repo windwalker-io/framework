@@ -122,6 +122,11 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
                 $schema->varchar('name')->length(190)->allowNull(false);
                 $schema->varchar('alias')->length(190);
                 $schema->float('float');
+                $schema->text('intro');
+                $schema->longtext('full');
+                $schema->integer('num')->length(5);
+                $schema->tinyint('state')->length(2);
+                $schema->decimal('price')->length('20,6');
                 $schema->datetime('created')->defaultValue(null);
 
                 $schema->addIndex('name', 'idx_name')->comment('Test');
@@ -132,10 +137,10 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
 
         $columns = $table->getColumnDetails();
 
-        $this->assertEquals('int(11) unsigned', $columns['id']->Type);
-        $this->assertEquals('varchar(190)', $columns['name']->Type);
+        $this->assertEquals('int(10)', $columns['id']->Type);
+        $this->assertEquals('nvarchar(190)', $columns['name']->Type);
         $this->assertEquals('UNI', $columns['alias']->Key);
-        $this->assertEquals('float(10,2) unsigned', $columns['float']->Type);
+        $this->assertEquals('real(24)', $columns['float']->Type);
         $this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['created']->Default);
 
         $this->assertTrue($table->hasIndex('idx_cloud_float'));
@@ -163,14 +168,14 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
         $this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['date']->Default);
 
         try {
-            $this->db->setQuery('INSERT #__strict VALUES (1, "2013-07-12T03:00:00+07:00", "")')->execute();
+            $this->db->setQuery("INSERT #__strict VALUES ('2013-07-12T03:00:00+07:00', '')")->execute();
         } catch (\PDOException $e) {
             // SQLSTATE[22007]: Invalid datetime format: 1292 Incorrect datetime value: '2013-07-12T03:00:00+07:00' for column 'date' at row 1
             $this->assertEquals(22007, $e->getCode());
         }
 
         try {
-            $this->db->setQuery('INSERT #__strict VALUES (1, "2013-07-12 03:00:00", NULL)')->execute();
+            $this->db->setQuery("INSERT #__strict VALUES ('2013-07-12 03:00:00', NULL)")->execute();
         } catch (\PDOException $e) {
             // SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'data' cannot be null
             $this->assertEquals(23000, $e->getCode());
@@ -192,8 +197,8 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
 
         $columns = $table->getColumnDetails();
 
-        $this->assertEquals('int(11) unsigned', $columns['id']->Type);
-        $this->assertEquals('varchar(190)', $columns['name']->Type);
+        $this->assertEquals('int(10)', $columns['id']->Type);
+        $this->assertEquals('nvarchar(190)', $columns['name']->Type);
     }
 
     /**
