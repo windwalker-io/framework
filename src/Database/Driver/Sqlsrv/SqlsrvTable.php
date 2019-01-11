@@ -10,6 +10,7 @@ namespace Windwalker\Database\Driver\Sqlsrv;
 
 use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Sqlsrv\SqlsrvGrammar;
 
@@ -81,32 +82,27 @@ class SqlsrvTable extends AbstractTable
         $options['comments'] = $comments;
         $options['key_comments'] = $keyComments;
 
-//        $inherits = isset($options['inherits']) ? $options['inherits'] : null;
-//        $tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
-
         $query = SqlsrvGrammar::createTable(
             $this->getName(),
             $columns,
             $primary,
             $keys,
-//            $inherits,
             $ifNotExists
-//            $tablespace
         );
 
-//        $comments = isset($options['comments']) ? $options['comments'] : [];
-//        $keyComments = isset($options['key_comments']) ? $options['key_comments'] : [];
-//
-//        // Comments
-//        foreach ($comments as $name => $comment) {
-//            $query .= ";\n" . SqlsrvGrammar::comment('COLUMN', $this->getName(), $name, $comment);
-//        }
-//
-//        foreach ($keyComments as $name => $comment) {
-//            $query .= ";\n" . SqlsrvGrammar::comment('INDEX', 'public', $name, $comment);
-//        }
-show($query);
-        $this->db->setQuery($query)->execute();
+        $comments = isset($options['comments']) ? $options['comments'] : [];
+
+        // Comments
+        foreach ($comments as $name => $comment) {
+            $query .= ";\n" . SqlsrvGrammar::comment(
+                'COLUMN',
+                $this->db->replacePrefix($this->getName()),
+                $name,
+                $comment
+            );
+        }
+
+        $this->db->execute($query);
 
         return $this->reset();
     }
@@ -130,11 +126,7 @@ show($query);
 
         $column = parent::prepareColumn($column);
 
-        if ($column->getType() === SqlsrvType::INTEGER) {
-            $column->length(null);
-        }
-
-        if ($column->getType() === SqlsrvType::SMALLINT) {
+        if (SqlsrvType::noLength($column->getType())) {
             $column->length(null);
         }
 
@@ -147,7 +139,7 @@ show($query);
      * @param string  $newName
      * @param boolean $returnNew
      *
-     * @return  $this
+     * @return  static
      */
     public function rename($newName, $returnNew = true)
     {
@@ -193,11 +185,14 @@ show($query);
         ])->from('information_schema.columns')
             ->where('table_name = %q', $table);
 
-        $fields = $this->db->setQuery($query)->loadAll();
+        $fields = $this->db->prepare($query)->loadAll();
 
         $keys = $this->getIndexes();
 
         foreach ($fields as $field) {
+            $field->Key = '';
+            $field->Extra = '';
+
             // Type & Length
             $length = ((int) $field->character_maximum_length) > 0
                 ? $field->character_maximum_length
@@ -225,10 +220,6 @@ show($query);
 
             $details[$field->Field] = $field;
 
-            if ($field->is_identity) {
-                $field->Extra = 'auto_increment';
-            }
-
             // Find key
             $index = null;
 
@@ -246,6 +237,10 @@ show($query);
                     $field->Key = 'UNI';
                 } else {
                     $field->Key = 'MUL';
+                }
+
+                if ($index->is_identity) {
+                    $field->Extra = 'auto_increment';
                 }
             }
         }
@@ -275,6 +270,39 @@ show($query);
         $comment = '',
         $options = []
     ) {
+        $column = $name;
+
+        if (!($column instanceof Column)) {
+            $column = new Column($name, $type, $signed, $allowNull, $default, $comment, $options);
+        }
+
+        if ($this->hasColumn($column->getName())) {
+            return $this;
+        }
+
+        $this->prepareColumn($column);
+
+        $query = SqlsrvGrammar::addColumn(
+            $this->getName(),
+            $column->getName(),
+            $column->getType() . $column->getLength(),
+            $column->getAllowNull(),
+            $column->getDefault()
+        );
+
+        $this->db->execute($query);
+
+        if ($column->getComment()) {
+            $query = SqlsrvGrammar::comment(
+                'COLUMN',
+                $this->db->replacePrefix($this->getName()),
+                $column->getName(),
+                $column->getComment()
+            );
+            $this->db->execute($query);
+        }
+
+        return $this;
     }
 
     /**
@@ -299,6 +327,77 @@ show($query);
         $comment = '',
         $options = []
     ) {
+        $column = $name;
+
+        if ($column instanceof Column) {
+            $name = $column->getName();
+            $type = $column->getType();
+            $length = $column->getLength();
+            $allowNull = $column->getAllowNull();
+            $default = $column->getDefault();
+            $comment = $column->getComment();
+        }
+
+        if (!$this->hasColumn($name)) {
+            return $this;
+        }
+
+        $type = SqlsrvType::getType($type);
+        $length = isset($length) ? $length : SqlsrvType::getLength($type);
+        $length = SqlsrvType::noLength($type) ? null : $length;
+        $length = $length ? '(' . $length . ')' : null;
+
+        $query = $this->db->getQuery(true);
+
+        // Sqlsrv must drop default constraint first
+        $q = <<<SQL
+DECLARE @ConstraintName nvarchar(200)
+    
+SELECT @ConstraintName = Name FROM SYS.DEFAULT_CONSTRAINTS
+WHERE PARENT_OBJECT_ID = OBJECT_ID(%q)
+AND PARENT_COLUMN_ID = (SELECT column_id FROM sys.columns
+                        WHERE NAME = N%q
+                        AND object_id = OBJECT_ID(N%q))
+    
+IF @ConstraintName IS NOT NULL
+EXEC('ALTER TABLE %n DROP CONSTRAINT [' + @ConstraintName + ']')
+SQL;
+
+        $table = $this->db->replacePrefix($this->getName());
+
+        $this->db->execute($query->format($q, $table, $name, $table, $table));
+
+        // Type
+        $this->db->execute(SqlsrvGrammar::build(
+            'ALTER TABLE',
+            $query->quoteName($this->getName()),
+            'ALTER COLUMN',
+            $query->quoteName($name),
+            $type . $length,
+            $allowNull ? null : 'NOT NULL'
+        ));
+
+        if ($default !== false) {
+            $this->db->execute(SqlsrvGrammar::build(
+                'ALTER TABLE',
+                $query->quoteName($this->getName()),
+                'ADD DEFAULT',
+                $query->validValue($default),
+                'FOR',
+                $query->quoteName($name)
+            ));
+        }
+
+        if ($comment) {
+            $this->db->execute(SqlsrvGrammar::comment(
+                'COLUMN',
+                $this->db->replacePrefix($this->getName()),
+                $column->getName(),
+                $comment
+            ));
+        }
+
+        return $this->reset();
     }
 
     /**
@@ -325,6 +424,36 @@ show($query);
         $comment = '',
         $options = []
     ) {
+        if (!$this->hasColumn($oldName)) {
+            return $this;
+        }
+
+        $column = $newName;
+
+        if ($column instanceof Column) {
+            $newName = $column->getName();
+            $column->name($oldName);
+
+            $this->modifyColumn($column);
+        } else {
+            $this->modifyColumn(
+                $oldName,
+                $type,
+                $signed,
+                $allowNull,
+                $default,
+                $comment,
+                $options
+            );
+        }
+
+        $this->db->execute(SqlsrvGrammar::renameColumn(
+            $this->db->replacePrefix($this->getName()),
+            $oldName,
+            $newName
+        ));
+
+        return $this;
     }
 
     /**
@@ -340,6 +469,43 @@ show($query);
      */
     public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
     {
+        if ($this->hasIndex($name)) {
+            $this->dropIndex($name);
+        }
+
+        if (!$type instanceof Key) {
+            if (!$columns) {
+                throw new \InvalidArgumentException('No columns given.');
+            }
+
+            $columns = (array) $columns;
+
+            $index = new Key($type, $columns, $name, $comment);
+        } else {
+            $index = $type;
+        }
+
+        if ($this->hasIndex($index->getName())) {
+            return $this;
+        }
+
+        $query = SqlsrvGrammar::addIndex(
+            $this->db->replacePrefix($this->getName()),
+            strtolower($index->getType()) === 'key' ? 'INDEX' : $index->getType(),
+            $index->getColumns(),
+            $index->getName()
+        );
+
+        $this->db->execute($query);
+
+        // No index comment now.
+//        if ($index->getComment()) {
+//            $query = SqlsrvGrammar::comment('INDEX', 'public', $index->getName(), $index->getComment());
+//
+//            $this->db->setQuery($query)->execute();
+//        }
+
+        return $this->reset();
     }
 
     /**
@@ -351,6 +517,17 @@ show($query);
      */
     public function dropIndex($name)
     {
+        if (!$this->hasIndex($name)) {
+            return $this;
+        }
+
+        $this->db->execute(SqlsrvGrammar::build(
+            'DROP INDEX',
+            $this->db->getQuery(true)
+                ->quoteName($this->getName() . '.' . $name)
+        ));
+
+        return $this->reset();
     }
 
     /**
@@ -385,7 +562,7 @@ show($query);
             )
             ->where('tbl.name = %q', $table);
 
-        $indexes = $this->db->setQuery($query)->loadAll();
+        $indexes = $this->db->prepare($query)->loadAll();
 
         $keys = [];
 
@@ -393,9 +570,9 @@ show($query);
             $key = new \stdClass();
 
             $key->Table = $table;
-            $key->Is_primary = $index->is_primary_key;
+            $key->Is_primary = $index->is_primary_key ?: $index->is_identity;
             $key->Non_unique = !$index->is_unique;
-            $key->Key_name = $index->index_name;
+            $key->Key_name = $key->Is_primary ? 'PRIMARY' : $index->index_name;
             $key->Column_name = $index->column_name;
             $key->Collation = 'A';
             $key->Cardinality = 0;
@@ -410,7 +587,7 @@ show($query);
 
             $keys[] = $key;
         }
-
+show($indexes, $keys);
         return $keys;
     }
 }

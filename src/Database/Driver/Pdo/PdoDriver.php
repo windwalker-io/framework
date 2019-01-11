@@ -294,7 +294,7 @@ class PdoDriver extends AbstractDatabaseDriver
             $msg = $e->getMessage();
 
             if ($this->debug) {
-                $msg .= "\nSQL: " . $this->cursor->queryString;
+                $msg .= "\nSQL: " . $query;
             }
 
             throw new \PDOException($msg, (int) $e->getCode(), $e);

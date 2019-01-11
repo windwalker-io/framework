@@ -118,6 +118,13 @@ class DataType
     ];
 
     /**
+     * Property noLength.
+     *
+     * @var  array
+     */
+    protected static $noLength = [];
+
+    /**
      * Property instances.
      *
      * @var  static[]
@@ -219,5 +226,19 @@ class DataType
         }
 
         return static::$typeMapping[$type];
+    }
+
+    /**
+     * noLength
+     *
+     * @param   string $type
+     *
+     * @return  boolean
+     */
+    public static function noLength($type)
+    {
+        $type = strtolower($type);
+
+        return in_array($type, static::$noLength);
     }
 }

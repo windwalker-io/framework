@@ -202,12 +202,24 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      * @param string $table
      * @param string $column
      * @param string $type
+     * @param bool   $allowNull
+     * @param mixed  $default
      *
      * @return  string
      */
-    public static function addColumn($table, $column, $type = 'text')
+    public static function addColumn($table, $column, $type = 'text', $allowNull = false, $default = null)
     {
+        $query = static::getQuery();
 
+        return static::build(
+            'ALTER TABLE',
+            $query->quoteName($table),
+            'ADD',
+            $query->quoteName($column),
+            $type,
+            $allowNull ? null : 'NOT NULL',
+            $default ? 'DEFAULT' . $query->quote($default) : null
+        );
     }
 
     /**
@@ -222,7 +234,30 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      */
     public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text')
     {
+        // No use now
+    }
 
+    /**
+     * changeColumn
+     *
+     * @param string $table
+     * @param string $oldColumn
+     * @param string $newColumn
+     *
+     * @return  string
+     */
+    public static function renameColumn(string $table, string $oldColumn, string $newColumn): string
+    {
+        $query = self::getQuery(true);
+
+        return (string) $query->element(
+            'exec sp_rename',
+            $query->quote([
+                $table . '.' . $oldColumn,
+                $newColumn,
+                'COLUMN'
+            ])
+        );
     }
 
     /**
@@ -235,7 +270,15 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      */
     public static function dropColumn($table, $column)
     {
+        $query = static::getQuery();
 
+        return static::build(
+            'ALTER TABLE',
+            $query->quoteName($table),
+            'DROP',
+            'COLUMN',
+            $query->quoteName($column)
+        );
     }
 
     /**
@@ -316,5 +359,24 @@ class SqlsrvGrammar extends AbstractQueryGrammar
         }
 
         return static::$query;
+    }
+
+    public static function comment(string $type, string $table, string $name, string $comment): string
+    {
+        $query = self::getQuery(true);
+
+        return (string) $query->element(
+            'exec sp_addextendedproperty',
+            $query->quote([
+                'MS_Description',
+                $comment,
+                'SCHEMA',
+                'dbo',
+                'TABLE',
+                $table,
+                $type,
+                $name
+            ])
+        );
     }
 }

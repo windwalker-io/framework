@@ -252,12 +252,12 @@ class PostgresqlTable extends AbstractTable
             'NOT NULL'
         );
 
-        if ($default !== null) {
+        if ($default !== false) {
             $sql .= ";\n" . PostgresqlGrammar::build(
                 'ALTER TABLE ' . $query->quoteName($this->getName()),
                 'ALTER COLUMN',
                 $query->quoteName($name),
-                'SET DEFAULT' . $query->quote($default)
+                'SET DEFAULT ' . $query->validValue($default)
             );
         }
 

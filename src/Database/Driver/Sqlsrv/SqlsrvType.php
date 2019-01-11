@@ -69,6 +69,16 @@ class SqlsrvType extends DataType
     ];
 
     /**
+     * Property noLength.
+     *
+     * @var  array
+     */
+    protected static $noLength = [
+        self::INTEGER,
+        self::SMALLINT
+    ];
+
+    /**
      * getLength
      *
      * @param   string $type

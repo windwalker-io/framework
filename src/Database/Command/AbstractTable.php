@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Schema;
 
 /**
- * Class DatabaseTable
+ * Class AbstractTable
  *
  * @since 2.0
  */
@@ -112,7 +112,7 @@ abstract class AbstractTable
      * @param   bool            $ifNotExists
      * @param   array           $options
      *
-     * @return  $this
+     * @return  static
      */
     public function save($schema, $ifNotExists = true, $options = [])
     {
@@ -167,7 +167,7 @@ abstract class AbstractTable
      * @param string  $newName
      * @param boolean $returnNew
      *
-     * @return  $this
+     * @return  static
      */
     abstract public function rename($newName, $returnNew = true);
 

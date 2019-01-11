@@ -116,6 +116,8 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
                 ],
                 true
             );
+
+            $db->setDebug(true);
         } catch (\RangeException $e) {
             static::markTestSkipped($e->getMessage());
 
