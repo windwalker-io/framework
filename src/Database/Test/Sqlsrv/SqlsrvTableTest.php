@@ -168,14 +168,14 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
         $this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['date']->Default);
 
         try {
-            $this->db->setQuery('INSERT #__strict VALUES (1, "2013-07-12T03:00:00+07:00", "")')->execute();
+            $this->db->setQuery("INSERT #__strict VALUES ('2013-07-12T03:00:00+07:00', '')")->execute();
         } catch (\PDOException $e) {
             // SQLSTATE[22007]: Invalid datetime format: 1292 Incorrect datetime value: '2013-07-12T03:00:00+07:00' for column 'date' at row 1
             $this->assertEquals(22007, $e->getCode());
         }
 
         try {
-            $this->db->setQuery('INSERT #__strict VALUES (1, "2013-07-12 03:00:00", NULL)')->execute();
+            $this->db->setQuery("INSERT #__strict VALUES ('2013-07-12 03:00:00', NULL)")->execute();
         } catch (\PDOException $e) {
             // SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'data' cannot be null
             $this->assertEquals(23000, $e->getCode());
@@ -197,8 +197,8 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
 
         $columns = $table->getColumnDetails();
 
-        $this->assertEquals('int(11) unsigned', $columns['id']->Type);
-        $this->assertEquals('varchar(190)', $columns['name']->Type);
+        $this->assertEquals('int(10)', $columns['id']->Type);
+        $this->assertEquals('nvarchar(190)', $columns['name']->Type);
     }
 
     /**

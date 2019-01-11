@@ -48,6 +48,7 @@ class SqlsrvTable extends AbstractTable
             $columns[$column->getName()] = SqlsrvGrammar::build(
                 $column->getType() . $column->getLength(),
                 $column->getAllowNull() ? null : 'NOT NULL',
+                $column->getAutoIncrement() ? 'identity' : null,
                 $column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
             );
 
@@ -150,6 +151,22 @@ show($query);
      */
     public function rename($newName, $returnNew = true)
     {
+        $this->db->setQuery(
+            SqlsrvGrammar::build(
+                'exec sp_rename',
+                $this->db->quoteName($this->getName()),
+                ',',
+                $this->db->quoteName($newName)
+            )
+        );
+
+        $this->db->execute();
+
+        if ($returnNew) {
+            return $this->db->getTable($newName);
+        }
+
+        return $this;
     }
 
     /**
@@ -208,9 +225,8 @@ show($query);
 
             $details[$field->Field] = $field;
 
-            // TODO: Add AI info
-            if (strpos($field->Default, 'nextval') !== false) {
-//                $field->Extra = 'auto_increment';
+            if ($field->is_identity) {
+                $field->Extra = 'auto_increment';
             }
 
             // Find key
@@ -351,6 +367,7 @@ show($query);
             'tbl.name AS table_name',
             'col.name AS column_name',
             'idx.name AS index_name',
+            'col.*',
             'idx.*'
         ])
             ->from('sys.columns AS col')
@@ -389,6 +406,7 @@ show($query);
             // TODO: Finish comments query
             $key->Comment = null;
             $key->Index_comment = null;
+            $key->is_identity = $index->is_identity ? 'auto_increment' : '';
 
             $keys[] = $key;
         }
