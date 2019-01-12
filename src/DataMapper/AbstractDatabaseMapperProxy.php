@@ -61,6 +61,7 @@ use Windwalker\String\StringInflector;
  * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  * @method  static DataMapper  forUpdate()
  * @method  static DataMapper  suffix(string $string)
+ * @method  static AbstractDatabaseDriver  getDb()
  *
  * phpcs:enable
  *

@@ -63,9 +63,9 @@ class SqlsrvType extends DataType
         DataType::TINYINT => self::SMALLINT,
         DataType::BOOLEAN => self::BIT,
         DataType::VARCHAR => self::NVARCHAR,
-        DataType::CHAR => self::NCHAR,
-        DataType::TEXT => self::NTEXT,
-        DataType::LONGTEXT => self::NTEXT,
+        DataType::CHAR => self::NVARCHAR,
+        DataType::TEXT => self::NVARCHAR,
+        DataType::LONGTEXT => self::NVARCHAR,
         DataType::DATETIME => self::DATETIME2,
         DataType::TIMESTAMP => self::DATETIME2,
     ];

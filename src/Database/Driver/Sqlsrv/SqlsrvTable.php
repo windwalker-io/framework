@@ -136,6 +136,10 @@ class SqlsrvTable extends AbstractTable
             $column->length(53);
         }
 
+        if (in_array($column->getType(), [SqlsrvType::TEXT, SqlsrvType::LONGTEXT], true)) {
+            $column->length('max');
+        }
+
         $column = parent::prepareColumn($column);
 
         if (SqlsrvType::noLength($column->getType())) {

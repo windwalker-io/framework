@@ -103,6 +103,7 @@ class QueryHelper
     public function getSelectFields()
     {
         $fields = [];
+        $uniqueList = [];
 
         $i = 0;
 
@@ -123,8 +124,14 @@ class QueryHelper
                 }
 
                 if ($prefix === true) {
-                    $fields[] = $this->db->quoteName("{$alias}.{$column} AS {$alias}_{$column}");
+                    $as = "{$alias}_{$column}";
+
+                    if (!in_array($as, $uniqueList, true)) {
+                        $uniqueList[] = $as;
+                        $fields[] = $this->db->quoteName("{$alias}.{$column} AS $as");
+                    }
                 } else {
+                    $uniqueList[] = $column;
                     $fields[] = $this->db->quoteName("{$alias}.{$column} AS {$column}");
                 }
             }
