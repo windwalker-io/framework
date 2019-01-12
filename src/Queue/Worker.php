@@ -269,11 +269,7 @@ class Worker implements DispatcherAwareInterface
             return;
         }
 
-        if (version_compare(PHP_VERSION, '7.1', '>=')) {
-            pcntl_async_signals(true);
-        } else {
-            declare (ticks=1);
-        }
+        declare (ticks=1);
 
         if ($timeout !== 0) {
             pcntl_signal(

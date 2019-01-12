@@ -299,11 +299,7 @@ class ArrTest extends TestCase
             [7, 8, 9],
         ];
 
-        if (version_compare(PHP_VERSION, '7.0', '<') && !PhpHelper::isHHVM()) {
-            self::assertEquals([4, 5, 6, 7, 8, 9], Arr::collapse($array));
-        } else {
-            self::assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9], Arr::collapse($array));
-        }
+        self::assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9], Arr::collapse($array));
     }
 
     /**

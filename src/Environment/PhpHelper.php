@@ -91,11 +91,7 @@ class PhpHelper
      */
     public function getVersion()
     {
-        if (static::isHHVM()) {
-            return HHVM_VERSION;
-        } else {
-            return PHP_VERSION;
-        }
+        return PHP_VERSION;
     }
 
     /**

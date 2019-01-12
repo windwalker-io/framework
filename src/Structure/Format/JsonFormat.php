@@ -49,11 +49,7 @@ class JsonFormat implements FormatInterface
         $depth = StructureHelper::getValue($options, 'depth', 512);
         $option = StructureHelper::getValue($options, 'options', 0);
 
-        if (PHP_VERSION >= 5.4) {
-            return json_decode(trim($data), $assoc, $depth, $option);
-        } else {
-            return json_decode(trim($data), $assoc, $depth);
-        }
+        return json_decode(trim($data), $assoc, $depth, $option);
     }
 
     /**

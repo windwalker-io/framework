@@ -419,7 +419,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             }
 
             // Handler ...$args
-            if (PHP_VERSION_ID >= 50600 && $param->isVariadic()) {
+            if ($param->isVariadic()) {
                 $trailing = [];
 
                 foreach ($args as $key => $value) {
@@ -451,12 +451,6 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
                     $methodArgs[] = $param->getDefaultValue();
                 }
 
-                continue;
-            }
-
-            // Simple workaround for ArrayIterator::__construct() before PHP 7
-            // @see  https://bugs.php.net/bug.php?id=70303
-            if ($method->getDeclaringClass()->getName() === 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<')) {
                 continue;
             }
 

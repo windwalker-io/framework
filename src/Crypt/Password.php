@@ -119,10 +119,6 @@ class Password implements HasherInterface
 
                 $options['cost'] = $cost;
 
-                if (version_compare(PHP_VERSION, 7, '<')) {
-                    $options['salt'] = $salt;
-                }
-
                 return password_hash($password, PASSWORD_BCRYPT, $options);
                 break;
         }
