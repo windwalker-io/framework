@@ -46,16 +46,16 @@ abstract class AbstractWriter
     /**
      * Inserts a row into a table based on an object's properties.
      *
-     * @param   string       $table The name of the database table to insert into.
-     * @param   array|object &$data A reference to an object whose public properties match the table fields.
-     * @param   string       $key   The name of the primary key. If provided the object property is updated.
+     * @param   string        $table          The name of the database table to insert into.
+     * @param   array|object &$data           A reference to an object whose public properties match the table fields.
+     * @param   string        $key            The name of the primary key. If provided the object property is updated.
+     * @param   bool          $incrementField Has increment field or not.
      *
-     * @throws \InvalidArgumentException
      * @return  static
      *
      * @since   2.0
      */
-    public function insertOne($table, &$data, $key = null)
+    public function insertOne($table, &$data, $key = null, bool $incrementField = false)
     {
         $fields = [];
         $values = [];
@@ -98,7 +98,7 @@ abstract class AbstractWriter
         }
 
         // Create the base insert statement.
-        $query->insert($query->quoteName($table))
+        $query->insert($query->quoteName($table), $incrementField)
             ->columns($fields)
             ->values([$values]);
 
@@ -200,54 +200,48 @@ abstract class AbstractWriter
     /**
      * save
      *
-     * @param   string  $table       The name of the database table to update.
-     * @param   array   &$data       A reference to an object whose public properties match the table fields.
-     * @param   string  $key         The name of the primary key.
-     * @param   boolean $updateNulls True to update null fields or false to ignore them.
+     * @param   string   $table       The name of the database table to update.
+     * @param   array   &$data        A reference to an object whose public properties match the table fields.
+     * @param   string   $key         The name of the primary key.
+     * @param   boolean  $updateNulls True to update null fields or false to ignore them.
+     * @param   bool     $incrementField
      *
      * @return  bool|static
      *
-     * @throws \InvalidArgumentException
      */
-    public function saveOne($table, &$data, $key, $updateNulls = false)
+    public function saveOne($table, &$data, ?string $key, bool $updateNulls = false, bool $incrementField = false)
     {
-        if (is_array($key) || is_object($key)) {
-            throw new \InvalidArgumentException(
-                __NAMESPACE__ . '::save() dose not support multiple keys, please give me only one key.'
-            );
-        }
-
         if (is_array($data)) {
-            $id = isset($data[$key]) ? $data[$key] : null;
+            $id = $data[$key] ?? null;
         } else {
-            $id = isset($data->$key) ? $data->$key : null;
+            $id = $data->$key ?? null;
         }
 
         if ($id) {
             return $this->updateOne($table, $data, $key, $updateNulls);
         }
 
-        return $this->insertOne($table, $data, $key);
+        return $this->insertOne($table, $data, $key, $incrementField);
     }
 
     /**
      * insertMultiple
      *
-     * @param   string $table    The name of the database table to update.
-     * @param   array  &$dataSet A reference to an object whose public properties match the table fields.
-     * @param   array  $key      The name of the primary key.
+     * @param   string  $table           The name of the database table to update.
+     * @param   array  &$dataSet         A reference to an object whose public properties match the table fields.
+     * @param   array   $key             The name of the primary key.
+     * @param bool      $incrementField  Has increment field or not.
      *
-     * @throws \InvalidArgumentException
      * @return  mixed
      */
-    public function insertMultiple($table, &$dataSet, $key = null)
+    public function insertMultiple($table, &$dataSet, $key = null, bool $incrementField = false)
     {
         if (!is_array($dataSet) && !($dataSet instanceof \Traversable)) {
             throw new \InvalidArgumentException('The data set to store should be array or \Traversable');
         }
 
         foreach ($dataSet as $k => $data) {
-            $dataSet[$k] = $this->insertOne($table, $data, $key);
+            $dataSet[$k] = $this->insertOne($table, $data, $key, $incrementField);
         }
 
         return $dataSet;
@@ -284,18 +278,18 @@ abstract class AbstractWriter
      * @param   array   $dataSet     A reference to an object whose public properties match the table fields.
      * @param   array   $key         The name of the primary key.
      * @param   boolean $updateNulls True to update null fields or false to ignore them.
+     * @param bool      $incrementField
      *
-     * @throws \InvalidArgumentException
      * @return  mixed
      */
-    public function saveMultiple($table, $dataSet, $key, $updateNulls = false)
+    public function saveMultiple($table, $dataSet, $key, $updateNulls = false, bool $incrementField = false)
     {
         if (!is_array($dataSet) && !($dataSet instanceof \Traversable)) {
             throw new \InvalidArgumentException('The data set to store should be array or \Traversable');
         }
 
         foreach ($dataSet as $data) {
-            $this->saveOne($table, $data, $key, $updateNulls);
+            $this->saveOne($table, $data, $key, $updateNulls, $incrementField);
         }
 
         return $dataSet;

@@ -261,6 +261,8 @@ class PdoDriver extends AbstractDatabaseDriver
         $query = $this->replacePrefix((string) $this->query);
 
         try {
+            $this->getMonitor()->start($query);
+
             if ($prepare) {
                 // Set query string into PDO, but keep query object in $this->query
                 // that we can bind params when execute().
@@ -300,6 +302,8 @@ class PdoDriver extends AbstractDatabaseDriver
         }
 
         $this->lastQuery = $this->cursor->queryString ?? $query;
+
+        $this->getMonitor()->stop();
 
         return $this->cursor;
     }

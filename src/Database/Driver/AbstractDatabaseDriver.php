@@ -14,6 +14,8 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Command\AbstractTransaction;
 use Windwalker\Database\Command\AbstractWriter;
 use Windwalker\Database\Iterator\DataIterator;
+use Windwalker\Database\Monitor\NullMonitor;
+use Windwalker\Database\Monitor\QueryMonitorInterface;
 use Windwalker\Query\Query;
 
 /**
@@ -138,6 +140,13 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     protected $lastQuery;
 
     /**
+     * Property monitor.
+     *
+     * @var QueryMonitorInterface
+     */
+    protected $monitor;
+
+    /**
      * Property independentQuery.
      *
      * @var  Query
@@ -163,6 +172,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
         // Set class options.
         $this->options = $options;
+
+        // Prepare Null monitor
+        $this->setMonitor(new NullMonitor());
     }
 
     /**
@@ -854,5 +866,33 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     public function getNullDate()
     {
         return $this->getIndependentQuery()->getNullDate();
+    }
+
+    /**
+     * Method to get property Monitor
+     *
+     * @return  QueryMonitorInterface
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getMonitor(): QueryMonitorInterface
+    {
+        return $this->monitor;
+    }
+
+    /**
+     * Method to set property monitor
+     *
+     * @param   QueryMonitorInterface $monitor
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setMonitor(QueryMonitorInterface $monitor)
+    {
+        $this->monitor = $monitor;
+
+        return $this;
     }
 }

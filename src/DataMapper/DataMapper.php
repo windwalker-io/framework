@@ -269,7 +269,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
                 $entity = $this->validValue($entity);
 
-                $this->db->getWriter()->insertOne($this->table, $entity, $pkName);
+                $this->db->getWriter()->insertOne($this->table, $entity, $pkName, $entity->hasIncrementField());
 
                 $data->$pkName = $entity->$pkName;
 

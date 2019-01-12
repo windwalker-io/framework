@@ -1483,7 +1483,7 @@ class Query implements QueryInterface, PreparableInterface
      * $query->values('1,2,3')->values('4,5,6');
      * $query->values(array('1,2,3', '4,5,6'));
      *
-     * @param   string $values A single tuple, or array of tuples.
+     * @param   string|array $values A single tuple, or array of tuples.
      *
      * @return static  Returns this object to allow chaining.
      *

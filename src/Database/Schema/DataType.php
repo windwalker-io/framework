@@ -239,6 +239,6 @@ class DataType
     {
         $type = strtolower($type);
 
-        return in_array($type, static::$noLength);
+        return in_array($type, static::$noLength, true);
     }
 }

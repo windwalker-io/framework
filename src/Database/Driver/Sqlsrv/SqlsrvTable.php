@@ -32,9 +32,12 @@ class SqlsrvTable extends AbstractTable
      */
     public function create($schema, $ifNotExists = true, $options = [])
     {
+        if ($ifNotExists && $this->db->getDatabase(null, true)->tableExists($this->getName())) {
+            return $this;
+        }
+
         $defaultOptions = [
-            'auto_increment' => 1,
-            'sequences' => [],
+            'auto_increment' => 1
         ];
 
         $options = array_merge($defaultOptions, $options);
@@ -68,14 +71,18 @@ class SqlsrvTable extends AbstractTable
         $keyComments = [];
 
         foreach ($schema->getIndexes() as $index) {
-            $keys[$index->getName()] = [
-                'type' => strtoupper($index->getType()),
-                'name' => $index->getName(),
-                'columns' => $index->getColumns(),
-            ];
+            if ($index->getType() === Key::TYPE_PRIMARY) {
+                $primary = array_merge($primary, $index->getColumns());
+            } else {
+                $keys[$index->getName()] = [
+                    'type' => strtoupper($index->getType()),
+                    'name' => $index->getName(),
+                    'columns' => $index->getColumns(),
+                ];
 
-            if ($index->getComment()) {
-                $keyComments[$index->getName()] = $index->getComment();
+                if ($index->getComment()) {
+                    $keyComments[$index->getName()] = $index->getComment();
+                }
             }
         }
 
@@ -87,8 +94,11 @@ class SqlsrvTable extends AbstractTable
             $columns,
             $primary,
             $keys,
-            $ifNotExists
+            false
         );
+
+        $this->db->execute($query);
+        $query = '';
 
         $comments = isset($options['comments']) ? $options['comments'] : [];
 
@@ -102,7 +112,9 @@ class SqlsrvTable extends AbstractTable
             );
         }
 
-        $this->db->execute($query);
+        if ($query) {
+            $this->db->execute($query);
+        }
 
         return $this->reset();
     }

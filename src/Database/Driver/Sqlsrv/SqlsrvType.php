@@ -28,6 +28,8 @@ class SqlsrvType extends DataType
 
     const NVARCHAR = 'nvarchar';
 
+    const NTEXT = 'ntext';
+
     // EXACT NUMERIC
     const INTEGER = 'int';
 
@@ -47,7 +49,7 @@ class SqlsrvType extends DataType
         self::DOUBLE => [53, 0, 'float'],
         self::REAL => [53, 0, 'float'],
         self::NCHAR => [255, 0, 'string'],
-        self::NVARCHAR => ['max', 0, 'string'],
+        self::NVARCHAR => [255, 0, 'string'],
         self::DATETIME2 => [null, '1900-01-01 00:00:00', 'string']
     ];
 
@@ -62,8 +64,8 @@ class SqlsrvType extends DataType
         DataType::BOOLEAN => self::BIT,
         DataType::VARCHAR => self::NVARCHAR,
         DataType::CHAR => self::NCHAR,
-        DataType::TEXT => self::NVARCHAR,
-        DataType::LONGTEXT => self::NVARCHAR,
+        DataType::TEXT => self::NTEXT,
+        DataType::LONGTEXT => self::NTEXT,
         DataType::DATETIME => self::DATETIME2,
         DataType::TIMESTAMP => self::DATETIME2,
     ];
@@ -75,7 +77,8 @@ class SqlsrvType extends DataType
      */
     protected static $noLength = [
         self::INTEGER,
-        self::SMALLINT
+        self::SMALLINT,
+        self::NTEXT,
     ];
 
     /**

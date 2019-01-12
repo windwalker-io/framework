@@ -41,6 +41,10 @@ class SqlsrvDatabase extends AbstractDatabase
      */
     public function create($ifNotExists = false, $charset = null, $collate = null)
     {
+        if ($ifNotExists && $this->exists()) {
+            return $this;
+        }
+
         $query = SqlsrvGrammar::createDatabase($this->name, $collate);
 
         $this->db->setQuery($query)->execute();

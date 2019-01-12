@@ -631,4 +631,24 @@ class Entity extends Data implements \JsonSerializable
 
         return \DateTime::createFromFormat($this->db->getQuery(true)->getDateFormat(), $date);
     }
+
+    /**
+     * hasIncrementField
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function hasIncrementField(): bool
+    {
+        $fields = $this->getFields();
+
+        foreach ($this->data as $key => $datum) {
+            if (isset($fields[$key]) && $fields[$key]->Extra === 'auto_increment') {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -79,7 +79,7 @@ class SqlsrvGrammar extends AbstractQueryGrammar
      */
     public static function showTableColumns($table)
     {
-
+        // No use
     }
 
     /**
@@ -131,7 +131,8 @@ class SqlsrvGrammar extends AbstractQueryGrammar
         }
 
         if ($pks) {
-            $cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
+            $cols[] = 'CONSTRAINT ' . $query->quoteName($name . '_pk')
+                . ' PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
         }
 
         $indexes = [];
@@ -170,7 +171,7 @@ class SqlsrvGrammar extends AbstractQueryGrammar
         );
 
         if ($ifNotExists) {
-            self::getQuery(true)->format(
+            $sql = self::getQuery(true)->format(
                 "if not exists (select * from sysobjects where name=%q and xtype='U')\n$sql\ngo;",
                 $name
             );
@@ -326,23 +327,9 @@ class SqlsrvGrammar extends AbstractQueryGrammar
         $cols = [];
 
         foreach ((array) $columns as $key => $val) {
-            if (is_numeric($key)) {
-                $cols[] = $query->quoteName($val);
-            } else {
-                if (!is_numeric($val)) {
-                    $string = is_string($val) ? ' ' . $query->quote($val) : '';
+            $col = is_numeric($key) ? $val : $key;
 
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'Index length should be number, (%s)%s given.',
-                            gettype($val),
-                            $string
-                        )
-                    );
-                }
-
-                $cols[] = $query->quoteName($key) . '(' . $val . ')';
-            }
+            $cols[] = $query->quoteName(trim(explode('(', $col)[0]));
         }
 
         $cols = '(' . implode(', ', $cols) . ')';
