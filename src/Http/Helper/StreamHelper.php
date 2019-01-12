@@ -101,7 +101,7 @@ abstract class StreamHelper
             $stream = new Stream($stream, 'r');
         }
 
-        /** @var MessageInterface|ResponseInterface $response */
+        /** @var ResponseInterface $response */
         $response = $response ?: new Response();
 
         $filename = null;
