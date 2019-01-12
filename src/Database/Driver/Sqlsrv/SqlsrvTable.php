@@ -318,7 +318,7 @@ class SqlsrvTable extends AbstractTable
             $this->db->execute($query);
         }
 
-        return $this;
+        return $this->reset();
     }
 
     /**
@@ -359,7 +359,7 @@ class SqlsrvTable extends AbstractTable
         }
 
         $type = SqlsrvType::getType($type);
-        $length = isset($length) ? $length : SqlsrvType::getLength($type);
+        $length = $length ?? SqlsrvType::getLength($type);
         $length = SqlsrvType::noLength($type) ? null : $length;
         $length = $length ? '(' . $length . ')' : null;
 
