@@ -100,7 +100,7 @@ class SqlsrvTable extends AbstractTable
         $this->db->execute($query);
         $query = '';
 
-        $comments = isset($options['comments']) ? $options['comments'] : [];
+        $comments = $options['comments'] ?? [];
 
         // Comments
         foreach ($comments as $name => $comment) {

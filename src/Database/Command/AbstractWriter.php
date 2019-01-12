@@ -106,13 +106,15 @@ abstract class AbstractWriter
         $this->execute($query);
 
         // Update the primary key if it exists.
-        $id = $this->insertId();
+        if (!$incrementField) {
+            $id = $this->insertId();
 
-        if ($key && $id && is_string($key)) {
-            if (is_array($data)) {
-                $data[$key] = $id;
-            } else {
-                $data->$key = $id;
+            if ($key && $id && is_string($key)) {
+                if (is_array($data)) {
+                    $data[$key] = $id;
+                } else {
+                    $data->$key = $id;
+                }
             }
         }
 

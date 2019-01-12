@@ -416,23 +416,9 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $cols = [];
 
         foreach ((array) $columns as $key => $val) {
-            if (is_numeric($key)) {
-                $cols[] = $query->quoteName($val);
-            } else {
-                if (!is_numeric($val)) {
-                    $string = is_string($val) ? ' ' . $query->quote($val) : '';
+            $col = is_numeric($key) ? $val : $key;
 
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'Index length should be number, (%s)%s given.',
-                            gettype($val),
-                            $string
-                        )
-                    );
-                }
-
-                $cols[] = $query->quoteName($key) . '(' . $val . ')';
-            }
+            $cols[] = $query->quoteName(trim(explode('(', $col)[0]));
         }
 
         $cols = '(' . implode(', ', $cols) . ')';

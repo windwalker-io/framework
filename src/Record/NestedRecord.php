@@ -357,6 +357,7 @@ class NestedRecord extends Record
 
             // If the location has been set, move the node to its new location.
             if ($this->locationId > 0) {
+
                 $this->moveByReference($this->locationId, $this->location, $this->$k);
             }
         }
@@ -427,7 +428,7 @@ class NestedRecord extends Record
     public function moveByReference($referenceId, $position = self::LOCATION_AFTER, $pk = null)
     {
         $k = $this->getKeyName();
-        $pk = $pk === null ? $this->$k : $pk;
+        $pk = $pk ?? $this->$k;
 
         // Get the node by id.
         if (!$node = $this->getNode($pk)) {

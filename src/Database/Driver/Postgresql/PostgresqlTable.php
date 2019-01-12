@@ -50,7 +50,9 @@ class PostgresqlTable extends AbstractTable
             $columns[$column->getName()] = PostgresqlGrammar::build(
                 $column->getType() . $column->getLength(),
                 $column->getAllowNull() ? null : 'NOT NULL',
-                $column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
+                $column->isPrimary()
+                    ? null
+                    : 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault())
             );
 
             // Comment
@@ -68,14 +70,18 @@ class PostgresqlTable extends AbstractTable
         $keyComments = [];
 
         foreach ($schema->getIndexes() as $index) {
-            $keys[$index->getName()] = [
-                'type' => strtoupper($index->getType()),
-                'name' => $index->getName(),
-                'columns' => $index->getColumns(),
-            ];
+            if ($index->getType() === Key::TYPE_PRIMARY) {
+                $primary = array_merge($primary, $index->getColumns());
+            } else {
+                $keys[$index->getName()] = [
+                    'type' => strtoupper($index->getType()),
+                    'name' => $index->getName(),
+                    'columns' => $index->getColumns(),
+                ];
 
-            if ($index->getComment()) {
-                $keyComments[$index->getName()] = $index->getComment();
+                if ($index->getComment()) {
+                    $keyComments[$index->getName()] = $index->getComment();
+                }
             }
         }
 
@@ -546,16 +552,21 @@ class PostgresqlTable extends AbstractTable
             $keys = $this->getIndexes();
 
             foreach ($result as $field) {
+                if (strpos($field->Default, 'nextval') !== false) {
+                    $field->Extra = 'auto_increment';
+                    $field->Default = 0;
+                }
+
                 if (preg_match("/^NULL::*/", $field->Default)) {
                     $field->Default = null;
                 }
 
-                if (strpos($field->Type, 'character varying') !== false) {
-                    $field->Type = str_replace('character varying', 'varchar', $field->Type);
+                if (preg_match("/'(.*)'::[\w\s]/", $field->Default, $matches)) {
+                    $field->Default = $matches[1] ?? '';
                 }
 
-                if (strpos($field->Default, 'nextval') !== false) {
-                    $field->Extra = 'auto_increment';
+                if (strpos($field->Type, 'character varying') !== false) {
+                    $field->Type = str_replace('character varying', 'varchar', $field->Type);
                 }
 
                 // Find key

@@ -66,8 +66,16 @@ class PostgresqlReader extends PdoReader
 
         $insertidQuery->select($changedColName);
 
-        $insertVal = $this->db->getReader($insertidQuery)->loadArray();
+        try {
+            return $this->db->getReader($insertidQuery)->loadResult();
+        } catch (\PDOException $e) {
+            // 55000 means we trying to insert value to serial column
+            // Just return because insertedId get the last generated value.
+            if ($e->getCode() !== 55000) {
+                throw $e;
+            }
+        }
 
-        return $insertVal[0];
+        return null;
     }
 }
