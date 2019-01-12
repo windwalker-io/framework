@@ -21,7 +21,7 @@ interface DataInterface
      * @param   mixed   $values       The data array or object.
      * @param   boolean $replaceNulls Replace null or not.
      *
-     * @return  Data Return self to support chaining.
+     * @return  static Return self to support chaining.
      */
     public function bind($values, $replaceNulls = false);
 

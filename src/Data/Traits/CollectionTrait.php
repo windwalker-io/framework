@@ -31,7 +31,7 @@ trait CollectionTrait
     public function each(callable $callback)
     {
         foreach ($this as $key => $value) {
-            $return = call_user_func($callback, $value, $key);
+            $return = $callback($value, $key);
 
             if ($return === false) {
                 break;
@@ -140,7 +140,7 @@ trait CollectionTrait
      */
     public function apply(callable $callback)
     {
-        return $this->bindNewInstance(call_user_func($callback, $this->convertArray($this)));
+        return $this->bindNewInstance($callback($this->convertArray($this)));
     }
 
     /**
@@ -152,7 +152,7 @@ trait CollectionTrait
      */
     public function pipe(callable $callback)
     {
-        return call_user_func($callback, $this);
+        return $callback($this);
     }
 
     /**
@@ -275,7 +275,7 @@ trait CollectionTrait
      */
     protected function convertArray($array)
     {
-        if ($array instanceof static) {
+        if ($array instanceof DataInterface) {
             $array = $array->dump();
         }
 

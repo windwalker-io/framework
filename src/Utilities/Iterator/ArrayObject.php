@@ -75,7 +75,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
             return $this->offsetExists($key);
         }
 
-        if (in_array($key, $this->protectedProperties)) {
+        if (in_array($key, $this->protectedProperties, true)) {
             throw new \InvalidArgumentException('$key is a protected property, use a different key');
         }
 
@@ -99,8 +99,8 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
             return;
         }
 
-        if (in_array($key, $this->protectedProperties)) {
-            throw new \InvalidArgumentException('$key is a protected property, use a different key');
+        if (in_array($key, $this->protectedProperties, true)) {
+            throw new \InvalidArgumentException("$key is a protected property, use a different key");
         }
 
         $this->$key = $value;
@@ -122,7 +122,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
             return;
         }
 
-        if (in_array($key, $this->protectedProperties)) {
+        if (in_array($key, $this->protectedProperties, true)) {
             throw new \InvalidArgumentException('$key is a protected property, use a different key');
         }
 
@@ -147,7 +147,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
             return $ret;
         }
 
-        if (in_array($key, $this->protectedProperties)) {
+        if (in_array($key, $this->protectedProperties, true)) {
             throw new \InvalidArgumentException('$key is a protected property, use a different key');
         }
 
