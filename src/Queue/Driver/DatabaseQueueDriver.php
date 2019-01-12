@@ -133,8 +133,6 @@ class DatabaseQueueDriver implements QueueDriverInterface
             $this->db->getWriter()->updateBatch($this->table, $values, ['id' => $data['id']]);
 
             $trans->commit();
-        } catch (\Exception $e) {
-            $trans->rollback();
         } catch (\Throwable $t) {
             $trans->rollback();
         }

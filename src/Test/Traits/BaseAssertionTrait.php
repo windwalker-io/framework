@@ -108,18 +108,6 @@ trait BaseAssertionTrait
 
         try {
             $closure();
-        } catch (\Exception $e) {
-            static::assertInstanceOf($class, $e, $message);
-
-            if ($msg !== null) {
-                static::assertStringStartsWith($msg, $e->getMessage(), $message);
-            }
-
-            if ($code !== null) {
-                static::assertEquals($code, $e->getCode(), $message);
-            }
-
-            return;
         } catch (\Throwable $t) {
             static::assertInstanceOf($class, $t, $message);
 

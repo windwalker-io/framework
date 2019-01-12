@@ -164,11 +164,6 @@ class Edge
             } else {
                 eval(' ?>' . $this->cache->load($__path) . '<?php ');
             }
-        } catch (\Exception $e) {
-            ob_clean();
-            $this->wrapException($e, $__path, $__layout);
-
-            return null;
         } catch (\Throwable $e) {
             ob_clean();
             $this->wrapException($e, $__path, $__layout);

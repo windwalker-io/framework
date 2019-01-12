@@ -235,8 +235,6 @@ class Worker implements DispatcherAwareInterface
             );
 
             $this->manager->delete($message);
-        } catch (\Exception $e) {
-            $this->handleJobException($job, $message, $options, $e);
         } catch (\Throwable $t) {
             $this->handleJobException($job, $message, $options, $t);
         } finally {

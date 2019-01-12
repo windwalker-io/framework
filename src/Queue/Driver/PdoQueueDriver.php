@@ -147,9 +147,6 @@ class PdoQueueDriver implements QueueDriverInterface
             $stat->execute();
 
             $this->pdo->commit();
-        } catch (\Exception $e) {
-            $this->pdo->rollBack();
-            throw $e;
         } catch (\Throwable $t) {
             $this->pdo->rollBack();
             throw $t;

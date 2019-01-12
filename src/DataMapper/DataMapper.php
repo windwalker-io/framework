@@ -275,10 +275,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
                 $dataset[$k] = $data;
             }
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -328,10 +324,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
                 $dataset[$k] = $data;
             }
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -360,10 +352,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
         try {
             $result = $this->db->getWriter()->updateBatch($this->table, $data, $conditions);
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -398,10 +386,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             if ($this->create($dataset) === false) {
                 throw new \RuntimeException(sprintf('Insert row fail when updating relations table: %s', $this->table));
             }
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -429,10 +413,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
         try {
             $result = $this->db->getWriter()->delete($this->table, $conditions);
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
