@@ -1064,7 +1064,7 @@ class Query implements QueryInterface, PreparableInterface
             $this->join = [];
         }
 
-        if (is_string($table)) {
+        if (is_string($table) || $table instanceof Query) {
             $table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
         }
 
@@ -2069,7 +2069,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function bind(
         $key = null,
-        &$value = null,
+        $value = null,
         $dataType = \PDO::PARAM_STR,
         $length = null,
         $driverOptions = null

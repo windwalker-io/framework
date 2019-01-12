@@ -422,7 +422,7 @@ abstract class AbstractTable
     public function getName()
     {
         if ($this->database instanceof AbstractDatabase
-            && $this->database->getName() != $this->db->getCurrentDatabase()) {
+            && $this->database->getName() !== $this->db->getCurrentDatabase()) {
             return $this->database->getName() . '.' . $this->name;
         }
 
@@ -489,7 +489,7 @@ abstract class AbstractTable
         if (!$schema instanceof Schema && is_callable($schema)) {
             $s = $this->getSchema();
 
-            call_user_func($schema, $s);
+            $schema($s);
 
             $schema = $s;
         }
@@ -514,7 +514,7 @@ abstract class AbstractTable
     /**
      * Method to set property database
      *
-     * @param   AbstractDatabase $database
+     * @param   AbstractDatabase|string $database
      *
      * @return  static  Return self to support chaining.
      */

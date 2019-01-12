@@ -299,11 +299,11 @@ class PdoDriver extends AbstractDatabaseDriver
             }
 
             throw new \PDOException($msg, (int) $e->getCode(), $e);
+        } finally {
+            $this->lastQuery = $this->cursor->queryString ?? $query;
+
+            $this->getMonitor()->stop();
         }
-
-        $this->lastQuery = $this->cursor->queryString ?? $query;
-
-        $this->getMonitor()->stop();
 
         return $this->cursor;
     }

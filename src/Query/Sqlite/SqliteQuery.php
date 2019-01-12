@@ -64,7 +64,7 @@ class SqliteQuery extends Query
      */
     public function bind(
         $key = null,
-        &$value = null,
+        $value = null,
         $dataType = \PDO::PARAM_STR,
         $length = null,
         $driverOptions = null

@@ -47,11 +47,11 @@ class QueryHelper
     /**
      * addTable
      *
-     * @param string  $alias
-     * @param string  $table
-     * @param mixed   $condition
-     * @param string  $joinType
-     * @param boolean $prefix
+     * @param string        $alias
+     * @param string|Query  $table
+     * @param mixed         $condition
+     * @param string        $joinType
+     * @param boolean       $prefix
      *
      * @return  QueryHelper
      */
@@ -107,15 +107,19 @@ class QueryHelper
         $i = 0;
 
         foreach ($this->tables as $alias => $table) {
+            if (!is_string($table['name'])) {
+                continue;
+            }
+
             $columns = $this->db->getTable($table['name'])->getColumns();
 
             foreach ($columns as $column) {
                 $prefix = $table['prefix'];
 
                 if ($i === 0) {
-                    $prefix = $prefix === null ? false : true;
+                    $prefix = $prefix !== null;
                 } else {
-                    $prefix = $prefix === null ? true : false;
+                    $prefix = $prefix === null;
                 }
 
                 if ($prefix === true) {
@@ -141,12 +145,21 @@ class QueryHelper
     public function registerQueryTables(QueryInterface $query)
     {
         foreach ($this->tables as $alias => $table) {
+            $from = $table['name'];
+
+            if ($from instanceof Query) {
+                $from->clear('alias');
+                $from = '(' . $from . ')';
+            } else {
+                $from = $query->quoteName($from);
+            }
+
             if ($table['join'] === 'FROM') {
-                $query->from($query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias));
+                $query->from($from . ' AS ' . $query->quoteName($alias));
             } else {
                 $query->join(
                     $table['join'],
-                    $query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias),
+                    $from . ' AS ' . $query->quoteName($alias),
                     $table['condition']
                 );
             }

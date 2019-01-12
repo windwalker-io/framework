@@ -182,82 +182,86 @@ class SqlsrvTable extends AbstractTable
      */
     public function getColumnDetails($refresh = false)
     {
-        $details = [];
-        $table = $this->db->replacePrefix((string) $this->name);
+        if (!$this->columnCache || $refresh) {
+            $details = [];
+            $table = $this->db->replacePrefix((string) $this->name);
 
-        $query = $this->db->getQuery(true);
-        $query->select([
-            'column_name AS Field',
-            'data_type AS Type',
-            'is_nullable AS ' . $query->quote('Null'),
-            'column_default AS ' . $query->quote('Default'),
-            'character_maximum_length',
-            'numeric_precision',
-            'numeric_scale',
-        ])->from('information_schema.columns')
-            ->where('table_name = %q', $table);
+            $query = $this->db->getQuery(true);
+            $query->select([
+                'column_name AS Field',
+                'data_type AS Type',
+                'is_nullable AS ' . $query->quote('Null'),
+                'column_default AS ' . $query->quote('Default'),
+                'character_maximum_length',
+                'numeric_precision',
+                'numeric_scale',
+            ])->from('information_schema.columns')
+                ->where('table_name = %q', $table);
 
-        $fields = $this->db->prepare($query)->loadAll();
+            $fields = $this->db->prepare($query)->loadAll();
 
-        $keys = $this->getIndexes();
+            $keys = $this->getIndexes();
 
-        foreach ($fields as $field) {
-            $field->Key = '';
-            $field->Extra = '';
+            foreach ($fields as $field) {
+                $field->Key = '';
+                $field->Extra = '';
 
-            // Type & Length
-            $length = ((int) $field->character_maximum_length) > 0
-                ? $field->character_maximum_length
-                : null;
+                // Type & Length
+                $length = ((int) $field->character_maximum_length) > 0
+                    ? $field->character_maximum_length
+                    : null;
 
-            if ($field->numeric_precision) {
-                $length = $field->numeric_precision;
+                if ($field->numeric_precision) {
+                    $length = $field->numeric_precision;
 
-                if ($field->numeric_scale) {
-                    $length .= ',' . $field->numeric_scale;
+                    if ($field->numeric_scale) {
+                        $length .= ',' . $field->numeric_scale;
+                    }
+                }
+
+                if ($length) {
+                    $field->Type .= '(' . $length . ')';
+                }
+
+                // Default
+                // Parse ('foo') as foo
+                $field->Default = preg_replace(
+                    "/(^(\(\(|\('|\(N'|\()|(('\)|(?<!\()\)\)|\))$))/i",
+                    '',
+                    $field->Default
+                );
+
+                $details[$field->Field] = $field;
+
+                // Find key
+                $index = null;
+
+                foreach ($keys as $key) {
+                    if ($key->Column_name == $field->Field) {
+                        $index = $key;
+                        break;
+                    }
+                }
+
+                if ($index) {
+                    if ($index->Is_primary) {
+                        $field->Key = 'PRI';
+                    } elseif (!$index->Non_unique) {
+                        $field->Key = 'UNI';
+                    } else {
+                        $field->Key = 'MUL';
+                    }
+
+                    if ($index->is_identity) {
+                        $field->Extra = 'auto_increment';
+                    }
                 }
             }
 
-            if ($length) {
-                $field->Type .= '(' . $length . ')';
-            }
-
-            // Default
-            // Parse ('foo') as foo
-            $field->Default = preg_replace(
-                "/(^(\(\(|\('|\(N'|\()|(('\)|(?<!\()\)\)|\))$))/i",
-                '',
-                $field->Default
-            );
-
-            $details[$field->Field] = $field;
-
-            // Find key
-            $index = null;
-
-            foreach ($keys as $key) {
-                if ($key->Column_name == $field->Field) {
-                    $index = $key;
-                    break;
-                }
-            }
-
-            if ($index) {
-                if ($index->Is_primary) {
-                    $field->Key = 'PRI';
-                } elseif (!$index->Non_unique) {
-                    $field->Key = 'UNI';
-                } else {
-                    $field->Key = 'MUL';
-                }
-
-                if ($index->is_identity) {
-                    $field->Extra = 'auto_increment';
-                }
-            }
+            $this->columnCache = $details;
         }
 
-        return $details;
+        return $this->columnCache;
     }
 
     /**
