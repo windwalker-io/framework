@@ -1,6 +1,7 @@
 # Development system files #
 .*
 !/.gitignore
+!/.gitkeep
 !/.travis.yml
 
 # Composer #
@@ -9,3 +10,4 @@ composer.lock
 
 # Test #
 phpunit.xml
+/Test/logs

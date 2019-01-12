@@ -688,7 +688,7 @@ class SqlsrvQueryTest extends AbstractQueryTestCase
             ->order('id')
             ->limit(3);
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+        $sql = 'SELECT TOP 3 * FROM foo WHERE a = b ORDER BY id';
 
         $this->assertEquals($this->format($sql), $this->format($query));
 
@@ -697,9 +697,11 @@ class SqlsrvQueryTest extends AbstractQueryTestCase
             ->from('foo')
             ->where('a = b')
             ->order('id')
-            ->limit(3, 0);
+            ->limit(3, 6);
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+        $sql = 'SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) AS RowNumber FROM (
+    SELECT TOP 9 * FROM foo WHERE a = b ORDER BY id
+) AS A) AS A WHERE RowNumber > 6';
 
         $this->assertEquals($this->format($sql), $this->format($query));
     }
@@ -719,7 +721,7 @@ class SqlsrvQueryTest extends AbstractQueryTestCase
             ->where('a = b')
             ->order('id');
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+        $sql = 'SELECT TOP 3 * FROM foo WHERE a = b ORDER BY id';
 
         $this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3)));
 
@@ -729,7 +731,7 @@ class SqlsrvQueryTest extends AbstractQueryTestCase
             ->where('a = b')
             ->order('id');
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+        $sql = 'SELECT TOP 3 * FROM foo WHERE a = b ORDER BY id';
 
         $this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3, 0)));
     }

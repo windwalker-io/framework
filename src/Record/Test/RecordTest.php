@@ -10,6 +10,7 @@ namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
+use Windwalker\DataMapper\DatabaseContainer;
 use Windwalker\Record\Record;
 use Windwalker\Record\Test\Stub\StubRecord;
 use Windwalker\Test\TestHelper;
@@ -39,6 +40,8 @@ class RecordTest extends AbstractMysqlTestCase
     {
         parent::setUp();
 
+        DatabaseContainer::reset();
+
         $this->instance = new Record('articles');
     }
 
@@ -47,6 +50,7 @@ class RecordTest extends AbstractMysqlTestCase
      * This method is called after a test is executed.
      *
      * @return void
+     * @throws \ReflectionException
      */
     protected function tearDown()
     {

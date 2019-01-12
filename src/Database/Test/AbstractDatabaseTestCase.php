@@ -11,6 +11,7 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Monitor\CallbackMonitor;
 use Windwalker\Query\Query;
 use Windwalker\Test\TestHelper;
 
@@ -88,7 +89,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
             static::markTestSkipped('DSN of driver ' . static::$driver . ' not available');
         }
 
-        static::$dbname = $dbname = isset($dsn['dbname']) ? $dsn['dbname'] : null;
+        static::$dbname = $dbname = $dsn['dbname'] ?? null;
 
         if (!$dbname) {
             throw new \LogicException(sprintf('No dbname in %s DSN', static::$driver));
@@ -118,6 +119,17 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
             );
 
             $db->setDebug(true);
+
+            $logfile = fopen(
+                __DIR__ . '/logs/' . str_replace('\\', '_', static::class) . '.log',
+                'ab'
+            );
+
+            $db->setMonitor(new CallbackMonitor(
+                function ($query) use ($logfile) {
+                    fwrite($logfile, $query . "\n\n");
+                }
+            ));
         } catch (\RangeException $e) {
             static::markTestSkipped($e->getMessage());
 
@@ -167,8 +179,6 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
         $queries = static::getSetupSql();
 
         self::$dbo->execute($queries);
-
-//        DatabaseHelper::batchQuery(static::$dbo, $queries);
     }
 
     /**

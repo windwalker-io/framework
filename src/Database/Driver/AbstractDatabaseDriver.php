@@ -167,8 +167,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         // Initialise object variables.
         $this->connection = $connection;
 
-        $this->database    = (isset($options['database'])) ? $options['database'] : '';
-        $this->tablePrefix = (isset($options['prefix'])) ? $options['prefix'] : 'wind_';
+        $this->database    = $options['database'] ?? '';
+        $this->tablePrefix = $options['prefix'] ?? 'wind_';
 
         // Set class options.
         $this->options = $options;
@@ -229,21 +229,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
         // Increment the query counter.
         $this->count++;
-
-//        if ($this->middlewares) {
-//            // Prepare middleware data
-//            $data = new \stdClass();
-//            $data->debug = &$this->debug;
-//            $data->query = &$this->query;
-//            $data->sql = $this->replacePrefix((string) $this->query);
-//            $data->db = $this;
-//
-//            if ($this->query instanceof PreparableInterface) {
-//                $data->bounded = $this->query->getBounded();
-//            }
-//
-//            return $this->middlewares->execute($data);
-//        }
 
         return $this->doExecute($prepare);
     }

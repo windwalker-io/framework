@@ -51,8 +51,6 @@ class DatabaseContainer
      * Method to set property db
      *
      * @param   AbstractDatabaseDriver|callable $db
-     *
-     * @return  static  Return self to support chaining.
      */
     public static function setDb($db)
     {
@@ -63,5 +61,17 @@ class DatabaseContainer
         }
 
         static::$db = $db;
+    }
+
+    /**
+     * reset
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function reset(): void
+    {
+        static::$db = null;
     }
 }

@@ -9,6 +9,7 @@
 namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
+use Windwalker\DataMapper\DatabaseContainer;
 use Windwalker\Record\NestedRecord;
 use Windwalker\Utilities\ArrayHelper;
 
@@ -35,6 +36,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
+
+        DatabaseContainer::reset();
+
+        show(spl_object_hash(static::$dbo));
 
         $record = new NestedRecord('#__nestedsets');
 
