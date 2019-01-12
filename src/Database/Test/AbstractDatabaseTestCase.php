@@ -121,7 +121,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
             $db->setDebug(true);
 
             $logfile = fopen(
-                __DIR__ . '/logs/' . str_replace('\\', '_', static::class) . '.log',
+                __DIR__ . '/logs/' . str_replace('\\', '_', static::class) . '.sql',
                 'ab'
             );
 
