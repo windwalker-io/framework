@@ -15,6 +15,8 @@ use Windwalker\Middleware\AbstractMiddleware;
  * The ProfilerMiddleware class.
  *
  * @since  3.0
+ *
+ * @deprecated Use Monitor class instead.
  */
 class DbProfilerMiddleware extends AbstractMiddleware
 {

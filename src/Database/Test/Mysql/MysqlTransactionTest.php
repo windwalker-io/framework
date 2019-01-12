@@ -109,6 +109,41 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
     }
 
     /**
+     * testTransactionNested
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function testTransactionNested()
+    {
+        $table = '#__flower';
+
+        // Level 1
+        $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('D', '', '')";
+
+        $tran = $this->db->getTransaction()->start();
+
+        $this->db->execute($sql);
+
+        // Level 2
+        $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('E', '', '')";
+
+        $tran = $tran->start();
+
+        $this->db->execute($sql);
+
+        $tran->rollback();
+        $tran->commit();
+
+        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'D\'')->loadResult();
+        $this->assertEquals('D', $result);
+
+        $result2 = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'E\'')->loadResult();
+        $this->assertNotEquals('E', $result2);
+    }
+
+    /**
      * Method to test getDriver().
      *
      * @return void

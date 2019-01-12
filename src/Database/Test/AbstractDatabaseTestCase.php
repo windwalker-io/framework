@@ -238,13 +238,10 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
+     * @throws \ReflectionException
      */
     protected function tearDown()
     {
-        if (class_exists('Windwalker\Middleware\Chain\ChainBuilder')) {
-            $this->db->resetMiddlewares();
-        }
-
         $tables = TestHelper::getValue($this->db, 'tables');
 
         foreach ((array) $tables as $table) {

@@ -14,10 +14,7 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Command\AbstractTransaction;
 use Windwalker\Database\Command\AbstractWriter;
 use Windwalker\Database\Iterator\DataIterator;
-use Windwalker\Middleware\Chain\ChainBuilder;
-use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Query\Query;
-use Windwalker\Query\Query\PreparableInterface;
 
 /**
  * Class DatabaseDriver
@@ -141,13 +138,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     protected $lastQuery;
 
     /**
-     * Property middlewares.
-     *
-     * @var  ChainBuilder
-     */
-    protected $middlewares;
-
-    /**
      * Property independentQuery.
      *
      * @var  Query
@@ -168,15 +158,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         // Initialise object variables.
         $this->connection = $connection;
 
-        $this->database = (isset($options['database'])) ? $options['database'] : '';
+        $this->database    = (isset($options['database'])) ? $options['database'] : '';
         $this->tablePrefix = (isset($options['prefix'])) ? $options['prefix'] : 'wind_';
 
         // Set class options.
         $this->options = $options;
-
-        if (class_exists('Windwalker\Middleware\Chain\ChainBuilder')) {
-            $this->resetMiddlewares();
-        }
     }
 
     /**
@@ -521,7 +507,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      * This function replaces a string identifier <var>$prefix</var> with the string held is the
      * <var>tablePrefix</var> class variable.
      *
-     * @see https://stackoverflow.com/a/31745275
+     * @see     https://stackoverflow.com/a/31745275
      *
      * @param   string $sql    The SQL statement to prepare.
      * @param   string $prefix The common table prefix.
@@ -538,7 +524,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
             for ($i = 0; $i < $number; $i++) {
                 if (!empty($matches[0][$i])) {
                     $array[$i] = trim($matches[0][$i]);
-                    $sql = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
+                    $sql       = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
                 }
             }
         }
@@ -565,10 +551,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public static function splitSql($sql)
     {
-        $start = 0;
-        $open = false;
-        $char = '';
-        $end = strlen($sql);
+        $start   = 0;
+        $open    = false;
+        $char    = '';
+        $end     = strlen($sql);
         $queries = [];
 
         for ($i = 0; $i < $end; $i++) {
@@ -596,7 +582,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
             if (($current === ';' && !$open) || $i == $end - 1) {
                 $queries[] = substr($sql, $start, ($i - $start + 1));
-                $start = $i + 1;
+                $start     = $i + 1;
             }
         }
 
@@ -832,51 +818,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         $this->database = $database;
 
         $this->options['database'] = $database;
-
-        return $this;
-    }
-
-    /**
-     * addMiddleware
-     *
-     * @param  MiddlewareInterface|callable $middleware
-     *
-     * @return  static
-     *
-     * @throws \ReflectionException
-     * @since   3.0
-     */
-    public function addMiddleware($middleware)
-    {
-        $this->getMiddlewares()->add($middleware);
-
-        return $this;
-    }
-
-    /**
-     * Method to get property Middlewares
-     *
-     * @return  ChainBuilder
-     *
-     * @since   3.0
-     */
-    public function getMiddlewares()
-    {
-        return $this->middlewares;
-    }
-
-    /**
-     * Method to set property middlewares
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @throws \ReflectionException
-     * @since   3.0
-     */
-    public function resetMiddlewares()
-    {
-        $this->middlewares = new ChainBuilder();
-        $this->middlewares->add([$this, 'doExecute']);
 
         return $this;
     }

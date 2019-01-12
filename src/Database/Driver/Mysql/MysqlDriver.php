@@ -46,8 +46,23 @@ class MysqlDriver extends PdoDriver
     public function __construct(\PDO $connection = null, $options = [])
     {
         $options['driver'] = 'mysql';
-        $options['charset'] = (isset($options['charset'])) ? $options['charset'] : 'utf8';
+        $options['charset'] = $options['charset'] ?? 'utf8';
 
         parent::__construct($connection, $options);
+    }
+
+    /**
+     * connect
+     *
+     * @throws  \RuntimeException
+     * @return  static
+     */
+    public function connect()
+    {
+        parent::connect();
+
+        $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
+
+        return $this;
     }
 }

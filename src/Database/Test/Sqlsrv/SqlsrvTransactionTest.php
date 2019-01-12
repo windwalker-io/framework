@@ -6,16 +6,16 @@
  * @license    LGPL-2.0-or-later
  */
 
-namespace Windwalker\Database\Test\Postgresql;
+namespace Windwalker\Database\Test\Sqlsrv;
 
-use Windwalker\Database\Driver\Postgresql\PostgresqlTransaction;
+use Windwalker\Database\Driver\Sqlsrv\SqlsrvTransaction;
 
 /**
- * Test class of PostgresqlTransaction
+ * Test class of SqlsrvTransaction
  *
  * @since 2.0
  */
-class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
+class SqlsrvTransactionTest extends AbstractSqlsrvTestCase
 {
     /**
      * Tears down the fixture, for example, closes a network connection.
@@ -25,6 +25,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
      */
     protected function tearDown()
     {
+        parent::tearDown();
     }
 
     /**
@@ -36,7 +37,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
      */
     public function testGetNested()
     {
-        $tran = new PostgresqlTransaction($this->db, false);
+        $tran = new SqlsrvTransaction($this->db, false);
 
         $this->assertFalse($tran->getNested());
     }
@@ -50,11 +51,96 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
      */
     public function testSetNested()
     {
-        $tran = new PostgresqlTransaction($this->db);
+        $tran = new SqlsrvTransaction($this->db);
 
         $tran->setNested(false);
 
         $this->assertFalse($tran->getNested());
+    }
+
+    /**
+     * Method to test start().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Sqlsrv\SqlsrvTransaction::start
+     * @covers \Windwalker\Database\Driver\Sqlsrv\SqlsrvTransaction::rollback
+     */
+    public function testTransactionRollback()
+    {
+        $table = '#__flower';
+
+        $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('A', '', ''), ('B', '', ''), ('C', '', '')";
+
+        $tran = $this->db->getTransaction()->start();
+
+        $this->db->setQuery($sql)->execute();
+
+        $tran->rollback();
+
+        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'A\'')->loadResult();
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Method to test start().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Sqlsrv\SqlsrvTransaction::start
+     * @covers \Windwalker\Database\Driver\Sqlsrv\SqlsrvTransaction::commit
+     */
+    public function testTransactionCommit()
+    {
+        $table = '#__flower';
+
+        $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('A', '', ''), ('B', '', ''), ('C', '', '')";
+
+        $tran = $this->db->getTransaction()->start();
+
+        $this->db->setQuery($sql)->execute();
+
+        $tran->commit();
+
+        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'A\'')->loadResult();
+
+        $this->assertEquals('A', $result);
+    }
+
+    /**
+     * testTransactionNested
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function testTransactionNested()
+    {
+        $table = '#__flower';
+
+        // Level 1
+        $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('D', '', '')";
+
+        $tran = $this->db->getTransaction()->start();
+
+        $this->db->execute($sql);
+
+        // Level 2
+        $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('E', '', '')";
+
+        $tran = $tran->start();
+
+        $this->db->execute($sql);
+
+        $tran->rollback();
+        $tran->commit();
+
+        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'D\'')->loadResult();
+        $this->assertEquals('D', $result);
+
+        $result2 = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'E\'')->loadResult();
+        $this->assertNotEquals('E', $result2);
     }
 
     /**
@@ -86,90 +172,5 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
-    }
-
-    /**
-     * Method to test start().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::start
-     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::rollback
-     */
-    public function testTransactionRollback()
-    {
-        $table = '#__flower';
-
-        $sql = "INSERT INTO {$table} (catid, title) VALUES (1, 'A'), (2, 'B'), (3, 'C')";
-
-        $tran = $this->db->getTransaction()->start();
-
-        $this->db->setQuery($sql)->execute();
-
-        $tran->rollback();
-
-        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'A\'')->loadResult();
-
-        $this->assertFalse($result);
-    }
-
-    /**
-     * Method to test start().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::start
-     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::commit
-     */
-    public function testTransactionCommit()
-    {
-        $table = '#__flower';
-
-        $sql = "INSERT INTO {$table} (catid, title) VALUES (1, 'A'), (2, 'B'), (3, 'C')";
-
-        $tran = $this->db->getTransaction()->start();
-
-        $this->db->setQuery($sql)->execute();
-
-        $tran->commit();
-
-        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'A\'')->loadResult();
-
-        $this->assertEquals('A', $result);
-    }
-
-    /**
-     * testTransactionNested
-     *
-     * @return  void
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function testTransactionNested()
-    {
-        $table = '#__flower';
-
-        // Level 1
-        $sql = "INSERT INTO {$table} (catid, title, meaning, params) VALUES (0, 'D', '', '')";
-
-        $tran = $this->db->getTransaction()->start();
-
-        $this->db->execute($sql);
-
-        // Level 2
-        $sql = "INSERT INTO {$table} (catid, title, meaning, params) VALUES (0, 'E', '', '')";
-
-        $tran = $tran->start();
-
-        $this->db->execute($sql);
-
-        $tran->rollback();
-        $tran->commit();
-
-        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'D\'')->loadResult();
-        $this->assertEquals('D', $result);
-
-        $result2 = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'E\'')->loadResult();
-        $this->assertNotEquals('E', $result2);
     }
 }

@@ -129,7 +129,6 @@ class PdoDriver extends AbstractDatabaseDriver
         }
 
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-//        $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
 
         return $this;
     }

@@ -48,6 +48,21 @@ abstract class AbstractSqlsrvTestCase extends AbstractDatabaseTestCase
     protected $connection;
 
     /**
+     * setUpBeforeClass
+     *
+     * @throws \LogicException
+     * @return  void
+     */
+    public static function setUpBeforeClass()
+    {
+        // Fix for MacOS ODBC driver 17.2 issue
+        // @see https://github.com/Microsoft/msphpsql/issues/909
+        setlocale(LC_ALL, 'en_GB');
+
+        parent::setUpBeforeClass();
+    }
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *

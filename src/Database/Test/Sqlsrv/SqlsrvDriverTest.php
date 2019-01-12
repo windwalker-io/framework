@@ -18,22 +18,6 @@ use Windwalker\Query\Sqlsrv\SqlsrvQuery;
 class SqlsrvDriverTest extends AbstractSqlsrvTestCase
 {
     /**
-     * setUpBeforeClass
-     *
-     * @throws \LogicException
-     * @return  void
-     */
-    public static function setUpBeforeClass()
-    {
-        // Fix for MacOS ODBC driver 17.2 issue
-        // @see https://github.com/Microsoft/msphpsql/issues/909
-        setlocale(LC_ALL, 'en_GB');
-
-        parent::setUpBeforeClass();
-    }
-
-
-    /**
      * Method to test getOption().
      *
      * @return void
