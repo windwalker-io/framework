@@ -830,6 +830,59 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
+     * Find and replace sprintf-like tokens in a format string.
+     * Each token takes one of the following forms:
+     *     %%       - A literal percent character.
+     *     %[t]     - Where [t] is a type specifier.
+     *     %[n]$[x] - Where [n] is an argument specifier and [t] is a type specifier.
+     *
+     * Types:
+     * a - Numeric: Replacement text is coerced to a numeric type but not quoted or escaped.
+     * e - Escape: Replacement text is passed to $this->escape().
+     * E - Escape (extra): Replacement text is passed to $this->escape() with true as the second argument.
+     * n - Name Quote: Replacement text is passed to $this->quoteName().
+     * q - Quote: Replacement text is passed to $this->quote().
+     * Q - Quote (no escape): Replacement text is passed to $this->quote() with false as the second argument.
+     * r - Raw: Replacement text is used as-is. (Be careful)
+     *
+     * Date Types:
+     * - Replacement text automatically quoted (use uppercase for Name Quote).
+     * - Replacement text should be a string in date format or name of a date column.
+     * y/Y - Year
+     * m/M - Month
+     * d/D - Day
+     * h/H - Hour
+     * i/I - Minute
+     * s/S - Second
+     *
+     * Invariable Types:
+     * - Takes no argument.
+     * - Argument index not incremented.
+     * t - Replacement text is the result of $this->currentTimestamp().
+     * z - Replacement text is the result of $this->nullDate(false).
+     * Z - Replacement text is the result of $this->nullDate(true).
+     *
+     * Usage:
+     * $query->format('SELECT %1$n FROM %2$n WHERE %3$n = %4$a', 'foo', '#__foo', 'bar', 1);
+     * Returns: SELECT `foo` FROM `#__foo` WHERE `bar` = 1
+     *
+     * Notes:
+     * The argument specifier is optional but recommended for clarity.
+     * The argument index used for unspecified tokens is incremented only when used.
+     *
+     * @param string $format The formatting string.
+     * @param array  $args   The parameters.
+     *
+     * @return  string  Returns a string produced according to the formatting string.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function format(string $format, ...$args): string
+    {
+        return $this->getIndependentQuery()->format($format, ...$args);
+    }
+
+    /**
      * getDateFormat
      *
      * @return  string
