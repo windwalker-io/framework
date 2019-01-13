@@ -8,7 +8,6 @@
 
 namespace Windwalker\Data;
 
-use http\Exception\BadMethodCallException;
 use Windwalker\Data\Traits\CollectionTrait;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Iterator\ArrayObject;
@@ -21,7 +20,6 @@ use Windwalker\Utilities\Iterator\ArrayObject;
  * @method mixed prev()
  * @method mixed end()
  * @method mixed reset()
- * @method mixed each()
  * @method mixed key()
  * @method mixed firstKey()
  * @method mixed lastKey()
@@ -148,13 +146,13 @@ class Collection extends ArrayObject implements DataInterface
      * @param string      $name
      * @param string|null $key
      *
-     * @return  array
+     * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function column(string $name, ?string $key = null): array
+    public function column(string $name, ?string $key = null): self
     {
-        return array_column($this->storage, $name, $key);
+        return new static(array_column($this->storage, $name, $key));
     }
 
     /**
@@ -427,13 +425,13 @@ class Collection extends ArrayObject implements DataInterface
      * @param callable $callable
      * @param mixed    $initial
      *
-     * @return  static
+     * @return  mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function reduce(callable $callable, $initial = null): self
+    public function reduce(callable $callable, $initial = null)
     {
-        return new static(array_reduce($this->storage, $callable, $initial));
+        return array_reduce($this->storage, $callable, $initial);
     }
 
     /**
@@ -518,15 +516,49 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @param int      $offset
      * @param int|null $length
-     * @param bool     $replacement
+     * @param mixed    $replacement
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function splice(int $offset, ?int $length = null, bool $replacement = false): self
+    public function splice(int $offset, ?int $length = null, $replacement = null): self
     {
         return new static(array_splice($this->storage, $offset, $length, $replacement));
+    }
+
+    /**
+     * insertAfter
+     *
+     * @param int   $key
+     * @param mixed $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function insertAfter(int $key, $value): self
+    {
+        $this->splice($key + 1, 0, $value);
+
+        return $this;
+    }
+
+    /**
+     * insertBefore
+     *
+     * @param int   $key
+     * @param mixed $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function insertBefore(int $key, $value): self
+    {
+        $this->splice($key, 0, $value);
+
+        return $this;
     }
 
     /**
@@ -639,7 +671,11 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function shuffle(): self
     {
-        return new static(shuffle($this->storage));
+        $new = $this->storage;
+
+        shuffle($new);
+
+        return new static($new);
     }
 
     /**
@@ -654,6 +690,8 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function __call($name, $args)
     {
+        $name = strtolower($name);
+
         // Simple apply storage
         $methods = [
             'current' => 'current',
@@ -661,14 +699,13 @@ class Collection extends ArrayObject implements DataInterface
             'prev' => 'prev',
             'end' => 'end',
             'reset' => 'reset',
-            'each' => 'each',
             'key' => 'key',
-            'firstkey' => 'array_first_key',
-            'lastkey' => 'array_last_key'
+            'firstkey' => 'array_key_first',
+            'lastkey' => 'array_key_last'
         ];
 
-        if (in_array(strtolower($name), $methods, true)) {
-            return $name($this->storage, ...$args);
+        if (array_key_exists($name, $methods)) {
+            return $methods[$name]($this->storage, ...$args);
         }
 
         // Alias
@@ -677,13 +714,13 @@ class Collection extends ArrayObject implements DataInterface
             'include' => 'contains',
         ];
 
-        if (in_array(strtolower($name), $methods, true)) {
-            return $this->$name(...$args);
+        if (array_key_exists($name, $methods)) {
+            return $this->{$methods[$name]}(...$args);
         }
 
-        throw new BadMethodCallException(
+        throw new \BadMethodCallException(
             sprintf(
-                'Method: %s not found in %s',
+                'Method: %s() not found in %s',
                 $name,
                 static::class
             )
