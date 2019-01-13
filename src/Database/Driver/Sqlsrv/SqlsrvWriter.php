@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2019 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Sqlsrv;
