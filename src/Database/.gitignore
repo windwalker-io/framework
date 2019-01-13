@@ -10,4 +10,5 @@ composer.lock
 
 # Test #
 phpunit.xml
-/Test/logs
+/Test/logs/*.log
+/Test/logs/*.sql
