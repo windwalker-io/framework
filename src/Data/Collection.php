@@ -8,12 +8,25 @@
 
 namespace Windwalker\Data;
 
+use http\Exception\BadMethodCallException;
 use Windwalker\Data\Traits\CollectionTrait;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Iterator\ArrayObject;
 
 /**
  * The Collection class.
+ *
+ * @method mixed current()
+ * @method mixed next()
+ * @method mixed prev()
+ * @method mixed end()
+ * @method mixed reset()
+ * @method mixed each()
+ * @method mixed key()
+ * @method mixed firstKey()
+ * @method mixed lastKey()
+ * @method mixed indexOf($value, bool $strict = false) Alias of search()
+ * @method mixed include($value, bool $strict = false) Alias of contains()
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -130,21 +143,6 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
-     * chunk
-     *
-     * @param int  $num
-     * @param bool $preserveKeys
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function chunk(int $num, ?bool $preserveKeys = null): self
-    {
-        return new static(static::toCollections(array_chunk($this->storage, $num, $preserveKeys)));
-    }
-
-    /**
      * column
      *
      * @param string      $name
@@ -171,5 +169,524 @@ class Collection extends ArrayObject implements DataInterface
     public function combine($values): self
     {
         return new static(array_combine($this->storage, Arr::toArray($values)));
+    }
+
+    /**
+     * diff
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function diff(...$args): self
+    {
+        $args = array_map([Arr::class, 'toArray'], $args);
+
+        return new static(array_diff($this->storage, ...$args));
+    }
+
+    /**
+     * diffKeys
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function diffKeys(...$args): self
+    {
+        $args = array_map([Arr::class, 'toArray'], $args);
+
+        return new static(array_diff_key($this->storage, ...$args));
+    }
+
+    /**
+     * fill
+     *
+     * @param int   $start
+     * @param int   $num
+     * @param mixed $value
+     *
+     * @return  Collection
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function fill(int $start, int $num, $value): self
+    {
+        return new static(array_fill($start, $num, $value));
+    }
+
+    /**
+     * fillKeys
+     *
+     * @param array $keys
+     * @param mixed $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function fillKeys(array $keys, $value): self
+    {
+        return new static(array_fill_keys($keys, $value));
+    }
+
+    /**
+     * flip
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function flip(): self
+    {
+        return new static(array_flip($this->storage));
+    }
+
+    /**
+     * intersect
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function intersect(...$args): self
+    {
+        $args = array_map([Arr::class, 'toArray'], $args);
+
+        return new static(array_intersect($this->storage, ...$args));
+    }
+
+    /**
+     * intersectKey
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function intersectKey(...$args): self
+    {
+        $args = array_map([Arr::class, 'toArray'], $args);
+
+        return new static(array_intersect_key($this->storage, ...$args));
+    }
+
+    /**
+     * merge
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function merge(...$args): self
+    {
+        $args = array_map([Arr::class, 'toArray'], $args);
+
+        return new static(array_merge($this->storage, ...$args));
+    }
+
+    /**
+     * mergeRecursive
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function mergeRecursive(...$args): self
+    {
+        $new = $this->bindNewInstance($this);
+
+        return array_map([$new, 'bind'], $args);
+    }
+
+    /**
+     * pad
+     *
+     * @param int   $size
+     * @param mixed $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function pad(int $size, $value): self
+    {
+        return new static(array_pad($this->storage, $size, $value));
+    }
+
+    /**
+     * leftPad
+     *
+     * @param int   $size
+     * @param mixed $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function leftPad(int $size, $value): self
+    {
+        return $this->pad(-$size, $value);
+    }
+
+    /**
+     * leftPad
+     *
+     * @param int   $size
+     * @param mixed $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function rightPad(int $size, $value): self
+    {
+        return $this->pad($size, $value);
+    }
+
+    /**
+     * pop
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function pop()
+    {
+        return array_pop($this->storage);
+    }
+
+    /**
+     * shift
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function shift()
+    {
+        return array_shift($this->storage);
+    }
+
+    /**
+     * push
+     *
+     * @param mixed ...$value
+     *
+     * @return  int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function push(...$value): int
+    {
+        return array_push($this->storage, ...$value);
+    }
+
+    /**
+     * unshift
+     *
+     * @param mixed ...$value
+     *
+     * @return  int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function unshift(...$value): int
+    {
+        return array_unshift($this->storage, ...$value);
+    }
+
+    /**
+     * rand
+     *
+     * @param int $num
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function rand(int $num = 1): self
+    {
+        return new static(array_rand($this->storage, $num));
+    }
+
+    /**
+     * reduce
+     *
+     * @param callable $callable
+     * @param mixed    $initial
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function reduce(callable $callable, $initial = null): self
+    {
+        return new static(array_reduce($this->storage, $callable, $initial));
+    }
+
+    /**
+     * replace
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function replace(...$args): self
+    {
+        $args = array_map([Arr::class, 'toArray'], $args);
+
+        return new static(array_replace($this->storage, ...$args));
+    }
+
+    /**
+     * replaceRecursive
+     *
+     * @param array[]|static[] ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function replaceRecursive(...$args): self
+    {
+        $args = self::allToArray($args);
+
+        return new static(array_replace_recursive($this->storage, ...$args));
+    }
+
+    /**
+     * reverse
+     *
+     * @param bool $preserveKeys
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function reverse(bool $preserveKeys = false): self
+    {
+        return new static(array_reverse($this->storage, $preserveKeys));
+    }
+
+    /**
+     * search
+     *
+     * @param mixed $value
+     * @param bool  $strict
+     *
+     * @return  false|int|string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function search($value, bool $strict = false)
+    {
+        return array_search($value, $this->storage, $strict);
+    }
+
+    /**
+     * slice
+     *
+     * @param int      $offset
+     * @param int|null $length
+     * @param bool     $preserveKeys
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function slice(int $offset, ?int $length = null, bool $preserveKeys = false): self
+    {
+        return new static(array_slice($this->storage, $offset, $length, $preserveKeys));
+    }
+
+    /**
+     * slice
+     *
+     * @param int      $offset
+     * @param int|null $length
+     * @param bool     $replacement
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function splice(int $offset, ?int $length = null, bool $replacement = false): self
+    {
+        return new static(array_splice($this->storage, $offset, $length, $replacement));
+    }
+
+    /**
+     * sum
+     *
+     * @return  float|int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function sum()
+    {
+        return array_sum($this->storage);
+    }
+
+    /**
+     * unique
+     *
+     * @param int $sortFlags
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function unique($sortFlags = SORT_STRING): self
+    {
+        return new static(array_unique($this->storage, $sortFlags));
+    }
+
+    /**
+     * walk
+     *
+     * @param callable $callable
+     * @param mixed    $userdata
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function walk(callable $callable, $userdata = null): bool
+    {
+        return array_walk($this->storage, $callable, $userdata);
+    }
+
+    /**
+     * walkRecursive
+     *
+     * @param callable $callable
+     * @param mixed    $userdata
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function walkRecursive(callable $callable, $userdata = null): bool
+    {
+        return array_walk_recursive($this->storage, $callable, $userdata);
+    }
+
+    /**
+     * current
+     *
+     * @param mixed $value
+     * @param bool  $strict
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function contains($value, bool $strict = false)
+    {
+        return in_array($this->storage, $value, $strict);
+    }
+
+    /**
+     * keyExists
+     *
+     * @param mixed $key
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function keyExists($key): bool
+    {
+        return array_key_exists($key, $this->storage);
+    }
+
+    /**
+     * range
+     *
+     * @param mixed     $start
+     * @param mixed     $end
+     * @param int|float $step
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function range($start, $end, $step = 1): self
+    {
+        return new static(range($start, $end, $step));
+    }
+
+    /**
+     * shuffle
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function shuffle(): self
+    {
+        return new static(shuffle($this->storage));
+    }
+
+    /**
+     * __call
+     *
+     * @param string $name
+     * @param array  $args
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function __call($name, $args)
+    {
+        // Simple apply storage
+        $methods = [
+            'current' => 'current',
+            'next' => 'next',
+            'prev' => 'prev',
+            'end' => 'end',
+            'reset' => 'reset',
+            'each' => 'each',
+            'key' => 'key',
+            'firstkey' => 'array_first_key',
+            'lastkey' => 'array_last_key'
+        ];
+
+        if (in_array(strtolower($name), $methods, true)) {
+            return $name($this->storage, ...$args);
+        }
+
+        // Alias
+        $methods = [
+            'indexof' => 'search',
+            'include' => 'contains',
+        ];
+
+        if (in_array(strtolower($name), $methods, true)) {
+            return $this->$name(...$args);
+        }
+
+        throw new BadMethodCallException(
+            sprintf(
+                'Method: %s not found in %s',
+                $name,
+                static::class
+            )
+        );
     }
 }

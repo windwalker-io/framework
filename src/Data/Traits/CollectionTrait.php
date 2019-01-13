@@ -186,7 +186,7 @@ trait CollectionTrait
             return null;
         }
 
-        return array_shift($array);
+        return $array[array_key_first($array)];
     }
 
     /**
@@ -212,7 +212,7 @@ trait CollectionTrait
             return $prev;
         }
 
-        return array_pop($array);
+        return $array[array_key_last($array)];
     }
 
     /**
