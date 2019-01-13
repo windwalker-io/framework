@@ -16,7 +16,7 @@ use Psr\Log\NullLogger;
 /**
  * The LoggingMonitor class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class LoggingMonitor implements QueryMonitorInterface, LoggerAwareInterface
 {
@@ -39,7 +39,7 @@ class LoggingMonitor implements QueryMonitorInterface, LoggerAwareInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function start(string $query): void
     {
@@ -51,7 +51,7 @@ class LoggingMonitor implements QueryMonitorInterface, LoggerAwareInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function stop(): void
     {

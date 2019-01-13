@@ -63,7 +63,7 @@ class Arr
      *
      * @return  iterable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function toIterable($iterable): iterable
     {

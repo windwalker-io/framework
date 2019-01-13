@@ -452,7 +452,7 @@ class SqlsrvTableTest extends AbstractSqlsrvTestCase
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function testDrop()
     {

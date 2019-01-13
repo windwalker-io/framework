@@ -26,7 +26,7 @@ use Windwalker\Utilities\Iterator\ArrayObject;
  * @method mixed indexOf($value, bool $strict = false) Alias of search()
  * @method mixed include($value, bool $strict = false) Alias of contains()
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class Collection extends ArrayObject implements DataInterface
 {
@@ -110,7 +110,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  Collection[]
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function toCollections(array $items): array
     {
@@ -129,7 +129,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function keys(?string $search = null, ?bool $strict = null): array
     {
@@ -148,7 +148,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function column(string $name, ?string $key = null): self
     {
@@ -162,7 +162,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function combine($values): self
     {
@@ -176,7 +176,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function diff(...$args): self
     {
@@ -192,7 +192,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function diffKeys(...$args): self
     {
@@ -210,7 +210,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  Collection
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function fill(int $start, int $num, $value): self
     {
@@ -225,7 +225,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function fillKeys(array $keys, $value): self
     {
@@ -237,7 +237,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function flip(): self
     {
@@ -251,7 +251,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function intersect(...$args): self
     {
@@ -267,7 +267,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function intersectKey(...$args): self
     {
@@ -283,7 +283,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function merge(...$args): self
     {
@@ -299,7 +299,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function mergeRecursive(...$args): self
     {
@@ -316,7 +316,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function pad(int $size, $value): self
     {
@@ -331,7 +331,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function leftPad(int $size, $value): self
     {
@@ -346,7 +346,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function rightPad(int $size, $value): self
     {
@@ -358,7 +358,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function pop()
     {
@@ -370,7 +370,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function shift()
     {
@@ -384,7 +384,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function push(...$value): int
     {
@@ -398,7 +398,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function unshift(...$value): int
     {
@@ -412,7 +412,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function rand(int $num = 1): self
     {
@@ -427,7 +427,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function reduce(callable $callable, $initial = null)
     {
@@ -441,7 +441,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function replace(...$args): self
     {
@@ -457,7 +457,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function replaceRecursive(...$args): self
     {
@@ -473,7 +473,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function reverse(bool $preserveKeys = false): self
     {
@@ -488,7 +488,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  false|int|string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function search($value, bool $strict = false)
     {
@@ -504,7 +504,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function slice(int $offset, ?int $length = null, bool $preserveKeys = false): self
     {
@@ -520,7 +520,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function splice(int $offset, ?int $length = null, $replacement = null): self
     {
@@ -535,7 +535,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function insertAfter(int $key, $value): self
     {
@@ -552,7 +552,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function insertBefore(int $key, $value): self
     {
@@ -566,7 +566,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  float|int
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function sum()
     {
@@ -580,7 +580,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function unique($sortFlags = SORT_STRING): self
     {
@@ -595,7 +595,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function walk(callable $callable, $userdata = null): bool
     {
@@ -610,7 +610,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function walkRecursive(callable $callable, $userdata = null): bool
     {
@@ -625,7 +625,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function contains($value, bool $strict = false)
     {
@@ -639,7 +639,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function keyExists($key): bool
     {
@@ -655,7 +655,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function range($start, $end, $step = 1): self
     {
@@ -667,7 +667,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function shuffle(): self
     {
@@ -686,7 +686,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function __call($name, $args)
     {

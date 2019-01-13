@@ -17,7 +17,7 @@ use Windwalker\Query\Sqlsrv\SqlsrvGrammar;
 /**
  * The SqlsrvTable class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class SqlsrvTable extends AbstractTable
 {

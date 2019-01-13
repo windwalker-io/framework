@@ -13,7 +13,7 @@ use Windwalker\String\Mbstring;
 /**
  * The ArrConverter class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class ArrConverter
 {

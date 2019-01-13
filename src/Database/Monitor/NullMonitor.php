@@ -11,7 +11,7 @@ namespace Windwalker\Database\Monitor;
 /**
  * The NullMonitor class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class NullMonitor implements QueryMonitorInterface
 {
@@ -22,7 +22,7 @@ class NullMonitor implements QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function start(string $query): void
     {
@@ -34,7 +34,7 @@ class NullMonitor implements QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function stop(): void
     {

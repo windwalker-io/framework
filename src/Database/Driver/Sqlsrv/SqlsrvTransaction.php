@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoTransaction;
 /**
  * The SqlsrvTransaction class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class SqlsrvTransaction extends PdoTransaction
 {

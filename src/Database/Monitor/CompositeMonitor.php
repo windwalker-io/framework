@@ -11,7 +11,7 @@ namespace Windwalker\Database\Monitor;
 /**
  * The CompositeMonitor class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class CompositeMonitor implements QueryMonitorInterface
 {
@@ -29,7 +29,7 @@ class CompositeMonitor implements QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function start(string $query): void
     {
@@ -43,7 +43,7 @@ class CompositeMonitor implements QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function stop(): void
     {
@@ -59,7 +59,7 @@ class CompositeMonitor implements QueryMonitorInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function addMonitor(QueryMonitorInterface $monitor): self
     {
@@ -73,7 +73,7 @@ class CompositeMonitor implements QueryMonitorInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function reset(): self
     {
@@ -87,7 +87,7 @@ class CompositeMonitor implements QueryMonitorInterface
      *
      * @return  QueryMonitorInterface[]
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function getMonitors(): array
     {
@@ -101,7 +101,7 @@ class CompositeMonitor implements QueryMonitorInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function setMonitors(array $monitors): self
     {

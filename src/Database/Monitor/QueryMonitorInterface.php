@@ -12,7 +12,7 @@ namespace Windwalker\Database\Monitor;
 /**
  * Interface QueryMonitorInterface
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 interface QueryMonitorInterface
 {
@@ -23,7 +23,7 @@ interface QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function start(string $query): void;
 
@@ -32,7 +32,7 @@ interface QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function stop(): void;
 }

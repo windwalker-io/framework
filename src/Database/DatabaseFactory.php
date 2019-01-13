@@ -139,7 +139,7 @@ abstract class DatabaseFactory
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function reset(): void
     {

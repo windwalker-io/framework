@@ -35,7 +35,7 @@ class Str
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function toString($data, bool $dump = true): string
     {

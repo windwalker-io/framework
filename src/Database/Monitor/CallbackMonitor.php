@@ -11,7 +11,7 @@ namespace Windwalker\Database\Monitor;
 /**
  * The CallbackMonitor class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class CallbackMonitor implements QueryMonitorInterface
 {
@@ -47,7 +47,7 @@ class CallbackMonitor implements QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function start(string $query): void
     {
@@ -59,7 +59,7 @@ class CallbackMonitor implements QueryMonitorInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function stop(): void
     {
@@ -73,7 +73,7 @@ class CallbackMonitor implements QueryMonitorInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function setBefore(?callable $before): self
     {
@@ -89,7 +89,7 @@ class CallbackMonitor implements QueryMonitorInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function setAfter(?callable $after): self
     {
@@ -103,7 +103,7 @@ class CallbackMonitor implements QueryMonitorInterface
      *
      * @return  callable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function getBefore(): callable
     {
@@ -117,7 +117,7 @@ class CallbackMonitor implements QueryMonitorInterface
      *
      * @return  callable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function getAfter(): callable
     {

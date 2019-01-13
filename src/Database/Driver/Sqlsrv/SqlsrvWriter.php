@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoWriter;
 /**
  * The SqlsrvWraiter class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class SqlsrvWriter extends PdoWriter
 {

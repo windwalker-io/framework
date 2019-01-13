@@ -214,7 +214,7 @@ abstract class Filesystem
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function glob(string $pattern, int $flags = 0): array
     {
@@ -262,7 +262,7 @@ abstract class Filesystem
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public static function globAll(string $baseDir, array $patterns, int $flags = 0): array
     {

@@ -875,7 +875,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  string  Returns a string produced according to the formatting string.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function format(string $format, ...$args): string
     {
@@ -911,7 +911,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  QueryMonitorInterface
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function getMonitor(): QueryMonitorInterface
     {
@@ -925,7 +925,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function setMonitor(QueryMonitorInterface $monitor)
     {

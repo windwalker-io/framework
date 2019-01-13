@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoDriver;
 /**
  * The SqlsrvDriver class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class SqlsrvDriver extends PdoDriver
 {

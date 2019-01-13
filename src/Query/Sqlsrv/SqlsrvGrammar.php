@@ -14,7 +14,7 @@ use Windwalker\Query\QueryElement;
 /**
  * The SqlsrvGrammar class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5
  */
 class SqlsrvGrammar extends AbstractQueryGrammar
 {

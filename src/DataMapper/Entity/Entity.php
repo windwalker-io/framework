@@ -637,7 +637,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5
      */
     public function hasIncrementField(): bool
     {
