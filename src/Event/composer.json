@@ -6,7 +6,7 @@
     "homepage": "https://github.com/ventoviro/windwalker-event",
     "license": "LGPL-2.0-or-later",
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=7.1.3"
     },
     "require-dev": {
         "windwalker/test": "~3.0"

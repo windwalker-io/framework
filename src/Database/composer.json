@@ -6,7 +6,7 @@
     "homepage": "https://github.com/ventoviro/windwalker-database",
     "license": "LGPL-2.0-or-later",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.1.3",
         "psr/log": "1.*@stable",
         "windwalker/query": "~3.0",
         "ext-pdo": "*"

@@ -6,7 +6,7 @@
     "homepage": "https://github.com/ventoviro/windwalker-form",
     "license": "LGPL-2.0-or-later",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.1.3",
         "windwalker/dom": "~3.0",
         "windwalker/html": "~3.0",
         "windwalker/validator": "~3.0",
