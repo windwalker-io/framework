@@ -120,6 +120,7 @@ class ArrConverter
 
         foreach ((array) $origin as $key => $val) {
             $key = $prefix . $key;
+
             if (!Arr::get($target, $key)) {
                 $target = Arr::set($target, $key, $val);
             }
