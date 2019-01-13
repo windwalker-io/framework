@@ -279,7 +279,7 @@ trait CollectionTrait
             $array = $array->dump();
         }
 
-        return $array;
+        return Arr::toArray($array);
     }
 
     /**

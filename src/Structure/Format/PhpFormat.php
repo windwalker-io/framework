@@ -9,6 +9,7 @@
 namespace Windwalker\Structure\Format;
 
 use Windwalker\Structure\StructureHelper;
+use Windwalker\Utilities\Arr;
 
 /**
  * PHP class format handler for Structure
@@ -94,9 +95,15 @@ class PhpFormat implements FormatInterface
         $s = "[\n";
         $i = 0;
 
+        $assoc = Arr::isAssociative($a);
+
         foreach ($a as $k => $v) {
             $s .= $i ? ",\n" : '';
-            $s .= str_repeat('    ', $level) . "'" . $k . "' => ";
+            $s .= str_repeat('    ', $level);
+
+            if ($assoc) {
+                $s .= "'" . $k . "' => ";
+            }
 
             if (is_array($v) || is_object($v)) {
                 $s .= static::getArrayString((array) $v, $level + 1);
