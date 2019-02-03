@@ -299,7 +299,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function extract($path)
     {
-        return new static($this->get($path));
+        return (new static())->load((array) $this->get($path), true);
     }
 
     /**
