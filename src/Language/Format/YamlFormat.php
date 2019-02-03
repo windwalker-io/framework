@@ -8,6 +8,7 @@
 
 namespace Windwalker\Language\Format;
 
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -30,10 +31,22 @@ class YamlFormat extends AbstractFormat
      * @param string $string
      *
      * @return  string[]
+     * @throws \ErrorException
      */
     public function parse($string)
     {
-        $array = Yaml::parse($string);
+        try {
+            $array = Yaml::parse($string);
+        } catch (ParseException $e) {
+            throw new \ErrorException(
+                $e->getMessage(),
+                $e->getCode(),
+                E_ERROR,
+                $e->getParsedFile(),
+                $e->getParsedLine(),
+                $e
+            );
+        }
 
         return $this->toOneDimension($array);
     }

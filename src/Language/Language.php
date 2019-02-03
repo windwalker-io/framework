@@ -132,6 +132,7 @@ class Language implements LanguageInterface
      * @param string $loader
      *
      * @return  $this
+     * @throws \ErrorException
      */
     public function load($file, $format = 'ini', $loader = 'file')
     {
@@ -139,9 +140,20 @@ class Language implements LanguageInterface
             $loader = 'php';
         }
 
-        $string = $this->getLoader($loader)->load($file);
+        try {
+            $string = $this->getLoader($loader)->load($file);
 
-        $string = $this->getFormat($format)->parse($string);
+            $string = $this->getFormat($format)->parse($string);
+        } catch (\Throwable $e) {
+            throw new \ErrorException(
+                $e->getMessage(),
+                $e->getCode(),
+                E_ERROR,
+                $file,
+                $e->getLine(),
+                $e
+            );
+        }
 
         $this->addStrings($string);
 

@@ -28,9 +28,23 @@ class IniFormat extends AbstractFormat
      * @param string $string
      *
      * @return  array
+     * @throws \ErrorException
      */
     public function parse($string)
     {
-        return parse_ini_string($string);
+        try {
+            return parse_ini_string($string);
+        } catch (\Throwable $e) {
+            preg_match('/on line (\d+)/', $e->getMessage(), $match);
+            
+            throw new \ErrorException(
+                $e->getMessage(),
+                $e->getCode(),
+                E_ERROR,
+                '',
+                ($match[1] ?? 2) - 1,
+                $e
+            );
+        }
     }
 }
