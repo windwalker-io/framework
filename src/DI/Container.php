@@ -317,7 +317,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     public function newInstance($class, array $args = [])
     {
         if ($class instanceof ClassMeta) {
-            $class = function (self $container) use ($class, $args) {
+            $class = function (self $container, array $args) use ($class) {
                 return $class->setContainer($container)->newInstance($args);
             };
         }
@@ -351,7 +351,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
                 $instance = $reflection->newInstanceArgs($newInstanceArgs);
             }
         } elseif (is_callable($class)) {
-            $instance = $class($this);
+            $instance = $class($this, $args);
 
             $reflection = new \ReflectionClass($instance);
         } else {
