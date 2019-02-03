@@ -978,4 +978,60 @@ class Arr
 
         return $results;
     }
+
+    /**
+     * Find value from array.
+     *
+     * @param mixed        $array
+     * @param string|array $field
+     * @param string|null  $operator
+     * @param mixed        $value
+     * @param bool         $strict
+     * @param bool         $keepKey
+     *
+     * @return  array
+     *
+     * @since  3.5.1
+     */
+    public static function where(
+        $array,
+        $field,
+        ?string $operator = null,
+        $value = null,
+        bool $strict = false,
+        bool $keepKey = false
+    ): array {
+        if (is_string($field)) {
+            $operator = $operator === '=' ? '' : $operator;
+
+            $query = [$field . rtrim(' ' . $operator) => $value];
+        } elseif (is_array($field)) {
+            $query = $field;
+        } else {
+            throw new \InvalidArgumentException('Where query must br array or string.');
+        }
+
+        return ArrayHelper::query($array, $query, $strict, $keepKey);
+    }
+
+    /**
+     * Query a two-dimensional array values to get second level array.
+     *
+     * @param   array          $array         An array to query.
+     * @param   array|callable $queries       Query strings or callback, may contain Comparison Operators: '>', '>=',
+     *                                        '<', '<='. Example: array(
+     *                                        'id'          => 6,   // Get all elements where id=6
+     *                                        'published >' => 0    // Get all elements where published>0
+     *                                        );
+     * @param   boolean        $strict        Use strict to compare equals.
+     * @param   boolean        $keepKey       Keep origin array keys.
+     *
+     * @return  array  An new two-dimensional array queried.
+     *
+     * @since   3.5.1
+     */
+    public static function query($array, array $queries = [], bool $strict = false, bool $keepKey = false): array
+    {
+        return ArrayHelper::query($array, $queries, $strict, $keepKey);
+    }
 }
