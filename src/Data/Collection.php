@@ -647,6 +647,20 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * implode
+     *
+     * @param string $glue
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function implode(string $glue): string
+    {
+        return implode($glue, $this->storage);
+    }
+
+    /**
      * range
      *
      * @param mixed     $start
