@@ -109,6 +109,20 @@ class ClassMeta
     }
 
     /**
+     * hasArgument
+     *
+     * @param string $name
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function hasArgument(string $name): bool
+    {
+        return isset($this->arguments[$name]);
+    }
+
+    /**
      * removeArgument
      *
      * @param   string $name

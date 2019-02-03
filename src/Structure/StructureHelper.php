@@ -349,6 +349,10 @@ class StructureHelper
      */
     public static function toArray($data, $recursive = false)
     {
+        if ($data instanceof ValueReference) {
+            return $data;
+        }
+
         // Ensure the input data is an array.
         if ($data instanceof \Traversable) {
             $data = iterator_to_array($data);

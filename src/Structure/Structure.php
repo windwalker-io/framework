@@ -38,6 +38,21 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     protected $ignoreValues = [null];
 
     /**
+     * Create Value Reference.
+     *
+     * @param string      $path
+     * @param string|null $separator
+     *
+     * @return  ValueReference
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function ref(string $path, string $separator = null): ValueReference
+    {
+        return new ValueReference($path, $separator);
+    }
+
+    /**
      * Constructor
      *
      * @param   mixed  $data   The data to bind to the new Structure object.
@@ -137,18 +152,19 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Get a structure value.
      *
-     * @param   string $path    Structure path (e.g. foo.content.showauthor)
-     * @param   mixed  $default Optional default value, returned if the internal value is null.
+     * @param   string    $path       Structure path (e.g. foo.content.showauthor)
+     * @param   mixed     $default    Optional default value, returned if the internal value is null.
+     * @param   string    $separator  Force separate character.
      *
      * @return  mixed  Value of entry or null
      *
      * @since   2.0
      */
-    public function get($path, $default = null)
+    public function get($path, $default = null, string $separator = null)
     {
-        $result = StructureHelper::getByPath($this->data, $path, $this->separator);
+        $result = StructureHelper::getByPath($this->data, $path, $separator ?: $this->separator);
 
-        return null !== $result ? $result : $default;
+        return $result ?? $default;
     }
 
     /**
@@ -381,6 +397,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function set($path, $value)
     {
+        if ($value instanceof ValueReference) {
+            $value = $value->get($this);
+        }
+
         if (\is_array($value) || \is_object($value)) {
             $value = StructureHelper::toArray($value, true);
         }
@@ -483,7 +503,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
                 $this->bindData($parent[$key], $value, $raw);
             } else {
-                $parent[$key] = $value;
+                $parent[$key] = $this->resolveValue($value);
             }
         }
     }
@@ -739,6 +759,24 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     public function count()
     {
         return \count($this->data);
+    }
+
+    /**
+     * resolveValue
+     *
+     * @param mixed|ValueReference $value
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function resolveValue($value)
+    {
+        if ($value instanceof ValueReference) {
+            $value = $value->get($this);
+        }
+
+        return $value;
     }
 
     /**

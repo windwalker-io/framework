@@ -14,6 +14,8 @@ use PhpDocReader\PhpDocReader;
 use Psr\Container\ContainerInterface;
 use Windwalker\DI\Annotation\Inject;
 use Windwalker\DI\Exception\DependencyResolutionException;
+use Windwalker\Structure\Structure;
+use Windwalker\Structure\ValueReference;
 
 /**
  * The DI Container.
@@ -80,6 +82,13 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     protected $docReader;
 
     /**
+     * Property parameters.
+     *
+     * @var  Structure
+     */
+    protected $parameters;
+
+    /**
      * Create class meta.
      *
      * @param string|callable $class
@@ -108,6 +117,21 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     }
 
     /**
+     * Create parameter ref.
+     *
+     * @param string      $path
+     * @param string|null $separator
+     *
+     * @return  ValueReference
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function ref(string $path, string $separator = null): ValueReference
+    {
+        return new ValueReference($path, $separator);
+    }
+
+    /**
      * Constructor for the DI Container
      *
      * @param   Container   $parent   Parent for hierarchical containers.
@@ -119,6 +143,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     {
         $this->parent   = $parent;
         $this->children = $children;
+        $this->parameters = new Structure();
 
         // Load Inject Annotation first to make sure AnnotationReader can autoload it.
         new Inject();
@@ -517,6 +542,8 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     {
         if ($value instanceof ClassMeta) {
             $value = $value->setContainer($this)->newInstance();
+        } elseif ($value instanceof ValueReference) {
+            $value = $value->get($this->getParameters());
         } elseif ($value instanceof RawWrapper) {
             $value = $value->get();
         }
@@ -1106,5 +1133,65 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         }
 
         return $this->docReader;
+    }
+
+    /**
+     * getParameter
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getParameter(string $key, $default = null)
+    {
+        return $this->parameters->get($key, $default);
+    }
+
+    /**
+     * setParameter
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setParameter(string $key, $value): self
+    {
+        $this->parameters->set($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * Method to get property Parameters
+     *
+     * @return  Structure
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getParameters(): Structure
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Method to set property parameters
+     *
+     * @param   Structure $parameters
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setParameters(Structure $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
     }
 }
