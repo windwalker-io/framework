@@ -543,7 +543,13 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         if ($value instanceof ClassMeta) {
             $value = $value->setContainer($this)->newInstance();
         } elseif ($value instanceof ValueReference) {
-            $value = $value->get($this->getParameters());
+            $v = $value->get($this->getParameters());
+
+            if ($v === null && $this->parent instanceof Container) {
+                $v = $value->get($this->parent->getParameters());
+            }
+
+            $value = $v;
         } elseif ($value instanceof RawWrapper) {
             $value = $value->get();
         }
