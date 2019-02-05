@@ -115,7 +115,7 @@ class ClassMeta
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function hasArgument(string $name): bool
     {
@@ -227,7 +227,7 @@ class ClassMeta
      *
      * @return  Container
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function getContainer(): Container
     {
@@ -241,7 +241,7 @@ class ClassMeta
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function setContainer(Container $container)
     {

@@ -2,8 +2,8 @@
 /**
  * Part of earth project.
  *
- * @copyright  Copyright (C) 2019 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2019 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI;
@@ -11,7 +11,7 @@ namespace Windwalker\DI;
 /**
  * The RawWrapper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.1
  */
 class RawWrapper
 {
@@ -37,7 +37,7 @@ class RawWrapper
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function get()
     {
@@ -51,7 +51,7 @@ class RawWrapper
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function set($value): self
     {
