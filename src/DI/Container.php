@@ -95,7 +95,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  ClassMeta
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public static function meta($class): ClassMeta
     {
@@ -109,7 +109,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  RawWrapper
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public static function raw($value): RawWrapper
     {
@@ -124,7 +124,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  ValueReference
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public static function ref(string $path, string $separator = null): ValueReference
     {
@@ -1149,7 +1149,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function getParameter(string $key, $default = null)
     {
@@ -1164,7 +1164,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function setParameter(string $key, $value): self
     {
@@ -1178,7 +1178,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  Structure
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function getParameters(): Structure
     {
@@ -1192,7 +1192,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function setParameters(Structure $parameters)
     {

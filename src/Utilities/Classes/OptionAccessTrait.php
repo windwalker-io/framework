@@ -82,7 +82,7 @@ trait OptionAccessTrait
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function pushOption(string $name, $value)
     {

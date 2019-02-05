@@ -2,8 +2,8 @@
 /**
  * Part of earth project.
  *
- * @copyright  Copyright (C) 2019 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2019 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Structure;
@@ -11,7 +11,7 @@ namespace Windwalker\Structure;
 /**
  * The ValueReference class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.1
  */
 class ValueReference
 {
@@ -49,7 +49,7 @@ class ValueReference
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function get($structure, $default = null)
     {
@@ -65,7 +65,7 @@ class ValueReference
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function getPath(): string
     {
@@ -79,7 +79,7 @@ class ValueReference
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function setPath(string $path)
     {
@@ -93,7 +93,7 @@ class ValueReference
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function getSeparator(): string
     {
@@ -107,7 +107,7 @@ class ValueReference
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function setSeparator(string $separator)
     {

@@ -653,7 +653,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public function implode(string $glue): string
     {

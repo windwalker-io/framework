@@ -45,7 +45,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @return  ValueReference
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     public static function ref(string $path, string $separator = null): ValueReference
     {
@@ -768,7 +768,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.1
      */
     protected function resolveValue($value)
     {
