@@ -21,7 +21,7 @@ Add this to the require block in your `composer.json`.
 - [Blade](#blade-renderer)
 - [Edge](#edge-renderer) (A Blade compitable engine without dependencies)
 - [Mustache](#mustache-renderer)
-- [Plates](#plastes-renderer)
+- [Plates](#plates-renderer)
 
 ## Getting Started
 
@@ -316,17 +316,17 @@ $renderer->setLoader(new \Mustache_Loader_FilesystemLoader($path, $options));
 
 We can change the file extension name and many other configs, please see [Mustache PHP Document](https://github.com/bobthecow/mustache.php/wiki).
 
-## Plastes Renderer
+## Plates Renderer
 
 ``` php
-use Windwalker\Renderer\PlastesRenderer;
+use Windwalker\Renderer\PlatesRenderer;
 
-$renderer = new PlastesRenderer;
+$renderer = new PlatesRenderer;
 
 echo $renderer->render('flower.sakura', array('foo' => 'bar'));
 ```
 
-See: [Plastes](http://platesphp.com/)
+See: [Plates](http://platesphp.com/)
 
 ## Use Cases
 
