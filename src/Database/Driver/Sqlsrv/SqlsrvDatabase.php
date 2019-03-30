@@ -61,6 +61,12 @@ class SqlsrvDatabase extends AbstractDatabase
      */
     public function drop($ifExists = false)
     {
+        $databases = $this->db->listDatabases();
+
+        if (!in_array($this->getName(), $databases, true)) {
+            return $this;
+        }
+
         if ($this->getName() === $this->db->getDatabase()->getName()) {
             $this->db->disconnect();
             $this->db->setDatabaseName(null);
