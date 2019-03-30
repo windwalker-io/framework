@@ -23,8 +23,7 @@ use Windwalker\Utilities\Iterator\ArrayObject;
  * @method mixed key()
  * @method mixed firstKey()
  * @method mixed lastKey()
- * @method mixed indexOf($value, bool $strict = false) Alias of search()
- * @method mixed include($value, bool $strict = false) Alias of contains()
+ * @method bool  include($value, bool $strict = false) Alias of contains()
  *
  * @since  3.5
  */
@@ -496,6 +495,23 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * indexOf
+     *
+     * @param mixed $value
+     * @param bool  $strict
+     *
+     * @return  int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function indexOf($value, bool $strict = false): int
+    {
+        $r = $this->search($value, $strict);
+
+        return (int) ($r === false ? -1 : $r);
+    }
+
+    /**
      * slice
      *
      * @param int      $offset
@@ -623,13 +639,13 @@ class Collection extends ArrayObject implements DataInterface
      * @param mixed $value
      * @param bool  $strict
      *
-     * @return  mixed
+     * @return  bool
      *
      * @since  3.5
      */
-    public function contains($value, bool $strict = false)
+    public function contains($value, bool $strict = false): bool
     {
-        return in_array($this->storage, $value, $strict);
+        return (bool) in_array($this->storage, $value, $strict);
     }
 
     /**
