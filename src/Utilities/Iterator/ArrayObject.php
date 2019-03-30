@@ -19,12 +19,12 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      * Properties of the object have their normal functionality
      * when accessed as list (var_dump, foreach, etc.).
      */
-    const STD_PROP_LIST = 1;
+    public const STD_PROP_LIST = 1;
 
     /**
      * Entries can be accessed as properties (read and write).
      */
-    const ARRAY_AS_PROPS = 2;
+    public const ARRAY_AS_PROPS = 2;
 
     /**
      * @var array
@@ -169,11 +169,15 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     /**
      * Sort the entries by value
      *
-     * @return void
+     * @param int $flags
+     *
+     * @return static
      */
-    public function asort()
+    public function asort($flags = null)
     {
-        asort($this->storage);
+        asort($this->storage, $flags);
+
+        return $this;
     }
 
     /**
@@ -258,33 +262,107 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort the entries by key
+     * Sort Dataset by key.
      *
-     * @return void
+     * @param   integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     *
+     * @return  static  Support chaining.
+     *
+     * @since   3.5.2
      */
-    public function ksort()
+    public function ksort($flags = null)
     {
-        ksort($this->storage);
+        ksort($this->storage, $flags);
+
+        return $this;
+    }
+
+    /**
+     * Sort DataSet by key in reverse order
+     *
+     * @param   integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     *
+     * @return  static  Support chaining.
+     *
+     * @since   3.5.2
+     */
+    public function krsort($flags = null)
+    {
+        krsort($this->storage, $flags);
+
+        return $this;
+    }
+
+    /**
+     * Sort data.
+     *
+     * @param integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     *
+     * @return  static  Support chaining.
+     *
+     * @since   3.0
+     */
+    public function sort($flags = null)
+    {
+        sort($this->storage, $flags);
+
+        return $this;
+    }
+
+    /**
+     * Sort Data in reverse order.
+     *
+     * @param integer $flags You may modify the behavior of the sort using the optional parameter flags.
+     *
+     * @return  static  Support chaining.
+     *
+     * @since   3.0
+     */
+    public function rsort($flags = null)
+    {
+        rsort($this->storage, $flags);
+
+        return $this;
+    }
+
+    /**
+     * Sort DataSet by keys using a user-defined comparison function
+     *
+     * @param   callable $callable The compare function used for the sort.
+     *
+     * @return  static  Support chaining.
+     *
+     * @since   3.5.2
+     */
+    public function uksort($callable)
+    {
+        uksort($this->storage, $callable);
+
+        return $this;
     }
 
     /**
      * Sort an array using a case insensitive "natural order" algorithm
      *
-     * @return void
+     * @return static
      */
     public function natcasesort()
     {
         natcasesort($this->storage);
+
+        return $this;
     }
 
     /**
      * Sort entries using a "natural order" algorithm
      *
-     * @return void
+     * @return static
      */
     public function natsort()
     {
         natsort($this->storage);
+
+        return $this;
     }
 
     /**
@@ -329,6 +407,12 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      */
     public function offsetSet($key, $value)
     {
+        if ($key === null) {
+            $this->storage[] = $value;
+
+            return;
+        }
+
         $this->storage[$key] = $value;
     }
 
@@ -402,27 +486,13 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @param  callable $function
      *
-     * @return void
+     * @return static
      */
     public function uasort($function)
     {
-        if (is_callable($function)) {
-            uasort($this->storage, $function);
-        }
-    }
+        uasort($this->storage, $function);
 
-    /**
-     * Sort the entries by keys using a user-defined comparison function
-     *
-     * @param  callable $function
-     *
-     * @return void
-     */
-    public function uksort($function)
-    {
-        if (is_callable($function)) {
-            uksort($this->storage, $function);
-        }
+        return $this;
     }
 
     /**

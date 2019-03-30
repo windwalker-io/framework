@@ -7,6 +7,9 @@
  */
 
 namespace {
+
+    use Windwalker\Utilities\ArrayHelper;
+
     if (!function_exists('with')) {
         /**
          * Return the given object. Useful for chaining. This class has many influences from Joomla!Framework:
@@ -67,14 +70,14 @@ namespace {
                 $i = 1;
 
                 foreach ($args as $arg) {
-                    $prints[] = "[Value " . $i . "]\n" . \Windwalker\Utilities\ArrayHelper::dump($arg, $level);
+                    $prints[] = '[Value ' . $i . "]\n" . ArrayHelper::dump($arg, $level);
                     $i++;
                 }
 
                 echo implode("\n\n", $prints);
             } else {
                 // Dump one value.
-                echo \Windwalker\Utilities\ArrayHelper::dump($data, $level);
+                echo ArrayHelper::dump($data, $level);
             }
 
             if (PHP_SAPI !== 'cli') {

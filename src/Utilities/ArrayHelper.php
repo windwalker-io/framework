@@ -712,7 +712,7 @@ class ArrayHelper
         $recursiveType = ['object', 'array'];
 
         // Recursive
-        if (in_array($type, $recursiveType)) {
+        if (in_array($type, $recursiveType, true)) {
             // If type is object, try to get properties by Reflection.
             if ($type === 'object') {
                 $output = get_class($data) . ' ' . ucfirst($type);
@@ -725,13 +725,13 @@ class ArrayHelper
                     $pType = $property->getName();
 
                     if ($property->isProtected()) {
-                        $pType .= ":protected";
+                        $pType .= ':protected';
                     } elseif ($property->isPrivate()) {
-                        $pType .= ":" . $property->class . ":private";
+                        $pType .= ':' . $property->class . ':private';
                     }
 
                     if ($property->isStatic()) {
-                        $pType .= ":static";
+                        $pType .= ':static';
                     }
 
                     $elements[$pType] = $property->getValue($data);
@@ -751,13 +751,15 @@ class ArrayHelper
                     $output .= "\n{$tabs}[{$key}] => ";
 
                     // Increment level
-                    $tabLevel = $tabLevel + 2;
+                    $tabLevel += 2;
                     $innerLevel++;
 
-                    $output .= in_array(gettype($element), $recursiveType) ? static::$self($element, $level) : $element;
+                    $output .= in_array(gettype($element), $recursiveType, true)
+                        ? static::$self($element, $level)
+                        : $element;
 
                     // Decrement level
-                    $tabLevel = $tabLevel - 2;
+                    $tabLevel -= 2;
                     $innerLevel--;
                 }
 

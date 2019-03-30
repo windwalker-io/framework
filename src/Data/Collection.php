@@ -127,17 +127,17 @@ class Collection extends ArrayObject implements DataInterface
      * @param string|null $search
      * @param bool|null   $strict
      *
-     * @return  array
+     * @return  Collection
      *
      * @since  3.5
      */
-    public function keys(?string $search = null, ?bool $strict = null): array
+    public function keys(?string $search = null, ?bool $strict = null): Collection
     {
         if (func_get_args()['search'] ?? false) {
             return array_keys($this->storage, $search, (bool) $strict);
         }
 
-        return array_keys($this->storage);
+        return new static(array_keys($this->storage));
     }
 
     /**
