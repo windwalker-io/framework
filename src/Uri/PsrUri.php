@@ -22,14 +22,14 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * @const string
      */
-    const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
+    public const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
 
     /**
      * Unreserved characters used in paths, query strings, and fragments.
      *
      * @const string
      */
-    const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
+    public const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
 
     /**
      * Property standardSchemes.
@@ -280,7 +280,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * An empty query string value is equivalent to removing the query string.
      *
-     * @param  string|array $query The query string to use with the new instance.
+     * @param  string $query The query string to use with the new instance.
      *
      * @return  static  A new instance with the specified query string.
      * @throws  \InvalidArgumentException for invalid query strings.
@@ -296,6 +296,66 @@ class PsrUri extends AbstractUri implements PsrUriInterface
         $new = clone $this;
         $new->vars = UriHelper::parseQuery($query);
         $new->query = $query;
+
+        return $new;
+    }
+
+    /**
+     * withQueryParams
+     *
+     * @param array|string $query
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function withQueryParams($query): self
+    {
+        if (!is_string($query)) {
+            $query = UriHelper::buildQuery((array) $query);
+        }
+
+        return $this->withQuery($query);
+    }
+
+    /**
+     * withVar
+     *
+     * @param string       $name
+     * @param array|string $value
+     *
+     * @return  PsrUri
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function withVar(string $name, $value): self
+    {
+        $new = clone $this;
+
+        $query = UriHelper::filterQuery(UriHelper::buildQuery($new->vars + [$name => $value]));
+
+        $new->vars = UriHelper::parseQuery($query);
+        $new->query = $query;
+
+        return $new;
+    }
+
+    /**
+     * delVar
+     *
+     * @param string $name
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function delVar(string $name): self
+    {
+        $new = clone $this;
+
+        unset($new->vars[$name]);
+
+        $new->query = UriHelper::buildQuery($new->vars);
 
         return $new;
     }

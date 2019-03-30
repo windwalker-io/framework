@@ -19,9 +19,9 @@ namespace Windwalker\Uri;
  */
 abstract class AbstractUri implements UriInterface
 {
-    const SCHEME_HTTP = 'http';
+    public const SCHEME_HTTP = 'http';
 
-    const SCHEME_HTTPS = 'https';
+    public const SCHEME_HTTPS = 'https';
 
     /**
      * @var    string  Original URI
@@ -347,21 +347,21 @@ abstract class AbstractUri implements UriInterface
 
         $parts = UriHelper::parseUrl($uri);
 
-        $retval = ($parts) ? true : false;
+        $retval = $parts ? true : false;
 
         // We need to replace &amp; with & for parse_str to work right...
         if (isset($parts['query']) && strpos($parts['query'], '&amp;')) {
             $parts['query'] = str_replace('&amp;', '&', $parts['query']);
         }
 
-        $this->scheme = isset($parts['scheme']) ? $parts['scheme'] : null;
-        $this->user = isset($parts['user']) ? $parts['user'] : null;
-        $this->pass = isset($parts['pass']) ? $parts['pass'] : null;
-        $this->host = isset($parts['host']) ? $parts['host'] : null;
-        $this->port = isset($parts['port']) ? $parts['port'] : null;
-        $this->path = isset($parts['path']) ? $parts['path'] : null;
-        $this->query = isset($parts['query']) ? $parts['query'] : null;
-        $this->fragment = isset($parts['fragment']) ? $parts['fragment'] : null;
+        $this->scheme = $parts['scheme'] ?? null;
+        $this->user = $parts['user'] ?? null;
+        $this->pass = $parts['pass'] ?? null;
+        $this->host = $parts['host'] ?? null;
+        $this->port = $parts['port'] ?? null;
+        $this->path = $parts['path'] ?? null;
+        $this->query = $parts['query'] ?? null;
+        $this->fragment = $parts['fragment'] ?? null;
 
         // Parse the query
         if (isset($parts['query'])) {
