@@ -13,7 +13,7 @@ namespace Windwalker\Utilities\Iterator;
  *
  * @since  2.1.1
  */
-class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
+class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {
     /**
      * Properties of the object have their normal functionality
@@ -529,5 +529,17 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
                     $this->__set($k, $v);
             }
         }
+    }
+
+    /**
+     * jsonSerialize
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function jsonSerialize()
+    {
+        return $this->storage;
     }
 }
