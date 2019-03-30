@@ -12,6 +12,7 @@ use Composer\CaBundle\CaBundle;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Response\Response;
 
@@ -38,13 +39,17 @@ class CurlTransport extends AbstractTransport
         // Execute the request and close the connection.
         $content = curl_exec($ch);
 
+        $error = curl_error($ch);
+
         if (!$this->getOption('allow_empty_result', false) && !trim($content)) {
-            $message = curl_error($ch);
-
             // Error but nothing from cURL? Create our own
-            $message = $message ?: 'No HTTP response received';
+            $error = $error ?: 'No HTTP response received';
 
-            throw new \RuntimeException($message);
+            throw new HttpRequestException($error, curl_errno($ch));
+        }
+
+        if (!$this->getOption('ignore_curl_error', false) && $error !== '') {
+            throw new HttpRequestException($error, curl_errno($ch));
         }
 
         // Get the request information.
@@ -74,7 +79,7 @@ class CurlTransport extends AbstractTransport
         $return = new Response();
 
         // Get the number of redirects that occurred.
-        $redirects = isset($info['redirect_count']) ? $info['redirect_count'] : 0;
+        $redirects = $info['redirect_count'] ?? 0;
 
         /*
          * Split the response into headers and body. If cURL encountered redirects,
@@ -101,7 +106,7 @@ class CurlTransport extends AbstractTransport
             $return = $return->withStatus($code);
         } elseif (!$this->getOption('allow_empty_status_code', false)) {
             // No valid response code was detected.
-            throw new \UnexpectedValueException('No HTTP response code found.');
+            throw new HttpRequestException('No HTTP response code found.');
         }
 
         // Add the response headers to the response object.
