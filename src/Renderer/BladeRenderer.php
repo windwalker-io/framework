@@ -123,7 +123,7 @@ class BladeRenderer extends AbstractEngineRenderer
             }
 
             // B/C for 4.* and 5.*
-            if ($rawTags = GlobalContainer::getRawTags() && is_callable([$bladeCompiler, 'setRawTags'])) {
+            if (($rawTags = GlobalContainer::getRawTags()) && is_callable([$bladeCompiler, 'setRawTags'])) {
                 $bladeCompiler->setRawTags($rawTags[0], $rawTags[1]);
             }
 
