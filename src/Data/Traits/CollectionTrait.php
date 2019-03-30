@@ -8,6 +8,7 @@
 
 namespace Windwalker\Data\Traits;
 
+use Windwalker\Data\Collection;
 use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;
 use Windwalker\Data\DataSet;
@@ -247,29 +248,35 @@ trait CollectionTrait
     /**
      * Mapping all elements.
      *
-     * @param   callable $callback
+     * @param callable $callback
+     * @param bool     $useKeys
      *
      * @return  static  Support chaining.
      *
      * @since   2.0.9
      */
-    public function map($callback)
+    public function map($callback, $useKeys = true)
     {
         $keys = $this->keys();
 
+        if ($keys instanceof Collection) {
+            $keys = $keys->dump();
+        }
+
+        if ($useKeys) {
+            $result = array_map($callback, $this->convertArray(clone $this), $keys);
+        } else {
+            $result = array_map($callback, $this->convertArray(clone $this));
+        }
+
         // Keep keys same as origin
-        return $this->bindNewInstance(
-            array_combine(
-                $keys,
-                array_map($callback, $this->convertArray(clone $this), $keys)
-            )
-        );
+        return $this->bindNewInstance(array_combine($keys, $result));
     }
 
     /**
      * convertArray
      *
-     * @param array|Data|DataSet $array
+     * @param array|Data|DataSet|static $array
      *
      * @return  array
      */
