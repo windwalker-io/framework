@@ -92,6 +92,21 @@ abstract class AbstractRenderer implements RendererInterface
     }
 
     /**
+     * has
+     *
+     * @param string $file
+     * @param string $ext
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function has(string $file, string $ext = ''): bool
+    {
+        return $this->findFile($file, $ext) !== null;
+    }
+
+    /**
      * getPaths
      *
      * @return  \SplPriorityQueue

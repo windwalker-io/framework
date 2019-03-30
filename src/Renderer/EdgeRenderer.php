@@ -14,6 +14,7 @@ use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 use Windwalker\Edge\Compiler\EdgeCompilerInterface;
 use Windwalker\Edge\Edge;
+use Windwalker\Edge\Exception\LayoutNotFoundException;
 use Windwalker\Edge\Extension\EdgeExtensionInterface;
 use Windwalker\Edge\Loader\EdgeFileLoader;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
@@ -122,6 +123,23 @@ class EdgeRenderer extends AbstractEngineRenderer
         }
 
         return $this->getEngine()->render($file, (array) $data);
+    }
+
+    /**
+     * finFile
+     *
+     * @param string $file
+     * @param string $ext
+     *
+     * @return  string
+     */
+    public function findFile($file, $ext = '')
+    {
+        try {
+            return $this->getEngine()->getLoader()->find($file);
+        } catch (LayoutNotFoundException $e) {
+            return null;
+        }
     }
 
     /**
