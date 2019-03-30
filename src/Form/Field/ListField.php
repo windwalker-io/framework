@@ -70,7 +70,7 @@ class ListField extends AbstractField
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return void
      */
     public function prepare(&$attrs)
     {
@@ -109,13 +109,19 @@ class ListField extends AbstractField
      *
      * @param array $attrs
      *
-     * @return  mixed|void
+     * @return  SelectList|string
      */
     public function buildInput($attrs)
     {
         $options = $this->getOptions();
 
-        return new SelectList($this->getFieldName(), $options, $attrs, $this->getValue(), $this->getBool('multiple'));
+        return new SelectList(
+            $this->getFieldName(),
+            $options,
+            $attrs,
+            $this->getValue(),
+            $this->getBool('multiple')
+        );
     }
 
     /**
@@ -132,6 +138,7 @@ class ListField extends AbstractField
      * setOptions
      *
      * @param array|Option[] $options
+     * @param null|string    $group
      *
      * @return  static
      */
@@ -142,6 +149,47 @@ class ListField extends AbstractField
         }
 
         $this->handleOptions(null, $options);
+
+        return $this;
+    }
+
+    /**
+     * register
+     *
+     * @param callable $handler
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function register(callable $handler): self
+    {
+        $handler($this);
+
+        return $this;
+    }
+
+    /**
+     * registerOptions
+     *
+     * @param array    $options
+     * @param callable $handler
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function registerOptions(array $options, callable $handler): self
+    {
+        foreach ($options as $name => $option) {
+            if (is_numeric($name)) {
+                // Option
+                $handler($this, $option, null);
+            } else {
+                // Group
+                $handler($this, $option, $name);
+            }
+        }
 
         return $this;
     }
@@ -274,7 +322,7 @@ class ListField extends AbstractField
                     $this->options[] = $option;
                 } else {
                     $this->options[$name] = array_merge(
-                        isset($this->options[$name]) ? $this->options[$name] : [],
+                        $this->options[$name] ?? [],
                         $option
                     );
                 }
