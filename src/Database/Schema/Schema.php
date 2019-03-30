@@ -161,7 +161,7 @@ class Schema
     /**
      * addPrimaryKey
      *
-     * @param array $columns
+     * @param array|string $columns
      *
      * @return Key
      */
