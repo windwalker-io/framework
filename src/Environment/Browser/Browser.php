@@ -17,55 +17,59 @@ namespace Windwalker\Environment\Browser;
  */
 class Browser
 {
-    const DEVICE_WINDOWS = 'Windows';
+    public const DEVICE_WINDOWS = 'Windows';
 
-    const DEVICE_WINDOWS_PHONE = 'Windows Phone';
+    public const DEVICE_WINDOWS_PHONE = 'Windows Phone';
 
-    const DEVICE_WINDOWS_CE = 'Windows CE';
+    public const DEVICE_WINDOWS_CE = 'Windows CE';
 
-    const DEVICE_IPHONE = 'iPhone';
+    public const DEVICE_IPHONE = 'iPhone';
 
-    const DEVICE_IPAD = 'iPad';
+    public const DEVICE_IPAD = 'iPad';
 
-    const DEVICE_IPOD = 'iPod';
+    public const DEVICE_IPOD = 'iPod';
 
-    const DEVICE_MAC = 'Mac';
+    public const DEVICE_MAC = 'Mac';
 
-    const DEVICE_BLACKBERRY = 'Blackberry';
+    public const DEVICE_BLACKBERRY = 'Blackberry';
 
-    const DEVICE_ANDROID = 'Android';
+    public const DEVICE_ANDROID = 'Android';
 
-    const DEVICE_LINUX = 'Linux';
+    public const DEVICE_LINUX = 'Linux';
 
-    const ENGINE_TRIDENT = 'Trident';
+    public const ENGINE_TRIDENT = 'Trident';
 
-    const ENGINE_EDGE_HTML = 'EdgeHTML';
+    public const ENGINE_EDGE_HTML = 'EdgeHTML';
 
-    const ENGINE_WEBKIT = 'Webkit';
+    public const ENGINE_WEBKIT = 'Webkit';
 
-    const ENGINE_GECKO = 'Gecko';
+    public const ENGINE_GECKO = 'Gecko';
 
-    const ENGINE_PRESTO = 'Presto';
+    public const ENGINE_PRESTO = 'Presto';
 
-    const ENGINE_KHTML = 'KHTML';
+    public const ENGINE_KHTML = 'KHTML';
 
-    const AMAYA = 'Amaya';
+    public const ENGINE_BLINK = 'Blink';
 
-    const IE = 'MSIE';
+    public const AMAYA = 'Amaya';
 
-    const EDGE = 'Edge';
+    public const IE = 'MSIE';
 
-    const FIREFOX = 'Firefox';
+    public const EDGE = 'Edge';
 
-    const CHROME = 'Chrome';
+    public const EDG = 'Edg';
 
-    const SAFARI = 'Safari';
+    public const FIREFOX = 'Firefox';
 
-    const OPERA = 'Opera';
+    public const CHROME = 'Chrome';
 
-    const VIVALDI = 'Vivaldi';
+    public const SAFARI = 'Safari';
 
-    const ANDROID_TABLET = 'Android Tablet';
+    public const OPERA = 'Opera';
+
+    public const VIVALDI = 'Vivaldi';
+
+    public const ANDROID_TABLET = 'Android Tablet';
 
     /**
      * The detected platform on which the web client runs.
@@ -216,29 +220,32 @@ class Browser
 
         // Attempt to detect the browser type.  Obviously we are only worried about major browsers.
         if ((stripos($userAgent, 'MSIE') !== false) && (stripos($userAgent, 'Opera') === false)) {
-            $this->browser = static::IE;
+            $this->browser  = static::IE;
             $patternBrowser = 'MSIE';
         } elseif (stripos($userAgent, 'Trident') !== false) {
-            $this->browser = static::IE;
+            $this->browser  = static::IE;
             $patternBrowser = ' rv';
         } elseif (stripos($userAgent, 'Edge') !== false) {
-            $this->browser = static::EDGE;
+            $this->browser  = static::EDGE;
             $patternBrowser = 'Edge';
+        } elseif (stripos($userAgent, 'Ede') !== false) {
+            $this->browser  = static::EDG;
+            $patternBrowser = 'Edg';
         } elseif ((stripos($userAgent, 'Firefox') !== false) && (stripos($userAgent, 'like Firefox') === false)) {
-            $this->browser = static::FIREFOX;
+            $this->browser  = static::FIREFOX;
             $patternBrowser = 'Firefox';
         } elseif (stripos($userAgent, 'Vivaldi') !== false) {
             // Vivaldi must before Chrome & Safari
-            $this->browser = static::VIVALDI;
+            $this->browser  = static::VIVALDI;
             $patternBrowser = 'Vivaldi';
         } elseif (stripos($userAgent, 'Chrome') !== false) {
-            $this->browser = static::CHROME;
+            $this->browser  = static::CHROME;
             $patternBrowser = 'Chrome';
         } elseif (stripos($userAgent, 'Safari') !== false) {
-            $this->browser = static::SAFARI;
+            $this->browser  = static::SAFARI;
             $patternBrowser = 'Safari';
         } elseif (stripos($userAgent, 'Opera') !== false) {
-            $this->browser = static::OPERA;
+            $this->browser  = static::OPERA;
             $patternBrowser = 'Opera';
         }
 
@@ -252,7 +259,7 @@ class Browser
 
             if (preg_match_all($pattern, $userAgent, $matches)) {
                 // Do we have both a Version and browser match?
-                if (count($matches['browser']) == 2) {
+                if (count($matches['browser']) === 2) {
                     // See whether Version or browser came first, and use the number accordingly.
                     if (strripos($userAgent, 'Version') < strripos($userAgent, $patternBrowser)) {
                         $this->browserVersion = $matches['version'][0];
@@ -260,7 +267,7 @@ class Browser
                         $this->browserVersion = $matches['version'][1];
                     }
                 } elseif (count($matches['browser']) > 2) {
-                    $key = array_search('Version', $matches['browser']);
+                    $key = array_search('Version', $matches['browser'], true);
 
                     if ($key) {
                         $this->browserVersion = $matches['version'][$key];
@@ -308,13 +315,22 @@ class Browser
         if (stripos($userAgent, 'MSIE') !== false || stripos($userAgent, 'Trident') !== false) {
             // Attempt to detect the client engine -- starting with the most popular ... for now.
             $this->engine = self::ENGINE_TRIDENT;
-        }
-
-        if (stripos($userAgent, 'Edge') !== false) {
+        } elseif (stripos($userAgent, 'Edge') !== false) {
             $this->engine = self::ENGINE_EDGE_HTML;
+        } elseif (stripos($userAgent, 'Ede') !== false) {
+            $this->engine = self::ENGINE_BLINK;
         } elseif (stripos($userAgent, 'AppleWebKit') !== false || stripos($userAgent, 'blackberry') !== false) {
             // Evidently blackberry uses WebKit and doesn't necessarily report it.  Bad RIM.
             $this->engine = self::ENGINE_WEBKIT;
+        } elseif (stripos($userAgent, 'Chrome') !== false) {
+            $result  = explode('/', stristr($userAgent, 'Chrome'));
+            $version = explode(' ', $result[1]);
+
+            if ($version[0] >= 28) {
+                $this->engine = self::ENGINE_BLINK;
+            } else {
+                $this->engine = self::ENGINE_WEBKIT;
+            }
         } elseif (stripos($userAgent, 'Gecko') !== false && stripos($userAgent, 'like Gecko') === false) {
             // We have to check for like Gecko because some other browsers spoof Gecko.
             $this->engine = self::ENGINE_GECKO;
