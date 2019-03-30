@@ -293,10 +293,6 @@ class MysqlTable extends AbstractTable
      */
     public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
     {
-        if ($this->hasIndex($name)) {
-            $this->dropIndex($name);
-        }
-
         if (!$type instanceof Key) {
             if (!$columns) {
                 throw new \InvalidArgumentException('No columns given.');
@@ -307,6 +303,10 @@ class MysqlTable extends AbstractTable
             $index = new Key($type, $columns, $name, $comment);
         } else {
             $index = $type;
+        }
+
+        if ($this->hasIndex($index->getName())) {
+            $this->dropIndex($index->getName());
         }
 
         $query = MysqlGrammar::addIndex(

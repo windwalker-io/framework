@@ -425,10 +425,6 @@ class PostgresqlTable extends AbstractTable
      */
     public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
     {
-        if ($this->hasIndex($name)) {
-            $this->dropIndex($name);
-        }
-
         if (!$type instanceof Key) {
             if (!$columns) {
                 throw new \InvalidArgumentException('No columns given.');
@@ -442,7 +438,7 @@ class PostgresqlTable extends AbstractTable
         }
 
         if ($this->hasIndex($index->getName())) {
-            return $this;
+            $this->dropIndex($index->getName());
         }
 
         $query = PostgresqlGrammar::addIndex(

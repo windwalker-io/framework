@@ -489,10 +489,6 @@ SQL;
      */
     public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
     {
-        if ($this->hasIndex($name)) {
-            $this->dropIndex($name);
-        }
-
         if (!$type instanceof Key) {
             if (!$columns) {
                 throw new \InvalidArgumentException('No columns given.');
@@ -506,7 +502,7 @@ SQL;
         }
 
         if ($this->hasIndex($index->getName())) {
-            return $this;
+            $this->dropIndex($index->getName());
         }
 
         $query = SqlsrvGrammar::addIndex(
