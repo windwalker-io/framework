@@ -228,7 +228,7 @@ class Browser
         } elseif (stripos($userAgent, 'Edge') !== false) {
             $this->browser  = static::EDGE;
             $patternBrowser = 'Edge';
-        } elseif (stripos($userAgent, 'Ede') !== false) {
+        } elseif (stripos($userAgent, 'Edg') !== false) {
             $this->browser  = static::EDG;
             $patternBrowser = 'Edg';
         } elseif ((stripos($userAgent, 'Firefox') !== false) && (stripos($userAgent, 'like Firefox') === false)) {
@@ -317,7 +317,7 @@ class Browser
             $this->engine = self::ENGINE_TRIDENT;
         } elseif (stripos($userAgent, 'Edge') !== false) {
             $this->engine = self::ENGINE_EDGE_HTML;
-        } elseif (stripos($userAgent, 'Ede') !== false) {
+        } elseif (stripos($userAgent, 'Edg') !== false) {
             $this->engine = self::ENGINE_BLINK;
         } elseif (stripos($userAgent, 'AppleWebKit') !== false || stripos($userAgent, 'blackberry') !== false) {
             // Evidently blackberry uses WebKit and doesn't necessarily report it.  Bad RIM.
