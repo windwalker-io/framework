@@ -62,6 +62,8 @@ use Windwalker\String\StringInflector;
  * @method  static DataMapper  forUpdate()
  * @method  static DataMapper  suffix(string $string)
  * @method  static AbstractDatabaseDriver  getDb()
+ * @method  static DataMapper  setDataClass()
+ * @method  static DataMapper  setDatasetClass()
  *
  * phpcs:enable
  *
@@ -159,7 +161,7 @@ class AbstractDatabaseMapperProxy
      *
      * @param   string $table
      *
-     * @return  DatabaseMapperInterface
+     * @return  DataMapper
      * @throws \Exception
      */
     public static function getInstance($table = null)
@@ -210,12 +212,12 @@ class AbstractDatabaseMapperProxy
     /**
      * setDataMapper
      *
-     * @param string                  $table
-     * @param DatabaseMapperInterface $mapper
+     * @param string     $table
+     * @param DataMapper $mapper
      *
      * @return  void
      */
-    public static function setDataMapper($table, DatabaseMapperInterface $mapper)
+    public static function setDataMapper($table, DataMapper $mapper)
     {
         static::$instances[$table] = $mapper;
     }

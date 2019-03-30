@@ -16,7 +16,7 @@ use Windwalker\Data\Data;
  */
 class Entity extends Data implements \JsonSerializable
 {
-    const DUMP_ALL_DATA = true;
+    public const DUMP_ALL_DATA = true;
 
     /**
      * Property data.
@@ -471,7 +471,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @return  array
      */
-    public function toArray($all)
+    public function toArray($all = false)
     {
         $keys = $all ? array_keys($this->data) : array_keys($this->getFields());
 
@@ -482,6 +482,20 @@ class Entity extends Data implements \JsonSerializable
         }
 
         return $data;
+    }
+
+    /**
+     * asData
+     *
+     * @param bool $all
+     *
+     * @return  Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function asData($all = false): Data
+    {
+        return new Data($this->dump($all));
     }
 
     /**
