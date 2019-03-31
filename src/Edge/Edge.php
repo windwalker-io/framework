@@ -151,6 +151,10 @@ class Edge
         $__data = array_merge($this->getGlobals(true), $__more, $__data);
 
         foreach ($__data as $__key => $__value) {
+            if ($__key === '__path' || $__key === '__data') {
+                continue;
+            }
+
             $$__key = $__value;
         }
 

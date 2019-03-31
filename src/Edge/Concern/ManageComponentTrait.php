@@ -48,14 +48,15 @@ trait ManageComponentTrait
      *
      * @param  string $name
      * @param  array  $data
+     * @param  array  $more
      *
      * @return void
      */
-    public function startComponent($name, array $data = [])
+    public function startComponent($name, array $data = [], array $more = [])
     {
         if (ob_start()) {
             $this->componentStack[] = $name;
-            $this->componentData[$this->currentComponent()] = $data;
+            $this->componentData[$this->currentComponent()] = array_merge($more, $data);
             $this->slots[$this->currentComponent()] = [];
         }
     }
