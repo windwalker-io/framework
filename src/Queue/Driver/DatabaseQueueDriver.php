@@ -259,9 +259,23 @@ class DatabaseQueueDriver implements QueueDriverInterface
      */
     public function reconnect()
     {
-        $this->db->disconnect();
+        $this->disconnect();
 
         $this->db->connect();
+
+        return $this;
+    }
+
+    /**
+     * Disconnect DB.
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function disconnect()
+    {
+        $this->db->disconnect();
 
         return $this;
     }
