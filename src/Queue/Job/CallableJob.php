@@ -39,6 +39,10 @@ class CallableJob implements JobInterface, \Serializable
      */
     public function __construct(callable $callback, $name = null)
     {
+        if (!class_exists(Serializer::class)) {
+            throw new \DomainException('Please install jeremeamia/SuperClosure ^2.0 first');
+        }
+
         $this->callback = $callback;
         $this->name = $name;
     }

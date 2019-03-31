@@ -21,7 +21,8 @@
         "iron-io/iron_mq": "If you want to use Iron.io as queue service.",
         "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
         "pda/pheanstalk": "If you want to use Beanstalkd queue as service.",
-        "chrisboulton/php-resque": "Install <= 1.2 if you want to use PHP Resque (Redis) as queue service."
+        "chrisboulton/php-resque": "Install <= 1.2 if you want to use PHP Resque (Redis) as queue service.",
+        "jeremeamia/SuperClosure": "Install ~2.0 to support anonymous function jobs."
     },
     "minimum-stability": "beta",
     "autoload": {
