@@ -31,6 +31,7 @@ use Windwalker\Validator\ValidatorInterface;
  * @method $this removeLabelClass($value)
  * @method $this addControlClass($value)
  * @method $this removeControlClass($value)
+ * @method $this|mixed help(string $value = null)
  *
  * @since  2.0
  */
@@ -1285,7 +1286,8 @@ abstract class AbstractField
             'class',
             'labelClass',
             'controlClass',
-            'wraps'
+            'wraps',
+            'help'
         ];
     }
 
