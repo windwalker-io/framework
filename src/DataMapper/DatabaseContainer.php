@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -51,8 +51,6 @@ class DatabaseContainer
      * Method to set property db
      *
      * @param   AbstractDatabaseDriver|callable $db
-     *
-     * @return  static  Return self to support chaining.
      */
     public static function setDb($db)
     {
@@ -63,5 +61,17 @@ class DatabaseContainer
         }
 
         static::$db = $db;
+    }
+
+    /**
+     * reset
+     *
+     * @return  void
+     *
+     * @since  3.5
+     */
+    public static function reset(): void
+    {
+        static::$db = null;
     }
 }

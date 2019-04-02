@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver;
@@ -14,10 +14,9 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Command\AbstractTransaction;
 use Windwalker\Database\Command\AbstractWriter;
 use Windwalker\Database\Iterator\DataIterator;
-use Windwalker\Middleware\Chain\ChainBuilder;
-use Windwalker\Middleware\MiddlewareInterface;
+use Windwalker\Database\Monitor\NullMonitor;
+use Windwalker\Database\Monitor\QueryMonitorInterface;
 use Windwalker\Query\Query;
-use Windwalker\Query\Query\PreparableInterface;
 
 /**
  * Class DatabaseDriver
@@ -141,11 +140,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     protected $lastQuery;
 
     /**
-     * Property middlewares.
+     * Property monitor.
      *
-     * @var  ChainBuilder
+     * @var QueryMonitorInterface
      */
-    protected $middlewares;
+    protected $monitor;
 
     /**
      * Property independentQuery.
@@ -168,15 +167,14 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         // Initialise object variables.
         $this->connection = $connection;
 
-        $this->database = (isset($options['database'])) ? $options['database'] : '';
-        $this->tablePrefix = (isset($options['prefix'])) ? $options['prefix'] : 'wind_';
+        $this->database    = $options['database'] ?? '';
+        $this->tablePrefix = $options['prefix'] ?? 'wind_';
 
         // Set class options.
         $this->options = $options;
 
-        if (class_exists('Windwalker\Middleware\Chain\ChainBuilder')) {
-            $this->resetMiddlewares();
-        }
+        // Prepare Null monitor
+        $this->setMonitor(new NullMonitor());
     }
 
     /**
@@ -206,13 +204,23 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Execute the SQL statement.
      *
+     * @param   mixed $query The SQL statement to set either as a Query object or a string.
+     *
      * @return  resource|false  Return Resource to do more or false if query failure.
      *
      * @since   2.0
      * @throws  \RuntimeException
      */
-    public function execute()
+    public function execute($query = null)
     {
+        $prepare = true;
+
+        if ($query !== null) {
+            $this->setQuery($query);
+
+            $prepare = false;
+        }
+
         $this->connect();
 
         if (!$this->connection) {
@@ -222,22 +230,21 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         // Increment the query counter.
         $this->count++;
 
-        if ($this->middlewares) {
-            // Prepare middleware data
-            $data = new \stdClass();
-            $data->debug = &$this->debug;
-            $data->query = &$this->query;
-            $data->sql = $this->replacePrefix((string) $this->query);
-            $data->db = $this;
+        return $this->doExecute($prepare);
+    }
 
-            if ($this->query instanceof PreparableInterface) {
-                $data->bounded = $this->query->getBounded();
-            }
-
-            return $this->middlewares->execute($data);
-        }
-
-        return $this->doExecute();
+    /**
+     * Sets the SQL statement string for later execution.
+     *
+     * @param   mixed $query The SQL statement to set either as a Query object or a string.
+     *
+     * @return  AbstractDatabaseDriver  This object to support method chaining.
+     *
+     * @since   2.0
+     */
+    public function prepare($query)
+    {
+        return $this->setQuery($query);
     }
 
     /**
@@ -259,12 +266,14 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * Execute the SQL statement.
      *
+     * @param bool $prepare
+     *
      * @return  resource|false  A database cursor resource on success, boolean false on failure.
      *
+     * @throws \RuntimeException
      * @since   2.0
-     * @throws  \RuntimeException
      */
-    abstract protected function doExecute();
+    abstract protected function doExecute(bool $prepare = true);
 
     /**
      * Select a database for use.
@@ -337,7 +346,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
                 throw new \RuntimeException('Database Query Class not found.');
             }
 
-            return new $class($this->getConnection());
+            return new $class($this);
         } else {
             return $this->query;
         }
@@ -495,6 +504,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      * This function replaces a string identifier <var>$prefix</var> with the string held is the
      * <var>tablePrefix</var> class variable.
      *
+     * @see     https://stackoverflow.com/a/31745275
+     *
      * @param   string $sql    The SQL statement to prepare.
      * @param   string $prefix The common table prefix.
      *
@@ -504,78 +515,24 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public function replacePrefix($sql, $prefix = '#__')
     {
-        $startPos = 0;
-        $literal = '';
+        $array = [];
 
-        $sql = trim($sql);
-        $n = strlen($sql);
-
-        while ($startPos < $n) {
-            $ip = strpos($sql, $prefix, $startPos);
-
-            if ($ip === false) {
-                break;
-            }
-
-            $j = strpos($sql, "'", $startPos);
-            $k = strpos($sql, '"', $startPos);
-
-            if (($k !== false) && (($k < $j) || ($j === false))) {
-                $quoteChar = '"';
-                $j = $k;
-            } else {
-                $quoteChar = "'";
-            }
-
-            if ($j === false) {
-                $j = $n;
-            }
-
-            $literal .= str_replace($prefix, $this->tablePrefix, substr($sql, $startPos, $j - $startPos));
-            $startPos = $j;
-
-            $j = $startPos + 1;
-
-            if ($j >= $n) {
-                break;
-            }
-
-            // Quote comes first, find end of quote
-            while (true) {
-                $k = strpos($sql, $quoteChar, $j);
-                $escaped = false;
-
-                if ($k === false) {
-                    break;
+        if ($number = preg_match_all('#((?<![\\\])[\'"])((?:.(?!(?<![\\\])\1))*.?)\1#i', $sql, $matches)) {
+            for ($i = 0; $i < $number; $i++) {
+                if (!empty($matches[0][$i])) {
+                    $array[$i] = trim($matches[0][$i]);
+                    $sql       = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
                 }
-
-                $l = $k - 1;
-
-                while ($l >= 0 && $sql{$l} === '\\') {
-                    $l--;
-                    $escaped = !$escaped;
-                }
-
-                if ($escaped) {
-                    $j = $k + 1;
-                    continue;
-                }
-
-                break;
             }
-
-            if ($k === false) {
-                // Error in the query - no end quote; ignore it
-                break;
-            }
-
-            $literal .= substr($sql, $startPos, $k - $startPos + 1);
-            $startPos = $k + 1;
         }
 
-        if ($startPos < $n) {
-            $literal .= substr($sql, $startPos, $n - $startPos);
+        $sql = str_replace($prefix, $this->tablePrefix, $sql);
+
+        foreach ($array as $key => $js) {
+            $sql = str_replace('<#encode:' . $key . ':code#>', $js, $sql);
         }
+
+        return $sql;
 
         return $literal;
     }
@@ -591,10 +548,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public static function splitSql($sql)
     {
-        $start = 0;
-        $open = false;
-        $char = '';
-        $end = strlen($sql);
+        $start   = 0;
+        $open    = false;
+        $char    = '';
+        $end     = strlen($sql);
         $queries = [];
 
         for ($i = 0; $i < $end; $i++) {
@@ -622,7 +579,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
             if (($current === ';' && !$open) || $i == $end - 1) {
                 $queries[] = substr($sql, $start, ($i - $start + 1));
-                $start = $i + 1;
+                $start     = $i + 1;
             }
         }
 
@@ -863,51 +820,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
-     * addMiddleware
-     *
-     * @param  MiddlewareInterface|callable $middleware
-     *
-     * @return  static
-     *
-     * @throws \ReflectionException
-     * @since   3.0
-     */
-    public function addMiddleware($middleware)
-    {
-        $this->getMiddlewares()->add($middleware);
-
-        return $this;
-    }
-
-    /**
-     * Method to get property Middlewares
-     *
-     * @return  ChainBuilder
-     *
-     * @since   3.0
-     */
-    public function getMiddlewares()
-    {
-        return $this->middlewares;
-    }
-
-    /**
-     * Method to set property middlewares
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @throws \ReflectionException
-     * @since   3.0
-     */
-    public function resetMiddlewares()
-    {
-        $this->middlewares = new ChainBuilder();
-        $this->middlewares->add([$this, 'doExecute']);
-
-        return $this;
-    }
-
-    /**
      * Method to get property LastQuery
      *
      * @return  string
@@ -915,6 +827,59 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     public function getLastQuery()
     {
         return $this->lastQuery;
+    }
+
+    /**
+     * Find and replace sprintf-like tokens in a format string.
+     * Each token takes one of the following forms:
+     *     %%       - A literal percent character.
+     *     %[t]     - Where [t] is a type specifier.
+     *     %[n]$[x] - Where [n] is an argument specifier and [t] is a type specifier.
+     *
+     * Types:
+     * a - Numeric: Replacement text is coerced to a numeric type but not quoted or escaped.
+     * e - Escape: Replacement text is passed to $this->escape().
+     * E - Escape (extra): Replacement text is passed to $this->escape() with true as the second argument.
+     * n - Name Quote: Replacement text is passed to $this->quoteName().
+     * q - Quote: Replacement text is passed to $this->quote().
+     * Q - Quote (no escape): Replacement text is passed to $this->quote() with false as the second argument.
+     * r - Raw: Replacement text is used as-is. (Be careful)
+     *
+     * Date Types:
+     * - Replacement text automatically quoted (use uppercase for Name Quote).
+     * - Replacement text should be a string in date format or name of a date column.
+     * y/Y - Year
+     * m/M - Month
+     * d/D - Day
+     * h/H - Hour
+     * i/I - Minute
+     * s/S - Second
+     *
+     * Invariable Types:
+     * - Takes no argument.
+     * - Argument index not incremented.
+     * t - Replacement text is the result of $this->currentTimestamp().
+     * z - Replacement text is the result of $this->nullDate(false).
+     * Z - Replacement text is the result of $this->nullDate(true).
+     *
+     * Usage:
+     * $query->format('SELECT %1$n FROM %2$n WHERE %3$n = %4$a', 'foo', '#__foo', 'bar', 1);
+     * Returns: SELECT `foo` FROM `#__foo` WHERE `bar` = 1
+     *
+     * Notes:
+     * The argument specifier is optional but recommended for clarity.
+     * The argument index used for unspecified tokens is incremented only when used.
+     *
+     * @param string $format The formatting string.
+     * @param array  $args   The parameters.
+     *
+     * @return  string  Returns a string produced according to the formatting string.
+     *
+     * @since  3.5
+     */
+    public function format(string $format, ...$args): string
+    {
+        return $this->getIndependentQuery()->format($format, ...$args);
     }
 
     /**
@@ -939,5 +904,33 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     public function getNullDate()
     {
         return $this->getIndependentQuery()->getNullDate();
+    }
+
+    /**
+     * Method to get property Monitor
+     *
+     * @return  QueryMonitorInterface
+     *
+     * @since  3.5
+     */
+    public function getMonitor(): QueryMonitorInterface
+    {
+        return $this->monitor;
+    }
+
+    /**
+     * Method to set property monitor
+     *
+     * @param   QueryMonitorInterface $monitor
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  3.5
+     */
+    public function setMonitor(QueryMonitorInterface $monitor)
+    {
+        $this->monitor = $monitor;
+
+        return $this;
     }
 }

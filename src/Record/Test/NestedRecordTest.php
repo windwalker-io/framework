@@ -2,13 +2,14 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
+use Windwalker\DataMapper\DatabaseContainer;
 use Windwalker\Record\NestedRecord;
 use Windwalker\Utilities\ArrayHelper;
 
@@ -35,6 +36,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
+
+        DatabaseContainer::reset();
+
+        show(spl_object_hash(static::$dbo));
 
         $record = new NestedRecord('#__nestedsets');
 

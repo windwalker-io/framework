@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Language\Format;
@@ -28,9 +28,23 @@ class IniFormat extends AbstractFormat
      * @param string $string
      *
      * @return  array
+     * @throws \ErrorException
      */
     public function parse($string)
     {
-        return parse_ini_string($string);
+        try {
+            return parse_ini_string($string);
+        } catch (\Throwable $e) {
+            preg_match('/on line (\d+)/', $e->getMessage(), $match);
+            
+            throw new \ErrorException(
+                $e->getMessage(),
+                $e->getCode(),
+                E_ERROR,
+                '',
+                ($match[1] ?? 2) - 1,
+                $e
+            );
+        }
     }
 }

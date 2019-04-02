@@ -2,15 +2,15 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
+ * @license    LGPL-2.0-or-later
  */
 
-namespace Windwalker\Query\Test\Sqlserv;
+namespace Windwalker\Query\Test\Sqlsrv;
 
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Query;
-use Windwalker\Query\Sqlserv\SqlservQuery;
+use Windwalker\Query\Sqlsrv\SqlsrvQuery;
 use Windwalker\Query\Test\QueryTestTrait;
 use Windwalker\Test\TestHelper;
 
@@ -19,14 +19,14 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class SqlservQueryTest extends AbstractQueryTestCase
+class SqlsrvQueryTest extends AbstractQueryTestCase
 {
     use QueryTestTrait;
 
     /**
      * Test instance.
      *
-     * @var SqlservQuery
+     * @var SqlsrvQuery
      */
     protected $instance;
 
@@ -54,11 +54,11 @@ class SqlservQueryTest extends AbstractQueryTestCase
     /**
      * getQuery
      *
-     * @return  SqlservQuery
+     * @return  SqlsrvQuery
      */
     protected function getQuery()
     {
-        return new SqlservQuery();
+        return new SqlsrvQuery();
     }
 
     /**
@@ -688,7 +688,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
             ->order('id')
             ->limit(3);
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+        $sql = 'SELECT TOP 3 * FROM foo WHERE a = b ORDER BY id';
 
         $this->assertEquals($this->format($sql), $this->format($query));
 
@@ -697,9 +697,11 @@ class SqlservQueryTest extends AbstractQueryTestCase
             ->from('foo')
             ->where('a = b')
             ->order('id')
-            ->limit(3, 0);
+            ->limit(3, 6);
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+        $sql = 'SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) AS RowNumber FROM (
+    SELECT TOP 9 * FROM foo WHERE a = b ORDER BY id
+) AS A) AS A WHERE RowNumber > 6';
 
         $this->assertEquals($this->format($sql), $this->format($query));
     }
@@ -719,7 +721,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
             ->where('a = b')
             ->order('id');
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+        $sql = 'SELECT TOP 3 * FROM foo WHERE a = b ORDER BY id';
 
         $this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3)));
 
@@ -729,7 +731,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
             ->where('a = b')
             ->order('id');
 
-        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+        $sql = 'SELECT TOP 3 * FROM foo WHERE a = b ORDER BY id';
 
         $this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3, 0)));
     }
@@ -1211,7 +1213,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
      */
     public function testGetName()
     {
-        $this->assertEquals('sqlserv', $this->instance->getName());
+        $this->assertEquals('sqlsrv', $this->instance->getName());
     }
 
     /**

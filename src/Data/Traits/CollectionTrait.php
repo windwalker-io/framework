@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 $Asikart.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Data\Traits;
 
+use Windwalker\Data\Collection;
 use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;
 use Windwalker\Data\DataSet;
@@ -31,7 +32,7 @@ trait CollectionTrait
     public function each(callable $callback)
     {
         foreach ($this as $key => $value) {
-            $return = call_user_func($callback, $value, $key);
+            $return = $callback($value, $key);
 
             if ($return === false) {
                 break;
@@ -140,7 +141,7 @@ trait CollectionTrait
      */
     public function apply(callable $callback)
     {
-        return $this->bindNewInstance(call_user_func($callback, $this->convertArray($this)));
+        return $this->bindNewInstance($callback($this->convertArray($this)));
     }
 
     /**
@@ -152,7 +153,7 @@ trait CollectionTrait
      */
     public function pipe(callable $callback)
     {
-        return call_user_func($callback, $this);
+        return $callback($this);
     }
 
     /**
@@ -186,7 +187,7 @@ trait CollectionTrait
             return null;
         }
 
-        return array_shift($array);
+        return $array[array_key_first($array)];
     }
 
     /**
@@ -212,7 +213,7 @@ trait CollectionTrait
             return $prev;
         }
 
-        return array_pop($array);
+        return $array[array_key_last($array)];
     }
 
     /**
@@ -247,39 +248,45 @@ trait CollectionTrait
     /**
      * Mapping all elements.
      *
-     * @param   callable $callback
+     * @param callable $callback
+     * @param bool     $useKeys
      *
      * @return  static  Support chaining.
      *
      * @since   2.0.9
      */
-    public function map($callback)
+    public function map($callback, $useKeys = true)
     {
         $keys = $this->keys();
 
+        if ($keys instanceof Collection) {
+            $keys = $keys->dump();
+        }
+
+        if ($useKeys) {
+            $result = array_map($callback, $this->convertArray(clone $this), $keys);
+        } else {
+            $result = array_map($callback, $this->convertArray(clone $this));
+        }
+
         // Keep keys same as origin
-        return $this->bindNewInstance(
-            array_combine(
-                $keys,
-                array_map($callback, $this->convertArray(clone $this), $keys)
-            )
-        );
+        return $this->bindNewInstance(array_combine($keys, $result));
     }
 
     /**
      * convertArray
      *
-     * @param array|Data|DataSet $array
+     * @param array|Data|DataSet|static $array
      *
      * @return  array
      */
     protected function convertArray($array)
     {
-        if ($array instanceof static) {
+        if ($array instanceof DataInterface) {
             $array = $array->dump();
         }
 
-        return $array;
+        return Arr::toArray($array);
     }
 
     /**

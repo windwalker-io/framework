@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Postgresql;
@@ -12,6 +12,7 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
@@ -24,8 +25,9 @@ class PostgresqlTable extends AbstractTable
     /**
      * create
      *
-     * @param bool  $ifNotExists
-     * @param array $options
+     * @param callable|Schema $schema
+     * @param bool            $ifNotExists
+     * @param array           $options
      *
      * @return  static
      */
@@ -48,7 +50,9 @@ class PostgresqlTable extends AbstractTable
             $columns[$column->getName()] = PostgresqlGrammar::build(
                 $column->getType() . $column->getLength(),
                 $column->getAllowNull() ? null : 'NOT NULL',
-                $column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
+                $column->isPrimary()
+                    ? null
+                    : 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault())
             );
 
             // Comment
@@ -66,14 +70,18 @@ class PostgresqlTable extends AbstractTable
         $keyComments = [];
 
         foreach ($schema->getIndexes() as $index) {
-            $keys[$index->getName()] = [
-                'type' => strtoupper($index->getType()),
-                'name' => $index->getName(),
-                'columns' => $index->getColumns(),
-            ];
+            if ($index->getType() === Key::TYPE_PRIMARY) {
+                $primary = array_merge($primary, $index->getColumns());
+            } else {
+                $keys[$index->getName()] = [
+                    'type' => strtoupper($index->getType()),
+                    'name' => $index->getName(),
+                    'columns' => $index->getColumns(),
+                ];
 
-            if ($index->getComment()) {
-                $keyComments[$index->getName()] = $index->getComment();
+                if ($index->getComment()) {
+                    $keyComments[$index->getName()] = $index->getComment();
+                }
             }
         }
 
@@ -250,12 +258,12 @@ class PostgresqlTable extends AbstractTable
             'NOT NULL'
         );
 
-        if ($default !== null) {
+        if ($default !== false) {
             $sql .= ";\n" . PostgresqlGrammar::build(
                 'ALTER TABLE ' . $query->quoteName($this->getName()),
                 'ALTER COLUMN',
                 $query->quoteName($name),
-                'SET DEFAULT' . $query->quote($default)
+                'SET DEFAULT ' . $query->validValue($default)
             );
         }
 
@@ -417,10 +425,6 @@ class PostgresqlTable extends AbstractTable
      */
     public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
     {
-        if ($this->hasIndex($name)) {
-            $this->dropIndex($name);
-        }
-
         if (!$type instanceof Key) {
             if (!$columns) {
                 throw new \InvalidArgumentException('No columns given.');
@@ -434,7 +438,7 @@ class PostgresqlTable extends AbstractTable
         }
 
         if ($this->hasIndex($index->getName())) {
-            return $this;
+            $this->dropIndex($index->getName());
         }
 
         $query = PostgresqlGrammar::addIndex(
@@ -544,16 +548,21 @@ class PostgresqlTable extends AbstractTable
             $keys = $this->getIndexes();
 
             foreach ($result as $field) {
+                if (strpos($field->Default, 'nextval') !== false) {
+                    $field->Extra = 'auto_increment';
+                    $field->Default = 0;
+                }
+
                 if (preg_match("/^NULL::*/", $field->Default)) {
                     $field->Default = null;
                 }
 
-                if (strpos($field->Type, 'character varying') !== false) {
-                    $field->Type = str_replace('character varying', 'varchar', $field->Type);
+                if (preg_match("/'(.*)'::[\w\s]/", $field->Default, $matches)) {
+                    $field->Default = $matches[1] ?? '';
                 }
 
-                if (strpos($field->Default, 'nextval') !== false) {
-                    $field->Extra = 'auto_increment';
+                if (strpos($field->Type, 'character varying') !== false) {
+                    $field->Type = str_replace('character varying', 'varchar', $field->Type);
                 }
 
                 // Find key

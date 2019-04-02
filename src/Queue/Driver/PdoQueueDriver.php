@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 $Asikart.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
 
@@ -147,9 +147,6 @@ class PdoQueueDriver implements QueueDriverInterface
             $stat->execute();
 
             $this->pdo->commit();
-        } catch (\Exception $e) {
-            $this->pdo->rollBack();
-            throw $e;
         } catch (\Throwable $t) {
             $this->pdo->rollBack();
             throw $t;

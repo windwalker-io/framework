@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Console;
@@ -148,9 +148,11 @@ class Console extends AbstractConsole
 
             $exitCode = $e->getCode();
             $error = true;
+
+            $this->handleException($e);
         } catch (\Throwable $t) {
             $command->renderException(
-                new \ErrorException(
+                $e = new \ErrorException(
                     $t->getMessage(),
                     $t->getCode(),
                     E_ERROR,
@@ -162,6 +164,8 @@ class Console extends AbstractConsole
 
             $exitCode = $t->getCode();
             $error = true;
+
+            $this->handleException($t);
         }
 
         if ($exitCode === true) {
@@ -207,6 +211,20 @@ class Console extends AbstractConsole
         }
 
         return $this->getRootCommand()->setIO($io)->execute();
+    }
+
+    /**
+     * handleException
+     *
+     * @param \Throwable $e
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function handleException(\Throwable $e): void
+    {
+        //
     }
 
     /**

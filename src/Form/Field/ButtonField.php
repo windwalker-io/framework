@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -15,11 +15,19 @@ use Windwalker\Dom\HtmlElement;
  *
  * @method  mixed|$this  text(string | integer $value = null)
  * @method  mixed|$this  buttonType(string | integer $value = null)
+ * @method  mixed|$this  element(string $value = null)
  *
  * @since  2.1.8
  */
 class ButtonField extends AbstractField
 {
+    public const ELEMENT_BUTTON = 'button';
+    public const ELEMENT_LINK = 'link';
+
+    public const TYPE_BUTTON = 'button';
+    public const TYPE_CLEAR = 'clear';
+    public const TYPE_SUBMIT = 'submit';
+
     /**
      * Property type.
      *
@@ -28,34 +36,26 @@ class ButtonField extends AbstractField
     protected $type = 'button';
 
     /**
-     * Property element.
-     *
-     * @var  string
-     */
-    protected $element = 'button';
-
-    /**
      * prepareRenderInput
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return void
      */
     public function prepare(&$attrs)
     {
-        $attrs['type'] = $this->get('type', 'submit');
-        $attrs['name'] = $this->getFieldName();
-        $attrs['id'] = $this->getAttribute('id', $this->getId());
-        $attrs['class'] = $this->getAttribute('class');
-        $attrs['autofocus'] = $this->getAttribute('autofocus');
-        $attrs['form'] = $this->getAttribute('form');
-        $attrs['formaction'] = $this->getAttribute('formaction');
-        $attrs['formenctype'] = $this->getAttribute('formenctype');
-        $attrs['formmethod'] = $this->getAttribute('formmethod');
+        $attrs['name']           = $this->getFieldName();
+        $attrs['id']             = $this->getAttribute('id', $this->getId());
+        $attrs['class']          = $this->getAttribute('class');
+        $attrs['autofocus']      = $this->getAttribute('autofocus');
+        $attrs['form']           = $this->getAttribute('form');
+        $attrs['formaction']     = $this->getAttribute('formaction');
+        $attrs['formenctype']    = $this->getAttribute('formenctype');
+        $attrs['formmethod']     = $this->getAttribute('formmethod');
         $attrs['formnovalidate'] = $this->getAttribute('formnovalidate');
-        $attrs['formtarget'] = $this->getAttribute('formtarget');
-        $attrs['disabled'] = $this->getAttribute('disabled');
-        $attrs['required'] = $this->required;
+        $attrs['formtarget']     = $this->getAttribute('formtarget');
+        $attrs['disabled']       = $this->getAttribute('disabled');
+        $attrs['required']       = $this->required;
     }
 
     /**
@@ -71,7 +71,8 @@ class ButtonField extends AbstractField
             parent::getAccessors(),
             [
                 'text' => 'text',
-                'buttonType' => 'type'
+                'buttonType' => 'type',
+                'element' => 'element',
             ]
         );
     }
@@ -85,6 +86,14 @@ class ButtonField extends AbstractField
      */
     public function buildInput($attrs)
     {
-        return new HtmlElement($this->element, $this->getAttribute('text', $this->getValue()), $attrs);
+        if ($this->element() === static::ELEMENT_BUTTON) {
+            $attrs['type'] = $this->buttonType() ?: 'submit';
+        }
+
+        return new HtmlElement(
+            $this->element(),
+            $this->getAttribute('text', $this->getValue()),
+            $attrs
+        );
     }
 }

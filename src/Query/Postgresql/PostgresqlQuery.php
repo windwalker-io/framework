@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Query\Postgresql;
@@ -207,6 +207,10 @@ class PostgresqlQuery extends Query
             $query .= ' ' . (string) $this->suffix;
         }
 
+        if ($this->type === 'select' && $this->alias !== null) {
+            $query = sprintf('(%s) AS %s', $query, $this->alias);
+        }
+
         return $query;
     }
 
@@ -260,6 +264,7 @@ class PostgresqlQuery extends Query
             case 'columns':
             case 'values':
             case 'suffix':
+            case 'alias':
                 parent::clear($clause);
                 break;
 

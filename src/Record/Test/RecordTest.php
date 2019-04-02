@@ -2,14 +2,15 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
+use Windwalker\DataMapper\DatabaseContainer;
 use Windwalker\Record\Record;
 use Windwalker\Record\Test\Stub\StubRecord;
 use Windwalker\Test\TestHelper;
@@ -39,6 +40,8 @@ class RecordTest extends AbstractMysqlTestCase
     {
         parent::setUp();
 
+        DatabaseContainer::reset();
+
         $this->instance = new Record('articles');
     }
 
@@ -47,6 +50,7 @@ class RecordTest extends AbstractMysqlTestCase
      * This method is called after a test is executed.
      *
      * @return void
+     * @throws \ReflectionException
      */
     protected function tearDown()
     {

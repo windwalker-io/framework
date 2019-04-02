@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2014 LYRASOFT.
  * @license    GNU General Public License version 2 or later;
  */
 

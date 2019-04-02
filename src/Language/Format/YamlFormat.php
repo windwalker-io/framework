@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Language\Format;
 
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -30,10 +31,22 @@ class YamlFormat extends AbstractFormat
      * @param string $string
      *
      * @return  string[]
+     * @throws \ErrorException
      */
     public function parse($string)
     {
-        $array = Yaml::parse($string);
+        try {
+            $array = Yaml::parse($string);
+        } catch (ParseException $e) {
+            throw new \ErrorException(
+                $e->getMessage(),
+                $e->getCode(),
+                E_ERROR,
+                $e->getParsedFile(),
+                $e->getParsedLine(),
+                $e
+            );
+        }
 
         return $this->toOneDimension($array);
     }

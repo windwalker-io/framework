@@ -2,13 +2,14 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Structure\Format;
 
 use Windwalker\Structure\StructureHelper;
+use Windwalker\Utilities\Arr;
 
 /**
  * PHP class format handler for Structure
@@ -29,6 +30,7 @@ class PhpFormat implements FormatInterface
     public static function structToString($struct, array $options = [])
     {
         $header = StructureHelper::getValue($options, 'header');
+        $asArray = StructureHelper::getValue($options, 'as_array');
 
         // Build the object variables string
         $vars = '';
@@ -41,19 +43,28 @@ class PhpFormat implements FormatInterface
             }
         }
 
-        $str = "<?php\n";
+        if (!$asArray) {
+            $str = "<?php\n";
 
-        if ($header) {
-            $str .= $header . "\n";
+            if ($header) {
+                $str .= $header . "\n";
+            }
+
+            $str .= "\nreturn [\n";
+        } else {
+            $str = "[\n";
         }
 
-        $str .= "\nreturn [\n";
         $str .= $vars;
-        $str .= "];\n";
+        $str .= ']';
 
-        // Use the closing tag if set to true in parameters.
-        if (StructureHelper::getValue($options, 'closingtag', false)) {
-            $str .= "\n?>";
+        if (!$asArray) {
+            $str .= ";\n";
+
+            // Use the closing tag if set to true in parameters.
+            if (StructureHelper::getValue($options, 'closingtag', false)) {
+                $str .= "\n?>";
+            }
         }
 
         return $str;
@@ -84,9 +95,15 @@ class PhpFormat implements FormatInterface
         $s = "[\n";
         $i = 0;
 
+        $assoc = Arr::isAssociative($a);
+
         foreach ($a as $k => $v) {
             $s .= $i ? ",\n" : '';
-            $s .= str_repeat('    ', $level) . "'" . $k . "' => ";
+            $s .= str_repeat('    ', $level);
+
+            if ($assoc) {
+                $s .= "'" . $k . "' => ";
+            }
 
             if (is_array($v) || is_object($v)) {
                 $s .= static::getArrayString((array) $v, $level + 1);

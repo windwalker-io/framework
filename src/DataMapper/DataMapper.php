@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DataMapper;
@@ -269,16 +269,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
                 $entity = $this->validValue($entity);
 
-                $this->db->getWriter()->insertOne($this->table, $entity, $pkName);
+                $this->db->getWriter()->insertOne($this->table, $entity, $pkName, $entity->hasIncrementField());
 
                 $data->$pkName = $entity->$pkName;
 
                 $dataset[$k] = $data;
             }
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -328,10 +324,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
                 $dataset[$k] = $data;
             }
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -360,10 +352,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
         try {
             $result = $this->db->getWriter()->updateBatch($this->table, $data, $conditions);
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -398,10 +386,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             if ($this->create($dataset) === false) {
                 throw new \RuntimeException(sprintf('Insert row fail when updating relations table: %s', $this->table));
             }
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 
@@ -429,10 +413,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
         try {
             $result = $this->db->getWriter()->delete($this->table, $conditions);
-        } catch (\Exception $e) {
-            !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
-
-            throw $e;
         } catch (\Throwable $e) {
             !$this->useTransaction ?: $this->db->getTransaction(true)->rollback();
 

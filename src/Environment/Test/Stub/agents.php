@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -28,6 +28,16 @@ return [
         Browser::EDGE,
         '12',
         'Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; DEVICE INFO) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Mobile Safari/537.36 Edge/12.0',
+    ],
+
+    // Edge Chromium
+    [
+        Browser::DEVICE_WINDOWS,
+        false,
+        Browser::ENGINE_BLINK,
+        Browser::EDG,
+        '75',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3738.0 Safari/537.36 Edg/75.0.107.0',
     ],
 
     // IE Windows

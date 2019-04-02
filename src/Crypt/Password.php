@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Crypt;
@@ -118,10 +118,6 @@ class Password implements HasherInterface
                 $cost = CryptHelper::limitInteger($this->cost, 4, 31);
 
                 $options['cost'] = $cost;
-
-                if (version_compare(PHP_VERSION, 7, '<')) {
-                    $options['salt'] = $salt;
-                }
 
                 return password_hash($password, PASSWORD_BCRYPT, $options);
                 break;

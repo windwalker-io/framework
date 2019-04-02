@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -151,6 +151,10 @@ class Edge
         $__data = array_merge($this->getGlobals(true), $__more, $__data);
 
         foreach ($__data as $__key => $__value) {
+            if ($__key === '__path' || $__key === '__data') {
+                continue;
+            }
+
             $$__key = $__value;
         }
 
@@ -164,11 +168,6 @@ class Edge
             } else {
                 eval(' ?>' . $this->cache->load($__path) . '<?php ');
             }
-        } catch (\Exception $e) {
-            ob_clean();
-            $this->wrapException($e, $__path, $__layout);
-
-            return null;
         } catch (\Throwable $e) {
             ob_clean();
             $this->wrapException($e, $__path, $__layout);

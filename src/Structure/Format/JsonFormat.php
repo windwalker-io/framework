@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Structure\Format;
@@ -49,11 +49,7 @@ class JsonFormat implements FormatInterface
         $depth = StructureHelper::getValue($options, 'depth', 512);
         $option = StructureHelper::getValue($options, 'options', 0);
 
-        if (PHP_VERSION >= 5.4) {
-            return json_decode(trim($data), $assoc, $depth, $option);
-        } else {
-            return json_decode(trim($data), $assoc, $depth);
-        }
+        return json_decode(trim($data), $assoc, $depth, $option);
     }
 
     /**

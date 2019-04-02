@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Test;
@@ -11,6 +11,8 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Monitor\CallbackMonitor;
+use Windwalker\Query\Query;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -87,7 +89,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
             static::markTestSkipped('DSN of driver ' . static::$driver . ' not available');
         }
 
-        static::$dbname = $dbname = isset($dsn['dbname']) ? $dsn['dbname'] : null;
+        static::$dbname = $dbname = $dsn['dbname'] ?? null;
 
         if (!$dbname) {
             throw new \LogicException(sprintf('No dbname in %s DSN', static::$driver));
@@ -101,17 +103,33 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
         }
 
         try {
+            DatabaseFactory::reset();
+
             // Use factory create dbo, only create once and will be singleton.
             $db = self::$dbo = DatabaseFactory::getDbo(
                 static::$driver,
                 [
-                    'host' => isset($dsn['host']) ? $dsn['host'] : null,
-                    'user' => isset($dsn['user']) ? $dsn['user'] : null,
-                    'password' => isset($dsn['pass']) ? $dsn['pass'] : null,
-                    'port' => isset($dsn['port']) ? $dsn['port'] : null,
-                    'prefix' => isset($dsn['prefix']) ? $dsn['prefix'] : null,
-                ]
+                    'host' => $dsn['host'] ?? null,
+                    'user' => $dsn['user'] ?? null,
+                    'password' => $dsn['pass'] ?? null,
+                    'port' => $dsn['port'] ?? null,
+                    'prefix' => $dsn['prefix'] ?? null,
+                ],
+                true
             );
+
+            $db->setDebug(true);
+
+            $logfile = fopen(
+                __DIR__ . '/logs/' . str_replace('\\', '_', static::class) . '.sql',
+                'ab'
+            );
+
+            $db->setMonitor(new CallbackMonitor(
+                function ($query) use ($logfile) {
+                    fwrite($logfile, $query . "\n\n");
+                }
+            ));
         } catch (\RangeException $e) {
             static::markTestSkipped($e->getMessage());
 
@@ -160,7 +178,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     {
         $queries = static::getSetupSql();
 
-        DatabaseHelper::batchQuery(static::$dbo, $queries);
+        self::$dbo->execute($queries);
     }
 
     /**
@@ -188,6 +206,8 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 
         static::$debug or static::tearDownFixtures();
 
+        self::$dbo->disconnect();
+
         self::$dbo = null;
     }
 
@@ -201,6 +221,8 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
         }
 
         static::$debug or static::tearDownFixtures();
+
+        self::$dbo->disconnect();
 
         self::$dbo = null;
     }
@@ -226,13 +248,10 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
+     * @throws \ReflectionException
      */
     protected function tearDown()
     {
-        if (class_exists('Windwalker\Middleware\Chain\ChainBuilder')) {
-            $this->db->resetMiddlewares();
-        }
-
         $tables = TestHelper::getValue($this->db, 'tables');
 
         foreach ((array) $tables as $table) {

@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Query\Sqlite;
@@ -49,21 +49,26 @@ class SqliteQuery extends Query
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param   string|integer $key             The key that will be used in your SQL query to reference the value.
+     * @param   string|integer  $key            The key that will be used in your SQL query to reference the value.
      *                                          Usually of the form ':key', but can also be an integer.
      * @param   mixed          &$value          The value that will be bound. The value is passed by reference to
      *                                          support output parameters such as those possible with stored
      *                                          procedures.
-     * @param   integer        $dataType        Constant corresponding to a SQL datatype.
-     * @param   integer        $length          The length of the variable. Usually required for OUTPUT parameters.
-     * @param   array          $driverOptions   Optional driver options to be used.
+     * @param   integer         $dataType       Constant corresponding to a SQL datatype.
+     * @param   integer         $length         The length of the variable. Usually required for OUTPUT parameters.
+     * @param   array           $driverOptions  Optional driver options to be used.
      *
      * @return  static  Returns this object to allow chaining.
      *
      * @since   2.0
      */
-    public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
-    {
+    public function bind(
+        $key = null,
+        $value = null,
+        $dataType = \PDO::PARAM_STR,
+        $length = null,
+        $driverOptions = null
+    ) {
         // Case 1: Empty Key (reset $bounded array)
         if (empty($key)) {
             $this->bounded = [];
@@ -146,7 +151,7 @@ class SqliteQuery extends Query
      *
      * @param   string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
      *
-     * @return  SqliteQuery  Returns this object to allow chaining.
+     * @return  static  Returns this object to allow chaining.
      *
      * @since   2.0
      */

@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Test\Mysql;
@@ -436,6 +436,20 @@ class MysqlTableTest extends AbstractMysqlTestCase
         $indexes = $table->getIndexes();
 
         $this->assertEquals(0, count($indexes));
+    }
+
+    /**
+     * testDrop
+     *
+     * @return  void
+     *
+     * @since  3.5
+     */
+    public function testDrop()
+    {
+        $this->db->getTable('#__strict')->drop(true);
+
+        self::assertFalse(in_array('ww_strict', $this->db->getDatabase()->getTables(true)));
     }
 
     /**

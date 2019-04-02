@@ -2,19 +2,20 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use PhpDocReader\PhpDocReader;
 use Psr\Container\ContainerInterface;
-use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\DI\Annotation\Inject;
+use Windwalker\DI\Exception\DependencyResolutionException;
+use Windwalker\Structure\Structure;
+use Windwalker\Structure\ValueReference;
 
 /**
  * The DI Container.
@@ -23,7 +24,7 @@ use Windwalker\DI\Annotation\Inject;
  */
 class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
-    const FORCE_NEW = true;
+    public const FORCE_NEW = true;
 
     /**
      * Property children.
@@ -81,6 +82,56 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     protected $docReader;
 
     /**
+     * Property parameters.
+     *
+     * @var  Structure
+     */
+    protected $parameters;
+
+    /**
+     * Create class meta.
+     *
+     * @param string|callable $class
+     *
+     * @return  ClassMeta
+     *
+     * @since  3.5.1
+     */
+    public static function meta($class): ClassMeta
+    {
+        return new ClassMeta($class);
+    }
+
+    /**
+     * Wrap as raw.
+     *
+     * @param mixed $value
+     *
+     * @return  RawWrapper
+     *
+     * @since  3.5.1
+     */
+    public static function raw($value): RawWrapper
+    {
+        return new RawWrapper($value);
+    }
+
+    /**
+     * Create parameter ref.
+     *
+     * @param string      $path
+     * @param string|null $separator
+     *
+     * @return  ValueReference
+     *
+     * @since  3.5.1
+     */
+    public static function ref(string $path, string $separator = null): ValueReference
+    {
+        return new ValueReference($path, $separator);
+    }
+
+    /**
      * Constructor for the DI Container
      *
      * @param   Container   $parent   Parent for hierarchical containers.
@@ -90,8 +141,9 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      */
     public function __construct(Container $parent = null, array $children = [])
     {
-        $this->parent = $parent;
+        $this->parent   = $parent;
         $this->children = $children;
+        $this->parameters = new Structure();
 
         // Load Inject Annotation first to make sure AnnotationReader can autoload it.
         new Inject();
@@ -246,7 +298,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      * @param bool   $shared
      * @param bool   $protected
      *
-     * @return object
+     * @return  mixed
      * @since   3.0
      */
     public function createObject($class, array $args = [], $shared = false, $protected = false)
@@ -265,7 +317,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      * @param array  $args
      * @param bool   $protected
      *
-     * @return object
+     * @return  mixed
      *
      * @since   3.0
      */
@@ -277,8 +329,8 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     /**
      * Create an object of class $key;
      *
-     * @param   string $class The class name to build.
-     * @param   array  $args  The default args if no class hint provided.
+     * @param   string|ClassMeta|callable $class The class name to build.
+     * @param   array                     $args  The default args if no class hint provided.
      *
      * @return mixed  Instance of class specified by $key with all dependencies injected.
      *                 Returns an object if the class exists and false otherwise
@@ -289,32 +341,48 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      */
     public function newInstance($class, array $args = [])
     {
-        try {
-            $reflection = new \ReflectionClass($class);
-        } catch (\ReflectionException $e) {
-            return false;
+        if ($class instanceof ClassMeta) {
+            $class = function (self $container, array $args) use ($class) {
+                return $class->setContainer($container)->newInstance($args);
+            };
         }
 
-        $constructor = $reflection->getConstructor();
-
-        // If there are no parameters, just return a new object.
-        if (null === $constructor) {
-            $instance = new $class();
-        } else {
+        if (is_string($class)) {
             try {
-                $args = array_merge($this->whenCreating($class)->getArguments(), $args);
-
-                $newInstanceArgs = $this->getMethodArgs($constructor, $args);
-            } catch (DependencyResolutionException $e) {
-                throw new DependencyResolutionException(
-                    $e->getMessage() . ' / Target class: ' . $class,
-                    $e->getCode(),
-                    $e
-                );
+                $reflection = new \ReflectionClass($class);
+            } catch (\ReflectionException $e) {
+                return false;
             }
 
-            // Create a callable for the dataStore
-            $instance = $reflection->newInstanceArgs($newInstanceArgs);
+            $constructor = $reflection->getConstructor();
+
+            // If there are no parameters, just return a new object.
+            if (null === $constructor) {
+                $instance = new $class();
+            } else {
+                try {
+                    $args = array_merge($this->whenCreating($class)->getArguments(), $args);
+
+                    $newInstanceArgs = $this->getMethodArgs($constructor, $args);
+                } catch (DependencyResolutionException $e) {
+                    throw new DependencyResolutionException(
+                        $e->getMessage() . ' / Target class: ' . $class,
+                        $e->getCode(),
+                        $e
+                    );
+                }
+
+                // Create a callable for the dataStore
+                $instance = $reflection->newInstanceArgs($newInstanceArgs);
+            }
+        } elseif (is_callable($class)) {
+            $instance = $class($this, $args);
+
+            $reflection = new \ReflectionClass($instance);
+        } else {
+            throw new \InvalidArgumentException(
+                'New instance must get first argument as class name, callable or ClassMeta object.'
+            );
         }
 
         if (!class_exists(AnnotationReader::class) || !class_exists(PhpDocReader::class)) {
@@ -382,20 +450,20 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         $methodArgs = [];
 
         foreach ($method->getParameters() as $i => $param) {
-            $dependency = $param->getClass();
+            $dependency        = $param->getClass();
             $dependencyVarName = $param->getName();
 
             // If we have a dependency, that means it has been type-hinted.
             if (null !== $dependency) {
-                $depObject = null;
+                $depObject           = null;
                 $dependencyClassName = $dependency->getName();
 
                 // If the dependency class name is registered with this container or a parent, use it.
-                if ($this->exists($dependencyClassName)) {
+                if ($this->has($dependencyClassName)) {
                     $depObject = $this->get($dependencyClassName);
                 } elseif (array_key_exists($dependencyVarName, $args)) {
                     // If an arg provided, use it.
-                    $methodArgs[] = $args[$dependencyVarName];
+                    $methodArgs[] = $this->resolveArgumentValue($args[$dependencyVarName]);
 
                     continue;
                 } elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait()) {
@@ -419,29 +487,29 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             }
 
             // Handler ...$args
-            if (PHP_VERSION_ID >= 50600 && $param->isVariadic()) {
+            if ($param->isVariadic()) {
                 $trailing = [];
 
                 foreach ($args as $key => $value) {
                     if (is_numeric($key)) {
-                        $trailing[] = $value;
+                        $trailing[] = $this->resolveArgumentValue($value);
                     }
                 }
 
-                $trailing = array_slice($trailing, $i);
+                $trailing   = array_slice($trailing, $i);
                 $methodArgs = array_merge($methodArgs, $trailing);
                 continue;
             }
 
             // If an arg provided, use it.
             if (array_key_exists($dependencyVarName, $args)) {
-                $methodArgs[] = $args[$dependencyVarName];
+                $methodArgs[] = $this->resolveArgumentValue($args[$dependencyVarName]);
 
                 continue;
             }
 
             if (array_key_exists($i, $args)) {
-                $methodArgs[] = $args[$i];
+                $methodArgs[] = $this->resolveArgumentValue($args[$i]);
                 continue;
             }
 
@@ -454,17 +522,39 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
                 continue;
             }
 
-            // Simple workaround for ArrayIterator::__construct() before PHP 7
-            // @see  https://bugs.php.net/bug.php?id=70303
-            if ($method->getDeclaringClass()->getName() === 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<')) {
-                continue;
-            }
-
             // Couldn't resolve dependency, and no default was provided.
             throw new DependencyResolutionException(sprintf('Could not resolve dependency: $%s', $dependencyVarName));
         }
 
         return $methodArgs;
+    }
+
+    /**
+     * resolveArgumentValue
+     *
+     * @param mixed $value
+     *
+     * @return  mixed
+     *
+     * @since  3.5.1
+     */
+    protected function resolveArgumentValue($value)
+    {
+        if ($value instanceof ClassMeta) {
+            $value = $value->setContainer($this)->newInstance();
+        } elseif ($value instanceof ValueReference) {
+            $v = $value->get($this->getParameters());
+
+            if ($v === null && $this->parent instanceof Container) {
+                $v = $value->get($this->parent->getParameters());
+            }
+
+            $value = $v;
+        } elseif ($value instanceof RawWrapper) {
+            $value = $value->get();
+        }
+
+        return $value;
     }
 
     /**
@@ -1049,5 +1139,65 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         }
 
         return $this->docReader;
+    }
+
+    /**
+     * getParameter
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return  mixed
+     *
+     * @since  3.5.1
+     */
+    public function getParameter(string $key, $default = null)
+    {
+        return $this->parameters->get($key, $default);
+    }
+
+    /**
+     * setParameter
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return  static
+     *
+     * @since  3.5.1
+     */
+    public function setParameter(string $key, $value): self
+    {
+        $this->parameters->set($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * Method to get property Parameters
+     *
+     * @return  Structure
+     *
+     * @since  3.5.1
+     */
+    public function getParameters(): Structure
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Method to set property parameters
+     *
+     * @param   Structure $parameters
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  3.5.1
+     */
+    public function setParameters(Structure $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
     }
 }

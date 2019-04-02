@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Schema;
@@ -118,6 +118,13 @@ class DataType
     ];
 
     /**
+     * Property noLength.
+     *
+     * @var  array
+     */
+    protected static $noLength = [];
+
+    /**
      * Property instances.
      *
      * @var  static[]
@@ -219,5 +226,19 @@ class DataType
         }
 
         return static::$typeMapping[$type];
+    }
+
+    /**
+     * noLength
+     *
+     * @param   string $type
+     *
+     * @return  boolean
+     */
+    public static function noLength($type)
+    {
+        $type = strtolower($type);
+
+        return in_array($type, static::$noLength, true);
     }
 }

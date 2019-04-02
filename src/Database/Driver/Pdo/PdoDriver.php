@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Pdo;
@@ -123,13 +123,12 @@ class PdoDriver extends AbstractDatabaseDriver
         } catch (\PDOException $e) {
             throw new \RuntimeException(
                 'Could not connect to PDO: ' . $e->getMessage() . '. DSN: ' . $dsn,
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e
             );
         }
 
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
 
         return $this;
     }
@@ -249,45 +248,62 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Execute the SQL statement.
      *
-     * @throws \RuntimeException
+     * @param bool $prepare
+     *
      * @return  \PDOStatement|false  A database cursor resource on success, boolean false on failure.
      *
+     * @throws \RuntimeException
      * @since   2.0
      */
-    public function doExecute()
+    public function doExecute(bool $prepare = true)
     {
         // Replace prefix
         $query = $this->replacePrefix((string) $this->query);
 
-        // Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
-        $this->cursor = $this->connection->prepare($query, $this->driverOptions);
-
-        if (!($this->cursor instanceof \PDOStatement)) {
-            throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
-        }
-
-        // Bind the variables:
-        if ($this->query instanceof PreparableInterface) {
-            $bounded = &$this->query->getBounded();
-
-            foreach ($bounded as $key => $data) {
-                $this->cursor->bindParam($key, $data->value, $data->dataType, $data->length, $data->driverOptions);
-            }
-        }
-
         try {
-            $this->cursor->execute();
+            $this->getMonitor()->start($query);
+
+            if ($prepare) {
+                // Set query string into PDO, but keep query object in $this->query
+                // that we can bind params when execute().
+                $this->cursor = $this->connection->prepare($query, $this->driverOptions);
+
+                if (!($this->cursor instanceof \PDOStatement)) {
+                    throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
+                }
+
+                // Bind the variables:
+                if ($this->query instanceof PreparableInterface) {
+                    $bounded = &$this->query->getBounded();
+
+                    foreach ($bounded as $key => $data) {
+                        $this->cursor->bindParam(
+                            $key,
+                            $data->value,
+                            $data->dataType,
+                            $data->length,
+                            $data->driverOptions
+                        );
+                    }
+                }
+
+                $this->cursor->execute();
+            } else {
+                $this->connection->exec($query);
+            }
         } catch (\PDOException $e) {
             $msg = $e->getMessage();
 
             if ($this->debug) {
-                $msg .= "\nSQL: " . $this->cursor->queryString;
+                $msg .= "\nSQL: " . $query;
             }
 
             throw new \PDOException($msg, (int) $e->getCode(), $e);
-        }
+        } finally {
+            $this->lastQuery = $this->cursor->queryString ?? $query;
 
-        $this->lastQuery = $this->cursor->queryString;
+            $this->getMonitor()->stop();
+        }
 
         return $this->cursor;
     }

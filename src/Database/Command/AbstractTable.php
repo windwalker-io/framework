@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Command;
@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Schema;
 
 /**
- * Class DatabaseTable
+ * Class AbstractTable
  *
  * @since 2.0
  */
@@ -112,7 +112,7 @@ abstract class AbstractTable
      * @param   bool            $ifNotExists
      * @param   array           $options
      *
-     * @return  $this
+     * @return  static
      */
     public function save($schema, $ifNotExists = true, $options = [])
     {
@@ -167,7 +167,7 @@ abstract class AbstractTable
      * @param string  $newName
      * @param boolean $returnNew
      *
-     * @return  $this
+     * @return  static
      */
     abstract public function rename($newName, $returnNew = true);
 
@@ -422,7 +422,7 @@ abstract class AbstractTable
     public function getName()
     {
         if ($this->database instanceof AbstractDatabase
-            && $this->database->getName() != $this->db->getCurrentDatabase()) {
+            && $this->database->getName() !== $this->db->getCurrentDatabase()) {
             return $this->database->getName() . '.' . $this->name;
         }
 
@@ -489,7 +489,7 @@ abstract class AbstractTable
         if (!$schema instanceof Schema && is_callable($schema)) {
             $s = $this->getSchema();
 
-            call_user_func($schema, $s);
+            $schema($s);
 
             $schema = $s;
         }
@@ -514,7 +514,7 @@ abstract class AbstractTable
     /**
      * Method to set property database
      *
-     * @param   AbstractDatabase $database
+     * @param   AbstractDatabase|string $database
      *
      * @return  static  Return self to support chaining.
      */
@@ -559,11 +559,12 @@ abstract class AbstractTable
 
         $length = $length ? '(' . $length . ')' : null;
 
+        $column->type($type);
+
         // Prepare default value
         $this->prepareDefaultValue($column);
 
-        return $column->type($type)
-            ->length($length);
+        return $column->length($length);
     }
 
     /**

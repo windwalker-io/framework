@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -54,12 +54,12 @@ class ClassMeta
     /**
      * ClassMeta constructor.
      *
-     * @param string    $class
-     * @param Container $container
+     * @param string|callable $class
+     * @param Container       $container
      */
-    public function __construct($class, Container $container)
+    public function __construct($class, ?Container $container = null)
     {
-        $this->class = $class;
+        $this->class     = $class;
         $this->container = $container;
     }
 
@@ -109,6 +109,20 @@ class ClassMeta
     }
 
     /**
+     * hasArgument
+     *
+     * @param string $name
+     *
+     * @return  bool
+     *
+     * @since  3.5.1
+     */
+    public function hasArgument(string $name): bool
+    {
+        return isset($this->arguments[$name]);
+    }
+
+    /**
      * removeArgument
      *
      * @param   string $name
@@ -117,8 +131,7 @@ class ClassMeta
      */
     public function removeArgument($name)
     {
-        unset($this->arguments[$name]);
-        unset($this->caches[$name]);
+        unset($this->arguments[$name], $this->caches[$name]);
 
         return $this;
     }
@@ -176,23 +189,64 @@ class ClassMeta
      * @param   array  $args
      *
      * @return  mixed
+     * @throws Exception\DependencyResolutionException
+     * @throws \ReflectionException
      */
     public function __call($name, $args)
     {
         $allowMethods = [
-            'newInstance',
-            'createObject',
-            'createSharedObject',
             'bind',
             'bindShared',
         ];
 
-        if (in_array($name, $allowMethods)) {
+        if (in_array($name, $allowMethods, true)) {
             array_unshift($args, $this->class);
 
-            return call_user_func_array([$this->container, $name], $args);
+            return $this->container->$name(...$args);
+        }
+
+        $allowMethods = [
+            'newInstance',
+            'createObject',
+            'createSharedObject',
+        ];
+
+        if (in_array($name, $allowMethods, true)) {
+            $args[0] = array_merge($this->getArguments(), $args[0] ?? []);
+
+            array_unshift($args, $this->class);
+
+            return $this->container->$name(...$args);
         }
 
         throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');
+    }
+
+    /**
+     * Method to get property Container
+     *
+     * @return  Container
+     *
+     * @since  3.5.1
+     */
+    public function getContainer(): Container
+    {
+        return $this->container;
+    }
+
+    /**
+     * Method to set property container
+     *
+     * @param   Container $container
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  3.5.1
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
     }
 }

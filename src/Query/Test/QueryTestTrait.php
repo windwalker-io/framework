@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 $Asikart.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
 
@@ -51,5 +51,26 @@ trait QueryTestTrait
         $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id FOR UPDATE';
 
         $this->assertEquals($this->format($sql), $this->format($query));
+    }
+
+    /**
+     * testAlias
+     *
+     * @return  void
+     *
+     * @since  3.4.9
+     */
+    public function testQueryAlias()
+    {
+        $query = $this->getQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('a = b')
+            ->order('id')
+            ->alias('foo');
+
+        $sql = '(SELECT * FROM foo WHERE a = b ORDER BY id) AS foo';
+
+        self::assertEquals($this->format($sql), $this->format($query));
     }
 }

@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 $Asikart.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
 
@@ -235,8 +235,6 @@ class Worker implements DispatcherAwareInterface
             );
 
             $this->manager->delete($message);
-        } catch (\Exception $e) {
-            $this->handleJobException($job, $message, $options, $e);
         } catch (\Throwable $t) {
             $this->handleJobException($job, $message, $options, $t);
         } finally {
@@ -271,11 +269,7 @@ class Worker implements DispatcherAwareInterface
             return;
         }
 
-        if (version_compare(PHP_VERSION, '7.1', '>=')) {
-            pcntl_async_signals(true);
-        } else {
-            declare (ticks=1);
-        }
+        declare (ticks=1);
 
         if ($timeout !== 0) {
             pcntl_signal(

@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2015 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Database\Test;
 
+use Windwalker\Query\Query;
 use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 
@@ -16,7 +17,7 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
  *
  * @since  2.1
  */
-class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
+abstract class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
 {
     use BaseAssertionTrait;
 

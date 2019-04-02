@@ -2,14 +2,16 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Query\Test\Mysql;
 
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Mysql\MysqlGrammar;
+use Windwalker\Query\Mysql\MysqlQuery;
+use Windwalker\Query\Query;
 
 /**
  * Test class of MysqlGrammar

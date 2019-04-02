@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `ww_categories` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
-INSERT INTO `ww_categories` (`id`, `title`, `ordering`, `params`) VALUES
+INSERT INTO ww_categories2 (`id`, `title`, `ordering`, `params`) VALUES
 	(1, 'Foo', 1, ''),
 	(2, 'Bar', 2, '');
 

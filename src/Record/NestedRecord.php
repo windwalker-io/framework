@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Record;
@@ -427,7 +427,7 @@ class NestedRecord extends Record
     public function moveByReference($referenceId, $position = self::LOCATION_AFTER, $pk = null)
     {
         $k = $this->getKeyName();
-        $pk = $pk === null ? $this->$k : $pk;
+        $pk = $pk ?? $this->$k;
 
         // Get the node by id.
         if (!$node = $this->getNode($pk)) {

@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Form\Field;
@@ -31,6 +31,7 @@ use Windwalker\Validator\ValidatorInterface;
  * @method $this removeLabelClass($value)
  * @method $this addControlClass($value)
  * @method $this removeControlClass($value)
+ * @method $this|mixed help(string $value = null)
  *
  * @since  2.0
  */
@@ -1285,7 +1286,8 @@ abstract class AbstractField
             'class',
             'labelClass',
             'controlClass',
-            'wraps'
+            'wraps',
+            'help'
         ];
     }
 

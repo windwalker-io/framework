@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -18,7 +18,7 @@ trait OptionAccessTrait
     /**
      * Property options.
      *
-     * @var  array
+     * @var  array|\ArrayAccess
      */
     protected $options = [];
 
@@ -32,11 +32,7 @@ trait OptionAccessTrait
      */
     public function getOption($name, $default = null)
     {
-        if (array_key_exists($name, $this->options)) {
-            return $this->options[$name];
-        }
-
-        return $default;
+        return $this->options[$name] ?? $default;
     }
 
     /**
@@ -57,7 +53,7 @@ trait OptionAccessTrait
     /**
      * Method to get property Options
      *
-     * @return  array
+     * @return  array|\ArrayAccess
      */
     public function getOptions()
     {
@@ -67,13 +63,34 @@ trait OptionAccessTrait
     /**
      * Method to set property options
      *
-     * @param   array $options
+     * @param   array|\ArrayAccess $options
      *
      * @return  static  Return self to support chaining.
      */
     public function setOptions($options)
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * pushOption
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return  $this
+     *
+     * @since  3.5.1
+     */
+    public function pushOption(string $name, $value)
+    {
+        $array = $this->options[$name] ?? [];
+
+        $array[] = $value;
+
+        $this->options[$name] = $array;
 
         return $this;
     }

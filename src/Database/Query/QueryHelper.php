@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Query;
@@ -47,11 +47,11 @@ class QueryHelper
     /**
      * addTable
      *
-     * @param string  $alias
-     * @param string  $table
-     * @param mixed   $condition
-     * @param string  $joinType
-     * @param boolean $prefix
+     * @param string        $alias
+     * @param string|Query  $table
+     * @param mixed         $condition
+     * @param string        $joinType
+     * @param boolean       $prefix
      *
      * @return  QueryHelper
      */
@@ -103,24 +103,35 @@ class QueryHelper
     public function getSelectFields()
     {
         $fields = [];
+        $uniqueList = [];
 
         $i = 0;
 
         foreach ($this->tables as $alias => $table) {
+            if (!is_string($table['name'])) {
+                continue;
+            }
+
             $columns = $this->db->getTable($table['name'])->getColumns();
 
             foreach ($columns as $column) {
                 $prefix = $table['prefix'];
 
                 if ($i === 0) {
-                    $prefix = $prefix === null ? false : true;
+                    $prefix = $prefix !== null;
                 } else {
-                    $prefix = $prefix === null ? true : false;
+                    $prefix = $prefix === null;
                 }
 
                 if ($prefix === true) {
-                    $fields[] = $this->db->quoteName("{$alias}.{$column} AS {$alias}_{$column}");
+                    $as = "{$alias}_{$column}";
+
+                    if (!in_array($as, $uniqueList, true)) {
+                        $uniqueList[] = $as;
+                        $fields[] = $this->db->quoteName("{$alias}.{$column} AS $as");
+                    }
                 } else {
+                    $uniqueList[] = $column;
                     $fields[] = $this->db->quoteName("{$alias}.{$column} AS {$column}");
                 }
             }
@@ -141,12 +152,21 @@ class QueryHelper
     public function registerQueryTables(QueryInterface $query)
     {
         foreach ($this->tables as $alias => $table) {
+            $from = $table['name'];
+
+            if ($from instanceof Query) {
+                $from->clear('alias');
+                $from = '(' . $from . ')';
+            } else {
+                $from = $query->quoteName($from);
+            }
+
             if ($table['join'] === 'FROM') {
-                $query->from($query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias));
+                $query->from($from . ' AS ' . $query->quoteName($alias));
             } else {
                 $query->join(
                     $table['join'],
-                    $query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias),
+                    $from . ' AS ' . $query->quoteName($alias),
                     $table['condition']
                 );
             }

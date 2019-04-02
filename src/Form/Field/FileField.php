@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Form\Field;
@@ -12,6 +12,8 @@ namespace Windwalker\Form\Field;
  * The TextField class.
  *
  * @method  mixed|$this  multiple(bool $value = null)
+ * @method  mixed|$this  accept(bool $value = null)
+ * @method  mixed|$this  capture(bool $value = null)
  *
  * @since  2.0
  */
@@ -36,6 +38,8 @@ class FileField extends TextField
         parent::prepare($attrs);
 
         $attrs['multiple'] = $this->getAttribute('multiple');
+        $attrs['accept'] = $this->getAttribute('accept');
+        $attrs['capture'] = $this->getAttribute('capture');
     }
 
     /**
@@ -51,6 +55,8 @@ class FileField extends TextField
             parent::getAccessors(),
             [
                 'multiple' => 'multiple',
+                'accept' => 'accept',
+                'capture' => 'capture',
             ]
         );
     }

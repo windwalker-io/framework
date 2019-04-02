@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DataMapper\Entity;
@@ -16,7 +16,7 @@ use Windwalker\Data\Data;
  */
 class Entity extends Data implements \JsonSerializable
 {
-    const DUMP_ALL_DATA = true;
+    public const DUMP_ALL_DATA = true;
 
     /**
      * Property data.
@@ -471,7 +471,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @return  array
      */
-    public function toArray($all)
+    public function toArray($all = false)
     {
         $keys = $all ? array_keys($this->data) : array_keys($this->getFields());
 
@@ -482,6 +482,20 @@ class Entity extends Data implements \JsonSerializable
         }
 
         return $data;
+    }
+
+    /**
+     * asData
+     *
+     * @param bool $all
+     *
+     * @return  Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function asData($all = false): Data
+    {
+        return new Data($this->dump($all));
     }
 
     /**
@@ -630,5 +644,25 @@ class Entity extends Data implements \JsonSerializable
         }
 
         return \DateTime::createFromFormat($this->db->getQuery(true)->getDateFormat(), $date);
+    }
+
+    /**
+     * hasIncrementField
+     *
+     * @return  bool
+     *
+     * @since  3.5
+     */
+    public function hasIncrementField(): bool
+    {
+        $fields = $this->getFields();
+
+        foreach ($this->data as $key => $datum) {
+            if (isset($fields[$key]) && $fields[$key]->Extra === 'auto_increment') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

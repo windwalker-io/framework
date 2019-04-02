@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Data;
@@ -21,7 +21,7 @@ interface DataInterface
      * @param   mixed   $values       The data array or object.
      * @param   boolean $replaceNulls Replace null or not.
      *
-     * @return  Data Return self to support chaining.
+     * @return  static Return self to support chaining.
      */
     public function bind($values, $replaceNulls = false);
 

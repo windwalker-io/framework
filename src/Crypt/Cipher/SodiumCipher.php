@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 $Asikart.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
 
@@ -228,8 +228,10 @@ class SodiumCipher extends AbstractCipher
      *
      * @throws \RuntimeException
      */
-    protected function randomPseudoBytes($size = SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
+    protected function randomPseudoBytes($size = null)
     {
+        $size = $size ?? SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
+
         return static::genRandomBytes($size);
     }
 
@@ -250,7 +252,7 @@ class SodiumCipher extends AbstractCipher
      */
     public function canMemzero()
     {
-        return version_compare(PHP_VERSION, '7.2', '>=') || extension_loaded('libsodium');
+        return PHP_VERSION_ID >= 70200 || extension_loaded('libsodium');
     }
 
     /**
@@ -260,6 +262,7 @@ class SodiumCipher extends AbstractCipher
      *
      * @return  void
      * @throws \LogicException
+     * @throws \SodiumException
      */
     public function memzero(&$data)
     {

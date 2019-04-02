@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Language;
@@ -132,6 +132,7 @@ class Language implements LanguageInterface
      * @param string $loader
      *
      * @return  $this
+     * @throws \ErrorException
      */
     public function load($file, $format = 'ini', $loader = 'file')
     {
@@ -139,9 +140,20 @@ class Language implements LanguageInterface
             $loader = 'php';
         }
 
-        $string = $this->getLoader($loader)->load($file);
+        try {
+            $string = $this->getLoader($loader)->load($file);
 
-        $string = $this->getFormat($format)->parse($string);
+            $string = $this->getFormat($format)->parse($string);
+        } catch (\Throwable $e) {
+            throw new \ErrorException(
+                $e->getMessage(),
+                $e->getCode(),
+                E_ERROR,
+                $file,
+                $e->getLine(),
+                $e
+            );
+        }
 
         $this->addStrings($string);
 
@@ -283,8 +295,25 @@ class Language implements LanguageInterface
      * @param bool   $normalize
      *
      * @return  boolean
+     *
+     * @deprecated Use has() instead.
      */
     public function exists($key, $normalize = true)
+    {
+        return $this->has($key, $normalize);
+    }
+
+    /**
+     * has
+     *
+     * @param string $key
+     * @param bool   $normalize
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function has(string $key, $normalize = true): bool
     {
         if ($normalize) {
             $key = $this->normalize($key);
@@ -718,6 +747,34 @@ class Language implements LanguageInterface
     public function setTraceLevelOffset($traceLevelOffset)
     {
         $this->traceLevelOffset = $traceLevelOffset;
+
+        return $this;
+    }
+
+    /**
+     * Method to get property Strings
+     *
+     * @return  string[]
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getStrings(): array
+    {
+        return $this->strings;
+    }
+
+    /**
+     * Method to set property strings
+     *
+     * @param   string[] $strings
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setStrings(array $strings): self
+    {
+        $this->strings = $strings;
 
         return $this;
     }

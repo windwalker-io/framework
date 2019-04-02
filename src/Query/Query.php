@@ -2,13 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Query;
 
-use http\Exception\InvalidArgumentException;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
@@ -28,7 +28,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The database driver.
      *
-     * @var    \PDO
+     * @var    AbstractDatabaseDriver|\PDO
      * @since  2.0
      */
     protected $connection = null;
@@ -264,15 +264,22 @@ class Query implements QueryInterface, PreparableInterface
     protected $bounded = [];
 
     /**
+     * Property alias.
+     *
+     * @var string
+     */
+    protected $alias;
+
+    /**
      * Class constructor.
      *
-     * @param   \PDO $connection The PDO connection object to help us escape string.
+     * @param   AbstractDatabaseDriver|\PDO $connection The PDO connection object to help us escape string.
      *
      * @since   2.0
      */
-    public function __construct(\PDO &$connection = null)
+    public function __construct($connection = null)
     {
-        $this->connection = &$connection ?: ConnectionContainer::getConnection($this->name);
+        $this->connection = $connection ?: ConnectionContainer::getConnection($this->name);
     }
 
     /**
@@ -412,6 +419,10 @@ class Query implements QueryInterface, PreparableInterface
 
         if ($this->suffix) {
             $query .= ' ' . (string) $this->suffix;
+        }
+
+        if ($this->type === 'select' && $this->alias !== null) {
+            $query = sprintf('(%s) AS %s', $query, $this->alias);
         }
 
         return $query;
@@ -574,6 +585,10 @@ class Query implements QueryInterface, PreparableInterface
                 $this->union = null;
                 break;
 
+            case 'alias':
+                $this->alias = null;
+                break;
+
             default:
                 $this->type = null;
                 $this->select = null;
@@ -597,6 +612,7 @@ class Query implements QueryInterface, PreparableInterface
                 $this->limit = 0;
                 $this->suffix = null;
                 $this->bounded = [];
+                $this->alias = null;
                 break;
         }
 
@@ -1048,7 +1064,7 @@ class Query implements QueryInterface, PreparableInterface
             $this->join = [];
         }
 
-        if (is_string($table)) {
+        if (is_string($table) || $table instanceof Query) {
             $table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
         }
 
@@ -1467,7 +1483,7 @@ class Query implements QueryInterface, PreparableInterface
      * $query->values('1,2,3')->values('4,5,6');
      * $query->values(array('1,2,3', '4,5,6'));
      *
-     * @param   string $values A single tuple, or array of tuples.
+     * @param   string|array $values A single tuple, or array of tuples.
      *
      * @return static  Returns this object to allow chaining.
      *
@@ -1766,6 +1782,22 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
+     * Method to set property alias
+     *
+     * @param   string $alias
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since   3.4.8
+     */
+    public function alias($alias)
+    {
+        $this->alias = (string) $alias;
+
+        return $this;
+    }
+
+    /**
      * Find and replace sprintf-like tokens in a format string.
      * Each token takes one of the following forms:
      *     %%       - A literal percent character.
@@ -1995,9 +2027,9 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Method to get property Connection
      *
-     * @return  \PDO
+     * @return  AbstractDatabaseDriver|\PDO
      */
-    public function &getConnection()
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -2005,13 +2037,13 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Method to set property connection
      *
-     * @param   \PDO $connection
+     * @param   AbstractDatabaseDriver|\PDO $connection
      *
      * @return  static  Return self to support chaining.
      */
-    public function setConnection(&$connection)
+    public function setConnection($connection)
     {
-        $this->connection = &$connection;
+        $this->connection = $connection;
 
         return $this;
     }
@@ -2021,22 +2053,27 @@ class Query implements QueryInterface, PreparableInterface
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param   string|integer|array $key            The key that will be used in your SQL query to reference the
+     * @param   string|integer|array  $key           The key that will be used in your SQL query to reference the
      *                                               value. Usually of the form ':key', but can also be an integer.
      * @param   mixed                &$value         The value that will be bound. The value is passed by reference to
      *                                               support output parameters such as those possible with stored
      *                                               procedures.
-     * @param   integer              $dataType       Constant corresponding to a SQL datatype.
-     * @param   integer              $length         The length of the variable. Usually required for OUTPUT
+     * @param   integer               $dataType      Constant corresponding to a SQL datatype.
+     * @param   integer               $length        The length of the variable. Usually required for OUTPUT
      *                                               parameters.
-     * @param   array                $driverOptions  Optional driver options to be used.
+     * @param   array                 $driverOptions Optional driver options to be used.
      *
      * @return  static
      *
      * @since   2.0
      */
-    public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
-    {
+    public function bind(
+        $key = null,
+        $value = null,
+        $dataType = \PDO::PARAM_STR,
+        $length = null,
+        $driverOptions = null
+    ) {
         // If is array, loop for all elements.
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -2179,6 +2216,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param   string $string
      *
      * @return  string
+     * @throws  \Exception
      */
     public function validDatetime($string)
     {

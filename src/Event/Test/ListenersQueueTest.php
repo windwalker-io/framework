@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Source Matters. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later..txt
+ * @copyright  Copyright (C) 2019 LYRASOFT Source Matters.
+ * @license    LGPL-2.0-or-later.txt
  */
 
 namespace Windwalker\Event\Test;

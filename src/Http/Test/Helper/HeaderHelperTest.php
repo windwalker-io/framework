@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2019 SMS Taiwan, Inc.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -16,7 +16,7 @@ use Windwalker\Http\Response\Response;
  *
  * @since 3.0
  */
-class HerderHelperTest extends \PHPUnit\Framework\TestCase
+class HeaderHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Method to test getValue().
@@ -335,6 +335,6 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 
         $response = HeaderHelper::prepareAttachmentHeaders(new Response(), 'foo.zip');
 
-        $this->assertEquals(['attachment; filename="foo.zip"'], $response->getHeader('Content-Disposition'));
+        $this->assertEquals(['attachment; filename*=utf-8\'\'foo.zip'], $response->getHeader('Content-Disposition'));
     }
 }

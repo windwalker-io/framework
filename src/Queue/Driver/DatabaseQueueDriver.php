@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 $Asikart.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
 
@@ -133,8 +133,6 @@ class DatabaseQueueDriver implements QueueDriverInterface
             $this->db->getWriter()->updateBatch($this->table, $values, ['id' => $data['id']]);
 
             $trans->commit();
-        } catch (\Exception $e) {
-            $trans->rollback();
         } catch (\Throwable $t) {
             $trans->rollback();
         }
@@ -261,9 +259,23 @@ class DatabaseQueueDriver implements QueueDriverInterface
      */
     public function reconnect()
     {
-        $this->db->disconnect();
+        $this->disconnect();
 
         $this->db->connect();
+
+        return $this;
+    }
+
+    /**
+     * Disconnect DB.
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function disconnect()
+    {
+        $this->db->disconnect();
 
         return $this;
     }

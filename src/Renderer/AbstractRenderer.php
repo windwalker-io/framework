@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Renderer;
@@ -89,6 +89,21 @@ abstract class AbstractRenderer implements RendererInterface
         }
 
         return null;
+    }
+
+    /**
+     * has
+     *
+     * @param string $file
+     * @param string $ext
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function has(string $file, string $ext = ''): bool
+    {
+        return $this->findFile($file, $ext) !== null;
     }
 
     /**

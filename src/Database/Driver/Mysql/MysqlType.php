@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Mysql;
@@ -43,6 +43,7 @@ class MysqlType extends DataType
     public static $typeDefinitions = [
         self::BOOLEAN => [1, 0, 'bool'],
         self::INTEGER => [11, 0, 'int'],
+        self::BIGINT => [20, 0, 'int'],
         self::ENUM => [null, '', 'string'],
         self::SET => [null, '', 'string'],
         self::DATETIME => [null, '1000-01-01 00:00:00', 'string'],

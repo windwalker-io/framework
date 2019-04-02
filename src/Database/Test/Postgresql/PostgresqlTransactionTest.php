@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Test\Postgresql;
@@ -136,5 +136,40 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
         $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'A\'')->loadResult();
 
         $this->assertEquals('A', $result);
+    }
+
+    /**
+     * testTransactionNested
+     *
+     * @return  void
+     *
+     * @since  3.5
+     */
+    public function testTransactionNested()
+    {
+        $table = '#__flower';
+
+        // Level 1
+        $sql = "INSERT INTO {$table} (catid, title, meaning, params) VALUES (0, 'D', '', '')";
+
+        $tran = $this->db->getTransaction()->start();
+
+        $this->db->execute($sql);
+
+        // Level 2
+        $sql = "INSERT INTO {$table} (catid, title, meaning, params) VALUES (0, 'E', '', '')";
+
+        $tran = $tran->start();
+
+        $this->db->execute($sql);
+
+        $tran->rollback();
+        $tran->commit();
+
+        $result = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'D\'')->loadResult();
+        $this->assertEquals('D', $result);
+
+        $result2 = $this->db->getReader('SELECT title FROM #__flower WHERE title = \'E\'')->loadResult();
+        $this->assertNotEquals('E', $result2);
     }
 }

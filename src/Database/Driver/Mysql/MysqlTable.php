@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Mysql;
@@ -293,10 +293,6 @@ class MysqlTable extends AbstractTable
      */
     public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
     {
-        if ($this->hasIndex($name)) {
-            $this->dropIndex($name);
-        }
-
         if (!$type instanceof Key) {
             if (!$columns) {
                 throw new \InvalidArgumentException('No columns given.');
@@ -307,6 +303,10 @@ class MysqlTable extends AbstractTable
             $index = new Key($type, $columns, $name, $comment);
         } else {
             $index = $type;
+        }
+
+        if ($this->hasIndex($index->getName())) {
+            $this->dropIndex($index->getName());
         }
 
         $query = MysqlGrammar::addIndex(

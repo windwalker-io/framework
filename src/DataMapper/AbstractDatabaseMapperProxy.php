@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -61,6 +61,9 @@ use Windwalker\String\StringInflector;
  * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  * @method  static DataMapper  forUpdate()
  * @method  static DataMapper  suffix(string $string)
+ * @method  static AbstractDatabaseDriver  getDb()
+ * @method  static DataMapper  setDataClass()
+ * @method  static DataMapper  setDatasetClass()
  *
  * phpcs:enable
  *
@@ -158,7 +161,7 @@ class AbstractDatabaseMapperProxy
      *
      * @param   string $table
      *
-     * @return  DatabaseMapperInterface
+     * @return  DataMapper
      * @throws \Exception
      */
     public static function getInstance($table = null)
@@ -209,12 +212,12 @@ class AbstractDatabaseMapperProxy
     /**
      * setDataMapper
      *
-     * @param string                  $table
-     * @param DatabaseMapperInterface $mapper
+     * @param string     $table
+     * @param DataMapper $mapper
      *
      * @return  void
      */
-    public static function setDataMapper($table, DatabaseMapperInterface $mapper)
+    public static function setDataMapper($table, DataMapper $mapper)
     {
         static::$instances[$table] = $mapper;
     }

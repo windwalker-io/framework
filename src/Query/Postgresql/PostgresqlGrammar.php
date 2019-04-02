@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Query\Postgresql;
@@ -406,8 +406,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      *
      * @param string $name
      * @param array  $columns
-     *
-     * @param        $table
+     * @param string $table
      *
      * @return string
      */
@@ -417,23 +416,9 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $cols = [];
 
         foreach ((array) $columns as $key => $val) {
-            if (is_numeric($key)) {
-                $cols[] = $query->quoteName($val);
-            } else {
-                if (!is_numeric($val)) {
-                    $string = is_string($val) ? ' ' . $query->quote($val) : '';
+            $col = is_numeric($key) ? $val : $key;
 
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'Index length should be number, (%s)%s given.',
-                            gettype($val),
-                            $string
-                        )
-                    );
-                }
-
-                $cols[] = $query->quoteName($key) . '(' . $val . ')';
-            }
+            $cols[] = $query->quoteName(trim(explode('(', $col)[0]));
         }
 
         $cols = '(' . implode(', ', $cols) . ')';

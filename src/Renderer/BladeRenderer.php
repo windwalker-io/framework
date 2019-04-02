@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Renderer;
@@ -123,7 +123,7 @@ class BladeRenderer extends AbstractEngineRenderer
             }
 
             // B/C for 4.* and 5.*
-            if ($rawTags = GlobalContainer::getRawTags() && is_callable([$bladeCompiler, 'setRawTags'])) {
+            if (($rawTags = GlobalContainer::getRawTags()) && is_callable([$bladeCompiler, 'setRawTags'])) {
                 $bladeCompiler->setRawTags($rawTags[0], $rawTags[1]);
             }
 

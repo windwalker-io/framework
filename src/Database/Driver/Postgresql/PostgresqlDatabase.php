@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Postgresql;
@@ -62,7 +62,7 @@ class PostgresqlDatabase extends AbstractDatabase
      */
     public function drop($ifExists = false)
     {
-        if ($this->getName() == $this->db->getDatabase()->getName()) {
+        if ($this->getName() === $this->db->getDatabase()->getName()) {
             $this->db->disconnect();
             $this->db->setDatabaseName(null);
             $this->db->connect();

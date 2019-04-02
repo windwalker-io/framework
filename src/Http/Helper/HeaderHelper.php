@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2015 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
  * @license    GNU General Public License version 2 or later;
  */
 
@@ -271,15 +271,20 @@ abstract class HeaderHelper
      *
      * @return  ResponseInterface
      */
-    public static function prepareAttachmentHeaders(ResponseInterface $response, $filename = null)
-    {
+    public static function prepareAttachmentHeaders(
+        ResponseInterface $response,
+        ?string $filename = null
+    ): ResponseInterface {
         $response = $response->withHeader('Content-Type', 'application/octet-stream')
             ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withHeader('Content-Encoding', 'none');
 
         if ($filename !== null) {
-            $response = $response->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            $response = $response->withHeader(
+                'Content-Disposition',
+                'attachment; filename*=utf-8\'\'' . rawurlencode($filename)
+            );
         }
 
         return $response;

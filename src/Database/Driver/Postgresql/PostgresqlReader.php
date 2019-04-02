@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Database\Driver\Postgresql;
@@ -66,8 +66,16 @@ class PostgresqlReader extends PdoReader
 
         $insertidQuery->select($changedColName);
 
-        $insertVal = $this->db->getReader($insertidQuery)->loadArray();
+        try {
+            return $this->db->getReader($insertidQuery)->loadResult();
+        } catch (\PDOException $e) {
+            // 55000 means we trying to insert value to serial column
+            // Just return because insertedId get the last generated value.
+            if ($e->getCode() !== 55000) {
+                throw $e;
+            }
+        }
 
-        return $insertVal[0];
+        return null;
     }
 }
