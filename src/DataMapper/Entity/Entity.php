@@ -491,7 +491,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @return  Data
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function asData($all = false): Data
     {

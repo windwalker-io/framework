@@ -271,7 +271,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function disconnect()
     {

@@ -502,7 +502,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function indexOf($value, bool $strict = false): int
     {

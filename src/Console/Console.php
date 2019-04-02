@@ -220,7 +220,7 @@ class Console extends AbstractConsole
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function handleException(\Throwable $e): void
     {

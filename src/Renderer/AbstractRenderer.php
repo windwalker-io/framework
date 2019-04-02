@@ -99,7 +99,7 @@ abstract class AbstractRenderer implements RendererInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function has(string $file, string $ext = ''): bool
     {

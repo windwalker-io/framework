@@ -307,7 +307,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function withQueryParams($query): self
     {
@@ -326,7 +326,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * @return  PsrUri
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function withVar(string $name, $value): self
     {
@@ -347,7 +347,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function delVar(string $name): self
     {

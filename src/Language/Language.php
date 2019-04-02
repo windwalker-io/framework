@@ -311,7 +311,7 @@ class Language implements LanguageInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function has(string $key, $normalize = true): bool
     {
@@ -756,7 +756,7 @@ class Language implements LanguageInterface
      *
      * @return  string[]
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function getStrings(): array
     {
@@ -770,7 +770,7 @@ class Language implements LanguageInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function setStrings(array $strings): self
     {

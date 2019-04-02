@@ -74,7 +74,7 @@ class CallableJob implements JobInterface, \Serializable
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function serialize()
     {
@@ -90,7 +90,7 @@ class CallableJob implements JobInterface, \Serializable
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function unserialize($serialized)
     {

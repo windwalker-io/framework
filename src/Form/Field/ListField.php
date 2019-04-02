@@ -160,7 +160,7 @@ class ListField extends AbstractField
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function register(callable $handler): self
     {
@@ -177,7 +177,7 @@ class ListField extends AbstractField
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function registerOptions(array $options, callable $handler): self
     {

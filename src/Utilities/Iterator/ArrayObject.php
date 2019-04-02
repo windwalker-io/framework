@@ -536,7 +536,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.2
      */
     public function jsonSerialize()
     {
