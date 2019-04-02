@@ -15,21 +15,21 @@ namespace Windwalker\Form\Filter;
  */
 class RangeFilter implements FilterInterface
 {
-    const INT_UNSIGNED_MAX = 4294967295;
+    public const INT_UNSIGNED_MAX = 4294967295;
 
-    const INT_UNSIGNED_MIN = 0;
+    public const INT_UNSIGNED_MIN = 0;
 
-    const INT_SIGNED_MAX = 2147483647;
+    public const INT_SIGNED_MAX = 2147483647;
 
-    const INT_SIGNED_MIN = -2147483648;
+    public const INT_SIGNED_MIN = -2147483648;
 
-    const BIGINT_UNSIGNED_MAX = '18446744073709551615';
+    public const BIGINT_UNSIGNED_MAX = '18446744073709551615';
 
-    const BIGINT_UNSIGNED_MIN = 0;
+    public const BIGINT_UNSIGNED_MIN = 0;
 
-    const BIGINT_SIGNED_MAX = '9223372036854775807';
+    public const BIGINT_SIGNED_MAX = '9223372036854775807';
 
-    const BIGINT_SIGNED_MIN = '-9223372036854775808';
+    public const BIGINT_SIGNED_MIN = '-9223372036854775808';
 
     /**
      * Property min.
