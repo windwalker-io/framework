@@ -151,6 +151,36 @@ class DomElement implements \ArrayAccess
     }
 
     /**
+     * hasAttribute
+     *
+     * @param string $name
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function hasAttribute($name)
+    {
+        return isset($this->attribs[$name]);
+    }
+
+    /**
+     * removeAttribute
+     *
+     * @param string $name
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function removeAttribute($name)
+    {
+        unset($this->attribs[$name]);
+
+        return $this;
+    }
+
+    /**
      * Get all attributes.
      *
      * @return  array All attributes.

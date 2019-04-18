@@ -43,6 +43,10 @@ class Str
             return static::toString($data());
         }
 
+        if (is_stringable($data)) {
+            return (string) $data;
+        }
+
         if (is_array($data)) {
             $data = $dump ? Arr::dump($data) : 'Array()';
         }
