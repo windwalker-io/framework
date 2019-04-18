@@ -86,12 +86,14 @@ class ButtonField extends AbstractField
      */
     public function buildInput($attrs)
     {
-        if ($this->element() === static::ELEMENT_BUTTON) {
+        $element = $this->element() ?: static::ELEMENT_BUTTON;
+
+        if ($element === static::ELEMENT_BUTTON) {
             $attrs['type'] = $this->buttonType() ?: 'submit';
         }
 
         return new HtmlElement(
-            $this->element(),
+            $element,
             $this->getAttribute('text', $this->getValue()),
             $attrs
         );
