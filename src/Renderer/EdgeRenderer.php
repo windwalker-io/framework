@@ -65,6 +65,10 @@ class EdgeRenderer extends AbstractEngineRenderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
+            $this->loader = null;
+            $this->compiler = null;
+            $this->cache = null;
+
             $edge = new Edge($this->getLoader(), $this->getCompiler(), $this->getCache());
 
             foreach (GlobalContainer::getExtensions() as $name => $extension) {
@@ -122,7 +126,7 @@ class EdgeRenderer extends AbstractEngineRenderer
             $data = get_object_vars($data);
         }
 
-        return $this->getEngine()->render($file, (array) $data);
+        return $this->getEngine(true)->render($file, (array) $data);
     }
 
     /**
