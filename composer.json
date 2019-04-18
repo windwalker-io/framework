@@ -58,7 +58,8 @@
     },
     "provide":           {
         "psr/cache-implementation": "~1.0",
-        "psr/http-message-implementation": "~1.0"
+        "psr/http-message-implementation": "~1.0",
+        "php-http/client-implementation": "~1.0"
     },
     "replace": {
         "windwalker/application": "self.version",
