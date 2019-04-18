@@ -26,7 +26,7 @@ use Windwalker\Event\ListenerMapper;
  */
 abstract class AbstractDataMapper implements DataMapperInterface
 {
-    const UPDATE_NULLS = true;
+    public const UPDATE_NULLS = true;
 
     /**
      * Table name.
@@ -66,7 +66,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * @var    string
      * @since  2.0
      */
-    protected $dataClass = 'Windwalker\Data\Data';
+    protected $dataClass = Data::class;
 
     /**
      * Data set object class.
@@ -74,7 +74,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * @var    string
      * @since  2.0
      */
-    protected $datasetClass = 'Windwalker\Data\DataSet';
+    protected $datasetClass = DataSet::class;
 
     /**
      * Property useTransaction.
@@ -685,6 +685,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
         $createDataset = new $datasetClass();
         $updateDataset = new $datasetClass();
 
+        $fields = $this->getFields();
+        
         foreach ($dataset as $k => $data) {
             if (!($data instanceof $this->dataClass)) {
                 $data = $this->bindData($data);
@@ -692,9 +694,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
             $update = true;
 
-            // If one field not matched, use insert.
+            // If AI field is empty, use insert.
             foreach ($condFields as $field) {
-                if (!$data->$field) {
+                $extra = $fields[$field]->Extra ?? '';
+
+                if ($extra === 'auto_increment' && !$data->$field) {
                     $update = false;
 
                     break;
