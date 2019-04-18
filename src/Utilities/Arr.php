@@ -15,9 +15,9 @@ namespace Windwalker\Utilities;
  */
 class Arr
 {
-    const SORT_ASC = false;
+    public const SORT_ASC = false;
 
-    const SORT_DESC = true;
+    public const SORT_DESC = true;
 
     /**
      * SAPI mocck name to support test.

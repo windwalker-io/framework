@@ -656,18 +656,6 @@ class DataSet implements
     }
 
     /**
-     * keyBy
-     *
-     * @param string|int $field
-     *
-     * @return  static
-     */
-    public function keyBy($field)
-    {
-        return $this->bindNewInstance(Arr::group($this->data, $field));
-    }
-
-    /**
      * remove
      *
      * @param array|string $fields
@@ -679,7 +667,7 @@ class DataSet implements
         $fields = (array) $fields;
 
         return $this->map(
-            function (Data $data) use ($fields) {
+            static function (Data $data) use ($fields) {
                 return $data->except($fields);
             }
         );
@@ -697,7 +685,7 @@ class DataSet implements
         $fields = (array) $fields;
 
         return $this->map(
-            function (Data $data) use ($fields) {
+            static function (Data $data) use ($fields) {
                 return $data->only($fields);
             }
         );

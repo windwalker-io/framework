@@ -274,6 +274,55 @@ trait CollectionTrait
     }
 
     /**
+     * sortColumn
+     *
+     * @param string $column
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function sortColumn(string $column)
+    {
+        $array = $this->dump();
+
+        usort($array, static function ($a, $b) use ($column) {
+            return strcmp(
+                Arr::get($a, $column),
+                Arr::get($b, $column)
+            );
+        });
+
+        return $this->bindNewInstance($array);
+    }
+
+    /**
+     * groupBy
+     *
+     * @param string $column
+     *
+     * @return  CollectionTrait
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function groupBy(string $column)
+    {
+        return $this->bindNewInstance(Arr::group($this->dump(), $column, true));
+    }
+
+    /**
+     * keyBy
+     *
+     * @param string $field
+     *
+     * @return  static
+     */
+    public function keyBy(string $field)
+    {
+        return $this->bindNewInstance(Arr::group($this->dump(), $field));
+    }
+
+    /**
      * convertArray
      *
      * @param array|Data|DataSet|static $array
