@@ -645,4 +645,28 @@ class Browser
     {
         return (!empty($this->server['HTTPS']) && strtolower($this->server['HTTPS']) !== 'off');
     }
+
+    /**
+     * getRemoteIP
+     *
+     * @see @see https://www.phpini.com/php/php-get-real-ip
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getRemoteIP(): string
+    {
+        $server = $this->server;
+
+        if (!empty($server['HTTP_CLIENT_IP'])) {
+            return $server['HTTP_CLIENT_IP'];
+        }
+
+        if (!empty($server['HTTP_X_FORWARDED_FOR'])) {
+            return $server['HTTP_X_FORWARDED_FOR'];
+        }
+
+        return $server['REMOTE_ADDR'];
+    }
 }

@@ -34,7 +34,7 @@ class WebEnvironment extends Environment
     public static function create(array $server = null)
     {
         $server = $server ?: $_SERVER;
-        $agent = isset($server['HTTP_USER_AGENT']) ? $server['HTTP_USER_AGENT'] : null;
+        $agent = $server['HTTP_USER_AGENT'] ?? null;
 
         return new static(new Browser($agent, $server), new Platform($server));
     }

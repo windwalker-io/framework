@@ -79,7 +79,7 @@ abstract class ServerHelper
         $headers = [];
 
         foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) === 'HTTP_') {
+            if (strpos($name, 'HTTP_') === 0) {
                 $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
             }
         }
@@ -105,8 +105,8 @@ abstract class ServerHelper
         $out = [];
 
         foreach ($_SERVER as $key => $value) {
-            if (substr($key, 0, 5) == "HTTP_") {
-                $key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
+            if (strpos($key, 'HTTP_') === 0) {
+                $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
 
                 $out[$key] = $value;
             } else {
