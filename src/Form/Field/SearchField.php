@@ -20,7 +20,7 @@ class SearchField extends TextField
      *
      * @var  string
      */
-    protected $type = 'email';
+    protected $type = 'search';
 
     /**
      * prepare
