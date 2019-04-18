@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Dom;
@@ -11,7 +11,7 @@ namespace Windwalker\Dom;
 /**
  * The DOMTokenList class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.3
  */
 class DOMTokenList
 {
@@ -39,7 +39,7 @@ class DOMTokenList
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function add(string ...$args): self
     {
@@ -59,7 +59,7 @@ class DOMTokenList
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function remove(string ...$args): self
     {
@@ -79,7 +79,7 @@ class DOMTokenList
      *
      * @return  string|null
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function item(int $index): ?string
     {
@@ -96,7 +96,7 @@ class DOMTokenList
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function toggle(string $class, ?bool $force = null): bool
     {
@@ -132,7 +132,7 @@ class DOMTokenList
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function contains(string $class): bool
     {
@@ -144,7 +144,7 @@ class DOMTokenList
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function getClasses(): array
     {
@@ -156,7 +156,7 @@ class DOMTokenList
      *
      * @return  HtmlElement
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function getHtml(): HtmlElement
     {

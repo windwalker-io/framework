@@ -157,7 +157,7 @@ class DomElement implements \ArrayAccess
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function hasAttribute($name)
     {
@@ -171,7 +171,7 @@ class DomElement implements \ArrayAccess
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function removeAttribute($name)
     {

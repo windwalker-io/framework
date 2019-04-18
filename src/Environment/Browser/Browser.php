@@ -653,7 +653,7 @@ class Browser
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function getRemoteIP(): string
     {

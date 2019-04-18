@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Dom;
@@ -13,7 +13,7 @@ use Windwalker\String\StringNormalise;
 /**
  * The DOMStringMap class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.3
  */
 class DOMStringMap
 {
@@ -39,7 +39,7 @@ class DOMStringMap
      *
      * @return  HtmlElement
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function getHtml(): HtmlElement
     {
@@ -51,7 +51,7 @@ class DOMStringMap
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     protected function getDataAttrs(): array
     {
@@ -77,7 +77,7 @@ class DOMStringMap
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function __get($name)
     {
@@ -92,7 +92,7 @@ class DOMStringMap
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function __set($name, $value)
     {
@@ -106,7 +106,7 @@ class DOMStringMap
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function __isset($name)
     {
@@ -120,7 +120,7 @@ class DOMStringMap
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function __unset($name)
     {
@@ -134,7 +134,7 @@ class DOMStringMap
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     protected function toDataKey(string $name): string
     {

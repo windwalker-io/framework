@@ -40,7 +40,7 @@ class HtmlElement extends DomElement
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function addClass($class): self
     {
@@ -60,7 +60,7 @@ class HtmlElement extends DomElement
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function removeClass($class): self
     {
@@ -81,7 +81,7 @@ class HtmlElement extends DomElement
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function toggleClass(string $class, ?bool $force = null): self
     {
@@ -97,7 +97,7 @@ class HtmlElement extends DomElement
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function hasClass(string $class): self
     {
@@ -114,7 +114,7 @@ class HtmlElement extends DomElement
      *
      * @return  string|static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function data(string $name, $value = null)
     {
@@ -132,7 +132,7 @@ class HtmlElement extends DomElement
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function __get($name)
     {

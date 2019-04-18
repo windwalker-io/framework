@@ -83,7 +83,7 @@ abstract class AbstractTransaction
      *
      * @throws \Throwable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function transaction(callable $callback, bool $autoCommit = true): self
     {

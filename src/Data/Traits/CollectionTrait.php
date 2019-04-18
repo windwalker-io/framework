@@ -280,7 +280,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function sortColumn(string $column)
     {
@@ -303,7 +303,7 @@ trait CollectionTrait
      *
      * @return  CollectionTrait
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function groupBy(string $column)
     {

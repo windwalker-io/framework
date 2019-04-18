@@ -475,7 +475,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @throws \Throwable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.3
      */
     public function transaction(callable $callback, bool $nested = true, bool $autoCommit = true): self
     {
