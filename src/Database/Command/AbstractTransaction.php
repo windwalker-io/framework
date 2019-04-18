@@ -74,6 +74,37 @@ abstract class AbstractTransaction
     abstract public function rollback();
 
     /**
+     * transaction
+     *
+     * @param callable $callback
+     * @param bool     $autoCommit
+     *
+     * @return  AbstractTransaction
+     *
+     * @throws \Throwable
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function transaction(callable $callback, bool $autoCommit = true): self
+    {
+        $this->start();
+
+        try {
+            $callback($this->db, $this);
+
+            if ($autoCommit) {
+                $this->commit();
+            }
+        } catch (\Throwable $e) {
+            $this->rollback();
+
+            throw $e;
+        }
+
+        return $this;
+    }
+
+    /**
      * getNested
      *
      * @return  boolean
