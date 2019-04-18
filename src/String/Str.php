@@ -17,15 +17,15 @@ use Windwalker\Utilities\Arr;
  */
 class Str
 {
-    const CASE_SENSITIVE = true;
+    public const CASE_SENSITIVE = true;
 
-    const CASE_INSENSITIVE = false;
+    public const CASE_INSENSITIVE = false;
 
-    const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+    public const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
 
-    const ENCODING_UTF8 = 'UTF-8';
+    public const ENCODING_UTF8 = 'UTF-8';
 
-    const ENCODING_US_ASCII = 'US-ASCII';
+    public const ENCODING_US_ASCII = 'US-ASCII';
 
     /**
      * Convert all to string.
@@ -39,6 +39,10 @@ class Str
      */
     public static function toString($data, bool $dump = true): string
     {
+        if (is_callable($data)) {
+            return static::toString($data());
+        }
+
         if (is_array($data)) {
             $data = $dump ? Arr::dump($data) : 'Array()';
         }
