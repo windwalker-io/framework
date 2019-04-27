@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Edge\Compiler\Concern;
@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Compiler\Concern;
 /**
  * The CompileConditional class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.4
  */
 trait CompileConditional
 {
