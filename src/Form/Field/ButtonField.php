@@ -44,6 +44,7 @@ class ButtonField extends AbstractField
      */
     public function prepare(&$attrs)
     {
+        $attrs['type']           = null;
         $attrs['name']           = $this->getFieldName();
         $attrs['id']             = $this->getAttribute('id', $this->getId());
         $attrs['class']          = $this->getAttribute('class');

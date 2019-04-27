@@ -4,9 +4,9 @@ sudo: true
 dist: trusty
 
 php:
-  - 7.1
-  - 7.2
-  - 7.3
+  - '7.1'
+  - '7.2'
+  - '7.3'
 
 addons:
   postgresql: "9.3"
@@ -23,6 +23,7 @@ before_install:
   - sh -e build/travis/scripts/libsodium.sh
 
 before_script:
+  - curl -sSfL -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
   - sh -e build/travis/scripts/pecl-libsodium.sh || true
   - composer update
   - phpenv rehash
