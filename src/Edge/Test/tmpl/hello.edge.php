@@ -9,4 +9,14 @@
 @section('content')
 <p>This is my body content.</p>
 
+    @switch('a')
+        @case('a')
+            A
+            @break
+
+        @case('b')
+            B
+            @break
+    @endswitch
+
 @stop

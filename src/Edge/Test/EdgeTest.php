@@ -74,6 +74,7 @@ class EdgeTest extends AbstractDomTestCase
 
         <div class="container">
             <p>This is my body content.</p>
+            A
         </div>
     </body>
 </html>
