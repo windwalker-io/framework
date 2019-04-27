@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Structure\Format;
@@ -15,7 +15,7 @@ use Yosymfony\Toml\TomlBuilder;
 /**
  * The TomlFormat class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.4
  */
 class TomlFormat implements FormatInterface
 {
@@ -55,7 +55,7 @@ class TomlFormat implements FormatInterface
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.4
      */
     protected static function addValues(TomlBuilder $tb, $struct, ?string $prefix = null): void
     {
