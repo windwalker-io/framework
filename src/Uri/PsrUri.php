@@ -332,7 +332,10 @@ class PsrUri extends AbstractUri implements PsrUriInterface
     {
         $new = clone $this;
 
-        $query = UriHelper::filterQuery(UriHelper::buildQuery($new->vars + [$name => $value]));
+        $query = $new->vars;
+        $query[$name] = $value;
+
+        $query = UriHelper::filterQuery(UriHelper::buildQuery($query));
 
         $new->vars = UriHelper::parseQuery($query);
         $new->query = $query;
