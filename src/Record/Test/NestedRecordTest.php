@@ -33,7 +33,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * @return  void
      * @throws \Exception
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -53,7 +53,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * @return void
      * @throws \Exception
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -78,7 +78,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -89,12 +89,13 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * @return void
      *
      * @throws \Exception
-     * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
      */
     public function testCheckParentIdZero()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->instance->parent_id = 0;
 
         $this->instance->validate();
@@ -106,12 +107,13 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * @return void
      *
      * @throws \Exception
-     * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
      */
     public function testCheckParentIdNotExists()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->instance->parent_id = 99;
 
         $this->instance->validate();
@@ -306,12 +308,13 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * @return void
      *
      * @throws \Exception
-     * @expectedException \RuntimeException
      *
      * @covers \Windwalker\Record\NestedRecord::delete
      */
     public function testDelete()
     {
+        $this->expectException(\RuntimeException::class);
+
         // Before
         $data = [
             'title' => 'Rose',

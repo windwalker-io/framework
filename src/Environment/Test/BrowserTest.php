@@ -120,7 +120,7 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
      *
      * @since   2.0
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

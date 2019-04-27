@@ -30,7 +30,7 @@ class RegexValidatorTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         // Using Alnum to test
         $this->instance = new RegexValidator('^[a-zA-Z0-9]*$', 'i');
@@ -42,7 +42,7 @@ class RegexValidatorTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

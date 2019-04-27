@@ -31,7 +31,7 @@ class CallbackValidatorTest extends TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new CallbackValidator();
     }
@@ -42,7 +42,7 @@ class CallbackValidatorTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

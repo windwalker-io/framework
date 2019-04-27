@@ -213,7 +213,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
         static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();

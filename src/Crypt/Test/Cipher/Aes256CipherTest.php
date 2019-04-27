@@ -30,7 +30,7 @@ class Aes256CipherTest extends AbstractOpensslTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Aes256Cipher();
     }
@@ -41,7 +41,7 @@ class Aes256CipherTest extends AbstractOpensslTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

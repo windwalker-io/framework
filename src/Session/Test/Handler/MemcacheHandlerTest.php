@@ -30,7 +30,7 @@ class MemcacheHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!MemcacheHandler::isSupported()) {
             $this->markTestSkipped('Memcache is not enabled on this system.');
@@ -45,7 +45,7 @@ class MemcacheHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

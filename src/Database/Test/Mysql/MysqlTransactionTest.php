@@ -23,7 +23,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

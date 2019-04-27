@@ -30,7 +30,7 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = $this->getObjectForTrait(ContainerAwareTrait::class);
     }
@@ -39,11 +39,11 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
      * Tests calling getContainer() without a Container object set
      *
      * @return  void
-     *
-     * @expectedException   \UnexpectedValueException
      */
     public function testGetContainerException()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->instance->getContainer();
     }
 

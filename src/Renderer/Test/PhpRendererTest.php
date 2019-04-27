@@ -38,7 +38,7 @@ class PhpRendererTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/php');
 
@@ -55,7 +55,7 @@ class PhpRendererTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

@@ -32,7 +32,7 @@ class StructureTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Structure($this->getTestData());
     }
@@ -67,7 +67,7 @@ class StructureTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

@@ -35,7 +35,7 @@ class PdoQueryTest extends AbstractQueryTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = $this->getQuery();
     }
@@ -46,7 +46,7 @@ class PdoQueryTest extends AbstractQueryTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

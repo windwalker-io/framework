@@ -53,7 +53,7 @@ abstract class AbstractSqlsrvTestCase extends AbstractDatabaseTestCase
      * @throws \LogicException
      * @return  void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Fix for MacOS ODBC driver 17.2 issue
         // @see https://github.com/Microsoft/msphpsql/issues/909
@@ -68,7 +68,7 @@ abstract class AbstractSqlsrvTestCase extends AbstractDatabaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -32,7 +32,7 @@ class SelectPrompterTest extends AbstractPrompterTest
      *
      * @since  2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

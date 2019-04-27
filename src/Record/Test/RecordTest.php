@@ -36,7 +36,7 @@ class RecordTest extends AbstractMysqlTestCase
      * @return void
      * @throws \Exception
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -52,7 +52,7 @@ class RecordTest extends AbstractMysqlTestCase
      * @return void
      * @throws \ReflectionException
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

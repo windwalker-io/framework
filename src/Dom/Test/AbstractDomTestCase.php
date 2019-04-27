@@ -85,13 +85,15 @@ class AbstractDomTestCase extends AbstractBaseTestCase
     /**
      * Asserts that two variables are equal.
      *
-     * @param  mixed   $expected
-     * @param  mixed   $actual
-     * @param  string  $message
-     * @param  float   $delta
-     * @param  integer $maxDepth
-     * @param  boolean $canonicalize
-     * @param  boolean $ignoreCase
+     * @param mixed   $expected
+     * @param mixed   $actual
+     * @param string  $message
+     * @param float   $delta
+     * @param integer $maxDepth
+     * @param boolean $canonicalize
+     * @param boolean $ignoreCase
+     *
+     * @throws \Exception
      */
     public function assertHtmlFormatEquals(
         $expected,

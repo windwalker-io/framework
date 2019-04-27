@@ -48,7 +48,7 @@ abstract class AbstractPrompterTest extends AbstractBaseTestCase
      *
      * @since  2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->io = new MockIO();
     }

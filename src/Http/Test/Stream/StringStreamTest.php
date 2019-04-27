@@ -40,7 +40,7 @@ class StringStreamTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new StringStream('', Stream::MODE_READ_WRITE_FROM_BEGIN);
     }
@@ -51,7 +51,7 @@ class StringStreamTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->tmpnam && is_file($this->tmpnam)) {
             unlink($this->tmpnam);
@@ -77,7 +77,7 @@ class StringStreamTest extends AbstractBaseTestCase
         $stream = new StringStream($stringObject);
 
         $this->assertEquals('FOO', TestHelper::getValue($stream, 'resource'));
-        $this->assertInternalType('object', TestHelper::getValue($stream, 'stream'));
+        $this->assertIsObject(TestHelper::getValue($stream, 'stream'));
     }
 
     /**
@@ -102,6 +102,7 @@ class StringStreamTest extends AbstractBaseTestCase
      * @return void
      *
      * @covers \Windwalker\Http\Stream\StringStream::close
+     * @throws \ReflectionException
      */
     public function testClose()
     {
@@ -111,7 +112,7 @@ class StringStreamTest extends AbstractBaseTestCase
         $stream->close();
 
         $this->assertEmpty($stream->getResource());
-        $this->assertAttributeEmpty('resource', $stream);
+        self::assertEmpty(TestHelper::getValue($stream, 'stream'));
         $this->assertEquals('', (string) $stream);
     }
 
@@ -121,14 +122,15 @@ class StringStreamTest extends AbstractBaseTestCase
      * @return void
      *
      * @covers \Windwalker\Http\Stream\StringStream::detach
+     * @throws \ReflectionException
      */
     public function testDetach()
     {
         $stream = new StringStream('flower');
 
         $this->assertEquals('flower', $stream->detach());
-        $this->assertAttributeEmpty('resource', $stream);
-        $this->assertAttributeEmpty('stream', $stream);
+        self::assertEmpty(TestHelper::getValue($stream, 'resource'));
+        self::assertEmpty(TestHelper::getValue($stream, 'stream'));
     }
 
     /**
@@ -356,7 +358,7 @@ class StringStreamTest extends AbstractBaseTestCase
      */
     public function testGetMetadata()
     {
-        $this->assertInternalType('array', $this->instance->getMetadata());
+        $this->assertIsArray($this->instance->getMetadata());
 
         $this->assertTrue($this->instance->getMetadata('seekable'));
         $this->assertEquals('rb', $this->instance->getMetadata('mode'));

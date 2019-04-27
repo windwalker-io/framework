@@ -23,7 +23,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

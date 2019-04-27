@@ -25,7 +25,7 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
@@ -35,7 +35,7 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -64,7 +64,7 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     {
         $data = StructureHelper::toObject(['foo' => 'bar']);
 
-        $this->assertInternalType('object', $data);
+        $this->assertIsObject($data);
 
         $this->assertEquals('bar', $data->foo);
 

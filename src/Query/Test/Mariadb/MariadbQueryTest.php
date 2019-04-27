@@ -42,7 +42,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $pdo = defined('DB_USER') ? new \PDO('mysql:host=localhost;', DB_USER, DB_PASSWD) : null;
 
@@ -55,7 +55,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

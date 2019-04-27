@@ -421,11 +421,12 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      * @return  void
      *
      * @covers             Windwalker\Event\Dispatcher::addListener
-     * @expectedException  \InvalidArgumentException
      * @since              2.0
      */
     public function testAddClosureListenerNoEventsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->instance->addListener(
             function (EventInterface $event) {
             }
@@ -435,8 +436,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addListener method with an invalid listener.
      *
-     * @expectedException  \InvalidArgumentException
-     *
      * @return  void
      *
      * @covers  \Windwalker\Event\Dispatcher::addListener
@@ -444,6 +443,8 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddListenerInvalidListenerException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->instance->addListener('trim');
     }
 
@@ -833,7 +834,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      *
      * @since   2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Dispatcher();
     }

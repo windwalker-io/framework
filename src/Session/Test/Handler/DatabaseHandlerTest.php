@@ -39,7 +39,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      *
      * @return  void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -57,7 +57,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
     }
@@ -163,7 +163,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -176,7 +176,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 }

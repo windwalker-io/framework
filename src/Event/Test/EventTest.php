@@ -436,14 +436,14 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the offsetSet method exception.
      *
-     * @expectedException  \InvalidArgumentException
-     *
      * @return  void
      *
      * @since   2.0
      */
     public function testOffsetSetException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->instance[] = 'bar';
     }
 
@@ -474,7 +474,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      *
      * @since   2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Event('test');
     }

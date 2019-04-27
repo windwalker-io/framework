@@ -30,7 +30,7 @@ class ColorStyleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new ColorStyle('red', 'white', ['blink']);
     }
@@ -41,7 +41,7 @@ class ColorStyleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -91,48 +91,48 @@ class ColorStyleTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the fromString method.
      *
-     * @expectedException \RuntimeException
-     *
      * @return void
      */
     public function testFromStringInvalid()
     {
+        $this->expectException(\RuntimeException::class);
+
         $this->instance->fromString('XXX;XX=YY');
     }
 
     /**
      * Test the __construct method.
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructInvalid1()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new ColorStyle('INVALID');
     }
 
     /**
      * Test the __construct method.
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructInvalid2()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new ColorStyle('', 'INVALID');
     }
 
     /**
      * Test the __construct method.
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructInvalid3()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new ColorStyle('', '', ['INVALID']);
     }
 }

@@ -30,7 +30,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         // Skip this test suite if PCNTL extension is not available
         if (!extension_loaded('PCNTL')) {
@@ -45,7 +45,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
