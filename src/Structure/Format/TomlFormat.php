@@ -60,7 +60,6 @@ class TomlFormat implements FormatInterface
     protected static function addValues(TomlBuilder $tb, $struct, ?string $prefix = null): void
     {
         foreach ($struct as $key => $value) {
-
             if (is_array($value) && StructureHelper::isAssociativeArray($value)) {
                 $tb->addTable($key = trim($prefix . '.' . $key, '.'));
 
