@@ -14,6 +14,17 @@ Add this to the require block in your `composer.json`.
 }
 ```
 
+## Supported Formats
+
+- JSON
+- PHP file (return array or class)
+- JSON
+- [HJSON](https://hjson.org/)
+- YAML
+- [TOML](https://github.com/toml-lang/toml)
+- XML
+- INI
+
 ## Getting Started
 
 ``` php

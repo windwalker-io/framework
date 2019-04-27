@@ -55,21 +55,24 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Constructor
      *
-     * @param   mixed  $data   The data to bind to the new Structure object.
-     * @param   string $format The format of input, only work when first argument is string.
+     * @param mixed  $data    The data to bind to the new Structure object.
+     * @param string $format  The format of input, only work when first argument is string.
+     * @param array  $options The load options.
      *
      * @since   2.0
      */
-    public function __construct($data = null, $format = Format::JSON)
+    public function __construct($data = null, $format = Format::JSON, array $options = [])
     {
+        $raw = $options['load_raw'] ?? false;
+
         // Optionally load supplied data.
         if (\is_array($data) || \is_object($data)) {
-            $this->bindData($this->data, $data);
+            $this->bindData($this->data, $data, $raw, $options);
         } elseif (!empty($data) && \is_string($data)) {
             if (\strlen($data) < PHP_MAXPATHLEN && is_file($data)) {
-                $this->loadFile($data, $format);
+                $this->loadFile($data, $format, $options);
             } else {
-                $this->loadString($data, $format);
+                $this->loadString($data, $format, $options);
             }
         }
     }

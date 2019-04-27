@@ -11,11 +11,15 @@
     "require-dev": {
         "windwalker/test": "~3.0",
         "symfony/yaml": "3.*",
+        "laktak/hjson": "^2.1",
+        "yosymfony/toml": "^1.0",
         "ext-json": "*"
     },
     "minimum-stability": "beta",
     "suggest": {
-        "symfony/yaml": "Install 3.* if you require YAML support."
+        "symfony/yaml": "Install 3.* if you require YAML support.",
+        "laktak/hjson": "Install ~2.0 if you require HJSON support.",
+        "yosymfony/toml": "Install ~1.0 if you require TOML support."
     },
     "autoload": {
         "psr-4": {

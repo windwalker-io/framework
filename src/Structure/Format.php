@@ -15,13 +15,17 @@ namespace Windwalker\Structure;
  */
 class Format
 {
-    const JSON = 'json';
+    public const JSON = 'json';
 
-    const INI = 'ini';
+    public const INI = 'ini';
 
-    const YAML = 'yaml';
+    public const YAML = 'yaml';
 
-    const XML = 'xml';
+    public const XML = 'xml';
 
-    const PHP = 'php';
+    public const PHP = 'php';
+
+    public const HJSON = 'hjson';
+
+    public const TOML = 'toml';
 }

@@ -31,10 +31,14 @@
         "league/plates": "~3.0",
         "paragonie/sodium_compat": "~1.0",
         "doctrine/annotations": "~1.0",
-        "php-di/phpdoc-reader": "~2.0"
+        "php-di/phpdoc-reader": "~2.0",
+        "laktak/hjson": "^2.1",
+        "yosymfony/toml": "^1.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~3.0 if you require YAML support.",
+        "laktak/hjson": "Install ~2.0 if you require HJSON support.",
+        "yosymfony/toml": "Install ~1.0 if you require TOML support.",
         "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation.",
         "paragonie/sodium_compat": "Install paragonie/sodium_compat if you want to SodiumCipher.",
         "doctrine/annotations": "Install ~1.0 to support DI annotations injectable.",
