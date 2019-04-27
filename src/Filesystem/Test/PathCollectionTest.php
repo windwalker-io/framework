@@ -37,7 +37,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      *
      * @since  2.0
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->collection = new PathCollection();
     }

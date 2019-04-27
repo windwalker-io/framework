@@ -36,7 +36,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $server['HTTP_HOST'] = 'foo.com';
         $server['HTTP_USER_AGENT'] = 'Mozilla/5.0';
@@ -52,7 +52,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

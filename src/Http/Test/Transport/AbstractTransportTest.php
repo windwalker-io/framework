@@ -51,7 +51,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!defined('WINDWALKER_TEST_HTTP_URL')) {
             static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
@@ -64,7 +64,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$this->instance->isSupported()) {
             $this->markTestSkipped(get_class($this->instance) . ' driver not supported.');
@@ -117,11 +117,11 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
      * testBadDomainGet
      *
      * @return  void
-     *
-     * @expectedException  \RuntimeException
      */
     public function testBadDomainGet()
     {
+        $this->expectException(\RuntimeException::class);
+
         $request = $this->createRequest();
 
         $request = $request->withUri(new PsrUri('http://not.exists.url/flower.sakura'))

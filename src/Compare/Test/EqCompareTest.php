@@ -30,7 +30,7 @@ class EqCompareTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new EqCompare('flower', 'sakura');
     }

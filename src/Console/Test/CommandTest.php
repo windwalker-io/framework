@@ -38,7 +38,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      * @since  2.0
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $command = new RootCommand('default', new MockIO());
 
@@ -183,7 +183,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
     {
         $args = $this->instance->getChildren();
 
-        $this->assertInternalType('array', $args, 'Return not array');
+        static::assertIsArray($args, 'Return not array');
 
         $this->assertInstanceOf(
             'Windwalker\\Console\\Command\\AbstractCommand',
@@ -270,7 +270,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 
         $array = $this->instance->getOptions();
 
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
 
         $this->assertInstanceOf(
             'Windwalker\\Console\\Option\\Option',
@@ -327,7 +327,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 
         $array = $this->instance->getAllOptions();
 
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
 
         $this->assertInstanceOf(
             'Windwalker\\Console\\Option\\Option',
@@ -580,11 +580,12 @@ Did you mean one of these?
      * testError
      *
      * @return  void
-     *
-     * @expectedException  \Exception
+     * @throws \Exception
      */
     public function testError()
     {
+        $this->expectException(\Exception::class);
+
         $this->instance->error('test');
     }
 }

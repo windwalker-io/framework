@@ -11,6 +11,7 @@ namespace Windwalker\IO\Test;
 use Windwalker\Filter\InputFilter;
 use Windwalker\IO\Input;
 use Windwalker\Test\TestHelper;
+use Windwalker\IO\CookieInput;
 
 /**
  * Test class of Input
@@ -32,7 +33,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         // $this->instance = new Input;
     }
@@ -43,7 +44,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -117,20 +118,20 @@ class InputTest extends \PHPUnit\Framework\TestCase
     {
         $instance = $this->newInstance([]);
 
-        $this->assertAttributeEquals($_GET, 'data', $instance->get);
+        self::assertEquals($_GET, $instance->get->getRawData());
 
         $inputs = TestHelper::getValue($instance, 'inputs');
 
         // Previously cached input
         $this->assertArrayHasKey('get', $inputs);
 
-        $this->assertTrue($inputs['get'] instanceof Input);
+        $this->assertInstanceOf(Input::class, $inputs['get']);
 
-        $this->assertAttributeEquals($_GET, 'data', $instance->get);
+        $this->assertEquals($_GET, $instance->get->getRawData());
 
         $cookies = $instance->cookie;
-        $this->assertInstanceOf('Windwalker\IO\Input', $cookies);
-        $this->assertInstanceOf('Windwalker\IO\CookieInput', $cookies);
+        $this->assertInstanceOf(Input::class, $cookies);
+        $this->assertInstanceOf(CookieInput::class, $cookies);
 
         // If nothing is returned
         $this->assertEquals(null, $instance->foobar);
@@ -183,7 +184,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('', $instance->get('foo'));
 
-        $this->assertInternalType('string', $instance->get('foo'));
+        $this->assertIsString($instance->get('foo'));
     }
 
     /**
@@ -200,7 +201,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0, $instance->getInt('foo'));
 
-        $this->assertInternalType('integer', $instance->getInt('foo'));
+        $this->assertIsInt($instance->getInt('foo'));
     }
 
     /**
@@ -217,7 +218,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0.0, $instance->getFloat('foo'));
 
-        $this->assertInternalType('float', $instance->getFloat('foo'));
+        $this->assertIsFloat($instance->getFloat('foo'));
     }
 
     /**
@@ -234,7 +235,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals("0", $instance->get('foo'));
 
-        $this->assertInternalType('string', $instance->get('foo'));
+        $this->assertIsString($instance->get('foo'));
     }
 
     /**
@@ -251,7 +252,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse($instance->getBoolean('foo'));
 
-        $this->assertInternalType('boolean', $instance->getBool('foo'));
+        $this->assertIsBool($instance->getBool('foo'));
     }
 
     /**

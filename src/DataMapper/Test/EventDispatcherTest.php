@@ -39,7 +39,7 @@ class EventDispatcherTest extends AbstractBaseTestCase
      * @return  void
      * @throws \Exception
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->instance = new StubDispatcherAwareDatamapper('stub');
 

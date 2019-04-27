@@ -31,7 +31,7 @@ class SodiumCipherTest extends TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!function_exists('sodium_crypto_secretbox_open')) {
             $this->markTestSkipped('libsodium extension or compat not available.');
@@ -50,7 +50,7 @@ class SodiumCipherTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

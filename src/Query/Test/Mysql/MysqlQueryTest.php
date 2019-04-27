@@ -57,7 +57,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $dsn = TestDsnResolver::getDsn('mysql');
 
@@ -74,7 +74,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

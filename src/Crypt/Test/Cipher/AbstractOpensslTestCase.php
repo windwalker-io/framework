@@ -38,7 +38,7 @@ abstract class AbstractOpensslTestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!is_callable('openssl_encrypt')) {
             $this->markTestSkipped('Openssl Extension not available.');

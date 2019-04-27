@@ -52,7 +52,7 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

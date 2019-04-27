@@ -31,7 +31,7 @@ class TextareaFieldTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new TextareaField(
             'flower',
@@ -58,7 +58,7 @@ class TextareaFieldTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

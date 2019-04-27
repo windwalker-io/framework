@@ -32,7 +32,7 @@ class HttpCompressorTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!HttpCompressor::isSupported()) {
             $this->markTestSkipped('This environment not support zlib');
@@ -47,7 +47,7 @@ class HttpCompressorTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

@@ -33,7 +33,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
      *
      * @since   2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new Uri('http://someuser:somepass@www.example.com:80/path/file.html?var=value#fragment');
     }

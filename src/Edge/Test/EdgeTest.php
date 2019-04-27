@@ -32,7 +32,7 @@ class EdgeTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Edge(
             new EdgeFileLoader(
@@ -49,7 +49,7 @@ class EdgeTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -74,6 +74,7 @@ class EdgeTest extends AbstractDomTestCase
 
         <div class="container">
             <p>This is my body content.</p>
+            A
         </div>
     </body>
 </html>

@@ -37,7 +37,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      * @return void
      * @throws \ReflectionException
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new ChainBuilder();
     }
@@ -48,7 +48,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

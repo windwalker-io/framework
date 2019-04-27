@@ -33,7 +33,7 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new ClassLoader(
             new MockFileMappingLoader(),
@@ -50,7 +50,7 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->instance->unregister();
     }

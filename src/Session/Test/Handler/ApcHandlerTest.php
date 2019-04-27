@@ -30,7 +30,7 @@ class ApcHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!ApcHandler::isSupported()) {
             $this->markTestSkipped('Apc is not enabled on this system.');
@@ -44,7 +44,7 @@ class ApcHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

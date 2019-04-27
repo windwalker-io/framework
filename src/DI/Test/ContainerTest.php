@@ -13,6 +13,7 @@ use Windwalker\DI\Test\Annotation\StubInject;
 use Windwalker\DI\Test\Annotation\StubService;
 use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of Container
@@ -34,7 +35,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Container();
 
@@ -66,7 +67,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -126,12 +127,12 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     /**
      * testSetProtect
      *
-     * @expectedException \OutOfBoundsException
-     *
      * @return  void
      */
     public function testSetAsProtect()
     {
+        $this->expectException(\OutOfBoundsException::class);
+
         $container = new Container();
 
         // Share, Protect
@@ -187,12 +188,12 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
-     * @expectedException \OutOfBoundsException
-     *
      * @covers \Windwalker\DI\Container::protect
      */
     public function testProtect()
     {
+        $this->expectException(\OutOfBoundsException::class);
+
         $container = new Container();
 
         // Share, Protect
@@ -455,7 +456,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $obj = $container->newInstance(StubInject::class);
 
         self::assertInstanceOf(StubService::class, $obj->foo);
-        self::assertAttributeInstanceOf(StubService::class, 'bar', $obj);
+        self::assertInstanceOf(StubService::class, TestHelper::getValue($obj, 'bar'));
         self::assertInstanceOf(StubService::class, $obj->baz);
         self::assertInstanceOf(StubService::class, $obj->yoo);
         self::assertEquals(4, $obj->yoo->getCounter());

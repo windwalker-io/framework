@@ -33,7 +33,7 @@ class CustomHtmlTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new CustomHtmlField(
             'flower',
@@ -49,7 +49,7 @@ class CustomHtmlTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

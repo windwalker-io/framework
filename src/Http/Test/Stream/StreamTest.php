@@ -39,7 +39,7 @@ class StreamTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new Stream('php://memory', Stream::MODE_READ_WRITE_RESET);
     }
@@ -50,7 +50,7 @@ class StreamTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->tmpnam && is_file($this->tmpnam)) {
             unlink($this->tmpnam);
@@ -66,7 +66,7 @@ class StreamTest extends AbstractBaseTestCase
 
         $stream = new Stream();
 
-        $this->assertInternalType('resource', TestHelper::getValue($stream, 'resource'));
+        $this->assertIsResource(TestHelper::getValue($stream, 'resource'));
         $this->assertEquals('php://memory', TestHelper::getValue($stream, 'stream'));
     }
 
@@ -101,6 +101,7 @@ class StreamTest extends AbstractBaseTestCase
      * @return void
      *
      * @covers \Windwalker\Http\Stream\Stream::close
+     * @throws \ReflectionException
      */
     public function testClose()
     {
@@ -114,7 +115,7 @@ class StreamTest extends AbstractBaseTestCase
         $stream->close();
 
         $this->assertFalse(is_resource($resource));
-        $this->assertAttributeEmpty('resource', $stream);
+        $this->assertEmpty(TestHelper::getValue($stream, 'resource'));
         $this->assertEquals('', (string) $stream);
     }
 
@@ -124,6 +125,7 @@ class StreamTest extends AbstractBaseTestCase
      * @return void
      *
      * @covers \Windwalker\Http\Stream\Stream::detach
+     * @throws \ReflectionException
      */
     public function testDetach()
     {
@@ -131,8 +133,8 @@ class StreamTest extends AbstractBaseTestCase
         $stream = new Stream($resource);
 
         $this->assertSame($resource, $stream->detach());
-        $this->assertAttributeEmpty('resource', $stream);
-        $this->assertAttributeEmpty('stream', $stream);
+        self::assertEmpty(TestHelper::getValue($stream, 'resource'));
+        self::assertEmpty(TestHelper::getValue($stream, 'stream'));
     }
 
     /**

@@ -25,7 +25,7 @@ class RadioListTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

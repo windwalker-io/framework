@@ -32,7 +32,7 @@ class RadioFieldTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new RadioField(
             'flower',
@@ -62,7 +62,7 @@ class RadioFieldTest extends AbstractDomTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

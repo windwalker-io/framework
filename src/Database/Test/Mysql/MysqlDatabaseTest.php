@@ -213,7 +213,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::$dbo->setQuery(MysqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
         static::$dbo->setQuery(MysqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();

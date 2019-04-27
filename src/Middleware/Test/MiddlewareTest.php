@@ -34,7 +34,7 @@ class MiddlewareTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new StubCaesarMiddleware();
 
@@ -47,7 +47,7 @@ class MiddlewareTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

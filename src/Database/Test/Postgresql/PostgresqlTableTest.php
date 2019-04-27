@@ -27,7 +27,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
      *
      * @return  void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -409,7 +409,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (!static::$dbo) {
             return;

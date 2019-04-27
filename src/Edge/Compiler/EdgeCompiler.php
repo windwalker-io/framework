@@ -9,6 +9,7 @@
 namespace Windwalker\Edge\Compiler;
 
 use Windwalker\Edge\Compiler\Concern\CompileComponentTrait;
+use Windwalker\Edge\Compiler\Concern\CompileConditional;
 
 /**
  * The EdgeCompiler class.
@@ -22,6 +23,7 @@ use Windwalker\Edge\Compiler\Concern\CompileComponentTrait;
 class EdgeCompiler implements EdgeCompilerInterface
 {
     use CompileComponentTrait;
+    use CompileConditional;
 
     /**
      * All custom "directive" handlers.
@@ -536,42 +538,6 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * Compile the unless statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileUnless($expression)
-    {
-        return "<?php if ( ! $expression): ?>";
-    }
-
-    /**
-     * Compile the end unless statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileEndunless($expression)
-    {
-        return '<?php endif; ?>';
-    }
-
-    /**
-     * Compile the else statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileElse($expression)
-    {
-        return '<?php else: ?>';
-    }
-
-    /**
      * Compile the for statements into valid PHP.
      *
      * @param  string $expression
@@ -634,44 +600,6 @@ class EdgeCompiler implements EdgeCompilerInterface
     }
 
     /**
-     * Compile the if statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileIf($expression)
-    {
-        return "<?php if{$expression}: ?>";
-    }
-
-    /**
-     * Compile the else-if statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileElseif($expression)
-    {
-        return "<?php elseif{$expression}: ?>";
-    }
-
-    /**
-     * Compile the forelse statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileEmpty($expression)
-    {
-        $empty = '$__empty_' . $this->forelseCounter--;
-
-        return "<?php endforeach; if ({$empty}): ?>";
-    }
-
-    /**
      * Compile the has section statements into valid PHP.
      *
      * @param  string $expression
@@ -729,18 +657,6 @@ class EdgeCompiler implements EdgeCompilerInterface
     protected function compileEndforeach($expression)
     {
         return '<?php endforeach; ?>';
-    }
-
-    /**
-     * Compile the end-if statements into valid PHP.
-     *
-     * @param  string $expression
-     *
-     * @return string
-     */
-    protected function compileEndif($expression)
-    {
-        return '<?php endif; ?>';
     }
 
     /**

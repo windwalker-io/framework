@@ -33,7 +33,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->message = new StubMessage();
     }
@@ -44,7 +44,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

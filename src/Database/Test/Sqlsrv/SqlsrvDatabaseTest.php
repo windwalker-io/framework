@@ -215,7 +215,7 @@ class SqlsrvDatabaseTest extends AbstractSqlsrvTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::$dbo->setQuery(SqlsrvGrammar::dropDatabase('windwalker_foo_test', true))->execute();
         static::$dbo->setQuery(SqlsrvGrammar::dropDatabase('windwalker_bar_test', true))->execute();

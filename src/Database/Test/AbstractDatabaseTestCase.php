@@ -77,7 +77,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
      * @throws \LogicException
      * @return  void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!static::$driver) {
             throw new \LogicException('static::$driver variable is empty.');
@@ -198,7 +198,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (!self::$dbo) {
             return;
@@ -236,7 +236,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
      *
      * @since   2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (empty(static::$dbo)) {
             $this->markTestSkipped('There is no database driver.');
@@ -250,7 +250,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
      * This method is called after a test is executed.
      * @throws \ReflectionException
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $tables = TestHelper::getValue($this->db, 'tables');
 

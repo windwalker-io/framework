@@ -37,7 +37,7 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // @mkdir(__DIR__ . '/dest');
     }
@@ -47,7 +47,7 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (is_dir(static::$dest)) {
             Folder::delete(static::$dest);
@@ -69,7 +69,7 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         static::$dest = __DIR__ . '/dest';
         static::$src = __DIR__ . '/files';
@@ -82,7 +82,7 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

@@ -30,7 +30,7 @@ class UrlValidatorTest extends AbstractValidateTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new UrlValidator();
     }
@@ -41,7 +41,7 @@ class UrlValidatorTest extends AbstractValidateTestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

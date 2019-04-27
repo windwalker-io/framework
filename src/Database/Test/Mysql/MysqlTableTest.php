@@ -465,7 +465,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
      *
      * @return  void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (static::$dbo) {
             try {
