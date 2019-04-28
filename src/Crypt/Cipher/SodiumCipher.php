@@ -252,7 +252,7 @@ class SodiumCipher extends AbstractCipher
      */
     public function canMemzero()
     {
-        return PHP_VERSION_ID >= 70200 || extension_loaded('libsodium');
+        return PHP_VERSION_ID >= 70000 && (extension_loaded('libsodium') || extension_loaded('sodium'));
     }
 
     /**

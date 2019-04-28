@@ -282,10 +282,6 @@ class StructureTest extends AbstractBaseTestCase
             )->get('flower'),
             'sakura'
         );
-
-        show($structure->toArray());
-
-        show($structure->toString('toml'));
     }
 
     /**
