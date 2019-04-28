@@ -23,7 +23,7 @@
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
-        "symfony/yaml": "~3.0",
+        "symfony/yaml": "~4.0",
 
         "twig/twig": "~1.0",
         "illuminate/view": "5.2.*",
