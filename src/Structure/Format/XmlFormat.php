@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -134,11 +134,11 @@ class XmlFormat implements FormatInterface
         foreach ((array) $var as $k => $v) {
             if (is_scalar($v)) {
                 $n = $node->addChild($nodeName, $v);
-                $n->addAttribute('name', $k);
+                $n->addAttribute('name', (string) $k);
                 $n->addAttribute('type', gettype($v));
             } else {
                 $n = $node->addChild($nodeName);
-                $n->addAttribute('name', $k);
+                $n->addAttribute('name', (string) $k);
                 $n->addAttribute('type', gettype($v));
 
                 static::getXmlChildren($n, $v, $nodeName);

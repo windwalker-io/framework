@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -131,18 +131,18 @@ class ArrayHelper
         }
 
         // Handle the type constraint
-        switch (strtoupper($type)) {
+        switch (strtoupper((string) $type)) {
             case 'INT':
             case 'INTEGER':
                 // Only use the first integer value
-                @preg_match('/-?[0-9]+/', $result, $matches);
+                @preg_match('/-?[0-9]+/', (string) $result, $matches);
                 $result = @(int) $matches[0];
                 break;
 
             case 'FLOAT':
             case 'DOUBLE':
                 // Only use the first floating point value
-                @preg_match('/-?[0-9]+(\.[0-9]+)?/', $result, $matches);
+                @preg_match('/-?[0-9]+(\.[0-9]+)?/', (string) $result, $matches);
                 $result = @(float) $matches[0];
                 break;
 

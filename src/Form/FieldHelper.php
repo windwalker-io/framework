@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -71,12 +71,12 @@ class FieldHelper extends AbstractFormElementHelper
      */
     public static function createByXml(\SimpleXMLElement $xml, \SplPriorityQueue $namespaces = null)
     {
-        $type = XmlHelper::get($xml, 'type', 'text');
+        $type = (string) XmlHelper::get($xml, 'type', 'text');
 
         if (class_exists($type)) {
             $class = $type;
         } else {
-            $class = static::findFieldClass($type, $namespaces);
+            $class = (string) static::findFieldClass($type, $namespaces);
         }
 
         if (!class_exists($class)) {

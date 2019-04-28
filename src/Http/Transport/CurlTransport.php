@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -41,7 +41,7 @@ class CurlTransport extends AbstractTransport
 
         $error = curl_error($ch);
 
-        if (!$this->getOption('allow_empty_result', false) && !trim($content)) {
+        if (!$this->getOption('allow_empty_result', false) && !trim((string) $content)) {
             // Error but nothing from cURL? Create our own
             $error = $error ?: 'No HTTP response received';
 

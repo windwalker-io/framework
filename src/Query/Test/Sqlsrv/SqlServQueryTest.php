@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
@@ -350,7 +350,7 @@ class SqlsrvQueryTest extends AbstractQueryTestCase
         $query = $this->getQuery()
             ->exec('foo');
 
-        $this->assertEquals('EXEC foo', trim($query));
+        $this->assertEquals('EXEC foo', trim((string) $query));
     }
 
     /**

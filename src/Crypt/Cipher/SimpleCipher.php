@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -68,7 +68,7 @@ class SimpleCipher implements CipherInterface
         $chars = $this->hexToIntArray($data);
 
         // Make sure private key is as long as chars length
-        $key = str_repeat($key, ceil(count($chars) / strlen($key)));
+        $key = str_repeat($key, (int) ceil(count($chars) / strlen($key)));
 
         // Get the XOR values between the ASCII values of the input and key characters for all input offsets.
         foreach ($chars as $i => $char) {
@@ -115,7 +115,7 @@ class SimpleCipher implements CipherInterface
         $chars = preg_split('//', $data, -1, PREG_SPLIT_NO_EMPTY);
 
         // Make sure private key is as long as chars length
-        $key = str_repeat($key, ceil(count($chars) / strlen($key)));
+        $key = str_repeat($key, (int) ceil(count($chars) / strlen($key)));
 
         // Get the XOR values between the ASCII values of the input and key characters for all input offsets.
         foreach ($chars as $i => $char) {

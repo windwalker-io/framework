@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -59,8 +59,8 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function __destruct()
     {
-        if (is_dir(static::$dest)) {
-            Folder::delete(static::$dest);
+        if (is_dir((string) static::$dest)) {
+            Folder::delete((string) static::$dest);
         }
     }
 

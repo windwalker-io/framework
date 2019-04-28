@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -37,7 +37,7 @@ abstract class Folder
      */
     public static function copy($src, $dest, $force = false)
     {
-        @set_time_limit(ini_get('max_execution_time'));
+        @set_time_limit((int) ini_get('max_execution_time'));
 
         // Eliminate trailing directory separators, if any
         $src = rtrim($src, '/\\');
@@ -175,7 +175,7 @@ abstract class Folder
      */
     public static function delete($path)
     {
-        @set_time_limit(ini_get('max_execution_time'));
+        @set_time_limit((int) ini_get('max_execution_time'));
 
         // Sanity check
         if (!rtrim($path, '/\\')) {

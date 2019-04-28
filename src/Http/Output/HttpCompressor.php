@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -167,7 +167,7 @@ class HttpCompressor
             throw new CompressException('Connection is not alive, compression can not work.');
         }
 
-        return gzencode($data, $level, $encoding);
+        return gzencode((string) $data, $level, $encoding);
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -63,7 +63,7 @@ abstract class AbstractPrompterTest extends AbstractBaseTestCase
     protected function setStream($text)
     {
         $this->memory = fopen('php://memory', 'r+', false);
-        fputs($this->memory, $text);
+        fwrite($this->memory, (string) $text);
         rewind($this->memory);
 
         $this->instance->getIO()->setInputStream($this->memory);

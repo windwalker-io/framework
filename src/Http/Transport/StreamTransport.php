@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -97,7 +97,7 @@ class StreamTransport extends AbstractTransport
         // Capture PHP errors
         $php_errormsg = '';
         $track_errors = ini_get('track_errors');
-        ini_set('track_errors', true);
+        ini_set('track_errors', '1');
 
         $connection = @fopen($request->getRequestTarget(), Stream::MODE_READ_ONLY_FROM_BEGIN, false, $context);
 

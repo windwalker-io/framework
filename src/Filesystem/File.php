@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -235,7 +235,7 @@ class File
      */
     public static function write($file, $buffer)
     {
-        @set_time_limit(ini_get('max_execution_time'));
+        @set_time_limit((int) ini_get('max_execution_time'));
 
         // If the destination directory doesn't exist we need to create it
         if (!is_dir(dirname($file))) {

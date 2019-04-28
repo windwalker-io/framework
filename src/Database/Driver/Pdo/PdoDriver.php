@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -281,7 +281,7 @@ class PdoDriver extends AbstractDatabaseDriver
                             $key,
                             $data->value,
                             $data->dataType,
-                            $data->length,
+                            (int) $data->length,
                             $data->driverOptions
                         );
                     }

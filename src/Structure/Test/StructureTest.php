@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
@@ -545,7 +545,7 @@ class StructureTest extends AbstractBaseTestCase
         $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.json'), $structure->toString('json'));
         $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.yml'), $structure->toString('yml'));
         $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.xml'), $structure->toString('xml'));
-        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.php'), $structure->toString('php'));
+        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.php'), $structure->toString('php', ['strict' => true]));
     }
 
     /**

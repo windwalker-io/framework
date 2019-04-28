@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -54,7 +54,7 @@ class CryptHelper
             return $string;
         }
 
-        $string = str_repeat($string, ceil($length / strlen($string)));
+        $string = str_repeat($string, (int) ceil($length / strlen($string)));
 
         if ($cut) {
             $string = substr($string, 0, $length);

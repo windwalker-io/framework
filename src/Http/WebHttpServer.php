@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -274,10 +274,10 @@ class WebHttpServer extends HttpServer
         // If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
         if (strpos(PHP_SAPI, 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($server['REQUEST_URI'])) {
             // We aren't expecting PATH_INFO within PHP_SELF so this should work.
-            $uri = $uri->withPath(rtrim(\dirname(ServerHelper::getValue($server, 'PHP_SELF')), '/\\'));
+            $uri = $uri->withPath(rtrim(\dirname((string) ServerHelper::getValue($server, 'PHP_SELF')), '/\\'));
         } else {
             // Pretty much everything else should be handled with SCRIPT_NAME.
-            $uri = $uri->withPath(rtrim(\dirname(ServerHelper::getValue($server, 'SCRIPT_NAME')), '/\\'));
+            $uri = $uri->withPath(rtrim(\dirname((string) ServerHelper::getValue($server, 'SCRIPT_NAME')), '/\\'));
         }
 
         // Clear the unused parts of the requested URI.

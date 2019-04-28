@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -139,7 +139,7 @@ class SqliteQuery extends Query
             return $text;
         }
 
-        if (!class_exists('SQLite3') || !is_callable('SQLite3', 'escapeString')) {
+        if (!class_exists('SQLite3') || !is_callable(['SQLite3', 'escapeString'])) {
             return $this->escapeWithNoConnection($text);
         }
 

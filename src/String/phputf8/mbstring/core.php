@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -105,9 +105,9 @@ function utf8_strrpos($str, $search, $offset = false)
 function utf8_substr($str, $offset, $length = false)
 {
     if ($length === false) {
-        return mb_substr($str, $offset);
+        return mb_substr($str, (int) $offset);
     } else {
-        return mb_substr($str, $offset, $length);
+        return mb_substr($str, (int) $offset, (int) $length);
     }
 }
 //--------------------------------------------------------------------
@@ -127,7 +127,7 @@ function utf8_substr($str, $offset, $length = false)
  */
 function utf8_strtolower($str)
 {
-    return mb_strtolower($str);
+    return mb_strtolower((string) $str);
 }
 
 //--------------------------------------------------------------------

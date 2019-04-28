@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -401,7 +401,7 @@ class Route implements \IteratorAggregate
      */
     public function setScheme($scheme)
     {
-        $this->scheme = strtolower($scheme);
+        $this->scheme = strtolower((string) $scheme);
 
         $this->ssl = ($this->scheme === 'https');
 
@@ -427,7 +427,7 @@ class Route implements \IteratorAggregate
      */
     public function setHost($host)
     {
-        $this->host = strtolower($host);
+        $this->host = strtolower((string) $host);
 
         return $this;
     }

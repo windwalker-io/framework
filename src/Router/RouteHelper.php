@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -62,8 +62,8 @@ abstract class RouteHelper
                 continue;
             }
 
-            if (strpos($var, '/') !== false) {
-                $var = explode('/', $var);
+            if (strpos((string) $var, '/') !== false) {
+                $var = explode('/', (string) $var);
             }
 
             $vars[$i] = $var;

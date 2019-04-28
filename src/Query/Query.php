@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -721,7 +721,7 @@ class Query implements QueryInterface, PreparableInterface
         if (!method_exists($this->connection, 'quote')) {
             $result = $this->escapeWithNoConnection($text);
         } else {
-            $result = substr($this->connection->quote($text), 1, -1);
+            $result = substr($this->connection->quote((string) $text), 1, -1);
         }
 
         if ($extra) {

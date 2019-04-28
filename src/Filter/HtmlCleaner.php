@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -324,14 +324,14 @@ class HtmlCleaner
                     // If the attribute value is wrapped in quotes we need to grab the substring from
                     // the closing quote, otherwise grab until the next space.
                     if (($openQuotes !== false) && (strpos(substr($fromSpace, ($openQuotes + 1)), '"') !== false)) {
-                        $attr = substr($fromSpace, 0, ($closeQuotes + 1));
+                        $attr = substr($fromSpace, 0, $closeQuotes + 1);
                     } else {
-                        $attr = substr($fromSpace, 0, $nextSpace);
+                        $attr = substr($fromSpace, 0, (int) $nextSpace);
                     }
                 } else // No more equal signs so add any extra text in the tag into the attribute array [eg. checked]
                 {
                     if ($fromSpace !== '/') {
-                        $attr = substr($fromSpace, 0, $nextSpace);
+                        $attr = substr($fromSpace, 0, (int) $nextSpace);
                     }
                 }
 
@@ -513,7 +513,7 @@ class HtmlCleaner
 
         // Process each portion based on presence of =" and "<space>, "/>, or ">
         // See if there are any more attributes to process
-        while (preg_match('#<[^>]*?=\s*?(\"|\')#s', $remainder, $matches, PREG_OFFSET_CAPTURE)) {
+        while (preg_match('#<[^>]*?=\s*?(\"|\')#s', (string) $remainder, $matches, PREG_OFFSET_CAPTURE)) {
             // Get the portion before the attribute value
             $quotePosition = $matches[0][1];
             $nextBefore = $quotePosition + strlen($matches[0][0]);

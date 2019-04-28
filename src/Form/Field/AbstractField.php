@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -189,9 +189,9 @@ abstract class AbstractField
             $this->attributes = $attributes;
         }
 
-        $this->filter = $filter ?: explode(',', $this->getAttribute('filter'));
+        $this->filter = $filter ?: explode(',', (string) $this->getAttribute('filter'));
 
-        $this->validator = $validator ?: explode(',', $this->getAttribute('validator'));
+        $this->validator = $validator ?: explode(',', (string) $this->getAttribute('validator'));
 
         $this->required = $this->getBool('required', false);
 
@@ -502,9 +502,9 @@ abstract class AbstractField
     {
         if (!$this->fieldName || $refresh) {
             // Prevent double '/'
-            $names = array_values(array_filter(explode('/', $this->getName(true)), 'strlen'));
+            $names = array_values(array_filter(explode('/', (string) $this->getName(true)), 'strlen'));
 
-            $control = array_values(array_filter(explode('/', $this->getControl()), 'strlen'));
+            $control = array_values(array_filter(explode('/', (string) $this->getControl()), 'strlen'));
 
             $names = array_merge($control, $names);
 
@@ -1270,7 +1270,7 @@ abstract class AbstractField
      */
     public function escape($text)
     {
-        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+        return htmlspecialchars((string) $text, ENT_COMPAT, 'UTF-8');
     }
 
     /**

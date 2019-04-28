@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -455,7 +455,7 @@ class DataSet implements
      */
     public function ksort($flags = null)
     {
-        ksort($this->data, $flags);
+        ksort($this->data, (int) $flags);
 
         return $this;
     }
@@ -471,7 +471,7 @@ class DataSet implements
      */
     public function krsort($flags = null)
     {
-        krsort($this->data, $flags);
+        krsort($this->data, (int) $flags);
 
         return $this;
     }

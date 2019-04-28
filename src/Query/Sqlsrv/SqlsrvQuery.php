@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -140,18 +140,18 @@ class SqlsrvQuery extends Query
         if ($limit) {
             $total = $offset + $limit;
 
-            $position = stripos($query, 'SELECT');
-            $distinct = stripos($query, 'SELECT DISTINCT');
+            $position = stripos((string) $query, 'SELECT');
+            $distinct = stripos((string) $query, 'SELECT DISTINCT');
 
             if ($position === $distinct) {
-                $query = substr_replace($query, 'SELECT DISTINCT TOP ' . (int) $total, $position, 15);
+                $query = substr_replace((string) $query, 'SELECT DISTINCT TOP ' . (int) $total, $position, 15);
             } else {
-                $query = substr_replace($query, 'SELECT TOP ' . (int) $total, $position, 6);
+                $query = substr_replace((string) $query, 'SELECT TOP ' . (int) $total, $position, 6);
             }
         }
 
         if (!$offset) {
-            return $query;
+            return (string) $query;
         }
 
         return PHP_EOL

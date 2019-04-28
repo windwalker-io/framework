@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
  *
@@ -156,7 +156,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $prefix = (version_compare(PHP_VERSION, '5.3.7') >= 0) ? '$2y$' : '$2a$';
 
         // PHP7 will auto generate salt
-        if (version_compare(PHP_VERSION, 7, '<')) {
+        if (version_compare(PHP_VERSION, '7', '<')) {
             $this->assertEquals(crypt('windwalker', $prefix . '10$sakurasakurasakurasaku$'), $pass);
         }
 

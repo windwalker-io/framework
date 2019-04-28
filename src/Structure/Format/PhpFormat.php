@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -31,6 +31,7 @@ class PhpFormat implements FormatInterface
     {
         $header = StructureHelper::getValue($options, 'header');
         $asArray = StructureHelper::getValue($options, 'as_array');
+        $strict = StructureHelper::getValue($options, 'strict');
 
         // Build the object variables string
         $vars = '';
@@ -44,7 +45,11 @@ class PhpFormat implements FormatInterface
         }
 
         if (!$asArray) {
-            $str = "<?php\n";
+            if ($strict) {
+                $str = "<?php declare(strict_types=1);\n";
+            } else {
+                $str = "<?php\n";
+            }
 
             if ($header) {
                 $str .= $header . "\n";

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Part of Windwalker project.
  *
@@ -24,7 +24,7 @@
  */
 function utf8_str_split($str, $split_len = 1)
 {
-    if (!preg_match('/^[0-9]+$/', $split_len) || $split_len < 1) {
+    if (!preg_match('/^[0-9]+$/', (string) $split_len) || $split_len < 1) {
         return false;
     }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @copyright  Copyright (C) 2019 LYRASOFT Source Matters.
  * @license    LGPL-2.0-or-later.txt
