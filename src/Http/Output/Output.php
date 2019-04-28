@@ -80,7 +80,7 @@ class Output implements OutputInterface
      */
     public function header($string, $replace = true, $code = null)
     {
-        header($string, $replace, $code);
+        header((string) $string, $replace, (int) $code);
 
         return $this;
     }

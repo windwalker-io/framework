@@ -156,7 +156,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
         // Sync the session maxlifetime
         if (!headers_sent()) {
-            ini_set('session.gc_maxlifetime', $this->getOption('expire_time') * 60);
+            ini_set('session.gc_maxlifetime', (string) ($this->getOption('expire_time') * 60));
         }
 
         $this->setCookieParams();
