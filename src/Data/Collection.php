@@ -645,7 +645,7 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function contains($value, bool $strict = false): bool
     {
-        return (bool) in_array($this->storage, $value, $strict);
+        return (bool) in_array($value, $this->storage, $strict);
     }
 
     /**
