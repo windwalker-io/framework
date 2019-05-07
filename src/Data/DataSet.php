@@ -29,7 +29,7 @@ class DataSet implements
     /**
      * The data store.
      *
-     * @var  array
+     * @var  Data[]
      */
     protected $data = [];
 
@@ -689,6 +689,30 @@ class DataSet implements
                 return $data->only($fields);
             }
         );
+    }
+
+    /**
+     * toCollection
+     *
+     * @param bool $recursive
+     *
+     * @return  Collection
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function toCollection(bool $recursive = false): Collection
+    {
+        $items = [];
+
+        if ($recursive) {
+            foreach ($this->data as $datum) {
+                $items[] = $datum->toCollection();
+            }
+        } else {
+            $items = $this->data;
+        }
+
+        return new Collection($items);
     }
 
     /**

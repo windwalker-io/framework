@@ -323,6 +323,37 @@ trait CollectionTrait
     }
 
     /**
+     * To another class.
+     *
+     * @param string $class
+     *
+     * @return  DataInterface
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function as(string $class)
+    {
+        $obj = new $class();
+
+        if (is_subclass_of($class, DataInterface::class)) {
+            if ($this instanceof DataSetInterface) {
+                $value = $this->dump();
+            } else {
+                $value = $this->dump(true);
+            }
+
+            /** @var DataInterface $obj */
+            $obj->bind($value);
+        } else {
+            foreach ($this->dump(true) as $k => $v) {
+                $obj->$k = $v;
+            }
+        }
+
+        return $obj;
+    }
+
+    /**
      * convertArray
      *
      * @param array|Data|DataSet|static $array

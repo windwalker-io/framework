@@ -470,6 +470,18 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     }
 
     /**
+     * toCollection
+     *
+     * @return  Collection
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function toCollection(): Collection
+    {
+        return new Collection($this->dump());
+    }
+
+    /**
      * Clone this object.
      *
      * @return  void
