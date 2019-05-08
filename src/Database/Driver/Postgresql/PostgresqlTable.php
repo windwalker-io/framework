@@ -553,11 +553,11 @@ class PostgresqlTable extends AbstractTable
                     $field->Default = 0;
                 }
 
-                if (preg_match("/^NULL::*/", $field->Default)) {
+                if (preg_match('/^NULL::*/', (string) $field->Default)) {
                     $field->Default = null;
                 }
 
-                if (preg_match("/'(.*)'::[\w\s]/", $field->Default, $matches)) {
+                if (preg_match("/'(.*)'::[\w\s]/", (string) $field->Default, $matches)) {
                     $field->Default = $matches[1] ?? '';
                 }
 
@@ -569,7 +569,7 @@ class PostgresqlTable extends AbstractTable
                 $index = null;
 
                 foreach ($keys as $key) {
-                    if ($key->column_name == $field->column_name) {
+                    if ($key->column_name === $field->column_name) {
                         $index = $key;
                         break;
                     }
