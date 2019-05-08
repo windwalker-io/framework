@@ -301,7 +301,7 @@ trait CollectionTrait
      *
      * @param string $column
      *
-     * @return  CollectionTrait
+     * @return  static
      *
      * @since  3.5.3
      */
