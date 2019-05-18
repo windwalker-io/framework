@@ -1656,7 +1656,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param   mixed   $query    The Query object or string to union.
      * @param   boolean $distinct True to only return distinct rows from the union.
      *
-     * @return  mixed    The Query object on success or boolean false on failure.
+     * @return  static    The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
