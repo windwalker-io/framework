@@ -578,6 +578,31 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * only
+     *
+     * @param array|string $fields
+     *
+     *
+     * @return  static
+     */
+    public function only($fields)
+    {
+        $fields = (array) $fields;
+
+        $new = $this->getNewInstance();
+
+        foreach ($fields as $origin => $field) {
+            if (is_numeric($origin)) {
+                $new->$field = $this->$field;
+            } else {
+                $new->$field = $this->$origin;
+            }
+        }
+
+        return $new;
+    }
+
+    /**
      * sum
      *
      * @return  float|int

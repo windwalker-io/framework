@@ -534,6 +534,9 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
         foreach ($entity->getFields() as $field => $detail) {
             $value = $entity[$field];
 
+            // Convert to correct type.
+            $dataType = DataType::getInstance($this->db->getName());
+
             // Convert value type
             if ($value instanceof \DateTimeInterface) {
                 $value = $value->format($this->db->getDateFormat());
@@ -556,11 +559,17 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 // This field is null and the db column is not nullable, use db default value.
                 if (strtolower($detail->Null) === 'no') {
                     $entity[$field] = $detail->Default;
+                } else {
+                    $entity[$field] = $dataType::getDefaultValue($detail->Type);
+                }
+            } elseif ($value === '') {
+                // This field is null and the db column is not nullable, use db default value.
+                if (strtolower($detail->Null) !== 'no') {
+                    $entity[$field] = null;
+                } else {
+                    $entity[$field] = $dataType::getDefaultValue($detail->Type);
                 }
             } else {
-                // Convert to correct type.
-                $dataType = DataType::getInstance($this->db->getName());
-
                 $type = explode(' ', $detail->Type)[0];
                 $type = explode('(', $type)[0];
 

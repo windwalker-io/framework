@@ -239,19 +239,28 @@ class DataSet implements
      */
     public function set($name, $value)
     {
-        if (!$value instanceof Data && !$value instanceof DataSet) {
+        if (!$value instanceof DataInterface && !$value instanceof DataSet) {
             $value = new Data($value);
         }
 
         if ($name !== null) {
             $this->data[$name] = $value;
         } else {
-            array_push($this->data, $value);
+            $this->data[] = $value;
         }
 
         return $this;
     }
 
+    /**
+     * getColumn
+     *
+     * @param string $column
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     public function getColumn($column)
     {
         $return = [];
@@ -677,15 +686,20 @@ class DataSet implements
      * only
      *
      * @param array|string $fields
+     * @param string|null  $as
      *
      * @return  static
      */
-    public function only($fields)
+    public function only($fields, string $as = Data::class)
     {
         $fields = (array) $fields;
 
         return $this->map(
-            static function (Data $data) use ($fields) {
+            static function (Data $data) use ($fields, $as) {
+                if ($as) {
+                    $data = $data->as($as);
+                }
+
                 return $data->only($fields);
             }
         );
