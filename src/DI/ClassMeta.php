@@ -200,9 +200,7 @@ class ClassMeta
         ];
 
         if (in_array($name, $allowMethods, true)) {
-            array_unshift($args, $this->class);
-
-            return $this->container->$name(...$args);
+            return $this->container->$name($this->class, ...$args);
         }
 
         $allowMethods = [
@@ -212,11 +210,9 @@ class ClassMeta
         ];
 
         if (in_array($name, $allowMethods, true)) {
-            $args[0] = array_merge($this->getArguments(), $args[0] ?? []);
+            $arguments = array_merge($this->getArguments(), $args[0] ?? []);
 
-            array_unshift($args, $this->class);
-
-            return $this->container->$name(...$args);
+            return $this->container->$name($this->class, $arguments);
         }
 
         throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');

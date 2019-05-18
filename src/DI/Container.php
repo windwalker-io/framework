@@ -92,14 +92,21 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      * Create class meta.
      *
      * @param string|callable $class
+     * @param array           $args
      *
      * @return  ClassMeta
      *
      * @since  3.5.1
      */
-    public static function meta($class): ClassMeta
+    public static function meta($class, array $args = []): ClassMeta
     {
-        return new ClassMeta($class);
+        $meta = new ClassMeta($class);
+
+        if ($args !== []) {
+            $meta->setArguments($args);
+        }
+
+        return $meta;
     }
 
     /**
