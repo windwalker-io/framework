@@ -241,4 +241,20 @@ class DataType
 
         return in_array($type, static::$noLength, true);
     }
+
+    /**
+     * parseTypeName
+     *
+     * @param string $type
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function parseTypeName(string $type): string
+    {
+        $parsed = explode(' ', $type)[0] ?? '';
+
+        return explode('(', $parsed)[0] ?? '';
+    }
 }

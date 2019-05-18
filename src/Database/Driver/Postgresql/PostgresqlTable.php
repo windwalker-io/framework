@@ -548,7 +548,7 @@ class PostgresqlTable extends AbstractTable
             $keys = $this->getIndexes();
 
             foreach ($result as $field) {
-                if (strpos($field->Default, 'nextval') !== false) {
+                if (strpos((string) $field->Default, 'nextval') !== false) {
                     $field->Extra = 'auto_increment';
                     $field->Default = 0;
                 }
@@ -561,7 +561,7 @@ class PostgresqlTable extends AbstractTable
                     $field->Default = $matches[1] ?? '';
                 }
 
-                if (strpos($field->Type, 'character varying') !== false) {
+                if (strpos((string) $field->Type, 'character varying') !== false) {
                     $field->Type = str_replace('character varying', 'varchar', $field->Type);
                 }
 

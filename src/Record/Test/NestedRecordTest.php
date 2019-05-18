@@ -39,8 +39,6 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
         DatabaseContainer::reset();
 
-        show(spl_object_hash(static::$dbo));
-
         $record = new NestedRecord('#__nestedsets');
 
         $record->createRoot();
