@@ -249,7 +249,7 @@ class DataType
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.5
      */
     public static function parseTypeName(string $type): string
     {

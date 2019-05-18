@@ -329,7 +329,7 @@ trait CollectionTrait
      *
      * @return  DataInterface
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.5
      */
     public function as(string $class)
     {

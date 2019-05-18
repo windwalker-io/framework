@@ -474,7 +474,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      *
      * @return  Collection
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.5
      */
     public function toCollection(): Collection
     {

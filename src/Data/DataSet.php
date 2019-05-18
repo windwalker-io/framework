@@ -259,7 +259,7 @@ class DataSet implements
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.5
      */
     public function getColumn($column)
     {
@@ -712,7 +712,7 @@ class DataSet implements
      *
      * @return  Collection
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.5
      */
     public function toCollection(bool $recursive = false): Collection
     {
