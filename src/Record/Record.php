@@ -712,8 +712,14 @@ class Record extends Entity
         $this->data = [];
 
         // Get the default values for the class from the table.
-        foreach ((array) $this->getFields() as $k => $v) {
-            $this->data[$k] = $loadDefault ? $v->Default : null;
+        foreach ((array) $this->getFields() as $k => $detail) {
+            if ($loadDefault && strtolower($detail->Null) === 'no') {
+                $value = $detail->Default;
+            } else {
+                $value = null;
+            }
+
+            $this->data[$k] = $value;
         }
 
         return $this;
