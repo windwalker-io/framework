@@ -15,7 +15,7 @@ services:
   - memcached # will start memcached
 
 before_install:
-  - composer global require phpunit/phpunit ~8.0
+  - composer global require phpunit/phpunit ^7.0
   - sh -e build/travis/scripts/apt-get.sh
   - sh -e build/travis/scripts/apache2-vhost.sh
   - sh -e build/travis/scripts/apache2-configure.sh
