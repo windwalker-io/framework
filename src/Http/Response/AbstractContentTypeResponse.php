@@ -110,6 +110,6 @@ abstract class AbstractContentTypeResponse extends Response
      */
     protected function normalizeContentType($contentType)
     {
-        return strtolower($contentType);
+        return strtolower((string) $contentType);
     }
 }
