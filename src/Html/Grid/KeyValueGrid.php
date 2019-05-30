@@ -75,7 +75,7 @@ class KeyValueGrid extends Grid
     public function addItem($key, $value = null, $attribs = [])
     {
         if (is_array($value)) {
-            $value = print_r($value, 1);
+            $value = print_r($value, true);
         }
 
         $this->addRow((array) $this->getValue($attribs, static::ROW))
