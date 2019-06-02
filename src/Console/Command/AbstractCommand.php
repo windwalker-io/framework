@@ -923,6 +923,13 @@ abstract class AbstractCommand implements \ArrayAccess
             return;
         }
 
+        $trace = '';
+        $e = $exception;
+
+        do {
+            $trace .= $e->getTraceAsString() . "\n";
+        } while ($e = $e->getPrevious());
+
         /** @var $exception \Exception */
         $class = get_class($exception);
 
@@ -932,7 +939,7 @@ abstract class AbstractCommand implements \ArrayAccess
 <info>in {$exception->getFile()}:{$exception->getLine()}</info>
 
 <error>Stack trace:</error>
-{$exception->getTraceAsString()}
+{$trace}
 EOF;
         // @codingStandardsIgnoreEnd
 
