@@ -45,6 +45,10 @@ class CallbackFilter implements FilterInterface
             return $text;
         }
 
+        if ($text === null) {
+            return $text;
+        }
+
         $handler = $this->handler;
 
         return $handler($text);

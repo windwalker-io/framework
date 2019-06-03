@@ -61,6 +61,8 @@ class MaxLengthFilter implements FilterInterface
      */
     public function clean($text)
     {
+        $text = (string) $text;
+
         $len = $this->utf8 ? mb_strlen($text) : strlen($text);
 
         if ($len <= $this->max) {
