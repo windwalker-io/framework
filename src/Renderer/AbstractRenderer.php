@@ -61,7 +61,7 @@ abstract class AbstractRenderer implements RendererInterface
     public function escape($output)
     {
         // Escape the output.
-        return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
+        return htmlspecialchars((string) $output, ENT_COMPAT, 'UTF-8');
     }
 
     /**

@@ -193,7 +193,7 @@ abstract class AbstractWebApplication extends AbstractApplication
     public function redirect($url, $code = 303)
     {
         // Perform a basic sanity check to make sure we don't have any CRLF garbage.
-        $url = preg_split("/[\r\n]/", $url);
+        $url = preg_split("/[\r\n]/", (string) $url);
         $url = $url[0];
 
         /*
