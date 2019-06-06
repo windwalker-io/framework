@@ -18,6 +18,43 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 class File
 {
     /**
+     * Read file content.
+     *
+     * @param string   $filename
+     * @param bool     $useIncludePath
+     * @param resource $context
+     * @param int      $offset
+     * @param int|null $maxlen
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function read(
+        string $filename,
+        bool $useIncludePath = false,
+        $context = null,
+        int $offset = 0,
+        ?int $maxlen = null
+    ): string {
+        if ($maxlen) {
+            $content = @file_get_contents($filename, $useIncludePath, $context, $offset, $maxlen);
+        } else {
+            $content = @file_get_contents($filename, $useIncludePath, $context, $offset);
+        }
+
+        if ($content === false) {
+            throw new FilesystemException(sprintf(
+                'file_get_contents(%s): failed to open stream: No such file or directory. File: %s',
+                $filename,
+                __FILE__
+            ));
+        }
+
+        return $content;
+    }
+
+    /**
      * Strips the last extension off of a file name
      *
      * @param   string $file The file name
