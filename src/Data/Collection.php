@@ -32,6 +32,28 @@ class Collection extends ArrayObject implements DataInterface
     use CollectionTrait;
 
     /**
+     * explode
+     *
+     * @param string   $delimiter
+     * @param string   $string
+     * @param int|null $limit
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function explode(string $delimiter, string $string, ?int $limit = null): self
+    {
+        if ($limit === null) {
+            $arr = explode($delimiter, $string);
+        } else {
+            $arr = explode($delimiter, $string, $limit);
+        }
+
+        return new static($arr);
+    }
+
+    /**
      * Bind the data into this object.
      *
      * @param   mixed   $values       The data array or object.

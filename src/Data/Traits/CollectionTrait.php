@@ -255,7 +255,7 @@ trait CollectionTrait
      *
      * @since   2.0.9
      */
-    public function map($callback, $useKeys = true)
+    public function map($callback, $useKeys = false)
     {
         $keys = $this->keys();
 

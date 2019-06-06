@@ -605,13 +605,6 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      */
     public function explode($delimiter, $limit = null)
     {
-        // Fix HHVM default explode limit issue
-        // @see  https://github.com/facebook/hhvm/issues/7696
-        // @see  https://3v4l.org/fllad
-        if ($limit === null) {
-            $limit = defined('HHVM_VERSION') ? 0x7FFFFFFF : PHP_INT_MAX;
-        }
-
         return explode($delimiter, $this->string, $limit);
     }
 
