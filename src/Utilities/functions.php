@@ -37,25 +37,17 @@ namespace {
         /**
          * Dump Array or Object as tree node. If send multiple params in this method, this function will batch print it.
          *
-         * @param   mixed $data Array or Object to dump.
+         * @param   mixed $args Array or Object to dump.
          *
          * @since   2.0
          *
          * @return  void
          */
-        function show($data)
+        function show(...$args)
         {
-            $args = func_get_args();
+            $last = $args[array_key_last($args)];
 
-            $last = array_pop($args);
-
-            if (is_int($last)) {
-                $level = $last;
-            } else {
-                $level = 5;
-
-                $args[] = $last;
-            }
+            $level = is_int($last) ? $last : 5;
 
             echo "\n\n";
 
@@ -77,7 +69,7 @@ namespace {
                 echo implode("\n\n", $prints);
             } else {
                 // Dump one value.
-                echo ArrayHelper::dump($data, $level);
+                echo ArrayHelper::dump($args[0], $level);
             }
 
             if (PHP_SAPI !== 'cli') {

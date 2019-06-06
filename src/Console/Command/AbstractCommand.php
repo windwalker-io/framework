@@ -1075,6 +1075,6 @@ EOF;
      */
     public function offsetGet($offset)
     {
-        return isset($this->children[$offset]) ? $this->children[$offset] : null;
+        return $this->children[$offset] ?? null;
     }
 }
