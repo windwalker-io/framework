@@ -75,4 +75,16 @@ class VarDumper
 
         return $prevHandler;
     }
+
+    /**
+     * isSupported
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isSupported(): bool
+    {
+        return class_exists(VarCloner::class);
+    }
 }

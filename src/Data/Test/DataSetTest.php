@@ -370,7 +370,8 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
                 $data->foo = 'bar';
 
                 return $data;
-            }
+            },
+            true
         );
 
         $this->assertEquals([null, null], $this->instance->foo);

@@ -46,9 +46,20 @@ namespace {
          */
         function show(...$args)
         {
-            $last = $args[array_key_last($args)];
+            if (VarDumper::isSupported()) {
+                $dumper = [VarDumper::class, 'dump'];
+            } else {
+                $dumper = [ArrayHelper::class, 'dump'];
+            }
 
-            $level = is_int($last) ? $last : 5;
+            $last = array_pop($args);
+
+            if (is_int($last)) {
+                $level = $last;
+            } else {
+                $level = 5;
+                $args[] = $last;
+            }
 
             echo "\n\n";
 
@@ -63,14 +74,14 @@ namespace {
                 $i = 1;
 
                 foreach ($args as $arg) {
-                    $prints[] = '[Value ' . $i . "]\n" . VarDumper::dump($arg, $level);
+                    $prints[] = '[Value ' . $i . "]\n" . $dumper($arg, $level);
                     $i++;
                 }
 
                 echo implode("\n\n", $prints);
             } else {
                 // Dump one value.
-                echo VarDumper::dump($args[0], $level);
+                echo $dumper($args[0], $level);
             }
 
             if (PHP_SAPI !== 'cli') {

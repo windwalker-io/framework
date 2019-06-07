@@ -605,6 +605,10 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      */
     public function explode($delimiter, $limit = null)
     {
+        if ($limit === null) {
+            return explode($delimiter, $this->string);
+        }
+
         return explode($delimiter, $this->string, $limit);
     }
 
