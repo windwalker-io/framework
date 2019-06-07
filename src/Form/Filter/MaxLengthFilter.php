@@ -18,13 +18,13 @@ class MaxLengthFilter implements FilterInterface
     /*
      * MySQL text length. @see https://stackoverflow.com/a/23169977
      */
-    const TEXT_MAX_ASCII = 65535;
+    public const TEXT_MAX_ASCII = 65535;
 
-    const TEXT_MAX_UTF8 = 21844;
+    public const TEXT_MAX_UTF8 = 21844;
 
-    const LONGTEXT_MAX_ASCII = 4294967295;
+    public const LONGTEXT_MAX_ASCII = 4294967295;
 
-    const LONGTEXT_MAX_UTF8 = 1431655765;
+    public const LONGTEXT_MAX_UTF8 = 1431655765;
 
     /**
      * Property max.
