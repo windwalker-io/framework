@@ -130,13 +130,6 @@ class PrintRDumper extends AbstractDumper
      */
     public function leaveHash(Cursor $cursor, $type, $class, $hasChild, $cut)
     {
-        if (!$hasChild && $cut > 0) {
-            $this->line .= '*MAX LEVEL*';
-            $this->dumpLine($cursor->depth + 2);
-        }
-
-        $this->line .= ")\n";
-
         $depth = $cursor->depth;
 
         if ($cursor->depth === 1) {
@@ -144,6 +137,13 @@ class PrintRDumper extends AbstractDumper
         } elseif ($cursor->depth >= 2) {
             $depth = $cursor->depth + $cursor->depth;
         }
+
+        if (!$hasChild && $cut > 0) {
+            $this->line .= '*MAX LEVEL*';
+            $this->dumpLine($depth + 1);
+        }
+
+        $this->line .= ")\n";
 
         $this->dumpLine($depth);
     }
@@ -167,7 +167,9 @@ class PrintRDumper extends AbstractDumper
             if (strpos($key, "\0") === 0) {
                 $key = explode("\0", substr($key, 1), 2);
 
-                if ($key[0][0] === '*') {
+                if ($key[0][0] === '+') {
+                    $key = $key[1];
+                } elseif ($key[0][0] === '*') {
                     $key = $key[1] . ':protected';
                 } elseif ($key[0][0] === '~') {
                     $key = $key[1] . ':private';

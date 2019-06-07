@@ -41,6 +41,7 @@ class VarDumper
     {
         if (null === self::$handler) {
             $cloner = new VarCloner();
+            $cloner->setMaxItems(-1);
             $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
 
             if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
