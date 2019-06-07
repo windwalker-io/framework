@@ -254,24 +254,24 @@ class InputFilter implements \Serializable
 
         // WORD
         $this->handlers[static::WORD] = function ($source) {
-            return (string) preg_replace('/[^A-Z_]/i', '', $source);
+            return (string) preg_replace('/[^A-Z_]/i', '', (string) $source);
         };
 
         // ALNUM
         $this->handlers[static::ALNUM] = function ($source) {
-            return (string) preg_replace('/[^A-Z0-9]/i', '', $source);
+            return (string) preg_replace('/[^A-Z0-9]/i', '', (string) $source);
         };
 
         // CMD
         $this->handlers[static::CMD] = function ($source) {
-            $result = (string) preg_replace('/[^A-Z0-9_\.-]/i', '', $source);
+            $result = (string) preg_replace('/[^A-Z0-9_\.-]/i', '', (string) $source);
 
             return ltrim($result, '.');
         };
 
         // BASE64
         $this->handlers[static::BASE64] = function ($source) {
-            return (string) preg_replace('/[^A-Z0-9\/+=]/i', '', $source);
+            return (string) preg_replace('/[^A-Z0-9\/+=]/i', '', (string) $source);
         };
 
         // STRING
@@ -299,18 +299,18 @@ class InputFilter implements \Serializable
 
         // USERNAME
         $this->handlers[static::USERNAME] = function ($source) {
-            return (string) preg_replace('/[\x00-\x1F\x7F<>"\'%&]/', '', $source);
+            return (string) preg_replace('/[\x00-\x1F\x7F<>"\'%&]/', '', (string) $source);
         };
 
         // EMAIL
         $this->handlers[static::EMAIL] = function ($source) {
-            return (string) filter_var($source, FILTER_SANITIZE_EMAIL);
+            return (string) filter_var((string) $source, FILTER_SANITIZE_EMAIL);
         };
 
         // HTML
         $this->handlers[static::URL] = function ($source) {
             return (string) filter_var(
-                $source,
+                (string) $source,
                 FILTER_SANITIZE_URL,
                 FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED
             );
