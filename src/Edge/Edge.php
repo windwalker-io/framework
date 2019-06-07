@@ -143,7 +143,11 @@ class Edge
         if ($this->cache->isExpired($__path)) {
             $compiler = $this->prepareExtensions(clone $this->compiler);
 
-            $this->cache->store($__path, $compiler->compile($this->loader->load($__path)));
+            $this->cache->store(
+                $__path,
+                "<?php /* File: {$__path} */ ?>"
+                . $compiler->compile($this->loader->load($__path))
+            );
 
             unset($compiler);
         }
