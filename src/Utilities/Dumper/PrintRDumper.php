@@ -33,13 +33,13 @@ class PrintRDumper extends AbstractDumper
             case 'double':
                 switch (true) {
                     case INF === $value:
-                        $value = 'INF';
+                        $value = '(INF)';
                         break;
                     case -INF === $value:
-                        $value = '-INF';
+                        $value = '(-INF)';
                         break;
                     case is_nan($value):
-                        $value = 'NAN';
+                        $value = '(NAN)';
                         break;
                     default:
                         $value = (string) $value;
@@ -52,11 +52,11 @@ class PrintRDumper extends AbstractDumper
                 break;
 
             case 'NULL':
-                $value = '*NULL';
+                $value = '(NULL)';
                 break;
 
             case 'boolean':
-                $value = $value ? '*TRUE' : '*FALSE';
+                $value = $value ? '(TRUE)' : '(FALSE)';
                 break;
         }
 

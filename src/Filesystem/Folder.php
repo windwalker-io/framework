@@ -284,8 +284,9 @@ abstract class Folder
                     break;
 
                 case ($pathType === static::PATH_RELATIVE):
-                    $pathLength = strlen($path);
+                    $pathLength = strlen(realpath($path));
                     $name = $file->getRealPath();
+                    show($name);
                     $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
@@ -313,7 +314,8 @@ abstract class Folder
     public static function items($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
     {
         $files = [];
-        $pathLength = strlen($path);
+
+        $path = realpath($path);
 
         /** @var $file \SplFileInfo */
         foreach (Filesystem::items($path, $recursive) as $file) {
@@ -323,7 +325,7 @@ abstract class Folder
                     break;
 
                 case ($pathType === static::PATH_RELATIVE):
-                    $pathLength = strlen($path);
+                    $pathLength = strlen(realpath($path));
                     $name = $file->getRealPath();
                     $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
@@ -353,6 +355,8 @@ abstract class Folder
     {
         $files = [];
 
+        $path = realpath($path);
+
         /** @var $file \SplFileInfo */
         foreach (Filesystem::folders($path, $recursive) as $file) {
             switch ($pathType) {
@@ -361,7 +365,7 @@ abstract class Folder
                     break;
 
                 case ($pathType === static::PATH_RELATIVE):
-                    $pathLength = strlen($path);
+                    $pathLength = strlen(realpath($path));
                     $name = $file->getRealPath();
                     $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
