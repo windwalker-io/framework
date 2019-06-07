@@ -73,7 +73,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     public function request($method, $url, $data = null, $headers = [])
     {
-        $request = $this->prepareRequest(new Request(), $method, $url, $data, $headers);
+        $request = $this->preprocessRequest(new Request(), $method, $url, $data, $headers);
 
         return $this->send($request);
     }
@@ -90,7 +90,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     public function download($url, $dest, $data = null, $headers = [])
     {
-        $request = $this->prepareRequest(new Request(), 'GET', $url, $data, $headers);
+        $request = $this->preprocessRequest(new Request(), 'GET', $url, $data, $headers);
 
         $transport = $this->getTransport();
 
@@ -333,7 +333,24 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     }
 
     /**
-     * Prepare Request object to send request.
+     * Create Request object.
+     *
+     * @param   string           $method  The method type.
+     * @param   string|object    $url     The URL to request, may be string or Uri object.
+     * @param   mixed            $data    The request body data, can be an array of POST data.
+     * @param   array            $headers The headers array.
+     *
+     * @return  RequestInterface
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function createRequest(string $method, $url, $data = '', array $headers = []): RequestInterface
+    {
+        return static::prepareRequest(new Request(), $method, $url, $data, $headers);
+    }
+
+    /**
+     * Prepare Request object.
      *
      * @param   RequestInterface $request The Psr Request object.
      * @param   string           $method  The method type.
@@ -342,11 +359,16 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      * @param   array            $headers The headers array.
      *
      * @return  RequestInterface
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     *
+     * @since  __DEPLOY_VERSION__
      */
-    protected function prepareRequest(RequestInterface $request, $method, $url, $data, $headers)
-    {
+    public static function prepareRequest(
+        RequestInterface $request,
+        string $method,
+        $url,
+        $data = '',
+        array $headers = []
+    ): RequestInterface {
         $url = (string) $url;
 
         // If is GET, we merge data into URL.
@@ -372,17 +394,35 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
         $request = $request->withRequestTarget((string) new PsrUri($url))
             ->withMethod($method);
 
-        // Set global headers
-        foreach ((array) $this->getOption('headers') as $key => $value) {
-            $request = $request->withHeader($key, $value);
-        }
-
         // Override with this method
         foreach ($headers as $key => $value) {
             $request = $request->withHeader($key, $value);
         }
 
         return $request;
+    }
+
+    /**
+     * Prepare Request object to send request.
+     *
+     * @param   RequestInterface $request The Psr Request object.
+     * @param   string           $method  The method type.
+     * @param   string|object    $url     The URL to request, may be string or Uri object.
+     * @param   mixed            $data    The request body data, can be an array of POST data.
+     * @param   array            $headers The headers array.
+     *
+     * @return  RequestInterface
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    protected function preprocessRequest(RequestInterface $request, $method, $url, $data, $headers)
+    {
+        // Set global headers
+        foreach ((array) $this->getOption('headers') as $key => $value) {
+            $request = $request->withHeader($key, $value);
+        }
+
+        return static::prepareRequest($request, $method, $url, $data, $headers);
     }
 
     /**
