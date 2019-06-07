@@ -9,6 +9,7 @@
 namespace {
 
     use Windwalker\Utilities\ArrayHelper;
+    use Windwalker\Utilities\Dumper\VarDumper;
 
     if (!function_exists('with')) {
         /**
@@ -62,14 +63,14 @@ namespace {
                 $i = 1;
 
                 foreach ($args as $arg) {
-                    $prints[] = '[Value ' . $i . "]\n" . ArrayHelper::dump($arg, $level);
+                    $prints[] = '[Value ' . $i . "]\n" . VarDumper::dump($arg, $level);
                     $i++;
                 }
 
                 echo implode("\n\n", $prints);
             } else {
                 // Dump one value.
-                echo ArrayHelper::dump($args[0], $level);
+                echo VarDumper::dump($args[0], $level);
             }
 
             if (PHP_SAPI !== 'cli') {

@@ -29,7 +29,40 @@ class PrintRDumper extends AbstractDumper
     {
         $this->dumpKey($cursor);
 
+        switch ($type) {
+            case 'double':
+                switch (true) {
+                    case INF === $value:
+                        $value = 'INF';
+                        break;
+                    case -INF === $value:
+                        $value = '-INF';
+                        break;
+                    case is_nan($value):
+                        $value = 'NAN';
+                        break;
+                    default:
+                        $value = (string) $value;
+
+                        if (false === strpos($value, $this->decimalPoint)) {
+                            $value .= $this->decimalPoint . '0';
+                        }
+                        break;
+                }
+                break;
+
+            case 'NULL':
+                $value = '*NULL';
+                break;
+
+            case 'boolean':
+                $value = $value ? '*TRUE' : '*FALSE';
+                break;
+        }
+
         $this->line .= $value;
+
+        $this->dumpLine($cursor->depth);
     }
 
     /**
@@ -64,20 +97,26 @@ class PrintRDumper extends AbstractDumper
         if (Cursor::HASH_OBJECT === $type) {
             $prefix = $class . ' Object';
         } elseif (Cursor::HASH_RESOURCE === $type) {
-            $prefix = 'resource';
+            $prefix = 'Resource ' . $class;
         } else {
             $prefix = 'Array';
         }
 
         $this->line .= $prefix;
 
-        if ($hasChild) {
-            $this->dumpLine($cursor->depth);
+        $this->dumpLine($cursor->depth);
 
-            $this->line .= '    (';
+        $this->line .= '(';
 
-            $this->dumpLine($cursor->depth);
+        $depth = $cursor->depth;
+
+        if ($cursor->depth === 1) {
+            $depth = $cursor->depth + 1;
+        } elseif ($cursor->depth >= 2) {
+            $depth = $cursor->depth + $cursor->depth;
         }
+
+        $this->dumpLine($depth);
     }
 
     /**
@@ -91,15 +130,53 @@ class PrintRDumper extends AbstractDumper
      */
     public function leaveHash(Cursor $cursor, $type, $class, $hasChild, $cut)
     {
-        $this->line .= "\n)";
+        if (!$hasChild && $cut > 0) {
+            $this->line .= '*MAX LEVEL*';
+            $this->dumpLine($cursor->depth + 2);
+        }
 
-        $this->dumpLine($cursor->depth);
+        $this->line .= ")\n";
+
+        $depth = $cursor->depth;
+
+        if ($cursor->depth === 1) {
+            $depth = $cursor->depth + 1;
+        } elseif ($cursor->depth >= 2) {
+            $depth = $cursor->depth + $cursor->depth;
+        }
+
+        $this->dumpLine($depth);
     }
 
-    protected function dumpKey(Cursor $cursor)
+    /**
+     * dumpKey
+     *
+     * @param Cursor $cursor
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function dumpKey(Cursor $cursor): void
     {
         if ($cursor->depth > 0) {
-            $this->line .= '[' . $cursor->hashKey . '] => ';
+            $this->line .= $cursor->depth > 1 ? str_repeat('    ', $cursor->depth - 1) : '';
+
+            $key = $cursor->hashKey;
+
+            if (strpos($key, "\0") === 0) {
+                $key = explode("\0", substr($key, 1), 2);
+
+                if ($key[0][0] === '*') {
+                    $key = $key[1] . ':protected';
+                } elseif ($key[0][0] === '~') {
+                    $key = $key[1] . ':private';
+                } else {
+                    $key = $key[1] . ':private';
+                }
+            }
+
+            $this->line .= '[' . $key . '] => ';
         }
     }
 }

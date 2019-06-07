@@ -31,12 +31,13 @@ class VarDumper
      * dump
      *
      * @param mixed $var
+     * @param int   $depth
      *
      * @return  string
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function dump($var): string
+    public static function dump($var, int $depth = 5): string
     {
         if (null === self::$handler) {
             $cloner = new VarCloner();
@@ -48,9 +49,9 @@ class VarDumper
                 $dumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new PrintRDumper() : new PrintRDumper();
             }
 
-            self::$handler = static function ($var) use ($cloner, $dumper) {
+            self::$handler = static function ($var) use ($cloner, $dumper, $depth) {
                 $dumper->setIndentPad('    ');
-                $dumper->dump($cloner->cloneVar($var));
+                $dumper->dump($cloner->cloneVar($var)->withMaxDepth($depth));
             };
         }
 
