@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Utilities\Dumper;
@@ -14,7 +14,7 @@ use Symfony\Component\VarDumper\Dumper\AbstractDumper;
 /**
  * The PrintRDumper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.6
  */
 class PrintRDumper extends AbstractDumper
 {
@@ -155,7 +155,7 @@ class PrintRDumper extends AbstractDumper
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     protected function dumpKey(Cursor $cursor): void
     {

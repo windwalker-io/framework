@@ -342,7 +342,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      *
      * @return  RequestInterface
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function createRequest(string $method, $url, $data = '', array $headers = []): RequestInterface
     {
@@ -360,7 +360,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      *
      * @return  RequestInterface
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function prepareRequest(
         RequestInterface $request,

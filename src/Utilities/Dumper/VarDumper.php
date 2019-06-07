@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Utilities\Dumper;
@@ -16,7 +16,7 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 /**
  * The VarDumper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.6
  */
 class VarDumper
 {
@@ -35,7 +35,7 @@ class VarDumper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function dump($var, int $depth = 5): string
     {
@@ -66,7 +66,7 @@ class VarDumper
      *
      * @return  callable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function setHandler(callable $callable = null)
     {
@@ -81,7 +81,7 @@ class VarDumper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function isSupported(): bool
     {

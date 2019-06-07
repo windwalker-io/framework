@@ -28,7 +28,7 @@ class File
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function read(
         string $filename,

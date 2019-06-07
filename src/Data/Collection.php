@@ -40,7 +40,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.6
      */
     public static function explode(string $delimiter, string $string, ?int $limit = null): self
     {
