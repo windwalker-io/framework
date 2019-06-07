@@ -52,13 +52,16 @@ namespace {
                 $dumper = [ArrayHelper::class, 'dump'];
             }
 
-            $last = array_pop($args);
+            $level = 5;
 
-            if (is_int($last)) {
-                $level = $last;
-            } else {
-                $level = 5;
-                $args[] = $last;
+            if (count($args) > 1) {
+                $last = array_pop($args);
+
+                if (is_int($last)) {
+                    $level = $last;
+                } else {
+                    $args[] = $last;
+                }
             }
 
             echo "\n\n";
