@@ -12,6 +12,7 @@ use Symfony\Component\VarDumper\Caster\ReflectionCaster;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use Windwalker\String\Str;
 
 /**
  * The VarDumper class.
@@ -44,15 +45,23 @@ class VarDumper
             $cloner->setMaxItems(-1);
             $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
 
-            if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
-                $dumper = 'html' === $_SERVER['VAR_DUMPER_FORMAT'] ? new PrintRDumper() : new PrintRDumper();
-            } else {
-                $dumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new PrintRDumper() : new PrintRDumper();
-            }
+//            if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
+//                $dumper = 'html' === $_SERVER['VAR_DUMPER_FORMAT'] ? new PrintRDumper() : new PrintRDumper();
+//            } else {
+//                $dumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new PrintRDumper() : new PrintRDumper();
+//            }
+
+            $dumper = new PrintRDumper();
 
             self::$handler = static function ($var) use ($cloner, $dumper, $depth) {
                 $dumper->setIndentPad('    ');
-                $dumper->dump($cloner->cloneVar($var)->withMaxDepth($depth));
+
+                $result = $dumper->dump(
+                    $cloner->cloneVar($var)->withMaxDepth($depth),
+                    true
+                );
+
+                return substr($result, 0, -1);
             };
         }
 

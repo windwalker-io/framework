@@ -19,6 +19,18 @@ use Symfony\Component\VarDumper\Dumper\AbstractDumper;
 class PrintRDumper extends AbstractDumper
 {
     /**
+     * @param callable|resource|string|null $output  A line dumper callable, an opened stream or an output path,
+     *                                               defaults to static::$defaultOutput
+     * @param string|null                   $charset The default character encoding to use for non-UTF8 strings
+     * @param int                           $flags   A bit field of static::DUMP_* constants to fine tune dumps
+     *                                               representation
+     */
+    public function __construct($output = null, string $charset = null, int $flags = 0)
+    {
+        parent::__construct($output, $charset, $flags);
+    }
+
+    /**
      * Dumps a scalar value.
      *
      * @param Cursor                $cursor The Cursor position in the dump
@@ -143,7 +155,11 @@ class PrintRDumper extends AbstractDumper
             $this->dumpLine($depth + 1);
         }
 
-        $this->line .= ")\n";
+        $this->line .= ')';
+
+        if ($depth > 1) {
+            $this->line .= "\n";
+        }
 
         $this->dumpLine($depth);
     }
