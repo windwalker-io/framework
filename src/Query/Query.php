@@ -218,14 +218,6 @@ class Query implements QueryInterface, PreparableInterface
     protected $union = null;
 
     /**
-     * The unionAll element.
-     *
-     * @var    QueryElement
-     * @since  2.0
-     */
-    protected $unionAll = null;
-
-    /**
      * Property dateFormat.
      *
      * @var  string
@@ -329,6 +321,14 @@ class Query implements QueryInterface, PreparableInterface
                     $query .= (string) $this->where;
                 }
 
+                if ($this->union) {
+                    if (!$this->select) {
+                        $this->union->setName('()');
+                    }
+
+                    $query .= (string) $this->union;
+                }
+
                 if ($this->group) {
                     $query .= (string) $this->group;
                 }
@@ -341,10 +341,6 @@ class Query implements QueryInterface, PreparableInterface
                     $query .= (string) $this->order;
                 }
 
-                break;
-
-            case 'union':
-                $query .= (string) $this->union;
                 break;
 
             case 'delete':
@@ -1662,7 +1658,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function union($query, $distinct = false)
     {
-        $this->type = 'union';
+        $this->type = 'select';
 
         // Clear any ORDER BY clause in UNION query
         // See http://dev.mysql.com/doc/refman/5.0/en/union.html
@@ -1672,10 +1668,10 @@ class Query implements QueryInterface, PreparableInterface
 
         // Set up the DISTINCT flag, the name with parentheses, and the glue.
         if ($distinct) {
-            $name = '()';
+            $name = 'UNION DISTINCT()';
             $glue = ')' . PHP_EOL . 'UNION DISTINCT (';
         } else {
-            $name = '()';
+            $name = 'UNION()';
             $glue = ')' . PHP_EOL . 'UNION (';
         }
 
@@ -1728,13 +1724,13 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function unionAll($query)
     {
-        $this->type = 'union';
+        $this->type = 'select';
 
         $glue = ')' . PHP_EOL . 'UNION ALL (';
 
         // Get the JDatabaseQueryElement if it does not exist
-        if (null === $this->unionAll) {
-            $this->union = $this->element('()', $query, $glue);
+        if (null === $this->union) {
+            $this->union = $this->element('UNION ALL ()', $query, $glue);
         } else {
             // Otherwise append the second UNION.
             $this->union->append($query);

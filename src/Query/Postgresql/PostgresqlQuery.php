@@ -121,6 +121,14 @@ class PostgresqlQuery extends Query
                     $query .= (string) $this->where;
                 }
 
+                if ($this->union) {
+                    if (!$this->select) {
+                        $this->union->setName('()');
+                    }
+
+                    $query .= (string) $this->union;
+                }
+
                 if ($this->group) {
                     $query .= (string) $this->group;
                 }
