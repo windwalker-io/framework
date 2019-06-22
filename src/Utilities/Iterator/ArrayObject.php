@@ -39,7 +39,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     /**
      * @var string
      */
-    protected $iteratorClass = 'ArrayIterator';
+    protected $iteratorClass = \ArrayIterator::class;
 
     /**
      * @var array
@@ -53,10 +53,10 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      * @param int    $flags
      * @param string $iteratorClass
      */
-    public function __construct($input = [], $flags = self::STD_PROP_LIST, $iteratorClass = 'ArrayIterator')
+    public function __construct($input = [], $flags = self::STD_PROP_LIST, $iteratorClass = \ArrayIterator::class)
     {
         $this->setFlags($flags);
-        $this->storage = $input;
+        $this->storage = (array) $input;
         $this->setIteratorClass($iteratorClass);
         $this->protectedProperties = array_keys(get_object_vars($this));
     }

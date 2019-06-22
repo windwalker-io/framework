@@ -316,9 +316,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
                 $entity = new Entity($this->getFields($this->table), $data);
 
-                if ($updateNulls) {
-                    $entity = $this->validValue($entity);
-                }
+                $entity = $this->validValue($entity, $updateNulls);
 
                 $this->db->getWriter()->updateOne($this->table, $entity, $condFields, $updateNulls);
 
@@ -526,13 +524,18 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      * this Mysql warning in STRICT_TRANS_TABLE mode.
      *
      * @param Entity $entity
+     * @param bool   $updateNulls
      *
      * @return  Entity
      */
-    protected function validValue(Entity $entity)
+    protected function validValue(Entity $entity, $updateNulls = true)
     {
         foreach ($entity->getFields() as $field => $detail) {
             $value = $entity[$field];
+
+            if (!$updateNulls && $value === null) {
+                continue;
+            }
 
             // Convert to correct type.
             $dataType = DataType::getInstance($this->db->getName());
