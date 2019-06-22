@@ -418,6 +418,58 @@ abstract class AbstractDataMapper implements DataMapperInterface
     }
 
     /**
+     * copy
+     *
+     * @param mixed $conditions
+     * @param array $initData
+     * @param bool  $removeKey
+     *
+     * @return  mixed|DataSet
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function copy($conditions = [], array $initData = [], bool $removeKey = false)
+    {
+        $items = $this->find($conditions);
+
+        foreach ($items as $i => $item) {
+            $items[$i] = $this->copyOne($item, $initData, $removeKey);
+        }
+
+        return $items;
+    }
+
+    /**
+     * copyOne
+     *
+     * @param mixed $conditions
+     * @param array $initData
+     * @param bool  $removeKey
+     *
+     * @return  mixed|Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function copyOne($conditions = [], array $initData = [], bool $removeKey = false)
+    {
+        $item = $this->findOne($conditions);
+
+        if ($removeKey) {
+            foreach ($this->getKeyName(true) as $key) {
+                $item->$key = null;
+            }
+        }
+
+        foreach ($initData as $key => $value) {
+            if ($value !== null) {
+                $item->$key = $value;
+            }
+        }
+
+        return $this->createOne($item);
+    }
+
+    /**
      * Create records by data set.
      *
      * @param mixed $dataset The data set contains data we want to store.

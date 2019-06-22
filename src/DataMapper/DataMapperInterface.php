@@ -97,6 +97,25 @@ interface DataMapperInterface
     public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null);
 
     /**
+     * Find column as an array.
+     *
+     * @param mixed   $conditions Where conditions, you can use array or Compare object.
+     *                            Example:
+     *                            - `array('id' => 5)` => id = 5
+     *                            - `new GteCompare('id', 20)` => 'id >= 20'
+     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed   $order      Order sort, can ba string, array or object.
+     *                            Example:
+     *                            - `id ASC` => ORDER BY id ASC
+     *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     *
+     * @return  mixed
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function findResult($conditions = [], $order = null);
+
+    /**
      * Create records by data set.
      *
      * @param mixed $dataset The data set contains data we want to store.
@@ -203,4 +222,30 @@ interface DataMapperInterface
      * @return  boolean Will be always true.
      */
     public function delete($conditions);
+
+    /**
+     * copy
+     *
+     * @param mixed $conditions
+     * @param array $initData
+     * @param bool  $removeKey
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function copy($conditions = [], array $initData = [], bool $removeKey = false);
+
+    /**
+     * copyOne
+     *
+     * @param mixed $conditions
+     * @param array $initData
+     * @param bool  $removeKey
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function copyOne($conditions = [], array $initData = [], bool $removeKey = false);
 }
