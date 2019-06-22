@@ -284,6 +284,49 @@ class NestedRecord extends Record
      */
     public function store($updateNulls = false)
     {
+        $this->preprocessStore();
+
+        return parent::store($updateNulls);
+    }
+
+    /**
+     * create
+     *
+     * @return  static
+     *
+     * @throws \Exception
+     */
+    public function create()
+    {
+        $this->preprocessStore();
+
+        return parent::create();
+    }
+
+    /**
+     * update
+     *
+     * @param bool $updateNulls
+     *
+     * @return  static
+     * @throws \Exception
+     */
+    public function update($updateNulls = false)
+    {
+        $this->preprocessStore();
+
+        return parent::update($updateNulls);
+    }
+
+    /**
+     * preprocessStore
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function preprocessStore(): void
+    {
         $k = $this->getKeyName();
 
         /*
@@ -360,8 +403,6 @@ class NestedRecord extends Record
                 $this->moveByReference($this->locationId, $this->location, $this->$k);
             }
         }
-
-        return parent::store($updateNulls);
     }
 
     /**
@@ -694,7 +735,7 @@ class NestedRecord extends Record
 
         $result = $this->db->setQuery($query)->loadColumn();
 
-        if (count($result) == 1) {
+        if (count($result) >= 1) {
             return self::$rootId = $result[0];
         }
 
@@ -706,11 +747,11 @@ class NestedRecord extends Record
 
         $result = $this->db->setQuery($query)->loadColumn();
 
-        if (count($result) == 1) {
+        if (count($result) >= 1) {
             return self::$rootId = $result[0];
         }
 
-        throw new NestedHandleException(sprintf('%s::getRootId', get_class($this)));
+        throw new NestedHandleException(sprintf('%s::getRootId() root id not found', get_class($this)));
     }
 
     /**

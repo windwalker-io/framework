@@ -8,6 +8,7 @@
 
 namespace Windwalker\Record;
 
+use Windwalker\Data\Data;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\DataMapper\AbstractDataMapper;
 use Windwalker\DataMapper\DataMapper;
@@ -27,9 +28,9 @@ use Windwalker\Record\Exception\NoResultException;
  */
 class Record extends Entity
 {
-    const UPDATE_NULLS = true;
+    public const UPDATE_NULLS = true;
 
-    const LOAD_DEFAULT = true;
+    public const LOAD_DEFAULT = true;
 
     /**
      * Name of the database table to model.
@@ -96,10 +97,10 @@ class Record extends Entity
      * be overridden by child classes to explicitly set the table and key fields
      * for a particular database table.
      *
-     * @param   string             $table   Name of the table to model.
-     * @param   mixed              $keys    Name of the primary key field in the table or array of field names that
+     * @param string             $table     Name of the table to model.
+     * @param mixed              $keys      Name of the primary key field in the table or array of field names that
      *                                      compose the primary key.
-     * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
+     * @param AbstractDataMapper $mapper    The DataMapper Adapter to access database.
      *
      * @throws \Exception
      * @since   2.0
@@ -120,7 +121,7 @@ class Record extends Entity
         }
 
         $this->mapper = $mapper ?: new DataMapper($this->table, $this->keys);
-        $this->db = $this->mapper->getDb();
+        $this->db     = $this->mapper->getDb();
 
         // Initialise the table properties.
         $this->reset(false);
@@ -133,8 +134,8 @@ class Record extends Entity
     /**
      * Magic getter to get a table field.
      *
-     * @param   string $key     The key name.
-     * @param   null   $default The default value.
+     * @param string $key     The key name.
+     * @param null   $default The default value.
      *
      * @return  mixed
      *
@@ -153,8 +154,8 @@ class Record extends Entity
      * property name.  The rows that will be reordered are those whose value matches
      * the AbstractTable instance for the property specified.
      *
-     * @param   mixed   $src         An associative array or object to bind to the AbstractTable instance.
-     * @param   boolean $updateNulls True to update fields even if they are null.
+     * @param mixed   $src         An associative array or object to bind to the AbstractTable instance.
+     * @param boolean $updateNulls True to update fields even if they are null.
      *
      * @return  static  Method allows chaining
      *
@@ -177,8 +178,8 @@ class Record extends Entity
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
-     * @param   mixed $src          An associative array or object to bind to the AbstractTable instance.
-     * @param   bool  $replaceNulls Replace NULL value.
+     * @param mixed $src          An associative array or object to bind to the AbstractTable instance.
+     * @param bool  $replaceNulls Replace NULL value.
      *
      * @return static Method allows chaining
      *
@@ -232,9 +233,9 @@ class Record extends Entity
      * Method to load a row from the database by primary key and bind the fields
      * to the AbstractTable instance properties.
      *
-     * @param   mixed   $keys    An optional primary key value to load the row by, or an array of fields to match.  If
+     * @param mixed   $keys      An optional primary key value to load the row by, or an array of fields to match.  If
      *                           not set the instance property value is used.
-     * @param   boolean $reset   True to reset the default values before loading the new row.
+     * @param boolean $reset     True to reset the default values before loading the new row.
      *
      * @return  static  Method allows chaining
      * @throws \Exception
@@ -258,11 +259,11 @@ class Record extends Entity
         // If keys empty, use inner values as keys.
         if (empty($keys)) {
             $empty = true;
-            $keys = [];
+            $keys  = [];
 
             // If empty, use the value of the current key
             foreach ($this->keys as $key) {
-                $empty = $empty && empty($this->$key);
+                $empty      = $empty && empty($this->$key);
                 $keys[$key] = $this->$key;
             }
 
@@ -296,7 +297,7 @@ class Record extends Entity
     /**
      * Method to delete a row from the database table by primary key value.
      *
-     * @param   mixed $conditions An optional primary key value to delete.  If not set the instance property value is
+     * @param mixed $conditions   An optional primary key value to delete.  If not set the instance property value is
      *                            used.
      *
      * @return  static  Method allows chaining
@@ -357,9 +358,9 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
+     * @throws  \RuntimeException
      * @since   2.0
      *
-     * @throws  \RuntimeException
      */
     public function validate()
     {
@@ -373,7 +374,7 @@ class Record extends Entity
      * a new row will be inserted into the database with the properties from the
      * AbstractTable instance.
      *
-     * @param   boolean $updateNulls True to update fields even if they are null.
+     * @param boolean $updateNulls True to update fields even if they are null.
      *
      * @return  static  Method allows chaining
      *
@@ -487,6 +488,72 @@ class Record extends Entity
     }
 
     /**
+     * copy
+     *
+     * @param array|object|callable $newValue
+     * @param bool                  $removeKey
+     *
+     * @return  static
+     *
+     * @throws \Exception
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function copy($newValue = null, bool $removeKey = true): self
+    {
+        if ($removeKey) {
+            foreach ($this->getKeyName(true) as $key) {
+                $this->data[$key] = null;
+            }
+        }
+
+        if (is_callable($newValue)) {
+            $newValue($this);
+        } else {
+            $this->bind($newValue);
+        }
+
+        return $this->store();
+    }
+
+    /**
+     * loadOrCreate
+     *
+     * @param mixed                 $keys
+     * @param array|object|callable $initData
+     * @param bool                  $mergeKeysData
+     *
+     * @return  static
+     *
+     * @throws \Exception
+     * @since  __DEPLOY_VERSION__
+     */
+    public function loadOrCreate($keys = null, $initData = null, bool $mergeKeysData = true): self
+    {
+        try {
+            $this->load($keys, true);
+        } catch (NoResultException $e) {
+            if ($mergeKeysData) {
+                if (is_array($keys) || is_object($keys)) {
+                    $this->bind($keys);
+                } else {
+                    $this->data[$this->getKeyName()] = $keys;
+                }
+            }
+
+            if (is_callable($initData)) {
+                $initData($this);
+            } else {
+                $this->bind($initData);
+            }
+
+            $this->create();
+        }
+
+        return $this;
+    }
+
+    /**
      * Get the table name.
      *
      * @return  string
@@ -501,7 +568,7 @@ class Record extends Entity
     /**
      * Method to set property table
      *
-     * @param   string $table
+     * @param string $table
      *
      * @return  static  Return self to support chaining.
      */
@@ -538,7 +605,7 @@ class Record extends Entity
     /**
      * Method to get the primary key field name for the table.
      *
-     * @param   boolean $multiple True to return all primary keys (as an array) or false to return just the first one
+     * @param boolean $multiple   True to return all primary keys (as an array) or false to return just the first one
      *                            (as a string).
      *
      * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
@@ -588,8 +655,8 @@ class Record extends Entity
     /**
      * Check a field value exists in database or not, to keep a field unique.
      *
-     * @param   string $field The field name to check.
-     * @param   mixed  $value The value to check.
+     * @param string $field The field name to check.
+     * @param mixed  $value The value to check.
      *
      * @return bool
      *
@@ -631,8 +698,8 @@ class Record extends Entity
     /**
      * triggerEvent
      *
-     * @param   string|Event $event
-     * @param   array        $args
+     * @param string|Event $event
+     * @param array        $args
      *
      * @return  EventInterface
      *
@@ -682,7 +749,7 @@ class Record extends Entity
     /**
      * Method to set property dispatcher
      *
-     * @param   DispatcherInterface $dispatcher
+     * @param DispatcherInterface $dispatcher
      *
      * @return  static  Return self to support chaining.
      *
@@ -762,7 +829,7 @@ class Record extends Entity
     /**
      * Method to set property mapper
      *
-     * @param   AbstractDataMapper $mapper
+     * @param AbstractDataMapper $mapper
      *
      * @return  static  Return self to support chaining.
      */
