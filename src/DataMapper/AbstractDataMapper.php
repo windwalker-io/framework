@@ -96,8 +96,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * We don't dependency on database in abstract class, that means you can use other data provider.
      *
-     * @param   string $table Table name.
-     * @param   string $keys  The primary key, default will be `id`.
+     * @param string $table Table name.
+     * @param string $keys  The primary key, default will be `id`.
      *
      * @throws  \Exception
      * @since   2.0
@@ -132,18 +132,18 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * - `$mapper->find(array('id' => 5), 'date', 20, 10);`
      * - `$mapper->find(null, 'id', 0, 1);`
      *
-     * @param   mixed   $conditions  Where conditions, you can use array or Compare object.
+     * @param mixed   $conditions    Where conditions, you can use array or Compare object.
      *                               Example:
      *                               - `array('id' => 5)` => id = 5
      *                               - `new GteCompare('id', 20)` => 'id >= 20'
      *                               - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param   mixed   $order       Order sort, can ba string, array or object.
+     * @param mixed   $order         Order sort, can ba string, array or object.
      *                               Example:
      *                               - `id ASC` => ORDER BY id ASC
      *                               - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-     * @param   integer $start       Limit start number.
-     * @param   integer $limit       Limit rows.
-     * @param   string  $key         The index key.
+     * @param integer $start         Limit start number.
+     * @param integer $limit         Limit rows.
+     * @param string  $key           The index key.
      *
      * @return  mixed|DataSet Found rows data set.
      * @since   2.0
@@ -281,7 +281,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
         $result = $dataset[0];
 
         if (!$result) {
-            $class = $this->dataClass;
+            $class  = $this->dataClass;
             $result = new $class();
         }
 
@@ -361,12 +361,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Find column as an array.
      *
-     * @param mixed   $conditions Where conditions, you can use array or Compare object.
+     * @param mixed $conditions   Where conditions, you can use array or Compare object.
      *                            Example:
      *                            - `array('id' => 5)` => id = 5
      *                            - `new GteCompare('id', 20)` => 'id >= 20'
      *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param mixed   $order      Order sort, can ba string, array or object.
+     * @param mixed $order        Order sort, can ba string, array or object.
      *                            Example:
      *                            - `id ASC` => ORDER BY id ASC
      *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
@@ -420,20 +420,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * copy
      *
-     * @param mixed $conditions
-     * @param array $initData
-     * @param bool  $removeKey
+     * @param mixed                 $conditions
+     * @param array|object|callable $newValue
+     * @param bool                  $removeKey
      *
      * @return  mixed|DataSet
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function copy($conditions = [], array $initData = [], bool $removeKey = false)
+    public function copy($conditions = [], $newValue = null, bool $removeKey = false)
     {
         $items = $this->find($conditions);
 
         foreach ($items as $i => $item) {
-            $items[$i] = $this->copyOne($item, $initData, $removeKey);
+            $items[$i] = $this->copyOne($item, $newValue, $removeKey);
         }
 
         return $items;
@@ -442,15 +442,15 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * copyOne
      *
-     * @param mixed $conditions
-     * @param array $initData
-     * @param bool  $removeKey
+     * @param mixed                 $conditions
+     * @param array|object|callable $newValue
+     * @param bool                  $removeKey
      *
      * @return  mixed|Data
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function copyOne($conditions = [], array $initData = [], bool $removeKey = false)
+    public function copyOne($conditions = [], $newValue = null, bool $removeKey = false)
     {
         $item = $this->findOne($conditions);
 
@@ -460,9 +460,19 @@ abstract class AbstractDataMapper implements DataMapperInterface
             }
         }
 
-        foreach ($initData as $key => $value) {
-            if ($value !== null) {
-                $item->$key = $value;
+        if (is_callable($newValue)) {
+            $result = $newValue($item, $conditions);
+
+            if ($result) {
+                $item = $result;
+            }
+        } else {
+            $newValue = new Data($newValue);
+
+            foreach ($newValue as $key => $value) {
+                if ($value !== null) {
+                    $item->$key = $value;
+                }
             }
         }
 
@@ -474,9 +484,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param mixed $dataset The data set contains data we want to store.
      *
-     * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
      * @return  mixed|DataSet  Data set data with inserted id.
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
      */
     public function create($dataset)
     {
@@ -510,8 +520,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param mixed $data Send a data in and store.
      *
-     * @throws \InvalidArgumentException
      * @return  mixed|Data Data with inserted id.
+     * @throws \InvalidArgumentException
      */
     public function createOne($data)
     {
@@ -630,8 +640,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                          - `new GteCompare('id', 20)` => 'id >= 20'
      *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @throws \InvalidArgumentException
      * @return  boolean
+     * @throws \InvalidArgumentException
      */
     public function updateBatch($data, $conditions = [])
     {
@@ -738,7 +748,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
         $updateDataset = new $datasetClass();
 
         $fields = $this->getFields();
-        
+
         foreach ($dataset as $k => $data) {
             if (!($data instanceof $this->dataClass)) {
                 $data = $this->bindData($data);
@@ -817,6 +827,109 @@ abstract class AbstractDataMapper implements DataMapperInterface
         );
 
         return $result;
+    }
+
+    /**
+     * findOneOrCreate
+     *
+     * @param array|mixed           $conditions
+     * @param array|object|callable $initData
+     * @param bool                  $mergeConditions
+     *
+     * @return  mixed|Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function findOneOrCreate($conditions, $initData = null, bool $mergeConditions = true)
+    {
+        $item = $this->findOne($conditions);
+
+        if ($item->notNull()) {
+            return $item;
+        }
+
+        if ($mergeConditions && is_array($conditions)) {
+            foreach ($conditions as $k => $v) {
+                if (!is_numeric($k)) {
+                    $item->$k = $v;
+                }
+            }
+        }
+
+        if (is_callable($initData)) {
+            $result = $initData($item, $conditions);
+
+            if ($result) {
+                $item = $result;
+            }
+        } else {
+            $initData = new Data($initData);
+
+            foreach ($initData as $key => $value) {
+                if ($value !== null) {
+                    $item->$key = $value;
+                }
+            }
+        }
+
+        return $this->createOne($item);
+    }
+
+    /**
+     * updateOneOrCreate
+     *
+     * @param mixed      $data
+     * @param mixed      $initData
+     * @param array|null $condFields
+     * @param bool       $updateNulls
+     *
+     * @return  mixed|Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function updateOneOrCreate($data, $initData = null, ?array $condFields = null, bool $updateNulls = false)
+    {
+        $condFields = $condFields ?: $this->getKeyName(true);
+
+        $conditions = [];
+
+        foreach ($condFields as $field) {
+            if (is_array($data)) {
+                $conditions[$field] = $data[$field];
+            } else {
+                $conditions[$field] = $data->$field;
+            }
+        }
+
+        $item = $this->findOne($conditions);
+
+        if ($item->notNull()) {
+            return $this->updateOne($data, $condFields, $updateNulls);
+        }
+
+        $data = new Data($data);
+
+        foreach ($data as $k => $v) {
+            $item->$k = $v;
+        }
+
+        if (is_callable($initData)) {
+            $result = $initData($item, $conditions);
+
+            if ($result) {
+                $item = $result;
+            }
+        } else {
+            $initData = new Data($initData);
+
+            foreach ($initData as $key => $value) {
+                if ($value !== null) {
+                    $item->$key = $value;
+                }
+            }
+        }
+
+        return $this->createOne($item);
     }
 
     /**
@@ -907,6 +1020,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                            will use primary key instead.
      * @param bool  $updateNulls  Update empty fields or not.
      *
+     *
      * @return  mixed Updated data set.
      */
     abstract protected function doUpdate($dataset, array $condFields, $updateNulls = false);
@@ -962,7 +1076,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Set table name.
      *
-     * @param   string $table Table name.
+     * @param string $table Table name.
      *
      * @return  AbstractDataMapper  Return self to support chaining.
      */
@@ -985,7 +1099,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     protected function bindData($data)
     {
         $dataClass = $this->dataClass;
-        $object = new $dataClass();
+        $object    = new $dataClass();
 
         if ($object instanceof DataInterface) {
             return $object->bind($data);
@@ -1011,7 +1125,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     protected function bindDataset($dataset)
     {
         $datasetClass = $this->datasetClass;
-        $object = new $datasetClass();
+        $object       = new $datasetClass();
 
         if ($object instanceof DataSetInterface) {
             return $object->bind($dataset);
@@ -1045,7 +1159,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Set data class.
      *
-     * @param   string $dataClass Data class.
+     * @param string $dataClass Data class.
      *
      * @return  AbstractDataMapper  Return self to support chaining.
      */
@@ -1069,7 +1183,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Set Data set class.
      *
-     * @param   string $datasetClass Dat set class.
+     * @param string $datasetClass Dat set class.
      *
      * @return  AbstractDataMapper  Return self to support chaining.
      */
@@ -1099,8 +1213,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * triggerEvent
      *
-     * @param   string|Event $event
-     * @param   array        $args
+     * @param string|Event $event
+     * @param array        $args
      *
      * @return  Event
      */
@@ -1146,7 +1260,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Method to set property dispatcher
      *
-     * @param   DispatcherInterface $dispatcher
+     * @param DispatcherInterface $dispatcher
      *
      * @return  static  Return self to support chaining.
      */
@@ -1160,7 +1274,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Method to get the primary key field name for the table.
      *
-     * @param   boolean $multiple True to return all primary keys (as an array) or false to return just the first one
+     * @param boolean $multiple   True to return all primary keys (as an array) or false to return just the first one
      *                            (as a string).
      *
      * @return  array|mixed  Array of primary key field names or string containing the first primary key field.

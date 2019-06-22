@@ -8,6 +8,8 @@
 
 namespace Windwalker\DataMapper;
 
+use Windwalker\Data\Data;
+
 /**
  * DataMapper Interface
  */
@@ -99,12 +101,12 @@ interface DataMapperInterface
     /**
      * Find column as an array.
      *
-     * @param mixed   $conditions Where conditions, you can use array or Compare object.
+     * @param mixed $conditions   Where conditions, you can use array or Compare object.
      *                            Example:
      *                            - `array('id' => 5)` => id = 5
      *                            - `new GteCompare('id', 20)` => 'id >= 20'
      *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param mixed   $order      Order sort, can ba string, array or object.
+     * @param mixed $order        Order sort, can ba string, array or object.
      *                            Example:
      *                            - `id ASC` => ORDER BY id ASC
      *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
@@ -226,26 +228,53 @@ interface DataMapperInterface
     /**
      * copy
      *
-     * @param mixed $conditions
-     * @param array $initData
-     * @param bool  $removeKey
+     * @param mixed              $conditions
+     * @param array|object|callable $newValue
+     * @param bool               $removeKey
      *
      * @return  mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function copy($conditions = [], array $initData = [], bool $removeKey = false);
+    public function copy($conditions = [], $newValue = null, bool $removeKey = false);
 
     /**
      * copyOne
      *
-     * @param mixed $conditions
-     * @param array $initData
-     * @param bool  $removeKey
+     * @param mixed                 $conditions
+     * @param array|object|callable $newValue
+     * @param bool                  $removeKey
      *
      * @return  mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function copyOne($conditions = [], array $initData = [], bool $removeKey = false);
+    public function copyOne($conditions = [], $newValue = null, bool $removeKey = false);
+
+    /**
+     * findOneOrCreate
+     *
+     * @param array|mixed           $conditions
+     * @param array|object|callable $initData
+     * @param bool                  $mergeConditions
+     *
+     * @return  mixed|Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function findOneOrCreate($conditions, $initData = null, bool $mergeConditions = true);
+
+    /**
+     * updateOneOrCreate
+     *
+     * @param mixed      $data
+     * @param mixed      $initData
+     * @param array|null $condFields
+     * @param bool       $updateNulls
+     *
+     * @return  mixed|Data
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function updateOneOrCreate($data, $initData = null, ?array $condFields = null, bool $updateNulls = false);
 }

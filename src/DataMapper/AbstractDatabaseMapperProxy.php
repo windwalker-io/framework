@@ -38,6 +38,8 @@ use Windwalker\String\StringInflector;
  * @method  static DataSet|Data[]  flush($dataset, $conditions = [])
  * @method  static DataSet|Data[]  save($dataset, $condFields = null, $updateNulls = false)
  * @method  static Data            saveOne($data, $condFields = null, $updateNulls = false)
+ * @method  static Data|mixed      findOneOrCreate($conditions, $initData = null, bool $mergeConditions = true)
+ * @method  static Data|mixed      updateOneOrCreate($data, $initData = null, ?array $condFields = null, bool $updateNulls = false)
  * @method  static boolean         delete($conditions)
  * @method  static boolean         useTransaction($yn = null)
  * @method  static Event                triggerEvent($event, $args = [])
