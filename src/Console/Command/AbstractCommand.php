@@ -8,6 +8,10 @@
 
 namespace Windwalker\Console\Command;
 
+use Whoops\Exception\Frame;
+use Whoops\Exception\Inspector;
+use Whoops\Handler\CallbackHandler;
+use Whoops\Handler\PlainTextHandler;
 use Windwalker\Console\AbstractConsole;
 use Windwalker\Console\Console;
 use Windwalker\Console\Exception\CommandNotFoundException;
@@ -16,6 +20,7 @@ use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
+use Windwalker\Core\Utilities\Debug\BacktraceHelper;
 
 /**
  * Abstract Console class.
@@ -923,28 +928,36 @@ abstract class AbstractCommand implements \ArrayAccess
             return;
         }
 
-        $trace = '';
-        $e = $exception;
+        $handler = new CallbackHandler(function (\Throwable $e, Inspector $inspector) {
+            /** @var $exception \Exception */
+            $class = $inspector->getExceptionName();
 
-        do {
-            $trace .= $e->getTraceAsString() . "\n";
-        } while ($e = $e->getPrevious());
+            $trace = [];
 
-        /** @var $exception \Exception */
-        $class = get_class($exception);
+            /** @var Frame $frame */
+            foreach ($inspector->getFrames() as $i => $frame) {
+                $trace[] = BacktraceHelper::traceAsString($i + 1, $frame->getRawFrame(), false);
+            }
 
-        // @codingStandardsIgnoreStart
-        $output = <<<EOF
-<error>Exception '{$class}' with message:</error> <fg=cyan;options=bold>{$exception->getMessage()}</fg=cyan;options=bold>
-<info>in {$exception->getFile()}:{$exception->getLine()}</info>
+            $trace = implode("\n", $trace);
+
+            // @codingStandardsIgnoreStart
+            $output = <<<EOF
+<error>Exception '{$class}' with message:</error> <fg=cyan;options=bold>{$inspector->getExceptionMessage()}</fg=cyan;options=bold>
+<info>in {$inspector->getException()->getFile()}:{$inspector->getException()->getLine()}</info>
 
 <error>Stack trace:</error>
 {$trace}
 EOF;
-        // @codingStandardsIgnoreEnd
+            // @codingStandardsIgnoreEnd
 
-        $this->out('');
-        $this->err($output);
+            $this->out('');
+            $this->err($output);
+        });
+
+        $handler->setException($exception);
+        $handler->setInspector(new Inspector($exception));
+        $handler->handle();
     }
 
     /**
