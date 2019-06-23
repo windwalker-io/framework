@@ -333,7 +333,7 @@ class ListField extends AbstractField
     /**
      * getValue
      *
-     * @return  array
+     * @return  array|string
      */
     public function getValue()
     {
