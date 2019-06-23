@@ -234,7 +234,7 @@ interface DataMapperInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     public function copy($conditions = [], $newValue = null, bool $removeKey = false);
 
@@ -247,7 +247,7 @@ interface DataMapperInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     public function copyOne($conditions = [], $newValue = null, bool $removeKey = false);
 
@@ -260,7 +260,7 @@ interface DataMapperInterface
      *
      * @return  mixed|Data
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     public function findOneOrCreate($conditions, $initData = null, bool $mergeConditions = true);
 
@@ -274,7 +274,7 @@ interface DataMapperInterface
      *
      * @return  mixed|Data
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     public function updateOneOrCreate($data, $initData = null, ?array $condFields = null, bool $updateNulls = false);
 }

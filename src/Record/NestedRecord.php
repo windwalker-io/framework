@@ -277,7 +277,7 @@ class NestedRecord extends Record
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     protected function preprocessStore(): void
     {

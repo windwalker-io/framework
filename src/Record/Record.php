@@ -428,7 +428,7 @@ class Record extends Entity
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     protected function preprocessStore(): void
     {
@@ -515,7 +515,7 @@ class Record extends Entity
      *
      * @throws \Exception
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     public function copy($newValue = null, bool $removeKey = true): self
     {
@@ -544,7 +544,7 @@ class Record extends Entity
      * @return  static
      *
      * @throws \Exception
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.7
      */
     public function loadOrCreate($keys = null, $initData = null, bool $mergeKeysData = true): self
     {
