@@ -30,15 +30,15 @@ use Windwalker\Session\Handler\NativeHandler;
  */
 class Session implements \ArrayAccess, \IteratorAggregate
 {
-    const STATE_ACTIVE = 'active';
+    public const STATE_ACTIVE = 'active';
 
-    const STATE_INACTIVE = 'inactive';
+    public const STATE_INACTIVE = 'inactive';
 
-    const STATE_EXPIRED = 'expired';
+    public const STATE_EXPIRED = 'expired';
 
-    const STATE_DESTROYED = 'destroyed';
+    public const STATE_DESTROYED = 'destroyed';
 
-    const STATE_ERROR = 'error';
+    public const STATE_ERROR = 'error';
 
     /**
      * Internal state.
@@ -179,7 +179,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * @since   2.0
      */
-    protected function setCookieParams()
+    public function setCookieParams()
     {
         $cookie = $this->getCookieParams();
 
