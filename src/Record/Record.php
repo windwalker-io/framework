@@ -403,6 +403,8 @@ class Record extends Entity
             ]
         );
 
+        $this->preprocessStore();
+
         // Do Action
         // If a primary key exists update the object, otherwise insert it.
         $this->getDataMapper()->saveOne($this, $this->getKeyName(true), $updateNulls);
@@ -422,6 +424,18 @@ class Record extends Entity
     }
 
     /**
+     * preprocessStore
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function preprocessStore(): void
+    {
+        //
+    }
+
+    /**
      * create
      *
      * @return  static
@@ -434,6 +448,8 @@ class Record extends Entity
         $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), []);
 
         $this->triggerEvent('onBeforeStore');
+
+        $this->preprocessStore();
 
         // Do Action
         $this->getDataMapper()->createOne($this);
@@ -470,6 +486,8 @@ class Record extends Entity
                 'updateNulls' => &$updateNulls,
             ]
         );
+
+        $this->preprocessStore();
 
         // Do Action
         $this->getDataMapper()->updateOne($this, $this->getKeyName(true), $updateNulls);

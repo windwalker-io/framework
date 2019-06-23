@@ -273,59 +273,13 @@ class NestedRecord extends Record
     }
 
     /**
-     * Method to store a node in the database table.
-     *
-     * @param   boolean $updateNulls True to update null values as well.
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @throws \Exception
-     * @since   2.0
-     */
-    public function store($updateNulls = false)
-    {
-        $this->preprocessStore();
-
-        return parent::store($updateNulls);
-    }
-
-    /**
-     * create
-     *
-     * @return  static
-     *
-     * @throws \Exception
-     */
-    public function create()
-    {
-        $this->preprocessStore();
-
-        return parent::create();
-    }
-
-    /**
-     * update
-     *
-     * @param bool $updateNulls
-     *
-     * @return  static
-     * @throws \Exception
-     */
-    public function update($updateNulls = false)
-    {
-        $this->preprocessStore();
-
-        return parent::update($updateNulls);
-    }
-
-    /**
      * preprocessStore
      *
      * @return  void
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function preprocessStore(): void
+    protected function preprocessStore(): void
     {
         $k = $this->getKeyName();
 
