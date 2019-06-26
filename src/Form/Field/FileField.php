@@ -43,6 +43,24 @@ class FileField extends TextField
     }
 
     /**
+     * buildInput
+     *
+     * @param array $attrs
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function buildInput($attrs)
+    {
+        if ($attrs['multiple']) {
+            $attrs['name'] .= '[]';
+        }
+
+        return parent::buildInput($attrs);
+    }
+
+    /**
      * getAccessors
      *
      * @return  array
