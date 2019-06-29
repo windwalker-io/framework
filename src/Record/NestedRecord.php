@@ -275,11 +275,13 @@ class NestedRecord extends Record
     /**
      * preprocessStore
      *
+     * @param bool $new
+     *
      * @return  void
      *
      * @since  3.5.7
      */
-    protected function preprocessStore(): void
+    protected function preprocessStore(bool $new = false): void
     {
         $k = $this->getKeyName();
 
@@ -287,7 +289,7 @@ class NestedRecord extends Record
          * If the primary key is empty, then we assume we are inserting a new node into the
          * tree.  From this point we would need to determine where in the tree to insert it.
          */
-        if (empty($this->$k)) {
+        if ($new) {
             /*
              * We are inserting a node somewhere in the tree with a known reference
              * node.  We have to make room for the new node and set the left and right
