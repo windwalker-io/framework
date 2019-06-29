@@ -108,6 +108,28 @@ namespace {
             return (is_scalar($var) && !is_bool($var)) || (is_object($var) && method_exists($var, '__toString'));
         }
     }
+
+    if (!function_exists('is_json')) {
+        /**
+         * is_json
+         *
+         * @param mixed $string
+         *
+         * @return  bool
+         *
+         * @since  __DEPLOY_VERSION__
+         */
+        function is_json($string): bool
+        {
+            if (!is_string($string)) {
+                return false;
+            }
+
+            json_decode($string);
+
+            return json_last_error() === JSON_ERROR_NONE;
+        }
+    }
 }
 
 namespace Windwalker {

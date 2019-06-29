@@ -620,21 +620,15 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                     $entity->$field = is_array($value) ? json_encode($value) : $value;
                     break;
                 case 'json':
-                    if (is_string($value)) {
-                        if (strlen($value) > 0 && !in_array($value[0], ['"', '{', '['], true)) {
-                            $entity->$field = json_encode($value);
-                            break;
-                        }
-
-                        $entity->$field = $value;
-                        break;
+                    if (!is_json($value)) {
+                        $value = json_encode($value);
                     }
 
-                    $entity->$field = json_encode($value);
+                    $entity->$field = $value;
                     break;
                 case 'date':
                 case 'datetime':
-                    $entity->$field = $entity->toDateTime($value)->format($this->db->getQuery(true)->getDateFormat());
+                    $entity->$field = $entity->toDateTime($value)->format($this->db->getDateFormat());
                     break;
                 case 'timestamp':
                     $entity->$field = $entity->toDateTime($value)->getTimestamp();

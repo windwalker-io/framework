@@ -620,10 +620,14 @@ class Entity extends Data implements \JsonSerializable
             case 'boolean':
                 return (bool) $value;
             case 'object':
-                return json_decode($value);
+                return !is_array($value) && !is_object($value)
+                    ? (object) json_decode($value)
+                    : (object) $value;
             case 'array':
             case 'json':
-                return json_decode($value, true);
+                return !is_array($value) && !is_object($value)
+                    ? json_decode($value, true)
+                    : (array) $value;
             case 'date':
             case 'datetime':
                 return $this->toDateTime($value);
