@@ -58,6 +58,22 @@ trait CollectionTrait
     }
 
     /**
+     * query
+     *
+     * @param array|callable $queries
+     * @param bool           $strict
+     * @param bool           $keepKey
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function query($queries = [], bool $strict = false, bool $keepKey = false)
+    {
+        return $this->bindNewInstance(Arr::query($this->convertArray($this), $queries, $strict, $keepKey));
+    }
+
+    /**
      * filter
      *
      * @param callable $callback
@@ -104,7 +120,7 @@ trait CollectionTrait
      */
     public function partition(callable $callback, $keepKey = false)
     {
-        $true = [];
+        $true  = [];
         $false = [];
 
         if (is_string($callback)) {
@@ -122,7 +138,7 @@ trait CollectionTrait
         }
 
         if (!$keepKey) {
-            $true = array_values($true);
+            $true  = array_values($true);
             $false = array_values($false);
         }
 
@@ -274,6 +290,27 @@ trait CollectionTrait
     }
 
     /**
+     * mapRecursive
+     *
+     * @param callable $callback
+     * @param bool     $useKeys
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function mapRecursive(callable $callback, $useKeys = false)
+    {
+        return $this->map(static function ($value) use ($callback, $useKeys) {
+            if (is_array($value) || is_object($value)) {
+                return (new static($value))->map($callback, $useKeys);
+            }
+
+            return $callback($value);
+        }, $useKeys);
+    }
+
+    /**
      * sortColumn
      *
      * @param string $column
@@ -372,7 +409,7 @@ trait CollectionTrait
     /**
      * allToArray
      *
-     * @param   mixed $value
+     * @param mixed $value
      *
      * @return  array
      */

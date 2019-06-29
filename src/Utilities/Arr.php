@@ -1030,7 +1030,7 @@ class Arr
      *
      * @since   3.5.1
      */
-    public static function query($array, array $queries = [], bool $strict = false, bool $keepKey = false): array
+    public static function query($array, $queries = [], bool $strict = false, bool $keepKey = false): array
     {
         return ArrayHelper::query($array, $queries, $strict, $keepKey);
     }
