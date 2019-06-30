@@ -66,7 +66,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.8
      */
     public function query($queries = [], bool $strict = false, bool $keepKey = false)
     {
@@ -297,7 +297,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.8
      */
     public function mapRecursive(callable $callback, $useKeys = false)
     {

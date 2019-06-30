@@ -117,7 +117,7 @@ namespace {
          *
          * @return  bool
          *
-         * @since  __DEPLOY_VERSION__
+         * @since  3.5.8
          */
         function is_json($string): bool
         {

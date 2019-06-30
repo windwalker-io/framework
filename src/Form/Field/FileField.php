@@ -49,7 +49,7 @@ class FileField extends TextField
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.8
      */
     public function buildInput($attrs)
     {
