@@ -156,7 +156,7 @@ class PdoDriver extends AbstractDatabaseDriver
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.9
      */
     public function isConnected(): bool
     {
@@ -397,7 +397,7 @@ class PdoDriver extends AbstractDatabaseDriver
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.9
      */
     public function ping(): bool
     {

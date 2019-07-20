@@ -268,7 +268,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.9
      */
     abstract public function isConnected(): bool;
 
@@ -715,7 +715,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.9
      */
     public function ping(): bool
     {
