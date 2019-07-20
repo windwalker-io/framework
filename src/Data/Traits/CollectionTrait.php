@@ -43,7 +43,7 @@ trait CollectionTrait
     }
 
     /**
-     * filter
+     * find
      *
      * @param callable $callback
      * @param bool     $keepKey
@@ -77,12 +77,13 @@ trait CollectionTrait
      * filter
      *
      * @param callable $callback
+     * @param int      $flag
      *
      * @return  static
      */
-    public function filter(callable $callback = null)
+    public function filter(callable $callback = null, int $flag = 0)
     {
-        return $this->find($callback);
+        return $this->bindNewInstance(array_filter($this->convertArray($this), ...func_get_args()));
     }
 
     /**
