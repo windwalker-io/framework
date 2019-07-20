@@ -152,6 +152,18 @@ class PdoDriver extends AbstractDatabaseDriver
     }
 
     /**
+     * isConnected
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function isConnected(): bool
+    {
+        return $this->connection && $this->connection instanceof \PDO;
+    }
+
+    /**
      * Retrieve a PDO database connection attribute
      * http://www.php.net/manual/en/pdo.getattribute.php
      *

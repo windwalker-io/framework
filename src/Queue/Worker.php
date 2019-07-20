@@ -28,15 +28,15 @@ class Worker implements DispatcherAwareInterface
 {
     use DispatcherAwareTrait;
 
-    const STATE_INACTIVE = 'inactive';
+    public const STATE_INACTIVE = 'inactive';
 
-    const STATE_ACTIVE = 'active';
+    public const STATE_ACTIVE = 'active';
 
-    const STATE_EXITING = 'exiting';
+    public const STATE_EXITING = 'exiting';
 
-    const STATE_PAUSE = 'pause';
+    public const STATE_PAUSE = 'pause';
 
-    const STATE_STOP = 'stop';
+    public const STATE_STOP = 'stop';
 
     /**
      * Property queue.

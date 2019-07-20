@@ -264,6 +264,15 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     abstract public function disconnect();
 
     /**
+     * isConnected
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    abstract public function isConnected(): bool;
+
+    /**
      * Execute the SQL statement.
      *
      * @param bool $prepare
