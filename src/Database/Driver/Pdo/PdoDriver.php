@@ -354,9 +354,9 @@ class PdoDriver extends AbstractDatabaseDriver
             }
 
             return parent::getQuery($new);
-        } else {
-            return $this->query;
         }
+
+        return $this->query;
     }
 
     /**
@@ -378,5 +378,21 @@ class PdoDriver extends AbstractDatabaseDriver
         /** @var $builder \Windwalker\Query\QueryGrammarInterface */
 
         return $this->setQuery($builder::listDatabases())->loadColumn();
+    }
+
+    /**
+     * ping
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function ping(): bool
+    {
+        try {
+            return (int) $this->prepare('SELECT 1')->loadResult() === 1;
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 }

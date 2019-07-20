@@ -702,6 +702,22 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     }
 
     /**
+     * ping
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function ping(): bool
+    {
+        try {
+            return (int) $this->prepare('SELECT 1')->loadResult() === 1;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
+    }
+
+    /**
      * getIndependentQuery
      *
      * @return  Query
