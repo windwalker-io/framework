@@ -148,8 +148,6 @@ class Console extends AbstractConsole
 
             $exitCode = $e->getCode();
             $error = true;
-
-            $this->handleException($e);
         } catch (\Throwable $t) {
             $command->renderException(
                 $e = new \ErrorException(
@@ -164,8 +162,6 @@ class Console extends AbstractConsole
 
             $exitCode = $t->getCode();
             $error = true;
-
-            $this->handleException($t);
         }
 
         if ($exitCode === true) {
@@ -224,7 +220,7 @@ class Console extends AbstractConsole
      */
     public function handleException(\Throwable $e): void
     {
-        //
+        echo $e;
     }
 
     /**

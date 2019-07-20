@@ -92,6 +92,23 @@ abstract class AbstractConsole
     }
 
     /**
+     * Write a string to standard error output.
+     *
+     * @param string  $text The text to display.
+     * @param boolean $nl   True (default) to append a new line at the end of the output string.
+     *
+     * @return  static  Instance of $this to allow chaining.
+     *
+     * @since   3.5.9
+     */
+    public function err($text = '', $nl = true)
+    {
+        $this->io->err($text, $nl);
+
+        return $this;
+    }
+
+    /**
      * Get a value from standard input.
      *
      * @return  string  The input string from standard input.

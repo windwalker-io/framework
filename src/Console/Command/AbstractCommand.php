@@ -919,44 +919,7 @@ abstract class AbstractCommand implements \ArrayAccess
      */
     public function renderException(\Exception $exception)
     {
-        $verbose = $this->console ? $this->console->get('verbose', 0) : 0;
-
-        if (!$verbose) {
-            $this->out()->err($exception->getMessage());
-
-            return;
-        }
-
-        $handler = new CallbackHandler(function (\Throwable $e, Inspector $inspector) {
-            /** @var $exception \Exception */
-            $class = $inspector->getExceptionName();
-
-            $trace = [];
-
-            /** @var Frame $frame */
-            foreach ($inspector->getFrames() as $i => $frame) {
-                $trace[] = BacktraceHelper::traceAsString($i + 1, $frame->getRawFrame(), false);
-            }
-
-            $trace = implode("\n", $trace);
-
-            // @codingStandardsIgnoreStart
-            $output = <<<EOF
-<error>Exception '{$class}' with message:</error> <fg=cyan;options=bold>{$inspector->getExceptionMessage()}</fg=cyan;options=bold>
-<info>in {$inspector->getException()->getFile()}:{$inspector->getException()->getLine()}</info>
-
-<error>Stack trace:</error>
-{$trace}
-EOF;
-            // @codingStandardsIgnoreEnd
-
-            $this->out('');
-            $this->err($output);
-        });
-
-        $handler->setException($exception);
-        $handler->setInspector(new Inspector($exception));
-        $handler->handle();
+        $this->console->handleException($exception);
     }
 
     /**
@@ -967,10 +930,11 @@ EOF;
      * @return  void
      *
      * @throws  \Exception
+     * @throws  \Throwable
      */
     public function error($exception)
     {
-        if (!($exception instanceof $exception)) {
+        if (!($exception instanceof \Throwable)) {
             $exception = new \Exception($exception);
         }
 

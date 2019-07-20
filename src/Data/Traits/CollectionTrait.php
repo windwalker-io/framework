@@ -324,10 +324,25 @@ trait CollectionTrait
         $array = $this->dump();
 
         usort($array, static function ($a, $b) use ($column) {
-            return strcmp(
-                Arr::get($a, $column),
-                Arr::get($b, $column)
-            );
+            $aValue = Arr::get($a, $column);
+            $bValue = Arr::get($b, $column);
+
+            if (is_stringable($aValue) && is_stringable($bValue)) {
+                return strcmp(
+                    (string) $aValue,
+                    (string) $bValue
+                );
+            }
+
+            if ($aValue > $bValue) {
+                return 1;
+            }
+
+            if ($bValue > $aValue) {
+                return -1;
+            }
+
+            return 0;
         });
 
         return $this->bindNewInstance($array);
