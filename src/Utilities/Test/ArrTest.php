@@ -1320,8 +1320,6 @@ Array
 
     [3] => ArrayObject Object
         (
-            [flower] => sakura
-            [fruit] => apple
         )
 
     [4] => Array

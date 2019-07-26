@@ -33,7 +33,8 @@
         "doctrine/annotations": "~1.0",
         "php-di/phpdoc-reader": "~2.0",
         "laktak/hjson": "^2.1",
-        "yosymfony/toml": "^1.0"
+        "yosymfony/toml": "^1.0",
+        "symfony/var-dumper": "^4.3"
     },
     "suggest": {
         "symfony/yaml": "Install ~3.0 if you require YAML support.",

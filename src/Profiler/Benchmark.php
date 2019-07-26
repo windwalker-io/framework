@@ -263,7 +263,7 @@ class Benchmark
 
         $separator = $html ? "<br />\n" : "\n";
 
-        return implode($output, $separator);
+        return implode($separator, $output);
     }
 
     /**

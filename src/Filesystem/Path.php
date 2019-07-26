@@ -121,13 +121,13 @@ class Path
 
         for ($i = 0; $i < 3; $i++) {
             // Read
-            $parsedMode .= ($mode{$i} & 04) ? "r" : "-";
+            $parsedMode .= ($mode[$i] & 04) ? "r" : "-";
 
             // Write
-            $parsedMode .= ($mode{$i} & 02) ? "w" : "-";
+            $parsedMode .= ($mode[$i] & 02) ? "w" : "-";
 
             // Execute
-            $parsedMode .= ($mode{$i} & 01) ? "x" : "-";
+            $parsedMode .= ($mode[$i] & 01) ? "x" : "-";
         }
 
         return $parsedMode;
