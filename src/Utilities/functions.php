@@ -46,6 +46,15 @@ namespace {
          */
         function show(...$args)
         {
+            function out(string $text)
+            {
+                if (PHP_SAPI === 'cli' || defined('STDOUT')) {
+                    fwrite(STDOUT, $text);
+                } else {
+                    echo $text;
+                }
+            }
+
             if (VarDumper::isSupported()) {
                 $dumper = [VarDumper::class, 'dump'];
             } else {
@@ -64,10 +73,10 @@ namespace {
                 }
             }
 
-            fwrite(STDOUT, "\n\n");
+            out("\n\n");
 
             if (PHP_SAPI !== 'cli') {
-                fwrite(STDOUT, '<pre>');
+                out('<pre>');
             }
 
             // Dump Multiple values
@@ -81,14 +90,14 @@ namespace {
                     $i++;
                 }
 
-                fwrite(STDOUT, implode("\n\n", $prints));
+                out(implode("\n\n", $prints));
             } else {
                 // Dump one value.
-                fwrite(STDOUT, $dumper($args[0], $level));
+                out($dumper($args[0], $level));
             }
 
             if (PHP_SAPI !== 'cli') {
-                fwrite(STDOUT, '</pre>');
+                out('</pre>');
             }
         }
     }
