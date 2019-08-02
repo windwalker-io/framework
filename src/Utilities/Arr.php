@@ -387,7 +387,7 @@ class Arr
         // Prevent resource-greedy loop.
         // @see https://github.com/dseguy/clearPHP/blob/master/rules/no-array_merge-in-loop.md
         if (count($temp)) {
-            return call_user_func_array('array_merge', $temp);
+            return array_merge(...$temp);
         }
 
         return [];

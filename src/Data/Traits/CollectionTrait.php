@@ -375,6 +375,36 @@ trait CollectionTrait
     }
 
     /**
+     * flatten
+     *
+     * @param string $delimiter
+     * @param int    $depth
+     * @param string $prefix
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function flatten(string $delimiter = '.', int $depth = 0, ?string $prefix = null)
+    {
+        return $this->bindNewInstance(Arr::flatten($this->dump(), $delimiter, $depth, $prefix));
+    }
+
+    /**
+     * collapse
+     *
+     * @param int $depth
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function collapse(int $depth = 0)
+    {
+        return $this->flatten('.', $depth)->values();
+    }
+
+    /**
      * To another class.
      *
      * @param string $class
