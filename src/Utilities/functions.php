@@ -64,10 +64,10 @@ namespace {
                 }
             }
 
-            echo "\n\n";
+            fwrite(STDOUT, "\n\n");
 
             if (PHP_SAPI !== 'cli') {
-                echo '<pre>';
+                fwrite(STDOUT, '<pre>');
             }
 
             // Dump Multiple values
@@ -81,14 +81,14 @@ namespace {
                     $i++;
                 }
 
-                echo implode("\n\n", $prints);
+                fwrite(STDOUT, implode("\n\n", $prints));
             } else {
                 // Dump one value.
-                echo $dumper($args[0], $level);
+                fwrite(STDOUT, $dumper($args[0], $level));
             }
 
             if (PHP_SAPI !== 'cli') {
-                echo '</pre>';
+                fwrite(STDOUT, '</pre>');
             }
         }
     }
