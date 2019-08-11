@@ -46,10 +46,10 @@ abstract class AbstractWriter
     /**
      * Inserts a row into a table based on an object's properties.
      *
-     * @param   string        $table          The name of the database table to insert into.
-     * @param   array|object &$data           A reference to an object whose public properties match the table fields.
-     * @param   string        $key            The name of the primary key. If provided the object property is updated.
-     * @param   bool          $incrementField Has increment field or not.
+     * @param string        $table          The name of the database table to insert into.
+     * @param array|object &$data           A reference to an object whose public properties match the table fields.
+     * @param string        $key            The name of the primary key. If provided the object property is updated.
+     * @param bool          $incrementField Has increment field or not.
      *
      * @return  static
      *
@@ -59,7 +59,7 @@ abstract class AbstractWriter
     {
         $fields = [];
         $values = [];
-        $item = [];
+        $item   = [];
 
         if (!is_array($data) && !is_object($data)) {
             throw new \InvalidArgumentException('Please give me array or object to insert.');
@@ -124,14 +124,14 @@ abstract class AbstractWriter
     /**
      * Updates a row in a table based on an object's properties.
      *
-     * @param   string       $table       The name of the database table to update.
-     * @param   array|object $data        A reference to an object whose public properties match the table fields.
-     * @param   array        $key         The name of the primary key.
-     * @param   boolean      $updateNulls True to update null fields or false to ignore them.
-     *
-     * @throws \InvalidArgumentException
+     * @param string       $table       The name of the database table to update.
+     * @param array|object $data        A reference to an object whose public properties match the table fields.
+     * @param array|string $key         The name of the primary key.
+     * @param boolean      $updateNulls True to update null fields or false to ignore them.
      *
      * @return  boolean  True on success.
+     *
+     * @throws \InvalidArgumentException
      *
      * @since   2.0
      */
@@ -202,11 +202,11 @@ abstract class AbstractWriter
     /**
      * save
      *
-     * @param   string   $table       The name of the database table to update.
-     * @param   array   &$data        A reference to an object whose public properties match the table fields.
-     * @param   string   $key         The name of the primary key.
-     * @param   boolean  $updateNulls True to update null fields or false to ignore them.
-     * @param   bool     $incrementField
+     * @param string   $table       The name of the database table to update.
+     * @param array   &$data        A reference to an object whose public properties match the table fields.
+     * @param string   $key         The name of the primary key.
+     * @param boolean  $updateNulls True to update null fields or false to ignore them.
+     * @param bool     $incrementField
      *
      * @return  bool|static
      *
@@ -229,10 +229,10 @@ abstract class AbstractWriter
     /**
      * insertMultiple
      *
-     * @param   string  $table           The name of the database table to update.
-     * @param   array  &$dataSet         A reference to an object whose public properties match the table fields.
-     * @param   array   $key             The name of the primary key.
-     * @param bool      $incrementField  Has increment field or not.
+     * @param string  $table          The name of the database table to update.
+     * @param array  &$dataSet        A reference to an object whose public properties match the table fields.
+     * @param array   $key            The name of the primary key.
+     * @param bool    $incrementField Has increment field or not.
      *
      * @return  mixed
      */
@@ -252,13 +252,13 @@ abstract class AbstractWriter
     /**
      * updateMultiple
      *
-     * @param   string  $table       The name of the database table to update.
-     * @param   array   $dataSet     A reference to an object whose public properties match the table fields.
-     * @param   array   $key         The name of the primary key.
-     * @param   boolean $updateNulls True to update null fields or false to ignore them.
+     * @param string       $table       The name of the database table to update.
+     * @param array        $dataSet     A reference to an object whose public properties match the table fields.
+     * @param array|string $key         The name of the primary key.
+     * @param boolean      $updateNulls True to update null fields or false to ignore them.
      *
-     * @throws \InvalidArgumentException
      * @return  mixed
+     * @throws \InvalidArgumentException
      */
     public function updateMultiple($table, $dataSet, $key, $updateNulls = false)
     {
@@ -276,11 +276,11 @@ abstract class AbstractWriter
     /**
      * saveMultiple
      *
-     * @param   string  $table       The name of the database table to update.
-     * @param   array   $dataSet     A reference to an object whose public properties match the table fields.
-     * @param   array   $key         The name of the primary key.
-     * @param   boolean $updateNulls True to update null fields or false to ignore them.
-     * @param bool      $incrementField
+     * @param string  $table       The name of the database table to update.
+     * @param array   $dataSet     A reference to an object whose public properties match the table fields.
+     * @param array   $key         The name of the primary key.
+     * @param boolean $updateNulls True to update null fields or false to ignore them.
+     * @param bool    $incrementField
      *
      * @return  mixed
      */
@@ -394,7 +394,7 @@ abstract class AbstractWriter
     /**
      * execute
      *
-     * @param   string|Query $query
+     * @param string|Query $query
      *
      * @return  static
      */
@@ -420,7 +420,7 @@ abstract class AbstractWriter
     /**
      * Method to set property db
      *
-     * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
+     * @param \Windwalker\Database\Driver\AbstractDatabaseDriver $db
      *
      * @return  static  Return self to support chaining.
      */
@@ -444,7 +444,7 @@ abstract class AbstractWriter
     /**
      * Method to set property cursor
      *
-     * @param   resource $cursor
+     * @param resource $cursor
      *
      * @return  static  Return self to support chaining.
      */
