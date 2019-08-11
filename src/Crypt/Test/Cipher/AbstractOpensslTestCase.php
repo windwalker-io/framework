@@ -32,6 +32,15 @@ abstract class AbstractOpensslTestCase extends \PHPUnit\Framework\TestCase
      */
     protected $instance;
 
+    public static function setUpBeforeClass(): void
+    {
+        if (PHP_VERSION_ID >= 70400) {
+            self::markTestSkipped();
+        }
+
+        parent::setUpBeforeClass();
+    }
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.

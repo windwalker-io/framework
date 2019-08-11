@@ -240,7 +240,7 @@ abstract class HeaderHelper
         }
 
         if ($toString) {
-            $headerArray = implode($headerArray, "\r\n");
+            $headerArray = implode("\r\n", $headerArray);
         }
 
         return $headerArray;
