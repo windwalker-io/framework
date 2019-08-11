@@ -383,7 +383,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.10
      */
     public function flatten(string $delimiter = '.', int $depth = 0, ?string $prefix = null)
     {
@@ -397,7 +397,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.10
      */
     public function collapse(int $depth = 0)
     {
