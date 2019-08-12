@@ -24,7 +24,7 @@ class ArrConverter
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.11
      */
     public static function flipMatrix(array $array): array
     {
