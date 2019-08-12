@@ -37,18 +37,18 @@ class File
         int $offset = 0,
         ?int $maxlen = null
     ): string {
-        if ($maxlen) {
-            $content = @file_get_contents($filename, $useIncludePath, $context, $offset, $maxlen);
-        } else {
-            $content = @file_get_contents($filename, $useIncludePath, $context, $offset);
-        }
-
-        if ($content === false) {
-            throw new FilesystemException(sprintf(
-                'file_get_contents(%s): failed to open stream: No such file or directory. File: %s',
-                $filename,
-                __FILE__
-            ));
+        try {
+            if ($maxlen) {
+                $content = file_get_contents($filename, $useIncludePath, $context, $offset, $maxlen);
+            } else {
+                $content = file_get_contents($filename, $useIncludePath, $context, $offset);
+            }
+        } catch (\Throwable $e) {
+            throw new FilesystemException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
 
         return $content;
@@ -208,9 +208,14 @@ class File
 
             // In case of restricted permissions we zap it one way or the other
             // as long as the owner is either the webserver or the ftp
-            // TODO: Remove exception and use PHP7 throwable
-            if (@!unlink($file)) {
-                throw new FilesystemException(__METHOD__ . ': Failed deleting ' . basename($file));
+            try {
+                unlink($file);
+            } catch (\Throwable $e) {
+                throw new FilesystemException(
+                    $e->getMessage(),
+                    $e->getCode(),
+                    $e
+                );
             }
         }
 
@@ -252,8 +257,14 @@ class File
             Folder::create($dir);
         }
 
-        if (!@ rename($src, $dest)) {
-            throw new FilesystemException(__METHOD__ . ': Rename failed.');
+        try {
+            rename($src, $dest);
+        } catch (\Throwable $e) {
+            throw new FilesystemException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
 
         return true;
@@ -311,9 +322,9 @@ class File
             // Short circuit to prevent file permission errors
             if (Path::setPermissions($dest)) {
                 return true;
-            } else {
-                throw new FilesystemException(__METHOD__ . ': Failed to change file permissions.');
             }
+
+            throw new FilesystemException(__METHOD__ . ': Failed to change file permissions.');
         }
 
         throw new FilesystemException(__METHOD__ . ': Failed to move file.');
@@ -346,12 +357,5 @@ class File
         }
 
         return false;
-    }
-
-    public static function fixCase($path, $filename = null)
-    {
-        if ($filename !== null) {
-            $path .= DIRECTORY_SEPARATOR . $filename;
-        }
     }
 }

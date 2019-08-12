@@ -149,15 +149,19 @@ abstract class Folder
         // First set umask
         $origmask = @umask(0);
 
-        // Create the path
-        if (!@mkdir($path, $mode) && !is_dir($path)) {
+        try {
+            if (!mkdir($path, $mode) && !is_dir($path)) {
+                throw new FilesystemException(sprintf('Directory "%s" was not created', $path));
+            }
+        } catch (\Throwable $e) {
+            throw new FilesystemException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        } finally {
             @umask($origmask);
-
-            throw new FilesystemException(__METHOD__ . ': Could not create directory.  Path: ' . $path);
         }
-
-        // Reset umask
-        @umask($origmask);
 
         return true;
     }
@@ -214,10 +218,11 @@ abstract class Folder
         // as long as the owner is either the webserver or the ftp.
         if (@rmdir($path)) {
             return true;
-        } else {
-            $error = error_get_last();
-            throw new FilesystemException($error['message'], $error['type']);
         }
+
+        $error = error_get_last();
+
+        throw new FilesystemException($error['message'], $error['type']);
     }
 
     /**
@@ -256,8 +261,14 @@ abstract class Folder
             return true;
         }
 
-        if (!@rename($src, $dest)) {
-            throw new FilesystemException('Rename failed');
+        try {
+            rename($src, $dest);
+        } catch (\Throwable $e) {
+            throw new FilesystemException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
 
         return true;

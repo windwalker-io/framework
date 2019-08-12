@@ -46,13 +46,10 @@ namespace {
          */
         function show(...$args)
         {
-            function out(string $text)
-            {
-                if (PHP_SAPI === 'cli' || defined('STDOUT')) {
-                    fwrite(STDOUT, $text);
-                } else {
-                    echo $text;
-                }
+            if (PHP_SAPI === 'cli' || defined('STDOUT')) {
+                $output = STDOUT;
+            } else {
+                $output = fopen('php://output', 'wb');
             }
 
             if (VarDumper::isSupported()) {
@@ -73,10 +70,10 @@ namespace {
                 }
             }
 
-            out("\n\n");
+            fwrite($output, "\n\n");
 
             if (PHP_SAPI !== 'cli') {
-                out('<pre>');
+                fwrite($output, '<pre>');
             }
 
             // Dump Multiple values
@@ -90,14 +87,14 @@ namespace {
                     $i++;
                 }
 
-                out(implode("\n\n", $prints));
+                fwrite($output, implode("\n\n", $prints));
             } else {
                 // Dump one value.
-                out($dumper($args[0], $level));
+                fwrite($output, $dumper($args[0], $level));
             }
 
             if (PHP_SAPI !== 'cli') {
-                out('</pre>');
+                fwrite($output, '</pre>');
             }
         }
     }

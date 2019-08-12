@@ -66,6 +66,8 @@ class ArrConverter
      * @param   array $array An array with two level.
      *
      * @return  array An pivoted array.
+     *
+     * @deprecated  Use transpose()
      */
     public static function pivotBySort(array $array): array
     {
@@ -132,21 +134,23 @@ class ArrConverter
     /**
      * Pivot two-dimensional array to one-dimensional.
      *
-     * @param   array &$array A two-dimension array.
+     * @param   array|object &$array A two-dimension array.
      *
      * @return  array  Pivoted array.
      */
-    public static function pivotFromTwoDimension(&$array)
+    public static function pivotFromTwoDimension($array)
     {
+        $new = [];
+
         foreach ((array) $array as $val) {
             if (is_array($val) || is_object($val)) {
                 foreach ((array) $val as $key => $val2) {
-                    $array = Arr::set($array, $key, $val2);
+                    $new = Arr::set($new, $key, $val2);
                 }
             }
         }
 
-        return $array;
+        return $new;
     }
 
     /**
@@ -157,8 +161,10 @@ class ArrConverter
      *
      * @return  array  Pivoted array.
      */
-    public static function pivotToTwoDimension(&$array, array $keys = [])
+    public static function pivotToTwoDimension($array, array $keys = [])
     {
+        $new = [];
+
         foreach ($keys as $key) {
             if (is_object($array)) {
                 $array2 = clone $array;
@@ -166,10 +172,10 @@ class ArrConverter
                 $array2 = $array;
             }
 
-            $array = Arr::set($array, $key, $array2);
+            $new = Arr::set($new, $key, $array2);
         }
 
-        return $array;
+        return $new;
     }
 
     /**

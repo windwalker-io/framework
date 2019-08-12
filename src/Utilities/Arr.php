@@ -645,15 +645,7 @@ class Arr
      */
     public static function pivot(array $array)
     {
-        $result = [];
-
-        foreach (array_keys($array) as $i => $key) {
-            foreach ((array) $array[$key] as $key2 => $value) {
-                $result[$key2][$key] = $value;
-            }
-        }
-
-        return $result;
+        return ArrConverter::transpose($array);
     }
 
     /**
