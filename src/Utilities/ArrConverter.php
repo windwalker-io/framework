@@ -18,6 +18,28 @@ use Windwalker\String\Mbstring;
 class ArrConverter
 {
     /**
+     * Flip array key and value and make 2-dimensional array to 1-dimensional.
+     *
+     * @param array $array
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function flipMatrix(array $array): array
+    {
+        $new = [];
+
+        foreach ($array as $k => $v) {
+            foreach ($v as $k2 => $v2) {
+                $new[$v2] = $k;
+            }
+        }
+
+        return $new;
+    }
+
+    /**
      * Transpose a two-dimensional matrix array.
      *
      * @param  array $array An array with two level.
