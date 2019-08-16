@@ -315,17 +315,17 @@ class QueryExpression
      */
     public function caseCondition(array $cases, $else = null)
     {
-        $expression = "CASE";
+        $expression = 'CASE';
 
         foreach ($cases as $condition => $case) {
-            $expression .= $condition . ' THEN' . $case . "\n";
+            $expression .= ' WHEN ' . $condition . ' THEN ' . $case . "\n";
         }
 
         if ($else) {
-            $expression .= 'ELSE ' . $else . "\n";
+            $expression .= ' ELSE ' . $else . "\n";
         }
 
-        $expression .= 'END';
+        $expression .= ' END';
 
         return $expression;
     }
