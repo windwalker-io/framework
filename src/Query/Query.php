@@ -1060,12 +1060,16 @@ class Query implements QueryInterface, PreparableInterface
             $this->join = [];
         }
 
-        if (is_string($table) || $table instanceof Query) {
-            $table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
+        if (is_string($table) || $table instanceof static) {
+            $conditions = is_array($conditions) ? $conditions : [$conditions];
+            show($conditions);
+            $conditions = array_map([$this, 'applyFormat'], $conditions);
+
+            $table .= ($conditions ? ' ON ' . implode(' AND ', $conditions) : '');
         }
 
         $this->join[] = $this->element(strtoupper($type) . ' JOIN', (array) $table);
-
+show($this->join);
         return $this;
     }
 
@@ -1612,7 +1616,7 @@ class Query implements QueryInterface, PreparableInterface
 
             $query->where = new QueryElement('()', [], ' OR ');
 
-            call_user_func($conditions, $query);
+            $conditions($query);
 
             $this->where((string) $query->where);
         }
@@ -1791,6 +1795,24 @@ class Query implements QueryInterface, PreparableInterface
         $this->alias = (string) $alias;
 
         return $this;
+    }
+
+    /**
+     * applyFormat
+     *
+     * @param string|FormatWrapper $format
+     *
+     * @return  mixed|string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function applyFormat($format)
+    {
+        if (!$format instanceof FormatWrapper) {
+            return $format;
+        }
+
+        return $this->format(...$format->all());
     }
 
     /**
@@ -2248,6 +2270,10 @@ class Query implements QueryInterface, PreparableInterface
 
         if ($value instanceof ExpressionWrapper) {
             return $value->getContent();
+        }
+
+        if ($value instanceof FormatWrapper) {
+            return $this->quote($this->applyFormat($value));
         }
 
         if (is_float($value) || is_double($value)) {
