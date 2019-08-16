@@ -8,6 +8,7 @@
 
 namespace Windwalker\Router\Test;
 
+use PHPUnit\Framework\TestCase;
 use Windwalker\Router\Matcher\TrieMatcher;
 use Windwalker\Router\Route;
 use Windwalker\Router\Router;
@@ -17,7 +18,7 @@ use Windwalker\Router\Router;
  *
  * @since 2.0
  */
-class RouterTest extends \PHPUnit\Framework\TestCase
+class RouterTest extends TestCase
 {
     /**
      * Test instance.
@@ -60,7 +61,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $routes = $this->instance->getRoutes();
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes[0]);
+        $this->assertInstanceOf(Route::class, $routes[0]);
         $this->assertEquals('/flower/(id)/(alias)', $routes[0]->getPattern());
     }
 
@@ -82,8 +83,8 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $routes = $this->instance->getRoutes();
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes[0]);
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes[1]);
+        $this->assertInstanceOf(Route::class, $routes[0]);
+        $this->assertInstanceOf(Route::class, $routes[1]);
     }
 
     /**
@@ -99,11 +100,11 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $routes = $this->instance->getRoutes();
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes[0]);
+        $this->assertInstanceOf(Route::class, $routes[0]);
 
         $result = $this->instance->match('flower/5/foo');
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $result);
+        $this->assertInstanceOf(Route::class, $result);
 
         $result = $result->getVariables();
 
@@ -114,13 +115,13 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $routes = $this->instance->getRoutes();
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes['sakura']);
+        $this->assertInstanceOf(Route::class, $routes['sakura']);
 
         $this->instance->addRoute('foo', 'foo/bar/baz', ['_ctrl' => 'yoo']);
 
         $routes = $this->instance->getRoutes();
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes['foo']);
+        $this->assertInstanceOf(Route::class, $routes['foo']);
     }
 
     /**
@@ -141,8 +142,8 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $routes = $this->instance->getRoutes();
 
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes[0]);
-        $this->assertInstanceOf('Windwalker\Router\Route', $routes['sakura']);
+        $this->assertInstanceOf(Route::class, $routes[0]);
+        $this->assertInstanceOf(Route::class, $routes['sakura']);
     }
 
     /**
