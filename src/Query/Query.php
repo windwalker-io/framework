@@ -2285,6 +2285,22 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
+     * pipe
+     *
+     * @param callable $handler
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function pipe(callable $handler): self
+    {
+        $handler($this);
+
+        return $this;
+    }
+
+    /**
      * Unsetting PDO connection before going to sleep (this is needed if the query gets serialized)
      */
     public function __sleep()
