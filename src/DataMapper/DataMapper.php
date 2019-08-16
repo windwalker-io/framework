@@ -733,6 +733,22 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     }
 
     /**
+     * pipe
+     *
+     * @param callable $handler
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function pipe(callable $handler): self
+    {
+        $handler($this->getQuery());
+
+        return $this;
+    }
+
+    /**
      * __call
      *
      * @param   string $name

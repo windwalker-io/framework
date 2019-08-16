@@ -433,7 +433,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function get($clause)
     {
-        return isset($this->$clause) ? $this->$clause : null;
+        return $this->$clause ?? null;
     }
 
     /**
@@ -626,7 +626,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function columns($columns)
     {
-        if (is_null($this->columns)) {
+        if ($this->columns === null) {
             $this->columns = $this->element('()', $columns);
         } else {
             $this->columns->append($columns);

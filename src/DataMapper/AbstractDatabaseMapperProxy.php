@@ -68,6 +68,7 @@ use Windwalker\String\StringInflector;
  * @method  static AbstractDatabaseDriver  getDb()
  * @method  static DataMapper  setDataClass(string $class)
  * @method  static DataMapper  setDatasetClass(string $class)
+ * @method  static DataMapper  pipe(callable $handler)
  *
  * phpcs:enable
  *
