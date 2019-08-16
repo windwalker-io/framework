@@ -744,6 +744,29 @@ class Arr
     }
 
     /**
+     * mapWithKeys
+     *
+     * @param iterable $array
+     * @param callable $handler
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function mapWithKeys(iterable $array, callable $handler): array
+    {
+        $new = [];
+
+        foreach ($array as $k => $v) {
+            $r = $handler($v, $k);
+
+            $new[] = $r;
+        }
+
+        return array_merge(...$new);
+    }
+
+    /**
      * Multidimensional array safe unique test
      *
      * @param   array $array The array to make unique.

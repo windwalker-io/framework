@@ -375,6 +375,20 @@ trait CollectionTrait
     }
 
     /**
+     * mapWithKeys
+     *
+     * @param callable $handler
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function mapWithKeys(callable $handler)
+    {
+        return $this->bindNewInstance(Arr::mapWithKeys($this->dump(), $handler));
+    }
+
+    /**
      * flatten
      *
      * @param string $delimiter
