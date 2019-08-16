@@ -1062,14 +1062,14 @@ class Query implements QueryInterface, PreparableInterface
 
         if (is_string($table) || $table instanceof static) {
             $conditions = is_array($conditions) ? $conditions : [$conditions];
-            show($conditions);
+
             $conditions = array_map([$this, 'applyFormat'], $conditions);
 
             $table .= ($conditions ? ' ON ' . implode(' AND ', $conditions) : '');
         }
 
         $this->join[] = $this->element(strtoupper($type) . ' JOIN', (array) $table);
-show($this->join);
+
         return $this;
     }
 
@@ -1533,6 +1533,10 @@ show($this->join);
 
         if (!is_array($conditions) && count($args) > 1) {
             $conditions = call_user_func_array([$this, 'format'], $args);
+        } elseif (count($args) === 1) {
+            $conditions = is_array($conditions) ? $conditions : [$conditions];
+
+            $conditions = array_map([$this, 'applyFormat'], $conditions);
         }
 
         $this->where->append($conditions);

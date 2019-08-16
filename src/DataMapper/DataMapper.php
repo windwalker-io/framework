@@ -189,7 +189,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
             // Add dot to orders
             $orders = array_map(
-                function ($value) use ($alias) {
+                static function ($value) use ($alias) {
                     return strpos($value, '.') !== false ? $value : $alias . '.' . $value;
                 },
                 $orders
