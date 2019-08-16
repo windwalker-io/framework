@@ -1348,10 +1348,10 @@ class Query implements QueryInterface, PreparableInterface
                 continue;
             }
 
-            if (strlen($q) == 1) {
+            if (strlen($q) === 1) {
                 $parts[] = $q . $part . $q;
             } else {
-                $parts[] = $q{0} . $part . $q{1};
+                $parts[] = $q[0] . $part . $q[1];
             }
         }
 
