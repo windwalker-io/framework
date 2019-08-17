@@ -721,6 +721,8 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if ($this->connection instanceof AbstractDatabaseDriver) {
+            $this->connection->connect();
+
             $result = substr($this->connection->getConnection()->quote((string) $text), 1, -1);
         } elseif ($this->connection instanceof \PDO || method_exists($this->connection, 'quote')) {
             $result = substr($this->connection->quote((string) $text), 1, -1);
