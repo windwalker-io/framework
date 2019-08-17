@@ -16,7 +16,7 @@ interface DispatcherAwareInterface
     /**
      * getDispatcher
      *
-     * @return  DispatcherInterface
+     * @return  DispatcherInterface|Dispatcher
      */
     public function getDispatcher();
 
