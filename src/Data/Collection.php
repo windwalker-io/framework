@@ -562,7 +562,7 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function splice(int $offset, ?int $length = null, $replacement = null): self
     {
-        return new static(array_splice($this->storage, $offset, $length, $replacement));
+        return new static(array_splice($this->storage, ...func_get_args()));
     }
 
     /**
