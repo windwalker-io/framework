@@ -30,6 +30,7 @@ abstract class BasicCompiler
         $pattern = RouteHelper::sanitize($pattern);
 
         $regex = static::replaceOptionalSegments($pattern);
+        $regex = static::replaceOptionalWildcards($regex);
         $regex = static::replaceWildcards($regex);
 
         return chr(1) . '^' . static::replaceAllRegex($regex, $requirements) . '$' . chr(1);
@@ -53,7 +54,7 @@ abstract class BasicCompiler
         $list = explode(',', $matches[1]);
         $head = '';
 
-        if (substr($regex, 0, 2) === '(/') {
+        if (strpos($regex, '(/') === 0) {
             $name = array_shift($list);
             $head = "/(\{{$name}\})?";
         }
@@ -125,6 +126,28 @@ abstract class BasicCompiler
             $name = $match[1];
 
             $regex = str_replace("(*{$name})", "(?P<{$name}>.*)", $regex);
+        }
+
+        return $regex;
+    }
+
+    /**
+     * replaceOptionalWildcards
+     *
+     * @param string $regex
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected static function replaceOptionalWildcards($regex)
+    {
+        preg_match_all(chr(1) . '\(/\\*([a-z][a-zA-Z0-9]*)\)' . chr(1), $regex, $matches, PREG_SET_ORDER);
+
+        foreach ($matches as $match) {
+            $name = $match[1];
+
+            $regex = str_replace("(/*{$name})", "(/(?P<{$name}>.*))?", $regex);
         }
 
         return $regex;

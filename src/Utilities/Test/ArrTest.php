@@ -1298,6 +1298,10 @@ class ArrTest extends TestCase
             static::markTestSkipped('Skip since HHVM has different behavior of ArrayObject, but still works.');
         }
 
+        if (PHP_VERSION_ID >= 70400) {
+            static::markTestSkipped('7.4-beta has some different behavior in ArrayObject.');
+        }
+
         $data = [
             1,
             2,

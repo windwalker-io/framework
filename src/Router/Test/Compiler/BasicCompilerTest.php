@@ -103,6 +103,20 @@ class BasicCompilerTest extends \PHPUnit\Framework\TestCase
                 ['tags' => ['john', 'troilus'], 'alias' => 'cressida'],
                 __LINE__,
             ],
+            [
+                '/king(/*tags)',
+                '/king(/(?P<tags>.*))?',
+                '/king',
+                [],
+                __LINE__,
+            ],
+            [
+                '/king(/*tags)',
+                '/king(/(?P<tags>.*))?',
+                '/king/john/troilus/and/cressida',
+                ['tags' => ['john', 'troilus', 'and', 'cressida']],
+                __LINE__,
+            ],
         ];
     }
 
@@ -123,7 +137,11 @@ class BasicCompilerTest extends \PHPUnit\Framework\TestCase
     {
         $regex = BasicCompiler::compile($pattern, ['id' => '\d+']);
 
-        $this->assertEquals(chr(1) . '^' . $expected . '$' . chr(1), $regex, 'Fail at: ' . $line);
+        $this->assertEquals(
+            '/^' . $expected . '$/',
+            str_replace(chr(1), '/', $regex),
+            'Fail at: ' . $line
+        );
 
         preg_match($regex, $route, $matches);
 
