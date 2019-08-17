@@ -84,11 +84,28 @@ class NestedRecord extends Record
      * @return mixed An array of node objects including the start node.
      *
      * @since   2.0
+     *
+     * @deprecated Use getAncestors()
      */
     public function getPath($pk = null, $allFields = false)
     {
+        return $this->getAncestors($pk, $allFields);
+    }
+
+    /**
+     * Method to get an array of nodes from a given node to its root.
+     *
+     * @param   integer $pk        Primary key of the node for which to get the path.
+     * @param   boolean $allFields Get all fields.
+     *
+     * @return mixed An array of node objects including the start node.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getAncestors($pk = null, $allFields = false)
+    {
         $k = $this->getKeyName();
-        $pk = $pk === null ? $this->$k : $pk;
+        $pk = $pk ?? $this->$k;
 
         // Get the path from the node to the root.
         $query = $this->db->getQuery(true)
@@ -118,7 +135,7 @@ class NestedRecord extends Record
     public function getTree($pk = null, $allFields = false)
     {
         $k = $this->getKeyName();
-        $pk = (is_null($pk)) ? $this->$k : $pk;
+        $pk = $pk ?? $this->$k;
 
         // Get the node and children as a tree.
         $query = $this->db->getQuery(true)
@@ -148,7 +165,7 @@ class NestedRecord extends Record
     public function isLeaf($pk = null)
     {
         $key = $this->getKeyName();
-        $pk = (is_null($pk)) ? $this->$key : $pk;
+        $pk = $pk ?? $this->$key;
         $node = $this->getNode($pk);
 
         // Get the node by primary key.
@@ -158,7 +175,7 @@ class NestedRecord extends Record
         }
 
         // The node is a leaf node.
-        return (($node->rgt - $node->lft) == 1);
+        return $node->rgt - $node->lft === 1;
     }
 
     /**
@@ -254,7 +271,7 @@ class NestedRecord extends Record
         ];
 
         // Make sure the location is valid.
-        if (!in_array($position, $allow)) {
+        if (!in_array($position, $allow, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     '%s::setLocation(%d, *%s*)',
