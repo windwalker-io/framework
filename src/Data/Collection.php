@@ -546,7 +546,7 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function slice(int $offset, ?int $length = null, bool $preserveKeys = false): self
     {
-        return new static(array_slice($this->storage, $offset, $length, $preserveKeys));
+        return new static(array_slice($this->storage, ...func_get_args()));
     }
 
     /**
