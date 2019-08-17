@@ -262,6 +262,46 @@ class QueryHelper
     }
 
     /**
+     * replaceQueryParams
+     *
+     * @param AbstractDatabaseDriver $db
+     * @param string                 $query
+     * @param array                  $bounded
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function replaceQueryParams(AbstractDatabaseDriver $db, $query, array $bounded): string
+    {
+        if ($bounded === []) {
+            return $query;
+        }
+
+        return preg_replace_callback('/(:[a-zA-Z0-9_]+)/', function ($matched) use ($bounded, $db) {
+            $name = $matched[0];
+
+            $bound = $bounded[$name] ?? $bounded[ltrim($name, ':')] ?? null;
+
+            if (!$bound) {
+                return $name;
+            }
+
+            $bound = (array) $bound;
+
+            switch ($bound['dataType']) {
+                case \PDO::PARAM_STR:
+                case \PDO::PARAM_STR_CHAR:
+                case \PDO::PARAM_STR_NATL:
+                    return $db->quote($bound['value']);
+
+                default:
+                    return $bound['value'];
+            }
+        }, $query);
+    }
+
+    /**
      * getDb
      *
      * @return  AbstractDatabaseDriver

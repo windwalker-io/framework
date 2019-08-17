@@ -14,6 +14,12 @@ use Windwalker\Query\Query\PreparableInterface;
 /**
  * Class AbstractQuery
  *
+ * @method mixed loadOne($class = \stdClass::class)
+ * @method mixed loadAll($key = null, $class = \stdClass::class)
+ * @method mixed loadResult()
+ * @method mixed loadColumn()
+ * @method mixed execute()
+ *
  * @since 2.0
  */
 class Query implements QueryInterface, PreparableInterface
@@ -265,7 +271,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Class constructor.
      *
-     * @param   AbstractDatabaseDriver|\PDO $connection The PDO connection object to help us escape string.
+     * @param   AbstractDatabaseDriver|\PDO|mixed $connection The PDO connection object to help us escape string.
      *
      * @since   2.0
      */
@@ -714,10 +720,12 @@ class Query implements QueryInterface, PreparableInterface
             return $text;
         }
 
-        if (!method_exists($this->connection, 'quote')) {
-            $result = $this->escapeWithNoConnection($text);
-        } else {
+        if ($this->connection instanceof AbstractDatabaseDriver) {
+            $result = substr($this->connection->getConnection()->quote((string) $text), 1, -1);
+        } elseif ($this->connection instanceof \PDO || method_exists($this->connection, 'quote')) {
             $result = substr($this->connection->quote((string) $text), 1, -1);
+        } else {
+            $result = $this->escapeWithNoConnection($text);
         }
 
         if ($extra) {
@@ -818,7 +826,7 @@ class Query implements QueryInterface, PreparableInterface
             $tables = PHP_EOL . '(' . trim((string) $tables) . ') AS ' . $subQueryAlias;
         }
 
-        if (is_null($this->from)) {
+        if ($this->from === null) {
             $this->from = $this->element('FROM', $tables);
         } else {
             $this->from->append($tables);
@@ -2092,7 +2100,7 @@ class Query implements QueryInterface, PreparableInterface
     public function bind(
         $key = null,
         $value = null,
-        $dataType = \PDO::PARAM_STR,
+        $dataType = null,
         $length = null,
         $driverOptions = null
     ) {
@@ -2104,9 +2112,9 @@ class Query implements QueryInterface, PreparableInterface
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param string|integer $key The key that will be used in your SQL query to reference the value.
+     * @param string|integer|array $key The key that will be used in your SQL query to reference the value.
      *                                          Usually of the form ':key', but can also be an integer.
-     * @param mixed          &$value The value that will be bound. The value is passed by reference to
+     * @param mixed                &$value The value that will be bound. The value is passed by reference to
      *                                          support output parameters such as those possible with stored
      *                                          procedures.
      * @param integer $dataType Constant corresponding to a SQL datatype.
@@ -2120,7 +2128,7 @@ class Query implements QueryInterface, PreparableInterface
     public function bindRef(
         $key = null,
         &$value = null,
-        $dataType = \PDO::PARAM_STR,
+        $dataType = null,
         $length = 0,
         $driverOptions = null
     ) {
@@ -2133,20 +2141,12 @@ class Query implements QueryInterface, PreparableInterface
             return $this;
         }
 
-        // Case 1: Empty Key (reset $bounded array)
-        if (empty($key)) {
-            $this->bounded = [];
-
-            return $this;
-        }
-
-        // Case 2: Key Provided, null value (unset key from $bounded array)
-        if (null === $value) {
-            if (isset($this->bounded[$key])) {
-                unset($this->bounded[$key]);
+        if ($dataType === null) {
+            if (is_numeric($value) && strpos((string) $value, '.') === false) {
+                $dataType = \PDO::PARAM_INT;
+            } else {
+                $dataType = \PDO::PARAM_STR;
             }
-
-            return $this;
         }
 
         $obj = new \stdClass();
@@ -2178,7 +2178,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @since   3.5.5
      */
-    public function bindValues(array &$values, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = null)
+    public function bindValues(array &$values, $dataType = null, $length = 0, $driverOptions = null)
     {
         foreach ($values as $k => &$v) {
             $this->bindRef($k, $v);
@@ -2208,6 +2208,38 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         return null;
+    }
+
+    /**
+     * resetBounded
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function resetBounded()
+    {
+        $this->bounded = [];
+
+        return $this;
+    }
+
+    /**
+     * unbind
+     *
+     * @param string|array $keys
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function unbind($keys)
+    {
+        $keys = (array) $keys;
+
+        $this->bounded = array_diff_key($this->bounded, array_flip($keys));
+
+        return $this;
     }
 
     /**
@@ -2352,5 +2384,45 @@ class Query implements QueryInterface, PreparableInterface
         if ($this->name) {
             $this->connection = ConnectionContainer::getConnection($this->name);
         }
+    }
+
+    /**
+     * __call
+     *
+     * @param string $name
+     * @param array  $args
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function __call(string $name, array $args)
+    {
+        $dbMethods = [
+            'loadOne',
+            'loadAll',
+            'loadResult',
+            'loadColumn',
+            'execute'
+        ];
+
+        if (in_array($name, $dbMethods, true)) {
+            if (!$this->connection instanceof AbstractDatabaseDriver) {
+                throw new \LogicException(
+                    'Loading data from Query must inject AbstractDatabaseDriver object into it.'
+                );
+            }
+
+            if ($name === 'execute') {
+                return $this->connection->$name($this);
+            }
+
+            return $this->connection->prepare($this)->$name(...$args);
+        }
+
+        throw new \BadMethodCallException(sprintf(
+            'Method %s not found',
+            $name
+        ));
     }
 }

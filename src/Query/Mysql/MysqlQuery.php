@@ -8,6 +8,7 @@
 
 namespace Windwalker\Query\Mysql;
 
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query;
 
 /**
@@ -43,18 +44,6 @@ class MysqlQuery extends Query
      * @since  2.0
      */
     protected $nullDate = '1000-01-01 00:00:00';
-
-    /**
-     * Class constructor.
-     *
-     * @param   \PDO $connection The PDO connection object to help us escape string.
-     *
-     * @since   2.0
-     */
-    public function __construct(\PDO $connection = null)
-    {
-        parent::__construct($connection);
-    }
 
     /**
      * If no connection set, we escape it with default function.

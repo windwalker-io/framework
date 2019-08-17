@@ -657,7 +657,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  mixed
      */
-    public function loadAll($key = null, $class = '\\stdClass')
+    public function loadAll($key = null, $class = \stdClass::class)
     {
         if (strtolower($class) === 'array') {
             return $this->getReader()->loadArrayList($key);
@@ -677,7 +677,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  mixed
      */
-    public function loadOne($class = '\\stdClass')
+    public function loadOne($class = \stdClass::class)
     {
         if (strtolower($class) === 'array') {
             return $this->getReader()->loadArray();

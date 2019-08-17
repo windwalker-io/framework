@@ -362,7 +362,7 @@ class PdoDriver extends AbstractDatabaseDriver
             if (class_exists($class)) {
                 $this->connect();
 
-                return new $class($this->getConnection());
+                return new $class($this);
             }
 
             return parent::getQuery($new);
