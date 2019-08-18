@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Query;
@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * The FormatWrapper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.12
  */
 class FormatWrapper
 {
@@ -46,7 +46,7 @@ class FormatWrapper
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function all(): array
     {
@@ -62,7 +62,7 @@ class FormatWrapper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function getString(): string
     {
@@ -74,7 +74,7 @@ class FormatWrapper
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function getArgs(): array
     {
@@ -88,7 +88,7 @@ class FormatWrapper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function toString(Query $query): string
     {

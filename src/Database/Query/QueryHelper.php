@@ -270,7 +270,7 @@ class QueryHelper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public static function replaceQueryParams(AbstractDatabaseDriver $db, $query, array $bounded): string
     {

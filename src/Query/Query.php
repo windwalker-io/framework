@@ -1818,7 +1818,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  mixed|string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     protected function applyFormat($format)
     {
@@ -2217,7 +2217,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function resetBounded()
     {
@@ -2233,7 +2233,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function unbind($keys)
     {
@@ -2361,7 +2361,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function pipe(callable $handler): self
     {
@@ -2396,7 +2396,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function __call(string $name, array $args)
     {

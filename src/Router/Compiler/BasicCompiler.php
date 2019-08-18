@@ -138,7 +138,7 @@ abstract class BasicCompiler
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     protected static function replaceOptionalWildcards($regex)
     {

@@ -739,7 +739,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function pipe(callable $handler): self
     {
