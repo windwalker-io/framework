@@ -374,6 +374,10 @@ class File
         $dir = $dir ?? sys_get_temp_dir();
         $prefix = $prefix ?? 'Windwalker-Temp-';
 
+        if (!is_dir($dir)) {
+            Folder::create($dir);
+        }
+
         $temp = tempnam($dir, $prefix);
 
         if (!$temp) {
