@@ -358,4 +358,35 @@ class File
 
         return false;
     }
+
+    /**
+     * createTemp
+     *
+     * @param string|null $dir
+     * @param string|null $prefix
+     *
+     * @return  string
+     *
+     * @since  3.5.12
+     */
+    public static function createTemp(?string $dir = null, ?string $prefix = null): string
+    {
+        $dir = $dir ?? sys_get_temp_dir();
+        $prefix = $prefix ?? 'Windwalker-Temp-';
+
+        if (!is_dir($dir)) {
+            Folder::create($dir);
+        }
+
+        $temp = tempnam($dir, $prefix);
+
+        if (!$temp) {
+            throw new FilesystemException(sprintf(
+                'Create temp file on %s failure.',
+                $dir
+            ));
+        }
+
+        return (string) $temp;
+    }
 }

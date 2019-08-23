@@ -100,7 +100,7 @@ class NestedRecord extends Record
      *
      * @return mixed An array of node objects including the start node.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function getAncestors($pk = null, $allFields = false)
     {

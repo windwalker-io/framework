@@ -751,7 +751,7 @@ class Arr
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public static function mapWithKeys(iterable $array, callable $handler): array
     {

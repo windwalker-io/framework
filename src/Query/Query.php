@@ -721,6 +721,8 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if ($this->connection instanceof AbstractDatabaseDriver) {
+            $this->connection->connect();
+
             $result = substr($this->connection->getConnection()->quote((string) $text), 1, -1);
         } elseif ($this->connection instanceof \PDO || method_exists($this->connection, 'quote')) {
             $result = substr($this->connection->quote((string) $text), 1, -1);
@@ -1816,7 +1818,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  mixed|string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     protected function applyFormat($format)
     {
@@ -2215,7 +2217,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function resetBounded()
     {
@@ -2231,7 +2233,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function unbind($keys)
     {
@@ -2359,7 +2361,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function pipe(callable $handler): self
     {
@@ -2394,7 +2396,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function __call(string $name, array $args)
     {

@@ -98,7 +98,7 @@ class EdgeRenderer extends AbstractEngineRenderer
      */
     public function setEngine($engine)
     {
-        if (!$this->engine instanceof Edge) {
+        if ($this->engine && !$this->engine instanceof Edge) {
             throw new \InvalidArgumentException('Engine should be instance of Edge');
         }
 

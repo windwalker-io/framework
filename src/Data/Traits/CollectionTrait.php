@@ -381,7 +381,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.12
      */
     public function mapWithKeys(callable $handler)
     {
