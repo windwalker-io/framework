@@ -627,4 +627,20 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
             }
         );
     }
+
+    /**
+     * clearHtml
+     *
+     * @param string|null $allowTags
+     *
+     * @return  StringObject
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function stripHtmlTags(?string $allowTags = null)
+    {
+        return $this->cloneInstance(function (self $new) use ($allowTags) {
+            $new->string = strip_tags($new->string, $allowTags);
+        });
+    }
 }
