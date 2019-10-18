@@ -427,6 +427,68 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * concat
+     *
+     * @param  mixed  ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function concat(...$args): self
+    {
+        $new = $this->storage;
+        array_push($new, ...$args);
+
+        return new static($new);
+    }
+
+    /**
+     * concatStart
+     *
+     * @param  mixed  ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function concatStart(...$args): self
+    {
+        $new = $this->storage;
+        array_unshift($new, ...$args);
+
+        return new static($new);
+    }
+
+    /**
+     * removeEnd
+     *
+     * @param  int  $num
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function removeLast($num = 1): self
+    {
+        return $this->bindNewInstance($this->storage)->splice(0, -$num);
+    }
+
+    /**
+     * removeStart
+     *
+     * @param  int  $num
+     *
+     * @return  $this
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function removeFirst($num = 1): self
+    {
+        return $this->bindNewInstance($this->storage)->splice($num);
+    }
+
+    /**
      * rand
      *
      * @param int $num
@@ -577,9 +639,7 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function insertAfter(int $key, $value): self
     {
-        $this->splice($key + 1, 0, $value);
-
-        return $this;
+        return $this->bindNewInstance($this->storage)->splice($key + 1, 0, $value);
     }
 
     /**
@@ -594,9 +654,7 @@ class Collection extends ArrayObject implements DataInterface
      */
     public function insertBefore(int $key, $value): self
     {
-        $this->splice($key, 0, $value);
-
-        return $this;
+        return $this->bindNewInstance($this->storage)->splice($key, 0, $value);
     }
 
     /**
