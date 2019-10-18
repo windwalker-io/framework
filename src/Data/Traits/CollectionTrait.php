@@ -203,7 +203,7 @@ trait CollectionTrait
             return null;
         }
 
-        return $array[array_key_first($array)];
+        return $array[array_key_first($array)] ?? null;
     }
 
     /**
@@ -229,7 +229,7 @@ trait CollectionTrait
             return $prev;
         }
 
-        return $array[array_key_last($array)];
+        return $array[array_key_last($array)] ?? null;
     }
 
     /**
