@@ -615,9 +615,9 @@ class Collection extends ArrayObject implements DataInterface
 
         foreach ($fields as $origin => $field) {
             if (is_numeric($origin)) {
-                $new->$field = $this->$field;
+                $new[$field] = $this[$field];
             } else {
-                $new->$field = $this->$origin;
+                $new[$field] = $this[$origin];
             }
         }
 
@@ -640,7 +640,7 @@ class Collection extends ArrayObject implements DataInterface
         $new = $this->getNewInstance();
 
         foreach ($fields as $origin => $field) {
-            unset($new->$field);
+            unset($new[$field]);
         }
 
         return $new;
