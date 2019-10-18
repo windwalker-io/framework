@@ -44,7 +44,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     /**
      * @var array
      */
-    protected $protectedProperties;
+    protected $protectedProperties = [];
 
     /**
      * Constructor
