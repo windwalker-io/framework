@@ -155,4 +155,19 @@ namespace Windwalker {
 
         return $value;
     }
+
+    /**
+     * Count NULL as 0 to workaround some code before php7.2
+     *
+     * @param  mixed  $value
+     * @param  int    $mode
+     *
+     * @return  int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    function count($value, $mode = COUNT_NORMAL): int
+    {
+        return $value !== null ? \count($value, $mode) : 0;
+    }
 }
