@@ -257,7 +257,10 @@ trait CollectionTrait
     public function chunk($size, $preserveKeys = null)
     {
         return $this->bindNewInstance(
-            array_map([$this, 'bindNewInstance'], array_chunk($this->convertArray($this), $size, $preserveKeys))
+            array_map(
+                [$this, 'bindNewInstance'],
+                array_chunk($this->convertArray($this), ...func_get_args())
+            )
         );
     }
 
