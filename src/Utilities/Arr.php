@@ -763,7 +763,7 @@ class Arr
             $new[] = $r;
         }
 
-        return array_merge(...$new);
+        return array_replace(...$new);
     }
 
     /**
