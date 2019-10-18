@@ -24,14 +24,14 @@ class UriHelper
      *
      * @const string
      */
-    const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
+    public const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
 
     /**
      * Unreserved characters used in paths, query strings, and fragments.
      *
      * @const string
      */
-    const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
+    public const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
 
     /**
      * Build a query from a array (reverse of the PHP parse_str()).
@@ -45,7 +45,7 @@ class UriHelper
      */
     public static function buildQuery(array $params)
     {
-        return urldecode(http_build_query($params, '', '&'));
+        return http_build_query($params, '', '&');
     }
 
     /**
@@ -152,7 +152,7 @@ class UriHelper
         $parts = explode('&', $query);
 
         foreach ($parts as $index => $part) {
-            list($key, $value) = static::splitQueryValue($part);
+            [$key, $value] = static::splitQueryValue($part);
 
             if ($value === null) {
                 $parts[$index] = static::filterQueryOrFragment($key);

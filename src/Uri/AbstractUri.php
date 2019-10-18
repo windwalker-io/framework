@@ -178,7 +178,7 @@ abstract class AbstractUri implements UriInterface
      *
      * @param   boolean $toArray True to return the query as a key => value pair array.
      *
-     * @return  string   Query string.
+     * @return  string|array   Query string.
      *
      * @since   2.0
      */
@@ -189,7 +189,7 @@ abstract class AbstractUri implements UriInterface
         }
 
         // If the query is empty build it first
-        if (is_null($this->query)) {
+        if ($this->query === null) {
             $this->query = UriHelper::buildQuery($this->vars);
         }
 
