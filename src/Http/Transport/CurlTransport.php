@@ -12,9 +12,11 @@ use Composer\CaBundle\CaBundle;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\CurlFile;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Response\Response;
+use Windwalker\Utilities\Arr;
 
 /**
  * The CurlTransport class.
@@ -162,16 +164,38 @@ class CurlTransport extends AbstractTransport
         $data = (string) $request->getBody();
 
         if (isset($data)) {
-            // If the data is a scalar value simply add it to the cURL post fields.
-            if (is_scalar($data) || strpos($request->getHeaderLine('Content-Type'), 'multipart/form-data') === 0) {
-                $options[CURLOPT_POSTFIELDS] = $data;
-            } else // Otherwise we need to encode the value first.
-            {
-                $options[CURLOPT_POSTFIELDS] = http_build_query($data);
-            }
+            $contentType = $request->getHeaderLine('Content-Type');
 
-            if (!$request->getHeaderLine('Content-Type')) {
-                $request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+            if (strpos($contentType, 'multipart/form-data') === 0) {
+                $data = unserialize($data);
+
+                array_walk_recursive($data, function (&$value) {
+                    if ($value instanceof CurlFile) {
+                        $value = $value->toCURLFile();
+                    }
+                });
+
+                $options[CURLOPT_POSTFIELDS] = $data;
+
+                // If no boundary, remove content-type and let CURL add it.
+                if (strpos($contentType, 'boundary') === false) {
+                    $request = $request->withoutHeader('Content-Type');
+                }
+            } else {
+                if (is_scalar($data)) {
+                    // If the data is a scalar value simply add it to the cURL post fields.
+                    $options[CURLOPT_POSTFIELDS] = $data;
+                } else {
+                    // Otherwise we need to encode the value first.
+                    $options[CURLOPT_POSTFIELDS] = http_build_query($data);
+                }
+
+                if (!$request->getHeaderLine('Content-Type')) {
+                    $request = $request->withHeader(
+                        'Content-Type',
+                        'application/x-www-form-urlencoded; charset=utf-8'
+                    );
+                }
             }
 
             // Add the relevant headers.

@@ -194,7 +194,7 @@ abstract class HeaderHelper
 
         foreach ($value as $k => $v) {
             if (!static::isValidValue($v)) {
-                throw new \InvalidArgumentException('Value :' . $value . ' is invalid.');
+                throw new \InvalidArgumentException('Value :' . print_r($value, true) . ' is invalid.');
             }
         }
 

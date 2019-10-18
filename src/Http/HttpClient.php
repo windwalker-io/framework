@@ -33,6 +33,8 @@ use Windwalker\Uri\UriHelper;
  */
 class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 {
+    public const MULTIPART_FORMDATA = 'multipart/form-data';
+
     /**
      * Property options.
      *
@@ -371,6 +373,14 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     ): RequestInterface {
         $url = (string) $url;
 
+        $request = $request->withRequestTarget((string) new PsrUri($url))
+            ->withMethod($method);
+
+        // Override with this method
+        foreach ($headers as $key => $value) {
+            $request = $request->withHeader($key, $value);
+        }
+
         // If is GET, we merge data into URL.
         if (is_array($data) && strtoupper($method) === 'GET') {
             $url = new Uri($url);
@@ -385,19 +395,15 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 
         // If not GET, convert data to query string.
         if (is_array($data)) {
-            $data = UriHelper::buildQuery($data);
+            if (strpos($request->getHeaderLine('Content-Type'), 'multipart/form-data') === 0) {
+                $data = serialize($data);
+            } else {
+                $data = UriHelper::buildQuery($data);
+            }
         }
 
         /** @var RequestInterface $request */
         $request->getBody()->write((string) $data);
-
-        $request = $request->withRequestTarget((string) new PsrUri($url))
-            ->withMethod($method);
-
-        // Override with this method
-        foreach ($headers as $key => $value) {
-            $request = $request->withHeader($key, $value);
-        }
 
         return $request;
     }

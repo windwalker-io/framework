@@ -312,6 +312,8 @@ class Browser
      */
     protected function detectEngine($userAgent)
     {
+        $userAgent = (string) $userAgent;
+
         if (stripos($userAgent, 'MSIE') !== false || stripos($userAgent, 'Trident') !== false) {
             // Attempt to detect the client engine -- starting with the most popular ... for now.
             $this->engine = self::ENGINE_TRIDENT;
