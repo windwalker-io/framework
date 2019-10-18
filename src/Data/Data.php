@@ -126,7 +126,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     public function exists($field)
     {
         // Remove \0 from begin of field name.
-        if (strpos($field, "\0") === 0) {
+        if (strpos((string) $field, "\0") === 0) {
             $field = substr($field, 3);
         }
 
@@ -243,7 +243,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
     public function offsetUnset($offset)
     {
         // Remove \0 from begin of field name.
-        if (strpos($offset, "\0") === 0) {
+        if (strpos((string) $offset, "\0") === 0) {
             $offset = substr($offset, 3);
         }
 
