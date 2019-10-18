@@ -649,7 +649,7 @@ class Browser
     /**
      * getRemoteIP
      *
-     * @see @see https://www.phpini.com/php/php-get-real-ip
+     * @see https://www.phpini.com/php/php-get-real-ip
      *
      * @return  string
      *

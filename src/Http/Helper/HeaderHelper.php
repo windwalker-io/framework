@@ -283,10 +283,29 @@ abstract class HeaderHelper
         if ($filename !== null) {
             $response = $response->withHeader(
                 'Content-Disposition',
-                'attachment; filename*=utf-8\'\'' . rawurlencode($filename)
+                static::attachmentContentDisposition($filename)
             );
         }
 
         return $response;
+    }
+
+    /**
+     * downloadContentDisposition
+     *
+     * @param  string  $filename
+     * @param  bool    $utf8
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function attachmentContentDisposition(string $filename, bool $utf8 = true): string
+    {
+        if ($utf8) {
+            return sprintf("attachment; filename*=utf-8''%s", rawurlencode($filename));
+        }
+
+        return sprintf('attachment; filename="%s"', rawurlencode($filename));
     }
 }

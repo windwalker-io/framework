@@ -98,6 +98,9 @@ class AttachmentResponse extends Response
      */
     public function withFilename($filename)
     {
-        return $this->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        return $this->withHeader(
+            'Content-Disposition',
+            HeaderHelper::attachmentContentDisposition($filename)
+        );
     }
 }
