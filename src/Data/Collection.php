@@ -625,6 +625,28 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * except
+     *
+     * @param array|string $fields
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function except($fields)
+    {
+        $fields = (array) $fields;
+
+        $new = $this->getNewInstance();
+
+        foreach ($fields as $origin => $field) {
+            unset($new->$field);
+        }
+
+        return $new;
+    }
+
+    /**
      * sum
      *
      * @return  float|int
