@@ -69,6 +69,7 @@ use Windwalker\String\StringInflector;
  * @method  static DataMapper  setDataClass(string $class)
  * @method  static DataMapper  setDatasetClass(string $class)
  * @method  static DataMapper  pipe(callable $handler)
+ * @method  static DataMapper  handleQuery(callable $handler)
  *
  * phpcs:enable
  *

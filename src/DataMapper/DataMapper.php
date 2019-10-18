@@ -79,6 +79,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     protected $queryHelper;
 
     /**
+     * Property queryHandlers.
+     *
+     * @var  array callable[]
+     */
+    protected $queryHandlers = [];
+
+    /**
      * newRelation
      *
      * @param string                 $alias
@@ -228,7 +235,28 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             }
         }
 
+        foreach ($this->queryHandlers as $queryHandler)
+        {
+            $queryHandler($query, $this);
+        }
+
         return $query;
+    }
+
+    /**
+     * handleQuery
+     *
+     * @param  callable  $handler
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function handleQuery(callable $handler): self
+    {
+        $this->queryHandlers[] = $handler;
+
+        return $this;
     }
 
     /**
@@ -710,6 +738,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
     {
         $this->query = null;
         $this->queryHelper = null;
+        $this->queryHandlers = [];
 
         return $this;
     }
@@ -743,7 +772,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      */
     public function pipe(callable $handler): self
     {
-        $handler($this->getQuery());
+        $handler($this);
 
         return $this;
     }
