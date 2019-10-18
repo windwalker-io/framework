@@ -265,14 +265,21 @@ trait CollectionTrait
      * Mapping all elements.
      *
      * @param callable $callback
+     * @param array    ...$args
      * @param bool     $useKeys
      *
      * @return  static  Support chaining.
      *
      * @since   2.0.9
      */
-    public function map($callback, $useKeys = false)
+    public function map($callback, ...$args)
     {
+        $useKeys = false;
+
+        if (is_bool($args[0] ?? null)) {
+            $useKeys = $args[0];
+        }
+
         $keys = $this->keys();
 
         if ($keys instanceof Collection) {
@@ -282,7 +289,9 @@ trait CollectionTrait
         if ($useKeys) {
             $result = array_map($callback, $this->convertArray(clone $this), $keys);
         } else {
-            $result = array_map($callback, $this->convertArray(clone $this));
+            $args = array_map([static::class, 'convertArray'], $args);
+
+            $result = array_map($callback, $this->convertArray(clone $this), ...$args);
         }
 
         // Keep keys same as origin
@@ -416,6 +425,22 @@ trait CollectionTrait
     public function collapse(int $depth = 0)
     {
         return $this->flatten('.', $depth)->values();
+    }
+
+    /**
+     * mapAs
+     *
+     * @param  string  $class
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function mapAs(string $class)
+    {
+        return $this->map(function ($v) use ($class) {
+            return new $class($v);
+        });
     }
 
     /**
