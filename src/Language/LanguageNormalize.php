@@ -67,4 +67,55 @@ abstract class LanguageNormalize
 
         return strtolower(trim($key, '.'));
     }
+
+    /**
+     * shortLangCode
+     *
+     * @param string $code
+     * @param string $separator
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function shortLangCode(string $code, string $separator = '_'): string
+    {
+        [$first, $last] = static::extract($code);
+
+        if ($last === null || (strtolower($first) === strtolower($last))) {
+            return strtolower($first);
+        }
+
+        return strtolower($first) . $separator . strtoupper($last);
+    }
+
+    /**
+     * toLinuxCode
+     *
+     * @param string $code
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function toLinuxCode(string $code): string
+    {
+        return str_replace('-', '_', $code);
+    }
+
+    /**
+     * extract
+     *
+     * @param string $code
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function extract(string $code): array
+    {
+        $code = str_replace('_', '-', $code);
+
+        return array_pad(explode('-', $code, 2), 2, null);
+    }
 }
