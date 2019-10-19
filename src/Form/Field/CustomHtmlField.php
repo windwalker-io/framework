@@ -11,6 +11,8 @@ namespace Windwalker\Form\Field;
 /**
  * The ButtonField class.
  *
+ * @method  mixed|$this  content(string|callable $value = null)
+ *
  * @since  2.1.8
  */
 class CustomHtmlField extends AbstractField
@@ -27,7 +29,7 @@ class CustomHtmlField extends AbstractField
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return  void
      */
     public function prepare(&$attrs)
     {
@@ -45,23 +47,21 @@ class CustomHtmlField extends AbstractField
         $content = $this->getAttribute('content');
 
         if (is_callable($content)) {
-            return call_user_func($content, $this);
+            return $content($this, $attrs);
         }
 
         return $content;
     }
 
     /**
-     * content
+     * getAccessors
      *
-     * @param   string $content
-     *
-     * @return  static
+     * @return  array
      */
-    public function content($content)
+    protected function getAccessors()
     {
-        $this->set('content', $content);
-
-        return $this;
+        return array_merge(parent::getAccessors(), [
+            'content',
+        ]);
     }
 }
