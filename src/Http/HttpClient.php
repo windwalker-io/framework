@@ -371,16 +371,6 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
         $data = '',
         array $headers = []
     ): RequestInterface {
-        $url = (string) $url;
-
-        $request = $request->withRequestTarget((string) new PsrUri($url))
-            ->withMethod($method);
-
-        // Override with this method
-        foreach ($headers as $key => $value) {
-            $request = $request->withHeader($key, $value);
-        }
-
         // If is GET, we merge data into URL.
         if (is_array($data) && strtoupper($method) === 'GET') {
             $url = new Uri($url);
@@ -391,6 +381,16 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 
             $url = (string) $url;
             $data = null;
+        }
+
+        $url = (string) $url;
+
+        $request = $request->withRequestTarget((string) new PsrUri($url))
+            ->withMethod($method);
+
+        // Override with this method
+        foreach ($headers as $key => $value) {
+            $request = $request->withHeader($key, $value);
         }
 
         // If not GET, convert data to query string.

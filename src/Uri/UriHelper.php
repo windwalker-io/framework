@@ -86,7 +86,7 @@ class UriHelper
 
         // Create encoded URL with special URL characters decoded so it can be parsed
         // All other characters will be encoded
-        $encodedURL = str_replace($entities, $replacements, urlencode($url));
+        $encodedURL = str_replace($entities, $replacements, urlencode((string) $url));
 
         // Parse the encoded URL
         $encodedParts = parse_url($encodedURL);
