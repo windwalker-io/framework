@@ -125,6 +125,18 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * dumpAll
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function dumpAll(): array
+    {
+        return Arr::toArray($this->getArrayCopy(), true);
+    }
+
+    /**
      * toCollections
      *
      * @param array $items
