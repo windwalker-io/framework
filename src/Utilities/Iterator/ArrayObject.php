@@ -157,18 +157,6 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Appends the value
-     *
-     * @param  mixed $value
-     *
-     * @return void
-     */
-    public function append($value)
-    {
-        $this->storage[] = $value;
-    }
-
-    /**
      * Sort the entries by value
      *
      * @param int $flags
