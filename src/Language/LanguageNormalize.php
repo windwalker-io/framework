@@ -76,7 +76,7 @@ abstract class LanguageNormalize
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public static function shortLangCode(string $code, string $separator = '_'): string
     {
@@ -96,7 +96,7 @@ abstract class LanguageNormalize
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public static function toLinuxCode(string $code): string
     {
@@ -110,7 +110,7 @@ abstract class LanguageNormalize
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public static function extract(string $code): array
     {

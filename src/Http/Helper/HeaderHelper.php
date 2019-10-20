@@ -298,7 +298,7 @@ abstract class HeaderHelper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public static function attachmentContentDisposition(string $filename, bool $utf8 = true): string
     {

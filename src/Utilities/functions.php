@@ -164,7 +164,7 @@ namespace Windwalker {
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     function count($value, $mode = COUNT_NORMAL): int
     {

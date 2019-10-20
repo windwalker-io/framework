@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Http;
@@ -11,7 +11,7 @@ namespace Windwalker\Http;
 /**
  * The CurlFile class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.13
  */
 class CurlFile
 {
@@ -53,7 +53,7 @@ class CurlFile
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function getFile()
     {
@@ -69,7 +69,7 @@ class CurlFile
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function setFile(string $file, ?string $mimetype = null, ?string $filename = null): self
     {
@@ -85,7 +85,7 @@ class CurlFile
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function getMimetype(): string
     {
@@ -99,7 +99,7 @@ class CurlFile
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function setMimetype(string $mimetype): self
     {
@@ -113,7 +113,7 @@ class CurlFile
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function getFilename(): string
     {
@@ -127,7 +127,7 @@ class CurlFile
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function setFilename(string $filename): self
     {
@@ -141,7 +141,7 @@ class CurlFile
      *
      * @return  \CURLFile
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function toCURLFile(): \CURLFile
     {

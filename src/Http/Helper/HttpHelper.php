@@ -3,7 +3,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2019 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Http\Helper;
@@ -11,7 +11,7 @@ namespace Windwalker\Http\Helper;
 /**
  * The HttpHelper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.13
  */
 class HttpHelper
 {
@@ -24,7 +24,7 @@ class HttpHelper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public static function getIp(array $server = []): string
     {

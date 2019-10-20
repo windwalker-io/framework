@@ -250,7 +250,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function handleQuery(callable $handler): self
     {

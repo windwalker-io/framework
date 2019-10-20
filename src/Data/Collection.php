@@ -147,7 +147,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function dumpAll(): array
     {
@@ -445,7 +445,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function append(...$args): self
     {
@@ -462,7 +462,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function prepend(...$args): self
     {
@@ -479,7 +479,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function removeLast($num = 1): self
     {
@@ -493,7 +493,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function removeFirst($num = 1): self
     {
@@ -701,7 +701,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function except($fields)
     {

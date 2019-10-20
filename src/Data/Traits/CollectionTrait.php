@@ -437,7 +437,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.13
      */
     public function mapAs(string $class)
     {
