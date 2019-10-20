@@ -55,7 +55,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      * @param int    $flags
      * @param string $iteratorClass
      */
-    public function __construct($input = [], $flags = self::STD_PROP_LIST, $iteratorClass = \ArrayIterator::class)
+    public function __construct($input = [], $flags = self::ARRAY_AS_PROPS, $iteratorClass = \ArrayIterator::class)
     {
         $this->setFlags($flags);
         $this->storage = Arr::toArray($input);
