@@ -54,6 +54,24 @@ class Collection extends ArrayObject implements DataInterface
     }
 
     /**
+     * toCollections
+     *
+     * @param array $items
+     *
+     * @return  Collection[]
+     *
+     * @since  3.5
+     */
+    public static function toCollections(iterable $items): iterable
+    {
+        foreach ($items as $k => $item) {
+            $items[$k] = new static($item);
+        }
+
+        return $items;
+    }
+
+    /**
      * Bind the data into this object.
      *
      * @param   mixed   $values       The data array or object.
@@ -134,24 +152,6 @@ class Collection extends ArrayObject implements DataInterface
     public function dumpAll(): array
     {
         return Arr::toArray($this->getArrayCopy(), true);
-    }
-
-    /**
-     * toCollections
-     *
-     * @param array $items
-     *
-     * @return  Collection[]
-     *
-     * @since  3.5
-     */
-    public static function toCollections(array $items): array
-    {
-        foreach ($items as $k => $item) {
-            $items[$k] = new static($item);
-        }
-
-        return $items;
     }
 
     /**
@@ -447,7 +447,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function concat(...$args): self
+    public function append(...$args): self
     {
         $new = $this->storage;
         array_push($new, ...$args);
@@ -464,7 +464,7 @@ class Collection extends ArrayObject implements DataInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function concatStart(...$args): self
+    public function prepend(...$args): self
     {
         $new = $this->storage;
         array_unshift($new, ...$args);

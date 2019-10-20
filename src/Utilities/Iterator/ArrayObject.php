@@ -8,6 +8,8 @@
 
 namespace Windwalker\Utilities\Iterator;
 
+use Windwalker\Utilities\Arr;
+
 /**
  * The ArrayObject class. Based on ZF2.
  *
@@ -56,7 +58,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     public function __construct($input = [], $flags = self::STD_PROP_LIST, $iteratorClass = \ArrayIterator::class)
     {
         $this->setFlags($flags);
-        $this->storage = (array) $input;
+        $this->storage = Arr::toArray($input);
         $this->setIteratorClass($iteratorClass);
         $this->protectedProperties = array_keys(get_object_vars($this));
     }
