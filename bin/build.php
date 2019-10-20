@@ -324,8 +324,6 @@ HELP;
             );
 
             file_put_contents($file->getPathname(), $content);
-
-            $this->out('[Replace Docblock] ' . $file->getPathname());
         }
 
         $this->exec('git checkout master');
