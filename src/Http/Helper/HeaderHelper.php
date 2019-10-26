@@ -303,9 +303,25 @@ abstract class HeaderHelper
     public static function attachmentContentDisposition(string $filename, bool $utf8 = true): string
     {
         if ($utf8) {
-            return sprintf("attachment; filename*=utf-8''%s", rawurlencode($filename));
+            return sprintf("attachment; filename*=utf-8''%s", rawurlencode(static::makeUtf8Safe($filename)));
         }
 
         return sprintf('attachment; filename="%s"', rawurlencode($filename));
+    }
+
+    /**
+     * makeUtf8Safe
+     *
+     * @param string $file
+     *
+     * @return  false|string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private static function makeUtf8Safe(string $file)
+    {
+        $file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
+
+        return mb_ereg_replace("([\.]{2,})", '', $file);
     }
 }
