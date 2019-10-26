@@ -43,6 +43,15 @@ class File
             } else {
                 $content = file_get_contents($filename, $useIncludePath, $context, $offset);
             }
+
+            if ($content === false) {
+                $error = error_get_last();
+
+                throw new FilesystemException(
+                    $error['message'],
+                    $error['type']
+                );
+            }
         } catch (\Throwable $e) {
             throw new FilesystemException(
                 $e->getMessage(),
