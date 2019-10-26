@@ -20,4 +20,4 @@ before_script:
   - phpenv rehash
 
 script:
-  - phpunit --configuration phpunit.travis.xml
+  - /home/travis/.config/composer/vendor/bin/phpunit --configuration phpunit.travis.xml
