@@ -100,7 +100,7 @@ class PhpFormat implements FormatInterface
         $s = "[\n";
         $i = 0;
 
-        $assoc = Arr::isAssociative($a);
+        $assoc = static::isAssociative($a);
 
         foreach ($a as $k => $v) {
             $s .= $i ? ",\n" : '';
@@ -122,5 +122,25 @@ class PhpFormat implements FormatInterface
         $s .= "\n" . str_repeat('    ', $level - 1) . ']';
 
         return $s;
+    }
+
+    /**
+     * isAssociative
+     *
+     * @param  array  $array
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private static function isAssociative(array $array): bool
+    {
+        foreach (array_keys($array) as $k => $v) {
+            if ($k !== $v) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
