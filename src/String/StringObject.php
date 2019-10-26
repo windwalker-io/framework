@@ -629,6 +629,20 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
+     * pipe
+     *
+     * @param  callable  $callback
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function pipe(callable $callback): self
+    {
+        return $callback($this);
+    }
+
+    /**
      * clearHtml
      *
      * @param string|null $allowTags
