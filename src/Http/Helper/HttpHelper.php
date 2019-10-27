@@ -40,4 +40,18 @@ class HttpHelper
 
         return $server['REMOTE_ADDR'];
     }
+
+    /**
+     * isIPv6
+     *
+     * @param  string  $ip
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isIPv6(string $ip): bool
+    {
+        return strpos($ip, ':') !== false;
+    }
 }
