@@ -121,6 +121,6 @@ class FieldHelper extends AbstractFormElementHelper
      */
     public static function clearAttribute(string $string): string
     {
-        return preg_replace('/[\[\]\s\"\'=]+/', '-', $string);
+        return preg_replace('/[\[\]\s\"\'=\.:\/\\\\]+/', '-', $string);
     }
 }
