@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "windwalker/test": "~3.0",
-        "windwalker/utilities": "~3.0"
+        "windwalker/utilities": "dev-master"
     },
     "suggest": {
         "windwalker/utilities": "Install ~3.0 if you require SimpleTemplate template engine."
