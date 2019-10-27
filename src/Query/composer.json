@@ -11,7 +11,8 @@
     },
     "require-dev": {
         "windwalker/test": "~3.0",
-        "windwalker/database": "dev-master"
+        "windwalker/database": "dev-master",
+        "jdorn/sql-formatter": "~1.0"
     },
     "suggest": {
     },
