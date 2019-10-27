@@ -131,7 +131,7 @@ class PhpFormat implements FormatInterface
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.14
      */
     private static function isAssociative(array $array): bool
     {

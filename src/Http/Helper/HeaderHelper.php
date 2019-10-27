@@ -316,7 +316,7 @@ abstract class HeaderHelper
      *
      * @return  false|string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.14
      */
     private static function makeUtf8Safe(string $file)
     {
