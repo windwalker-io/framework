@@ -8,8 +8,8 @@ php:
   - 7.2
   - 7.3
 
-
 before_install:
+  - composer global require phpunit/phpunit ^7.0
   - sudo add-apt-repository ppa:ondrej/php -y
   - sh -e build/travis/scripts/libsodium.sh
 
