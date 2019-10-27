@@ -8,8 +8,8 @@ php:
   - 7.2
   - 7.3
 
-
 before_install:
+  - composer global require phpunit/phpunit ^7.0
   - composer self-update
   - sh -e build/travis/scripts/apt-get.sh
   - sh -e build/travis/scripts/apache2-vhost.sh

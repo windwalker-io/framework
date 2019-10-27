@@ -10,7 +10,8 @@
         "ext-pdo": "*"
     },
     "require-dev": {
-        "windwalker/test": "~3.0"
+        "windwalker/test": "~3.0",
+        "windwalker/database": "~3.0"
     },
     "suggest": {
     },
