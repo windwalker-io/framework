@@ -10,6 +10,7 @@ namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Form\FieldHelper;
 use Windwalker\Form\Filter\FilterComposite;
 use Windwalker\Form\Filter\FilterInterface;
 use Windwalker\Form\FilterHelper;
@@ -337,7 +338,7 @@ abstract class AbstractField
      *
      * @since  3.3.2
      */
-    protected function wrapElements($html)
+    protected function wrapElements($html): string
     {
         if (isset($this->attributes['wraps']) && is_array($this->attributes['wraps'])) {
             $elements = $this->attributes['wraps'];
@@ -369,9 +370,27 @@ abstract class AbstractField
      */
     public function getId()
     {
+        if ($this->get('id')) {
+            return $this->get('id');
+        }
+
         $control = $this->control ? $this->control . '/' : '';
 
-        return 'input-' . preg_replace('/[^A-Z0-9_]+/i', '-', $control . $this->getName(true));
+        return 'input-' . FieldHelper::clearAttribute($control . $this->getName(true));
+    }
+
+    /**
+     * id
+     *
+     * @param string $id
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function id(string $id): self
+    {
+        return $this->setAttribute('id', $id);
     }
 
     /**
@@ -462,17 +481,20 @@ abstract class AbstractField
     /**
      * Method to get property Name
      *
-     * @param bool $withGroup
+     * @param bool        $withGroup
+     * @param string|null $customName
      *
      * @return  string
      */
-    public function getName($withGroup = false)
+    public function getName($withGroup = false, ?string $customName = null)
     {
         $group = $withGroup ? $this->getGroup() : '';
 
         $group = $group ? $group . '/' : '';
 
-        return $group . $this->name;
+        $name = $customName ?? $this->name;
+
+        return $group . $name;
     }
 
     /**
@@ -494,33 +516,69 @@ abstract class AbstractField
     /**
      * Method to get property FieldName
      *
-     * @param bool $refresh
+     * @param bool   $refresh
+     * @param string $suffix
      *
      * @return  string
      */
-    public function getFieldName($refresh = false)
+    public function getFieldName($refresh = false, string $suffix = '')
     {
         if (!$this->fieldName || $refresh) {
-            // Prevent double '/'
-            $names = array_values(array_filter(explode('/', (string) $this->getName(true)), 'strlen'));
-
-            $control = array_values(array_filter(explode('/', (string) $this->getControl()), 'strlen'));
-
-            $names = array_merge($control, $names);
-
-            $control = array_shift($names);
-
-            $names = array_map(
-                function ($value) {
-                    return '[' . $value . ']';
-                },
-                $names
-            );
-
-            $this->fieldName = $control . implode('', $names);
+            $this->fieldName = $this->buildFieldName(null, $suffix);
         }
 
         return $this->fieldName;
+    }
+
+    /**
+     * buildFieldName
+     *
+     * @param string|null $name
+     * @param string      $suffix
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function buildFieldName(?string $name = null, string $suffix = ''): string
+    {
+        $name = $name ?? (string) $this->getName(true, $name);
+
+        // Prevent double '/'
+        $names = array_values(array_filter(explode('/', $name), 'strlen'));
+
+        $control = array_values(array_filter(explode('/', (string) $this->getControl()), 'strlen'));
+
+        $names = array_merge($control, $names);
+
+        return static::buildName($names) . $suffix;
+    }
+
+    /**
+     * buildName
+     *
+     * @param string|array $names
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function buildName($names): string
+    {
+        if (!is_array($names)) {
+            $names = array_values(array_filter(explode('/', $names), 'strlen'));
+        }
+
+        $control = array_shift($names);
+
+        $names = array_map(
+            static function ($value) {
+                return '[' . $value . ']';
+            },
+            $names
+        );
+
+        return $control . implode('', $names);
     }
 
     /**

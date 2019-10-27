@@ -109,4 +109,18 @@ class FieldHelper extends AbstractFormElementHelper
 
         return false;
     }
+
+    /**
+     * clearAttribute
+     *
+     * @param string $string
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function clearAttribute(string $string): string
+    {
+        return preg_replace('/[\[\]\s\"\'=]+/', '-', $string);
+    }
 }
