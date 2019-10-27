@@ -635,7 +635,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.14
      */
     public function pipe(callable $callback): self
     {

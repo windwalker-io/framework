@@ -117,7 +117,7 @@ class FieldHelper extends AbstractFormElementHelper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.14
      */
     public static function clearAttribute(string $string): string
     {
