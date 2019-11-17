@@ -326,7 +326,7 @@ class Browser
             $this->engine = self::ENGINE_WEBKIT;
         } elseif (stripos($userAgent, 'Chrome') !== false) {
             $result  = explode('/', stristr($userAgent, 'Chrome'));
-            $version = explode(' ', $result[1]);
+            $version = explode(' ', $result[1] ?? '');
 
             if ($version[0] >= 28) {
                 $this->engine = self::ENGINE_BLINK;
