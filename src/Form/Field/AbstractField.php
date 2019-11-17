@@ -939,8 +939,6 @@ abstract class AbstractField
     {
         $this->fieldName = null;
 
-        $control = str_replace('.', '/', $control);
-
         $this->control = $control;
 
         return $this;

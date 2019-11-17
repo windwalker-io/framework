@@ -720,7 +720,7 @@ class Form implements \IteratorAggregate
      */
     public function setControl($control)
     {
-        $this->control = str_replace('.', '/', $control);
+        $this->control = $control;
 
         foreach ($this->fields as $field) {
             $field->setControl($control);
