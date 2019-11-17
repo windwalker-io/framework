@@ -48,7 +48,7 @@ class HttpHelper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.15
      */
     public static function isIPv6(string $ip): bool
     {

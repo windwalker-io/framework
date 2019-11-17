@@ -313,7 +313,7 @@ abstract class HeaderHelper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.15
      */
     public static function inlineContentDisposition(string $filename, bool $utf8 = true): string
     {
@@ -329,7 +329,7 @@ abstract class HeaderHelper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.15
      */
     public static function contentDisposition(string $type, string $filename, bool $utf8 = true): string
     {
