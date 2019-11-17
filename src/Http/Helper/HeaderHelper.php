@@ -302,11 +302,42 @@ abstract class HeaderHelper
      */
     public static function attachmentContentDisposition(string $filename, bool $utf8 = true): string
     {
+        return static::contentDisposition('attachment', $filename, $utf8);
+    }
+
+    /**
+     * inlineContentDisposition
+     *
+     * @param  string  $filename
+     * @param  bool    $utf8
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function inlineContentDisposition(string $filename, bool $utf8 = true): string
+    {
+        return static::contentDisposition('inline', $filename, $utf8);
+    }
+
+    /**
+     * contentDisposition
+     *
+     * @param  string  $type
+     * @param  string  $filename
+     * @param  bool    $utf8
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function contentDisposition(string $type, string $filename, bool $utf8 = true): string
+    {
         if ($utf8) {
-            return sprintf("attachment; filename*=utf-8''%s", rawurlencode(static::makeUtf8Safe($filename)));
+            return sprintf("$type; filename*=utf-8''%s", rawurlencode(static::makeUtf8Safe($filename)));
         }
 
-        return sprintf('attachment; filename="%s"', rawurlencode($filename));
+        return sprintf($type . '; filename="%s"', rawurlencode($filename));
     }
 
     /**
