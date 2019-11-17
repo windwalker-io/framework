@@ -476,21 +476,25 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     /**
      * transaction
      *
-     * @param callable $callback
-     * @param bool     $nested
-     * @param bool     $autoCommit
+     * @param  callable  $callback
+     * @param  bool      $nested
+     * @param  bool      $autoCommit
+     * @param  bool      $enabled
      *
      * @return  AbstractDatabaseDriver
      *
      * @throws \Throwable
-     *
      * @since  3.5.3
      */
-    public function transaction(callable $callback, bool $nested = true, bool $autoCommit = true): self
-    {
+    public function transaction(
+        callable $callback,
+        bool $nested = true,
+        bool $autoCommit = true,
+        bool $enabled = true
+    ): self {
         $trans = $this->getTransaction($nested);
 
-        $trans->transaction($callback, $autoCommit);
+        $trans->transaction($callback, $autoCommit, $enabled);
 
         return $this;
     }

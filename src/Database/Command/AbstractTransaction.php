@@ -76,17 +76,23 @@ abstract class AbstractTransaction
     /**
      * transaction
      *
-     * @param callable $callback
-     * @param bool     $autoCommit
+     * @param  callable  $callback
+     * @param  bool      $autoCommit
+     * @param  bool      $enabled
      *
      * @return  AbstractTransaction
      *
      * @throws \Throwable
-     *
      * @since  3.5.3
      */
-    public function transaction(callable $callback, bool $autoCommit = true): self
+    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): self
     {
+        if (!$enabled) {
+            $callback($this->db, $this);
+
+            return $this;
+        }
+
         $this->start();
 
         try {
