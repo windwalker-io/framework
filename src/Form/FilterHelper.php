@@ -41,14 +41,14 @@ class FilterHelper extends AbstractFormElementHelper
      */
     public static function create($filter, \SplPriorityQueue $namespaces = null)
     {
-        if (class_exists($filter)) {
+        if (class_exists((string) $filter)) {
             return new $filter();
         }
 
         $namespaces = $namespaces ?: static::getNamespaces();
 
         foreach ($namespaces as $namespace) {
-            $class = trim($namespace, '\\') . '\\' . ucfirst($filter) . 'Filter';
+            $class = trim((string) $namespace, '\\') . '\\' . ucfirst($filter) . 'Filter';
 
             if (class_exists($class)) {
                 return new $class();
