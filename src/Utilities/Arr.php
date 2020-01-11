@@ -763,6 +763,10 @@ class Arr
             $new[] = $r;
         }
 
+        if ($new === []) {
+            return [];
+        }
+
         return array_replace(...$new);
     }
 
