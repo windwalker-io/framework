@@ -15,7 +15,7 @@ use Windwalker\Data\Traits\CollectionTrait;
  *
  * @since 2.0
  */
-class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable
+class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable
 {
     use CollectionTrait;
 
@@ -495,5 +495,13 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
                 $this->$key = clone $item;
             }
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }
