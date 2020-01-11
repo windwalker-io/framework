@@ -1624,7 +1624,9 @@ class Query implements QueryInterface, PreparableInterface
 
             $conditions = array_merge($conditions, $args);
 
-            $this->where(new QueryElement('()', $conditions, ' OR '));
+            if ($conditions !== []) {
+                $this->where(new QueryElement('()', $conditions, ' OR '));
+            }
         } elseif (is_callable($conditions)) {
             $query = new static($this->connection);
 
@@ -1632,7 +1634,9 @@ class Query implements QueryInterface, PreparableInterface
 
             $conditions($query);
 
-            $this->where((string) $query->where);
+            if (!$query->where) {
+                $this->where((string) $query->where);
+            }
         }
 
         return $this;
