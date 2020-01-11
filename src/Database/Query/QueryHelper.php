@@ -291,8 +291,9 @@ class QueryHelper
 
             switch ($bound['dataType']) {
                 case \PDO::PARAM_STR:
-                case \PDO::PARAM_STR_CHAR:
-                case \PDO::PARAM_STR_NATL:
+                // Only support 7.2 later
+                // case \PDO::PARAM_STR_CHAR:
+                // case \PDO::PARAM_STR_NATL:
                     return $db->quote($bound['value']);
 
                 default:
