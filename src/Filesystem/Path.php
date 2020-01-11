@@ -181,7 +181,7 @@ class Path
             throw new \InvalidArgumentException('Path length is 0.');
         }
 
-        $path = trim($path);
+        $path = trim($path, ' ');
 
         if (($ds === '\\') && ($path[0] === '\\') && ($path[1] === '\\')) {
             // Remove double slashes and backslashes and convert all slashes and backslashes to DIRECTORY_SEPARATOR
