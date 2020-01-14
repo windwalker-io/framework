@@ -1634,7 +1634,7 @@ class Query implements QueryInterface, PreparableInterface
 
             $conditions($query);
 
-            if (!$query->where) {
+            if ($query->where) {
                 $this->where((string) $query->where);
             }
         }
