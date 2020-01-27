@@ -380,6 +380,8 @@ class Browser
      */
     protected function detectDevice($userAgent)
     {
+        $userAgent = (string) $userAgent;
+
         // Attempt to detect the client platform.
         switch (true) {
             case stripos($userAgent, 'Windows') !== false:
@@ -475,7 +477,7 @@ class Browser
      */
     protected function detectRobot($userAgent)
     {
-        if (preg_match('/http|bot|robot|spider|crawler|curl|^$/i', $userAgent)) {
+        if (preg_match('/http|bot|robot|spider|crawler|curl|^$/i', (string) $userAgent)) {
             $this->robot = true;
         } else {
             $this->robot = false;
