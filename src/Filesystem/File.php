@@ -94,14 +94,25 @@ class File
     /**
      * Get file name from a path.
      *
-     * @param   string $path The file path to get basename.
+     * @param string $path The file path to get basename.
+     * @param bool   $safe Use safe splitter to get UTF-8 filename.
      *
      * @return  string  The file name.
      *
      * @since   2.0
      */
-    public static function getFilename($path)
+    public static function getFilename($path, bool $safe = true)
     {
+        if ($safe) {
+            $paths = explode(DIRECTORY_SEPARATOR, Path::clean($path));
+
+            if ($paths === []) {
+                return '';
+            }
+
+            return $paths[array_key_last($paths)];
+        }
+
         $name = pathinfo($path, PATHINFO_FILENAME);
 
         $ext = pathinfo($path, PATHINFO_EXTENSION);
