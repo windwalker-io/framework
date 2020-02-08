@@ -66,7 +66,7 @@ class File
     /**
      * Strips the last extension off of a file name
      *
-     * @param   string $file The file name
+     * @param string $file The file name
      *
      * @return  string  The file name without the extension
      *
@@ -80,7 +80,7 @@ class File
     /**
      * getExtension
      *
-     * @param   string $file The file path to get extension.
+     * @param string $file The file path to get extension.
      *
      * @return  string  The ext of file path.
      *
@@ -125,10 +125,34 @@ class File
     }
 
     /**
+     * Safe mb basename().
+     *
+     * @see https://www.php.net/manual/en/function.basename.php#121405
+     *
+     * @param string $path
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function basename(string $path): string
+    {
+        if (preg_match('@^.*[\\\\/]([^\\\\/]+)$@s', $path, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('@^([^\\\\/]+)$@s', $path, $matches)) {
+            return $matches[1];
+        }
+
+        return '';
+    }
+
+    /**
      * Makes the file name safe to use
      *
-     * @param   string $file       The name of the file [not full path]
-     * @param   array  $stripChars Array of regex (by default will remove any leading periods)
+     * @param string $file       The name of the file [not full path]
+     * @param array  $stripChars Array of regex (by default will remove any leading periods)
      *
      * @return  string  The sanitised string
      *
@@ -165,14 +189,14 @@ class File
     /**
      * Copies a file
      *
-     * @param   string $src   The path to the source file
-     * @param   string $dest  The path to the destination file
-     * @param   bool   $force Force copy.
+     * @param string $src   The path to the source file
+     * @param string $dest  The path to the destination file
+     * @param bool   $force Force copy.
      *
-     * @throws \UnexpectedValueException
-     * @throws Exception\FilesystemException
      * @return  boolean  True on success
      *
+     * @throws Exception\FilesystemException
+     * @throws \UnexpectedValueException
      * @since   2.0
      */
     public static function copy($src, $dest, $force = false)
@@ -208,12 +232,12 @@ class File
     /**
      * Delete a file or array of files
      *
-     * @param   mixed $files The file name or an array of file names
+     * @param mixed $files The file name or an array of file names
      *
      * @return  boolean  True on success
      *
-     * @since   2.0
      * @throws  FilesystemException
+     * @since   2.0
      */
     public static function delete($files)
     {
@@ -245,13 +269,13 @@ class File
     /**
      * Moves a file
      *
-     * @param   string $src   The path to the source file
-     * @param   string $dest  The path to the destination file
-     * @param   bool   $force Force move it.
+     * @param string $src   The path to the source file
+     * @param string $dest  The path to the destination file
+     * @param bool   $force Force move it.
      *
-     * @throws Exception\FilesystemException
      * @return  boolean  True on success
      *
+     * @throws Exception\FilesystemException
      * @since   2.0
      */
     public static function move($src, $dest, $force = false)
@@ -293,13 +317,13 @@ class File
     /**
      * Write contents to a file
      *
-     * @param   string $file   The full file path
-     * @param   string $buffer The buffer to write
+     * @param string $file   The full file path
+     * @param string $buffer The buffer to write
      *
      * @return  boolean  True on success
      *
-     * @since   2.0
      * @throws  FilesystemException
+     * @since   2.0
      */
     public static function write($file, $buffer)
     {
@@ -318,13 +342,13 @@ class File
     /**
      * Moves an uploaded file to a destination folder
      *
-     * @param   string $src  The name of the php (temporary) uploaded file
-     * @param   string $dest The path (including filename) to move the uploaded file to
+     * @param string $src  The name of the php (temporary) uploaded file
+     * @param string $dest The path (including filename) to move the uploaded file to
      *
      * @return  boolean  True on success
      *
-     * @since   2.0
      * @throws  FilesystemException
+     * @since   2.0
      */
     public static function upload($src, $dest)
     {
@@ -391,7 +415,7 @@ class File
      */
     public static function createTemp(?string $dir = null, ?string $prefix = null): string
     {
-        $dir = $dir ?? sys_get_temp_dir();
+        $dir    = $dir ?? sys_get_temp_dir();
         $prefix = $prefix ?? 'Windwalker-Temp-';
 
         if (!is_dir($dir)) {
