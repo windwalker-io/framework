@@ -133,7 +133,7 @@ class File
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.17
      */
     public static function basename(string $path): string
     {

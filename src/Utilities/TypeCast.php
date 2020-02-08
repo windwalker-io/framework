@@ -4,7 +4,7 @@
  * Part of ww4 project.
  *
  * @copyright  Copyright (C) 2019 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 declare(strict_types=1);
@@ -26,7 +26,7 @@ use Windwalker\Data\DataSetInterface;
  * @method static tryArray($value, bool $strict = false)
  * @method static tryObject($value, bool $strict = false)
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.17
  */
 abstract class TypeCast
 {
@@ -171,7 +171,7 @@ abstract class TypeCast
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.17
      */
     public static function forceString($data): string
     {
@@ -186,7 +186,7 @@ abstract class TypeCast
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.17
      */
     public static function mapAs(array $src, string $typeOrClass): array
     {
@@ -258,7 +258,7 @@ abstract class TypeCast
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.17
      */
     public static function try($value, string $type, bool $strict = false)
     {
@@ -318,7 +318,7 @@ abstract class TypeCast
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.17
      */
     public static function __callStatic(string $name, array $args)
     {

@@ -4,7 +4,7 @@
  * Part of ww4 project.
  *
  * @copyright  Copyright (C) 2019 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 declare(strict_types=1);
@@ -16,7 +16,7 @@ use TypeError;
 /**
  * The Assert class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.17
  */
 class TypeAssert
 {
@@ -37,7 +37,7 @@ class TypeAssert
      *
      * @throws TypeError
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.17
      */
     public static function assert($assertion, string $message, $value = null, ?string $caller = null): void
     {
