@@ -14,6 +14,8 @@ namespace Windwalker\String;
  * This class is based on Joomla String package
  *
  * @since  2.0
+ *
+ * @deprecated Use {@see \Windwalker\String\StrNormalise} instead.
  */
 abstract class StringNormalise
 {
