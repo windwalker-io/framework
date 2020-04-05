@@ -181,7 +181,7 @@ class AbstractInputList extends HtmlElement
      */
     protected function isChecked(Option $option)
     {
-        return $option->getValue() == $this->getChecked();
+        return (string) $option->getValue() === (string) $this->getChecked();
     }
 
     /**
