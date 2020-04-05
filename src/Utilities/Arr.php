@@ -39,27 +39,12 @@ class Arr
      * @param   bool  $recursive Recursive if data is nested.
      *
      * @return  array  The converted array.
+     *
+     * @deprecated Use {@see TypeCast::toArray()} instead.
      */
     public static function toArray($data, $recursive = false)
     {
-        // Ensure the input data is an array.
-        if ($data instanceof \Traversable) {
-            $data = iterator_to_array($data);
-        } elseif (is_object($data)) {
-            $data = get_object_vars($data);
-        } else {
-            $data = (array) $data;
-        }
-
-        if ($recursive) {
-            foreach ($data as &$value) {
-                if (is_array($value) || is_object($value)) {
-                    $value = static::toArray($value, $recursive);
-                }
-            }
-        }
-
-        return $data;
+        return TypeCast::toArray($data, $recursive);
     }
 
     /**
@@ -70,18 +55,12 @@ class Arr
      * @return  iterable
      *
      * @since  3.5
+     *
+     * @deprecated Use {@see TypeCast::toIterable()} instead.
      */
     public static function toIterable($iterable): iterable
     {
-        if (is_iterable($iterable)) {
-            return $iterable;
-        }
-
-        if (is_object($iterable)) {
-            return get_object_vars($iterable);
-        }
-
-        return (array) $iterable;
+        return TypeCast::toIterable($iterable);
     }
 
     /**
