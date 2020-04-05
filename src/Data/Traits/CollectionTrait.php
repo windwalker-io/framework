@@ -371,7 +371,7 @@ trait CollectionTrait
      */
     public function groupBy(string $column)
     {
-        return $this->bindNewInstance(Arr::group($this->dump(), $column, true));
+        return $this->bindNewInstance(Arr::group($this->dump(), $column, Arr::GROUP_TYPE_ARRAY));
     }
 
     /**
@@ -383,7 +383,7 @@ trait CollectionTrait
      */
     public function keyBy(string $field)
     {
-        return $this->bindNewInstance(Arr::group($this->dump(), $field));
+        return $this->bindNewInstance(Arr::group($this->dump(), $field, Arr::GROUP_TYPE_KEY_BY));
     }
 
     /**

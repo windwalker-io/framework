@@ -19,6 +19,12 @@ class Arr
 
     public const SORT_DESC = true;
 
+    public const GROUP_TYPE_ARRAY = 1;
+
+    public const GROUP_TYPE_KEY_BY = 2;
+
+    public const GROUP_TYPE_MIX = 3;
+
     /**
      * SAPI mocck name to support test.
      *
@@ -682,22 +688,27 @@ class Arr
         return is_array($array) || $array instanceof \ArrayAccess;
     }
 
+
     /**
      * Re-group an array to create a reverse lookup of an array of scalars, arrays or objects.
      *
-     * @param array  $array      The source array data.
-     * @param string $key        Where the elements of the source array are objects or arrays, the key to pivot on.
-     * @param bool   $forceArray Force child element always array.
+     * @param  array     $array  The source array data.
+     * @param  string    $key    Where the elements of the source array are objects or arrays, the key to pivot on.
+     * @param  int|bool  $type   The group type.
      *
      * @return array An array of arrays grouped either on the value of the keys,
      *               or an individual key of an object or array.
      *
      * @since  2.0
      */
-    public static function group(array $array, $key = null, $forceArray = false)
+    public static function group(array $array, ?string $key = null, $type = self::GROUP_TYPE_MIX): array
     {
-        $results = [];
+        $results  = [];
         $hasArray = [];
+
+        if (is_bool($type)) {
+            $type = $type ? static::GROUP_TYPE_ARRAY : static::GROUP_TYPE_MIX;
+        }
 
         foreach ($array as $index => $value) {
             // List value
@@ -706,34 +717,36 @@ class Arr
                     continue;
                 }
 
-                $resultKey = static::get($value, $key);
+                $resultKey   = static::get($value, $key);
                 $resultValue = $array[$index];
             } else {
                 // Scalar value.
-                $resultKey = $value;
+                $resultKey   = $value;
                 $resultValue = $index;
             }
 
             // First set value if not exists.
             if (!isset($results[$resultKey])) {
                 // Force first element in array.
-                if ($forceArray) {
-                    $results[$resultKey] = [$resultValue];
+                if ($type === static::GROUP_TYPE_ARRAY) {
+                    $results[$resultKey]  = [$resultValue];
                     $hasArray[$resultKey] = true;
                 } else {
                     // Keep first element single.
                     $results[$resultKey] = $resultValue;
                 }
-            } elseif (!$forceArray && empty($hasArray[$resultKey])) {
-                // If first element is sngle, now add second element as an array.
+            } elseif ($type === static::GROUP_TYPE_MIX && empty($hasArray[$resultKey])) {
+                // If first element is single, now add second element as an array.
                 $results[$resultKey] = [
                     $results[$resultKey],
                     $resultValue,
                 ];
 
                 $hasArray[$resultKey] = true;
+            } elseif ($type === static::GROUP_TYPE_KEY_BY) {
+                $results[$resultKey] = $resultValue;
             } else {
-                // Now always push new elements.
+                // Now always push results elements.
                 $results[$resultKey][] = $resultValue;
             }
         }
