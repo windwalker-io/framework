@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Response;
 
 use Psr\Http\Message\UriInterface;
+use Windwalker\Http\Stream\NullStream;
 use Windwalker\Http\Stream\Stream;
 
 /**
@@ -42,6 +43,6 @@ class RedirectResponse extends Response
 
         $headers['location'] = [$uri];
 
-        parent::__construct(new Stream('php://temp', 'r'), $status, $headers);
+        parent::__construct(new NullStream(), $status, $headers);
     }
 }
