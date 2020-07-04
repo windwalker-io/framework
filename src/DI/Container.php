@@ -460,7 +460,20 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             $dependency        = $param->getClass();
             $dependencyVarName = $param->getName();
 
-            // If we have a dependency, that means it has been type-hinted.
+            // Prior (1): Argument with numeric keys.
+            if (array_key_exists($i, $args)) {
+                $methodArgs[] = $this->resolveArgumentValue($args[$i]);
+                continue;
+            }
+
+            // Prior (2): Argument with named keys.
+            if (array_key_exists($dependencyVarName, $args)) {
+                $methodArgs[] = $this->resolveArgumentValue($args[$dependencyVarName]);
+
+                continue;
+            }
+
+            // // Prior (3): Argument with numeric keys.
             if (null !== $dependency) {
                 $depObject           = null;
                 $dependencyClassName = $dependency->getName();
@@ -505,18 +518,6 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
 
                 $trailing   = array_slice($trailing, $i);
                 $methodArgs = array_merge($methodArgs, $trailing);
-                continue;
-            }
-
-            // If an arg provided, use it.
-            if (array_key_exists($dependencyVarName, $args)) {
-                $methodArgs[] = $this->resolveArgumentValue($args[$dependencyVarName]);
-
-                continue;
-            }
-
-            if (array_key_exists($i, $args)) {
-                $methodArgs[] = $this->resolveArgumentValue($args[$i]);
                 continue;
             }
 
