@@ -8,7 +8,6 @@
 
 namespace Windwalker\Http\Response;
 
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\AbstractMessage;
@@ -21,7 +20,7 @@ use Windwalker\Http\Stream\Stream;
  *
  * @since  2.1
  */
-class Response extends AbstractMessage implements MessageInterface, ResponseInterface
+class Response extends AbstractMessage implements ResponseInterface
 {
     /**
      * Property statusCode.
@@ -38,9 +37,27 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
     protected $reasonPhrase;
 
     /**
+     * from
+     *
+     * @param  ResponseInterface  $response
+     *
+     * @return  ResponseInterface
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function from(ResponseInterface $response): ResponseInterface
+    {
+        return new static(
+            $response->getBody(),
+            $response->getStatusCode(),
+            $response->getHeaders()
+        );
+    }
+
+    /**
      * Constructor.
      *
-     * @param  string $body    The body data.
+     * @param  mixed  $body    The body data.
      * @param  int    $status  The status code.
      * @param  array  $headers The custom headers.
      */
