@@ -9,6 +9,7 @@
 namespace Windwalker\Query;
 
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Iterator\DataIterator;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
@@ -22,7 +23,7 @@ use Windwalker\Query\Query\PreparableInterface;
  *
  * @since 2.0
  */
-class Query implements QueryInterface, PreparableInterface
+class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
 {
     /**
      * Property name.
@@ -2390,6 +2391,26 @@ class Query implements QueryInterface, PreparableInterface
         if ($this->name) {
             $this->connection = ConnectionContainer::getConnection($this->name);
         }
+    }
+
+    /**
+     * getIterator
+     *
+     * @param string $class
+     *
+     * @return  \Traversable|DataIterator
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getIterator(string $class = 'stdClass')
+    {
+        if (!$this->connection instanceof AbstractDatabaseDriver) {
+            throw new \LogicException(
+                'Loading data from Query must inject AbstractDatabaseDriver object into it.'
+            );
+        }
+
+        return $this->connection->prepare($this)->getIterator($class);
     }
 
     /**
