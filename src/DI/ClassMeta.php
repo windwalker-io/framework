@@ -76,21 +76,25 @@ class ClassMeta
      *
      * @param mixed $obj
      *
-     * @return  string
+     * @return  string|callable
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function getClassName($obj): string
+    public static function getClassName($obj)
     {
         if ($obj instanceof static) {
             return $obj->getClass();
+        }
+
+        if ($obj instanceof \Closure) {
+            return spl_object_hash($obj);
         }
 
         if (is_object($obj)) {
             return get_class($obj);
         }
 
-        if (is_string($obj)) {
+        if (is_string($obj) || is_callable($obj)) {
             return $obj;
         }
 
