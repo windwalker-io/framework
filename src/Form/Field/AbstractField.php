@@ -468,7 +468,7 @@ abstract class AbstractField
      */
     public function filter()
     {
-        if ($this->get('disabled')) {
+        if ($this->value === null || $this->get('disabled')) {
             return $this;
         }
 
