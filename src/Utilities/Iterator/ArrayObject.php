@@ -268,7 +268,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      */
     public function ksort($flags = null)
     {
-        ksort($this->storage, $flags);
+        ksort($this->storage, ...func_get_args());
 
         return $this;
     }
@@ -284,7 +284,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      */
     public function krsort($flags = null)
     {
-        krsort($this->storage, $flags);
+        krsort($this->storage, ...func_get_args());
 
         return $this;
     }
@@ -300,7 +300,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      */
     public function sort($flags = null)
     {
-        sort($this->storage, $flags);
+        sort($this->storage, ...func_get_args());
 
         return $this;
     }
@@ -316,7 +316,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      */
     public function rsort($flags = null)
     {
-        rsort($this->storage, $flags);
+        rsort($this->storage, ...func_get_args());
 
         return $this;
     }
