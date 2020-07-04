@@ -26,6 +26,11 @@ class TypeAssert
     protected static $exceptionClass = TypeError::class;
 
     /**
+     * @var int
+     */
+    protected static $exceptionCode = 500;
+
+    /**
      * assert
      *
      * @param  bool|callable  $assertion
@@ -74,7 +79,7 @@ class TypeAssert
 
         $class = static::$exceptionClass;
 
-        return new $class(sprintf($message, $caller, static::describeValue($value)));
+        return new $class(sprintf($message, $caller, static::describeValue($value)), static::$exceptionCode);
     }
 
     public static function getCaller(int $backSteps = 2): string
