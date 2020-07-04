@@ -69,7 +69,7 @@ class ServerRequestFactory
         $decodedFiles = $_FILES;
 
         if (in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
-            $type = HeaderHelper::getValue($headers, 'Content-Type');
+            $type = (string) HeaderHelper::getValue($headers, 'Content-Type');
 
             if (strpos($type, 'application/x-www-form-urlencoded') !== false) {
                 parse_str($body->__toString(), $decodedBody);
