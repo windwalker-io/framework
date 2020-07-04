@@ -62,7 +62,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
         $dsn = TestDsnResolver::getDsn('mysql');
 
         if ($dsn) {
-            $this->pdo = new \PDO('mysql:host=localhost;', $dsn['user'], $dsn['pass']);
+            $this->pdo = new \PDO("mysql:host={$dsn['host']};", $dsn['user'], $dsn['pass']);
         }
 
         $this->instance = new MysqlQuery($this->pdo);

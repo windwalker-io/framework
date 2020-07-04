@@ -1335,7 +1335,7 @@ class QueryTest extends AbstractQueryTestCase
             $this->markTestSkipped('No DSN to test');
         }
 
-        $pdo = new \PDO('mysql:host=localhost;', $dsn['user'], $dsn['pass']);
+        $pdo = new \PDO("mysql:host={$dsn['host']};", $dsn['user'], $dsn['pass']);
 
         ConnectionContainer::setConnection('mysql', $pdo);
 

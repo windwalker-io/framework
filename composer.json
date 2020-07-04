@@ -17,13 +17,14 @@
         "psr/cache": "~1.0",
         "psr/container": "^1.0",
         "composer/ca-bundle": "^1.1",
+        "symfony/polyfill-php73": "^1.17",
         "ext-json": "*",
         "ext-curl": "*",
         "ext-pdo": "*"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
-        "symfony/yaml": "~4.0",
+        "symfony/yaml": "~4.0||^5.0",
 
         "twig/twig": "~1.0",
         "illuminate/view": "^5.0||^6.0",
@@ -104,5 +105,10 @@
         "windwalker/uri": "self.version",
         "windwalker/utilities": "self.version",
         "windwalker/validator": "self.version"
+    },
+    "config": {
+        "platform": {
+            "php": "7.1.10"
+        }
     }
 }
