@@ -78,7 +78,7 @@ class CurlTransport extends AbstractTransport
     public function getResponse($content, $info)
     {
         // Create the response object.
-        $return = new Response();
+        $return = $this->createResponse();
 
         // Get the number of redirects that occurred.
         $redirects = $info['redirect_count'] ?? 0;
@@ -119,6 +119,20 @@ class CurlTransport extends AbstractTransport
         }
 
         return $return;
+    }
+
+    /**
+     * createResponse
+     *
+     * @return  ResponseInterface
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function createResponse(): ResponseInterface
+    {
+        $class = $this->options['response_class'] ?? Response::class;
+
+        return new $class();
     }
 
     /**

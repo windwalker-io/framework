@@ -50,6 +50,21 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     protected $transport;
 
     /**
+     * create
+     *
+     * @param array                   $options
+     * @param TransportInterface|null $transport
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function create(array $options = [], TransportInterface $transport = null)
+    {
+        return new static($options, $transport);
+    }
+
+    /**
      * Class init.
      *
      * @param  array              $options   The options of this client object.

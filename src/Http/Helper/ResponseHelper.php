@@ -114,4 +114,84 @@ abstract class ResponseHelper
 
         return ($code >= 100 && $code < 600);
     }
+
+    /**
+     * inRange
+     *
+     * @param int      $code
+     * @param int      $start
+     * @param int|null $end
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function inRange(int $code, int $start, ?int $end = null): bool
+    {
+        if ($end === null) {
+            $end = $start + 100;
+        }
+
+        if ($end < $start) {
+            throw new \InvalidArgumentException('Range end should larger than start.');
+        }
+
+        return $code >= $start && $code < $end;
+    }
+
+    /**
+     * isSuccess
+     *
+     * @param int $code
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isSuccess(int $code): bool
+    {
+        return static::inRange($code, 200);
+    }
+
+    /**
+     * isRedirect
+     *
+     * @param int $code
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isRedirect(int $code): bool
+    {
+        return static::inRange($code, 300);
+    }
+
+    /**
+     * isClientError
+     *
+     * @param int $code
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isClientError(int $code): bool
+    {
+        return static::inRange($code, 400);
+    }
+
+    /**
+     * isServerError
+     *
+     * @param int $code
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isServerError(int $code): bool
+    {
+        return static::inRange($code, 500);
+    }
 }
