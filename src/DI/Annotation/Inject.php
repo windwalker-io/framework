@@ -21,7 +21,7 @@ use Windwalker\DI\Exception\DependencyResolutionException;
  *
  * @since  3.4.4
  */
-class Inject
+class Inject implements AnnotationInterface
 {
     /**
      * Property key.
@@ -48,6 +48,19 @@ class Inject
     {
         $this->key = isset($values['key']) ? $values['key'] : null;
         $this->new = isset($values['new']) ? $values['new'] : false;
+    }
+
+    /**
+     * handle
+     *
+     * @param Container $container
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function handle(Container $container): void
+    {
     }
 
     /**
