@@ -25,6 +25,7 @@ use Windwalker\String\StringInflector;
  *
  * @method  static DataSet|Data[]  find($conditions = [], $order = null, $start = null, $limit = null, $key = null)
  * @method  static DataSet|Data[]  findAll($order = null, $start = null, $limit = null, $key = null)
+ * @method  static \Iterator       findIterate($conditions = [], $order = null, $start = null, $limit = null, $key = null)
  * @method  static Data            findOne($conditions = [], $order = null)
  * @method  static array           findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null)
  * @method  static mixed           findResult($conditions = [], $order = null)

@@ -24,7 +24,7 @@ use Windwalker\Event\ListenerMapper;
  *
  * @since  2.0
  */
-abstract class AbstractDataMapper implements DataMapperInterface
+abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggregate
 {
     public const UPDATE_NULLS = true;
 
@@ -246,6 +246,86 @@ abstract class AbstractDataMapper implements DataMapperInterface
         );
 
         return $result;
+    }
+
+    /**
+     * findIterate
+     *
+     * @param mixed   $conditions    Where conditions, you can use array or Compare object.
+     *                               Example:
+     *                               - `array('id' => 5)` => id = 5
+     *                               - `new GteCompare('id', 20)` => 'id >= 20'
+     *                               - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed   $order         Order sort, can ba string, array or object.
+     *                               Example:
+     *                               - `id ASC` => ORDER BY id ASC
+     *                               - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     * @param integer $start         Limit start number.
+     * @param integer $limit         Limit rows.
+     * @param string  $key           The index key.
+     *
+     * @return  \Iterator
+     *
+     * @throws \Exception
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function findIterate($conditions = [], $order = null, $start = null, $limit = null, $key = null): \Iterator
+    {
+        if ($conditions instanceof \Traversable) {
+            $conditions = iterator_to_array($conditions);
+        } elseif (is_object($conditions)) {
+            $conditions = get_object_vars($conditions);
+        }
+
+        if (!is_array($conditions)) {
+            // Load by primary key.
+            $keyCount = count($this->getKeyName(true));
+
+            if ($keyCount) {
+                if ($keyCount > 1) {
+                    throw new \InvalidArgumentException(
+                        'Table has multiple primary keys specified, only one primary key value provided.'
+                    );
+                }
+
+                $conditions = [$this->getKeyName() => $conditions];
+            } else {
+                throw new \RuntimeException('No primary keys defined.');
+            }
+        }
+
+        $order = (array) $order;
+
+        // Event
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__),
+            [
+                'conditions' => &$conditions,
+                'order' => &$order,
+                'start' => &$start,
+                'limit' => &$limit,
+            ]
+        );
+
+        // Find data
+        $iterator = $this->doFindIterate($conditions, $order, $start, $limit);
+
+        // Event
+        $this->triggerEvent(
+            'onAfter' . ucfirst(__FUNCTION__),
+            [
+                'result' => &$iterator,
+            ]
+        );
+
+        foreach ($iterator as $k => $data) {
+            $i = $key ? $data->$key : $k;
+
+            if (!($data instanceof $this->dataClass)) {
+                yield $i => $this->bindData($data);
+            }
+        }
     }
 
     /**
@@ -1004,6 +1084,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
     abstract protected function doFind(array $conditions, array $orders, $start, $limit, $key);
 
     /**
+     * doFindIterate
+     *
+     * @param array   $conditions Where conditions, you can use array or Compare object.
+     * @param array   $orders     Order sort, can ba string, array or object.
+     * @param integer $start      Limit start number.
+     * @param integer $limit      Limit rows.
+     *
+     * @return  \Iterator
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    abstract protected function doFindIterate(array $conditions, $order, ?int $start, ?int $limit): \Iterator;
+
+    /**
      * Do create action, this method should be override by sub class.
      *
      * @param mixed $dataset The data set contains data we want to store.
@@ -1313,5 +1407,17 @@ abstract class AbstractDataMapper implements DataMapperInterface
         }
 
         return !$empty;
+    }
+
+    /**
+     * getIterator
+     *
+     * @return  \ArrayIterator|\Traversable
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getIterator()
+    {
+        return $this->findIterate();
     }
 }

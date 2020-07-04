@@ -142,4 +142,21 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 
         return $this;
     }
+
+    /**
+     * doFindIterate
+     *
+     * @param array   $conditions Where conditions, you can use array or Compare object.
+     * @param array   $orders     Order sort, can ba string, array or object.
+     * @param integer $start      Limit start number.
+     * @param integer $limit      Limit rows.
+     *
+     * @return  \Iterator
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function doFindIterate(array $conditions, $order, ?int $start, ?int $limit): \Iterator
+    {
+        return new \ArrayIterator();
+    }
 }
