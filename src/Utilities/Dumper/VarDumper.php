@@ -8,11 +8,10 @@
 
 namespace Windwalker\Utilities\Dumper;
 
+use Symfony\Component\VarDumper\Caster\DateCaster;
 use Symfony\Component\VarDumper\Caster\ReflectionCaster;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Windwalker\String\Str;
+use Windwalker\Utilities\Dumper\Caster\DateTimeCaster;
 
 /**
  * The VarDumper class.
@@ -44,6 +43,11 @@ class VarDumper
             $cloner = new VarCloner();
             $cloner->setMaxItems(-1);
             $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+            $cloner->addCasters(
+                [
+                    \DateTimeInterface::class => [DateTimeCaster::class, 'castDateTime']
+                ]
+            );
 
 //            if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
 //                $dumper = 'html' === $_SERVER['VAR_DUMPER_FORMAT'] ? new PrintRDumper() : new PrintRDumper();
@@ -79,7 +83,7 @@ class VarDumper
      */
     public static function setHandler(callable $callable = null)
     {
-        $prevHandler = self::$handler;
+        $prevHandler   = self::$handler;
         self::$handler = $callable;
 
         return $prevHandler;
