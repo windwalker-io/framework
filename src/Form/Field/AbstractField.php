@@ -169,6 +169,20 @@ abstract class AbstractField
     protected $form;
 
     /**
+     * create
+     *
+     * @param mixed ...$args
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function create(...$args)
+    {
+        return new static(...$args);
+    }
+
+    /**
      * Constructor.
      *
      * @param string $name
@@ -1411,5 +1425,17 @@ abstract class AbstractField
         }
 
         throw new \BadMethodCallException(sprintf('Method: %s not exists', $method));
+    }
+
+    /**
+     * __toString
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function __toString()
+    {
+        return $this->render();
     }
 }

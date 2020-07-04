@@ -148,7 +148,43 @@ class ListField extends AbstractField
             $options = [$group => $options];
         }
 
+        $this->resetOptions();
         $this->handleOptions(null, $options);
+
+        return $this;
+    }
+
+    /**
+     * addOptions
+     *
+     * @param array|Option[] $options
+     * @param null|string    $group
+     *
+     * @return  $this
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function addOptions($options, $group = null)
+    {
+        if ($group) {
+            $options = [$group => $options];
+        }
+
+        $this->handleOptions(null, $options);
+
+        return $this;
+    }
+
+    /**
+     * resetOptions
+     *
+     * @return  $this
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function resetOptions()
+    {
+        $this->options = [];
 
         return $this;
     }
