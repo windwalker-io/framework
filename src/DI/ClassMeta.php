@@ -8,6 +8,8 @@
 
 namespace Windwalker\DI;
 
+use Windwalker\Utilities\Assert\TypeAssert;
+
 /**
  * The ClassMeta class.
  *
@@ -50,6 +52,50 @@ class ClassMeta
      * @var  Container
      */
     protected $container;
+
+    /**
+     * isSameClass
+     *
+     * @param mixed $obj1
+     * @param mixed $obj2
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function isSameClass($obj1, $obj2): bool
+    {
+        $class1 = static::getClassName($obj1);
+        $class2 = static::getClassName($obj2);
+
+        return strtolower(trim($class1, '\\')) === strtolower(trim($class2, '\\'));
+    }
+
+    /**
+     * getClassName
+     *
+     * @param mixed $obj
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function getClassName($obj): string
+    {
+        if ($obj instanceof static) {
+            return $obj->getClass();
+        }
+
+        if (is_object($obj)) {
+            return get_class($obj);
+        }
+
+        if (is_string($obj)) {
+            return $obj;
+        }
+
+        throw new \InvalidArgumentException('Invalid object type, should be object or class name.');
+    }
 
     /**
      * ClassMeta constructor.
@@ -244,5 +290,17 @@ class ClassMeta
         $this->container = $container;
 
         return $this;
+    }
+
+    /**
+     * Method to get property Class
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 }
