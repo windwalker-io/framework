@@ -55,7 +55,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      * @param int    $flags
      * @param string $iteratorClass
      */
-    public function __construct($input = [], $flags = self::ARRAY_AS_PROPS, $iteratorClass = \ArrayIterator::class)
+    public function __construct($input = [], $flags = self::ARRAY_AS_PROPS, $iteratorClass = \Generator::class)
     {
         $this->setFlags($flags);
         $this->storage = Arr::toArray($input);
@@ -234,11 +234,17 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return \Iterator
      */
-    public function getIterator()
+    public function &getIterator()
     {
         $class = $this->iteratorClass;
 
-        return new $class($this->storage);
+        if ($class !== \Generator::class) {
+            return new $class($this->storage);
+        }
+
+        foreach ($this->storage as &$item) {
+            yield $item;
+        }
     }
 
     /**

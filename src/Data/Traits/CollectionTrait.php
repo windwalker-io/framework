@@ -23,6 +23,45 @@ use Windwalker\Utilities\Arr;
 trait CollectionTrait
 {
     /**
+     * wrap
+     *
+     * @param mixed $data
+     * @param bool  $includeChildren
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function wrap($data, bool $includeChildren = false)
+    {
+        if (!$data instanceof static) {
+            $data = new static($data);
+        }
+
+        if ($includeChildren) {
+            $data->wrapAll();
+        }
+
+        return $data;
+    }
+
+    /**
+     * wrapAll
+     *
+     * @param string|null $className
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function wrapAll(?string $className = null)
+    {
+        $className = $className ?? static::class;
+
+        return $this->map([$className, 'wrap']);
+    }
+
+    /**
      * each
      *
      * @param callable $callback
