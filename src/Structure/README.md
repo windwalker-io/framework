@@ -254,7 +254,7 @@ Add Symfony YAML component in `composer.json`
 ``` json
 {
 	"require-dev": {
-		"symfony/yaml": "~3.0"
+		"symfony/yaml": "^4.0||^5.0"
 	}
 }
 ```
