@@ -7,11 +7,10 @@ php:
   - '7.1'
   - '7.2'
   - '7.3'
-  - 7.4snapshot
+  - '7.4'
 
-matrix:
-  allow_failures:
-    - php: 7.4snapshot
+#matrix:
+#  allow_failures:
 
 addons:
   postgresql: "9.3"
