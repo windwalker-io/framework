@@ -9,6 +9,9 @@
 namespace Windwalker\DI\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
+use Doctrine\Common\Annotations\AnnotationReader;
+use PhpDocReader\AnnotationException;
+use PhpDocReader\PhpDocReader;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
@@ -21,47 +24,12 @@ use Windwalker\DI\Exception\DependencyResolutionException;
  *
  * @since  3.4.4
  */
-class Inject implements AnnotationInterface
+class Inject extends AbstractAnnotation implements PropertyAnnotationInterface
 {
     /**
-     * Property key.
-     *
-     * @var string
+     * @var PhpDocReader
      */
-    protected $key;
-
-    /**
-     * Property new.
-     *
-     * @Enum({true, false})
-     *
-     * @var  bool
-     */
-    protected $new = false;
-
-    /**
-     * Inject constructor.
-     *
-     * @param array $values
-     */
-    public function __construct(array $values = [])
-    {
-        $this->key = isset($values['key']) ? $values['key'] : null;
-        $this->new = isset($values['new']) ? $values['new'] : false;
-    }
-
-    /**
-     * handle
-     *
-     * @param Container $container
-     *
-     * @return  void
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function handle(Container $container): void
-    {
-    }
+    protected static $docReader;
 
     /**
      * getInjectable
@@ -78,10 +46,10 @@ class Inject implements AnnotationInterface
      */
     public function resolveInjectable(Container $container, $class)
     {
-        $id = $this->key === null ? $class : $this->key;
+        $id = $this->getOption('key') ?? $class;
 
         if ($container->has($id)) {
-            return $container->get($id, $this->new);
+            return $container->get($id, (bool) $this->getOption('new'));
         }
 
         if (!class_exists($id)) {
@@ -91,5 +59,61 @@ class Inject implements AnnotationInterface
         }
 
         return $container->newInstance($id);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws DependencyResolutionException|\ReflectionException
+     */
+    public function __invoke(Container $container, $instance, \ReflectionProperty $property)
+    {
+        if (!class_exists(PhpDocReader::class)) {
+            return $instance;
+        }
+
+        if (!$property instanceof \ReflectionProperty) {
+            return $instance;
+        }
+
+        try {
+            $varClass = $this->getDocReader()->getPropertyClass($property);
+        } catch (AnnotationException $e) {
+            throw new DependencyResolutionException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        if ($property->isProtected() || $property->isPrivate()) {
+            $property->setAccessible(true);
+        }
+
+        $property->setValue(
+            $instance,
+            $this->resolveInjectable($container, $varClass)
+        );
+
+        if ($property->isProtected() || $property->isPrivate()) {
+            $property->setAccessible(false);
+        }
+
+        return $instance;
+    }
+
+    /**
+     * getDocReader
+     *
+     * @return  PhpDocReader
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function getDocReader(): PhpDocReader
+    {
+        if (!static::$docReader) {
+            static::$docReader = new PhpDocReader();
+        }
+
+        return static::$docReader;
     }
 }

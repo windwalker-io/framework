@@ -29,7 +29,7 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function __construct($options = [])
     {
-        $this->prefix = isset($options['prefix']) ? $options['prefix'] : 'wws_';
+        $this->prefix = $options['prefix'] ?? 'wws_';
     }
 
     /**
@@ -39,6 +39,8 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function register()
     {
-        session_set_save_handler($this, true);
+        if (!headers_sent()) {
+            session_set_save_handler($this, true);
+        }
     }
 }

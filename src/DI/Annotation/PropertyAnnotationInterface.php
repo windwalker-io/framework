@@ -12,22 +12,22 @@ namespace Windwalker\DI\Annotation;
 use Windwalker\DI\Container;
 
 /**
- * Interface AnnotationInterface
+ * Interface PropertyAnnotationInterface
  *
  * @since  __DEPLOY_VERSION__
  */
-interface AnnotationInterface
+interface PropertyAnnotationInterface
 {
     /**
      * handle
      *
-     * @param Container  $container
-     * @param            $instance
-     * @param \Reflector $reflector
+     * @param Container           $container
+     * @param object              $instance
+     * @param \ReflectionProperty $property
      *
      * @return  object
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function __invoke(Container $container, $instance, \Reflector $reflector);
+    public function __invoke(Container $container, $instance, \ReflectionProperty $property);
 }

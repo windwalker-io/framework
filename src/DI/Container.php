@@ -9,9 +9,9 @@
 namespace Windwalker\DI;
 
 use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\AnnotationReader;
 use PhpDocReader\PhpDocReader;
 use Psr\Container\ContainerInterface;
+use Windwalker\DI\Annotation\AnnotationRegistry;
 use Windwalker\DI\Annotation\Inject;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\Structure\Structure;
@@ -68,11 +68,11 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     protected $args = [];
 
     /**
-     * Property annotationReader.
+     * Property AnnotationRegistry.
      *
-     * @var AnnotationReader
+     * @var AnnotationRegistry
      */
-    protected $annotationReader;
+    protected $annotationRegistry;
 
     /**
      * Property docReader.
@@ -392,50 +392,14 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             );
         }
 
-        if (!class_exists(AnnotationReader::class) || !class_exists(PhpDocReader::class)) {
+        $annotationRegistry = $this->getAnnotationRegistry();
+
+        if (!$annotationRegistry::isSupported()) {
             return $instance;
         }
 
-        try {
-            $reader = $this->getAnnotationReader();
-        } catch (AnnotationException $e) {
-            throw new DependencyResolutionException(
-                $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
-
-        $properties = $reflection->getProperties();
-
-        foreach ($properties as $property) {
-            $inject = $reader->getPropertyAnnotation($property, Inject::class);
-
-            if ($inject instanceof Inject) {
-                try {
-                    $varClass = $this->getDocReader()->getPropertyClass($property);
-                } catch (\PhpDocReader\AnnotationException $e) {
-                    throw new DependencyResolutionException(
-                        $e->getMessage(),
-                        $e->getCode(),
-                        $e
-                    );
-                }
-
-                if ($property->isProtected() || $property->isPrivate()) {
-                    $property->setAccessible(true);
-                }
-
-                $property->setValue(
-                    $instance,
-                    $inject->resolveInjectable($this, $varClass)
-                );
-
-                if ($property->isProtected() || $property->isPrivate()) {
-                    $property->setAccessible(false);
-                }
-            }
-        }
+        $instance = $annotationRegistry->resolveObject($this, $instance);
+        $instance = $annotationRegistry->resolveProperties($this, $instance);
 
         return $instance;
     }
@@ -460,20 +424,35 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             $dependency        = $param->getClass();
             $dependencyVarName = $param->getName();
 
-            // Prior (1): Argument with numeric keys.
+            // Prior (1): Handler ...$args
+            if ($param->isVariadic()) {
+                $trailing = [];
+
+                foreach ($args as $key => $value) {
+                    if (is_numeric($key)) {
+                        $trailing[] = $this->resolveArgumentValue($value);
+                    }
+                }
+
+                $trailing   = array_slice($trailing, $i);
+                $methodArgs = array_merge($methodArgs, $trailing);
+                continue;
+            }
+
+            // Prior (2): Argument with numeric keys.
             if (array_key_exists($i, $args)) {
                 $methodArgs[] = $this->resolveArgumentValue($args[$i]);
                 continue;
             }
 
-            // Prior (2): Argument with named keys.
+            // Prior (3): Argument with named keys.
             if (array_key_exists($dependencyVarName, $args)) {
                 $methodArgs[] = $this->resolveArgumentValue($args[$dependencyVarName]);
 
                 continue;
             }
 
-            // // Prior (3): Argument with numeric keys.
+            // // Prior (4): Argument with numeric keys.
             if (null !== $dependency) {
                 $depObject           = null;
                 $dependencyClassName = $dependency->getName();
@@ -504,21 +483,6 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
 
                     continue;
                 }
-            }
-
-            // Handler ...$args
-            if ($param->isVariadic()) {
-                $trailing = [];
-
-                foreach ($args as $key => $value) {
-                    if (is_numeric($key)) {
-                        $trailing[] = $this->resolveArgumentValue($value);
-                    }
-                }
-
-                $trailing   = array_slice($trailing, $i);
-                $methodArgs = array_merge($methodArgs, $trailing);
-                continue;
             }
 
             if ($param->isOptional()) {
@@ -576,9 +540,13 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @throws DependencyResolutionException
      * @throws \ReflectionException
+     * @throws AnnotationException
      */
     public function execute($callable, array $args = [], $context = null)
     {
+        $object = null;
+        $method = null;
+
         if ($callable instanceof \Closure) {
             $ref = new \ReflectionObject($callable);
 
@@ -588,7 +556,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
                 $callable = explode('::', $callable);
             }
 
-            list($object, $method) = $callable;
+            [$object, $method] = $callable;
 
             $ref = new \ReflectionClass($object);
 
@@ -614,6 +582,10 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
 
         if ($context) {
             $closure = $closure->bindTo($context, $context);
+        }
+
+        if (AnnotationRegistry::isSupported() && $object !== null && is_object($object)) {
+            $closure = $this->getAnnotationRegistry()->resolveMethod($this, $object, $method, $closure);
         }
 
         return $closure();
@@ -1117,20 +1089,19 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     }
 
     /**
-     * Method to get property AnnotationReader
+     * Method to get property AnnotationRegistry
      *
-     * @return  AnnotationReader
+     * @return  AnnotationRegistry
      *
-     * @since  3.4.4
-     * @throws AnnotationException
+     * @since  __DEPLOY_VERSION__
      */
-    public function getAnnotationReader()
+    public function getAnnotationRegistry(): AnnotationRegistry
     {
-        if (!$this->annotationReader) {
-            $this->annotationReader = new AnnotationReader();
+        if (!$this->annotationRegistry) {
+            $this->annotationRegistry = new AnnotationRegistry();
         }
 
-        return $this->annotationReader;
+        return $this->annotationRegistry;
     }
 
     /**

@@ -35,7 +35,7 @@ class NativeBridge implements SessionBridgeInterface
     public function __construct()
     {
         // Do not re set ini if session has started.
-        if (!$this->isStarted()) {
+        if (!$this->isStarted() && !headers_sent()) {
             // Disable transparent sid support
             ini_set('session.use_trans_sid', '0');
 
@@ -64,7 +64,9 @@ class NativeBridge implements SessionBridgeInterface
          */
         session_register_shutdown();
 
-        session_cache_limiter('none');
+        if (!headers_sent()) {
+            session_cache_limiter('none');
+        }
 
         if (!session_start()) {
             throw new \RuntimeException('Failed to start the session');
