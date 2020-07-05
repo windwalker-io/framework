@@ -175,7 +175,7 @@ abstract class AbstractField
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function create(...$args)
     {
@@ -1432,7 +1432,7 @@ abstract class AbstractField
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function __toString()
     {

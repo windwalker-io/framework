@@ -2400,7 +2400,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      *
      * @return  \Traversable|DataIterator
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function getIterator(string $class = 'stdClass')
     {

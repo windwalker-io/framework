@@ -153,7 +153,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      *
      * @return  \Iterator
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     protected function doFindIterate(array $conditions, $order, ?int $start, ?int $limit): \Iterator
     {

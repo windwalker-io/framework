@@ -124,7 +124,7 @@ abstract class ResponseHelper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function inRange(int $code, int $start, ?int $end = null): bool
     {
@@ -146,7 +146,7 @@ abstract class ResponseHelper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function isSuccess(int $code): bool
     {
@@ -160,7 +160,7 @@ abstract class ResponseHelper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function isRedirect(int $code): bool
     {
@@ -174,7 +174,7 @@ abstract class ResponseHelper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function isClientError(int $code): bool
     {
@@ -188,7 +188,7 @@ abstract class ResponseHelper
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function isServerError(int $code): bool
     {

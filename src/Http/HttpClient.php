@@ -57,7 +57,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function create(array $options = [], TransportInterface $transport = null)
     {

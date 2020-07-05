@@ -43,7 +43,7 @@ class Response extends AbstractMessage implements ResponseInterface
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function from(ResponseInterface $response): ResponseInterface
     {

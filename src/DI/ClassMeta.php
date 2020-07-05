@@ -61,7 +61,7 @@ class ClassMeta
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function isSameClass($obj1, $obj2): bool
     {
@@ -78,7 +78,7 @@ class ClassMeta
      *
      * @return  string|callable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function getClassName($obj)
     {
@@ -301,7 +301,7 @@ class ClassMeta
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function getClass()
     {

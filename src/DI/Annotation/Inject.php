@@ -106,7 +106,7 @@ class Inject extends AbstractAnnotation implements PropertyAnnotationInterface
      *
      * @return  PhpDocReader
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     protected function getDocReader(): PhpDocReader
     {

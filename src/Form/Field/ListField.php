@@ -162,7 +162,7 @@ class ListField extends AbstractField
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function addOptions($options, $group = null)
     {
@@ -180,7 +180,7 @@ class ListField extends AbstractField
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function resetOptions()
     {
