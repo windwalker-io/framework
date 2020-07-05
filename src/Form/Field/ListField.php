@@ -246,7 +246,7 @@ class ListField extends AbstractField
             $group = $this->currentGroup;
         }
 
-        $this->setOptions($options, $group);
+        $this->addOptions($options, $group);
 
         return $this;
     }
