@@ -22,7 +22,7 @@ interface AnnotationInterface
      * handle
      *
      * @param Container  $container
-     * @param            $instance
+     * @param object     $instance
      * @param \Reflector $reflector
      *
      * @return  object

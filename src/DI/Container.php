@@ -398,7 +398,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             return $instance;
         }
 
-        $instance = $annotationRegistry->resolveObject($this, $instance);
+        $instance = $annotationRegistry->resolveClass($this, $instance);
         $instance = $annotationRegistry->resolveProperties($this, $instance);
 
         return $instance;

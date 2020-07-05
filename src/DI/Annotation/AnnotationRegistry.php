@@ -93,7 +93,7 @@ class AnnotationRegistry
     }
 
     /**
-     * resolveObject
+     * resolveClass
      *
      * @param Container $container
      * @param object    $instance
@@ -104,7 +104,7 @@ class AnnotationRegistry
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function resolveObject(Container $container, $instance)
+    public function resolveClass(Container $container, $instance)
     {
         $ref = new \ReflectionClass($instance);
 
