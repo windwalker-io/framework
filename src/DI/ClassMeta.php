@@ -54,6 +54,11 @@ class ClassMeta
     protected $container;
 
     /**
+     * @var callable[]
+     */
+    protected $extends = [];
+
+    /**
      * isSameClass
      *
      * @param mixed $obj1
@@ -233,6 +238,36 @@ class ClassMeta
     }
 
     /**
+     * extend
+     *
+     * @param callable $handler
+     *
+     * @return  $this
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function extend(callable $handler)
+    {
+        $this->extends[] = $handler;
+
+        return $this;
+    }
+
+    /**
+     * clearExtends
+     *
+     * @return  $this
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function clearExtends()
+    {
+        $this->extends = [];
+
+        return $this;
+    }
+
+    /**
      * __call
      *
      * @param   string $name
@@ -262,7 +297,13 @@ class ClassMeta
         if (in_array($name, $allowMethods, true)) {
             $arguments = array_merge($this->getArguments(), $args[0] ?? []);
 
-            return $this->container->$name($this->class, $arguments);
+            $object = $this->container->$name($this->class, $arguments);
+
+            foreach ($this->extends as $extend) {
+                $object = $extend($this->container, $object);
+            }
+
+            return $object;
         }
 
         throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');
