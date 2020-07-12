@@ -244,8 +244,8 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
             $storage = new $class($storage);
         }
 
-        foreach ($storage as &$item) {
-            yield $item;
+        foreach ($storage as $key => &$item) {
+            yield $key => $item;
         }
     }
 
