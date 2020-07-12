@@ -39,7 +39,7 @@ trait CollectionTrait
         }
 
         if ($includeChildren) {
-            $data->wrapAll();
+            $data = $data->wrapAll();
         }
 
         return $data;

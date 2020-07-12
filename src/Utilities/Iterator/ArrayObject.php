@@ -238,11 +238,13 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     {
         $class = $this->iteratorClass;
 
+        $storage = &$this->storage;
+
         if ($class !== \Generator::class) {
-            return new $class($this->storage);
+            $storage = new $class($storage);
         }
 
-        foreach ($this->storage as &$item) {
+        foreach ($storage as &$item) {
             yield $item;
         }
     }
