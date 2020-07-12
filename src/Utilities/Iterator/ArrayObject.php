@@ -238,11 +238,13 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     {
         $class = $this->iteratorClass;
 
-        $storage = &$this->storage;
-
+        // If is not generator, loop it-self to prevent storage property be referenced and override.
         if ($class !== \Generator::class) {
-            $storage = new $class($storage);
+            $storage = new $class($this->storage);
+        } else {
+            $storage = &$this->storage;
         }
+
 
         foreach ($storage as $key => &$item) {
             yield $key => $item;
