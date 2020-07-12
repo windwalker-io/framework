@@ -244,7 +244,7 @@ class ClassMeta
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.20
      */
     public function extend(callable $handler)
     {
@@ -258,7 +258,7 @@ class ClassMeta
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.20
      */
     public function clearExtends()
     {
