@@ -1093,7 +1093,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  AnnotationRegistry
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function getAnnotationRegistry(): AnnotationRegistry
     {

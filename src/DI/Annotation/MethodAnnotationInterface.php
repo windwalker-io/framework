@@ -4,7 +4,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2020 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI\Annotation;
@@ -14,7 +14,7 @@ use Windwalker\DI\Container;
 /**
  * Interface MethodAnnotationInterface
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.19
  */
 interface MethodAnnotationInterface
 {
@@ -27,7 +27,7 @@ interface MethodAnnotationInterface
      *
      * @return  \Closure
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function __invoke(Container $container, \Closure $closure, \ReflectionMethod $method);
 }

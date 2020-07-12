@@ -30,7 +30,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function wrap($data, bool $includeChildren = false)
     {
@@ -52,7 +52,7 @@ trait CollectionTrait
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function wrapAll(?string $className = null)
     {

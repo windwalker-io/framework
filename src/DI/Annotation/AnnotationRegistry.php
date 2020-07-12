@@ -4,7 +4,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2020 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI\Annotation;
@@ -17,7 +17,7 @@ use Windwalker\DI\Container;
 /**
  * The AnnotationRegistry class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.19
  */
 class AnnotationRegistry
 {
@@ -49,7 +49,7 @@ class AnnotationRegistry
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public static function isSupported(): bool
     {
@@ -81,7 +81,7 @@ class AnnotationRegistry
      *
      * @return  \ReflectionObject
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function reflect($object): \ReflectionObject
     {
@@ -102,7 +102,7 @@ class AnnotationRegistry
      *
      * @throws \ReflectionException|AnnotationException
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function resolveClass(Container $container, $instance)
     {
@@ -133,7 +133,7 @@ class AnnotationRegistry
      * @throws AnnotationException
      * @throws \ReflectionException
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function resolveMethod(Container $container, $instance, string $methodName, \Closure $closure): \Closure
     {
@@ -160,7 +160,7 @@ class AnnotationRegistry
      * @return  object
      *
      * @throws AnnotationException
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function resolveProperties(Container $container, $instance)
     {
@@ -187,7 +187,7 @@ class AnnotationRegistry
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     protected static function normalizeClassName(string $className): string
     {

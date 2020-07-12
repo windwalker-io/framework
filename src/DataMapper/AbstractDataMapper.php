@@ -268,7 +268,7 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
      *
      * @throws \Exception
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function findIterate($conditions = [], $order = null, $start = null, $limit = null, $key = null): \Iterator
     {
@@ -1093,7 +1093,7 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
      *
      * @return  \Iterator
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     abstract protected function doFindIterate(array $conditions, $order, ?int $start, ?int $limit): \Iterator;
 
@@ -1414,7 +1414,7 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
      *
      * @return  \ArrayIterator|\Traversable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     public function getIterator()
     {

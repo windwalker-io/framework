@@ -4,7 +4,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2020 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI\Annotation;
@@ -14,7 +14,7 @@ use Windwalker\Utilities\Classes\OptionAccessTrait;
 /**
  * The AbstractAnnotation class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.19
  */
 abstract class AbstractAnnotation
 {

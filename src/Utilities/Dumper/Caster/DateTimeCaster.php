@@ -4,7 +4,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2020 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Utilities\Dumper\Caster;
@@ -16,7 +16,7 @@ use Symfony\Component\VarDumper\Cloner\Stub;
 /**
  * The DateTimeCaster class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.5.19
  */
 class DateTimeCaster
 {

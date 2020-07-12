@@ -126,7 +126,7 @@ class CurlTransport extends AbstractTransport
      *
      * @return  ResponseInterface
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.19
      */
     protected function createResponse(): ResponseInterface
     {
