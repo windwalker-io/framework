@@ -10,7 +10,9 @@ namespace Windwalker\Query;
 
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Iterator\DataIterator;
+use Windwalker\Query\Mysql\MysqlQuery;
 use Windwalker\Query\Query\PreparableInterface;
+use Windwalker\String\Str;
 
 /**
  * Class AbstractQuery
@@ -1849,6 +1851,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      * q - Quote: Replacement text is passed to $this->quote().
      * Q - Quote (no escape): Replacement text is passed to $this->quote() with false as the second argument.
      * r - Raw: Replacement text is used as-is. (Be careful)
+     * j - Json: JSON extract with quote (->) or unquote (->>).
      *
      * Date Types:
      * - Replacement text automatically quoted (use uppercase for Name Quote).
@@ -1950,6 +1953,10 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
                     return $replacement;
                     break;
 
+                case 'j':
+                    return $query->parseJsonExtract($replacement);
+                    break;
+
                 // Dates
                 case 'y':
                     return $expression->year($query->quote($replacement));
@@ -2014,7 +2021,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
          * 5: Type specifier
          * 6: '%' if full token is '%%'
          */
-        return preg_replace_callback('#%(((([\d]+)\$)?([aeEnqQryYmMdDhHiIsStzZ]))|(%))#', $func, $format);
+        return preg_replace_callback('#%(((([\d]+)\$)?([aeEnqQrjyYmMdDhHiIsStzZ]))|(%))#', $func, $format);
     }
 
     /**
@@ -2411,6 +2418,56 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
         }
 
         return $this->connection->prepare($this)->getIterator($class);
+    }
+
+    /**
+     * parseJsonExtract
+     *
+     * @param  string  $expr
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function parseJsonExtract(string $expr): string
+    {
+        if (!$this instanceof MysqlQuery) {
+            throw new \LogicException('Currently only supports MySQL');
+        }
+
+        $q = $this->nameQuote;
+
+        if (strlen($q) === 1) {
+            $q1 = $q;
+            $q2 = $q;
+        } else {
+            $q1 = $q[0];
+            $q2 = $q[1];
+        }
+
+        $pattern = sprintf(
+            '/%s?([\w.]+)%s?\s*(->+)\s*(.*)/',
+            $q1,
+            $q2
+        );
+
+        preg_match($pattern, $expr, $matches);
+
+        if (count($matches) < 4) {
+            return $expr;
+        }
+
+        [, $column, $operator, $path] = $matches;
+
+        $path = trim($path, '"\'');
+
+        $expression = $this->format('JSON_EXTRACT(%n, %q)', $column, $path);
+
+        if ($operator === '->>') {
+            $expression = $this->expression('JSON_UNQUOTE', $expression);
+        }
+
+        return (string) $expression;
     }
 
     /**
