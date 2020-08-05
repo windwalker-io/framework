@@ -1045,4 +1045,28 @@ class Arr
     {
         return ArrayHelper::query($array, $queries, $strict, $keepKey);
     }
+
+    /**
+     * explodeNoEmpty
+     *
+     * @param  string    $delimiter
+     * @param  string    $str
+     * @param  int|null  $limit
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function explodeNoEmpty(string $delimiter, string $str, ?int $limit = null): array
+    {
+        return array_values(
+            array_filter(
+                array_map(
+                    'trim',
+                    explode(...func_get_args())
+                ),
+                'strlen',
+            )
+        );
+    }
 }
