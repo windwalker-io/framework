@@ -84,4 +84,20 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
 
         return static::$query;
     }
+
+    /**
+     * buildJsonSelector
+     *
+     * @param  string  $column
+     * @param  array   $paths
+     * @param  bool    $unQuoteLast
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function buildJsonSelector(string $column, array $paths, bool $unQuoteLast = true): string
+    {
+        throw new \LogicException('This DB does not support JSON.');
+    }
 }

@@ -1954,7 +1954,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
                     break;
 
                 case 'j':
-                    return $query->parseJsonExtract($replacement);
+                    return $query->jsonSelector($replacement);
                     break;
 
                 // Dates
@@ -2424,50 +2424,27 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      * parseJsonExtract
      *
      * @param  string  $expr
+     * @param  bool    $unQuoteLast
      *
      * @return  string
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function parseJsonExtract(string $expr): string
+    public function jsonSelector(string $expr): string
     {
-        if (!$this instanceof MysqlQuery) {
-            throw new \LogicException('Currently only supports MySQL');
-        }
+        $unQuoteLast = strpos($expr, '->>') !== false;
 
-        $q = $this->nameQuote;
-
-        if (strlen($q) === 1) {
-            $q1 = $q;
-            $q2 = $q;
-        } else {
-            $q1 = $q[0];
-            $q2 = $q[1];
-        }
-
-        $pattern = sprintf(
-            '/%s?([\w.]+)%s?\s*(->+)\s*(.*)/',
-            $q1,
-            $q2
+        $paths = array_filter(array_map('trim', preg_split('/->+/', $expr)), 'strlen');
+        $paths = array_map(
+            function ($segment) {
+                return trim($segment, "\"'");
+            },
+            $paths
         );
 
-        preg_match($pattern, $expr, $matches);
+        $column = array_shift($paths);
 
-        if (count($matches) < 4) {
-            return $expr;
-        }
-
-        [, $column, $operator, $path] = $matches;
-
-        $path = trim($path, '"\'');
-
-        $expression = $this->format('JSON_EXTRACT(%n, %q)', $column, $path);
-
-        if ($operator === '->>') {
-            $expression = $this->expression('JSON_UNQUOTE', $expression);
-        }
-
-        return (string) $expression;
+        return $this->getGrammar()::buildJsonSelector($column, $paths, $unQuoteLast);
     }
 
     /**

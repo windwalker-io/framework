@@ -1265,4 +1265,41 @@ class MysqlQueryTest extends AbstractQueryTestCase
             'This test has not been implemented yet.'
         );
     }
+
+    /**
+     * testParseJsonSelector
+     *
+     * @param  string  $selector
+     * @param  string  $expected
+     *
+     * @return  void
+     *
+     * @dataProvider parseJsonSelectorProvider
+     */
+    public function testParseJsonSelector(string $selector, string $expected)
+    {
+        self::assertEquals($expected, $this->getQuery()->jsonSelector($selector));
+    }
+
+    public function parseJsonSelectorProvider(): array
+    {
+        return [
+            [
+                'foo ->> bar',
+                'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$.bar\'))'
+            ],
+            [
+                'foo->bar[1]->>yoo',
+                'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$.bar[1].yoo\'))'
+            ],
+            [
+                'foo->bar[1]->>\'yoo\'',
+                'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$.bar[1].yoo\'))'
+            ],
+            [
+                'foo->bar[1]->\'yoo\'',
+                'JSON_EXTRACT(`foo`, \'$.bar[1].yoo\')'
+            ],
+        ];
+    }
 }

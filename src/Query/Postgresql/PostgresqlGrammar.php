@@ -527,4 +527,40 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     {
         // No use now
     }
+
+    /**
+     * buildJsonSelector
+     *
+     * @param  string  $column
+     * @param  array   $paths
+     * @param  bool    $unQuoteLast
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function buildJsonSelector(string $column, array $paths, bool $unQuoteLast = true): string
+    {
+        $query = static::getQuery();
+        $column = (string) $query->quoteName($column);
+
+        $newPaths = [];
+
+        foreach ($paths as $path) {
+            preg_match('/([\w.]+)\[(\d)\]/', $path, $matches);
+
+            if (count($matches) >= 3) {
+                $newPaths[] = $query->quote($matches[1]);
+                $newPaths[] = (int) $matches[2];
+            } else {
+                $newPaths[] = $query->quote($path);
+            }
+        }
+
+        $last = array_pop($newPaths);
+        $lastArrow = $unQuoteLast ? '->>' : '->';
+        array_unshift($newPaths, $column);
+
+        return implode('->', $newPaths) . $lastArrow . $last;
+    }
 }

@@ -1247,4 +1247,46 @@ class PostgresqlQueryTest extends AbstractQueryTestCase
             'This test has not been implemented yet.'
         );
     }
+
+    /**
+     * testParseJsonSelector
+     *
+     * @param  string  $selector
+     * @param  bool    $unQuoteLast
+     * @param  string  $expected
+     *
+     * @return  void
+     *
+     * @dataProvider parseJsonSelectorProvider
+     */
+    public function testParseJsonSelector(string $selector, bool $unQuoteLast, string $expected)
+    {
+        self::assertEquals($expected, $this->getQuery()->jsonSelector($selector, $unQuoteLast));
+    }
+
+    public function parseJsonSelectorProvider(): array
+    {
+        return [
+            [
+                'foo ->> bar',
+                true,
+                '"foo"->>\'bar\''
+            ],
+            [
+                'foo->bar[1]->>yoo',
+                true,
+                '"foo"->\'bar\'->1->>\'yoo\''
+            ],
+            [
+                'foo->bar[1]->>\'yoo\'',
+                true,
+                '"foo"->\'bar\'->1->>\'yoo\''
+            ],
+            [
+                'foo->bar[1]->\'yoo\'',
+                false,
+                '"foo"->\'bar\'->1->\'yoo\''
+            ],
+        ];
+    }
 }

@@ -549,7 +549,7 @@ class MysqlGrammar extends AbstractQueryGrammar
         $position = trim($position);
 
         if (strpos(strtoupper($position), 'AFTER') !== false) {
-            list($position, $posColumn) = explode(' ', $position, 2);
+            [$position, $posColumn] = explode(' ', $position, 2);
 
             $posColumn = $query->quoteName($posColumn);
         }
@@ -593,5 +593,35 @@ class MysqlGrammar extends AbstractQueryGrammar
         }
 
         return static::$query;
+    }
+
+    /**
+     * buildJsonSelector
+     *
+     * @param  string  $column
+     * @param  array   $paths
+     * @param  bool    $unQuoteLast
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function buildJsonSelector(string $column, array $paths, bool $unQuoteLast = true): string
+    {
+        $query = static::getQuery();
+
+        $column = (string) $query->quoteName($column);
+
+        $expr = sprintf(
+            'JSON_EXTRACT(%s, %s)',
+            $column,
+            $query->quote('$.' . implode('.', $paths))
+        );
+
+        if ($unQuoteLast) {
+            $expr = 'JSON_UNQUOTE(' . $expr . ')';
+        }
+
+        return $expr;
     }
 }
