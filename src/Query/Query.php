@@ -1311,7 +1311,11 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
                 $quotedAlias = $this->quoteNameStr([$alias]);
             }
 
-            $quotedName = $this->quoteNameStr(explode('.', $name));
+            if (strpos($name, '->') !== false) {
+                $quotedName = $this->jsonSelector($name);
+            } else {
+                $quotedName = $this->quoteNameStr(explode('.', $name));
+            }
 
             return $quotedName . ($quotedAlias ? ' AS ' . $quotedAlias : '');
         }
@@ -1851,7 +1855,6 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      * q - Quote: Replacement text is passed to $this->quote().
      * Q - Quote (no escape): Replacement text is passed to $this->quote() with false as the second argument.
      * r - Raw: Replacement text is used as-is. (Be careful)
-     * j - Json: JSON extract with quote (->) or unquote (->>).
      *
      * Date Types:
      * - Replacement text automatically quoted (use uppercase for Name Quote).
@@ -1953,10 +1956,6 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
                     return $replacement;
                     break;
 
-                case 'j':
-                    return $query->jsonSelector($replacement);
-                    break;
-
                 // Dates
                 case 'y':
                     return $expression->year($query->quote($replacement));
@@ -2021,7 +2020,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
          * 5: Type specifier
          * 6: '%' if full token is '%%'
          */
-        return preg_replace_callback('#%(((([\d]+)\$)?([aeEnqQrjyYmMdDhHiIsStzZ]))|(%))#', $func, $format);
+        return preg_replace_callback('#%(((([\d]+)\$)?([aeEnqQryYmMdDhHiIsStzZ]))|(%))#', $func, $format);
     }
 
     /**
@@ -2424,7 +2423,6 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      * parseJsonExtract
      *
      * @param  string  $expr
-     * @param  bool    $unQuoteLast
      *
      * @return  string
      *
