@@ -130,6 +130,11 @@ abstract class AbstractField
     protected $filter = null;
 
     /**
+     * @var FilterComposite
+     */
+    protected $valueFilter = null;
+
+    /**
      * Property attrs.
      *
      * @var  array
@@ -223,6 +228,7 @@ abstract class AbstractField
         }
 
         $this->resetValidators()->addValidators($validator);
+        $this->resetValueFilters();
     }
 
     /**
@@ -664,9 +670,21 @@ abstract class AbstractField
     /**
      * Method to get property Value
      *
-     * @return  null
+     * @return  mixed
      */
     public function getValue()
+    {
+        return $this->valueFilter->clean($this->getComputedValue());
+    }
+
+    /**
+     * getRawValue
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getComputedValue()
     {
         return ($this->value !== null && $this->value !== '') ? $this->value : $this->getAttribute('default');
     }
@@ -893,6 +911,87 @@ abstract class AbstractField
     public function resetFilters()
     {
         $this->filter = new FilterComposite();
+
+        return $this;
+    }
+
+    /**
+     * Method to get property ValueFilter
+     *
+     * @return  FilterComposite
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getValueFilter(): FilterComposite
+    {
+        return $this->valueFilter;
+    }
+
+    /**
+     * Method to set property valueFilter
+     *
+     * @param  FilterComposite  $valueFilter
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setValueFilter(FilterComposite $valueFilter)
+    {
+        $this->valueFilter = $valueFilter;
+
+        return $this;
+    }
+
+    /**
+     * addFilter
+     *
+     * @param  FilterInterface|callable $filter
+     *
+     * @return  static
+     * @throws \InvalidArgumentException
+     */
+    public function addValueFilter($filter)
+    {
+        if (!($filter instanceof FilterInterface) && !is_callable($filter)) {
+            $filter = FilterHelper::create($filter);
+        }
+
+        $this->valueFilter->addFilter($filter);
+
+        return $this;
+    }
+
+    /**
+     * addFilters
+     *
+     * @param FilterInterface[]|callable[] $filters
+     *
+     * @return  static
+     */
+    public function addValueFilters(array $filters)
+    {
+        foreach ($filters as $filter) {
+            if ($filter === null) {
+                continue;
+            }
+
+            $this->addValueFilter($filter);
+        }
+
+        return $this;
+    }
+
+    /**
+     * resetValueFilters
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function resetValueFilters()
+    {
+        $this->valueFilter = new FilterComposite();
 
         return $this;
     }
