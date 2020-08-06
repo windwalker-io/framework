@@ -474,7 +474,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      */
     protected function compileShow($expression)
     {
-        return '<?php echo $this->yieldSection(); ?>';
+        return '<?php endif; echo $this->yieldSection(); ?>';
     }
 
     /**
@@ -486,7 +486,13 @@ class EdgeCompiler implements EdgeCompilerInterface
      */
     protected function compileSection($expression)
     {
-        return "<?php \$this->startSection{$expression}; ?>";
+        $params = explode(',', $expression);
+
+        if (count($params) >= 2) {
+            return "<?php \$this->startSection{$expression}; ?>";
+        }
+
+        return "<?php \$this->startSection{$expression}; if (\$this->hasParent{$expression}): ?>";
     }
 
     /**
@@ -498,7 +504,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      */
     protected function compileAppend($expression)
     {
-        return '<?php $this->appendSection(); ?>';
+        return '<?php endif; $this->appendSection(); ?>';
     }
 
     /**
@@ -510,7 +516,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      */
     protected function compileEndsection($expression)
     {
-        return '<?php $this->stopSection(); ?>';
+        return '<?php endif; $this->stopSection(); ?>';
     }
 
     /**
@@ -522,7 +528,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      */
     protected function compileStop($expression)
     {
-        return '<?php $this->stopSection(); ?>';
+        return '<?php endif; $this->stopSection(); ?>';
     }
 
     /**
@@ -534,7 +540,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      */
     protected function compileOverwrite($expression)
     {
-        return '<?php $this->stopSection(true); ?>';
+        return '<?php endif; $this->stopSection(true); ?>';
     }
 
     /**

@@ -61,6 +61,11 @@ class Edge
     protected $sectionStack = [];
 
     /**
+     * @var array
+     */
+    protected $hasParents = [];
+
+    /**
      * The stack of in-progress push sections.
      *
      * @var array
@@ -299,7 +304,11 @@ class Edge
         if ($overwrite) {
             $this->sections[$last] = ob_get_clean();
         } else {
-            $this->extendSection($last, ob_get_clean());
+            $content = ob_get_clean();
+
+            $this->hasParents[$last] = strpos($content, '@parent') !== false;
+
+            $this->extendSection($last, $content);
         }
 
         return $last;
@@ -343,6 +352,20 @@ class Edge
         }
 
         $this->sections[$section] = $content;
+    }
+
+    /**
+     * hasParent
+     *
+     * @param  string  $section
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function hasParent(string $section): bool
+    {
+        return !empty($this->hasParents[$section]) || !isset($this->sections[$section]);
     }
 
     /**
@@ -495,6 +518,7 @@ class Edge
 
         $this->sections = [];
         $this->sectionStack = [];
+        $this->hasParents = [];
 
         $this->pushes = [];
         $this->pushStack = [];
