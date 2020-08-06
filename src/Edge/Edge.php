@@ -254,6 +254,8 @@ class Edge
                 $this->sectionStack[] = $section;
             }
         } else {
+            $this->hasParents[$section] = strpos($content, '@parent') !== false;
+
             $this->extendSection($section, $content);
         }
     }
@@ -382,15 +384,16 @@ class Edge
 
         if (isset($this->sections[$section])) {
             $sectionContent = $this->sections[$section];
+            $sectionContent = str_replace('@@parent', '--parent--holder--', $sectionContent);
+
+            return str_replace(
+                '--parent--holder--',
+                '@parent',
+                str_replace('@parent', $default, $sectionContent)
+            );
         }
 
-        $sectionContent = str_replace('@@parent', '--parent--holder--', $sectionContent);
-
-        return str_replace(
-            '--parent--holder--',
-            '@parent',
-            str_replace('@parent', '', $sectionContent)
-        );
+        return $sectionContent;
     }
 
     /**
