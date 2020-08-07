@@ -285,7 +285,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
                 time() - 42000,
                 '/' . ltrim($this->getOption('cookie_path'), '/'),
                 $this->getOption('cookie_domain'),
-                false,
+                true,
                 true
             );
         }

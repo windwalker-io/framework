@@ -70,7 +70,7 @@ class CookieInput extends Input
      * @see     setcookie()
      * @since   2.0
      */
-    public function set($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
+    public function set($name, $value, $expire = 0, $path = '', $domain = '', $secure = true, $httpOnly = true)
     {
         setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
 
