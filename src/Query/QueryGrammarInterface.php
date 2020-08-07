@@ -147,7 +147,7 @@ interface QueryGrammarInterface
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public static function buildJsonSelector(string $column, array $paths, bool $unQuoteLast = true): string;
 }

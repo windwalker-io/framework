@@ -453,7 +453,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     protected function doSync($dataset, array $conditions, ?array $compareKeys = null): array
     {

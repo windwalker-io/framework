@@ -363,7 +363,7 @@ class Edge
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public function hasParent(string $section): bool
     {

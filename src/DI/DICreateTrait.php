@@ -4,7 +4,7 @@
  * Part of earth project.
  *
  * @copyright  Copyright (C) 2020 .
- * @license    __LICENSE__
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\DI;
@@ -12,7 +12,7 @@ namespace Windwalker\DI;
 /**
  * DICreateTrait
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.5.21
  */
 trait DICreateTrait
 {
@@ -23,7 +23,7 @@ trait DICreateTrait
      *
      * @return  ClassMeta
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public static function di(...$args): ClassMeta
     {

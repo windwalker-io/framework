@@ -1055,7 +1055,7 @@ class Arr
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public static function explodeNoEmpty(string $delimiter, string $str, ?int $limit = null): array
     {

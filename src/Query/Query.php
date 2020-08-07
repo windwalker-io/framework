@@ -2426,7 +2426,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public function jsonSelector(string $expr): string
     {

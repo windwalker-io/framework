@@ -1187,7 +1187,7 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     abstract protected function doSync($dataset, array $conditions, ?array $compareKeys = null): array;
 

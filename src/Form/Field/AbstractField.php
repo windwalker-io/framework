@@ -682,7 +682,7 @@ abstract class AbstractField
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public function getComputedValue()
     {
@@ -920,7 +920,7 @@ abstract class AbstractField
      *
      * @return  FilterComposite
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public function getValueFilter(): FilterComposite
     {
@@ -934,7 +934,7 @@ abstract class AbstractField
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public function setValueFilter(FilterComposite $valueFilter)
     {
@@ -987,7 +987,7 @@ abstract class AbstractField
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.21
      */
     public function resetValueFilters()
     {
