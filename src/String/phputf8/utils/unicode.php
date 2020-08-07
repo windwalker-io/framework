@@ -39,7 +39,7 @@ function utf8_to_unicode($str)
     $len = strlen($str);
 
     for ($i = 0; $i < $len; $i++) {
-        $in = ord($str{$i});
+        $in = ord($str[$i]);
 
         if ($mState == 0) {
             // When mState is zero we expect either a US-ASCII character or a
