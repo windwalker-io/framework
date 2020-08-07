@@ -159,4 +159,20 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
     {
         return new \ArrayIterator();
     }
+
+    /**
+     * doSync
+     *
+     * @param  mixed       $dataset      Data set contain data we want to update.
+     * @param  array       $conditions   Where conditions, you can use array or Compare object.
+     * @param  array|null  $compareKeys  Thr compare keys to check update, keep or delete.
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function doSync($dataset, array $conditions, ?array $compareKeys = null): array
+    {
+        return [];
+    }
 }
