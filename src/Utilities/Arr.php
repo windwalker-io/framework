@@ -1065,7 +1065,7 @@ class Arr
                     'trim',
                     explode(...func_get_args())
                 ),
-                'strlen',
+                'strlen'
             )
         );
     }
