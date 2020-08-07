@@ -9,12 +9,15 @@
 namespace Windwalker\DataMapper;
 
 use Windwalker\Cache\Serializer\JsonSerializer;
+use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 use Windwalker\Database\Schema\DataType;
 use Windwalker\DataMapper\Entity\Entity;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryInterface;
+use Windwalker\Utilities\Arr;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * Main Database Mapper class.
@@ -439,6 +442,68 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
         !$this->useTransaction ?: $this->db->getTransaction(true)->commit();
 
         return $dataset;
+    }
+
+    /**
+     * doSync
+     *
+     * @param mixed      $dataset     Data set contain data we want to update.
+     * @param array      $conditions  Where conditions, you can use array or Compare object.
+     * @param array|null $compareKeys Thr compare keys to check update, keep or delete.
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function doSync($dataset, array $conditions, ?array $compareKeys = null): array
+    {
+        $oldItems = $this->find($conditions)->dump();
+
+        $delItems = array_filter($oldItems, function ($old) use ($compareKeys, $dataset) {
+            $oldValues = Arr::only(TypeCast::toArray($old), $compareKeys);
+            ksort($oldValues);
+
+            return array_filter($dataset, function ($map) use ($compareKeys, $oldValues) {
+                    $mapValues = Arr::only(TypeCast::toArray($map), $compareKeys);
+                    ksort($mapValues);
+
+                    return $oldValues === $mapValues;
+                }) === [];
+        });
+
+        [$addItems, $keepItems] = Collection::wrap($dataset)
+            ->partition(function ($data) use ($compareKeys, $oldItems) {
+                $mapValues = Arr::only(TypeCast::toArray($data), $compareKeys);
+                ksort($mapValues);
+
+                return array_filter($oldItems, function ($old) use ($mapValues, $compareKeys) {
+                        $oldValues = Arr::only(TypeCast::toArray($old), $compareKeys);
+                        ksort($oldValues);
+
+                        return $oldValues === $mapValues;
+                    }) === [];
+            });
+
+        $addItems  = $addItems->dump();
+        $keepItems = $keepItems->dump();
+
+        // Delete
+        foreach ($delItems as $delItem) {
+            $this->delete(Arr::only(TypeCast::toArray($delItem), $compareKeys));
+        }
+
+        // Add
+        $this->create($addItems);
+
+        // Update
+        foreach ($keepItems as $keepItem) {
+            $this->updateBatch(
+                $keepItem,
+                Arr::only($keepItem, $compareKeys)
+            );
+        }
+
+        return [$keepItems, $addItems, $delItems];
     }
 
     /**

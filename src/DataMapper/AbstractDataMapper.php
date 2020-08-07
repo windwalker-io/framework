@@ -794,6 +794,45 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
         return $result;
     }
 
+    public function sync($dataset, $conditions = [], ?array $compareKeys = null)
+    {
+        // Handling conditions
+        if (!is_array($conditions) && !is_object($conditions)) {
+            $cond = [];
+
+            foreach ((array) $this->getKeyName(true) as $field) {
+                $cond[$field] = $conditions;
+            }
+
+            $conditions = $cond;
+        }
+
+        $conditions = (array) $conditions;
+
+        $compareKeys = $compareKeys ?? array_keys($conditions);
+
+        // Event
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__),
+            [
+                'dataset' => &$dataset,
+                'conditions' => &$conditions,
+            ]
+        );
+
+        $result = $this->doSync($dataset, (array) $conditions, $compareKeys);
+
+        // Event
+        $this->triggerEvent(
+            'onAfter' . ucfirst(__FUNCTION__),
+            [
+                'result' => &$result,
+            ]
+        );
+
+        return $result;
+    }
+
     /**
      * Save will auto detect is conditions matched in data or not.
      * If matched, using update, otherwise we will create it as new record.
@@ -1138,6 +1177,19 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
      * @return  mixed Updated data set.
      */
     abstract protected function doFlush($dataset, array $conditions);
+
+    /**
+     * doSync
+     *
+     * @param mixed      $dataset     Data set contain data we want to update.
+     * @param array      $conditions  Where conditions, you can use array or Compare object.
+     * @param array|null $compareKeys Thr compare keys to check update, keep or delete.
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    abstract protected function doSync($dataset, array $conditions, ?array $compareKeys = null): array;
 
     /**
      * Do delete action, this method should be override by sub class.

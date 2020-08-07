@@ -37,6 +37,7 @@ use Windwalker\String\StringInflector;
  * @method  static Data            updateOne($data, $condFields = null, $updateNulls = false)
  * @method  static boolean         updateBatch($data, $conditions = [])
  * @method  static DataSet|Data[]  flush($dataset, $conditions = [])
+ * @method  static Data[]|array[]  sync($dataset, $conditions = [], ?array $compareKeys = null)
  * @method  static DataSet|Data[]  save($dataset, $condFields = null, $updateNulls = false)
  * @method  static Data            saveOne($data, $condFields = null, $updateNulls = false)
  * @method  static Data|mixed      findOneOrCreate($conditions, $initData = null, bool $mergeConditions = true)
