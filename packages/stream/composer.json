@@ -1,0 +1,51 @@
+{
+    "name": "windwalker/stream",
+    "type": "windwalker-package",
+    "description": "Windwalker Stream package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "stream",
+        "psr7"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-stream",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "psr/http-message": "^1.0",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Stream\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Stream\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    },
+    "provide": {
+        "psr/http-message-implementation": "~1.0"
+    }
+}

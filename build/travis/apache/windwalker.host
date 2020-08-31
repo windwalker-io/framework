@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+    ServerName %hostname%
+    ServerAdmin github@babdev.com
+
+    DocumentRoot %basedir%
+
+    <Directory %basedir%>
+        DirectoryIndex app.php
+        Options -Indexes +FollowSymLinks +SymLinksifOwnerMatch
+        AllowOverride all
+        Allow from all
+
+        Require all granted
+    </Directory>
+</VirtualHost>

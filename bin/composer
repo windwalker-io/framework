@@ -1,0 +1,2 @@
+#!/bin/bash
+php8 $(which composer) "$@" --ignore-platform-reqs

@@ -1,0 +1,49 @@
+{
+    "name": "windwalker/utilities",
+    "type": "windwalker-package",
+    "description": "Windwalker Utilities package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "utilities"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-utilities",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "windwalker/scalars": "4.x-dev",
+        "doctrine/inflector": "^2.0"
+    },
+    "suggest": {
+        "doctrine/inflector": "Install ~1.0 to use inflector.",
+        "opis/closure": "Install ^3.0 to support serializable Closure."
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Utilities\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Utilities\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

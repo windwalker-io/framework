@@ -1,0 +1,49 @@
+{
+    "name": "windwalker/language",
+    "type": "windwalker-package",
+    "description": "Windwalker Language package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "language",
+        "translation",
+        "multi-language"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-language",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/data": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Language\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Language\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platlanguage": {
+            "php": "8.0.0"
+        }
+    }
+}

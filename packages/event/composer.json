@@ -1,0 +1,59 @@
+{
+    "name": "windwalker/event",
+    "type": "windwalker-package",
+    "description": "Windwalker Event package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "event",
+        "event-dispatcher",
+        "rx",
+        "observable",
+        "psr-14"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-event",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "psr/event-dispatcher": "^1.0",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "mockery/mockery": "^1.3",
+        "windwalker/test": "4.x-dev",
+        "windwalker/promise": "4.x-dev",
+        "reactivex/rxphp": "^2.0",
+        "react/event-loop": "^1.1"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Event\\Test\\": "test/"
+        }
+    },
+    "suggest": {
+        "reactivex/rxphp": "Support EventEmitter::observe() pattern."
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Event\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    },
+    "provide": {
+        "psr/event-dispatcher-implementation": "1.0.0"
+    }
+}

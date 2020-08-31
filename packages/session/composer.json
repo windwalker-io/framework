@@ -1,0 +1,51 @@
+{
+    "name": "windwalker/session",
+    "type": "windwalker-package",
+    "description": "Windwalker Session package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "session"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-session",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/cache": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "windwalker/database": "4.x-dev",
+        "windwalker/filesystem": "4.x-dev",
+        "mikey179/vfsstream": "^1.6",
+        "webmozart/glob": "^4.1"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Session\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Session\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

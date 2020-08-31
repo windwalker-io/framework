@@ -1,0 +1,46 @@
+{
+    "name": "windwalker/environment",
+    "type": "windwalker-package",
+    "description": "Windwalker Environment package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "environment"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-environment",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Environment\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Environment\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platenvironment": {
+            "php": "8.0.0"
+        }
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "name": "windwalker/di",
+    "type": "windwalker-package",
+    "description": "Windwalker DI package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "di"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-di",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "psr/container": "^1.0",
+        "windwalker/data": "4.x-dev",
+        "windwalker/cache": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\DI\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\DI\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

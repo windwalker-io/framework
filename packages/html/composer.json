@@ -1,0 +1,47 @@
+{
+    "name": "windwalker/html",
+    "type": "windwalker-package",
+    "description": "Windwalker Html package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "html",
+        "html-builder"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-html",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Html\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Html\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "plathtml": {
+            "php": "8.0.0"
+        }
+    }
+}

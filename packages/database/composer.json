@@ -1,0 +1,56 @@
+{
+    "name": "windwalker/database",
+    "type": "windwalker-package",
+    "description": "Windwalker Database package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "database",
+        "db",
+        "mysql",
+        "postgresql",
+        "sqlsrv",
+        "pdo"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-database",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/query": "4.x-dev",
+        "windwalker/event": "4.x-dev",
+        "windwalker/data": "4.x-dev",
+        "windwalker/cache": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "asika/sql-splitter": "^1.0"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Database\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Database\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

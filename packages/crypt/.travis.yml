@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 8.0
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: 8.0
+
+# services:
+
+before_install:
+  - sh -e build/travis/scripts/libsodium.sh
+
+before_script:
+  - sh -e build/travis/scripts/pecl-libsodium.sh || true
+  - composer update --ignore-platform-reqs --prefer-stable
+
+script:
+  - php vendor/bin/phpunit --configuration phpunit.travis.xml

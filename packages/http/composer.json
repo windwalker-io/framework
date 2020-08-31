@@ -1,0 +1,63 @@
+{
+    "name": "windwalker/http",
+    "type": "windwalker-package",
+    "description": "Windwalker Http package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "http",
+        "psr7",
+        "psr17"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-http",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "psr/http-client": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-factory": "^1.0",
+        "composer/ca-bundle": "^1.2",
+        "windwalker/event": "4.x-dev",
+        "windwalker/stream": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "mikey179/vfsstream": "^1.6",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+        "relay/relay": "Install ^2.0 to support PSR-15 middlewares."
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Http\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Http\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    },
+    "provide": {
+        "psr/http-message-implementation": "~1.0",
+        "psr/http-client-implementation": "~1.0",
+        "psr/http-factory-implementation": "~1.0"
+    }
+}

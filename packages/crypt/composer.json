@@ -1,0 +1,53 @@
+{
+    "name": "windwalker/crypt",
+    "type": "windwalker-package",
+    "description": "Windwalker Crypt package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "crypt",
+        "symmetric",
+        "sodium",
+        "libsodium",
+        "openssl"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-crypt",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "paragonie/constant_time_encoding": "^2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "ext-openssl": "*",
+        "ext-sodium": "*"
+    },
+    "suggest": {
+        "ext-openssl": "Install openssl to support legacy openssl cipher."
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Crypt\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Crypt\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

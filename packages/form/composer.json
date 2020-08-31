@@ -1,0 +1,51 @@
+{
+    "name": "windwalker/form",
+    "type": "windwalker-package",
+    "description": "Windwalker Form package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "form",
+        "form-builder",
+        "html"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-form",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/filter": "4.x-dev",
+        "windwalker/data": "4.x-dev",
+        "windwalker/dom": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Form\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Form\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

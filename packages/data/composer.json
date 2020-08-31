@@ -1,0 +1,50 @@
+{
+    "name": "windwalker/data",
+    "type": "windwalker-package",
+    "description": "Windwalker Data package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "utilities"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-data",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/scalars": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "symfony/yaml": "^5.0",
+        "laktak/hjson": "^2.1",
+        "yosymfony/toml": "^1.0"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Data\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Data\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

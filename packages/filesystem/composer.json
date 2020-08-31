@@ -1,0 +1,54 @@
+{
+    "name": "windwalker/filesystem",
+    "type": "windwalker-package",
+    "description": "Windwalker Filesystem package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "filesystem"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-filesystem",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "psr/http-message": "~1.0",
+        "windwalker/scalars": "4.x-dev",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "windwalker/stream": "4.x-dev",
+        "windwalker/validator": "4.x-dev",
+        "mikey179/vfsstream": "^1.6",
+        "webmozart/glob": "^4.1"
+    },
+    "suggest": {
+        "webmozart/glob": "Install ^4.0 to support Ant-like glob().",
+        "windwalker/validator": "Install ^4.0 to support regex() filter."
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Filesystem\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Filesystem\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

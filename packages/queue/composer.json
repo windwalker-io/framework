@@ -1,0 +1,59 @@
+{
+    "name": "windwalker/queue",
+    "type": "windwalker-package",
+    "description": "Windwalker Queue package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "queue"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-queue",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/utilities": "4.x-dev",
+        "windwalker/event": "4.x-dev",
+        "windwalker/data": "4.x-dev",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev",
+        "windwalker/database": "4.x-dev",
+        "asika/sql-splitter": "^1.0",
+        "jdorn/sql-formatter": "^1.0",
+        "opis/closure": "4.x-dev||^4.0"
+    },
+    "suggest": {
+        "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
+        "iron-io/iron_mq": "If you want to use Iron.io as queue service.",
+        "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
+        "pda/pheanstalk": "If you want to use Beanstalkd queue as service.",
+        "chrisboulton/php-resque": "Install <= 1.2 if you want to use PHP Resque (Redis) as queue service.",
+        "opis/closure": "Install ^3.0 to support Closure jobs."
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Queue\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Queue\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "name": "windwalker/reactor",
+    "type": "windwalker-package",
+    "description": "Windwalker Swoole package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "swoole",
+        "react",
+        "async",
+        "reactor"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-swoole",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Reactor\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Reactor\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}

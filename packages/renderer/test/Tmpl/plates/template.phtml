@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title><?php echo $v->e($title)?></title>
+</head>
+<body>
+
+<img src="logo.png">
+
+<div id="page">
+    <?php echo $v->section('page')?>
+</div>
+
+<div id="sidebar">
+    <?php if ($v->section('sidebar')): ?>
+    <?php echo $v->section('sidebar')?>
+    <?php else: ?>
+    <?php echo $v->fetch('default-sidebar')?>
+    <?php endif ?>
+</div>
+
+</body>
+</html>

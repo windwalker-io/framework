@@ -1,0 +1,44 @@
+{
+    "name": "windwalker/test",
+    "type": "windwalker-package",
+    "description": "Windwalker Test package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "test"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-test",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Test\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Test\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
+}
