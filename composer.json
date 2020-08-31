@@ -25,14 +25,12 @@
         "psr/event-dispatcher": "^1.0",
         "paragonie/constant_time_encoding": "^2.3",
         "composer/ca-bundle": "^1.2",
-        "ircmaxell/filterus": "^1.0",
-        "symfony/process": "^5.1",
-        "mockery/mockery": "^1.4"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
         "composer/semver": "^3.0",
-        "mockery/mockery": "^1.3",
+        "symfony/process": "^5.1",
+        "mockery/mockery": "^1.4",
         "symfony/var-dumper": "^5.0",
         "symfony/yaml": "^5.0",
         "laktak/hjson": "^2.1",
