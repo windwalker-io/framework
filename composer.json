@@ -24,7 +24,7 @@
         "psr/link": "^1.0",
         "psr/event-dispatcher": "^1.0",
         "paragonie/constant_time_encoding": "^2.3",
-        "composer/ca-bundle": "^1.2",
+        "composer/ca-bundle": "^1.2"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
