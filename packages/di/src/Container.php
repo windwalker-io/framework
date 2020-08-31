@@ -69,6 +69,14 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
 
     protected AttributesResolver $attributesResolver;
 
+    public static function define(string|callable $class, array $args): ObjectBuilderDefinition
+    {
+        $builder = new ObjectBuilderDefinition($class);
+        $builder->setArguments($args);
+
+        return $builder;
+    }
+
     /**
      * Container constructor.
      *
@@ -192,6 +200,10 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
     public function resolve($idOrDefinition, bool $forceNew = false)
     {
         if ($idOrDefinition instanceof DefinitionInterface) {
+            if ($idOrDefinition instanceof ObjectBuilderDefinition) {
+                $idOrDefinition->setContainer($this);
+            }
+
             return $idOrDefinition->resolve($this);
         }
 
@@ -488,6 +500,15 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         return $builder;
     }
 
+    /**
+     * newInstance
+     *
+     * @param  mixed  $class
+     * @param  array  $args
+     * @param  int    $options
+     *
+     * @return  mixed|object
+     */
     public function newInstance($class, array $args = [], int $options = 0)
     {
         return $this->dependencyResolver->newInstance($class, $args, $options);

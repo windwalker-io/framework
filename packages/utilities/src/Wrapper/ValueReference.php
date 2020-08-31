@@ -51,13 +51,14 @@ class ValueReference implements WrapperInterface
      *
      * @param  array|object  $src
      * @param  mixed         $default
+     * @param  string|null   $delimiter
      *
      * @return  mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function __invoke($src, $default = null)
+    public function __invoke($src, $default = null, ?string $delimiter = null)
     {
-        return Arr::get($src, $this->path, (string) $this->delimiter);
+        return Arr::get($src, $this->path, (string) ($delimiter ?? $this->delimiter));
     }
 }

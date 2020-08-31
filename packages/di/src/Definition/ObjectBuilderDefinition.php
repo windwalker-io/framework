@@ -179,7 +179,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @throws DependencyResolutionException
      * @throws \ReflectionException
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         $args = [];
 

@@ -10,21 +10,12 @@
 declare(strict_types=1);
 
 namespace Windwalker\DI {
-    use Windwalker\DI\Definition\DefinitionFactory;
-    use Windwalker\DI\Definition\DefinitionInterface;
-    use Windwalker\DI\Definition\ProtectedDefinition;
+    use Windwalker\DI\Definition\ObjectBuilderDefinition;
 
-    if (function_exists('protect')) {
-        function protect($value): ProtectedDefinition
+    if (!function_exists('create')) {
+        function create(string|callable $class, ...$args): ObjectBuilderDefinition
         {
-            return new ProtectedDefinition(factory($value));
-        }
-    }
-
-    if (function_exists('factory')) {
-        function factory($value): DefinitionInterface
-        {
-            return DefinitionFactory::create($value);
+            return Container::define($class, $args);
         }
     }
 }
