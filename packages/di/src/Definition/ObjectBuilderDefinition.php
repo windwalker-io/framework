@@ -22,9 +22,9 @@ class ObjectBuilderDefinition implements DefinitionInterface
     /**
      * Property class.
      *
-     * @var  string
+     * @var  string|callable
      */
-    protected string $class;
+    protected $class;
 
     /**
      * Property arguments.

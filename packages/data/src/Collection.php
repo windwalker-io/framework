@@ -181,29 +181,31 @@ class Collection extends ArrayObject
     /**
      * hasDeep
      *
-     * @param  string  $path
+     * @param string      $path
+     * @param string|null $delimiter
      *
      * @return  bool
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function hasDeep(string $path): bool
+    public function hasDeep(string $path, ?string $delimiter = '.'): bool
     {
-        return Arr::has($this->storage, $path);
+        return Arr::has($this->storage, $path, $delimiter);
     }
 
     /**
      * removeDeep
      *
-     * @param  string  $path
+     * @param string      $path
+     * @param string|null $delimiter
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function removeDeep(string $path)
+    public function removeDeep(string $path, ?string $delimiter = '.')
     {
-        $this->storage = Arr::remove($this->storage, $path);
+        $this->storage = Arr::remove($this->storage, $path, $delimiter);
 
         return $this;
     }
@@ -211,17 +213,18 @@ class Collection extends ArrayObject
     /**
      * withRemoveDeep
      *
-     * @param  string  $path
+     * @param string      $path
+     * @param string|null $delimiter
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function withRemoveDeep(string $path)
+    public function withRemoveDeep(string $path, ?string $delimiter = '.')
     {
         $new = clone $this;
 
-        $new->storage = Arr::remove($new->storage, $path);
+        $new->storage = Arr::remove($new->storage, $path, $delimiter);
 
         return $new;
     }

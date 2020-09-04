@@ -61,4 +61,28 @@ class ValueReference implements WrapperInterface
     {
         return Arr::get($src, $this->path, (string) ($delimiter ?? $this->delimiter));
     }
+
+    /**
+     * Method to get property Delimiter
+     *
+     * @return  string|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getDelimiter(): ?string
+    {
+        return $this->delimiter;
+    }
+
+    /**
+     * Method to get property Path
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
 }

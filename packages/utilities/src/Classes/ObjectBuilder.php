@@ -16,7 +16,7 @@ namespace Windwalker\Utilities\Classes;
  */
 class ObjectBuilder
 {
-    protected \Closure $builder;
+    protected ?\Closure $builder = null;
 
     /**
      * Create object by class and resolve attributes.

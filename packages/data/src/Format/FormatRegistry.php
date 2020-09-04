@@ -87,6 +87,10 @@ class FormatRegistry
             $format = $this->resolveFileFormat($ext);
         }
 
+        if ($format === 'php') {
+            return require $file;
+        }
+
         return $this->parse(file_get_contents($file), $format ?: $this->defaultFormat, $options);
     }
 

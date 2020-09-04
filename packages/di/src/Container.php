@@ -23,6 +23,7 @@ use Windwalker\DI\Definition\StoreDefinitionInterface;
 use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\Exception\DefinitionNotFoundException;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
+use Windwalker\Utilities\Wrapper\ValueReference;
 
 /**
  * The Container class.
@@ -197,17 +198,25 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         return $definition->resolve($this);
     }
 
-    public function resolve($idOrDefinition, bool $forceNew = false)
+    public function resolve($source, bool $forceNew = false)
     {
-        if ($idOrDefinition instanceof DefinitionInterface) {
-            if ($idOrDefinition instanceof ObjectBuilderDefinition) {
-                $idOrDefinition->setContainer($this);
-            }
+        if (is_string($source)) {
+            $value = $this->getParameters()->getDeep($source);
 
-            return $idOrDefinition->resolve($this);
+            if ($value !== null) {
+                $source = $value;
+            }
         }
 
-        return $this->get($idOrDefinition, $forceNew);
+        if ($source instanceof DefinitionInterface) {
+            if ($source instanceof ObjectBuilderDefinition) {
+                $source->setContainer($this);
+            }
+
+            return $source->resolve($this);
+        }
+
+        return $this->get($source, $forceNew);
     }
 
     /**
@@ -645,6 +654,13 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         $this->parent = $parent;
 
         return $this;
+    }
+
+    public function loadParameters($source, ?string $format = null, array $options = []): Collection
+    {
+        $this->parameters = $this->parameters->load($source, $format, $options);
+
+        return $this->parameters;
     }
 
     /**
