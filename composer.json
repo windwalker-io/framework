@@ -1,7 +1,7 @@
 {
-    "name": "windwalker/packages",
+    "name": "windwalker/framework",
     "description": "PHP RAD framework.",
-    "homepage": "https://github.com/ventoviro/windwalker-packages",
+    "homepage": "https://github.com/ventoviro/windwalker-framework",
     "license": "MIT",
     "minimum-stability": "beta",
     "authors": [
