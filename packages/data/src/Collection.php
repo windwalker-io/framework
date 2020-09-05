@@ -36,17 +36,21 @@ class Collection extends ArrayObject
     protected bool $isProxy = false;
 
     /**
-     * Structure constructor.
+     * from
      *
      * @param  mixed        $data
      * @param  string|null  $format
      * @param  array        $options
+     *
+     * @return  static
      */
-    public function __construct($data = [], ?string $format = null, array $options = [])
+    public static function from($data, ?string $format = null, array $options = []): static
     {
-        parent::__construct([]);
+        if (!is_string($data)) {
+            return static::wrap($data);
+        }
 
-        $this->load($data, $format, $options);
+        return (new static())->load($data, $format, $options);
     }
 
     /**

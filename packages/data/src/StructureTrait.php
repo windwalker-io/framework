@@ -23,7 +23,7 @@ trait StructureTrait
     /**
      * @var FormatRegistry
      */
-    protected $formatRegistry;
+    protected ?FormatRegistry $formatRegistry = null;
 
     /**
      * Method to get property FormatRegistry
