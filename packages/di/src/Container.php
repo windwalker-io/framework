@@ -198,10 +198,24 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         return $definition->resolve($this);
     }
 
+    /**
+     * resolve
+     *
+     * @param  string|callable|DefinitionInterface|ValueReference  $source
+     * @param  bool  $forceNew
+     *
+     * @return  mixed|object|string
+     *
+     * @throws \ReflectionException
+     */
     public function resolve($source, bool $forceNew = false)
     {
+        if ($source instanceof ValueReference) {
+            $source = $source($this->getParameters(), $source->getDelimiter() ?? '.');
+        }
+
         if (is_string($source)) {
-            $value = $this->getParameters()->getDeep($source);
+            $value = $this->getParam($source);
 
             if ($value !== null) {
                 $source = $value;
@@ -282,7 +296,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      *
      * @since   2.0
      */
-    public function getDefinition($id): ?StoreDefinitionInterface
+    public function getDefinition(string $id): ?StoreDefinitionInterface
     {
         $id = $this->resolveAlias($id);
 
@@ -565,7 +579,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      *
      * @since   2.0
      */
-    protected function resolveAlias($id)
+    protected function resolveAlias(string $id)
     {
         while (isset($this->aliases[$id])) {
             $id = $this->aliases[$id];
@@ -614,7 +628,10 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      */
     public function createChild()
     {
-        return new static($this);
+        $child = new static($this);
+        $params = clone $this->getParameters();
+        $child->setParameters($params->reset());
+        return $child;
     }
 
     /**
@@ -654,6 +671,25 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         $this->parent = $parent;
 
         return $this;
+    }
+
+    /**
+     * getParam
+     *
+     * @param  string  $path
+     * @param  string  $delimiter
+     *
+     * @return  mixed
+     */
+    public function getParam(string $path, string $delimiter = '.')
+    {
+        $value = $this->getParameters()->getDeep($path, $delimiter);
+
+        if ($value === null && $this->parent) {
+            $value = $this->parent->getParam($path, $delimiter);
+        }
+
+        return $value;
     }
 
     public function loadParameters($source, ?string $format = null, array $options = []): Collection

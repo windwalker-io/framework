@@ -19,10 +19,3 @@ if (!function_exists('collect')) {
         return Collection::wrap($storage);
     }
 }
-
-if (!function_exists('collect_from')) {
-    function collect($storage = []): Collection
-    {
-        return Collection::wrap($storage);
-    }
-}

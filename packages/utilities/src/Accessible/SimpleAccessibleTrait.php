@@ -34,7 +34,7 @@ trait SimpleAccessibleTrait
     {
         $ret = null;
 
-        if (!$this->has($key)) {
+        if (!isset($this->getStorage()[$key])) {
             return $ret;
         }
 
