@@ -35,6 +35,8 @@ class Collection extends ArrayObject
 
     protected bool $isProxy = false;
 
+    protected ?Collection $parent = null;
+
     /**
      * Structure constructor.
      *
@@ -94,6 +96,7 @@ class Collection extends ArrayObject
 
         if ($reference) {
             $this->isProxy = true;
+            $this->parent = $this;
         }
 
         return $new;
@@ -266,5 +269,13 @@ class Collection extends ArrayObject
         }
 
         return parent::__call($name, $args);
+    }
+
+    /**
+     * @return static|null
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }
