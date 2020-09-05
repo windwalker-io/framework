@@ -23,12 +23,12 @@ class MapProxy
     /**
      * @var Collection
      */
-    protected $collection;
+    protected Collection $collection;
 
     /**
      * @var string|null
      */
-    protected $column;
+    protected ?string $column = null;
 
     /**
      * MapProxy constructor.
