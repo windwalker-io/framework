@@ -41,7 +41,7 @@ class StreamOutput extends Output
      */
     public function respond(ResponseInterface $response): void
     {
-        $response = $this->prepareContentLength($response);
+        // $response = static::prepareContentLength($response);
 
         parent::respond($response);
     }
@@ -112,7 +112,7 @@ class StreamOutput extends Output
      *
      * @return  ResponseInterface
      */
-    protected function prepareContentLength(ResponseInterface $response): ResponseInterface
+    public static function prepareContentLength(ResponseInterface $response): ResponseInterface
     {
         if (!$response->hasHeader('content-length')) {
             if ($response->getBody()->getSize() !== null) {
