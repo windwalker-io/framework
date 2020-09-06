@@ -87,6 +87,13 @@ class StoreDefinition extends DelegateDefinition implements StoreDefinitionInter
         parent::set($value);
     }
 
+    /**
+     * extend
+     *
+     * @param  \Closure  $closure
+     *
+     * @return  $this
+     */
     public function extend(\Closure $closure)
     {
         $this->definition = new DelegateDefinition(

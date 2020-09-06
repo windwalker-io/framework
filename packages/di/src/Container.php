@@ -351,7 +351,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      * or created, otherwise it will create new one.
      *
      * @param  string  $id
-     * @param  mixed   $class
+     * @param  mixed   $value
      * @param  int     $options
      *
      * @return Container
@@ -359,18 +359,18 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      * @throws DefinitionException
      * @since   3.0
      */
-    public function bind(string $id, string $class, int $options = 0)
+    public function bind(string $id, $value, int $options = 0)
     {
-        $class = static fn(Container $container) => $container->newInstance($class, [], $options);
+        $value = static fn(Container $container) => $container->newInstance($value, [], $options);
 
-        return $this->set($id, $class, $options);
+        return $this->set($id, $value, $options);
     }
 
     /**
      * bindShared
      *
      * @param  string  $id
-     * @param  mixed   $class
+     * @param  mixed   $value
      * @param  int     $options
      *
      * @return Container
@@ -378,9 +378,9 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      * @throws DefinitionException
      * @since   3.0
      */
-    public function bindShared(string $id, string $class, int $options = 0)
+    public function bindShared(string $id, $value, int $options = 0)
     {
-        return $this->bind($id, $class, $options | static::SHARED);
+        return $this->bind($id, $value, $options | static::SHARED);
     }
 
     /**
@@ -838,5 +838,10 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         $this->attributesResolver = $attributesResolver;
 
         return $this;
+    }
+
+    public function dump(): array
+    {
+        return $this->storage;
     }
 }
