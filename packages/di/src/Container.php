@@ -202,13 +202,14 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      * resolve
      *
      * @param  string|callable|DefinitionInterface|ValueReference  $source
-     * @param  bool  $forceNew
+     * @param  array                                               $args
+     * @param  int                                                 $options
      *
      * @return  mixed|object|string
      *
      * @throws \ReflectionException
      */
-    public function resolve($source, bool $forceNew = false)
+    public function resolve($source, array $args = [], int $options = 0)
     {
         if ($source instanceof ValueReference) {
             $source = $source($this->getParameters(), $source->getDelimiter() ?? '.');
@@ -222,15 +223,21 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
             }
         }
 
+        if (is_callable($source)) {
+            return $this->newInstance($source, $args, $options);
+        }
+
         if ($source instanceof DefinitionInterface) {
             if ($source instanceof ObjectBuilderDefinition) {
+                $source = clone $source;
                 $source->setContainer($this);
+                $source->setArguments($args);
             }
 
             return $source->resolve($this);
         }
 
-        return $this->get($source, $forceNew);
+        return $this->get($source);
     }
 
     /**

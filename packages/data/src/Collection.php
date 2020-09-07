@@ -35,8 +35,6 @@ class Collection extends ArrayObject
 
     protected bool $isProxy = false;
 
-    protected ?Collection $parent = null;
-
     /**
      * from
      *
@@ -99,8 +97,7 @@ class Collection extends ArrayObject
         }
 
         if ($reference) {
-            $this->isProxy = true;
-            $this->parent = $this;
+            $new->isProxy = true;
         }
 
         return $new;
@@ -273,13 +270,5 @@ class Collection extends ArrayObject
         }
 
         return parent::__call($name, $args);
-    }
-
-    /**
-     * @return static|null
-     */
-    public function getParent()
-    {
-        return $this->parent;
     }
 }

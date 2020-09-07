@@ -103,6 +103,6 @@ trait ServiceAwareTrait
      */
     public function resolve($source, bool $forceNew = false)
     {
-        return $this->getContainer()->resolve($source, $forceNew);
+        return $this->getContainer()->resolve($source);
     }
 }
