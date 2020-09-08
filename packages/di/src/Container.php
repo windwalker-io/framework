@@ -215,7 +215,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
             $source = $source($this->getParameters(), $source->getDelimiter() ?? '.');
         }
 
-        if (is_string($source)) {
+        if (is_string($source) && !class_exists($source)) {
             $value = $this->getParam($source);
 
             if ($value !== null) {
@@ -223,7 +223,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
             }
         }
 
-        if (is_callable($source)) {
+        if (is_callable($source) || is_string($source)) {
             return $this->newInstance($source, $args, $options);
         }
 
