@@ -14,8 +14,6 @@ namespace Windwalker\DI;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Windwalker\Data\Collection;
-use Windwalker\DI\Attributes\Inject;
 use Windwalker\DI\Definition\DefinitionFactory;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
@@ -58,9 +56,9 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
     /**
      * Property parameters.
      *
-     * @var Collection
+     * @var Parameters
      */
-    protected Collection $parameters;
+    protected Parameters $parameters;
 
     /**
      * @var ObjectBuilderDefinition[]
@@ -89,7 +87,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
     {
         $this->parent = $parent;
         $this->options = $options;
-        $this->parameters = new Collection();
+        $this->parameters = new Parameters();
 
         $this->dependencyResolver = new DependencyResolver($this);
         $this->attributesResolver = new AttributesResolver($this);
@@ -705,7 +703,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
         return $value;
     }
 
-    public function loadParameters($source, ?string $format = null, array $options = []): Collection
+    public function loadParameters($source, ?string $format = null, array $options = []): Parameters
     {
         $this->parameters = $this->parameters->load($source, $format, $options);
 
@@ -713,19 +711,19 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
     }
 
     /**
-     * @return Collection
+     * @return Parameters
      */
-    public function getParameters(): Collection
+    public function getParameters(): Parameters
     {
         return $this->parameters;
     }
 
     /**
-     * @param  Collection  $parameters
+     * @param  Parameters  $parameters
      *
      * @return  static  Return self to support chaining.
      */
-    public function setParameters(Collection $parameters)
+    public function setParameters(Parameters $parameters)
     {
         $this->parameters = $parameters;
 
