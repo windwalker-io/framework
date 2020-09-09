@@ -13,6 +13,7 @@ namespace Windwalker\Database\Driver;
 
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\Pdo\PdoDriver;
+use Windwalker\Database\Platform\AbstractPlatform;
 
 /**
  * The DriverFactory class.
@@ -23,10 +24,12 @@ class DriverFactory
     {
         $names = explode('_', $name);
 
+        $platformName = AbstractPlatform::getPlatformName($names[0]);
+
         $driverClass = sprintf(
             __NAMESPACE__ . '\%s\%sDriver',
-            ucfirst($names[0]),
-            ucfirst($names[0])
+            $platformName,
+            $platformName
         );
 
         $driver = new $driverClass($db);

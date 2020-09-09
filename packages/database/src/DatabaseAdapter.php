@@ -21,7 +21,7 @@ use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Schema\DatabaseManager;
 use Windwalker\Database\Schema\SchemaManager;
 use Windwalker\Event\EventListenableInterface;
-use Windwalker\Event\EventListenableTrait;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Classes\OptionAccessTrait;
@@ -37,7 +37,7 @@ use Windwalker\Utilities\Classes\OptionAccessTrait;
 class DatabaseAdapter implements EventListenableInterface
 {
     use OptionAccessTrait;
-    use EventListenableTrait;
+    use EventAwareTrait;
     use InstanceCacheTrait;
 
     protected ?AbstractDriver $driver = null;

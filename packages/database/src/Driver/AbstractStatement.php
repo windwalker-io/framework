@@ -18,7 +18,7 @@ use Windwalker\Database\Event\QueryFailedEvent;
 use Windwalker\Database\Event\QueryStartEvent;
 use Windwalker\Database\Exception\StatementException;
 use Windwalker\Event\EventEmitter;
-use Windwalker\Event\EventListenableTrait;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\Query\Bounded\BindableTrait;
 
 use function Windwalker\collect;
@@ -30,7 +30,7 @@ use function Windwalker\tap;
 abstract class AbstractStatement implements StatementInterface
 {
     use BindableTrait;
-    use EventListenableTrait;
+    use EventAwareTrait;
 
     /**
      * @var mixed|resource

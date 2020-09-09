@@ -82,6 +82,8 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      *
      * @param  Container|null  $parent
      * @param  int             $options
+     *
+     * @throws DefinitionException
      */
     public function __construct(?Container $parent = null, int $options = 0)
     {
@@ -91,6 +93,8 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
 
         $this->dependencyResolver = new DependencyResolver($this);
         $this->attributesResolver = new AttributesResolver($this);
+
+        $this->share(static::class, $this);
     }
 
     /**
@@ -227,7 +231,7 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
             }
         }
 
-        if (is_callable($source) || is_string($source)) {
+        if (is_callable($source) || (is_string($source) && !$this->has($source))) {
             return $this->newInstance($source, $args, $options);
         }
 
