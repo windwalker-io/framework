@@ -14,14 +14,14 @@ namespace Windwalker\DI {
     use Windwalker\DI\Definition\ObjectBuilderDefinition;
     use Windwalker\DI\Definition\StoreDefinition;
 
-    if (!function_exists('create')) {
+    if (!function_exists('\Windwalker\DI\create')) {
         function create(string|callable $class, ...$args): ObjectBuilderDefinition
         {
             return Container::define($class, $args);
         }
     }
 
-    if (!function_exists('share')) {
+    if (!function_exists('\Windwalker\DI\share')) {
         function share(string|callable $class, ...$args): StoreDefinition
         {
             return new StoreDefinition(
@@ -31,7 +31,7 @@ namespace Windwalker\DI {
         }
     }
 
-    if (!function_exists('prepare')) {
+    if (!function_exists('\Windwalker\DI\prepare')) {
         function prepare(string $class, ?callable $extend, int $options = 0): StoreDefinition
         {
             $def = new StoreDefinition(
@@ -43,7 +43,7 @@ namespace Windwalker\DI {
         }
     }
 
-    if (!function_exists('prepare_shared')) {
+    if (!function_exists('\Windwalker\DI\prepare_shared')) {
         function prepare_shared(string $class, ?callable $extend, int $options = 0): StoreDefinition
         {
             return prepare($class, $extend, $options | Container::SHARED);
