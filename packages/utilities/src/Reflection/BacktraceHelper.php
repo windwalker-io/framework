@@ -24,12 +24,12 @@ class BacktraceHelper
         $inClass = false;
 
         foreach ($traces = debug_backtrace() as $i => $trace) {
-            if ($inClass === false && ($trace['object'] ?? null) instanceof  $class) {
+            if ($inClass === false && ($trace['object'] ?? null) instanceof $class) {
                 $inClass = true;
                 continue;
             }
 
-            if ($inClass === true && !($trace['object'] ?? null) instanceof  $class) {
+            if ($inClass === true && !($trace['object'] ?? null) instanceof $class) {
                 return [
                     'file' => $traces[$i - 2]['file'],
                     'line' => $traces[$i - 2]['line'],
@@ -47,12 +47,12 @@ class BacktraceHelper
         $inClass = false;
 
         foreach ($traces = debug_backtrace() as $i => $trace) {
-            if ($inClass === false && ($trace['object'] ?? null) instanceof  $class) {
+            if ($inClass === false && ($trace['object'] ?? null) instanceof $class) {
                 $inClass = true;
                 continue;
             }
 
-            if ($inClass === true && !($trace['object'] ?? null) instanceof  $class) {
+            if ($inClass === true && !($trace['object'] ?? null) instanceof $class) {
                 return [
                     'file' => $traces[$i - 1]['file'],
                     'line' => $traces[$i - 1]['line'],
@@ -68,14 +68,20 @@ class BacktraceHelper
     /**
      * normalizeBacktrace
      *
-     * @param array $trace
-     * @param string  $replaceRoot
+     * @param  array        $trace
+     * @param  string|null  $replaceRoot
      *
      * @return  array
+     * @throws \ReflectionException
      */
     public static function normalizeBacktrace(array $trace, ?string $replaceRoot = null): array
     {
         $args = [];
+
+        $trace['class'] ??= null;
+        $trace['args']  ??= [];
+        $trace['file']  ??= null;
+        $trace['line']  ??= null;
 
         foreach ($trace['args'] as $arg) {
             if (is_array($arg)) {
@@ -109,15 +115,15 @@ class BacktraceHelper
             'function' => ($trace['class'] ? $trace['class'] . $trace['type'] : null) . $trace['function'] .
                 sprintf('(%s)', implode(', ', $args)),
             'pathname' => $trace['file'],
-            'line' => $trace['line']
+            'line' => $trace['line'],
         ];
     }
 
     /**
      * normalizeBacktraces
      *
-     * @param array $traces
-     * @param bool  $replaceRoot
+     * @param  array  $traces
+     * @param  bool   $replaceRoot
      *
      * @return  array
      */
@@ -135,9 +141,9 @@ class BacktraceHelper
     /**
      * traceAsString
      *
-     * @param int   $i
-     * @param array $trace
-     * @param bool  $replaceRoot
+     * @param  int    $i
+     * @param  array  $trace
+     * @param  bool   $replaceRoot
      *
      * @return  string
      *

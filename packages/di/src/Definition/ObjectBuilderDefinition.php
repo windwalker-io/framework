@@ -16,6 +16,8 @@ use Windwalker\DI\Exception\DependencyResolutionException;
 
 /**
  * The ObjectBuilder class.
+ *
+ * @method object newInstance(string $class, array $args = [], int $options = 0)
  */
 class ObjectBuilderDefinition implements DefinitionInterface
 {
@@ -87,10 +89,16 @@ class ObjectBuilderDefinition implements DefinitionInterface
      */
     public function resolve(Container $container)
     {
-        return $container->newInstance(
+        $object = $container->newInstance(
             $this->getClass(),
             $this->getArguments()
         );
+
+        foreach ($this->extends as $extend) {
+            $object = $extend($object, $this->container);
+        }
+
+        return $object;
     }
 
     /**

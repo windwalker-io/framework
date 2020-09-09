@@ -22,6 +22,7 @@ use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\DI\Definition\StoreDefinitionInterface;
 use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\Exception\DefinitionNotFoundException;
+use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
@@ -211,6 +212,11 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
      */
     public function resolve($source, array $args = [], int $options = 0)
     {
+        ArgumentsAssert::assert(
+            $source !== null,
+            '{caller} Argument #1 (source) can not be NULL'
+        );
+
         if ($source instanceof ValueReference) {
             $source = $source($this->getParameters(), $source->getDelimiter() ?? '.');
         }
