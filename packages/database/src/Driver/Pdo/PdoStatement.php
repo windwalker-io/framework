@@ -30,9 +30,9 @@ class PdoStatement extends AbstractStatement
     protected $cursor;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
-    protected $prepare;
+    protected ?\Closure $prepare = null;
 
     /**
      * PdoStatement constructor.

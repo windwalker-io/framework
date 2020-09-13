@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\DriverFactory;
@@ -24,7 +25,7 @@ use Windwalker\Event\EventListenableInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Classes\OptionResolverTrait;
 
 /**
  * The DatabaseAdapter class.
@@ -36,7 +37,7 @@ use Windwalker\Utilities\Classes\OptionAccessTrait;
  */
 class DatabaseAdapter implements EventListenableInterface
 {
-    use OptionAccessTrait;
+    use OptionResolverTrait;
     use EventAwareTrait;
     use InstanceCacheTrait;
 
@@ -51,7 +52,15 @@ class DatabaseAdapter implements EventListenableInterface
      */
     public function __construct(array $options = [])
     {
-        $this->prepareOptions(
+        $this->resolveOptions(
+            $options,
+            [$this, 'configureOptions']
+        );
+    }
+
+    protected function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(
             [
                 'driver' => '',
                 'host' => 'localhost',
@@ -62,9 +71,15 @@ class DatabaseAdapter implements EventListenableInterface
                 'prefix' => null,
                 'charset' => null,
                 'driverOptions' => [],
-            ],
-            $options
-        );
+            ]
+        )
+            ->setRequired(
+                [
+                    'driver',
+                    'host',
+                    'username'
+                ]
+            );
     }
 
     public function connect(): ConnectionInterface

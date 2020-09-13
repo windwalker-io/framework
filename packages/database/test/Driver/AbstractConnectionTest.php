@@ -13,6 +13,7 @@ namespace Windwalker\Database\Test\Driver;
 
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
+use Windwalker\Utilities\Arr;
 
 /**
  * The AbstractConnectionTest class.
@@ -58,7 +59,18 @@ abstract class AbstractConnectionTest extends AbstractDatabaseDriverTestCase
     {
         $className = static::$className;
 
-        return new $className(self::getTestParams());
+        return new $className(
+            Arr::only(
+                self::getTestParams(),
+                [
+                    'host',
+                    'username',
+                    'password',
+                    'database',
+                    'port'
+                ]
+            )
+        );
     }
 
     /**

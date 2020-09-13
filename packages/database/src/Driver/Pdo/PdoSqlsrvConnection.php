@@ -16,9 +16,9 @@ namespace Windwalker\Database\Driver\Pdo;
  */
 class PdoSqlsrvConnection extends AbstractPdoConnection
 {
-    protected static $dbtype = 'sqlsrv';
+    protected static string $dbtype = 'sqlsrv';
 
-    protected static $defaultAttributes = [
+    protected static array $defaultAttributes = [
         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
         \PDO::ATTR_STRINGIFY_FETCHES => false,
 

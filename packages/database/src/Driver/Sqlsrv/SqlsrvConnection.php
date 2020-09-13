@@ -19,7 +19,7 @@ use Windwalker\Database\Exception\DatabaseConnectException;
  */
 class SqlsrvConnection extends AbstractConnection
 {
-    protected static $name = 'sqlsrv';
+    protected static string $name = 'sqlsrv';
 
     /**
      * @inheritDoc

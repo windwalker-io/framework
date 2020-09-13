@@ -16,7 +16,7 @@ namespace Windwalker\Database\Driver\Pdo;
  */
 class PdoPgsqlConnection extends AbstractPdoConnection
 {
-    protected static $dbtype = 'pgsql';
+    protected static string $dbtype = 'pgsql';
 
     public static function getParameters(array $options): array
     {
