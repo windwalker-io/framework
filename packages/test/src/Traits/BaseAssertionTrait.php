@@ -68,20 +68,20 @@ trait BaseAssertionTrait
     /**
      * assertExpectedException
      *
-     * @param  callable  $closure
-     * @param  string    $class
-     * @param  string    $msg
-     * @param  int       $code
-     * @param  string    $message
+     * @param  callable     $closure
+     * @param  string       $class
+     * @param  string|null  $msg
+     * @param  int|null     $code
+     * @param  string       $message
      *
      * @return  void
      */
     public static function assertExpectedException(
         callable $closure,
-        $class = Throwable::class,
-        $msg = null,
-        $code = null,
-        $message = ''
+        string $class = Throwable::class,
+        ?string $msg = null,
+        ?int $code = null,
+        string $message = ''
     ): void {
         if (is_object($class)) {
             $class = get_class($class);
@@ -103,7 +103,7 @@ trait BaseAssertionTrait
             return;
         }
 
-        static::fail('No exception or throwable caught.');
+        static::fail('No exception or throwable caught. expected: ' . $class);
     }
 
     /**

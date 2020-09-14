@@ -115,7 +115,7 @@ class AttributesResolver extends ObjectBuilder
     {
         $ref = new \ReflectionObject($object);
 
-        $builder = fn () => $object;
+        $builder = $this->createHandler(fn () => $object, $ref);
 
         foreach ($ref->getAttributes() as $attribute) {
             if ($this->hasAttribute($attribute->getName(), AttributeType::CLASSES)) {

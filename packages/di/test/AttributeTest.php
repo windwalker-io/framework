@@ -44,6 +44,21 @@ class AttributeTest extends TestCase
         self::assertInstanceOf(InnerStub::class, $result->instance);
     }
 
+    public function testObjectDecorateCallable()
+    {
+        $this->instance->getAttributesResolver()
+            ->registerAttribute(Decorator::class, AttributeType::CLASSES);
+
+        $result = $this->instance->newInstance(
+            function () {
+                return new InnerStub();
+            }
+        );
+
+        self::assertInstanceOf(Wrapped::class, $result);
+        self::assertInstanceOf(InnerStub::class, $result->instance);
+    }
+
     public function testObjectWrapCreator()
     {
         $this->instance->getAttributesResolver()

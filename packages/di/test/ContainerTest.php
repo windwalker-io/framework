@@ -27,6 +27,7 @@ use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Mock\UnionTypeStub;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 use Windwalker\Scalars\ArrayObject;
+use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 /**
@@ -34,6 +35,8 @@ use Windwalker\Utilities\Reflection\ReflectAccessor;
  */
 class ContainerTest extends TestCase
 {
+    use BaseAssertionTrait;
+
     protected ?Container $instance;
 
     public function testGetAndSet()
@@ -236,6 +239,7 @@ class ContainerTest extends TestCase
      * @covers \Windwalker\DI\Container::createObject
      * @covers \Windwalker\DI\Container::createSharedObject
      * @covers \Windwalker\DI\Container::newInstance
+     * @throws DefinitionException
      */
     public function testCreateObject()
     {
@@ -296,6 +300,15 @@ class ContainerTest extends TestCase
         self::assertSame($foo, $foo2);
     }
 
+    public function testNewInstanceWithCallable()
+    {
+        $container = new Container(null, Container::AUTO_WIRE);
+
+        $foo = $container->newInstance(fn(Bar $bar) => new Foo($bar));
+
+        self::assertInstanceOf(Bar::class, $foo->bar);
+    }
+
     public function testNewInstanceWithUnionTypes()
     {
         $container = new Container(null, Container::AUTO_WIRE);
@@ -315,11 +328,7 @@ class ContainerTest extends TestCase
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
-        try {
-            $foo = $container->newInstance(Foo::class, [], 0);
-        } catch (DependencyResolutionException $e) {
-            self::assertInstanceOf(DependencyResolutionException::class, $e);
-        }
+        $container->newInstance(Foo::class, [], 0);
 
         $container->prepareObject(Bar::class);
 
@@ -330,11 +339,10 @@ class ContainerTest extends TestCase
         // No autowire on default options
         $container = new Container();
 
-        try {
-            $foo = $container->newInstance(Foo::class, []);
-        } catch (DependencyResolutionException $e) {
-            self::assertInstanceOf(DependencyResolutionException::class, $e);
-        }
+        self::assertExpectedException(
+            fn () => $container->newInstance(Foo::class, []),
+            DependencyResolutionException::class
+        );
 
         // force autowire at calling
         $foo = $container->newInstance(Foo::class, [], Container::AUTO_WIRE);

@@ -91,6 +91,9 @@ class Container implements ContainerInterface, \IteratorAggregate, \Countable, A
 
         $this->dependencyResolver = new DependencyResolver($this);
         $this->attributesResolver = new AttributesResolver($this);
+
+        // Always set Container as self
+        $this->share(static::class, $this);
     }
 
     /**

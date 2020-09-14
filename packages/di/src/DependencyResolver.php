@@ -57,12 +57,19 @@ class DependencyResolver
 
             $instance = $builder($args, $options);
         } elseif (is_callable($class)) {
-            $instance = $class($this->container, $args, $options);
+            $instance = $this->container->call($class, $args, null, $options);
+
+            if (!($options & Container::IGNORE_ATTRIBUTES)) {
+                $instance = $this->container->getAttributesResolver()
+                    ->decorateObject($instance);
+            }
 
             // If is definition object, means this callable is a factory, let's resolve definition.
             if ($instance instanceof DefinitionInterface) {
-                return $this->container->resolve($instance);
+                $instance = $this->container->resolve($instance);
             }
+
+            return $instance;
         } else {
             throw new InvalidArgumentException(
                 'New instance must get first argument as class name, callable or DefinitionInterface object.'
