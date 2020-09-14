@@ -25,7 +25,7 @@ use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventListenableInterface;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
-use Windwalker\Utilities\Options\OptionResolverTrait;
+use Windwalker\Utilities\Options\OptionsResolverTrait;
 
 /**
  * The DatabaseAdapter class.
@@ -37,7 +37,7 @@ use Windwalker\Utilities\Options\OptionResolverTrait;
  */
 class DatabaseAdapter implements EventListenableInterface
 {
-    use OptionResolverTrait;
+    use OptionsResolverTrait;
     use EventAwareTrait;
     use InstanceCacheTrait;
 
@@ -187,11 +187,7 @@ class DatabaseAdapter implements EventListenableInterface
      */
     public function getDriver(): AbstractDriver
     {
-        if (!$this->driver) {
-            $this->driver = DriverFactory::create($this->getOption('driver'), $this);
-        }
-
-        return $this->driver;
+        return $this->driver ??= DriverFactory::create($this->getOption('driver'), $this);
     }
 
     /**

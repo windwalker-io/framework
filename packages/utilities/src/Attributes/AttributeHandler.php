@@ -43,7 +43,12 @@ class AttributeHandler
 
     public function __invoke(&...$args)
     {
-        return ($this->handler)(...$args);
+        // try {
+            return ($this->handler)(...$args);
+        // } catch (\Throwable $e) {
+        //     show($this->handler, $this->reflactor);
+        //     exit(' @Checkpoint');
+        // }
     }
 
     public function set(callable $handler)

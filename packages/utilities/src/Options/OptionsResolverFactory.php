@@ -25,6 +25,10 @@ class OptionsResolverFactory
 
     public static function getByClass(string $class): OptionsResolver
     {
+        if (!class_exists(OptionsResolver::class)) {
+            throw new \DomainException('Please install symfony/options-resolver first');
+        }
+
         return self::once('options:' . $class, fn () => new OptionsResolver());
     }
 }

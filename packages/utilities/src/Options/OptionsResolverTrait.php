@@ -14,7 +14,7 @@ namespace Windwalker\Utilities\Options;
 /**
  * Trait OptionResolverTrait
  */
-trait OptionResolverTrait
+trait OptionsResolverTrait
 {
     protected array $options = [];
     private static array $resolversByClass = [];

@@ -139,10 +139,12 @@ class DependencyResolver
             if ($param->isVariadic()) {
                 $trailing = [];
 
-                foreach ($args as $key => $value) {
+                foreach ($args as $key => $v) {
                     if (is_numeric($key)) {
-                        $trailing[] = &$this->resolveParameterValue($value, $param);
+                        $trailing[] = &$this->resolveParameterValue($v, $param);
                     }
+
+                    unset($v);
                 }
 
                 $trailing   = array_slice($trailing, $i);
@@ -159,7 +161,6 @@ class DependencyResolver
             // Prior (3): Argument with named keys.
             if (array_key_exists($dependencyVarName, $args)) {
                 $methodArgs[$dependencyVarName] = &$this->resolveParameterValue($args[$dependencyVarName], $param);
-
                 continue;
             }
 
@@ -171,8 +172,12 @@ class DependencyResolver
 
             if ($value !== null) {
                 $methodArgs[$dependencyVarName] = &$value;
+
+                unset($value);
                 continue;
             }
+
+            unset($value);
 
             if ($param->isOptional()) {
                 // Finally, if there is a default parameter, use it.
