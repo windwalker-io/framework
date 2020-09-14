@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Classes;
+namespace Windwalker\Utilities\Options;
 
 use ArrayAccess;
 use Windwalker\Utilities\Arr;

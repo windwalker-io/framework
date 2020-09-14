@@ -14,8 +14,7 @@ namespace Windwalker\Database\Schema\Ddl;
 use Windwalker\Database\Platform\Type\DataType;
 use Windwalker\Query\Grammar\MySQLGrammar;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
-use Windwalker\Utilities\StrNormalise;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\raw;

@@ -11,13 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
-use Windwalker\Database\DatabaseAdapter;
-use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\AbstractPlatform;
-use Windwalker\Query\Bounded\ParamType;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The PdoHandler class.

@@ -16,9 +16,8 @@ use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
 use Windwalker\Utilities\Accessible\SimpleAccessibleTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
-
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 use function Windwalker\tap;
 

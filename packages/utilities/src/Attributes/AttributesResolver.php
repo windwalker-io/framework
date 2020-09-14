@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Attributes;
 
 use Windwalker\Utilities\Classes\ObjectBuilder;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\Reflection\ReflectionCallable;
 
 /**

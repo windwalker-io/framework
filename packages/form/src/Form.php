@@ -19,7 +19,7 @@ use Windwalker\Form\Renderer\SimpleRenderer;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Attributes\AttributesResolver;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The Form class.

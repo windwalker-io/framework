@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Server;
 
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The Server class.

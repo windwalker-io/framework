@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Cache\Storage;
 
 use RuntimeException;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The FilesystemStorage class.

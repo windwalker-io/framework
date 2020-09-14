@@ -23,8 +23,8 @@ use Windwalker\Http\Transport\TransportInterface;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
 use Windwalker\Utilities\Exception\ExceptionFactory;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\TypeCast;
 
 /**

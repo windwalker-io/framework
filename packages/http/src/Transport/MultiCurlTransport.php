@@ -12,14 +12,11 @@ declare(strict_types=1);
 namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
-
-use function DI\string;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The MultiCurlHandler class.

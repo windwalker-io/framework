@@ -9,9 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Classes;
-
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace Windwalker\Utilities\Options;
 
 /**
  * Trait OptionResolverTrait
@@ -19,6 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 trait OptionResolverTrait
 {
     protected array $options = [];
+    private static array $resolversByClass = [];
 
     /**
      * prepareDefaultOptions
@@ -30,7 +29,7 @@ trait OptionResolverTrait
      */
     protected function resolveOptions(array $options = [], ?callable $handler = null): void
     {
-        $resolver = new OptionsResolver();
+        $resolver = OptionsResolverFactory::getByClass(static::class);
 
         if ($handler) {
             $handler($resolver);
@@ -58,7 +57,7 @@ trait OptionResolverTrait
 
     public function setOptions(array $options)
     {
-        $this->options = $options;
+        $this->options = OptionsResolverFactory::getByClass(static::class)->resolve($options);
 
         return $this;
     }

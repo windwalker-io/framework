@@ -11,9 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
-use Windwalker\Event\EventListenableInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
 
 /**
  * The Server class.

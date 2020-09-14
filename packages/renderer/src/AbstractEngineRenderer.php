@@ -13,7 +13,7 @@ namespace Windwalker\Renderer;
 
 use Closure;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The AbstractEngineRenderer class.

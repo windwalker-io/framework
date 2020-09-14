@@ -78,7 +78,7 @@ trait BaseAssertionTrait
      */
     public static function assertExpectedException(
         callable $closure,
-        string $class = Throwable::class,
+        string|Throwable $class = Throwable::class,
         ?string $msg = null,
         ?int $code = null,
         string $message = ''

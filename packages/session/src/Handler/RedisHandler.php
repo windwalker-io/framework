@@ -13,7 +13,7 @@ namespace Windwalker\Session\Handler;
 
 use Predis\Response\ErrorInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The RedisHandler class.

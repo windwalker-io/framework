@@ -13,7 +13,7 @@ namespace Windwalker\Session\Handler;
 
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Filesystem;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The FilesystemHandler class.

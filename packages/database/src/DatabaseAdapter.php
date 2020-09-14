@@ -21,11 +21,11 @@ use Windwalker\Database\Manager\WriterManager;
 use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Schema\DatabaseManager;
 use Windwalker\Database\Schema\SchemaManager;
-use Windwalker\Event\EventListenableInterface;
 use Windwalker\Event\EventAwareTrait;
+use Windwalker\Event\EventListenableInterface;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
-use Windwalker\Utilities\Classes\OptionResolverTrait;
+use Windwalker\Utilities\Options\OptionResolverTrait;
 
 /**
  * The DatabaseAdapter class.

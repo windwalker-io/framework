@@ -12,10 +12,9 @@ declare(strict_types=1);
 namespace Windwalker\Session\Bridge;
 
 use Windwalker\Data\Format\FormatInterface;
-use Windwalker\Data\Format\PhpSerializeFormat;
 use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Handler\NativeHandler;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The ArrayBridge class.

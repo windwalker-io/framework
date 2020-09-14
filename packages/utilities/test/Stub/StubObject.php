@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Stub;
 
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\Test\Stub\Attrs\StubWrapper;
 
 /**

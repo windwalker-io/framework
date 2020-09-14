@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver;
 
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The AbstractConnection class.
