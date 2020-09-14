@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+
 /**
  * Trait EventAwareTrait
  */
-trait EventListenableTrait
+trait EventAwareTrait
 {
     /**
      * Property dispatcher.
@@ -79,9 +81,9 @@ trait EventListenableTrait
     /**
      * getDispatcher
      *
-     * @return  EventEmitter
+     * @return  EventDispatcherInterface
      */
-    public function getDispatcher(): EventEmitter
+    public function getDispatcher(): EventDispatcherInterface
     {
         if (!$this->dispatcher) {
             $this->dispatcher = new EventEmitter();

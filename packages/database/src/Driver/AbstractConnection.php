@@ -23,7 +23,7 @@ abstract class AbstractConnection implements ConnectionInterface
     /**
      * @var string
      */
-    protected static $name = '';
+    protected static string $name = '';
 
     /**
      * @var mixed
@@ -33,7 +33,12 @@ abstract class AbstractConnection implements ConnectionInterface
     /**
      * @var array
      */
-    protected $defaultOptions = [];
+    protected array $defaultOptions = [
+        'database' => null,
+        'host' => 'localhost',
+        'username' => '',
+        'password' => '',
+    ];
 
     /**
      * AbstractConnection constructor.

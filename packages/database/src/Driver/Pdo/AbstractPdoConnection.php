@@ -18,14 +18,14 @@ use Windwalker\Database\Driver\AbstractConnection;
  */
 abstract class AbstractPdoConnection extends AbstractConnection
 {
-    protected static $name = 'pdo';
+    protected static string $name = 'pdo';
 
     /**
      * @var string
      */
-    protected static $dbtype = '';
+    protected static string $dbtype = '';
 
-    protected static $defaultAttributes = [
+    protected static array $defaultAttributes = [
         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
         \PDO::ATTR_EMULATE_PREPARES => true,
         \PDO::ATTR_STRINGIFY_FETCHES => false

@@ -20,7 +20,7 @@ use Windwalker\Database\Exception\DatabaseConnectException;
  */
 class PgsqlConnection extends AbstractConnection
 {
-    protected static $name = 'pgsql';
+    protected static string $name = 'pgsql';
 
     /**
      * @inheritDoc

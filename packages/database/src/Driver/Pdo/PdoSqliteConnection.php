@@ -16,7 +16,7 @@ namespace Windwalker\Database\Driver\Pdo;
  */
 class PdoSqliteConnection extends AbstractPdoConnection
 {
-    protected static $dbtype = 'sqlite';
+    protected static string $dbtype = 'sqlite';
 
     public static function getParameters(array $options): array
     {

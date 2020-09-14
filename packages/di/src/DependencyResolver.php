@@ -213,7 +213,7 @@ class DependencyResolver
             $depObject           = null;
             $dependencyClassName = $type->getName();
 
-            if (!class_exists($dependencyClassName)) {
+            if (!class_exists($dependencyClassName) && !interface_exists($dependencyClassName)) {
                 // Next dependency
                 continue;
             }

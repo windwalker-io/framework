@@ -19,7 +19,7 @@ class PdoOdbcConnection extends AbstractPdoConnection
     /**
      * @var string
      */
-    protected static $dbtype = 'odbc';
+    protected static string $dbtype = 'odbc';
 
     public static function getParameters(array $options): array
     {
