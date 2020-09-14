@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Classes;
+namespace Windwalker\Utilities\Options;
 
 use ArrayAccess;
 use Windwalker\Utilities\Arr;
@@ -17,9 +17,7 @@ use Windwalker\Utilities\Contract\AccessibleInterface;
 use Windwalker\Utilities\TypeCast;
 
 /**
- * The OptionAccessTrait class.
- *
- * @since  3.0.1
+ * Trait StateAccessTrait
  */
 trait StateAccessTrait
 {
