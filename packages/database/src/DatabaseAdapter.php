@@ -56,13 +56,17 @@ class DatabaseAdapter implements EventListenableInterface
             $options,
             [$this, 'configureOptions']
         );
+
+        if ($this->options['driver'] === 'mysql') {
+            $this->options['driver'] = 'pdo_mysql';
+        }
     }
 
     protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [
-                'driver' => '',
+                'driver' => null,
                 'host' => 'localhost',
                 'database' => null,
                 'username' => null,
@@ -79,7 +83,8 @@ class DatabaseAdapter implements EventListenableInterface
                     'host',
                     'username'
                 ]
-            );
+            )
+            ->setAllowedTypes('driver', 'string');
     }
 
     public function connect(): ConnectionInterface
