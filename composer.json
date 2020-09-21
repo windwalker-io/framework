@@ -63,7 +63,8 @@
         "illuminate/view": "^6.0||^7.0||^8.0",
         "mustache/mustache": "^2.0",
         "league/plates": "dev-master",
-        "league/flysystem": "^2.0"
+        "league/flysystem": "^2.0",
+        "symfony/options-resolver": "^5.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~4.0 if you require YAML support.",
@@ -82,6 +83,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Windwalker\\Attributes\\": "packages/attributes/src",
             "Windwalker\\Authentication\\": "packages/authentication/src",
             "Windwalker\\Authorisaction\\": "packages/authorisaction/src",
             "Windwalker\\Cache\\": "packages/cache/src",
@@ -111,6 +113,7 @@
             "Windwalker\\Utilities\\": "packages/utilities/src"
         },
         "files": [
+            "packages/attributes/src/bootstrap.php",
             "packages/authentication/src/bootstrap.php",
             "packages/authorisaction/src/bootstrap.php",
             "packages/bootstrap.php",
@@ -143,6 +146,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Windwalker\\Attributes\\Test\\": "packages/attributes/test",
             "Windwalker\\Authentication\\Test\\": "packages/authentication/test",
             "Windwalker\\Authorisaction\\Test\\": "packages/authorisaction/test",
             "Windwalker\\Cache\\Test\\": "packages/cache/test",
@@ -187,6 +191,7 @@
         "psr/http-message-implementation": "~1.0"
     },
     "replace": {
+        "windwalker/attributes": "self.version",
         "windwalker/authentication": "self.version",
         "windwalker/authorisaction": "self.version",
         "windwalker/cache": "self.version",

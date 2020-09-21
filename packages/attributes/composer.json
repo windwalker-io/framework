@@ -6,8 +6,7 @@
         "windwalker",
         "framework",
         "attributes",
-        "auth",
-        "user"
+        "php8"
     ],
     "homepage": "https://github.com/ventoviro/windwalker-attributes",
     "license": "MIT",
