@@ -1,0 +1,48 @@
+{
+    "name": "windwalker/attributes",
+    "type": "windwalker-package",
+    "description": "Windwalker Attributes package",
+    "keywords": [
+        "windwalker",
+        "framework",
+        "attributes",
+        "auth",
+        "user"
+    ],
+    "homepage": "https://github.com/ventoviro/windwalker-attributes",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "windwalker/utilities": "4.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0||^9.0",
+        "windwalker/test": "4.x-dev"
+    },
+    "suggest": {
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Attributes\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Windwalker\\Attributes\\Test\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4": "4.x-dev"
+        }
+    },
+    "config": {
+        "platattributes": {
+            "php": "8.0.0"
+        }
+    }
+}
