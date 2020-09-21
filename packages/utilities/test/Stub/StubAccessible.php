@@ -7,7 +7,7 @@
  * @license    MIT
  */
 
-namespace Windwalker\Attributes\Test\Stub;
+namespace Windwalker\Utilities\Test\Stub;
 
 use Windwalker\Utilities\Accessible\AccessibleTrait;
 use Windwalker\Utilities\Contract\AccessibleInterface;
