@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\DI;
 
+use Windwalker\Attributes\AttributesResolver as GlobalAttributesResolver;
 use Windwalker\DI\Attributes\AttributeHandler;
 use Windwalker\DI\Attributes\Inject;
-use Windwalker\Utilities\Attributes\AttributesResolver as GlobalAttributesResolver;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 /**

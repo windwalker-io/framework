@@ -17,7 +17,7 @@ use Windwalker\DI\Container;
 /**
  * The AttributeHandler class.
  */
-class AttributeHandler extends \Windwalker\Utilities\Attributes\AttributeHandler
+class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
 {
     protected Container $container;
 

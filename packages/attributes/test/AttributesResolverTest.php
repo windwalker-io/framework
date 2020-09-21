@@ -9,21 +9,20 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Test\Attributes;
+namespace Windwalker\Attributes\Test;
 
 use PHPUnit\Framework\TestCase;
-use Windwalker\DI\Test\Injection\Wrapped;
-use Windwalker\Scalars\StringObject;
-use Windwalker\Utilities\Attributes\AttributesResolver;
-use Windwalker\Utilities\Attributes\AttributeType;
-use Windwalker\Utilities\Test\Stub\Attrs\PropWrap;
-use Windwalker\Utilities\Test\Stub\Attrs\StrUpper;
-use Windwalker\Utilities\Test\Stub\Attrs\StubWrapper;
-use Windwalker\Utilities\Test\Stub\Attrs\ValueImplode;
-use Windwalker\Utilities\Test\Stub\StubAccessible;
-use Windwalker\Utilities\Test\Stub\StubObject;
+use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributeType;
+use Windwalker\Attributes\Test\Stub\Attrs\PropWrap;
+use Windwalker\Attributes\Test\Stub\Attrs\StrUpper;
+use Windwalker\Attributes\Test\Stub\Attrs\StubWrapper;
+use Windwalker\Attributes\Test\Stub\Attrs\ValueImplode;
+use Windwalker\Attributes\Test\Stub\StubAccessible;
+use Windwalker\Attributes\Test\Stub\StubObject;
 
-use function PHPUnit\Framework\assertEquals;
+use Windwalker\Scalars\StringObject;
+
 use function Windwalker\str;
 
 /**

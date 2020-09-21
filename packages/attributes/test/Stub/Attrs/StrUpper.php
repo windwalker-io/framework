@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Test\Stub\Attrs;
+namespace Windwalker\Attributes\Test\Stub\Attrs;
 
+use Windwalker\Attributes\AttributeHandler;
 use Windwalker\Scalars\StringObject;
-use Windwalker\Utilities\Attributes\AttributeHandler;
 
 /**
  * The StrUpper class.

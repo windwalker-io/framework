@@ -9,9 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Attributes;
-
-use Closure;
+namespace Windwalker\Attributes;
 
 /**
  * The AttributeHandler class.

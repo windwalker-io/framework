@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Test\Stub;
+namespace Windwalker\Attributes\Test\Stub;
 
 use Windwalker\Utilities\Options\OptionAccessTrait;
-use Windwalker\Utilities\Test\Stub\Attrs\StubWrapper;
+use Windwalker\Attributes\Test\Stub\Attrs\StubWrapper;
 
 /**
  * The StubObject class.

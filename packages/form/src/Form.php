@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Form;
 
+use Windwalker\Attributes\AttributesResolver;
 use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\Form\Attributes\Fieldset;
 use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Renderer\FormRendererInterface;
 use Windwalker\Form\Renderer\SimpleRenderer;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Attributes\AttributesResolver;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 

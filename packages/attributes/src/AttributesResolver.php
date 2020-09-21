@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Attributes;
+namespace Windwalker\Attributes;
 
 use Windwalker\Utilities\Classes\ObjectBuilder;
 use Windwalker\Utilities\Options\OptionAccessTrait;

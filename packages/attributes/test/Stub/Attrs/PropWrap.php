@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Utilities\Test\Stub\Attrs;
+namespace Windwalker\Attributes\Test\Stub\Attrs;
 
-use Windwalker\Utilities\Attributes\AttributeHandler;
-use Windwalker\Utilities\Attributes\AttributeInterface;
+use Windwalker\Attributes\AttributeHandler;
+use Windwalker\Attributes\AttributeInterface;
 
 /**
  * The PropWrap class.

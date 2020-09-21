@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Attributes;
 
+use Windwalker\Attributes\AttributeHandler;
+use Windwalker\Attributes\AttributeInterface;
 use Windwalker\Form\Form;
-use Windwalker\Utilities\Attributes\AttributeHandler;
-use Windwalker\Utilities\Attributes\AttributeInterface;
 
 /**
  * The Group class.
