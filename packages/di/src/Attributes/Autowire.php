@@ -16,13 +16,13 @@ use Windwalker\DI\Container;
 /**
  * The Autowire class.
  */
-@@\Attribute
+#[\Attribute]
 class Autowire implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable
     {
         $container = $handler->getContainer();
-        $reflector = $handler->getReflactor();
+        $reflector = $handler->getReflector();
 
         if ($reflector instanceof \ReflectionParameter && $reflector->getType()) {
             return function (...$args) use ($handler, $reflector, $container) {

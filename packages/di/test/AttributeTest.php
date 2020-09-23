@@ -75,10 +75,10 @@ class AttributeTest extends TestCase
         $this->instance->set('stub', fn () => new StubService());
 
         $this->instance->getAttributesResolver()
-            ->registerAttribute(ToUpper::class, AttributeType::FUNCTION_METHOD);
+            ->registerAttribute(ToUpper::class, AttributeType::CALLABLE);
 
         $obj = new class {
-            @@ToUpper
+            #[ToUpper]
             public function foo()
             {
                 return 'foo';
@@ -101,8 +101,10 @@ class AttributeTest extends TestCase
             ->registerAttribute(ParamLower::class, AttributeType::PARAMETERS);
 
         $obj = new class {
-            public function foo(@@ParamLower StringObject $foo)
-            {
+            public function foo(
+                #[ParamLower]
+                StringObject $foo
+            ) {
                 return (string) $foo;
             }
         };
@@ -120,7 +122,11 @@ class AttributeTest extends TestCase
         $this->instance->getAttributesResolver()
             ->registerAttribute(Autowire::class, AttributeType::PARAMETERS);
 
-        $closure = function (@@Autowire StubService $stub, array &$options = []): StubService {
+        $closure = function (
+            #[Autowire]
+            StubService $stub,
+            array &$options = []
+        ): StubService {
             $options['foo'] = 'bar';
             return $stub;
         };

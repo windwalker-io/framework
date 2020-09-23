@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Attributes;
 
-use Attribute;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
@@ -20,7 +19,7 @@ use Windwalker\DI\Exception\DependencyResolutionException;
  *
  * @since  3.4.4
  */
-@@Attribute
+#[\Attribute]
 class Inject implements ContainerAttributeInterface
 {
     public ?string $id = null;
@@ -50,7 +49,7 @@ class Inject implements ContainerAttributeInterface
      */
     public function __invoke(AttributeHandler $handler): callable
     {
-        $reflector = $handler->getReflactor();
+        $reflector = $handler->getReflector();
 
         if (!$reflector instanceof \ReflectionProperty) {
             return $handler;

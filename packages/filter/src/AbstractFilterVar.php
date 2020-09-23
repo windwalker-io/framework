@@ -21,7 +21,7 @@ abstract class AbstractFilterVar extends AbstractFilter
      */
     public function filter($value)
     {
-        return filter_var($value, $this->getFilterName(), $this->getOptions());
+        return filter_var($value, $this->getFilterName(), (int) $this->getOptions());
     }
 
     abstract public function getFilterName(): int;

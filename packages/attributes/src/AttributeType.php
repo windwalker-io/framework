@@ -16,7 +16,7 @@ namespace Windwalker\Attributes;
  */
 abstract class AttributeType
 {
-    public const FUNCTION_METHOD = 'function_method';
+    public const CALLABLE = 'callable';
 
     public const PROPERTIES = 'properties';
 

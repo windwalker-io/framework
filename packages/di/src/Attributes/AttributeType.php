@@ -14,13 +14,7 @@ namespace Windwalker\DI\Attributes;
 /**
  * The AttributeType class.
  */
-abstract class AttributeType
+abstract class AttributeType extends \Windwalker\Attributes\AttributeType
 {
-    public const FUNCTION_METHOD = 'function_method';
-
-    public const PROPERTIES = 'properties';
-
-    public const CLASSES = 'classes';
-
-    public const PARAMETERS = 'parameters';
+    //
 }

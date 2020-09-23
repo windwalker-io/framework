@@ -25,7 +25,7 @@ class AttributesResolver extends ObjectBuilder
     protected array $registry = [
         AttributeType::CLASSES => [],
         AttributeType::PROPERTIES => [],
-        AttributeType::FUNCTION_METHOD => [],
+        AttributeType::CALLABLE => [],
         AttributeType::PARAMETERS => [],
     ];
 
@@ -156,7 +156,7 @@ class AttributesResolver extends ObjectBuilder
         $handler = $this->createHandler($closure, $ref);
 
         foreach ($funcRef->getAttributes() as $attribute) {
-            if ($this->hasAttribute($attribute->getName(), AttributeType::FUNCTION_METHOD)) {
+            if ($this->hasAttribute($attribute->getName(), AttributeType::CALLABLE)) {
                 $handler = $this->runAttribute($attribute, $handler);
             }
         }
@@ -292,7 +292,7 @@ class AttributesResolver extends ObjectBuilder
 
         $result = $attrInstance($handler);
 
-        return $this->createHandler($result, $handler->getReflactor());
+        return $this->createHandler($result, $handler->getReflector());
     }
 
     /**

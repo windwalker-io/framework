@@ -28,12 +28,11 @@ class IPV4 extends AbstractRegexFilter
 
     /**
      * @inheritDoc
+     *
+     * @see https://stackoverflow.com/a/36760050
      */
     public function test($value, bool $strict = false): bool
     {
-        return filter_var(
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_IPV4
-        );
+        return (bool) preg_match('/^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/', (string) $value);
     }
 }

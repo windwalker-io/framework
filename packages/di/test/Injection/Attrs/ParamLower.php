@@ -20,7 +20,7 @@ use Windwalker\Scalars\StringObject;
 /**
  * The ParamLower class.
  */
-@@\Attribute(\Attribute::TARGET_PARAMETER)
+#[\Attribute(\Attribute::TARGET_PARAMETER)]
 class ParamLower implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable

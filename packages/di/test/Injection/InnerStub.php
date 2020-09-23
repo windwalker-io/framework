@@ -16,7 +16,7 @@ use Windwalker\DI\Attributes\Decorator;
 /**
  * The InnerStub class.
  */
-@@Decorator(Wrapped::class)
+#[Decorator(Wrapped::class)]
 class InnerStub
 {
 }

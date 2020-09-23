@@ -48,8 +48,8 @@ class BoundedHelper
                     $values[] = $params[$name] ?? $params[ltrim($name, ':')] ?? null;
                 }
 
-                if (strpos($symbol, '%d') !== false) {
-                    $symbol = str_replace('%d', $s, $symbol);
+                if (str_contains($symbol, '%d')) {
+                    $symbol = str_replace('%d', (string) $s, $symbol);
                     $s++;
                 }
 

@@ -17,7 +17,7 @@ use Windwalker\Scalars\StringObject;
 /**
  * The StrUpper class.
  */
-@@\Attribute
+#[\Attribute]
 class StrUpper
 {
     public function __invoke(AttributeHandler $handler)

@@ -21,7 +21,7 @@ class AttributeHandler
      */
     public $handler;
 
-    public \Reflector $reflactor;
+    public \Reflector $reflector;
 
     public AttributesResolver $resolver;
 
@@ -35,8 +35,8 @@ class AttributeHandler
     public function __construct(callable $handler, \Reflector $reflactor, AttributesResolver $resolver)
     {
         $this->set($handler);
-        $this->reflactor = $reflactor;
-        $this->resolver = $resolver;
+        $this->reflector = $reflactor;
+        $this->resolver  = $resolver;
     }
 
     public function __invoke(&...$args)
@@ -64,9 +64,9 @@ class AttributeHandler
     /**
      * @return \Reflector
      */
-    public function getReflactor(): \Reflector
+    public function getReflector(): \Reflector
     {
-        return $this->reflactor;
+        return $this->reflector;
     }
 
     /**

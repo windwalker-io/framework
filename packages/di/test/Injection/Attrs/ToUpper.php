@@ -18,7 +18,7 @@ use Windwalker\DI\Attributes\ContainerAttributeInterface;
 /**
  * The ToUpper class.
  */
-@@Attribute
+#[Attribute]
 class ToUpper implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable

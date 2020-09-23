@@ -16,7 +16,7 @@ use Windwalker\Attributes\AttributeHandler;
 /**
  * The StubWrapper class.
  */
-@@\Attribute
+#[\Attribute]
 class StubWrapper
 {
     public object $instance;

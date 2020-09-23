@@ -17,7 +17,7 @@ use Windwalker\Attributes\Test\Stub\Attrs\StubWrapper;
 /**
  * The StubObject class.
  */
-@@StubWrapper
+#[StubWrapper]
 class StubObject
 {
     use OptionAccessTrait;

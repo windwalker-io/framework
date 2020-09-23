@@ -17,7 +17,7 @@ use Windwalker\Attributes\AttributeInterface;
 /**
  * The PropWrap class.
  */
-@@\Attribute
+#[\Attribute]
 class PropWrap implements AttributeInterface
 {
     public $instance;

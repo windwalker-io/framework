@@ -398,7 +398,7 @@ class Form implements \IteratorAggregate
             ]
         );
 
-        $this->attributeResolver->registerAttribute(Fieldset::class, AttributeType::FUNCTION_METHOD);
+        $this->attributeResolver->registerAttribute(Fieldset::class, AttributeType::CALLABLE);
     }
 
     /**

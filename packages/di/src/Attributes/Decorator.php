@@ -14,7 +14,7 @@ namespace Windwalker\DI\Attributes;
 /**
  * The Decorator class.
  */
-@@\Attribute(\Attribute::TARGET_CLASS)
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class Decorator implements ContainerAttributeInterface
 {
     protected string $class;

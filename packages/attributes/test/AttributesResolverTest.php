@@ -68,7 +68,8 @@ class AttributesResolverTest extends TestCase
         self::assertInstanceOf(StubObject::class, $obj->instance);
 
         $obj = $this->instance->decorateObject(
-            new @@StubWrapper class {
+            new #[StubWrapper]
+            class {
                 public $foo = 'bar';
             }
         );
@@ -80,9 +81,15 @@ class AttributesResolverTest extends TestCase
     public function testMethocCall()
     {
         $this->instance->registerAttribute(StrUpper::class, AttributeType::PARAMETERS);
-        $this->instance->registerAttribute(ValueImplode::class, AttributeType::FUNCTION_METHOD);
+        $this->instance->registerAttribute(ValueImplode::class, AttributeType::CALLABLE);
 
-        $closure = @@ValueImplode(' ') function (@@StrUpper string $str = 'hello', @@StrUpper StringObject $str2 = null) {
+        $closure = #[ValueImplode(' ')]
+        function (
+            #[StrUpper]
+            string $str = 'hello',
+            #[StrUpper]
+            StringObject $str2 = null
+        ) {
             return [$str, (string) $str2];
         };
 
@@ -96,7 +103,7 @@ class AttributesResolverTest extends TestCase
     public function testMethocCallWithReference()
     {
         $this->instance->registerAttribute(StrUpper::class, AttributeType::PARAMETERS);
-        $this->instance->registerAttribute(ValueImplode::class, AttributeType::FUNCTION_METHOD);
+        $this->instance->registerAttribute(ValueImplode::class, AttributeType::CALLABLE);
 
         $opt = [
             'test' => 1
@@ -118,7 +125,7 @@ class AttributesResolverTest extends TestCase
         $this->instance->registerAttribute(PropWrap::class, AttributeType::PROPERTIES);
 
         $obj = new class {
-            @@PropWrap(StringObject::class)
+            #[PropWrap(StringObject::class)]
             protected $foo = 'bar';
 
             public function getFoo()

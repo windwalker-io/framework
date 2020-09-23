@@ -16,7 +16,7 @@ use Windwalker\Attributes\AttributeHandler;
 /**
  * The ValueImplode class.
  */
-@@\Attribute
+#[\Attribute]
 class ValueImplode
 {
     protected string $sep = '';

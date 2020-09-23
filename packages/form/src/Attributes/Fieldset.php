@@ -18,7 +18,7 @@ use Windwalker\Form\Form;
 /**
  * The Fieldset class.
  */
-@@\Attribute
+#[\Attribute]
 class Fieldset implements AttributeInterface
 {
     public string $name;
