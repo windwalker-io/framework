@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Windwalker\Form;
 
 use Windwalker\Attributes\AttributesResolver;
-use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\Form\Attributes\Fieldset;
 use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Renderer\FormRendererInterface;
@@ -398,7 +397,7 @@ class Form implements \IteratorAggregate
             ]
         );
 
-        $this->attributeResolver->registerAttribute(Fieldset::class, AttributeType::CALLABLE);
+        $this->attributeResolver->registerAttribute(Fieldset::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
     }
 
     /**

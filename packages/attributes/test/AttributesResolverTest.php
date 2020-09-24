@@ -13,15 +13,17 @@ namespace Windwalker\Attributes\Test;
 
 use PHPUnit\Framework\TestCase;
 use Windwalker\Attributes\AttributesResolver;
-use Windwalker\Attributes\AttributeType;
 use Windwalker\Attributes\Test\Stub\Attrs\PropWrap;
 use Windwalker\Attributes\Test\Stub\Attrs\StrUpper;
+use Windwalker\Attributes\Test\Stub\Attrs\StubSubscribe;
 use Windwalker\Attributes\Test\Stub\Attrs\StubWrapper;
 use Windwalker\Attributes\Test\Stub\Attrs\ValueImplode;
 use Windwalker\Attributes\Test\Stub\StubAccessible;
 use Windwalker\Attributes\Test\Stub\StubObject;
 
 use Windwalker\Scalars\StringObject;
+
+use Windwalker\Test\Traits\BaseAssertionTrait;
 
 use function Windwalker\str;
 
@@ -30,11 +32,73 @@ use function Windwalker\str;
  */
 class AttributesResolverTest extends TestCase
 {
+    use BaseAssertionTrait;
+
     protected ?AttributesResolver $instance = null;
+
+    public function testRegisterAttribute(): void
+    {
+        // Test property type
+        $this->instance->registerAttribute(StubWrapper::class, \Attribute::TARGET_PROPERTY);
+
+        self::assertTrue(
+            $this->instance->hasAttribute(StubWrapper::class)
+        );
+
+        self::assertFalse(
+            $this->instance->hasAttribute(StubWrapper::class, \Attribute::TARGET_CLASS)
+        );
+
+        // Test add class type
+        $this->instance->registerAttribute(StubWrapper::class, \Attribute::TARGET_CLASS);
+
+        self::assertTrue(
+            $this->instance->hasAttribute(StubWrapper::class, \Attribute::TARGET_CLASS)
+        );
+
+        // Test remove property type
+        $this->instance->removeAttribute(StubWrapper::class, \Attribute::TARGET_PROPERTY);
+
+        self::assertFalse(
+            $this->instance->hasAttribute(StubWrapper::class, \Attribute::TARGET_PROPERTY)
+        );
+
+        self::assertTrue(
+            $this->instance->hasAttribute(StubWrapper::class, \Attribute::TARGET_CLASS)
+        );
+
+        // Test remove all
+        $this->instance->removeAttribute(StubWrapper::class, \Attribute::TARGET_ALL);
+
+        self::assertFalse(
+            $this->instance->hasAttribute(StubWrapper::class)
+        );
+    }
+
+    public function testRegisterAttributeCallable(): void
+    {
+        $foo = new class {
+            #[StubSubscribe]
+            public function foo()
+            {
+
+            }
+        };
+
+        $ref = new \ReflectionClass($foo);
+        $met = $ref->getMethod('foo');
+
+        foreach ($met->getAttributes() as $attribute) {
+            show(
+                $attribute->getName(),
+                $attribute->getTarget(),
+            );
+        }
+    }
 
     public function testClassCreate()
     {
-        $this->instance->registerAttribute(StubWrapper::class, AttributeType::CLASSES);
+        $this->instance->registerAttribute(StubWrapper::class, \Attribute::TARGET_CLASS);
 
         $obj = $this->instance->createObject(StubObject::class);
 
@@ -44,7 +108,7 @@ class AttributesResolverTest extends TestCase
 
     public function testClassCreateWithNamedArgs()
     {
-        $this->instance->registerAttribute(StubWrapper::class, AttributeType::CLASSES);
+        $this->instance->registerAttribute(StubWrapper::class, \Attribute::TARGET_CLASS);
 
         $obj = $this->instance->createObject(
             StubObject::class,
@@ -60,7 +124,7 @@ class AttributesResolverTest extends TestCase
 
     public function testObjectDecorate()
     {
-        $this->instance->registerAttribute(StubWrapper::class, AttributeType::CLASSES);
+        $this->instance->registerAttribute(StubWrapper::class, \Attribute::TARGET_CLASS);
 
         $obj = $this->instance->decorateObject(new StubObject());
 
@@ -80,8 +144,8 @@ class AttributesResolverTest extends TestCase
 
     public function testMethocCall()
     {
-        $this->instance->registerAttribute(StrUpper::class, AttributeType::PARAMETERS);
-        $this->instance->registerAttribute(ValueImplode::class, AttributeType::CALLABLE);
+        $this->instance->registerAttribute(StrUpper::class, \Attribute::TARGET_PARAMETER);
+        $this->instance->registerAttribute(ValueImplode::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
 
         $closure = #[ValueImplode(' ')]
         function (
@@ -102,8 +166,8 @@ class AttributesResolverTest extends TestCase
 
     public function testMethocCallWithReference()
     {
-        $this->instance->registerAttribute(StrUpper::class, AttributeType::PARAMETERS);
-        $this->instance->registerAttribute(ValueImplode::class, AttributeType::CALLABLE);
+        $this->instance->registerAttribute(StrUpper::class, \Attribute::TARGET_PARAMETER);
+        $this->instance->registerAttribute(ValueImplode::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
 
         $opt = [
             'test' => 1
@@ -122,7 +186,7 @@ class AttributesResolverTest extends TestCase
 
     public function testProperties()
     {
-        $this->instance->registerAttribute(PropWrap::class, AttributeType::PROPERTIES);
+        $this->instance->registerAttribute(PropWrap::class, \Attribute::TARGET_PROPERTY);
 
         $obj = new class {
             #[PropWrap(StringObject::class)]
@@ -141,6 +205,12 @@ class AttributesResolverTest extends TestCase
             $obj->getFoo()->toUpperCase()->__toString()
         );
     }
+
+    // public function testResolveMethods()
+    // {
+    //     $this->instance->registerAttribute(StubSubscribe::class, \Attribute::TARGET_METHOD);
+    //     $this->instance->resolveMethods();
+    // }
 
     protected function setUp(): void
     {

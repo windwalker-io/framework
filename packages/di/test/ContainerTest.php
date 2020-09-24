@@ -13,7 +13,6 @@ namespace Windwalker\DI\Test;
 
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Collection;
-use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Inject;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
@@ -417,7 +416,7 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
         $container->getAttributesResolver()
-            ->registerAttribute(Inject::class, AttributeType::PROPERTIES);
+            ->registerAttribute(Inject::class, \Attribute::TARGET_PROPERTY);
         StubService::$counter = 0;
 
         $container->share('stub', function () {

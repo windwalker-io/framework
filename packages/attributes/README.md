@@ -44,10 +44,9 @@ Then, register this attribute to resolver.
 
 ```php
 use Windwalker\Attributes\AttributesResolver;
-use Windwalker\DI\Attributes\AttributeType;
 
 $attributes = new AttributesResolver();
-$attributes->registerAttribute(\Wrapper::class, AttributeType::CLASSES);
+$attributes->registerAttribute(\Wrapper::class, \Attribute::TARGET_CLASS);
 
 // Now, try to wrap an object.
             
@@ -76,7 +75,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on Class and Object
-$attributes->registerAttribute(\Decorator::class, AttributeType::CLASSES);
+$attributes->registerAttribute(\Decorator::class, \Attribute::TARGET_CLASS);
 
 // Decorate existing object
 $object = $attributes->decorateObject($object);
@@ -94,7 +93,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on method, function, Closure or callable.
-$attributes->registerAttribute(\Autowire::class, AttributeType::CALLABLE);
+$attributes->registerAttribute(\Autowire::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
 
 $result = $attributes->call($callable, ...$args);
 ```
@@ -108,7 +107,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on object properties
-$attributes->registerAttribute(\Inject::class, AttributeType::PROPERTIES);
+$attributes->registerAttribute(\Inject::class, \Attribute::TARGET_PROPERTY);
 
 $object = new class {
     #[\Inject()]
@@ -127,7 +126,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on callable parameters.
-$attributes->registerAttribute(\StrUpper::class, AttributeType::PARAMETERS);
+$attributes->registerAttribute(\StrUpper::class, \Attribute::TARGET_PARAMETER);
 $func = function (
     #[\StrUpper]
     $foo    
@@ -195,7 +194,7 @@ class Foo
 $attributes = new AttributesResolver();
 
 // Work on Class and Object
-$attributes->registerAttribute(\Decorator::class, AttributeType::CLASSES);
+$attributes->registerAttribute(\Decorator::class, \Attribute::TARGET_CLASS);
 
 // Decorate existing object
 $component = $attributes->decorateObject($object);
@@ -290,8 +289,8 @@ class Controller
 
 $attributes = new AttributesResolver();
 
-$attributes->registerAttribute(\Method::class, AttributeType::CALLABLE);
-$attributes->registerAttribute(\Json::class, AttributeType::CALLABLE);
+$attributes->registerAttribute(\Method::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
+$attributes->registerAttribute(\Json::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
 
 // Call
 $jsonResponse = $attributes->call(
@@ -339,7 +338,7 @@ class Http
 
 $attributes = new AttributesResolver();
 
-$attributes->registerAttribute(\Upper::class, AttributeType::PARAMETERS);
+$attributes->registerAttribute(\Upper::class, \Attribute::TARGET_PARAMETER);
 
 // Decorate existing object
 $jsonResponse = $attributes->call([\Http::class, 'request'], ['POST', 'foo=bar']);
@@ -386,7 +385,7 @@ $object = new class {
 
 $attributes = new AttributesResolver();
 
-$attributes->registerAttribute(\Wrapper::class, AttributeType::PROPERTIES);
+$attributes->registerAttribute(\Wrapper::class, \Attribute::TARGET_PROPERTY);
 
 $object = $attributes->resolveProperties($object);
 ```
