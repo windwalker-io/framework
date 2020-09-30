@@ -117,6 +117,13 @@ class BasicCompilerTest extends \PHPUnit\Framework\TestCase
                 ['tags' => ['john', 'troilus', 'and', 'cressida']],
                 __LINE__,
             ],
+            [
+                '/king(/*tags)/and/(alias)',
+                '/king(/(?P<tags>.*))?/and/(?P<alias>[^/]+)',
+                '/king/john/troilus/and/cressida',
+                ['tags' => ['john', 'troilus'], 'alias' => 'cressida'],
+                __LINE__,
+            ],
         ];
     }
 

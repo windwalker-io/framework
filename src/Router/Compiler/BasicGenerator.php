@@ -26,6 +26,7 @@ abstract class BasicGenerator
     public static function generate($pattern, array $data = [])
     {
         $route = static::replaceOptionalSegments($pattern, $data);
+        $route = static::replaceOptionalWildcards($route, $data);
         $route = static::replaceWildCards($route, $data);
 
         return static::replaceAllSegments($route, $data);
@@ -86,6 +87,35 @@ abstract class BasicGenerator
 
         if ($queries) {
             $route = rtrim($route, '/') . '?' . $queries;
+        }
+
+        return $route;
+    }
+
+    /**
+     * replaceOptionalWildcards
+     *
+     * @param string $route
+     * @param array  &$data
+     *
+     * @return  string|string[]
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected static function replaceOptionalWildcards($route, &$data)
+    {
+        preg_match_all(chr(1) . '\(/\*([a-z][a-zA-Z0-9_]*)\)' . chr(1), $route, $matches, PREG_SET_ORDER);
+
+        if (!$matches) {
+            return $route;
+        }
+
+        foreach ($matches as $match) {
+            if (isset($data[$match[1]])) {
+                $route = str_replace($match[0], '/' . implode('/', (array) $data[$match[1]]), $route);
+
+                unset($data[$match[1]]);
+            }
         }
 
         return $route;

@@ -80,7 +80,19 @@ class BasicGeneratorTest extends \PHPUnit\Framework\TestCase
                 __LINE__,
             ],
             [
+                'flower(/*tags)',
+                ['id' => 25, 'tags' => ['sakura', 'rose', 'olive']],
+                'flower/sakura/rose/olive?id=25',
+                __LINE__,
+            ],
+            [
                 'flower/(*tags)/(alias)',
+                ['id' => 25, 'alias' => 'wind', 'tags' => ['sakura', 'rose', 'olive']],
+                'flower/sakura/rose/olive/wind?id=25',
+                __LINE__,
+            ],
+            [
+                'flower(/*tags)/(alias)',
                 ['id' => 25, 'alias' => 'wind', 'tags' => ['sakura', 'rose', 'olive']],
                 'flower/sakura/rose/olive/wind?id=25',
                 __LINE__,
