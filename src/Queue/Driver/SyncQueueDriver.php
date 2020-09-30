@@ -19,6 +19,25 @@ use Windwalker\Queue\QueueMessage;
 class SyncQueueDriver implements QueueDriverInterface
 {
     /**
+     * @var callable
+     */
+    protected $handler;
+
+    /**
+     * SyncQueueDriver constructor.
+     *
+     * @param callable|null $handler
+     */
+    public function __construct(?callable $handler = null)
+    {
+        $this->handler = $handler ?? function (QueueMessage $message) {
+            $job = unserialize($message->getJob());
+
+            $job->execute();
+        };
+    }
+
+    /**
      * push
      *
      * @param QueueMessage $message
@@ -27,11 +46,7 @@ class SyncQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message)
     {
-        $job = $message->getJob();
-        /** @var JobInterface $job */
-        $job = unserialize($job);
-
-        $job->execute();
+        ($this->handler)($message);
 
         return 0;
     }
@@ -69,6 +84,34 @@ class SyncQueueDriver implements QueueDriverInterface
      */
     public function release(QueueMessage $message)
     {
+        return $this;
+    }
+
+    /**
+     * Method to get property Handler
+     *
+     * @return  callable
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getHandler(): callable
+    {
+        return $this->handler;
+    }
+
+    /**
+     * Method to set property handler
+     *
+     * @param callable $handler
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setHandler(callable $handler)
+    {
+        $this->handler = $handler;
+
         return $this;
     }
 }
