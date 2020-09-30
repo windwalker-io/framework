@@ -731,7 +731,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                     $entity->$field = is_array($value) ? json_encode($value) : $value;
                     break;
                 case 'json':
-                    if (!is_json($value)) {
+                    if ($value !== '' && !is_json($value)) {
                         $value = json_encode($value);
                     }
 
