@@ -92,7 +92,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @return  callable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.22
      */
     public function getHandler(): callable
     {
@@ -106,7 +106,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.22
      */
     public function setHandler(callable $handler)
     {
