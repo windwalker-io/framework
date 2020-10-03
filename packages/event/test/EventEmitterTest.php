@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Event\Test;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Event\Attributes\EventSubscriber;
+use Windwalker\Event\Attributes\ListenTo;
 use Windwalker\Event\EventDispatcher;
 use Windwalker\Event\EventEmitter;
 use Windwalker\Event\EventInterface;
@@ -380,31 +382,28 @@ class EventEmitterTest extends TestCase
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    protected function getCounterSubscriber(): EventSubscriberInterface
+    protected function getCounterSubscriber(): object
     {
-        return new class implements EventSubscriberInterface {
+        return new
+        #[EventSubscriber]
+        class {
             public $count = 0;
 
             public $flower = '';
 
-            public function getSubscribedEvents(): array
-            {
-                return [
-                    'count' => [['count1'], ['count2']],
-                    'flower' => 'sakura',
-                ];
-            }
-
+            #[ListenTo('count')]
             public function count1(EventInterface $event): void
             {
                 $event['result'] = $this->count += $event['num'];
             }
 
+            #[ListenTo('count')]
             public function count2(EventInterface $event): void
             {
                 $event['result'] = $this->count += $event['num'];
             }
 
+            #[ListenTo('flower')]
             public function sakura()
             {
                 $this->flower = 'Sakura';
@@ -412,32 +411,26 @@ class EventEmitterTest extends TestCase
         };
     }
 
-    protected function getOnceSubscriber()
+    protected function getOnceSubscriber(): object
     {
-        return new class implements EventSubscriberInterface {
+        return new
+        #[EventSubscriber]
+        class {
             public $count = 0;
 
-            public function getSubscribedEvents(): array
-            {
-                return [
-                    'foo' => [disposable([$this, 'foo']), 500],
-                    'bar' => [
-                        [disposable([$this, 'bar1']), 100],
-                        ['bar2', 100],
-                    ],
-                ];
-            }
-
+            #[ListenTo('foo', 500, true)]
             public function foo(EventInterface $event)
             {
                 $this->count += $event['num'];
             }
 
+            #[ListenTo('bar', 100, true)]
             public function bar1(EventInterface $event)
             {
                 $this->count *= $event['num'];
             }
 
+            #[ListenTo('bar', 100)]
             public function bar2(EventInterface $event)
             {
                 $this->count *= $event['num'];

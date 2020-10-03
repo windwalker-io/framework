@@ -370,4 +370,26 @@ class AttributesResolver extends ObjectBuilder
     {
         return strtolower(trim($className, '\\'));
     }
+
+    public static function runAttributeIfExists(
+        array|\Reflector $refOrAttributes,
+        string $attributeClass,
+        callable $handler
+    ): int {
+        $count = 0;
+
+        if ($refOrAttributes instanceof \Reflector) {
+            $refOrAttributes = $refOrAttributes->getAttributes();
+        }
+
+        /** @var \ReflectionAttribute $attribute */
+        foreach ($refOrAttributes as $attribute) {
+            if (strtolower($attribute->getName()) === strtolower($attributeClass)) {
+                $handler($attribute->newInstance());
+                $count++;
+            }
+        }
+
+        return $count;
+    }
 }

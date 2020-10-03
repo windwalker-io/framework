@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Provider;
 
+use Windwalker\Attributes\AttributesAwareTrait;
+use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Event\Attributes\EventSubscriber;
+use Windwalker\Event\Attributes\ListenTo;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\EventSubscriberInterface;
 use Windwalker\Event\Listener\ListenerPriority;
@@ -19,15 +23,33 @@ use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\StrNormalise;
 
+use function Windwalker\disposable;
+
 /**
  * The SubscribableListenerProvider class.
  */
 class SubscribableListenerProvider implements SubscribableListenerProviderInterface
 {
+    use AttributesAwareTrait;
+
     /**
      * @var ListenersQueue[]
      */
     protected $queues = [];
+
+    /**
+     * SubscribableListenerProvider constructor.
+     */
+    public function __construct()
+    {
+        $this->configureAttributes($this->getAttributesResolver());
+    }
+
+    protected function configureAttributes(AttributesResolver $resolver): void
+    {
+        $resolver->registerAttribute(ListenTo::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
+        $resolver->setOption('provider', $this);
+    }
 
     /**
      * @inheritDoc
@@ -67,43 +89,21 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
      */
     public function subscribe(object $subscriber, ?int $priority = null): void
     {
-        if ($subscriber instanceof EventSubscriberInterface) {
-            $events = $subscriber->getSubscribedEvents();
-        } else {
+        $hasAttribute = (bool) AttributesResolver::runAttributeIfExists(
+            new \ReflectionObject($subscriber),
+            EventSubscriber::class,
+            disposable(fn (): object => $this->getAttributesResolver()->resolveMethods($subscriber))
+        );
+
+        if (!$hasAttribute) {
             $methods = get_class_methods($subscriber);
-            $events  = [];
 
             foreach ($methods as $method) {
-                $events[$method] = [static::normalize($method), $priority];
-            }
-        }
-
-        foreach ($events as $event => $method) {
-            // Register: ['eventName' => 'methodName']
-            if (static::isCallable($subscriber, $method)) {
                 $this->on(
-                    $event,
-                    static::toCallable($subscriber, $method),
+                    $method,
+                    [$subscriber, static::normalize($method)],
                     $priority
                 );
-            } elseif (is_array($method) && $method !== []) {
-                if (static::isCallable($subscriber, $method[0])) {
-                    // Register: ['eventName' => ['methodName or callable', $priority]]
-                    $this->on(
-                        $event,
-                        static::toCallable($subscriber, $method[0]),
-                        $method[1] ?? $priority
-                    );
-                } else {
-                    // Register: ['eventName' => [['methodName1 or callable', $priority], ['methodName2']]]
-                    foreach ($method as $subMethod) {
-                        $this->on(
-                            $event,
-                            static::toCallable($subscriber, $subMethod[0]),
-                            $subMethod[1] ?? $priority
-                        );
-                    }
-                }
             }
         }
     }

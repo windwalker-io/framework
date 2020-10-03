@@ -13,6 +13,8 @@ namespace Windwalker\Event\Test\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Event\Attributes\EventSubscriber;
+use Windwalker\Event\Attributes\ListenTo;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\EventSubscriberInterface;
 use Windwalker\Event\Listener\ListenerCallable;
@@ -37,32 +39,23 @@ class SubscribableListenerProviderTest extends TestCase
      */
     public function testSubscribe(): void
     {
-        $subscriber = new class implements EventSubscriberInterface {
-            /**
-             * @inheritDoc
-             */
-            public function getSubscribedEvents(): array
-            {
-                return [
-                    'flower.sakura' => 'onFlowerSakura',
-                    'flower.rose' => ['onFlowerRose', 50],
-                    'flower.olive' => [
-                        ['onFlowerRose', 30],
-                        ['onFlowerOlive', 100],
-                    ],
-                ];
-            }
-
+        $subscriber = new
+        #[EventSubscriber]
+        class {
+            #[ListenTo('flower.sakura')]
             public function onFlowerSakura($event)
             {
                 $event->foo(2);
             }
 
+            #[ListenTo('flower.olive', 30)]
+            #[ListenTo('flower.rose', 50)]
             public function onFlowerRose($event)
             {
                 $event->foo(3);
             }
 
+            #[ListenTo('flower.olive', 30)]
             public function onFlowerOlive($event)
             {
                 $event->foo(1);
@@ -90,8 +83,8 @@ class SubscribableListenerProviderTest extends TestCase
         $listeners = array_values(TypeCast::toArray($this->instance->getListenersForEvent($event)));
 
         self::assertSame($subscriber, $listeners[0][0]);
-        self::assertEquals('onFlowerOlive', $listeners[0][1]);
-        self::assertEquals('onFlowerRose', $listeners[1][1]);
+        self::assertEquals('onFlowerRose', $listeners[0][1]);
+        self::assertEquals('onFlowerOlive', $listeners[1][1]);
     }
 
     /**
