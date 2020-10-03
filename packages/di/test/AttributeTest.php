@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\DI\Test;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Autowire;
 use Windwalker\DI\Attributes\Decorator;
 use Windwalker\DI\Container;
@@ -74,7 +75,7 @@ class AttributeTest extends TestCase
         $this->instance->set('stub', fn () => new StubService());
 
         $this->instance->getAttributesResolver()
-            ->registerAttribute(ToUpper::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
+            ->registerAttribute(ToUpper::class, AttributeType::CALLABLE);
 
         $obj = new class {
             #[ToUpper]

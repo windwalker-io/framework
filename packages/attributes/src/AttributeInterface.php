@@ -21,7 +21,7 @@ interface AttributeInterface
      *
      * @param  AttributeHandler  $handler
      *
-     * @return  mixed
+     * @return  callable
      */
-    public function __invoke(AttributeHandler $handler);
+    public function __invoke(AttributeHandler $handler): callable;
 }

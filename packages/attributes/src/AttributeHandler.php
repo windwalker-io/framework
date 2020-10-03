@@ -21,22 +21,21 @@ class AttributeHandler
      */
     public $handler;
 
-    public \Reflector $reflector;
-
-    public AttributesResolver $resolver;
-
     /**
      * AttributeHandler constructor.
      *
      * @param  callable            $handler
-     * @param  \Reflector          $reflactor
+     * @param  \Reflector          $reflector
+     * @param  object|null         $object
      * @param  AttributesResolver  $resolver
      */
-    public function __construct(callable $handler, \Reflector $reflactor, AttributesResolver $resolver)
-    {
+    public function __construct(
+        callable $handler,
+        protected \Reflector $reflector,
+        protected ?object $object,
+        protected AttributesResolver $resolver
+    ) {
         $this->set($handler);
-        $this->reflector = $reflactor;
-        $this->resolver  = $resolver;
     }
 
     public function __invoke(&...$args)
@@ -75,5 +74,13 @@ class AttributeHandler
     public function getResolver(): AttributesResolver
     {
         return $this->resolver;
+    }
+
+    /**
+     * @return object|null
+     */
+    public function getObject(): ?object
+    {
+        return $this->object;
     }
 }

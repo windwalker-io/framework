@@ -9,11 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\DI;
+namespace Windwalker\DI\Attributes;
 
 use Windwalker\Attributes\AttributesResolver as GlobalAttributesResolver;
-use Windwalker\DI\Attributes\AttributeHandler;
-use Windwalker\DI\Attributes\Inject;
+use Windwalker\DI\Container;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 /**
@@ -52,8 +51,8 @@ class AttributesResolver extends GlobalAttributesResolver
     /**
      * @inheritDoc
      */
-    protected function createHandler(callable $getter, \Reflector $property): AttributeHandler
+    protected function createHandler(callable $getter, \Reflector $reflector, ?object $object = null): AttributeHandler
     {
-        return new AttributeHandler($getter, $property, $this, $this->container);
+        return new AttributeHandler($getter, $reflector, $object, $this, $this->container);
     }
 }

@@ -145,4 +145,33 @@ class ReflectionCallable implements \Reflector
     {
         return (string) $this->getReflector();
     }
+
+    /**
+     * @return string|null
+     */
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    /**
+     * @return object|null
+     */
+    public function getObject(): ?object
+    {
+        return $this->instance;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFunctionName(): ?string
+    {
+        return $this->function;
+    }
+
+    public function getObjectOrClass(): object|string|null
+    {
+        return $this->instance ?? $this->class;
+    }
 }

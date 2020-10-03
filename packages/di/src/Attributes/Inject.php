@@ -89,11 +89,11 @@ class Inject implements ContainerAttributeInterface
                 );
             }
 
-            if ($reflector->isProtected() || $reflector->isPrivate()) {
-                $reflector->setAccessible(true);
-            }
+            $value = $this->resolveInjectable($handler->getContainer(), $varClass);
 
-            return $this->resolveInjectable($handler->getContainer(), $varClass);
+            $reflector->setValue($handler->getObject(), $value);
+
+            return $value;
         };
     }
 

@@ -20,31 +20,15 @@ use Windwalker\DI\Attributes\Inject;
  */
 class StubInject
 {
-    /**
-     * @Inject
-     *
-     * @var StubService
-     */
     #[Inject]
     public ?StubService $foo = null;
 
-    /**
-     * @Inject
-     *
-     * @var StubService
-     */
     #[Inject]
     protected ?StubService $bar = null;
 
-    /**
-     * @var StubService
-     */
     #[Inject('stub')]
     public StubService $baz;
 
-    /**
-     * @var StubService
-     */
     #[Inject('stub', true)]
     public StubService $yoo;
 }

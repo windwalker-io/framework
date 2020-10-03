@@ -40,7 +40,7 @@ class Fieldset implements AttributeInterface
     /**
      * @inheritDoc
      */
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         return function () use ($handler) {
             $resolver = $handler->getResolver();

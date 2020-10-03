@@ -20,7 +20,7 @@ use Windwalker\Attributes\AttributeInterface;
 #[\Attribute]
 class PropWrap implements AttributeInterface
 {
-    public $instance;
+    public $value;
 
     public string $wrap;
 
@@ -34,12 +34,18 @@ class PropWrap implements AttributeInterface
         $this->wrap = $wrap;
     }
 
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
-        return function (...$args) use ($handler) {
-            $this->instance = $handler(...$args);
+        return function () use ($handler) {
+            $this->value = $handler();
 
-            return new ($this->wrap)($this->instance);
+            $object = $handler->getObject();
+            /** @var \ReflectionProperty $ref */
+            $ref = $handler->getReflector();
+
+            $ref->setValue($object, $v = new ($this->wrap)($this->value));
+
+            return $v;
         };
     }
 }
