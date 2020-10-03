@@ -3,6 +3,28 @@
 This package provides a universal interface to manage (PHP8 Attributes)[https://stitcher.io/blog/attributes-in-php-8] ((RFC)[https://wiki.php.net/rfc/attributes_v2]) 
 and help developers construct the attribute processors.
 
+## Table of Contents
+
+* [Installation](#installation)
+* [Getting Started](#getting-started)
+* [Available Types & Actions](#available-types---actions)
+    + [Object & Classes](#object---classes)
+    + [Function & Method](#function---method)
+    + [Callable](#callable)
+    + [Properties](#properties)
+    + [Parameters](#parameters)
+* [Write Your Own Attribute Handlers](#write-your-own-attribute-handlers)
+    + [Object & Classes](#object---classes-1)
+    + [Use Custom Object Builder](#use-custom-object-builder)
+    + [Functions & Methods](#functions---methods)
+    + [Callable](#callable-1)
+    + [Parameters](#parameters-1)
+    + [Properties](#properties-1)
+* [About `AttributeHandler`](#about--attributehandler-)
+* [Integrate to Any Objects](#integrate-to-any-objects)
+* [Run if Attributes Exists](#run-if-attributes-exists)
+* [Available Handling Methods](#available-handling-methods)
+
 ## Installation
 
 This package is currently in Alpha, you must allow dev version in your composer settings.
@@ -597,10 +619,12 @@ AttributesResolver::runAttributeIfExists(
 
 ## Available Handling Methods
 
-- `createObject(string $class, ...$args): object`: Create object by class and decorate it.
-- `decorateObject(object $object): object`: Decorate an exists object.
-- `call(callable $callable, $args = [], ?object $context = null): mixed`: Call a callable, this will resolve methods, functions and their parameters.
-- `resolveProperties(object $instance): object`: Modify object properties values.
-- `resolveMethods(object $instance): object`: Resolve methods but won't change anything, just call your custom handler.
-- `resolveConstants(object $instance): object`: Resolve class constants but won't change anything, just call your custom handler.
-- `resolveObjectMembers(object $instance): object`: This will run `resolveProperties()`, `resolveConstants()` and `resolveConstants()` one time.
+| Method | Description |
+| --- | --- |
+|`createObject(string $class, ...$args): object`| Create object by class and decorate it.|
+|`decorateObject(object $object): object`| Decorate an exists object.|
+|`call(callable $callable, $args = [], ?object $context = null): mixed`| Call a callable, this will resolve methods, functions and their parameters.|
+|`resolveProperties(object $instance): object`| Modify object properties values.|
+|`resolveMethods(object $instance): object`| Resolve methods but won't change anything, just call your custom handler.|
+|`resolveConstants(object $instance): object`| Resolve class constants but won't change anything, just call your custom handler.|
+|`resolveObjectMembers(object $instance): object`| This will run `resolveProperties()`, `resolveConstants()` and `resolveConstants()` one time.|
