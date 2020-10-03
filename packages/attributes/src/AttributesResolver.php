@@ -128,9 +128,9 @@ class AttributesResolver extends ObjectBuilder
      * @param  mixed        ...$args
      * @param  object|null  $context
      *
-     * @return
+     * @return mixed
      */
-    public function call(callable $callable, $args = [], ?object $context = null)
+    public function call(callable $callable, $args = [], ?object $context = null): mixed
     {
         $args = $this->resolveCallArguments($callable, $args);
 
@@ -186,7 +186,7 @@ class AttributesResolver extends ObjectBuilder
         return $newArgs;
     }
 
-    public function &resolveParameter(&$value, \ReflectionParameter $ref)
+    public function &resolveParameter(&$value, \ReflectionParameter $ref): mixed
     {
         $func = fn () => $value;
 

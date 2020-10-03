@@ -44,9 +44,10 @@ Then, register this attribute to resolver.
 
 ```php
 use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributeType;
 
 $attributes = new AttributesResolver();
-$attributes->registerAttribute(\Wrapper::class, \Attribute::TARGET_CLASS);
+$attributes->registerAttribute(\Wrapper::class, AttributeType::CLASSES);
 
 // Now, try to wrap an object.
             
@@ -75,7 +76,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on Class and Object
-$attributes->registerAttribute(\Decorator::class, \Attribute::TARGET_CLASS);
+$attributes->registerAttribute(\Decorator::class, AttributeType::CLASSES);
 
 // Decorate existing object
 $object = $attributes->decorateObject($object);
@@ -84,7 +85,26 @@ $object = $attributes->decorateObject($object);
 $object = $attributes->createObject(\Foo::class, ...$args);
 ```
 
-### Function, Method and any Callable
+### Function & Method
+
+```php
+use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributeType;
+
+$attributes = new AttributesResolver();
+
+// Work on method and function.
+$attributes->registerAttribute(\AOP::class, AttributeType::METHODS | AttributeType::FUNCTIONS);
+
+$object = $attributes->resolveMethods(new SomObject());
+```
+
+### Callable
+
+Callable type is a special type, allows `AttributesResolver` to call any callable and
+wrap the calling process. You can replace parameters or change the return value.
+
+This type works on methods, functions, closures and any callable.
 
 ```php
 use Windwalker\Attributes\AttributesResolver;
@@ -93,7 +113,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on method, function, Closure or callable.
-$attributes->registerAttribute(\Autowire::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
+$attributes->registerAttribute(\Autowire::class, AttributeType::CALLABLE);
 
 $result = $attributes->call($callable, ...$args);
 ```
@@ -107,10 +127,10 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on object properties
-$attributes->registerAttribute(\Inject::class, \Attribute::TARGET_PROPERTY);
+$attributes->registerAttribute(\Inject::class, AttributeType::PROPERTIES);
 
 $object = new class {
-    #[\Inject()]
+    #[\Inject]
     protected ?\Foo $foo = null;
 };
 
@@ -126,7 +146,7 @@ use Windwalker\Attributes\AttributeType;
 $attributes = new AttributesResolver();
 
 // Work on callable parameters.
-$attributes->registerAttribute(\StrUpper::class, \Attribute::TARGET_PARAMETER);
+$attributes->registerAttribute(\StrUpper::class, AttributeType::PROPERTIES);
 $func = function (
     #[\StrUpper]
     $foo    
@@ -137,7 +157,7 @@ $func = function (
 $result = $attributes->call($func, ['flower'], /* $context to bind this */); // "FLOWER"
 ```
 
-## Write Your Own Attribute Handler
+## Write Your Own Attribute Handlers
 
 ### Object & Classes
 
@@ -147,7 +167,7 @@ This is a Decorator example:
 use Windwalker\Attributes\AttributeHandler;
 use Windwalker\Attributes\AttributeInterface;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Decorator implements AttributeInterface
 {
     protected string $class;
@@ -160,7 +180,7 @@ class Decorator implements AttributeInterface
         $this->args = $args;
     }
 
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         return fn (...$newInstanceArgs) => new ($this->class)($handler(...$newInstanceArgs), ...$this->args); 
     }
@@ -194,7 +214,7 @@ class Foo
 $attributes = new AttributesResolver();
 
 // Work on Class and Object
-$attributes->registerAttribute(\Decorator::class, \Attribute::TARGET_CLASS);
+$attributes->registerAttribute(\Decorator::class, AttributeType::CLASSES);
 
 // Decorate existing object
 $component = $attributes->decorateObject($object);
@@ -215,6 +235,63 @@ $attributes->setBuilder(function (string $class, ...$args) use ($container) {
 
 > TODO: Support custom call() handler.
 
+
+### Functions & Methods
+
+Functions & Methods type will not return anything, use this type to determine attributes exists and do something else.
+This is an example to register methods to another object.
+
+```php
+use Windwalker\Attributes\AttributeHandler;
+use Windwalker\Attributes\AttributeInterface;
+
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+class ListenTo implements AttributeInterface
+{
+    public function __construct(protected string $event) 
+    {
+        //
+    }
+
+    public function __invoke(AttributeHandler $handler): callable
+    {
+        return function () use ($handler) {
+            $provider = $handler->getResolver()->getOption('provider');
+
+            $listener = $handler();
+
+            $provider->addListener(
+                $this->event,
+                $listener
+            );
+
+            return $listener;
+        };
+    }
+}
+```
+
+The `$handler()` will just return method callable array `[$object, 'method_name'']` or function name.
+
+```php
+use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributeType;
+
+class Subscriber 
+{
+    #[\ListenTo(\FooEvent::class)]
+    public function foo()
+    {
+        //
+    }
+}
+
+$attributes = new AttributesResolver();
+
+$attributes->registerAttribute(\ListenTo::class, AttributeType::METHODS | AttributeType::FUNCTIONS);
+$attributes->resolveMethods(new \Subscriber());
+```
+
 ### Callable
 
 An example to control HTTP allow methods and Json Response.
@@ -233,7 +310,7 @@ class Method implements AttributeInterface
         $this->allows = array_map('strtoupper', (array) $allows);
     }
 
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         return function ($request, $reqHandler) use ($handler) {
             if (!in_array($request->getMethod(), $this->allows, true)) {
@@ -257,7 +334,7 @@ use Windwalker\Attributes\AttributeInterface;
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION)]
 class Json implements AttributeInterface
 {
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         return function ($request, $reqHandler) use ($handler) {
             $res = $handler($request, $reqHandler);
@@ -289,13 +366,13 @@ class Controller
 
 $attributes = new AttributesResolver();
 
-$attributes->registerAttribute(\Method::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
-$attributes->registerAttribute(\Json::class, \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION);
+$attributes->registerAttribute(\Method::class, AttributeType::CALLABLE);
+$attributes->registerAttribute(\Json::class, AttributeType::CALLABLE);
 
 // Call
 $jsonResponse = $attributes->call(
     [new \Controller(), 'index'], // Callable 
-    [$request, 'handler' => $reaHandler], // Args should be array, support php8 named arguments
+    [$request, 'handler' => $resHandler], // Args should be array, support php8 named arguments
     [?object $context = null] // Context is an object wll bind as this for the callable, default is NULL. 
 );
 ```
@@ -311,7 +388,7 @@ use Windwalker\Attributes\AttributeInterface;
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 class Upper implements AttributeInterface
 {
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         return fn () => strtoupper((string) $handler());
     }
@@ -355,7 +432,7 @@ use Windwalker\Attributes\AttributeInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class Wrapper implements AttributeInterface
 {
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         /** @var $ref ReflectionProperty */
         $ref = $handler->getReflector();
@@ -401,7 +478,7 @@ use Windwalker\Attributes\AttributeInterface;
 #[\Attribute]
 class MyAttribute implements AttributeInterface
 {
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         /** 
          * $ref can be:
@@ -427,7 +504,9 @@ class MyAttribute implements AttributeInterface
 You can create AttributesResolver in some object to help this object handle attributes, here we use EventDispatcher as example:
 
 ```php
-use Windwalker\Attributes\AttributesAwareTrait;use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributesAwareTrait;
+use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributeType;
 
 class EventDispatcher 
 {
@@ -440,10 +519,88 @@ class EventDispatcher
 
     protected function prepareAttributes(AttributesResolver $resolver)
     {
-        $resolver->registerAttribute(\ListenerTo::class, );
+        $resolver->registerAttribute(\ListenerTo::class, AttributeType::METHODS);
+        $resolver->setOption('dispatcher', $this);
+    }
+    
+    public function addListener(callable $callable)
+    {
+        // Register listener        
+    }
+    
+    public function subscribe(object $subscriber)
+    {
+        $this->getAttributesResolver()->resolverMethods($subscriber);        
     }
 }
 ```
 
+Set object to option, then you can access it in attribute handler:
 
+```php
+use Windwalker\Attributes\AttributeHandler;
+use Windwalker\Attributes\AttributeInterface;
 
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+class ListenTo implements AttributeInterface
+{
+    public function __construct(protected string $event) 
+    {
+        //
+    }
+
+    public function __invoke(AttributeHandler $handler): callable
+    {
+        return function () use ($handler) {
+            $provider = $handler->getResolver()->getOption('dispatcher');
+
+            $listener = $handler();
+
+            $provider->addListener(
+                $this->event,
+                $listener
+            );
+
+            return $listener;
+        };
+    }
+}
+```
+
+## Run if Attributes Exists
+
+`AttributesResolver` provides a simple static methods to run any callback if attribute exists.
+
+```php
+use Windwalker\Attributes\AttributesResolver;
+
+$object = new Foo();
+
+AttributesResolver::runAttributeIfExists(
+    new ReflectionObject($object), // Send any reflections
+    SomeAttribute::class,
+    function (SomeAttribute $attr) {
+        // Run anything you want
+    }
+);
+
+$ref = new ReflectionObject($object);
+
+AttributesResolver::runAttributeIfExists(
+    $ref->getMethod('foo'), // Send ReflectionMethod
+    SomeAttribute::class,
+    function (SomeAttribute $attr) {
+        // Run anything you want
+    }
+);
+```
+
+## Available Handling Methods
+
+- `createObject(string $class, ...$args): object`: Create object by class and decorate it.
+- `decorateObject(object $object): object`: Decorate an exists object.
+- `call(callable $callable, $args = [], ?object $context = null): mixed`: Call a callable, this will resolve methods, functions and their parameters.
+- `resolveProperties(object $instance): object`: Modify object properties values.
+- `resolveMethods(object $instance): object`: Resolve methods but won't change anything, just call your custom handler.
+- `resolveConstants(object $instance): object`: Resolve class constants but won't change anything, just call your custom handler.
+- `resolveObjectMembers(object $instance): object`: This will run `resolveProperties()`, `resolveConstants()` and `resolveConstants()` one time.
