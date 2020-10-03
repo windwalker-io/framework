@@ -1,7 +1,7 @@
 {
     "name": "windwalker/attributes",
     "type": "windwalker-package",
-    "description": "Windwalker Attributes package",
+    "description": "Windwalker Attributes package, provides PHP8 Attributes resolving interface.",
     "keywords": [
         "windwalker",
         "framework",
