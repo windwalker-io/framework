@@ -1,6 +1,6 @@
 # Windwalker Attributes Resolver Package
 
-This package provides a universal interface to manage (PHP8 Attributes)[https://stitcher.io/blog/attributes-in-php-8] ((RFC)[https://wiki.php.net/rfc/attributes_v2]) 
+This package provides a universal interface to manage [PHP8 Attributes](https://stitcher.io/blog/attributes-in-php-8) ([RFC](https://wiki.php.net/rfc/attributes_v2)) 
 and help developers construct the attribute processors.
 
 ## Table of Contents
