@@ -87,7 +87,15 @@ $foo->inner instanceof \Foo;
 
 ## Available Types & Actions
 
-Currently, there has 4 types, You can use `registerAttribute()` to control attribute working scope.
+Currently, there has 7 types, You can use `registerAttribute()` to control attribute working scope.
+
+- `CLASSES`: Same with `Attribute::TARGET_CLASS`
+- `CLASS_CONSTANTS`: Same with `Attribute::TARGET_CLASS_CONSTANT`
+- `METHODS`: Same with `Attribute::TARGET_METHOD`
+- `FUNCTIONS`: Same with `Attribute::TARGET_FUNCTION`
+- `CALLABLE`: **Special type only provided by `AttributeType`.**
+- `PROPERTIES`: Same with `Attribute::TARGET_PROPERTY`
+- `PARAMETERS`: Same with `Attribute::TARGET_PARAMETER`
 
 ### Object & Classes 
 
