@@ -10,9 +10,19 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        php-versions: ['8.0']
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, libsodium, fileinfo
+#          coverage: xdebug
+#          tools: php-cs-fixer, phpunit
 
       - name: Validate composer.json and composer.lock
         run: composer validate
