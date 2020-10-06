@@ -20,12 +20,12 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, intl, libsodium, fileinfo
+          extensions: mbstring, intl, sodium, fileinfo
 #          coverage: xdebug
 #          tools: php-cs-fixer, phpunit
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-suggest --ignore-platform-reqs
 
       - name: Start PHP Server
         run: php -S localhost:8100 bin/test-server.php &> /dev/null &
