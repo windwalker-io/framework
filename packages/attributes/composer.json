@@ -16,7 +16,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0||^9.0",
-        "windwalker/test": "4.x-dev"
+        "windwalker/test": "4.x-dev",
+        "windwalker/scalars": "4.x-dev"
     },
     "suggest": {
     },
