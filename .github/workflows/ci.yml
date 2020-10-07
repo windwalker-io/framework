@@ -30,7 +30,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql
+          extensions: |
+            mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, mysqli
 #          coverage: xdebug
 #          tools: php-cs-fixer, phpunit
       - name: Start mysql service
