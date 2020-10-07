@@ -16,15 +16,8 @@ jobs:
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
-      - uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
-          mysql database: 'windwalker_test' # Optional, default value is "test". The specified database which will be create
-          mysql root password: ut1234 # Required if "mysql user" is empty, default is empty. The root superuser password
-      - name: Test mysql service
-        run: |
-          sleep 15
-          mysql -h 127.0.0.1 --port 3306 -u root -put1234 -e 'CREATE DATABASE IF NOT EXISTS windwalker_test;'
+      - name: Setup MySQL latest
+        run: docker run --rm --name=mysqld -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=windwalker_test -p 3306:3306 -d mysql --default-authentication-plugin=mysql_native_password --disable-log-bin
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
