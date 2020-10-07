@@ -17,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: mirromutth/mysql-action@v1.1
-          with:
-            mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
-            mysql database: 'windwalker_test' # Optional, default value is "test". The specified database which will be create
-            mysql root password: ut1234 # Required if "mysql user" is empty, default is empty. The root superuser password
+        with:
+          mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
+          mysql database: 'windwalker_test' # Optional, default value is "test". The specified database which will be create
+          mysql root password: ut1234 # Required if "mysql user" is empty, default is empty. The root superuser password
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
