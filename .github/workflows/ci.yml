@@ -12,7 +12,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: ut1234
           MYSQL_DATABASE: windwalker_test
         ports:
           - 3306/tcp
@@ -35,7 +36,7 @@ jobs:
 #          tools: php-cs-fixer, phpunit
       - name: Start mysql service
         run: sudo /etc/init.d/mysql start
-      - run: mysql -h 127.0.0.1 --port 3306 -u root -e 'CREATE DATABASE IF NOT EXISTS windwalker_test;'
+      - run: mysql --port 3306 -u root -put1234 -e 'CREATE DATABASE IF NOT EXISTS windwalker_test;'
       - name: Get composer cache directory
         id: composercache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
