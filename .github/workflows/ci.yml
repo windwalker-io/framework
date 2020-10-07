@@ -9,15 +9,6 @@ jobs:
         php-versions: [ '8.0' ]
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: ut1234
-          MYSQL_DATABASE: windwalker_test
-        ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       redis:
         image: redis
         ports:
@@ -25,6 +16,11 @@ jobs:
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
+          mysql database: 'windwalker_test' # Optional, default value is "test". The specified database which will be create
+          mysql root password: ut1234 # Required if "mysql user" is empty, default is empty. The root superuser password
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
