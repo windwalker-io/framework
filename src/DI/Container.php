@@ -513,8 +513,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             } elseif (array_key_exists($dependencyVarName, $args)) {
                 // If an arg provided, use it.
                 return $args[$dependencyVarName];
-            } elseif (
-                !$dependency->isAbstract()
+            } elseif (!$dependency->isAbstract()
                 && !$dependency->isInterface()
                 && !$dependency->isTrait()
             ) {
@@ -527,7 +526,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
                     $childArgs = [];
                 }
 
-                $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
+                $depObject = $this->newInstance($dependencyClassName, $childArgs);
             }
 
             if ($depObject instanceof $dependencyClassName) {
