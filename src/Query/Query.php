@@ -727,7 +727,8 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
             $this->connection->connect();
 
             $result = substr($this->connection->getConnection()->quote((string) $text), 1, -1);
-        } elseif ($this->connection instanceof \PDO || method_exists($this->connection, 'quote')) {
+        } elseif ($this->connection
+            && ($this->connection instanceof \PDO || method_exists($this->connection, 'quote'))) {
             $result = substr($this->connection->quote((string) $text), 1, -1);
         } else {
             $result = $this->escapeWithNoConnection($text);

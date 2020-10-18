@@ -162,7 +162,7 @@ class FileTest extends AbstractFilesystemTest
     {
         File::delete(static::$dest . '/folder1/path1');
 
-        $this->assertFileNotExists(static::$dest . '/folder1/path1');
+        $this->assertFileDoesNotExist(static::$dest . '/folder1/path1');
 
         try {
             File::delete(static::$dest . '/folder1/path2');

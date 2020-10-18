@@ -108,7 +108,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 
         $headers = $response->getHeaders();
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/[\w]{3}, [\d]{1,2} [\w]{3} [\d]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT/',
             $headers['Expires'][0]
         );
@@ -131,7 +131,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
             'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
             $headers['Cache-Control'][0]
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/[\w]{3}, [\d]{1,2} [\w]{3} [\d]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT/',
             $headers['Last-Modified'][0]
         );

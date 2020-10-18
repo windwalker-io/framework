@@ -212,6 +212,12 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 
         $data = json_decode($response->getBody()->getContents(), true);
 
+        if ($data['_SERVER']['GATEWAY_INTERFACE'] ?? null) {
+            if (str_contains($data['_SERVER']['GATEWAY_INTERFACE'], 'CGI')) {
+                self::markTestSkipped('Target server is CGI, unable to get PHP_AUTH_USER');
+            }
+        }
+
         $this->assertEquals('username', $data['_SERVER']['PHP_AUTH_USER']);
         $this->assertEquals('pass1234', $data['_SERVER']['PHP_AUTH_PW']);
     }
@@ -247,7 +253,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     {
         $this->unlinkDownloaded();
 
-        $this->assertFileNotExists((string) $this->destFile);
+        $this->assertFileDoesNotExist((string) $this->destFile);
 
         $request = $this->createRequest(new Stream());
 

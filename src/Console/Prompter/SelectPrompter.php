@@ -79,7 +79,7 @@ class SelectPrompter extends ValidatePrompter
 
         // Build select list.
         foreach ($this->options as $key => $description) {
-            $tmpl = str_replace('{WIDTH}', $longest, $this->listTemplate);
+            $tmpl = str_replace('{WIDTH}', (string) $longest, $this->listTemplate);
 
             $list .= sprintf($tmpl, ' ', $key, $description) . "\n";
         }
