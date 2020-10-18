@@ -421,7 +421,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         $methodArgs = [];
 
         foreach ($method->getParameters() as $i => $param) {
-            $dependency        = $param->getClass();
+            $dependency        = $param->getType();
             $dependencyVarName = $param->getName();
 
             // Prior (1): Handler ...$args
@@ -453,36 +453,14 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
             }
 
             // // Prior (4): Argument with numeric keys.
-            if (null !== $dependency) {
-                $depObject           = null;
-                $dependencyClassName = $dependency->getName();
+            $value = $this->resolveArgumentValue(
+                $this->resolveParameterDependency($param, $args),
+                $param
+            );
 
-                // If the dependency class name is registered with this container or a parent, use it.
-                if ($this->has($dependencyClassName)) {
-                    $depObject = $this->get($dependencyClassName);
-                } elseif (array_key_exists($dependencyVarName, $args)) {
-                    // If an arg provided, use it.
-                    $methodArgs[] = $this->resolveArgumentValue($args[$dependencyVarName]);
-
-                    continue;
-                } elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait()) {
-                    // Otherwise we create this object recursive
-
-                    // Find child args if set
-                    if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName])) {
-                        $childArgs = $args[$dependencyClassName];
-                    } else {
-                        $childArgs = [];
-                    }
-
-                    $depObject = $this->newInstance($dependencyClassName, $childArgs);
-                }
-
-                if ($depObject instanceof $dependencyClassName) {
-                    $methodArgs[] = $depObject;
-
-                    continue;
-                }
+            if ($value !== null) {
+                $methodArgs[] = $value;
+                continue;
             }
 
             if ($param->isOptional()) {
@@ -499,6 +477,65 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         }
 
         return $methodArgs;
+    }
+
+    protected function &resolveParameterDependency(\ReflectionParameter $param, array $args = [])
+    {
+        $nope = null;
+
+        $type = $param->getType();
+        $dependencyVarName = $param->getName();
+
+        if (!$type) {
+            return $nope;
+        }
+
+        if ($type instanceof \ReflectionUnionType) {
+            $dependencies = $type->getTypes();
+        } else {
+            $dependencies = [$type];
+        }
+
+        foreach ($dependencies as $type) {
+            $depObject           = null;
+            $dependencyClassName = $type->getName();
+
+            if (!class_exists($dependencyClassName) && !interface_exists($dependencyClassName)) {
+                // Next dependency
+                continue;
+            }
+
+            $dependency = new \ReflectionClass($dependencyClassName);
+
+            // If the dependency class name is registered with this container or a parent, use it.
+            if ($this->has($dependencyClassName)) {
+                $depObject = $this->get($dependencyClassName);
+            } elseif (array_key_exists($dependencyVarName, $args)) {
+                // If an arg provided, use it.
+                return $args[$dependencyVarName];
+            } elseif (
+                !$dependency->isAbstract()
+                && !$dependency->isInterface()
+                && !$dependency->isTrait()
+            ) {
+                // Otherwise we create this object recursive
+
+                // Find child args if set
+                if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName])) {
+                    $childArgs = $args[$dependencyClassName];
+                } else {
+                    $childArgs = [];
+                }
+
+                $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
+            }
+
+            if ($depObject instanceof $dependencyClassName) {
+                return $depObject;
+            }
+        }
+
+        return $nope;
     }
 
     /**
