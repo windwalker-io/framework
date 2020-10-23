@@ -97,7 +97,7 @@ EOF;
         $help = $command->getHelp();
 
         // Clean line indent of description
-        $description = explode("\n", $description);
+        $description = explode("\n", (string) $description);
 
         foreach ($description as &$line) {
             $line = trim($line);

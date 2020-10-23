@@ -99,7 +99,7 @@ EOF;
         // Count the max command length as column width.
         foreach ($this->items as $item) {
             /** @var $item AbstractCommand */
-            $length = strlen($item->getName());
+            $length = strlen((string) $item->getName());
 
             if ($length > $this->maxLength) {
                 $this->maxLength = $length;
