@@ -70,7 +70,7 @@ class FilesystemTest extends AbstractFilesystemTest
         Filesystem::delete(static::$dest);
 
         $this->assertFalse(is_dir(static::$dest));
-        $this->assertFileNotExists(static::$dest . '/folder1/level2/file3');
+        $this->assertFileDoesNotExist(static::$dest . '/folder1/level2/file3');
     }
 
     /**

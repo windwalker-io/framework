@@ -68,7 +68,7 @@ EOF;
         $name = $command->getName();
         $description = $command->getDescription() ?: 'No description';
 
-        $template = str_replace('{WIDTH}', $this->maxLength + $this->offsetAfterCommand, $this->template);
+        $template = str_replace('{WIDTH}', (string) ($this->maxLength + $this->offsetAfterCommand), $this->template);
 
         // Sets the body indent.
         $body = [];

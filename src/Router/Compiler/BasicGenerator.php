@@ -77,7 +77,7 @@ abstract class BasicGenerator
 
         foreach ($matches as $match) {
             if (isset($data[$match[1]])) {
-                $route = str_replace($match[0], $data[$match[1]], $route);
+                $route = str_replace((string) $match[0], (string) $data[$match[1]], (string) $route);
 
                 unset($data[$match[1]]);
             }

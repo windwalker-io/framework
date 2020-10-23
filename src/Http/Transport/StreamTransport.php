@@ -108,7 +108,7 @@ class StreamTransport extends AbstractTransport
             }
 
             // Restore error tracking to give control to the exception handler
-            ini_set('track_errors', $track_errors);
+            ini_set('track_errors', (string) $track_errors);
 
             throw new \RuntimeException($php_errormsg);
         }

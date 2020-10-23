@@ -43,7 +43,7 @@ class DomHelper
             '\\1',
         ];
 
-        $buffer = preg_replace($search, $replace, $buffer);
+        $buffer = preg_replace($search, $replace, (string) $buffer);
 
         return $buffer;
     }
