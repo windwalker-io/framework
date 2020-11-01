@@ -454,8 +454,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
 
             // // Prior (4): Argument with numeric keys.
             $value = $this->resolveArgumentValue(
-                $this->resolveParameterDependency($param, $args),
-                $param
+                $this->resolveParameterDependency($param, $args)
             );
 
             if ($value !== null) {
@@ -479,6 +478,19 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
         return $methodArgs;
     }
 
+    /**
+     * resolveParameterDependency
+     *
+     * @param \ReflectionParameter $param
+     * @param array                $args
+     *
+     * @return  mixed
+     *
+     * @throws DependencyResolutionException
+     * @throws \ReflectionException
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     protected function &resolveParameterDependency(\ReflectionParameter $param, array $args = [])
     {
         $nope = null;
@@ -673,7 +685,9 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     {
         $name = $name ?: md5(uniqid('windwalker-di', true));
 
-        $this->children[$name] = new static($this);
+        $this->children[$name] = $child = new static($this);
+
+        $child->setAnnotationRegistry($this->getAnnotationRegistry());
 
         return $this->children[$name];
     }
@@ -1212,6 +1226,22 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
     public function setParameters(Structure $parameters)
     {
         $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Method to set property annotationRegistry
+     *
+     * @param AnnotationRegistry $annotationRegistry
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setAnnotationRegistry($annotationRegistry)
+    {
+        $this->annotationRegistry = $annotationRegistry;
 
         return $this;
     }

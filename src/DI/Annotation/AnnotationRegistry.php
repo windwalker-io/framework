@@ -12,6 +12,7 @@ namespace Windwalker\DI\Annotation;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry as DoctrinAnnotationRegistry;
+use Doctrine\Common\Annotations\Reader;
 use Windwalker\DI\Container;
 
 /**
@@ -29,7 +30,7 @@ class AnnotationRegistry
     protected $annotations = [];
 
     /**
-     * @var AnnotationReader
+     * @var Reader
      */
     protected $annotationReader;
 
@@ -59,19 +60,35 @@ class AnnotationRegistry
     /**
      * Method to get property AnnotationReader
      *
-     * @return  AnnotationReader
+     * @return  Reader
      *
      * @throws AnnotationException
      * @since  3.4.4
      *
      */
-    public function getAnnotationReader(): AnnotationReader
+    public function getAnnotationReader(): Reader
     {
         if (!$this->annotationReader) {
             $this->annotationReader = new AnnotationReader();
         }
 
         return $this->annotationReader;
+    }
+
+    /**
+     * Method to set property annotationReader
+     *
+     * @param Reader $annotationReader
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function setAnnotationReader(Reader $annotationReader)
+    {
+        $this->annotationReader = $annotationReader;
+
+        return $this;
     }
 
     /**
