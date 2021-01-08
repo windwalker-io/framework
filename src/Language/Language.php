@@ -556,7 +556,7 @@ class Language implements LanguageInterface
 	 *
 	 * @return  Language  Return self to support chaining.
 	 */
-	public function setLocalise($locale = 'en-GB', LocaliseInterface $localise)
+	public function setLocalise($locale = 'en-GB', LocaliseInterface $localise = null)
 	{
 		$locale = LanguageNormalize::toLanguageTag($locale);
 
@@ -679,7 +679,7 @@ class Language implements LanguageInterface
 
 				$ref = null;
 
-				if (method_exists($traceData['class'], $traceData['function']))
+				if (method_exists((string) $traceData['class'], $traceData['function']))
 				{
 					$ref = new \ReflectionMethod($traceData['class'], $traceData['function']);
 				}

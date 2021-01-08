@@ -113,7 +113,7 @@ class IniFormat implements FormatInterface
 			$line = trim($line);
 
 			// Ignore empty lines and comments.
-			if (empty($line) || ($line{0} == ';'))
+			if (empty($line) || ($line[0] == ';'))
 			{
 				continue;
 			}
@@ -130,7 +130,7 @@ class IniFormat implements FormatInterface
 					continue;
 				}
 			}
-			elseif ($line{0} == '[')
+			elseif ($line[0] == '[')
 			{
 				continue;
 			}

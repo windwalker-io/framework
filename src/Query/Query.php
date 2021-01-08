@@ -1275,7 +1275,7 @@ class Query implements QueryInterface, PreparableInterface
 			}
 			else
 			{
-				$parts[] = $q{0} . $part . $q{1};
+				$parts[] = $q[0] . $part . $q[1];
 			}
 		}
 

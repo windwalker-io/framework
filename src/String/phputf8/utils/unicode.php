@@ -35,7 +35,7 @@ function utf8_to_unicode($str) {
 
     for($i = 0; $i < $len; $i++) {
 
-        $in = ord($str{$i});
+        $in = ord($str[$i]);
 
         if ( $mState == 0) {
 
