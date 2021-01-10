@@ -230,4 +230,18 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         return count(get_object_vars($this));
     }
+
+    /**
+     * clear
+     *
+     * @param string $uri
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function clear(string $uri): string
+    {
+        return (new PsrUri($uri))->toString();
+    }
 }
