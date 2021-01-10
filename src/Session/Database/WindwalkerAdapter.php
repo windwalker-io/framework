@@ -142,7 +142,9 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
      */
     private function getMergeSql(string $sessionId, string $data, int $time)
     {
-        $driver = $this->db->getConnection()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        /** @var \PDO $conn */
+        $conn = $this->db->getConnection();
+        $driver = $conn->getAttribute(\PDO::ATTR_DRIVER_NAME);
 
         $cols = $this->db->getTable($this->options['table'])->getColumnDetails();
         
@@ -153,14 +155,15 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
         switch ($driver) {
             case 'mysql':
                 return $this->db->getQuery(true)->format(
-                    <<<SQL
+<<<SQL
 INSERT INTO {$this->options['table']} ({$this->options['id_col']}, 
 {$this->options['data_col']},
 {$this->options['time_col']}) 
  VALUES (%q, %q, %q)
  ON DUPLICATE KEY UPDATE {$this->options['data_col']} = VALUES({$this->options['data_col']}), 
  {$this->options['time_col']} = VALUES({$this->options['time_col']}) 
-SQL,
+SQL
+                    ,
                     $sessionId,
                     $data,
                     $time
@@ -169,14 +172,16 @@ SQL,
             case 'oci':
                 // DUAL is Oracle specific dummy table
                 return $this->db->getQuery(true)->format(
-                    <<<SQL
- MERGE INTO {$this->options['table']} USING DUAL ON ({$this->options['id_col']} = :id) 
+<<<SQL
+ MERGE INTO {$this->options['table']} USING DUAL ON ({$this->options['id_col']} = %q) 
  WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, 
  {$this->options['data_col']}, 
  {$this->options['time_col']}) 
  VALUES (%q, %q, %q)  
  WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = %q, {$this->options['time_col']} = %q
-SQL,
+SQL
+                    ,
+                    $sessionId,
                     $sessionId,
                     $data,
                     $time,
@@ -185,7 +190,7 @@ SQL,
                 );
 
             case 'sqlsrv' === $driver && version_compare(
-                    $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION),
+                    $conn->getAttribute(\PDO::ATTR_SERVER_VERSION),
                     '10',
                     '>='
                 ):
