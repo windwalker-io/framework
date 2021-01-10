@@ -56,35 +56,6 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * write
-     *
-     * @param string|int $id
-     * @param string     $data
-     *
-     * @return  boolean
-     */
-    public function write($id, $data)
-    {
-        $writer = $this->db->getWriter();
-
-        $data = [
-            $this->options['data_col'] => $data,
-            $this->options['time_col'] => (int) time(),
-            $this->options['id_col'] => $id,
-        ];
-
-        $writer->updateOne($this->options['table'], $data, $this->options['id_col']);
-
-        if ($writer->countAffected()) {
-            return true;
-        }
-
-        $writer->insertOne($this->options['table'], $data, $this->options['id_col']);
-
-        return true;
-    }
-
-    /**
      * destroy
      *
      * @param string|int $id
@@ -120,5 +91,129 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
         $this->db->setQuery($query);
 
         return (bool) $this->db->execute();
+    }
+
+    /**
+     * write
+     *
+     * @param int|string $id
+     * @param string     $data
+     *
+     * @return  bool
+     *
+     * @throws \RuntimeException
+     */
+    public function write($id, $data)
+    {
+        $time = time();
+
+        // We use a single MERGE SQL query when supported by the database.
+        $mergeSql = $this->getMergeSql($id, $data, $time);
+
+        if (null !== $mergeSql) {
+            $this->db->execute($mergeSql);
+
+            return true;
+        }
+
+        $writer = $this->db->getWriter();
+
+        $data = [
+            $this->options['data_col'] => $data,
+            $this->options['time_col'] => $time,
+            $this->options['id_col'] => $id,
+        ];
+
+        $writer->updateOne($this->options['table'], $data, $this->options['id_col']);
+
+        if ($writer->countAffected()) {
+            return true;
+        }
+
+        $writer->insertOne($this->options['table'], $data, $this->options['id_col']);
+
+        return true;
+    }
+
+    /**
+     * Returns a merge/upsert (i.e. insert or update) SQL query when supported by the database.
+     *
+     * @return string|null The SQL string or null when not supported
+     */
+    private function getMergeSql(string $sessionId, string $data, int $time)
+    {
+        $driver = $this->db->getConnection()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+
+        $cols = $this->db->getTable($this->options['table'])->getColumnDetails();
+        
+        if ($cols[$this->options['id_col']]->Key !== 'PRI') {
+            return null;
+        }
+
+        switch ($driver) {
+            case 'mysql':
+                return $this->db->getQuery(true)->format(
+                    <<<SQL
+INSERT INTO {$this->options['table']} ({$this->options['id_col']}, 
+{$this->options['data_col']},
+{$this->options['time_col']}) 
+ VALUES (%q, %q, %q)
+ ON DUPLICATE KEY UPDATE {$this->options['data_col']} = VALUES({$this->options['data_col']}), 
+ {$this->options['time_col']} = VALUES({$this->options['time_col']}) 
+SQL,
+                    $sessionId,
+                    $data,
+                    $time
+                );
+
+            case 'oci':
+                // DUAL is Oracle specific dummy table
+                return $this->db->getQuery(true)->format(
+                    <<<SQL
+ MERGE INTO {$this->options['table']} USING DUAL ON ({$this->options['id_col']} = :id) 
+ WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, 
+ {$this->options['data_col']}, 
+ {$this->options['time_col']}) 
+ VALUES (%q, %q, %q)  
+ WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = %q, {$this->options['time_col']} = %q
+SQL,
+                    $sessionId,
+                    $data,
+                    $time,
+                    $data,
+                    $time
+                );
+
+            case 'sqlsrv' === $driver && version_compare(
+                    $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION),
+                    '10',
+                    '>='
+                ):
+                // @codingStandardsIgnoreStart
+                // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
+                // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+                return $this->db->getQuery(true)->format(
+                    "MERGE INTO {$this->options['table']} WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ({$this->options['id_col']} = %q) " .
+                    "WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (%q, %q, %q) " .
+                    "WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = %q, {$this->options['time_col']} = %q;",
+                    $sessionId,
+                    $sessionId,
+                    $data,
+                    $time,
+                    $data,
+                    $time
+                );
+
+            case 'sqlite':
+                return $this->db->getQuery(true)->format(
+                    "INSERT OR REPLACE INTO {$this->options['table']} ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (%q, %q, %q)",
+                    $sessionId,
+                    $data,
+                    $time
+                );
+        }
+
+        // @codingStandardsIgnoreEnd
+        return '';
     }
 }
