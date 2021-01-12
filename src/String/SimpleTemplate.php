@@ -49,7 +49,7 @@ abstract class SimpleTemplate
                     return $return;
                 }
             },
-            $string
+            (string) $string
         );
     }
 }
