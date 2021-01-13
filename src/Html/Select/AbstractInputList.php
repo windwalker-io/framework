@@ -147,7 +147,7 @@ class AbstractInputList extends HtmlElement
                     preg_replace(
                         '/[^A-Z0-9_\.-]/i',
                         '-',
-                        $option->getValue() ?: 'empty'
+                        (string) ($option->getValue() ?: 'empty')
                     ),
                     '-'
                 )
