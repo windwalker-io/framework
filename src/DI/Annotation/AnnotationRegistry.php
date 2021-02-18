@@ -82,7 +82,7 @@ class AnnotationRegistry
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.23
      */
     public function setAnnotationReader(Reader $annotationReader)
     {

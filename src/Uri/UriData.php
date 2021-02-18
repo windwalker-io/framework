@@ -238,7 +238,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.23
      */
     public static function clear(string $uri): string
     {

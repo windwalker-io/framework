@@ -489,7 +489,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      * @throws DependencyResolutionException
      * @throws \ReflectionException
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.23
      */
     protected function &resolveParameterDependency(\ReflectionParameter $param, array $args = [])
     {
@@ -1237,7 +1237,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.5.23
      */
     public function setAnnotationRegistry($annotationRegistry)
     {
