@@ -266,7 +266,7 @@ abstract class TypeCast
             case 'int':
             case 'integer':
                 if ($strict) {
-                    return is_numeric($value) && floor($value) == $value ? (int) $value : null;
+                    return is_numeric($value) && floor((float) $value) == $value ? (int) $value : null;
                 }
 
                 if (is_scalar($value)) {
