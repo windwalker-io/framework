@@ -19,6 +19,7 @@ use Windwalker\Core\Package\PackageInstaller;
 use Windwalker\Core\Seed\FakerService;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
+use Windwalker\ORM\ORM;
 
 /**
  * The DatabasePackage class.
