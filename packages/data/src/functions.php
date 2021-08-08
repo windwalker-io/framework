@@ -13,7 +13,9 @@ namespace Windwalker;
 
 use Windwalker\Data\Collection;
 
-function collect($storage = []): Collection
-{
-    return Collection::wrap($storage);
+if (!function_exists('\Windwalker\collect')) {
+    function collect($storage = []): Collection
+    {
+        return Collection::wrap($storage);
+    }
 }

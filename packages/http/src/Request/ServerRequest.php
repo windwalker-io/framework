@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Request;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -111,19 +112,19 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
         string $protocol = '1.1'
     ) {
         if (!ServerHelper::validateUploadedFiles($uploadedFiles)) {
-            throw new \InvalidArgumentException('Invalid uploaded files, every file should be an UploadedInterface');
+            throw new InvalidArgumentException('Invalid uploaded files, every file should be an UploadedInterface');
         }
 
         if ($body === 'php://input') {
             $body = new PhpInputStream();
         }
 
-        $this->serverParams  = $serverParams;
+        $this->serverParams = $serverParams;
         $this->uploadedFiles = $uploadedFiles;
-        $this->cookieParams  = $cookies;
-        $this->queryParams   = $queryParams;
-        $this->parsedBody    = $parsedBody;
-        $this->protocol      = $protocol;
+        $this->cookieParams = $cookies;
+        $this->queryParams = $queryParams;
+        $this->parsedBody = $parsedBody;
+        $this->protocol = $protocol;
 
         parent::__construct($uri, $method, $body, $headers);
     }
@@ -175,7 +176,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *
      * @return  static
      */
-    public function withCookieParams(array $cookies)
+    public function withCookieParams(array $cookies): static|ServerRequest
     {
         $new = clone $this;
 
@@ -224,7 +225,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *
      * @return static
      */
-    public function withQueryParams(array $query)
+    public function withQueryParams(array $query): static|ServerRequest
     {
         $new = clone $this;
 
@@ -260,12 +261,12 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @param  array  $uploadedFiles  An array tree of UploadedFileInterface instances.
      *
      * @return static
-     * @throws \InvalidArgumentException if an invalid structure is provided.
+     * @throws InvalidArgumentException if an invalid structure is provided.
      */
-    public function withUploadedFiles(array $uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles): static|ServerRequest
     {
         if (!ServerHelper::validateUploadedFiles($uploadedFiles)) {
-            throw new \InvalidArgumentException('Invalid uploaded files, every file should be an UploadedInterface');
+            throw new InvalidArgumentException('Invalid uploaded files, every file should be an UploadedInterface');
         }
 
         $new = clone $this;
@@ -321,10 +322,10 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *                                   typically be in an array or object.
      *
      * @return static
-     * @throws \InvalidArgumentException if an unsupported argument type is
+     * @throws InvalidArgumentException if an unsupported argument type is
      *     provided.
      */
-    public function withParsedBody($data)
+    public function withParsedBody($data): static|ServerRequest
     {
         $new = clone $this;
 
@@ -366,7 +367,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @see getAttributes()
      *
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute($name, $default = null): mixed
     {
         if (!array_key_exists($name, $this->attributes)) {
             return $default;
@@ -392,7 +393,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @see getAttributes()
      *
      */
-    public function withAttribute($name, $value)
+    public function withAttribute($name, $value): static|ServerRequest
     {
         $new = clone $this;
 
@@ -417,7 +418,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @see getAttributes()
      *
      */
-    public function withoutAttribute($name)
+    public function withoutAttribute($name): static|ServerRequest
     {
         if (!isset($this->attributes[$name])) {
             return clone $this;

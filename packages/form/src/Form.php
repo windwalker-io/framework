@@ -11,20 +11,31 @@ declare(strict_types=1);
 
 namespace Windwalker\Form;
 
-use Windwalker\DI\Attributes\AttributeType;
+use Attribute;
+use Countable;
+use Generator;
+use InvalidArgumentException;
+use IteratorAggregate;
+use OutOfBoundsException;
+use ReflectionException;
+use Windwalker\Attributes\AttributesResolver;
+use Windwalker\Attributes\AttributeType;
 use Windwalker\Form\Attributes\Fieldset;
+use Windwalker\Form\Attributes\NS;
 use Windwalker\Form\Field\AbstractField;
+use Windwalker\Form\Field\CompositeFieldInterface;
 use Windwalker\Form\Renderer\FormRendererInterface;
 use Windwalker\Form\Renderer\SimpleRenderer;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Attributes\AttributesResolver;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
+use Windwalker\Utilities\Symbol;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The Form class.
  */
-class Form implements \IteratorAggregate
+class Form implements IteratorAggregate, Countable
 {
     use ObjectBuilderAwareTrait;
     use OptionAccessTrait;
@@ -64,7 +75,7 @@ class Form implements \IteratorAggregate
     {
         $this->setNamespace($namespace);
 
-        $this->renderer  = $renderer ?? new SimpleRenderer();
+        $this->renderer = $renderer ?? new SimpleRenderer();
 
         $this->prepareOptions(
             [],
@@ -81,9 +92,9 @@ class Form implements \IteratorAggregate
      *
      * @return  $this
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function defineFormFields(FieldDefinitionInterface|string $define)
+    public function defineFormFields(FieldDefinitionInterface|string $define): static
     {
         if (is_string($define)) {
             $define = $this->getObjectBuilder()->createObject($define);
@@ -94,7 +105,7 @@ class Form implements \IteratorAggregate
         return $this;
     }
 
-    public function add(string $name, $field, ?string $fieldset = null): AbstractField
+    public function add(string $name, mixed $field, ?string $fieldset = null): AbstractField
     {
         [$namespace, $name] = FormNormalizer::extractNamespace($name);
 
@@ -107,13 +118,16 @@ class Form implements \IteratorAggregate
         }
 
         if (!$field instanceof AbstractField) {
-            throw new \InvalidArgumentException(__METHOD__ . ' argument 2 should be sub class of AbstractField.');
+            throw new InvalidArgumentException(
+                __METHOD__ . ' argument 2 should be sub class of AbstractField. '
+                . $field . ' given.'
+            );
         }
 
         $field->setName($name);
 
         if ($namespace) {
-            $field->setNamespace($name);
+            $field->setNamespace($namespace);
         }
 
         return $this->addField($field, $fieldset);
@@ -149,7 +163,7 @@ class Form implements \IteratorAggregate
         return $field;
     }
 
-    public function addFields(array $fields, ?string $fieldset = null, string $namespace = '')
+    public function addFields(array $fields, ?string $fieldset = null, string $namespace = ''): static
     {
         foreach ($fields as $field) {
             $this->addField($field, $fieldset, $namespace);
@@ -161,17 +175,19 @@ class Form implements \IteratorAggregate
     /**
      * fill
      *
-     * @param  array  $data
+     * @param  mixed  $data
      *
      * @return  $this
      */
-    public function fill(array $data)
+    public function fill(mixed $data): static
     {
+        $data = TypeCast::toArray($data);
+
         foreach ($this->fields as $name => $field) {
             $value = Arr::get($data, $name, '/');
 
             if ($value !== null) {
-                $field->bindValue($value);
+                $field->setValue($value);
             }
         }
 
@@ -185,7 +201,7 @@ class Form implements \IteratorAggregate
      *
      * @return  $this
      */
-    public function bind(array &$data)
+    public function bind(array &$data): static
     {
         $this->bounded = &$data;
 
@@ -193,6 +209,9 @@ class Form implements \IteratorAggregate
             $value = &Arr::get($data, $name, '/');
 
             $field->bindValue($value);
+
+            // Break reference
+            unset($value);
         }
 
         return $this;
@@ -217,15 +236,21 @@ class Form implements \IteratorAggregate
     /**
      * getFields
      *
-     * @param  string|null  $fieldset
-     * @param  string       $namespace
+     * @param  Symbol|string|null  $fieldset
+     * @param  string              $namespace
      *
-     * @return  \Generator|AbstractField[]
+     * @return Generator
+     *
+     * @psalm-return AbstractField[]
      */
-    public function getFields(?string $fieldset = null, string $namespace = ''): \Generator
+    public function getFields(Symbol|string|null $fieldset = null, string $namespace = ''): Generator
     {
         foreach ($this->fields as $k => $field) {
-            if ($fieldset !== null && $field->getFieldset() !== $fieldset) {
+            if ($field->getFieldset() && Symbol::none()->is($fieldset)) {
+                continue;
+            }
+
+            if ($fieldset !== null && $field->getFieldset() !== $fieldset && !Symbol::none()->is($fieldset)) {
                 continue;
             }
 
@@ -245,33 +270,46 @@ class Form implements \IteratorAggregate
     /**
      * removeField
      *
-     * @param  string  $namespace
+     * @param  string|AbstractField  $field  Field full namespace name or object.
      *
      * @return  $this
      */
-    public function removeField(string $namespace)
+    public function removeField(string|AbstractField $field): static
     {
-        unset($this->fields[$namespace]);
+        if (is_stringable($field)) {
+            unset($this->fields[$field]);
+        } else {
+            $this->fields = array_filter($this->fields, fn($f) => $f !== $field);
+        }
 
         return $this;
     }
 
-    public function wrap(?string $fieldset = null, ?string $group = null, ?callable $handler = null)
+    public function removeFields(Symbol|string|null $fieldset = null, string $namespace = ''): static
+    {
+        foreach ($this->getFields($fieldset, $namespace) as $field) {
+            $this->removeField($field->getNamespaceName());
+        }
+
+        return $this;
+    }
+
+    public function wrap(?string $fieldset = null, ?string $namespace = null, ?callable $handler = null): static
     {
         if ($fieldset) {
             $this->fieldsets[$fieldset] ??= new Fieldset($fieldset, null);
-            $this->fieldset             = $this->fieldsets[$fieldset];
+            $this->fieldset = $this->fieldsets[$fieldset];
         }
 
-        if ($group) {
-            $this->namespaceStack[] = $group;
+        if ($namespace) {
+            $this->namespaceStack[] = $namespace;
         }
 
         if ($handler) {
             $this->register($handler);
         }
 
-        if ($group) {
+        if ($namespace) {
             array_pop($this->namespaceStack);
         }
 
@@ -282,7 +320,7 @@ class Form implements \IteratorAggregate
         return $this;
     }
 
-    public function register(\Closure $handler)
+    public function register(callable $handler): static
     {
         $this->attributeResolver->resolveCallable($handler)($this);
 
@@ -296,23 +334,81 @@ class Form implements \IteratorAggregate
         return $this->fieldsets[$name];
     }
 
-    public function group(string $name, callable $handler)
+    public function removeFieldset(string $name): static
+    {
+        unset($this->fieldsets[$name]);
+
+        return $this;
+    }
+
+    /**
+     * Wrap by namespace, use `/` to separate namespace.
+     *
+     * @param  string    $name
+     * @param  callable  $handler
+     *
+     * @return  $this
+     */
+    public function ns(string $name, callable $handler): static
     {
         $this->wrap(null, $name, $handler);
 
         return $this;
     }
 
-    public function filter(array $data): array
+    /**
+     * Alias of ns().
+     *
+     * @param  string    $name
+     * @param  callable  $handler
+     *
+     * @return  static
+     */
+    public function group(string $name, callable $handler): static
     {
-        $filtered = [];
+        return $this->ns($name, $handler);
+    }
+
+    public function filter(array $data, bool $keepAllData = false): array
+    {
+        $filtered = $keepAllData ? $data : [];
 
         foreach ($this->fields as $name => $field) {
-            $value    = Arr::get($data, $name, '/');
-            $filtered = Arr::set($filtered, $name, $field->filter($value), '/');
+            if ($field instanceof CompositeFieldInterface) {
+                $filtered = array_merge(
+                    $data,
+                    $field->filter($data)
+                );
+            } else {
+                $name = $field->getNamespaceName(true);
+
+                if (!Arr::has($data, $name, '/')) {
+                    continue;
+                }
+
+                $value = Arr::get($data, $name, '/');
+                $filtered = Arr::set($filtered, $name, $field->filter($value), '/');
+            }
         }
 
         return $filtered;
+    }
+
+    public function prepareStore(array $data): array
+    {
+        foreach ($this->fields as $name => $field) {
+            if (!Arr::has($data, $name, '/')) {
+                continue;
+            }
+
+            $value = Arr::get($data, $name, '/');
+
+            $value = $field->prepareStore($value);
+
+            $data = Arr::set($data, $name, $value, '/');
+        }
+
+        return $data;
     }
 
     /**
@@ -327,7 +423,11 @@ class Form implements \IteratorAggregate
         $results = new ResultSet();
 
         foreach ($this->fields as $name => $field) {
-            $value = Arr::get($data, $name, '/');
+            if ($field instanceof CompositeFieldInterface) {
+                $value = $data;
+            } else {
+                $value = Arr::get($data, $field->getNamespaceName(true), '/');
+            }
 
             $results->addResult($name, $field->validate($value));
         }
@@ -351,7 +451,7 @@ class Form implements \IteratorAggregate
         $field = $this->getField($namespace);
 
         if (!$field) {
-            throw new \OutOfBoundsException("Field $namespace not found.");
+            throw new OutOfBoundsException("Field $namespace not found.");
         }
 
         return $field->render($options);
@@ -360,17 +460,20 @@ class Form implements \IteratorAggregate
     /**
      * renderFields
      *
-     * @param  string|null  $fieldset
-     * @param  string       $namespace
-     * @param  array        $options
+     * @param  Symbol|string|null  $fieldset
+     * @param  string              $namespace
+     * @param  array               $options
      *
      * @return string
      */
-    public function renderFields(?string $fieldset = null, string $namespace = '', array $options = []): string
-    {
+    public function renderFields(
+        Symbol|string|null $fieldset = null,
+        ?string $namespace = '',
+        array $options = []
+    ): string {
         $output = '';
 
-        foreach ($this->getFields($fieldset, $namespace) as $field) {
+        foreach ($this->getFields($fieldset, (string) $namespace) as $field) {
             $output .= "\n" . $field->render($options);
         }
 
@@ -380,7 +483,7 @@ class Form implements \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         return $this->getFields();
     }
@@ -398,7 +501,15 @@ class Form implements \IteratorAggregate
             ]
         );
 
-        $this->attributeResolver->registerAttribute(Fieldset::class, AttributeType::FUNCTION_METHOD);
+        $this->attributeResolver->registerAttribute(
+            Fieldset::class,
+            Attribute::TARGET_METHOD | Attribute::TARGET_FUNCTION | AttributeType::CALLABLE
+        );
+
+        $this->attributeResolver->registerAttribute(
+            NS::class,
+            Attribute::TARGET_METHOD | Attribute::TARGET_FUNCTION | AttributeType::CALLABLE
+        );
     }
 
     /**
@@ -422,7 +533,7 @@ class Form implements \IteratorAggregate
      *
      * @return  static  Return self to support chaining.
      */
-    public function setRenderer(FormRendererInterface $renderer)
+    public function setRenderer(FormRendererInterface $renderer): static
     {
         $this->renderer = $renderer;
 
@@ -442,10 +553,44 @@ class Form implements \IteratorAggregate
      *
      * @return  static  Return self to support chaining.
      */
-    public function setNamespace(string $namespace)
+    public function setNamespace(string $namespace): static
     {
         $this->namespace = $namespace;
 
         return $this;
+    }
+
+    public function appendNamespace(string $namespace): static
+    {
+        $this->namespace .= '/' . $namespace;
+        $this->namespace = FormNormalizer::clearNamespace($this->namespace);
+
+        return $this;
+    }
+
+    /**
+     * @return Fieldset[]
+     */
+    public function getFieldsets(): array
+    {
+        return $this->fieldsets;
+    }
+
+    public function getFieldset(string $name): ?Fieldset
+    {
+        return $this->fieldsets[$name] ?? null;
+    }
+
+    /**
+     * Count elements of an object
+     * @link https://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * <p>
+     * The return value is cast to an integer.
+     * </p>
+     */
+    public function count(): int
+    {
+        return count($this->fields);
     }
 }

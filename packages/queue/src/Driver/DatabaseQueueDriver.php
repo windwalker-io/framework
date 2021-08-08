@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
+use DateTimeImmutable;
+use Exception;
+use Throwable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Query\Query;
 use Windwalker\Queue\QueueMessage;
@@ -38,13 +41,17 @@ class DatabaseQueueDriver implements QueueDriverInterface
     /**
      * DatabaseQueueDriver constructor.
      *
-     * @param DatabaseAdapter $db
-     * @param string                 $channel
-     * @param string                 $table
-     * @param int                    $timeout
+     * @param  DatabaseAdapter  $db
+     * @param  string           $channel
+     * @param  string           $table
+     * @param  int              $timeout
      */
-    public function __construct(DatabaseAdapter $db, string $channel = 'default', string $table = 'queue_jobs', int $timeout = 60)
-    {
+    public function __construct(
+        DatabaseAdapter $db,
+        string $channel = 'default',
+        string $table = 'queue_jobs',
+        int $timeout = 60
+    ) {
         $this->db = $db;
         $this->table = $table;
         $this->channel = $channel;
@@ -56,12 +63,12 @@ class DatabaseQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function push(QueueMessage $message): int|string
+    public function push(QueueMessage $message): string
     {
-        $time = new \DateTimeImmutable('now');
+        $time = new DateTimeImmutable('now');
 
         $data = [
             'channel' => $message->getChannel() ?: $this->channel,
@@ -74,7 +81,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
         $data = $this->db->getWriter()->insertOne($this->table, $data, 'id');
 
-        return $data['id'];
+        return (string) $data['id'];
     }
 
     /**
@@ -83,13 +90,13 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param  string|null  $channel
      *
      * @return QueueMessage|null
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
         $channel = $channel ?: $this->channel;
 
-        $now = new \DateTimeImmutable('now');
+        $now = new DateTimeImmutable('now');
 
         $query = $this->db->getQuery(true);
 
@@ -105,21 +112,23 @@ class DatabaseQueueDriver implements QueueDriverInterface
             )
             ->forUpdate();
 
-        $data = $this->db->transaction(function () use ($now, $query) {
-            $data = $this->db->prepare($query)->get();
+        $data = $this->db->transaction(
+            function () use ($now, $query) {
+                $data = $this->db->prepare($query)->get();
 
-            if (!$data) {
-                return null;
+                if (!$data) {
+                    return null;
+                }
+
+                $data['attempts']++;
+
+                $values = ['reserved' => $now, 'attempts' => $data['attempts']];
+
+                $this->db->getWriter()->updateWhere($this->table, $values, ['id' => $data['id']]);
+
+                return $data;
             }
-
-            $data['attempts']++;
-
-            $values = ['reserved' => $now, 'attempts' => $data['attempts']];
-
-            $this->db->getWriter()->updateBatch($this->table, $values, ['id' => $data['id']]);
-
-            return $data;
-        });
+        );
 
         if ($data === null) {
             return null;
@@ -143,7 +152,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      *
      * @return static
      */
-    public function delete(QueueMessage $message)
+    public function delete(QueueMessage $message): static
     {
         $channel = $message->getChannel() ?: $this->channel;
 
@@ -158,16 +167,16 @@ class DatabaseQueueDriver implements QueueDriverInterface
     /**
      * release
      *
-     * @param QueueMessage|string $message
+     * @param  QueueMessage|string  $message
      *
      * @return static
-     * @throws \Exception
+     * @throws Exception
      */
-    public function release(QueueMessage $message)
+    public function release(QueueMessage $message): static
     {
         $channel = $message->getChannel() ?: $this->channel;
 
-        $time = new \DateTimeImmutable('now');
+        $time = new DateTimeImmutable('now');
         $time = $time->modify('+' . $message->getDelay() . 'seconds');
 
         $values = [
@@ -175,7 +184,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
             'visibility' => $time,
         ];
 
-        $this->db->getWriter()->updateBatch(
+        $this->db->getWriter()->updateWhere(
             $this->table,
             $values,
             [
@@ -200,11 +209,11 @@ class DatabaseQueueDriver implements QueueDriverInterface
     /**
      * Method to set property table
      *
-     * @param   mixed $table
+     * @param  mixed  $table
      *
      * @return  static  Return self to support chaining.
      */
-    public function setTable(string $table)
+    public function setTable(string $table): static
     {
         $this->table = $table;
 
@@ -224,11 +233,11 @@ class DatabaseQueueDriver implements QueueDriverInterface
     /**
      * Method to set property db
      *
-     * @param   DatabaseAdapter $db
+     * @param  DatabaseAdapter  $db
      *
      * @return  static  Return self to support chaining.
      */
-    public function setDb(DatabaseAdapter $db)
+    public function setDb(DatabaseAdapter $db): static
     {
         $this->db = $db;
 
@@ -240,7 +249,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      *
      * @return  static
      */
-    public function reconnect()
+    public function reconnect(): static
     {
         $this->disconnect();
 
@@ -256,7 +265,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      *
      * @since  3.5.2
      */
-    public function disconnect()
+    public function disconnect(): static
     {
         $this->db->disconnect();
 

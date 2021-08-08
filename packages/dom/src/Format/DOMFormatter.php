@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DOM\Format;
 
+use InvalidArgumentException;
 use RuntimeException;
 use Windwalker\DOM\DOMFactory;
 
@@ -63,7 +64,7 @@ class DOMFormatter
      *
      * @return  static
      */
-    public static function getInstance()
+    public static function getInstance(): static
     {
         if (empty(static::$instance)) {
             static::$instance = new static();
@@ -75,7 +76,7 @@ class DOMFormatter
     /**
      * Method to set property instance
      *
-     * @param static $instance
+     * @param  static  $instance
      *
      * @return  void
      */
@@ -87,11 +88,11 @@ class DOMFormatter
     /**
      * format
      *
-     * @param string $buffer
+     * @param  string  $buffer
      *
      * @return  string  Formatted Html string.
      */
-    public static function format(string $buffer)
+    public static function format(string $buffer): string
     {
         return static::getInstance()->indent($buffer);
     }
@@ -99,13 +100,13 @@ class DOMFormatter
     /**
      * Constructor.
      *
-     * @param array $options
+     * @param  array  $options
      */
     public function __construct(array $options = [])
     {
         foreach ($options as $name => $value) {
             if (!array_key_exists($name, $this->options)) {
-                throw new \InvalidArgumentException('Unrecognized option.');
+                throw new InvalidArgumentException('Unrecognized option.');
             }
 
             $this->options[$name] = $value;
@@ -115,7 +116,7 @@ class DOMFormatter
     /**
      * indent
      *
-     * @param string $input
+     * @param  string  $input
      *
      * @return  string
      */
@@ -133,7 +134,7 @@ class DOMFormatter
     /**
      * Format Dom.
      *
-     * @param string $input Dom input.
+     * @param  string  $input  Dom input.
      *
      * @return string Indented Dom.
      */
@@ -185,9 +186,10 @@ class DOMFormatter
                     }
 
                     $output .= str_repeat(
-                            $this->options['indentation_character'],
-                            $indentationLevel
-                        ) . $matches[0] . "\n";
+                        $this->options['indentation_character'],
+                        $indentationLevel
+                    );
+                    $output .= $matches[0] . "\n";
 
                     break;
                 }
@@ -212,7 +214,7 @@ class DOMFormatter
     /**
      * removeDoubleWhiteSpace
      *
-     * @param string $input
+     * @param  string  $input
      *
      * @return  string
      */
@@ -265,7 +267,7 @@ class DOMFormatter
      *
      * @return  mixed
      */
-    public static function minify($buffer)
+    public static function minify(string $buffer): string
     {
         $search = [
             // Strip whitespaces after tags, except space
@@ -304,7 +306,7 @@ class DOMFormatter
     /**
      * formatByDOMDocument
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return  string
      */

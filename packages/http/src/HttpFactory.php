@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -21,25 +22,27 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
+use RuntimeException;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\Request\ServerRequestFactory;
 use Windwalker\Http\Response\Response;
 use Windwalker\Stream\Stream;
+use Windwalker\Uri\UriFactory;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
+
+use const UPLOAD_ERR_OK;
 
 /**
  * The HttpFactory class.
  */
-class HttpFactory implements
+class HttpFactory extends UriFactory implements
     RequestFactoryInterface,
     ResponseFactoryInterface,
     ServerRequestFactoryInterface,
     StreamFactoryInterface,
-    UploadedFileFactoryInterface,
-    UriFactoryInterface
+    UploadedFileFactoryInterface
 {
     public static function create(): static
     {
@@ -143,8 +146,8 @@ class HttpFactory implements
      * @param  string  $mode      Mode with which to open the underlying filename/stream.
      *
      * @return StreamInterface
-     * @throws \RuntimeException If the file cannot be opened.
-     * @throws \InvalidArgumentException If the mode is invalid.
+     * @throws RuntimeException If the file cannot be opened.
+     * @throws InvalidArgumentException If the mode is invalid.
      */
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
@@ -182,36 +185,21 @@ class HttpFactory implements
      *
      * @param  StreamInterface  $stream           Underlying stream representing the
      *                                            uploaded file content.
-     * @param  int              $size             in bytes
+     * @param  int|null         $size             in bytes
      * @param  int              $error            PHP file upload error
-     * @param  string           $clientFilename   Filename as provided by the client, if any.
-     * @param  string           $clientMediaType  Media type as provided by the client, if any.
+     * @param  string|null      $clientFilename   Filename as provided by the client, if any.
+     * @param  string|null      $clientMediaType  Media type as provided by the client, if any.
      *
      * @return UploadedFileInterface
      *
-     * @throws \InvalidArgumentException If the file resource is not readable.
      */
     public function createUploadedFile(
         StreamInterface $stream,
         int $size = null,
-        int $error = \UPLOAD_ERR_OK,
+        int $error = UPLOAD_ERR_OK,
         string $clientFilename = null,
         string $clientMediaType = null
     ): UploadedFileInterface {
         return new UploadedFile($stream, $size, $error, $clientFilename, $clientMediaType);
-    }
-
-    /**
-     * Create a new URI.
-     *
-     * @param  string  $uri
-     *
-     * @return UriInterface
-     *
-     * @throws \InvalidArgumentException If the given URI cannot be parsed.
-     */
-    public function createUri(string $uri = ''): UriInterface
-    {
-        return new Uri($uri);
     }
 }

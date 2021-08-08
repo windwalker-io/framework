@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Html\Grid;
 
+use InvalidArgumentException;
+use Traversable;
+
 /**
  * The KeyValueGrid class.
  *
@@ -27,11 +30,11 @@ class KeyValueGrid extends Grid
     /**
      * create
      *
-     * @param array  $attrs
+     * @param  array  $attrs
      *
      * @return static
      */
-    public static function create(array $attrs = [])
+    public static function create(array $attrs = []): static
     {
         return new static($attrs);
     }
@@ -39,7 +42,7 @@ class KeyValueGrid extends Grid
     /**
      * Class init.
      *
-     * @param array  $attrs
+     * @param  array  $attrs
      */
     public function __construct(array $attrs = [])
     {
@@ -51,13 +54,13 @@ class KeyValueGrid extends Grid
     /**
      * addHeader
      *
-     * @param string  $keyTitle
-     * @param string  $valueTitle
-     * @param array   $attrs
+     * @param  string  $keyTitle
+     * @param  string  $valueTitle
+     * @param  array   $attrs
      *
      * @return  static
      */
-    public function addHeader(string $keyTitle = 'Key', string $valueTitle = 'Value', array $attrs = [])
+    public function addHeader(string $keyTitle = 'Key', string $valueTitle = 'Value', array $attrs = []): static
     {
         $this->addRow((array) $this->getValue($attrs, static::ROW), static::ROW_HEAD)
             ->setRowCell(static::COL_KEY, $keyTitle, (array) $this->getValue($attrs, static::COL_KEY))
@@ -69,13 +72,13 @@ class KeyValueGrid extends Grid
     /**
      * addItem
      *
-     * @param string  $key
-     * @param string  $value
-     * @param array   $attrs
+     * @param  string  $key
+     * @param  string  $value
+     * @param  array   $attrs
      *
      * @return static
      */
-    public function addItem(string $key, $value = null, array $attrs = [])
+    public function addItem(string $key, $value = null, array $attrs = []): static
     {
         if (is_array($value) || is_object($value)) {
             $value = print_r($value, true);
@@ -94,12 +97,12 @@ class KeyValueGrid extends Grid
     /**
      * addItems
      *
-     * @param array  $items
-     * @param array   $attrs
+     * @param  array  $items
+     * @param  array  $attrs
      *
      * @return  static
      */
-    public function addItems(array $items = null, array $attrs = [])
+    public function addItems(array $items = null, array $attrs = []): static
     {
         $this->configure(
             $items,
@@ -114,12 +117,12 @@ class KeyValueGrid extends Grid
     /**
      * addTitle
      *
-     * @param string  $name
-     * @param array   $attrs
+     * @param  string  $name
+     * @param  array   $attrs
      *
      * @return  static
      */
-    public function addTitle(string $name, array $attrs = [])
+    public function addTitle(string $name, array $attrs = []): static
     {
         $attrs[static::COL_KEY]['colspan'] = 2;
 
@@ -131,19 +134,19 @@ class KeyValueGrid extends Grid
     /**
      * configureRows
      *
-     * @param   array    $items
-     * @param   callable $handler
+     * @param  array     $items
+     * @param  callable  $handler
      *
      * @return  static
      */
-    public function configure(array $items, callable $handler)
+    public function configure(array $items, callable $handler): static
     {
         if (!is_callable($handler)) {
-            throw new \InvalidArgumentException(__METHOD__ . ' Handler should be callable.');
+            throw new InvalidArgumentException(__METHOD__ . ' Handler should be callable.');
         }
 
-        if (!$items instanceof \Traversable && !is_array($items)) {
-            throw new \InvalidArgumentException(__METHOD__ . ' items should be array or iterator.');
+        if (!$items instanceof Traversable && !is_array($items)) {
+            throw new InvalidArgumentException(__METHOD__ . ' items should be array or iterator.');
         }
 
         foreach ($items as $key => $item) {
@@ -156,13 +159,13 @@ class KeyValueGrid extends Grid
     /**
      * getValue
      *
-     * @param array  $options
-     * @param string $name
-     * @param mixed  $default
+     * @param  array   $options
+     * @param  string  $name
+     * @param  mixed   $default
      *
      * @return  mixed
      */
-    protected function getValue(array $options, string $name, $default = null)
+    protected function getValue(array $options, string $name, $default = null): mixed
     {
         return $options[$name] ?? $default;
     }

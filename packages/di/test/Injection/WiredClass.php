@@ -17,7 +17,7 @@ use Windwalker\Scalars\StringObject;
 /**
  * The WiredClass class.
  */
-@@Autowire
+#[Autowire]
 class WiredClass
 {
     public array $logs = [];

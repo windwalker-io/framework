@@ -17,8 +17,11 @@ use React\EventLoop\LoopInterface;
 use React\Http\Server;
 use React\Socket\Server as SocketServer;
 use React\Socket\ServerInterface as ReactServerInterface;
+use RuntimeException;
+use Throwable;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
+use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
 
@@ -58,7 +61,7 @@ class ReactServer extends AbstractServer
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
         if ($this->listening) {
-            throw new \RuntimeException('Server is listening.');
+            throw new RuntimeException('Server is listening.');
         }
 
         $this->socket = $this->createSocket($host, $port);
@@ -90,7 +93,7 @@ class ReactServer extends AbstractServer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setLoop(?LoopInterface $loop)
+    public function setLoop(?LoopInterface $loop): static
     {
         $this->loop = $loop;
 
@@ -115,7 +118,7 @@ class ReactServer extends AbstractServer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setSocket(?ReactServerInterface $socket)
+    public function setSocket(?ReactServerInterface $socket): static
     {
         $this->socket = $socket;
 
@@ -140,7 +143,7 @@ class ReactServer extends AbstractServer
                         RequestEvent::wrap('request')
                             ->setRequest($req)
                     );
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $code = $e->getCode();
                     $code = ResponseHelper::isClientError($code) ? $code : 500;
 
@@ -150,13 +153,19 @@ class ReactServer extends AbstractServer
                     return $res;
                 }
 
+                $event = $this->emit(
+                    ResponseEvent::wrap('response')
+                        ->setRequest($req)
+                        ->setResponse($event->getResponse())
+                );
+
                 return $event->getResponse();
             }
         );
 
         $server->on(
             'error',
-            function (\Throwable $e) {
+            function (Throwable $e) {
                 $event = $this->emit(
                     ErrorEvent::wrap('error')
                         ->setException($e)
@@ -172,7 +181,7 @@ class ReactServer extends AbstractServer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setServer(?Server $server)
+    public function setServer(?Server $server): static
     {
         $this->server = $server;
 
@@ -181,9 +190,9 @@ class ReactServer extends AbstractServer
 
     public function reset(): void
     {
-        $this->loop      = null;
-        $this->socket    = null;
-        $this->server    = null;
+        $this->loop = null;
+        $this->socket = null;
+        $this->server = null;
         $this->listening = false;
     }
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Response;
 
+use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Response\Response;
 use Windwalker\Stream\Stream;
 
@@ -19,7 +20,7 @@ use Windwalker\Stream\Stream;
  *
  * @since 2.1
  */
-class ResponseTest extends \PHPUnit\Framework\TestCase
+class ResponseTest extends TestCase
 {
     /**
      * Test instance.

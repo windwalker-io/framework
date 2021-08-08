@@ -14,6 +14,7 @@ namespace Windwalker\Utilities;
 use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
+use Closure;
 use InvalidArgumentException;
 use ReflectionObject;
 use Windwalker\Utilities\Classes\PreventInitialTrait;
@@ -56,7 +57,7 @@ abstract class Arr
      *
      * @since 4.0
      */
-    public static function has($source, $key, string $delimiter = '.'): bool
+    public static function has(object|array $source, int|string $key, string $delimiter = '.'): bool
     {
         $nodes = static::getPathNodes((string) $key, $delimiter);
 
@@ -64,7 +65,7 @@ abstract class Arr
             return false;
         }
 
-        $key   = array_shift($nodes);
+        $key = array_shift($nodes);
         $value = null;
 
         if ($source instanceof ArrayAccess && isset($source[$key])) {
@@ -78,7 +79,7 @@ abstract class Arr
         }
 
         if ($nodes !== [] && (is_array($value) || is_object($value))) {
-            return static::has($value, implode($delimiter, $nodes));
+            return static::has($value, implode($delimiter, $nodes), $delimiter);
         }
 
         return true;
@@ -94,10 +95,9 @@ abstract class Arr
      *
      * @return  array|object
      * @throws InvalidArgumentException
-     *
      * @since 4.0
      */
-    public static function def($array, string $key, $value, string $delimiter = '.')
+    public static function def(object|array $array, string $key, mixed $value, string $delimiter = '.'): object|array
     {
         if (static::has($array, $key, $delimiter)) {
             return $array;
@@ -114,7 +114,7 @@ abstract class Arr
      *
      * @return  array
      */
-    private static function getPathNodes(string $path, string $delimiter = '.'): array
+    private static function getPathNodes(string|array $path, string $delimiter = '.'): array
     {
         if ($delimiter === '') {
             return [$path];
@@ -124,7 +124,7 @@ abstract class Arr
             return $path;
         }
 
-        if ($path && strpos((string) $path, $delimiter) === false) {
+        if ($path && !str_contains((string) $path, $delimiter)) {
             return [$path];
         }
 
@@ -157,10 +157,10 @@ abstract class Arr
      *
      * @since   2.0
      */
-    public static function &get(&$data, $key, string $delimiter = '.')
+    public static function &get(mixed &$data, int|string $key, string $delimiter = '.'): mixed
     {
         $nodes = static::getPathNodes((string) $key, $delimiter);
-        $null  = null;
+        $null = null;
 
         if (empty($nodes)) {
             return $null;
@@ -194,11 +194,15 @@ abstract class Arr
      *
      * @return  array|object
      * @throws InvalidArgumentException
-     *
      * @since   2.0
      */
-    public static function set($data, string $key, $value, string $delimiter = '.', string $storeType = 'array')
-    {
+    public static function set(
+        mixed $data,
+        string $key,
+        mixed $value,
+        string $delimiter = '.',
+        string $storeType = 'array'
+    ): object|array {
         $nodes = static::getPathNodes((string) $key, $delimiter);
 
         if (empty($nodes)) {
@@ -214,7 +218,7 @@ abstract class Arr
          *
          * @throws InvalidArgumentException
          */
-        $createStore = static function ($type) {
+        $createStore = static function (string $type) {
             if (strtolower($type) === 'array') {
                 return [];
             }
@@ -265,7 +269,7 @@ abstract class Arr
      *
      * @return  array|object
      */
-    public static function remove($data, $key, $delimiter = '.')
+    public static function remove(object|array $data, int|string $key, $delimiter = '.'): object|array
     {
         $nodes = static::getPathNodes((string) $key, $delimiter);
 
@@ -273,9 +277,9 @@ abstract class Arr
             return $data;
         }
 
-        $node     = null;
+        $node = null;
         $previous = null;
-        $dataTmp  = &$data;
+        $dataTmp = &$data;
 
         foreach ($nodes as $node) {
             if (is_object($dataTmp)) {
@@ -284,14 +288,14 @@ abstract class Arr
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp->$node;
+                $dataTmp = &$dataTmp->$node;
             } elseif (is_array($dataTmp)) {
                 if (empty($dataTmp[$node])) {
                     return $data;
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp[$node];
+                $dataTmp = &$dataTmp[$node];
             } else {
                 return $data;
             }
@@ -311,17 +315,22 @@ abstract class Arr
      * Collapse array to one dimension
      *
      * @param  array|object  $data
+     * @param  bool          $keepKey
      *
      * @return  array
      */
-    public static function collapse($data): array
+    public static function collapse(array|object $data, $keepKey = false): array
     {
         $result = [];
 
         array_walk_recursive(
             $data,
-            static function ($v, $k) use (&$result) {
-                $result[$k] = $v;
+            static function ($v, $k) use ($keepKey, &$result) {
+                if ($keepKey) {
+                    $result[$k] = $v;
+                } else {
+                    $result[] = $v;
+                }
             }
         );
 
@@ -334,12 +343,16 @@ abstract class Arr
      * @param  array|object  $array      The array or object to convert.
      * @param  string        $delimiter  The key path delimiter.
      * @param  int           $depth      Only flatten limited depth, 0 means on limit.
-     * @param  string        $prefix     Last level key prefix.
+     * @param  string|null   $prefix     Last level key prefix.
      *
      * @return array
      */
-    public static function flatten($array, string $delimiter = '.', int $depth = 0, ?string $prefix = null): array
-    {
+    public static function flatten(
+        object|array $array,
+        string $delimiter = '.',
+        int $depth = 0,
+        ?string $prefix = null
+    ): array {
         $temp = [];
 
         foreach (TypeCast::toArray($array, false) as $k => $v) {
@@ -370,7 +383,7 @@ abstract class Arr
      * @return  array|object
      * @throws InvalidArgumentException
      */
-    public static function only($data, array $fields)
+    public static function only(object|array $data, array $fields): object|array
     {
         if (is_array($data)) {
             return array_intersect_key($data, array_flip($fields));
@@ -401,7 +414,7 @@ abstract class Arr
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function except($data, array $fields)
+    public static function except(object|array $data, array $fields): object|array
     {
         if (is_array($data)) {
             return array_diff_key($data, array_flip($fields));
@@ -423,26 +436,26 @@ abstract class Arr
     /**
      * find
      *
-     * @param  array     $data
-     * @param  callable  $callback
-     * @param  bool      $keepKey
-     * @param  int       $offset
-     * @param  int       $limit
+     * @param  array          $data
+     * @param  callable|null  $callback
+     * @param  bool           $keepKey
+     * @param  int|null       $offset
+     * @param  int|null       $limit
      *
      * @return array
      */
     public static function find(
         array $data,
-        callable $callback = null,
+        ?callable $callback = null,
         bool $keepKey = false,
         ?int $offset = null,
         ?int $limit = null
     ): array {
         $results = [];
-        $i       = 0;
-        $c       = 0;
+        $i = 0;
+        $c = 0;
 
-        $callback = $callback ?? 'is_null';
+        $callback ??= fn(mixed $v) => $v !== null;
 
         foreach ($data as $key => $value) {
             // If use global function, send only value as argument.
@@ -479,7 +492,7 @@ abstract class Arr
      *
      * @return  mixed
      */
-    public static function findFirst(array $data, callable $callback = null)
+    public static function findFirst(array $data, callable $callback = null): mixed
     {
         $results = static::find($data, $callback, false, 0, 1);
 
@@ -520,8 +533,12 @@ abstract class Arr
      *
      * @return  mixed
      */
-    public static function takeout(&$data, $key, $default = null, string $delimiter = '.')
-    {
+    public static function takeout(
+        object|array &$data,
+        int|string $key,
+        $default = null,
+        string $delimiter = '.'
+    ): mixed {
         if (!static::has($data, $key, $delimiter)) {
             return $default;
         }
@@ -545,8 +562,12 @@ abstract class Arr
      *
      * @since   4.0
      */
-    public static function sort(array $data, $condition, bool $descending = false, int $options = SORT_REGULAR): array
-    {
+    public static function sort(
+        array $data,
+        callable|string $condition,
+        bool $descending = false,
+        int $options = SORT_REGULAR
+    ): array {
         $results = [];
 
         // If condition is string, we just use this as key name to get sort data from items.
@@ -623,7 +644,7 @@ abstract class Arr
      *
      * @param  array  $array  An array to test.
      *
-     * @return  boolean  True if the array is an associative array.
+     * @return  bool  True if the array is an associative array.
      *
      * @since   2.0
      */
@@ -647,7 +668,7 @@ abstract class Arr
      *
      * @since  4.0
      */
-    public static function isAccessible($array): bool
+    public static function isAccessible(mixed $array): bool
     {
         return is_array($array) || $array instanceof ArrayAccess;
     }
@@ -672,6 +693,75 @@ abstract class Arr
     }
 
     /**
+     * To get 2-dimensional array columns without native php array_column()
+     *
+     * @param  array|object  $src
+     * @param  string        $column
+     * @param  ?string       $keyName
+     * @param  bool          $invasive
+     *
+     * @return  array
+     */
+    public static function getColumn(
+        array|object $src,
+        string $column,
+        ?string $keyName = null,
+        bool $invasive = true
+    ): array {
+        $result = [];
+
+        foreach (TypeCast::toIterable($src) as $key => $item) {
+            if (is_object($item) && !isset($item->$column) && $invasive) {
+                $ref = new ReflectionObject($item);
+
+                if (!$ref->hasProperty($column)) {
+                    continue;
+                }
+
+                $prop = $ref->getProperty($column);
+                $prop->setAccessible(true);
+                $value = $prop->getValue($item);
+
+                if ($keyName !== null) {
+                    if ($ref->hasProperty($keyName)) {
+                        $prop = $ref->getProperty($keyName);
+                        $prop->setAccessible(true);
+                        $keyName = $prop->getValue($item);
+                    } else {
+                        $keyName = null;
+                    }
+                }
+            } else {
+                if (!static::has($item, $column, '')) {
+                    continue;
+                }
+
+                if (method_exists($item, '__get')) {
+                    $value = $item->__get($column);
+
+                    if ($keyName !== null) {
+                        $keyName = $item->__get($keyName);
+                    }
+                } else {
+                    $value = static::get($item, $column, '');
+
+                    if ($keyName !== null) {
+                        $keyName = static::get($item, $keyName, '');
+                    }
+                }
+            }
+
+            if ($keyName) {
+                $result[$keyName] = $item;
+            } else {
+                $result[] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * flatMap
      *
      * @param  array|object  $array
@@ -681,7 +771,7 @@ abstract class Arr
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function flatMap($array, callable $callback): array
+    public static function flatMap(object|array $array, callable $callback): array
     {
         $mapped = [];
 
@@ -749,7 +839,7 @@ abstract class Arr
 
         foreach ($args as $i => $array) {
             if (!is_array($array)) {
-                throw new InvalidArgumentException(sprintf('Argument #%d is not an array.', $i + 2));
+                throw new InvalidArgumentException(sprintf('Argument #%d is not an array.', $i + 1));
             }
 
             foreach ($array as $key => &$value) {
@@ -765,6 +855,20 @@ abstract class Arr
     }
 
     /**
+     * arrayEquals
+     *
+     * @param  array  $a
+     * @param  array  $b
+     *
+     * @return  bool
+     */
+    public static function arrayEquals(array $a, array $b): bool
+    {
+        return count($a) === count($b)
+            && array_diff($a, $b) === array_diff($b, $a);
+    }
+
+    /**
      * Recursive dump variables and limit by level.
      *
      * @param  mixed  $data   The variable you want to dump.
@@ -774,18 +878,18 @@ abstract class Arr
      *
      * @since   2.0
      */
-    public static function dump($data, int $depth = 5): string
+    public static function dump(mixed $data, int $depth = 5): string
     {
         static $innerLevel = 1;
         static $tabLevel = 1;
 
         $self = __FUNCTION__;
 
-        $type       = gettype($data);
-        $tabs       = str_repeat('    ', $tabLevel);
+        $type = gettype($data);
+        $tabs = str_repeat('    ', $tabLevel);
         $quoteTabes = str_repeat('    ', $tabLevel - 1);
-        $output     = '';
-        $elements   = [];
+        $output = '';
+        $elements = [];
 
         $recursiveType = ['object', 'array'];
 
@@ -794,9 +898,9 @@ abstract class Arr
             // If type is object, try to get properties by Reflection.
             if ($type === 'object') {
                 // Remove special characters from anonymous class name.
-                $ref        = new ReflectionObject($data);
-                $class      = $ref->isAnonymous() ? 'class@anonymous' : $ref->getName();
-                $output     = $class . ' ' . ucfirst($type);
+                $ref = new ReflectionObject($data);
+                $class = $ref->isAnonymous() ? 'class@anonymous' : $ref->getName();
+                $output = $class . ' ' . ucfirst($type);
                 $properties = $ref->getProperties();
 
                 // Fix for ArrayObject & ArrayIterator
@@ -819,7 +923,11 @@ abstract class Arr
                         $pType .= ':static';
                     }
 
-                    $elements[$pType] = $property->getValue($data);
+                    if ($property->isInitialized($data)) {
+                        $elements[$pType] = $property->getValue($data);
+                    } else {
+                        $elements[$pType] = '(Not initialized)';
+                    }
                 }
 
                 if ($data instanceof ArrayObject || $data instanceof ArrayIterator) {
@@ -827,7 +935,7 @@ abstract class Arr
                 }
             } elseif ($type === 'array') {
                 // If type is array, just return it's value.
-                $output   = ucfirst($type);
+                $output = ucfirst($type);
                 $elements = $data;
             }
 
@@ -878,8 +986,8 @@ abstract class Arr
      * @since  3.5.1
      */
     public static function where(
-        $array,
-        $field,
+        mixed $array,
+        array|string $field,
         ?string $operator = null,
         $value = null,
         bool $strict = false,
@@ -901,22 +1009,26 @@ abstract class Arr
     /**
      * Query a two-dimensional array values to get second level array.
      *
-     * @param  array|object    $array         An array to query.
-     * @param  array|callable  $queries       Query strings or callback, may contain Comparison Operators: '>', '>=',
+     * @param  array|object  $array           An array to query.
+     * @param  array         $queries         Query strings or callback, may contain Comparison Operators: '>', '>=',
      *                                        '<', '<='. Example: array(
      *                                        'id'          => 6,   // Get all elements where id=6
      *                                        'published >' => 0    // Get all elements where published>0
      *                                        );
-     * @param  boolean         $strict        Use strict to compare equals.
-     * @param  boolean         $keepKey       Keep origin array keys.
+     * @param  bool          $strict          Use strict to compare equals.
+     * @param  bool          $keepKey         Keep origin array keys.
      *
      * @return  array|object  An new two-dimensional array queried.
      *
      * @since   2.0
      */
-    public static function query($array, $queries = [], bool $strict = false, bool $keepKey = false)
-    {
-        $array   = TypeCast::toArray($array, false);
+    public static function query(
+        object|array $array,
+        $queries = [],
+        bool $strict = false,
+        bool $keepKey = false
+    ): object|array {
+        $array = TypeCast::toArray($array, false);
         $results = [];
 
         // If queries is callback, we run this logic to compare values.
@@ -946,19 +1058,19 @@ abstract class Arr
     /**
      * Query a two-dimensional array values to get second level array, return only first.
      *
-     * @param  array|object    $array         An array to query.
-     * @param  array|callable  $queries       Query strings or callback, may contain Comparison Operators: '>', '>=',
+     * @param  array|object  $array           An array to query.
+     * @param  array         $queries         Query strings or callback, may contain Comparison Operators: '>', '>=',
      *                                        '<', '<='. Example: array(
      *                                        'id'          => 6,   // Get all elements where id=6
      *                                        'published >' => 0    // Get all elements where published>0
      *                                        );
-     * @param  boolean         $strict        Use strict to compare equals.
+     * @param  bool          $strict          Use strict to compare equals.
      *
-     * @return  mixed|null
+     * @return mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function queryFirst($array, $queries = [], bool $strict = false)
+    public static function queryFirst(object|array $array, $queries = [], bool $strict = false): mixed
     {
         $result = static::query($array, $queries, $strict, false);
 
@@ -968,13 +1080,13 @@ abstract class Arr
     /**
      * Check an array match our query.
      *
-     * @param  array    $array    An array to query.
-     * @param  array    $queries  Query strings or callback, may contain Comparison Operators: '>', '>=', '<', '<='.
-     * @param  boolean  $strict   Use strict to compare equals.
+     * @param  array  $array    An array to query.
+     * @param  array  $queries  Query strings or callback, may contain Comparison Operators: '>', '>=', '<', '<='.
+     * @param  bool   $strict   Use strict to compare equals.
      *
      * @return  bool
      */
-    public static function match($array, array $queries, bool $strict = false): bool
+    public static function match(array $array, array $queries, bool $strict = false): bool
     {
         $results = [];
 
@@ -982,7 +1094,7 @@ abstract class Arr
         foreach ($queries as $key => $val) {
             if ($val instanceof WhereWrapper) {
                 $results[] = $val($array);
-            } elseif (is_callable($val)) {
+            } elseif ($val instanceof Closure) {
                 $results[] = $val($array[$key], $key);
             } elseif (substr($key, -2) === '>=') {
                 $results[] = (static::get($array, trim(substr($key, 0, -2))) >= $val);
@@ -994,21 +1106,19 @@ abstract class Arr
                 $results[] = (static::get($array, trim(substr($key, 0, -1))) < $val);
             } elseif (is_array($val)) {
                 $results[] = in_array(static::get($array, $key), $val, $strict);
+            } elseif ($strict) {
+                $results[] = static::get($array, $key) === $val;
             } else {
-                if ($strict) {
-                    $results[] = static::get($array, $key) === $val;
-                } else {
-                    // Workaround for PHP object compare bug, see: https://bugs.php.net/bug.php?id=62976
-                    $compare1 = is_object(static::get($array, $key)) ? get_object_vars(
-                        static::get(
-                            $array,
-                            $key
-                        )
-                    ) : static::get($array, $key);
-                    $compare2 = is_object($val) ? get_object_vars($val) : $val;
+                // Workaround for PHP object compare bug, see: https://bugs.php.net/bug.php?id=62976
+                $compare1 = is_object(static::get($array, $key)) ? get_object_vars(
+                    static::get(
+                        $array,
+                        $key
+                    )
+                ) : static::get($array, $key);
+                $compare2 = is_object($val) ? get_object_vars($val) : $val;
 
-                    $results[] = ($compare1 == $compare2);
-                }
+                $results[] = ($compare1 == $compare2);
             }
         }
 
@@ -1024,17 +1134,15 @@ abstract class Arr
      *
      * @return  array
      */
-    public static function filterRecursive($array, callable $callback): array
+    public static function filterRecursive(array $array, callable $callback): array
     {
         foreach ($array as $key => & $value) { // mind the reference
             if (is_array($value)) {
                 $value = static::filterRecursive($value, $callback);
-            } else {
-                if ($callback !== null && !$callback($value, $key)) {
-                    unset($array[$key]);
-                } elseif (!(bool) $value) {
-                    unset($array[$key]);
-                }
+            } elseif ($callback !== null && !$callback($value, $key)) {
+                unset($array[$key]);
+            } elseif (!(bool) $value) {
+                unset($array[$key]);
             }
         }
 

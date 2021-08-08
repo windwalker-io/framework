@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Wrapper;
 
+use Windwalker\Data\Collection;
 use Windwalker\Utilities\Arr;
 
 /**
@@ -40,9 +41,9 @@ class ValueReference implements WrapperInterface
      * @param  string       $path
      * @param  string|null  $delimiter
      */
-    public function __construct(string $path, ?string $delimiter = null)
+    public function __construct(string $path, ?string $delimiter = '.')
     {
-        $this->path      = $path;
+        $this->path = $path;
         $this->delimiter = $delimiter;
     }
 
@@ -50,15 +51,18 @@ class ValueReference implements WrapperInterface
      * Get wrapped value.
      *
      * @param  array|object  $src
-     * @param  mixed         $default
      * @param  string|null   $delimiter
      *
      * @return  mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function __invoke($src, $default = null, ?string $delimiter = null)
+    public function __invoke(mixed $src, ?string $delimiter = null): mixed
     {
+        if ($src instanceof Collection) {
+            return $src->getDeep($this->path, (string) ($delimiter ?? $this->delimiter));
+        }
+
         return Arr::get($src, $this->path, (string) ($delimiter ?? $this->delimiter));
     }
 

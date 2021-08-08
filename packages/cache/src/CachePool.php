@@ -11,12 +11,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache;
 
+use DateInterval;
+use Generator;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
+use Throwable;
+use Traversable;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\RawSerializer;
@@ -57,18 +62,21 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     private bool $autoCommit = true;
 
-    public function __construct(?StorageInterface $storage = null, ?SerializerInterface $serializer = null)
-    {
-        $this->storage    = $storage ?? new ArrayStorage();
+    public function __construct(
+        ?StorageInterface $storage = null,
+        ?SerializerInterface $serializer = null,
+        ?LoggerInterface $logger = null
+    ) {
+        $this->storage = $storage ?? new ArrayStorage();
         $this->serializer = $serializer ?? new RawSerializer();
 
-        $this->logger = new NullLogger();
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
      * @inheritDoc
      */
-    public function getItem($key)
+    public function getItem(string $key): CacheItemInterface|CacheItem
     {
         $item = new CacheItem($key);
         $item->setLogger($this->logger);
@@ -85,9 +93,9 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      *
-     * @return \Traversable|CacheItemInterface[]
+     * @return Traversable|CacheItemInterface[]
      */
-    public function getItems(iterable $keys = [])
+    public function getItems(iterable $keys = []): Traversable|array|Generator
     {
         foreach ($keys as $key) {
             yield $key => $this->getItem($key);
@@ -97,7 +105,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function hasItem($key): bool
+    public function hasItem(string $key): bool
     {
         return $this->getItem($key)->isHit();
     }
@@ -124,7 +132,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function deleteItem($key): bool
+    public function deleteItem(string $key): bool
     {
         try {
             $this->storage->remove($key);
@@ -182,7 +190,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return true;
         } catch (RuntimeException $e) {
             $this->logException(
-                'Retrieving cache item caused exception.',
+                'Saving cache item caused exception.',
                 $e,
                 $item
             );
@@ -238,7 +246,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $default;
         }
 
-        return $item->get();
+        return $this->serializer->unserialize($item->get());
     }
 
     /**
@@ -325,38 +333,40 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * call
      *
-     * @param  string                  $key
-     * @param  callable                $handler
-     * @param  null|int|\DateInterval  $ttl
+     * @param  string                 $key
+     * @param  callable               $handler
+     * @param  null|int|DateInterval  $ttl
      *
      * @return  mixed
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function call(string $key, callable $handler, $ttl = null)
+    public function call(string $key, callable $handler, $ttl = null): mixed
     {
         $item = $this->getItem($key);
 
-        if (!$item->isHit()) {
-            $item->set($handler());
-            $item->expiresAfter($ttl);
-
-            $this->save($item);
+        if ($item->isHit()) {
+            return $this->serializer->unserialize($item->get());
         }
 
-        return $item->get();
+        $item->set($data = $handler());
+        $item->expiresAfter($ttl);
+
+        $this->save($item);
+
+        return $data;
     }
 
     /**
      * logException
      *
      * @param  string                   $message
-     * @param  \Throwable               $e
+     * @param  Throwable                $e
      * @param  CacheItemInterface|null  $item
      *
      * @return  void
      */
-    protected function logException(string $message, \Throwable $e, ?CacheItemInterface $item = null): void
+    protected function logException(string $message, Throwable $e, ?CacheItemInterface $item = null): void
     {
         $this->logger->critical(
             $message,
@@ -388,7 +398,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setStorage(StorageInterface $storage)
+    public function setStorage(StorageInterface $storage): static
     {
         $this->storage = $storage;
 
@@ -416,7 +426,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer): static
     {
         $this->serializer = $serializer;
 
@@ -444,7 +454,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function autoCommit(bool $autoCommit)
+    public function autoCommit(bool $autoCommit): static
     {
         $this->autoCommit = $autoCommit;
 

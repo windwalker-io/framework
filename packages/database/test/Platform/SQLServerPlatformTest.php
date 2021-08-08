@@ -83,7 +83,7 @@ class SQLServerPlatformTest extends AbstractPlatformTest
                     'TABLE_TYPE' => 'BASE TABLE',
                     'VIEW_DEFINITION' => null,
                     'CHECK_OPTION' => null,
-                    'IS_UPDATABLE' => null
+                    'IS_UPDATABLE' => null,
                 ],
                 'ww_categories' => [
                     'TABLE_NAME' => 'ww_categories',
@@ -91,8 +91,8 @@ class SQLServerPlatformTest extends AbstractPlatformTest
                     'TABLE_TYPE' => 'BASE TABLE',
                     'VIEW_DEFINITION' => null,
                     'CHECK_OPTION' => null,
-                    'IS_UPDATABLE' => null
-                ]
+                    'IS_UPDATABLE' => null,
+                ],
             ],
             $tables
         );
@@ -104,19 +104,23 @@ class SQLServerPlatformTest extends AbstractPlatformTest
     public function testGetViews(): void
     {
         $views = $this->instance->listViews(static::$schema);
-        echo self::dumpArray($views);
+
+        $views['ww_articles_view']['VIEW_DEFINITION'] = Str::replaceCRLF($views['ww_articles_view']['VIEW_DEFINITION']);
+
         self::assertEquals(
             [
                 'ww_articles_view' => [
                     'TABLE_NAME' => 'ww_articles_view',
                     'TABLE_SCHEMA' => 'dbo',
                     'TABLE_TYPE' => 'VIEW',
-                    'VIEW_DEFINITION' => Str::replaceCRLF('
+                    'VIEW_DEFINITION' => Str::replaceCRLF(
+                        '
 
-CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
+CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'
+                    ),
                     'CHECK_OPTION' => 'NONE',
-                    'IS_UPDATABLE' => 'NO'
-                ]
+                    'IS_UPDATABLE' => 'NO',
+                ],
             ],
             $views
         );
@@ -143,7 +147,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                 'numeric_unsigned',
                 'comment',
                 'auto_increment',
-                'erratas'
+                'erratas',
             ],
             array_keys($columns[array_key_first($columns)])
         );
@@ -165,7 +169,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => true,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'category_id' => [
                     'column_name' => 'category_id',
@@ -182,7 +186,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'page_id' => [
                     'column_name' => 'page_id',
@@ -199,7 +203,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'type' => [
                     'column_name' => 'type',
@@ -216,7 +220,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'price' => [
                     'column_name' => 'price',
@@ -233,7 +237,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'title' => [
                     'column_name' => 'title',
@@ -250,7 +254,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'alias' => [
                     'column_name' => 'alias',
@@ -267,7 +271,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'introtext' => [
                     'column_name' => 'introtext',
@@ -284,7 +288,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'state' => [
                     'column_name' => 'state',
@@ -301,7 +305,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'ordering' => [
                     'column_name' => 'ordering',
@@ -318,7 +322,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'created' => [
                     'column_name' => 'created',
@@ -335,7 +339,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'created_by' => [
                     'column_name' => 'created_by',
@@ -352,7 +356,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'language' => [
                     'column_name' => 'language',
@@ -369,7 +373,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
+                    ],
                 ],
                 'params' => [
                     'column_name' => 'params',
@@ -386,8 +390,8 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'auto_increment' => false,
                     'erratas' => [
 
-                    ]
-                ]
+                    ],
+                ],
             ],
             $columns
         );
@@ -407,24 +411,24 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'constraint_type' => 'PRIMARY KEY',
                     'table_name' => 'ww_articles',
                     'columns' => [
-                        'id'
-                    ]
+                        'id',
+                    ],
                 ],
                 'fk_articles_category_id' => [
                     'constraint_name' => 'fk_articles_category_id',
                     'constraint_type' => 'FOREIGN KEY',
                     'table_name' => 'ww_articles',
                     'columns' => [
-                        'category_id'
+                        'category_id',
                     ],
                     'referenced_table_schema' => 'dbo',
                     'referenced_table_name' => 'ww_categories',
                     'referenced_columns' => [
-                        'id'
+                        'id',
                     ],
                     'match_option' => 'SIMPLE',
                     'update_rule' => 'SET NULL',
-                    'delete_rule' => 'SET NULL'
+                    'delete_rule' => 'SET NULL',
                 ],
                 'fk_articles_category_more' => [
                     'constraint_name' => 'fk_articles_category_more',
@@ -432,18 +436,18 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'table_name' => 'ww_articles',
                     'columns' => [
                         'page_id',
-                        'created_by'
+                        'created_by',
                     ],
                     'referenced_table_schema' => 'dbo',
                     'referenced_table_name' => 'ww_categories',
                     'referenced_columns' => [
                         'parent_id',
-                        'level'
+                        'level',
                     ],
                     'match_option' => 'SIMPLE',
                     'update_rule' => 'NO ACTION',
-                    'delete_rule' => 'NO ACTION'
-                ]
+                    'delete_rule' => 'NO ACTION',
+                ],
             ],
             $constraints
         );
@@ -465,9 +469,9 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'columns' => [
                         'id' => [
                             'column_name' => 'id',
-                            'sub_part' => null
-                        ]
-                    ]
+                            'sub_part' => null,
+                        ],
+                    ],
                 ],
                 'idx_articles_alias' => [
                     'table_schema' => 'dbo',
@@ -479,13 +483,13 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'columns' => [
                         'type' => [
                             'column_name' => 'type',
-                            'sub_part' => null
+                            'sub_part' => null,
                         ],
                         'alias' => [
                             'column_name' => 'alias',
-                            'sub_part' => null
-                        ]
-                    ]
+                            'sub_part' => null,
+                        ],
+                    ],
                 ],
                 'idx_articles_category_id' => [
                     'table_schema' => 'dbo',
@@ -497,9 +501,9 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'columns' => [
                         'category_id' => [
                             'column_name' => 'category_id',
-                            'sub_part' => null
-                        ]
-                    ]
+                            'sub_part' => null,
+                        ],
+                    ],
                 ],
                 'idx_articles_created_by' => [
                     'table_schema' => 'dbo',
@@ -511,9 +515,9 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'columns' => [
                         'created_by' => [
                             'column_name' => 'created_by',
-                            'sub_part' => null
-                        ]
-                    ]
+                            'sub_part' => null,
+                        ],
+                    ],
                 ],
                 'idx_articles_language' => [
                     'table_schema' => 'dbo',
@@ -525,9 +529,9 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'columns' => [
                         'language' => [
                             'column_name' => 'language',
-                            'sub_part' => null
-                        ]
-                    ]
+                            'sub_part' => null,
+                        ],
+                    ],
                 ],
                 'idx_articles_page_id' => [
                     'table_schema' => 'dbo',
@@ -539,10 +543,10 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
                     'columns' => [
                         'page_id' => [
                             'column_name' => 'page_id',
-                            'sub_part' => null
-                        ]
-                    ]
-                ]
+                            'sub_part' => null,
+                        ],
+                    ],
+                ],
             ],
             $indexes
         );
@@ -550,7 +554,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'),
 
     protected function setUp(): void
     {
-        $this->instance = static::$db->getDriver()->getPlatform();
+        $this->instance = static::$db->getPlatform();
     }
 
     protected function tearDown(): void

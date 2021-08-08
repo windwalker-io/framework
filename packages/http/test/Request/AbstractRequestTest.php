@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Request;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Test\Stub\StubRequest;
-use Windwalker\Http\Uri;
 use Windwalker\Stream\Stream;
 use Windwalker\Test\Traits\BaseAssertionTrait;
+use Windwalker\Uri\Uri;
 
 /**
  * Test class of AbstractRequest
@@ -137,7 +138,7 @@ class AbstractRequestTest extends TestCase
             function () use ($request) {
                 $request->withMethod('FLY');
             },
-            new \InvalidArgumentException()
+            new InvalidArgumentException()
         );
     }
 

@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Manager;
 
+use PDO;
 use Windwalker\Database\Manager\TableManager;
+use Windwalker\Database\Platform\MySQLPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
@@ -28,7 +30,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
         $table = self::$db->getTable('enterprise');
 
         $logs = $this->logQueries(
-            fn () => $table->create(
+            fn() => $table->create(
                 static function (Schema $schema) {
                     $schema->primary('id');
                     $schema->char('type')->length(25);
@@ -77,7 +79,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
                 SELECT DATABASE()
             );
             CREATE TABLE IF NOT EXISTS `enterprise` (
-            `id` int(11) NOT NULL,
+            `id` int(11) NOT NULL AUTO_INCREMENT,
             `type` char(25) NOT NULL DEFAULT '',
             `catid` int(11) DEFAULT NULL,
             `alias` varchar(255) NOT NULL DEFAULT '',
@@ -89,12 +91,11 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
             `created` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
             `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             `deleted` timestamp NOT NULL DEFAULT '1970-01-01 12:00:01',
-            `params` json NOT NULL
+            `params` json NOT NULL,
+            PRIMARY KEY (`id`),
+            INDEX `idx_enterprise_catid_type` (`catid`, `type`),
+            INDEX `idx_enterprise_title` (`title`(150))
             ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-            ALTER TABLE `enterprise` ADD CONSTRAINT `pk_enterprise` PRIMARY KEY (`id`);
-            ALTER TABLE `enterprise` MODIFY COLUMN `id` int(11) NOT NULL AUTO_INCREMENT;
-            ALTER TABLE `enterprise` ADD INDEX `idx_enterprise_catid_type` (`catid`,`type`);
-            ALTER TABLE `enterprise` ADD INDEX `idx_enterprise_title` (`title`(150));
             ALTER TABLE `enterprise` ADD CONSTRAINT `idx_enterprise_alias` UNIQUE (`alias`)
             SQL,
             implode(";\n", $logs)
@@ -109,7 +110,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     public function testGetConstraints(): void
     {
         $constraints = $this->instance->getConstraints();
-        $constraints = array_filter($constraints, fn (Constraint $item) => $item->constraintType !== 'CHECK');
+        $constraints = array_filter($constraints, fn(Constraint $item) => $item->constraintType !== 'CHECK');
 
         self::assertEquals(
             ['PRIMARY', 'idx_enterprise_alias'],
@@ -131,7 +132,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
                 'TABLE_TYPE' => 'BASE TABLE',
                 'VIEW_DEFINITION' => null,
                 'CHECK_OPTION' => null,
-                'IS_UPDATABLE' => null
+                'IS_UPDATABLE' => null,
             ],
             $detail
         );
@@ -143,29 +144,34 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     public function testUpdate(): void
     {
         $logs = $this->logQueries(
-            fn () => $this->instance->update(function (Schema $schema) {
-                // New column
-                $schema->varchar('captain')->length(512)->after('catid');
-                $schema->varchar('first_officer')->length(512)->after('captain');
+            fn() => $this->instance->update(
+                function (Schema $schema) {
+                    // New column
+                    $schema->varchar('captain')->length(512)->after('catid');
+                    $schema->varchar('first_officer')->length(512)->after('captain');
 
-                // Update column
-                $schema->char('alias')->length(25)
-                    ->nullable(true)
-                    ->defaultValue('');
+                    // Update column
+                    $schema->char('alias')->length(25)
+                        ->nullable(true)
+                        ->defaultValue('');
 
-                // New index
-                $schema->addIndex('captain');
-            })
+                    // New index
+                    $schema->addIndex('captain');
+                }
+            )
         );
 
         self::assertSqlFormatEquals(
             <<<SQL
+            {$this->getMariaDBChecksSQL()}
             SELECT `ORDINAL_POSITION`,
                    `COLUMN_DEFAULT`,
                    `IS_NULLABLE`,
                    `DATA_TYPE`,
                    `CHARACTER_MAXIMUM_LENGTH`,
                    `CHARACTER_OCTET_LENGTH`,
+                   `CHARACTER_SET_NAME`,
+                   `COLLATION_NAME`,
                    `NUMERIC_PRECISION`,
                    `NUMERIC_SCALE`,
                    `COLUMN_NAME`,
@@ -176,9 +182,9 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
             WHERE `TABLE_NAME` = 'enterprise'
               AND `TABLE_SCHEMA` = (SELECT DATABASE());
             ALTER TABLE `enterprise`
-                ADD COLUMN `captain` varchar(512) NOT NULL DEFAULT '';
+                ADD COLUMN `captain` varchar(512) NOT NULL DEFAULT '' AFTER `catid`;
             ALTER TABLE `enterprise`
-                ADD COLUMN `first_officer` varchar(512) NOT NULL DEFAULT '';
+                ADD COLUMN `first_officer` varchar(512) NOT NULL DEFAULT '' AFTER `captain`;
             ALTER TABLE `enterprise`
                 MODIFY COLUMN `alias` char(25) DEFAULT '';
             SELECT `TABLE_SCHEMA`,
@@ -214,12 +220,15 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
 
         self::assertSqlFormatEquals(
             <<<SQL
+            {$this->getMariaDBChecksSQL()}
             SELECT `ORDINAL_POSITION`,
                    `COLUMN_DEFAULT`,
                    `IS_NULLABLE`,
                    `DATA_TYPE`,
                    `CHARACTER_MAXIMUM_LENGTH`,
                    `CHARACTER_OCTET_LENGTH`,
+                   `CHARACTER_SET_NAME`,
+                   `COLLATION_NAME`,
                    `NUMERIC_PRECISION`,
                    `NUMERIC_SCALE`,
                    `COLUMN_NAME`,
@@ -303,7 +312,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     public function testAddConstraint(): void
     {
         $logs = $this->logQueries(
-            fn () => $this->instance->addConstraint(
+            fn() => $this->instance->addConstraint(
                 ['captain', 'first_officer'],
                 Constraint::TYPE_UNIQUE
             )
@@ -311,12 +320,15 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
 
         self::assertSqlFormatEquals(
             <<<SQL
+{$this->getMariaDBChecksSQL()}
 SELECT `ORDINAL_POSITION`,
        `COLUMN_DEFAULT`,
        `IS_NULLABLE`,
        `DATA_TYPE`,
        `CHARACTER_MAXIMUM_LENGTH`,
        `CHARACTER_OCTET_LENGTH`,
+       `CHARACTER_SET_NAME`,
+       `COLLATION_NAME`,
        `NUMERIC_PRECISION`,
        `NUMERIC_SCALE`,
        `COLUMN_NAME`,
@@ -405,7 +417,7 @@ SQL,
      */
     public function testTruncate(): void
     {
-        $logs = $this->logQueries(fn () => $this->instance->truncate());
+        $logs = $this->logQueries(fn() => $this->instance->truncate());
 
         self::assertEquals('TRUNCATE TABLE `enterprise`', $logs[0]);
     }
@@ -431,7 +443,7 @@ SQL,
                 'created',
                 'updated',
                 'deleted',
-                'params'
+                'params',
             ],
             $cols
         );
@@ -473,7 +485,7 @@ SQL,
                 'created',
                 'updated',
                 'deleted',
-                'params'
+                'params',
             ],
             $this->instance->getColumnNames()
         );
@@ -555,7 +567,7 @@ SQL,
                 'idx_enterprise_catid_type',
                 'idx_enterprise_title',
                 'idx_enterprise_created',
-                'idx_enterprise_start_date_title'
+                'idx_enterprise_start_date_title',
             ],
             $indexes
         );
@@ -568,18 +580,21 @@ SQL,
 
     public function testGetSchema(): void
     {
-        $this->instance->schemaName = self::$db->getOption('database');
+        $this->instance->schemaName = self::$db->getDriver()->getOption('dbname');
 
-        $logs = $this->logQueries(fn () => $this->instance->getColumns());
+        $logs = $this->logQueries(fn() => $this->instance->getColumns(true));
 
         self::assertSqlFormatEquals(
             <<<SQL
+            {$this->getMariaDBChecksSQL('\'windwalker_test\'')}
             SELECT `ORDINAL_POSITION`,
                    `COLUMN_DEFAULT`,
                    `IS_NULLABLE`,
                    `DATA_TYPE`,
                    `CHARACTER_MAXIMUM_LENGTH`,
                    `CHARACTER_OCTET_LENGTH`,
+                   `CHARACTER_SET_NAME`,
+                   `COLLATION_NAME`,
                    `NUMERIC_PRECISION`,
                    `NUMERIC_SCALE`,
                    `COLUMN_NAME`,
@@ -590,7 +605,7 @@ SQL,
             WHERE `TABLE_NAME` = 'enterprise'
               AND `TABLE_SCHEMA` = 'windwalker_test'
             SQL,
-            $logs[0]
+            implode(";\n", $logs)
         );
     }
 
@@ -601,7 +616,7 @@ SQL,
     {
         $this->instance->dropConstraint('idx_enterprise_alias');
 
-        $ver = self::$baseConn->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        $ver = self::$baseConn->getAttribute(PDO::ATTR_SERVER_VERSION);
 
         $expect = ['PRIMARY'];
 
@@ -667,5 +682,21 @@ SQL,
     protected function setUp(): void
     {
         $this->instance = self::$db->getTable('enterprise');
+    }
+
+    protected function getMariaDBChecksSQL(string $schema = 'DATABASE()', $tableName = "'enterprise'"): string
+    {
+        /** @var MySQLPlatform $platform */
+        $platform = static::$db->getPlatform();
+
+        return !$platform->isMariaDB() ? '' : <<<SQL
+SELECT
+  *
+FROM
+  `information_schema`.`CHECK_CONSTRAINTS`
+WHERE
+  `CONSTRAINT_SCHEMA` = $schema
+  AND `TABLE_NAME` = $tableName;
+SQL;
     }
 }

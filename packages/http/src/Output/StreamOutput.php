@@ -41,7 +41,7 @@ class StreamOutput extends Output
      */
     public function respond(ResponseInterface $response): void
     {
-        $response = $this->prepareContentLength($response);
+        // $response = static::prepareContentLength($response);
 
         parent::respond($response);
     }
@@ -112,7 +112,7 @@ class StreamOutput extends Output
      *
      * @return  ResponseInterface
      */
-    protected function prepareContentLength(ResponseInterface $response): ResponseInterface
+    public static function prepareContentLength(ResponseInterface $response): ResponseInterface
     {
         if (!$response->hasHeader('content-length')) {
             if ($response->getBody()->getSize() !== null) {
@@ -128,7 +128,7 @@ class StreamOutput extends Output
      *
      * @see  http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
      *
-     * @param   string $header
+     * @param  string  $header
      *
      * @return  false|array  An array with [unit, first, last, length] elements;
      */
@@ -161,11 +161,11 @@ class StreamOutput extends Output
     /**
      * Method to set property maxBufferLength
      *
-     * @param   int $maxBufferLength
+     * @param  int  $maxBufferLength
      *
      * @return  static  Return self to support chaining.
      */
-    public function setMaxBufferLength(int $maxBufferLength)
+    public function setMaxBufferLength(int $maxBufferLength): static
     {
         $this->maxBufferLength = $maxBufferLength;
 
@@ -189,7 +189,7 @@ class StreamOutput extends Output
      *
      * @return  static  Return self to support chaining.
      */
-    public function setDelay(int $delay)
+    public function setDelay(int $delay): static
     {
         $this->delay = $delay;
 

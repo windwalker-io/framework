@@ -11,16 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\DOM\DOMElement;
 use Windwalker\Filter\Rule\Range;
 
 /**
  * The AbstractHtml5Field class.
  *
- * @method  $this  step(int $value)
+ * @method  $this  step(int|float|string $value)
  * @method  mixed  getStep()
- * @method  $this  patten(string $value)
- * @method  mixed  getPatten()
+ * @method  $this  pattern(string $value)
+ * @method  mixed  getPattern()
  *
  * @since  3.0.1
  */
@@ -29,15 +28,14 @@ abstract class AbstractHtml5Field extends TextField
     /**
      * max
      *
-     * @param int  $max
-     * @param bool $addFilter
-     * @param bool $forceInt
+     * @param  int|null  $max
+     * @param  bool      $addFilter
      *
-     * @return  static|mixed
+     * @return mixed
      *
      * @since  3.4.2
      */
-    public function max(?int $max = null, bool $addFilter = true)
+    public function max(?int $max = null, bool $addFilter = true): mixed
     {
         if ($addFilter) {
             $this->addFilter(new Range(null, $max));
@@ -49,14 +47,14 @@ abstract class AbstractHtml5Field extends TextField
     /**
      * min
      *
-     * @param int  $min
-     * @param bool $addFilter
+     * @param  int|null  $min
+     * @param  bool      $addFilter
      *
-     * @return  mixed|static
+     * @return mixed
      *
      * @since  3.4.2
      */
-    public function min(?int $min = null, bool $addFilter = true)
+    public function min(?int $min = null, bool $addFilter = true): mixed
     {
         if ($addFilter) {
             $this->addFilter(new Range($min, null));
@@ -68,16 +66,16 @@ abstract class AbstractHtml5Field extends TextField
     /**
      * range
      *
-     * @param int  $min
-     * @param int  $max
-     * @param bool $addFilter
-     * @param bool $forceInt
+     * @param  int   $min
+     * @param  int   $max
+     * @param  bool  $addFilter
+     * @param  bool  $forceInt
      *
      * @return  $this
      *
      * @since  3.4.2
      */
-    public function range(?int $min, ?int $max, bool $addFilter = true)
+    public function range(?int $min, ?int $max, bool $addFilter = true): static
     {
         if ($addFilter) {
             $this->addFilter(new Range($min, $max));

@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Schema;
 
-use phpDocumentor\Reflection\Types\Array_;
+use InvalidArgumentException;
 use Windwalker\Database\Manager\TableManager;
-use Windwalker\Database\Platform\Type\DataType;
-use Windwalker\Database\Schema\Concern\DataTypeTrait;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Ddl\Index;
@@ -33,6 +31,11 @@ use Windwalker\Database\Schema\Ddl\Index;
  * @method  Column  integer(string $name)
  * @method  Column  longtext(string $name)
  * @method  Column  primary(string $name)
+ * @method  Column  primaryBigint(string $name)
+ * @method  Column  primaryUuidChar(string $name)
+ * @method  Column  primaryUuidBinary(string $name)
+ * @method  Column  uuidChar(string $name)
+ * @method  Column  uuidBinary(string $name)
  * @method  Column  text(string $name)
  * @method  Column  timestamp(string $name)
  * @method  Column  tinyint(string $name)
@@ -72,7 +75,7 @@ class Schema
         }
 
         if (!$column instanceof Column) {
-            throw new \InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
+            throw new InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
         }
 
         $this->columns[$column->getColumnName()] = $column;
@@ -140,8 +143,11 @@ class Schema
             ->columns($columns);
     }
 
-    public function addForeignKey(array|string $columns, ?string $refTable = null, array|string|null $refColumns = null): Constraint
-    {
+    public function addForeignKey(
+        array|string $columns,
+        ?string $refTable = null,
+        array|string|null $refColumns = null
+    ): Constraint {
         $columns = (array) $columns;
 
         $constraint = $this->addConstraint(Constraint::TYPE_PRIMARY_KEY, 'PRIMARY')
@@ -217,25 +223,33 @@ class Schema
         return $this->getTable()->getDb()->getNullDate();
     }
 
-    public function __call(string $name, array $args)
+    public function __call(string $name, array $args): Column
     {
         $column = array_shift($args);
 
         $column = $this->addColumn(new Column($column, $name));
 
-        if ($name === 'primary') {
-            $column->dataType('integer')
+        return match($name) {
+            'primary' => $column->dataType('integer')
                 ->autoIncrement(true)
-                ->primary(true);
-        }
-
-        if ($name === 'primaryBigint') {
-            $column->dataType('bigint')
+                ->primary(true),
+            'primaryBigint' => $column->dataType('bigint')
                 ->autoIncrement(true)
-                ->primary(true);
-        }
-
-        return $column;
+                ->primary(true),
+            'uuidChar' => $column->dataType('char')
+                ->length(36)
+                ->collation('ascii_bin'),
+            'primaryUuidChar' => $column->dataType('char')
+                ->length(36)
+                ->collation('ascii_bin')
+                ->primary(true),
+            'uuidBinary' => $column->dataType('binary')
+                ->length(16),
+            'primaryUuidBinary' => $column->dataType('binary')
+                ->length(16)
+                ->primary(true),
+            default => $column
+        };
     }
 
     /**
@@ -251,7 +265,7 @@ class Schema
      *
      * @return  static  Return self to support chaining.
      */
-    public function setIndexes(array $indexes)
+    public function setIndexes(array $indexes): static
     {
         $this->indexes = $indexes;
 
@@ -271,7 +285,7 @@ class Schema
      *
      * @return  static  Return self to support chaining.
      */
-    public function setConstraints(array $constraints)
+    public function setConstraints(array $constraints): static
     {
         $this->constraints = $constraints;
 

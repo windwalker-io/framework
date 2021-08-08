@@ -13,7 +13,7 @@ namespace Windwalker\Renderer;
 
 use Closure;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The AbstractEngineRenderer class.
@@ -50,7 +50,7 @@ abstract class AbstractEngineRenderer implements
                 'context' => null,
                 'paths' => [],
                 'root_path' => null,
-                'debug' => null
+                'debug' => null,
             ],
             $options
         );
@@ -83,7 +83,7 @@ abstract class AbstractEngineRenderer implements
     /**
      * @inheritDoc
      */
-    public function extend(callable $callable)
+    public function extend(callable $callable): static
     {
         $builder = $this->getBuilder();
 
@@ -111,7 +111,7 @@ abstract class AbstractEngineRenderer implements
      *
      * @return  static  Return self to support chaining.
      */
-    public function setBuilder(?Closure $builder)
+    public function setBuilder(?Closure $builder): static
     {
         $this->builder = $builder;
 

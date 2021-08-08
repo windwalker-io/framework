@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Html\Grid;
 
+use stdClass;
+
 /**
  * The Grid class to dynamically generate HTML tables.
  *
@@ -61,7 +63,7 @@ class Grid
     /**
      * Constructor for a Grid object
      *
-     * @param   array  $attrs  Associative array of attributes for the table-tag
+     * @param  array  $attrs  Associative array of attributes for the table-tag
      *
      * @since   2.1
      */
@@ -73,11 +75,11 @@ class Grid
     /**
      * create
      *
-     * @param array  $attrs
+     * @param  array  $attrs
      *
      * @return static
      */
-    public static function create(array $attrs = [])
+    public static function create(array $attrs = []): static
     {
         return new static($attrs);
     }
@@ -97,14 +99,14 @@ class Grid
     /**
      * Method to set the attributes for a table-tag
      *
-     * @param   array  $attrs    Associative array of attributes for the table-tag
-     * @param   bool   $replace  Replace possibly existing attributes
+     * @param  array  $attrs    Associative array of attributes for the table-tag
+     * @param  bool   $replace  Replace possibly existing attributes
      *
      * @return  static This object for chaining
      *
      * @since 2.1
      */
-    public function setTableAttributes(array $attrs = [], bool $replace = false)
+    public function setTableAttributes(array $attrs = [], bool $replace = false): static
     {
         if ($replace) {
             $this->attrs = $attrs;
@@ -130,13 +132,13 @@ class Grid
     /**
      * Add new column name to process
      *
-     * @param   string $name Internal column name
+     * @param  string  $name  Internal column name
      *
      * @return  static This object for chaining
      *
      * @since 2.1
      */
-    public function addColumn(string $name)
+    public function addColumn(string $name): static
     {
         $this->columns[] = $name;
 
@@ -158,13 +160,13 @@ class Grid
     /**
      * Delete column by name
      *
-     * @param   string $name Name of the column to be deleted
+     * @param  string  $name  Name of the column to be deleted
      *
      * @return  static This object for chaining
      *
      * @since 2.1
      */
-    public function deleteColumn(string $name)
+    public function deleteColumn(string $name): static
     {
         $index = array_search($name, $this->columns, true);
 
@@ -180,13 +182,13 @@ class Grid
      * Method to set a whole range of columns at once
      * This can be used to re-order the columns, too
      *
-     * @param   array $columns List of internal column names
+     * @param  array  $columns  List of internal column names
      *
      * @return  static This object for chaining
      *
      * @since 2.1
      */
-    public function setColumns(array $columns)
+    public function setColumns(array $columns): static
     {
         $this->columns = array_values($columns);
 
@@ -197,14 +199,14 @@ class Grid
      * Adds a row to the table and sets the currently
      * active row to the new row
      *
-     * @param   array     $attrs    Associative array of attributes for the row
-     * @param   int|bool  $special  1 for a new row in the header, 2 for a new row in the footer
+     * @param  array     $attrs    Associative array of attributes for the row
+     * @param  int|bool  $special  1 for a new row in the header, 2 for a new row in the footer
      *
      * @return  static This object for chaining
      *
      * @since   2.1
      */
-    public function addRow(array $attrs = [], int|bool $special = self::ROW_NORMAL)
+    public function addRow(array $attrs = [], int|bool $special = self::ROW_NORMAL): static
     {
         $this->rows[]['_row'] = $attrs;
         $this->activeRow = count($this->rows) - 1;
@@ -235,13 +237,13 @@ class Grid
     /**
      * Method to set the attributes of the currently active row
      *
-     * @param   array  $attrs  Associative array of attributes
+     * @param  array  $attrs  Associative array of attributes
      *
      * @return  static This object for chaining
      *
      * @since   2.1
      */
-    public function setRowAttributes(array $attrs)
+    public function setRowAttributes(array $attrs): static
     {
         $this->rows[$this->activeRow]['_row'] = $attrs;
 
@@ -263,13 +265,13 @@ class Grid
     /**
      * Set the currently active row
      *
-     * @param   int $id ID of the row to be set to current
+     * @param  int  $id  ID of the row to be set to current
      *
      * @return  static This object for chaining
      *
      * @since  2.1
      */
-    public function setActiveRow(int $id)
+    public function setActiveRow(int $id): static
     {
         $this->activeRow = (int) $id;
 
@@ -280,19 +282,19 @@ class Grid
      * Set cell content for a specific column for the
      * currently active row
      *
-     * @param   string  $name     Name of the column
-     * @param   string  $content  Content for the cell
-     * @param   array   $attrs    Associative array of attributes for the td-element
-     * @param   bool    $replace  If false, the content is appended to the current content of the cell
+     * @param  string  $name     Name of the column
+     * @param  string  $content  Content for the cell
+     * @param  array   $attrs    Associative array of attributes for the td-element
+     * @param  bool    $replace  If false, the content is appended to the current content of the cell
      *
      * @return  static This object for chaining
      *
      * @since 2.1
      */
-    public function setRowCell(string $name, string $content, array $attrs = [], bool $replace = true)
+    public function setRowCell(string $name, string $content, array $attrs = [], bool $replace = true): static
     {
         if ($replace || !isset($this->rows[$this->activeRow][$name])) {
-            $cell = new \stdClass();
+            $cell = new stdClass();
             $cell->attribs = $attrs;
             $cell->content = $content;
             $this->rows[$this->activeRow][$name] = $cell;
@@ -307,7 +309,7 @@ class Grid
     /**
      * Get all data for a row
      *
-     * @param   ?int $id ID of the row to return
+     * @param   ?int  $id  ID of the row to return
      *
      * @return  ?array Array of columns of a table row
      *
@@ -323,7 +325,7 @@ class Grid
     /**
      * Get the IDs of all rows in the table
      *
-     * @param   int|bool $special false for the standard rows, 1 for the header rows, 2 for the footer rows
+     * @param  int|bool  $special  false for the standard rows, 1 for the header rows, 2 for the footer rows
      *
      * @return  array Array of IDs
      *
@@ -348,13 +350,13 @@ class Grid
     /**
      * Delete a row from the object
      *
-     * @param   int $id ID of the row to be deleted
+     * @param  int  $id  ID of the row to be deleted
      *
      * @return  static This object for chaining
      *
      * @since   2.1
      */
-    public function deleteRow(int $id)
+    public function deleteRow(int $id): static
     {
         unset($this->rows[$id]);
 
@@ -410,9 +412,9 @@ class Grid
     /**
      * Render an area of the table
      *
-     * @param   array  $ids  IDs of the rows to render
-     * @param   string $area Name of the area to render. Valid: tbody, tfoot, thead
-     * @param   string $cell Name of the cell to render. Valid: td, th
+     * @param  array   $ids   IDs of the rows to render
+     * @param  string  $area  Name of the area to render. Valid: tbody, tfoot, thead
+     * @param  string  $cell  Name of the cell to render. Valid: td, th
      *
      * @return string The rendered table area
      *
@@ -429,9 +431,8 @@ class Grid
             foreach ($this->getColumns() as $name) {
                 if (isset($this->rows[$id][$name])) {
                     $column = $this->rows[$id][$name];
-                    $output[] = "\t\t<" . $cell . $this->renderAttributes(
-                        $column->attribs
-                    ) . '>' . $column->content . '</' . $cell . ">\n";
+                    $output[] = "\t\t<" . $cell . $this->renderAttributes($column->attribs)
+                        . '>' . $column->content . '</' . $cell . ">\n";
                 }
             }
 
@@ -446,7 +447,7 @@ class Grid
     /**
      * Renders an HTML attribute from an associative array
      *
-     * @param   array  $attrs  Associative array of attributes
+     * @param  array  $attrs  Associative array of attributes
      *
      * @return  string The HTML attribute string
      *

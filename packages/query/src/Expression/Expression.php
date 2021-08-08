@@ -13,7 +13,7 @@ namespace Windwalker\Query\Expression;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\StrNormalise;
+use Windwalker\Utilities\StrNormalize;
 
 /**
  * Class QueryExpression
@@ -50,7 +50,7 @@ class Expression
     /**
      * isExpression
      *
-     * @param   string $value
+     * @param  string  $value
      *
      * @return  boolean
      */
@@ -67,9 +67,9 @@ class Expression
      *
      * @return  mixed|Clause
      */
-    public function build($name, ...$args)
+    public function build(string $name, ...$args): mixed
     {
-        $method = StrNormalise::toCamelCase($name);
+        $method = StrNormalize::toCamelCase($name);
 
         if (method_exists($this, $method)) {
             return $this->$method(...$args);
@@ -95,7 +95,7 @@ class Expression
      *
      * @return  static  Return self to support chaining.
      */
-    public function setQuery(Query $query)
+    public function setQuery(Query $query): static
     {
         $this->query = $query;
 
@@ -108,8 +108,8 @@ class Expression
      * Usage:
      * $query->select($query->concat(['a', 'b']));
      *
-     * @param   array  $values    An array of values to concatenate.
-     * @param   string $separator As separator to place between each value.
+     * @param  array   $values     An array of values to concatenate.
+     * @param  string  $separator  As separator to place between each value.
      *
      * @return  Clause  The concatenated values.
      *
@@ -129,8 +129,8 @@ class Expression
     /**
      * caseCondition
      *
-     * @param   array  $cases
-     * @param   string $else
+     * @param  array   $cases
+     * @param  string  $else
      *
      * @return  string
      *
@@ -155,6 +155,6 @@ class Expression
 
     public function __call($name, $args)
     {
-        return $this->build(StrNormalise::toSnakeCase($name), ...$args);
+        return $this->build(StrNormalize::toSnakeCase($name), ...$args);
     }
 }

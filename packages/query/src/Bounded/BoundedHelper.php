@@ -11,20 +11,29 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Bounded;
 
+use PDO;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\TypeCast;
 
 /**
  * The QueryHelper class.
  */
 class BoundedHelper
 {
-    public static function replaceParams(string $sql, string $symbol = '?', array $params = []): array
+    /**
+     * Replace all named params to ordered params.
+     *
+     * @param  string  $sql
+     * @param  string  $sign
+     * @param  array   $params
+     *
+     * @return  array
+     */
+    public static function replaceParams(string $sql, string $sign = '?', array $params = []): array
     {
         $values = [];
-        $i      = 0;
-        $s      = 1;
+        $i = 0;
+        $s = 1;
 
         $sql = (string) preg_replace_callback(
             '/(:[\w_]+|\?)/',
@@ -32,7 +41,7 @@ class BoundedHelper
                 &$values,
                 &$i,
                 &$s,
-                $symbol,
+                $sign,
                 $params
             ) {
                 $name = $matched[0];
@@ -48,12 +57,12 @@ class BoundedHelper
                     $values[] = $params[$name] ?? $params[ltrim($name, ':')] ?? null;
                 }
 
-                if (strpos($symbol, '%d') !== false) {
-                    $symbol = str_replace('%d', $s, $symbol);
+                if (str_contains($sign, '%d')) {
+                    $sign = str_replace('%d', (string) $s, $sign);
                     $s++;
                 }
 
-                return $symbol;
+                return $sign;
             },
             $sql
         );
@@ -64,13 +73,13 @@ class BoundedHelper
     /**
      * simulatePrepared
      *
-     * @param  \PDO|callable|Query|mixed  $escaper
+     * @param  PDO|callable|Query|mixed  $escaper
      * @param  string                     $sql
      * @param  array                      $bounded
      *
      * @return  string
      */
-    public static function emulatePrepared($escaper, $sql, array $bounded): string
+    public static function emulatePrepared(mixed $escaper, string $sql, array $bounded): string
     {
         if ($bounded === []) {
             return $sql;
@@ -81,14 +90,10 @@ class BoundedHelper
         $values = [];
 
         foreach ($params as $param) {
-            switch ($param['dataType']) {
-                case ParamType::STRING:
-                    $v = Escaper::tryQuote($escaper, (string) $param['value']);
-                    break;
-                default:
-                    $v = $param['value'];
-                    break;
-            }
+            $v = match ($param['dataType']) {
+                ParamType::STRING => Escaper::tryQuote($escaper, (string) $param['value']),
+                default => $param['value'],
+            };
 
             $values[] = $v;
         }
@@ -97,8 +102,7 @@ class BoundedHelper
             return $sql;
         }
 
-        $sql = str_replace('%', '%%', $sql);
-        $sql = str_replace('?', '%s', $sql);
+        $sql = str_replace(['%', '?'], ['%%', '%s'], $sql);
 
         return sprintf($sql, ...$values);
     }

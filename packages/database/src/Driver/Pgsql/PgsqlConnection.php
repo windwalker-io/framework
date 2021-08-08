@@ -20,7 +20,7 @@ use Windwalker\Database\Exception\DatabaseConnectException;
  */
 class PgsqlConnection extends AbstractConnection
 {
-    protected static $name = 'pgsql';
+    protected static string $name = 'pgsql';
 
     /**
      * @inheritDoc
@@ -36,8 +36,8 @@ class PgsqlConnection extends AbstractConnection
 
         $params['host'] = $options['host'];
         $params['port'] = $options['port'] ?? null;
-        $params['dbname'] = $options['database'] ?? null;
-        $params['user'] = $options['username'] ?? null;
+        $params['dbname'] = $options['dbname'] ?? null;
+        $params['user'] = $options['user'] ?? null;
         $params['password'] = $options['password'] ?? null;
 
         if (isset($options['charset'])) {
@@ -66,7 +66,7 @@ class PgsqlConnection extends AbstractConnection
     /**
      * @inheritDoc
      */
-    public function disconnect()
+    public function disconnect(): mixed
     {
         if (!$this->isConnected()) {
             return true;

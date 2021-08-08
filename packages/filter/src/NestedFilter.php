@@ -13,9 +13,8 @@ namespace Windwalker\Filter;
 
 use Windwalker\Filter\Exception\ValidateException;
 use Windwalker\Utilities\Arr;
+use Windwalker\Utilities\Assert\Assert;
 use Windwalker\Utilities\TypeCast;
-
-use function DI\create;
 
 /**
  * The NestedFilter class.
@@ -37,7 +36,7 @@ class NestedFilter extends AbstractFilter
     /**
      * @inheritDoc
      */
-    public function filter($value)
+    public function filter(mixed $value): mixed
     {
         $paths = \Windwalker\collect(TypeCast::toArray($value))
             ->flatten()
@@ -60,7 +59,7 @@ class NestedFilter extends AbstractFilter
     /**
      * @inheritDoc
      */
-    public function test($value, bool $strict = false): bool
+    public function test(mixed $value, bool $strict = false): bool
     {
         $paths = \Windwalker\collect(TypeCast::toArray($value))
             ->flatten()
@@ -75,7 +74,8 @@ class NestedFilter extends AbstractFilter
                     if (!$filter->test(Arr::get($value, $path))) {
                         throw ValidateException::create(
                             $filter,
-                            'Validator: ' . $filter::class . ' returns false, value is: ' . get_debug_type($value)
+                            'Validator: ' . TypeCast::forceString($filter)
+                            . ' returns false, value is: ' . Assert::describeValue($value)
                         );
                     }
                 }
@@ -90,5 +90,10 @@ class NestedFilter extends AbstractFilter
         }
 
         return true;
+    }
+
+    public function get(string $name): FilterInterface|ValidatorInterface|null
+    {
+        return $this->map[$name] ?? null;
     }
 }

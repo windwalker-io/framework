@@ -11,24 +11,25 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Attributes;
 
-use Windwalker\DI\AttributesResolver;
+use Reflector;
 use Windwalker\DI\Container;
 
 /**
  * The AttributeHandler class.
  */
-class AttributeHandler extends \Windwalker\Utilities\Attributes\AttributeHandler
+class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
 {
-    protected Container $container;
-
     /**
      * @inheritDoc
      */
-    public function __construct(callable $handler, \Reflector $reflactor, AttributesResolver $resolver, Container $container)
-    {
-        parent::__construct($handler, $reflactor, $resolver);
-
-        $this->container = $container;
+    public function __construct(
+        callable $handler,
+        Reflector $reflector,
+        ?object $object,
+        AttributesResolver $resolver,
+        protected Container $container
+    ) {
+        parent::__construct($handler, $reflector, $object, $resolver);
     }
 
     /**

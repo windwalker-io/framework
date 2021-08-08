@@ -16,19 +16,35 @@ namespace Windwalker\Session;
  */
 class FlashBag
 {
-    protected ?array $storage;
+    /**
+     * Since this property will be reference to session variable,
+     * We must not declare type that to prevent reference type held error.
+     *
+     * This error often occurred by Symfony/VarDumper.
+     *
+     * @var ?array
+     */
+    protected mixed $storage = null;
 
     /**
      * FlashBag constructor.
      *
      * @param  array|null  $storage
      */
-    public function __construct(?array &$storage)
+    public function __construct(?array $storage = [])
     {
-        $this->storage = &$storage;
+        $this->storage = $storage;
     }
 
-    public function add($value, string $type = 'info'): void
+    public function link(array &$storage, string $name = '_flash'): static
+    {
+        $storage[$name] ??= [];
+        $this->storage = &$storage[$name];
+
+        return $this;
+    }
+
+    public function add(mixed $value, string $type = 'info'): void
     {
         $this->storage[$type] ??= [];
 
@@ -44,7 +60,7 @@ class FlashBag
         return $this->storage;
     }
 
-    public function get(string $type)
+    public function get(string $type): mixed
     {
         $msg = $this->storage[$type] ?? null;
 
@@ -53,7 +69,7 @@ class FlashBag
         return $msg;
     }
 
-    public function all()
+    public function all(): ?array
     {
         $storage = $this->storage;
 
@@ -75,7 +91,7 @@ class FlashBag
      *
      * @return  static  Return self to support chaining.
      */
-    public function setStorage(?array &$storage)
+    public function setStorage(?array $storage): static
     {
         $this->storage = &$storage;
 

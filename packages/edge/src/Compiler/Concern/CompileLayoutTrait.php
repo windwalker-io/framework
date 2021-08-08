@@ -28,7 +28,7 @@ trait CompileLayoutTrait
     /**
      * Compile the extends statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -36,9 +36,9 @@ trait CompileLayoutTrait
     {
         $expression = $this->stripParentheses($expression);
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable
         $data = "<?php echo \$__edge->render($expression, \$__edge->except(get_defined_vars(), ['__data', '__path'])); ?>";
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable
 
         $this->footer[] = $data;
 
@@ -48,7 +48,7 @@ trait CompileLayoutTrait
     /**
      * Compile the yield statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -60,7 +60,7 @@ trait CompileLayoutTrait
     /**
      * Compile the show statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -72,7 +72,7 @@ trait CompileLayoutTrait
     /**
      * Compile the section statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -92,7 +92,7 @@ trait CompileLayoutTrait
     /**
      * Compile the append statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -104,7 +104,7 @@ trait CompileLayoutTrait
     /**
      * Compile the end-section statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -116,7 +116,7 @@ trait CompileLayoutTrait
     /**
      * Compile the stop statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -128,7 +128,7 @@ trait CompileLayoutTrait
     /**
      * Compile the overwrite statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -140,7 +140,7 @@ trait CompileLayoutTrait
     /**
      * Compile the has section statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -154,7 +154,7 @@ trait CompileLayoutTrait
      *
      * @return string
      */
-    protected function compileParent()
+    protected function compileParent(): string
     {
         return Edge::parentPlaceholder($this->lastSection ?: '');
     }

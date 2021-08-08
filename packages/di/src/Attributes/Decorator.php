@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Attributes;
 
+use Attribute;
+
 /**
  * The Decorator class.
  */
-@@\Attribute(\Attribute::TARGET_CLASS)
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Decorator implements ContainerAttributeInterface
 {
     protected string $class;
@@ -35,6 +37,7 @@ class Decorator implements ContainerAttributeInterface
 
     public function __invoke(AttributeHandler $handler): callable
     {
-        return fn (...$args) => $handler->getContainer()->newInstance($this->class, [$handler(...$args), ...$this->args]);
+        return fn(...$args) => $handler->getContainer()
+            ->newInstance($this->class, [$handler(...$args), ...$this->args]);
     }
 }

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Filter;
 
-use Windwalker\Data\Collection;
+use OutOfRangeException;
 use Windwalker\Filter\Rule\Absolute;
 use Windwalker\Filter\Rule\Alnum;
 use Windwalker\Filter\Rule\CastTo;
@@ -59,27 +59,28 @@ class FilterFactory
         }
     }
 
-    public function createNested(array $map): NestedFilter
+    public function createNested(array $map, array $options = []): NestedFilter
     {
-        return new NestedFilter($this->createMap($map));
+        return new NestedFilter($this->createMap($map, $options));
     }
 
-    public function createMap(array $map): array
+    public function createMap(array $map, array $options = []): array
     {
-        return Arr::mapRecursive($map, fn ($syntax) => $this->createChainFromSyntax($syntax));
+        return Arr::mapRecursive($map, fn($syntax) => $this->createChainFromSyntax($syntax, $options));
     }
 
     /**
      * createChainFromSyntax
      *
-     * @param string|callable|FilterInterface|ValidatorInterface|array $syntax
+     * @param  string|callable|FilterInterface|ValidatorInterface|array  $syntax
+     * @param  array                                                     $options
      *
      * @return  FilterInterface|ValidatorInterface
      */
-    public function createChainFromSyntax($syntax): FilterInterface|ValidatorInterface
+    public function createChainFromSyntax(mixed $syntax, array $options = []): FilterInterface|ValidatorInterface
     {
         if (is_string($syntax)) {
-            $clauses = Arr::explodeAndClear(';', $syntax);
+            $clauses = Arr::explodeAndClear('|', $syntax);
         } elseif (!is_array($syntax)) {
             $clauses = [$syntax];
         } else {
@@ -90,7 +91,7 @@ class FilterFactory
 
         foreach ($clauses as $clause) {
             if (is_string($clause)) {
-                $filter = $this->createFromSyntax($clause);
+                $filter = $this->createFromSyntax($clause, $options);
             } else {
                 $filter = $this->create($clause);
             }
@@ -103,11 +104,14 @@ class FilterFactory
 
     public function createFromSyntax(string $syntax, array &$options = []): FilterInterface|ValidatorInterface
     {
-        [$type, $optString] = array_pad(explode(':', $syntax), 2, '');
+        preg_match('/(?P<type>\w+)(\((?P<params>.*)\))*/', $syntax, $matches);
+
+        $type = $matches['type'] ?? '';
+        $params = $matches['params'] ?? '';
 
         $type = trim($type);
 
-        preg_match_all('/(\w+)(\s?=\s?(\w+))?/', $optString, $matches, PREG_SET_ORDER);
+        preg_match_all('/(\w+)(\s?=\s?(\w+))?/', $params, $matches, PREG_SET_ORDER);
 
         $options = [];
         foreach ($matches as $match) {
@@ -151,7 +155,7 @@ class FilterFactory
     public function getFactory(string $type): callable
     {
         if (!isset($this->factories[$type])) {
-            throw new \OutOfRangeException("Filter type: $type not found.");
+            throw new OutOfRangeException("Filter type: $type not found.");
         }
 
         return $this->factories[$type];
@@ -165,10 +169,10 @@ class FilterFactory
      *
      * @return  $this
      */
-    public function addFactory(string $type, callable|string $factory)
+    public function addFactory(string $type, callable|string $factory): static
     {
         if (is_string($factory)) {
-            $factory = fn () => new $factory();
+            $factory = fn() => new $factory();
         }
 
         $this->factories[$type] = $factory;
@@ -183,7 +187,7 @@ class FilterFactory
      *
      * @return  $this
      */
-    public function removeFactory(string $type)
+    public function removeFactory(string $type): static
     {
         unset($this->factories[$type]);
 
@@ -203,7 +207,7 @@ class FilterFactory
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFactories(array $factories)
+    public function setFactories(array $factories): static
     {
         $this->factories = $factories;
 
@@ -245,9 +249,8 @@ class FilterFactory
             )
         );
         $this->addFactory('required', Required::class);
-        $this->addFactory('default', fn (array $options) => new DefaultValue(array_key_first($options)));
-        $this->addFactory('func', fn (array $options) => new CallbackFilter(array_key_first($options)));
-
+        $this->addFactory('default', fn(array $options) => new DefaultValue(array_key_first($options)));
+        $this->addFactory('func', fn(array $options) => new CallbackFilter(array_key_first($options)));
 
         // types
         $types = [
@@ -256,7 +259,7 @@ class FilterFactory
             'float',
             'array',
             'bool',
-            'object'
+            'object',
         ];
 
         foreach ($types as $type) {

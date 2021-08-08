@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
+use DomainException;
 use IronMQ\IronMQ;
 use Windwalker\Queue\QueueMessage;
 
@@ -55,9 +56,9 @@ class IronmqQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
+     * @return string
      */
-    public function push(QueueMessage $message): int|string
+    public function push(QueueMessage $message): string
     {
         $channel = $message->getChannel() ?: $this->channel;
 
@@ -65,7 +66,7 @@ class IronmqQueueDriver implements QueueDriverInterface
 
         $options['delay'] = $message->getDelay();
 
-        return $this->client->postMessage($channel, json_encode($message), $options)->id;
+        return (string) $this->client->postMessage($channel, json_encode($message), $options)->id;
     }
 
     /**
@@ -104,7 +105,7 @@ class IronmqQueueDriver implements QueueDriverInterface
      *
      * @return IronmqQueueDriver
      */
-    public function delete(QueueMessage $message)
+    public function delete(QueueMessage $message): static
     {
         $channel = $message->getChannel() ?: $this->channel;
 
@@ -116,11 +117,11 @@ class IronmqQueueDriver implements QueueDriverInterface
     /**
      * release
      *
-     * @param QueueMessage|string $message
+     * @param  QueueMessage|string  $message
      *
      * @return static
      */
-    public function release(QueueMessage $message)
+    public function release(QueueMessage $message): static
     {
         $channel = $message->getChannel() ?: $this->channel;
 
@@ -137,16 +138,16 @@ class IronmqQueueDriver implements QueueDriverInterface
     /**
      * getIronMQ
      *
-     * @param       $projectId
-     * @param       $token
-     * @param array $options
+     * @param         $projectId
+     * @param         $token
+     * @param  array  $options
      *
      * @return  IronMQ
      */
-    public function getIronMQ($projectId, $token, array $options)
+    public function getIronMQ($projectId, $token, array $options): IronMQ
     {
         if (!class_exists(IronMQ::class)) {
-            throw new \DomainException('Please install iron-io/iron_mq first.');
+            throw new DomainException('Please install iron-io/iron_mq first.');
         }
 
         $defaultOptions = [

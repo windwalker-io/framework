@@ -22,6 +22,7 @@ trait JobEventTrait
     use QueueEventTrait;
 
     protected QueueMessage $message;
+
     protected JobInterface $job;
 
     /**
@@ -37,7 +38,7 @@ trait JobEventTrait
      *
      * @return  static  Return self to support chaining.
      */
-    public function setMessage(QueueMessage $message)
+    public function setMessage(QueueMessage $message): static
     {
         $this->message = $message;
 
@@ -57,7 +58,7 @@ trait JobEventTrait
      *
      * @return  static  Return self to support chaining.
      */
-    public function setJob(JobInterface $job)
+    public function setJob(JobInterface $job): static
     {
         $this->job = $job;
 

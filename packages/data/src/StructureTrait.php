@@ -9,6 +9,7 @@
 
 namespace Windwalker\Data;
 
+use SplFileInfo;
 use Windwalker\Data\Format\FormatRegistry;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
@@ -23,7 +24,7 @@ trait StructureTrait
     /**
      * @var FormatRegistry
      */
-    protected $formatRegistry;
+    protected ?FormatRegistry $formatRegistry = null;
 
     /**
      * Method to get property FormatRegistry
@@ -50,7 +51,7 @@ trait StructureTrait
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setFormatRegistry(FormatRegistry $formatRegistry)
+    public function setFormatRegistry(FormatRegistry $formatRegistry): static
     {
         $this->formatRegistry = $formatRegistry;
 
@@ -60,15 +61,15 @@ trait StructureTrait
     /**
      * load
      *
-     * @param  mixed   $data
-     * @param  string  $format
-     * @param  array   $options
+     * @param  mixed        $data
+     * @param  string|null  $format
+     * @param  array        $options
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function load($data, ?string $format = null, array $options = [])
+    public function load(mixed $data, ?string $format = null, array $options = []): static
     {
         $this->storage = Arr::mergeRecursive($this->storage, $this->loadData($data, $format, $options));
 
@@ -78,15 +79,15 @@ trait StructureTrait
     /**
      * withLoad
      *
-     * @param  mixed   $data
-     * @param  string  $format
-     * @param  array   $options
+     * @param  mixed        $data
+     * @param  string|null  $format
+     * @param  array        $options
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function withLoad($data, ?string $format = null, array $options = [])
+    public function withLoad(mixed $data, ?string $format = null, array $options = []): StructureTrait|static
     {
         $new = clone $this;
 
@@ -98,17 +99,17 @@ trait StructureTrait
     /**
      * loadData
      *
-     * @param  mixed   $data
-     * @param  string  $format
-     * @param  array   $options
+     * @param  mixed        $data
+     * @param  string|null  $format
+     * @param  array        $options
      *
      * @return  array
      *
      * @since  __DEPLOY_VERSION__
      */
-    protected function loadData($data, ?string $format = null, array $options = []): array
+    protected function loadData(mixed $data, ?string $format = null, array $options = []): array
     {
-        if ($data instanceof \SplFileInfo) {
+        if ($data instanceof SplFileInfo) {
             $data = $data->getPathname();
         }
 
@@ -117,7 +118,10 @@ trait StructureTrait
         } else {
             $registry = $this->getFormatRegistry();
 
-            $storage = TypeCast::toArray($registry->load((string) $data, $format, $options), $options['to_array'] ?? false);
+            $storage = TypeCast::toArray(
+                $registry->load((string) $data, $format, $options),
+                $options['to_array'] ?? false
+            );
         }
 
         return $storage;
@@ -135,7 +139,7 @@ trait StructureTrait
      */
     public function toString(?string $format = null, array $options = []): string
     {
-        return $this->getFormatRegistry()->dump($this->storage, $format, $options);
+        return $this->getFormatRegistry()->dump($this->storage, $format ?? 'json', $options);
     }
 
     /**

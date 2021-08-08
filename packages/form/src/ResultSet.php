@@ -11,10 +11,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Form;
 
+use Countable;
+use Generator;
+use IteratorAggregate;
+
 /**
  * The ResultSet class.
  */
-class ResultSet
+class ResultSet implements IteratorAggregate, Countable
 {
     /**
      * @var ValidateResult[]
@@ -33,7 +37,7 @@ class ResultSet
         }
     }
 
-    public function addResult(string $name, ValidateResult $result)
+    public function addResult(string $name, ValidateResult $result): static
     {
         $this->results[$name] = $result;
 
@@ -47,18 +51,28 @@ class ResultSet
 
     public function isSuccess(): bool
     {
-        foreach ($this->results as $result) {
-            if ($result->isFailure()) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->getFirstFailure() === null;
     }
 
     public function isFailure(): bool
     {
         return !$this->isSuccess();
+    }
+
+    public function first(): ?ValidateResult
+    {
+        return $this->results[array_key_first($this->results)] ?? null;
+    }
+
+    public function getFirstFailure(): ?ValidateResult
+    {
+        foreach ($this->results as $result) {
+            if ($result->isFailure()) {
+                return $result;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -72,10 +86,15 @@ class ResultSet
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         foreach ($this->results as $k => $result) {
             yield $k => $result;
         }
+    }
+
+    public function count(): int
+    {
+        return count($this->results);
     }
 }

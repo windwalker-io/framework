@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Bridge;
 
+use Exception;
+use RuntimeException;
+use SessionIdInterface;
+use SessionUpdateTimestampHandlerInterface;
 use Windwalker\Data\Format\FormatInterface;
-use Windwalker\Data\Format\PhpSerializeFormat;
 use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Handler\NativeHandler;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The ArrayBridge class.
@@ -30,7 +33,15 @@ class PhpBridge implements BridgeInterface
 
     protected int $status = PHP_SESSION_NONE;
 
-    protected array $storage = [];
+    /**
+     * Since this property will be reference to session variable,
+     * We must not declare type that to prevent reference type held error.
+     *
+     * This error often occurred by Symfony/VarDumper.
+     *
+     * @var ?array
+     */
+    protected mixed $storage = [];
 
     protected ?string $origin = null;
 
@@ -47,15 +58,18 @@ class PhpBridge implements BridgeInterface
      * @param  HandlerInterface|null  $handler
      * @param  FormatInterface|null   $serializer
      */
-    public function __construct(array $options = [], HandlerInterface $handler = null, ?FormatInterface $serializer = null)
-    {
-        $this->handler    = $handler ?? new NativeHandler();
+    public function __construct(
+        array $options = [],
+        HandlerInterface $handler = null,
+        ?FormatInterface $serializer = null
+    ) {
+        $this->handler = $handler ?? new NativeHandler();
         $this->serializer = $serializer;
 
         $this->prepareOptions(
             [
                 static::OPTION_AUTO_COMMIT => false,
-                static::OPTION_WITH_SUPER_GLOBAL => false
+                static::OPTION_WITH_SUPER_GLOBAL => false,
             ],
             $options
         );
@@ -65,12 +79,13 @@ class PhpBridge implements BridgeInterface
      * start
      *
      * @return  bool
+     * @throws Exception
      */
     public function start(): bool
     {
         $this->handler->open($this->getOptionAndINI('save_path'), $this->getSessionName());
 
-        if ($this->getOption('auto_commit')) {
+        if ($this->getOption(static::OPTION_AUTO_COMMIT)) {
             register_shutdown_function([$this, 'writeClose']);
         }
 
@@ -80,7 +95,7 @@ class PhpBridge implements BridgeInterface
             $id === null
             || (
                 $this->getOptionAndINI('use_strict_mode')
-                && $this->handler instanceof \SessionUpdateTimestampHandlerInterface
+                && $this->handler instanceof SessionUpdateTimestampHandlerInterface
                 && !$this->handler->validateId($id)
             )
         ) {
@@ -162,7 +177,7 @@ class PhpBridge implements BridgeInterface
      * @param  bool  $saveOld
      *
      * @return  bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function regenerate(bool $deleteOld = false, bool $saveOld = true): bool
     {
@@ -206,7 +221,7 @@ class PhpBridge implements BridgeInterface
         if (
             $this->getOptionAndINI('lazy_write')
             && $this->origin === $data
-            && $this->handler instanceof \SessionUpdateTimestampHandlerInterface
+            && $this->handler instanceof SessionUpdateTimestampHandlerInterface
         ) {
             $r = $this->handler->updateTimestamp($this->getId(), $data);
         } else {
@@ -267,7 +282,7 @@ class PhpBridge implements BridgeInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setStorage(array $storage)
+    public function setStorage(array $storage): static
     {
         $this->storage = $storage;
 
@@ -277,9 +292,9 @@ class PhpBridge implements BridgeInterface
     /**
      * getStorage
      *
-     * @return  array|null
+     * @return  array
      */
-    public function &getStorage(): ?array
+    public function &getStorage(): mixed
     {
         return $this->storage;
     }
@@ -289,11 +304,11 @@ class PhpBridge implements BridgeInterface
      *
      * @return  string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function createId(): string
     {
-        if ($this->handler instanceof \SessionIdInterface) {
+        if ($this->handler instanceof SessionIdInterface) {
             return $this->handler->create_sid();
         }
 
@@ -342,10 +357,10 @@ class PhpBridge implements BridgeInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setHandler(HandlerInterface $handler)
+    public function setHandler(HandlerInterface $handler): static
     {
         if ($this->getStatus() === PHP_SESSION_ACTIVE) {
-            throw new \RuntimeException('Cannot change handler during session active.');
+            throw new RuntimeException('Cannot change handler during session active.');
         }
 
         $this->handler = $handler;
@@ -358,10 +373,10 @@ class PhpBridge implements BridgeInterface
         return $this->serializer;
     }
 
-    public function setSerializer(?FormatInterface $serializer)
+    public function setSerializer(?FormatInterface $serializer): static
     {
         if ($this->getStatus() === PHP_SESSION_ACTIVE) {
-            throw new \RuntimeException('Cannot change serializer during session active.');
+            throw new RuntimeException('Cannot change serializer during session active.');
         }
 
         $this->serializer = $serializer;

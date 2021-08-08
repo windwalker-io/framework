@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Stream;
 
+use RuntimeException;
+
 /**
  * The PhpInputStream class.
  *
@@ -57,7 +59,7 @@ class PhpInputStream extends Stream
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (static::$reachedEof) {
             return static::$cache;
@@ -73,7 +75,7 @@ class PhpInputStream extends Stream
      *
      * @return bool
      */
-    public function isWritable()
+    public function isWritable(): bool
     {
         return false;
     }
@@ -88,9 +90,9 @@ class PhpInputStream extends Stream
      * @return   string  Returns the data read from the stream, or an empty string
      *                   if no bytes are available.
      *
-     * @throws \RuntimeException if an error occurs.
+     * @throws RuntimeException if an error occurs.
      */
-    public function read($length)
+    public function read($length): string
     {
         $content = parent::read($length);
 
@@ -110,9 +112,9 @@ class PhpInputStream extends Stream
      *
      * @return string
      *
-     * @throws \RuntimeException if unable to read or an error occurs while reading.
+     * @throws RuntimeException if unable to read or an error occurs while reading.
      */
-    public function getContents($maxLength = -1)
+    public function getContents($maxLength = -1): string
     {
         if (static::$reachedEof) {
             return static::$cache;

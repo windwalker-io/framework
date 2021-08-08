@@ -11,15 +11,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer;
 
+use Closure;
 use SplPriorityQueue;
 use Windwalker\Edge\Exception\LayoutNotFoundException;
-use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Path;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\LogicAssert;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
-use Windwalker\Utilities\Iterator\PriorityQueue;
+use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
+use Windwalker\Utilities\Paths\PathsAwareTrait;
 use Windwalker\Utilities\Str;
 
 /**
@@ -27,50 +28,45 @@ use Windwalker\Utilities\Str;
  *
  * @since 2.0
  */
-class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
+class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, ExtendableRendererInterface
 {
+    use ObjectBuilderAwareTrait;
     use InstanceCacheTrait;
     use OptionAccessTrait;
+    use PathsAwareTrait;
 
     protected array $factories = [
+        'edge' => [
+            EdgeRenderer::class,
+            ['edge.php'],
+        ],
         'blade' => [
             BladeRenderer::class,
-            ['blade.php']
+            ['blade.php'],
         ],
         'plates' => [
             PlatesRenderer::class,
-            ['php']
-        ],
-        'edge' => [
-            EdgeRenderer::class,
-            ['edge.php']
+            ['php'],
         ],
         'mustache' => [
             MustacheRenderer::class,
-            ['mustache']
+            ['mustache'],
         ],
         'twig' => [
             TwigRenderer::class,
-            ['twig']
+            ['twig'],
         ],
     ];
 
     protected array $aliases = [];
 
     /**
-     * Property paths.
-     *
-     * @var PriorityQueue
-     */
-    protected PriorityQueue $paths;
-
-    /**
      * Class init.
      *
      * @param  string|array|SplPriorityQueue  $paths
-     * @param  array                   $options
+     * @param  array                          $options
      */
-    public function __construct(SplPriorityQueue|string|array $paths, array $options = [])
+    public function __construct(SplPriorityQueue|string|array $paths = [], array $options = [])
     {
         $this->setPaths($paths);
 
@@ -83,23 +79,29 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
     /**
      * @inheritDoc
      */
-    public function make(string $layout, array $options = []): \Closure
+    public function make(string $layout, array $options = []): Closure
     {
         $options = Arr::mergeRecursive($this->getOptions(), $options);
 
-        $file = $this->findFile($layout);
+        if (is_file($layout)) {
+            $path = dirname($layout);
+            $filename = Path::getFilename($layout);
+        } else {
+            $file = $this->findFile($layout);
 
-        if (!$file) {
-            throw new LayoutNotFoundException(
-                sprintf(
-                    'Layout: %s not found in paths: %s',
-                    $layout,
-                    implode("\n| ", $this->dumpPaths())
-                )
-            );
+            if (!$file) {
+                throw new LayoutNotFoundException(
+                    sprintf(
+                        'Layout: %s not found in paths: %s',
+                        $layout,
+                        implode("\n| ", $this->dumpPaths())
+                    )
+                );
+            }
+
+            $path = $file->getPath();
+            $filename = $file->getFilename();
         }
-
-        [$fullPath, $path, $filename] = $file;
 
         [$type, , $extension] = $this->matchExtension($filename);
         $renderer = $this->getRenderer($type);
@@ -138,11 +140,11 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
     /**
      * finFile
      *
-     * @param  string       $layout
+     * @param  string  $layout
      *
-     * @return array|null
+     * @return \SplFileInfo|null
      */
-    public function findFile(string $layout): ?array
+    public function findFile(string $layout): ?\SplFileInfo
     {
         $layout = $this->resolveAlias($layout);
 
@@ -155,15 +157,24 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
             $filePath = $path . '/' . $layout;
 
             if (is_file($filePath)) {
-                return $this->getFoundFileInfo($filePath, $path);
+                return new \SplFileInfo($filePath);
             }
 
-            foreach ($this->getSupportedExtensions() as $ext) {
-                $filePath = $path . '/' . $slashedLayout . '.' . $ext;
+            if ($info = static::findFileInfoByExtensions($path, $slashedLayout, $this->getSupportedExtensions())) {
+                return $info;
+            }
+        }
 
-                if (is_file($filePath)) {
-                    return $this->getFoundFileInfo($filePath, $path);
-                }
+        return null;
+    }
+
+    public static function findFileInfoByExtensions(string $base, string $filepath, array $extensions): ?\SplFileInfo
+    {
+        foreach ($extensions as $ext) {
+            $filePath = $base . '/' . $filepath . '.' . $ext;
+
+            if (is_file($filePath)) {
+                return new \SplFileInfo($filePath);
             }
         }
 
@@ -184,96 +195,16 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
         return $this->findFile($layout) !== null;
     }
 
-    /**
-     * getPaths
-     *
-     * @return  PriorityQueue
-     */
-    public function getPaths(): PriorityQueue
-    {
-        return $this->paths;
-    }
-
-    /**
-     * setPaths
-     *
-     * @param  array|string|SplPriorityQueue  $paths
-     *
-     * @return static Return self to support chaining.
-     */
-    public function setPaths(array|string|SplPriorityQueue $paths)
-    {
-        if ($paths instanceof SplPriorityQueue) {
-            $paths = new PriorityQueue($paths);
-        }
-
-        if (!$paths instanceof PriorityQueue) {
-            $priority = new PriorityQueue();
-
-            foreach ((array) $paths as $i => $path) {
-                $priority->insert($path, 100 - ($i * 10));
-            }
-
-            $paths = $priority;
-        }
-
-        $this->paths = $paths;
-
-        return $this;
-    }
-
-    /**
-     * addPath
-     *
-     * @param  string   $path
-     * @param  integer  $priority
-     *
-     * @return  static
-     */
-    public function addPath(string $path, int $priority = 100)
-    {
-        $this->paths->insert($path, $priority);
-
-        return $this;
-    }
-
-    /**
-     * clearPaths
-     *
-     * @return  static
-     */
-    public function clearPaths()
-    {
-        $this->setPaths([]);
-
-        return $this;
-    }
-
-    /**
-     * dumpPaths
-     *
-     * @return  array
-     */
-    public function dumpPaths(): array
-    {
-        $paths = clone $this->paths;
-
-        $return = [];
-
-        foreach ($paths as $path) {
-            $return[] = $path;
-        }
-
-        return $return;
-    }
-
     public function getRenderer(string $type, array $options = []): TemplateFactoryInterface
     {
-        return $this->once('renderer.' . $type, function () use ($options, $type) {
-            [$factory, $exts] = $this->getFactory($type);
+        return $this->once(
+            'renderer.' . $type,
+            function () use ($options, $type) {
+                [$factory, $exts] = $this->getFactory($type);
 
-            return new $factory($options);
-        });
+                return $this->getObjectBuilder()->createObject($factory, $options);
+            }
+        );
     }
 
     public function addFactory(string $type, string $class, array $extensions = []): void
@@ -293,7 +224,7 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
     public function addFileExtensions(string $type, array|string $extensions): void
     {
         LogicAssert::assert(
-            $this->getFactory($type),
+            (bool) $this->getFactory($type),
             sprintf(
                 'Factory %s not registered.',
                 $type
@@ -345,11 +276,11 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
      * getFoundFileInfo
      *
      * @param  string  $filePath
-     * @param          $path
+     * @param  string  $path
      *
      * @return  array
      */
-    protected function getFoundFileInfo(string $filePath, $path): array
+    protected static function getFoundFileInfo(string $filePath, string $path): array
     {
         $filename = Str::removeLeft(
             $filePath = Path::normalize($filePath),
@@ -359,7 +290,7 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
         return [
             $filePath,
             $path,
-            ltrim($filename, '/\\')
+            ltrim($filename, '/\\'),
         ];
     }
 
@@ -371,7 +302,7 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
      *
      * @return  static
      */
-    public function alias(string $alias, string $layout)
+    public function alias(string $alias, string $layout): static
     {
         $this->aliases[$alias] = $layout;
 
@@ -400,9 +331,31 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setAliases(array $aliases)
+    public function setAliases(array $aliases): static
     {
         $this->aliases = $aliases;
+
+        return $this;
+    }
+
+    /**
+     * Extends engine after created, this is similar a decorator.
+     *
+     * @param  callable  $callable
+     *
+     * @return  static  Retrun self to support chaining.
+     */
+    public function extend(callable $callable): static
+    {
+        $builder = $this->getObjectBuilder();
+
+        $handler = $builder->getBuilder();
+
+        $handler = static function (string $className, array $options) use ($callable, $handler) {
+            return $callable($handler($className, $options), $options);
+        };
+
+        $builder->setBuilder($handler);
 
         return $this;
     }

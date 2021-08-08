@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use PDO;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
-use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Escaper;
 
 /**
@@ -25,72 +27,40 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @var string
      */
-    protected static $name = 'pdo';
+    protected static string $name = 'pdo';
 
     /**
      * @var string
      */
-    protected $platformName = 'odbc';
+    protected string $platformName = 'odbc';
+
+    /**
+     * @var ?ConnectionInterface
+     */
+    protected ?ConnectionInterface $connection = null;
 
     protected function getConnectionClass(): string
     {
+        $platformName = $this->options['platform'] ?? $this->options['driver'];
+
         return sprintf(
             __NAMESPACE__ . '\Pdo%sConnection',
-            ucfirst(AbstractPlatform::getShortName($this->platformName))
+            ucfirst(DatabaseFactory::getDriverShortName($platformName))
         );
     }
 
     /**
-     * @inheritDoc
+     * doPrepare
+     *
+     * @param  string  $query
+     * @param  array   $bounded
+     * @param  array   $options
+     *
+     * @return  StatementInterface
      */
-    public function doPrepare(string $query, array $bounded = [], array $options = []): StatementInterface
+    public function createStatement(string $query, array $bounded = [], array $options = []): StatementInterface
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
-
-        $exec = $options['exec'] ?? null;
-
-        unset($options['exec']);
-
-        return new PdoStatement(
-            static function () use ($pdo, $query, $options, $bounded, $exec) {
-                return [
-                    $pdo->prepare($query, $options),
-                    static function (PdoStatement $stmt) use ($bounded) {
-                        foreach ($bounded as $key => $bound) {
-                            $key = is_int($key) ? $key + 1 : $key;
-
-                            $stmt->bindParam(
-                                $key,
-                                $bound['value'],
-                                $bound['dataType'] ?? null,
-                                $bound['length'] ?? 0,
-                                $bound['driverOptions'] ?? null
-                            );
-                        }
-                    }
-                ];
-            }
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function execute($query, ?array $params = null): StatementInterface
-    {
-        return $this->prepare($query, ['exec' => true])->execute($params);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function lastInsertId(?string $sequence = null): ?string
-    {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
-
-        return $pdo->lastInsertId($sequence);
+        return new PdoStatement($this, $query, $bounded, $options);
     }
 
     /**
@@ -98,10 +68,14 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
      */
     public function quote(string $value): string
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
+        return $this->useConnection(
+            function (ConnectionInterface $conn) use ($value) {
+                /** @var PDO $pdo */
+                $pdo = $conn->get();
 
-        return $pdo->quote($value);
+                return $pdo->quote($value);
+            }
+        );
     }
 
     /**
@@ -115,10 +89,26 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @inheritDoc
      */
+    public function getConnection(): ConnectionInterface
+    {
+        if ($this->connection) {
+            return $this->connection;
+        }
+
+        return parent::getConnection();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function transactionStart(): bool
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
+        $connection = $this->getConnection();
+
+        /** @var PDO $pdo */
+        $pdo = $connection->get();
+
+        $this->connection = $connection;
 
         return $pdo->beginTransaction();
     }
@@ -128,8 +118,8 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
      */
     public function transactionCommit(): bool
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
+        /** @var PDO $pdo */
+        $pdo = $this->getConnection()->get();
 
         return $pdo->commit();
     }
@@ -139,10 +129,15 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
      */
     public function transactionRollback(): bool
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
+        /** @var PDO $pdo */
+        $pdo = $this->getConnection()->get();
 
-        return $pdo->rollBack();
+        return \Windwalker\tap(
+            $pdo->rollBack(),
+            function () {
+                $this->connection = null;
+            }
+        );
     }
 
     /**
@@ -152,9 +147,8 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
      */
     public function getVersion(): string
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connect()->get();
-
-        return $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        return $this->useConnection(
+            fn(ConnectionInterface $conn) => $conn->get()->getAttribute(PDO::ATTR_SERVER_VERSION)
+        );
     }
 }

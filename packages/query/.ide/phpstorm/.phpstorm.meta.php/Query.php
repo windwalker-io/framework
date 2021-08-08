@@ -11,6 +11,27 @@ declare(strict_types=1);
 
 namespace PHPSTORM_META {
 
+    // Types
+
+    override(
+        \Windwalker\Query\Query::get(0),
+        map(
+            [
+                '' => '@',
+            ]
+        )
+    );
+
+    override(
+        \Windwalker\Query\Query::all(0),
+        map(
+            [
+                '' => '@',
+            ]
+        )
+    );
+
+    // Options
     registerArgumentsSet(
         'query_join_types',
         'INNER',
@@ -38,5 +59,51 @@ namespace PHPSTORM_META {
         argumentsSet('query_union_types')
     );
 
+    // Compares
+    registerArgumentsSet(
+        'compare_operators',
+        '=',
+        '!=',
+        '<',
+        '<=',
+        '>',
+        '>=',
+        'between',
+        'not between',
+        'in',
+        'not in',
+        'is',
+        'is not',
+    );
+
+    expectedArguments(
+        \Windwalker\Query\Query::where(),
+        1,
+        argumentsSet('compare_operators')
+    );
+
+    expectedArguments(
+        \Windwalker\Query\Query::having(),
+        1,
+        argumentsSet('compare_operators')
+    );
+
+    expectedArguments(
+        \Windwalker\Query\Clause\JoinClause::on(),
+        2,
+        argumentsSet('compare_operators')
+    );
+
+    registerArgumentsSet(
+        'order_directions',
+        'ASC',
+        'DESC'
+    );
+
+    expectedArguments(
+        \Windwalker\Query\Query::order(),
+        1,
+        argumentsSet('order_directions')
+    );
     // todo: add row lock hints
 }

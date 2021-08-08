@@ -26,4 +26,22 @@ interface EdgeLoaderInterface
      * @return  string
      */
     public function find(string $key): string;
+
+    /**
+     * loadFile
+     *
+     * @param  string  $path
+     *
+     * @return  string
+     */
+    public function load(string $path): string;
+
+    /**
+     * has
+     *
+     * @param  string  $key
+     *
+     * @return  bool
+     */
+    public function has(string $key): bool;
 }

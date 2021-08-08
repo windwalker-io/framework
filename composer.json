@@ -15,54 +15,58 @@
         "ext-json": "*",
         "ext-dom": "*",
         "psr/log": "^1.0",
-        "psr/container": "^1.0",
+        "psr/container": "^1.0||^2.0",
         "psr/http-message": "^1.0",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",
-        "psr/cache": "^1.0",
+        "psr/cache": "^1.0||^2.0||^3.0",
         "psr/simple-cache": "^1.0",
-        "psr/link": "^1.0",
         "psr/event-dispatcher": "^1.0",
         "paragonie/constant_time_encoding": "^2.3",
-        "composer/ca-bundle": "^1.2"
+        "composer/ca-bundle": "^1.2",
+        "symfony/options-resolver": "^5.0",
+        "symfony/polyfill-php81": "^1.0"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-master",
-        "composer/semver": "^3.0",
-        "symfony/process": "^5.1",
-        "mockery/mockery": "^1.4",
-        "symfony/var-dumper": "^5.0",
-        "symfony/yaml": "^5.0",
-        "laktak/hjson": "^2.1",
-        "yosymfony/toml": "^1.0",
-        "opis/closure": "4.x-dev||^4.0",
-        "phpunit/phpunit": "^8.4||^9.0",
-        "squizlabs/php_codesniffer": "^3.5",
-        "swoole/ide-helper": "^4.4",
-        "reactivex/rxphp": "^2.0",
-        "react/event-loop": "^1.1",
-        "mikey179/vfsstream": "^1.6",
-        "webmozart/glob": "^4.1",
-        "symfony/dom-crawler": "^5.0",
-        "symfony/css-selector": "^5.0",
-        "ext-openssl": "*",
-        "ext-sodium": "*",
-        "ext-pdo": "*",
-        "jdorn/sql-formatter": "^1.2",
         "asika/sql-splitter": "^1.0",
-        "doctrine/inflector": "^2.0",
+        "composer/semver": "^3.0",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-sodium": "*",
         "guzzlehttp/promises": "^1.3",
-        "react/promise": "^2.7",
+        "illuminate/view": "^6.0||^7.0||^8.0||^9.0",
+        "jdorn/sql-formatter": "^1.2",
+        "laktak/hjson": "^2.1",
+        "league/flysystem": "^2.0",
+        "league/plates": "^3.4",
         "masterminds/html5": "^2.7",
-        "react/socket": "^1.5",
-        "react/http": "^1.0",
+        "mikey179/vfsstream": "^1.6",
+        "mockery/mockery": "^1.4",
+        "mustache/mustache": "^2.0",
+        "myclabs/php-enum": "^1.7",
+        "opis/closure": "^3.0",
+        "phpunit/phpunit": "^8.4||^9.0||^10.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
+        "react/event-loop": "^1.1",
+        "react/http": "^1.0",
+        "react/promise": "^2.7",
+        "react/socket": "^1.5",
+        "reactivex/rxphp": "^2.0",
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.0",
+        "swoole/ide-helper": "^4.4",
+        "symfony/css-selector": "^5.0",
+        "symfony/dom-crawler": "^5.0",
+        "symfony/process": "^5.1",
+        "symfony/string": "^5.2",
+        "symfony/var-dumper": "^5.0",
+        "symfony/yaml": "^5.0",
         "twig/twig": "^2.0",
-        "illuminate/view": "^6.0||^7.0||^8.0",
-        "mustache/mustache": "^2.0",
-        "league/plates": "dev-master",
-        "league/flysystem": "^2.0"
+        "webmozart/glob": "^4.1",
+        "yosymfony/toml": "^1.0",
+        "doctrine/inflector": "^2.0",
+        "symfony/options-resolver": "^5.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~4.0 if you require YAML support.",
@@ -77,12 +81,14 @@
         "pda/pheanstalk": "If you want to use Beanstalkd queue as service.",
         "chrisboulton/php-resque": "Install <= 1.2 if you want to use PHP Resque (Redis) as queue service.",
         "reactivex/rxphp": "Support EventEmitter::observe() pattern.",
-        "relay/relay": "Install ^2.0 to support PSR-15 middlewares."
+        "relay/relay": "Install ^2.0 to support PSR-15 middlewares.",
+        "symfony/string": "Install ^5.2 to use inflector."
     },
     "autoload": {
         "psr-4": {
+            "Windwalker\\Attributes\\": "packages/attributes/src",
             "Windwalker\\Authentication\\": "packages/authentication/src",
-            "Windwalker\\Authorisaction\\": "packages/authorisaction/src",
+            "Windwalker\\Authorization\\": "packages/authorization/src",
             "Windwalker\\Cache\\": "packages/cache/src",
             "Windwalker\\Crypt\\": "packages/crypt/src",
             "Windwalker\\DI\\": "packages/di/src",
@@ -98,6 +104,8 @@
             "Windwalker\\Html\\": "packages/html/src",
             "Windwalker\\Http\\": "packages/http/src",
             "Windwalker\\Language\\": "packages/language/src",
+            "Windwalker\\ORM\\": "packages/orm/src",
+            "Windwalker\\Pool\\": "packages/pool/src",
             "Windwalker\\Promise\\": "packages/promise/src",
             "Windwalker\\Query\\": "packages/query/src",
             "Windwalker\\Queue\\": "packages/queue/src",
@@ -107,11 +115,13 @@
             "Windwalker\\Session\\": "packages/session/src",
             "Windwalker\\Stream\\": "packages/stream/src",
             "Windwalker\\Test\\": "packages/test/src",
+            "Windwalker\\Uri\\": "packages/uri/src",
             "Windwalker\\Utilities\\": "packages/utilities/src"
         },
         "files": [
+            "packages/attributes/src/bootstrap.php",
             "packages/authentication/src/bootstrap.php",
-            "packages/authorisaction/src/bootstrap.php",
+            "packages/authorization/src/bootstrap.php",
             "packages/bootstrap.php",
             "packages/cache/src/bootstrap.php",
             "packages/crypt/src/bootstrap.php",
@@ -128,6 +138,8 @@
             "packages/html/src/bootstrap.php",
             "packages/http/src/bootstrap.php",
             "packages/language/src/bootstrap.php",
+            "packages/orm/src/bootstrap.php",
+            "packages/pool/src/bootstrap.php",
             "packages/promise/src/bootstrap.php",
             "packages/query/src/bootstrap.php",
             "packages/queue/src/bootstrap.php",
@@ -137,13 +149,15 @@
             "packages/session/src/bootstrap.php",
             "packages/stream/src/bootstrap.php",
             "packages/test/src/bootstrap.php",
+            "packages/uri/src/bootstrap.php",
             "packages/utilities/src/bootstrap.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
+            "Windwalker\\Attributes\\Test\\": "packages/attributes/test",
             "Windwalker\\Authentication\\Test\\": "packages/authentication/test",
-            "Windwalker\\Authorisaction\\Test\\": "packages/authorisaction/test",
+            "Windwalker\\Authorization\\Test\\": "packages/authorization/test",
             "Windwalker\\Cache\\Test\\": "packages/cache/test",
             "Windwalker\\Crypt\\Test\\": "packages/crypt/test",
             "Windwalker\\DI\\Test\\": "packages/di/test",
@@ -159,6 +173,8 @@
             "Windwalker\\Html\\Test\\": "packages/html/test",
             "Windwalker\\Http\\Test\\": "packages/http/test",
             "Windwalker\\Language\\Test\\": "packages/language/test",
+            "Windwalker\\ORM\\Test\\": "packages/orm/test",
+            "Windwalker\\Pool\\Test\\": "packages/pool/test",
             "Windwalker\\Promise\\Test\\": "packages/promise/test",
             "Windwalker\\Query\\Test\\": "packages/query/test",
             "Windwalker\\Queue\\Test\\": "packages/queue/test",
@@ -168,6 +184,7 @@
             "Windwalker\\Session\\Test\\": "packages/session/test",
             "Windwalker\\Stream\\Test\\": "packages/stream/test",
             "Windwalker\\Test\\Test\\": "packages/test/test",
+            "Windwalker\\Uri\\Test\\": "packages/uri/test",
             "Windwalker\\Utilities\\Test\\": "packages/utilities/test"
         }
     },
@@ -178,7 +195,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-4": "4.x-dev"
+            "dev-master": "4.x-dev"
         }
     },
     "provide": {
@@ -186,8 +203,9 @@
         "psr/http-message-implementation": "~1.0"
     },
     "replace": {
+        "windwalker/attributes": "self.version",
         "windwalker/authentication": "self.version",
-        "windwalker/authorisaction": "self.version",
+        "windwalker/authorization": "self.version",
         "windwalker/cache": "self.version",
         "windwalker/crypt": "self.version",
         "windwalker/data": "self.version",
@@ -203,6 +221,8 @@
         "windwalker/html": "self.version",
         "windwalker/http": "self.version",
         "windwalker/language": "self.version",
+        "windwalker/orm": "self.version",
+        "windwalker/pool": "self.version",
         "windwalker/promise": "self.version",
         "windwalker/query": "self.version",
         "windwalker/queue": "self.version",
@@ -212,6 +232,20 @@
         "windwalker/session": "self.version",
         "windwalker/stream": "self.version",
         "windwalker/test": "self.version",
+        "windwalker/uri": "self.version",
         "windwalker/utilities": "self.version"
+    },
+    "archive": {
+        "exclude": [
+            ".github",
+            ".idea",
+            "docs",
+            "build",
+            "packages/*/.github",
+            "packages/*/test",
+            "tmp",
+            ".travis.yml",
+            "yarn.lock"
+        ]
     }
 }

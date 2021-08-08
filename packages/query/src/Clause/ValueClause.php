@@ -22,19 +22,19 @@ class ValueClause implements ClauseInterface
     /**
      * @var string|mixed|Query
      */
-    protected $value;
+    protected mixed $value;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $placeholder;
+    protected ?string $placeholder = null;
 
     /**
      * AsClause constructor.
      *
      * @param  string|Query|RawWrapper  $value
      */
-    public function __construct($value)
+    public function __construct(mixed $value)
     {
         $this->value = $value;
     }
@@ -66,7 +66,7 @@ class ValueClause implements ClauseInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function &getValue()
+    public function &getValue(): mixed
     {
         return $this->value;
     }
@@ -80,7 +80,7 @@ class ValueClause implements ClauseInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function value($value)
+    public function value(mixed $value): static
     {
         $this->value = $value;
 
@@ -90,11 +90,11 @@ class ValueClause implements ClauseInterface
     /**
      * Method to set property placeholder
      *
-     * @param  string  $placeholder
+     * @param  string|null  $placeholder
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPlaceholder(string $placeholder)
+    public function setPlaceholder(?string $placeholder): static
     {
         $this->placeholder = $placeholder;
 

@@ -55,7 +55,7 @@ class Loop
      * @param  mixed      $target
      * @param  Loop|null  $parent
      */
-    public function __construct(int $length, &$target, ?Loop $parent = null)
+    public function __construct(int $length, mixed &$target, ?Loop $parent = null)
     {
         $this->length = $length;
         $this->parent = $parent;
@@ -72,10 +72,10 @@ class Loop
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function loop(int $index, $key)
+    public function loop(int $index, mixed $key): static
     {
         $this->index = $index;
-        $this->key   = $key;
+        $this->key = $key;
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Loop
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->key;
     }

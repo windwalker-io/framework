@@ -163,8 +163,12 @@ class Str
         return static::match('.*[[:upper:]]', $string, 'msr', $encoding);
     }
 
-    public static function match(string $pattern, string $string, string $option = 'msr', ?string $encoding = null): bool
-    {
+    public static function match(
+        string $pattern,
+        string $string,
+        string $option = 'msr',
+        ?string $encoding = null
+    ): bool {
         $encoding ??= mb_internal_encoding();
 
         $encodingBackup = mb_regex_encoding();
@@ -188,7 +192,7 @@ class Str
             return $string;
         }
 
-        $left  = Utf8String::substr($string, 0, $position, $encoding);
+        $left = Utf8String::substr($string, 0, $position, $encoding);
         $right = Utf8String::substr($string, $position, $length, $encoding);
 
         return $left . $insert . $right;
@@ -228,7 +232,7 @@ class Str
 
     public static function intersectLeft(string $string1, string $string2, ?string $encoding = null): string
     {
-        $encoding  ??= mb_internal_encoding();
+        $encoding ??= mb_internal_encoding();
         $maxLength = min(Utf8String::strlen($string1, $encoding), Utf8String::strlen($string2, $encoding));
         $intersect = '';
 
@@ -247,7 +251,7 @@ class Str
 
     public static function intersectRight(string $string1, string $string2, ?string $encoding = null): string
     {
-        $encoding  ??= mb_internal_encoding();
+        $encoding ??= mb_internal_encoding();
         $maxLength = min(Utf8String::strlen($string1, $encoding), Utf8String::strlen($string2, $encoding));
         $intersect = '';
 
@@ -278,7 +282,7 @@ class Str
      */
     public static function intersect(string $string1, string $string2, ?string $encoding = null): string
     {
-        $encoding   ??= mb_internal_encoding();
+        $encoding ??= mb_internal_encoding();
         $str1Length = Utf8String::strlen($string1, $encoding);
         $str2Length = Utf8String::strlen($string2, $encoding);
 
@@ -328,9 +332,9 @@ class Str
         string $substring = ' ',
         ?string $encoding = null
     ): string {
-        $encoding  ??= mb_internal_encoding();
+        $encoding ??= mb_internal_encoding();
         $strLength = Utf8String::strlen($string, $encoding);
-        $padding   = $length - $strLength;
+        $padding = $length - $strLength;
 
         return static::doPad($string, (int) floor($padding / 2), (int) ceil($padding / 2), $substring, $encoding);
     }
@@ -372,7 +376,7 @@ class Str
         string $substring = ' ',
         ?string $encoding = null
     ): string {
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         return static::doPad($string, 0, $length - Utf8String::strlen($string, $encoding), $substring, $encoding);
     }
@@ -395,15 +399,15 @@ class Str
         string $substring,
         ?string $encoding = null
     ): string {
-        $strLength    = Utf8String::strlen($string, $encoding);
-        $padLength    = Utf8String::strlen($substring, $encoding);
+        $strLength = Utf8String::strlen($string, $encoding);
+        $padLength = Utf8String::strlen($substring, $encoding);
         $paddedLength = $strLength + $left + $right;
 
         if (!$padLength || $paddedLength <= $strLength) {
             return $string;
         }
 
-        $leftStr  = Utf8String::substr(str_repeat($substring, (int) ceil($left / $padLength)), 0, $left, $encoding);
+        $leftStr = Utf8String::substr(str_repeat($substring, (int) ceil($left / $padLength)), 0, $left, $encoding);
         $rightStr = Utf8String::substr(str_repeat($substring, (int) ceil($right / $padLength)), 0, $right, $encoding);
 
         return $leftStr . $string . $rightStr;
@@ -421,13 +425,13 @@ class Str
      */
     public static function removeChar(string $string, int $offset, int $length = null, ?string $encoding = null): string
     {
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         if (Utf8String::strlen($string, $encoding) < abs($offset)) {
             return $string;
         }
 
-        $length = $length === null ? 1 : $length;
+        $length = $length ?? 1;
 
         return Utf8String::substrReplace($string, '', $offset, $length, $encoding);
     }
@@ -451,7 +455,7 @@ class Str
             return $string;
         }
 
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         if (!static::startsWith($string, $search, true, $encoding)) {
             return $string;
@@ -479,7 +483,7 @@ class Str
             return $string;
         }
 
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         if (!static::endsWith($string, $search, true, $encoding)) {
             return $string;
@@ -500,7 +504,7 @@ class Str
      */
     public static function slice(string $string, int $start, int $end = null, ?string $encoding = null): string
     {
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         if ($end === null) {
             $length = Utf8String::strlen($string, $encoding);
@@ -527,13 +531,13 @@ class Str
      */
     public static function substring(string $string, int $start, int $end = null, ?string $encoding = null): string
     {
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         if ($end === null) {
             $length = Utf8String::strlen($string, $encoding);
         } elseif ($end >= 0 && $end <= $start) {
             $length = $start - $end;
-            $start  = $end;
+            $start = $end;
         } elseif ($end < 0) {
             $length = Utf8String::strlen($string, $encoding) + $end - $start;
         } else {
@@ -551,7 +555,7 @@ class Str
      *
      * @return  string
      */
-    public static function wrap(string $string, $substring = ['"', '"']): string
+    public static function surrounds(string $string, string|array $substring = ['"', '"']): string
     {
         $substring = (array) $substring;
 
@@ -572,7 +576,7 @@ class Str
      */
     public static function toggleCase(string $string, ?string $encoding = null): string
     {
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         return preg_replace_callback(
             '/[\S]/u',
@@ -605,7 +609,7 @@ class Str
         bool $wordBreak = true,
         ?string $encoding = null
     ): string {
-        $encoding ??= mb_internal_encoding();;
+        $encoding ??= mb_internal_encoding();
 
         if ($length >= Utf8String::strlen($string, $encoding)) {
             return $string;
@@ -615,7 +619,7 @@ class Str
 
         if (!$wordBreak && Utf8String::strpos($result, ' ', 0, $encoding) !== $length) {
             $position = Utf8String::strrpos($result, ' ', 0, $encoding);
-            $result   = Utf8String::substr($result, 0, $position, $encoding);
+            $result = Utf8String::substr($result, 0, $position, $encoding);
         }
 
         return $result . $suffix;
@@ -695,5 +699,22 @@ class Str
             },
             $encoding
         );
+    }
+
+    public static function increment(string $string, string $pattern = '%s (%d)', ?int $n = null): string
+    {
+        $regex = str_replace(
+            ['%s', '%d'],
+            ['([\w\W]*)', '(\d+)'],
+            preg_quote($pattern, '/')
+        );
+
+        preg_match('/' . $regex . '/', $string, $matches);
+
+        if ($matches === []) {
+            return sprintf($pattern, $string, $n ?? 2);
+        }
+
+        return sprintf($pattern, $matches[1], $n ?? ($matches[2] + 1));
     }
 }

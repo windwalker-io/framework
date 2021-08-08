@@ -11,7 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Assert;
 
+use Closure;
+use ReflectionFunction;
+use Throwable;
 use Windwalker\Utilities\SimpleTemplate;
+use Windwalker\Utilities\Str;
 
 /**
  * The Assert class.
@@ -28,12 +32,12 @@ class Assert
     /**
      * Assert constructor.
      *
-     * @param  callable $exceptionHandler
-     * @param  ?string  $caller
+     * @param  callable  $exceptionHandler
+     * @param  ?string   $caller
      */
     public function __construct(callable $exceptionHandler, ?string $caller = null)
     {
-        $this->caller           = $caller ?? static::getCaller(2);
+        $this->caller = $caller ?? static::getCaller(2);
         $this->exceptionHandler = $exceptionHandler;
     }
 
@@ -46,7 +50,7 @@ class Assert
      *
      * @return  void
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @since  __DEPLOY_VERSION__
      */
@@ -86,9 +90,10 @@ class Assert
                 $message,
                 [
                     'caller' => $this->caller,
-                    'value' => $value
+                    'value' => $value,
                 ],
-                '.', ['{', '}']
+                '.',
+                ['{', '}']
             );
         }
 
@@ -102,7 +107,7 @@ class Assert
         return trim(($trace['class'] ?? '') . '::' . ($trace['function']), ':') . '()';
     }
 
-    public static function describeValue($value): string
+    public static function describeValue(mixed $value, ?int $truncate = 50): string
     {
         if ($value === null) {
             return '(NULL)';
@@ -116,6 +121,14 @@ class Assert
             return 'BOOL (FALSE)';
         }
 
+        if ($value instanceof Closure) {
+            $ref = new ReflectionFunction($value);
+            $classRef = $ref->getClosureScopeClass();
+            $line = $ref->getStartLine() . ':' . $ref->getEndLine();
+
+            return $classRef->getName() . "::{Closure} ($line)";
+        }
+
         if (is_object($value)) {
             return get_class($value);
         }
@@ -125,6 +138,8 @@ class Assert
         }
 
         if (is_string($value)) {
+            $value = Str::truncate($value, $truncate, '...');
+
             return sprintf('string(%s) "%s"', strlen($value), $value);
         }
 

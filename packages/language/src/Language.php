@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Language;
 
+use JetBrains\PhpStorm\ArrayShape;
+use ReflectionException;
+use UnexpectedValueException;
 use Windwalker\Data\Traits\FormatAwareTrait;
 use Windwalker\Utilities\Reflection\BacktraceHelper;
 use Windwalker\Utilities\Utf8String;
@@ -107,17 +110,18 @@ class Language implements LanguageInterface
     /**
      * load
      *
-     * @param  string  $file
-     * @param  string  $format
-     * @param  array   $options
+     * @param  string       $file
+     * @param  string|null  $format
+     * @param  string|null  $locale
+     * @param  array        $options
      *
      * @return  $this
      */
-    public function load(string $file, $format = 'ini', array $options = [])
+    public function load(string $file, ?string $format = 'ini', ?string $locale = null, array $options = []): static
     {
-        $string = $this->getFormatRegistry()->load($file, $format, $options);
+        $strings = $this->getFormatRegistry()->load($file, $format, $options);
 
-        $this->addStrings($string);
+        $this->addStrings($strings, $locale);
 
         return $this;
     }
@@ -158,11 +162,16 @@ class Language implements LanguageInterface
      * @param  string|null  $locale
      * @param  bool         $fallback
      *
-     * @return  array
+     * @return  array<string>
+     * @throws ReflectionException
      */
-    public function get(string $id, ?string $locale = null, bool $fallback = true): array
-    {
-        $fullId    = $this->resolveNamespace($id);
+    #[ArrayShape(['string', 'string'])]
+    public function get(
+        string $id,
+        ?string $locale = null,
+        bool $fallback = true
+    ): array {
+        $fullId = $this->resolveNamespace($id);
         $locale ??= $this->getLocale();
 
         $fallback = $fallback || $this->isDebug();
@@ -200,7 +209,7 @@ class Language implements LanguageInterface
         return $this->replace($string, $args);
     }
 
-    public function choice(string $id, int|float $number, ...$args)
+    public function choice(string $id, int|float $number, ...$args): string
     {
         [$locale, $string] = $this->get($id);
 
@@ -222,7 +231,7 @@ class Language implements LanguageInterface
             return $string;
         }
 
-        $values       = [];
+        $values = [];
         $replacements = [];
 
         foreach ($args as $k => $v) {
@@ -245,12 +254,12 @@ class Language implements LanguageInterface
                     [
                         ':' . $key,
                         ':' . Utf8String::strtoupper((string) $key),
-                        ':' . Utf8String::ucfirst((string) $key)
+                        ':' . Utf8String::ucfirst((string) $key),
                     ],
                     [
                         $value,
                         Utf8String::strtoupper((string) $value),
-                        Utf8String::ucfirst((string) $value)
+                        Utf8String::ucfirst((string) $value),
                     ],
                     $string
                 );
@@ -294,7 +303,7 @@ class Language implements LanguageInterface
      *
      * @return  $this
      */
-    public function addString(string $key, string $string, ?string $locale = null)
+    public function addString(string $key, string $string, ?string $locale = null): static
     {
         $locale ??= $this->getLocale();
 
@@ -311,7 +320,7 @@ class Language implements LanguageInterface
      *
      * @return  $this
      */
-    public function addStrings(array $strings, ?string $locale = null)
+    public function addStrings(array $strings, ?string $locale = null): static
     {
         foreach ($strings as $key => $string) {
             $this->addString($key, $string, $locale);
@@ -327,7 +336,7 @@ class Language implements LanguageInterface
      *
      * @return  Language  Return self to support chaining.
      */
-    public function setDebug(bool $debug)
+    public function setDebug(bool $debug): static
     {
         $this->debug = $debug;
 
@@ -371,7 +380,7 @@ class Language implements LanguageInterface
      *
      * @return  Language  Return self to support chaining.
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = LanguageNormalizer::toBCP47($locale);
 
@@ -395,7 +404,7 @@ class Language implements LanguageInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFallback($fallback)
+    public function setFallback(string $fallback): static
     {
         $this->fallback = LanguageNormalizer::toBCP47($fallback);
 
@@ -408,14 +417,14 @@ class Language implements LanguageInterface
      * @param  string  $string
      *
      * @return  mixed
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
-    public function normalize(string $string)
+    public function normalize(string $string): mixed
     {
         $handler = $this->getNormalizeHandler();
 
         if (!is_callable($handler)) {
-            throw new \UnexpectedValueException('Normalize handler is not callable.');
+            throw new UnexpectedValueException('Normalize handler is not callable.');
         }
 
         return $handler($string);
@@ -426,7 +435,7 @@ class Language implements LanguageInterface
      *
      * @return  callable
      */
-    public function getNormalizeHandler()
+    public function getNormalizeHandler(): array|callable
     {
         return $this->normalizeHandler;
     }
@@ -438,7 +447,7 @@ class Language implements LanguageInterface
      *
      * @return  Language  Return self to support chaining.
      */
-    public function setNormalizeHandler(callable $normalizeHandler)
+    public function setNormalizeHandler(callable $normalizeHandler): static
     {
         $this->normalizeHandler = $normalizeHandler;
 
@@ -458,7 +467,7 @@ class Language implements LanguageInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setSelector(PluralSelector $selector)
+    public function setSelector(PluralSelector $selector): static
     {
         $this->selector = $selector;
 
@@ -472,10 +481,10 @@ class Language implements LanguageInterface
      *
      * @return  static
      */
-    public function extract(string $namespace)
+    public function extract(string $namespace): static
     {
-        $lang = new static($this->getLocale(), $this->getFallback(), $namespace);
-
+        $lang = clone $this;
+        $lang->setNamespace($namespace);
         $lang->setParent($this);
 
         return $lang;
@@ -487,7 +496,7 @@ class Language implements LanguageInterface
      * @param  string  $id
      *
      * @return  array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function backtrace(string $id): array
     {
@@ -502,7 +511,7 @@ class Language implements LanguageInterface
      *
      * @return  array
      */
-    public function getTrace()
+    public function getTrace(): array
     {
         return $this->trace;
     }
@@ -548,7 +557,7 @@ class Language implements LanguageInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setNamespace(string $namespace)
+    public function setNamespace(string $namespace): static
     {
         $this->namespace = $namespace;
 
@@ -576,7 +585,7 @@ class Language implements LanguageInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setParent(?self $parent)
+    public function setParent(?self $parent): static
     {
         $this->parent = $parent;
 

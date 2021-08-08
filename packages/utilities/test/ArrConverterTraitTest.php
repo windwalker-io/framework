@@ -22,7 +22,7 @@ class ArrConverterTraitTest extends TestCase
 {
     public function testFlipMatrix(): void
     {
-        $src      = [
+        $src = [
             'A' => [
                 'id1',
                 'Julius Caesar',
@@ -74,7 +74,7 @@ class ArrConverterTraitTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestGroup()
+    public function providerTestGroup(): array
     {
         return [
             'A scalar array' => [

@@ -23,13 +23,13 @@ class Negative extends AbstractCallbackFilter
      */
     public function getHandler(): callable
     {
-        return fn ($value) => -$value;
+        return fn($value) => -$value;
     }
 
     /**
      * @inheritDoc
      */
-    public function test($value, bool $strict = false): bool
+    public function test(mixed $value, bool $strict = false): bool
     {
         return $value < 0;
     }

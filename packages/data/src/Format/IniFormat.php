@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Format;
 
+use ErrorException;
+use Throwable;
 use Windwalker\Utilities\Arr;
 
 /**
@@ -31,9 +33,9 @@ class IniFormat implements FormatInterface
      *
      * @return  string  INI formatted string.
      */
-    public function dump($data, array $options = []): string
+    public function dump(mixed $data, array $options = []): string
     {
-        $local  = [];
+        $local = [];
         $global = [];
 
         // Iterate over the object to set the properties.
@@ -73,18 +75,18 @@ class IniFormat implements FormatInterface
      *
      * @return array|false Data array.
      */
-    public function parse(string $string, array $options = [])
+    public function parse(string $string, array $options = []): bool|array
     {
         try {
             return parse_ini_string(
                 $string,
-                $options['process_section'] ?? true,
+                $options['process_section'] ?? false,
                 $options['mode'] ?? INI_SCANNER_NORMAL
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             preg_match('/on line (\d+)/', $e->getMessage(), $match);
 
-            throw new \ErrorException(
+            throw new ErrorException(
                 $e->getMessage(),
                 $e->getCode(),
                 E_ERROR,
@@ -102,26 +104,12 @@ class IniFormat implements FormatInterface
      *
      * @return  string  The value in INI format.
      */
-    protected static function getValueAsINI($value)
+    protected static function getValueAsINI(mixed $value): string
     {
-        $string = '';
-
-        switch (gettype($value)) {
-            case 'integer':
-            case 'double':
-                $string = $value;
-                break;
-
-            case 'boolean':
-                $string = $value ? 'true' : 'false';
-                break;
-
-            case 'string':
-                // Sanitize any CRLF characters..
-                $string = '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"';
-                break;
-        }
-
-        return $string;
+        return match (gettype($value)) {
+            'integer', 'double' => $value,
+            'boolean' => $value ? 'true' : 'false',
+            'string' => '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"',
+        };
     }
 }

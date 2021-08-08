@@ -36,17 +36,21 @@ class Collection extends ArrayObject
     protected bool $isProxy = false;
 
     /**
-     * Structure constructor.
+     * from
      *
      * @param  mixed        $data
      * @param  string|null  $format
      * @param  array        $options
+     *
+     * @return  static
      */
-    public function __construct($data = [], ?string $format = null, array $options = [])
+    public static function from(mixed $data, ?string $format = null, array $options = []): static
     {
-        parent::__construct([]);
+        if (!is_string($data)) {
+            return static::wrap($data);
+        }
 
-        $this->load($data, $format, $options);
+        return (new static())->load($data, $format, $options);
     }
 
     /**
@@ -59,7 +63,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function extract(?string $path = null, bool $reference = false)
+    public function extract(?string $path = null, bool $reference = false): static
     {
         $new = new static();
 
@@ -70,6 +74,10 @@ class Collection extends ArrayObject
                 $new->storage = $this->storage;
             }
         } elseif ($reference) {
+            if (!Arr::has($this->storage, $path)) {
+                $this->storage = Arr::set($this->storage, $path, []);
+            }
+
             $new->storage = &Arr::get($this->storage, $path);
         } else {
             $new->storage = Arr::get($this->storage, $path);
@@ -93,7 +101,7 @@ class Collection extends ArrayObject
         }
 
         if ($reference) {
-            $this->isProxy = true;
+            $new->isProxy = true;
         }
 
         return $new;
@@ -108,7 +116,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function proxy(string $path)
+    public function proxy(string $path): static
     {
         return $this->extract($path, true);
     }
@@ -135,7 +143,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function &getDeep(string $path, string $delimiter = '.')
+    public function &getDeep(string $path, string $delimiter = '.'): mixed
     {
         return Arr::get($this->storage, $path, $delimiter);
     }
@@ -151,7 +159,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setDeep(string $path, $value, string $delimiter = '.')
+    public function setDeep(string $path, mixed $value, string $delimiter = '.'): static
     {
         $this->storage = Arr::set($this->storage, $path, $value, $delimiter);
 
@@ -169,7 +177,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function withDeep(string $path, $value, string $delimiter = '.')
+    public function withDeep(string $path, mixed $value, string $delimiter = '.'): Collection|static
     {
         $new = clone $this;
 
@@ -181,8 +189,8 @@ class Collection extends ArrayObject
     /**
      * hasDeep
      *
-     * @param string      $path
-     * @param string|null $delimiter
+     * @param  string       $path
+     * @param  string|null  $delimiter
      *
      * @return  bool
      *
@@ -196,14 +204,14 @@ class Collection extends ArrayObject
     /**
      * removeDeep
      *
-     * @param string      $path
-     * @param string|null $delimiter
+     * @param  string       $path
+     * @param  string|null  $delimiter
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function removeDeep(string $path, ?string $delimiter = '.')
+    public function removeDeep(string $path, ?string $delimiter = '.'): static
     {
         $this->storage = Arr::remove($this->storage, $path, $delimiter);
 
@@ -213,14 +221,14 @@ class Collection extends ArrayObject
     /**
      * withRemoveDeep
      *
-     * @param string      $path
-     * @param string|null $delimiter
+     * @param  string       $path
+     * @param  string|null  $delimiter
      *
      * @return  static
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function withRemoveDeep(string $path, ?string $delimiter = '.')
+    public function withRemoveDeep(string $path, ?string $delimiter = '.'): Collection|static
     {
         $new = clone $this;
 
@@ -247,7 +255,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function __call($name, $args)
+    public function __call(string $name, array $args): mixed
     {
         $allowFormat = [
             'tojson' => 'json',

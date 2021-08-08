@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Platform;
 
+use Throwable;
 use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
 use Windwalker\Database\Platform\Type\DataType;
@@ -19,7 +21,6 @@ use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Schema;
-use Windwalker\Query\Clause\AlterClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Query;
@@ -32,8 +33,11 @@ use function Windwalker\Query\clause;
 abstract class AbstractPlatform
 {
     public const MYSQL = 'MySQL';
+
     public const POSTGRESQL = 'PostgreSQL';
+
     public const SQLSERVER = 'SQLServer';
+
     public const SQLITE = 'SQLite';
 
     /**
@@ -56,46 +60,6 @@ abstract class AbstractPlatform
 
     protected ?DataType $dataType = null;
 
-    public static function getPlatformName(string $platform): string
-    {
-        switch (strtolower($platform)) {
-            case 'pgsql':
-            case 'postgresql':
-                $platform = 'PostgreSQL';
-                break;
-
-            case 'sqlsrv':
-            case 'sqlserver':
-                $platform = 'SQLServer';
-                break;
-
-            case 'mysql':
-                $platform = 'MySQL';
-                break;
-
-            case 'sqlite':
-                $platform = 'SQLite';
-                break;
-        }
-
-        return $platform;
-    }
-
-    public static function getShortName(string $platform): string
-    {
-        switch (strtolower($platform)) {
-            case 'postgresql':
-                $platform = 'pgsql';
-                break;
-
-            case 'sqlserver':
-                $platform = 'sqlsrv';
-                break;
-        }
-
-        return strtolower($platform);
-    }
-
     /**
      * @return string
      */
@@ -104,15 +68,15 @@ abstract class AbstractPlatform
         return $this->name;
     }
 
-    public static function create(string $platform, DatabaseAdapter $db)
+    public static function createPlatform(string $platform, DatabaseAdapter $db)
     {
-        $class = __NAMESPACE__ . '\\' . static::getPlatformName($platform) . 'Platform';
+        $class = __NAMESPACE__ . '\\' . DatabaseFactory::getPlatformName($platform) . 'Platform';
 
         return new $class($db);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public static function getDefaultSchema(): ?string
     {
@@ -122,25 +86,21 @@ abstract class AbstractPlatform
     /**
      * AbstractPlatform constructor.
      *
-     * @param  DatabaseAdapter  $db
+     * @param  AbstractGrammar|null  $grammar
      */
-    public function __construct(DatabaseAdapter $db)
+    public function __construct(?AbstractGrammar $grammar = null)
     {
-        $this->db = $db;
+        $this->grammar = $grammar ?? AbstractGrammar::create($this->name);
     }
 
     public function getGrammar(): AbstractGrammar
     {
-        if (!$this->grammar) {
-            $this->grammar = $this->createQuery()->getGrammar();
-        }
-
         return $this->grammar;
     }
 
-    public function createQuery(): Query
+    public function createQuery(mixed $escaper = null): Query
     {
-        return new Query($this->db->getDriver(), $this->name);
+        return new Query($escaper ?? $this->db, $this->grammar);
     }
 
     abstract public function listDatabasesQuery(): Query;
@@ -216,7 +176,7 @@ abstract class AbstractPlatform
      */
     public function loadColumnsStatement(string $table, ?string $schema = null): StatementInterface
     {
-        return $this->listColumnsQuery($table, $schema)->getIterator();
+        return $this->listColumnsQuery($table, $schema)->prepareStatement();
     }
 
     /**
@@ -229,7 +189,7 @@ abstract class AbstractPlatform
      */
     public function loadConstraintsStatement(string $table, ?string $schema = null): StatementInterface
     {
-        return $this->listConstraintsQuery($table, $schema)->getIterator();
+        return $this->listConstraintsQuery($table, $schema)->prepareStatement();
     }
 
     /**
@@ -242,15 +202,10 @@ abstract class AbstractPlatform
      */
     public function loadIndexesStatement(string $table, ?string $schema = null): StatementInterface
     {
-        return $this->listIndexesQuery($table, $schema)->getIterator();
+        return $this->listIndexesQuery($table, $schema)->prepareStatement();
     }
 
     abstract public function getCurrentDatabase(): ?string;
-
-    public function selectDatabase(string $name): StatementInterface
-    {
-        return $this->db->execute('USE ' . $this->db->quoteName($name));
-    }
 
     public function createDatabase(string $name, array $options = []): StatementInterface
     {
@@ -259,7 +214,9 @@ abstract class AbstractPlatform
                 ::build(
                     'CREATE DATABASE',
                     !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
-                    $this->db->quoteName($name)
+                    $this->db->quoteName($name),
+                    'CHARACTER SET=' . ($options['charset'] ?? 'utf8mb4'),
+                    'COLLATE=' . ($options['collation'] ?? 'utf8mb4_unicode_ci'),
                 )
         );
     }
@@ -307,7 +264,11 @@ abstract class AbstractPlatform
         );
     }
 
-    abstract public function createTable(Schema $schema, bool $ifNotExists = false, array $options = []): StatementInterface;
+    abstract public function createTable(
+        Schema $schema,
+        bool $ifNotExists = false,
+        array $options = []
+    ): StatementInterface;
 
     public function getColumnExpression(Column $column): Clause
     {
@@ -398,7 +359,12 @@ abstract class AbstractPlatform
         );
     }
 
-    abstract public function renameColumn(string $table, string $from, string $to, ?string $schema = null): StatementInterface;
+    abstract public function renameColumn(
+        string $table,
+        string $from,
+        string $to,
+        ?string $schema = null
+    ): StatementInterface;
 
     public function addIndex(string $table, Index $index, ?string $schema = null): StatementInterface
     {
@@ -455,7 +421,7 @@ abstract class AbstractPlatform
 
     protected function prepareKeyColumns(array $columns): array
     {
-        return array_map(fn (Column $col) => $this->getKeyColumnExpression($col), $columns);
+        return array_map(fn(Column $col) => $this->getKeyColumnExpression($col), $columns);
     }
 
     protected function getKeyColumnExpression(Column $column): Clause
@@ -498,7 +464,7 @@ abstract class AbstractPlatform
     /**
      * prepareDefaultValue
      *
-     * @param Column $column
+     * @param  Column  $column
      *
      * @return  Column
      */
@@ -527,7 +493,7 @@ abstract class AbstractPlatform
      *
      * @return  static
      */
-    public function transactionStart()
+    public function transactionStart(): static
     {
         $driver = $this->db->getDriver();
 
@@ -547,7 +513,7 @@ abstract class AbstractPlatform
      *
      * @return  static
      */
-    public function transactionCommit()
+    public function transactionCommit(): static
     {
         $driver = $this->db->getDriver();
 
@@ -567,7 +533,7 @@ abstract class AbstractPlatform
      *
      * @return  static
      */
-    public function transactionRollback()
+    public function transactionRollback(): static
     {
         $driver = $this->db->getDriver();
 
@@ -591,14 +557,12 @@ abstract class AbstractPlatform
      *
      * @return  mixed
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true)
+    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
     {
         if (!$enabled) {
-            $callback($this->db, $this);
-
-            return $this;
+            return $callback($this->db, $this);
         }
 
         $this->transactionStart();
@@ -611,7 +575,7 @@ abstract class AbstractPlatform
             }
 
             return $result;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->transactionRollback();
 
             throw $e;
@@ -631,5 +595,17 @@ abstract class AbstractPlatform
         }
 
         return $this->dataType;
+    }
+
+    /**
+     * @param  DatabaseAdapter|null  $db
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDbAdapter(?DatabaseAdapter $db): static
+    {
+        $this->db = $db;
+
+        return $this;
     }
 }

@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\SQLServerGrammar;
 
+use function Windwalker\Query\qn;
 use function Windwalker\raw;
 
 /**
@@ -31,6 +33,85 @@ class SQLServerQueryTest extends QueryTest
     public static function createGrammar(): AbstractGrammar
     {
         return new SQLServerGrammar();
+    }
+
+    /**
+     * testParseJsonSelector
+     *
+     * @param  string  $selector
+     * @param  bool    $unQuoteLast
+     * @param  string  $expected
+     *
+     * @return  void
+     *
+     * @dataProvider parseJsonSelectorProvider
+     */
+    public function testParseJsonSelector(string $selector, bool $unQuoteLast, string $expected)
+    {
+        $parsed = $this->instance->jsonSelector($selector);
+
+        $bounded = $this->instance->getMergedBounded();
+
+        self::assertEquals(
+            $expected,
+            BoundedHelper::emulatePrepared(
+                $this->instance->getEscaper(),
+                (string) $parsed,
+                $bounded
+            )
+        );
+        $this->instance->render(true);
+    }
+
+    public function parseJsonSelectorProvider(): array
+    {
+        return [
+            [
+                'foo ->> bar',
+                true,
+                'JSON_VALUE([foo], \'$.bar\')',
+            ],
+            [
+                'foo->bar[1]->>yoo',
+                true,
+                'JSON_VALUE([foo], \'$.bar[1].yoo\')',
+            ],
+            [
+                'foo->bar[1]->>\'yoo\'',
+                true,
+                'JSON_VALUE([foo], \'$.bar[1].yoo\')',
+            ],
+            [
+                'foo->bar[1]->>"yoo"',
+                true,
+                'JSON_VALUE([foo], \'$.bar[1]."yoo"\')',
+            ],
+            [
+                'foo->bar[1]->\'yoo\'',
+                false,
+                'JSON_QUERY([foo], \'$.bar[1].yoo\')',
+            ],
+        ];
+    }
+
+    public function testJsonQuote(): void
+    {
+        $query = $this->instance->select('foo -> bar ->> yoo AS yoo')
+            ->selectRaw('%n AS l', 'foo -> bar -> loo')
+            ->from('test')
+            ->where('foo -> bar ->> yoo', 'www')
+            ->having('foo -> bar', '=', qn('hoo -> joo ->> moo'))
+            ->order('foo -> bar ->> yoo', 'DESC');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT JSON_VALUE([foo], '$.bar.yoo') AS [yoo], JSON_QUERY([foo], '$.bar.loo') AS l
+            FROM [test] WHERE JSON_VALUE([foo], '$.bar.yoo') = 'www'
+            HAVING JSON_QUERY([foo], '$.bar') = JSON_VALUE([hoo], '$.joo.moo')
+            ORDER BY JSON_VALUE([foo], '$.bar.yoo') DESC
+            SQL,
+            $query->render(true)
+        );
     }
 
     public function testInsert(): void
@@ -61,12 +142,14 @@ SQL
         $q = self::createQuery()
             ->insert('foo')
             ->set('id', 1)
-            ->set([
-                      'title' => 'A',
-                      'foo' => 'a',
-                      'bar' => null,
-                      'yoo' => raw('CURRENT_TIMESTAMP()')
-                  ]);
+            ->set(
+                [
+                    'title' => 'A',
+                    'foo' => 'a',
+                    'bar' => null,
+                    'yoo' => raw('CURRENT_TIMESTAMP()'),
+                ]
+            );
 
         self::assertSqlEquals(
             <<<SQL
@@ -121,7 +204,9 @@ SQL
 
         // Only offset will not work
         self::assertSqlEquals(
+        // phpcs:disable
             'SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) AS RowNumber FROM ( SELECT * FROM [foo] ORDER BY [id] ) AS A) AS A WHERE RowNumber > 10',
+            // phpcs:enable
             $q->render()
         );
 
@@ -134,7 +219,9 @@ SQL
             ->offset(15);
 
         self::assertSqlEquals(
+        // phpcs:disable
             'SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) AS RowNumber FROM ( SELECT TOP 20 * FROM [foo] ORDER BY [id] ) AS A) AS A WHERE RowNumber > 15',
+            // phpcs:enable
             $q->render()
         );
     }

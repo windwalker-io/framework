@@ -14,8 +14,7 @@ namespace Windwalker\Database\Schema\Ddl;
 use Windwalker\Database\Platform\Type\DataType;
 use Windwalker\Query\Grammar\MySQLGrammar;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
-use Windwalker\Utilities\StrNormalise;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\raw;
@@ -25,7 +24,7 @@ use function Windwalker\raw;
  */
 class Column
 {
-    use WrapableTrait;
+    use WrappableTrait;
     use OptionAccessTrait;
 
     public string $columnName = '';
@@ -53,6 +52,10 @@ class Column
 
     protected ?string $comment = null;
 
+    protected ?string $characterSetName = null;
+
+    protected ?string $collationName = null;
+
     protected bool $autoIncrement = false;
 
     protected array $erratas = [];
@@ -64,12 +67,12 @@ class Column
         mixed $columnDefault = null,
         array $options = []
     ) {
-        $this->columnName    = $name;
+        $this->columnName = $name;
         $this->columnDefault = $columnDefault;
-        $this->isNullable    = $isNullable;
+        $this->isNullable = $isNullable;
         $this->dataType((string) $dataType);
 
-        $this->bind($options);
+        $this->fill($options);
     }
 
     /**
@@ -125,7 +128,7 @@ class Column
      *
      * @return  static  Return self to support chaining.
      */
-    public function columnDefault($value): static
+    public function columnDefault(mixed $value): static
     {
         $this->columnDefault = $value;
 
@@ -144,7 +147,7 @@ class Column
      *
      * @return  static  Return self to support chaining.
      */
-    public function defaultValue($value): static
+    public function defaultValue(mixed $value): static
     {
         return $this->columnDefault($value);
     }
@@ -448,6 +451,60 @@ class Column
     public function autoIncrement(bool $autoIncrement = true): static
     {
         $this->autoIncrement = $autoIncrement;
+
+        return $this;
+    }
+
+    public function charset(?string $charset = null): static
+    {
+        $this->characterSetName = $charset;
+
+        return $this;
+    }
+
+    public function collation(?string $collation): static
+    {
+        $this->collationName = $collation;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCharacterSetName(): ?string
+    {
+        return $this->characterSetName;
+    }
+
+    /**
+     * @param  string|null  $characterSetName
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCharacterSetName(?string $characterSetName): static
+    {
+        $this->characterSetName = $characterSetName;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCollationName(): ?string
+    {
+        return $this->collationName;
+    }
+
+    /**
+     * @param  string|null  $collationName
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCollationName(?string $collationName): static
+    {
+        $this->collationName = $collationName;
 
         return $this;
     }

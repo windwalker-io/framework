@@ -11,11 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Query;
 
+use PDO;
+use UnexpectedValueException;
+use WeakReference;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Str;
-
-use function Windwalker\value;
 
 /**
  * The Escaper class.
@@ -23,25 +25,25 @@ use function Windwalker\value;
 class Escaper
 {
     /**
-     * @var \PDO|callable|mixed
+     * @var WeakReference<PDO|callable|mixed>|null
      */
-    protected $connection;
+    protected ?WeakReference $connection = null;
 
     /**
-     * @var Query
+     * @var Query|null
      */
-    protected $query;
+    protected ?Query $query = null;
 
     /**
      * Escaper constructor.
      *
-     * @param  \PDO|callable|mixed  $connection
-     * @param  Query                $query
+     * @param  PDO|callable|object  $connection
+     * @param  Query|null            $query
      */
-    public function __construct($connection, Query $query = null)
+    public function __construct(mixed $connection, ?Query $query = null)
     {
-        $this->connection = $connection;
-        $this->query      = $query;
+        $this->connection = $connection ? WeakReference::create($connection) : null;
+        $this->query = $query;
     }
 
     public function escape(string $value): string
@@ -54,31 +56,34 @@ class Escaper
         return static::tryQuote($this->getConnection(), $value);
     }
 
-    public function quoteMultiple($value): array|string
-    {
-        return $this->getDriver()->quote((string) $value);
-    }
-
     /**
      * escape
      *
-     * @param  \PDO|callable|mixed  $escaper
+     * @param  PDO|callable|mixed  $escaper
      * @param  int|string           $value
      *
      * @return  string
      */
-    public static function tryEscape($escaper, string|int $value): string
+    public static function tryEscape(mixed $escaper, string|int $value): string
     {
-        if (is_callable($escaper)) {
-            return $escaper($value, [static::class, 'stripQuote']);
-        }
-
-        if ($escaper instanceof \PDO) {
+        if ($escaper instanceof PDO) {
             return static::stripQuote((string) $escaper->quote((string) $value));
         }
 
         if ($escaper instanceof AbstractDriver) {
             return $escaper->escape((string) $value);
+        }
+
+        if ($escaper instanceof DatabaseAdapter) {
+            return $escaper->escape((string) $value);
+        }
+
+        if ($escaper instanceof ORM) {
+            return $escaper->getDb()->escape((string) $value);
+        }
+
+        if (is_callable($escaper)) {
+            return $escaper($value, [static::class, 'stripQuote']);
         }
 
         return $escaper->escape($value);
@@ -87,20 +92,24 @@ class Escaper
     /**
      * quote
      *
-     * @param  \PDO|callable|mixed  $escaper
+     * @param  PDO|callable|mixed  $escaper
      * @param  int|string           $value
      *
      * @return  string
      */
-    public static function tryQuote($escaper, string|int $value): string
+    public static function tryQuote(mixed $escaper, string|int $value): string
     {
         // PDO has quote method, directly use it.
-        if ($escaper instanceof \PDO) {
+        if ($escaper instanceof PDO) {
             return (string) $escaper->quote((string) $value);
         }
 
         if ($escaper instanceof DatabaseAdapter) {
             return $escaper->getDriver()->quote((string) $value);
+        }
+
+        if ($escaper instanceof ORM) {
+            return $escaper->getDb()->quote((string) $value);
         }
 
         return "'" . static::tryEscape($escaper, $value) . "'";
@@ -129,17 +138,20 @@ class Escaper
      * stripQuoteIfExists
      *
      * @param  string|null  $value
-     * @param  string  $sign
+     * @param  string       $sign
+     * @param  string|null  $sign2
      *
-     * @return  string
+     * @return string|null
      */
-    public static function stripQuoteIfExists(?string $value, string $sign = "'"): ?string
+    public static function stripQuoteIfExists(?string $value, string $sign = "'", ?string $sign2 = null): ?string
     {
         if ($value === null) {
             return $value;
         }
 
-        if (Str::startsWith($value, $sign) && Str::endsWith($value, $sign)) {
+        $sign2 ??= $sign;
+
+        if (Str::startsWith($value, $sign) && Str::endsWith($value, $sign2)) {
             return static::stripQuote($value);
         }
 
@@ -151,15 +163,19 @@ class Escaper
      *
      * @return  mixed
      */
-    public function getConnection()
+    public function getConnection(): mixed
     {
-        if ($this->connection instanceof \WeakReference) {
+        if ($this->connection instanceof WeakReference) {
             $conn = $this->connection->get();
-        } else {
-            $conn = $this->connection;
+
+            if ($conn === null) {
+                throw new UnexpectedValueException(
+                    'Escaper connection is NULL, the reference object has been destroyed.'
+                );
+            }
         }
 
-        return $conn ?: [$this->query->getGrammar(), 'localEscape'];
+        return $conn ?? [$this->query->getGrammar(), 'localEscape'];
     }
 
     /**
@@ -169,7 +185,7 @@ class Escaper
      *
      * @return  static  Return self to support chaining.
      */
-    public function setConnection($connection)
+    public function setConnection(mixed $connection): static
     {
         if ($connection instanceof DatabaseAdapter) {
             $connection = $connection->getDriver();

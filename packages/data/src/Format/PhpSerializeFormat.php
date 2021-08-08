@@ -24,7 +24,7 @@ class PhpSerializeFormat implements FormatInterface
      *
      * @return  string
      */
-    public function dump($data, array $options = []): string
+    public function dump(mixed $data, array $options = []): string
     {
         return serialize($data);
     }
@@ -37,7 +37,7 @@ class PhpSerializeFormat implements FormatInterface
      *
      * @return  array
      */
-    public function parse(string $string, array $options = [])
+    public function parse(string $string, array $options = []): array
     {
         return unserialize($string, $options);
     }

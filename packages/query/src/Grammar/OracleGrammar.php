@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
+use LogicException;
+use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
 /**
@@ -21,19 +23,19 @@ class OracleGrammar extends BaseGrammar
     /**
      * @var string
      */
-    protected static $name = 'Oracle';
+    public static string $name = 'Oracle';
 
     /**
      * @var string
      */
-    protected static $nullDate = 'RRRR-MM-DD HH24:MI:SS';
+    public static string $nullDate = 'RRRR-MM-DD HH24:MI:SS';
 
     /**
      * @inheritDoc
      */
     public function compileLimit(Query $query, array $sql): array
     {
-        $limit  = (int) $query->getLimit();
+        $limit = (int) $query->getLimit();
         $offset = (int) $query->getOffset();
 
         // Check if we need to mangle the query.
@@ -62,5 +64,15 @@ class OracleGrammar extends BaseGrammar
         }
 
         return $sql;
+    }
+
+    public function compileJsonSelector(
+        Query $query,
+        string $column,
+        array $paths,
+        bool $unQuoteLast = true,
+        bool $instant = false
+    ): Clause {
+        throw new LogicException('This DB does not support JSON.');
     }
 }

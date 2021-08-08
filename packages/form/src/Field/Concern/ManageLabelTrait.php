@@ -13,7 +13,6 @@ namespace Windwalker\Form\Field\Concern;
 
 use Windwalker\DOM\DOMElement;
 use Windwalker\Form\FormNormalizer;
-use Windwalker\Form\Renderer\FormRendererInterface;
 
 /**
  * Trait ManageLabelTrait
@@ -29,7 +28,7 @@ trait ManageLabelTrait
      *
      * @return  static
      */
-    public function label(string $label)
+    public function label(string $label): static
     {
         $this->getLabel()->textContent = $label;
 
@@ -39,7 +38,7 @@ trait ManageLabelTrait
     /**
      * getLabel
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  string
      */
@@ -50,9 +49,9 @@ trait ManageLabelTrait
         return $this->getForm()->getRenderer()->renderLabel($this, $label, $options);
     }
 
-    public function buildLabel(DOMElement $label, array $options = []): string
+    public function buildLabel(DOMElement $label, array $options = []): string|DOMElement
     {
-        return $label->render();
+        return $label;
     }
 
     public function getPreparedLabel(): DOMElement
@@ -72,7 +71,7 @@ trait ManageLabelTrait
         return $label;
     }
 
-    public function modifyLabel(callable $handler)
+    public function modifyLabel(callable $handler): static
     {
         $handler($this->getLabel());
 
@@ -99,7 +98,7 @@ trait ManageLabelTrait
      *
      * @return  static  Return self to support chaining.
      */
-    public function setLabel(DOMElement $label)
+    public function setLabel(DOMElement $label): static
     {
         $this->label = $label;
 
@@ -113,7 +112,7 @@ trait ManageLabelTrait
      *
      * @return  string
      */
-    public function getLabelAttribute($name): string
+    public function getLabelAttribute(string $name): string
     {
         return $this->getLabel()->getAttribute($name);
     }
@@ -126,7 +125,7 @@ trait ManageLabelTrait
      *
      * @return  static
      */
-    public function setLabelAttribute(string $name, string $value)
+    public function setLabelAttribute(string $name, string $value): static
     {
         $this->getWrapper()->setAttribute($name, $value);
 
@@ -146,7 +145,7 @@ trait ManageLabelTrait
      *
      * @return  static
      */
-    public function labelAttr(string $name, $value = null)
+    public function labelAttr(string $name, $value = null): static
     {
         return $this->setAttribute($name, $value);
     }
@@ -156,21 +155,21 @@ trait ManageLabelTrait
         return $this->getLabel()->classList->value;
     }
 
-    public function setLabelClass(string $class)
+    public function setLabelClass(string $class): static
     {
         $this->getLabel()->setAttribute('class', $class);
 
         return $this;
     }
 
-    public function addLabelClass(...$args)
+    public function addLabelClass(...$args): static
     {
         $this->getLabel()->classList->add(...$args);
 
         return $this;
     }
 
-    public function removeLabelClass(...$args)
+    public function removeLabelClass(...$args): static
     {
         $this->getLabel()->classList->remove(...$args);
 

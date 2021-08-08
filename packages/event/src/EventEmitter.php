@@ -11,11 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
+use DomainException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use ReflectionException;
 use Rx\Observable;
 use Rx\ObserverInterface;
+use WeakMap;
 use Windwalker\Event\Provider\CompositeListenerProvider;
+use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 
 use function Windwalker\disposable;
 use function Windwalker\tap;
@@ -28,15 +32,17 @@ class EventEmitter extends EventDispatcher implements
     EventListenableInterface,
     EventDisposableInterface
 {
+    use ObjectBuilderAwareTrait;
+
     /**
      * @var CompositeListenerProvider
      */
-    protected $provider;
+    protected ListenerProviderInterface $provider;
 
     /**
      * @var EventDispatcherInterface[]
      */
-    protected $dealers = [];
+    protected WeakMap $dealers;
 
     /**
      * EventEmitter constructor.
@@ -46,12 +52,14 @@ class EventEmitter extends EventDispatcher implements
     public function __construct(ListenerProviderInterface $provider = null)
     {
         parent::__construct(CompositeListenerProvider::create($provider));
+
+        $this->dealers = new WeakMap();
     }
 
     /**
      * @inheritDoc
      */
-    public function dispatch(object $event)
+    public function dispatch(object $event): object
     {
         return tap(
             parent::dispatch($event),
@@ -66,9 +74,11 @@ class EventEmitter extends EventDispatcher implements
     /**
      * @inheritDoc
      */
-    public function emit(EventInterface|string $event, array $args = []): EventInterface
+    public function emit(object|string $event, array $args = []): object
     {
-        $event = Event::wrap($event, $args);
+        if (is_string($event) || $event instanceof EventInterface) {
+            $event = Event::wrap($event, $args);
+        }
 
         $this->dispatch($event);
 
@@ -78,7 +88,7 @@ class EventEmitter extends EventDispatcher implements
     /**
      * @inheritDoc
      */
-    public function subscribe(object $subscriber, ?int $priority = null)
+    public function subscribe(object $subscriber, ?int $priority = null): static
     {
         $this->provider->subscribe($subscriber, $priority);
 
@@ -88,7 +98,7 @@ class EventEmitter extends EventDispatcher implements
     /**
      * @inheritDoc
      */
-    public function on(string $event, callable $callable, ?int $priority = null)
+    public function on(string $event, callable $callable, ?int $priority = null): static
     {
         $this->provider->on($event, $callable, $priority);
 
@@ -98,7 +108,7 @@ class EventEmitter extends EventDispatcher implements
     /**
      * @inheritDoc
      */
-    public function once(string $event, callable $callable, ?int $priority = null)
+    public function once(string $event, callable $callable, ?int $priority = null): static
     {
         $this->on($event, disposable($callable), $priority);
 
@@ -116,7 +126,7 @@ class EventEmitter extends EventDispatcher implements
     public function observe(string $event, ?int $priority = null): Observable
     {
         if (!class_exists(Observable::class)) {
-            throw new \DomainException('Please install reactivex/rxphp to support Observable.');
+            throw new DomainException('Please install reactivex/rxphp to support Observable.');
         }
 
         return Observable::create(
@@ -139,9 +149,9 @@ class EventEmitter extends EventDispatcher implements
      *
      * @return  static
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function remove($listenerOrSubscriber)
+    public function remove(callable|object $listenerOrSubscriber): static
     {
         $this->provider->remove($listenerOrSubscriber);
 
@@ -155,9 +165,9 @@ class EventEmitter extends EventDispatcher implements
      * @param  callable|object        $listenerOrSubscriber
      *
      * @return  static
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function off($event, $listenerOrSubscriber = null)
+    public function off(string|EventInterface $event, $listenerOrSubscriber = null): static
     {
         $this->provider->off($event, $listenerOrSubscriber);
 
@@ -171,7 +181,7 @@ class EventEmitter extends EventDispatcher implements
      *
      * @return  callable[]
      */
-    public function getListeners($event): iterable
+    public function getListeners(string|EventInterface $event): iterable
     {
         return $this->provider->getListenersForEvent(Event::wrap($event));
     }
@@ -183,7 +193,7 @@ class EventEmitter extends EventDispatcher implements
      *
      * @return  static
      */
-    public function appendProvider(ListenerProviderInterface $provider)
+    public function appendProvider(ListenerProviderInterface $provider): static
     {
         $this->provider->appendProvider($provider);
 
@@ -197,9 +207,9 @@ class EventEmitter extends EventDispatcher implements
      *
      * @return  static
      */
-    public function registerDealer(EventDispatcherInterface $dispatcher)
+    public function addDealer(EventDispatcherInterface $dispatcher): static
     {
-        $this->dealers[] = $dispatcher;
+        $this->dealers[$dispatcher] = $dispatcher;
 
         return $this;
     }
@@ -209,10 +219,27 @@ class EventEmitter extends EventDispatcher implements
      *
      * @return  static
      */
-    public function resetDealers()
+    public function resetDealers(): static
     {
-        $this->dealers = [];
+        $this->dealers = new WeakMap();
 
         return $this;
+    }
+
+    /**
+     * When an object is cloned, PHP 5 will perform a shallow copy of all of the object's properties.
+     * Any properties that are references to other variables, will remain references.
+     * Once the cloning is complete, if a __clone() method is defined,
+     * then the newly created object's __clone() method will be called, to allow any necessary properties that need to
+     * be changed. NOT CALLABLE DIRECTLY.
+     *
+     * @return void
+     * @link https://php.net/manual/en/language.oop5.cloning.php
+     */
+    public function __clone(): void
+    {
+        parent::__clone();
+
+        $this->dealers = clone $this->dealers;
     }
 }

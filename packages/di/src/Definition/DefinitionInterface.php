@@ -30,9 +30,9 @@ interface DefinitionInterface
     /**
      * Set new value or factory callback to this definition.
      *
-     * @param mixed $value  Value or callable.
+     * @param  mixed  $value  Value or callable.
      *
      * @return  void
      */
-    public function set($value): void;
+    public function set(mixed $value): void;
 }

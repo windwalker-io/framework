@@ -11,8 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem;
 
+use AppendIterator;
+use BadMethodCallException;
+use DomainException;
 use FilesystemIterator;
 use Psr\Http\Message\StreamInterface;
+use Traversable;
+use Webmozart\Glob\Glob;
 use Webmozart\Glob\Iterator\GlobIterator;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\Iterator\FilesIterator;
@@ -80,10 +85,13 @@ class Filesystem
         int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO
     ): FilesIterator {
         if (!class_exists(GlobIterator::class)) {
-            throw new \DomainException('Please install webmozart/glob first');
+            throw new DomainException('Please install webmozart/glob first');
         }
 
-        return new FilesIterator(new GlobIterator($path, $flags));
+        // Webmozart/glob must use `/` in windows.
+        $path = Path::clean($path, '/');
+
+        return new FilesIterator(new GlobIterator($path, $flags), Glob::getBasePath($path));
     }
 
     /**
@@ -95,17 +103,19 @@ class Filesystem
      * @return  FilesIterator
      */
     public static function globAll(
-        array $paths,
+        string|array $paths,
         int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO
     ): FilesIterator {
         if (!class_exists(GlobIterator::class)) {
-            throw new \DomainException('Please install webmozart/glob first');
+            throw new DomainException('Please install webmozart/glob first');
         }
 
-        $iter = new \AppendIterator();
+        $paths = (array) $paths;
+
+        $iter = new AppendIterator();
 
         foreach ($paths as $path) {
-            $iter->append(new GlobIterator($path, $flags));
+            $iter->append(new FilesIterator(new GlobIterator($path, $flags), Glob::getBasePath($path)));
         }
 
         return new FilesIterator(new UniqueIterator($iter));
@@ -114,11 +124,11 @@ class Filesystem
     /**
      * iteratorToArray
      *
-     * @param  \Traversable  $iterator
+     * @param  Traversable  $iterator
      *
      * @return  array
      */
-    public static function toArray(\Traversable $iterator): array
+    public static function toArray(Traversable $iterator): array
     {
         $array = [];
 
@@ -141,7 +151,7 @@ class Filesystem
      */
     public static function createTemp(?string $dir = null, ?string $prefix = null): FileObject
     {
-        $dir    = $dir ?? sys_get_temp_dir();
+        $dir = $dir ?? sys_get_temp_dir();
         $prefix = $prefix ?? 'Windwalker-Temp-';
 
         if (!is_dir($dir)) {
@@ -176,7 +186,7 @@ class Filesystem
         $windows = defined('PHP_WINDOWS_VERSION_BUILD');
 
         $target = Path::normalize($target);
-        $link   = Path::normalize($link);
+        $link = Path::normalize($link);
 
         if ($windows) {
             if (is_file($target)) {
@@ -201,7 +211,7 @@ class Filesystem
      *
      * @return  void
      */
-    public static function __callStatic(string $name, $args)
+    public static function __callStatic(string $name, array $args)
     {
         $maps = [
             'read',
@@ -241,6 +251,6 @@ class Filesystem
             return static::get($path)->$method(...$args);
         }
 
-        throw new \BadMethodCallException(sprintf('Method %s::%s not exists.', static::class, $name));
+        throw new BadMethodCallException(sprintf('Method %s::%s not exists.', static::class, $name));
     }
 }

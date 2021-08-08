@@ -68,11 +68,11 @@ class MockTransport extends AbstractTransport
     /**
      * Method to check if HTTP transport layer available for using
      *
-     * @return  boolean  True if available else false
+     * @return  bool  True if available else false
      *
      * @since   2.1
      */
-    public static function isSupported()
+    public static function isSupported(): bool
     {
         return true;
     }
@@ -88,8 +88,11 @@ class MockTransport extends AbstractTransport
      * @return  ResponseInterface
      * @since   2.1
      */
-    public function download(RequestInterface $request, string|StreamInterface $dest, array $options = [])
-    {
+    public function download(
+        RequestInterface $request,
+        string|StreamInterface $dest,
+        array $options = []
+    ): ResponseInterface {
         $this->setOption('target_file', $dest);
 
         return $this->request($request);

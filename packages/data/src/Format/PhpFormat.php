@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Format;
 
+use LogicException;
+
 /**
  * PHP class format handler for Data
  *
@@ -27,7 +29,7 @@ class PhpFormat implements FormatInterface
      *
      * @return  string
      */
-    public function dump($data, array $options = []): string
+    public function dump(mixed $data, array $options = []): string
     {
         $header = $options['header'] ?? '';
         $return = $options['return'] ?? false;
@@ -74,9 +76,9 @@ class PhpFormat implements FormatInterface
      *
      * @return void Data array.
      */
-    public function parse(string $string, array $options = [])
+    public function parse(string $string, array $options = []): mixed
     {
-        throw new \LogicException('Currently does not support parse php array.');
+        throw new LogicException('Currently does not support parse php array.');
     }
 
     /**

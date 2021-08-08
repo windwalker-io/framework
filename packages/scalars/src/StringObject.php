@@ -20,9 +20,11 @@ use ReflectionException;
 use ReflectionMethod;
 use ReflectionObject;
 use ReflectionParameter;
+use Stringable;
 use Traversable;
 use Windwalker\Scalars\Concern\StringInflectorTrait;
 use Windwalker\Scalars\Concern\StringModifyTrait;
+use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Classes\ImmutableHelperTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
 use Windwalker\Utilities\Contract\NullableInterface;
@@ -36,7 +38,7 @@ use Windwalker\Utilities\Utf8String;
  *
  * @method StringObject getChar(int $pos)
  * @method StringObject between(string $start, string $end, int $offset = 0)
- * @method StringObject collapseWhitespaces(string $string)
+ * @method StringObject collapseWhitespaces()
  * @method bool         contains(string $search, bool $caseSensitive = true)
  * @method bool         endsWith(string $search, bool $caseSensitive = true)
  * @method bool         startsWith(string $target, bool $caseSensitive = true)
@@ -61,7 +63,7 @@ use Windwalker\Utilities\Utf8String;
  * @method StringObject removeRight(string $search)
  * @method StringObject slice(int $start, int $end = null)
  * @method StringObject substring(int $start, int $end = null)
- * @method StringObject wrap($substring = ['"', '"'])
+ * @method StringObject surrounds($substring = ['"', '"'])
  * @method StringObject toggleCase()
  * @method StringObject truncate(int $length, string $suffix = '', bool $wordBreak = true)
  * @method StringObject map(callable $callback)
@@ -71,16 +73,17 @@ use Windwalker\Utilities\Utf8String;
  * @method StringObject toLowerCase()
  * @method int|bool     strpos(string $search)
  * @method int|bool     strrpos(string $search)
- * @method StringObject split(string $delimiter, ?int $limit = null)
+ * @method ArrayObject  split(string $delimiter, ?int $limit = null)
  *
  * @since  __DEPLOY_VERSION__
  */
-class StringObject implements Countable, ArrayAccess, IteratorAggregate, \Stringable, NullableInterface
+class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringable, NullableInterface
 {
     use MarcoableTrait;
     use ImmutableHelperTrait;
     use StringModifyTrait;
     use StringInflectorTrait;
+    use FlowControlTrait;
 
     /**
      * We only provides 3 default encoding constants of PHP.
@@ -116,7 +119,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      */
     public function __construct($string = '', ?string $encoding = self::ENCODING_UTF8)
     {
-        $this->string   = (string) $string;
+        $this->string = (string) $string;
         $this->encoding = $encoding ?? static::ENCODING_UTF8;
     }
 
@@ -133,6 +136,15 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
         return new static($string, $encoding);
     }
 
+    public static function wrap(mixed $string = '', ?string $encoding = self::ENCODING_UTF8): StringObject
+    {
+        if ($string instanceof static) {
+            return $string;
+        }
+
+        return new static((string) $string, $encoding);
+    }
+
     /**
      * __call
      *
@@ -143,7 +155,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      * @throws BadMethodCallException
      * @throws ReflectionException
      */
-    public function __call(string $name, array $args)
+    public function __call(string $name, array $args): mixed
     {
         $class = Str::class;
 
@@ -171,10 +183,10 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      * @param  string  $method
      * @param  array   $args
      *
-     * @return  static
+     * @return  mixed
      * @throws ReflectionException
      */
-    protected function callProxy(string $class, string $method, array $args)
+    protected function callProxy(string $class, string $method, array $args): mixed
     {
         $new = $this->cloneInstance();
 
@@ -239,7 +251,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         $offset = $offset >= 0 ? $offset : (int) abs($offset) - 1;
 
@@ -263,7 +275,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      *
      * @return string|static Can return all value types.
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): StringObject|string|static
     {
         return $this->getChar($offset);
     }
@@ -278,7 +290,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      *
      * @return void
      */
-    public function offsetSet($offset, $string): void
+    public function offsetSet(mixed $offset, mixed $string): void
     {
         $this->string = Utf8String::substrReplace($this->string, $string, $offset, 1, $this->encoding);
     }
@@ -292,7 +304,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      *
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         if ($this->length() < abs($offset)) {
             return;
@@ -350,7 +362,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      *
      * @return  static  Return self to support chaining.
      */
-    public function withEncoding(string $encoding)
+    public function withEncoding(string $encoding): static
     {
         return $this->cloneInstance(
             static function (StringObject $new) use ($encoding) {
@@ -376,7 +388,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      *
      * @return  static  Return self to support chaining.
      */
-    public function withString(string $string)
+    public function withString(string $string): static
     {
         return $this->cloneInstance(
             static function (StringObject $new) use ($string) {
@@ -457,28 +469,13 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, \String
      *
      * @return  static
      */
-    public function apply(callable $callback, ...$args)
+    public function apply(callable $callback, ...$args): static
     {
         return $this->cloneInstance(
             static function ($new) use ($callback, $args) {
                 return $new->string = $callback($new->string, ...$args);
             }
         );
-    }
-
-    /**
-     * pipe
-     *
-     * @param  callable  $callback
-     * @param  array     $args
-     *
-     * @return  static
-     *
-     * @since  3.5.14
-     */
-    public function pipe(callable $callback, ...$args)
-    {
-        return $callback($this, ...$args);
     }
 
     /**

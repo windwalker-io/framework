@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue;
 
+use InvalidArgumentException;
+use JsonException;
 use Windwalker\Queue\Driver\QueueDriverInterface;
 use Windwalker\Queue\Job\CallableJob;
 use Windwalker\Queue\Job\JobInterface;
@@ -32,7 +34,7 @@ class Queue
     /**
      * QueueManager constructor.
      *
-     * @param QueueDriverInterface $driver
+     * @param  QueueDriverInterface  $driver
      */
     public function __construct(QueueDriverInterface $driver)
     {
@@ -49,7 +51,7 @@ class Queue
      *
      * @return int|string
      */
-    public function push($job, int $delay = 0, ?string $channel = null, array $options = []): int|string
+    public function push(mixed $job, int $delay = 0, ?string $channel = null, array $options = []): int|string
     {
         $message = $this->getMessageByJob($job);
         $message->setDelay($delay);
@@ -68,10 +70,14 @@ class Queue
      * @param  array         $options
      *
      * @return  int|string
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public function pushRaw(string|array $body, int $delay = 0, ?string $channel = null, array $options = []): int|string
-    {
+    public function pushRaw(
+        string|array $body,
+        int $delay = 0,
+        ?string $channel = null,
+        array $options = []
+    ): int|string {
         if (is_string($body)) {
             json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         }
@@ -100,11 +106,11 @@ class Queue
     /**
      * delete
      *
-     * @param QueueMessage|mixed $message
+     * @param  QueueMessage|mixed  $message
      *
      * @return  void
      */
-    public function delete($message): void
+    public function delete(mixed $message): void
     {
         if (!$message instanceof QueueMessage) {
             $msg = new QueueMessage();
@@ -121,12 +127,12 @@ class Queue
     /**
      * release
      *
-     * @param QueueMessage|mixed $message
-     * @param int                $delay
+     * @param  QueueMessage|mixed  $message
+     * @param  int                 $delay
      *
      * @return  void
      */
-    public function release($message, int $delay = 0): void
+    public function release(mixed $message, int $delay = 0): void
     {
         if (!$message instanceof QueueMessage) {
             $msg = new QueueMessage();
@@ -141,13 +147,13 @@ class Queue
     /**
      * getMessage
      *
-     * @param mixed $job
-     * @param array $data
+     * @param  mixed  $job
+     * @param  array  $data
      *
      * @return QueueMessage
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function getMessageByJob($job, array $data = []): QueueMessage
+    public function getMessageByJob(mixed $job, array $data = []): QueueMessage
     {
         $message = new QueueMessage();
 
@@ -165,10 +171,10 @@ class Queue
     /**
      * createJobInstance
      *
-     * @param mixed $job
+     * @param  mixed  $job
      *
      * @return  JobInterface
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function createJobInstance(JobInterface|callable $job): JobInterface
     {
@@ -184,7 +190,7 @@ class Queue
         // Create by class name.
         if (is_string($job)) {
             if (!class_exists($job) || is_subclass_of($job, JobInterface::class)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     sprintf(
                         'Job should be a class which implements %s, %s given',
                         JobInterface::class,
@@ -212,11 +218,11 @@ class Queue
     /**
      * Method to set property driver
      *
-     * @param   QueueDriverInterface $driver
+     * @param  QueueDriverInterface  $driver
      *
      * @return  static  Return self to support chaining.
      */
-    public function setDriver(QueueDriverInterface $driver)
+    public function setDriver(QueueDriverInterface $driver): static
     {
         $this->driver = $driver;
 

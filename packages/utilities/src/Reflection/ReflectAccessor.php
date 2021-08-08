@@ -11,19 +11,28 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Reflection;
 
+use Closure;
 use InvalidArgumentException;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionObject;
 use ReflectionProperty;
+use ReflectionUnionType;
+use Reflector;
+use Windwalker\Utilities\Cache\RuntimeCacheTrait;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The Reflector class.
  */
 class ReflectAccessor
 {
-    public static function getProperties(
-        object $object,
+    use RuntimeCacheTrait;
+
+    public static function getPropertiesValues(
+        object|string $object,
         int $filters = ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PRIVATE | ReflectionProperty::IS_PROTECTED
     ): array {
         $ref = new ReflectionClass($object);
@@ -35,7 +44,13 @@ class ReflectAccessor
         foreach ($properties as $property) {
             $property->setAccessible(true);
 
-            $values[$property->getName()] = $property->getValue($object);
+            $inited = is_object($object)
+                ? $property->isInitialized($object)
+                : $property->isInitialized();
+
+            $value = $inited ? $property->getValue($object) : null;
+
+            $values[$property->getName()] = $value;
         }
 
         return $values;
@@ -47,29 +62,114 @@ class ReflectAccessor
      * @param  object  $object        The object for which to set the property.
      * @param  string  $propertyName  The name of the property to set.
      * @param  mixed   $value         The value to set for the property.
+     * @param  bool    $safe          Guess and try type casting.
      *
      * @return  void
      *
      * @throws ReflectionException
      * @since   2.0
      */
-    public static function setValue(object $object, string $propertyName, $value): void
+    public static function setValue(object $object, mixed $propertyName, mixed $value, bool $safe = false): void
     {
         $refl = new ReflectionClass($object);
+
+        $propertyName = (string) $propertyName;
 
         // First check if the property is easily accessible.
         if ($refl->hasProperty($propertyName)) {
             $property = $refl->getProperty($propertyName);
             $property->setAccessible(true);
 
-            $property->setValue($object, $value);
-        } elseif (get_parent_class($object)) {
-            // Hrm, maybe dealing with a private property in the parent class.
-            $property = new ReflectionProperty(get_parent_class($object), $propertyName);
-            $property->setAccessible(true);
+            if ($safe) {
+                $value = static::safeTypeCast($property, $value);
+            }
 
             $property->setValue($object, $value);
+
+            return;
         }
+
+        $parent = get_parent_class($object);
+
+        if ($parent) {
+            $refl = new ReflectionClass($parent);
+
+            if ($refl->hasProperty($propertyName)) {
+                // Hrm, maybe dealing with a private property in the parent class.
+                $property = new ReflectionProperty($parent, $propertyName);
+                $property->setAccessible(true);
+
+                if ($safe) {
+                    $value = static::safeTypeCast($property, $value);
+                }
+
+                $property->setValue($object, $value);
+
+                return;
+            }
+        }
+
+        $object->$propertyName = $value;
+    }
+
+    protected static function safeTypeCast(ReflectionProperty $prop, mixed $value): mixed
+    {
+        $typeRef = $prop->getType();
+
+        if (!$typeRef) {
+            return $value;
+        }
+
+        if ($typeRef instanceof ReflectionUnionType) {
+            $types = $typeRef->getTypes();
+        } else {
+            $types = [$typeRef];
+        }
+
+        foreach ($types as $type) {
+            if (is_object($value) && $value::class === $type->getName()) {
+                return $value;
+            }
+
+            if ($type->getName() === 'mixed') {
+                return $value;
+            }
+
+            if ($value === null && $type->allowsNull()) {
+                return null;
+            }
+
+            if (!$type->isBuiltin()) {
+                continue;
+            }
+
+            $value = TypeCast::try($value, $type->getName());
+
+            if ($value !== null) {
+                return $value;
+            }
+        }
+
+        return $value ?? settype($value, $types[0]->getName());
+    }
+
+    public static function hasProperty(object $object, string $propertyName): bool
+    {
+        $refl = new ReflectionClass($object);
+
+        // First check if the property is easily accessible.
+        $exists = $refl->hasProperty($propertyName);
+
+        // Check parent private
+        if (!$exists) {
+            $parent = get_parent_class($object);
+
+            $refl = new ReflectionClass($parent);
+
+            $exists = $refl->hasProperty($propertyName);
+        }
+
+        return $exists;
     }
 
     /**
@@ -83,7 +183,7 @@ class ReflectAccessor
      * @throws ReflectionException
      * @since   2.0
      */
-    public static function getValue(object $object, string $propertyName)
+    public static function getValue(object $object, string $propertyName): mixed
     {
         $ref = new ReflectionClass($object);
 
@@ -128,7 +228,7 @@ class ReflectAccessor
      * @throws ReflectionException
      * @since   2.0
      */
-    public static function invoke(object $object, string $methodName, ...$args)
+    public static function invoke(object $object, string $methodName, ...$args): mixed
     {
         $method = new ReflectionMethod($object, $methodName);
         $method->setAccessible(true);
@@ -136,22 +236,91 @@ class ReflectAccessor
         return $method->invokeArgs(is_object($object) ? $object : null, $args);
     }
 
-    public static function wrap($target): \Reflector
+    public static function reflect(mixed $value): Reflector
     {
-        if (is_string($target)) {
-            if (str_contains($target, '::')) {
-                $target = explode('::', $target, 2);
-            } elseif (class_exists($target)) {
-                return new \ReflectionClass($target);
-            } else {
-                return new \ReflectionFunction($target);
-            }
+        if ($value instanceof Reflector) {
+            return $value;
         }
 
-        if (is_array($target)) {
-            return new ReflectionMethod($target[0], $target[1]);
+        if (is_string($value) && class_exists($value)) {
+            return new ReflectionClass($value);
         }
 
-        throw new \InvalidArgumentException('No a valid target to get reflection.');
+        if (is_object($value) && !$value instanceof Closure) {
+            return new ReflectionObject($value);
+        }
+
+        if (is_callable($value)) {
+            return (new ReflectionCallable($value))->getReflector();
+        }
+
+        throw new InvalidArgumentException(
+            sprintf(
+                'Unable to reflect value of: %s',
+                get_debug_type($value)
+            )
+        );
+    }
+
+    public static function getReflectProperties(
+        object|string $object,
+        ?int $filters = ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PRIVATE
+        | ReflectionProperty::IS_PROTECTED
+    ): array {
+        $ref = new ReflectionClass($object);
+
+        $properties = $ref->getProperties($filters);
+
+        $values = [];
+
+        foreach ($properties as $property) {
+            $values[$property->getName()] = $property;
+        }
+
+        return $values;
+    }
+
+    /**
+     * getAssocProperties
+     *
+     * @param  string|object  $object
+     * @param  int|null       $filters
+     *
+     * @return  ReflectionMethod[]
+     * @throws ReflectionException
+     */
+    public static function getReflectMethods(
+        string|object $object,
+        ?int $filters = ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED | ReflectionMethod::IS_PRIVATE
+    ): array {
+        $ref = new ReflectionClass($object);
+        $methods = [];
+
+        foreach ($ref->getMethods($filters) as $method) {
+            $methods[$method->getName()] = $method;
+        }
+
+        return $methods;
+    }
+
+    /**
+     * getNoRepeatAttributes
+     *
+     * @param  Reflector   $ref
+     * @param  string|null  $name
+     * @param  int          $flags
+     *
+     * @return  ReflectionAttribute[]
+     */
+    public static function getNoRepeatAttributes(Reflector $ref, ?string $name = null, int $flags = 0): array
+    {
+        $attrs = [];
+
+        /** @var ReflectionAttribute $attribute */
+        foreach ($ref->getAttributes($name, $flags) as $attribute) {
+            $attrs[$attribute->getName()] = $attribute;
+        }
+
+        return $attrs;
     }
 }

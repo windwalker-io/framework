@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Event;
 
+use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Query\Query;
 
 /**
  * The QueryEndEvent class.
@@ -19,8 +21,12 @@ use Windwalker\Event\AbstractEvent;
 class QueryEndEvent extends AbstractEvent
 {
     protected bool $result;
+
     protected string $sql;
+
     protected array $bounded;
+
+    protected StatementInterface $statement;
 
     /**
      * @var mixed
@@ -40,7 +46,7 @@ class QueryEndEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setResult(bool $result)
+    public function setResult(bool $result): static
     {
         $this->result = $result;
 
@@ -50,7 +56,7 @@ class QueryEndEvent extends AbstractEvent
     /**
      * @return mixed
      */
-    public function getQuery()
+    public function getQuery(): mixed
     {
         return $this->query;
     }
@@ -60,11 +66,22 @@ class QueryEndEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setQuery($query)
+    public function setQuery(mixed $query): static
     {
         $this->query = $query;
 
         return $this;
+    }
+
+    public function getDebugQueryString(): string
+    {
+        $query = $this->getQuery();
+
+        if ($query instanceof Query) {
+            $query = $query->render(true);
+        }
+
+        return (string) $query;
     }
 
     /**
@@ -80,7 +97,7 @@ class QueryEndEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setSql(string $sql)
+    public function setSql(string $sql): static
     {
         $this->sql = $sql;
 
@@ -100,9 +117,29 @@ class QueryEndEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setBounded(array $bounded)
+    public function setBounded(array $bounded): static
     {
         $this->bounded = $bounded;
+
+        return $this;
+    }
+
+    /**
+     * @return StatementInterface
+     */
+    public function getStatement(): StatementInterface
+    {
+        return $this->statement;
+    }
+
+    /**
+     * @param  StatementInterface  $statement
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setStatement(StatementInterface $statement): static
+    {
+        $this->statement = $statement;
 
         return $this;
     }

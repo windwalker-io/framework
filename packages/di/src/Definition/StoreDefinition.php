@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Definition;
 
+use Closure;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
 
@@ -61,7 +62,7 @@ class StoreDefinition extends DelegateDefinition implements StoreDefinitionInter
      *
      * @return mixed
      */
-    public function resolve(Container $container)
+    public function resolve(Container $container): mixed
     {
         if (!$this->isShared()) {
             $this->reset();
@@ -78,7 +79,7 @@ class StoreDefinition extends DelegateDefinition implements StoreDefinitionInter
      * @return  void
      * @throws DefinitionException
      */
-    public function set($value): void
+    public function set(mixed $value): void
     {
         if ($this->options & Container::PROTECTED) {
             throw new DefinitionException('This value / definition is protected.');
@@ -87,7 +88,14 @@ class StoreDefinition extends DelegateDefinition implements StoreDefinitionInter
         parent::set($value);
     }
 
-    public function extend(\Closure $closure)
+    /**
+     * extend
+     *
+     * @param  Closure  $closure
+     *
+     * @return  $this
+     */
+    public function extend(Closure $closure): static
     {
         $this->definition = new DelegateDefinition(
             $this->definition,

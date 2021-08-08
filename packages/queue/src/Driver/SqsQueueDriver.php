@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Driver;
 
 use Aws\Sqs\SqsClient;
+use DomainException;
+use JsonException;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -38,10 +40,10 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * SqsQueueDriver constructor.
      *
-     * @param string $key
-     * @param string $secret
-     * @param string $channel
-     * @param array  $options
+     * @param  string  $key
+     * @param  string  $secret
+     * @param  string  $channel
+     * @param  array   $options
      */
     public function __construct(string $key, string $secret, string $channel = 'default', array $options = [])
     {
@@ -55,10 +57,10 @@ class SqsQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
-     * @throws \JsonException
+     * @return string
+     * @throws JsonException
      */
-    public function push(QueueMessage $message): int|string
+    public function push(QueueMessage $message): string
     {
         $request = [
             'QueueUrl' => $this->getQueueUrl($message->getChannel()),
@@ -71,7 +73,7 @@ class SqsQueueDriver implements QueueDriverInterface
 
         $request = array_merge($request, $options);
 
-        return $this->client->sendMessage($request)->get('MessageId');
+        return (string) $this->client->sendMessage($request)->get('MessageId');
     }
 
     /**
@@ -115,7 +117,7 @@ class SqsQueueDriver implements QueueDriverInterface
      *
      * @return static
      */
-    public function delete(QueueMessage $message)
+    public function delete(QueueMessage $message): static
     {
         $this->client->deleteMessage(
             [
@@ -130,11 +132,11 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * release
      *
-     * @param QueueMessage $message
+     * @param  QueueMessage  $message
      *
      * @return static
      */
-    public function release(QueueMessage $message)
+    public function release(QueueMessage $message): static
     {
         $this->client->changeMessageVisibility(
             [
@@ -150,11 +152,11 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * getQueueUrl
      *
-     * @param string $channel
+     * @param  string  $channel
      *
      * @return string
      */
-    public function getQueueUrl(?string $channel = null)
+    public function getQueueUrl(?string $channel = null): string
     {
         $channel = $channel ?: $this->channel;
 
@@ -168,7 +170,7 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * getReceiptHandle
      *
-     * @param QueueMessage $message
+     * @param  QueueMessage  $message
      *
      * @return  string
      */
@@ -180,17 +182,17 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * getSqsClient
      *
-     * @param string $key
-     * @param string $secret
-     * @param array  $options
+     * @param  string  $key
+     * @param  string  $secret
+     * @param  array   $options
      *
      * @return  SqsClient
-     * @throws \DomainException
+     * @throws DomainException
      */
     public function getSqsClient(string $key, string $secret, array $options = []): SqsClient
     {
         if (!class_exists(SqsClient::class)) {
-            throw new \DomainException('Please install aws/aws-sdk-php first.');
+            throw new DomainException('Please install aws/aws-sdk-php first.');
         }
 
         $defaultOptions = [

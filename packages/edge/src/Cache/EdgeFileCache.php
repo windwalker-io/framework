@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Cache;
 
+use RuntimeException;
+use Windwalker\Filesystem\Path;
+
 /**
  * The FileCacheHandler class.
  *
@@ -25,10 +28,12 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     protected string $path = '';
 
+    protected bool $debug = false;
+
     /**
      * FileCacheHandler constructor.
      *
-     * @param string $path
+     * @param  string  $path
      */
     public function __construct(string $path)
     {
@@ -62,13 +67,23 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     public function getCacheKey(string $path): string
     {
-        return md5(realpath($path));
+        $key = md5(realpath($path));
+
+        if ($this->isDebug()) {
+            $prefix = Path::getFilename($path);
+            $prefix = Path::stripExtension($prefix);
+            $prefix = Path::stripExtension($prefix);
+
+            $key = $prefix . '-' . $key . '.php';
+        }
+
+        return $key;
     }
 
     /**
      * getCacheFile
      *
-     * @param   string $key
+     * @param  string  $key
      *
      * @return  string
      */
@@ -99,17 +114,28 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     public function store(string $path, string $value): void
     {
-        $value = "<?php /* File: {$path} */ ?>" . $value;
+        $value = self::replaceFirst(
+            '<?php',
+            "<?php /* File: {$path} */ ",
+            $value
+        );
 
         $file = $this->getCacheFile($this->getCacheKey($path));
 
         if (!is_dir(dirname($file))) {
             if (!mkdir($concurrentDirectory = dirname($file), 0755, true) && !is_dir($concurrentDirectory)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
             }
         }
 
         file_put_contents($file, $value);
+    }
+
+    private static function replaceFirst(string $from, string $to, string $content): string
+    {
+        $from = '/' . preg_quote($from, '/') . '/';
+
+        return preg_replace($from, $to, $content, 1);
     }
 
     /**
@@ -137,9 +163,29 @@ class EdgeFileCache implements EdgeCacheInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPath(string $path)
+    public function setPath(string $path): static
     {
         $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebug(): bool
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param  bool  $debug
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDebug(bool $debug): static
+    {
+        $this->debug = $debug;
 
         return $this;
     }

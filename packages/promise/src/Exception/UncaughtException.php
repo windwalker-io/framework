@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Exception;
 
+use Exception;
+use Throwable;
+
 /**
  * The UncaughtException class.
  */
-class UncaughtException extends \Exception
+class UncaughtException extends Exception
 {
     private $reason;
 
@@ -22,9 +25,9 @@ class UncaughtException extends \Exception
      * UncaughtException constructor.
      *
      * @param  mixed            $reason
-     * @param  \Throwable|null  $previous
+     * @param  Throwable|null  $previous
      */
-    public function __construct($reason, ?\Throwable $previous = null)
+    public function __construct(mixed $reason, ?Throwable $previous = null)
     {
         $this->reason = $reason;
 
@@ -38,7 +41,7 @@ class UncaughtException extends \Exception
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function getReason()
+    public function getReason(): mixed
     {
         return $this->reason;
     }

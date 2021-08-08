@@ -105,11 +105,11 @@ class EdgeArrayCache implements EdgeCacheInterface
     /**
      * Method to set property data
      *
-     * @param   array $data
+     * @param  array  $data
      *
      * @return  static  Return self to support chaining.
      */
-    public function setData(array $data)
+    public function setData(array $data): static
     {
         $this->data = $data;
 

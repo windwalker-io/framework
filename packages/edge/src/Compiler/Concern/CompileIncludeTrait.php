@@ -19,7 +19,7 @@ trait CompileIncludeTrait
     /**
      * Compile the each statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -31,7 +31,7 @@ trait CompileIncludeTrait
     /**
      * Compile the include statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -39,15 +39,15 @@ trait CompileIncludeTrait
     {
         $expression = $this->stripParentheses($expression);
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable
         return "<?php echo \$__edge->render($expression, \$__edge->except(get_defined_vars(), ['__data', '__path'])); ?>";
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable
     }
 
     /**
      * Compile the include statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -55,8 +55,8 @@ trait CompileIncludeTrait
     {
         $expression = $this->stripParentheses($expression);
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable
         return "<?php if (\$__edge->exists($expression)) echo \$__edge->render($expression, \$__edge->except(get_defined_vars(), ['__data', '__path'])); ?>";
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable
     }
 }

@@ -13,7 +13,7 @@ namespace Windwalker\Session\Bridge;
 
 use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Handler\NativeHandler;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The PhpBridge class.
@@ -36,7 +36,7 @@ class NativeBridge implements BridgeInterface
 
         $this->prepareOptions(
             [
-                'auto_commit' => false
+                'auto_commit' => false,
             ],
             $options
         );
@@ -187,9 +187,9 @@ class NativeBridge implements BridgeInterface
     /**
      * getStorage
      *
-     * @return array|null
+     * @return array
      */
-    public function &getStorage(): ?array
+    public function &getStorage(): mixed
     {
         return $_SESSION;
     }

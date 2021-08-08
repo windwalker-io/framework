@@ -11,20 +11,31 @@ declare(strict_types=1);
 
 namespace Windwalker\Database;
 
+use BadMethodCallException;
+use DateTime;
+use DateTimeInterface;
+use DomainException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Stringable;
+use Throwable;
 use Windwalker\Database\Driver\AbstractDriver;
-use Windwalker\Database\Driver\ConnectionInterface;
-use Windwalker\Database\Driver\DriverFactory;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\Database\Hydrator\HydratorAwareInterface;
+use Windwalker\Database\Hydrator\HydratorInterface;
+use Windwalker\Database\Manager\DatabaseManager;
+use Windwalker\Database\Manager\SchemaManager;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Manager\WriterManager;
 use Windwalker\Database\Platform\AbstractPlatform;
-use Windwalker\Database\Schema\DatabaseManager;
-use Windwalker\Database\Schema\SchemaManager;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventListenableInterface;
-use Windwalker\Event\EventListenableTrait;
+use Windwalker\ORM\EntityMapper;
+use Windwalker\ORM\ORM;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+
+use function Windwalker\raw;
 
 /**
  * The DatabaseAdapter class.
@@ -32,63 +43,78 @@ use Windwalker\Utilities\Classes\OptionAccessTrait;
  * @method Query select(...$columns)
  * @method Query update(string $table, ?string $alias = null)
  * @method Query delete(string $table, ?string $alias = null)
- * @method Query insert(string $table, ?string $incrementField = null)
+ * @method Query insert(string $table, bool $incrementField = false)
  */
-class DatabaseAdapter implements EventListenableInterface
+class DatabaseAdapter implements EventListenableInterface, HydratorAwareInterface
 {
-    use OptionAccessTrait;
-    use EventListenableTrait;
+    use EventAwareTrait;
     use InstanceCacheTrait;
 
     protected ?AbstractDriver $driver = null;
 
-    protected \Stringable|string|null $query = null;
+    /**
+     * @var Query|string|Stringable|null
+     */
+    protected mixed $query = null;
+
+    /**
+     * @var LoggerInterface|null
+     */
+    protected ?LoggerInterface $logger;
+
+    /**
+     * @var AbstractPlatform
+     */
+    protected AbstractPlatform $platform;
+
+    protected ?ORM $orm = null;
 
     /**
      * DatabaseAdapter constructor.
      *
-     * @param  array  $options
+     * @param  AbstractDriver        $driver
+     * @param  AbstractPlatform      $platform
+     * @param  LoggerInterface|null  $logger
      */
-    public function __construct(array $options = [])
-    {
-        $this->prepareOptions(
-            [
-                'driver' => '',
-                'host' => 'localhost',
-                'database' => null,
-                'username' => null,
-                'password' => null,
-                'port' => null,
-                'prefix' => null,
-                'charset' => null,
-                'driverOptions' => [],
-            ],
-            $options
-        );
+    public function __construct(
+        AbstractDriver $driver,
+        AbstractPlatform $platform,
+        ?LoggerInterface $logger = null,
+    ) {
+        $this->driver = $driver;
+        $this->logger = $logger ?? new NullLogger();
+        $this->platform = $platform;
+
+        $this->platform->setDbAdapter($this);
     }
 
-    public function connect(): ConnectionInterface
+    /**
+     * Force close all connections from pool.
+     *
+     * @return  int
+     */
+    public function disconnect(): int
     {
-        return $this->getDriver()->connect();
+        return $this->getDriver()->disconnectAll();
     }
 
-    public function disconnect()
-    {
-        return $this->getDriver()->disconnect();
-    }
-
-    public function prepare($query, array $options = []): StatementInterface
+    public function prepare(mixed $query, array $options = []): StatementInterface
     {
         $this->query = $query;
 
-        return $this->getDriver()->prepare($query, $options);
+        $stmt = $this->getDriver()->prepare($query, $options);
+
+        // Make DatabaseAdapter listen to statement events
+        $stmt->addDispatcherDealer($this->getEventDispatcher());
+
+        return $stmt;
     }
 
-    public function execute($query, ?array $params = null): StatementInterface
+    public function execute(mixed $query, ?array $params = null): StatementInterface
     {
         $this->query = $query;
 
-        return $this->getDriver()->execute($query, $params);
+        return $this->prepare($query)->execute($params);
     }
 
     /**
@@ -98,10 +124,10 @@ class DatabaseAdapter implements EventListenableInterface
      *
      * @return string|Query
      */
-    public function getQuery(bool $new = false): Query|\Stringable|string|null
+    public function getQuery(bool $new = false): Query|Stringable|string|null
     {
         if ($new) {
-            return $this->getPlatform()->createQuery();
+            return $this->getPlatform()->createQuery($this);
         }
 
         return $this->query;
@@ -112,26 +138,46 @@ class DatabaseAdapter implements EventListenableInterface
         return $this->getQuery(true);
     }
 
-    public function getCachedQuery(bool $new = false): Query
+    /**
+     * To support escape() and quote() methods, we must cache a Query object and reuse it.
+     *
+     * This Query must set Driver as escaper to prevent infinity-loop.
+     *
+     * @param  bool  $new
+     *
+     * @return  Query
+     */
+    protected function getEscaperQuery(bool $new = false): Query
     {
-        return $this->once('cached.query', fn () => $this->getQuery(true), $new);
+        return $this->once(
+            'cached.query',
+            fn() => $this->getPlatform()
+                ->createQuery($this->getDriver()),
+            $new
+        );
     }
 
     /**
      * quoteName
      *
      * @param  mixed  $value
+     * @param  bool   $ignoreDot
      *
      * @return  array|string
      */
-    public function quoteName(mixed $value): array|string
+    public function quoteName(string|Stringable $value, bool $ignoreDot = false): array|string
     {
-        return $this->getPlatform()->getGrammar()::quoteNameMultiple($value);
+        return $this->getPlatform()->getGrammar()::quoteName($value, $ignoreDot);
     }
 
     public function quote(mixed $value): array|string
     {
-        return $this->getCachedQuery()->quote($value);
+        return $this->getEscaperQuery()->quote($value);
+    }
+
+    public function escape(mixed $value): array|string
+    {
+        return $this->getEscaperQuery()->escape($value);
     }
 
     /**
@@ -167,15 +213,21 @@ class DatabaseAdapter implements EventListenableInterface
         return $this->getSchema($schema)->getTables($includeViews);
     }
 
+    public function getOptions(): array
+    {
+        return $this->getDriver()->getOptions();
+    }
+
+    public function getDriverName(): string
+    {
+        return $this->getDriver()->getOption('driver');
+    }
+
     /**
      * @return AbstractDriver
      */
     public function getDriver(): AbstractDriver
     {
-        if (!$this->driver) {
-            $this->driver = DriverFactory::create($this->getOption('driver'), $this);
-        }
-
         return $this->driver;
     }
 
@@ -184,21 +236,21 @@ class DatabaseAdapter implements EventListenableInterface
      */
     public function getPlatform(): AbstractPlatform
     {
-        return $this->getDriver()->getPlatform();
+        return $this->platform;
     }
 
     public function getDatabase(string $name = null, $new = false): DatabaseManager
     {
-        $name = $name ?? $this->getOption('database');
+        $name = $name ?? $this->getDriver()->getOption('dbname');
 
-        return $this->once('database.' . $name, fn () => new DatabaseManager($name, $this), $new);
+        return $this->once('database.' . $name, fn() => new DatabaseManager($name, $this), $new);
     }
 
     public function getSchema(?string $name = null, $new = false): SchemaManager
     {
         $name = $name ?? $this->getPlatform()::getDefaultSchema();
 
-        return $this->once('schema.' . $name, fn () => new SchemaManager($name, $this), $new);
+        return $this->once('schema.' . $name, fn() => new SchemaManager($name, $this), $new);
     }
 
     public function getTable(string $name, $new = false): TableManager
@@ -208,7 +260,7 @@ class DatabaseAdapter implements EventListenableInterface
 
     public function getWriter($new = false): WriterManager
     {
-        return $this->once('writer', fn () => new WriterManager($this), $new);
+        return $this->once('writer', fn() => new WriterManager($this), $new);
     }
 
     public function replacePrefix(string $query, string $prefix = '#__'): string
@@ -225,11 +277,45 @@ class DatabaseAdapter implements EventListenableInterface
      *
      * @return  mixed
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true)
+    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
     {
         return $this->getPlatform()->transaction($callback, $autoCommit, $enabled);
+    }
+
+    public function countWith(Query|string $query): int
+    {
+        // Use fast COUNT(*) on Query objects if there no GROUP BY or HAVING clause:
+        if (
+            $query instanceof Query
+            && $query->getType() === Query::TYPE_SELECT
+            && $query->getGroup() === null
+            && $query->getHaving() === null
+        ) {
+            $query = clone $query;
+
+            $query->clear('select', 'order', 'limit')->selectRaw('COUNT(*)');
+
+            return (int) $query->result();
+        }
+
+        // Otherwise fall back to inefficient way of counting all results.
+        if ($query instanceof Query) {
+            $subQuery = clone $query;
+
+            $subQuery->clear('select', 'order', 'limit')
+                ->selectAs(raw('COUNT(*)'), 'count');
+        } else {
+            $subQuery = $query->getSql();
+        }
+
+        $query = $this->createQuery();
+
+        $query->selectRaw('COUNT(%n)', 'count')
+            ->from($subQuery, 'c');
+
+        return (int) $this->prepare($query)->result();
     }
 
     /**
@@ -252,13 +338,13 @@ class DatabaseAdapter implements EventListenableInterface
         return $this->getPlatform()->getGrammar()::nullDate();
     }
 
-    public function isNullDate(string|int|null|\DateTimeInterface $date): bool
+    public function isNullDate(string|int|null|DateTimeInterface $date): bool
     {
         if (is_numeric($date)) {
-            $date = new \DateTime($date);
+            $date = new DateTime($date);
         }
 
-        if ($date instanceof \DateTimeInterface) {
+        if ($date instanceof DateTimeInterface) {
             $date = $date->format($this->getDateFormat());
         }
 
@@ -280,15 +366,60 @@ class DatabaseAdapter implements EventListenableInterface
             'select',
             'delete',
             'update',
-            'insert'
+            'insert',
         ];
 
         if (in_array(strtolower($name), $queryMethods, true)) {
             return $this->createQuery()->$name(...$args);
         }
 
-        throw new \BadMethodCallException(
+        throw new BadMethodCallException(
             sprintf('Call to undefined method of: %s::%s()', static::class, $name)
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHydrator(): HydratorInterface
+    {
+        return $this->getDriver()->getHydrator();
+    }
+
+    /**
+     * @template T
+     *
+     * @param  string|T  $entityClass
+     *
+     * @return EntityMapper<T>
+     * @throws \ReflectionException
+     */
+    public function mapper(string $entityClass): EntityMapper
+    {
+        return $this->orm()->mapper($entityClass);
+    }
+
+    /**
+     * @return ORM
+     */
+    public function orm(): ORM
+    {
+        if (!class_exists(ORM::class)) {
+            throw new DomainException('Please install windwalker/orm ^4.0 first.');
+        }
+
+        return $this->orm ??= new ORM($this);
+    }
+
+    /**
+     * @param  ORM|null  $orm
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setORM(?ORM $orm): static
+    {
+        $this->orm = $orm;
+
+        return $this;
     }
 }

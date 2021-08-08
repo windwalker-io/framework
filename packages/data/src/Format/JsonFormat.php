@@ -26,9 +26,9 @@ class JsonFormat implements FormatInterface
      *
      * @return  string
      */
-    public function dump($data, array $options = []): string
+    public function dump(mixed $data, array $options = []): string
     {
-        $depth  = $options['depth'] ?? 512;
+        $depth = $options['depth'] ?? 512;
         $option = $options['options'] ?? 0;
 
         return json_encode($data, JSON_THROW_ON_ERROR | $option, $depth);
@@ -42,10 +42,10 @@ class JsonFormat implements FormatInterface
      *
      * @return mixed Data array.
      */
-    public function parse(string $string, array $options = [])
+    public function parse(string $string, array $options = []): mixed
     {
-        $assoc  = $options['assoc'] ?? true;
-        $depth  = $options['depth'] ?? 512;
+        $assoc = $options['assoc'] ?? true;
+        $depth = $options['depth'] ?? 512;
         $option = $options['options'] ?? 0;
 
         return json_decode(trim($string), $assoc, $depth, $option);

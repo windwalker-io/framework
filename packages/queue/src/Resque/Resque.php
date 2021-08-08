@@ -23,12 +23,12 @@ class Resque extends PhpResque
     /**
      * Remove items of the specified queue
      *
-     * @param string $queue The name of the queue to fetch an item from.
-     * @param array  $items
+     * @param  string  $queue  The name of the queue to fetch an item from.
+     * @param  array   $items
      *
      * @return integer number of deleted items
      */
-    public static function dequeue($queue, $items = [])
+    public static function dequeue(string $queue, array $items = []): int
     {
         if (count($items) > 0) {
             return self::removeItems($queue, $items);
@@ -45,12 +45,12 @@ class Resque extends PhpResque
      *
      * @private
      *
-     * @param string $queue The name of the queue
-     * @param array  $items
+     * @param  string  $queue  The name of the queue
+     * @param  array   $items
      *
      * @return integer number of deleted items
      */
-    protected static function removeItems($queue, $items = [])
+    protected static function removeItems(string $queue, array $items = []): int
     {
         $counter = 0;
         $originalQueue = 'queue:' . $queue;
@@ -104,7 +104,7 @@ class Resque extends PhpResque
      *
      * @return (bool)
      */
-    protected static function matchItem($string, $items)
+    protected static function matchItem($string, $items): bool
     {
         $decoded = json_decode($string, true);
 
@@ -118,8 +118,10 @@ class Resque extends PhpResque
             } elseif (is_array($val)) {
                 $decodedArgs = (array) $decoded['args'][0];
 
-                if ($decoded['class'] == $key && count($decodedArgs) > 0
-                    && count(array_diff($decodedArgs, $val)) == 0) {
+                if (
+                    $decoded['class'] == $key && count($decodedArgs) > 0
+                    && count(array_diff($decodedArgs, $val)) == 0
+                ) {
                     return true;
                 }
                 // class name with ID, example: item[0] = ['class' => 'id']
@@ -142,7 +144,7 @@ class Resque extends PhpResque
      *
      * @return integer number of deleted items belongs to this list
      */
-    protected static function removeList($queue)
+    protected static function removeList($queue): int
     {
         $counter = self::size($queue);
         $result = self::redis()->del('queue:' . $queue);
@@ -155,7 +157,7 @@ class Resque extends PhpResque
      *
      * @return string
      */
-    public static function generateJobId()
+    public static function generateJobId(): string
     {
         return md5(uniqid('', true));
     }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Helper;
 
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
@@ -27,14 +28,18 @@ abstract class ServerHelper
      *
      * Will also do a case-insensitive search if a case sensitive search fails.
      *
-     * @param   array  $servers Server values to search.
-     * @param   string $name    The name we want to search.
-     * @param   mixed  $default Default value if not found.
+     * @param  array   $servers  Server values to search.
+     * @param  string  $name     The name we want to search.
+     * @param  mixed   $default  Default value if not found.
      *
      * @return  mixed
      */
-    public static function getValue(array $servers, $name, $default = null)
-    {
+    #[Pure]
+    public static function getValue(
+        array $servers,
+        string $name,
+        mixed $default = null
+    ): mixed {
         if (array_key_exists($name, $servers)) {
             return $servers[$name];
         }
@@ -47,11 +52,11 @@ abstract class ServerHelper
      *
      * Every file should be an UploadedFileInterface object.
      *
-     * @param   array $files Files array.
+     * @param  array  $files  Files array.
      *
-     * @return  boolean
+     * @return  bool
      */
-    public static function validateUploadedFiles(array $files)
+    public static function validateUploadedFiles(array $files): bool
     {
         foreach ($files as $file) {
             if (is_array($file)) {
@@ -75,7 +80,7 @@ abstract class ServerHelper
      *
      * @return  array|false
      */
-    public static function getAllHeaders()
+    public static function getAllHeaders(): bool|array
     {
         if (function_exists('getallheaders')) {
             return getallheaders();
@@ -101,7 +106,7 @@ abstract class ServerHelper
      *
      * @link  http://php.net/manual/en/function.getallheaders.php#99814
      */
-    public static function apacheRequestHeaders()
+    public static function apacheRequestHeaders(): array
     {
         if (function_exists('apache_request_headers')) {
             return apache_request_headers();
@@ -125,13 +130,13 @@ abstract class ServerHelper
     /**
      * parseFormData
      *
-     * @param string $input
+     * @param  string  $input
      *
      * @return array
      *
      * @link  http://stackoverflow.com/questions/5483851/manually-parse-raw-http-data-with-php/5488449#5488449
      */
-    public static function parseFormData($input)
+    public static function parseFormData(string $input): array
     {
         $boundary = substr($input, 0, strpos($input, "\r\n"));
 
@@ -142,14 +147,14 @@ abstract class ServerHelper
 
         foreach ($parts as $part) {
             // If this is the last part, break
-            if (strpos($part, '--') === 0) {
+            if (str_starts_with($part, '--')) {
                 break;
             }
 
             // Separate content from headers
             $part = ltrim($part, "\r\n");
 
-            list($rawHeaders, $content) = explode("\r\n\r\n", $part, 2);
+            [$rawHeaders, $content] = explode("\r\n\r\n", $part, 2);
 
             $content = substr($content, 0, strlen($content) - 2);
 
@@ -158,7 +163,7 @@ abstract class ServerHelper
             $headers = [];
 
             foreach ($rawHeaders as $header) {
-                list($name, $value) = explode(':', $header, 2);
+                [$name, $value] = explode(':', $header, 2);
 
                 $headers[strtolower($name)] = ltrim($value, ' ');
             }
@@ -214,16 +219,18 @@ abstract class ServerHelper
     /**
      * setByPath
      *
-     * @param mixed  &$data
-     * @param string $path
-     * @param mixed  $value
-     * @param string $separator
+     * @param  mixed  &$data
+     * @param  string  $path
+     * @param  mixed   $value
+     * @param  string  $separator
      *
-     * @return  boolean
+     * @return  bool
      *
-     * @since   2.0
+     * @since      2.0
+     *
+     * @deprecated Use Arr::set()
      */
-    public static function setByPath(array &$data, $path, $value, $separator = '.')
+    public static function setByPath(array &$data, string $path, mixed $value, string $separator = '.'): bool
     {
         $nodes = array_values(explode($separator, $path));
 

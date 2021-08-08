@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Cache\Test\Storage;
 
 use Windwalker\Cache\Storage\MemcachedStorage;
+use Windwalker\Utilities\Env;
 
 /**
  * The MemcachedStorageTest class.
@@ -28,7 +29,7 @@ class MemcachedStorageTest extends AbstractStorageTest
      */
     public static function setUpBeforeClass(): void
     {
-        if (!class_exists(\Memcached::class)) {
+        if (!Env::get('MEMCACHED_ENABLED')) {
             self::markTestSkipped('Memcached not supported');
         }
     }

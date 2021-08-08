@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Stream;
 
+use Exception;
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 
 /**
  * The Stream class.
@@ -37,14 +40,14 @@ class Stream implements StreamInterface
      *
      * @var resource
      */
-    protected $resource;
+    protected mixed $resource;
 
     /**
      * Stream resource.
      *
      * @var string|resource
      */
-    protected $stream;
+    protected mixed $stream;
 
     /**
      * fromString
@@ -54,7 +57,7 @@ class Stream implements StreamInterface
      *
      * @return  static
      */
-    public static function fromString(string $string, string $mode = self::MODE_READ_WRITE_FROM_BEGIN)
+    public static function fromString(string $string, string $mode = self::MODE_READ_WRITE_FROM_BEGIN): static
     {
         $stream = new static(null, $mode);
         $stream->write($string);
@@ -70,7 +73,7 @@ class Stream implements StreamInterface
      *
      * @return  static
      */
-    public static function fromFilePath(string $file, string $mode = self::MODE_READ_WRITE_RESET)
+    public static function fromFilePath(string $file, string $mode = self::MODE_READ_WRITE_RESET): static
     {
         return new static(fopen($file, $mode));
     }
@@ -117,7 +120,7 @@ class Stream implements StreamInterface
      * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->isReadable()) {
             return '';
@@ -127,7 +130,7 @@ class Stream implements StreamInterface
             $this->rewind();
 
             return $this->getContents();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return (string) $e;
         }
     }
@@ -156,7 +159,7 @@ class Stream implements StreamInterface
      *
      * @return  static Return self to support chaining.
      */
-    public function attach($stream, $mode = 'r')
+    public function attach(mixed $stream, string $mode = 'r'): static
     {
         $this->stream = $stream;
 
@@ -165,7 +168,7 @@ class Stream implements StreamInterface
         } elseif (is_string($stream)) {
             $this->resource = fopen($stream, $mode);
         } elseif ($stream !== false) {
-            throw new \InvalidArgumentException('Invalid resource.');
+            throw new InvalidArgumentException('Invalid resource.');
         }
 
         return $this;
@@ -183,7 +186,7 @@ class Stream implements StreamInterface
         $resource = $this->resource;
 
         $this->resource = null;
-        $this->stream   = null;
+        $this->stream = null;
 
         return $resource;
     }
@@ -193,7 +196,7 @@ class Stream implements StreamInterface
      *
      * @return int|null Returns the size in bytes if known, or null if unknown.
      */
-    public function getSize()
+    public function getSize(): ?int
     {
         if (!is_resource($this->resource)) {
             return null;
@@ -208,18 +211,18 @@ class Stream implements StreamInterface
      * Returns the current position of the file read/write pointer
      *
      * @return int Position of the file pointer
-     * @throws \RuntimeException on error.
+     * @throws RuntimeException on error.
      */
-    public function tell()
+    public function tell(): int
     {
         if (!is_resource($this->resource)) {
-            throw new \RuntimeException('No resource available.');
+            throw new RuntimeException('No resource available.');
         }
 
         $result = ftell($this->resource);
 
         if (!is_int($result)) {
-            throw new \RuntimeException('Error occurred during tell operation');
+            throw new RuntimeException('Error occurred during tell operation');
         }
 
         return $result;
@@ -230,7 +233,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function eof()
+    public function eof(): bool
     {
         if (!is_resource($this->resource)) {
             return true;
@@ -244,7 +247,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         if (!is_resource($this->resource)) {
             return false;
@@ -269,22 +272,22 @@ class Stream implements StreamInterface
      *
      * @return boolean
      *
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET): bool
     {
         if (!is_resource($this->resource)) {
-            throw new \RuntimeException('No resource available.');
+            throw new RuntimeException('No resource available.');
         }
 
         if (!$this->isSeekable()) {
-            throw new \RuntimeException('Stream is not seekable');
+            throw new RuntimeException('Stream is not seekable');
         }
 
         $result = fseek($this->resource, $offset, $whence);
 
         if ($result !== 0) {
-            throw new \RuntimeException('Error seeking within stream');
+            throw new RuntimeException('Error seeking within stream');
         }
 
         return true;
@@ -296,11 +299,11 @@ class Stream implements StreamInterface
      * If the stream is not seekable, this method will raise an exception;
      * otherwise, it will perform a seek(0).
      *
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
-    public function rewind()
+    public function rewind(): bool
     {
         return $this->seek(0);
     }
@@ -310,7 +313,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function isWritable()
+    public function isWritable(): bool
     {
         if (!is_resource($this->resource)) {
             return false;
@@ -327,18 +330,18 @@ class Stream implements StreamInterface
      * @param  string  $string  The string that is to be written.
      *
      * @return int Returns the number of bytes written to the stream.
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      */
-    public function write($string)
+    public function write($string): int
     {
         if (!is_resource($this->resource)) {
-            throw new \RuntimeException('No resource available.');
+            throw new RuntimeException('No resource available.');
         }
 
         $result = fwrite($this->resource, $string);
 
         if ($result === false) {
-            throw new \RuntimeException('Error writing to stream');
+            throw new RuntimeException('Error writing to stream');
         }
 
         return $result;
@@ -370,22 +373,22 @@ class Stream implements StreamInterface
      *
      * @return string Returns the data read from the stream, or an empty string
      *     if no bytes are available.
-     * @throws \RuntimeException if an error occurs.
+     * @throws RuntimeException if an error occurs.
      */
-    public function read($length)
+    public function read($length): string
     {
         if (!is_resource($this->resource)) {
-            throw new \RuntimeException('No resource available.');
+            throw new RuntimeException('No resource available.');
         }
 
         if (!$this->isReadable()) {
-            throw new \RuntimeException('Stream is not readable');
+            throw new RuntimeException('Stream is not readable');
         }
 
         $result = fread($this->resource, $length);
 
         if ($result === false) {
-            throw new \RuntimeException('Error reading stream');
+            throw new RuntimeException('Error reading stream');
         }
 
         return $result;
@@ -395,10 +398,10 @@ class Stream implements StreamInterface
      * Returns the remaining contents in a string
      *
      * @return string
-     * @throws \RuntimeException if unable to read or an error occurs while
+     * @throws RuntimeException if unable to read or an error occurs while
      *     reading.
      */
-    public function getContents()
+    public function getContents(): string
     {
         if (!$this->isReadable()) {
             return '';
@@ -407,7 +410,7 @@ class Stream implements StreamInterface
         $result = stream_get_contents($this->resource);
 
         if ($result === false) {
-            throw new \RuntimeException('Error reading from stream');
+            throw new RuntimeException('Error reading from stream');
         }
 
         return $result;
@@ -427,7 +430,7 @@ class Stream implements StreamInterface
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
-    public function getMetadata($key = null)
+    public function getMetadata($key = null): mixed
     {
         $metadata = stream_get_meta_data($this->resource);
 

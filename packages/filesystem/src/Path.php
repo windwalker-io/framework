@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem;
 
+use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
+use UnexpectedValueException;
+use Windwalker\Filesystem\Exception\FilesystemException;
+use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Str;
 
 /**
@@ -37,7 +42,7 @@ class Path
      *
      * @since   2.0
      */
-    public static function setPermissions(string $path, $filemode = '0644', $foldermode = '0755'): bool
+    public static function setPermissions(string $path, string $filemode = '0644', string $foldermode = '0755'): bool
     {
         // Initialise return value
         $ret = true;
@@ -120,8 +125,8 @@ class Path
      *
      * @return  string  The cleaned path.
      *
-     * @throws  \UnexpectedValueException If $path is not a string.
-     * @throws  \InvalidArgumentException
+     * @throws  UnexpectedValueException If $path is not a string.
+     * @throws  InvalidArgumentException
      * @since   2.0
      */
     public static function clean(string $path, string $ds = DIRECTORY_SEPARATOR): string
@@ -132,7 +137,7 @@ class Path
 
         $prefix = '';
 
-        if (strpos($path, '://') !== false) {
+        if (str_contains($path, '://')) {
             $extracted = explode('://', $path, 2);
 
             if (count($extracted) === 1) {
@@ -140,14 +145,14 @@ class Path
             }
 
             $prefix = $extracted[0] . '://';
-            $path   = $extracted[1];
+            $path = $extracted[1];
         } elseif (preg_match('/(\w+):[\/\\\\](.*)/', $path, $matches)) {
             if ($matches[2] === '') {
                 return $path;
             }
 
-            $prefix = $matches[1] . ':\\';
-            $path   = $matches[2];
+            $prefix = $matches[1] . ':' . $ds;
+            $path = $matches[2];
         }
 
         $path = trim($path, ' ');
@@ -176,8 +181,8 @@ class Path
      */
     public static function normalize(string $path, string $ds = DIRECTORY_SEPARATOR): string
     {
-        $parts    = [];
-        $path     = static::clean($path, $ds);
+        $parts = [];
+        $path = static::clean($path, $ds);
         $segments = explode($ds, $path);
 
         foreach ($segments as $segment) {
@@ -204,6 +209,37 @@ class Path
         return rtrim(implode($ds, $parts), '.' . DIRECTORY_SEPARATOR);
     }
 
+    public static function realpath(string $src, bool $checkExists = false): string|false
+    {
+        if ($src === '') {
+            return $src;
+        }
+
+        [$pathScheme, $path] = array_pad(explode('://', $src, 2), -2, null);
+
+        if (!$pathScheme && ($fastPath = stream_resolve_include_path($src))) {
+            return $fastPath;
+        }
+
+        $isRelative = static::isRelative($path);
+
+        if ($isRelative) {
+            $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+        }
+
+        $path = static::normalize($path);
+
+        if ($pathScheme) {
+            $path = "{$pathScheme}://{$path}";
+        }
+
+        if ($checkExists && !file_exists($path)) {
+            return false;
+        }
+
+        return $path;
+    }
+
     /**
      * Check file exists and also the filename cases.
      *
@@ -211,7 +247,7 @@ class Path
      * @param  int     $sensitive  Sensitive file name case.
      *
      * @return  bool
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     public static function exists(string $path, int $sensitive = self::CASE_OS_DEFAULT): bool
     {
@@ -220,7 +256,7 @@ class Path
         }
 
         $path = static::normalize($path, DIRECTORY_SEPARATOR);
-        $it   = Filesystem::items(dirname($path));
+        $it = Filesystem::items(dirname($path));
 
         if (static::CASE_INSENSITIVE === $sensitive) {
             $lowerfile = strtolower($path);
@@ -273,7 +309,7 @@ class Path
      */
     public static function stripTrailingDot(string $path, string $ds = DIRECTORY_SEPARATOR): string
     {
-        return Str::removeRight($path, DIRECTORY_SEPARATOR . '.');
+        return Str::removeRight($path, $ds . '.');
     }
 
     /**
@@ -299,7 +335,7 @@ class Path
      *
      * @since   2.0
      */
-    public static function getExtension(string $file)
+    public static function getExtension(string $file): string
     {
         return pathinfo($file, PATHINFO_EXTENSION);
     }
@@ -313,7 +349,7 @@ class Path
      *
      * @since   2.0
      */
-    public static function getFilename(string $path)
+    public static function getFilename(string $path): string
     {
         $name = pathinfo($path, PATHINFO_FILENAME);
 
@@ -343,9 +379,7 @@ class Path
         $file = preg_replace($regex, '', $file);
 
         // Remove any trailing dots, as those aren't ever valid file names.
-        $file = rtrim($file, '.');
-
-        return $file;
+        return rtrim($file, '.');
     }
 
     /**
@@ -357,10 +391,136 @@ class Path
      *
      * @since  3.4.5
      */
-    public static function makeUtf8Safe($file)
-    {
+    public static function makeUtf8Safe(
+        string $file
+    ): bool|string {
         $file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
 
         return mb_ereg_replace("([\.]{2,})", '', $file);
+    }
+
+    /**
+     * Returns whether a path is absolute.
+     *
+     * @param  string  $path  A path string.
+     *
+     * @return bool Returns true if the path is absolute, false if it is
+     *              relative or empty.
+     */
+    public static function isAbsolute(string $path): bool
+    {
+        if ('' === $path) {
+            return false;
+        }
+
+        // Strip scheme
+        if (false !== ($pos = strpos($path, '://'))) {
+            $path = substr($path, $pos + 3);
+        }
+
+        // UNIX root "/" or "\" (Windows style)
+        if ('/' === $path[0] || '\\' === $path[0]) {
+            return true;
+        }
+
+        // Windows root
+        if (strlen($path) > 1 && ctype_alpha($path[0]) && ':' === $path[1]) {
+            // Special case: "C:"
+            if (2 === strlen($path)) {
+                return true;
+            }
+
+            // Normal case: "C:/ or "C:\"
+            if ('/' === $path[2] || '\\' === $path[2]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns whether a path is relative.
+     *
+     * @param  string  $path  A path string.
+     *
+     * @return bool Returns true if the path is relative or empty, false if
+     *              it is absolute.
+     *
+     * @since 1.0 Added method.
+     * @since 2.0 Method now fails if $path is not a string.
+     */
+    public static function isRelative(string $path): bool
+    {
+        return !static::isAbsolute($path);
+    }
+
+    /**
+     * Find root. if in xUNIX system will return `/`, if in Windows will return disk root name.
+     *
+     * @param  string  $path
+     *
+     * @return  string
+     */
+    public static function findRoot(string $path): string
+    {
+        if (DIRECTORY_SEPARATOR === '/') {
+            return '/';
+        }
+
+        if (!static::isAbsolute($path)) {
+            throw new FilesystemException("Finding root from a relative path: \"$path\".");
+        }
+
+        $paths = explode(DIRECTORY_SEPARATOR, static::normalize($path));
+
+        $root = array_shift($paths);
+
+        return Str::ensureRight($root, DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Method to find the relative path from a given path to another path based on the current working directory.
+     * If both the given paths are the same, it would resolve to a zero-length string.
+     * This method is a fork from Node.js but without case check.
+     *
+     * @see https://github.com/nodejs/node-v0.x-archive/blob/master/lib/path.js#L504-L530
+     * @see https://github.com/nodejs/node-v0.x-archive/blob/master/lib/path.js#L265-L304
+     *
+     * Path::relative('/root/path', '/root/path/images/a.jpg') => `images/a.jpg`
+     *
+     * @param  string  $from
+     * @param  string  $to
+     *
+     * @return  string
+     */
+    public static function relative(string $from, string $to): string
+    {
+        $to = static::normalize($to);
+        $from = static::normalize($from);
+
+        $fromParts = Arr::explodeAndClear(DIRECTORY_SEPARATOR, $from);
+        $toParts = Arr::explodeAndClear(DIRECTORY_SEPARATOR, $to);
+
+        $length = min(count($fromParts), count($toParts));
+        $samePartsLength = $length;
+
+        for ($i = 0; $i < $length; $i++) {
+            if ($fromParts[$i] !== $toParts[$i]) {
+                $samePartsLength = $i;
+                break;
+            }
+        }
+
+        $outputParts = [];
+        $fromPartsLength = count($fromParts);
+
+        for ($k = $samePartsLength; $k < $fromPartsLength; $k++) {
+            $outputParts[] = '..';
+        }
+
+        $outputParts = array_merge($outputParts, array_slice($toParts, $samePartsLength));
+
+        return implode(DIRECTORY_SEPARATOR, $outputParts);
     }
 }

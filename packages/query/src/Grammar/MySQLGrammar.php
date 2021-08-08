@@ -11,8 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
+use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
+use function Windwalker\Query\expr;
+use function Windwalker\Query\qn;
 use function Windwalker\raw;
 
 /**
@@ -23,17 +26,17 @@ class MySQLGrammar extends AbstractGrammar
     /**
      * @var string
      */
-    protected static $name = 'MySQL';
+    protected static string $name = 'MySQL';
 
     /**
      * @var array
      */
-    protected static $nameQuote = ['`', '`'];
+    public static array $nameQuote = ['`', '`'];
 
     /**
      * @var string
      */
-    protected static $nullDate = '1000-01-01 00:00:00';
+    public static string $nullDate = '1000-01-01 00:00:00';
 
     /**
      * If no connection set, we escape it with default function.
@@ -42,11 +45,11 @@ class MySQLGrammar extends AbstractGrammar
      * Please see:
      * http://stackoverflow.com/questions/4892882/mysql-real-escape-string-for-multibyte-without-a-connection
      *
-     * @param string $text
+     * @param  string  $text
      *
      * @return  string
      */
-    public function localEscape(string $text): string
+    public static function localEscape(string $text): string
     {
         return str_replace(
             ['\\', "\0", "\n", "\r", "'", '"', "\x1a"],
@@ -72,5 +75,23 @@ class MySQLGrammar extends AbstractGrammar
         }
 
         return $query;
+    }
+
+    public function compileJsonSelector(
+        Query $query,
+        string $column,
+        array $paths,
+        bool $unQuoteLast = true,
+        bool $instant = false
+    ): Clause {
+        $expr = expr('JSON_EXTRACT()', qn($column, $query));
+
+        $expr->append($query->valueize('$.' . implode('.', $paths), $instant));
+
+        if ($unQuoteLast) {
+            $expr = expr('JSON_UNQUOTE()', $expr);
+        }
+
+        return $expr;
     }
 }

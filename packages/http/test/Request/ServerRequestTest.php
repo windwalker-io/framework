@@ -12,9 +12,10 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Request;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\UploadedFile;
-use Windwalker\Http\Uri;
+use Windwalker\Uri\Uri;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 /**
@@ -51,7 +52,7 @@ class ServerRequestTest extends TestCase
      * testConstruct
      *
      * @return  void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function testConstruct()
     {

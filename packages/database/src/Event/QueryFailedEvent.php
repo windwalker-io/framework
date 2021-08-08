@@ -11,15 +11,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Event;
 
+use Throwable;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Query\Query;
 
 /**
  * The QueryFailedEvent class.
  */
 class QueryFailedEvent extends AbstractEvent
 {
-    protected \Throwable $exception;
+    protected Throwable $exception;
+
     protected string $sql;
+
     protected array $bounded;
 
     /**
@@ -40,7 +44,7 @@ class QueryFailedEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setName(string $name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -60,7 +64,7 @@ class QueryFailedEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setSql(string $sql)
+    public function setSql(string $sql): static
     {
         $this->sql = $sql;
 
@@ -80,7 +84,7 @@ class QueryFailedEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setBounded(array $bounded)
+    public function setBounded(array $bounded): static
     {
         $this->bounded = $bounded;
 
@@ -90,7 +94,7 @@ class QueryFailedEvent extends AbstractEvent
     /**
      * @return mixed
      */
-    public function getQuery()
+    public function getQuery(): mixed
     {
         return $this->query;
     }
@@ -100,27 +104,38 @@ class QueryFailedEvent extends AbstractEvent
      *
      * @return  static  Return self to support chaining.
      */
-    public function setQuery($query)
+    public function setQuery(mixed $query): static
     {
         $this->query = $query;
 
         return $this;
     }
 
+    public function getDebugQueryString(): string
+    {
+        $query = $this->getQuery();
+
+        if ($query instanceof Query) {
+            $query = $query->render(true);
+        }
+
+        return (string) $query;
+    }
+
     /**
-     * @return \Throwable
+     * @return Throwable
      */
-    public function getException(): \Throwable
+    public function getException(): Throwable
     {
         return $this->exception;
     }
 
     /**
-     * @param  \Throwable  $exception
+     * @param  Throwable  $exception
      *
      * @return  static  Return self to support chaining.
      */
-    public function setException(\Throwable $exception)
+    public function setException(Throwable $exception): static
     {
         $this->exception = $exception;
 

@@ -11,7 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Format;
 
+use Closure;
 use InvalidArgumentException;
+use Traversable;
+use Windwalker\Utilities\Contract\DumpableInterface;
+use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function strlen;
 
@@ -66,23 +70,27 @@ class FormatRegistry
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function parse(string $string, string $format, array $options = [])
+    public function parse(string $string, ?string $format = null, array $options = []): mixed
     {
+        $format ??= $this->defaultFormat;
+
         return $this->getFormatHandler($this->resolveFormatAlias($format))
             ->parse($string, $options);
     }
 
-    public function dump(array $data, string $format, array $options = []): string
+    public function dump(mixed $data, ?string $format = null, array $options = []): string
     {
+        $format ??= $this->defaultFormat;
+
         return $this->getFormatHandler($this->resolveFormatAlias($format))
             ->dump($data, $options);
     }
 
-    public function loadFile(string $file, ?string $format = null, array $options = [])
+    public function loadFile(string $file, ?string $format = null, array $options = []): mixed
     {
         if ($format === null) {
             $paths = explode('.', $file);
-            $ext   = $paths[array_key_last($paths)];
+            $ext = $paths[array_key_last($paths)];
 
             $format = $this->resolveFileFormat($ext);
         }
@@ -91,7 +99,7 @@ class FormatRegistry
             return require $file;
         }
 
-        return $this->parse(file_get_contents($file), $format ?: $this->defaultFormat, $options);
+        return $this->parse(file_get_contents($file), $format ?? $this->defaultFormat, $options);
     }
 
     public function load(string $string, ?string $format = null, array $options = [])
@@ -119,8 +127,11 @@ class FormatRegistry
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function registerFormat(string $format, $handlerOrParser, ?callable $dumper = null)
-    {
+    public function registerFormat(
+        string $format,
+        callable|FormatInterface $handlerOrParser,
+        ?callable $dumper = null
+    ): static {
         if ($handlerOrParser instanceof FormatInterface) {
             $this->handlers[strtolower($format)] = $handlerOrParser;
 
@@ -155,7 +166,7 @@ class FormatRegistry
         return new $class();
     }
 
-    public function removeHandler(string $formst)
+    public function removeHandler(string $formst): static
     {
         unset($this->handlers[strtolower($formst)]);
 
@@ -172,14 +183,14 @@ class FormatRegistry
         return $this->extMaps[strtolower($ext)] ?? $ext;
     }
 
-    public function alias(string $alias, string $format)
+    public function alias(string $alias, string $format): static
     {
         $this->aliases[strtolower($alias)] = strtoupper($format);
 
         return $this;
     }
 
-    public function extMap(string $ext, string $format)
+    public function extMap(string $ext, string $format): static
     {
         $this->extMaps[strtolower($ext)] = strtolower($format);
 
@@ -198,5 +209,49 @@ class FormatRegistry
         $this->extMaps = [];
 
         return $this;
+    }
+
+    /**
+     * makeDumpable
+     *
+     * @param  mixed  $data
+     *
+     * @return  array
+     */
+    public static function makeDumpable(mixed $data): array
+    {
+        // Ensure the input data is an array.
+        if ($data instanceof DumpableInterface) {
+            $data = $data->dump(true);
+        } elseif ($data instanceof Traversable) {
+            $data = iterator_to_array($data);
+        } elseif (is_object($data)) {
+            $data = ReflectAccessor::getPropertiesValues($data);
+        } else {
+            $data = (array) $data;
+        }
+
+        $data = array_map(
+            static function ($v) {
+                if (is_resource($v)) {
+                    return '[resource #' . get_resource_id($v) . ']';
+                }
+
+                if ($v instanceof Closure) {
+                    return "[Object Closure]";
+                }
+
+                return $v;
+            },
+            $data,
+        );
+
+        foreach ($data as &$value) {
+            if (is_array($value) || is_object($value)) {
+                $value = static::makeDumpable($value);
+            }
+        }
+
+        return $data;
     }
 }

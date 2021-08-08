@@ -25,9 +25,9 @@ interface QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
+     * @return string
      */
-    public function push(QueueMessage $message): int|string;
+    public function push(QueueMessage $message): string;
 
     /**
      * pop
@@ -45,14 +45,14 @@ interface QueueDriverInterface
      *
      * @return static
      */
-    public function delete(QueueMessage $message);
+    public function delete(QueueMessage $message): static;
 
     /**
      * release
      *
-     * @param QueueMessage $message
+     * @param  QueueMessage  $message
      *
      * @return static
      */
-    public function release(QueueMessage $message);
+    public function release(QueueMessage $message): static;
 }

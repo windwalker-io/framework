@@ -16,12 +16,17 @@ namespace Windwalker\Database\Schema\Ddl;
  */
 class Table
 {
-    use WrapableTrait;
+    use WrappableTrait;
 
     public ?string $tableName = null;
+
     public ?string $tableSchema = null;
+
     public ?string $tableType = null;
+
     public ?string $viewDefinition = null;
+
     public ?string $checkOption = null;
+
     public ?string $isUpdatable = null;
 }

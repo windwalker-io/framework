@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DOM;
 
-use Windwalker\Utilities\StrNormalise;
+use Windwalker\Utilities\StrNormalize;
 
 /**
  * The DOMStringMap class.
@@ -30,7 +30,7 @@ class DOMStringMap
     /**
      * ClassList constructor.
      *
-     * @param DOMElement $element
+     * @param  DOMElement  $element
      */
     public function __construct(DOMElement $element)
     {
@@ -80,13 +80,13 @@ class DOMStringMap
     /**
      * __get
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  string
      *
      * @since  3.5.3
      */
-    public function __get($name)
+    public function __get(string $name): string
     {
         return $this->element->getAttribute($this->toDataKey($name));
     }
@@ -94,14 +94,14 @@ class DOMStringMap
     /**
      * __set
      *
-     * @param string $name
-     * @param string $value
+     * @param  string  $name
+     * @param  string  $value
      *
      * @return  void
      *
      * @since  3.5.3
      */
-    public function __set($name, $value)
+    public function __set(mixed $name, mixed $value)
     {
         $this->element->setAttribute($this->toDataKey($name), $value);
     }
@@ -109,13 +109,13 @@ class DOMStringMap
     /**
      * __isset
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  bool
      *
      * @since  3.5.3
      */
-    public function __isset($name)
+    public function __isset(mixed $name): bool
     {
         return $this->element->hasAttribute($this->toDataKey($name));
     }
@@ -123,13 +123,13 @@ class DOMStringMap
     /**
      * __unset
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  void
      *
      * @since  3.5.3
      */
-    public function __unset($name)
+    public function __unset(mixed $name)
     {
         $this->element->removeAttribute($this->toDataKey($name));
     }
@@ -137,7 +137,7 @@ class DOMStringMap
     /**
      * toDataKey
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  string
      *
@@ -145,6 +145,6 @@ class DOMStringMap
      */
     private function toDataKey(string $name): string
     {
-        return 'data-' . StrNormalise::toDashSeparated($name);
+        return 'data-' . StrNormalize::toDashSeparated($name);
     }
 }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace PHPSTORM_META {
 
     override(
-        \Windwalker\Utilities\Attributes\AttributesResolver::createObject(0),
+        \Windwalker\Attributes\AttributesResolver::createObject(0),
         map(
             [
                 '' => '@',

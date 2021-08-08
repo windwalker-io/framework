@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Contract;
 
+use ArrayAccess;
+
 /**
  * Interface ArrayAccessibleInterface
  */
-interface ArrayAccessibleInterface extends \ArrayAccess
+interface ArrayAccessibleInterface extends ArrayAccess
 {
     /**
      * Returns whether the requested key exists
@@ -23,7 +25,7 @@ interface ArrayAccessibleInterface extends \ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($key): bool;
+    public function offsetExists(mixed $key): bool;
 
     /**
      * Returns the value at the specified key
@@ -32,17 +34,19 @@ interface ArrayAccessibleInterface extends \ArrayAccess
      *
      * @return mixed
      */
-    public function &offsetGet($key);
+    public function &offsetGet(mixed $key): mixed;
 
     /**
      * Sets the value at the specified key to value
      *
      * @param  mixed  $key
      * @param  mixed  $value
+     *                      \
+     *                      ]cdf
      *
      * @return void
      */
-    public function offsetSet($key, $value): void;
+    public function offsetSet(mixed $key, mixed $value): void;
 
     /**
      * Unsets the value at the specified key
@@ -51,5 +55,5 @@ interface ArrayAccessibleInterface extends \ArrayAccess
      *
      * @return void
      */
-    public function offsetUnset($key): void;
+    public function offsetUnset(mixed $key): void;
 }

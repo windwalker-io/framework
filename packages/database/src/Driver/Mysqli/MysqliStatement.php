@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Mysqli;
 
-use Windwalker\Data\Collection;
+use mysqli;
+use mysqli_result;
+use mysqli_stmt;
 use Windwalker\Database\Driver\AbstractStatement;
+use Windwalker\Database\Driver\ConnectionInterface;
+use Windwalker\Database\Driver\DriverInterface;
+use Windwalker\Database\Exception\StatementException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
-
-use function Windwalker\collect;
 
 /**
  * The MysqliStatement class.
@@ -24,34 +27,19 @@ use function Windwalker\collect;
 class MysqliStatement extends AbstractStatement
 {
     /**
-     * @var \mysqli_stmt
+     * @var mysqli_stmt
      */
-    protected $cursor;
+    protected mixed $cursor = null;
 
     /**
-     * @var \mysqli_result
+     * @var mysqli
      */
-    protected $result;
+    protected mixed $conn = null;
 
     /**
-     * @var string
+     * @var mysqli_result|bool|null
      */
-    protected $query;
-
-    /**
-     * @var \mysqli
-     */
-    protected $conn;
-
-    /**
-     * @inheritDoc
-     */
-    public function __construct(\mysqli $conn, string $query, array $bounded = [])
-    {
-        $this->bounded = $bounded;
-        $this->query = $query;
-        $this->conn = $conn;
-    }
+    protected mysqli_result|bool|null $result = null;
 
     /**
      * @inheritDoc
@@ -64,7 +52,7 @@ class MysqliStatement extends AbstractStatement
                 static function ($param) {
                     return [
                         'value' => $param,
-                        'dataType' => ParamType::guessType($param)
+                        'dataType' => ParamType::guessType($param),
                     ];
                 },
                 $params
@@ -75,36 +63,38 @@ class MysqliStatement extends AbstractStatement
 
         [$query, $params] = BoundedHelper::replaceParams($this->query, '?', $params);
 
-        $this->cursor = $stmt = $this->conn->prepare($query);
+        $this->driver->useConnection(
+            function (ConnectionInterface $conn) use ($params, $query) {
+                $this->conn = $conn->get();
+                $this->cursor = $stmt = $this->conn->prepare($query);
 
-        if ($params !== []) {
-            $types = '';
-            $args = [];
+                if ($params !== []) {
+                    $types = '';
+                    $args = [];
 
-            foreach ($params as $param) {
-                $type = $param['dataType'] ?? ParamType::guessType($param['value']);
+                    foreach ($params as $param) {
+                        $type = $param['dataType'] ?? ParamType::guessType($param['value']);
 
-                $types .= ParamType::convertToMysqli($type);
-                $args[] = &$param['value'];
+                        $types .= ParamType::convertToMysqli($type);
+                        $args[] = &$param['value'];
+                    }
+
+                    $stmt->bind_param(
+                        $types,
+                        ...$args
+                    );
+                }
+
+                $stmt->execute();
+
+                $this->result = $stmt->get_result();
             }
-
-            $stmt->bind_param(
-                $types,
-                ...$args
-            );
-        }
-
-        $stmt->execute();
-
-        $this->result = $stmt->get_result();
+        );
 
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function fetch(array $args = []): ?Collection
+    protected function doFetch(array $args = []): ?array
     {
         $this->execute();
 
@@ -114,13 +104,13 @@ class MysqliStatement extends AbstractStatement
 
         $row = $this->result->fetch_assoc();
 
-        return $row ? collect($row) : null;
+        return $row ?: null;
     }
 
     /**
      * @inheritDoc
      */
-    public function close()
+    public function close(): static
     {
         if ($this->cursor) {
             $this->cursor->free_result();
@@ -137,6 +127,18 @@ class MysqliStatement extends AbstractStatement
      */
     public function countAffected(): int
     {
+        if (!$this->cursor) {
+            throw new StatementException('Cursor not exists or statement closed.');
+        }
+
         return $this->cursor->affected_rows;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function lastInsertId(?string $sequence = null): ?string
+    {
+        return (string) $this->conn->insert_id;
     }
 }

@@ -74,7 +74,7 @@ class ServerRequestFactoryTest extends TestCase
      *
      * @return  array
      */
-    public function apacheRequestHeaders()
+    public function apacheRequestHeaders(): array
     {
         return [
             'authorization' => 'foo',
@@ -86,7 +86,7 @@ class ServerRequestFactoryTest extends TestCase
      *
      * @return  array
      */
-    public function apacheRequestHeadersEmpty()
+    public function apacheRequestHeadersEmpty(): array
     {
         return [];
     }
@@ -187,9 +187,9 @@ class ServerRequestFactoryTest extends TestCase
     /**
      * Method to test prepareUri().
      *
-     * @param array  $servers
-     * @param array  $headers
-     * @param string $expected
+     * @param  array   $servers
+     * @param  array   $headers
+     * @param  string  $expected
      *
      * @covers       \Windwalker\Http\Request\ServerRequestFactory::prepareUri
      *
@@ -207,7 +207,7 @@ class ServerRequestFactoryTest extends TestCase
      *
      * @return  array
      */
-    public function prepareUri_Provider()
+    public function prepareUri_Provider(): array
     {
         return [
             '#apache-normal' => [

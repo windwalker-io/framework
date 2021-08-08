@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise;
 
+use LogicException;
+
 /**
  * Interface PromiseInterface
  *
@@ -38,7 +40,7 @@ interface PromiseInterface
     public function then(
         $onFulfilled = null,
         $onRejected = null
-    );
+    ): static;
 
     /**
      * Get the state of the promise ("pending", "rejected", or "fulfilled").
@@ -55,14 +57,14 @@ interface PromiseInterface
      *
      * @param  mixed  $value
      */
-    public function resolve($value): void;
+    public function resolve(mixed $value): void;
 
     /**
      * Reject the promise with the given reason.
      *
      * @param  mixed  $reason
      */
-    public function reject($reason): void;
+    public function reject(mixed $reason): void;
 
     /**
      * Waits until the promise completes if possible.
@@ -70,8 +72,8 @@ interface PromiseInterface
      * If the promise cannot be waited on, then the promise will be rejected.
      *
      * @return mixed
-     * @throws \LogicException if the promise has no wait function or if the
+     * @throws LogicException if the promise has no wait function or if the
      *                         promise does not settle after waiting.
      */
-    public function wait();
+    public function wait(): mixed;
 }

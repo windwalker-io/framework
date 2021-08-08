@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pdo;
 
-use Windwalker\Database\Driver\Pdo\PdoSqlsrvConnection;
 use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\Driver\AbstractDriverTest;
 
@@ -25,19 +24,19 @@ class PdoDriverTest extends AbstractDriverTest
     protected static string $driverName = 'pdo_mysql';
 
     /**
-     * @see  AbstractDriver::setPlatformName
-     */
-    public function testSetPlatformName(): void
-    {
-        $driver = self::createDriver([]);
-        $driver->setPlatformName('sqlsrv');
-        $conn = $driver->createConnection();
-
-        self::assertInstanceOf(
-            PdoSqlsrvConnection::class,
-            $conn
-        );
-    }
+     * //  * @see  AbstractDriver::setPlatformName
+     * //  */
+    // public function testSetPlatformName(): void
+    // {
+    //     $driver = self::createDriver([]);
+    //     $driver->setPlatformName('sqlsrv');
+    //     $conn = $driver->createConnection();
+    //
+    //     self::assertInstanceOf(
+    //         PdoSqlsrvConnection::class,
+    //         $conn
+    //     );
+    // }
 
     /**
      * @see  AbstractDriver::quote

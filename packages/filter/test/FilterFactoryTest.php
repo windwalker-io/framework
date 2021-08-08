@@ -13,10 +13,7 @@ namespace Windwalker\Filter\Test;
 
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\FilterFactory;
-
 use Windwalker\Test\Traits\BaseAssertionTrait;
-
-use function PHPUnit\Framework\assertEquals;
 
 /**
  * The FilterFactoryTest class.
@@ -32,7 +29,7 @@ class FilterFactoryTest extends TestCase
      */
     public function testCreateFromSyntax(): void
     {
-        $filter = $this->instance->createFromSyntax('range: min = 5, max=10');
+        $filter = $this->instance->createFromSyntax('range(min = 5, max=10)');
 
         self::assertEquals(
             10,
@@ -51,12 +48,12 @@ class FilterFactoryTest extends TestCase
     {
         $map = $this->instance->createNested(
             [
-                'id' => 'required; int; range:min=1,max=100;',
-                'alias' => 'alnum; length:max=10; default: hello',
+                'id' => 'required|int|range(min=1,max=100)',
+                'alias' => 'alnum|length(max=10)|default(hello)',
                 'item' => [
-                    'content' => 'func: strtoupper',
-                    'params' => fn ($v) => json_decode($v, true, 512, JSON_THROW_ON_ERROR)
-                ]
+                    'content' => 'func(strtoupper)',
+                    'params' => fn($v) => json_decode($v, true, 512, JSON_THROW_ON_ERROR),
+                ],
             ]
         );
 
@@ -67,8 +64,8 @@ class FilterFactoryTest extends TestCase
                 'item' => [
                     'intro' => 'Intro',
                     'content' => 'Flower',
-                    'params' => '{"foo": "bar"}'
-                ]
+                    'params' => '{"foo": "bar"}',
+                ],
             ]
         );
 
@@ -80,9 +77,9 @@ class FilterFactoryTest extends TestCase
                     'intro' => 'Intro',
                     'content' => 'FLOWER',
                     'params' => [
-                        'foo' => 'bar'
-                    ]
-                ]
+                        'foo' => 'bar',
+                    ],
+                ],
             ],
             $result
         );
@@ -90,16 +87,18 @@ class FilterFactoryTest extends TestCase
 
     public function testValidateMap()
     {
-        $this->expectExceptionMessage('Field "id" not match - Validator: Windwalker\Filter\Rule\Range returns false, value is: string');
+        $this->expectExceptionMessage(
+            'Field "id" not match - Validator: Windwalker\Filter\Rule\Range min: 1, max: 100 returns false, value is: string(3) "600"'
+        );
 
         $map = $this->instance->createNested(
             [
-                'id' => 'required; int; range:min=1,max=100;',
-                'alias' => 'alnum; length:max=10; default: hello',
+                'id' => 'required|int|range(min=1,max=100)',
+                'alias' => 'alnum|length(max=10)|default(hello)',
                 'item' => [
-                    'content' => 'func: strtoupper',
-                    'params' => fn ($v) => json_decode($v, true, 512, JSON_THROW_ON_ERROR)
-                ]
+                    'content' => 'func(strtoupper)',
+                    'params' => fn($v) => json_decode($v, true, 512, JSON_THROW_ON_ERROR),
+                ],
             ]
         );
 
@@ -110,8 +109,8 @@ class FilterFactoryTest extends TestCase
                 'item' => [
                     'intro' => 'Intro',
                     'content' => 'Flower',
-                    'params' => '{"foo": "bar"}'
-                ]
+                    'params' => '{"foo": "bar"}',
+                ],
             ]
         );
     }

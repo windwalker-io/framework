@@ -71,8 +71,8 @@ class DualIterator implements Iterator
      */
     public function __construct(Iterator $lhs, Iterator $rhs, $flags = 0x33)
     {
-        $this->lhs   = $lhs;
-        $this->rhs   = $rhs;
+        $this->lhs = $lhs;
+        $this->rhs = $rhs;
         $this->flags = $flags;
     }
 
@@ -144,7 +144,7 @@ class DualIterator implements Iterator
      *
      * @return mixed current value depending on CURRENT_* flags
      */
-    public function current()
+    public function current(): mixed
     {
         switch ($this->flags & 0x0F) {
             default:
@@ -164,7 +164,7 @@ class DualIterator implements Iterator
      *
      * @return mixed current value depending on KEY_* flags
      */
-    public function key()
+    public function key(): mixed
     {
         switch ($this->flags & 0xF0) {
             default:

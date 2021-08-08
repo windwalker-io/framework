@@ -28,7 +28,7 @@ trait CompileConditional
     /**
      * Compile the if statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -40,7 +40,7 @@ trait CompileConditional
     /**
      * Compile the else-if statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -52,7 +52,7 @@ trait CompileConditional
     /**
      * Compile the forelse statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -60,13 +60,13 @@ trait CompileConditional
     {
         $empty = '$__empty_' . $this->forelseCounter--;
 
-        return "<?php endforeach; if ({$empty}): ?>";
+        return "<?php endforeach if ({$empty}): ?>";
     }
 
     /**
      * Compile the unless statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -78,19 +78,19 @@ trait CompileConditional
     /**
      * Compile the end unless statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
     protected function compileEndunless(string $expression): string
     {
-        return '<?php endif; ?>';
+        return '<?php endif ?>';
     }
 
     /**
      * Compile the else statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -102,19 +102,19 @@ trait CompileConditional
     /**
      * Compile the end-if statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
     protected function compileEndif(string $expression): string
     {
-        return '<?php endif; ?>';
+        return '<?php endif ?>';
     }
 
     /**
      * Compile the switch statements into valid PHP.
      *
-     * @param string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -128,7 +128,7 @@ trait CompileConditional
     /**
      * Compile the case statements into valid PHP.
      *
-     * @param string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -160,6 +160,6 @@ trait CompileConditional
      */
     protected function compileEndSwitch(): string
     {
-        return '<?php endswitch; ?>';
+        return '<?php endswitch ?>';
     }
 }

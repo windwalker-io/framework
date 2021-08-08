@@ -31,11 +31,11 @@ class YamlFormat implements FormatInterface
      *
      * @since   2.0
      */
-    public function dump($data, array $options = []): string
+    public function dump(mixed $data, array $options = []): string
     {
         $inline = $options['inline'] ?? 2;
         $indent = $options['indent'] ?? 0;
-        $flags  = $options['flags'] ?? 0;
+        $flags = $options['flags'] ?? 0;
 
         return Yaml::dump($data, $inline, $indent, $flags);
     }
@@ -51,7 +51,7 @@ class YamlFormat implements FormatInterface
      *
      * @since   2.0
      */
-    public function parse(string $string, array $options = [])
+    public function parse(string $string, array $options = []): mixed
     {
         $flags = $options['flags'] ?? 0;
 

@@ -42,21 +42,21 @@ class DOMTokenList
     /**
      * ClassList constructor.
      *
-     * @param DOMElement $element
-     * @param string     $name
-     * @param array|null $supports
+     * @param  DOMElement  $element
+     * @param  string      $name
+     * @param  array|null  $supports
      */
     public function __construct(DOMElement $element, string $name, ?array $supports = null)
     {
-        $this->element  = $element;
+        $this->element = $element;
         $this->supports = $supports;
-        $this->name     = $name;
+        $this->name = $name;
     }
 
     /**
      * add
      *
-     * @param string ...$args
+     * @param  string  ...$args
      *
      * @return  static
      *
@@ -79,7 +79,7 @@ class DOMTokenList
     /**
      * remove
      *
-     * @param string ...$args
+     * @param  string  ...$args
      *
      * @return  static
      *
@@ -102,7 +102,7 @@ class DOMTokenList
     /**
      * item
      *
-     * @param int $index
+     * @param  int  $index
      *
      * @return  string|null
      *
@@ -118,8 +118,8 @@ class DOMTokenList
     /**
      * toggle
      *
-     * @param string    $class
-     * @param bool|null $force
+     * @param  string     $class
+     * @param  bool|null  $force
      *
      * @return  bool
      *
@@ -155,7 +155,7 @@ class DOMTokenList
     /**
      * contains
      *
-     * @param string $class
+     * @param  string  $class
      *
      * @return  bool
      *
@@ -193,7 +193,7 @@ class DOMTokenList
     /**
      * supports
      *
-     * @param string $token
+     * @param  string  $token
      *
      * @return  bool
      *
@@ -213,11 +213,11 @@ class DOMTokenList
     /**
      * __isset
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  bool
      */
-    public function __isset(string $name)
+    public function __isset(string $name): bool
     {
         if ($name === 'value') {
             return true;
@@ -229,11 +229,11 @@ class DOMTokenList
     /**
      * __get
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  mixed
      */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         if ($name === 'value') {
             return $this->element->getAttribute($this->name);

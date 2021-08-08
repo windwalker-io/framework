@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Crypt\Symmetric;
 
+use SodiumException;
 use Windwalker\Crypt\CryptHelper;
 use Windwalker\Crypt\Exception\CryptException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
+
+use function sodium_memzero;
 
 /**
  * The Openssl Cipher class.
@@ -67,7 +70,7 @@ class OpensslCipher implements CipherInterface
 
         $this->options = array_merge(
             [
-                'pbkdf2_iteration' => 12000
+                'pbkdf2_iteration' => 12000,
             ],
             $options
         );
@@ -85,8 +88,8 @@ class OpensslCipher implements CipherInterface
         $length = CryptHelper::strlen($message);
 
         // Split string
-        $salt      = CryptHelper::substr($message, 0, static::PBKDF2_SALT_BYTE_SIZE);
-        $iv        = CryptHelper::substr($message, static::PBKDF2_SALT_BYTE_SIZE, $this->getIVSize());
+        $salt = CryptHelper::substr($message, 0, static::PBKDF2_SALT_BYTE_SIZE);
+        $iv = CryptHelper::substr($message, static::PBKDF2_SALT_BYTE_SIZE, $this->getIVSize());
         $encrypted = CryptHelper::substr(
             $message,
             static::PBKDF2_SALT_BYTE_SIZE + $this->getIVSize(),
@@ -114,14 +117,14 @@ class OpensslCipher implements CipherInterface
 
         if (function_exists('sodium_memzero')) {
             try {
-                \sodium_memzero($message);
-                \sodium_memzero($calc);
-                \sodium_memzero($salt);
-                \sodium_memzero($iv);
-                \sodium_memzero($hmacKey);
-                \sodium_memzero($encrypted);
-                \sodium_memzero($encKey);
-            } catch (\SodiumException $e) {
+                sodium_memzero($message);
+                sodium_memzero($calc);
+                sodium_memzero($salt);
+                sodium_memzero($iv);
+                sodium_memzero($hmacKey);
+                sodium_memzero($encrypted);
+                sodium_memzero($encKey);
+            } catch (SodiumException $e) {
                 // No actions
             }
         }
@@ -135,7 +138,7 @@ class OpensslCipher implements CipherInterface
      */
     public function encrypt(HiddenString $str, Key $key, string $encoder = SafeEncoder::BASE64): string
     {
-        $salt = $this->randomPseudoBytes(static::PBKDF2_SALT_BYTE_SIZE);
+        $salt = OpensslCipher::randomPseudoBytes(static::PBKDF2_SALT_BYTE_SIZE);
 
         [$encKey, $hmacKey] = $this->derivateSecureKeys($key->get(), $salt);
 
@@ -156,13 +159,13 @@ class OpensslCipher implements CipherInterface
 
         if (function_exists('sodium_memzero')) {
             try {
-                \sodium_memzero($encKey);
-                \sodium_memzero($hmacKey);
-                \sodium_memzero($iv);
-                \sodium_memzero($salt);
-                \sodium_memzero($encrypted);
-                \sodium_memzero($hmac);
-            } catch (\SodiumException $e) {
+                sodium_memzero($encKey);
+                sodium_memzero($hmacKey);
+                sodium_memzero($iv);
+                sodium_memzero($salt);
+                sodium_memzero($encrypted);
+                sodium_memzero($hmac);
+            } catch (SodiumException $e) {
                 // No actions
             }
         }
@@ -176,7 +179,7 @@ class OpensslCipher implements CipherInterface
     /**
      * getIVSize
      *
-     * @return  integer
+     * @return  int
      */
     public function getIVSize(): int
     {
@@ -186,13 +189,13 @@ class OpensslCipher implements CipherInterface
     /**
      * randomPseudoBytes
      *
-     * @param  int  $size
+     * @param  int|null  $size
      *
      * @return  string
      *
      * @throws CryptException
      */
-    protected function randomPseudoBytes(?int $size = null): string
+    protected static function randomPseudoBytes(?int $size = null): string
     {
         $size = $size ?: static::PBKDF2_SALT_BYTE_SIZE;
 
@@ -214,7 +217,7 @@ class OpensslCipher implements CipherInterface
      */
     public function getIV(): string
     {
-        return $this->randomPseudoBytes($this->getIVSize());
+        return OpensslCipher::randomPseudoBytes($this->getIVSize());
     }
 
     /**
@@ -297,5 +300,10 @@ class OpensslCipher implements CipherInterface
     public function getMethod(): string
     {
         return $this->method;
+    }
+
+    public static function generateKey(?int $length = null): Key
+    {
+        return new Key(static::randomPseudoBytes($length));
     }
 }

@@ -34,8 +34,8 @@ class CallbackCookies implements CookiesInterface
      */
     public function __construct(?callable $getter = null, ?callable $setter = null)
     {
-        $this->getter = $getter ?? fn () => true;
-        $this->setter = $setter ?? fn () => null;
+        $this->getter = $getter ?? fn() => true;
+        $this->setter = $setter ?? fn() => null;
     }
 
     /**
@@ -76,7 +76,7 @@ class CallbackCookies implements CookiesInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setGetter(callable $getter)
+    public function setGetter(callable $getter): static
     {
         $this->getter = $getter;
 
@@ -96,7 +96,7 @@ class CallbackCookies implements CookiesInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setSetter(callable $setter)
+    public function setSetter(callable $setter): static
     {
         $this->setter = $setter;
 

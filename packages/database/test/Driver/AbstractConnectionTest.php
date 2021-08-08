@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver;
 
+use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
+use Windwalker\Utilities\Arr;
 
 /**
  * The AbstractConnectionTest class.
@@ -58,7 +60,18 @@ abstract class AbstractConnectionTest extends AbstractDatabaseDriverTestCase
     {
         $className = static::$className;
 
-        return new $className(self::getTestParams());
+        return new $className(
+            Arr::only(
+                self::getTestParams(),
+                [
+                    'host',
+                    'user',
+                    'password',
+                    'database',
+                    'port',
+                ]
+            )
+        );
     }
 
     /**
@@ -81,10 +94,10 @@ abstract class AbstractConnectionTest extends AbstractDatabaseDriverTestCase
     public function testConnectWrong()
     {
         $conn = $this->instance;
-        $conn->setOption('username', 'notexists');
+        $conn->setOption('user', 'notexists');
         $conn->setOption('password', 'This-is-wrong-password');
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $conn->connect();
     }
 

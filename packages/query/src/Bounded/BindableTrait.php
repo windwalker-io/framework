@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Bounded;
 
+use Windwalker\Query\Clause\QuoteNameClause;
 use Windwalker\Query\Clause\ValueClause;
 
 /**
@@ -44,7 +45,12 @@ trait BindableTrait
         $dataType = null,
         int $length = 0,
         $driverOptions = null
-    ) {
+    ): static {
+        // No action if value is QuoteNameClause
+        if ($value instanceof QuoteNameClause) {
+            return $this;
+        }
+
         // If is array, loop for all elements.
         if (is_array($key)) {
             foreach ($key as $k => &$v) {
@@ -96,7 +102,7 @@ trait BindableTrait
         $key = null,
         $value = null,
         $dataType = null
-    ) {
+    ): static {
         return $this->bindParam($key, $value, $dataType);
     }
 
@@ -116,7 +122,13 @@ trait BindableTrait
             return $this->bounded;
         }
 
-        return $this->bounded[$key] ?? null;
+        $value = null;
+
+        if ($this->bounded[$key] ?? null) {
+            $value = &$this->bounded[$key];
+        }
+
+        return $value;
     }
 
     /**
@@ -124,7 +136,7 @@ trait BindableTrait
      *
      * @return  static
      */
-    public function resetBounded()
+    public function resetBounded(): static
     {
         $this->bounded = [];
 
@@ -138,7 +150,7 @@ trait BindableTrait
      *
      * @return  static
      */
-    public function unbind($keys)
+    public function unbind(mixed $keys): static
     {
         $keys = (array) $keys;
 

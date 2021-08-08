@@ -27,7 +27,7 @@ class EdgeFileLoader implements EdgeLoaderInterface
      */
     protected array $extensions = [
         'edge.php',
-        'blade.php'
+        'blade.php',
     ];
 
     /**
@@ -61,6 +61,19 @@ class EdgeFileLoader implements EdgeLoaderInterface
      */
     public function find(string $key): string
     {
+        $filePath = $this->doFind($key);
+
+        if ($filePath === null) {
+            $paths = implode(" |\n ", $this->paths);
+
+            throw new LayoutNotFoundException('View file not found: ' . $key . ".\n (Paths: " . $paths . ')', 13001);
+        }
+
+        return $filePath;
+    }
+
+    public function doFind(string $key): ?string
+    {
         $key = $this->normalize($key);
 
         $filePath = null;
@@ -73,12 +86,6 @@ class EdgeFileLoader implements EdgeLoaderInterface
                     break 2;
                 }
             }
-        }
-
-        if ($filePath === null) {
-            $paths = implode(" |\n ", $this->paths);
-
-            throw new LayoutNotFoundException('View file not found: ' . $key . ".\n (Paths: " . $paths . ')', 13001);
         }
 
         return $filePath;
@@ -103,7 +110,7 @@ class EdgeFileLoader implements EdgeLoaderInterface
      *
      * @return  static
      */
-    public function addPath(string $path)
+    public function addPath(string $path): static
     {
         $this->paths[] = $path;
 
@@ -117,7 +124,7 @@ class EdgeFileLoader implements EdgeLoaderInterface
      *
      * @return  static
      */
-    public function prependPath(string $path)
+    public function prependPath(string $path): static
     {
         array_unshift($this->paths, $path);
 
@@ -127,11 +134,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     /**
      * normalize
      *
-     * @param   string $path
+     * @param  string  $path
      *
      * @return  string
      */
-    protected function normalize(string $path)
+    protected function normalize(string $path): string
     {
         return str_replace('.', '/', $path);
     }
@@ -149,11 +156,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     /**
      * Method to set property paths
      *
-     * @param   array $paths
+     * @param  array  $paths
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPaths(array $paths)
+    public function setPaths(array $paths): static
     {
         $this->paths = $paths;
 
@@ -163,11 +170,11 @@ class EdgeFileLoader implements EdgeLoaderInterface
     /**
      * addExtension
      *
-     * @param   string $name
+     * @param  string  $name
      *
      * @return  static
      */
-    public function addFileExtension(string $name)
+    public function addFileExtension(string $name): static
     {
         $this->extensions[] = $name;
 
@@ -187,14 +194,26 @@ class EdgeFileLoader implements EdgeLoaderInterface
     /**
      * Method to set property extensions
      *
-     * @param   array $extensions
+     * @param  array  $extensions
      *
      * @return  static  Return self to support chaining.
      */
-    public function setExtensions(array $extensions)
+    public function setExtensions(array $extensions): static
     {
         $this->extensions = $extensions;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has(string $key): bool
+    {
+        try {
+            return $this->doFind($key) !== null;
+        } catch (LayoutNotFoundException) {
+            return false;
+        }
     }
 }

@@ -19,12 +19,12 @@ class BoundedSequence
     /**
      * @var string
      */
-    protected $prefix;
+    protected string $prefix = '';
 
     /**
      * @var int
      */
-    protected $index;
+    protected int $index = 0;
 
     /**
      * BoundedSequence constructor.
@@ -69,7 +69,7 @@ class BoundedSequence
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPrefix(string $prefix)
+    public function setPrefix(string $prefix): static
     {
         $this->prefix = $prefix;
 
@@ -93,7 +93,7 @@ class BoundedSequence
      *
      * @return  static  Return self to support chaining.
      */
-    public function setIndex(int $index)
+    public function setIndex(int $index): static
     {
         $this->index = $index;
 

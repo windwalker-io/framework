@@ -59,13 +59,23 @@ class ArrayObjectTest extends TestCase
     }
 
     /**
-     * @see  ArrayObject::bind
+     * @see  ArrayObject::fill
      */
-    public function testBind(): void
+    public function testFill(): void
     {
-        $a = $this->instance->bind(['a', 'b', null]);
+        $a = $this->instance->fill(['a', 'b', null]);
 
         self::assertEquals(['a', 'b', 3], $a->dump());
+    }
+
+    public function testBind(): void
+    {
+        $data = ['a', 'b', null];
+        $a = $this->instance->bind($data);
+
+        $data['foo'] = 'bar';
+
+        self::assertEquals(['a', 'b', null, 'foo' => 'bar'], $a->dump());
     }
 
     public function testJsonSerialize(): void
@@ -414,6 +424,19 @@ class ArrayObjectTest extends TestCase
         );
 
         self::assertEquals([3, 2, 1], $a->dump());
+        self::assertNotSame($a, $this->instance);
+    }
+
+    public function testTransform(): void
+    {
+        $a = $this->instance->transform(
+            function (array $v) {
+                return array_reverse($v);
+            }
+        );
+
+        self::assertEquals([3, 2, 1], $a->dump());
+        self::assertSame($a, $this->instance);
     }
 
     public function testImplode(): void

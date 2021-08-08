@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Data;
 
-use Windwalker\Scalars\ArrayObject;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
@@ -23,12 +22,12 @@ class MapProxy
     /**
      * @var Collection
      */
-    protected $collection;
+    protected Collection $collection;
 
     /**
      * @var string|null
      */
-    protected $column;
+    protected ?string $column = null;
 
     /**
      * MapProxy constructor.
@@ -44,16 +43,20 @@ class MapProxy
 
     private function mapCollection(string $name, array $args): Collection
     {
-        return $this->collection->map(function ($item) use ($name, $args) {
-            return $item->$name(...$args);
-        });
+        return $this->collection->map(
+            function ($item) use ($name, $args) {
+                return $item->$name(...$args);
+            }
+        );
     }
 
     private function mapColumn(string $name, array $args): Collection
     {
         $items = $this->collection
             ->column($this->column)
-            ->$name(...$args);
+            ->$name(
+                ...$args
+            );
 
         ArgumentsAssert::assert(
             $items instanceof Collection,
@@ -81,7 +84,7 @@ class MapProxy
         return $new;
     }
 
-    public function __call(string $name, array $args)
+    public function __call(string $name, array $args): Collection
     {
         if ($this->column === null) {
             return $this->mapCollection($name, $args);

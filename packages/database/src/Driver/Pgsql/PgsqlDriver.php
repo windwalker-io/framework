@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Pgsql;
 
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
-use Windwalker\Database\Platform\PostgreSQLPlatform;
 
 /**
  * The PgsqlDriver class.
@@ -23,32 +23,19 @@ class PgsqlDriver extends AbstractDriver
     /**
      * @var string
      */
-    protected static $name = 'pgsql';
+    protected static string $name = 'pgsql';
 
     /**
      * @var string
      */
-    protected $platformName = 'pgsql';
+    protected string $platformName = 'pgsql';
 
     /**
      * @inheritDoc
      */
-    public function doPrepare(string $query, array $bounded = [], array $options = []): StatementInterface
+    public function createStatement(string $query, array $bounded = [], array $options = []): StatementInterface
     {
-        $conn = $this->connect()->get();
-
-        return new PgsqlStatement($conn, $query, $bounded);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function lastInsertId(?string $sequence = null): ?string
-    {
-        /** @var PostgreSQLPlatform $platform */
-        $platform = $this->getPlatform();
-
-        return $platform->lastInsertId($this->lastQuery, $sequence);
+        return new PgsqlStatement($this, $query, $bounded, $options);
     }
 
     /**
@@ -64,7 +51,9 @@ class PgsqlDriver extends AbstractDriver
      */
     public function escape(string $value): string
     {
-        return pg_escape_string($this->connect()->get(), $value);
+        return $this->useConnection(
+            fn(ConnectionInterface $conn) => pg_escape_string($conn->get(), $value)
+        );
     }
 
     /**
@@ -74,6 +63,6 @@ class PgsqlDriver extends AbstractDriver
      */
     public function getVersion(): string
     {
-        return pg_version($this->connect()->get())['server'] ?? '';
+        return $this->useConnection(fn(ConnectionInterface $conn) => pg_version($conn->get())['server'] ?? '');
     }
 }

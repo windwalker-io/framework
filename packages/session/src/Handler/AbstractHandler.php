@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
+use SessionIdInterface;
+use SessionUpdateTimestampHandlerInterface;
+
 /**
  * Class AbstractHandler
  *
  * @since 2.0
  */
-abstract class AbstractHandler implements HandlerInterface, \SessionUpdateTimestampHandlerInterface, \SessionIdInterface
+abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimestampHandlerInterface, SessionIdInterface
 {
     protected ?string $loadedData = null;
 
@@ -30,7 +33,7 @@ abstract class AbstractHandler implements HandlerInterface, \SessionUpdateTimest
      *
      * @return bool true on success, false on failure
      */
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         return true;
     }
@@ -40,7 +43,7 @@ abstract class AbstractHandler implements HandlerInterface, \SessionUpdateTimest
      *
      * @return bool true on success, false on failure
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -52,7 +55,7 @@ abstract class AbstractHandler implements HandlerInterface, \SessionUpdateTimest
      *
      * @return  bool
      */
-    public function validateId($id)
+    public function validateId($id): bool
     {
         $this->loadedData = $this->read($id);
 
@@ -70,12 +73,13 @@ abstract class AbstractHandler implements HandlerInterface, \SessionUpdateTimest
      *
      * @return  string
      */
-    public function read($id)
+    public function read($id): string
     {
         $data = $this->loadedData;
 
         if ($data !== null) {
             $this->loadedData = null;
+
             return $data;
         }
 
@@ -95,8 +99,10 @@ abstract class AbstractHandler implements HandlerInterface, \SessionUpdateTimest
      * @link https://php.net/manual/en/sessionidinterface.create-sid.php
      * @return string
      */
-    public function create_sid()
+    // phpcs:disable
+    public function create_sid(): string
     {
+        // phpcs:enable
         return session_create_id();
     }
 }

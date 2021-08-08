@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
+use DomainException;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Filesystem;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The FilesystemHandler class.
@@ -33,12 +34,12 @@ class FilesystemHandler extends AbstractHandler
     public function __construct(?string $path = null, array $options = [])
     {
         if (!class_exists(Filesystem::class)) {
-            throw new \DomainException('Please install windwalker/filesystem ^4.0');
+            throw new DomainException('Please install windwalker/filesystem ^4.0');
         }
 
         $this->prepareOptions(
             [
-                'prefix' => 'sess_'
+                'prefix' => 'sess_',
             ],
             $options
         );
@@ -99,7 +100,7 @@ class FilesystemHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         Filesystem::delete($this->getFilePath($id));
 
@@ -113,12 +114,12 @@ class FilesystemHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         $past = time() - $maxlifetime;
 
         $files = Filesystem::files($this->path)
-            ->filter(fn (FileObject $file) => $file->getMTime() < $past);
+            ->filter(fn(FileObject $file) => $file->getMTime() < $past);
 
         /** @var FileObject $file */
         foreach ($files as $file) {
@@ -136,7 +137,7 @@ class FilesystemHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
         Filesystem::write($this->getFilePath($id), $data);
 
@@ -151,7 +152,7 @@ class FilesystemHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function updateTimestamp($id, $data)
+    public function updateTimestamp($id, $data): bool
     {
         $file = Filesystem::get($this->getFilePath($id));
 

@@ -47,9 +47,11 @@ class DOMElementTest extends TestCase
                     'enabled' => true,
                 ],
                 'data-empty' => '',
-                'data-true' => true
+                'data-true' => true,
             ]
         );
+
+        // phpcs:disable
 
         self::assertDomStringEqualsDomString(
             '<field name="foo" label="FOO" class="col-12 form-control" ' .
@@ -84,9 +86,9 @@ class DOMElementTest extends TestCase
     /**
      * testCreateWithCSSExpr
      *
-     * @param string $selector
-     * @param array  $attributes
-     * @param string $result
+     * @param  string  $selector
+     * @param  array   $attributes
+     * @param  string  $result
      *
      * @return  void
      *
@@ -105,35 +107,35 @@ class DOMElementTest extends TestCase
             [
                 'img#foo',
                 [],
-                '<img id="foo"/>'
+                '<img id="foo"/>',
             ],
             [
                 'img.foo',
                 [],
-                '<img class="foo"/>'
+                '<img class="foo"/>',
             ],
             [
                 '#foo.bar',
                 [],
-                '<div id="foo" class="bar"/>'
+                '<div id="foo" class="bar"/>',
             ],
             [
                 'img#foo.bar.yoo',
                 [],
-                '<img id="foo" class="bar yoo"/>'
+                '<img id="foo" class="bar yoo"/>',
             ],
             [
                 'div#foo#foo2.bar.yoo',
                 [],
-                '<div id="foo2" class="bar yoo"/>'
+                '<div id="foo2" class="bar yoo"/>',
             ],
             [
                 'div#foo.bar',
                 [
                     'id' => 'hoo',
-                    'class' => 'yoo'
+                    'class' => 'yoo',
                 ],
-                '<div id="foo" class="yoo bar"/>'
+                '<div id="foo" class="yoo bar"/>',
             ],
         ];
     }
@@ -144,7 +146,7 @@ class DOMElementTest extends TestCase
      */
     public function testOffsetAccess(): void
     {
-        $ele             = DOMElement::create('hello');
+        $ele = DOMElement::create('hello');
         $ele['data-foo'] = 'bar';
 
         self::assertTrue(isset($ele['data-foo']));
@@ -162,7 +164,7 @@ class DOMElementTest extends TestCase
      */
     public function testToString(): void
     {
-        $ele             = DOMElement::create('hello');
+        $ele = DOMElement::create('hello');
         $ele['data-foo'] = 'bar';
 
         self::assertEquals('<hello data-foo="bar"/>', (string) $ele);
@@ -302,7 +304,7 @@ XML
 
     public function testWith(): void
     {
-        $dom  = new DOMDocument();
+        $dom = new DOMDocument();
         $root = $dom->createElement('root');
 
         $ele = DOMElement::create('hello');
@@ -313,7 +315,7 @@ XML
 
     public function testCreateChild(): void
     {
-        $ele   = DOMElement::create('root');
+        $ele = DOMElement::create('root');
         $hello = $ele->createChild('hello');
         $hello->setAttribute('foo', 'bar');
 

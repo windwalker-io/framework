@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Filter\Rule;
 
+use DomainException;
 use Windwalker\Filter\AbstractFilter;
 use Windwalker\Utilities\Compare\CompareHelper;
 
@@ -43,11 +44,11 @@ class CompareWith extends AbstractFilter
     /**
      * CompareValidator constructor.
      *
-     * @param mixed   $compareA
-     * @param string  $operator
-     * @param bool    $strict
+     * @param  mixed   $compareA
+     * @param  string  $operator
+     * @param  bool    $strict
      *
-     * @throws \DomainException
+     * @throws DomainException
      */
     public function __construct($compareA = null, ?string $operator = null, bool $strict = false)
     {
@@ -59,7 +60,7 @@ class CompareWith extends AbstractFilter
     /**
      * @inheritDoc
      */
-    public function filter($value)
+    public function filter(mixed $value): mixed
     {
         return CompareHelper::compare($this->compare, $value, $this->operator, $this->strict);
     }
@@ -77,11 +78,11 @@ class CompareWith extends AbstractFilter
     /**
      * Method to set property operator
      *
-     * @param   string $operator
+     * @param  string  $operator
      *
      * @return  static  Return self to support chaining.
      */
-    public function setOperator(?string $operator)
+    public function setOperator(?string $operator): static
     {
         $this->operator = $operator;
 
@@ -93,7 +94,7 @@ class CompareWith extends AbstractFilter
      *
      * @return  mixed|null
      */
-    public function getCompare()
+    public function getCompare(): mixed
     {
         return $this->compare;
     }
@@ -101,11 +102,11 @@ class CompareWith extends AbstractFilter
     /**
      * Method to set property compare
      *
-     * @param   mixed|null $compare
+     * @param  mixed|null  $compare
      *
      * @return  static  Return self to support chaining.
      */
-    public function setCompare($compare)
+    public function setCompare(mixed $compare): static
     {
         $this->compare = $compare;
 
@@ -115,11 +116,11 @@ class CompareWith extends AbstractFilter
     /**
      * Method to set property strict
      *
-     * @param   bool $strict
+     * @param  bool  $strict
      *
      * @return  static  Return self to support chaining.
      */
-    public function setStrict(bool $strict)
+    public function setStrict(bool $strict): static
     {
         $this->strict = $strict;
 

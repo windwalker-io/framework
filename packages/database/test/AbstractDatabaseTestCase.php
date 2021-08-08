@@ -12,9 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test;
 
 use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Event\QueryEndEvent;
-
-use function Windwalker\disposable;
 
 /**
  * The AbstractDatabaseTestCase class.
@@ -43,11 +42,14 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
 
     protected static function createAdapter(?array $params = null): DatabaseAdapter
     {
-        $params           = $params ?? self::getTestParams();
+        $params = $params ?? self::getTestParams();
         $params['driver'] = static::$driver;
         static::$lastQueries = [];
 
-        $db = new DatabaseAdapter($params);
+        $db = (new DatabaseFactory())->create(
+            static::$driver,
+            $params
+        );
 
         $logFile = __DIR__ . '/../tmp/test-sql.sql';
 
@@ -57,15 +59,18 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
             self::$logInited = true;
         }
 
-        $db->on(QueryEndEvent::class, function (QueryEndEvent $event) use ($logFile) {
-            static::$lastQueries[] = $event->getSql();
+        $db->on(
+            QueryEndEvent::class,
+            function (QueryEndEvent $event) use ($logFile) {
+                static::$lastQueries[] = $event->getSql();
 
-            $fp = fopen($logFile, 'ab+');
+                $fp = fopen($logFile, 'ab+');
 
-            fwrite($fp, $event->getSql() . ";\n\n");
+                fwrite($fp, $event->getSql() . ";\n\n");
 
-            fclose($fp);
-        });
+                fclose($fp);
+            }
+        );
 
         return $db;
     }
@@ -77,7 +82,7 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
     {
         parent::tearDownAfterClass();
 
-        static::$db->getDriver()->disconnect();
+        static::$db->getDriver()->disconnectAll();
         static::$db = null;
     }
 
@@ -92,7 +97,7 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
 
         $result = $callback();
 
-        static::$db->getDispatcher()->remove($fp);
+        static::$db->getEventDispatcher()->remove($fp);
 
         return $logs;
     }

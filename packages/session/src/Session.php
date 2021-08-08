@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Session;
 
+use LogicException;
 use Windwalker\Session\Bridge\BridgeInterface;
 use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
-use Windwalker\Utilities\Accessible\SimpleAccessibleTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
-
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
+use Windwalker\Utilities\Options\OptionAccessTrait;
+use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\tap;
 
@@ -28,7 +28,8 @@ use function Windwalker\tap;
 class Session implements SessionInterface, ArrayAccessibleInterface
 {
     use OptionAccessTrait;
-    use SimpleAccessibleTrait;
+
+    protected mixed $storage = [];
 
     protected ?BridgeInterface $bridge = null;
 
@@ -37,30 +38,35 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     protected ?FlashBag $flashBag = null;
 
     /**
+     * @var callable
+     */
+    protected $destructor = null;
+
+    /**
      * Session constructor.
      *
-     * @param  array                 $options
-     * @param  BridgeInterface|null  $bridge
-     * @param  CookiesInterface|null          $cookies
+     * @param  array                  $options
+     * @param  BridgeInterface|null   $bridge
+     * @param  CookiesInterface|null  $cookies
      */
     public function __construct(array $options = [], ?BridgeInterface $bridge = null, ?CookiesInterface $cookies = null)
     {
         $this->prepareOptions(
             [
-                static::OPTION_AUTO_COMMIT => true,
+                static::OPTION_AUTO_COMMIT => true, // Only for non-native handlers
                 'ini' => [
                     //
-                ]
+                ],
             ],
             $options
         );
 
-        $this->bridge  = $bridge ?? new NativeBridge();
+        $this->bridge = $bridge ?? new NativeBridge();
         $this->cookies = $cookies ?? Cookies::create()
-            ->httpOnly(true)
-            ->expires('+30days')
-            ->secure(false)
-            ->sameSite(Cookies::SAMESITE_LAX);
+                ->httpOnly(true)
+                ->expires('+30days')
+                ->secure(false)
+                ->sameSite(Cookies::SAMESITE_LAX);
     }
 
     public function registerINI(): void
@@ -78,7 +84,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
         }
     }
 
-    public function setName(string $name)
+    public function setName(string $name): static
     {
         $this->bridge->setSessionName($name);
 
@@ -90,7 +96,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
         return $this->bridge->getSessionName();
     }
 
-    public function setId(string $id)
+    public function setId(string $id): static
     {
         $this->bridge->setId($id);
 
@@ -127,21 +133,24 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             }
 
             // Must set cookie and update expires after session end.
-            register_shutdown_function(function () {
-                if ($this->getOption('auto_commit')) {
-                    $this->stop(true);
-                }
-            });
+            if ($this->getOption(static::OPTION_AUTO_COMMIT)) {
+                $this->destructor = [$this, 'stop'];
+
+                register_shutdown_function(fn() => $this->destruct());
+            }
         }
 
         return tap(
             $this->bridge->start(),
-
             // Send Cookies after started
-            fn () => $this->cookies->set(
-                $this->bridge->getSessionName(),
-                $this->bridge->getId()
-            )
+            function () {
+                $this->storage = &$this->bridge->getStorage();
+
+                $this->cookies->set(
+                    $this->bridge->getSessionName(),
+                    $this->bridge->getId()
+                );
+            }
         );
     }
 
@@ -153,7 +162,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     public function fork(?string $newId = null): Session
     {
         if (!$this->isStarted()) {
-            throw new \LogicException(
+            throw new LogicException(
                 static::class
                 . '::fork() only work after started, before started, you can use clone to copy it.'
             );
@@ -163,13 +172,18 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
         $bridge = $new->bridge;
 
+        // To break old Session data reference.
+        $storage = $this->storage;
+        unset($this->storage);
+        $this->storage = $storage;
+
         if ($newId === null) {
-            // If use native php session, we can only regenerate new ID
+            // If using native php session, we can only regenerate new ID
             $bridge->regenerate(false, true);
         } else {
-            // If use our implemented php bridge, we can fork it with specific ID.
+            // If using our implemented php bridge, we can fork it with specific ID.
             if ($this->bridge instanceof NativeBridge) {
-                throw new \LogicException('Fork with specific ID does not supports NativeBridge');
+                throw new LogicException('Fork with specific ID does not supports for NativeBridge');
             }
 
             $data = $new->getStorage();
@@ -196,17 +210,126 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     }
 
     /**
-     * clear
+     * Get value from this object.
      *
-     * @return bool
+     * @param  mixed  $key
+     *
+     * @return  mixed
      */
-    public function clear(): bool
+    public function &get(mixed $key): mixed
     {
-        return $this->bridge->unset();
+        $this->start();
+
+        $ret = null;
+
+        if (!$this->has($key)) {
+            return $ret;
+        }
+
+        return $this->storage[$key];
     }
 
-    public function &all(): array
+    /**
+     * Set value to this object.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     *
+     * @return  static
+     */
+    public function set(mixed $key, mixed $value): static
     {
+        $this->start();
+
+        $this->storage[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set value default if not exists.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $default
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function def(mixed $key, mixed $default): mixed
+    {
+        $this->start();
+
+        $this->storage[$key] ??= $default;
+
+        return $this->getStorage()[$key];
+    }
+
+    /**
+     * Check a key exists or not.
+     *
+     * @param  mixed  $key
+     *
+     * @return  mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function has(mixed $key): bool
+    {
+        $this->start();
+
+        return isset($this->storage[$key]);
+    }
+
+    /**
+     * remove
+     *
+     * @param  mixed  $key
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function remove(mixed $key): static
+    {
+        $this->start();
+
+        if ($this->has($key)) {
+            unset($this->storage[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Creates a copy of storage.
+     *
+     * @param  bool  $recursive
+     *
+     * @param  bool  $onlyDumpable
+     *
+     * @return array
+     */
+    public function dump(bool $recursive = false, bool $onlyDumpable = false): array
+    {
+        $this->start();
+
+        if (!$recursive) {
+            return $this->getStorage();
+        }
+
+        return TypeCast::toArray($this->getStorage(), true, $onlyDumpable);
+    }
+
+    /**
+     * Convert the object into something JSON serializable.
+     *
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        $this->start();
+
         return $this->getStorage();
     }
 
@@ -214,46 +337,88 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      * count
      *
      * @return  int
+     *
+     * @since  __DEPLOY_VERSION__
      */
-    public function count()
+    public function count(): int
     {
-        return \Windwalker\count($this->getStorage());
+        $this->start();
+
+        return count($this->getStorage());
     }
 
     /**
-     * jsonSerialize
-     *
-     * @return  mixed
+     * @return array|null
      */
-    public function jsonSerialize()
+    public function &getStorage(): ?array
     {
+        $this->start();
+
         return $this->bridge->getStorage();
     }
 
-    public function &getStorage(): ?array
+    public function overrideWith(string $name, mixed $override = null): mixed
     {
-        $storage =& $this->bridge->getStorage();
+        $this->start();
 
-        return $storage;
+        if ($override === null) {
+            return $this->get($name);
+        }
+
+        $this->set($name, $override);
+
+        return $override;
+    }
+
+    /**
+     * clear
+     *
+     * @return bool
+     */
+    public function clear(): bool
+    {
+        $this->start();
+
+        return $this->bridge->unset();
+    }
+
+    public function &all(): array
+    {
+        $this->start();
+
+        return $this->getStorage();
+    }
+
+    public function destroy(): void
+    {
+        $this->getBridge()->destroy();
     }
 
     /**
      * Set session cookie parameters, this method should call before session started.
      *
-     * @param array $options An associative array which may have any of the keys lifetime, path, domain,
-     * secure, httponly and samesite. The values have the same meaning as described
-     * for the parameters with the same name. The value of the samesite element
-     * should be either Lax or Strict. If any of the allowed options are not given,
-     * their default values are the same as the default values of the explicit
-     * parameters. If the samesite element is omitted, no SameSite cookie attribute
-     * is set.
+     * @param  array  $options  An associative array which may have any of the keys lifetime, path, domain,
+     *                          secure, httponly and samesite. The values have the same meaning as described
+     *                          for the parameters with the same name. The value of the samesite element
+     *                          should be either Lax or Strict. If any of the allowed options are not given,
+     *                          their default values are the same as the default values of the explicit
+     *                          parameters. If the samesite element is omitted, no SameSite cookie attribute
+     *                          is set.
      *
      * @since   2.0
      */
     public function setCookieParams(?array $options = null): void
     {
-        if (headers_sent() && $this->getCookies() instanceof Cookies) {
-            session_set_cookie_params($options ?? $this->cookies->getOptions());
+        if (!headers_sent() && $this->getCookies() instanceof Cookies) {
+            $options ??= $this->cookies->getOptions();
+
+            if (isset($options['expires'])) {
+                $options['lifetime'] = max($options['expires'] - time(), 0);
+
+                unset($options['expires']);
+            }
+
+            session_set_cookie_params($options);
         }
     }
 
@@ -270,14 +435,14 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setCookies(?CookiesInterface $cookies)
+    public function setCookies(?CookiesInterface $cookies): static
     {
         $this->cookies = $cookies;
 
         return $this;
     }
 
-    protected function getOptionAndINI(string $name)
+    protected function getOptionAndINI(string $name): mixed
     {
         return $this->getOption('ini')[$name] ?? ini_get('session.' . $name);
     }
@@ -287,11 +452,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      */
     public function getFlashBag(): FlashBag
     {
-        if ($this->flashBag === null) {
-            $storage = &$this->getStorage();
-            $storage['_flash'] = [];
+        $this->start();
 
-            $this->flashBag = new FlashBag($storage['_flash']);
+        if ($this->flashBag === null) {
+            $this->setFlashBag(new FlashBag());
         }
 
         return $this->flashBag;
@@ -302,9 +466,15 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFlashBag(?FlashBag $flashBag)
+    public function setFlashBag(?FlashBag $flashBag): static
     {
         $this->flashBag = $flashBag;
+
+        if ($flashBag) {
+            $storage = &$this->getStorage();
+
+            $flashBag->link($storage);
+        }
 
         return $this;
     }
@@ -312,14 +482,14 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     /**
      * Add a flash message.
      *
-     * @param array|string  $messages  The message you want to set, can be an array to storage multiple messages.
-     * @param string        $type      The message type, default is `info`.
+     * @param  array|string  $messages  The message you want to set, can be an array to storage multiple messages.
+     * @param  string        $type      The message type, default is `info`.
      *
      * @return  static
      *
      * @since   2.0
      */
-    public function addFlash(array|string $messages, string $type = 'info')
+    public function addFlash(array|string $messages, string $type = 'info'): static
     {
         foreach ((array) $messages as $message) {
             $this->getFlashBag()->add($message, $type);
@@ -335,7 +505,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @since   2.0
      */
-    public function getFlashes()
+    public function getFlashes(): array
     {
         return $this->getFlashBag()->all();
     }
@@ -353,7 +523,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setBridge(BridgeInterface $bridge)
+    public function setBridge(BridgeInterface $bridge): static
     {
         $this->bridge = $bridge;
 
@@ -367,7 +537,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  bool
      */
-    public function offsetExists($key): bool
+    public function offsetExists(mixed $key): bool
     {
         return $this->has($key);
     }
@@ -379,7 +549,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  mixed
      */
-    public function &offsetGet($key)
+    public function &offsetGet(mixed $key): mixed
     {
         return $this->get($key);
     }
@@ -392,7 +562,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  void
      */
-    public function offsetSet($key, $value): void
+    public function offsetSet(mixed $key, mixed $value): void
     {
         $this->set($key, $value);
     }
@@ -404,7 +574,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @return  void
      */
-    public function offsetUnset($key): void
+    public function offsetUnset(mixed $key): void
     {
         $this->remove($key);
     }
@@ -429,5 +599,19 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     public function isStarted(): bool
     {
         return $this->bridge->isStarted();
+    }
+
+    public function __destruct()
+    {
+        $this->destruct();
+    }
+
+    public function destruct(): void
+    {
+        if ($this->destructor) {
+            ($this->destructor)();
+
+            $this->destructor = null;
+        }
     }
 }

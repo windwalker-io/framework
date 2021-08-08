@@ -28,16 +28,9 @@ class Authentication implements AuthenticationInterface
     protected array $methods = [];
 
     /**
-     * Property credential.
-     *
-     * @var array
-     */
-    protected array $credential;
-
-    /**
      * Authentication constructor.
      *
-     * @param Method\MethodInterface[] $methods
+     * @param  Method\MethodInterface[]  $methods
      */
     public function __construct(array $methods = [])
     {
@@ -76,7 +69,7 @@ class Authentication implements AuthenticationInterface
      *
      * @return  static
      */
-    public function addMethod(string $name, MethodInterface $method)
+    public function addMethod(string $name, MethodInterface $method): static
     {
         $this->methods[$name] = $method;
 
@@ -86,7 +79,7 @@ class Authentication implements AuthenticationInterface
     /**
      * getMethod
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  MethodInterface
      */
@@ -98,11 +91,11 @@ class Authentication implements AuthenticationInterface
     /**
      * removeMethod
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  $this
      */
-    public function removeMethod(string $name)
+    public function removeMethod(string $name): static
     {
         unset($this->methods[$name]);
 

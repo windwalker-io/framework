@@ -82,19 +82,19 @@ class Output implements OutputInterface
     /**
      * Method to send a header to the client.  We wrap header() function with this method for testing reason.
      *
-     * @param   string  $string    The header string.
-     * @param   boolean $replace   The optional replace parameter indicates whether the header should
+     * @param  string  $string     The header string.
+     * @param  bool    $replace    The optional replace parameter indicates whether the header should
      *                             replace a previous similar header, or add a second header of the same type.
-     * @param   integer $code      Forces the HTTP response code to the specified value. Note that
+     * @param  int     $code       Forces the HTTP response code to the specified value. Note that
      *                             this parameter only has an effect if the string is not empty.
      *
      * @return  static  Return self to support chaining.
      *
      * @see     header()
      */
-    public function header(string $string, bool $replace = true, int $code = null)
+    public function header(string $string, bool $replace = true, int $code = null): static
     {
-        header( $string, $replace, (int) $code);
+        header($string, $replace, (int) $code);
 
         return $this;
     }
@@ -102,11 +102,11 @@ class Output implements OutputInterface
     /**
      * Send all response headers.
      *
-     * @param   ResponseInterface $response Response object to contain headers.
+     * @param  ResponseInterface  $response  Response object to contain headers.
      *
      * @return  static  Instance of $this to allow chaining.
      */
-    public function sendHeaders(ResponseInterface $response)
+    public function sendHeaders(ResponseInterface $response): static
     {
         foreach ($response->getHeaders() as $header => $values) {
             $first = true;
@@ -125,7 +125,7 @@ class Output implements OutputInterface
     /**
      * Send HTTP status line.
      *
-     * @param   ResponseInterface $response Response object to contain status code and protocol version.
+     * @param  ResponseInterface  $response  Response object to contain status code and protocol version.
      *
      * @return  void
      */
@@ -168,7 +168,7 @@ class Output implements OutputInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setOutputStream(StreamInterface|string|null $outputStream)
+    public function setOutputStream(StreamInterface|string|null $outputStream): static
     {
         $this->outputStream = $outputStream
             ?? Stream::wrap($outputStream ?? 'php://output', Stream::MODE_WRITE_ONLY_RESET);

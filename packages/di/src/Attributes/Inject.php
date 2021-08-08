@@ -12,6 +12,11 @@ declare(strict_types=1);
 namespace Windwalker\DI\Attributes;
 
 use Attribute;
+use JetBrains\PhpStorm\Pure;
+use ReflectionParameter;
+use ReflectionProperty;
+use ReflectionUnionType;
+use RuntimeException;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
@@ -20,7 +25,7 @@ use Windwalker\DI\Exception\DependencyResolutionException;
  *
  * @since  3.4.4
  */
-@@Attribute
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Inject implements ContainerAttributeInterface
 {
     public ?string $id = null;
@@ -35,7 +40,7 @@ class Inject implements ContainerAttributeInterface
      */
     public function __construct(?string $id = null, bool $forceNew = false)
     {
-        $this->id       = $id;
+        $this->id = $id;
         $this->forceNew = $forceNew;
     }
 
@@ -45,31 +50,44 @@ class Inject implements ContainerAttributeInterface
      * @param  AttributeHandler  $handler
      *
      * @return mixed
-     *
-     * @throws DependencyResolutionException
      */
-    public function __invoke(AttributeHandler $handler): callable
-    {
-        $reflector = $handler->getReflactor();
-
-        if (!$reflector instanceof \ReflectionProperty) {
-            return $handler;
-        }
+    #[Pure]
+    public function __invoke(
+        AttributeHandler $handler
+    ): callable {
+        /** @var ReflectionProperty|ReflectionParameter $reflector */
+        $reflector = $handler->getReflector();
 
         return function (...$args) use ($handler, $reflector) {
-            $type = $reflector->getType();
-
-            if (!$type) {
-                throw new DependencyResolutionException(
-                    sprintf(
-                        'Property: %s->%s inject with no type.',
-                        $reflector->getDeclaringClass()->getName(),
-                        $reflector->getName()
-                    )
-                );
+            if ($reflector instanceof ReflectionParameter) {
+                return $this->handleParameter($handler);
             }
 
-            if ($type instanceof \ReflectionUnionType) {
+            if ($handler->getObject() === null) {
+                throw new RuntimeException('No object to inject.');
+            }
+
+            $value = $this->resolveInjectable($handler->getContainer(), $reflector);
+
+            $reflector->setValue($handler->getObject(), $value);
+
+            return $value;
+        };
+    }
+
+    protected function handleParameter(AttributeHandler $handler): mixed
+    {
+        return $this->resolveInjectable($handler->getContainer(), $handler->getReflector());
+    }
+
+    protected function getTypeName(ReflectionProperty|ReflectionParameter $reflector): mixed
+    {
+        $type = $reflector->getType();
+
+        if ($this->id) {
+            $varClass = $this->id;
+        } else {
+            if ($type instanceof ReflectionUnionType) {
                 $types = [$type->getTypes()];
             } else {
                 $types = [$type];
@@ -78,50 +96,48 @@ class Inject implements ContainerAttributeInterface
             $varClass = null;
 
             foreach ($types as $type) {
-                if (class_exists($type->getName())) {
+                if (class_exists($type->getName()) || interface_exists($type->getName())) {
                     $varClass = $type->getName();
                     break;
                 }
             }
+        }
 
-            if (!$varClass) {
-                throw new DependencyResolutionException(
-                    sprintf('unable to resolve injection of property: "%s".', $reflector->getName())
-                );
-            }
+        if (!$varClass) {
+            throw new DependencyResolutionException(
+                sprintf('Unable to resolve injection of property: "%s".', $reflector->getName())
+            );
+        }
 
-            if ($reflector->isProtected() || $reflector->isPrivate()) {
-                $reflector->setAccessible(true);
-            }
-
-            return $this->resolveInjectable($handler->getContainer(), $varClass);
-        };
+        return $varClass;
     }
 
-    /**
-     * getInjectable
-     *
-     * @param  Container  $container
-     * @param  string     $class
-     *
-     * @return  mixed
-     *
-     * @throws DependencyResolutionException
-     */
-    public function resolveInjectable(Container $container, $class)
+    public function resolveInjectable(Container $container, ReflectionProperty|ReflectionParameter $reflector): mixed
     {
-        $id = $this->id ?? $class;
+        $id = $this->getTypeName($reflector);
 
         if ($container->has($id)) {
             return $container->get($id, $this->forceNew);
         }
 
-        if (!class_exists($id)) {
+        if (class_exists($id) || interface_exists($id)) {
+            return $this->createObject($container, $id);
+        }
+
+        if (!$reflector->allowsNull()) {
+            $class = $reflector->getDeclaringClass();
+            $member = $reflector->getName();
+
             throw new DependencyResolutionException(
-                sprintf('Class: "%s" not exists.', $id)
+                "Unable to inject object $id for class $class::$member"
             );
         }
 
+        return null;
+    }
+
+    protected function createObject(Container $container, string $id): object
+    {
         return $container->newInstance($id);
     }
 }

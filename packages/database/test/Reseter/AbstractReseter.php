@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Reseter;
 
+use PDO;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Query;
 
@@ -28,16 +30,16 @@ abstract class AbstractReseter
      *
      * @return  static
      */
-    public static function create(string $platform)
+    public static function create(string $platform): static
     {
-        $class = __NAMESPACE__ . '\\' . ucfirst($platform) . 'Reseter';
+        $class = __NAMESPACE__ . '\\' . DatabaseFactory::getPlatformName($platform) . 'Reseter';
 
         return new $class();
     }
 
-    abstract public function createDatabase(\PDO $pdo, string $dbname): void;
+    abstract public function createDatabase(PDO $pdo, string $dbname): void;
 
-    abstract public function clearAllTables(\PDO $pdo, string $dbname): void;
+    abstract public function clearAllTables(PDO $pdo, string $dbname): void;
 
     public static function qn(string $value): string
     {

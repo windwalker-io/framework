@@ -11,12 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Iterator;
 
+use FilterIterator;
 use Iterator;
 
 /**
  * The UniqueIterator class.
  */
-class UniqueIterator extends \FilterIterator
+class UniqueIterator extends FilterIterator
 {
     /**
      * @var array
@@ -41,7 +42,7 @@ class UniqueIterator extends \FilterIterator
     /**
      * @inheritDoc
      */
-    public function accept()
+    public function accept(): bool
     {
         $current = $this->current();
 
@@ -61,26 +62,19 @@ class UniqueIterator extends \FilterIterator
      *
      * @return  mixed
      */
-    protected function formatValue($value)
+    protected function formatValue(mixed $value): mixed
     {
-        switch ($this->flags) {
-            case SORT_NUMERIC:
-                return (float) $value;
-
-            case SORT_STRING:
-            case SORT_LOCALE_STRING:
-                return (string) $value;
-
-            case SORT_REGULAR:
-            default:
-                return $value;
-        }
+        return match ($this->flags) {
+            SORT_NUMERIC => (float) $value,
+            SORT_STRING, SORT_LOCALE_STRING => (string) $value,
+            default => $value,
+        };
     }
 
     /**
      * @inheritDoc
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->exists = [];
 
@@ -96,7 +90,7 @@ class UniqueIterator extends \FilterIterator
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setFlags(int $flags)
+    public function setFlags(int $flags): static
     {
         $this->flags = $flags;
 

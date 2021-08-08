@@ -50,7 +50,7 @@ class TextareaFieldTest extends TestCase
         $this->instance->setAttribute('id', 'test-field');
         $this->instance->setAttribute('readonly', true);
         $this->instance->setAttribute('disabled', true);
-        $this->instance->setAttribute('onchange', 'javascript:void(0);');
+        $this->instance->setAttribute('onchange', 'void(0);');
         $this->instance->setAttribute('cols', 10);
         $this->instance->rows(15);
 
@@ -74,9 +74,11 @@ class TextareaFieldTest extends TestCase
      */
     public function testRender()
     {
+        // phpcs:disable
         $html = <<<HTML
-<textarea id="test-field" name="flower" class="stub-flower" cols="10" data-field-input disabled onchange="javascript:void(0);" readonly rows="15">sakura</textarea>
+<textarea id="test-field" name="flower" class="stub-flower" cols="10" data-field-input disabled onchange="void(0);" readonly rows="15">sakura</textarea>
 HTML;
+        // phpcs:enable
 
         self::assertDomStringEqualsDomString($html, $this->instance->renderInput());
     }

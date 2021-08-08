@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
+use Serializable;
 use Windwalker\Utilities\Accessible\AccessibleTrait;
 use Windwalker\Utilities\Contract\AccessibleInterface;
 
@@ -19,7 +20,7 @@ use Windwalker\Utilities\Contract\AccessibleInterface;
  *
  * @since 2.0
  */
-class Event extends AbstractEvent implements \Serializable, AccessibleInterface
+class Event extends AbstractEvent implements Serializable, AccessibleInterface
 {
     use AccessibleTrait;
 
@@ -30,7 +31,7 @@ class Event extends AbstractEvent implements \Serializable, AccessibleInterface
      *
      * @return  static
      */
-    public function merge(array $arguments)
+    public function merge(array $arguments): static
     {
         foreach ($arguments as $key => &$value) {
             $this->storage[$key] = &$value;
@@ -56,7 +57,7 @@ class Event extends AbstractEvent implements \Serializable, AccessibleInterface
      *
      * @since   2.0
      */
-    public function clear()
+    public function clear(): static
     {
         // Break the reference
         unset($this->storage);
@@ -73,7 +74,7 @@ class Event extends AbstractEvent implements \Serializable, AccessibleInterface
      *
      * @since   2.0
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([$this->name, $this->storage, $this->stopped]);
     }

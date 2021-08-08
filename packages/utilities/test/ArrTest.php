@@ -58,7 +58,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestDef()
+    public function providerTestDef(): array
     {
         return [
             [
@@ -139,6 +139,20 @@ class ArrTest extends TestCase
             'male' => 'Loki',
             'female' => 'Black Widow',
             'no-gender' => 'empty',
+        ];
+
+        self::assertEquals($exp, Arr::collapse($src, true));
+
+        $exp = [
+            'Jarvis',
+            'Phil Coulson',
+            'Hulk',
+            'Pepper',
+            'Iron Man',
+            'Nick Fury',
+            'Loki',
+            'Black Widow',
+            'empty',
         ];
 
         self::assertEquals($exp, Arr::collapse($src));
@@ -345,7 +359,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestRemove()
+    public function providerTestRemove(): array
     {
         return [
             [
@@ -438,10 +452,6 @@ class ArrTest extends TestCase
             (object) ['Lycoris' => 'energetic'],
             Arr::only((object) $array, ['Lycoris'])
         );
-
-        $this->expectException(InvalidArgumentException::class);
-
-        Arr::only('string', ['test']);
     }
 
     public function testExcept(): void
@@ -480,10 +490,6 @@ class ArrTest extends TestCase
             ],
             Arr::except((object) $array, ['Lycoris'])
         );
-
-        $this->expectException(InvalidArgumentException::class);
-
-        Arr::except('string', ['test']);
     }
 
     /**
@@ -727,7 +733,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestSort()
+    public function providerTestSort(): array
     {
         return [
             'simple array' => [
@@ -813,7 +819,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestInvert()
+    public function providerTestInvert(): array
     {
         return [
             'Case 1' => [
@@ -1204,7 +1210,7 @@ SHOW;
         $this->assertEquals([$data[0]], Arr::query($data, ['id' => 1, 'title' => 'Julius Caesar']));
 
         // Test object equals
-        $object      = new stdClass();
+        $object = new stdClass();
         $object->foo = 'bar';
         $this->assertEquals([$data[0], $data[3]], Arr::query($data, ['data' => $object]));
 

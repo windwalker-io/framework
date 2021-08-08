@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Wrapper;
 
+use Stringable;
+
 /**
  * The RawWrapper class.
  */
-class RawWrapper implements WrapperInterface, \Stringable
+class RawWrapper implements WrapperInterface, Stringable
 {
     /**
      * Property value.
@@ -40,7 +42,7 @@ class RawWrapper implements WrapperInterface, \Stringable
      *
      * @since  3.5.1
      */
-    public function get()
+    public function get(): mixed
     {
         return $this->value;
     }
@@ -54,7 +56,7 @@ class RawWrapper implements WrapperInterface, \Stringable
      *
      * @since  3.5.1
      */
-    public function set($value): self
+    public function set(mixed $value): self
     {
         $this->value = $value;
 
@@ -64,7 +66,7 @@ class RawWrapper implements WrapperInterface, \Stringable
     /**
      * @inheritDoc
      */
-    public function __invoke($src = null)
+    public function __invoke($src = null): mixed
     {
         return $this->get();
     }
@@ -72,7 +74,7 @@ class RawWrapper implements WrapperInterface, \Stringable
     /**
      * @inheritDoc
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->get();
     }

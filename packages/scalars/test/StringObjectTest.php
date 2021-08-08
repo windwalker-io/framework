@@ -151,7 +151,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function offsetGetProvider()
+    public function offsetGetProvider(): array
     {
         return [
             [0, '白'],
@@ -189,7 +189,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function offsetSetProvider()
+    public function offsetSetProvider(): array
     {
         return [
             ['Foobar', ' B', 3, 'Foo Bar'],
@@ -223,7 +223,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function offsetUnsetProvider()
+    public function offsetUnsetProvider(): array
     {
         return [
             ['Foobar', 3, 'Fooar'],
@@ -294,7 +294,7 @@ class StringObjectTest extends TestCase
      */
     public function testToLowerCase(string $string, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->toLowerCase();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -307,7 +307,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function toLowerCaseProvider()
+    public function toLowerCaseProvider(): array
     {
         return [
             ['FooBar', 'foobar'],
@@ -328,7 +328,7 @@ class StringObjectTest extends TestCase
      */
     public function testToUpperCase(string $string, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->toUpperCase();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -341,7 +341,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function toUpperCaseProvider()
+    public function toUpperCaseProvider(): array
     {
         return [
             ['FooBar', 'FOOBAR'],
@@ -363,7 +363,7 @@ class StringObjectTest extends TestCase
      */
     public function testLength(string $string, int $expected, string $encoding = null)
     {
-        $s      = new StringObject($string, $encoding);
+        $s = new StringObject($string, $encoding);
         $length = $s->length();
 
         self::assertEquals($expected, $length);
@@ -374,7 +374,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function lengthProvider()
+    public function lengthProvider(): array
     {
         return [
             ['Foo Bar', 7],
@@ -404,7 +404,7 @@ class StringObjectTest extends TestCase
      */
     public function testReplace(string $string, $search, $replacement, $expected, int $count)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->replace($search, $replacement, $c);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -418,7 +418,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function replaceProvider()
+    public function replaceProvider(): array
     {
         return [
             ['Foobar', 'oo', 'ii', 'Fiibar', 1],
@@ -516,7 +516,7 @@ class StringObjectTest extends TestCase
      */
     public function testReverse(string $string, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->reverse();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -548,7 +548,7 @@ class StringObjectTest extends TestCase
             return;
         }
 
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->substrReplace($replace, $start, $offset);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -567,7 +567,7 @@ class StringObjectTest extends TestCase
      */
     public function testTrimLeft(string $string, ?string $charlist, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->trimLeft($charlist);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -588,7 +588,7 @@ class StringObjectTest extends TestCase
      */
     public function testTrimRight(string $string, ?string $charlist, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->trimRight($charlist);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -609,7 +609,7 @@ class StringObjectTest extends TestCase
      */
     public function testTrim(string $string, ?string $charlist, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->trim($charlist);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -627,7 +627,7 @@ class StringObjectTest extends TestCase
      */
     public function testUpperCaseFirst(string $string, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->upperCaseFirst();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -645,7 +645,7 @@ class StringObjectTest extends TestCase
      */
     public function testLowerCaseFirst(string $string, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->lowerCaseFirst();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -665,7 +665,7 @@ class StringObjectTest extends TestCase
      */
     public function testUpperCaseWords(string $string, string $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->upperCaseWords();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -713,7 +713,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function indexOfProvider()
+    public function indexOfProvider(): array
     {
         return [
             ['FooBar', 'B', 3],
@@ -748,7 +748,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function indexOfLastProvider()
+    public function indexOfLastProvider(): array
     {
         return [
             ['FooBarBaz', 'B', 6],
@@ -783,7 +783,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
-    public function explodeProvider()
+    public function explodeProvider(): array
     {
         return [
             ['Foo/Bar/Yoo', '/', ['Foo', 'Bar', 'Yoo']],
@@ -827,7 +827,7 @@ class StringObjectTest extends TestCase
 
     public function testAppend(): void
     {
-        $str  = str('foo');
+        $str = str('foo');
         $str2 = $str->append(' bar');
 
         self::assertEquals('foo bar', (string) $str2);
@@ -836,7 +836,7 @@ class StringObjectTest extends TestCase
 
     public function testPrepend(): void
     {
-        $str  = str('foo');
+        $str = str('foo');
         $str2 = $str->prepend('bar ');
 
         self::assertEquals('bar foo', (string) $str2);

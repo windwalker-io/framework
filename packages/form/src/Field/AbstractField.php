@@ -11,21 +11,20 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
+use BadMethodCallException;
+use Closure;
+use InvalidArgumentException;
 use Windwalker\DOM\DOMElement;
-use Windwalker\DOM\HTMLFactory;
-use Windwalker\Form\Field\Concern\{
-    ManageFilterTrait,
+use Windwalker\Form\Field\Concern\{ManageFilterTrait,
     ManageInputTrait,
     ManageLabelTrait,
     ManageRenderTrait,
-    ManageWrapperTrait
-};
+    ManageWrapperTrait};
 use Windwalker\Form\Form;
-use Windwalker\Form\FormFactory;
 use Windwalker\Form\FormNormalizer;
-use Windwalker\Form\Renderer\FormRendererInterface;
+use Windwalker\Form\FormRegistry;
 use Windwalker\Utilities\Classes\FlowControlTrait;
-use Windwalker\Utilities\Classes\StateAccessTrait;
+use Windwalker\Utilities\Options\StateAccessTrait;
 use Windwalker\Utilities\Str;
 
 use function Windwalker\DOM\h;
@@ -44,6 +43,8 @@ use function Windwalker\DOM\h;
  * @method mixed isRequired()
  * @method $this disabled(bool $value)
  * @method mixed isDisabled()
+ * @method $this readonly(bool $value)
+ * @method mixed isReadonly()
  * @method  $this  onchange(string $value = null)
  * @method  mixed  getOnchange()
  * @method  $this  onfocus(string $value = null)
@@ -89,7 +90,7 @@ abstract class AbstractField
      *
      * @var  mixed
      */
-    protected $value = null;
+    protected mixed $value = null;
 
     /**
      * Property form.
@@ -97,6 +98,11 @@ abstract class AbstractField
      * @var  Form
      */
     protected ?Form $form = null;
+
+    /**
+     * @var array<callable>
+     */
+    protected array $surrounds = [];
 
     /**
      * create
@@ -107,7 +113,7 @@ abstract class AbstractField
      *
      * @since  3.5.19
      */
-    public static function create(...$args)
+    public static function create(...$args): static
     {
         return new static(...$args);
     }
@@ -119,7 +125,7 @@ abstract class AbstractField
      * @param  string  $label
      * @param  array   $attributes
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(string $name = '', string $label = '', array $attributes = [])
     {
@@ -128,7 +134,7 @@ abstract class AbstractField
         $this->input = $this->createInputElement($attributes);
         $this->label = h('label', [], $label);
         $this->wrapper = h('div', [], '');
-        $this->form = FormFactory::form();
+        $this->form = FormRegistry::form();
 
         $this->resetValidators();
         $this->resetFilters();
@@ -137,9 +143,15 @@ abstract class AbstractField
         $this->prepareState(
             [
                 'no_label' => false,
-                'vertical' => true,
             ]
         );
+
+        $this->configure();
+    }
+
+    protected function configure(): void
+    {
+        //
     }
 
     protected function createInputElement(array $attrs = []): DOMElement
@@ -160,17 +172,22 @@ abstract class AbstractField
     /**
      * render
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return string
      */
     public function render(array $options = []): string
     {
+        $wrapper = $this->getPreparedWrapper();
+
         $options = array_merge($this->getStates(), $options);
 
-        $wrapper = $this->prepareWrapper(clone $this->getWrapper());
-
         return $this->getForm()->getRenderer()->renderField($this, $wrapper, $options);
+    }
+
+    public function getPreparedWrapper(): DOMElement
+    {
+        return $this->prepareWrapper(clone $this->getWrapper());
     }
 
     /**
@@ -197,11 +214,11 @@ abstract class AbstractField
     /**
      * prepareStore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return  mixed
      */
-    public function prepareStore($value)
+    public function prepareStore(mixed $value): mixed
     {
         return $value;
     }
@@ -219,13 +236,9 @@ abstract class AbstractField
     public function getNamespaceName(bool $withParent = false): string
     {
         $name = $this->name;
-        $ns   = $this->getNamespace();
+        $ns = $this->getNamespace($withParent);
 
         if ($ns) {
-            $name = $ns . '/' . $name;
-        }
-
-        if ($withParent && $ns = $this->getForm()->getNamespace()) {
             $name = $ns . '/' . $name;
         }
 
@@ -239,7 +252,7 @@ abstract class AbstractField
      *
      * @return  static  Return self to support chaining.
      */
-    public function setName(string $name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -271,7 +284,7 @@ abstract class AbstractField
             [
                 FormNormalizer::clearNamespace($this->getForm()->getNamespace()),
                 FormNormalizer::clearNamespace($this->getNamespace()),
-                FormNormalizer::clearNamespace($name ?? $this->getName())
+                FormNormalizer::clearNamespace($name ?? $this->getName()),
             ],
             'strlen'
         );
@@ -323,7 +336,7 @@ abstract class AbstractField
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFieldset(?string $fieldset)
+    public function setFieldset(?string $fieldset): static
     {
         $this->fieldset = $fieldset;
 
@@ -335,7 +348,7 @@ abstract class AbstractField
      *
      * @return  mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->viewFilter->filter($this->getComputedValue());
     }
@@ -347,7 +360,7 @@ abstract class AbstractField
      *
      * @since  3.5.21
      */
-    public function getComputedValue()
+    public function getComputedValue(): mixed
     {
         return ($this->value !== null && $this->value !== '') ? $this->value : $this->get('default');
     }
@@ -357,7 +370,7 @@ abstract class AbstractField
      *
      * @return  mixed
      */
-    public function getRawValue()
+    public function getRawValue(): mixed
     {
         return $this->value;
     }
@@ -369,14 +382,21 @@ abstract class AbstractField
      *
      * @return  static  Return self to support chaining.
      */
-    public function setValue($value)
+    public function setValue($value): static
     {
         $this->value = $value;
 
         return $this;
     }
 
-    public function bindValue(&$value)
+    /**
+     * bindValue
+     *
+     * @param  mixed  $value
+     *
+     * @return  $this
+     */
+    public function bindValue(&$value): static
     {
         $this->value = &$value;
 
@@ -386,11 +406,19 @@ abstract class AbstractField
     /**
      * Method to get property Control
      *
+     * @param  bool  $withParent
+     *
      * @return  string
      */
-    public function getNamespace(): string
+    public function getNamespace(bool $withParent = false): string
     {
-        return $this->namespace;
+        $namespace = $this->namespace;
+
+        if ($withParent && $ns = $this->getForm()->getNamespace()) {
+            $namespace = trim($ns . '/' . $namespace, '/');
+        }
+
+        return $namespace;
     }
 
     /**
@@ -400,7 +428,7 @@ abstract class AbstractField
      *
      * @return  static  Return self to support chaining.
      */
-    public function setNamespace(string $namespace)
+    public function setNamespace(string $namespace): static
     {
         $this->namespace = FormNormalizer::clearNamespace($namespace);
 
@@ -414,7 +442,7 @@ abstract class AbstractField
      *
      * @return  $this
      */
-    public function appendNamespace(string $ns)
+    public function appendNamespace(string $ns): static
     {
         $this->namespace .= '/' . $ns;
 
@@ -423,12 +451,12 @@ abstract class AbstractField
         return $this;
     }
 
-    public function setDefaultValue($value)
+    public function defaultValue(mixed $value): static
     {
         return $this->set('default', $value);
     }
 
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->get('default');
     }
@@ -441,7 +469,7 @@ abstract class AbstractField
      *
      * @return mixed The return value of this attribute.
      */
-    public function get(string $name, $default = null)
+    public function get(string $name, $default = null): mixed
     {
         return $this->getState($name, $default);
     }
@@ -454,7 +482,7 @@ abstract class AbstractField
      *
      * @return  static
      */
-    public function set(string $name, $value)
+    public function set(string $name, mixed $value): static
     {
         $this->setState($name, $value);
 
@@ -478,7 +506,7 @@ abstract class AbstractField
      *
      * @return  static  Return self to support chaining.
      */
-    public function setForm(Form $form)
+    public function setForm(Form $form): static
     {
         $this->form = $form;
 
@@ -488,13 +516,13 @@ abstract class AbstractField
     /**
      * Escape html string.
      *
-     * @param  string  $text
+     * @param  string|null  $text
      *
      * @return  string
      *
      * @since  2.1.9
      */
-    public function escape(?string $text): string
+    public function escape(mixed $text): string
     {
         return htmlspecialchars((string) $text, ENT_COMPAT, 'UTF-8');
     }
@@ -510,7 +538,7 @@ abstract class AbstractField
     {
         return [
             'help',
-            'description'
+            'description',
         ];
     }
 
@@ -522,46 +550,53 @@ abstract class AbstractField
      *
      * @return  mixed
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args): mixed
     {
         $accessors = $this->getAccessors();
 
         if (isset($accessors[$method])) {
             $option = $accessors[$method];
+
+            return $this->set($option, $args[0]);
         }
 
         if (in_array($method, $accessors, true)) {
-            $option = $method;
-        }
-
-        if (isset($option)) {
-            if (str_starts_with($method, 'get')) {
-                return $this->get(strtolower(Str::removeLeft($method, 'get')));
-            }
-
-            if (str_starts_with($method, 'is')) {
-                $v = $this->get(strtolower(Str::removeLeft($method, 'is')));
-
-                return $v !== null && $v !== false;
-            }
-
             return $this->set($method, $args[0]);
         }
 
+        $is = false;
+        $option = null;
+
         if (str_starts_with($method, 'get')) {
-            return $this->getAttribute(strtolower(Str::removeLeft($method, 'get')));
+            $option = lcfirst(Str::removeLeft($method, 'get'));
+        } elseif (str_starts_with($method, 'is')) {
+            $option = lcfirst(Str::removeLeft($method, 'is'));
+            $is = true;
+            // return $v !== null && $v !== false;
         }
 
-        if (str_starts_with($method, 'is')) {
-            $v = $this->getAttribute(strtolower(Str::removeLeft($method, 'is')));
+        if ($option !== null) {
+            if (isset($accessors[$option])) {
+                $option = $accessors[$option];
+                $v = $this->get($option);
 
-            return $v !== null && $v !== false;
+                return $is ? $v !== null && $v !== false : $v;
+            }
+
+            if (in_array($option, $accessors, true)) {
+                $v = $this->get($option);
+
+                return $is ? $v !== null && $v !== false : $v;
+            }
+
+            $v = $this->getAttribute($option);
+
+            return $is ? $v !== null && $v !== false : $v;
         }
 
         return $this->setAttribute($method, $args[0]);
-
         // throw ExceptionFactory::badMethodCall($method, static::class);
     }
 
@@ -575,5 +610,50 @@ abstract class AbstractField
     public function __toString(): string
     {
         return $this->render();
+    }
+
+    public function surround(string|Closure|\DOMElement $surround, array $attributes = []): static
+    {
+        if (is_string($surround)) {
+            $surround = DOMElement::create($surround, $attributes);
+        }
+
+        if ($surround instanceof \DOMElement) {
+            $surround = function ($input) use ($surround) {
+                if ($input instanceof \DOMElement) {
+                    $surround->appendChild($input);
+
+                    return $surround;
+                }
+
+                $surround->innerHTML = $input;
+
+                return $surround;
+            };
+        }
+
+        $this->surrounds[] = $surround;
+
+        return $this;
+    }
+
+    /**
+     * @return callable[]
+     */
+    public function getSurrounds(): array
+    {
+        return $this->surrounds;
+    }
+
+    /**
+     * @param  callable[]|DOMElement[]  $surrounds
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setSurrounds(array $surrounds): static
+    {
+        $this->surrounds = $surrounds;
+
+        return $this;
     }
 }

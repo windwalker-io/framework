@@ -26,9 +26,9 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
+     * @return string
      */
-    public function push(QueueMessage $message): int|string
+    public function push(QueueMessage $message): string
     {
         $job = $message->getSerializedJob();
         /** @var JobInterface $job */
@@ -36,7 +36,7 @@ class SyncQueueDriver implements QueueDriverInterface
 
         $this->runJob($job);
 
-        return 0;
+        return '0';
     }
 
     protected function runJob(callable $job)
@@ -63,7 +63,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @return SyncQueueDriver
      */
-    public function delete(QueueMessage $message)
+    public function delete(QueueMessage $message): static
     {
         return $this;
     }
@@ -71,11 +71,11 @@ class SyncQueueDriver implements QueueDriverInterface
     /**
      * release
      *
-     * @param QueueMessage $message
+     * @param  QueueMessage  $message
      *
      * @return static
      */
-    public function release(QueueMessage $message)
+    public function release(QueueMessage $message): static
     {
         return $this;
     }

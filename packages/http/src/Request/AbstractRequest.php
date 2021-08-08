@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Request;
 
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\MessageTrait;
-use Windwalker\Http\Uri;
 use Windwalker\Stream\Stream;
+use Windwalker\Uri\Uri;
 
 /**
  * The AbstractRequest class.
@@ -90,21 +91,21 @@ abstract class AbstractRequest implements RequestInterface
             $value = HeaderHelper::allToArray($value);
 
             if (!HeaderHelper::arrayOnlyContainsString($value)) {
-                throw new \InvalidArgumentException('Header values should ony have string.');
+                throw new InvalidArgumentException('Header values should ony have string.');
             }
 
             if (!HeaderHelper::isValidName($name)) {
-                throw new \InvalidArgumentException('Invalid header name');
+                throw new InvalidArgumentException('Invalid header name');
             }
 
-            $normalized                     = strtolower($name);
+            $normalized = strtolower($name);
             $this->headerNames[$normalized] = $name;
-            $this->headers[$name]           = $value;
+            $this->headers[$name] = $value;
         }
 
         $this->stream = $body;
         $this->method = $this->validateMethod($method);
-        $this->uri    = $uri;
+        $this->uri = $uri;
     }
 
     /**
@@ -164,15 +165,15 @@ abstract class AbstractRequest implements RequestInterface
      * @param  mixed  $requestTarget
      *
      * @return static
-     * @throws \InvalidArgumentException if the request target is invalid.
+     * @throws InvalidArgumentException if the request target is invalid.
      */
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget(mixed $requestTarget): AbstractRequest|static
     {
         if (preg_match('/\s/', $requestTarget)) {
-            throw new \InvalidArgumentException('RequestTarget cannot contain whitespace.');
+            throw new InvalidArgumentException('RequestTarget cannot contain whitespace.');
         }
 
-        $new                = clone $this;
+        $new = clone $this;
         $new->requestTarget = $requestTarget;
 
         return $new;
@@ -202,9 +203,9 @@ abstract class AbstractRequest implements RequestInterface
      * @param  string  $method  Case-sensitive method.
      *
      * @return static
-     * @throws \InvalidArgumentException for invalid HTTP methods.
+     * @throws InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod($method)
+    public function withMethod($method): AbstractRequest|static
     {
         $method = $this->validateMethod($method);
 
@@ -224,7 +225,7 @@ abstract class AbstractRequest implements RequestInterface
      * @return UriInterface Returns a UriInterface instance
      *     representing the URI of the request.
      */
-    public function getUri()
+    public function getUri(): Uri|UriInterface|StreamInterface|string|null
     {
         return $this->uri;
     }
@@ -261,9 +262,9 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @return static
      */
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    public function withUri(UriInterface $uri, $preserveHost = false): AbstractRequest|static
     {
-        $new      = clone $this;
+        $new = clone $this;
         $new->uri = $uri;
 
         if ($preserveHost) {
@@ -281,7 +282,7 @@ abstract class AbstractRequest implements RequestInterface
         }
 
         $new->headerNames['host'] = 'Host';
-        $new->headers['Host']     = [$host];
+        $new->headers['Host'] = [$host];
 
         return $new;
     }
@@ -302,7 +303,7 @@ abstract class AbstractRequest implements RequestInterface
         $method = strtoupper($method);
 
         if (!in_array($method, $this->allowMethods, true)) {
-            throw new \InvalidArgumentException('Invalid HTTP method: ' . $method);
+            throw new InvalidArgumentException('Invalid HTTP method: ' . $method);
         }
 
         return $method;

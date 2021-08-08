@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use DOMElement;
-
 use Windwalker\Data\Collection;
+use Windwalker\DOM\DOMElement;
 use Windwalker\Form\FormNormalizer;
 
 use function Windwalker\DOM\h;
@@ -25,7 +24,7 @@ use function Windwalker\DOM\h;
  */
 class CheckboxesField extends ListField
 {
-    public function buildInput(DOMElement $input, array $options = []): string
+    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
         $attrs = $input->getAttributes(true);
         unset($attrs['name']);
@@ -36,7 +35,7 @@ class CheckboxesField extends ListField
             $option = clone $option;
             $option['type'] = 'checkbox';
             $option['name'] = $this->getInputName('[]');
-            $option['id']   = $this->getId('-' . FormNormalizer::clearAttribute($option['value']));
+            $option['id'] = $this->getId('-' . FormNormalizer::clearAttribute($option['value']));
             $option['data-checkbox-item-input'] = true;
 
             if (in_array($option['value'], $this->getValue())) {
@@ -60,7 +59,7 @@ class CheckboxesField extends ListField
                             [
                                 'for' => $option['id'],
                                 'id' => $option['id'] . '-label',
-                                'data-checkbox-item-label' => true
+                                'data-checkbox-item-label' => true,
                             ],
                             $option->childNodes
                         ),
@@ -69,7 +68,7 @@ class CheckboxesField extends ListField
             );
         }
 
-        return $input->render();
+        return $input;
     }
 
     /**
@@ -77,7 +76,7 @@ class CheckboxesField extends ListField
      *
      * @return  array
      */
-    public function getValue()
+    public function getValue(): array
     {
         $value = parent::getValue();
 

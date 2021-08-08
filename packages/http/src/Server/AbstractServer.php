@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
-use Windwalker\Event\EventListenableInterface;
-use Windwalker\Event\EventListenableTrait;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Event\EventAwareTrait;
 
 /**
  * The Server class.
  */
 abstract class AbstractServer implements ServerInterface
 {
-    use EventListenableTrait;
+    use EventAwareTrait;
 }

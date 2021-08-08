@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
+use ReflectionClass;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
@@ -21,7 +22,7 @@ abstract class AbstractEvent implements EventInterface
     /**
      * The event name.
      *
-     * @var    string
+     * @var string|null
      *
      * @since  2.0
      */
@@ -42,10 +43,12 @@ abstract class AbstractEvent implements EventInterface
      * @param  string|EventInterface  $event
      * @param  array                  $args
      *
-     * @return  static
+     * @return  static|EventInterface|AbstractEvent
      */
-    public static function wrap($event, array $args = [])
-    {
+    public static function wrap(
+        string|EventInterface $event,
+        array $args = []
+    ): EventInterface {
         ArgumentsAssert::assert(
             is_string($event) || $event instanceof EventInterface,
             '{caller} argument 1 should be string or EventInterface, %s given.',
@@ -61,6 +64,11 @@ abstract class AbstractEvent implements EventInterface
         $event->merge($args);
 
         return $event;
+    }
+
+    public static function create(array $args): static
+    {
+        return static::wrap(static::class, $args);
     }
 
     /**
@@ -92,12 +100,14 @@ abstract class AbstractEvent implements EventInterface
 
     /**
      * @inheritDoc
+     *
+     * @return EventInterface|AbstractEvent
      */
-    public function mirror(string $name, array $args = [])
+    public function mirror(string $name, array $args = []): static
     {
         $new = clone $this;
 
-        $new->name    = $name;
+        $new->name = $name;
         $new->stopped = false;
         $new->merge($args);
 
@@ -111,7 +121,7 @@ abstract class AbstractEvent implements EventInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setName(string $name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -142,10 +152,10 @@ abstract class AbstractEvent implements EventInterface
      *
      * @return  static
      */
-    public function merge(array $arguments)
+    public function merge(array $arguments): static
     {
-        foreach ($arguments as $key => &$value) {
-            $this->$key = &$value;
+        foreach ($arguments as $key => $value) {
+            $this->$key = $value;
         }
 
         return $this;
@@ -159,7 +169,7 @@ abstract class AbstractEvent implements EventInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): static
     {
         $this->clear();
 
@@ -175,9 +185,9 @@ abstract class AbstractEvent implements EventInterface
      *
      * @since   2.0
      */
-    public function clear()
+    public function clear(): static
     {
-        $props = (new \ReflectionClass($this))->getDefaultProperties();
+        $props = (new ReflectionClass($this))->getDefaultProperties();
 
         unset($props['name'], $props['stopped']);
 

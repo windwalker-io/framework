@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Test;
 
+use Throwable;
 use Windwalker\Promise\ExtendedPromiseInterface;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
@@ -49,7 +50,7 @@ class FunctionsTest extends AbstractPromiseTestCase
 
     public function testAsync()
     {
-        $this->skipIfSwooleNotInstalled();
+        static::skipIfSwooleNotInstalled();
 
         static::useScheduler(new SwooleScheduler());
 
@@ -72,7 +73,7 @@ class FunctionsTest extends AbstractPromiseTestCase
 
     public function testAwait()
     {
-        $this->skipIfSwooleNotInstalled();
+        static::skipIfSwooleNotInstalled();
 
         static::useScheduler(new SwooleScheduler());
 
@@ -99,7 +100,7 @@ class FunctionsTest extends AbstractPromiseTestCase
      *
      * @return  void
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function testCoroutine(): void
     {
@@ -119,7 +120,7 @@ class FunctionsTest extends AbstractPromiseTestCase
 
     public function testCoroutineInSwoole(): void
     {
-        $this->skipIfSwooleNotInstalled();
+        static::skipIfSwooleNotInstalled();
 
         static::useScheduler(new SwooleScheduler());
 
@@ -144,7 +145,7 @@ class FunctionsTest extends AbstractPromiseTestCase
      *
      * @return  void
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function testCoroutineable(): void
     {

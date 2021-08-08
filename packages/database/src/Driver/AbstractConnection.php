@@ -11,29 +11,35 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver;
 
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Pool\AbstractConnection as AbstractPoolConnection;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The AbstractConnection class.
  */
-abstract class AbstractConnection implements ConnectionInterface
+abstract class AbstractConnection extends AbstractPoolConnection implements ConnectionInterface
 {
     use OptionAccessTrait;
 
     /**
      * @var string
      */
-    protected static $name = '';
+    protected static string $name = '';
 
     /**
      * @var mixed
      */
-    protected $connection;
+    protected mixed $connection = null;
 
     /**
      * @var array
      */
-    protected $defaultOptions = [];
+    protected array $defaultOptions = [
+        'dbname' => null,
+        'host' => 'localhost',
+        'user' => '',
+        'password' => '',
+    ];
 
     /**
      * AbstractConnection constructor.
@@ -69,7 +75,7 @@ abstract class AbstractConnection implements ConnectionInterface
      *
      * @return  mixed
      */
-    public function connect()
+    public function connect(): mixed
     {
         if ($this->connection) {
             return $this->connection;
@@ -85,7 +91,7 @@ abstract class AbstractConnection implements ConnectionInterface
      *
      * @return  mixed
      */
-    abstract public function disconnect();
+    abstract public function disconnect(): mixed;
 
     /**
      * isConnected
@@ -100,7 +106,7 @@ abstract class AbstractConnection implements ConnectionInterface
     /**
      * @return mixed
      */
-    public function get()
+    public function get(): mixed
     {
         return $this->connection;
     }

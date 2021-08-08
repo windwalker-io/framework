@@ -25,7 +25,7 @@ class JsonSerializer implements SerializerInterface
      *
      * @return string|null
      */
-    public function serialize($data): ?string
+    public function serialize(mixed $data): ?string
     {
         return json_encode($data);
     }
@@ -37,8 +37,8 @@ class JsonSerializer implements SerializerInterface
      *
      * @return mixed
      */
-    public function unserialize(string $data)
+    public function unserialize(string $data): mixed
     {
-        return json_decode((string) $data, false);
+        return json_decode($data, false);
     }
 }

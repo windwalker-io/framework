@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
+use Closure;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The Server class.
@@ -23,7 +24,7 @@ class HttpServer extends AdaptableServer
 {
     use OptionAccessTrait;
 
-    protected \Closure $handler;
+    protected Closure $handler;
 
     /**
      * Create a Server instance.
@@ -32,20 +33,21 @@ class HttpServer extends AdaptableServer
      * @param  ServerInterface|null  $adapter
      * @param  callable|null         $handler
      */
-    public function __construct(array $options = [], ?ServerInterface $adapter = null, callable $handler = null) {
+    public function __construct(array $options = [], ?ServerInterface $adapter = null, callable $handler = null)
+    {
         $this->prepareOptions(
             [],
             $options
         );
 
-        $this->handler = \Closure::fromCallable(
-            $handler ?? fn ($server, $host, $port, $options) => $this->getAdapter()->listen($host, $port, $options)
+        $this->handler = Closure::fromCallable(
+            $handler ?? fn($server, $host, $port, $options) => $this->getAdapter()->listen($host, $port, $options)
         );
 
         parent::__construct($adapter);
 
-        $this->adapter->getDispatcher()
-            ->registerDealer($this->getDispatcher());
+        $this->adapter->getEventDispatcher()
+            ->addDealer($this->getEventDispatcher());
     }
 
     /**
@@ -68,19 +70,19 @@ class HttpServer extends AdaptableServer
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
-    public function getHandler(): \Closure
+    public function getHandler(): Closure
     {
         return $this->handler;
     }
 
     /**
-     * @param  \Closure  $handler
+     * @param  Closure  $handler
      *
      * @return  static  Return self to support chaining.
      */
-    public function setHandler(\Closure $handler)
+    public function setHandler(Closure $handler): static
     {
         $this->handler = $handler;
 

@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
+use Exception;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Bounded\ParamType;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * Database session storage handler for PHP
@@ -74,7 +75,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return  string  The session data.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   2.0
      */
     protected function doRead(string $id): ?string
@@ -94,7 +95,7 @@ class DatabaseHandler extends AbstractHandler
      * @return  boolean  True on success, false otherwise.
      * @since   2.0
      */
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
         $columns = $this->getOption('columns');
 
@@ -111,34 +112,36 @@ class DatabaseHandler extends AbstractHandler
             return true;
         }
 
-        $this->db->transaction(function () use ($id, $data, $columns): StatementInterface {
-            $item = [
-                $columns['data'] => $data,
-                $columns['time'] => (int) time(),
-                $columns['id'] => $id,
-            ];
+        $this->db->transaction(
+            function () use ($id, $data, $columns): StatementInterface {
+                $item = [
+                    $columns['data'] => $data,
+                    $columns['time'] => (int) time(),
+                    $columns['id'] => $id,
+                ];
 
-            $sess = $this->db->createQuery()
-                ->select('*')
-                ->from($this->getOption('table'))
-                ->where($columns['id'], $id)
-                ->forUpdate()
-                ->get();
+                $sess = $this->db->createQuery()
+                    ->select('*')
+                    ->from($this->getOption('table'))
+                    ->where($columns['id'], $id)
+                    ->forUpdate()
+                    ->get();
 
-            if ($sess === null) {
-                return $this->db->getWriter()->insertOne(
+                if ($sess === null) {
+                    return $this->db->getWriter()->insertOne(
+                        $this->getOption('table'),
+                        $item,
+                        $columns['id']
+                    );
+                }
+
+                return $this->db->getWriter()->updateOne(
                     $this->getOption('table'),
                     $item,
                     $columns['id']
                 );
             }
-
-            return $this->db->getWriter()->updateOne(
-                $this->getOption('table'),
-                $item,
-                $columns['id']
-            );
-        });
+        );
 
         return true;
     }
@@ -150,10 +153,10 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return  boolean  True on success, false otherwise.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   2.0
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         $columns = $this->getOption('columns');
 
@@ -171,10 +174,10 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return  boolean  True on success, false otherwise.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   2.0
      */
-    public function gc($lifetime)
+    public function gc($lifetime): bool
     {
         // Determine the timestamp threshold with which to purge old sessions.
         $past = time() - $lifetime;
@@ -194,7 +197,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function updateTimestamp($session_id, $session_data)
+    public function updateTimestamp($session_id, $session_data): bool
     {
         $columns = $this->getOption('columns');
 
@@ -251,12 +254,13 @@ ON DUPLICATE KEY UPDATE %n = VALUES(%n), %n = VALUES(%n)",
                     $columns['time']
                 );
 
-            case AbstractPlatform::SQLSERVER === $platformName && version_compare(
+            case AbstractPlatform::SQLSERVER === $platformName
+                && version_compare(
                     $this->db->getDriver()->getVersion(),
                     '10',
                     '>='
                 ):
-                // @codingStandardsIgnoreStart
+                // phpcs:disable
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
                 // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
                 return $query->format(

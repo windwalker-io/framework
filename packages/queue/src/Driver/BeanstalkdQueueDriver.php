@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
+use DomainException;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use Pheanstalk\PheanstalkInterface;
@@ -64,13 +65,13 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
+     * @return string
      */
-    public function push(QueueMessage $message): int|string
+    public function push(QueueMessage $message): string
     {
         $channel = $message->getChannel() ?: $this->channel;
 
-        return $this->client->useTube($channel)->put(
+        return (string) $this->client->useTube($channel)->put(
             json_encode($message),
             PheanstalkInterface::DEFAULT_PRIORITY,
             $message->getDelay(),
@@ -113,7 +114,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      *
      * @return BeanstalkdQueueDriver
      */
-    public function delete(QueueMessage $message)
+    public function delete(QueueMessage $message): static
     {
         $channel = $message->getChannel() ?: $this->channel;
 
@@ -125,11 +126,11 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     /**
      * release
      *
-     * @param QueueMessage|string $message
+     * @param  QueueMessage|string  $message
      *
      * @return static
      */
-    public function release(QueueMessage $message)
+    public function release(QueueMessage $message): static
     {
         $this->client->release(
             new Job($message->getId(), ''),
@@ -143,15 +144,15 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
     /**
      * getPheanstalk
      *
-     * @param string $host
+     * @param  string  $host
      *
      * @return  Pheanstalk
-     * @throws \DomainException
+     * @throws DomainException
      */
-    public function getPheanstalk($host = null)
+    public function getPheanstalk($host = null): Pheanstalk
     {
         if (!class_exists(Pheanstalk::class)) {
-            throw new \DomainException('Please install pda/pheanstalk first.');
+            throw new DomainException('Please install pda/pheanstalk first.');
         }
 
         return new Pheanstalk($host);

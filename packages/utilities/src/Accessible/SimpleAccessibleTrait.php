@@ -21,7 +21,7 @@ trait SimpleAccessibleTrait
     /**
      * @var  array
      */
-    protected $storage = [];
+    protected mixed $storage = [];
 
     /**
      * Get value from this object.
@@ -30,11 +30,11 @@ trait SimpleAccessibleTrait
      *
      * @return  mixed
      */
-    public function &get($key)
+    public function &get(mixed $key): mixed
     {
         $ret = null;
 
-        if (!$this->has($key)) {
+        if (!isset($this->getStorage()[$key])) {
             return $ret;
         }
 
@@ -51,7 +51,7 @@ trait SimpleAccessibleTrait
      *
      * @return  static
      */
-    public function set($key, $value)
+    public function set(mixed $key, mixed $value): static
     {
         $this->getStorage()[$key] = $value;
 
@@ -64,15 +64,15 @@ trait SimpleAccessibleTrait
      * @param  mixed  $key
      * @param  mixed  $default
      *
-     * @return  static
+     * @return  mixed
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function def($key, $default)
+    public function def(mixed $key, mixed $default): mixed
     {
         $this->getStorage()[$key] = $this->getStorage()[$key] ?? $default;
 
-        return $this;
+        return $this->getStorage()[$key];
     }
 
     /**
@@ -84,7 +84,7 @@ trait SimpleAccessibleTrait
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function has($key): bool
+    public function has(mixed $key): bool
     {
         return isset($this->getStorage()[$key]);
     }
@@ -98,7 +98,7 @@ trait SimpleAccessibleTrait
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function remove($key)
+    public function remove(mixed $key): static
     {
         if ($this->has($key)) {
             unset($this->getStorage()[$key]);
@@ -122,7 +122,9 @@ trait SimpleAccessibleTrait
             return $this->getStorage();
         }
 
-        return TypeCast::toArray($this->getStorage(), true, $onlyDumpable);
+        $data = $this->getStorage();
+
+        return TypeCast::toArray($data, true, $onlyDumpable);
     }
 
     /**

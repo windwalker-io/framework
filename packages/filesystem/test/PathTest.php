@@ -214,7 +214,7 @@ class PathTest extends AbstractVfsTestCase
      *
      * @since   2.0
      */
-    public function dataTestMakeSafe()
+    public function dataTestMakeSafe(): array
     {
         return [
             [
@@ -271,5 +271,12 @@ class PathTest extends AbstractVfsTestCase
     public function testMakeSafe($name, $stripChars, $expected, $message)
     {
         $this->assertEquals(Path::makeSafe($name, $stripChars), $expected, $message);
+    }
+
+    public function testRealpath(): void
+    {
+        $p = Path::realpath('foo/bar');
+
+        self::assertEquals(Path::clean(getcwd() . '/foo/bar'), $p);
     }
 }

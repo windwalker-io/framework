@@ -40,7 +40,7 @@ class ValueDefinition implements DefinitionInterface
      *
      * @return mixed
      */
-    public function resolve(Container $container)
+    public function resolve(Container $container): mixed
     {
         return $this->value;
     }
@@ -52,7 +52,7 @@ class ValueDefinition implements DefinitionInterface
      *
      * @return  void
      */
-    public function set($value): void
+    public function set(mixed $value): void
     {
         $this->value = $value;
     }

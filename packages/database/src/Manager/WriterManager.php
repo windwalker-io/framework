@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Manager;
 
+use InvalidArgumentException;
+use JsonException;
+use RuntimeException;
+use Traversable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Query\Query;
@@ -51,7 +55,7 @@ class WriterManager
      *
      * @return array|object
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @since   2.0
      */
     public function insertOne(string $table, array|object $data, ?string $key = null, array $options = []): array|object
@@ -59,7 +63,6 @@ class WriterManager
         $options = array_merge(
             [
                 'incrementField' => false,
-                'toJson' => true,
                 'filterFields' => false,
             ],
             $options
@@ -71,25 +74,13 @@ class WriterManager
         $item = TypeCast::toArray($data);
 
         if ($options['filterFields']) {
-            $item = $this->filterfields($table, $item);
+            $item = $this->filterFields($table, $item);
         }
 
         $query = $this->db->createQuery();
 
         // Iterate over the object variables to build the query fields and values.
         foreach ($item as $k => $v) {
-            // if (is_array($v) || is_object($v)) {
-            //     if ($options['toJson']) {
-            //         // To JSON
-            //         $v = json_encode($v, JSON_THROW_ON_ERROR);
-            //     } else {
-            //         // Only process non-null scalars.
-            //         continue;
-            //     }
-            // }
-            //
-            // $v = TypeCast::toString($v);
-
             // Prepare and sanitize the fields and values for the database query.
             $fields[] = $k;
             $values[] = $v;
@@ -129,7 +120,7 @@ class WriterManager
      *
      * @return StatementInterface
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @since   2.0
      */
     public function updateOne(
@@ -141,6 +132,7 @@ class WriterManager
         $options = array_merge(
             [
                 'updateNulls' => true,
+                'filterFields' => [],
             ],
             $options
         );
@@ -149,11 +141,17 @@ class WriterManager
 
         $key = (array) $key;
 
+        if ($key === []) {
+            throw new InvalidArgumentException(
+                'Condition fields cannot be empty array when updating data.'
+            );
+        }
+
         // Create the base update statement.
         $query = $this->db->update($table);
 
         if ($options['filterFields']) {
-            $item = $this->filterfields($table, $item);
+            $item = $this->filterFields($table, $item);
         }
 
         // Iterate over the object variables to build the query fields/value pairs.
@@ -199,9 +197,9 @@ class WriterManager
      * @param  array         $options  Options.
      *
      * @return  mixed
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public function saveOne(string $table, array|object $data, array|string|null $key, array $options = [])
+    public function saveOne(string $table, array|object $data, array|string|null $key, array $options = []): mixed
     {
         if (is_array($data)) {
             $id = $data[$key] ?? null;
@@ -225,7 +223,7 @@ class WriterManager
      * @param  array        $options
      *
      * @return array[]|object[]
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function insertMultiple(string $table, iterable $items, ?string $key = null, array $options = []): array
     {
@@ -247,7 +245,7 @@ class WriterManager
      * @param  array         $options
      *
      * @return StatementInterface[]
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function updateMultiple(string $table, iterable $items, array|string $key, array $options = []): array
     {
@@ -268,11 +266,15 @@ class WriterManager
      * @param  array|string|null  $key    The name of the primary key.
      * @param  array              $options
      *
-     * @return array|\Traversable
-     * @throws \JsonException
+     * @return array|Traversable
+     * @throws JsonException
      */
-    public function saveMultiple(string $table, iterable $items, array|string|null $key, array $options = [])
-    {
+    public function saveMultiple(
+        string $table,
+        iterable $items,
+        array|string|null $key,
+        array $options = []
+    ): Traversable|array {
         $result = [];
 
         foreach ($items as $k => $item) {
@@ -295,7 +297,7 @@ class WriterManager
      *
      * @return StatementInterface|null
      */
-    public function updateBatch(string $table, array $data, $conditions = [], array $options = []): ?StatementInterface
+    public function updateWhere(string $table, array $data, $conditions = [], array $options = []): ?StatementInterface
     {
         $options = array_merge(
             [
@@ -311,7 +313,7 @@ class WriterManager
 
         // Build update values.
         if ($options['filterFields']) {
-            $data = $this->filterfields($table, $data);
+            $data = $this->filterFields($table, $data);
         }
 
         foreach ($data as $field => $value) {
@@ -342,7 +344,7 @@ class WriterManager
         // Conditions.
         $query = Query::convertAllToWheres($query, $conditions);
 
-        $query->delete($query->quoteName($table));
+        $query->delete($table);
 
         return $this->execute($query);
     }
@@ -355,7 +357,7 @@ class WriterManager
      *
      * @since   2.0
      */
-    public function countAffected()
+    public function countAffected(): int
     {
         return $this->getStatement()->countAffected();
     }
@@ -369,9 +371,9 @@ class WriterManager
      *
      * @since   2.0
      */
-    public function lastInsertId(?string $sequence = null)
+    public function lastInsertId(?string $sequence = null): ?string
     {
-        return $this->db->getDriver()->lastInsertId($sequence);
+        return $this->getStatement()->lastInsertId($sequence);
     }
 
     /**
@@ -381,7 +383,7 @@ class WriterManager
      *
      * @return  StatementInterface
      */
-    public function execute($query): StatementInterface
+    public function execute(Query|string $query): StatementInterface
     {
         return $this->statement = $this->db->execute($query);
     }
@@ -391,7 +393,7 @@ class WriterManager
      *
      * @return  DatabaseAdapter
      */
-    public function getDb()
+    public function getDb(): DatabaseAdapter
     {
         return $this->db;
     }
@@ -401,7 +403,7 @@ class WriterManager
      *
      * @return  StatementInterface
      */
-    public function getStatement()
+    public function getStatement(): StatementInterface
     {
         return $this->statement;
     }
@@ -413,7 +415,7 @@ class WriterManager
      *
      * @return  static  Return self to support chaining.
      */
-    public function setStatement(StatementInterface $statement)
+    public function setStatement(StatementInterface $statement): static
     {
         $this->statement = $statement;
 
@@ -428,13 +430,13 @@ class WriterManager
      *
      * @return  array
      */
-    public function filterfields(string $table, array $item): array
+    public function filterFields(string $table, array $item): array
     {
-        $schema       = $this->db->getTable($table)->getSchema();
-        $tableManager = $this->db->getTable($table)->getSchema()->getTable($table);
+        $schema = $this->db->getTable($table)->getSchema();
+        $tableManager = $schema->getTable($table);
 
         if (!$tableManager) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Table: %s not exists in Schema: %s',
                     $table,

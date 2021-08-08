@@ -25,8 +25,8 @@ class Range extends AbstractFilter
     /**
      * RangeFilter constructor.
      *
-     * @param float $min
-     * @param float $max
+     * @param  int|float|null  $min
+     * @param  int|float|null  $max
      */
     public function __construct(int|float|null $min = null, int|float|null $max = null)
     {
@@ -37,7 +37,7 @@ class Range extends AbstractFilter
     /**
      * @inheritDoc
      */
-    public function filter($value)
+    public function filter(mixed $value): mixed
     {
         if ($this->min !== null && $value < $this->min) {
             $value = $this->min;

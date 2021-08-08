@@ -33,8 +33,8 @@ trait BaseAssertionTrait
      * @return  void
      */
     public static function assertStringDataEquals(
-        $expected,
-        $actual,
+        string $expected,
+        string $actual,
         string $message = ''
     ): void {
         static::assertEquals(
@@ -54,8 +54,8 @@ trait BaseAssertionTrait
      * @return  void
      */
     public static function assertStringSafeEquals(
-        $expected,
-        $actual,
+        string $expected,
+        string $actual,
         string $message = ''
     ): void {
         static::assertEquals(
@@ -68,20 +68,20 @@ trait BaseAssertionTrait
     /**
      * assertExpectedException
      *
-     * @param  callable  $closure
-     * @param  string    $class
-     * @param  string    $msg
-     * @param  int       $code
-     * @param  string    $message
+     * @param  callable          $closure
+     * @param  string|Throwable  $class
+     * @param  string|null       $msg
+     * @param  int|null          $code
+     * @param  string            $message
      *
      * @return  void
      */
     public static function assertExpectedException(
         callable $closure,
-        $class = Throwable::class,
-        $msg = null,
-        $code = null,
-        $message = ''
+        string|Throwable $class = Throwable::class,
+        ?string $msg = null,
+        ?int $code = null,
+        string $message = ''
     ): void {
         if (is_object($class)) {
             $class = get_class($class);
@@ -103,7 +103,7 @@ trait BaseAssertionTrait
             return;
         }
 
-        static::fail('No exception or throwable caught.');
+        static::fail('No exception or throwable caught. expected: ' . $class);
     }
 
     /**
@@ -128,7 +128,7 @@ trait BaseAssertionTrait
         }
     }
 
-    public static function dumpArray($array, array $options = [], bool $asString = false): ?string
+    public static function dumpArray(mixed $array, array $options = [], bool $asString = false): ?string
     {
         $options['return'] = false;
 
@@ -139,6 +139,7 @@ trait BaseAssertionTrait
         }
 
         echo $export;
+
         return null;
     }
 }

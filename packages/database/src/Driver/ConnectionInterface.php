@@ -11,36 +11,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver;
 
+use Windwalker\Pool\ConnectionInterface as PoolConnectionInterface;
+
 /**
  * Interface ConnectionInterface
  */
-interface ConnectionInterface
+interface ConnectionInterface extends PoolConnectionInterface
 {
     /**
-     * connect
+     * Get exists connection.
      *
-     * @return  mixed
-     */
-    public function connect();
-
-    /**
-     * disconnect
-     *
-     * @return  mixed
-     */
-    public function disconnect();
-
-    /**
-     * isConnected
-     *
-     * @return  bool
-     */
-    public function isConnected(): bool;
-
-    /**
      * @return mixed
      */
-    public function get();
+    public function get(): mixed;
 
     /**
      * @return string

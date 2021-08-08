@@ -11,16 +11,29 @@ declare(strict_types=1);
 
 namespace Windwalker\DI;
 
+use App\Module\Admin\Category\CategoryListView;
 use InvalidArgumentException;
+use Psr\Container\ContainerExceptionInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunctionAbstract;
+use ReflectionMethod;
+use ReflectionParameter;
+use ReflectionType;
+use ReflectionUnionType;
+use Throwable;
+use TypeError;
+use UnexpectedValueException;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
+use Windwalker\DI\Exception\DefinitionException;
+use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\Utilities\Reflection\ReflectionCallable;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
+
+use function Windwalker\collect;
 
 /**
  * The ObjectFactory class.
@@ -39,7 +52,7 @@ class DependencyResolver
         $this->container = $container;
     }
 
-    public function newInstance($class, array $args = [], int $options = 0)
+    public function newInstance(mixed $class, array $args = [], int $options = 0): object
     {
         if ($class instanceof DefinitionInterface) {
             return $this->container->resolve($class);
@@ -48,31 +61,74 @@ class DependencyResolver
         $options |= $this->container->getOptions();
 
         if (is_string($class)) {
-            $builder = fn (array $args, int $options) => $this->newInstanceByClassName($class, $args, $options);
+            $builder = fn(array $args, int $options) => $this->resolveMembersAttributes(
+                $this->newInstanceByClassName($class, $args, $options),
+                $options
+            );
 
             if (!($options & Container::IGNORE_ATTRIBUTES)) {
                 $builder = $this->container->getAttributesResolver()
                     ->resolveClassCreate($class, $builder);
             }
 
-            $instance = $builder($args, $options);
+            try {
+                $instance = $builder($args, $options);
+            } catch (ContainerExceptionInterface $e) {
+                throw new DefinitionResolveException(
+                    sprintf(
+                        'Error when creating object %s: %s',
+                        $class,
+                        $e->getMessage(),
+                    ),
+                    $e->getCode(),
+                    $e
+                );
+            }
         } elseif (is_callable($class)) {
-            $instance = $class($this->container, $args, $options);
+            $instance = $this->container->call($class, $args, null, $options);
+
+            if (!is_object($instance)) {
+                throw new UnexpectedValueException(
+                    sprintf(
+                        'Thr callback for creating instance must return an object, got %s.',
+                        get_debug_type($instance)
+                    )
+                );
+            }
+
+            $instance = $this->resolveMembersAttributes($instance, $options);
+
+            if (!($options & Container::IGNORE_ATTRIBUTES)) {
+                $instance = $this->container->getAttributesResolver()
+                    ->decorateObject($instance);
+            }
+
+            // If is definition object, means this callable is a factory, let's resolve definition.
+            if ($instance instanceof DefinitionInterface) {
+                $instance = $this->container->resolve($instance);
+            }
+
+            return $instance;
         } else {
             throw new InvalidArgumentException(
-                'New instance must get first argument as class name, callable or DefinitionInterface object.'
+                'New instance must get first argument as a class name, a callable or a DefinitionInterface object.'
             );
-        }
-
-        if (!($options & Container::IGNORE_ATTRIBUTES)) {
-            $instance = $this->container->getAttributesResolver()
-                ->resolveProperties($instance);
         }
 
         return $instance;
     }
 
-    public function newInstanceByClassName(string $class, array $args = [], $options = 0): object
+    protected function resolveMembersAttributes(object $instance, int $options): object
+    {
+        if (!($options & Container::IGNORE_ATTRIBUTES)) {
+            $instance = $this->container->getAttributesResolver()
+                ->resolveObjectMembers($instance);
+        }
+
+        return $instance;
+    }
+
+    public function newInstanceByClassName(string $class, array $args = [], int $options = 0): object
     {
         $reflection = new ReflectionClass($class);
 
@@ -87,7 +143,7 @@ class DependencyResolver
             $args = array_merge($this->container->whenCreating($class)->getArguments(), $args);
 
             $args = $this->getMethodArgs($constructor, $args, $options);
-        } catch (DependencyResolutionException $e) {
+        } catch (ContainerExceptionInterface $e) {
             throw new DependencyResolutionException(
                 $e->getMessage() . ' - Target class: ' . $class,
                 $e->getCode(),
@@ -98,7 +154,7 @@ class DependencyResolver
         try {
             // Create a callable for the dataStore
             return $reflection->newInstanceArgs($args);
-        } catch (\TypeError $e) {
+        } catch (TypeError $e) {
             throw new DependencyResolutionException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -125,15 +181,21 @@ class DependencyResolver
 
             // Prior (1): Handler ...$args
             if ($param->isVariadic()) {
-                $trailing = [];
-
-                foreach ($args as $key => $value) {
-                    if (is_numeric($key)) {
-                        $trailing[] = &$this->resolveParameterValue($value, $param);
-                    }
+                if ($param->getPosition() === 0) {
+                    return $args;
                 }
 
-                $trailing   = array_slice($trailing, $i);
+                $trailing = [];
+
+                foreach ($args as $key => $v) {
+                    if (is_numeric($key)) {
+                        $trailing[] = &$this->resolveParameterValue($v, $param);
+                    }
+
+                    unset($v);
+                }
+
+                $trailing = array_slice($trailing, $i);
                 $methodArgs = array_merge($methodArgs, $trailing);
                 continue;
             }
@@ -147,7 +209,6 @@ class DependencyResolver
             // Prior (3): Argument with named keys.
             if (array_key_exists($dependencyVarName, $args)) {
                 $methodArgs[$dependencyVarName] = &$this->resolveParameterValue($args[$dependencyVarName], $param);
-
                 continue;
             }
 
@@ -159,8 +220,12 @@ class DependencyResolver
 
             if ($value !== null) {
                 $methodArgs[$dependencyVarName] = &$value;
+
+                unset($value);
                 continue;
             }
+
+            unset($value);
 
             if ($param->isOptional()) {
                 // Finally, if there is a default parameter, use it.
@@ -171,13 +236,23 @@ class DependencyResolver
                 continue;
             }
 
-            $methodArgs[$dependencyVarName] = null;
+            throw new DependencyResolutionException(
+                sprintf(
+                    'Cannot resolve argument %s: $%s for %s%s()',
+                    $i + 1,
+                    $dependencyVarName,
+                    $method instanceof ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' : '',
+                    $method->getShortName()
+                )
+            );
+
+            $methodArgs[$i] = null;
         }
 
         return $methodArgs;
     }
 
-    public function &resolveParameterDependency(\ReflectionParameter $param, array $args = [], int $options = 0)
+    public function &resolveParameterDependency(ReflectionParameter $param, array $args = [], int $options = 0)
     {
         $nope = null;
         $options |= $this->container->getOptions();
@@ -191,17 +266,17 @@ class DependencyResolver
             return $nope;
         }
 
-        if ($type instanceof \ReflectionUnionType) {
+        if ($type instanceof ReflectionUnionType) {
             $dependencies = $type->getTypes();
         } else {
             $dependencies = [$type];
         }
 
         foreach ($dependencies as $type) {
-            $depObject           = null;
+            $depObject = null;
             $dependencyClassName = $type->getName();
 
-            if (!class_exists($dependencyClassName)) {
+            if (!class_exists($dependencyClassName) && !interface_exists($dependencyClassName)) {
                 // Next dependency
                 continue;
             }
@@ -211,14 +286,15 @@ class DependencyResolver
             // If the dependency class name is registered with this container or a parent, use it.
             if ($this->container->has($dependencyClassName)) {
                 $depObject = $this->container->get($dependencyClassName);
-            } elseif (array_key_exists($dependencyVarName, $args)) {
+            } elseif (array_key_exists($dependencyClassName, $args)) {
                 // If an arg provided, use it.
-                return $args[$dependencyVarName];
+                return $args[$dependencyClassName];
             } elseif (
                 $autowire
                 && !$dependency->isAbstract()
                 && !$dependency->isInterface()
                 && !$dependency->isTrait()
+                && !$param->allowsNull()
             ) {
                 // Otherwise we create this object recursive
 
@@ -237,34 +313,54 @@ class DependencyResolver
             }
         }
 
+        if (isset($depObject)) {
+            $types = collect($dependencies)
+                ->map(fn(ReflectionType $dep) => $dep->getName())
+                ->implode('|');
+
+            throw new DefinitionResolveException(
+                sprintf(
+                    'Unable to resolve %s argument #%s type: %s with %s given',
+                    $param->getDeclaringClass()->getName(),
+                    $param->getPosition(),
+                    (string) $types,
+                    get_debug_type($depObject ?? null)
+                )
+            );
+        }
+
         return $nope;
     }
 
     /**
      * resolveArgumentValue
      *
-     * @param  mixed                 $value
-     * @param  \ReflectionParameter  $param
-     * @param  int                   $options
+     * @param  mixed                $value
+     * @param  ReflectionParameter  $param
+     * @param  int                  $options
      *
      * @return mixed
      *
      * @since  3.5.1
      */
-    public function &resolveParameterValue(&$value, \ReflectionParameter $param, int $options = 0)
+    public function &resolveParameterValue(mixed &$value, ReflectionParameter $param, int $options = 0): mixed
     {
-        if ($value instanceof ObjectBuilderDefinition) {
-            $value = $this->container->resolve($value);
-        } elseif ($value instanceof ValueReference) {
-            $v = $value($this->container->getParameters());
+        if ($value instanceof RawWrapper) {
+            $value = $value();
+        } else {
+            if ($value instanceof ValueReference) {
+                $v = $value($this->container->getParameters());
 
-            if ($v === null && $this->container->getParent() instanceof Container) {
-                $v = $value($this->container->getParent()->getParameters());
+                if ($v === null && $this->container->getParent() instanceof Container) {
+                    $v = $value($this->container->getParent()->getParameters());
+                }
+
+                $value = $v;
             }
 
-            $value = $v;
-        } elseif ($value instanceof RawWrapper) {
-            $value = $value();
+            if ($value instanceof ObjectBuilderDefinition) {
+                $value = $this->container->resolve($value);
+            }
         }
 
         $options |= $this->container->getOptions();
@@ -289,7 +385,7 @@ class DependencyResolver
      *
      * @throws ReflectionException
      */
-    public function call(callable $callable, array $args = [], ?object $context = null, int $options = 0)
+    public function call(callable $callable, array $args = [], ?object $context = null, int $options = 0): mixed
     {
         $ref = new ReflectionCallable($callable);
 

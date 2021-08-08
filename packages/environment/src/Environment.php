@@ -28,7 +28,7 @@ class Environment
     /**
      * Class init.
      *
-     * @param Platform $platform
+     * @param  Platform  $platform
      */
     public function __construct(?Platform $platform = null)
     {
@@ -48,11 +48,11 @@ class Environment
     /**
      * Method to set property server
      *
-     * @param   Platform $platform
+     * @param  Platform  $platform
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPlatform(Platform $platform)
+    public function setPlatform(Platform $platform): static
     {
         $this->platform = $platform;
 

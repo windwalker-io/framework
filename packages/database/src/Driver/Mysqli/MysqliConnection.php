@@ -11,20 +11,20 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Mysqli;
 
+use mysqli;
 use Windwalker\Database\Driver\AbstractConnection;
-use Windwalker\Database\Exception\DatabaseConnectException;
 
 /**
  * The MysqliConnection class.
  */
 class MysqliConnection extends AbstractConnection
 {
-    protected static $name = 'mysqli';
+    protected static string $name = 'mysqli';
 
     /**
-     * @var \mysqli
+     * @var mysqli
      */
-    protected $connection;
+    protected mixed $connection = null;
 
     /**
      * @inheritDoc
@@ -39,22 +39,24 @@ class MysqliConnection extends AbstractConnection
         return $options;
     }
 
-    protected function doConnect(array $options)
+    protected function doConnect(array $options): bool|mysqli
     {
         mysqli_report(MYSQLI_REPORT_ALL | MYSQLI_REPORT_STRICT);
 
         return mysqli_connect(
             $options['host'] ?? null,
-            $options['username'] ?? null,
+            $options['user'] ?? null,
             $options['password'] ?? null,
-            $options['database'] ?? null
+            $options['dbname'] ?? null,
+            $options['port'] ?? null,
+            $options['socket'] ?? null,
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function disconnect()
+    public function disconnect(): mixed
     {
         if (!$this->isConnected()) {
             return true;
@@ -68,9 +70,9 @@ class MysqliConnection extends AbstractConnection
     }
 
     /**
-     * @return \mysqli
+     * @return mysqli
      */
-    public function get(): ?\mysqli
+    public function get(): ?mysqli
     {
         return parent::get();
     }

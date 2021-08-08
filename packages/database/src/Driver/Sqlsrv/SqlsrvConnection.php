@@ -19,7 +19,7 @@ use Windwalker\Database\Exception\DatabaseConnectException;
  */
 class SqlsrvConnection extends AbstractConnection
 {
-    protected static $name = 'sqlsrv';
+    protected static string $name = 'sqlsrv';
 
     /**
      * @inheritDoc
@@ -33,12 +33,12 @@ class SqlsrvConnection extends AbstractConnection
     {
         $params = [];
 
-        $params['Database']     = $options['database'] ?? null;
-        $params['UID']          = $options['username'] ?? null;
-        $params['PWD']          = $options['password'] ?? null;
+        $params['Database'] = $options['dbname'] ?? null;
+        $params['UID'] = $options['user'] ?? null;
+        $params['PWD'] = $options['password'] ?? null;
         $params['CharacterSet'] = $options['charset'] ?? null;
 
-        $params            = array_filter($params);
+        $params = array_filter($params);
         $options['params'] = $params;
 
         return $options;
@@ -70,7 +70,7 @@ class SqlsrvConnection extends AbstractConnection
     /**
      * @inheritDoc
      */
-    public function disconnect()
+    public function disconnect(): mixed
     {
         if (!$this->isConnected()) {
             return true;

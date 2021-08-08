@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Stream;
 
+use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
+use RuntimeException;
+
 /**
  * The ArrayStream class.
  *
@@ -23,28 +27,28 @@ class StringStream extends Stream
      *
      * @var string
      */
-    protected $resource;
+    protected mixed $resource;
 
     /**
      * Property position.
      *
      * @var  integer
      */
-    protected $pointer = 0;
+    protected int $pointer = 0;
 
     /**
      * Property pointer.
      *
      * @var  integer
      */
-    protected $readPosition = 0;
+    protected int $readPosition = 0;
 
     /**
      * Property metadata.
      *
      * @var  array
      */
-    private $metadata = [
+    private array $metadata = [
         'wrapper_type' => 'string',
         'stream_type' => 'STDIO',
         'mode' => 'r+b',
@@ -61,14 +65,14 @@ class StringStream extends Stream
      *
      * @var  boolean
      */
-    protected $seekable = true;
+    protected bool $seekable = true;
 
     /**
      * Property writable.
      *
      * @var  boolean
      */
-    protected $writable = true;
+    protected bool $writable = true;
 
     /**
      * Class init.
@@ -99,16 +103,16 @@ class StringStream extends Stream
      *
      * @return  static Return self to support chaining.
      */
-    public function attach($stream, $mode = 'rb+')
+    public function attach(mixed $stream, string $mode = 'rb+'): static
     {
         $this->stream = $stream;
 
         if (is_resource($stream)) {
-            throw new \InvalidArgumentException('StringStream do not support resource.');
+            throw new InvalidArgumentException('StringStream do not support resource.');
         }
 
         if (is_array($stream) || (is_object($stream) && !is_callable([$stream, '__toString']))) {
-            throw new \InvalidArgumentException('StringStream only support string as resource.');
+            throw new InvalidArgumentException('StringStream only support string as resource.');
         }
 
         if (!str_contains('+', $mode)) {
@@ -125,15 +129,15 @@ class StringStream extends Stream
      *
      * After the stream has been detached, the stream is in an unusable state.
      *
-     * @return resource|null Underlying PHP stream, if any
+     * @return ?string Underlying PHP stream, if any
      */
-    public function detach()
+    public function detach(): ?string
     {
         $resource = $this->resource;
 
         $this->resource = null;
-        $this->stream   = null;
-        $this->pointer  = 0;
+        $this->stream = null;
+        $this->pointer = 0;
         $this->seekable = true;
         $this->writable = true;
 
@@ -145,7 +149,8 @@ class StringStream extends Stream
      *
      * @return int|null Returns the size in bytes if known, or null if unknown.
      */
-    public function getSize()
+    #[Pure]
+    public function getSize(): ?int
     {
         if ($this->resource === null) {
             return null;
@@ -158,12 +163,12 @@ class StringStream extends Stream
      * Returns the current position of the file read/write pointer
      *
      * @return int Position of the file pointer
-     * @throws \RuntimeException on error.
+     * @throws RuntimeException on error.
      */
-    public function tell()
+    public function tell(): int
     {
         if ($this->resource === null) {
-            throw new \RuntimeException('No resource set.');
+            throw new RuntimeException('No resource set.');
         }
 
         return $this->pointer;
@@ -174,7 +179,8 @@ class StringStream extends Stream
      *
      * @return bool
      */
-    public function eof()
+    #[Pure]
+    public function eof(): bool
     {
         return $this->readPosition > $this->getSize();
     }
@@ -184,7 +190,7 @@ class StringStream extends Stream
      *
      * @return bool
      */
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return $this->seekable;
     }
@@ -203,12 +209,12 @@ class StringStream extends Stream
      *
      * @return boolean
      *
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET): bool
     {
         if (!$this->isSeekable()) {
-            throw new \RuntimeException('Stream is not seekable');
+            throw new RuntimeException('Stream is not seekable');
         }
 
         if ($whence == SEEK_SET) {
@@ -221,7 +227,7 @@ class StringStream extends Stream
         }
 
         if ($this->pointer < 0) {
-            throw new \RuntimeException('Position should not less than 0.');
+            throw new RuntimeException('Position should not less than 0.');
         }
 
         return true;
@@ -233,11 +239,11 @@ class StringStream extends Stream
      * If the stream is not seekable, this method will raise an exception;
      * otherwise, it will perform a seek(0).
      *
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
-    public function rewind()
+    public function rewind(): bool
     {
         $this->readPosition = 0;
 
@@ -249,7 +255,7 @@ class StringStream extends Stream
      *
      * @return bool
      */
-    public function isWritable()
+    public function isWritable(): bool
     {
         return $this->writable;
     }
@@ -260,20 +266,20 @@ class StringStream extends Stream
      * @param  string  $string  The string that is to be written.
      *
      * @return int Returns the number of bytes written to the stream.
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      */
-    public function write($string)
+    public function write($string): int
     {
         $length = strlen($string);
 
         $start = substr($this->resource, 0, $this->pointer);
-        $end   = substr($this->resource, $this->pointer + $length);
+        $end = substr($this->resource, $this->pointer + $length);
 
         $this->resource = $start . $string . $end;
 
         $this->pointer = strlen($start . $string);
 
-        return $string;
+        return $length;
     }
 
     /**
@@ -295,15 +301,15 @@ class StringStream extends Stream
      *
      * @return string Returns the data read from the stream, or an empty string
      *     if no bytes are available.
-     * @throws \RuntimeException if an error occurs.
+     * @throws RuntimeException if an error occurs.
      */
-    public function read($length)
+    public function read($length): string
     {
         $this->readPosition = $this->pointer;
 
         $result = substr($this->resource, $this->readPosition, $length);
 
-        $this->pointer      += $length;
+        $this->pointer += $length;
         $this->readPosition = $this->pointer;
 
         return $result;
@@ -313,10 +319,10 @@ class StringStream extends Stream
      * Returns the remaining contents in a string
      *
      * @return string
-     * @throws \RuntimeException if unable to read or an error occurs while
+     * @throws RuntimeException if unable to read or an error occurs while
      *     reading.
      */
-    public function getContents()
+    public function getContents(): string
     {
         if ($this->resource === null) {
             return '';
@@ -345,14 +351,14 @@ class StringStream extends Stream
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
-    public function getMetadata($key = null)
+    public function getMetadata($key = null): mixed
     {
         $metadata = $this->metadata;
 
-        $metadata['eof']          = $this->eof();
-        $metadata['seekable']     = $this->isSeekable();
+        $metadata['eof'] = $this->eof();
+        $metadata['seekable'] = $this->isSeekable();
         $metadata['unread_bytes'] = $this->getSize() - $this->pointer;
-        $metadata['mode']         = 'rb';
+        $metadata['mode'] = 'rb';
 
         if ($this->isWritable()) {
             $metadata['mode'] = 'r+b';
@@ -372,9 +378,9 @@ class StringStream extends Stream
     /**
      * Method to get property Resource
      *
-     * @return  resource
+     * @return  ?string
      */
-    public function getResource()
+    public function getResource(): ?string
     {
         return $this->resource;
     }
@@ -386,7 +392,7 @@ class StringStream extends Stream
      *
      * @return  static  Return self to support chaining.
      */
-    public function seekable($seekable)
+    public function seekable(bool $seekable): static
     {
         $this->seekable = (bool) $seekable;
 
@@ -400,9 +406,9 @@ class StringStream extends Stream
      *
      * @return  static  Return self to support chaining.
      */
-    public function writable($writable)
+    public function writable(bool $writable): static
     {
-        $this->writable = (bool) $writable;
+        $this->writable = $writable;
 
         return $this;
     }

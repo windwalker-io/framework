@@ -13,7 +13,7 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The AbstractTransport class.
@@ -27,7 +27,7 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Constructor.
      *
-     * @param   array$options Client options object.
+     * @param  array  $options  Client options object.
      *
      * @since   2.1
      */

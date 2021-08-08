@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 
@@ -71,14 +72,14 @@ trait MessageTrait
      * immutability of the message, and MUST return an instance that has the
      * new protocol version.
      *
-     * @param string $version HTTP protocol version
+     * @param  string  $version  HTTP protocol version
      *
      * @return static
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion($version): MessageTrait|static
     {
         if (!is_string($version)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Invalid version number, require string type, %s provided',
                     gettype($version)
@@ -87,7 +88,7 @@ trait MessageTrait
         }
 
         if (!HeaderHelper::isValidProtocolVersion($version)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Invalid version number, require "<major>.<minor>" format, %s provided',
                     $version
@@ -136,7 +137,7 @@ trait MessageTrait
     /**
      * Checks if a header exists by the given case-insensitive name.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param  string  $name  Case-insensitive header field name.
      *
      * @return bool Returns true if any header names match the given header
      *     name using a case-insensitive string comparison. Returns false if
@@ -156,7 +157,7 @@ trait MessageTrait
      * If the header does not appear in the message, this method MUST return an
      * empty array.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param  string  $name  Case-insensitive header field name.
      *
      * @return string[] An array of string values as provided for the given
      *    header. If the header does not appear in the message, this method MUST
@@ -187,7 +188,7 @@ trait MessageTrait
      * If the header does not appear in the message, this method MUST return
      * an empty string.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param  string  $name  Case-insensitive header field name.
      *
      * @return string A string of values as provided for the given header
      *    concatenated together using a comma. If the header does not appear in
@@ -214,13 +215,13 @@ trait MessageTrait
      * immutability of the message, and MUST return an instance that has the
      * new and/or updated header and value.
      *
-     * @param string          $name  Case-insensitive header field name.
-     * @param string|string[] $value Header value(s).
+     * @param  string           $name   Case-insensitive header field name.
+     * @param  string|string[]  $value  Header value(s).
      *
      * @return static
-     * @throws \InvalidArgumentException for invalid header names or values.
+     * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value): static
     {
         $new = $this->createHeader($name);
 
@@ -240,22 +241,22 @@ trait MessageTrait
      * immutability of the message, and MUST return an instance that has the
      * new header and/or value.
      *
-     * @param string $name  Case-insensitive header field name to add.
-     * @param mixed  $value Header value(s).
+     * @param  string  $name   Case-insensitive header field name to add.
+     * @param  mixed   $value  Header value(s).
      *
      * @return static
-     * @throws \InvalidArgumentException for invalid header names or values.
+     * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): MessageTrait|static
     {
         $value = HeaderHelper::allToArray($value);
 
         if (!HeaderHelper::arrayOnlyContainsString($value)) {
-            throw new \InvalidArgumentException('Header values should only contain string.');
+            throw new InvalidArgumentException('Header values should only contain string.');
         }
 
         if (!HeaderHelper::isValidName($name)) {
-            throw new \InvalidArgumentException('Invalid header name: ' . $name);
+            throw new InvalidArgumentException('Invalid header name: ' . $name);
         }
 
         $new = clone $this;
@@ -280,11 +281,11 @@ trait MessageTrait
      * immutability of the message, and MUST return an instance that removes
      * the named header.
      *
-     * @param string $name Case-insensitive header field name to remove.
+     * @param  string  $name  Case-insensitive header field name to remove.
      *
      * @return $this
      */
-    public function withoutHeader($name)
+    public function withoutHeader($name): MessageTrait|static
     {
         if (!$this->hasHeader($name)) {
             return clone $this;
@@ -319,12 +320,12 @@ trait MessageTrait
      * immutability of the message, and MUST return a new instance that has the
      * new body stream.
      *
-     * @param StreamInterface $body Body.
+     * @param  StreamInterface  $body  Body.
      *
      * @return static
-     * @throws \InvalidArgumentException When the body is not valid.
+     * @throws InvalidArgumentException When the body is not valid.
      */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): MessageTrait|static
     {
         $new = clone $this;
 
@@ -336,11 +337,11 @@ trait MessageTrait
     /**
      * createHeader
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  static
      */
-    protected function createHeader($name)
+    protected function createHeader(string $name): MessageTrait|static
     {
         $new = clone $this;
 
@@ -357,11 +358,11 @@ trait MessageTrait
     /**
      * getHeaderName
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return  string
      */
-    protected function getHeaderName($name): string
+    protected function getHeaderName(string $name): string
     {
         $normalized = strtolower($name);
 

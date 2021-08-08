@@ -14,7 +14,8 @@ namespace Windwalker\Query\Grammar;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
-use function Windwalker\raw;
+use function Windwalker\Query\clause;
+use function Windwalker\Query\qn;
 
 /**
  * The PostgresqlGrammar class.
@@ -24,19 +25,19 @@ class PostgreSQLGrammar extends AbstractGrammar
     /**
      * @var string
      */
-    protected static $name = 'PostgreSQL';
+    public static string $name = 'PostgreSQL';
 
     /**
      * @var string
      */
-    protected static $nullDate = '1970-01-01 00:00:00';
+    public static string $nullDate = '1970-01-01 00:00:00';
 
     /**
      * @inheritDoc
      */
     public function compileLimit(Query $query, array $sql): array
     {
-        $limit  = (int) $query->getLimit();
+        $limit = (int) $query->getLimit();
         $offset = (int) $query->getOffset();
 
         if ($limit > 0) {
@@ -50,53 +51,34 @@ class PostgreSQLGrammar extends AbstractGrammar
         return $sql;
     }
 
-    // /**
-    //  * @inheritDoc
-    //  */
-    // public function listTables(?string $schema = null): Query
-    // {
-    //     $query = $this->createQuery()
-    //         ->select('table_name AS Name')
-    //         ->from('information_schema.tables')
-    //         ->where('table_type', 'BASE TABLE')
-    //         ->order('table_name', 'ASC');
-    //
-    //     if ($schema) {
-    //         $query->where('table_schema', $schema);
-    //     } else {
-    //         $query->whereNotIn('table_schema', ['pg_catalog', 'information_schema']);
-    //     }
-    //
-    //     return $query;
-    // }
-    //
-    // /**
-    //  * @inheritDoc
-    //  */
-    // public function listViews(?string $schema = null): Query
-    // {
-    //     $query = $this->createQuery()
-    //         ->select('table_name AS Name')
-    //         ->from('information_schema.tables')
-    //         ->where('table_type', 'VIEW')
-    //         ->order('table_name', 'ASC');
-    //
-    //     if ($schema) {
-    //         $query->where('table_schema', $schema);
-    //     } else {
-    //         $query->whereNotIn('table_schema', ['pg_catalog', 'information_schema']);
-    //     }
-    //
-    //     return $query;
-    // }
-    //
-    // /**
-    //  * @inheritDoc
-    //  */
-    // public function dropTable(string $table, bool $ifExists = false, ...$options): Clause
-    // {
-    //     $options[] = 'CASCADE';
-    //
-    //     return parent::dropTable($table, $ifExists, ...$options);
-    // }
+    public function compileJsonSelector(
+        Query $query,
+        string $column,
+        array $paths,
+        bool $unQuoteLast = true,
+        bool $instant = false
+    ): Clause {
+        $newPaths = [];
+
+        foreach ($paths as $path) {
+            preg_match('/([\w.]+)\[(\d)\]/', $path, $matches);
+
+            if (count($matches) >= 3) {
+                $newPaths[] = $query->valueize($matches[1], $instant);
+                $newPaths[] = (int) $matches[2];
+            } else {
+                $newPaths[] = $query->valueize($path, $instant);
+            }
+        }
+
+        $last = array_pop($newPaths);
+        $lastArrow = $unQuoteLast ? '->>' : '->';
+        array_unshift($newPaths, qn($column, $query));
+
+        return clause(
+            '',
+            [clause('', $newPaths, '->'), $last],
+            $lastArrow
+        );
+    }
 }

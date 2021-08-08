@@ -38,12 +38,19 @@ class VarDumper
      *
      * @since  3.5.6
      */
-    public static function dump($var, int $depth = 5): string
+    public static function dump(mixed $var, int $depth = 5): string
     {
         if (null === self::$handler) {
+            unset(VarCloner::$defaultCasters[\DateTimeInterface::class]);
+
             $cloner = new VarCloner();
             $cloner->setMaxItems(-1);
             $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+            $cloner->addCasters(
+                [
+                    \DateTimeInterface::class => [DateCaster::class, 'castDateTime']
+                ]
+            );
 
 //            if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
 //                $dumper = 'html' === $_SERVER['VAR_DUMPER_FORMAT'] ? new PrintRDumper() : new PrintRDumper();
@@ -79,7 +86,7 @@ class VarDumper
      */
     public static function setHandler(callable $callable = null): callable
     {
-        $prevHandler   = self::$handler;
+        $prevHandler = self::$handler;
         self::$handler = $callable;
 
         return $prevHandler;

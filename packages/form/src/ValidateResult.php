@@ -58,7 +58,7 @@ class ValidateResult
     /**
      * isSuccess
      *
-     * @return  boolean
+     * @return  bool
      */
     public function isSuccess(): bool
     {
@@ -68,7 +68,7 @@ class ValidateResult
     /**
      * isFailure
      *
-     * @return  boolean
+     * @return  bool
      */
     public function isFailure(): bool
     {

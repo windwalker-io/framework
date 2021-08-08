@@ -12,10 +12,11 @@ declare(strict_types=1);
 namespace Windwalker\Http\Transport;
 
 use Composer\CaBundle\CaBundle;
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\CurlFile;
+use UnexpectedValueException;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\HttpClientInterface;
@@ -45,7 +46,7 @@ class CurlTransport extends AbstractTransport
     {
         $options = Arr::mergeRecursive(
             [
-                'ignore_curl_error' => false
+                'ignore_curl_error' => false,
             ],
             $this->getOptions(),
             $options
@@ -74,16 +75,16 @@ class CurlTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param   string $content   The complete server response, including headers
+     * @param  string  $content   The complete server response, including headers
      *                            as a string if the response has no errors.
-     * @param   array  $info      The cURL request information.
+     * @param  array   $info      The cURL request information.
      *
      * @return  Response
      *
+     * @throws  UnexpectedValueException
      * @since   2.0
-     * @throws  \UnexpectedValueException
      */
-    public function getResponse($content, $info)
+    public function getResponse(mixed $content, mixed $info): Response|ResponseInterface
     {
         // Create the response object.
         $return = $this->createResponse();
@@ -271,10 +272,13 @@ class CurlTransport extends AbstractTransport
      * @return  ResponseInterface
      * @since   2.1
      */
-    public function download(RequestInterface $request, string|StreamInterface $dest, array $options = [])
-    {
+    public function download(
+        RequestInterface $request,
+        string|StreamInterface $dest,
+        array $options = []
+    ): ResponseInterface {
         if (!$dest) {
-            throw new \InvalidArgumentException('Target file path is empty.');
+            throw new InvalidArgumentException('Target file path is empty.');
         }
 
         $response = $this->request($request);
@@ -291,11 +295,11 @@ class CurlTransport extends AbstractTransport
     /**
      * Method to check if HTTP transport layer available for using
      *
-     * @return  boolean  True if available else false
+     * @return  bool  True if available else false
      *
      * @since   2.1
      */
-    public static function isSupported()
+    public static function isSupported(): bool
     {
         return function_exists('curl_init') && is_callable('curl_init');
     }
@@ -303,13 +307,13 @@ class CurlTransport extends AbstractTransport
     /**
      * setCABundleToOptions
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  array
      *
      * @since  3.4.2
      */
-    protected function setCABundleToOptions(array $options)
+    protected function setCABundleToOptions(array $options): array
     {
         if ($this->getOption('certpath')) {
             $options[CURLOPT_CAINFO] = $this->getOption('certpath');

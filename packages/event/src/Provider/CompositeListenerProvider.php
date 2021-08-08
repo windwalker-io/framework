@@ -11,7 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Provider;
 
+use Closure;
+use Generator;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use ReflectionException;
+use ReflectionFunction;
 use Windwalker\Event\Event;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\Listener\ListenerCallable;
@@ -29,12 +33,12 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
     /**
      * @var SubscribableListenerProviderInterface
      */
-    protected $mainProvider;
+    protected SubscribableListenerProviderInterface $mainProvider;
 
     /**
      * @var ListenerProviderInterface[]
      */
-    protected $providers = [];
+    protected array $providers = [];
 
     /**
      * create
@@ -126,7 +130,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  void
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function removeIfNecessary(object $event, callable $listener): void
     {
@@ -150,9 +154,9 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  static
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function remove($listenerOrSubscriber)
+    public function remove(mixed $listenerOrSubscriber): static
     {
         if ($this->isSubscriber($listenerOrSubscriber)) {
             foreach ($this->getQueues() as $queue) {
@@ -171,25 +175,27 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      * offEvent
      *
      * @param  string|EventInterface  $event
-     * @param  callable|object        $listenerOrSubscriber
+     * @param  callable|object|null   $listenerOrSubscriber
      *
      * @return  static
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function off($event, $listenerOrSubscriber = null)
+    public function off(string|EventInterface $event, callable|object|null $listenerOrSubscriber = null): static
     {
         $event = Event::wrap($event);
 
         $listeners = &$this->getQueues();
 
-        if (!isset($listeners[$event->getName()])) {
+        $eventName = strtolower($event->getName());
+
+        if (!isset($listeners[$eventName])) {
             return $this;
         }
 
         if ($listenerOrSubscriber === null) {
-            unset($listeners[$event->getName()]);
+            unset($listeners[$eventName]);
         } else {
-            $queue = $listeners[$event->getName()];
+            $queue = $listeners[$eventName];
 
             if ($this->isSubscriber($listenerOrSubscriber)) {
                 $this->offSubscriber($queue, $listenerOrSubscriber);
@@ -209,7 +215,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  void
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function offSubscriber(ListenersQueue $queue, object $subscriber): void
     {
@@ -217,8 +223,8 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
         foreach ($queue as $listener) {
             $callable = $listener;
 
-            if ($callable instanceof \Closure) {
-                $ref  = new \ReflectionFunction($callable);
+            if ($callable instanceof Closure) {
+                $ref = new ReflectionFunction($callable);
                 $that = $ref->getClosureThis();
             } elseif (is_array($callable)) {
                 $that = $callable[0];
@@ -239,20 +245,20 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  bool
      */
-    private function isSubscriber($listener): bool
+    private function isSubscriber(mixed $listener): bool
     {
         return !is_array($listener)
             && !is_string($listener)
-            && !$listener instanceof \Closure
+            && !$listener instanceof Closure
             && !$listener instanceof CallableProxy;
     }
 
     /**
      * providerIterator
      *
-     * @return  \Generator|ListenerProviderInterface[]
+     * @return  Generator|ListenerProviderInterface[]
      */
-    private function providerIterator(): \Generator
+    private function providerIterator(): Generator
     {
         yield $this->mainProvider;
 
@@ -281,5 +287,24 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
     public function resetProviders(): void
     {
         $this->providers = [];
+    }
+
+    /**
+     * When an object is cloned, PHP 5 will perform a shallow copy of all of the object's properties.
+     * Any properties that are references to other variables, will remain references.
+     * Once the cloning is complete, if a __clone() method is defined,
+     * then the newly created object's __clone() method will be called, to allow any necessary properties that need to
+     * be changed. NOT CALLABLE DIRECTLY.
+     *
+     * @return void
+     * @link https://php.net/manual/en/language.oop5.cloning.php
+     */
+    public function __clone(): void
+    {
+        $this->mainProvider = clone $this->mainProvider;
+
+        foreach ($this->providers as $i => $provider) {
+            $this->providers[$i] = clone $provider;
+        }
     }
 }

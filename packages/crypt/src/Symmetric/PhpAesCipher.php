@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Crypt\Symmetric;
 
+use AesCtr;
+use Exception;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
@@ -53,7 +55,7 @@ class PhpAesCipher implements CipherInterface
         include_once __DIR__ . '/../lib/aes.class.php';
 
         return new HiddenString(
-            (string) \AesCtr::decrypt(base64_decode($str), $key->get(), $this->keyLength)
+            (string) AesCtr::decrypt(base64_decode($str), $key->get(), $this->keyLength)
         );
     }
 
@@ -72,6 +74,19 @@ class PhpAesCipher implements CipherInterface
     {
         include_once __DIR__ . '/../lib/aes.class.php';
 
-        return base64_encode(\AesCtr::encrypt($str->get(), $key->get(), $this->keyLength));
+        return base64_encode(AesCtr::encrypt($str->get(), $key->get(), $this->keyLength));
+    }
+
+    /**
+     * Generate Key.
+     *
+     * @param  int|null  $length
+     *
+     * @return  Key
+     * @throws Exception
+     */
+    public static function generateKey(?int $length = 32): Key
+    {
+        return new Key(random_bytes($length));
     }
 }

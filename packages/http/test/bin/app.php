@@ -13,14 +13,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Stream\Stream;
-use Windwalker\Stream\StringStream;
 
 return new class {
     public ServerRequestInterface $req;
 
-    public function __invoke(ServerRequestInterface $req)
+    public function __invoke(ServerRequestInterface $req): ResponseInterface
     {
-        $uri  = $req->getUri();
+        $uri = $req->getUri();
 
         $path = trim($uri->getPath(), '/') ?: 'index';
 
@@ -36,7 +35,7 @@ return new class {
     public function index(): ResponseInterface
     {
         $headers = $this->req->getHeaders();
-        $head    = '';
+        $head = '';
         foreach ($headers as $name => $headerItems) {
             $head .= sprintf("%s: %s\n", $name, $this->req->getHeaderLine($name));
         }
@@ -54,22 +53,22 @@ return new class {
         return $this->response($body);
     }
 
-    public function json()
+    public function json(): ResponseInterface
     {
-        $uri   = $this->req->getUri();
+        $uri = $this->req->getUri();
         $query = $uri->getQueryValues();
 
         return $this->response(json_encode($query));
     }
 
-    public function auth()
+    public function auth(): ResponseInterface
     {
         $uri = $this->req->getUri();
 
         return $this->response($uri->getUserInfo());
     }
 
-    public function server()
+    public function server(): ResponseInterface
     {
         return $this->response(json_encode($this->req->getServerParams()));
     }

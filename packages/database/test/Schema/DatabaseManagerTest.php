@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Schema;
 
-use Windwalker\Database\Schema\DatabaseManager;
+use Windwalker\Database\Manager\DatabaseManager;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 /**
@@ -33,7 +33,7 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
      */
     public function testCreate(): void
     {
-        $dbname = static::$db->getOption('database');
+        $dbname = static::$db->getDriver()->getOption('dbname');
 
         $newDbname = $dbname . '_new';
 
@@ -46,28 +46,12 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
         self::assertTrue($dbManager->exists());
     }
 
-    public function testSelect()
-    {
-        $dbname = static::$db->getOption('database');
-
-        $newDbname = $dbname . '_new';
-
-        $dbManager = static::$db->getDatabase($newDbname);
-
-        $dbManager->select();
-
-        self::assertEquals(
-            $newDbname,
-            static::$db->getPlatform()->getCurrentDatabase()
-        );
-    }
-
     /**
      * @see  DatabaseManager::drop
      */
     public function testDrop(): void
     {
-        $dbname = static::$db->getOption('database');
+        $dbname = static::$db->getDriver()->getOption('dbname');
 
         $newDbname = $dbname . '_new';
 

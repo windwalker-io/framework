@@ -11,14 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Attributes;
 
+use Attribute;
+use Windwalker\Attributes\AttributeHandler;
+use Windwalker\Attributes\AttributeInterface;
 use Windwalker\Form\Form;
-use Windwalker\Utilities\Attributes\AttributeHandler;
-use Windwalker\Utilities\Attributes\AttributeInterface;
 
 /**
  * The Fieldset class.
  */
-@@\Attribute
+#[Attribute]
 class Fieldset implements AttributeInterface
 {
     public string $name;
@@ -40,7 +41,7 @@ class Fieldset implements AttributeInterface
     /**
      * @inheritDoc
      */
-    public function __invoke(AttributeHandler $handler)
+    public function __invoke(AttributeHandler $handler): callable
     {
         return function () use ($handler) {
             $resolver = $handler->getResolver();
@@ -51,6 +52,8 @@ class Fieldset implements AttributeInterface
             $fieldset = $form->fieldset($this->name, $handler);
 
             $fieldset->title($this->title);
+
+            return $handler->get();
         };
     }
 
@@ -67,7 +70,7 @@ class Fieldset implements AttributeInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function name(string $name)
+    public function name(string $name): static
     {
         $this->name = $name;
 
@@ -87,7 +90,7 @@ class Fieldset implements AttributeInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function title(?string $title)
+    public function title(?string $title): static
     {
         $this->title = $title;
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
+use DomainException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -48,10 +49,10 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     /**
      * RabbitmqQueueDriver constructor.
      *
-     * @param string $channel
-     * @param array  $options
+     * @param  string  $channel
+     * @param  array   $options
      */
-    public function __construct($channel, array $options = [])
+    public function __construct(string $channel, array $options = [])
     {
         $this->client = $this->getAMQPConnection($options);
 
@@ -64,9 +65,9 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return int|string
+     * @return string
      */
-    public function push(QueueMessage $message): int|string
+    public function push(QueueMessage $message): string
     {
         $channel = $message->getChannel() ?: $this->channel;
 
@@ -88,7 +89,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
 
         $this->channel->basic_publish($msg, '', $channel);
 
-        return 1;
+        return '1';
     }
 
     /**
@@ -137,7 +138,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      *
      * @return RabbitmqQueueDriver
      */
-    public function delete(QueueMessage $message)
+    public function delete(QueueMessage $message): static
     {
         $this->channel->basic_ack($message->get('delivery_tag'));
 
@@ -147,11 +148,11 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     /**
      * release
      *
-     * @param QueueMessage|string $message
+     * @param  QueueMessage|string  $message
      *
      * @return static
      */
-    public function release(QueueMessage $message)
+    public function release(QueueMessage $message): static
     {
         $this->delete($message);
 
@@ -165,11 +166,11 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     /**
      * channelDeclare
      *
-     * @param string $channel
+     * @param  string  $channel
      *
      * @return  void
      */
-    protected function channelDeclare($channel)
+    protected function channelDeclare(string $channel)
     {
         $this->channel->channel_declare($channel, false, true, false, false);
     }
@@ -177,15 +178,15 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     /**
      * getAMQPConnection
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  AMQPStreamConnection
-     * @throws \DomainException
+     * @throws DomainException
      */
-    public function getAMQPConnection(array $options)
+    public function getAMQPConnection(array $options): AMQPStreamConnection
     {
         if (!class_exists(AMQPStreamConnection::class)) {
-            throw new \DomainException('Please install php-amqplib/php-amqplib first.');
+            throw new DomainException('Please install php-amqplib/php-amqplib first.');
         }
 
         $defaultOptions = [

@@ -31,7 +31,7 @@ class StubOutput extends Output
     /**
      * Property status.
      *
-     * @var  integer
+     * @var  int
      */
     public $status;
 
@@ -53,16 +53,16 @@ class StubOutput extends Output
     /**
      * header
      *
-     * @param string  $string
-     * @param bool    $replace
-     * @param integer $code
+     * @param  string  $string
+     * @param  bool    $replace
+     * @param  int     $code
      *
      * @return  static
      */
-    public function header($string, $replace = true, $code = null)
+    public function header($string, $replace = true, $code = null): static
     {
         if (strpos($string, ':') !== false) {
-            list($header, $value) = explode(': ', $string, 2);
+            [$header, $value] = explode(': ', $string, 2);
 
             if ($replace) {
                 $this->message = $this->message->withHeader($header, $value);

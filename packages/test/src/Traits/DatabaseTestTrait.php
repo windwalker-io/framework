@@ -12,11 +12,12 @@ declare(strict_types=1);
 namespace Windwalker\Test\Traits;
 
 use Asika\SqlSplitter\SqlSplitter;
+use PDOException;
+use RuntimeException;
 use Windwalker\Database\DatabaseAdapter;
-use Windwalker\Database\Driver\DriverFactory;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
 use Windwalker\Database\Event\QueryEndEvent;
-use Windwalker\Database\Platform\AbstractPlatform;
 
 /**
  * Trait DatabaseTestTrait
@@ -31,22 +32,17 @@ trait DatabaseTestTrait
 
     protected static function createDatabase(string $driver, ?array $params = null): DatabaseAdapter
     {
-        $platform = DriverFactory::getPlatformName($driver);
-        $platform = AbstractPlatform::getPlatformName($platform);
+        [, $platform] = DatabaseFactory::extractDriverName($driver);
+        $platform = DatabaseFactory::getPlatformName($platform);
 
         $params = $params ?? self::getTestParams($platform);
 
         $params['driver'] = $driver;
         static::$lastQueries = [];
 
-        $db = new DatabaseAdapter(
-            [
-                'driver' => $driver
-            ]
-        );
+        $params = $params ?? self::getTestParams($platform);
 
-        $params = $params ?? self::getTestParams($db->getPlatform()->getName());
-        $db->setOptions($params);
+        $db = (new DatabaseFactory())->create($driver, $params);
 
         // $logFile = __DIR__ . '/../tmp/all-test-sql.sql';
         //
@@ -56,15 +52,18 @@ trait DatabaseTestTrait
         //     self::$logInited = true;
         // }
 
-        $db->on(QueryEndEvent::class, function (QueryEndEvent $event) {
-            static::$lastQueries[] = $event->getSql();
+        $db->on(
+            QueryEndEvent::class,
+            function (QueryEndEvent $event) {
+                static::$lastQueries[] = $event->getSql();
 
-            // $fp = fopen($logFile, 'ab+');
-            //
-            // fwrite($fp, $event->getSql() . ";\n\n");
-            //
-            // fclose($fp);
-        });
+                // $fp = fopen($logFile, 'ab+');
+                //
+                // fwrite($fp, $event->getSql() . ";\n\n");
+                //
+                // fclose($fp);
+            }
+        );
 
         return static::$db = $db;
     }
@@ -107,7 +106,7 @@ trait DatabaseTestTrait
     protected static function importFromFile(string $file): void
     {
         if (!is_file($file)) {
-            throw new \RuntimeException('File not found: ' . $file);
+            throw new RuntimeException('File not found: ' . $file);
         }
 
         self::importIterator(SqlSplitter::splitFromFile($file));
@@ -129,8 +128,8 @@ trait DatabaseTestTrait
 
             try {
                 static::$db->execute($query);
-            } catch (\PDOException $e) {
-                throw new \PDOException(
+            } catch (PDOException $e) {
+                throw new PDOException(
                     $e->getMessage() . ' - SQ: ' . $query,
                     (int) $e->getCode(),
                     $e

@@ -14,14 +14,15 @@ namespace Windwalker\Http\Test\Transport;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 use Windwalker\Http\Exception\HttpRequestException;
-use Windwalker\Http\Helper\UriHelper;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Transport\AbstractTransport;
-use Windwalker\Http\Uri;
 use Windwalker\Stream\Stream;
 use Windwalker\Stream\StringStream;
 use Windwalker\Test\Traits\BaseAssertionTrait;
+use Windwalker\Uri\Uri;
+use Windwalker\Uri\UriHelper;
 
 /**
  * Test class of CurlTransport
@@ -76,11 +77,11 @@ abstract class AbstractTransportTest extends TestCase
     /**
      * createRequest
      *
-     * @param StreamInterface $stream
+     * @param  StreamInterface  $stream
      *
      * @return Request
      */
-    protected function createRequest($stream = null)
+    protected function createRequest($stream = null): Request
     {
         return new Request($stream ?: new StringStream());
     }
@@ -120,7 +121,7 @@ abstract class AbstractTransportTest extends TestCase
      */
     public function testBadDomainGet()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $request = $this->createRequest();
 
@@ -250,7 +251,7 @@ abstract class AbstractTransportTest extends TestCase
             'root',
             0755,
             [
-                'download' => []
+                'download' => [],
             ]
         );
 

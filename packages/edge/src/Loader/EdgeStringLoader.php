@@ -28,7 +28,7 @@ class EdgeStringLoader implements EdgeLoaderInterface
     /**
      * EdgeTextLoader constructor.
      *
-     * @param string $content
+     * @param  string  $content
      */
     public function __construct(string $content = '')
     {
@@ -50,7 +50,7 @@ class EdgeStringLoader implements EdgeLoaderInterface
     /**
      * loadFile
      *
-     * @param   string $path
+     * @param  string  $path
      *
      * @return  string
      */
@@ -72,14 +72,22 @@ class EdgeStringLoader implements EdgeLoaderInterface
     /**
      * Method to set property content
      *
-     * @param   string $content
+     * @param  string  $content
      *
      * @return  static  Return self to support chaining.
      */
-    public function setContent($content)
+    public function setContent(string $content): static
     {
         $this->content = $content;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has(string $key): bool
+    {
+        return true;
     }
 }

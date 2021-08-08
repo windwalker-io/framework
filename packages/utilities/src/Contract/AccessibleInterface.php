@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Contract;
 
-use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
@@ -38,7 +37,7 @@ interface AccessibleInterface extends
      *
      * @return mixed
      */
-    public function &__get($key);
+    public function &__get(mixed $key): mixed;
 
     /**
      * Dynamically set the value of an attribute.
@@ -48,7 +47,7 @@ interface AccessibleInterface extends
      *
      * @return void
      */
-    public function __set($key, $value);
+    public function __set(mixed $key, mixed $value);
 
     /**
      * Dynamically check if an attribute is set.
@@ -57,7 +56,7 @@ interface AccessibleInterface extends
      *
      * @return bool
      */
-    public function __isset($key);
+    public function __isset(mixed $key): bool;
 
     /**
      * Dynamically unset an attribute.
@@ -66,5 +65,5 @@ interface AccessibleInterface extends
      *
      * @return void
      */
-    public function __unset($key);
+    public function __unset(mixed $key);
 }

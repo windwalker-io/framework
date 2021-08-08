@@ -16,6 +16,7 @@ use DOMDocument;
 use DOMDocumentFragment;
 use DOMElement as NativeDOMElement;
 use DOMImplementation;
+use DOMNode;
 use DOMText;
 use Masterminds\HTML5;
 
@@ -37,7 +38,7 @@ class DOMFactory
     /**
      * getInstance
      *
-     * @param DOMDocument|null $dom
+     * @param  DOMDocument|null  $dom
      *
      * @return  DOMDocument
      */
@@ -57,7 +58,7 @@ class DOMFactory
     /**
      * html5
      *
-     * @param HTML5|null $html5
+     * @param  HTML5|null  $html5
      *
      * @return  HTML5
      */
@@ -92,12 +93,12 @@ class DOMFactory
     /**
      * element
      *
-     * @param string $name
-     * @param null   $value
+     * @param  string  $name
+     * @param  null    $value
      *
      * @return  DOMElement
      */
-    public static function element(string $name, $value = null)
+    public static function element(string $name, $value = null): DOMElement
     {
         if ($value !== null) {
             $ele = static::document()->createElement($name, $value);
@@ -111,7 +112,7 @@ class DOMFactory
     /**
      * comment
      *
-     * @param string $data
+     * @param  string  $data
      *
      * @return  DOMComment
      */
@@ -123,7 +124,7 @@ class DOMFactory
     /**
      * textNode
      *
-     * @param string $content
+     * @param  string  $content
      *
      * @return  DOMText
      */
@@ -135,7 +136,7 @@ class DOMFactory
     /**
      * create
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  DOMDocument
      */
@@ -151,7 +152,7 @@ class DOMFactory
         return $dom;
     }
 
-    public static function parse(string $text, int $options = 0): ?\DOMNode
+    public static function parse(string $text, int $options = 0): ?DOMNode
     {
         $doc = static::create();
         $doc->loadXML($text);

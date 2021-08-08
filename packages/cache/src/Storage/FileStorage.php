@@ -11,8 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Storage;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 use RuntimeException;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Throwable;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The FilesystemStorage class.
@@ -51,7 +55,7 @@ class FileStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         $data = $this->read($key);
 
@@ -73,7 +77,7 @@ class FileStorage implements StorageInterface
 
         sscanf($data, $this->getOption('expiration_format'), $expiration, $value);
 
-        if ((int) $expiration === 0 || $expiration > time()) {
+        if (!static::isExpired((int) $expiration)) {
             return true;
         }
 
@@ -90,16 +94,16 @@ class FileStorage implements StorageInterface
         $filePath = $this->getRoot();
         $this->checkFilePath($filePath);
 
-        $iterator = new \RegexIterator(
-            new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($filePath)
+        $iterator = new RegexIterator(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($filePath)
             ),
             '/' . preg_quote($this->getOption('extension')) . '$/i'
         );
 
         $results = true;
 
-        /* @var  \RecursiveDirectoryIterator $file */
+        /* @var  RecursiveDirectoryIterator $file */
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 $results = unlink($file->getRealPath()) && $results;
@@ -120,7 +124,7 @@ class FileStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    public function save(string $key, $value, int $expiration = 0): bool
+    public function save(string $key, mixed $value, int $expiration = 0): bool
     {
         if ($this->getOption('deny_access', false)) {
             $value = $this->getOption('deny_code') . $value;
@@ -138,17 +142,17 @@ class FileStorage implements StorageInterface
      *
      * @param  string  $filePath  A file path.
      *
-     * @return  boolean  The method will always return true, if it returns.
+     * @return  bool  The method will always return true, if it returns.
      *
      * @throws  RuntimeException if the file path is invalid.
      * @since   2.0
      */
-    protected function checkFilePath($filePath): bool
+    protected function checkFilePath(string $filePath): bool
     {
         if (!is_dir($filePath)) {
             try {
                 mkdir($filePath, 0755, true);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new RuntimeException(
                     sprintf('Directory "%s" was not created with error: %s', $filePath, $e->getMessage()),
                     $e->getCode(),
@@ -170,7 +174,7 @@ class FileStorage implements StorageInterface
      * @param  string  $key
      * @param  string  $value
      *
-     * @return  boolean
+     * @return  bool
      */
     protected function write(string $key, string $value): bool
     {
@@ -251,7 +255,7 @@ class FileStorage implements StorageInterface
      *
      * @return  string  The full stream URI for the cache entry.
      *
-     * @throws  \RuntimeException if the cache path is invalid.
+     * @throws  RuntimeException if the cache path is invalid.
      * @since   2.0
      */
     public function fetchStreamUri(string $key): string
@@ -291,5 +295,20 @@ class FileStorage implements StorageInterface
     public function getRoot(): string
     {
         return $this->root;
+    }
+
+    /**
+     * isExpired
+     *
+     * @param  int       $expiration
+     * @param  int|null  $time
+     *
+     * @return  bool
+     */
+    public static function isExpired(int $expiration, ?int $time = null): bool
+    {
+        $time ??= time();
+
+        return $expiration !== 0 && $expiration <= $time;
     }
 }

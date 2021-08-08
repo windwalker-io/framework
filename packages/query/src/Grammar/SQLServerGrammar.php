@@ -14,6 +14,9 @@ namespace Windwalker\Query\Grammar;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
+use function Windwalker\Query\expr;
+use function Windwalker\Query\qn;
+
 /**
  * The SqlsrvGrammar class.
  */
@@ -22,17 +25,17 @@ class SQLServerGrammar extends AbstractGrammar
     /**
      * @var string
      */
-    protected static $name = 'SQLServer';
+    public static string $name = 'SQLServer';
 
     /**
      * @var array
      */
-    protected static $nameQuote = ['[', ']'];
+    public static array $nameQuote = ['[', ']'];
 
     /**
      * @var string
      */
-    protected static $nullDate = '1900-01-01 00:00:00';
+    public static string $nullDate = '1900-01-01 00:00:00';
 
     public function compileInsert(Query $query): string
     {
@@ -51,7 +54,7 @@ class SQLServerGrammar extends AbstractGrammar
 
             if ($query->getIncrementField()) {
                 $elements = $sql['insert']->getElements();
-                $table    = $elements[array_key_first($elements)];
+                $table = $elements[array_key_first($elements)];
 
                 $sql = array_merge(
                     ['id_insert_on' => sprintf('SET IDENTITY_INSERT %s ON;', $table)],
@@ -66,7 +69,7 @@ class SQLServerGrammar extends AbstractGrammar
 
     public function compileLimit(Query $query, array $sql): array
     {
-        $limit  = $query->getLimit();
+        $limit = $query->getLimit();
         $offset = (int) $query->getOffset();
 
         $q = implode(' ', $sql);
@@ -95,16 +98,30 @@ class SQLServerGrammar extends AbstractGrammar
         );
     }
 
+    public function compileJsonSelector(
+        Query $query,
+        string $column,
+        array $paths,
+        bool $unQuoteLast = true,
+        bool $instant = false
+    ): Clause {
+        $vc = $query->valueize('$.' . implode('.', $paths), $instant);
+
+        $expr = $unQuoteLast
+            ? expr('JSON_VALUE()', $vc)
+            : expr('JSON_QUERY()', $vc);
+
+        return $expr->prepend(qn($column, $query));
+    }
+
     /**
      * If no connection set, we escape it with default function.
-     *
-     * @see https://stackoverflow.com/a/2526717
      *
      * @param  string  $text
      *
      * @return  string
      */
-    public function localEscape(string $text): string
+    public static function localEscape(string $text): string
     {
         if ($text === '') {
             return $text;
@@ -192,8 +209,8 @@ class SQLServerGrammar extends AbstractGrammar
         // Drop all foreign key reference to this table
         // @see https://social.msdn.microsoft.com/Forums/sqlserver/en-US/219f8a19-0026-49a1-a086-11c5d57d9c97/tsql-to-drop-all-constraints?forum=transactsql
         $dropFK = <<<SQL
-declare @str varchar(max)
-declare cur cursor for
+DECLARE @str VARCHAR(MAX)
+DECLARE cur CURSOR FOR
 
     SELECT 'ALTER TABLE ' + '[' + s.name + '].[' + t.name + '] DROP CONSTRAINT ['+ f.name + ']'
     FROM sys.foreign_keys AS f
@@ -202,7 +219,7 @@ declare cur cursor for
     WHERE s.name = 'dbo' AND f.referenced_object_id = object_id(%q)
     ORDER BY t.type
 
-open cur
+OPEN cur
 FETCH NEXT FROM cur INTO @str
 WHILE (@@fetch_status = 0) BEGIN
     PRINT @str
@@ -210,8 +227,8 @@ WHILE (@@fetch_status = 0) BEGIN
     FETCH NEXT FROM cur INTO @str
 END
 
-close cur
-deallocate cur;
+CLOSE cur
+DEALLOCATE cur;
 SQL;
 
         return static::build(

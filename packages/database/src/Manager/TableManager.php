@@ -11,13 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Manager;
 
-use Windwalker\Database\Schema\DatabaseManager;
+use InvalidArgumentException;
+use RuntimeException;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Schema;
-use Windwalker\Database\Schema\SchemaManager;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
+
+use function count;
 
 /**
  * The TableManager class.
@@ -67,7 +69,7 @@ class TableManager extends AbstractMetaManager
      *
      * @todo Move update() logic to Platform class.
      */
-    public function update($schema): static
+    public function update(Schema|callable $schema): static
     {
         $schema = $this->callSchema($schema);
 
@@ -114,7 +116,7 @@ class TableManager extends AbstractMetaManager
      *
      * @return  static
      */
-    public function save($schema, bool $ifNotExists = true, array $options = [])
+    public function save(Schema|callable $schema, bool $ifNotExists = true, array $options = []): static
     {
         $schema = $this->callSchema($schema);
 
@@ -165,7 +167,7 @@ class TableManager extends AbstractMetaManager
      *
      * @return  static
      *
-     * @throws  \RuntimeException
+     * @throws  RuntimeException
      * @since   2.0
      */
     public function truncate(): static
@@ -328,7 +330,7 @@ class TableManager extends AbstractMetaManager
             $tableColumns = $this->getColumns();
             $index = new Index($name, $this->getName());
             $index->columns((array) $columns)
-                ->bind($options);
+                ->fill($options);
 
             foreach ($index->getColumns() as $column) {
                 if (isset($tableColumns[$column->getColumnName()])) {
@@ -376,7 +378,7 @@ class TableManager extends AbstractMetaManager
     {
         return $this->once(
             'indexes',
-            fn () => Index::wrapList(
+            fn() => Index::wrapList(
                 $this->getPlatform()->listIndexes($this->getName(), $this->schemaName),
                 'index_name'
             )
@@ -404,7 +406,7 @@ class TableManager extends AbstractMetaManager
 
             $constraint = new Constraint($type, $name, $this->getName());
             $constraint->columns((array) $columns)
-                ->bind($options);
+                ->fill($options);
 
             foreach ($constraint->getColumns() as $column) {
                 if (isset($tableColumns[$column->getColumnName()])) {
@@ -445,7 +447,7 @@ class TableManager extends AbstractMetaManager
     {
         return $this->once(
             'constraints',
-            fn () => Constraint::wrapList(
+            fn() => Constraint::wrapList(
                 $this->getPlatform()->listConstraints($this->getName(), $this->schemaName),
                 'constraint_name'
             )
@@ -475,12 +477,12 @@ class TableManager extends AbstractMetaManager
      *
      * @return  static  Return self to support chaining.
      */
-    public function setName(?string $name)
+    public function setName(?string $name): static
     {
         if ($name !== null) {
             $names = explode('.', $name);
 
-            if (\count($names) >= 2) {
+            if (count($names) >= 2) {
                 [$schema, $name] = $names;
 
                 $this->schemaName = $schema;
@@ -518,7 +520,7 @@ class TableManager extends AbstractMetaManager
         }
 
         if (!$schema instanceof Schema) {
-            throw new \InvalidArgumentException('Argument 1 should be Schema object.');
+            throw new InvalidArgumentException('Argument 1 should be Schema object.');
         }
 
         return $schema;
@@ -542,7 +544,7 @@ class TableManager extends AbstractMetaManager
      *
      * @return  static  Return self to support chaining.
      */
-    public function setErratas(array $erratas)
+    public function setErratas(array $erratas): static
     {
         $this->erratas = $erratas;
 

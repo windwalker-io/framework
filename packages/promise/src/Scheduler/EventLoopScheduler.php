@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Scheduler;
 
+use DomainException;
 use React\EventLoop\LoopInterface;
 use Swoole\Coroutine\Channel;
 use Swoole\Event;
@@ -30,7 +31,7 @@ class EventLoopScheduler implements SchedulerInterface
      *
      * @param  callable|LoopInterface  $loop
      */
-    public function __construct($loop)
+    public function __construct(callable|LoopInterface $loop)
     {
         $this->timerCallback = $loop instanceof LoopInterface
             ? self::createReactTimer($loop)
@@ -74,7 +75,7 @@ class EventLoopScheduler implements SchedulerInterface
     public static function createSwooleTimer(): callable
     {
         if (!extension_loaded('swoole')) {
-            throw new \DomainException('Swoole not installed');
+            throw new DomainException('Swoole not installed');
         }
 
         return static function (callable $callable) {

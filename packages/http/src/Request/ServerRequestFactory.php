@@ -11,14 +11,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Request;
 
+use InvalidArgumentException;
+use JsonException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
+use UnexpectedValueException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ServerHelper;
 use Windwalker\Http\UploadedFile;
-use Windwalker\Http\Uri;
 use Windwalker\Stream\PhpInputStream;
+use Windwalker\Uri\Uri;
 
 /**
  * The ServerRequestFactory class.
@@ -40,20 +43,15 @@ class ServerRequestFactory
      * If any argument is not supplied, the corresponding superglobal value will
      * be used.
      *
-     * The ServerRequest created is then passed to the fromServer() method in
-     * order to marshal the request URI and headers.
-     *
-     * @see fromServer()
-     *
-     * @param  array $server     The $_SERVER superglobal variable.
-     * @param  array $query      The $_GET superglobal variable.
-     * @param  array $parsedBody The $_POST superglobal variable.
-     * @param  array $cookies    The $_COOKIE superglobal variable.
-     * @param  array $files      The $_FILES superglobal variable.
+     * @param  array       $server      The $_SERVER superglobal variable.
+     * @param  array       $query       The $_GET superglobal variable.
+     * @param  array|null  $parsedBody  The $_POST superglobal variable.
+     * @param  array       $cookies     The $_COOKIE superglobal variable.
+     * @param  array       $files       The $_FILES superglobal variable.
      *
      * @return ServerRequestInterface
      *
-     * @throws \InvalidArgumentException for invalid file values
+     * @throws JsonException
      */
     public static function createFromGlobals(
         array $server = [],
@@ -71,14 +69,20 @@ class ServerRequestFactory
 
         $decodedBody = $_POST;
         $decodedFiles = $_FILES;
+        $method = strtoupper($method);
+        $type = (string) HeaderHelper::getValue($headers, 'Content-Type');
 
-        if (in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
-            $type = (string) HeaderHelper::getValue($headers, 'Content-Type');
-
+        if ($method === 'POST') {
+            if (str_contains($type, 'application/json')) {
+                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+            }
+        } elseif (in_array($method, ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
             if (str_contains($type, 'application/x-www-form-urlencoded')) {
                 parse_str($body->__toString(), $decodedBody);
             } elseif (str_contains($type, 'multipart/form-data')) {
                 [$decodedBody, $decodedFiles] = array_values(ServerHelper::parseFormData($body->__toString()));
+            } elseif (str_contains($type, 'application/json')) {
+                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
             }
         }
 
@@ -101,13 +105,13 @@ class ServerRequestFactory
     /**
      * createFromUri
      *
-     * @param string|UriInterface $uri
-     * @param string $script
-     * @param array  $server
-     * @param array  $query
-     * @param array  $parsedBody
-     * @param array  $cookies
-     * @param array  $files
+     * @param  string|UriInterface  $uri
+     * @param  string               $script
+     * @param  array                $server
+     * @param  array                $query
+     * @param  array                $parsedBody
+     * @param  array                $cookies
+     * @param  array                $files
      *
      * @return  ServerRequestInterface
      */
@@ -140,7 +144,7 @@ class ServerRequestFactory
     /**
      * Prepare the $_SERVER variables.
      *
-     * @param   array $server The $_SERVER superglobal variable.
+     * @param  array  $server  The $_SERVER superglobal variable.
      *
      * @return  array
      */
@@ -170,11 +174,11 @@ class ServerRequestFactory
      * Transforms each value into an UploadedFileInterface instance, and ensures
      * that nested arrays are normalized.
      *
-     * @param   array $files THe $_FILES superglobal variable.
+     * @param  array  $files  THe $_FILES superglobal variable.
      *
      * @return  UploadedFileInterface[]
      *
-     * @throws  \InvalidArgumentException for unrecognized values
+     * @throws  InvalidArgumentException for unrecognized values
      */
     public static function prepareFiles(array $files): array
     {
@@ -201,7 +205,7 @@ class ServerRequestFactory
                 continue;
             }
 
-            throw new \InvalidArgumentException('Invalid value in files specification');
+            throw new InvalidArgumentException('Invalid value in files specification');
         }
 
         return $return;
@@ -210,7 +214,7 @@ class ServerRequestFactory
     /**
      * Get headers from $_SERVER.
      *
-     * @param   array $server The $_SERVER superglobal variable.
+     * @param  array  $server  The $_SERVER superglobal variable.
      *
      * @return  array
      */
@@ -245,13 +249,15 @@ class ServerRequestFactory
     /**
      * Marshal the URI from the $_SERVER array and headers
      *
-     * @param   array $server  The $_SERVER superglobal.
-     * @param   array $headers The headers variable from server.
+     * @param  array       $server   The $_SERVER superglobal.
+     * @param  array|null  $headers  The headers variable from server.
      *
      * @return  UriInterface  Prepared Uri object.
      */
-    public static function prepareUri(array $server, array $headers): UriInterface
+    public static function prepareUri(array $server, ?array $headers = null): UriInterface
     {
+        $headers ??= static::prepareHeaders($server);
+
         $uri = new Uri('');
 
         // URI scheme
@@ -303,10 +309,10 @@ class ServerRequestFactory
     /**
      * Marshal the host and port from HTTP headers and/or the PHP environment
      *
-     * @param   string $host    The uri host.
-     * @param   string $port    The request port.
-     * @param   array  $server  The $_SERVER superglobal.
-     * @param   array  $headers The headers variable from server.
+     * @param  string  $host     The uri host.
+     * @param  string  $port     The request port.
+     * @param  array   $server   The $_SERVER superglobal.
+     * @param  array   $headers  The headers variable from server.
      */
     public static function getHostAndPortFromHeaders(string &$host, ?int &$port, array $server, array $headers): void
     {
@@ -353,7 +359,7 @@ class ServerRequestFactory
      * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
      * @license   http://framework.zend.com/license/new-bsd New BSD License
      *
-     * @param array $server
+     * @param  array  $server
      *
      * @return string
      */
@@ -400,7 +406,7 @@ class ServerRequestFactory
     /**
      * Strip the query string from a path
      *
-     * @param   string $path The uri path.
+     * @param  string  $path  The uri path.
      *
      * @return  string  The path striped.
      */
@@ -418,9 +424,9 @@ class ServerRequestFactory
     /**
      * Marshal the host and port from the request header
      *
-     * @param string $host
-     * @param string $port
-     * @param string $headerHost
+     * @param  string  $host
+     * @param  string  $port
+     * @param  string  $headerHost
      */
     protected static function getHostAndPortFromHeader(string &$host, ?int &$port, string|array $headerHost): void
     {
@@ -442,7 +448,7 @@ class ServerRequestFactory
      * If an element is array, will call getFlattenFileData() to normalize them to
      * a standard nested file list.
      *
-     * @param   array $value $_FILES  struct.
+     * @param  array  $value  $_FILES  struct.
      *
      * @return  UploadedFileInterface|UploadedFileInterface[]
      */
@@ -468,7 +474,7 @@ class ServerRequestFactory
      * Loops through all nested files and returns a normalized array of
      * UploadedFileInterface instances.
      *
-     * @param   array $files The file spec array.
+     * @param  array  $files  The file spec array.
      *
      * @return  UploadedFileInterface[]
      */
@@ -494,7 +500,7 @@ class ServerRequestFactory
     /**
      * Return HTTP protocol version (X.Y)
      *
-     * @param   array $server The $_SERVER supperglobal.
+     * @param  array  $server  The $_SERVER supperglobal.
      *
      * @return  string  Protocol version.
      */
@@ -505,7 +511,7 @@ class ServerRequestFactory
         }
 
         if (!preg_match('/^(HTTP\/)?(\d+(?:\.\d+)+)/', $server['SERVER_PROTOCOL'], $matches)) {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 sprintf(
                     'Invalid protocol version format (%s)',
                     $server['SERVER_PROTOCOL']

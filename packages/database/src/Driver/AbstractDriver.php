@@ -11,70 +11,106 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver;
 
-use Windwalker\Database\DatabaseAdapter;
+use JetBrains\PhpStorm\Pure;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Event\QueryEndEvent;
 use Windwalker\Database\Event\QueryFailedEvent;
 use Windwalker\Database\Exception\DatabaseQueryException;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Hydrator\HydratorAwareInterface;
+use Windwalker\Database\Hydrator\HydratorInterface;
+use Windwalker\Database\Hydrator\SimpleHydrator;
 use Windwalker\Database\Schema\AbstractSchemaManager;
+use Windwalker\Event\EventAwareInterface;
+use Windwalker\Pool\ConnectionPool;
+use Windwalker\Pool\PoolInterface;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Options\OptionsResolverTrait;
 
 /**
  * The AbstractDriver class.
  */
-abstract class AbstractDriver implements DriverInterface
+abstract class AbstractDriver implements HydratorAwareInterface
 {
-    /**
-     * @var string
-     */
-    protected static $name = '';
+    use OptionsResolverTrait;
 
     /**
      * @var string
      */
-    protected $platformName = '';
+    protected static string $name = '';
 
     /**
-     * @var AbstractPlatform
+     * @var string
      */
-    protected $platform;
-
-    /**
-     * @var AbstractSchemaManager
-     */
-    protected $schema;
-
-    /**
-     * @var DatabaseAdapter
-     */
-    protected $db;
-
-    /**
-     * @var ConnectionInterface
-     */
-    protected $connection;
+    protected string $platformName = '';
 
     /**
      * @var Query|string
      */
-    protected $lastQuery;
+    protected mixed $lastQuery = null;
+
+    /**
+     * @var ?AbstractSchemaManager
+     */
+    protected ?AbstractSchemaManager $schema = null;
+
+    protected ?PoolInterface $pool = null;
+
+    protected ?HydratorInterface $hydrator = null;
 
     /**
      * AbstractPlatform constructor.
      *
-     * @param  DatabaseAdapter  $db
+     * @param  array               $options
+     * @param  PoolInterface|null  $pool
      */
-    public function __construct(DatabaseAdapter $db)
+    public function __construct(array $options, ?PoolInterface $pool = null)
     {
-        $this->db = $db;
+        $this->resolveOptions(
+            $options,
+            [$this, 'configureOptions']
+        );
+
+        $this->setPool($pool);
     }
 
-    /**
-     * @return DatabaseAdapter
-     */
-    public function getDb(): DatabaseAdapter
+    protected function configureOptions(OptionsResolver $resolver): void
     {
-        return $this->db;
+        $resolver->setDefaults(
+            [
+                'driver' => null,
+                'host' => 'localhost',
+                'unix_socket' => null,
+                'dbname' => null,
+                'user' => null,
+                'password' => null,
+                'port' => null,
+                'prefix' => null,
+                'charset' => null,
+                'collation' => null,
+                'platform' => null,
+                'dsn' => null,
+                'driverOptions' => [],
+                'strict' => true,
+                'modes' => [
+                    'ONLY_FULL_GROUP_BY',
+                    'STRICT_TRANS_TABLES',
+                    'ERROR_FOR_DIVISION_BY_ZERO',
+                    'NO_ENGINE_SUBSTITUTION',
+                    'NO_ZERO_IN_DATE',
+                    'NO_ZERO_DATE',
+                ]
+            ]
+        )
+            ->setRequired(
+                [
+                    'driver',
+                    'host',
+                    'user',
+                ]
+            );
+        // ->setAllowedTypes('driver', 'string');
     }
 
     protected function handleQuery($query, ?array &$bounded = [], $emulated = false): string
@@ -82,7 +118,7 @@ abstract class AbstractDriver implements DriverInterface
         $this->lastQuery = $query;
 
         if ($query instanceof Query) {
-            return $query->render($emulated, $bounded);
+            return $this->replacePrefix($query->render($emulated, $bounded));
         }
 
         $bounded = $bounded ?? [];
@@ -91,48 +127,81 @@ abstract class AbstractDriver implements DriverInterface
     }
 
     /**
-     * connect
+     * Get a connection, must release manually.
      *
      * @return  ConnectionInterface
      */
-    public function connect(): ConnectionInterface
+    public function getConnection(): ConnectionInterface
     {
-        $conn = $this->getConnection();
+        $conn = $this->getConnectionFromPool();
 
         if ($conn->isConnected()) {
             return $conn;
         }
 
-        $conn->connect();
+        try {
+            $conn->connect();
+        } finally {
+            $conn->release();
+        }
 
         return $conn;
+    }
+
+    public function useConnection(callable $callback): mixed
+    {
+        $conn = $this->getConnection();
+
+        try {
+            $result = $callback($conn);
+        } finally {
+            $conn->release();
+        }
+
+        return $result;
     }
 
     /**
      * disconnect
      *
-     * @return  mixed
+     * @return  int
      */
-    public function disconnect()
+    public function disconnectAll(): int
     {
-        return $this->getConnection()->disconnect();
+        return $this->getPool()->close();
     }
 
-    abstract protected function doPrepare(string $query, array $bounded = [], array $options = []): StatementInterface;
+    /**
+     * createStatement
+     *
+     * @param  string  $query
+     * @param  array   $bounded
+     * @param  array   $options
+     *
+     * @return  StatementInterface
+     */
+    abstract protected function createStatement(
+        string $query,
+        array $bounded = [],
+        array $options = []
+    ): StatementInterface;
 
     /**
      * @inheritDoc
      */
-    public function prepare($query, array $options = []): StatementInterface
+    public function prepare(mixed $query, array $options = []): StatementInterface
     {
         // Convert query to string and get merged bounded
         $sql = $this->handleQuery($query, $bounded);
 
         // Prepare actions by driver
-        $stmt = $this->doPrepare($sql, $bounded, $options);
+        $stmt = $this->createStatement($sql, $bounded, $options);
 
-        // Make DatabaseAdapter listen to statement events
-        $stmt->addDispatcherDealer($this->db->getDispatcher());
+        if ($query instanceof EventAwareInterface) {
+            $stmt->addDispatcherDealer($query->getEventDispatcher());
+        } elseif ($query instanceof EventDispatcherInterface) {
+            $stmt->addDispatcherDealer($query);
+        }
 
         // Register monitor events
         $stmt->on(
@@ -178,7 +247,7 @@ abstract class AbstractDriver implements DriverInterface
     /**
      * @inheritDoc
      */
-    public function execute($query, ?array $params = null): StatementInterface
+    public function execute(mixed $query, ?array $params = null): StatementInterface
     {
         return $this->prepare($query)->execute($params);
     }
@@ -190,14 +259,14 @@ abstract class AbstractDriver implements DriverInterface
      *
      * @see     https://stackoverflow.com/a/31745275
      *
-     * @param   string $sql    The SQL statement to prepare.
-     * @param   string $prefix The common table prefix.
+     * @param  string  $sql     The SQL statement to prepare.
+     * @param  string  $prefix  The common table prefix.
      *
      * @return  string  The processed SQL statement.
      */
     public function replacePrefix(string $sql, string $prefix = '#__'): string
     {
-        if ($prefix === '' || strpos($sql, $prefix) === false) {
+        if ($prefix === '' || !str_contains($sql, $prefix)) {
             return $sql;
         }
 
@@ -207,12 +276,12 @@ abstract class AbstractDriver implements DriverInterface
             for ($i = 0; $i < $number; $i++) {
                 if (!empty($matches[0][$i])) {
                     $array[$i] = trim($matches[0][$i]);
-                    $sql       = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
+                    $sql = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
                 }
             }
         }
 
-        $sql = str_replace($prefix, $this->db->getOption('prefix'), $sql);
+        $sql = str_replace($prefix, $this->getOption('prefix'), $sql);
 
         foreach ($array as $key => $js) {
             $sql = str_replace('<#encode:' . $key . ':code#>', $js, $sql);
@@ -229,21 +298,12 @@ abstract class AbstractDriver implements DriverInterface
         return $this->platformName;
     }
 
-    public function getPlatform(): AbstractPlatform
-    {
-        if (!$this->platform) {
-            $this->platform = AbstractPlatform::create($this->platformName, $this->db);
-        }
-
-        return $this->platform;
-    }
-
     /**
      * @param  string  $platformName
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPlatformName(string $platformName)
+    public function setPlatformName(string $platformName): static
     {
         $this->platformName = $platformName;
 
@@ -253,22 +313,22 @@ abstract class AbstractDriver implements DriverInterface
     /**
      * @return ConnectionInterface
      */
-    public function getConnection(): ConnectionInterface
+    public function getConnectionFromPool(): ConnectionInterface
     {
-        if (!$this->connection) {
-            $this->connection = $this->createConnection();
-        }
+        /** @var ConnectionInterface $connection */
+        $connection = $this->getPool()->getConnection();
 
-        return $this->connection;
+        return $connection;
     }
 
     public function createConnection(): ConnectionInterface
     {
         $class = $this->getConnectionClass();
 
-        return new $class($this->db->getOptions());
+        return new $class($this->getOptions());
     }
 
+    #[Pure]
     protected function getConnectionClass(): string
     {
         $class = __NAMESPACE__ . '\%s\%sConnection';
@@ -280,18 +340,6 @@ abstract class AbstractDriver implements DriverInterface
         );
     }
 
-    /**
-     * @param  ConnectionInterface  $connection
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setConnection(ConnectionInterface $connection)
-    {
-        $this->connection = $connection;
-
-        return $this;
-    }
-
     public function isSupported(): bool
     {
         return $this->getConnectionClass()::isSupported();
@@ -299,6 +347,80 @@ abstract class AbstractDriver implements DriverInterface
 
     public function __destruct()
     {
-        $this->disconnect();
+        $this->disconnectAll();
     }
+
+    /**
+     * @param  PoolInterface|null  $pool
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setPool(?PoolInterface $pool): static
+    {
+        $this->pool = $this->preparePool($pool);
+
+        return $this;
+    }
+
+    protected function preparePool(?PoolInterface $pool): ConnectionPool
+    {
+        if (!$pool) {
+            $options = $this->getOptions();
+
+            $pool = (new DatabaseFactory())
+                ->createConnectionPool($options['pool'] ?? []);
+        }
+
+        $pool->setConnectionBuilder(
+            function () {
+                return $this->createConnection();
+            }
+        );
+        $pool->init();
+
+        return $pool;
+    }
+
+    /**
+     * @return PoolInterface
+     */
+    public function getPool(): PoolInterface
+    {
+        return $this->pool ??= $this->preparePool(null);
+    }
+
+    public function getHydrator(): HydratorInterface
+    {
+        return $this->hydrator ??= new SimpleHydrator();
+    }
+
+    /**
+     * @param  HydratorInterface|null  $hydrator
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setHydrator(?HydratorInterface $hydrator): static
+    {
+        $this->hydrator = $hydrator;
+
+        return $this;
+    }
+
+    /**
+     * Quote and escape a value.
+     *
+     * @param  string  $value
+     *
+     * @return  string
+     */
+    abstract public function quote(string $value): string;
+
+    /**
+     * Escape a value.
+     *
+     * @param  string  $value
+     *
+     * @return  string
+     */
+    abstract public function escape(string $value): string;
 }

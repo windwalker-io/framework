@@ -47,11 +47,11 @@ class FormTest extends TestCase
     /**
      * getByDefine
      *
-     * @param string  $ns
+     * @param  string  $ns
      *
      * @return  Form
      */
-    protected function getByDefine($ns = '')
+    protected function getByDefine($ns = ''): Form
     {
         $form = new Form($ns);
 
@@ -256,12 +256,48 @@ class FormTest extends TestCase
     }
 
     /**
-     * Method to test bind().
+     * Method to test fill().
      *
      * @return void
      *
-     * @covers \Windwalker\Form\Form::bind
+     * @covers \Windwalker\Form\Form::fill
      */
+    public function testFill()
+    {
+        $data = [
+            'id' => 5,
+            'u' => [
+                'username' => 'foo',
+            ],
+        ];
+
+        $form = $this->getByDefine();
+
+        $fields = iterator_to_array($form->fill($data)->getFields());
+
+        self::assertEquals(5, $fields['id']->getValue());
+        self::assertEquals('foo', $fields['u/username']->getValue());
+    }
+
+    public function testFillCollection()
+    {
+        $data = \Windwalker\collect(
+            [
+                'id' => 5,
+                'u' => [
+                    'username' => 'foo',
+                ],
+            ]
+        );
+
+        $form = $this->getByDefine();
+
+        $fields = iterator_to_array($form->fill($data)->getFields());
+
+        self::assertEquals(5, $fields['id']->getValue());
+        self::assertEquals('foo', $fields['u/username']->getValue());
+    }
+
     public function testBind()
     {
         $data = [
@@ -275,8 +311,11 @@ class FormTest extends TestCase
 
         $fields = iterator_to_array($form->bind($data)->getFields());
 
-        self::assertEquals(5, $fields['id']->getValue());
-        self::assertEquals('foo', $fields['u/username']->getValue());
+        $data['id'] = 6;
+        $data['u']['username'] = 'bar';
+
+        self::assertEquals(6, $fields['id']->getValue());
+        self::assertEquals('bar', $fields['u/username']->getValue());
     }
 
     /**

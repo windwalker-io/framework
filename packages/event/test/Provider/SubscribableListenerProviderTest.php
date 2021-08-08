@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Test\Provider;
 
+use Closure;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Event\Attributes\EventSubscriber;
+use Windwalker\Event\Attributes\ListenTo;
 use Windwalker\Event\EventInterface;
-use Windwalker\Event\EventSubscriberInterface;
 use Windwalker\Event\Listener\ListenerCallable;
 use Windwalker\Event\Listener\ListenersQueue;
 use Windwalker\Event\Provider\SubscribableListenerProvider;
@@ -37,61 +40,57 @@ class SubscribableListenerProviderTest extends TestCase
      */
     public function testSubscribe(): void
     {
-        $subscriber = new class implements EventSubscriberInterface {
-            /**
-             * @inheritDoc
-             */
-            public function getSubscribedEvents(): array
-            {
-                return [
-                    'flower.sakura' => 'onFlowerSakura',
-                    'flower.rose' => ['onFlowerRose', 50],
-                    'flower.olive' => [
-                        ['onFlowerRose', 30],
-                        ['onFlowerOlive', 100],
-                    ],
-                ];
-            }
-
-            public function onFlowerSakura($event)
-            {
+        // phpcs:disable
+        $subscriber = new
+        #[EventSubscriber]
+        // phpcs:enable
+        class {
+            #[ListenTo('flower.sakura')]
+            public function onFlowerSakura(
+                $event
+            ) {
                 $event->foo(2);
             }
 
-            public function onFlowerRose($event)
-            {
+            #[ListenTo('flower.olive', 30)]
+            #[ListenTo('flower.rose', 50)]
+            public function onFlowerRose(
+                $event
+            ) {
                 $event->foo(3);
             }
 
-            public function onFlowerOlive($event)
-            {
+            #[ListenTo('flower.olive', 30)]
+            public function onFlowerOlive(
+                $event
+            ) {
                 $event->foo(1);
             }
         };
 
         $this->instance->subscribe($subscriber);
 
-        $event = \Mockery::mock(EventInterface::class);
+        $event = Mockery::mock(EventInterface::class);
         $event->shouldReceive('getName')->andReturn('flower.sakura')->getMock();
         $event->shouldReceive('foo')->with(2)->getMock();
 
         TypeCast::toArray($this->instance->getListenersForEvent($event))[0]($event);
 
-        $event = \Mockery::mock(EventInterface::class);
+        $event = Mockery::mock(EventInterface::class);
         $event->shouldReceive('getName')->andReturn('flower.rose')->getMock();
         $event->shouldReceive('foo')->with(3)->getMock();
 
         TypeCast::toArray($this->instance->getListenersForEvent($event))[0]($event);
 
-        $event = \Mockery::mock(EventInterface::class);
+        $event = Mockery::mock(EventInterface::class);
         $event->shouldReceive('getName')->andReturn('flower.olive')->getMock();
 
         /** @var ListenerCallable[] $listeners */
         $listeners = array_values(TypeCast::toArray($this->instance->getListenersForEvent($event)));
 
         self::assertSame($subscriber, $listeners[0][0]);
-        self::assertEquals('onFlowerOlive', $listeners[0][1]);
-        self::assertEquals('onFlowerRose', $listeners[1][1]);
+        self::assertEquals('onFlowerRose', $listeners[0][1]);
+        self::assertEquals('onFlowerOlive', $listeners[1][1]);
     }
 
     /**
@@ -100,7 +99,7 @@ class SubscribableListenerProviderTest extends TestCase
      */
     public function testGetListenersForEvent(): void
     {
-        $event = \Mockery::mock(EventInterface::class);
+        $event = Mockery::mock(EventInterface::class);
         $event->shouldReceive('getName')->andReturn('HelloEvent');
         $event->shouldReceive('hello');
 
@@ -145,7 +144,7 @@ class SubscribableListenerProviderTest extends TestCase
         //
     }
 
-    protected function nope()
+    protected function nope(): Closure
     {
         return function () {
             //

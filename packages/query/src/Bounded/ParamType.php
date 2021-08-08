@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Bounded;
 
-use Windwalker\Query\Clause\ValueClause;
+use PDO;
 use Windwalker\Utilities\TypeCast;
-use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The ParamType class.
@@ -21,19 +20,24 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 class ParamType
 {
     public const STRING = 'string';
+
     public const INT = 'int';
+
     public const FLOAT = 'float';
+
     public const BLOB = 'blob';
+
     public const BOOL = 'bool';
+
     public const NULL = 'null';
 
     private const PDO_MAPS = [
-        self::STRING => \PDO::PARAM_STR,
-        self::INT => \PDO::PARAM_INT,
-        self::FLOAT => \PDO::PARAM_STR,
-        self::BLOB => \PDO::PARAM_LOB,
-        self::BOOL => \PDO::PARAM_BOOL,
-        self::NULL => \PDO::PARAM_NULL,
+        self::STRING => PDO::PARAM_STR,
+        self::INT => PDO::PARAM_INT,
+        self::FLOAT => PDO::PARAM_STR,
+        self::BLOB => PDO::PARAM_LOB,
+        self::BOOL => PDO::PARAM_BOOL,
+        self::NULL => PDO::PARAM_NULL,
     ];
 
     private const MYSQLI_MAPS = [
@@ -48,11 +52,11 @@ class ParamType
     /**
      * convertToPDO
      *
-     * @param  string  $type
+     * @param  string|null  $type
      *
-     * @return  mixed|string
+     * @return mixed
      */
-    public static function convertToPDO(string $type)
+    public static function convertToPDO(?string $type): mixed
     {
         return static::PDO_MAPS[$type] ?? $type;
     }
@@ -64,7 +68,7 @@ class ParamType
      *
      * @return  mixed|string
      */
-    public static function convertToMysqli(string $type)
+    public static function convertToMysqli(string $type): mixed
     {
         return static::MYSQLI_MAPS[$type] ?? $type;
     }
@@ -72,16 +76,16 @@ class ParamType
     /**
      * guessType
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return  string
      */
-    public static function guessType($value): string
+    public static function guessType(mixed $value): string
     {
         $dataType = static::STRING;
 
         if (is_numeric($value)) {
-            if (TypeCast::tryInteger($value, true) === null) {
+            if (TypeCast::tryInteger($value, true) !== null) {
                 $dataType = static::INT;
             } else {
                 $dataType = static::FLOAT;

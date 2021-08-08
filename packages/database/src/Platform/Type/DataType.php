@@ -153,7 +153,7 @@ class DataType
      *
      * @return mixed
      */
-    public static function getDefaultValue(string $type)
+    public static function getDefaultValue(string $type): mixed
     {
         return static::getDefinition($type, 1);
     }
@@ -206,7 +206,7 @@ class DataType
     /**
      * parseTypeName
      *
-     * @param string $type
+     * @param  string  $type
      *
      * @return  string
      *

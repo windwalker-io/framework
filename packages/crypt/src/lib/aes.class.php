@@ -9,7 +9,7 @@
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-// @codingStandardsIgnoreStart
+// phpcs:disable
 
 class Aes
 {
@@ -22,7 +22,7 @@ class Aes
      *
      * @return      ciphertext as byte-array (16 bytes)
      */
-    public static function cipher($input, $w)
+    public static function cipher($input, $w): array|ciphertext
     {    // main cipher function [§5.1]
         $Nb = 4;                 // block size (in words): no of columns in state (fixed at 4 for AES)
         $Nr = count($w) / $Nb - 1; // no of rounds: 10/12/14 for 128/192/256-bit keys
@@ -118,17 +118,17 @@ class Aes
      *
      * @return    key schedule as 2D byte-array (Nr+1 x Nb bytes)
      */
-    public static function keyExpansion($key)
+    public static function keyExpansion($key): key|array
     {  // generate Index Schedule from Cipher Index [§5.2]
         $Nb = 4;              // block size (in words): no of columns in state (fixed at 4 for AES)
         $Nk = count($key) / 4;  // key length (in words): 4/6/8 for 128/192/256-bit keys
         $Nr = $Nk + 6;        // no of rounds: 10/12/14 for 128/192/256-bit keys
 
-        $w    = [];
+        $w = [];
         $temp = [];
 
         for ($i = 0; $i < $Nk; $i++) {
-            $r     = [$key[4 * $i], $key[4 * $i + 1], $key[4 * $i + 2], $key[4 * $i + 3]];
+            $r = [$key[4 * $i], $key[4 * $i + 1], $key[4 * $i + 2], $key[4 * $i + 3]];
             $w[$i] = $r;
         }
 
@@ -475,7 +475,7 @@ class AesCtr extends Aes
      *
      * @return          encrypted text
      */
-    public static function encrypt($plaintext, $password, $nBits)
+    public static function encrypt($plaintext, $password, $nBits): encrypted|string
     {
         $blockSize = 16;  // block size fixed at 16 bytes / 128 bits (Nb=4) for AES
         if (!($nBits == 128 || $nBits == 192 || $nBits == 256)) {
@@ -485,7 +485,7 @@ class AesCtr extends Aes
 
         // use AES itself to encrypt password to get cipher key (using plain password as source for
         // key expansion) - gives us well encrypted key
-        $nBytes  = $nBits / 8;  // no bytes in key
+        $nBytes = $nBits / 8;  // no bytes in key
         $pwBytes = [];
         for ($i = 0; $i < $nBytes; $i++) {
             $pwBytes[$i] = ord((string) substr($password, $i, 1)) & 0xff;
@@ -496,10 +496,10 @@ class AesCtr extends Aes
         // initialise 1st 8 bytes of counter block with nonce (NIST SP800-38A §B.2): [0-1] = millisec,
         // [2-3] = random, [4-7] = seconds, giving guaranteed sub-ms uniqueness up to Feb 2106
         $counterBlock = [];
-        $nonce        = floor(microtime(true) * 1000);   // timestamp: milliseconds since 1-Jan-1970
-        $nonceMs      = $nonce % 1000;
-        $nonceSec     = floor($nonce / 1000);
-        $nonceRnd     = floor(mt_rand(0, 0xffff));
+        $nonce = floor(microtime(true) * 1000);   // timestamp: milliseconds since 1-Jan-1970
+        $nonceMs = $nonce % 1000;
+        $nonceSec = floor($nonce / 1000);
+        $nonceRnd = floor(mt_rand(0, 0xffff));
 
         for ($i = 0; $i < 2; $i++) {
             $counterBlock[$i] = self::urs($nonceMs, $i * 8) & 0xff;
@@ -522,7 +522,7 @@ class AesCtr extends Aes
         //print_r($keySchedule);
 
         $blockCount = ceil(strlen($plaintext) / $blockSize);
-        $ciphertxt  = [];  // ciphertext as array of strings
+        $ciphertxt = [];  // ciphertext as array of strings
 
         for ($b = 0; $b < $blockCount; $b++) {
             // set counter (block #) in last 8 bytes of counter block (leaving nonce in 1st 8 bytes)
@@ -538,7 +538,7 @@ class AesCtr extends Aes
 
             // block size is reduced on final block
             $blockLength = $b < $blockCount - 1 ? $blockSize : (strlen($plaintext) - 1) % $blockSize + 1;
-            $cipherByte  = [];
+            $cipherByte = [];
 
             for ($i = 0; $i < $blockLength; $i++) {  // -- xor plaintext with ciphered counter byte-by-byte --
                 $cipherByte[$i] = $cipherCntr[$i] ^ ord(substr($plaintext, $b * $blockSize + $i, 1));
@@ -563,7 +563,7 @@ class AesCtr extends Aes
      *
      * @return           decrypted text
      */
-    public static function decrypt($ciphertext, $password, $nBits)
+    public static function decrypt($ciphertext, $password, $nBits): decrypted|string
     {
         $blockSize = 16;  // block size fixed at 16 bytes / 128 bits (Nb=4) for AES
         if (!($nBits == 128 || $nBits == 192 || $nBits == 256)) {
@@ -572,7 +572,7 @@ class AesCtr extends Aes
         $ciphertext = base64_decode($ciphertext);
 
         // use AES to encrypt password (mirroring encrypt routine)
-        $nBytes  = $nBits / 8;  // no bytes in key
+        $nBytes = $nBits / 8;  // no bytes in key
         $pwBytes = [];
         for ($i = 0; $i < $nBytes; $i++) {
             $pwBytes[$i] = ord((string) substr($password, $i, 1)) & 0xff;
@@ -582,7 +582,7 @@ class AesCtr extends Aes
 
         // recover nonce from 1st element of ciphertext
         $counterBlock = [];
-        $ctrTxt       = substr($ciphertext, 0, 8);
+        $ctrTxt = substr($ciphertext, 0, 8);
         for ($i = 0; $i < 8; $i++) {
             $counterBlock[$i] = ord(substr($ctrTxt, $i, 1));
         }
@@ -592,7 +592,7 @@ class AesCtr extends Aes
 
         // separate ciphertext into blocks (skipping past initial 8 bytes)
         $nBlocks = ceil((strlen($ciphertext) - 8) / $blockSize);
-        $ct      = [];
+        $ct = [];
         for ($b = 0; $b < $nBlocks; $b++) {
             $ct[$b] = substr($ciphertext, 8 + $b * $blockSize, 16);
         }
@@ -634,7 +634,7 @@ class AesCtr extends Aes
      * @param b  number of bits to shift a to the right (0..31)
      * @return   a right-shifted and zero-filled by b bits
      */
-    private static function urs($a, $b)
+    private static function urs($a, $b): int
     {
         $a &= 0xffffffff;
         $b &= 0x1f;  // (bounds check)
@@ -650,4 +650,4 @@ class AesCtr extends Aes
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-// @codingStandardsIgnoreEnd
+// phpcs:enable

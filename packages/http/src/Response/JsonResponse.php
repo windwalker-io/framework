@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Response;
 
+use InvalidArgumentException;
+use JsonException;
+use Psr\Http\Message\StreamInterface;
+
 /**
  * The HtmlResponse class.
  *
@@ -23,17 +27,17 @@ class JsonResponse extends TextResponse
      *
      * @var  string
      */
-    protected $type = 'application/json';
+    protected string $type = 'application/json';
 
     /**
      * Constructor.
      *
-     * @param  string $json    The JSON body data.
-     * @param  int    $status  The status code.
-     * @param  array  $headers The custom headers.
-     * @param  int    $options Json encode options.
+     * @param  string  $json     The JSON body data.
+     * @param  int     $status   The status code.
+     * @param  array   $headers  The custom headers.
+     * @param  int     $options  Json encode options.
      */
-    public function __construct($json = '', $status = 200, array $headers = [], $options = 0)
+    public function __construct($json = '', $status = 200, array $headers = [], int $options = 0)
     {
         parent::__construct(
             $this->encode($json, $options),
@@ -45,15 +49,20 @@ class JsonResponse extends TextResponse
     /**
      * Encode json.
      *
-     * @param   mixed $data    The dat to convert.
-     * @param   int   $options The json_encode() options flag.
+     * @param  mixed  $data     The data to convert.
+     * @param  int    $options  The json_encode() options flag.
      *
-     * @return  string  Encoded json.
+     * @return  mixed  Encoded json.
+     * @throws JsonException
      */
-    protected function encode($data, $options = 0)
+    protected function encode(mixed $data, int $options = 0): mixed
     {
+        if ($data instanceof StreamInterface || is_resource($data)) {
+            return $data;
+        }
+
         // Check is already json string.
-        if (is_string($data) && strlen($data) >= 1) {
+        if (is_string($data) && $data !== '') {
             $firstChar = $data[0];
 
             if (in_array($firstChar, ['[', '{', '"'])) {
@@ -61,27 +70,18 @@ class JsonResponse extends TextResponse
             }
         }
 
-        // Clear json_last_error()
-        json_encode(null);
-
-        $json = json_encode($data, $options);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \UnexpectedValueException(sprintf('JSON encode failure: %s', json_last_error_msg()));
-        }
-
-        return $json;
+        return json_encode($data, JSON_THROW_ON_ERROR | $options);
     }
 
     /**
      * withContent
      *
-     * @param   mixed $content
+     * @param  mixed  $content
      *
      * @return  static
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function withContent($content)
+    public function withContent(string $content): static
     {
         return parent::withContent($this->encode($content));
     }

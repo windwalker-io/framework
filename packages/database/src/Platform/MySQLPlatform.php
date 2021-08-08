@@ -20,11 +20,10 @@ use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\AlterClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Escaper;
-use Windwalker\Query\Mysql\MysqlGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Str;
 
-use function Windwalker\arr;
+use function Windwalker\collect;
 use function Windwalker\raw;
 
 /**
@@ -60,7 +59,7 @@ class MySQLPlatform extends AbstractPlatform
                     'TABLE_TYPE',
                     raw('NULL AS VIEW_DEFINITION'),
                     raw('NULL AS CHECK_OPTION'),
-                    raw('NULL AS IS_UPDATABLE')
+                    raw('NULL AS IS_UPDATABLE'),
                 ]
             )
             ->from('INFORMATION_SCHEMA.TABLES')
@@ -78,15 +77,15 @@ class MySQLPlatform extends AbstractPlatform
     public function listViewsQuery(?string $schema): Query
     {
         $query = $this->db->select(
-                [
-                    'TABLE_NAME',
-                    'TABLE_SCHEMA',
-                    raw('\'VIEW\' AS TABLE_TYPE'),
-                    'VIEW_DEFINITION',
-                    'CHECK_OPTION',
-                    'IS_UPDATABLE'
-                ]
-            )
+            [
+                'TABLE_NAME',
+                'TABLE_SCHEMA',
+                raw('\'VIEW\' AS TABLE_TYPE'),
+                'VIEW_DEFINITION',
+                'CHECK_OPTION',
+                'IS_UPDATABLE',
+            ]
+        )
             ->from('INFORMATION_SCHEMA.VIEWS');
 
         if ($schema !== null) {
@@ -101,21 +100,23 @@ class MySQLPlatform extends AbstractPlatform
     public function listColumnsQuery(string $table, ?string $schema): Query
     {
         $query = $this->db->select(
-                [
-                    'ORDINAL_POSITION',
-                    'COLUMN_DEFAULT',
-                    'IS_NULLABLE',
-                    'DATA_TYPE',
-                    'CHARACTER_MAXIMUM_LENGTH',
-                    'CHARACTER_OCTET_LENGTH',
-                    'NUMERIC_PRECISION',
-                    'NUMERIC_SCALE',
-                    'COLUMN_NAME',
-                    'COLUMN_TYPE',
-                    'COLUMN_COMMENT',
-                    'EXTRA',
-                ]
-            )
+            [
+                'ORDINAL_POSITION',
+                'COLUMN_DEFAULT',
+                'IS_NULLABLE',
+                'DATA_TYPE',
+                'CHARACTER_MAXIMUM_LENGTH',
+                'CHARACTER_OCTET_LENGTH',
+                'CHARACTER_SET_NAME',
+                'COLLATION_NAME',
+                'NUMERIC_PRECISION',
+                'NUMERIC_SCALE',
+                'COLUMN_NAME',
+                'COLUMN_TYPE',
+                'COLUMN_COMMENT',
+                'EXTRA',
+            ]
+        )
             ->from('INFORMATION_SCHEMA.COLUMNS')
             ->where('TABLE_NAME', $this->db->replacePrefix($table));
 
@@ -131,18 +132,18 @@ class MySQLPlatform extends AbstractPlatform
     public function listIndexesQuery(string $table, ?string $schema): Query
     {
         $query = $this->db->select(
-                [
-                    'TABLE_SCHEMA',
-                    'TABLE_NAME',
-                    'NON_UNIQUE',
-                    'INDEX_NAME',
-                    'COLUMN_NAME',
-                    'COLLATION',
-                    'CARDINALITY',
-                    'SUB_PART',
-                    'INDEX_COMMENT',
-                ]
-            )
+            [
+                'TABLE_SCHEMA',
+                'TABLE_NAME',
+                'NON_UNIQUE',
+                'INDEX_NAME',
+                'COLUMN_NAME',
+                'COLLATION',
+                'CARDINALITY',
+                'SUB_PART',
+                'INDEX_COMMENT',
+            ]
+        )
             ->from('INFORMATION_SCHEMA.STATISTICS')
             ->where('TABLE_NAME', $this->db->replacePrefix($table));
 
@@ -158,12 +159,12 @@ class MySQLPlatform extends AbstractPlatform
     public function listConstraintsQuery(string $table, ?string $schema): Query
     {
         return $this->db->select(
-                [
-                    'TABLE_NAME',
-                    'CONSTRAINT_NAME',
-                    'CONSTRAINT_TYPE',
-                ]
-            )
+            [
+                'TABLE_NAME',
+                'CONSTRAINT_NAME',
+                'CONSTRAINT_TYPE',
+            ]
+        )
             ->from('INFORMATION_SCHEMA.TABLE_CONSTRAINTS')
             ->where('TABLE_NAME', $this->db->replacePrefix($table))
             ->tap(
@@ -183,6 +184,8 @@ class MySQLPlatform extends AbstractPlatform
     public function listColumns(string $table, ?string $schema = null): array
     {
         $columns = [];
+
+        $checks = $this->isMariaDB() ? $this->listCheckConstraints($schema, $table) : collect();
 
         foreach ($this->loadColumnsStatement($table, $schema) as $row) {
             $erratas = [];
@@ -213,6 +216,13 @@ class MySQLPlatform extends AbstractPlatform
                 $erratas['on_update'] = 'current_timestamp()';
             }
 
+            // Is JSON
+            if ($this->isMariaDB()) {
+                $erratas['is_json'] = str_contains($checks[$table] ?? '', 'json_valid');
+            } else {
+                $erratas['is_json'] = strtolower($row['DATA_TYPE']) === 'json';
+            }
+
             // After MariaDB 10.2.7, the COLUMN_DEFAULT will surround with quotes if is string type.
             // @see https://mariadb.com/kb/en/information-schema-columns-table/
             if (
@@ -231,6 +241,8 @@ class MySQLPlatform extends AbstractPlatform
                 'data_type' => $row['DATA_TYPE'],
                 'character_maximum_length' => $row['CHARACTER_MAXIMUM_LENGTH'],
                 'character_octet_length' => $row['CHARACTER_OCTET_LENGTH'],
+                'character_set_name' => $row['CHARACTER_SET_NAME'],
+                'collation_name' => $row['COLLATION_NAME'],
                 'numeric_precision' => $row['NUMERIC_PRECISION'],
                 'numeric_scale' => $row['NUMERIC_SCALE'],
                 'numeric_unsigned' => str_contains($row['COLUMN_TYPE'], 'unsigned'),
@@ -241,6 +253,17 @@ class MySQLPlatform extends AbstractPlatform
         }
 
         return $columns;
+    }
+
+    public function listCheckConstraints(?string $schema, string $table): Collection
+    {
+        return $this->db->createQuery()
+            ->select()
+            ->from('information_schema.CHECK_CONSTRAINTS')
+            ->where('CONSTRAINT_SCHEMA', $schema ?? raw('DATABASE()'))
+            ->where('TABLE_NAME', $table)
+            ->all()
+            ->mapWithKeys(fn (Collection $item) => [$item->CONSTRAINT_NAME => $item->CHECK_CLAUSE]);
     }
 
     /**
@@ -307,15 +330,15 @@ class MySQLPlatform extends AbstractPlatform
 
         $rcItems = $this->db->prepare($query)->all()->keyBy('CONSTRAINT_NAME');
 
-        $realName    = null;
+        $realName = null;
         $constraints = [];
 
         foreach ($constraintItems as $name => $row) {
             $kcuItems = $kcuGroup[$name] ?? new Collection();
-            $rcItem   = $rcItems[$name] ?? new Collection();
+            $rcItem = $rcItems[$name] ?? new Collection();
 
             $realName = $row['CONSTRAINT_NAME'];
-            $isFK     = ('FOREIGN KEY' === $row['CONSTRAINT_TYPE']);
+            $isFK = ('FOREIGN KEY' === $row['CONSTRAINT_TYPE']);
 
             if ($isFK || $schema !== null) {
                 $name = $realName;
@@ -332,11 +355,11 @@ class MySQLPlatform extends AbstractPlatform
 
             if ($isFK) {
                 $constraints[$name]['referenced_table_schema'] = $kcuItems[0]['REFERENCED_TABLE_SCHEMA'];
-                $constraints[$name]['referenced_table_name']   = $kcuItems[0]['REFERENCED_TABLE_NAME'];
-                $constraints[$name]['referenced_columns']      = [];
-                $constraints[$name]['match_option']            = $rcItem['MATCH_OPTION'];
-                $constraints[$name]['update_rule']             = $rcItem['UPDATE_RULE'];
-                $constraints[$name]['delete_rule']             = $rcItem['DELETE_RULE'];
+                $constraints[$name]['referenced_table_name'] = $kcuItems[0]['REFERENCED_TABLE_NAME'];
+                $constraints[$name]['referenced_columns'] = [];
+                $constraints[$name]['match_option'] = $rcItem['MATCH_OPTION'];
+                $constraints[$name]['update_rule'] = $rcItem['UPDATE_RULE'];
+                $constraints[$name]['delete_rule'] = $rcItem['DELETE_RULE'];
             }
 
             foreach ($kcuItems as $kcuItem) {
@@ -364,17 +387,17 @@ class MySQLPlatform extends AbstractPlatform
 
         foreach ($indexGroup as $keys) {
             $index = [];
-            $name  = $keys[0]['INDEX_NAME'];
+            $name = $keys[0]['INDEX_NAME'];
 
             if ($schema === null) {
                 $name = $keys[0]['TABLE_NAME'] . '_' . $name;
             }
 
-            $index['table_schema']  = $keys[0]['TABLE_SCHEMA'];
-            $index['table_name']    = $keys[0]['TABLE_NAME'];
-            $index['is_unique']     = (string) $keys[0]['NON_UNIQUE'] === '0';
-            $index['is_primary']    = $keys[0]['INDEX_NAME'] === 'PRIMARY';
-            $index['index_name']    = $keys[0]['INDEX_NAME'];
+            $index['table_schema'] = $keys[0]['TABLE_SCHEMA'];
+            $index['table_name'] = $keys[0]['TABLE_NAME'];
+            $index['is_unique'] = (string) $keys[0]['NON_UNIQUE'] === '0';
+            $index['is_primary'] = $keys[0]['INDEX_NAME'] === 'PRIMARY';
+            $index['index_name'] = $keys[0]['INDEX_NAME'];
             $index['index_comment'] = $keys[0]['INDEX_COMMENT'];
 
             $index['columns'] = [];
@@ -413,12 +436,12 @@ class MySQLPlatform extends AbstractPlatform
             'auto_increment' => 1,
             'engine' => 'InnoDB',
             'charset' => 'utf8mb4',
-            'collate' => 'utf8mb4_unicode_ci'
+            'collate' => 'utf8mb4_unicode_ci',
         ];
 
         $options = array_merge($defaultOptions, $options);
         $columns = [];
-        $table   = $schema->getTable();
+        $table = $schema->getTable();
         $tableName = $this->db->quoteName($table->schemaName . '.' . $table->getName());
         $primaries = [];
 
@@ -429,12 +452,30 @@ class MySQLPlatform extends AbstractPlatform
                 $primaries[] = $column;
 
                 // Add AI later after table created.
-                $column = clone $column;
-                $column->autoIncrement(false);
+                // $column = clone $column;
+                // $column->autoIncrement(false);
             }
 
             $columns[$column->getColumnName()] = $this->getColumnExpression($column)
                 ->setName($this->db->quoteName($column->getColumnName()));
+        }
+
+        if ($primaries) {
+            $columns[] = sprintf(
+                'PRIMARY KEY (%s)',
+                implode(',', array_map(fn($col) => $this->getKeyColumnExpression($col), $primaries))
+            );
+        }
+
+        foreach ($schema->getIndexes() as $index) {
+            $columns[] = sprintf(
+                'INDEX %s (%s)',
+                $this->db->quoteName($index->indexName),
+                implode(
+                    ',',
+                    array_map(fn($col) => $this->getKeyColumnExpression($col), $index->getColumns())
+                )
+            );
         }
 
         $sql = $this->getGrammar()::build(
@@ -454,24 +495,24 @@ class MySQLPlatform extends AbstractPlatform
 
         $statement = $this->db->execute($sql);
 
-        if ($primaries) {
-            $this->addConstraint(
-                $table->getName(),
-                (new Constraint(Constraint::TYPE_PRIMARY_KEY, 'pk_' . $table->getName(), $table->getName()))
-                    ->columns($primaries),
-                $table->schemaName
-            );
-
-            foreach ($primaries as $column) {
-                if ($column->isAutoIncrement()) {
-                    $this->modifyColumn($table->getName(), $column, $table->schemaName);
-                }
-            }
-        }
-
-        foreach ($schema->getIndexes() as $index) {
-            $this->addIndex($table->getName(), $index, $table->schemaName);
-        }
+        // if ($primaries) {
+        //     $this->addConstraint(
+        //         $table->getName(),
+        //         (new Constraint(Constraint::TYPE_PRIMARY_KEY, 'pk_' . $table->getName(), $table->getName()))
+        //             ->columns($primaries),
+        //         $table->schemaName
+        //     );
+        //
+        //     foreach ($primaries as $column) {
+        //         if ($column->isAutoIncrement()) {
+        //             $this->modifyColumn($table->getName(), $column, $table->schemaName);
+        //         }
+        //     }
+        // }
+        //
+        // foreach ($schema->getIndexes() as $index) {
+        //     $this->addIndex($table->getName(), $index, $table->schemaName);
+        // }
 
         foreach ($schema->getConstraints() as $constraint) {
             $this->addConstraint($table->getName(), $constraint, $table->schemaName);
@@ -482,6 +523,12 @@ class MySQLPlatform extends AbstractPlatform
 
     public function getColumnExpression(Column $column): Clause
     {
+        $pos = $column->getOption('position') ?? [];
+
+        if ($pos[1] ?? null) {
+            $pos[1] = $this->db->quoteName($pos[1]);
+        }
+
         return $this->getGrammar()::build(
             $column->getTypeExpression(),
             $column->getNumericUnsigned() ? 'UNSIGNED' : '',
@@ -491,8 +538,11 @@ class MySQLPlatform extends AbstractPlatform
                 : '',
             $column->isAutoIncrement() ? 'AUTO_INCREMENT' : null,
             $column->getOption('on_update') ? 'ON UPDATE CURRENT_TIMESTAMP' : null,
+            // $column->getCharacterSetName() ? 'CHARACTER SET ' . $column->getCharacterSetName() : null,
+            $column->getCollationName() ? 'COLLATE ' . $column->getCollationName() : null,
             $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : '',
-            $column->getOption('suffix')
+            implode(' ', $pos),
+            $column->getOption('suffix'),
         );
     }
 
@@ -529,10 +579,12 @@ class MySQLPlatform extends AbstractPlatform
         return $this->db->execute(
             $this->db->createQuery()
                 ->alter('TABLE', $schema . '.' . $table)
-                ->tap(fn(AlterClause $alter) => $alter->addIndex(
-                    $index->indexName,
-                    $this->prepareKeyColumns($index->getColumns())
-                ))
+                ->tap(
+                    fn(AlterClause $alter) => $alter->addIndex(
+                        $index->indexName,
+                        $this->prepareKeyColumns($index->getColumns())
+                    )
+                )
         );
     }
 
@@ -572,7 +624,7 @@ class MySQLPlatform extends AbstractPlatform
         $constraint = array_values(
             array_filter(
                 $this->listConstraints($table, $schema),
-                fn ($constraint) => $constraint['constraint_name'] === $name
+                fn($constraint) => $constraint['constraint_name'] === $name
             )
         )[0];
 
@@ -597,7 +649,7 @@ class MySQLPlatform extends AbstractPlatform
      *
      * @return  static
      */
-    public function transactionStart()
+    public function transactionStart(): static
     {
         if (!$this->depth) {
             parent::transactionStart();
@@ -616,7 +668,7 @@ class MySQLPlatform extends AbstractPlatform
      *
      * @return  static
      */
-    public function transactionCommit()
+    public function transactionCommit(): static
     {
         if ($this->depth <= 1) {
             parent::transactionCommit();
@@ -632,7 +684,7 @@ class MySQLPlatform extends AbstractPlatform
      *
      * @return  static
      */
-    public function transactionRollback()
+    public function transactionRollback(): static
     {
         if ($this->depth <= 1) {
             parent::transactionRollback();
@@ -644,5 +696,13 @@ class MySQLPlatform extends AbstractPlatform
         }
 
         return $this;
+    }
+
+    public function isMariaDB(): bool
+    {
+        return str_contains(
+            strtolower($this->db->getDriver()->getVersion()),
+            'mariadb'
+        );
     }
 }

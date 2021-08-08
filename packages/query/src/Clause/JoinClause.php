@@ -11,9 +11,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Clause;
 
+use BadMethodCallException;
+use Closure;
+use InvalidArgumentException;
+use MyCLabs\Enum\Enum;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
+use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
+
+use function Windwalker\Query\val;
 
 /**
  * The JoinClause class.
@@ -56,7 +63,7 @@ class JoinClause implements ClauseInterface
      * @param  string           $prefix
      * @param  string|AsClause  $table
      */
-    public function __construct(Query $query, string $prefix, $table)
+    public function __construct(Query $query, string $prefix, AsClause|string $table)
     {
         $this->table = $table;
         $this->query = $query;
@@ -66,15 +73,15 @@ class JoinClause implements ClauseInterface
     /**
      * on
      *
-     * @param  string|array|\Closure|ClauseInterface  $column  Column name, array where list or callback
+     * @param  string|array|Closure|ClauseInterface  $column   Column name, array where list or callback
      *                                                         function as sub query.
-     * @param  mixed                                  ...$args
+     * @param  mixed                                 ...$args
      *
      * @return  static
      */
-    public function on($column, ...$args)
+    public function on(mixed $column, ...$args): static
     {
-        if ($column instanceof \Closure) {
+        if ($column instanceof Closure) {
             $this->handleNestedOn($column, (string) ($args[0] ?? 'AND'));
 
             return $this;
@@ -119,7 +126,7 @@ class JoinClause implements ClauseInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPrefix(string $prefix)
+    public function setPrefix(string $prefix): static
     {
         $this->prefix = $prefix;
 
@@ -148,19 +155,23 @@ class JoinClause implements ClauseInterface
      *
      * @return  array
      */
-    private function handleOperatorAndValue($operator, $value, bool $shortcut = false): array
+    private function handleOperatorAndValue(mixed $operator, mixed $value, bool $shortcut = false): array
     {
         if ($shortcut) {
             [$operator, $value] = ['=', $operator];
         }
 
         if ($operator === null) {
-            throw new \InvalidArgumentException('Where operator should not be NULL');
+            throw new InvalidArgumentException('Where operator should not be NULL');
         }
 
         // Closure means to create a sub query as value.
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             $value($value = $this->query->createSubQuery());
+        }
+
+        if ($value instanceof Enum) {
+            $value = val($value->getValue());
         }
 
         // Keep origin value a duplicate that we will need it later.
@@ -177,7 +188,11 @@ class JoinClause implements ClauseInterface
             }
 
             $value = 'NULL';
-        } elseif (is_array($value)) {
+        } elseif ($value instanceof Query) {
+            $value = $this->query->as($origin, false);
+        } elseif (is_iterable($value)) {
+            $origin = TypeCast::toArray($origin);
+
             // Auto convert array value as IN() clause.
             if ($operator === '=') {
                 $operator = 'IN';
@@ -189,14 +204,15 @@ class JoinClause implements ClauseInterface
 
             foreach ($origin as $col) {
                 // Append every value as ValueObject so that we can make placeholders as `IN(?, ?, ?...)`
-                $value->append($vc = $this->query->quote($col));
+                $value->append($vc = val($col));
 
                 $this->query->bind(null, $vc);
             }
-        } elseif ($value instanceof Query) {
-            $value = $this->query->as($origin, false);
         } elseif ($value instanceof RawWrapper) {
             $value = $value();
+        } elseif ($value instanceof ValueClause) {
+            $value = clone $value;
+            $this->query->bind(null, $value);
         } else {
             $value = $this->query->quoteName($value);
         }
@@ -204,10 +220,10 @@ class JoinClause implements ClauseInterface
         return [strtoupper($operator), $value, $origin];
     }
 
-    private function handleNestedOn(\Closure $callback, string $glue): void
+    private function handleNestedOn(Closure $callback, string $glue): void
     {
         if (!in_array(strtolower(trim($glue)), ['and', 'or'], true)) {
-            throw new \InvalidArgumentException('WHERE glue should only be `OR`, `AND`.');
+            throw new InvalidArgumentException('WHERE glue should only be `OR`, `AND`.');
         }
 
         $callback($clause = new static($this->query, $this->prefix, $this->table));
@@ -229,11 +245,11 @@ class JoinClause implements ClauseInterface
     /**
      * orWhere
      *
-     * @param  array|\Closure  $wheres
+     * @param  array|Closure  $wheres
      *
      * @return  static
      */
-    public function orOn($wheres)
+    public function orOn(array|Closure $wheres): static
     {
         if (is_array($wheres)) {
             return $this->orOn(
@@ -246,7 +262,7 @@ class JoinClause implements ClauseInterface
         }
 
         ArgumentsAssert::assert(
-            $wheres instanceof \Closure,
+            $wheres instanceof Closure,
             '{caller} argument should be array or Closure, %s given.',
             $wheres
         );
@@ -262,7 +278,7 @@ class JoinClause implements ClauseInterface
      *
      * @return  static
      */
-    public function onRaw($condition, ...$args)
+    public function onRaw(Clause|string $condition, ...$args): static
     {
         if (!$this->on) {
             $this->on = $this->query->clause('ON', [], ' AND ');
@@ -288,7 +304,7 @@ class JoinClause implements ClauseInterface
     /**
      * @return string|AsClause
      */
-    public function getTable()
+    public function getTable(): AsClause|string
     {
         return $this->table;
     }
@@ -300,7 +316,7 @@ class JoinClause implements ClauseInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function join($table)
+    public function join(AsClause|string $table): static
     {
         $this->table = $table;
 
@@ -319,7 +335,7 @@ class JoinClause implements ClauseInterface
             'nullDate',
             'escape',
             'quote',
-            'quoteName'
+            'quoteName',
         ];
 
         $method = $methods[strtolower($name)] ?? null;
@@ -328,6 +344,6 @@ class JoinClause implements ClauseInterface
             return $this->query->$method(...$args);
         }
 
-        throw new \BadMethodCallException('Call to undefined method: ' . $name . '()');
+        throw new BadMethodCallException('Call to undefined method: ' . $name . '()');
     }
 }

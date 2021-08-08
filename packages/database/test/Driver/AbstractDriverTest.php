@@ -11,14 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver;
 
-use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDriver;
-use Windwalker\Database\Driver\DriverInterface;
 use Windwalker\Database\Event\QueryEndEvent;
 use Windwalker\Database\Exception\DatabaseQueryException;
-use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
-use Windwalker\Event\EventInterface;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -30,7 +27,7 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
 
     protected static string $driverName = '';
 
-    protected static ?DriverInterface $driver;
+    protected static ?AbstractDriver $driver;
 
     /**
      * @see  AbstractDriver::prepare
@@ -83,9 +80,9 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
 
     public function testPrepareWithQuery(): void
     {
-        $id    = 1;
-        $query = static::$driver->getPlatform()
-            ->createQuery()
+        $id = 1;
+
+        $query = static::createQuery()
             ->select('*')
             ->from('ww_flower')
             ->whereRaw('id = :id')
@@ -194,13 +191,13 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
             [
                 'Test',
                 'YO',
-                '{}'
+                '{}',
             ]
         );
 
         self::assertEquals(
             86,
-            static::$driver->lastInsertId()
+            $st->lastInsertId()
         );
 
         self::assertEquals(
@@ -222,8 +219,7 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
     public function testEvents()
     {
         $stmt = static::$driver->prepare(
-            $q = static::$driver->getDb()
-                ->getQuery(true)
+            $q = static::createQuery()
                 ->select('*')
                 ->from('ww_flower')
                 ->where('id', 'in', [1, 2, 3])
@@ -281,33 +277,13 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
     }
 
     /**
-     * @see  AbstractDriver::disconnect
+     * @see  AbstractDriver::disconnectAll
      */
     public function testDisconnect(): void
     {
-        static::$driver->disconnect();
+        static::$driver->disconnectAll();
 
-        self::assertFalse(static::$driver->getConnection()->isConnected());
-
-        self::assertNull(static::$driver->getConnection()->get());
-    }
-
-    /**
-     * @see  AbstractDriver::getPlatform
-     */
-    public function testGetPlatform(): void
-    {
-        $platform = static::$driver->getPlatform();
-
-        self::assertInstanceOf(
-            get_class(
-                AbstractPlatform::create(
-                    static::$driver->getPlatformName(),
-                    static::$driver->getDb()
-                )
-            ),
-            $platform
-        );
+        self::assertCount(0, static::$driver->getPool());
     }
 
     /**
@@ -359,10 +335,10 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
 
     protected static function createDriver(?array $params = null): AbstractDriver
     {
-        $params           = $params ?? self::getTestParams();
+        $params = $params ?? self::getTestParams();
         $params['driver'] = static::$driverName;
 
-        return (new DatabaseAdapter($params))->getDriver();
+        return (new DatabaseFactory())->createDriver(static::$driverName, $params);
     }
 
     protected static function setupDatabase(): void
@@ -377,7 +353,7 @@ abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
     {
         parent::tearDownAfterClass();
 
-        static::$driver->disconnect();
+        static::$driver->disconnectAll();
         static::$driver = null;
     }
 }

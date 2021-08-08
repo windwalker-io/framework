@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Cache\Test\Storage;
 
 use Windwalker\Cache\Storage\RedisStorage;
+use Windwalker\Utilities\Env;
 
 /**
  * The RedisStorageTest class.
@@ -28,8 +29,8 @@ class RedisStorageTest extends AbstractStorageTest
      */
     public static function setUpBeforeClass(): void
     {
-        if (!class_exists(\Redis::class)) {
-            self::markTestSkipped('Redis not supported');
+        if (!Env::get('REDIS_ENABLED')) {
+            self::markTestSkipped('Redis not enabled');
         }
     }
 

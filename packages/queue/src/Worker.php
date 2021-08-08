@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue;
 
+use DateTimeImmutable;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Throwable;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventListenableInterface;
-use Windwalker\Event\EventListenableTrait;
 use Windwalker\Queue\Event\AfterJobRunEvent;
 use Windwalker\Queue\Event\BeforeJobRunEvent;
 use Windwalker\Queue\Event\JobFailureEvent;
@@ -33,7 +36,7 @@ use Windwalker\Queue\Job\NullJob;
  */
 class Worker implements EventListenableInterface
 {
-    use EventListenableTrait;
+    use EventAwareTrait;
 
     public const STATE_INACTIVE = 'inactive';
 
@@ -83,30 +86,30 @@ class Worker implements EventListenableInterface
     /**
      * Worker constructor.
      *
-     * @param Queue            $queue
-     * @param LoggerInterface  $logger
+     * @param  Queue            $queue
+     * @param  LoggerInterface  $logger
      */
     public function __construct(Queue $queue, ?LoggerInterface $logger = null)
     {
-        $this->queue  = $queue;
+        $this->queue = $queue;
         $this->logger = $logger ?? new NullLogger();
     }
 
     /**
      * loop
      *
-     * @param string|array  $channel
-     * @param array         $options
+     * @param  string|array  $channel
+     * @param  array         $options
      *
      * @return  void
-     * @throws \Exception
+     * @throws Exception
      */
     public function loop(string|array $channel, array $options = [])
     {
         gc_enable();
 
         // Last Restart
-        $this->lastRestart = (int) (new \DateTimeImmutable('now'))->format('U');
+        $this->lastRestart = (int) (new DateTimeImmutable('now'))->format('U');
 
         // Log PID
         $this->pid = getmypid();
@@ -130,7 +133,7 @@ class Worker implements EventListenableInterface
             if (($options['force'] ?? null) || $this->canLoop()) {
                 try {
                     $this->runNextJob($channel, $options);
-                } catch (\Exception $exception) {
+                } catch (Exception $exception) {
                     $message = sprintf('Worker failure in a loop cycle: %s', $exception->getMessage());
 
                     $this->logger->error($message);
@@ -151,8 +154,8 @@ class Worker implements EventListenableInterface
     /**
      * runNextJob
      *
-     * @param string|array  $channel
-     * @param array         $options
+     * @param  string|array  $channel
+     * @param  array         $options
      *
      * @return  void
      */
@@ -170,8 +173,8 @@ class Worker implements EventListenableInterface
     /**
      * process
      *
-     * @param QueueMessage $message
-     * @param array    $options
+     * @param  QueueMessage  $message
+     * @param  array         $options
      *
      * @return  void
      */
@@ -217,7 +220,7 @@ class Worker implements EventListenableInterface
             );
 
             $this->queue->delete($message);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             $this->handleJobException($job, $message, $options, $t);
         } finally {
             if (!$message->isDeleted()) {
@@ -233,7 +236,7 @@ class Worker implements EventListenableInterface
      *
      * @return  mixed
      */
-    protected function runJob(JobInterface $job)
+    protected function runJob(JobInterface $job): mixed
     {
         return $job();
     }
@@ -251,7 +254,7 @@ class Worker implements EventListenableInterface
     /**
      * registerTimeoutHandler
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  void
      */
@@ -263,7 +266,7 @@ class Worker implements EventListenableInterface
             return;
         }
 
-        declare (ticks=1);
+        declare(ticks=1);
 
         if ($timeout !== 0) {
             pcntl_signal(
@@ -273,7 +276,7 @@ class Worker implements EventListenableInterface
                 }
             );
 
-            pcntl_alarm($timeout + $options['sleep'] ?? null);
+            pcntl_alarm((int) ($timeout + $options['sleep']));
         }
 
         // Wait job complete then stop
@@ -326,7 +329,7 @@ class Worker implements EventListenableInterface
             $this->getState(),
             [
                 static::STATE_EXITING,
-                static::STATE_STOP
+                static::STATE_STOP,
             ],
             true
         );
@@ -335,14 +338,14 @@ class Worker implements EventListenableInterface
     /**
      * handleException
      *
-     * @param JobInterface          $job
-     * @param QueueMessage          $message
-     * @param array             $options
-     * @param \Exception|\Throwable $e
+     * @param  JobInterface  $job
+     * @param  QueueMessage  $message
+     * @param  array         $options
+     * @param  Throwable    $e
      *
      * @return void
      */
-    protected function handleJobException($job, QueueMessage $message, array $options, $e)
+    protected function handleJobException(mixed $job, QueueMessage $message, array $options, Throwable $e): void
     {
         if (!$job instanceof JobInterface) {
             $job = new NullJob();
@@ -392,7 +395,7 @@ class Worker implements EventListenableInterface
     /**
      * getNextMessage
      *
-     * @param string|array  $channel
+     * @param  string|array  $channel
      *
      * @return  null|QueueMessage
      */
@@ -412,7 +415,7 @@ class Worker implements EventListenableInterface
     /**
      * sleep
      *
-     * @param float $seconds
+     * @param  float  $seconds
      *
      * @return  void
      */
@@ -459,7 +462,7 @@ class Worker implements EventListenableInterface
     /**
      * setState
      *
-     * @param string $state
+     * @param  string  $state
      *
      * @return  void
      */
@@ -471,7 +474,7 @@ class Worker implements EventListenableInterface
     /**
      * stopIfNecessary
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  void
      */

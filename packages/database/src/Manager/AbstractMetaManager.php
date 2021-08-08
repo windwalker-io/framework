@@ -52,7 +52,7 @@ abstract class AbstractMetaManager
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -74,7 +74,7 @@ abstract class AbstractMetaManager
      *
      * @return  static  Return self to support chaining.
      */
-    public function setName(?string $name)
+    public function setName(?string $name): static
     {
         $this->name = $name;
 

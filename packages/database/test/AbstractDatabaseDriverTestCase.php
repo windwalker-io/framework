@@ -12,10 +12,14 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test;
 
 use Asika\SqlSplitter\SqlSplitter;
+use LogicException;
+use PDO;
+use PDOException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\Pdo\AbstractPdoConnection;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
-use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\Reseter\AbstractReseter;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Grammar\AbstractGrammar;
@@ -31,12 +35,12 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
     protected static string $platform = '';
 
-    protected static string $dbname = '';
+    protected static ?string $dbname = '';
 
     /**
-     * @var \PDO
+     * @var PDO
      */
-    protected static ?\PDO $baseConn;
+    protected static ?PDO $baseConn;
 
     /**
      * @inheritDoc
@@ -53,13 +57,13 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
         $platform = static::$platform;
 
-        $platform = AbstractPlatform::getShortName($platform);
+        $platform = DatabaseFactory::getDriverShortName($platform);
 
         /** @var AbstractPdoConnection|string $connClass */
         $connClass = 'Windwalker\Database\Driver\Pdo\Pdo' . ucfirst($platform) . 'Connection';
 
         if (!class_exists($connClass) || !is_subclass_of($connClass, AbstractPdoConnection::class)) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf(
                     '%s should exists and extends %s',
                     $connClass,
@@ -70,8 +74,8 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
         $reseter = AbstractReseter::create(static::$platform);
 
-        static::$dbname = $params['database'];
-        unset($params['database']);
+        static::$dbname = $params['dbname'];
+        unset($params['dbname']);
 
         $pdo = static::createBaseConnect($params, $connClass);
 
@@ -80,7 +84,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         // Disconnect.
         $pdo = null;
 
-        $params['database'] = static::$dbname;
+        $params['dbname'] = static::$dbname;
 
         static::$baseConn = static::createBaseConnect($params, $connClass);
 
@@ -89,16 +93,16 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         static::setupDatabase();
     }
 
-    protected static function createBaseConnect(array $params, string $connClass): \PDO
+    protected static function createBaseConnect(array $params, string $connClass): PDO
     {
         $dsn = $connClass::getParameters($params)['dsn'];
 
-        return new \PDO(
+        return new PDO(
             $dsn,
-            $params['username'] ?? null,
+            $params['user'] ?? null,
             $params['password'] ?? null,
             [
-                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]
         );
     }
@@ -120,10 +124,14 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
     protected static function importFromFile(string $file): void
     {
         if (!is_file($file)) {
-            throw new \RuntimeException('File not found: ' . $file);
+            throw new RuntimeException('File not found: ' . $file);
         }
 
-        self::importIterator(SqlSplitter::splitFromFile($file));
+        self::importIterator(
+            SqlSplitter::splitSqlString(
+                file_get_contents($file)
+            )
+        );
     }
 
     /**
@@ -142,8 +150,8 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
             try {
                 static::$baseConn->exec($query);
-            } catch (\PDOException $e) {
-                throw new \PDOException(
+            } catch (PDOException $e) {
+                throw new PDOException(
                     $e->getMessage() . ' - SQ: ' . $query,
                     (int) $e->getCode(),
                     $e
@@ -184,11 +192,11 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
     /**
      * getGrammar
      *
-     * @param mixed $escaper
+     * @param  mixed  $escaper
      *
      * @return  AbstractGrammar
      */
-    public static function getGrammar($escaper = null): AbstractGrammar
+    public static function getGrammar(mixed $escaper = null): AbstractGrammar
     {
         $grammar = AbstractGrammar::create(static::$platform);
 

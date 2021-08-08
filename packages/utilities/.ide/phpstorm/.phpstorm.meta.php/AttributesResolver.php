@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace PHPSTORM_META {
 
-    use Windwalker\Utilities\Attributes\AttributesResolver;
+    use Windwalker\Attributes\AttributesResolver;
 
     override(
         AttributesResolver::createObject(0),

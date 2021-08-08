@@ -11,13 +11,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Provider;
 
+use InvalidArgumentException;
+use ReflectionAttribute;
+use ReflectionObject;
+use Windwalker\Attributes\AttributesAccessor;
+use Windwalker\Event\Attributes\EventSubscriber;
+use Windwalker\Event\Attributes\ListenTo;
 use Windwalker\Event\EventInterface;
-use Windwalker\Event\EventSubscriberInterface;
 use Windwalker\Event\Listener\ListenerPriority;
 use Windwalker\Event\Listener\ListenersQueue;
-use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Assert\TypeAssert;
-use Windwalker\Utilities\StrNormalise;
+use Windwalker\Utilities\StrNormalize;
+
+use function Windwalker\disposable;
 
 /**
  * The SubscribableListenerProvider class.
@@ -27,7 +33,14 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
     /**
      * @var ListenersQueue[]
      */
-    protected $queues = [];
+    protected array $queues = [];
+
+    /**
+     * SubscribableListenerProvider constructor.
+     */
+    public function __construct()
+    {
+    }
 
     /**
      * @inheritDoc
@@ -67,43 +80,50 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
      */
     public function subscribe(object $subscriber, ?int $priority = null): void
     {
-        if ($subscriber instanceof EventSubscriberInterface) {
-            $events = $subscriber->getSubscribedEvents();
+        $ref = new ReflectionObject($subscriber);
+
+        if (AttributesAccessor::getFirstAttribute($ref, EventSubscriber::class)) {
+            foreach ($ref->getMethods() as $method) {
+                // Handle ListenTo attributes
+                foreach ($method->getAttributes(ListenTo::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                    /** @var ListenTo $listenTo */
+                    $listenTo = $attribute->newInstance();
+                    $listener = [$subscriber, static::normalize($method->getName())];
+
+                    if ($listenTo->once) {
+                        $listener = disposable($listener);
+                    }
+
+                    $this->on(
+                        $listenTo->event,
+                        $listener,
+                        $listenTo->priority
+                    );
+                }
+
+                // Handle Event attributes
+                foreach (
+                    $method->getAttributes(
+                        EventInterface::class,
+                        ReflectionAttribute::IS_INSTANCEOF
+                    ) as $attribute
+                ) {
+                    $this->on(
+                        $attribute->getName(),
+                        [$subscriber, static::normalize($method->getName())],
+                        $priority
+                    );
+                }
+            }
         } else {
             $methods = get_class_methods($subscriber);
-            $events  = [];
 
             foreach ($methods as $method) {
-                $events[$method] = [static::normalize($method), $priority];
-            }
-        }
-
-        foreach ($events as $event => $method) {
-            // Register: ['eventName' => 'methodName']
-            if (static::isCallable($subscriber, $method)) {
                 $this->on(
-                    $event,
-                    static::toCallable($subscriber, $method),
+                    $method,
+                    [$subscriber, static::normalize($method)],
                     $priority
                 );
-            } elseif (is_array($method) && $method !== []) {
-                if (static::isCallable($subscriber, $method[0])) {
-                    // Register: ['eventName' => ['methodName or callable', $priority]]
-                    $this->on(
-                        $event,
-                        static::toCallable($subscriber, $method[0]),
-                        $method[1] ?? $priority
-                    );
-                } else {
-                    // Register: ['eventName' => [['methodName1 or callable', $priority], ['methodName2']]]
-                    foreach ($method as $subMethod) {
-                        $this->on(
-                            $event,
-                            static::toCallable($subscriber, $subMethod[0]),
-                            $subMethod[1] ?? $priority
-                        );
-                    }
-                }
             }
         }
     }
@@ -117,7 +137,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
      */
     private static function normalize(string $methodName): string
     {
-        return lcfirst(StrNormalise::toCamelCase($methodName));
+        return lcfirst(StrNormalize::toCamelCase($methodName));
     }
 
     /**
@@ -140,7 +160,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
      *
      * @return  bool
      */
-    private static function isCallable(object $subscriber, $methodName): bool
+    private static function isCallable(object $subscriber, mixed $methodName): bool
     {
         if (is_callable($methodName)) {
             return true;
@@ -153,7 +173,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
         return false;
     }
 
-    private static function toCallable(object $subscriber, $methodName)
+    private static function toCallable(object $subscriber, $methodName): callable|array
     {
         if (is_callable($methodName)) {
             return $methodName;
@@ -163,7 +183,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
             return [$subscriber, $methodName];
         }
 
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
             sprintf(
                 'MethodName should be callable, %s got',
                 TypeAssert::describeValue($methodName)

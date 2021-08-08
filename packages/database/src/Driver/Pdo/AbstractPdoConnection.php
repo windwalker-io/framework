@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use PDO;
 use Windwalker\Database\Driver\AbstractConnection;
 
 /**
@@ -18,17 +19,17 @@ use Windwalker\Database\Driver\AbstractConnection;
  */
 abstract class AbstractPdoConnection extends AbstractConnection
 {
-    protected static $name = 'pdo';
+    protected static string $name = 'pdo';
 
     /**
      * @var string
      */
-    protected static $dbtype = '';
+    protected static string $dbtype = '';
 
-    protected static $defaultAttributes = [
-        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-        \PDO::ATTR_EMULATE_PREPARES => true,
-        \PDO::ATTR_STRINGIFY_FETCHES => false
+    protected static array $defaultAttributes = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_EMULATE_PREPARES => true,
+        PDO::ATTR_STRINGIFY_FETCHES => false,
     ];
 
     /**
@@ -38,11 +39,11 @@ abstract class AbstractPdoConnection extends AbstractConnection
      */
     public static function isSupported(): bool
     {
-        if (!class_exists(\PDO::class)) {
+        if (!class_exists(PDO::class)) {
             return false;
         }
 
-        return in_array(strtolower(static::$dbtype), \PDO::getAvailableDrivers(), true);
+        return in_array(strtolower(static::$dbtype), PDO::getAvailableDrivers(), true);
     }
 
     /**
@@ -58,31 +59,37 @@ abstract class AbstractPdoConnection extends AbstractConnection
     }
 
     /**
-     * doConnect
-     *
+     * @return array
+     */
+    public static function getDefaultAttributes(): array
+    {
+        return static::$defaultAttributes;
+    }
+
+    /**
      * @param  array  $options
      *
-     * @return  \PDO
+     * @return  PDO
      */
-    protected function doConnect(array $options)
+    protected function doConnect(array $options): PDO
     {
         $attrs = array_replace(
-            static::$defaultAttributes,
+            static::getDefaultAttributes(),
             $options['driverOptions'] ?? []
         );
 
-        return new \PDO(
+        return new PDO(
             $options['dsn'],
-            $options['username'] ?? null,
+            $options['user'] ?? null,
             $options['password'] ?? null,
             $attrs
         );
     }
 
     /**
-     * @return \PDO|null
+     * @return PDO|null
      */
-    public function get(): ?\PDO
+    public function get(): ?PDO
     {
         return parent::get();
     }
@@ -90,9 +97,11 @@ abstract class AbstractPdoConnection extends AbstractConnection
     /**
      * @inheritDoc
      */
-    public function disconnect()
+    public function disconnect(): mixed
     {
         $this->connection = null;
+
+        return true;
     }
 
     /**

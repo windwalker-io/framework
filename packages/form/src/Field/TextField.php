@@ -42,9 +42,9 @@ class TextField extends AbstractInputField
      */
     protected array $options = [];
 
-    public function buildInput(DOMElement $input, array $options = []): string
+    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
-        $html = parent::buildInput($input, $options);
+        $html = parent::buildFieldElement($input, $options);
 
         if (count($this->options)) {
             $html = h(
@@ -54,9 +54,9 @@ class TextField extends AbstractInputField
                     $html,
                     h(
                         'datalist',
-                        [],
+                        ['id' => $this->buildListId()],
                         $this->options
-                    )
+                    ),
                 ]
             );
         }
@@ -84,11 +84,11 @@ class TextField extends AbstractInputField
     /**
      * addOption
      *
-     * @param DOMElement $option
+     * @param  DOMElement  $option
      *
      * @return  static
      */
-    public function addOption(DOMElement $option)
+    public function addOption(DOMElement $option): static
     {
         $this->options[] = $option;
 
@@ -98,16 +98,17 @@ class TextField extends AbstractInputField
     /**
      * option
      *
-     * @param string  $value
-     * @param array   $attrs
+     * @param  string|null  $value
+     * @param  string|null  $text
+     * @param  array        $attrs
      *
      * @return static
      */
-    public function option($value = null, array $attrs = [])
+    public function option(?string $value = null, ?string $text = null, array $attrs = []): static
     {
         $attrs['value'] = $value;
 
-        $this->addOption(HTMLFactory::option($attrs));
+        $this->addOption(HTMLFactory::option($attrs, $text));
 
         return $this;
     }
@@ -115,11 +116,11 @@ class TextField extends AbstractInputField
     /**
      * setOptions
      *
-     * @param array|Option[] $options
+     * @param  array|DOMElement[]  $options
      *
      * @return  static
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): static
     {
         $this->options = $options;
 
@@ -127,7 +128,7 @@ class TextField extends AbstractInputField
     }
 
     /**
-     * @return Option[]
+     * @return DOMElement[]
      */
     public function getOptions(): array
     {
@@ -137,15 +138,15 @@ class TextField extends AbstractInputField
     /**
      * max
      *
-     * @param ?int  $length
-     * @param bool $addFilter
-     * @param bool $utf8
+     * @param ?int   $length
+     * @param  bool  $addFilter
+     * @param  bool  $utf8
      *
      * @return  static|mixed
      *
      * @since  3.4.2
      */
-    public function maxlength(?int $length = null, bool $addFilter = true, bool $utf8 = true)
+    public function maxlength(?int $length = null, bool $addFilter = true, bool $utf8 = true): mixed
     {
         if ($addFilter) {
             $this->addFilter(new Length($length, $utf8));

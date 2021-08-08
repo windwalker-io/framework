@@ -122,6 +122,16 @@ class CollectionTest extends TestCase
         $extracted = $this->instance->extract('foo.bar.goo', true);
     }
 
+    public function testLoadFrom()
+    {
+        $data = Collection::from('{"foo": "bar"}');
+
+        self::assertEquals(
+            'bar',
+            $data->foo
+        );
+    }
+
     /**
      * @see  Collection::proxy
      */

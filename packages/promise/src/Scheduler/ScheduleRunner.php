@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Scheduler;
 
+use DomainException;
+
 /**
  * The AsyncHandler class.
  */
@@ -105,7 +107,7 @@ class ScheduleRunner implements SchedulerInterface
             }
         }
 
-        throw new \DomainException('No available async handlers');
+        throw new DomainException('No available async handlers');
     }
 
     /**
@@ -134,7 +136,7 @@ class ScheduleRunner implements SchedulerInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setSchedulers(array $schedulers)
+    public function setSchedulers(array $schedulers): static
     {
         $this->schedulers = $schedulers;
 

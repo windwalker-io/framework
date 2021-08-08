@@ -24,12 +24,12 @@ class MergeComposer extends \Asika\SimpleConsole\Console
      *
      * @return  int
      */
-    protected function doExecute()
+    protected function doExecute(): int
     {
         $packages = \Windwalker\Filesystem\Filesystem::folders(PACKAGES_PATH);
 
         $rootJsonFile = PROJECT_ROOT . '/composer.json';
-        $rootJson = Collection::wrap($rootJsonFile);
+        $rootJson = Collection::from($rootJsonFile);
 
         $rootJson['replace'] = [];
 
@@ -38,7 +38,7 @@ class MergeComposer extends \Asika\SimpleConsole\Console
                 continue;
             }
 
-            $json = Collection::wrap($composerFile);
+            $json = Collection::from($composerFile);
 
             if (!$json->get('name')) {
                 continue;

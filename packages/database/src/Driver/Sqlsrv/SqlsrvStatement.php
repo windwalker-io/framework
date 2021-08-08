@@ -11,12 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Sqlsrv;
 
-use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\AbstractStatement;
+use Windwalker\Database\Driver\ConnectionInterface;
+use Windwalker\Database\Exception\StatementException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
-
-use function Windwalker\collect;
 
 /**
  * The SqlsrvStatement class.
@@ -24,28 +23,13 @@ use function Windwalker\collect;
 class SqlsrvStatement extends AbstractStatement
 {
     /**
+     * Keep connection resource to prevent gc after leave function scope.
+     *
+     * @see https://stackoverflow.com/questions/16562704/php-sqlsrv-passing-a-resource-from-a-function
+     *
      * @var resource
      */
-    protected $conn;
-
-    /**
-     * @var string
-     */
-    protected $query;
-
-    /**
-     * SqlsrvStatement constructor.
-     *
-     * @param  resource  $conn
-     * @param  string    $query
-     * @param  array     $bounded
-     */
-    public function __construct($conn, string $query, array $bounded = [])
-    {
-        $this->bounded = $bounded;
-        $this->conn = $conn;
-        $this->query = $query;
-    }
+    protected mixed $conn = null;
 
     /**
      * @inheritDoc
@@ -75,29 +59,38 @@ class SqlsrvStatement extends AbstractStatement
             $args[] = &$param['value'];
         }
 
-        $this->cursor = sqlsrv_prepare($this->conn, $query, $args);
+        return $this->driver->useConnection(
+            function (ConnectionInterface $conn) use ($args, $query) {
+                $this->conn = $resource = $conn->get();
 
-        return sqlsrv_execute($this->cursor);
+                $this->cursor = sqlsrv_prepare($resource, $query, $args);
+
+                return sqlsrv_execute($this->cursor);
+            }
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function fetch(array $args = []): ?Collection
+    protected function doFetch(array $args = []): ?array
     {
         $this->execute();
 
         $row = sqlsrv_fetch_array($this->cursor, SQLSRV_FETCH_ASSOC);
 
-        return $row ? collect($row) : null;
+        return $row ?: null;
     }
 
     /**
      * @inheritDoc
      */
-    public function close()
+    public function close(): static
     {
-        sqlsrv_free_stmt($this->cursor);
+        if ($this->cursor) {
+            sqlsrv_free_stmt($this->cursor);
+        }
+
         $this->cursor = null;
         $this->executed = false;
 
@@ -109,6 +102,21 @@ class SqlsrvStatement extends AbstractStatement
      */
     public function countAffected(): int
     {
+        if (!$this->cursor) {
+            throw new StatementException('Cursor not exists or statement closed.');
+        }
+
         return (int) sqlsrv_rows_affected($this->cursor);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function lastInsertId(?string $sequence = null): ?string
+    {
+        $cursor = sqlsrv_query($this->conn, 'SELECT @@IDENTITY AS id');
+        sqlsrv_fetch($cursor);
+
+        return sqlsrv_get_field($cursor, 0);
     }
 }

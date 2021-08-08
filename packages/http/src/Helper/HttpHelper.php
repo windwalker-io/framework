@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of earth project.
  *
@@ -6,21 +7,23 @@
  * @license    MIT
  */
 
+declare(strict_types=1);
+
 namespace Windwalker\Http\Helper;
+
+use JetBrains\PhpStorm\Pure;
 
 /**
  * The HttpHelper class.
  *
  * @since  3.5.13
- *
- * todo: Support php8 types hint
  */
 class HttpHelper
 {
     /**
      * getIp
      *
-     * @see https://www.phpini.com/php/php-get-real-ip
+     * @see    https://www.phpini.com/php/php-get-real-ip
      *
      * @param  array  $server
      *
@@ -52,8 +55,10 @@ class HttpHelper
      *
      * @since  3.5.15
      */
-    public static function isIPv6(string $ip): bool
-    {
-        return strpos($ip, ':') !== false;
+    #[Pure]
+    public static function isIPv6(
+        string $ip
+    ): bool {
+        return str_contains($ip, ':');
     }
 }

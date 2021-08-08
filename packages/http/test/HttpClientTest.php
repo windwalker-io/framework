@@ -11,18 +11,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test;
 
-use Windwalker\Http\Helper\UriHelper;
+use PHPUnit\Framework\TestCase;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Test\Mock\MockTransport;
-use Windwalker\Http\Uri;
+use Windwalker\Uri\Uri;
+use Windwalker\Uri\UriHelper;
 
 /**
  * Test class of HttpClient
  *
  * @since 2.1
  */
-class HttpClientTest extends \PHPUnit\Framework\TestCase
+class HttpClientTest extends TestCase
 {
     /**
      * Test instance.
@@ -52,12 +53,12 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
     /**
      * createClient
      *
-     * @param array $options
-     * @param null  $transport
+     * @param  array  $options
+     * @param  null   $transport
      *
      * @return  HttpClient
      */
-    protected function createClient($options = [], $transport = null)
+    protected function createClient($options = [], $transport = null): HttpClient
     {
         $this->transport = $transport = $transport ?: new MockTransport();
 
@@ -102,10 +103,15 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
     {
         $url = new Uri('http://example.com/?foo=bar');
 
-        $this->instance->request('GET', $url, null, [
-            'params' => ['flower' => 'sakura'],
-            'headers' => ['X-Foo' => 'Bar']
-        ]);
+        $this->instance->request(
+            'GET',
+            $url,
+            null,
+            [
+                'params' => ['flower' => 'sakura'],
+                'headers' => ['X-Foo' => 'Bar'],
+            ]
+        );
 
         self::assertEquals('GET', $this->transport->request->getMethod());
         self::assertEquals('http://example.com/?foo=bar&flower=sakura', $this->transport->request->getRequestTarget());
@@ -181,10 +187,13 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
     {
         $url = new Uri('http://example.com/?foo=bar');
 
-        $this->instance->get($url, [
-            'params' => ['flower' => 'sakura'],
-            'headers' => ['X-Foo' => 'Bar']
-        ]);
+        $this->instance->get(
+            $url,
+            [
+                'params' => ['flower' => 'sakura'],
+                'headers' => ['X-Foo' => 'Bar'],
+            ]
+        );
 
         self::assertEquals('GET', $this->transport->request->getMethod());
         self::assertEquals('http://example.com/?foo=bar&flower=sakura', $this->transport->request->getRequestTarget());

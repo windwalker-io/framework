@@ -24,7 +24,7 @@ trait ManageInputTrait
     /**
      * getInput
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  string
      */
@@ -35,9 +35,15 @@ trait ManageInputTrait
         return $this->getForm()->getRenderer()->renderInput($this, $input, $options);
     }
 
-    public function buildInput(DOMElement $input, array $options = []): string
+    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
-        return $input->render();
+        $surrounds = $this->getSurrounds();
+
+        foreach ($surrounds as $surround) {
+            $input = $surround($input, $options);
+        }
+
+        return $input;
     }
 
     public function getPreparedInput(): DOMElement
@@ -58,7 +64,7 @@ trait ManageInputTrait
     /**
      * prepareRenderInput
      *
-     * @param DOMElement  $input
+     * @param  DOMElement  $input
      *
      * @return  DOMElement
      */
@@ -77,7 +83,7 @@ trait ManageInputTrait
      *
      * @return  static  Return self to support chaining.
      */
-    public function setInput(DOMElement $element)
+    public function setInput(DOMElement $element): static
     {
         $this->input = $element;
 
@@ -89,9 +95,9 @@ trait ManageInputTrait
      *
      * @param  string  $name
      *
-     * @return  mixed
+     * @return string|null
      */
-    public function getAttribute($name): ?string
+    public function getAttribute(string $name): ?string
     {
         $input = $this->getInput();
 
@@ -115,7 +121,7 @@ trait ManageInputTrait
      *
      * @return  static
      */
-    public function setAttribute(string $name, $value)
+    public function setAttribute(string $name, mixed $value): static
     {
         $this->getInput()->setAttribute($name, $value);
 
@@ -130,7 +136,7 @@ trait ManageInputTrait
      *
      * @return  static
      */
-    public function attr(string $name, $value = null)
+    public function attr(string $name, $value = null): static
     {
         return $this->setAttribute($name, $value);
     }
@@ -140,21 +146,21 @@ trait ManageInputTrait
         return $this->getInput()->classList->value;
     }
 
-    public function setClass(string $class)
+    public function setClass(string $class): static
     {
         $this->getInput()->setAttribute('class', $class);
 
         return $this;
     }
 
-    public function addClass(...$args)
+    public function addClass(...$args): static
     {
         $this->getInput()->classList->add(...$args);
 
         return $this;
     }
 
-    public function removeClass(...$args)
+    public function removeClass(...$args): static
     {
         $this->getInput()->classList->remove(...$args);
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Clause;
 
+use Countable;
 use Windwalker\Utilities\Classes\FlowControlTrait;
 
 /**
@@ -22,7 +23,7 @@ use Windwalker\Utilities\Classes\FlowControlTrait;
  *
  * @since  2.0
  */
-class Clause implements \Countable, ClauseInterface
+class Clause implements Countable, ClauseInterface
 {
     use FlowControlTrait;
 
@@ -47,9 +48,9 @@ class Clause implements \Countable, ClauseInterface
     /**
      * Constructor.
      *
-     * @param   string $name     The name of the clause.
-     * @param   mixed  $elements String or array.
-     * @param   string $glue     The glue for elements.
+     * @param  string  $name      The name of the clause.
+     * @param  mixed   $elements  String or array.
+     * @param  string  $glue      The glue for elements.
      *
      * @since   2.0
      */
@@ -84,7 +85,7 @@ class Clause implements \Countable, ClauseInterface
     {
         $elements = array_filter(
             $this->elements,
-            fn ($arg) => $arg !== '' && $arg !== null && $arg !== false,
+            fn($arg) => $arg !== '' && $arg !== null && $arg !== false,
         );
 
         if (str_ends_with($this->name, '()')) {
@@ -99,13 +100,13 @@ class Clause implements \Countable, ClauseInterface
     /**
      * Appends element parts to the internal list.
      *
-     * @param   mixed $elements String or array.
+     * @param  mixed  $elements  String or array.
      *
      * @return  static
      *
      * @since   2.0
      */
-    public function append($elements): static
+    public function append(mixed $elements): static
     {
         if (is_array($elements)) {
             $this->elements = array_merge($this->elements, $elements);
@@ -119,11 +120,11 @@ class Clause implements \Countable, ClauseInterface
     /**
      * prepend
      *
-     * @param   mixed $elements String or array.
+     * @param  mixed  $elements  String or array.
      *
      * @return  static
      */
-    public function prepend($elements): static
+    public function prepend(mixed $elements): static
     {
         if (!is_array($elements)) {
             $elements = [$elements];
@@ -132,6 +133,36 @@ class Clause implements \Countable, ClauseInterface
         array_unshift($this->elements, ...$elements);
 
         return $this;
+    }
+
+    /**
+     * each
+     *
+     * @param  callable  $callable
+     *
+     * @return  static
+     */
+    public function mapElements(callable $callable): static
+    {
+        $new = clone $this;
+        $new->elements = array_map($callable, $this->elements);
+
+        return $new;
+    }
+
+    /**
+     * each
+     *
+     * @param  callable  $callable
+     *
+     * @return  static
+     */
+    public function filterElements(callable $callable): static
+    {
+        $new = clone $this;
+        $new->elements = array_filter($this->elements, $callable);
+
+        return $new;
     }
 
     /**
@@ -157,8 +188,14 @@ class Clause implements \Countable, ClauseInterface
     public function __clone()
     {
         foreach (get_object_vars($this) as $k => $v) {
-            if (is_object($v) || is_array($v)) {
-                $this->{$k} = unserialize(serialize($v));
+            if (is_object($v)) {
+                $this->$k = clone $v;
+            }
+        }
+
+        foreach ($this->elements as $k => $element) {
+            if (is_object($element) && !$element instanceof ValueClause) {
+                $this->elements[$k] = clone $element;
             }
         }
     }
@@ -176,7 +213,7 @@ class Clause implements \Countable, ClauseInterface
     /**
      * Method to set property glue
      *
-     * @param   string $glue
+     * @param  string  $glue
      *
      * @return  static  Return self to support chaining.
      */
@@ -200,7 +237,7 @@ class Clause implements \Countable, ClauseInterface
     /**
      * Method to set property name
      *
-     * @param   string $name
+     * @param  string  $name
      *
      * @return  static  Return self to support chaining.
      */
@@ -228,7 +265,7 @@ class Clause implements \Countable, ClauseInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setElements($elements): static
+    public function setElements(mixed $elements): static
     {
         $this->elements = [];
 

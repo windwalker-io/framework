@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Iterator;
 
+use Countable;
+use Iterator;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\AbstractStatement;
 
@@ -19,7 +21,7 @@ use Windwalker\Database\Driver\AbstractStatement;
  *
  * @since 2.0
  */
-class StatementIterator implements \Countable, \Iterator
+class StatementIterator implements Countable, Iterator
 {
     /**
      * Property reader.
@@ -63,9 +65,9 @@ class StatementIterator implements \Countable, \Iterator
      */
     public function __construct(AbstractStatement $stmt, $class = Collection::class, array $args = [])
     {
-        $this->stmt  = $stmt;
+        $this->stmt = $stmt;
         $this->class = $class;
-        $this->args  = $args;
+        $this->args = $args;
 
         $this->next();
     }
@@ -85,7 +87,7 @@ class StatementIterator implements \Countable, \Iterator
      *
      * @return mixed Can return any type.
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->current;
     }
@@ -98,7 +100,7 @@ class StatementIterator implements \Countable, \Iterator
     public function next()
     {
         // Try to get an object
-        $this->current = $current = $this->stmt->fetch($this->args);
+        $this->current = $current = $this->stmt->fetch($this->args, $this->args);
 
         if ($current) {
             $this->key++;
@@ -110,7 +112,7 @@ class StatementIterator implements \Countable, \Iterator
      *
      * @return mixed scalar on success, or null on failure.
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->key;
     }

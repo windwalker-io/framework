@@ -21,7 +21,7 @@ abstract class LanguageNormalizer
     /**
      * toLanguageKey
      *
-     * @param string $lang
+     * @param  string  $lang
      *
      * @return  string
      */
@@ -53,11 +53,11 @@ abstract class LanguageNormalizer
     /**
      * toLanguageKey
      *
-     * @param string $key
+     * @param  string  $key
      *
      * @return  string
      */
-    public static function normalize(string $key)
+    public static function normalize(string $key): string
     {
         // Only allow A-Z a-z 0-9 and "_", other characters will be replace with "_".
         $key = preg_replace('/[^A-Z0-9]+/i', '.', $key);
@@ -68,8 +68,8 @@ abstract class LanguageNormalizer
     /**
      * shortLangCode
      *
-     * @param string $code
-     * @param string $separator
+     * @param  string  $code
+     * @param  string  $separator
      *
      * @return  string
      *
@@ -89,7 +89,7 @@ abstract class LanguageNormalizer
     /**
      * extract
      *
-     * @param string $code
+     * @param  string  $code
      *
      * @return  array
      *

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Filter\Rule;
 
-use Windwalker\Filter\AbstractCallbackFilter;
 use Windwalker\Filter\AbstractFilter;
 use Windwalker\Utilities\TypeCast;
 
@@ -32,16 +31,24 @@ class CastTo extends AbstractFilter
      */
     public function __construct(string $type, bool $strict = false)
     {
-        $this->type   = $type;
+        $this->type = $type;
         $this->strict = $strict;
     }
 
     /**
      * @inheritDoc
      */
-    public function filter($value)
+    public function filter(mixed $value): mixed
     {
         return TypeCast::try($value, $this->type, $this->strict);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function test(mixed $value, ?bool $strict = null): bool
+    {
+        return parent::test($value, $strict ?? $this->strict);
     }
 
     /**
@@ -57,7 +64,7 @@ class CastTo extends AbstractFilter
      *
      * @return  static  Return self to support chaining.
      */
-    public function setType(string $type)
+    public function setType(string $type): static
     {
         $this->type = $type;
 
@@ -77,7 +84,7 @@ class CastTo extends AbstractFilter
      *
      * @return  static  Return self to support chaining.
      */
-    public function setStrict(bool $strict)
+    public function setStrict(bool $strict): static
     {
         $this->strict = $strict;
 

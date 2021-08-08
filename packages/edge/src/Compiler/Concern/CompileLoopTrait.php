@@ -19,7 +19,7 @@ trait CompileLoopTrait
     /**
      * Compile the for statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -31,7 +31,7 @@ trait CompileLoopTrait
     /**
      * Compile the foreach statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -43,7 +43,7 @@ trait CompileLoopTrait
     /**
      * Compile the break statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -55,7 +55,7 @@ trait CompileLoopTrait
     /**
      * Compile the continue statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -67,7 +67,7 @@ trait CompileLoopTrait
     /**
      * Compile the forelse statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -81,7 +81,7 @@ trait CompileLoopTrait
     /**
      * Compile the while statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
@@ -93,48 +93,48 @@ trait CompileLoopTrait
     /**
      * Compile the end-while statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
     protected function compileEndwhile(string $expression): string
     {
-        return '<?php endwhile; ?>';
+        return '<?php endwhile ?>';
     }
 
     /**
      * Compile the end-for statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
     protected function compileEndfor(string $expression): string
     {
-        return '<?php endfor; ?>';
+        return '<?php endfor ?>';
     }
 
     /**
      * Compile the end-for-each statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
     protected function compileEndforeach(string $expression): string
     {
-        return '<?php endforeach; ?>';
+        return '<?php endforeach ?>';
     }
 
     /**
      * Compile the end-for-else statements into valid PHP.
      *
-     * @param  string $expression
+     * @param  string  $expression
      *
      * @return string
      */
     protected function compileEndforelse(string $expression): string
     {
-        return '<?php endif; ?>';
+        return '<?php endif ?>';
     }
 }

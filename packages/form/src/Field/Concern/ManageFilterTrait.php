@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field\Concern;
 
+use InvalidArgumentException;
 use Windwalker\Filter\ChainFilter;
 use Windwalker\Filter\Exception\ValidateException;
 use Windwalker\Filter\FilterInterface;
@@ -34,11 +35,11 @@ trait ManageFilterTrait
     /**
      * validate
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return  ValidateResult
      */
-    public function validate($value): ValidateResult
+    public function validate(mixed $value): ValidateResult
     {
         if ($this->isDisabled()) {
             return new ValidateResult(ValidateResult::STATUS_SUCCESS, $this);
@@ -62,16 +63,16 @@ trait ManageFilterTrait
     /**
      * checkRequired
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return  bool
      */
-    public function checkRequired($value): bool
+    public function checkRequired(mixed $value): bool
     {
         return !in_array($value, $this->getEmptyValues(), true);
     }
 
-    public function addEmptyValues(...$args)
+    public function addEmptyValues(...$args): static
     {
         $values = $this->getState('emptyValues', ['', null, '0', 0, []]);
 
@@ -84,17 +85,17 @@ trait ManageFilterTrait
 
     public function getEmptyValues(): array
     {
-        return (array) ($this->getState('emptyValues') ?? ['', null, '0', 0]);
+        return (array) ($this->getState('emptyValues') ?? ['', null]);
     }
 
     /**
      * checkRule
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return  bool
      */
-    public function testValidator($value): bool
+    public function testValidator(mixed $value): bool
     {
         return $this->getValidator()->test($value);
     }
@@ -102,11 +103,11 @@ trait ManageFilterTrait
     /**
      * filter
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return mixed
      */
-    public function filter($value)
+    public function filter(mixed $value): mixed
     {
         if ($value === null || $this->isDisabled()) {
             return $value;
@@ -121,9 +122,9 @@ trait ManageFilterTrait
      * @param  ValidatorInterface|callable|string  $validators
      *
      * @return  static
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function addValidator(ValidatorInterface|callable|string ...$validators)
+    public function addValidator(ValidatorInterface|callable|string ...$validators): static
     {
         foreach ($validators as $validator) {
             $this->validator->addFilter($this->getFilterFactory()->create($validator));
@@ -147,7 +148,7 @@ trait ManageFilterTrait
      *
      * @return  static
      */
-    public function resetValidators()
+    public function resetValidators(): static
     {
         $this->validator = new ChainFilter();
 
@@ -157,12 +158,12 @@ trait ManageFilterTrait
     /**
      * addFilter
      *
-     * @param  FilterInterface|callable|string  $filters
+     * @param  FilterInterface|callable|string  ...$filters
      *
      * @return  static
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function addFilter(FilterInterface|callable|string ...$filters)
+    public function addFilter(FilterInterface|callable|string ...$filters): static
     {
         foreach ($filters as $filter) {
             $this->filter->addFilter($this->getFilterFactory()->create($filter));
@@ -176,7 +177,7 @@ trait ManageFilterTrait
      *
      * @return  ChainFilter
      */
-    public function getFilter()
+    public function getFilter(): ChainFilter
     {
         return $this->filter;
     }
@@ -186,7 +187,7 @@ trait ManageFilterTrait
      *
      * @return  static
      */
-    public function resetFilters()
+    public function resetFilters(): static
     {
         $this->filter = new ChainFilter();
 
@@ -214,7 +215,7 @@ trait ManageFilterTrait
      *
      * @since  3.5.21
      */
-    public function setViewFilter(ChainFilter $viewFilter)
+    public function setViewFilter(ChainFilter $viewFilter): static
     {
         $this->viewFilter = $viewFilter;
 
@@ -224,12 +225,12 @@ trait ManageFilterTrait
     /**
      * addFilter
      *
-     * @param  FilterInterface|callable|string  $filters
+     * @param  FilterInterface|callable|string  ...$filters
      *
      * @return  static
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function addViewFilter(FilterInterface|callable|string ...$filters)
+    public function addViewFilter(FilterInterface|callable|string ...$filters): static
     {
         foreach ($filters as $filter) {
             $this->viewFilter->addFilter($this->getFilterFactory()->create($filter));
@@ -245,7 +246,7 @@ trait ManageFilterTrait
      *
      * @since  3.5.21
      */
-    public function resetViewFilters()
+    public function resetViewFilters(): static
     {
         $this->viewFilter = new ChainFilter();
 

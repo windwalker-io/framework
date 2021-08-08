@@ -12,20 +12,24 @@ declare(strict_types=1);
 namespace Windwalker\Database\Schema\Ddl;
 
 use Windwalker\Database\Platform\Type\DataType;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The Index class.
  */
 class Index
 {
-    use WrapableTrait;
+    use WrappableTrait;
     use OptionAccessTrait;
 
     public ?string $tableName = null;
+
     public ?string $indexName = null;
+
     public ?string $indexComment = null;
+
     public bool $isUnique;
+
     public bool $isPrimary;
 
     /**
@@ -45,21 +49,21 @@ class Index
         $this->indexName = $indexName;
     }
 
-    public function tableName(string $tableName)
+    public function tableName(string $tableName): static
     {
         $this->tableName = $tableName;
 
         return $this;
     }
 
-    public function name(string $indexName)
+    public function name(string $indexName): static
     {
         $this->indexName = $indexName;
 
         return $this;
     }
 
-    public function comment(?string $indexComment)
+    public function comment(?string $indexComment): static
     {
         $this->indexComment = $indexComment;
 
@@ -90,7 +94,7 @@ class Index
                 if ($subParts) {
                     $column->erratas(
                         [
-                            'sub_parts' => $subParts
+                            'sub_parts' => $subParts,
                         ]
                     );
                 }

@@ -20,6 +20,7 @@ use Windwalker\Queue\Worker;
 trait QueueEventTrait
 {
     protected Worker $worker;
+
     protected Queue $queue;
 
     /**
@@ -35,7 +36,7 @@ trait QueueEventTrait
      *
      * @return  static  Return self to support chaining.
      */
-    public function setWorker(Worker $worker)
+    public function setWorker(Worker $worker): static
     {
         $this->worker = $worker;
 
@@ -55,7 +56,7 @@ trait QueueEventTrait
      *
      * @return  static  Return self to support chaining.
      */
-    public function setQueue(Queue $queue)
+    public function setQueue(Queue $queue): static
     {
         $this->queue = $queue;
 

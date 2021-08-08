@@ -11,9 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
+use Predis\ClientInterface;
 use Predis\Response\ErrorInterface;
+use Redis;
+use RedisArray;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The RedisHandler class.
@@ -23,21 +26,21 @@ class RedisHandler extends AbstractHandler
     use OptionAccessTrait;
 
     /**
-     * @var \Redis|\RedisArray|\Predis\ClientInterface
+     * @var Redis|RedisArray|ClientInterface
      */
     protected $driver;
 
     /**
      * RedisHandler constructor.
      *
-     * @param  \Predis\ClientInterface|\Redis|\RedisArray|RedisCaster  $driver
+     * @param  ClientInterface|Redis|RedisArray|RedisCaster  $driver
      */
     public function __construct($driver, array $options = [])
     {
         ArgumentsAssert::assert(
-            $driver instanceof \Redis
-            || $driver instanceof \RedisArray
-            || $driver instanceof \Predis\ClientInterface,
+            $driver instanceof Redis
+            || $driver instanceof RedisArray
+            || $driver instanceof ClientInterface,
             '{caller} argument 1 should be Redis instance, %s given.',
             $driver
         );
@@ -45,7 +48,7 @@ class RedisHandler extends AbstractHandler
         $this->prepareOptions(
             [
                 'prefix' => 'ww_sess_',
-                'ttl' => null
+                'ttl' => null,
             ],
             $options
         );
@@ -53,7 +56,7 @@ class RedisHandler extends AbstractHandler
         $this->driver = $driver;
     }
 
-    public function getKey(string $id)
+    public function getKey(string $id): string
     {
         $key = $id;
 
@@ -99,7 +102,7 @@ class RedisHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         $this->getDriver()->del($this->getKey($id));
 
@@ -113,7 +116,7 @@ class RedisHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         return true;
     }
@@ -126,7 +129,7 @@ class RedisHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
         $result = $this->getDriver()
             ->setEx(
@@ -146,20 +149,19 @@ class RedisHandler extends AbstractHandler
      *
      * @return  bool
      */
-    public function updateTimestamp($id, $data)
+    public function updateTimestamp($id, $data): bool
     {
         return (bool) $this->getDriver()
             ->expire(
                 $this->getKey($id),
                 (int) ($this->ttl ?? $this->getOption('gc_maxlifetime') ?? ini_get('session.gc_maxlifetime'))
             );
-
     }
 
     /**
-     * @return \Predis\ClientInterface|\Redis|\RedisArray
+     * @return ClientInterface|Redis|RedisArray
      */
-    public function getDriver()
+    public function getDriver(): ClientInterface|RedisCaster|Redis|RedisArray
     {
         return $this->driver;
     }

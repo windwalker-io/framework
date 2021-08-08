@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Promise;
 
+use Exception;
+use Throwable;
 use Windwalker\Http\Response\Response;
 
 /**
@@ -37,13 +39,13 @@ class PromiseResponse extends Response
     /**
      * then
      *
-     * @param callable $callback
+     * @param  callable  $callback
      *
      * @return  static
      *
      * @since  3.4
      */
-    public function then(callable $callback)
+    public function then(callable $callback): static
     {
         $this->thenCallables[] = $callback;
 
@@ -53,13 +55,13 @@ class PromiseResponse extends Response
     /**
      * reject
      *
-     * @param callable $callback
+     * @param  callable  $callback
      *
      * @return  static
      *
      * @since  3.4
      */
-    public function fail(callable $callback)
+    public function fail(callable $callback): static
     {
         $this->rejectCallables[] = $callback;
 
@@ -69,19 +71,19 @@ class PromiseResponse extends Response
     /**
      * resolve
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return  mixed
      *
      * @since  3.4
      */
-    public function resolve($value)
+    public function resolve(mixed $value): mixed
     {
         try {
             foreach ($this->thenCallables as $then) {
                 $value = $then($value);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             foreach ($this->rejectCallables as $reject) {
                 $e = $reject($e);
             }
@@ -93,13 +95,13 @@ class PromiseResponse extends Response
     /**
      * reject
      *
-     * @param \Exception|\Throwable $e
+     * @param  Exception|Throwable  $e
      *
      * @return  mixed
      *
      * @since  3.4.5
      */
-    public function reject($e)
+    public function reject(mixed $e): mixed
     {
         foreach ($this->rejectCallables as $reject) {
             $e = $reject($e);

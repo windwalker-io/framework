@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Html\Helper;
 
+use JsonException;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
@@ -24,12 +25,12 @@ abstract class HTMLHelper
     /**
      * Repair HTML. If Tidy not exists, use repair function.
      *
-     * @param   string   $html     The HTML string to repair.
-     * @param   boolean  $useTidy  Force tidy or not.
+     * @param  string  $html     The HTML string to repair.
+     * @param  bool    $useTidy  Force tidy or not.
      *
      * @return  string  Repaired HTML.
      */
-    public static function repair(string $html, bool $useTidy = true)
+    public static function repair(string $html, bool $useTidy = true): string
     {
         if (function_exists('tidy_repair_string') && $useTidy) {
             $TidyConfig = [
@@ -83,7 +84,7 @@ abstract class HTMLHelper
      *
      * @return string JavaScript object notation representation of the array
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @since  2.0
      */
     public static function getJSObject($data = [], bool $quoteKey = false): string
@@ -120,7 +121,7 @@ abstract class HTMLHelper
                     $output .= '[' . implode(',', $child) . ']';
                     break;
                 }
-                // Go to next body
+            // Go to next body
 
             case 'object':
                 $array = is_object($data) ? get_object_vars($data) : $data;

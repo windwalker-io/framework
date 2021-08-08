@@ -13,6 +13,7 @@ namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Http\Event\RequestEvent;
+use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Output\OutputInterface;
 use Windwalker\Http\Output\StreamOutput;
@@ -34,7 +35,7 @@ class PhpServer extends AbstractServer
      */
     public function __construct(?OutputInterface $output = null, ?HttpFactory $httpFactory = null)
     {
-        $this->output      = $output ?? $this->getOutput();
+        $this->output = $output ?? $this->getOutput();
         $this->httpFactory = $httpFactory ?? new HttpFactory();
     }
 
@@ -53,8 +54,14 @@ class PhpServer extends AbstractServer
                 ->setRequest($request ?? $this->httpFactory->createServerRequestFromGlobals())
         );
 
+        $event = $this->emit(
+            ResponseEvent::wrap('response')
+                ->setRequest($event->getRequest())
+                ->setResponse($event->getResponse() ?? $this->httpFactory->createResponse())
+        );
+
         $this->getOutput()->respond(
-            $event->getResponse() ?? $this->httpFactory->createResponse()
+            $event->getResponse()
         );
     }
 
@@ -80,7 +87,7 @@ class PhpServer extends AbstractServer
      *
      * @return  static  Return self to support chaining.
      */
-    public function setOutput(OutputInterface $output)
+    public function setOutput(OutputInterface $output): static
     {
         $this->output = $output;
 

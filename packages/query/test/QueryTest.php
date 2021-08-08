@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Test;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Clause\JoinClause;
 use Windwalker\Query\Grammar\AbstractGrammar;
@@ -21,7 +22,9 @@ use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
-use function Windwalker\Query\clause;
+use function Windwalker\Query\expr;
+use function Windwalker\Query\qn;
+use function Windwalker\Query\val;
 use function Windwalker\raw;
 
 /**
@@ -34,11 +37,13 @@ class QueryTest extends TestCase
     /**
      * @var Query
      */
-    protected $instance;
+    protected Query $instance;
+
+    protected static mixed $escaper;
 
     /**
      * @param  array        $args
-     * @param  array        $addArgs
+     * @param  array        $asArgs
      * @param  string       $expected
      * @param  string|null  $subQueryAlias
      * @param  string|null  $modifiedSql
@@ -49,15 +54,15 @@ class QueryTest extends TestCase
      */
     public function testSelect(
         array $args,
-        ?array $addArgs,
+        ?array $asArgs,
         string $expected,
         ?string $subQueryAlias = null,
         ?string $modifiedSql = null
     ): void {
         $q = $this->instance->select(...$args);
 
-        if ($addArgs !== null) {
-            $q = $q->selectAs(...$addArgs);
+        if ($asArgs !== null) {
+            $q = $q->selectAs(...$asArgs);
         }
 
         self::assertSqlEquals($expected, (string) $q);
@@ -99,7 +104,7 @@ class QueryTest extends TestCase
             ],
             'raw and clause' => [
                 // args
-                [[raw('COUNT(*) AS a')], clause('DISTINCT', ['foo AS bar']), 'c AS ccc'],
+                [[raw('COUNT(*) AS a')], expr('DISTINCT', qn('foo AS bar')), 'c AS ccc'],
                 null,
                 // expected
                 'SELECT COUNT(*) AS a, DISTINCT "foo" AS "bar", "c" AS "ccc"',
@@ -114,7 +119,7 @@ class QueryTest extends TestCase
             'raw and selectAs with clause' => [
                 // args
                 [[raw('COUNT(*) AS a')], 'c AS ccc'],
-                [clause('DISTINCT', ['foo AS bar'])],
+                [expr('DISTINCT', qn('foo AS bar'))],
                 // expected
                 'SELECT COUNT(*) AS a, "c" AS "ccc", DISTINCT "foo" AS "bar"',
             ],
@@ -152,6 +157,17 @@ class QueryTest extends TestCase
         ];
     }
 
+    public function testSelectWithNoColumns()
+    {
+        $this->instance->from('flowers')
+            ->where('id', 123);
+
+        self::assertSqlEquals(
+            'SELECT * FROM "flowers" WHERE "id" = 123',
+            $this->instance->render(true)
+        );
+    }
+
     /**
      * @param  mixed        $tables
      * @param  string|null  $alias
@@ -187,7 +203,7 @@ class QueryTest extends TestCase
                 [
                     ['foo', 'f'],
                     ['bar', 'b'],
-                    ['yoo', 'y']
+                    ['yoo', 'y'],
                 ],
                 'nouse',
                 'SELECT * FROM "foo" AS "f", "bar" AS "b", "yoo" AS "y"',
@@ -230,8 +246,8 @@ class QueryTest extends TestCase
                             ->select('*')
                             ->from('flower')
                             ->alias('fl_nouse'),
-                        'f'
-                    ]
+                        'f',
+                    ],
                 ],
                 'nouse',
                 'SELECT * FROM "ace" AS "a", (SELECT * FROM "flower") AS "f"',
@@ -245,8 +261,8 @@ class QueryTest extends TestCase
                                 ->from('flower')
                                 ->alias('fl_nouse');
                         },
-                        'f'
-                    ]
+                        'f',
+                    ],
                 ],
                 'nouse',
                 'SELECT * FROM "ace" AS "a", (SELECT * FROM "flower") AS "f"',
@@ -282,6 +298,7 @@ class QueryTest extends TestCase
 
     public function joinProvider(): array
     {
+        // phpcs:disable
         return [
             'Simple left join' => [
                 'LEFT JOIN "bars" AS "bar" ON "bar"."id" = "foo"."bar_id"',
@@ -330,6 +347,20 @@ class QueryTest extends TestCase
                     'bar.flower',
                     '=',
                     ['rose', 'sakura'],
+                ],
+            ],
+            'Join with value' => [
+                'LEFT JOIN "bars" AS "bar" ON "bar"."id" = "foo"."bar_id" AND "bar"."flower" = \'rose\'',
+                [
+                    'LEFT',
+                    'bars',
+                    'bar',
+                    'bar.id',
+                    '=',
+                    'foo.bar_id',
+                    'bar.flower',
+                    '=',
+                    val('rose'),
                 ],
             ],
             'Join with callback on' => [
@@ -381,10 +412,12 @@ class QueryTest extends TestCase
                     'bar',
                     static function (JoinClause $join) {
                         $join->on('bar.id', 'foo.bar_id');
-                        $join->orOn(static function (JoinClause $join) {
-                            $join->on('a', 'b');
-                            $join->on('c', 'd');
-                        });
+                        $join->orOn(
+                            static function (JoinClause $join) {
+                                $join->on('a', 'b');
+                                $join->on('c', 'd');
+                            }
+                        );
                     },
                 ],
             ],
@@ -395,14 +428,14 @@ class QueryTest extends TestCase
                     'bars',
                     'bar',
                     'foo.bar_id',
-                    'bar.id'
+                    'bar.id',
                 ],
                 [
                     'RIGHT',
                     'flowers',
                     'fl',
                     'fl.bar_id',
-                    'bar.id'
+                    'bar.id',
                 ],
             ],
             'Join sub query' => [
@@ -416,8 +449,8 @@ class QueryTest extends TestCase
                         ->group('bar.id'),
                     'bar',
                     'foo.bar_id',
-                    'bar.id'
-                ]
+                    'bar.id',
+                ],
             ],
             'Join sub query callback' => [
                 'LEFT JOIN (SELECT COUNT(*) AS "count", "id" FROM "bar" GROUP BY "bar"."id") AS "bar" ON "foo"."bar_id" = "bar"."id"',
@@ -431,10 +464,11 @@ class QueryTest extends TestCase
                     },
                     'bar',
                     'foo.bar_id',
-                    'bar.id'
-                ]
+                    'bar.id',
+                ],
             ],
         ];
+        // phpcs:enable
     }
 
     public function testUnion(): void
@@ -512,12 +546,14 @@ SQL
         $q = self::createQuery()
             ->insert('foo')
             ->set('id', 1)
-            ->set([
-                'title' => 'A',
-                'foo' => 'a',
-                'bar' => null,
-                'yoo' => raw('CURRENT_TIMESTAMP()')
-            ]);
+            ->set(
+                [
+                    'title' => 'A',
+                    'foo' => 'a',
+                    'bar' => null,
+                    'yoo' => raw('CURRENT_TIMESTAMP()'),
+                ]
+            );
 
         self::assertSqlEquals(
             <<<SQL
@@ -555,10 +591,12 @@ SQL
             ->update('foo')
             ->set('a', 'b')
             ->set('c', 5)
-            ->set([
-                'foo' => 'bar',
-                'yoo' => 'goo'
-            ])
+            ->set(
+                [
+                    'foo' => 'bar',
+                    'yoo' => 'goo',
+                ]
+            )
             ->where('id', 123);
 
         self::assertSqlEquals(
@@ -576,9 +614,11 @@ SQL
                     ->from('yoo')
                     ->where('id', 1)
             )
-            ->set([
-                'f.col' => $q->raw('%n + 1', 'b.col')
-            ])
+            ->set(
+                [
+                    'f.col' => $q->raw('%n + 1', 'b.col'),
+                ]
+            )
             ->where('id', 123);
 
         self::assertSqlEquals(
@@ -753,6 +793,7 @@ SQL
 
     public function whereProvider(): array
     {
+        // phpcs:disable
         return [
             'Simple where =' => [
                 'SELECT * FROM "a" WHERE "foo" = \'bar\'',
@@ -792,9 +833,17 @@ SQL
                 'SELECT * FROM "a" WHERE "foo" IN (1, 2, \'yoo\')',
                 ['foo', 'in', [1, 2, 'yoo']],
             ],
+            'Where in iterate' => [
+                'SELECT * FROM "a" WHERE "foo" IN (1, 2, \'yoo\')',
+                ['foo', 'in', \Windwalker\collect([1, 2, 'yoo'])],
+            ],
             'Where between' => [
                 'SELECT * FROM "a" WHERE "foo" BETWEEN 1 AND 100',
                 ['foo', 'between', [1, 100]],
+            ],
+            'Where between with column name' => [
+                'SELECT * FROM "a" WHERE "foo" BETWEEN "a"."lft" AND "b"."rgt"',
+                ['foo', 'between', [qn('a.lft'), qn('b.rgt')]],
             ],
             'Where not between' => [
                 'SELECT * FROM "a" WHERE "foo" NOT BETWEEN 1 AND 100',
@@ -820,6 +869,21 @@ SQL
                                 ->select('id')
                                 ->from('flower')
                                 ->where('id', 5),
+                        ],
+                    ],
+                ],
+            ],
+            'Where array with more conditions' => [
+                'SELECT * FROM "a" WHERE foo >= \'bar\' AND "yoo" = \'hello\' AND "flower" IN (\'a\', \'b\', \'c\')',
+                [
+                    // arg 1 is array
+                    [
+                        'foo >= \'bar\'',
+                        'yoo' => 'hello',
+                        'flower' => [
+                            'a',
+                            'b',
+                            'c',
                         ],
                     ],
                 ],
@@ -889,6 +953,7 @@ SQL
                 [raw('foo'), raw('YEAR(date)')],
             ],
         ];
+        // phpcs:enable
     }
 
     public function testOrWhere()
@@ -967,16 +1032,17 @@ SQL
             ->select('*')
             ->from('foo')
             ->whereIn('id', [1, 2, 3])
+            ->whereNotIn('id', \Windwalker\collect([5, 6, 7]))
             ->whereBetween('time', '2012-03-30', '2020-02-24')
             ->whereNotIn('created', [55, 66])
             ->whereNotLike('content', '%qwe%');
 
         self::assertSqlEquals(
-            'SELECT * FROM "foo" WHERE "id" IN (1, 2, 3) AND "time" BETWEEN \'2012-03-30\' AND \'2020-02-24\' '
-                . 'AND "created" NOT IN (55, 66) AND "content" NOT LIKE \'%qwe%\'',
+            'SELECT * FROM "foo" WHERE "id" IN (1, 2, 3) AND "id" NOT IN (5, 6, 7) '
+            . 'AND "time" BETWEEN \'2012-03-30\' AND \'2020-02-24\' '
+            . 'AND "created" NOT IN (55, 66) AND "content" NOT LIKE \'%qwe%\'',
             $q->render(true)
         );
-
 
         $q = self::createQuery()
             ->select('*')
@@ -988,7 +1054,29 @@ SQL
 
         self::assertSqlEquals(
             'SELECT * FROM "foo" HAVING "id" IN (1, 2, 3) AND "time" BETWEEN \'2012-03-30\' AND \'2020-02-24\' '
-                . 'AND "created" NOT IN (55, 66) AND "content" NOT LIKE \'%qwe%\'',
+            . 'AND "created" NOT IN (55, 66) AND "content" NOT LIKE \'%qwe%\'',
+            $q->render(true)
+        );
+    }
+
+    public function testAutoAlias(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->where('id', 123)
+            ->where('a.state', 1)
+            ->where('c.state', 1);
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM "articles" AS "a"
+                     LEFT JOIN "ww_categories" AS "c" ON "a"."category_id" = "c"."id"
+            WHERE "a"."id" = 123
+              AND "a"."state" = 1
+              AND "c"."state" = 1
+            SQL,
             $q->render(true)
         );
     }
@@ -1370,7 +1458,40 @@ SQL
         );
     }
 
-    public function testFormat()
+    public function testSubQueryInExpr(): void
+    {
+        $q = self::createQuery();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereRaw(
+                $q->expr(
+                    'EXISTS()',
+                    self::createQuery()
+                        ->select('p.id')
+                        ->from('articles', 'a')
+                        ->leftJoin('categories', 'c', 'a.category_id', 'c.id')
+                        ->where('c.id', '=', qn('a.category_id'))
+                        ->where('p.model', 'like', '%test%')
+                )
+            );
+
+        self::assertSqlEquals(
+            <<<SQL
+SELECT *
+FROM "articles" AS "a"
+         LEFT JOIN "ww_categories" AS "c" ON "a"."category_id" = "c"."id"
+WHERE EXISTS(SELECT "p"."id"
+     FROM "articles" AS "a"
+              LEFT JOIN "categories" AS "c" ON "a"."category_id" = "c"."id"
+     WHERE "c"."id" = "a"."category_id" AND "p"."model" LIKE '%test%')
+
+SQL
+            ,
+            $q
+        );
+    }
+
+    public function testFormat(): void
     {
         $result = $this->instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
 
@@ -1401,7 +1522,7 @@ SQL
     public function testQuoteName(): void
     {
         $this->assertEquals(self::replaceQn('"foo"'), $this->instance->quoteName('foo'));
-        $this->assertEquals([self::replaceQn('"foo"')], $this->instance->quoteName(['foo']));
+        $this->assertEquals([self::replaceQn('"foo"')], $this->instance->qnMultiple(['foo']));
     }
 
     /**
@@ -1410,7 +1531,7 @@ SQL
     public function testQuote(): void
     {
         $q = new Query(
-            static function (string $value) {
+            $func = static function (string $value) {
                 return addslashes($value);
             }
         );
@@ -1420,7 +1541,7 @@ SQL
         self::assertEquals("'These are Simon\'s items'", $s);
 
         $q = new Query(
-            new class {
+            $obj = new class {
                 public function escape(string $value): string
                 {
                     return addslashes($value);
@@ -1439,7 +1560,7 @@ SQL
     public function testEscape(): void
     {
         $q = new Query(
-            static function (string $value) {
+            $escaper = static function (string $value) {
                 return addslashes($value);
             }
         );
@@ -1449,7 +1570,7 @@ SQL
         self::assertEquals("These are Simon\'s items", $s);
 
         $q = new Query(
-            new class {
+            $escaper = new class {
                 public function escape(string $value): string
                 {
                     return addslashes($value);
@@ -1462,7 +1583,7 @@ SQL
         self::assertEquals("These are Simon\'s items", $s);
     }
 
-    public function testSuffix()
+    public function testSuffix(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1498,7 +1619,7 @@ SQL
         );
     }
 
-    public function testSql()
+    public function testSql(): void
     {
         $q = self::createQuery()
             ->sql('SELECT * FROM foo WHERE id = 5');
@@ -1514,7 +1635,7 @@ SQL
      *
      * @return void
      */
-    public function testClear()
+    public function testClear(): void
     {
         $query = self::createQuery();
 
@@ -1531,7 +1652,7 @@ SQL
      *
      * @return void
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function testClearClause()
     {
@@ -1583,7 +1704,7 @@ SQL
      *
      * @return void
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function testClearType()
     {
@@ -1625,7 +1746,11 @@ SQL
             $query->clear($type);
 
             // Check the type has been cleared.
-            $this->assertNull($query->getType(), 'Query property: ' . $type . ' should be null.');
+            $this->assertEquals(
+                Query::TYPE_SELECT,
+                $query->getType(),
+                'Query property: ' . $type . ' should be null.'
+            );
 
             $this->assertNull($query->{'get' . ucfirst($type)}(), $type . ' should be null.');
 
@@ -1639,9 +1764,35 @@ SQL
         }
     }
 
+    public function testStripQuote()
+    {
+        $quoteStr = $this->instance->quote('foo');
+
+        self::assertNotEquals('foo', $quoteStr);
+
+        self::assertEquals(
+            'foo',
+            $this->instance->stripQuote($quoteStr)
+        );
+    }
+
+    public function testStripNameQuote()
+    {
+        $quoteStr = $this->instance->quoteName('foo');
+
+        self::assertNotEquals('foo', $quoteStr);
+
+        self::assertEquals(
+            'foo',
+            $this->instance->stripNameQuote($quoteStr)
+        );
+    }
+
     public static function createQuery($conn = null): Query
     {
-        return new Query($conn ?: new MockEscaper(), static::createGrammar());
+        $connection = $conn ?? (static::$escaper ??= new MockEscaper());
+
+        return new Query($connection, static::createGrammar());
     }
 
     public static function createGrammar(): AbstractGrammar

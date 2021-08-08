@@ -11,29 +11,38 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Schema\Ddl;
 
-use Windwalker\Database\Platform\Type\DataType;
-use Windwalker\Utilities\Classes\OptionAccessTrait;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The Constraint class.
  */
 class Constraint
 {
-    use WrapableTrait;
+    use WrappableTrait;
     use OptionAccessTrait;
 
     public const TYPE_PRIMARY_KEY = 'PRIMARY KEY';
+
     public const TYPE_UNIQUE = 'UNIQUE';
+
     public const TYPE_FOREIGN_KEY = 'FOREIGN KEY';
+
     public const TYPE_CHECK = 'CHECK';
 
     public ?string $constraintName = null;
+
     public ?string $constraintType = null;
+
     public ?string $tableName = null;
+
     public ?string $referencedTableSchema = null;
+
     public ?string $referencedTableName = null;
+
     public ?string $matchOption = null;
+
     public ?string $updateRule = null;
+
     public ?string $deleteRule = null;
 
     /**
@@ -46,10 +55,13 @@ class Constraint
      */
     public array $referencedColumns = [];
 
-    public function __construct(?string $constraintType = null, ?string $constraintName = null, ?string $tableName = null)
-    {
+    public function __construct(
+        ?string $constraintType = null,
+        ?string $constraintName = null,
+        ?string $tableName = null
+    ) {
         $this->constraintName = $constraintName;
-        $this->tableName      = $tableName;
+        $this->tableName = $tableName;
         $this->constraintType = $constraintType;
     }
 
@@ -58,7 +70,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function name(string $constraintName)
+    public function name(string $constraintName): static
     {
         $this->constraintName = $constraintName;
 
@@ -70,7 +82,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function type(string $constraintType)
+    public function type(string $constraintType): static
     {
         $this->constraintType = $constraintType;
 
@@ -82,7 +94,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function tableName(string $tableName)
+    public function tableName(string $tableName): static
     {
         $this->tableName = $tableName;
 
@@ -94,7 +106,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function referencedSchema(?string $referencedTableSchema)
+    public function referencedSchema(?string $referencedTableSchema): static
     {
         $this->referencedTableSchema = $referencedTableSchema;
 
@@ -106,7 +118,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function referencedTableName(?string $referencedTableName)
+    public function referencedTableName(?string $referencedTableName): static
     {
         $this->referencedTableName = $referencedTableName;
 
@@ -118,7 +130,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function matchOption(?string $matchOption)
+    public function matchOption(?string $matchOption): static
     {
         $this->matchOption = $matchOption;
 
@@ -130,7 +142,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function onUpdate(?string $updateRule)
+    public function onUpdate(?string $updateRule): static
     {
         $this->updateRule = $updateRule;
 
@@ -142,7 +154,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function onDelete(?string $deleteRule)
+    public function onDelete(?string $deleteRule): static
     {
         $this->deleteRule = $deleteRule;
 
@@ -163,7 +175,7 @@ class Constraint
      *
      * @return  static  Return self to support chaining.
      */
-    public function referencedColumns(array $referencedColumns)
+    public function referencedColumns(array $referencedColumns): static
     {
         $cols = [];
 
@@ -189,7 +201,7 @@ class Constraint
      *
      * @return  $this
      */
-    public function columns(array $columns)
+    public function columns(array $columns): static
     {
         $cols = [];
 
