@@ -17,7 +17,7 @@
     },
     "suggest": {
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\Test\\": "src/"
@@ -33,7 +33,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-4": "4.x-dev"
+            "dev-master": "4.x-dev"
         }
     },
     "config": {

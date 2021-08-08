@@ -16,13 +16,13 @@
     "require": {
         "php": ">=8.0.0",
         "psr/event-dispatcher": "^1.0",
-        "windwalker/utilities": "4.x-dev"
+        "windwalker/utilities": "^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0||^9.0",
         "mockery/mockery": "^1.4",
-        "windwalker/test": "4.x-dev",
-        "windwalker/promise": "4.x-dev",
+        "windwalker/test": "^4.0",
+        "windwalker/promise": "^4.0",
         "reactivex/rxphp": "^2.0",
         "react/event-loop": "^1.1"
     },
@@ -34,7 +34,7 @@
     "suggest": {
         "reactivex/rxphp": "Support EventEmitter::observe() pattern."
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\Event\\": "src/"
@@ -45,7 +45,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-4": "4.x-dev"
+            "dev-master": "4.x-dev"
         }
     },
     "config": {

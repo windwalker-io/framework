@@ -194,6 +194,16 @@
         }
     },
     "extra": {
+        "windwalker": {
+            "packages": [
+                "Windwalker\\Cache\\CachePackage",
+                "Windwalker\\Database\\DatabasePackage",
+                "Windwalker\\Form\\FormPackage",
+                "Windwalker\\Language\\LanguagePackage",
+                "Windwalker\\Renderer\\RendererPackage",
+                "Windwalker\\Session\\SessionPackage"
+            ]
+        },
         "branch-alias": {
             "dev-master": "4.x-dev"
         }

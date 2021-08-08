@@ -15,13 +15,13 @@
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",
-        "windwalker/utilities": "4.x-dev"
+        "windwalker/utilities": "^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0||^9.0",
-        "windwalker/test": "4.x-dev",
-        "windwalker/dom": "4.x-dev",
-        "windwalker/filesystem": "4.x-dev",
+        "windwalker/test": "^4.0",
+        "windwalker/dom": "^4.0",
+        "windwalker/filesystem": "^4.0",
         "twig/twig": "^2.0",
         "illuminate/view": "^6.0||^7.0||^8.0||^9.0",
         "mustache/mustache": "^2.0",
@@ -29,7 +29,7 @@
     },
     "suggest": {
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\Renderer\\": "src/"
@@ -44,8 +44,13 @@
         }
     },
     "extra": {
+        "windwalker": {
+            "packages": [
+                "Windwalker\\Renderer\\RendererPackage"
+            ]
+        },
         "branch-alias": {
-            "dev-4": "4.x-dev"
+            "dev-master": "4.x-dev"
         }
     },
     "config": {

@@ -16,21 +16,21 @@
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",
-        "windwalker/query": "4.x-dev",
-        "windwalker/event": "4.x-dev",
-        "windwalker/data": "4.x-dev",
-        "windwalker/cache": "4.x-dev",
-        "windwalker/pool": "4.x-dev",
-        "windwalker/utilities": "4.x-dev"
+        "windwalker/query": "^4.0",
+        "windwalker/event": "^4.0",
+        "windwalker/data": "^4.0",
+        "windwalker/cache": "^4.0",
+        "windwalker/pool": "^4.0",
+        "windwalker/utilities": "^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0||^9.0",
-        "windwalker/test": "4.x-dev",
+        "windwalker/test": "^4.0",
         "asika/sql-splitter": "^1.0"
     },
     "suggest": {
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\Database\\": "src/"
@@ -45,8 +45,13 @@
         }
     },
     "extra": {
+        "windwalker": {
+            "packages": [
+                "Windwalker\\Database\\DatabasePackage"
+            ]
+        },
         "branch-alias": {
-            "dev-4": "4.x-dev"
+            "dev-master": "4.x-dev"
         }
     },
     "config": {
