@@ -214,11 +214,11 @@ class Build extends Console
 
             $this->exec(sprintf('git tag -d %s', $this->tag));
 
-            $this->exec(sprintf('git push %s :refs/tags/%s', $subtree, $this->tag));
+            $this->exec(sprintf('git push %s :refs/tags/%s', $repo, $this->tag));
 
             $this->exec(sprintf('git tag %s', $this->tag));
 
-            $this->exec(sprintf('git push %s %s', $subtree, $this->tag));
+            $this->exec(sprintf('git push %s %s', $repo, $this->tag));
         }
 
         $this->exec('git checkout ' . $this->branch);
