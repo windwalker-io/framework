@@ -115,6 +115,8 @@ class Filesystem
         $iter = new AppendIterator();
 
         foreach ($paths as $path) {
+            // Webmozart/glob must use `/` in windows.
+            $path = Path::clean($path, '/');
             $iter->append(new FilesIterator(new GlobIterator($path, $flags), Glob::getBasePath($path)));
         }
 
