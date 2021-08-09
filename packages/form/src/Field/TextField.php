@@ -70,7 +70,7 @@ class TextField extends AbstractInputField
     public function prepareInput(DOMElement $input): DOMElement
     {
         $input['type'] = $this->getInputType();
-        $input['value'] = $this->escape($this->getValue());
+        $input['value'] = $this->getValue();
         $input['list'] = $this->getAttribute('list') ?? $this->buildListId();
 
         return $input;
