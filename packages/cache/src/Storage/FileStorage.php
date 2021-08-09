@@ -44,7 +44,7 @@ class FileStorage implements StorageInterface
             [
                 'lock' => false,
                 'extension' => '.data',
-                'expiration_format' => '\/\/\/\/\/---------- Expired At: (\d+) ----------\/\/\/\/\/',
+                'expiration_format' => '/////---------- Expired At: %d ----------/////',
             ],
             $options
         );
@@ -60,7 +60,7 @@ class FileStorage implements StorageInterface
         $data = $this->read($key);
 
         return preg_replace(
-            '#' . $this->getOption('expiration_format') . '#',
+            '#' . static::escapeRegex($this->getOption('expiration_format')) . '#',
             '',
             $data
         );
@@ -78,7 +78,7 @@ class FileStorage implements StorageInterface
         $data = $this->read($key);
 
         preg_match(
-            '#' . $this->getOption('expiration_format') . '#',
+            '#' . static::escapeRegex($this->getOption('expiration_format')) . '#',
             $data,
             $matches
         );
@@ -140,7 +140,7 @@ class FileStorage implements StorageInterface
 
         $expirationFormat = $this->getOption('expiration_format');
 
-        $value = sprintf($expirationFormat, $expiration, $value);
+        $value = sprintf($expirationFormat, $expiration) . $value;
 
         return $this->write($key, $value);
     }
@@ -318,5 +318,11 @@ class FileStorage implements StorageInterface
         $time ??= time();
 
         return $expiration !== 0 && $expiration <= $time;
+    }
+
+    public static function escapeRegex(string $regex): string
+    {
+        $regex = preg_quote($regex, '#');
+        return str_replace('%d', '(\d+)', $regex);
     }
 }
