@@ -44,7 +44,7 @@ class FileStorage implements StorageInterface
             [
                 'lock' => false,
                 'extension' => '.data',
-                'expiration_format' => '/////---------- Expired At: %s ----------/////%s',
+                'expiration_format' => '\/\/\/\/\/---------- Expired At: (\d+) ----------\/\/\/\/\/',
             ],
             $options
         );
@@ -59,9 +59,11 @@ class FileStorage implements StorageInterface
     {
         $data = $this->read($key);
 
-        sscanf($data, $this->getOption('expiration_format'), $expiration, $value);
-
-        return $value;
+        return preg_replace(
+            '#' . $this->getOption('expiration_format') . '#',
+            '',
+            $data
+        );
     }
 
     /**
@@ -75,7 +77,13 @@ class FileStorage implements StorageInterface
 
         $data = $this->read($key);
 
-        sscanf($data, $this->getOption('expiration_format'), $expiration, $value);
+        preg_match(
+            '#' . $this->getOption('expiration_format') . '#',
+            $data,
+            $matches
+        );
+
+        $expiration = $matches[1] ?? null;
 
         if (!static::isExpired((int) $expiration)) {
             return true;
