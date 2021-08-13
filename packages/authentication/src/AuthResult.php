@@ -12,9 +12,17 @@ declare(strict_types=1);
 namespace Windwalker\Authentication;
 
 use Throwable;
+use Windwalker\Utilities\StrNormalize;
 
 /**
  * The AuthenticationResult class.
+ *
+ * @method static $this userNotFound(array $credential)
+ * @method static $this emptyCredential(array $credential)
+ * @method static $this success(array $credential)
+ * @method static $this invalidPassword(array $credential)
+ * @method static $this invalidUsername(array $credential)
+ * @method static $this invalidCredential(array $credential)
  */
 class AuthResult
 {
@@ -79,5 +87,22 @@ class AuthResult
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public static function __callStatic(string $name, array $args): mixed
+    {
+        $status = strtoupper(StrNormalize::toSpaceSeparated($name));
+
+        if (defined(static::class . '::' . $status)) {
+            return new static($status, ...$args);
+        }
+
+        throw new \BadMethodCallException(
+            sprintf(
+                'Call to undefined method %s::%s()',
+                static::class,
+                $name
+            )
+        );
     }
 }
