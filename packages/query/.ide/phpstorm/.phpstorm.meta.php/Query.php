@@ -15,20 +15,7 @@ namespace PHPSTORM_META {
 
     override(
         \Windwalker\Query\Query::get(0),
-        map(
-            [
-                '' => '@',
-            ]
-        )
-    );
-
-    override(
-        \Windwalker\Query\Query::all(0),
-        map(
-            [
-                '' => '@',
-            ]
-        )
+        type(0)
     );
 
     // Options

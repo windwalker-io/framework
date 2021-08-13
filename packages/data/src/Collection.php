@@ -19,6 +19,8 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The Collection class.
  *
+ * @template T
+ *
  * @method string toJson(array $options = [])
  * @method string toXml(array $options = [])
  * @method string toIni(array $options = [])
@@ -139,7 +141,7 @@ class Collection extends ArrayObject
      * @param  string  $path
      * @param  string  $delimiter
      *
-     * @return  mixed
+     * @return  mixed|T
      *
      * @since  __DEPLOY_VERSION__
      */

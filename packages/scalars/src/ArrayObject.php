@@ -28,6 +28,8 @@ use function Windwalker\str;
 /**
  * The ArrayObject class.
  *
+ * @template T
+ *
  * @since  __DEPLOY_VERSION__
  */
 class ArrayObject implements AccessibleInterface

@@ -18,10 +18,10 @@ use Windwalker\Utilities\Contract\NullableInterface;
 /**
  * The Accessible trait which implements AccessibleInterface.
  *
+ * @template T
+ *
  * @see    AccessibleInterface
  * @see    NullableInterface
- *
- * @since  __DEPLOY_VERSION__
  */
 trait AccessibleTrait
 {
@@ -60,7 +60,7 @@ trait AccessibleTrait
      *
      * @param  mixed  $key
      *
-     * @return mixed
+     * @return mixed|T
      */
     public function &offsetGet(mixed $key): mixed
     {
@@ -103,7 +103,7 @@ trait AccessibleTrait
      *
      * @param  string  $key
      *
-     * @return mixed
+     * @return mixed|T
      */
     public function &__get(mixed $key): mixed
     {
@@ -150,7 +150,7 @@ trait AccessibleTrait
     /**
      * Get storage iterator.
      *
-     * @return  Generator
+     * @return  Generator|iterable<T>
      *
      * @since  __DEPLOY_VERSION__
      */
