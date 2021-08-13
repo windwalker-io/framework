@@ -17,12 +17,12 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0||^9.0",
+        "phpunit/phpunit": "^8.0||^9.0||^10.0",
         "windwalker/test": "^4.0",
         "windwalker/database": "^4.0",
         "asika/sql-splitter": "^1.0",
         "jdorn/sql-formatter": "^1.2",
-        "opis/closure": "4.x-dev||^4.0"
+        "opis/closure": "^3.0"
     },
     "suggest": {
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",

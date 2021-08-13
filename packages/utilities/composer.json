@@ -13,14 +13,14 @@
         "php": ">=8.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0||^9.0",
+        "phpunit/phpunit": "^8.0||^9.0||^10.0",
         "windwalker/test": "^4.0",
         "windwalker/scalars": "^4.0",
-        "symfony/string": "^5.2",
-        "symfony/options-resolver": "^5.0"
+        "symfony/string": "^5.2||^6.0",
+        "symfony/options-resolver": "^5.0||^6.0"
     },
     "suggest": {
-        "symfony/string": "Install ^5.2 to use inflector.",
+        "symfony/string": "Install to use inflector.",
         "opis/closure": "Install ^3.0 to support serializable Closure."
     },
     "minimum-stability": "beta",
