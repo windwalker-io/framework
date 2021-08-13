@@ -158,8 +158,8 @@ class EntityMapper implements EventAwareInterface
     /**
      * findOne
      *
-     * @param  mixed        $conditions
-     * @param  string|null  $className
+     * @param  mixed            $conditions
+     * @param  class-string<T>  $className
      *
      * @return  object|null|T
      */
@@ -172,6 +172,12 @@ class EntityMapper implements EventAwareInterface
             ->get($className ?? $metadata->getClassName());
     }
 
+    /**
+     * @param  mixed|array      $conditions
+     * @param  class-string<T>  $className
+     *
+     * @return  object|T
+     */
     public function mustFindOne(mixed $conditions = [], ?string $className = null): object
     {
         if (!$item = $this->findOne($conditions, $className)) {
@@ -181,6 +187,12 @@ class EntityMapper implements EventAwareInterface
         return $item;
     }
 
+    /**
+     * @param  mixed|array      $conditions
+     * @param  class-string<T>  $className
+     *
+     * @return  ResultIterator<T>
+     */
     public function findList(mixed $conditions = [], ?string $className = null): ResultIterator
     {
         $metadata = $this->getMetadata();
@@ -265,6 +277,12 @@ class EntityMapper implements EventAwareInterface
         return $entity;
     }
 
+    /**
+     * @param  iterable  $items
+     * @param  int       $options
+     *
+     * @return  iterable<T>
+     */
     public function createMultiple(iterable $items, int $options = 0): iterable
     {
         /** @var array|object $item */
@@ -367,11 +385,9 @@ class EntityMapper implements EventAwareInterface
      *
      * @param  iterable           $items
      * @param  array|string|null  $condFields
-     * @param  false              $updateNulls
+     * @param  int                $options
      *
      * @return  StatementInterface[]
-     *
-     * @throws JsonException
      */
     public function updateMultiple(iterable $items, array|string $condFields = null, int $options = 0): array
     {
@@ -397,6 +413,7 @@ class EntityMapper implements EventAwareInterface
      * @param  int    $options     The options.
      *
      * @return StatementInterface
+     * @throws \ReflectionException
      */
     public function updateWhere(array|object $source, mixed $conditions = null, int $options = 0): StatementInterface
     {
@@ -438,6 +455,7 @@ class EntityMapper implements EventAwareInterface
      * @param  int           $options
      *
      * @return  StatementInterface[]
+     * @throws \ReflectionException
      */
     public function updateBatch(array|object $data, mixed $conditions = null, int $options = 0): array
     {
@@ -453,6 +471,15 @@ class EntityMapper implements EventAwareInterface
         return $results;
     }
 
+    /**
+     * @param  iterable           $items
+     * @param  string|array|null  $condFields
+     * @param  int                $options
+     *
+     * @return  iterable<T>
+     *
+     * @throws \ReflectionException
+     */
     public function saveMultiple(iterable $items, string|array $condFields = null, int $options = 0): iterable
     {
         // Event
@@ -519,11 +546,28 @@ class EntityMapper implements EventAwareInterface
         return empty($keyValue);
     }
 
+    /**
+     * @param  array|object       $item
+     * @param  array|string|null  $condFields
+     * @param  int                $options
+     *
+     * @return  object|T
+     *
+     * @throws \ReflectionException
+     */
     public function saveOne(array|object $item, array|string $condFields = null, int $options = 0): object
     {
         return $this->saveMultiple([$item], $condFields, $options)[0];
     }
 
+    /**
+     * @param  mixed       $conditions
+     * @param  mixed|null  $initData
+     * @param  bool        $mergeConditions
+     * @param  int         $options
+     *
+     * @return  object|T
+     */
     public function findOneOrCreate(
         mixed $conditions,
         mixed $initData = null,
@@ -565,6 +609,16 @@ class EntityMapper implements EventAwareInterface
         return $this->createOne($item, $options);
     }
 
+    /**
+     * @param  array|object  $item
+     * @param  mixed|null    $initData
+     * @param  array|null    $condFields
+     * @param  int           $options
+     *
+     * @return  object|T
+     *
+     * @throws \ReflectionException
+     */
     public function updateOneOrCreate(
         array|object $item,
         mixed $initData = null,
@@ -689,6 +743,13 @@ class EntityMapper implements EventAwareInterface
         return $results;
     }
 
+    /**
+     * @param  iterable     $items
+     * @param  mixed|array  $conditions
+     * @param  int          $options
+     *
+     * @return  iterable<T>
+     */
     public function flush(iterable $items, mixed $conditions = [], int $options = 0): iterable
     {
         // Handling conditions
@@ -705,6 +766,13 @@ class EntityMapper implements EventAwareInterface
         return $items;
     }
 
+    /**
+     * @param  mixed|array             $conditions
+     * @param  callable|iterable|null  $newValue
+     * @param  int                     $options
+     *
+     * @return  array<T>
+     */
     public function copy(mixed $conditions = [], callable|iterable $newValue = null, int $options = 0): array
     {
         $items = $this->findList($conditions, Collection::class);
@@ -754,6 +822,16 @@ class EntityMapper implements EventAwareInterface
         return $creates;
     }
 
+    /**
+     * @param  iterable     $items
+     * @param  mixed|array  $conditions
+     * @param  array|null   $compareKeys
+     * @param  int          $options
+     *
+     * @return  array<array<T>>
+     *
+     * @throws \ReflectionException
+     */
     public function sync(iterable $items, mixed $conditions = [], ?array $compareKeys = null, int $options = 0): array
     {
         // Handling conditions
@@ -969,7 +1047,7 @@ class EntityMapper implements EventAwareInterface
         return $this->getORM()->extractField($entity, $field);
     }
 
-    public function conditionsToWheres(mixed $conditions, ?string $alias = null): array
+    public function conditionsToWheres(mixed $conditions): array
     {
         if (!is_array($conditions)) {
             $metadata = $this->getMetadata();

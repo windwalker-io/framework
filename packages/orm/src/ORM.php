@@ -227,9 +227,11 @@ class ORM
     /**
      * createEntity
      *
-     * @param  string  $entityClass
+     * @template T
      *
-     * @return  object
+     * @param  class-string<T>  $entityClass
+     *
+     * @return  T
      *
      * @throws ReflectionException
      */
@@ -247,10 +249,12 @@ class ORM
     /**
      * hydrateEntity
      *
-     * @param  array   $data
-     * @param  object  $entity
+     * @template T
      *
-     * @return  object
+     * @param  array     $data
+     * @param  object|T  $entity
+     *
+     * @return  object|T
      * @throws ReflectionException
      */
     public function hydrateEntity(array $data, object $entity): object

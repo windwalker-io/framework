@@ -24,3 +24,10 @@ $user = $em->createEntity();
 $dm = (new DataMapper(Collection::class));
 $u = $dm->se
 $u = $dm->create(StubUser::class);
+
+/** @var \Windwalker\ORM\EntityMapper<\Windwalker\ORM\Test\Entity\StubSakura> $mapper */
+$mapper = $orm->mapper(
+    \Windwalker\ORM\Test\Entity\StubSakura::class
+);
+
+$mapper->mustFindOne([])->mapAs();
