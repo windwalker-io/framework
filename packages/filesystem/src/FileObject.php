@@ -540,9 +540,7 @@ class FileObject extends SplFileInfo
                 return rmdir($path);
             }
 
-            if ($this->isFile()) {
-                return unlink($path);
-            }
+            return unlink($path);
         } catch (\Throwable $e) {
             throw new FilesystemException(
                 $e->getMessage(),

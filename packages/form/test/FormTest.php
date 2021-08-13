@@ -419,7 +419,7 @@ class FormTest extends TestCase
     {
         $form = $this->getByDefine('windwalker');
 
-        $html = '<div id="input-windwalker-id-wrapper" class="control-input" data-field-wrapper><label id="input-windwalker-id-label" data-field-label for="input-windwalker-id">ID</label><div><input id="input-windwalker-id" name="windwalker[id]" data-field-input type="text" value></div></div>';
+        $html = '<div id="input-windwalker-id-wrapper" class="control-input" data-field-wrapper><label id="input-windwalker-id-label" data-field-label for="input-windwalker-id">ID</label><div><input id="input-windwalker-id" name="windwalker[id]" data-field-input type="text"></div></div>';
 
         self::assertEquals($html, $form->renderField('id'));
 

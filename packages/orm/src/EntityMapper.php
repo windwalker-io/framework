@@ -329,7 +329,7 @@ class EntityMapper implements EventAwareInterface
                 ->get()
                 ?->dump();
 
-            $data = array_merge($oldData, $data);
+            $data = array_merge($oldData ?? [], $data);
         }
 
         $entity = $this->toEntity($source);
