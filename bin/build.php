@@ -23,7 +23,7 @@ class Build extends Console
      *
      * @var  string
      */
-    protected $organization = 'ventoviro';
+    protected $organization = 'windwalker-io';
 
     /**
      * Property lastOutput.
@@ -188,7 +188,7 @@ class Build extends Console
 
         // Add remote repo
         $repo = sprintf(
-            'git@github.com:%s/windwalker-%s.git',
+            'git@github.com:%s/%s.git',
             $this->organization,
             $subtree
         );
