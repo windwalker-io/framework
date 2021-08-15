@@ -9,10 +9,7 @@
 
 declare(strict_types=1);
 
-use Windwalker\Core\Form\BootstrapFormRenderer;
 use Windwalker\Core\Form\FormProvider;
-
-use function Windwalker\DI\create;
 
 return [
     'form' => [

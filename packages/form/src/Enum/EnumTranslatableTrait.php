@@ -13,13 +13,16 @@ namespace Windwalker\Form\Enum;
 
 use MyCLabs\Enum\Enum;
 use Windwalker\Language\Language;
+use Windwalker\Language\LanguageInterface;
+use Windwalker\Language\LanguageNormalizer;
+use Windwalker\Utilities\StrNormalize;
 
 /**
  * Trait EnumTranslableTrait
  */
 trait EnumTranslatableTrait
 {
-    public static function getTransItems(Language $lang, ...$args): array
+    public static function getTransItems(LanguageInterface $lang, ...$args): array
     {
         $items = [];
 

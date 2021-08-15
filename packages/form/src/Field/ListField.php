@@ -251,6 +251,8 @@ class ListField extends AbstractField
                 // Option
                 if ($handler) {
                     $handler($this, $option, null);
+                } elseif ($option instanceof DOMElement) {
+                    $this->addOption($option);
                 } else {
                     $this->option((string) $option, (string) $option);
                 }
@@ -259,6 +261,8 @@ class ListField extends AbstractField
                     // Group
                     if ($handler) {
                         $handler($this, $opt, null, $name);
+                    } elseif ($option instanceof DOMElement) {
+                        $this->addOption($option, (string) $name);
                     } else {
                         $this->option((string) $opt, (string) $opt, [], (string) $name);
                     }
@@ -267,7 +271,9 @@ class ListField extends AbstractField
                 // Option
                 if ($handler) {
                     $handler($this, $option, $name);
-                } else {
+                } elseif ($option instanceof DOMElement) {
+                    $this->addOption($option, (string) $name);
+                }  else {
                     $this->option((string) $option, (string) $name);
                 }
             }
