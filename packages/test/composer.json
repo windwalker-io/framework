@@ -7,7 +7,7 @@
         "framework",
         "test"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-test",
+    "homepage": "https://github.com/windwalker-io/test",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0"

@@ -10,7 +10,7 @@
         "async",
         "reactor"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-swoole",
+    "homepage": "https://github.com/windwalker-io/swoole",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0"

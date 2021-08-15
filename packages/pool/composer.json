@@ -7,7 +7,7 @@
         "framework",
         "connection pool"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-pool",
+    "homepage": "https://github.com/windwalker-io/pool",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

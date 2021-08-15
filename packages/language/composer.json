@@ -9,7 +9,7 @@
         "translation",
         "multi-language"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-language",
+    "homepage": "https://github.com/windwalker-io/language",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

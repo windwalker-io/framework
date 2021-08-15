@@ -8,7 +8,7 @@
         "stream",
         "psr7"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-stream",
+    "homepage": "https://github.com/windwalker-io/stream",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

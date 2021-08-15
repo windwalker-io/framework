@@ -7,7 +7,7 @@
         "framework",
         "environment"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-environment",
+    "homepage": "https://github.com/windwalker-io/environment",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

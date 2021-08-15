@@ -7,7 +7,7 @@
         "framework",
         "queue"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-queue",
+    "homepage": "https://github.com/windwalker-io/queue",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

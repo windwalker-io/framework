@@ -9,7 +9,7 @@
         "scalar object",
         "array object"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-scalars",
+    "homepage": "https://github.com/windwalker-io/scalars",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

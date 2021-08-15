@@ -7,7 +7,7 @@
         "framework",
         "dom"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-dom",
+    "homepage": "https://github.com/windwalker-io/dom",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

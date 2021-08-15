@@ -10,7 +10,7 @@
         "auth",
         "user"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-authorization",
+    "homepage": "https://github.com/windwalker-io/authorization",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

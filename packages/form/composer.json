@@ -9,7 +9,7 @@
         "form-builder",
         "html"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-form",
+    "homepage": "https://github.com/windwalker-io/form",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

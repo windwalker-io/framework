@@ -11,7 +11,7 @@
         "observable",
         "psr-14"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-event",
+    "homepage": "https://github.com/windwalker-io/event",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

@@ -7,7 +7,7 @@
         "framework",
         "session"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-session",
+    "homepage": "https://github.com/windwalker-io/session",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

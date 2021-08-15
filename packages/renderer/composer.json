@@ -11,7 +11,7 @@
         "mustach",
         "plates"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-renderer",
+    "homepage": "https://github.com/windwalker-io/renderer",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

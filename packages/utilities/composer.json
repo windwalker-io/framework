@@ -7,7 +7,7 @@
         "framework",
         "utilities"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-utilities",
+    "homepage": "https://github.com/windwalker-io/utilities",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0"

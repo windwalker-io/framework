@@ -9,7 +9,7 @@
         "template",
         "blade"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-edge",
+    "homepage": "https://github.com/windwalker-io/edge",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

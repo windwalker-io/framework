@@ -7,7 +7,7 @@
         "framework",
         "filter"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-filter",
+    "homepage": "https://github.com/windwalker-io/filter",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

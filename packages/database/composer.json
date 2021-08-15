@@ -12,7 +12,7 @@
         "sqlsrv",
         "pdo"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-database",
+    "homepage": "https://github.com/windwalker-io/database",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

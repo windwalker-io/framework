@@ -9,7 +9,7 @@
         "psr7",
         "psr17"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-http",
+    "homepage": "https://github.com/windwalker-io/http",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

@@ -7,7 +7,7 @@
         "framework",
         "di"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-di",
+    "homepage": "https://github.com/windwalker-io/di",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

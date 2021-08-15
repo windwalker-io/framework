@@ -10,7 +10,7 @@
         "psr17",
         "uri"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-uri",
+    "homepage": "https://github.com/windwalker-io/uri",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

@@ -9,7 +9,7 @@
         "database",
         "sql"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-query",
+    "homepage": "https://github.com/windwalker-io/query",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

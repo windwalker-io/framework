@@ -8,7 +8,7 @@
         "attributes",
         "php8"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-attributes",
+    "homepage": "https://github.com/windwalker-io/attributes",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",

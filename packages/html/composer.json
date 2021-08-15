@@ -8,7 +8,7 @@
         "html",
         "html-builder"
     ],
-    "homepage": "https://github.com/ventoviro/windwalker-html",
+    "homepage": "https://github.com/windwalker-io/html",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",
