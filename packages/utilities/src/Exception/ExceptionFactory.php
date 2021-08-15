@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Exception;
 
 use BadMethodCallException;
+use JetBrains\PhpStorm\NoReturn;
 use Windwalker\Utilities\Assert\Assert;
 
 /**
@@ -27,6 +28,7 @@ class ExceptionFactory
      *
      * @return BadMethodCallException
      */
+    #[NoReturn]
     public static function badMethodCall(string $name, ?string $caller = null): BadMethodCallException
     {
         return new BadMethodCallException(

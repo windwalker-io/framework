@@ -28,16 +28,14 @@ trait EventAwareTrait
     /**
      * Trigger an event.
      *
-     * @param  object|string  $event  The event object or name.
-     * @param  array          $args   The arguments to set in event.
+     * @template T
      *
-     * @return  EventInterface|object  The event after being passed through all listeners.
+     * @param  object|string|T  $event  The event object or name.
+     * @param  array            $args   The arguments to set in event.
      *
-     * @psalm-template T
-     * @psalm-param T         $event
-     * @psalm-return T
+     * @return  EventInterface|object|T  The event after being passed through all listeners.
      *
-     * @since          2.0
+     * @since  2.0
      */
     public function emit(object|string $event, array $args = []): object
     {

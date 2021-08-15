@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Language;
 
+use Windwalker\Core\CorePackage;
 use Windwalker\Core\Language\LangService;
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
@@ -36,7 +37,7 @@ class LanguagePackage extends AbstractPackage implements ServiceProviderInterfac
             ->extend(
                 LangService::class,
                 function (LangService $langService) {
-                    return $langService->loadAllFromPath(__DIR__ . '/../../../resources/languages', 'php');
+                    return $langService->loadAllFromPath(CorePackage::dir() . '/../../resources/languages', 'php');
                 }
             );
     }

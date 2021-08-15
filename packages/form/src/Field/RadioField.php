@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Form\Field;
 
 use Windwalker\DOM\DOMElement;
+use Windwalker\Form\Contract\InputOptionsInterface;
+use Windwalker\Form\Field\Concern\InputOptionsTrait;
 use Windwalker\Form\FormNormalizer;
 
 use function Windwalker\DOM\h;
@@ -21,8 +23,10 @@ use function Windwalker\DOM\h;
  *
  * @since  2.0
  */
-class RadioField extends ListField
+class RadioField extends ListField implements InputOptionsInterface
 {
+    use InputOptionsTrait;
+
     public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
         $attrs = $input->getAttributes(true);
@@ -44,25 +48,29 @@ class RadioField extends ListField
             FormNormalizer::sortAttributes($option, ['id', 'value', 'name']);
 
             $input->appendChild(
-                h(
-                    'div',
-                    [
-                        'id' => $option['id'] . '-item',
-                        'class' => 'radio',
-                        'data-radio-item-wrapper' => true,
-                    ],
-                    [
-                        h('input', $option->getAttributes(true)),
-                        h(
-                            'label',
-                            [
-                                'for' => $option['id'],
-                                'id' => $option['id'] . '-label',
-                                'data-radio-item-label' => true,
-                            ],
-                            $option->childNodes
-                        ),
-                    ]
+                $this->configureOptionWrapper(
+                    h(
+                        'div',
+                        [
+                            'id' => $option['id'] . '-item',
+                            'class' => 'radio',
+                            'data-radio-item-wrapper' => true,
+                        ],
+                        [
+                            $this->configureOption(h('input', $option->getAttributes(true))),
+                            $this->configureOptionLabel(
+                                h(
+                                    'label',
+                                    [
+                                        'for' => $option['id'],
+                                        'id' => $option['id'] . '-label',
+                                        'data-radio-item-label' => true,
+                                    ],
+                                    $option->childNodes
+                                )
+                            ),
+                        ]
+                    )
                 )
             );
         }

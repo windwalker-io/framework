@@ -13,6 +13,8 @@ namespace Windwalker\Form\Field;
 
 use Windwalker\Data\Collection;
 use Windwalker\DOM\DOMElement;
+use Windwalker\Form\Contract\InputOptionsInterface;
+use Windwalker\Form\Field\Concern\InputOptionsTrait;
 use Windwalker\Form\FormNormalizer;
 
 use function Windwalker\DOM\h;
@@ -22,8 +24,10 @@ use function Windwalker\DOM\h;
  *
  * @since  2.0
  */
-class CheckboxesField extends ListField
+class CheckboxesField extends ListField implements InputOptionsInterface
 {
+    use InputOptionsTrait;
+
     public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
         $attrs = $input->getAttributes(true);
@@ -45,25 +49,29 @@ class CheckboxesField extends ListField
             FormNormalizer::sortAttributes($option, ['id', 'value', 'name']);
 
             $input->appendChild(
-                h(
-                    'div',
-                    [
-                        'id' => $option['id'] . '-item',
-                        'class' => 'checkbox',
-                        'data-checkbox-item-wrapper' => true,
-                    ],
-                    [
-                        h('input', $option->getAttributes(true)),
-                        h(
-                            'label',
-                            [
-                                'for' => $option['id'],
-                                'id' => $option['id'] . '-label',
-                                'data-checkbox-item-label' => true,
-                            ],
-                            $option->childNodes
-                        ),
-                    ]
+                $this->configureOptionWrapper(
+                    h(
+                        'div',
+                        [
+                            'id' => $option['id'] . '-item',
+                            'class' => 'checkbox',
+                            'data-checkbox-item-wrapper' => true,
+                        ],
+                        [
+                            $this->configureOption(h('input', $option->getAttributes(true))),
+                            $this->configureOptionLabel(
+                                h(
+                                    'label',
+                                    [
+                                        'for' => $option['id'],
+                                        'id' => $option['id'] . '-label',
+                                        'data-checkbox-item-label' => true,
+                                    ],
+                                    $option->childNodes
+                                )
+                            ),
+                        ]
+                    )
                 )
             );
         }
