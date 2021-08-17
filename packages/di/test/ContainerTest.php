@@ -39,6 +39,7 @@ use Windwalker\Scalars\ArrayObject;
 use Windwalker\Scalars\StringObject;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
+use Windwalker\Utilities\Reflection\ReflectionCallable;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\DI\create;
@@ -560,6 +561,28 @@ class ContainerTest extends TestCase
     public function testCall(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
+    }
+
+    public function testCallFirstClassCallable(): void
+    {
+        if (PHP_VERSION_ID < 80100) {
+            self::markTestSkipped('Only support PHP 8.1');
+        }
+
+        $r = $this->instance->call(
+            $this->firstCallableProvider(...),
+            ['str' => new StringObject('STR')]
+        );
+
+        self::assertEquals(
+            'STR',
+            $r
+        );
+    }
+
+    public function firstCallableProvider(StringObject $str): string
+    {
+        return (string) $str;
     }
 
     /**
