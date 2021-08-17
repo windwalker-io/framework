@@ -52,12 +52,23 @@ class ResultSet implements IteratorAggregate, Countable
             return false;
         }
 
-        return $this->getFirstFailure() === null;
+        return $this->getFirstSuccess() !== null;
     }
 
     public function isFailure(): bool
     {
         return !$this->isSuccess();
+    }
+
+    public function getFirstSuccess(): ?AuthResult
+    {
+        foreach ($this->results as $result) {
+            if ($result->isSuccess()) {
+                return $result;
+            }
+        }
+
+        return null;
     }
 
     public function getFirstFailure(): ?AuthResult
