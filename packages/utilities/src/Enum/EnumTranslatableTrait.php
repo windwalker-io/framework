@@ -15,7 +15,7 @@ use MyCLabs\Enum\Enum;
 use Windwalker\Utilities\Contract\LanguageInterface;
 
 /**
- * Trait EnumTranslableTrait
+ * Trait EnumTranslatableTrait
  */
 trait EnumTranslatableTrait
 {

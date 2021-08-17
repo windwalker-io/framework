@@ -20,5 +20,5 @@ interface EnumTranslatableInterface
 {
     public function trans(LanguageInterface $lang, ...$args): string;
 
-    public static function getTransItems(EnumTranslatableInterface $lang, ...$args): array;
+    public static function getTransItems(LanguageInterface $lang, ...$args): array;
 }
