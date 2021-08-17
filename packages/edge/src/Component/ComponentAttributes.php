@@ -388,7 +388,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->attributes[$offset]);
     }
@@ -400,7 +400,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
@@ -413,7 +413,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->attributes[$offset] = $value;
     }
@@ -425,7 +425,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->attributes[$offset]);
     }
@@ -435,7 +435,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->attributes);
     }

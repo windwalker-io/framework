@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Language;
+namespace Windwalker\Utilities\Contract;
 
 use JetBrains\PhpStorm\ArrayShape;
 

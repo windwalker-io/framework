@@ -20,7 +20,7 @@ use Windwalker\Utilities\Contract\AccessibleInterface;
  *
  * @since 2.0
  */
-class Event extends AbstractEvent implements Serializable, AccessibleInterface
+class Event extends AbstractEvent implements AccessibleInterface
 {
     use AccessibleTrait;
 
@@ -70,27 +70,27 @@ class Event extends AbstractEvent implements Serializable, AccessibleInterface
     /**
      * Serialize the event.
      *
-     * @return  string  The serialized event.
+     * @return  array  The serialized event.
      *
      * @since   2.0
      */
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize([$this->name, $this->storage, $this->stopped]);
+        return [$this->name, $this->storage, $this->stopped];
     }
 
     /**
      * Unserialize the event.
      *
-     * @param  string  $serialized  The serialized event.
+     * @param  string  $data  The serialized event.
      *
      * @return  void
      *
      * @since   2.0
      */
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        [$this->name, $this->storage, $this->stopped] = unserialize($serialized);
+        [$this->name, $this->storage, $this->stopped] = $data;
     }
 
     public function &__call(string $name, array $args)

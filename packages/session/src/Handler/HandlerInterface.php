@@ -21,7 +21,7 @@ interface HandlerInterface extends SessionHandlerInterface
     /**
      * isSupported
      *
-     * @return  boolean
+     * @return  bool
      */
     public static function isSupported(): bool;
 }

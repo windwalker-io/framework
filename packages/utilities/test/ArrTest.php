@@ -896,19 +896,21 @@ class ArrTest extends TestCase
         self::assertTrue(Arr::isAccessible(new ArrayObject()));
 
         $array = new class implements ArrayAccess {
-            public function offsetExists($offset)
+            public function offsetExists($offset): bool
+            {
+                return false;
+            }
+
+            public function offsetGet($offset): mixed
+            {
+                return null;
+            }
+
+            public function offsetSet($offset, $value): void
             {
             }
 
-            public function offsetGet($offset)
-            {
-            }
-
-            public function offsetSet($offset, $value)
-            {
-            }
-
-            public function offsetUnset($offset)
+            public function offsetUnset($offset): void
             {
             }
         };

@@ -74,9 +74,9 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     /**
      * Fetch first cell and close the cursor.
      *
-     * @return  string|null
+     * @return  mixed
      */
-    public function result(): ?string;
+    public function result(): mixed;
 
     /**
      * Close cursor and free result.

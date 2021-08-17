@@ -66,9 +66,9 @@ class ResultIterator extends IteratorIterator implements ArrayAccess
      *
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        throw new BadMethodCallException(static::class . ' do not support offset set, use all() to get all data.');
+        throw new BadMethodCallException(static::class . ' does not support offset set, use all() to get all data.');
     }
 
     /**
@@ -79,8 +79,8 @@ class ResultIterator extends IteratorIterator implements ArrayAccess
      *
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
-        throw new BadMethodCallException(static::class . ' do not support offset unset, use all() to get all data.');
+        throw new BadMethodCallException(static::class . ' does not support offset unset, use all() to get all data.');
     }
 }

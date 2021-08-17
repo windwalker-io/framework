@@ -20,7 +20,7 @@ use SplPriorityQueue;
  *
  * @since  2.1.1
  */
-class PriorityQueue extends SplPriorityQueue implements Serializable
+class PriorityQueue extends SplPriorityQueue
 {
     public const MIN = -300;
 
@@ -132,9 +132,9 @@ class PriorityQueue extends SplPriorityQueue implements Serializable
     /**
      * Serialize
      *
-     * @return string
+     * @return array
      */
-    public function serialize(): string
+    public function __serialize(): array
     {
         $clone = clone $this;
 
@@ -146,19 +146,19 @@ class PriorityQueue extends SplPriorityQueue implements Serializable
             $data[] = $item;
         }
 
-        return serialize($data);
+        return $data;
     }
 
     /**
      * Deserialize
      *
-     * @param  string  $data
+     * @param  array  $data
      *
      * @return void
      */
-    public function unserialize($data): void
+    public function __unserialize(array $data): void
     {
-        foreach (unserialize($data) as $item) {
+        foreach ($data as $item) {
             $this->insert($item['data'], $item['priority']);
         }
     }

@@ -15,6 +15,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use ReflectionException;
 use UnexpectedValueException;
 use Windwalker\Data\Traits\FormatAwareTrait;
+use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Reflection\BacktraceHelper;
 use Windwalker\Utilities\Utf8String;
 

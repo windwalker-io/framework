@@ -103,7 +103,7 @@ trait EntityTrait
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $this->loadAllRelations();
 

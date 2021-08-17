@@ -112,9 +112,9 @@ class FilesystemHandler extends AbstractHandler
      *
      * @param  int  $maxlifetime
      *
-     * @return  bool
+     * @return int|false
      */
-    public function gc($maxlifetime): bool
+    public function gc($maxlifetime): int|false
     {
         $past = time() - $maxlifetime;
 

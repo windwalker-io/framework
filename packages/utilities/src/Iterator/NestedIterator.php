@@ -198,7 +198,7 @@ class NestedIterator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->compileIterator()->current();
     }
@@ -206,7 +206,7 @@ class NestedIterator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function next()
+    public function next(): void
     {
         $this->compileIterator()->next();
     }
@@ -230,7 +230,7 @@ class NestedIterator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->compileIterator(true);
     }

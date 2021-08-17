@@ -226,7 +226,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->cache ?? [];
     }
@@ -256,7 +256,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         $this->all();
 
@@ -266,7 +266,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     /**
      * @inheritDoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         $this->all();
 
@@ -276,7 +276,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     /**
      * @inheritDoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->all();
 
@@ -286,7 +286,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     /**
      * @inheritDoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->all();
 

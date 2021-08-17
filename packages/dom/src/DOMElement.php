@@ -345,8 +345,9 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      * @param  mixed  $value   The value to set.
      *
      * @return void
+     * @throws DOMException
      */
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->setAttribute($offset, $value);
     }
@@ -358,7 +359,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @return void
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset(mixed $offset): void
     {
         $this->removeAttribute($offset);
     }

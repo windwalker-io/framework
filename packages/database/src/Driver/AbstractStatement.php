@@ -229,7 +229,7 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @inheritDoc
      */
-    public function result(): ?string
+    public function result(): mixed
     {
         $assoc = $this->get();
 

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Form\Enum;
+namespace Windwalker\Utilities\Enum;
 
 use MyCLabs\Enum\Enum;
 use Windwalker\Utilities\Contract\LanguageInterface;
@@ -23,7 +23,7 @@ trait EnumTranslatableTrait
     {
         $items = [];
 
-        /** @var Enum $item */
+        /** @var Enum|EnumTranslatableInterface $item */
         foreach (static::values() as $item) {
             $items[$item->getValue()] = $item->trans($lang, ...$args);
         }
