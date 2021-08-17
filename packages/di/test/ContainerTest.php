@@ -563,22 +563,22 @@ class ContainerTest extends TestCase
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    public function testCallFirstClassCallable(): void
-    {
-        if (PHP_VERSION_ID < 80100) {
-            self::markTestSkipped('Only support PHP 8.1');
-        }
-
-        $r = $this->instance->call(
-            $this->firstCallableProvider(...),
-            ['str' => new StringObject('STR')]
-        );
-
-        self::assertEquals(
-            'STR',
-            $r
-        );
-    }
+    // public function testCallFirstClassCallable(): void
+    // {
+    //     if (PHP_VERSION_ID < 80100) {
+    //         self::markTestSkipped('Only support PHP 8.1');
+    //     }
+    //
+    //     $r = $this->instance->call(
+    //         $this->firstCallableProvider(...),
+    //         ['str' => new StringObject('STR')]
+    //     );
+    //
+    //     self::assertEquals(
+    //         'STR',
+    //         $r
+    //     );
+    // }
 
     public function firstCallableProvider(StringObject $str): string
     {
