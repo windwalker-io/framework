@@ -239,15 +239,18 @@ class EntityMapper implements EventAwareInterface
             unset($data[$aiColumn]);
         }
 
-        $entity = $this->toEntity($source);
-
+        // Keep data field same as source, that developers can know what data has sent.
         $type = AbstractSaveEvent::TYPE_CREATE;
         $event = $this->emitEvent(
             BeforeSaveEvent::class,
             compact('data', 'type', 'metadata', 'source', 'options')
         );
 
-        $data = $this->castForSave($fullData = $event->getData(), true, $entity);
+        // Hydrate data into entity after event, to make sure all fields has default value.
+        $fullData = $event->getData();
+        $entity = $this->hydrate($fullData, $this->toEntity($source));
+
+        $data = $this->castForSave($this->extract($entity), true, $entity);
 
         $data = $this->getDb()->getWriter()->insertOne(
             $metadata->getTableName(),
@@ -332,15 +335,17 @@ class EntityMapper implements EventAwareInterface
             $data = array_merge($oldData ?? [], $data);
         }
 
-        $entity = $this->toEntity($source);
-
         $type = AbstractSaveEvent::TYPE_UPDATE;
         $event = $this->emitEvent(
             BeforeSaveEvent::class,
             compact('data', 'type', 'metadata', 'oldData', 'source', 'options')
         );
 
-        $data = $this->castForSave($fullData = $event->getData(), $updateNulls, $entity);
+        // Hydrate data into entity after event, to make sure all fields has default value.
+        $fullData = $event->getData();
+        $entity = $this->hydrate($fullData, $this->toEntity($source));
+
+        $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
 
         $metadata = $event->getMetadata();
 

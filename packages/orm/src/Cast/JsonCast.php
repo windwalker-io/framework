@@ -40,6 +40,6 @@ class JsonCast implements CastInterface
      */
     public function extract(mixed $value): ?string
     {
-        return is_json($value) ? $value : json_encode($value ?? '', JSON_THROW_ON_ERROR);
+        return is_json($value) ? $value : json_encode($value, JSON_THROW_ON_ERROR);
     }
 }
