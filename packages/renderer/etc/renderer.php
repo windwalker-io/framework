@@ -27,6 +27,10 @@ return [
             __DIR__ . '/../../views'
         ],
 
+        'namespaces' => [
+            //
+        ],
+
         'renderers' => [
             'edge' => [
                 EdgeRenderer::class,
