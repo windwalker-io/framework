@@ -218,7 +218,7 @@ class MySQLPlatform extends AbstractPlatform
 
             // Is JSON
             if ($this->isMariaDB()) {
-                $erratas['is_json'] = str_contains($checks[$table] ?? '', 'json_valid');
+                $erratas['is_json'] = str_contains($checks[$row['COLUMN_NAME']] ?? '', 'json_valid');
             } else {
                 $erratas['is_json'] = strtolower($row['DATA_TYPE']) === 'json';
             }
