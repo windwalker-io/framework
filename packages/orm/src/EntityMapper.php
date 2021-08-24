@@ -694,10 +694,16 @@ class EntityMapper implements EventAwareInterface
             $delItems = [$entityObject];
         } else {
             // If Entity has keys, use this keys to delete once per item.
-            $delItems = $this->getORM()
-                ->from($metadata->getClassName())
-                ->where($this->conditionsToWheres($conditions))
-                ->getIterator($metadata->getClassName());
+            $delItems = (function () use ($metadata, $conditions) {
+                while (
+                $item = $this->getORM()
+                    ->from($metadata->getClassName())
+                    ->where($this->conditionsToWheres($conditions))
+                    ->get($metadata->getClassName())
+                ) {
+                    yield $item;
+                }
+            })();
         }
 
         $results = [];
