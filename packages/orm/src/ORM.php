@@ -148,8 +148,8 @@ class ORM
     /**
      * @template K
      *
-     * @param  string   $entityClass
-     * @param  ?string  $mapperClass
+     * @param  class-string<K> $entityClass
+     * @param  ?string         $mapperClass
      *
      * @return  EntityMapper<K>
      * @throws ReflectionException
