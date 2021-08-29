@@ -620,7 +620,15 @@ class Uri implements UriInterface
             : '';
         $uri .= ($parts & static::HOST) ? $this->host : '';
         $uri .= ($parts & static::PORT) ? (!empty($this->port) ? ':' : '') . $this->port : '';
-        $uri .= ($parts & static::PATH) ? $this->path ? '/' . ltrim($this->path, '/') : '' : '';
+
+        if ($parts & static::PATH) {
+            if ($this->host !== '') {
+                $uri .= '/' . ltrim($this->path, '/');
+            } else {
+                $uri .= $this->path;
+            }
+        }
+
         $uri .= ($parts & static::QUERY) ? (!empty($query) ? '?' . $query : '') : '';
         $uri .= ($parts & static::FRAGMENT) ? (!empty($this->fragment) ? '#' . $this->fragment : '') : '';
 
