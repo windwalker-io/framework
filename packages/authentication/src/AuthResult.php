@@ -17,12 +17,13 @@ use Windwalker\Utilities\StrNormalize;
 /**
  * The AuthenticationResult class.
  *
- * @method static $this userNotFound(array $credential)
- * @method static $this emptyCredential(array $credential)
- * @method static $this success(array $credential)
- * @method static $this invalidPassword(array $credential)
- * @method static $this invalidUsername(array $credential)
- * @method static $this invalidCredential(array $credential)
+ * @method static $this userNotFound(array $credential, \Throwable $e = null)
+ * @method static $this emptyCredential(array $credential, \Throwable $e = null)
+ * @method static $this success(array $credential, \Throwable $e = null)
+ * @method static $this invalidPassword(array $credential, \Throwable $e = null)
+ * @method static $this invalidUsername(array $credential, \Throwable $e = null)
+ * @method static $this invalidCredential(array $credential, \Throwable $e = null)
+ * @method static $this authorizeFail(array $credential, \Throwable $e = null)
  */
 class AuthResult
 {
@@ -37,6 +38,8 @@ class AuthResult
     public const INVALID_USERNAME = 'INVALID_USERNAME';
 
     public const INVALID_CREDENTIAL = 'INVALID_CREDENTIAL';
+
+    public const AUTHORIZE_FAIL = 'AUTHORIZE_FAIL';
 
     public string $status;
 
@@ -91,7 +94,7 @@ class AuthResult
 
     public static function __callStatic(string $name, array $args): mixed
     {
-        $status = strtoupper(StrNormalize::toSpaceSeparated($name));
+        $status = strtoupper(StrNormalize::toUnderscoreSeparated($name));
 
         if (defined(static::class . '::' . $status)) {
             return new static($status, ...$args);

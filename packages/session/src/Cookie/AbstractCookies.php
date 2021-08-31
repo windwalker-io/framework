@@ -71,12 +71,13 @@ abstract class AbstractCookies implements CookiesInterface
      * @param  DateTimeInterface|int|string  $expires  Timestamp, DateTime or time modify string.
      *
      * @return static Return self to support chaining.
+     * @throws \Exception
      */
     public function expires(int|string|DateTimeInterface $expires): static
     {
         if (is_string($expires) && !is_numeric($expires)) {
-            $date = new DateTimeImmutable('now');
-            $expires = $date->modify($expires)->getTimestamp();
+            $date = new DateTimeImmutable($expires);
+            $expires = $date->getTimestamp();
         }
 
         if ($expires instanceof DateTimeInterface) {

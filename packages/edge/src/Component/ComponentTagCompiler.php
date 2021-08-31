@@ -250,7 +250,7 @@ class ComponentTagCompiler
             ) . '])
 <?php $component->withAttributes([' . $this->attributesToString(
                 $attributes->dump(),
-                $class !== DynamicComponent::class
+                is_a($class, DynamicComponent::class, true)
             ) . "]); ?>";
     }
 

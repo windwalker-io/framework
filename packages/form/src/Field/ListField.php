@@ -242,7 +242,8 @@ class ListField extends AbstractField
             }
         }
 
-        $isList = array_is_list($options);
+        // Todo: Remove list case
+        $isList = false;
 
         foreach ($options as $name => $option) {
             if ($isList && !$isEnum) {
