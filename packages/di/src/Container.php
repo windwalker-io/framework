@@ -667,6 +667,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function newInstance(mixed $class, array $args = [], int $options = 0): mixed
     {
+        if (is_string($class)) {
+            $class = $this->resolveAliasFromParent($class);
+        }
+
         return $this->dependencyResolver->newInstance($class, $args, $options);
     }
 
@@ -716,6 +720,17 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     {
         while (isset($this->aliases[$id])) {
             $id = $this->aliases[$id];
+        }
+
+        return $id;
+    }
+
+    protected function resolveAliasFromParent(string $id): string
+    {
+        $id = $this->resolveAlias($id);
+
+        if ($this->parent) {
+            $id = $this->parent->resolveAliasFromParent($id);
         }
 
         return $id;
