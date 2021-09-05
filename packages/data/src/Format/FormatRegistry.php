@@ -185,7 +185,7 @@ class FormatRegistry
 
     public function alias(string $alias, string $format): static
     {
-        $this->aliases[strtolower($alias)] = strtoupper($format);
+        $this->aliases[strtolower($alias)] = strtolower($format);
 
         return $this;
     }
