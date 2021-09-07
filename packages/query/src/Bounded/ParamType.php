@@ -85,7 +85,9 @@ class ParamType
         $dataType = static::STRING;
 
         if (is_numeric($value)) {
-            if (TypeCast::tryInteger($value, true) !== null) {
+            if ($value > PHP_INT_MAX) {
+                $dataType = static::STRING;
+            } elseif (TypeCast::tryInteger($value, true) !== null) {
                 $dataType = static::INT;
             } else {
                 $dataType = static::FLOAT;
