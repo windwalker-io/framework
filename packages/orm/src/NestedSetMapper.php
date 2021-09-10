@@ -378,7 +378,7 @@ class NestedSetMapper extends EntityMapper
             // We are inserting a node relative to the last root node.
             if (!$position->getReferenceId()) {
                 $reference = $this->select($k, 'parent_id', 'level', 'lft', 'rgt')
-                    ->where('parent_id', $this->getEmptyParentId())
+                    ->where('id', $entity->getParentId() ?: $this->getEmptyParentId())
                     ->order('lft', 'DESC')
                     ->limit(1)
                     ->get($className);
