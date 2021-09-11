@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Bounded;
 
-use PDO;
-use Windwalker\Utilities\TypeCast;
-
 /**
  * The ParamType class.
  */
@@ -32,12 +29,12 @@ class ParamType
     public const NULL = 'null';
 
     private const PDO_MAPS = [
-        self::STRING => PDO::PARAM_STR,
-        self::INT => PDO::PARAM_INT,
-        self::FLOAT => PDO::PARAM_STR,
-        self::BLOB => PDO::PARAM_LOB,
-        self::BOOL => PDO::PARAM_BOOL,
-        self::NULL => PDO::PARAM_NULL,
+        self::STRING => 2, // PDO::PARAM_STR,
+        self::INT => 1, // PDO::PARAM_INT,
+        self::FLOAT => 2, // PDO::PARAM_STR,
+        self::BLOB => 3, // PDO::PARAM_LOB,
+        self::BOOL => 5, // PDO::PARAM_BOOL,
+        self::NULL => 0, // PDO::PARAM_NULL,
     ];
 
     private const MYSQLI_MAPS = [
@@ -82,20 +79,11 @@ class ParamType
      */
     public static function guessType(mixed $value): string
     {
-        $dataType = static::STRING;
-
-        if (is_numeric($value)) {
-            if ($value > PHP_INT_MAX) {
-                $dataType = static::STRING;
-            } elseif (TypeCast::tryInteger($value, true) !== null) {
-                $dataType = static::INT;
-            } else {
-                $dataType = static::FLOAT;
-            }
-        } elseif ($value === null) {
-            $dataType = static::NULL;
-        }
-
-        return $dataType;
+        return match(true) {
+            is_int($value) => static::INT,
+            is_float($value) => static::FLOAT,
+            $value === null => static::NULL,
+            default => static::STRING
+        };
     }
 }
