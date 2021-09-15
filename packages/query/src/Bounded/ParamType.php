@@ -80,9 +80,13 @@ class ParamType
     public static function guessType(mixed $value): string
     {
         if (is_string($value) && is_numeric($value)) {
-            $value = trim($value, '0.');
+            $val = trim($value, '0.');
 
-            if (str_contains($value, '.')) {
+            if ($val !== $value) {
+                return static::STRING;
+            }
+
+            if (str_contains($val, '.')) {
                 return static::FLOAT;
             }
 
