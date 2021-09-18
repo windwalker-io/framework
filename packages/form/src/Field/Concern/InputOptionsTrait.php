@@ -36,7 +36,7 @@ trait InputOptionsTrait
     public function configureOptionWrapper(DOMElement $wrapper): DOMElement
     {
         if ($handler = $this->getOptionWrapperHandler()) {
-            $handler($wrapper, $this);
+            $wrapper = $handler($wrapper, $this) ?? $wrapper;
         }
 
         return $wrapper;
@@ -45,7 +45,7 @@ trait InputOptionsTrait
     public function configureOptionLabel(DOMElement $wrapper): DOMElement
     {
         if ($handler = $this->getOptionLabelHandler()) {
-            $handler($wrapper, $this);
+            $wrapper = $handler($wrapper, $this) ?? $wrapper;
         }
 
         return $wrapper;
@@ -54,7 +54,7 @@ trait InputOptionsTrait
     public function configureOption(DOMElement $wrapper): DOMElement
     {
         if ($handler = $this->getOptionHandler()) {
-            $handler($wrapper, $this);
+            $wrapper = $handler($wrapper, $this) ?? $wrapper;
         }
 
         return $wrapper;
