@@ -279,4 +279,86 @@ class PathTest extends AbstractVfsTestCase
 
         self::assertEquals(Path::clean(getcwd() . '/foo/bar'), $p);
     }
+
+    public function testBasename(): void
+    {
+        $file = '/var/www/foo/bar/yoo.inc.foo';
+
+        self::assertEquals(
+            'yoo.inc.foo',
+            Path::basename($file)
+        );
+
+        self::assertEquals(
+            'yoo.inc',
+            Path::basename($file, true)
+        );
+        $file = '/var/www/中文路徑/目錄/檔案.inc.foo';
+
+        self::assertEquals(
+            '檔案.inc.foo',
+            Path::basename($file)
+        );
+
+        self::assertEquals(
+            '檔案.inc',
+            Path::basename($file, true)
+        );
+    }
+
+    /**
+     * testIsChild
+     *
+     * @return  void
+     *
+     * @dataProvider isChildProvider
+     */
+    public function testIsChild(string $path, string $root, bool $isChild)
+    {
+        self::assertEquals(
+            Path::isChild($path, $root),
+            $isChild
+        );
+    }
+
+    public function isChildProvider(): array
+    {
+        return [
+            'Windows' => [
+                'C:\\foo\\bar\\yoo.inc.exe',
+                'C:\\foo\\bar',
+                true
+            ],
+            'Windows with trailing slash' => [
+                'C:\\foo\\bar\\yoo.inc.exe',
+                'C:\\foo\\bar\\',
+                true
+            ],
+            'Windows not child' => [
+                'C:\\foo\\bar\\yoo.inc.exe',
+                'C:\\goo\\bar\\',
+                false
+            ],
+            'Unix' => [
+                '/var/foo/bar/yoo.inc.sh',
+                '/var/foo',
+                true
+            ],
+            'Unix with trailing slash' => [
+                '/var/foo/bar/yoo.inc.sh',
+                '/var/foo/',
+                true
+            ],
+            'Unix not child' => [
+                '/var/foo/bar/yoo.inc.sh',
+                '/etc/foo/',
+                false
+            ],
+            'Unix not child2' => [
+                'foo/bar/yoo.inc.sh',
+                '/var/foo/',
+                false
+            ],
+        ];
+    }
 }
