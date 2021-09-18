@@ -37,17 +37,24 @@ abstract class LanguageNormalizer
 
     public static function normalizeLangCode(string $lang, string $sep = '-'): string
     {
+        $lang = static::sanitize($lang);
+
         $lang = str_replace(['_', '-'], $sep, $lang);
 
-        $lang = explode($sep, $lang);
+        [$a, $b] = explode($sep, $lang) + ['', ''];
 
-        if (isset($lang[1])) {
-            $lang[1] = strtoupper($lang[1]);
+        if ($b) {
+            $b = strtoupper($b);
         }
 
-        $lang[0] = strtolower($lang[0]);
+        $a = strtolower($a);
 
-        return implode($sep, $lang);
+        return implode($sep, [$a, $b]);
+    }
+
+    public static function sanitize(string $string): string
+    {
+        return preg_replace('/[#\s\'\"\.\/\\\\]/', '', $string);
     }
 
     /**
@@ -59,7 +66,7 @@ abstract class LanguageNormalizer
      */
     public static function normalize(string $key): string
     {
-        // Only allow A-Z a-z 0-9 and "_", other characters will be replace with "_".
+        // Only allow A-Z a-z 0-9 and "_", other characters will be replaced with "_".
         $key = preg_replace('/[^A-Z0-9]+/i', '.', $key);
 
         return strtolower(trim($key, '.'));
