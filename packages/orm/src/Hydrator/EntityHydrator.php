@@ -140,6 +140,12 @@ class EntityHydrator implements FieldHydratorInterface
 
         $data = $this->hydrator->extract($object);
 
+        if (!array_key_exists($prop, $data)) {
+            throw new \UnexpectedValueException(
+                'Extract an un-exists field: ' . $field . ' from: ' . get_debug_type($object)
+            );
+        }
+
         return static::castFieldForExtract(
             $metadata,
             $column->getName(),
