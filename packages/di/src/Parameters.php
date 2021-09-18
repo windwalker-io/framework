@@ -48,10 +48,12 @@ class Parameters extends Collection
     {
         return tap(
             parent::extract($path, $reference),
-            function ($new) use ($reference) {
-                if ($reference) {
-                    $new->parent = $this;
+            function ($new) use ($path, $reference) {
+                // if ($reference) {
+                if ($this->parent) {
+                    $new->parent = $this->parent->extract($path, $reference);
                 }
+                // }
             }
         );
     }

@@ -21,6 +21,7 @@ use Windwalker\Utilities\Contract\AccessorAccessibleInterface;
 interface SessionInterface extends Countable, JsonSerializable, AccessorAccessibleInterface
 {
     public const OPTION_AUTO_COMMIT = 'auto_commit';
+    public const OPTION_AUTO_START = 'auto_start';
 
     public function clear(): bool;
 

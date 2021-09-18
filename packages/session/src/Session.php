@@ -63,10 +63,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
         $this->bridge = $bridge ?? new NativeBridge();
         $this->cookies = $cookies ?? Cookies::create()
-                ->httpOnly(true)
-                ->expires('+30days')
-                ->secure(false)
-                ->sameSite(Cookies::SAMESITE_LAX);
+            ->httpOnly(true)
+            ->expires('+30days')
+            ->secure(false)
+            ->sameSite(CookiesInterface::SAMESITE_LAX);
     }
 
     public function registerINI(): void
@@ -110,6 +110,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
     public function start(): bool
     {
+        if ($this->getOption('disabled')) {
+            return false;
+        }
+
         if ($this->bridge->isStarted()) {
             return true;
         }
