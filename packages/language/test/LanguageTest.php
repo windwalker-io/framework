@@ -90,6 +90,20 @@ class LanguageTest extends TestCase
         self::assertEquals('??A key not exists??', $this->instance->trans('A key not exists'));
     }
 
+    public function testTransWithNotExists(): void
+    {
+        $this->instance->setDebug(true);
+
+        self::assertEquals('??A key not exists??', $this->instance->trans('A key not exists'));
+
+        $orphans = $this->instance->getOrphans();
+
+        self::assertArrayHasKey(
+            'a.key.not.exists',
+            $orphans
+        );
+    }
+
     /**
      * Method to test choice().
      *
@@ -109,6 +123,21 @@ class LanguageTest extends TestCase
         self::assertEquals('沒有花', $this->instance->choice('Windwalker Language Test flower Choice', 0));
         self::assertEquals('花', $this->instance->choice('Windwalker Language Test flower Choice', 1));
         self::assertEquals('花', $this->instance->choice('Windwalker Language Test flower Choice', 2));
+    }
+
+    public function testChoiceNotExists(): void
+    {
+        $this->instance->setDebug(true);
+
+        $this->instance->setLocale('zh-TW');
+
+        self::assertEquals('**沒有花**', $this->instance->choice('Windwalker Language Test flower Choice', 0));
+        self::assertEquals('**花**', $this->instance->choice('Windwalker Language Test flower Choice', 1));
+        self::assertEquals('**花**', $this->instance->choice('Windwalker Language Test flower Choice', 2));
+        self::assertEquals(
+            '??Windwalker Language Test flower Choice not exists??',
+            $this->instance->choice('Windwalker Language Test flower Choice not exists', 2)
+        );
     }
 
     /**

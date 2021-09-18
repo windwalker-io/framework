@@ -17,6 +17,7 @@ use UnexpectedValueException;
 use Windwalker\Data\Traits\FormatAwareTrait;
 use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Reflection\BacktraceHelper;
+use Windwalker\Utilities\Str;
 use Windwalker\Utilities\Utf8String;
 
 /**
@@ -156,6 +157,16 @@ class Language implements LanguageInterface
         return [null, null];
     }
 
+    protected function surroundsDebugSigns(string $string, bool $found = true): string
+    {
+        if ($this->isDebug()) {
+            $sign = $found ? '**' : '??';
+            return Str::surrounds($string, $sign);
+        }
+
+        return $string;
+    }
+
     /**
      * translate
      *
@@ -180,19 +191,11 @@ class Language implements LanguageInterface
         [$foundLocale, $string] = $this->find($fullId, $locale, $fallback);
 
         if ($string === null) {
-            // In debug mode, we notice user this is a translating string but not found.
             if ($this->isDebug()) {
                 $this->orphans[$fullId] = $this->backtrace($fullId);
-
-                $id = '??' . $fullId . '??';
             }
 
             return [null, $id];
-        }
-
-        // In debug mode, we notice user this is a translated string.
-        if ($this->isDebug()) {
-            $string = '**' . $string . '**';
         }
 
         // Store used keys
@@ -205,7 +208,9 @@ class Language implements LanguageInterface
 
     public function trans(string $id, ...$args): string
     {
-        [, $string] = $this->get($id);
+        [$locale, $string] = $this->get($id);
+
+        $string = $this->surroundsDebugSigns($string, (bool) $locale);
 
         return $this->replace($string, $args);
     }
@@ -215,14 +220,17 @@ class Language implements LanguageInterface
         [$locale, $string] = $this->get($id);
 
         if (!$locale) {
-            return $string;
+            return $this->surroundsDebugSigns($string, false);
         }
 
         $args['count'] = $number;
 
-        return $this->replace(
-            $this->getSelector()->choose($string, (int) $number, $locale),
-            $args
+        return $this->surroundsDebugSigns(
+            $this->replace(
+                $this->getSelector()->choose($string, (int) $number, $locale),
+                $args
+            ),
+            true
         );
     }
 
