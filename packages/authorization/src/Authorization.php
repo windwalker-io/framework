@@ -37,13 +37,13 @@ class Authorization implements AuthorizationInterface
      *
      * @return  boolean
      */
-    public function authorise(string $policy, mixed $user, mixed ...$args): bool
+    public function authorize(string $policy, mixed $user, mixed ...$args): bool
     {
         if (!$this->hasPolicy($policy)) {
             throw new OutOfBoundsException(sprintf('Policy "%s" not exists', $policy));
         }
 
-        return $this->getPolicy($policy)->authorise($user, ...$args);
+        return $this->getPolicy($policy)->authorize($user, ...$args);
     }
 
     /**

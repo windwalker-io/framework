@@ -27,7 +27,7 @@ interface AuthorizationInterface
      *
      * @return  bool
      */
-    public function authorise(string $policy, mixed $user, mixed ...$args): bool;
+    public function authorize(string $policy, mixed $user, mixed ...$args): bool;
 
     /**
      * addPolicy

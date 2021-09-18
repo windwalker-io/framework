@@ -256,7 +256,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         );
 
         if ($source instanceof RawWrapper) {
-            return $source;
+            return $source();
         }
 
         if ($source instanceof ValueReference) {
