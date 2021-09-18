@@ -220,6 +220,17 @@ class EntityMapper implements EventAwareInterface
             ->loadColumn();
     }
 
+    /**
+     * createOne
+     *
+     * @param  array|object  $source
+     * @param  int           $options
+     *
+     * @return  object|T
+     *
+     * @throws JsonException
+     * @throws \ReflectionException
+     */
     public function createOne(array|object $source = [], int $options = 0): object
     {
         $pk = $this->getMainKey();
@@ -696,10 +707,10 @@ class EntityMapper implements EventAwareInterface
             // If Entity has keys, use this keys to delete once per item.
             $delItems = (function () use ($metadata, $conditions) {
                 while (
-                $item = $this->getORM()
-                    ->from($metadata->getClassName())
-                    ->where($this->conditionsToWheres($conditions))
-                    ->get($metadata->getClassName())
+                    $item = $this->getORM()
+                        ->from($metadata->getClassName())
+                        ->where($this->conditionsToWheres($conditions))
+                        ->get($metadata->getClassName())
                 ) {
                     yield $item;
                 }
