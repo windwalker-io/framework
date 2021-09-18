@@ -12,6 +12,8 @@ declare(strict_types=1);
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabasePackage;
 
+use Windwalker\ORM\ORM;
+use Windwalker\ORM\Subscriber\TruncateValueSubscriber;
 use function Windwalker\ref;
 
 return [
@@ -31,6 +33,12 @@ return [
 
         'providers' => [
             DatabasePackage::class,
+        ],
+
+        'listeners' => [
+            ORM::class => [
+                TruncateValueSubscriber::class
+            ]
         ],
 
         'bindings' => [

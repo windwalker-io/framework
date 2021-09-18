@@ -643,7 +643,7 @@ class EntityMapper implements EventAwareInterface
         if ($found = $this->findOne($conditions)) {
             $this->updateOne($item, $condFields, $options);
 
-            return $this->hydrate($item, $found);
+            return $this->hydrate(array_filter($data), $found);
         }
 
         if (is_callable($initData)) {
