@@ -13,8 +13,11 @@ use Psr\Http\Message\StreamInterface;
 use SplFileInfo;
 use Windwalker\Data\Format\FormatRegistry;
 use Windwalker\Filesystem\FileObject;
+use Windwalker\Scalars\StringObject;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
+
+use function Windwalker\str;
 
 /**
  * The Structure class.
@@ -152,16 +155,21 @@ trait StructureTrait
     /**
      * toString
      *
-     * @param  string  $format
-     * @param  array   $options
+     * @param  string|null  $format
+     * @param  array        $options
      *
-     * @return  string
+     * @return StringObject
      *
      * @since  __DEPLOY_VERSION__
      */
     public function toString(?string $format = null, array $options = []): string
     {
         return $this->getFormatRegistry()->dump($this->storage, $format ?? 'json', $options);
+    }
+
+    public function toStringObject(?string $format = null, array $options = []): StringObject
+    {
+        return str($this->toString($format, $options));
     }
 
     /**

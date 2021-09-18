@@ -22,8 +22,10 @@ use ReflectionObject;
 use ReflectionParameter;
 use Stringable;
 use Traversable;
+use Windwalker\Data\Collection;
 use Windwalker\Scalars\Concern\StringInflectorTrait;
 use Windwalker\Scalars\Concern\StringModifyTrait;
+use Windwalker\Scalars\Concern\StringStructureTrait;
 use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Classes\ImmutableHelperTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
@@ -83,6 +85,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
     use ImmutableHelperTrait;
     use StringModifyTrait;
     use StringInflectorTrait;
+    use StringStructureTrait;
     use FlowControlTrait;
 
     /**
