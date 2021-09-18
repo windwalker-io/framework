@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Windwalker\Filesystem;
 
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use UnexpectedValueException;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Utilities\Arr;
@@ -341,7 +340,7 @@ class Path
     }
 
     /**
-     * Get file name from a path.
+     * Get UTF-8 file name from a path.
      *
      * @param  string  $path  The file path to get basename.
      *
@@ -351,12 +350,38 @@ class Path
      */
     public static function getFilename(string $path): string
     {
-        $name = pathinfo($path, PATHINFO_FILENAME);
+        $paths = explode(DIRECTORY_SEPARATOR, static::clean($path));
 
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        if ($paths === []) {
+            return '';
+        }
 
-        if ($ext) {
-            $name .= '.' . $ext;
+        return array_pop($paths);
+    }
+
+    /**
+     * Safe mb basename().
+     *
+     * @see    https://www.php.net/manual/en/function.basename.php#121405
+     *
+     * @param  string  $path
+     *
+     * @return  string
+     *
+     * @since  3.5.17
+     */
+    public static function basename(string $path, bool $noExtension = false): string
+    {
+        $name = '';
+
+        if (preg_match('@^.*[\\\\/]([^\\\\/]+)$@s', $path, $matches)) {
+            $name = $matches[1];
+        } elseif (preg_match('@^([^\\\\/]+)$@s', $path, $matches)) {
+            $name = $matches[1];
+        }
+
+        if ($noExtension) {
+            $name = static::stripExtension($name);
         }
 
         return $name;
@@ -391,9 +416,8 @@ class Path
      *
      * @since  3.4.5
      */
-    public static function makeUtf8Safe(
-        string $file
-    ): bool|string {
+    public static function makeUtf8Safe(string $file): bool|string
+    {
         $file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
 
         return mb_ereg_replace("([\.]{2,})", '', $file);
@@ -522,5 +546,12 @@ class Path
         $outputParts = array_merge($outputParts, array_slice($toParts, $samePartsLength));
 
         return implode(DIRECTORY_SEPARATOR, $outputParts);
+    }
+
+    public static function isChild(string $path, string $root): bool
+    {
+        $relative = static::relative($root, $path);
+
+        return !str_starts_with($relative, '..');
     }
 }

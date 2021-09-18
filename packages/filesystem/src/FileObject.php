@@ -737,14 +737,16 @@ class FileObject extends SplFileInfo
     /**
      * Method to set property root
      *
-     * @param  string|null  $root
+     * @param  string|SplFileInfo|null  $root
      *
      * @return  static  Return self to support chaining.
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function setRoot(?string $root): static
+    public function setRoot(string|SplFileInfo|null $root): static
     {
+        $root = static::unwrap($root);
+
         $this->root = $root;
 
         return $this;
