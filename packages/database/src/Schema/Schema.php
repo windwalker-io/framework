@@ -248,6 +248,7 @@ class Schema
             'primaryUuidBinary' => $column->dataType('binary')
                 ->length(16)
                 ->primary(true),
+            'json' => $column->nullable(true),
             default => $column
         };
     }
