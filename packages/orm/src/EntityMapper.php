@@ -779,7 +779,7 @@ class EntityMapper implements EventAwareInterface
 
         // Event
 
-        $this->deleteWhere($conditions, $options);
+        $this->deleteWhere($conditions, $options | static::IGNORE_EVENTS);
 
         $items = $this->createMultiple($items, $options);
 
