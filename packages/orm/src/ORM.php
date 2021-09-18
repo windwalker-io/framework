@@ -20,6 +20,8 @@ use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Hydrator\FieldHydratorInterface;
+use Windwalker\Event\EventAwareInterface;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\ORM\Attributes\AutoIncrement;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
@@ -53,6 +55,8 @@ use Windwalker\Query\Query;
  *
  * phpcs:disable
  *
+ * @see EntityMapper
+ *
  * @method  object|null   findOne(string $entityClass, mixed $conditions = [], ?string $className = null)
  * @method  object   mustFindOne(string $entityClass, mixed $conditions = [], ?string $className = null)
  * @method  ResultIterator findList(string $entityClass, mixed $conditions = [], ?string $className = null)
@@ -74,8 +78,10 @@ use Windwalker\Query\Query;
  *
  * phpcs:enable
  */
-class ORM
+class ORM implements EventAwareInterface
 {
+    use EventAwareTrait;
+
     use AttributesAwareTrait;
 
     protected DatabaseAdapter $db;

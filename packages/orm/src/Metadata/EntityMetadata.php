@@ -105,6 +105,8 @@ class EntityMetadata implements EventAwareInterface
         $this->castManager = new CastManager();
         $this->relationManager = new RelationManager($this);
 
+        $this->addEventDealer($orm);
+
         $this->setup();
     }
 
