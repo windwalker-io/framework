@@ -54,6 +54,6 @@
         }
     },
     "provide": {
-        "psr/event-dispatcher-implementation": "1.0.0"
+        "psr/event-dispatcher-implementation": "1.0"
     }
 }

@@ -57,8 +57,8 @@
         }
     },
     "provide": {
-        "psr/http-message-implementation": "~1.0",
-        "psr/http-client-implementation": "~1.0",
-        "psr/http-factory-implementation": "~1.0"
+        "psr/http-message-implementation": "1.0",
+        "psr/http-client-implementation": "1.0",
+        "psr/http-factory-implementation": "1.0"
     }
 }

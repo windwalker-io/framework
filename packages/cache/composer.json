@@ -9,7 +9,7 @@
         "psr-6",
         "psr-16"
     ],
-    "homepage": "https://github.com/windwalker-io/event",
+    "homepage": "https://github.com/windwalker-io/cache",
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",
@@ -57,7 +57,7 @@
         }
     },
     "provide": {
-        "psr/cache-implementation": "~1.0",
-        "psr/simple-cache-implementation": "~1.0"
+        "psr/cache-implementation": "1.0|2.0",
+        "psr/simple-cache-implementation": "1.0"
     }
 }

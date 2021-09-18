@@ -44,5 +44,8 @@
         "platform": {
             "php": "8.0.0"
         }
+    },
+    "provide": {
+        "psr/container-implementation": "1.0|2.0"
     }
 }

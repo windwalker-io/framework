@@ -47,6 +47,7 @@ class MergeComposer extends \Asika\SimpleConsole\Console
             $this->mergeRequires($rootJson, $json, 'require');
             $this->mergeRequires($rootJson, $json, 'require-dev');
             $this->mergeRequires($rootJson, $json, 'suggest');
+            $this->mergeRequires($rootJson, $json, 'provide');
 
             $this->mergeAutoload($rootJson, $json, 'autoload.psr-4', 'src');
             $this->mergeAutoload($rootJson, $json, 'autoload.files', 'src/bootstrap.php');
@@ -68,7 +69,7 @@ class MergeComposer extends \Asika\SimpleConsole\Console
     {
         $rootRequires = $rootJson->proxy($path);
 
-        $requires = $json->getDeep($path);
+        $requires = $json->getDeep($path) ?? [];
 
         foreach ($requires as $package => $pkgVersion) {
             if (str_starts_with($package, 'windwalker')) {
