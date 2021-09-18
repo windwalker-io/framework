@@ -508,6 +508,17 @@ class FileObject extends SplFileInfo
         return $this;
     }
 
+    public function addFile(string $filename, mixed $content = ''): static
+    {
+        if (!$this->isDir()) {
+            throw new FilesystemException('Unable able to add file, current path is not a dir.');
+        }
+
+        $dest = $this->appendPath(DIRECTORY_SEPARATOR . $filename);
+
+        return $dest->write($content);
+    }
+
     /**
      * delete
      *
