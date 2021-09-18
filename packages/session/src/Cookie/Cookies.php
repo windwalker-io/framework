@@ -14,7 +14,7 @@ namespace Windwalker\Session\Cookie;
 /**
  * The CookieSetter class.
  */
-class Cookies extends AbstractCookies
+class Cookies extends AbstractConfigurableCookies
 {
     public static function create(): static
     {

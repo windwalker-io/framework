@@ -17,9 +17,9 @@ use DateTimeInterface;
 /**
  * The AbstractCookies class.
  */
-abstract class AbstractCookies implements CookiesInterface
+abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesConfigurableInterface
 {
-    protected int $expires = 0;
+    protected ?DateTimeInterface $expires = null;
 
     protected string $path = '';
 
@@ -60,31 +60,31 @@ abstract class AbstractCookies implements CookiesInterface
     }
 
     /**
-     * @return int
+     * @return ?\DateTimeInterface
      */
-    public function getExpires(): int
+    public function getExpires(): ?\DateTimeInterface
     {
         return $this->expires;
     }
 
     /**
-     * @param  DateTimeInterface|int|string  $expires  Timestamp, DateTime or time modify string.
+     * @param  DateTimeInterface|int|string|null  $expires  Timestamp, DateTime or time modify string.
      *
      * @return static Return self to support chaining.
      * @throws \Exception
      */
-    public function expires(int|string|DateTimeInterface $expires): static
+    public function expires(int|string|DateTimeInterface|null $expires): static
     {
-        if (is_string($expires) && !is_numeric($expires)) {
-            $date = new DateTimeImmutable($expires);
-            $expires = $date->getTimestamp();
+        if ($expires === null) {
+            $this->expires = null;
+            return $this;
         }
 
-        if ($expires instanceof DateTimeInterface) {
-            $expires = $expires->getTimestamp();
+        if (!$expires instanceof DateTimeInterface) {
+            $expires = new DateTimeImmutable($expires);
         }
 
-        $this->expires = (int) $expires;
+        $this->expires = $expires;
 
         return $this;
     }
@@ -187,53 +187,5 @@ abstract class AbstractCookies implements CookiesInterface
         $this->sameSite = $sameSite;
 
         return $this;
-    }
-
-    public function getCookieHeaders(): array
-    {
-        $headers = [];
-
-        foreach ($this->getStorage() as $k => $item) {
-            $header = $k . '=' . $item;
-
-            if ($settings = $this->buildHeaderSettings()) {
-                $header .= '; ' . $settings;
-            }
-
-            $headers[] = $header;
-        }
-
-        return $headers;
-    }
-
-    protected function buildHeaderSettings(): string
-    {
-        $settings = [];
-
-        if ($this->domain) {
-            $settings[] = 'domain=' . $this->domain;
-        }
-
-        if ($this->path) {
-            $settings[] = 'path=' . $this->path;
-        }
-
-        if ($this->expires) {
-            $settings[] = 'expires=' . $this->expires;
-        }
-
-        if ($this->secure) {
-            $settings[] = 'secure';
-        }
-
-        if ($this->sameSite) {
-            $settings[] = 'SameSite=' . $this->sameSite;
-        }
-
-        if ($this->httpOnly) {
-            $settings[] = 'HttpOnly';
-        }
-
-        return implode('; ', $settings);
     }
 }
