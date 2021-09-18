@@ -15,7 +15,7 @@ use Attribute;
 use ReflectionMethod;
 
 /**
- * The Boot class.
+ * To boot class when created from Container.
  */
 #[Attribute(Attribute::TARGET_METHOD)]
 class Setup implements ContainerAttributeInterface
