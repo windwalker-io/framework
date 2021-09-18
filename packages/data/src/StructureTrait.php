@@ -9,8 +9,10 @@
 
 namespace Windwalker\Data;
 
+use Psr\Http\Message\StreamInterface;
 use SplFileInfo;
 use Windwalker\Data\Format\FormatRegistry;
+use Windwalker\Filesystem\FileObject;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
 
@@ -76,6 +78,18 @@ trait StructureTrait
         return $this;
     }
 
+    public function loadFile(string|SplFileInfo $file, ?string $format = null, array $options = []): static
+    {
+        if ($file instanceof SplFileInfo) {
+            $file = $file->getPathname();
+        }
+
+        $registry = $this->getFormatRegistry();
+        $this->storage = Arr::mergeRecursive($this->storage, $registry->loadFile($file, $format, $options));
+
+        return $this;
+    }
+
     /**
      * withLoad
      *
@@ -109,8 +123,16 @@ trait StructureTrait
      */
     protected function loadData(mixed $data, ?string $format = null, array $options = []): array
     {
+        if ($data instanceof FileObject) {
+            $data = $data->getStream();
+        }
+
         if ($data instanceof SplFileInfo) {
             $data = $data->getPathname();
+        }
+
+        if ($data instanceof StreamInterface) {
+            $data = $data->getContents();
         }
 
         if (is_array($data) || is_object($data)) {
@@ -119,7 +141,7 @@ trait StructureTrait
             $registry = $this->getFormatRegistry();
 
             $storage = TypeCast::toArray(
-                $registry->load((string) $data, $format, $options),
+                $registry->load($data, $format, $options),
                 $options['to_array'] ?? false
             );
         }

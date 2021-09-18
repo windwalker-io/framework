@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Collection;
 use Windwalker\Data\StructureTrait;
 
+use function Windwalker\fs;
+
 /**
  * The StructureTraitTest class.
  *
@@ -98,6 +100,82 @@ class StructureTraitTest extends TestCase
                 file_get_contents(__DIR__ . '/fixtures/flower.toml'),
                 'toml',
                 ['load_raw' => true]
+            )->get('flower'),
+            'sakura'
+        );
+    }
+
+    /**
+     * @see  StructureTrait::load
+     */
+    public function testLoadFile(): void
+    {
+        $collection = new Collection();
+
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                __DIR__ . '/fixtures/flower.json',
+                'json'
+            )->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                __DIR__ . '/fixtures/flower.yml',
+                'yaml'
+            )->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                __DIR__ . '/fixtures/flower.ini',
+                'ini'
+            )->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                __DIR__ . '/fixtures/flower.xml',
+                'xml'
+            )->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                __DIR__ . '/fixtures/flower.hjson',
+                'hjson'
+            )->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                __DIR__ . '/fixtures/flower.toml',
+                'toml',
+                ['load_raw' => true]
+            )->get('flower'),
+            'sakura'
+        );
+    }
+
+    /**
+     * @see  StructureTrait::load
+     */
+    public function testLoadFileAndStream(): void
+    {
+        $collection = new Collection();
+
+        $this->assertEquals(
+            $collection->reset()->loadFile(
+                fs(__DIR__ . '/fixtures/flower.json'),
+                'json'
+            )->get('flower'),
+            'sakura'
+        );
+
+        $this->assertEquals(
+            $collection->reset()->load(
+                fs(__DIR__ . '/fixtures/flower.json')->getStream(),
+                'json'
             )->get('flower'),
             'sakura'
         );

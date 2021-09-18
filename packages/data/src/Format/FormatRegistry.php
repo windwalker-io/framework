@@ -13,6 +13,7 @@ namespace Windwalker\Data\Format;
 
 use Closure;
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use Traversable;
 use Windwalker\Utilities\Contract\DumpableInterface;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
@@ -29,22 +30,22 @@ class FormatRegistry
     /**
      * @var  array
      */
-    protected $handlers = [];
+    protected array $handlers = [];
 
     /**
      * @var  array
      */
-    protected $aliases = [];
+    protected array $aliases = [];
 
     /**
      * @var  array
      */
-    protected $extMaps = [];
+    protected array $extMaps = [];
 
     /**
      * @var  string
      */
-    public $defaultFormat = 'json';
+    public string $defaultFormat = 'json';
 
     /**
      * FormatRegistry constructor.
@@ -86,8 +87,12 @@ class FormatRegistry
             ->dump($data, $options);
     }
 
-    public function loadFile(string $file, ?string $format = null, array $options = []): mixed
+    public function loadFile(string|\SplFileInfo $file, ?string $format = null, array $options = []): mixed
     {
+        if ($file instanceof \SplFileInfo) {
+            $file = $file->getPathname();
+        }
+
         if ($format === null) {
             $paths = explode('.', $file);
             $ext = $paths[array_key_last($paths)];
@@ -102,8 +107,12 @@ class FormatRegistry
         return $this->parse(file_get_contents($file), $format ?? $this->defaultFormat, $options);
     }
 
-    public function load(string $string, ?string $format = null, array $options = [])
+    public function load(string|StreamInterface $string, ?string $format = null, array $options = [])
     {
+        if ($string instanceof StreamInterface) {
+            $string = $string->getContents();
+        }
+
         if (strlen($string) < PHP_MAXPATHLEN && is_file($string)) {
             return $this->loadFile($string, $format, $options);
         }
