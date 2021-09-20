@@ -125,11 +125,11 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             && $this->cookies instanceof Cookies
             && $this->getOptionAndINI('use_cookies')
         ) {
-            // If use auto cookie, we set cookie params first.
+            // If you use auto cookie, we set cookie params first.
             // Only Native session bridge with native cookies use this.
             $this->setCookieParams();
         } else {
-            // Otherwise set session ID from $_COOKIE.
+            // Otherwise, set session ID from $_COOKIE.
             $id = $this->cookies->get($this->bridge->getSessionName());
 
             if ($id !== null) {
@@ -137,7 +137,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             }
 
             // Must set cookie and update expires after session end.
-            if ($this->getOption(static::OPTION_AUTO_COMMIT)) {
+            if (!$this->destructor && $this->getOption(static::OPTION_AUTO_COMMIT)) {
                 $this->destructor = [$this, 'stop'];
 
                 register_shutdown_function(fn() => $this->destruct());
@@ -203,14 +203,23 @@ class Session implements SessionInterface, ArrayAccessibleInterface
         return $new;
     }
 
-    public function regenerate(bool $deleteOld = false): bool
+    public function regenerate(bool $deleteOld = false, bool $saveOld = true): bool
     {
-        return $this->bridge->regenerate($deleteOld);
+        $this->bridge->regenerate($deleteOld, $saveOld);
+
+        $this->cookies->set(
+            $this->bridge->getSessionName(),
+            $this->bridge->getId()
+        );
+
+        return true;
     }
 
     public function restart(): bool
     {
-        return $this->bridge->regenerate(true);
+        $this->regenerate(true);
+
+        return true;
     }
 
     /**
