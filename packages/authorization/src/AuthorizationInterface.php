@@ -40,6 +40,15 @@ interface AuthorizationInterface
     public function addPolicy(string $name, callable $handler): static;
 
     /**
+     * hasPolicy
+     *
+     * @param  string  $name
+     *
+     * @return  bool
+     */
+    public function hasPolicy(string $name): bool;
+
+    /**
      * registerPolicy
      *
      * @param  PolicyProviderInterface  $policy
