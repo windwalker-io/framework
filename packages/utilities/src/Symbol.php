@@ -47,6 +47,11 @@ class Symbol
 
     public function is(mixed $value): bool
     {
+        return $this->equals($value);
+    }
+
+    public function equals(mixed $value): bool
+    {
         if ($value instanceof static) {
             $value = $value->getValue();
         }
