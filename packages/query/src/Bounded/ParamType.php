@@ -82,7 +82,7 @@ class ParamType
         if (is_string($value) && is_numeric($value)) {
             $val = trim($value, '0.');
 
-            if ($val !== $value) {
+            if ($val !== $value || $value >= PHP_INT_MAX) {
                 return static::STRING;
             }
 
