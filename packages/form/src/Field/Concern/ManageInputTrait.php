@@ -22,7 +22,7 @@ trait ManageInputTrait
     public DOMElement $input;
 
     /**
-     * getInput
+     * Use the form renderer to render input.
      *
      * @param  array  $options
      *
@@ -35,6 +35,17 @@ trait ManageInputTrait
         return $this->getForm()->getRenderer()->renderInput($this, $input, $options);
     }
 
+    /**
+     * Convert input element as the format that we want exacttly printed.
+     *
+     * This method is often called in template or before printed.
+     * If you got your own renderer or layout for this field, just override this method and return your custom layout.
+     *
+     * @param  DOMElement  $input
+     * @param  array       $options
+     *
+     * @return  string|DOMElement
+     */
     public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
         $surrounds = $this->getSurrounds();
@@ -46,6 +57,13 @@ trait ManageInputTrait
         return $input;
     }
 
+    /**
+     * Prepare the input element attributes.
+     *
+     * @return  DOMElement
+     *
+     * @throws \DOMException
+     */
     public function getPreparedInput(): DOMElement
     {
         $input = clone $this->getInput();
@@ -62,7 +80,7 @@ trait ManageInputTrait
     }
 
     /**
-     * prepareRenderInput
+     * Prepare the input element attributes, this method is for field customize.
      *
      * @param  DOMElement  $input
      *
