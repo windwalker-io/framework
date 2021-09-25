@@ -269,6 +269,16 @@ class DatabaseAdapter implements EventListenableInterface, HydratorAwareInterfac
     }
 
     /**
+     * getLastQuery
+     *
+     * @return  Query|string|null
+     */
+    public function getLastQuery(): mixed
+    {
+        return $this->getDriver()->getLastQuery();
+    }
+
+    /**
      * transaction
      *
      * @param  callable  $callback

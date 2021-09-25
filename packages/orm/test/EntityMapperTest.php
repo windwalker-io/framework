@@ -295,7 +295,7 @@ class EntityMapperTest extends AbstractORMTestCase
         $this->instance->updateOne($data);
 
         self::assertEquals(
-            '{}',
+            '[]', // Empty object will convert to array
             static::$db->prepare('SELECT * FROM ww_flower WHERE id = 10 LIMIT 1')
                 ->get()
                 ->params
@@ -307,7 +307,7 @@ class EntityMapperTest extends AbstractORMTestCase
         $updateData = $this->instance->updateOne($data);
 
         self::assertEquals(
-            '{}',
+            '[]',
             static::$db->prepare('SELECT * FROM ww_flower WHERE id = 11 LIMIT 1')
                 ->get()
                 ->params
@@ -328,8 +328,8 @@ class EntityMapperTest extends AbstractORMTestCase
         $comment2 = $mapper->findOne(10);
 
         self::assertNotEquals(
-            $comment->getCreated()->getTimestamp(),
-            $comment2->getCreated()->getTimestamp()
+            $comment->getCreated()?->getTimestamp(),
+            $comment2->getCreated()?->getTimestamp()
         );
 
         self::assertNotEquals(

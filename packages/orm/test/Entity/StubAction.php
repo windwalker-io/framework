@@ -40,6 +40,9 @@ class StubAction implements EntityInterface
     #[Column('title')]
     protected string $title = '';
 
+    #[Column('type')]
+    protected string $type = '';
+
     protected ?RelationCollection $members = null;
 
     #[Mapping('member_action_map')]
@@ -154,6 +157,26 @@ class StubAction implements EntityInterface
     public function setMap(?StubMemberActionMap $map): static
     {
         $this->map = $map;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param  string  $type
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

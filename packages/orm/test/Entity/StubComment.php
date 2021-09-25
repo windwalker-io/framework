@@ -14,6 +14,7 @@ namespace Windwalker\ORM\Test\Entity;
 use DateTimeImmutable;
 use Windwalker\ORM\Attributes\AutoIncrement;
 use Windwalker\ORM\Attributes\Cast;
+use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\CurrentTime;
 use Windwalker\ORM\Attributes\PK;
@@ -44,7 +45,7 @@ class StubComment
     protected string $content = '';
 
     #[Column('created')]
-    #[Cast(DateTimeImmutable::class)]
+    #[CastNullable(DateTimeImmutable::class)]
     #[CurrentTime]
     protected ?DateTimeImmutable $created = null;
 

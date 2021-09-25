@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use Windwalker\Data\Collection;
 use Windwalker\ORM\Attributes\AutoIncrement;
 use Windwalker\ORM\Attributes\Cast;
+use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
@@ -46,8 +47,8 @@ class StubArticle
     protected int $state = 1;
 
     #[Column('created')]
-    #[Cast(DateTimeImmutable::class)]
-    protected DateTimeImmutable $created;
+    #[CastNullable(DateTimeImmutable::class)]
+    protected ?DateTimeImmutable $created;
 
     #[Column('created_by')]
     protected int $createdBy = 0;
@@ -135,19 +136,19 @@ class StubArticle
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return DateTimeImmutable|null
      */
-    public function getCreated(): DateTimeImmutable
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->created;
     }
 
     /**
-     * @param  DateTimeImmutable  $created
+     * @param  DateTimeImmutable|null  $created
      *
      * @return  static  Return self to support chaining.
      */
-    public function setCreated(DateTimeImmutable $created): static
+    public function setCreated(?DateTimeImmutable $created): static
     {
         $this->created = $created;
 

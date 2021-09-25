@@ -43,10 +43,7 @@ class StubFlower
     public int $state = 0;
 
     #[Column('params')]
-    #[
-        Cast(JsonCast::class),
-        Cast('array')
-    ]
+    #[Cast(JsonCast::class)]
     public array $params = [];
 
     public array $c = [];

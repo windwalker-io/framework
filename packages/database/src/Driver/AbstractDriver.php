@@ -75,6 +75,14 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $this->setPool($pool);
     }
 
+    /**
+     * @return string|Query
+     */
+    public function getLastQuery(): mixed
+    {
+        return $this->lastQuery;
+    }
+
     protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
