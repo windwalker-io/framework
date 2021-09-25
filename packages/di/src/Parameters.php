@@ -65,6 +65,8 @@ class Parameters extends Collection
                 if ($reference) {
                     $new->parent = $this;
                 }
+
+                $new->addPath($path);
             }
         );
     }
@@ -79,16 +81,26 @@ class Parameters extends Collection
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function &getDeep(string $path, string $delimiter = '.'): mixed
+    public function &getDeep(string $path, string $delimiter = '.', int $depth = 0): mixed
     {
         $value = parent::getDeep($path, $delimiter);
 
         if ($value === null && $this->parent) {
-            $value = $this->parent->getDeep($this->getParentPath($path, $delimiter), $delimiter);
+            $depth++;
+            $value = $this->parent->getDeep($this->getParentPath($path, $delimiter), $delimiter, $depth);
+
+            if ($value === null) {
+                $value = $this->parent->getDeep($path, $delimiter, $depth);
+            }
+
+            $depth--;
         }
 
-        while ($value instanceof ValueReference) {
-            $value = $value($this, $value->getDelimiter() ?? $delimiter);
+        if ($depth === 0) {
+            // Only extract ref on leaf
+            while ($value instanceof ValueReference) {
+                $value = $value($this, $value->getDelimiter() ?? $delimiter);
+            }
         }
 
         return $value;
