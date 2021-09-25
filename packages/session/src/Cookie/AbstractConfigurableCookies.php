@@ -43,7 +43,13 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
 
     public function getOptions(): array
     {
-        return array_change_key_case(get_object_vars($this), CASE_LOWER);
+        $options = array_change_key_case(get_object_vars($this), CASE_LOWER);
+
+        if (isset($options['expires']) && $options['expires'] instanceof DateTimeInterface) {
+            $options['expires'] = time() - $options['expires']->getTimestamp();
+        }
+
+        return $options;
     }
 
     public function setOptions(array $options): static
@@ -78,6 +84,10 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
         if ($expires === null) {
             $this->expires = null;
             return $this;
+        }
+
+        if (is_int($expires)) {
+            $expires += time();
         }
 
         if (!$expires instanceof DateTimeInterface) {

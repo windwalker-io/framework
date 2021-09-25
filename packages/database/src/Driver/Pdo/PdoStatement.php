@@ -14,7 +14,6 @@ namespace Windwalker\Database\Driver\Pdo;
 use PDO;
 use Windwalker\Database\Driver\AbstractStatement;
 use Windwalker\Database\Driver\ConnectionInterface;
-use Windwalker\Database\Driver\DriverInterface;
 use Windwalker\Database\Exception\StatementException;
 use Windwalker\Query\Bounded\ParamType;
 

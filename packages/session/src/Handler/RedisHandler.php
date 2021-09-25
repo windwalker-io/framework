@@ -114,11 +114,11 @@ class RedisHandler extends AbstractHandler
      *
      * @param  int  $maxlifetime
      *
-     * @return  bool
+     * @return  int|false  Returns the number of deleted sessions on success, or false on failure.
      */
-    public function gc($maxlifetime): bool
+    public function gc($maxlifetime): int|false
     {
-        return true;
+        return 0;
     }
 
     /**

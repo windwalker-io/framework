@@ -221,12 +221,12 @@ class PdoHandler extends AbstractHandler
      *
      * @param  int  $lifetime  The maximum age of a session.
      *
-     * @return  boolean  True on success, false otherwise.
+     * @return  int|false  Returns the number of deleted sessions on success, or false on failure.
      *
      * @throws  Exception
      * @since   2.0
      */
-    public function gc($lifetime): bool
+    public function gc($lifetime): int|false
     {
         // Determine the timestamp threshold with which to purge old sessions.
         $past = time() - $lifetime;
@@ -238,7 +238,7 @@ class PdoHandler extends AbstractHandler
         $stmt = $this->db->prepare($query->forPDO($params));
         $stmt->execute($params);
 
-        return true;
+        return $stmt->rowCount();
     }
 
     /**

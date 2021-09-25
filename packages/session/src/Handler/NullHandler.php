@@ -37,9 +37,9 @@ class NullHandler extends AbstractHandler
     /**
      * @inheritDoc
      */
-    public function gc($max_lifetime)
+    public function gc($max_lifetime): int|false
     {
-        return true;
+        return 0;
     }
 
     /**

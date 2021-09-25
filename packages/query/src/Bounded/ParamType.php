@@ -28,15 +28,6 @@ class ParamType
 
     public const NULL = 'null';
 
-    private const PDO_MAPS = [
-        self::STRING => 2, // PDO::PARAM_STR,
-        self::INT => 1, // PDO::PARAM_INT,
-        self::FLOAT => 2, // PDO::PARAM_STR,
-        self::BLOB => 3, // PDO::PARAM_LOB,
-        self::BOOL => 5, // PDO::PARAM_BOOL,
-        self::NULL => 0, // PDO::PARAM_NULL,
-    ];
-
     private const MYSQLI_MAPS = [
         self::STRING => 's',
         self::INT => 'i',
@@ -51,11 +42,19 @@ class ParamType
      *
      * @param  string|null  $type
      *
-     * @return mixed
+     * @return  ?int
      */
-    public static function convertToPDO(?string $type): mixed
+    public static function convertToPDO(?string $type): ?int
     {
-        return static::PDO_MAPS[$type] ?? $type;
+        return match ($type) {
+            self::STRING => \PDO::PARAM_STR,
+            self::INT => \PDO::PARAM_INT,
+            self::FLOAT => \PDO::PARAM_STR,
+            self::BLOB => \PDO::PARAM_LOB,
+            self::BOOL => \PDO::PARAM_BOOL,
+            self::NULL => \PDO::PARAM_NULL,
+            default => $type
+        };
     }
 
     /**
@@ -63,11 +62,17 @@ class ParamType
      *
      * @param  string  $type
      *
-     * @return  mixed|string
+     * @return  string
      */
-    public static function convertToMysqli(string $type): mixed
+    public static function convertToMysqli(string $type): string
     {
-        return static::MYSQLI_MAPS[$type] ?? $type;
+        return match ($type) {
+            self::STRING => 's',
+            self::INT, self::BOOL, self::NULL => 'i',
+            self::FLOAT => 'd',
+            self::BLOB => 'b',
+            default => $type
+        };
     }
 
     /**

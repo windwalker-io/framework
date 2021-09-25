@@ -91,7 +91,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
             `created` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
             `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             `deleted` timestamp NOT NULL DEFAULT '1970-01-01 12:00:01',
-            `params` json NOT NULL,
+            `params` json DEFAULT NULL,
             PRIMARY KEY (`id`),
             INDEX `idx_enterprise_catid_type` (`catid`, `type`),
             INDEX `idx_enterprise_title` (`title`(150))

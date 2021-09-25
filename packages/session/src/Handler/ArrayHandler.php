@@ -76,15 +76,26 @@ class ArrayHandler extends AbstractHandler
      *
      * @param  int  $lifetime
      *
-     * @return  bool
+     * @return  int|false
      */
-    public function gc($lifetime): bool
+    public function gc($lifetime): int|false
     {
         $past = time() - $lifetime;
+        $count = 0;
 
-        $this->sessions = array_filter($this->sessions, fn($sess) => $sess['time'] >= $past);
+        $this->sessions = array_filter(
+            $this->sessions,
+            static function ($sess) use ($past, &$count) {
+                if ($sess['time'] < $past) {
+                    $count++;
+                    return false;
+                }
 
-        return true;
+                return true;
+            }
+        );
+
+        return $count;
     }
 
     /**

@@ -83,8 +83,10 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
     {
         $options = Arr::mergeRecursive($this->getOptions(), $options);
 
+        $baseDir = null;
+
         if (is_file($layout)) {
-            $path = dirname($layout);
+            $baseDir = dirname($layout);
             $filename = Path::getFilename($layout);
         } else {
             $file = $this->findFile($layout);
@@ -99,7 +101,7 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
                 );
             }
 
-            $path = $file->getPath();
+            $pathname = $file->getPathname();
             $filename = $file->getFilename();
         }
 
@@ -110,8 +112,13 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
             $layout = $renderer->handleLayout($layout, $extension);
         }
 
+        // If found a file, we must use layout path to find relative base dir.
+        if ($baseDir === null && isset($pathname)) {
+            $baseDir = Str::removeRight($pathname, $layout);
+        }
+
         $options['paths'] = $this->dumpPaths();
-        $options['base_dir'] = $path;
+        $options['base_dir'] = $baseDir;
 
         return $renderer->make($layout, $options);
     }

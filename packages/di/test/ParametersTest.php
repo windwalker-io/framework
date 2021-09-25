@@ -30,6 +30,8 @@ class ParametersTest extends TestCase
     {
         $foo = $this->instance->extract('foo', true);
 
+        $this->instance->setDeep('foo.goo', 'World');
+
         self::assertEquals(
             'Hello',
             $foo->getDeep('bar.yoo')
@@ -39,22 +41,27 @@ class ParametersTest extends TestCase
             'Hello',
             $foo->getDeep('foo.bar.yoo')
         );
-    }
-
-    public function testGetRefSelf()
-    {
-        self::assertEquals(
-            'Hello',
-            $this->instance->getDeep('ref')
-        );
-
-        $this->instance->set('ref', ref('foo/bar/yoo', '/'));
 
         self::assertEquals(
-            'Hello',
-            $this->instance->getDeep('ref')
+            'World',
+            $foo->getDeep('goo')
         );
     }
+
+    // public function testGetRefSelf()
+    // {
+    //     self::assertEquals(
+    //         'Hello',
+    //         $this->instance->getDeep('ref')
+    //     );
+    //
+    //     $this->instance->set('ref', ref('foo/bar/yoo', '/'));
+    //
+    //     self::assertEquals(
+    //         'Hello',
+    //         $this->instance->getDeep('ref')
+    //     );
+    // }
 
     public function testGetRefParent()
     {

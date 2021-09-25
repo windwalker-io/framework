@@ -33,12 +33,25 @@ class Parameters extends Collection
 
     protected ?Parameters $parent = null;
 
+    protected string $path = '';
+
     public function createChild(): static
     {
         $new = clone $this;
         $new->parent = $this;
 
         return $new;
+    }
+
+    public function addPath(string $path): void
+    {
+        if (!$this->path) {
+            $this->path = $path;
+
+            return;
+        }
+
+        $this->path .= '{SEPARATE}' . $path;
     }
 
     /**
@@ -49,11 +62,9 @@ class Parameters extends Collection
         return tap(
             parent::extract($path, $reference),
             function ($new) use ($path, $reference) {
-                // if ($reference) {
-                if ($this->parent) {
-                    $new->parent = $this->parent->extract($path, $reference);
+                if ($reference) {
+                    $new->parent = $this;
                 }
-                // }
             }
         );
     }
@@ -73,7 +84,7 @@ class Parameters extends Collection
         $value = parent::getDeep($path, $delimiter);
 
         if ($value === null && $this->parent) {
-            $value = $this->parent->getDeep($path, $delimiter);
+            $value = $this->parent->getDeep($this->getParentPath($path, $delimiter), $delimiter);
         }
 
         while ($value instanceof ValueReference) {
@@ -113,6 +124,15 @@ class Parameters extends Collection
     public function has(mixed $key): bool
     {
         return $this->get($key) !== null;
+    }
+
+    public function getParentPath(string $path, string $delimiter = '.'): string
+    {
+        if ($this->path) {
+            $path = $this->path . '{SEPARATE}' . $path;
+        }
+
+        return str_replace('{SEPARATE}', $delimiter, $path);
     }
 
     /**
