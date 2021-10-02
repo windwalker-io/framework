@@ -52,6 +52,8 @@ class Edge
     use ManageStackTrait;
     use ObjectBuilderAwareTrait;
 
+    public int $level = 0;
+
     /**
      * Property globals.
      *
@@ -147,6 +149,8 @@ class Edge
      */
     public function render(string|Closure $__layout, array $__data = [], array $__more = []): string
     {
+        $this->level++;
+
         // TODO: Aliases
 
         $this->incrementRender();
@@ -181,7 +185,14 @@ class Edge
             $closure($__path);
         } catch (Throwable $e) {
             ob_clean();
-            $this->wrapException($e, $__path, $__layout);
+
+            $this->level--;
+
+            if ($this->level === 0) {
+                $this->wrapException($e, $__path, $__layout);
+            } else {
+                throw $e;
+            }
 
             return '';
         }
@@ -191,6 +202,8 @@ class Edge
         $this->decrementRender();
 
         $this->flushSectionsIfDoneRendering();
+
+        $this->level--;
 
         return $result;
     }
