@@ -402,7 +402,11 @@ class ManyToMany extends AbstractRelation
 
             // Attempt to get map data if exists
             if (is_object($foreignEntity)) {
-                $mapEntity = ReflectAccessor::getValue($foreignEntity, $prop);
+                if (ReflectAccessor::hasProperty($foreignEntity, $prop)) {
+                    $mapEntity = ReflectAccessor::getValue($foreignEntity, $prop);
+                } else {
+                    $mapEntity = null;
+                }
             } else {
                 $mapEntity = $foreignEntity[$mapAlias] ?? null;
             }
