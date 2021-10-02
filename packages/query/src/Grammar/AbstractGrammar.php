@@ -116,6 +116,10 @@ abstract class AbstractGrammar
 
         $sql = $this->$method($query);
 
+        if ($prefix = $query->getPrefix()) {
+            $sql = $prefix . ' ' . $sql;
+        }
+
         if ($suffix = $query->getSuffix()) {
             $sql .= ' ' . $suffix;
         }

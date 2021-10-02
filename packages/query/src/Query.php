@@ -55,6 +55,7 @@ use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\WrapperInterface;
 
+use function Windwalker\collect;
 use function Windwalker\raw;
 use function Windwalker\value;
 
@@ -80,6 +81,7 @@ use function Windwalker\value;
  * @method Clause|null getSet()
  * @method Query[]     getSubQueries()
  * @method string|null getAlias()
+ * @method Clause|null getPrefix()
  * @method Clause|null getSuffix()
  * @method string|null getSql()
  * @method bool getIncrementField()
@@ -162,6 +164,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected Query|Clause|null $values = null;
 
     protected ?Clause $set = null;
+
+    protected ?Clause $prefix = null;
 
     protected ?Clause $suffix = null;
 
@@ -1358,6 +1362,41 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
+     * prefix
+     *
+     * @param  string|array  $prefix
+     * @param  mixed         ...$args
+     *
+     * @return  static
+     */
+    public function prefix(array|string $prefix, ...$args): static
+    {
+        if (is_array($prefix)) {
+            foreach ($prefix as $values) {
+                if (is_string($values)) {
+                    $this->prefix($values);
+                } else {
+                    $this->prefix(...$values);
+                }
+            }
+
+            return $this;
+        }
+
+        if (null === $this->prefix) {
+            $this->prefix = $this->clause('', []);
+        }
+
+        if (is_string($prefix) && $args !== []) {
+            $prefix = $this->format($prefix, ...$args);
+        }
+
+        $this->prefix->append($prefix);
+
+        return $this;
+    }
+
+    /**
      * suffix
      *
      * @param  string|array  $suffix
@@ -1635,12 +1674,33 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             return '';
         }
 
+        $topLevel = !$this->sequence;
+
         // Only top level query rendering should create sequence and get merged bounded
-        if (!$this->sequence) {
+        if ($topLevel) {
             $bounded = $this->mergeBounded();
         }
 
         $sql = $this->getGrammar()->compile((string) $type, $this);
+
+        if ($topLevel) {
+            // Convert the ValueClause to scalars,
+            // ValueClause objects will set to linked when they were converted to string,
+            // we only keep linked ValueClause and convert them to pure value.
+            // so that we can keep the correct bounded values numbers if you cleared any Query clauses.
+            $bounded = collect($bounded)
+                ->filter(fn(mixed $param) => !$param['value'] instanceof ValueClause || $param['value']->isLinked())
+                ->map(
+                    function (array $param) {
+                        if ($param['value'] instanceof ValueClause) {
+                            $param['value'] = $this->castValue($param['value']->getValue());
+                        }
+
+                        return $param;
+                    }
+                )
+                ->dump();
+        }
 
         if ($emulatePrepared) {
             $sql = BoundedHelper::emulatePrepared($this->getEscaper(), $sql, $bounded);
@@ -1730,7 +1790,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             if ($param['value'] instanceof ValueClause) {
                 $param['value']->setPlaceholder($sequence->get());
                 $key = $param['value']->getPlaceholder();
-                $param['value'] = $this->castValue($param['value']->getValue());
+
+                // Pre-set every ValueClause to unlinked.
+                // They will be auto set to linked later if they are converting to string.
+                // At the top level Query object, will ignore all unlinked ValueClause,
+                // so that can keep the correct bounded values numbers if you cleared any Query clauses.
+                $param['value']->setLinked(false);
             }
             $bounded[$key] = $param;
         }
@@ -1881,6 +1946,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'values' => [],
             'limit' => [],
             'offset' => [],
+            'prefix' => [],
             'suffix' => [],
             'union' => [],
             'alias' => [],

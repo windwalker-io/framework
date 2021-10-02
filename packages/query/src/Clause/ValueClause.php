@@ -29,6 +29,8 @@ class ValueClause implements ClauseInterface
      */
     protected ?string $placeholder = null;
 
+    protected bool $linked = false;
+
     /**
      * AsClause constructor.
      *
@@ -50,6 +52,8 @@ class ValueClause implements ClauseInterface
         if ($value instanceof Query) {
             return '(' . $value . ')';
         }
+
+        $this->setLinked(true);
 
         return $this->getPlaceholder();
     }
@@ -97,6 +101,26 @@ class ValueClause implements ClauseInterface
     public function setPlaceholder(?string $placeholder): static
     {
         $this->placeholder = $placeholder;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLinked(): bool
+    {
+        return $this->linked;
+    }
+
+    /**
+     * @param  bool  $linked
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setLinked(bool $linked): static
+    {
+        $this->linked = $linked;
 
         return $this;
     }
