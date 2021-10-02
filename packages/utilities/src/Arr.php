@@ -72,7 +72,9 @@ abstract class Arr
             $value = $source[$key];
         } elseif (is_array($source) && array_key_exists($key, $source)) {
             $value = $source[$key];
-        } elseif (is_object($source) && property_exists($source, $key)) {
+        } elseif (is_object($source) && method_exists($source, '__isset') && isset($source, $key)) {
+            $value = $source->$key;
+        }  elseif (is_object($source) && property_exists($source, $key)) {
             $value = $source->$key;
         } else {
             return false;

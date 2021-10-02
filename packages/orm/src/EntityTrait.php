@@ -20,6 +20,7 @@ use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
 use Windwalker\ORM\Relation\Strategy\RelationStrategyInterface;
+use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -110,15 +111,26 @@ trait EntityTrait
         return $this->dump();
     }
 
-    public function __get(string $name): mixed
+    public function &__get(string $name): mixed
     {
         $getter = $this->getGetter($name);
 
         if ($getter) {
-            return $this->$getter();
+            $v = $this->$getter();
+
+            return $v;
         }
 
         return $this->$name;
+    }
+
+    public function __set(string $name, mixed $value): void
+    {
+        $setter = $this->getSetter($name);
+
+        if ($setter) {
+            $this->$setter($value);
+        }
     }
 
     public function __isset(string $name): bool
@@ -134,13 +146,26 @@ trait EntityTrait
 
     private function getGetter(string $name): ?string
     {
-        $getter = 'get' . ucfirst($name);
+        $pascalName = StrNormalize::toPascalCase($name);
+        $getter = 'get' . $pascalName;
 
         if (method_exists($this, $getter)) {
             return $getter;
         }
 
-        $getter = 'is' . ucfirst($name);
+        $getter = 'is' . $pascalName;
+
+        if (method_exists($this, $getter)) {
+            return $getter;
+        }
+
+        return null;
+    }
+
+    private function getSetter(string $name): ?string
+    {
+        $pascalName = StrNormalize::toPascalCase($name);
+        $getter = 'set' . $pascalName;
 
         if (method_exists($this, $getter)) {
             return $getter;
