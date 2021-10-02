@@ -140,7 +140,7 @@ trait ArrConverterTrait
                     continue;
                 }
 
-                $resultKey = Arr::get($value, $key);
+                $resultKey = (string) Arr::get($value, $key);
                 $resultValue = $array[$index];
             } else {
                 // Scalar value.
