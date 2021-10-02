@@ -9,12 +9,9 @@
 
 declare(strict_types=1);
 
-use Lyrasoft\Luna\Entity\Session as SessionEntity;
-use Windwalker\Core\Attributes\Ref;
 use Windwalker\Core\Manager\SessionManager;
 use Windwalker\Core\Session\SessionRobotSubscriber;
 use Windwalker\DI\Container;
-use Windwalker\Session\Bridge\BridgeInterface;
 use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Bridge\PhpBridge;
 use Windwalker\Session\Cookie\Cookies;
@@ -25,7 +22,6 @@ use Windwalker\Session\Handler\FilesystemHandler;
 use Windwalker\Session\Handler\NativeHandler;
 use Windwalker\Session\Handler\NullHandler;
 use Windwalker\Session\Handler\RedisHandler;
-use Windwalker\Session\Session;
 use Windwalker\Session\SessionInterface;
 use Windwalker\Session\SessionPackage;
 
@@ -39,7 +35,7 @@ return [
         'default' => env('SESSION_DEFAULT') ?: 'database',
 
         'cookie_params' => [
-            'expires' => '+15minutes',
+            'expires' => '+150minutes',
             'path' => '/',
             'domain' => null,
             'secure' => false,
@@ -76,6 +72,14 @@ return [
                         SessionInterface::OPTION_AUTO_COMMIT => true
                     ]
                 ),
+                'filesystem' => SessionManager::createSession(
+                    'php',
+                    'filesystem',
+                    'request',
+                    [
+                        SessionInterface::OPTION_AUTO_COMMIT => true
+                    ]
+                ),
                 'database' => SessionManager::createSession(
                     'php',
                     'database',
@@ -99,14 +103,14 @@ return [
                 'null' => NullHandler::class,
                 'native' => NativeHandler::class,
                 'database' => create(
-                             DatabaseHandler::class,
+                    DatabaseHandler::class,
                     options: [
-                                 'table' => SessionEntity::table()
-                             ]
+                        'table' => 'sessions'
+                    ]
                 ),
                 'filesystem' => create(
-                             FilesystemHandler::class,
-                    path: sys_get_temp_dir() . '/sess',
+                    FilesystemHandler::class,
+                    path: fn () => sys_get_temp_dir() . '/sess',
                     options: []
                 ),
                 'redis' => RedisHandler::class,
