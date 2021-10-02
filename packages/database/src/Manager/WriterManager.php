@@ -168,10 +168,8 @@ class WriterManager
 
             $v = TypeCast::toString($v);
 
-            // Set the primary key to the WHERE clause instead of a field to update.
             if (in_array($k, $key, true)) {
-                $query->where($k, '=', $v);
-
+                // Set wheres later
                 continue;
             }
 
@@ -182,6 +180,11 @@ class WriterManager
 
             // Add the field to be updated.
             $query->set($k, $v);
+        }
+
+        foreach ($key as $k) {
+            // Set the primary key to the WHERE clause instead of a field to update.
+            $query->where($k, $data[$k] ?? null);
         }
 
         // Set the query and execute the update.
