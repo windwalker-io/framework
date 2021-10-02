@@ -645,11 +645,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
             foreach ($origin as $val) {
                 // Append every value as ValueObject so that we can make placeholders as `IN(?, ?, ?...)`
-                $value->append($vc = $this->val($val));
-
-                $this->bind(null, $vc);
+                $value->append($this->handleValueAndBind($val));
             }
-        } elseif ($value instanceof RawWrapper || $value instanceof QuoteNameClause) {
+        } else {
+            $value = $this->handleValueAndBind($value);
+        }
+
+        return [strtoupper($operator), $value, $origin];
+    }
+
+    private function handleValueAndBind(mixed $value): mixed
+    {
+        if ($value instanceof RawWrapper || $value instanceof QuoteNameClause) {
             // Process Raw
             $value = $this->val($value);
         } else {
@@ -657,7 +664,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->bind(null, $value = $this->val($value));
         }
 
-        return [strtoupper($operator), $value, $origin];
+        return $value;
     }
 
     private function handleNestedWheres(Closure $callback, string $glue, string $type = 'where'): void
