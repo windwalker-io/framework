@@ -552,7 +552,11 @@ class FileObject extends SplFileInfo
                 return rmdir($path);
             }
 
-            return unlink($path);
+            if (!$result = @unlink($path)) {
+                throw new FilesystemException('Error when deleting file or directory.');
+            }
+
+            return $result;
         } catch (\Throwable $e) {
             throw new FilesystemException(
                 $e->getMessage(),
