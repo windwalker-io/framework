@@ -552,12 +552,7 @@ class FileObject extends SplFileInfo
                 return rmdir($path);
             }
 
-            if (!$result = @unlink($path)) {
-                $error = error_get_last();
-                throw new FilesystemException($error['message'], (int) $error['type']);
-            }
-
-            return $result;
+            return unlink($path);
         } catch (\Throwable $e) {
             throw new FilesystemException(
                 $e->getMessage(),
@@ -565,6 +560,15 @@ class FileObject extends SplFileInfo
                 $e
             );
         }
+    }
+
+    public function deleteIfExists(): bool
+    {
+        if ($this->exists()) {
+            return $this->delete();
+        }
+
+        return false;
     }
 
     /**

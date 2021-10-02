@@ -16,6 +16,8 @@ use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
+use function Windwalker\fs;
+
 /**
  * The FilesystemHandler class.
  */
@@ -102,7 +104,7 @@ class FilesystemHandler extends AbstractHandler
      */
     public function destroy($id): bool
     {
-        Filesystem::delete($this->getFilePath($id));
+        fs($this->getFilePath($id))->deleteIfExists();
 
         return true;
     }

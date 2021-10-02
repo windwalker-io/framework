@@ -411,7 +411,7 @@ class ManyToMany extends AbstractRelation
                 $mapEntity = $foreignEntity[$mapAlias] ?? null;
             }
 
-            // Otherwise create new one
+            // Otherwise, create new one
             $mapData = $mapEntity ? $this->getORM()->extractEntity($mapEntity) : [];
 
             // Create Foreign data
