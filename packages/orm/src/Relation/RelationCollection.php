@@ -38,7 +38,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     /**
      * @var object[]
      */
-    protected ?array $cache = null;
+    public ?array $cache = null;
 
     protected bool $sync = false;
 

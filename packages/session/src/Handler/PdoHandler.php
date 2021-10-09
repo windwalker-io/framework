@@ -84,7 +84,7 @@ class PdoHandler extends AbstractHandler
         $item = $stmt->fetchAll(PDO::FETCH_NUM);
 
         if ($item) {
-            return $item[0][0];
+            return $item[0][0] ?? null;
         }
 
         return null;

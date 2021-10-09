@@ -408,7 +408,7 @@ class ManyToMany extends AbstractRelation
                     $mapEntity = null;
                 }
             } else {
-                $mapEntity = $foreignEntity[$mapAlias] ?? null;
+                $mapEntity = $foreignEntity[$mapAlias] ?? null ?: null;
             }
 
             // Otherwise, create new one

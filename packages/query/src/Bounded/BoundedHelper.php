@@ -12,8 +12,10 @@ declare(strict_types=1);
 namespace Windwalker\Query\Bounded;
 
 use PDO;
+use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The QueryHelper class.
@@ -90,9 +92,15 @@ class BoundedHelper
         $values = [];
 
         foreach ($params as $param) {
+            if ($param['value'] instanceof ValueClause) {
+                $v = $param['value']->getValue();
+            } else {
+                $v = $param['value'];
+            }
+
             $v = match ($param['dataType']) {
-                ParamType::STRING => Escaper::tryQuote($escaper, (string) $param['value']),
-                default => $param['value'],
+                ParamType::STRING => Escaper::tryQuote($escaper, (string) $v),
+                default => $v,
             };
 
             $values[] = $v;
@@ -115,6 +123,29 @@ class BoundedHelper
 
         [$sql, $params] = static::replaceParams($sql, '?', $bounded);
 
-        return [$sql, array_column($params, 'value')];
+        return [
+            $sql,
+            array_map(
+                fn ($value) => static::toScalar($value),
+                array_column($params, 'value')
+            )
+        ];
+    }
+
+    public static function toScalar(mixed $value): mixed
+    {
+        if ($value instanceof ValueClause) {
+            return $value->getValue();
+        }
+
+        if (is_scalar($value)) {
+            return $value;
+        }
+
+        if ($value === null) {
+            return $value;
+        }
+
+        return TypeCast::toString($value);
     }
 }

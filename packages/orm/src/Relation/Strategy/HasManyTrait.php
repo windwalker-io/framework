@@ -45,7 +45,11 @@ trait HasManyTrait
         $keepEntities = null;
 
         if ($collection->isSync()) {
-            $entities = $collection->all(Collection::class)->dump(true);
+            $entities = [];
+
+            foreach ($collection->all(Collection::class) as $k => $item) {
+                $entities[$k] = $this->getORM()->extractEntity($item);
+            }
 
             if ($this->isFlush()) {
                 // If is flush, let's delete all relations and make all attaches

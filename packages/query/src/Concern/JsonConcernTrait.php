@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Concern;
 
 use Windwalker\Query\Clause\Clause;
+use Windwalker\Query\Grammar\MySQLGrammar;
 
 /**
  * Trait JsonConcernTrait
@@ -54,6 +55,10 @@ trait JsonConcernTrait
      */
     public function whereJsonContains(string $column, mixed $json, string $path = '$'): static
     {
+        if ($this->getGrammar() instanceof MySQLGrammar) {
+            throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
+        }
+
         if (!is_json($json)) {
             $json = json_encode((array) $json, JSON_THROW_ON_ERROR);
         }
@@ -70,6 +75,10 @@ trait JsonConcernTrait
 
     public function whereJsonNotContains(string $column, mixed $json, string $path = '$'): static
     {
+        if ($this->getGrammar() instanceof MySQLGrammar) {
+            throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
+        }
+
         if (!is_json($json)) {
             $json = json_encode((array) $json, JSON_THROW_ON_ERROR);
         }
@@ -86,6 +95,10 @@ trait JsonConcernTrait
 
     public function havingJsonContains(string $column, mixed $json, string $path = '$'): static
     {
+        if ($this->getGrammar() instanceof MySQLGrammar) {
+            throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
+        }
+
         if (!is_json($json)) {
             $json = json_encode((array) $json, JSON_THROW_ON_ERROR);
         }
@@ -102,6 +115,10 @@ trait JsonConcernTrait
 
     public function havingJsonNotContains(string $column, mixed $json, string $path = '$'): static
     {
+        if ($this->getGrammar() instanceof MySQLGrammar) {
+            throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
+        }
+
         if (!is_json($json)) {
             $json = json_encode((array) $json, JSON_THROW_ON_ERROR);
         }

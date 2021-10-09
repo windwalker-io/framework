@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test\Handler;
 
+use Windwalker\Session\Handler\AbstractHandler;
 use Windwalker\Session\Handler\ArrayHandler;
 use Windwalker\Session\Handler\DatabaseHandler;
 use Windwalker\Session\Handler\HandlerInterface;
@@ -26,7 +27,7 @@ class DatabaseHandlerTest extends AbstractHandlerTest
     /**
      * @var DatabaseHandler
      */
-    protected $instance;
+    protected ?AbstractHandler $instance;
 
     /**
      * @see  ArrayHandler::updateTimestamp

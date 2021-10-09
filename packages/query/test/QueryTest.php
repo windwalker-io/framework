@@ -952,6 +952,20 @@ SQL
                 'SELECT * FROM "a" WHERE foo = YEAR(date)',
                 [raw('foo'), raw('YEAR(date)')],
             ],
+
+            'Where with one clause' => [
+                'SELECT * FROM "a" WHERE EXISTS(SELECT * FROM "b" WHERE "id" = "A"."id" AND "category_id" < 123)',
+                [
+                    expr(
+                        'EXISTS()',
+                        self::createQuery()
+                            ->select('*')
+                            ->from('b')
+                            ->where('id', qn('A.id'))
+                            ->where('category_id', '<', 123)
+                    )
+                ]
+            ]
         ];
         // phpcs:enable
     }
@@ -1264,6 +1278,20 @@ SQL
                 'SELECT * FROM "a" HAVING foo = YEAR(date)',
                 [raw('foo'), raw('YEAR(date)')],
             ],
+
+            'Having with one clause' => [
+                'SELECT * FROM "a" HAVING EXISTS(SELECT * FROM "b" WHERE "id" = "A"."id" AND "category_id" < 123)',
+                [
+                    expr(
+                        'EXISTS()',
+                        self::createQuery()
+                            ->select('*')
+                            ->from('b')
+                            ->where('id', qn('A.id'))
+                            ->where('category_id', '<', 123)
+                    )
+                ]
+            ]
         ];
     }
 

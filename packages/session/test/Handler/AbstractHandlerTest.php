@@ -35,7 +35,7 @@ abstract class AbstractHandlerTest extends TestCase
     /**
      * @var AbstractHandler
      */
-    protected $instance;
+    protected ?AbstractHandler $instance = null;
 
     /**
      * @see  ArrayHandler::read
