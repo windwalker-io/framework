@@ -15,6 +15,8 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ResponseInterface;
 use Traversable;
+use Windwalker\Http\Output\Output;
+use Windwalker\Http\Response\Response;
 
 /**
  * The HeaderHelper class.
@@ -25,6 +27,22 @@ use Traversable;
  */
 abstract class HeaderHelper
 {
+    /**
+     * Instant emit headers by PHP built-in header() function.
+     *
+     * @param  array|ResponseInterface  $headers
+     *
+     * @return  void
+     */
+    public static function emitHeaders(array|ResponseInterface $headers): void
+    {
+        if (!$headers instanceof ResponseInterface) {
+            $headers = new Response('php://memory', 200, $headers);
+        }
+
+        (new Output())->sendHeaders($headers);
+    }
+
     /**
      * Get header value.
      *

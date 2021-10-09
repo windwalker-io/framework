@@ -170,8 +170,11 @@ class Output implements OutputInterface
      */
     public function setOutputStream(StreamInterface|string|null $outputStream): static
     {
-        $this->outputStream = $outputStream
-            ?? Stream::wrap($outputStream ?? 'php://output', Stream::MODE_WRITE_ONLY_RESET);
+        if (!$outputStream instanceof StreamInterface) {
+            $outputStream = Stream::wrap($outputStream ?? 'php://output', Stream::MODE_WRITE_ONLY_RESET);
+        }
+
+        $this->outputStream = $outputStream;
 
         return $this;
     }
