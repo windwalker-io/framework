@@ -38,6 +38,7 @@ use Windwalker\Utilities\Str;
  * @method Promise writeAsync(string $buffer)
  * @method Promise writeStreamAsync(string|resource|StreamInterface $stream)
  * @method Promise deleteAsync()
+ * @method Promise deleteIfExistsAsync()
  * @method Promise filesAsync(bool $recursive = false)
  * @method Promise foldersAsync(bool $recursive = false)
  * @method Promise itemsAsync(bool $recursive = false)

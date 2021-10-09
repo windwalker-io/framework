@@ -70,7 +70,7 @@ class RewindableGenerator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->getGenerator()->current();
     }
@@ -78,7 +78,7 @@ class RewindableGenerator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function next()
+    public function next(): void
     {
         $this->getGenerator()->next();
     }
@@ -102,7 +102,7 @@ class RewindableGenerator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->getGenerator(true);
     }

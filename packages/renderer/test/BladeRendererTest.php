@@ -81,7 +81,7 @@ class BladeRendererTest extends TestCase
      */
     public function __destruct()
     {
-        Filesystem::delete(__DIR__ . '/cache');
+        Filesystem::deleteIfExists(__DIR__ . '/cache');
     }
 
     /**

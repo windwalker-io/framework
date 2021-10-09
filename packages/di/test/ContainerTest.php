@@ -24,6 +24,7 @@ use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
+use Windwalker\DI\Test\Injection\Attrs\ToUpper;
 use Windwalker\DI\Test\Injection\HelloInner;
 use Windwalker\DI\Test\Injection\HelloWrapper;
 use Windwalker\DI\Test\Injection\StubInject;
@@ -619,6 +620,31 @@ class ContainerTest extends TestCase
 
         self::assertSame(
             'fooooo',
+            $result
+        );
+    }
+
+    public function testCallFirstClassCallable(): void
+    {
+        if (PHP_VERSION_ID < 80100) {
+            static::markTestSkipped('First class callable only support PHP 8.1');
+        }
+
+        $this->instance->getAttributesResolver()
+            ->registerAttribute(ToUpper::class, AttributeType::ALL);
+
+        $object = new class () {
+            #[ToUpper]
+            public function foo(StringObject $str)
+            {
+                return 'fooooo';
+            }
+        };
+
+        $result = include __DIR__ . '/php8.1/call-first-callable.php';
+
+        self::assertSame(
+            'FOOOOO',
             $result
         );
     }

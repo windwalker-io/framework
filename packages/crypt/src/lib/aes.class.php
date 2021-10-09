@@ -636,6 +636,9 @@ class AesCtr extends Aes
      */
     private static function urs($a, $b): int
     {
+        $a = (int) $a;
+        $b = (int) $b;
+
         $a &= 0xffffffff;
         $b &= 0x1f;  // (bounds check)
         if ($a & 0x80000000 && $b > 0) {   // if left-most bit set

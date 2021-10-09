@@ -39,6 +39,7 @@ use Windwalker\Utilities\Iterator\UniqueIterator;
  * @method static FileObject      write(string $path, string $buffer)
  * @method static FileObject      writeStream(string $path, string|resource|StreamInterface $stream)
  * @method static FileObject      delete(string $path)
+ * @method static FileObject      deleteIfExists(string $path)
  * @method static FilesIterator   files(string $path, bool $recursive = false)
  * @method static FilesIterator   folders(string $path, bool $recursive = false)
  * @method static FilesIterator   items(string $path, bool $recursive = false)
@@ -50,6 +51,7 @@ use Windwalker\Utilities\Iterator\UniqueIterator;
  * @method static Promise writeAsync(string $path, string $buffer)
  * @method static Promise writeStreamAsync(string $path, string|resource|StreamInterface $stream)
  * @method static Promise deleteAsync(string $path)
+ * @method static Promise deleteIfExistsAsync(string $path)
  * @method static Promise filesAsync(string $path, bool $recursive = false)
  * @method static Promise foldersAsync(string $path, bool $recursive = false)
  * @method static Promise itemsAsync(string $path, bool $recursive = false)
@@ -224,6 +226,7 @@ class Filesystem
             'copy' => 'copyTo',
             'move' => 'moveTo',
             'delete',
+            'deleteIfExists',
             'files',
             'folders',
             'items',
@@ -235,6 +238,7 @@ class Filesystem
             'copyAsync' => 'copyToAsync',
             'moveAsync' => 'moveToAsync',
             'deleteAsync',
+            'deleteIfExistsAsync',
             'filesAsync',
             'foldersAsync',
             'itemsAsync',
