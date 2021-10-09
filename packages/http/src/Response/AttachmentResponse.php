@@ -17,6 +17,8 @@ use RuntimeException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
+use function Windwalker\uid;
+
 /**
  * The AttachmentResponse class.
  *
@@ -27,12 +29,16 @@ class AttachmentResponse extends Response
     /**
      * Constructor.
      *
-     * @param  string  $body     The body data.
+     * @param  mixed   $body     The body data.
      * @param  int     $status   The status code.
      * @param  array   $headers  The custom headers.
      */
-    public function __construct($body = 'php://temp', $status = 200, array $headers = [])
+    public function __construct(mixed $body = 'php://temp', int $status = 200, array $headers = [])
     {
+        if (!$body instanceof StreamInterface) {
+            $body = $this->createStream($body);
+        }
+
         parent::__construct($body, $status, $headers);
 
         $res = HeaderHelper::prepareAttachmentHeaders($this);
@@ -42,6 +48,11 @@ class AttachmentResponse extends Response
         foreach (array_keys($this->headers) as $header) {
             $this->headerNames[strtolower($header)] = $header;
         }
+    }
+
+    protected function createStream(mixed $body): Stream
+    {
+        return new Stream($body, Stream::MODE_READ_ONLY_FROM_BEGIN);
     }
 
     /**
@@ -58,7 +69,7 @@ class AttachmentResponse extends Response
             throw new InvalidArgumentException('File: ' . $file . ' not exists.');
         }
 
-        return $this->withFileStream(new Stream($file));
+        return $this->withFileStream($this->createStream($file));
     }
 
     /**
@@ -123,5 +134,10 @@ class AttachmentResponse extends Response
             'Content-Disposition',
             HeaderHelper::inlineContentDisposition($filename)
         );
+    }
+
+    public function withPreviewable(?string $filename = null): static
+    {
+        return $this->withInlineFilename($filename ?? uid());
     }
 }
