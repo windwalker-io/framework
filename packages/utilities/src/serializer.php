@@ -12,32 +12,44 @@ declare(strict_types=1);
 namespace Windwalker;
 
 use Closure;
+use Laravel\SerializableClosure\SerializableClosure;
 use LogicException;
-use Opis\Closure\SerializableClosure;
 
-function serialize($data): string
-{
-    if (!class_exists(SerializableClosure::class)) {
-        throw new LogicException('Please install opis/closure first');
+if (!function_exists('\Windwalker\serialize')) {
+    function serialize(mixed $data): string
+    {
+        if (!class_exists(SerializableClosure::class)) {
+            throw new LogicException('Please install laravel/serializable-closure first');
+        }
+
+        return \serialize(new SerializableClosure($data));
     }
-
-    return \Opis\Closure\serialize($data);
 }
 
-function unserialize(string $data, ?array $options = null)
-{
-    if (!class_exists(SerializableClosure::class)) {
-        throw new LogicException('Please install opis/closure first');
-    }
+if (!function_exists('\Windwalker\unserialize')) {
+    function unserialize(string $data, ?array $options = null)
+    {
+        if (!class_exists(SerializableClosure::class)) {
+            throw new LogicException('Please install laravel/serializable-closure first');
+        }
 
-    return \Opis\Closure\unserialize($data, $options);
+        $result = \unserialize($data, $options);
+
+        if ($result instanceof SerializableClosure) {
+            return $result->getClosure();
+        }
+
+        return $result;
+    }
 }
 
-function closure(Closure $closure): SerializableClosure
-{
-    if (!class_exists(SerializableClosure::class)) {
-        throw new LogicException('Please install opis/closure first');
-    }
+if (!function_exists('\Windwalker\closure')) {
+    function closure(Closure $closure): SerializableClosure
+    {
+        if (!class_exists(SerializableClosure::class)) {
+            throw new LogicException('Please install laravel/serializable-closure first');
+        }
 
-    return new SerializableClosure($closure);
+        return new SerializableClosure($closure);
+    }
 }

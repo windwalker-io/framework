@@ -22,7 +22,7 @@
         "windwalker/database": "^4.0",
         "asika/sql-splitter": "^1.0",
         "jdorn/sql-formatter": "^1.2",
-        "opis/closure": "^3.0"
+        "laravel/serializable-closure": "^1.0"
     },
     "suggest": {
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
@@ -30,7 +30,7 @@
         "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
         "pda/pheanstalk": "If you want to use Beanstalkd queue as service.",
         "chrisboulton/php-resque": "Install <= 1.2 if you want to use PHP Resque (Redis) as queue service.",
-        "opis/closure": "Install ^3.0 to support Closure jobs."
+        "laravel/serializable-closure": "Install ^1.0 to support Closure jobs."
     },
     "minimum-stability": "beta",
     "autoload": {

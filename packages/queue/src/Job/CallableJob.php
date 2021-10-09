@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Job;
 
 use Closure;
-use Opis\Closure\SerializableClosure;
+use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * The CallableJob class.

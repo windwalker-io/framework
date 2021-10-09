@@ -21,7 +21,7 @@
     },
     "suggest": {
         "symfony/string": "Install to use inflector.",
-        "opis/closure": "Install ^3.0 to support serializable Closure."
+        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure."
     },
     "minimum-stability": "beta",
     "autoload": {

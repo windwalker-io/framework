@@ -45,7 +45,6 @@
         "mockery/mockery": "^1.4",
         "mustache/mustache": "^2.0",
         "myclabs/php-enum": "^1.7",
-        "opis/closure": "^3.0",
         "phpunit/phpunit": "^8.4||^9.0||^10.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
@@ -66,7 +65,8 @@
         "symfony/yaml": "^5.0||dev-6.0",
         "twig/twig": "^2.0",
         "webmozart/glob": "^4.1",
-        "yosymfony/toml": "^1.0"
+        "yosymfony/toml": "^1.0",
+        "laravel/serializable-closure": "^1.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~4.0 if you require YAML support.",
@@ -74,7 +74,6 @@
         "webmozart/glob": "Install ^4.0 to support Ant-like glob().",
         "ext-openssl": "Install openssl to support legacy openssl cipher.",
         "doctrine/inflector": "Install ~1.0 to use inflector.",
-        "opis/closure": "Install ^3.0 to support serializable Closure.",
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
         "iron-io/iron_mq": "If you want to use Iron.io as queue service.",
         "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
@@ -82,7 +81,8 @@
         "chrisboulton/php-resque": "Install <= 1.2 if you want to use PHP Resque (Redis) as queue service.",
         "reactivex/rxphp": "Support EventEmitter::observe() pattern.",
         "relay/relay": "Install ^2.0 to support PSR-15 middlewares.",
-        "symfony/string": "Install ^5.2 to use inflector."
+        "symfony/string": "Install ^5.2 to use inflector.",
+        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure."
     },
     "autoload": {
         "psr-4": {
