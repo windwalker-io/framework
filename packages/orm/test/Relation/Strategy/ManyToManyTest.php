@@ -91,7 +91,7 @@ class ManyToManyTest extends AbstractORMTestCase
         /** @var StubSakura $newSakura */
         $newSakura = $sakuraMapper->findOne(['no' => 'S10001']);
 
-        self::assertArraySimilar(
+        self::assertEqualsCanonicalizing(
             ['26', '2'],
             $newSakura->getRoses()
                 ->all(Collection::class)
@@ -297,7 +297,7 @@ class ManyToManyTest extends AbstractORMTestCase
 
         $newSakuras = $newRose->getSakuras()->all(Collection::class);
 
-        self::assertArraySimilar(
+        self::assertEqualsCanonicalizing(
             [
                 '10',
                 '14',
