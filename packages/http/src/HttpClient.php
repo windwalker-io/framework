@@ -80,12 +80,13 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  array                    $options    The options of this client object.
      * @param  TransportInterface|null  $transport  The Transport handler, default is CurlTransport.
      */
-    public function __construct($options = [], ?TransportInterface $transport = null)
+    public function __construct(array $options = [], ?TransportInterface $transport = null)
     {
         $this->prepareOptions(
             [],
             $options
         );
+
         $this->transport = $transport ?? new CurlTransport();
     }
 
@@ -123,7 +124,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @return  ResponseInterface
      */
-    public function sendRequest(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request, array $options = []): ResponseInterface
     {
         $transport = $this->getTransport();
 
@@ -131,7 +132,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             throw new RangeException(get_class($transport) . ' driver not supported.');
         }
 
-        return $transport->request($request);
+        return $transport->request($request, $options);
     }
 
     /**
@@ -320,7 +321,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         RequestInterface $request,
         string $method,
         Stringable|string $url,
-        $body = '',
+        mixed $body = '',
         array $options = []
     ): RequestInterface {
         // If is GET, we merge data into URL.
@@ -355,28 +356,28 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $request->withBody($body);
     }
 
-    /**
-     * Prepare Request object to send request.
-     *
-     * @param  RequestInterface   $request  The Psr Request object.
-     * @param  string             $method   The method type.
-     * @param  string|Stringable  $url      The URL to request, may be string or Uri object.
-     * @param  mixed              $body     The request body data, can be an array of POST data.
-     * @param  array              $options  The options array.
-     *
-     * @return  RequestInterface
-     */
-    protected function preprocessRequest(
-        RequestInterface $request,
-        string $method,
-        Stringable|string $url,
-        mixed $body,
-        array $options
-    ): RequestInterface {
-        $options = Arr::mergeRecursive($this->getOptions(), $options);
-
-        return static::prepareRequest($request, $method, $url, $body, $options);
-    }
+    // /**
+    //  * Prepare Request object to send request.
+    //  *
+    //  * @param  RequestInterface   $request  The Psr Request object.
+    //  * @param  string             $method   The method type.
+    //  * @param  string|Stringable  $url      The URL to request, may be string or Uri object.
+    //  * @param  mixed              $body     The request body data, can be an array of POST data.
+    //  * @param  array              $options  The options array.
+    //  *
+    //  * @return  RequestInterface
+    //  */
+    // protected function preprocessRequest(
+    //     RequestInterface $request,
+    //     string $method,
+    //     Stringable|string $url,
+    //     mixed $body,
+    //     array $options
+    // ): RequestInterface {
+    //     $options = Arr::mergeRecursive($this->getOptions(), $options);
+    //
+    //     return static::prepareRequest($request, $method, $url, $body, $options);
+    // }
 
     /**
      * Request a remote server.
@@ -396,9 +397,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $body = null,
         array $options = []
     ): ResponseInterface {
-        $request = $this->preprocessRequest(new Request(), $method, $url, $body, $options);
+        $options = Arr::mergeRecursive($this->getOptions(), $options);
 
-        return $this->sendRequest($request);
+        $request = static::prepareRequest(new Request(), $method, $url, $body, $options);
+
+        return $this->sendRequest($request, $options['transport'] ?? []);
     }
 
     /**

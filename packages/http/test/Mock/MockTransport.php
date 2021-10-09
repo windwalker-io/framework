@@ -46,7 +46,7 @@ class MockTransport extends AbstractTransport
     {
         $this->request = $request;
 
-        return $this->doRequest($request);
+        return $this->doRequest($request, $options);
     }
 
     /**

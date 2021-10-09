@@ -13,6 +13,7 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
