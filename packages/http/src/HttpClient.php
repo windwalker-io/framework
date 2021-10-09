@@ -106,7 +106,9 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $body = null,
         array $options = []
     ): ResponseInterface {
-        $request = $this->preprocessRequest(new Request(), 'GET', $url, $body, $options);
+        $options = Arr::mergeRecursive($this->getOptions(), $options);
+
+        $request = static::prepareRequest(new Request(), 'GET', $url, $body, $options);
 
         $transport = $this->getTransport();
 
@@ -355,29 +357,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         return $request->withBody($body);
     }
-
-    // /**
-    //  * Prepare Request object to send request.
-    //  *
-    //  * @param  RequestInterface   $request  The Psr Request object.
-    //  * @param  string             $method   The method type.
-    //  * @param  string|Stringable  $url      The URL to request, may be string or Uri object.
-    //  * @param  mixed              $body     The request body data, can be an array of POST data.
-    //  * @param  array              $options  The options array.
-    //  *
-    //  * @return  RequestInterface
-    //  */
-    // protected function preprocessRequest(
-    //     RequestInterface $request,
-    //     string $method,
-    //     Stringable|string $url,
-    //     mixed $body,
-    //     array $options
-    // ): RequestInterface {
-    //     $options = Arr::mergeRecursive($this->getOptions(), $options);
-    //
-    //     return static::prepareRequest($request, $method, $url, $body, $options);
-    // }
 
     /**
      * Request a remote server.
