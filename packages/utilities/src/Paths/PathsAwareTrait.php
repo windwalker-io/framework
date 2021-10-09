@@ -79,7 +79,7 @@ trait PathsAwareTrait
         $queue = $this->getPaths();
 
         foreach ($path as $p) {
-            $queue->insert($p, $priority);
+            $queue->insert(Path::normalize($p), $priority);
         }
 
         return $this;
