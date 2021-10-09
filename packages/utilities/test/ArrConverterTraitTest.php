@@ -64,9 +64,9 @@ class ArrConverterTraitTest extends TestCase
      *
      * @dataProvider  providerTestGroup
      */
-    public function testGroup($source, $key, $expected, int $type)
+    public function testGroup($source, $key, $expected, int $type, ?string $delimiter = '')
     {
-        self::assertEquals($expected, Arr::group($source, $key, $type));
+        self::assertEquals($expected, Arr::groupByPath($source, $key, $type, (string) $delimiter));
     }
 
     /**
@@ -185,7 +185,7 @@ class ArrConverterTraitTest extends TestCase
                 [
                     1 => (object) ['id' => 41, 'title' => 'boo'],
                     2 => (object) ['id' => 42, 'title' => 'boo'],
-                    3 => (object) ['title' => 'boo'],
+                    3 => (object) ['title' => 'qoo'],
                     4 => (object) ['id' => 42, 'title' => 'boo'],
                     5 => (object) ['id' => 43, 'title' => 'boo'],
                 ],
@@ -201,6 +201,29 @@ class ArrConverterTraitTest extends TestCase
                     43 => (object) ['id' => 43, 'title' => 'boo'],
                 ],
                 Arr::GROUP_TYPE_MIX,
+            ],
+            'group by path' => [
+                // Source
+                [
+                    1 => (object) ['id' => 41, 'title' => 'boo', 'country' => ['id' => 55]],
+                    2 => (object) ['id' => 42, 'title' => 'boo', 'country' => ['id' => 56]],
+                    3 => (object) ['title' => 'qoo'],
+                    4 => (object) ['id' => 42, 'title' => 'boo', 'country' => ['id' => 56]],
+                    5 => (object) ['id' => 43, 'title' => 'boo', 'country' => ['id' => 57]],
+                ],
+                // Index
+                'country.id',
+                // Expected
+                [
+                    55 => (object) ['id' => 41, 'title' => 'boo', 'country' => ['id' => 55]],
+                    56 => [
+                        (object) ['id' => 42, 'title' => 'boo', 'country' => ['id' => 56]],
+                        (object) ['id' => 42, 'title' => 'boo', 'country' => ['id' => 56]],
+                    ],
+                    57 => (object) ['id' => 43, 'title' => 'boo', 'country' => ['id' => 57]],
+                ],
+                Arr::GROUP_TYPE_MIX,
+                '.'
             ],
         ];
     }

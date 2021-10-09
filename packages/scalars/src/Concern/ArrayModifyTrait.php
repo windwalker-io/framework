@@ -378,6 +378,14 @@ trait ArrayModifyTrait
         return $this->newInstance(Arr::group($this->dump(), $column, $type));
     }
 
+    public function groupByPath(
+        ?string $column = null,
+        int $type = Arr::GROUP_TYPE_ARRAY,
+        ?string $delimiter = '.'
+    ): static {
+        return $this->newInstance(Arr::groupByPath($this->dump(), $column, $type, $delimiter));
+    }
+
     /**
      * keyBy
      *

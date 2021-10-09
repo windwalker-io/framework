@@ -74,7 +74,7 @@ trait ArrConverterTrait
      *
      * @return  array  Pivoted array.
      */
-    public static function groupPrefix(&$origin, string $prefix, bool $removeOrigin = false): array
+    public static function groupPrefix(array|object &$origin, string $prefix, bool $removeOrigin = false): array
     {
         $target = [];
 
@@ -101,8 +101,11 @@ trait ArrConverterTrait
      *
      * @return  array  Pivoted array.
      */
-    public static function extractPrefix($origin, string $prefix, $target = null): object|array
-    {
+    public static function extractPrefix(
+        array|object $origin,
+        string $prefix,
+        array|object $target = null
+    ): object|array {
         $target = is_object($target) ? $target : (array) $target;
 
         foreach ((array) $origin as $key => $val) {
@@ -130,17 +133,26 @@ trait ArrConverterTrait
      */
     public static function group(array $array, ?string $key = null, int $type = self::GROUP_TYPE_ARRAY): array
     {
+        return static::groupByPath($array, $key, $type, '');
+    }
+
+    public static function groupByPath(
+        array $array,
+        ?string $key = null,
+        int $type = self::GROUP_TYPE_ARRAY,
+        string $delimiter = '.'
+    ): array {
         $results = [];
         $hasArray = [];
 
         foreach ($array as $index => $value) {
             // List value
             if (is_array($value) || is_object($value)) {
-                if (!Arr::has($value, $key)) {
+                if (!Arr::has($value, $key, $delimiter)) {
                     continue;
                 }
 
-                $resultKey = (string) Arr::get($value, $key);
+                $resultKey = (string) Arr::get($value, $key, $delimiter);
                 $resultValue = $array[$index];
             } else {
                 // Scalar value.
