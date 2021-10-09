@@ -211,6 +211,12 @@ class MySQLPlatform extends AbstractPlatform
                 $erratas['permitted_values'] = $permittedValues;
             }
 
+            [, $scale, $precision] = $this->getDataType()::extract($row['COLUMN_TYPE']);
+
+            if ($scale !== '') {
+                $erratas['custom_length'] = rtrim($scale . ',' . $precision, ',');
+            }
+
             // Timestamp
             if (str_contains($row['EXTRA'], 'on update')) {
                 $erratas['on_update'] = 'current_timestamp()';

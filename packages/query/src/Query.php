@@ -55,6 +55,7 @@ use Windwalker\Utilities\Wrapper\WrapperInterface;
 
 use function Windwalker\collect;
 use function Windwalker\raw;
+use function Windwalker\uid;
 use function Windwalker\value;
 
 /**
@@ -141,10 +142,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected ?Clause $join = null;
 
     protected ?Clause $union = null;
-
-    protected ?Clause $where = null;
-
-    protected ?Clause $having = null;
 
     protected ?Clause $order = null;
 
@@ -827,7 +824,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     private function injectSubQuery(Query $query, mixed $alias = null): void
     {
-        $alias = $alias ?: $query->getAlias() ?: uniqid('sq');
+        $alias = $alias ?: $query->getAlias() ?: uid('sq');
 
         $this->subQueries[$alias] = $query;
     }

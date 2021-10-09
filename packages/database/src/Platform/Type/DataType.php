@@ -223,8 +223,8 @@ class DataType
      * Extract data type to [type, precision, scale].
      *
      * Example:
-     * - datetime -> [datetime, NULL, NULL]
-     * - int(11) -> [int, 11, NULL]
+     * - datetime -> [datetime, '', '']
+     * - int(11) -> [int, 11, '']
      * - decimal(20,6) -> [decimal, 20, 6]
      *
      * @param  string  $type

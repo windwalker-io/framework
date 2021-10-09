@@ -42,7 +42,7 @@ class MySQLDataType extends DataType
      * @var  array
      */
     public static array $typeDefinitions = [
-        self::BOOLEAN => [1, 0, 'bool'],
+        self::BOOLEAN => [null, 0, 'bool'],
         self::INTEGER => [11, 0, 'int'],
         self::BIGINT => [20, 0, 'int'],
         self::TINYINT => [4, 0, 'int'],

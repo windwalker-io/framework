@@ -29,6 +29,10 @@ use function Windwalker\raw;
  */
 trait WhereConcernTrait
 {
+    protected ?Clause $where = null;
+
+    protected ?Clause $having = null;
+
     /**
      * where
      *
