@@ -165,11 +165,13 @@ HTML;
         $this->instance->setValue('sakura');
 
         $this->instance->addWrapperClass('form-group');
+        $this->instance->wrapperAttr('data-toggle', 'foo');
+        $this->instance->labelAttr('data-toggle', 'bar');
         $this->instance->setAttribute('data-test-element', true);
 
         $expect = <<<HTML
-<div id="input-windwalker-flower-wrapper" class="form-group" data-field-wrapper>
-    <label id="input-windwalker-flower-label" data-field-label for="input-windwalker-flower">Flower</label>
+<div id="input-windwalker-flower-wrapper" class="form-group" data-field-wrapper data-toggle="foo">
+    <label id="input-windwalker-flower-label" data-field-label data-toggle="bar" for="input-windwalker-flower">Flower</label>
     <div>
         <input id="input-windwalker-flower" name="windwalker[flower]" class="stub-flower" data-field-input data-test-element placeholder="The Flower" type="text" value="sakura">
     </div>
@@ -179,7 +181,7 @@ HTML;
         self::assertHtmlFormatEquals($expect, $this->instance->render());
 
         $expect = <<<HTML
-<div id="input-windwalker-flower-wrapper" class="form-group" data-field-wrapper>
+<div id="input-windwalker-flower-wrapper" class="form-group" data-field-wrapper data-toggle="foo">
     <div>
         <input id="input-windwalker-flower" name="windwalker[flower]" class="stub-flower" data-field-input data-test-element placeholder="The Flower" type="text" value="sakura">
     </div>

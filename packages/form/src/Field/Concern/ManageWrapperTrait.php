@@ -99,6 +99,7 @@ trait ManageWrapperTrait
      * @param  mixed   $value
      *
      * @return  static
+     * @throws \DOMException
      */
     public function setWrapperAttribute(string $name, string $value): static
     {
@@ -119,12 +120,20 @@ trait ManageWrapperTrait
      * @param  mixed   $value
      *
      * @return  static
+     * @throws \DOMException
      */
-    public function wrapperAttr(string $name, $value = null): static
+    public function wrapperAttr(string $name, mixed $value = null): static
     {
-        return $this->setAttribute($name, $value);
+        $this->getWrapper()->setAttribute($name, $value);
+
+        return $this;
     }
 
+    /**
+     * getWrapperClass
+     *
+     * @return  string
+     */
     public function getWrapperClass(): string
     {
         return $this->getWrapper()->classList->value;

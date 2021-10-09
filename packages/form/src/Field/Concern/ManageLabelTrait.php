@@ -124,10 +124,11 @@ trait ManageLabelTrait
      * @param  mixed   $value
      *
      * @return  static
+     * @throws \DOMException
      */
     public function setLabelAttribute(string $name, string $value): static
     {
-        $this->getWrapper()->setAttribute($name, $value);
+        $this->getLabel()->setAttribute($name, $value);
 
         return $this;
     }
@@ -144,10 +145,13 @@ trait ManageLabelTrait
      * @param  mixed   $value
      *
      * @return  static
+     * @throws \DOMException
      */
-    public function labelAttr(string $name, $value = null): static
+    public function labelAttr(string $name, mixed $value = null): static
     {
-        return $this->setAttribute($name, $value);
+        $this->getLabel()->setAttribute($name, $value);
+
+        return $this;
     }
 
     public function getLabelClass(): string
