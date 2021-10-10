@@ -11,11 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Session;
 
+use Windwalker\Utilities\Cache\InstanceCacheTrait;
+
 /**
  * The FlashBag class.
  */
 class FlashBag
 {
+    use InstanceCacheTrait;
+
     /**
      * Since this property will be reference to session variable,
      * We must not declare type that to prevent reference type held error.
@@ -71,11 +75,16 @@ class FlashBag
 
     public function all(): ?array
     {
-        $storage = $this->storage;
+        return $this->once(
+            'all',
+            function () {
+                $storage = $this->storage;
 
-        $this->storage = [];
+                $this->storage = [];
 
-        return $storage;
+                return $storage;
+            }
+        );
     }
 
     /**
