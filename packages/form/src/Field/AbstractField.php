@@ -656,4 +656,9 @@ abstract class AbstractField
 
         return $this;
     }
+
+    public function canModify(): bool
+    {
+        return !$this->isDisabled() && !$this->isReadonly();
+    }
 }

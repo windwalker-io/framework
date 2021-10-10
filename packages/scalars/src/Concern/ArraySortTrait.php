@@ -33,7 +33,7 @@ trait ArraySortTrait
      *
      * @since   3.5.2
      */
-    public function sortKeys($flags = SORT_REGULAR): ArraySortTrait|static
+    public function sortKeys(int|callable $flags = SORT_REGULAR): static
     {
         $new = clone $this;
 
@@ -55,7 +55,7 @@ trait ArraySortTrait
      *
      * @since   3.5.2
      */
-    public function sortKeysDesc($flags = SORT_REGULAR): static
+    public function sortKeysDesc(int|callable $flags = SORT_REGULAR): static
     {
         return $this->sortKeys($flags)->reverse(true);
     }
@@ -80,13 +80,18 @@ trait ArraySortTrait
      *
      * @return static
      */
-    public function natureSort(): ArraySortTrait|static
+    public function natureSort(): static
     {
         $new = clone $this;
 
         natsort($new->storage);
 
         return $new;
+    }
+
+    public function natureSortKeys(int $flags = 0): static
+    {
+        return $this->sortKeys($flags | SORT_NATURAL);
     }
 
     /**
@@ -96,7 +101,7 @@ trait ArraySortTrait
      *
      * @return static
      */
-    public function sort($flags = SORT_REGULAR): ArraySortTrait|static
+    public function sort(int|callable $flags = SORT_REGULAR): static
     {
         $new = clone $this;
 
@@ -116,7 +121,7 @@ trait ArraySortTrait
      *
      * @return static
      */
-    public function sortDesc($flags = SORT_REGULAR): ArraySortTrait|static
+    public function sortDesc(int $flags = SORT_REGULAR): static
     {
         $new = clone $this;
 
@@ -136,7 +141,7 @@ trait ArraySortTrait
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function sortBy(mixed $column, int $flags = SORT_REGULAR, bool $desc = false): static
+    public function sortBy(string|callable $column, int $flags = SORT_REGULAR, bool $desc = false): static
     {
         $results = [];
 

@@ -48,8 +48,8 @@ class Collection extends ArrayObject
      */
     public static function from(mixed $data, ?string $format = null, array $options = []): static
     {
-        if (!is_string($data)) {
-            return static::wrap($data);
+        if ($data instanceof static) {
+            return $data;
         }
 
         return (new static())->load($data, $format, $options);

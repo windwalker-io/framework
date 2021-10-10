@@ -585,12 +585,15 @@ class Form implements IteratorAggregate, Countable
      * Count elements of an object
      * @link https://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
-     * <p>
      * The return value is cast to an integer.
-     * </p>
      */
     public function count(): int
     {
         return count($this->fields);
+    }
+
+    public function countFields(Symbol|string|null $fieldset = null, string $namespace = ''): int
+    {
+        return iterator_count($this->getFields($fieldset, $namespace));
     }
 }

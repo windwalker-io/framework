@@ -19,6 +19,7 @@ use Psr\Http\Message\StreamInterface;
 use Traversable;
 use Webmozart\Glob\Glob;
 use Webmozart\Glob\Iterator\GlobIterator;
+use Windwalker\Data\Collection;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\Iterator\FilesIterator;
 use Windwalker\Promise\Promise;
@@ -39,6 +40,7 @@ use function Windwalker\filter;
  * @method static FileObject      move(string $src, string $dest, bool $force = false)
  * @method static StringObject    read(string $path)
  * @method static StreamInterface readStream(string $path, string $mode = Stream::MODE_READ_ONLY_FROM_BEGIN)
+ * @method static Collection      readAndParse(?string $format = null, array $options = [])
  * @method static FileObject      write(string $path, string $buffer)
  * @method static FileObject      writeStream(string $path, string|resource|StreamInterface $stream)
  * @method static FileObject      delete(string $path)

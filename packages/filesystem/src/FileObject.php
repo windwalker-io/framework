@@ -17,6 +17,7 @@ use Psr\Http\Message\StreamInterface;
 use SplFileInfo;
 use Throwable;
 use UnexpectedValueException;
+use Windwalker\Data\Collection;
 use Windwalker\Filesystem\Exception\FileNotFoundException;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\Iterator\FilesIterator;
@@ -459,6 +460,19 @@ class FileObject extends SplFileInfo
         return $this->getStream($mode);
     }
 
+    public function readAndParse(?string $format = null, array $options = []): Collection
+    {
+        if (!class_exists(Collection::class)) {
+            throw new \DomainException('Please install windwalker/data first.');
+        }
+
+        return Collection::from(
+            $this->getStream(),
+            $format ?? $this->getExtension(),
+            $options
+        );
+    }
+
     /**
      * Write contents to a file
      *
@@ -479,7 +493,7 @@ class FileObject extends SplFileInfo
 
         $result = file_put_contents($this->getPathname(), (string) $buffer);
 
-        if (!$result) {
+        if ($result === false) {
             throw new FilesystemException(error_get_last()['message'] ?? 'Unknown error');
         }
 
