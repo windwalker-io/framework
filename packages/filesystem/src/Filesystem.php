@@ -25,6 +25,9 @@ use Windwalker\Promise\Promise;
 use Windwalker\Scalars\StringObject;
 use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Iterator\UniqueIterator;
+use Windwalker\Utilities\Str;
+
+use function Windwalker\filter;
 
 /**
  * Class Filesystem
@@ -114,15 +117,45 @@ class Filesystem
 
         $paths = (array) $paths;
 
-        $iter = new AppendIterator();
+        $excludes = [];
+        $excludePaths = [];
+        $includePaths = [];
 
         foreach ($paths as $path) {
+            if (str_starts_with($path, '!')) {
+                $excludePaths[] = Str::removeLeft($path, '!');
+            } else {
+                $includePaths[] = $path;
+            }
+        }
+
+        if ($excludePaths !== []) {
+            $excludes = static::globAll($excludePaths)->toArray();
+
+            $excludes = array_map(fn ($path) => Path::normalize($path), $excludes);
+        }
+
+        $iter = new AppendIterator();
+
+        foreach ($includePaths as $path) {
             // Webmozart/glob must use `/` in windows.
             $path = Path::clean($path, '/');
             $iter->append(new FilesIterator(new GlobIterator($path, $flags), Glob::getBasePath($path)));
         }
 
-        return new FilesIterator(new UniqueIterator($iter));
+        $iter = (new FilesIterator(new UniqueIterator($iter)));
+
+        if ($excludes !== []) {
+            $iter = $iter->filter(
+                fn(FileObject $file) => !in_array(
+                    Path::normalize($file->getPathname()),
+                    $excludes,
+                    true
+                )
+            );
+        }
+
+        return $iter;
     }
 
     /**
