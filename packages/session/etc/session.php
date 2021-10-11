@@ -32,7 +32,7 @@ return [
     'session' => [
         'enabled' => true,
 
-        'default' => env('SESSION_DEFAULT') ?: 'database',
+        'default' => env('SESSION_DEFAULT') ?: 'native',
 
         'cookie_params' => [
             'expires' => '+150minutes',
@@ -65,9 +65,9 @@ return [
         'factories' => [
             'instances' => [
                 'native' => SessionManager::createSession(
-                    'php',
                     'native',
-                    'request',
+                    'native',
+                    'native',
                     [
                         SessionInterface::OPTION_AUTO_COMMIT => true
                     ]
