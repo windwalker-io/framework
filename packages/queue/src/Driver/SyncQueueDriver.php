@@ -13,6 +13,7 @@ namespace Windwalker\Queue\Driver;
 
 use Windwalker\Queue\Job\JobInterface;
 use Windwalker\Queue\QueueMessage;
+use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
  * The SyncQueueDriver class.
@@ -21,6 +22,8 @@ use Windwalker\Queue\QueueMessage;
  */
 class SyncQueueDriver implements QueueDriverInterface
 {
+    use OptionAccessTrait;
+
     /**
      * @var callable
      */
@@ -29,11 +32,18 @@ class SyncQueueDriver implements QueueDriverInterface
     /**
      * SyncQueueDriver constructor.
      *
-     * @param callable|null $handler
+     * @param  callable|null  $handler
+     * @param  array          $options
      */
-    public function __construct(?callable $handler = null)
+    public function __construct(?callable $handler = null, array $options = [])
     {
         $this->handler = $handler ?? static::getDefaultHandler();
+        $this->prepareOptions(
+            [
+                'debug' => false
+            ],
+            $options
+        );
     }
 
     /**
@@ -45,9 +55,19 @@ class SyncQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
-        ($this->handler)($message);
+        $output = ($this->handler)($message);
 
-        return '0';
+        $debug = $this->getOption('debug');
+
+        if ($debug) {
+            if (is_callable($debug)) {
+                $debug($output, $this);
+            } else {
+                show($output);
+            }
+        }
+
+        return (string) $output;
     }
 
     /**

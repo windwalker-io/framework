@@ -18,6 +18,10 @@ use LogicException;
 if (!function_exists('\Windwalker\serialize')) {
     function serialize(mixed $data): string
     {
+        if (!$data instanceof \Closure) {
+            return \serialize($data);
+        }
+
         if (!class_exists(SerializableClosure::class)) {
             throw new LogicException('Please install laravel/serializable-closure first');
         }
@@ -27,7 +31,7 @@ if (!function_exists('\Windwalker\serialize')) {
 }
 
 if (!function_exists('\Windwalker\unserialize')) {
-    function unserialize(string $data, ?array $options = null)
+    function unserialize(string $data, array $options = [])
     {
         if (!class_exists(SerializableClosure::class)) {
             throw new LogicException('Please install laravel/serializable-closure first');
