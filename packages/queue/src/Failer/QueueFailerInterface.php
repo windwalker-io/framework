@@ -33,9 +33,9 @@ interface QueueFailerInterface
     /**
      * all
      *
-     * @return  array
+     * @return  iterable
      */
-    public function all(): array;
+    public function all(): iterable;
 
     /**
      * get

@@ -22,6 +22,21 @@ use Windwalker\Queue\QueueMessage;
 class SyncQueueDriver implements QueueDriverInterface
 {
     /**
+     * @var callable
+     */
+    protected $handler;
+
+    /**
+     * SyncQueueDriver constructor.
+     *
+     * @param callable|null $handler
+     */
+    public function __construct(?callable $handler = null)
+    {
+        $this->handler = $handler ?? static::getDefaultHandler();
+    }
+
+    /**
      * push
      *
      * @param  QueueMessage  $message
@@ -30,13 +45,29 @@ class SyncQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
-        $job = $message->getSerializedJob();
-        /** @var JobInterface $job */
-        $job = unserialize($job);
-
-        $this->runJob($job);
+        ($this->handler)($message);
 
         return '0';
+    }
+
+    /**
+     * @return callable
+     */
+    public function getHandler(): callable
+    {
+        return $this->handler;
+    }
+
+    /**
+     * @param  callable  $handler
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setHandler(callable $handler): static
+    {
+        $this->handler = $handler;
+
+        return $this;
     }
 
     protected function runJob(callable $job)
@@ -53,7 +84,7 @@ class SyncQueueDriver implements QueueDriverInterface
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
-        return new QueueMessage();
+        return null;
     }
 
     /**
@@ -78,5 +109,14 @@ class SyncQueueDriver implements QueueDriverInterface
     public function release(QueueMessage $message): static
     {
         return $this;
+    }
+
+    public static function getDefaultHandler(): \Closure
+    {
+        return function (QueueMessage $message) {
+            $job = unserialize($message->getJob());
+
+            $job->execute();
+        };
     }
 }

@@ -36,9 +36,9 @@ class NullQueueFailer implements QueueFailerInterface
     /**
      * all
      *
-     * @return  array
+     * @return  iterable
      */
-    public function all(): array
+    public function all(): iterable
     {
         return [];
     }

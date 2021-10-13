@@ -31,7 +31,7 @@ class QueueMessage implements JsonSerializable
      *
      * @var  int|string
      */
-    protected int|string $id;
+    protected int|string $id = '';
 
     /**
      * Property attempts.

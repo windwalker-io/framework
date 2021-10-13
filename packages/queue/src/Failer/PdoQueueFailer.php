@@ -99,17 +99,19 @@ class PdoQueueFailer implements QueueFailerInterface
     /**
      * all
      *
-     * @return  array
+     * @return  iterable
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function all(): array
+    public function all(): iterable
     {
         $sql = 'SELECT * FROM ' . $this->table;
 
         $stat = $this->pdo->query($sql);
 
-        return $stat->fetchAll(PDO::FETCH_ASSOC);
+        while ($item = $stat->fetch(PDO::FETCH_ASSOC)) {
+            yield $item;
+        }
     }
 
     /**

@@ -15,6 +15,7 @@ use DateTime;
 use InvalidArgumentException;
 use JsonException;
 use RuntimeException;
+use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 
 use function Windwalker\collect;
@@ -92,16 +93,19 @@ class DatabaseQueueFailer implements QueueFailerInterface
     /**
      * all
      *
-     * @return  array
+     * @return  iterable
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function all(): array
+    public function all(): iterable
     {
-        return $this->db->select('*')
-            ->from($this->table)
-            ->all()
-            ->dump();
+        $query = $this->db->select('*')
+            ->from($this->table);
+
+        /** @var Collection $item */
+        foreach ($query as $item) {
+            yield $item;
+        }
     }
 
     /**
@@ -114,11 +118,11 @@ class DatabaseQueueFailer implements QueueFailerInterface
     public function get(mixed $conditions): ?array
     {
         $item = $this->db->select('*')
-                ->from($this->table)
-                ->where('id', $conditions)
-                ->get() ?? collect();
+            ->from($this->table)
+            ->where('id', $conditions)
+            ->get();
 
-        return $item->dump();
+        return $item?->dump();
     }
 
     /**

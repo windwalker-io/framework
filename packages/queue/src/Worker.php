@@ -84,6 +84,11 @@ class Worker implements EventListenableInterface
     protected ?int $pid = null;
 
     /**
+     * @var ?callable
+     */
+    protected $jobRunner = null;
+
+    /**
      * Worker constructor.
      *
      * @param  Queue            $queue
@@ -238,7 +243,7 @@ class Worker implements EventListenableInterface
      */
     protected function runJob(JobInterface $job): mixed
     {
-        return $job();
+        return $this->getJobRunner()($job);
     }
 
     /**
@@ -497,5 +502,25 @@ class Worker implements EventListenableInterface
         if ($this->getState() === static::STATE_EXITING) {
             $this->stop('Shutdown by signal. PID: ' . $this->pid);
         }
+    }
+
+    /**
+     * @return callable
+     */
+    public function getJobRunner(): callable
+    {
+        return $this->jobRunner ??= fn (JobInterface $job) => $job();
+    }
+
+    /**
+     * @param  ?callable  $jobRunner
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setJobRunner(?callable $jobRunner): static
+    {
+        $this->jobRunner = $jobRunner;
+
+        return $this;
     }
 }
