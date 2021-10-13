@@ -49,6 +49,7 @@ use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Metadata\EntityMetadataCollection;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The ORM class.
@@ -60,7 +61,7 @@ use Windwalker\Query\Query;
  * @method  object|null   findOne(string $entityClass, mixed $conditions = [], ?string $className = null)
  * @method  object   mustFindOne(string $entityClass, mixed $conditions = [], ?string $className = null)
  * @method  ResultIterator findList(string $entityClass, mixed $conditions = [], ?string $className = null)
- * @method  string|null   findResult(string $entityClass, mixed $conditions = [])
+ * @method  string|null   findResult(string $entityClass, string|RawWrapper $column, mixed $conditions = [])
  * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [])
  * @method  object  createOne(string $entityClass, array|object $item = [])
  * @method  iterable      createMultiple(string $entityClass, iterable $items)

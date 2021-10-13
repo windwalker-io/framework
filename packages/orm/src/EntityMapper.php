@@ -47,6 +47,8 @@ use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 use Windwalker\Utilities\TypeCast;
 
+use Windwalker\Utilities\Wrapper\RawWrapper;
+
 use function is_object;
 use function Windwalker\collect;
 
@@ -204,11 +206,12 @@ class EntityMapper implements EventAwareInterface
         );
     }
 
-    public function findResult(mixed $conditions = []): ?string
+    public function findResult(string|RawWrapper $column, mixed $conditions = []): ?string
     {
         $metadata = $this->getMetadata();
 
-        return $this->from($metadata->getClassName())
+        return $this->select($column)
+            ->from($metadata->getClassName())
             ->where($this->conditionsToWheres($conditions))
             ->result();
     }
