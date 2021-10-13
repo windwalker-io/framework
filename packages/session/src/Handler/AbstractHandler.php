@@ -26,6 +26,11 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
     protected bool $newSessionId = false;
 
     /**
+     * @var callable
+     */
+    protected $sessionIdHandler = null;
+
+    /**
      * Re-initializes existing session, or creates a new one.
      *
      * @param  string  $savePath     Save path
@@ -103,6 +108,26 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
     public function create_sid(): string
     {
         // phpcs:enable
-        return session_create_id();
+        return $this->getSessionIdHandler()();
+    }
+
+    /**
+     * @return callable
+     */
+    public function getSessionIdHandler(): callable
+    {
+        return $this->sessionIdHandler ?? fn () => session_create_id();
+    }
+
+    /**
+     * @param  callable  $sessionIdHandler
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setSessionIdHandler(?callable $sessionIdHandler): static
+    {
+        $this->sessionIdHandler = $sessionIdHandler;
+
+        return $this;
     }
 }
