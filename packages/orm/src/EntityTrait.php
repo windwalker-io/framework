@@ -130,7 +130,10 @@ trait EntityTrait
 
         if ($setter) {
             $this->$setter($value);
+            return;
         }
+
+        $this->$name = $value;
     }
 
     public function __isset(string $name): bool
