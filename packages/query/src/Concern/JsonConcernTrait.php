@@ -55,7 +55,7 @@ trait JsonConcernTrait
      */
     public function whereJsonContains(string $column, mixed $json, string $path = '$'): static
     {
-        if ($this->getGrammar() instanceof MySQLGrammar) {
+        if (!$this->getGrammar() instanceof MySQLGrammar) {
             throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
         }
 
@@ -75,7 +75,7 @@ trait JsonConcernTrait
 
     public function whereJsonNotContains(string $column, mixed $json, string $path = '$'): static
     {
-        if ($this->getGrammar() instanceof MySQLGrammar) {
+        if (!$this->getGrammar() instanceof MySQLGrammar) {
             throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
         }
 
@@ -95,7 +95,7 @@ trait JsonConcernTrait
 
     public function havingJsonContains(string $column, mixed $json, string $path = '$'): static
     {
-        if ($this->getGrammar() instanceof MySQLGrammar) {
+        if (!$this->getGrammar() instanceof MySQLGrammar) {
             throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
         }
 
@@ -115,7 +115,7 @@ trait JsonConcernTrait
 
     public function havingJsonNotContains(string $column, mixed $json, string $path = '$'): static
     {
-        if ($this->getGrammar() instanceof MySQLGrammar) {
+        if (!$this->getGrammar() instanceof MySQLGrammar) {
             throw new \RuntimeException(__METHOD__ . '() only support MySQL now.');
         }
 
