@@ -13,6 +13,8 @@ namespace Windwalker\Queue;
 
 use InvalidArgumentException;
 use JsonException;
+use Windwalker\DI\Definition\DefinitionInterface;
+use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\Queue\Driver\QueueDriverInterface;
 use Windwalker\Queue\Job\ClosureJob;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
@@ -163,7 +165,7 @@ class Queue
 
         $data['class'] = get_class($job);
 
-        $message->setName($job->getName());
+        $message->setName(get_debug_type($job));
         $message->setSerializedJob(serialize($job));
         $message->setData($data);
 
@@ -177,21 +179,23 @@ class Queue
      *
      * @return  callable
      */
-    protected function createJobInstance(callable|string $job): callable
+    protected function createJobInstance(mixed $job): callable
     {
         $instance = $job;
 
         // Create callable
         if ($job instanceof \Closure) {
-            $instance = new ClosureJob($job, md5(uniqid('', true)));
+            $instance = new ClosureJob($job);
         } elseif (is_string($job)) {
             // Create by class name.
             if (!class_exists($job) || method_exists($job, '__invoke')) {
                 throw new InvalidArgumentException(
-                    sprintf('Job should be a class which has __invoke() method.'
+                    'Job should be a class which has __invoke() method.'
                 );
             }
 
+            $instance = $this->createJobByClassName($job);
+        } elseif ($job instanceof DefinitionInterface) {
             $instance = $this->createJobByClassName($job);
         }
 
@@ -223,15 +227,15 @@ class Queue
     }
 
     /**
-     * createJob
+     * createJobByClassName
      *
-     * @param  string  $job
+     * @param  mixed  $job      Can be class name or DI definition.
+     * @param  mixed  ...$args  Arguments.
      *
      * @return  object
-     * @throws \ReflectionException
      */
-    protected function createJobByClassName(string $job): object
+    protected function createJobByClassName(mixed $job, ...$args): object
     {
-        return $this->getObjectBuilder()->createObject($job);
+        return $this->getObjectBuilder()->getBuilder()($job, ...$args);
     }
 }

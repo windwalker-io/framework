@@ -13,6 +13,7 @@ namespace Windwalker\Queue\Job;
 
 use Closure;
 use Laravel\SerializableClosure\SerializableClosure;
+use Windwalker\DI\Container;
 
 /**
  * The CallableJob class.
@@ -54,8 +55,9 @@ class ClosureJob
      * handle
      *
      * @return  void
+     * @throws \Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException
      */
-    public function __invoke(): void
+    public function __invoke(?Container $container): mixed
     {
         $callback = $this->callback;
 
@@ -63,7 +65,11 @@ class ClosureJob
             $callback = $callback->getClosure();
         }
 
-        $callback();
+        if ($container) {
+            return $container->call($callback);
+        }
+
+        return $callback();
     }
 
     // /**
