@@ -69,7 +69,7 @@ class CurlTransport extends AbstractTransport
         // Close the connection.
         curl_close($ch);
 
-        return $this->getResponse($content, $info);
+        return $this->getResponse((string) $content, $info);
     }
 
     /**
@@ -84,7 +84,7 @@ class CurlTransport extends AbstractTransport
      * @throws  UnexpectedValueException
      * @since   2.0
      */
-    public function getResponse(mixed $content, mixed $info): Response|ResponseInterface
+    public function getResponse(string $content, mixed $info): Response|ResponseInterface
     {
         // Create the response object.
         $return = $this->createResponse();
