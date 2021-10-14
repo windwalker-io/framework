@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
-use Windwalker\Queue\Job\JobInterface;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 

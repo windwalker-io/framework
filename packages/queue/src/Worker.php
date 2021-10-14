@@ -26,8 +26,6 @@ use Windwalker\Queue\Event\LoopFailureEvent;
 use Windwalker\Queue\Event\LoopStartEvent;
 use Windwalker\Queue\Event\StopEvent;
 use Windwalker\Queue\Exception\MaxAttemptsExceededException;
-use Windwalker\Queue\Job\JobInterface;
-use Windwalker\Queue\Job\NullJob;
 
 /**
  * The Worker class.
@@ -188,7 +186,7 @@ class Worker implements EventListenableInterface
         $maxTries = (int) ($options['tries'] ?? 5);
 
         $job = $message->getSerializedJob();
-        /** @var JobInterface $job */
+        /** @var callable $job */
         $job = unserialize($job);
 
         try {
@@ -237,11 +235,11 @@ class Worker implements EventListenableInterface
     /**
      * runJob
      *
-     * @param  JobInterface  $job
+     * @param  callable  $job
      *
      * @return  mixed
      */
-    protected function runJob(JobInterface $job): mixed
+    protected function runJob(callable $job): mixed
     {
         return $this->getJobRunner()($job);
     }
@@ -343,26 +341,22 @@ class Worker implements EventListenableInterface
     /**
      * handleException
      *
-     * @param  JobInterface  $job
+     * @param  callable  $job
      * @param  QueueMessage  $message
      * @param  array         $options
      * @param  Throwable    $e
      *
      * @return void
      */
-    protected function handleJobException(mixed $job, QueueMessage $message, array $options, Throwable $e): void
+    protected function handleJobException(callable $job, QueueMessage $message, array $options, Throwable $e): void
     {
-        if (!$job instanceof JobInterface) {
-            $job = new NullJob();
-        }
-
         $this->logger->error(
             sprintf(
                 'Job [%s] (%s) failed: %s - Class: %s',
-                $job->getName(),
+                get_debug_type($job),
                 $message->getId(),
                 $e->getMessage(),
-                get_class($job)
+                get_debug_type($job)
             )
         );
 
@@ -378,9 +372,9 @@ class Worker implements EventListenableInterface
             $this->logger->error(
                 sprintf(
                     'Max attempts exceeded. Job: %s (%s) - Class: %s',
-                    $job->getName(),
+                    get_debug_type($job),
                     $message->getId(),
-                    get_class($job)
+                    get_debug_type($job)
                 )
             );
         }
@@ -509,7 +503,7 @@ class Worker implements EventListenableInterface
      */
     public function getJobRunner(): callable
     {
-        return $this->jobRunner ??= fn (JobInterface $job) => $job();
+        return $this->jobRunner ??= fn ($job) => $job();
     }
 
     /**

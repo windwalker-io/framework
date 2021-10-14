@@ -14,8 +14,8 @@ namespace Windwalker\Queue;
 use InvalidArgumentException;
 use JsonException;
 use Windwalker\Queue\Driver\QueueDriverInterface;
-use Windwalker\Queue\Job\CallableJob;
-use Windwalker\Queue\Job\JobInterface;
+use Windwalker\Queue\Job\ClosureJob;
+use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 
 /**
  * The Queue class.
@@ -24,6 +24,8 @@ use Windwalker\Queue\Job\JobInterface;
  */
 class Queue
 {
+    use ObjectBuilderAwareTrait;
+
     /**
      * Property driver.
      *
@@ -171,38 +173,29 @@ class Queue
     /**
      * createJobInstance
      *
-     * @param  mixed  $job
+     * @param  callable|string  $job
      *
-     * @return  JobInterface
-     * @throws InvalidArgumentException
+     * @return  callable
      */
-    protected function createJobInstance(JobInterface|callable $job): JobInterface
+    protected function createJobInstance(callable|string $job): callable
     {
-        if ($job instanceof JobInterface) {
-            return $job;
-        }
+        $instance = $job;
 
         // Create callable
-        if (is_callable($job)) {
-            $job = new CallableJob($job, md5(uniqid('', true)));
-        }
-
-        // Create by class name.
-        if (is_string($job)) {
-            if (!class_exists($job) || is_subclass_of($job, JobInterface::class)) {
+        if ($job instanceof \Closure) {
+            $instance = new ClosureJob($job, md5(uniqid('', true)));
+        } elseif (is_string($job)) {
+            // Create by class name.
+            if (!class_exists($job) || method_exists($job, '__invoke')) {
                 throw new InvalidArgumentException(
-                    sprintf(
-                        'Job should be a class which implements %s, %s given',
-                        JobInterface::class,
-                        $job
-                    )
+                    sprintf('Job should be a class which has __invoke() method.'
                 );
             }
 
-            $job = $this->createJobByClassName($job);
+            $instance = $this->createJobByClassName($job);
         }
 
-        return $job;
+        return $instance;
     }
 
     /**
@@ -234,12 +227,11 @@ class Queue
      *
      * @param  string  $job
      *
-     * @return  JobInterface
+     * @return  object
+     * @throws \ReflectionException
      */
-    protected function createJobByClassName(string $job): JobInterface
+    protected function createJobByClassName(string $job): object
     {
-        $job = new $job();
-
-        return $job;
+        return $this->getObjectBuilder()->createObject($job);
     }
 }

@@ -16,18 +16,8 @@ namespace Windwalker\Queue\Job;
  *
  * @since  3.2
  */
-class NullJob implements JobInterface
+class NullJob
 {
-    /**
-     * getName
-     *
-     * @return  string
-     */
-    public function getName(): string
-    {
-        return 'null';
-    }
-
     public function __invoke(): void
     {
     }

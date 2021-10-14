@@ -19,7 +19,7 @@ use Laravel\SerializableClosure\SerializableClosure;
  *
  * @since  3.2
  */
-class CallableJob implements JobInterface
+class ClosureJob
 {
     /**
      * Property callable.
@@ -41,24 +41,13 @@ class CallableJob implements JobInterface
      * @param  callable     $callback
      * @param  string|null  $name
      */
-    public function __construct(callable $callback, ?string $name = null)
+    public function __construct(callable $callback)
     {
         if ($callback instanceof Closure) {
             $callback = new SerializableClosure($callback);
         }
 
         $this->callback = $callback;
-        $this->name = $name;
-    }
-
-    /**
-     * getName
-     *
-     * @return  string
-     */
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     /**

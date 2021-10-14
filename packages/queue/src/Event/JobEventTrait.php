@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Event;
 
-use Windwalker\Queue\Job\JobInterface;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -23,7 +22,10 @@ trait JobEventTrait
 
     protected QueueMessage $message;
 
-    protected JobInterface $job;
+    /**
+     * @var callable
+     */
+    protected $job;
 
     /**
      * @return QueueMessage
@@ -46,19 +48,19 @@ trait JobEventTrait
     }
 
     /**
-     * @return JobInterface
+     * @return callable
      */
-    public function getJob(): JobInterface
+    public function getJob(): callable
     {
         return $this->job;
     }
 
     /**
-     * @param  JobInterface  $job
+     * @param  callable  $job
      *
      * @return  static  Return self to support chaining.
      */
-    public function setJob(JobInterface $job): static
+    public function setJob(callable $job): static
     {
         $this->job = $job;
 

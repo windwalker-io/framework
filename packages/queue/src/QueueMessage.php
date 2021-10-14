@@ -13,8 +13,7 @@ namespace Windwalker\Queue;
 
 use InvalidArgumentException;
 use JsonSerializable;
-use Windwalker\Queue\Job\JobInterface;
-use Windwalker\Utilities\Arr;
+use Laravel\SerializableClosure\SerializableClosure;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
@@ -71,12 +70,12 @@ class QueueMessage implements JsonSerializable
     /**
      * QueueMessage constructor.
      *
-     * @param  JobInterface  $job
-     * @param  array         $data
-     * @param  int           $delay
-     * @param  array         $options
+     * @param  callable|SerializableClosure  $job
+     * @param  array                         $data
+     * @param  int                           $delay
+     * @param  array                         $options
      */
-    public function __construct(?JobInterface $job = null, array $data = [], int $delay = 0, array $options = [])
+    public function __construct(callable $job = null, array $data = [], int $delay = 0, array $options = [])
     {
         if ($job !== null) {
             $this->setSerializedJob(serialize($job));
@@ -98,7 +97,7 @@ class QueueMessage implements JsonSerializable
      *
      * @return  mixed
      */
-    public function get(string $name, $default = null): mixed
+    public function get(string $name, mixed $default = null): mixed
     {
         return $this->body[$name] ?? $default;
     }
@@ -173,7 +172,7 @@ class QueueMessage implements JsonSerializable
      */
     public function getSerializedJob(): string
     {
-        return Arr::get($this->body, 'job', '');
+        return $this->body['job'] ?? '';
     }
 
     /**
@@ -197,7 +196,7 @@ class QueueMessage implements JsonSerializable
      */
     public function getData(): array
     {
-        return Arr::get($this->body, 'data', []);
+        return $this->body['data'] ?? [];
     }
 
     /**
@@ -221,19 +220,19 @@ class QueueMessage implements JsonSerializable
      */
     public function getChannel(): ?string
     {
-        return Arr::get($this->body, 'channel', '');
+        return $this->body['channel'] ?? null;
     }
 
     /**
      * Method to set property queue
      *
-     * @param  string  $queue
+     * @param  ?string  $channel
      *
      * @return  static  Return self to support chaining.
      */
-    public function setChannel(?string $queue): static
+    public function setChannel(?string $channel): static
     {
-        $this->body['channel'] = $queue;
+        $this->body['channel'] = $channel;
 
         return $this;
     }
@@ -293,7 +292,7 @@ class QueueMessage implements JsonSerializable
      */
     public function getName(): string
     {
-        return Arr::get($this->body, 'name', '');
+        return $this->body['name'] ?? '';
     }
 
     /**
