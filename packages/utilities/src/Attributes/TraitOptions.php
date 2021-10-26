@@ -45,10 +45,10 @@ class TraitOptions
             $class = $class::class;
         }
 
-        return static::$cacheStorage[$class] ??= static::findAttribute($class)->options ?? [];
+        return static::$cacheStorage[$class] ??= static::findAttribute($class)?->options ?? [];
     }
 
-    public static function findAttribute(string $class): static
+    public static function findAttribute(string $class): ?static
     {
         return AttributesAccessor::getFirstAttributeInstance($class, static::class);
     }
