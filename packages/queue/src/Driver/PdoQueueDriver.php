@@ -163,7 +163,7 @@ class PdoQueueDriver implements QueueDriverInterface
         $message = new QueueMessage();
 
         $message->setId($data['id']);
-        $message->setAttempts($data['attempts']);
+        $message->setAttempts((int) $data['attempts']);
         $message->setBody(json_decode($data['body'], true));
         $message->setRawBody($data['body']);
         $message->setChannel($channel);

@@ -137,7 +137,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $message = new QueueMessage();
 
         $message->setId($data['id']);
-        $message->setAttempts($data['attempts']);
+        $message->setAttempts((int) $data['attempts']);
         $message->setBody(json_decode($data['body'], true, 512, JSON_THROW_ON_ERROR));
         $message->setRawBody($data['body']);
         $message->setChannel($channel);

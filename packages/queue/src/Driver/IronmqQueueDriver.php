@@ -89,7 +89,7 @@ class IronmqQueueDriver implements QueueDriverInterface
         $message = new QueueMessage();
 
         $message->setId($result->id);
-        $message->setAttempts($result->reserved_count);
+        $message->setAttempts((int) $result->reserved_count);
         $message->setBody(json_decode($result->body, true));
         $message->setRawBody($result->body);
         $message->setChannel($channel ?: $this->channel);

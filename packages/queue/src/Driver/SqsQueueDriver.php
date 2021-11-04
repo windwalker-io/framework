@@ -101,7 +101,7 @@ class SqsQueueDriver implements QueueDriverInterface
         $res = new QueueMessage();
 
         $res->setId($data['MessageId']);
-        $res->setAttempts($data['Attributes']['ApproximateReceiveCount']);
+        $res->setAttempts((int) $data['Attributes']['ApproximateReceiveCount']);
         $res->setBody(json_decode($data['Body'], true));
         $res->setRawBody($data['Body']);
         $res->setChannel($channel ?: $this->channel);

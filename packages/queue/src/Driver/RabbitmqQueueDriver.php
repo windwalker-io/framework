@@ -125,7 +125,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
         // Attempts
         $attempts = $message->get('attempts', 0) + 1;
 
-        $message->setAttempts($attempts);
+        $message->setAttempts((int) $attempts);
         $message->set('attempts', $attempts);
 
         return $message;

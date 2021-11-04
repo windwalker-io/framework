@@ -99,7 +99,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
         $message = new QueueMessage();
 
         $message->setId($job->getId());
-        $message->setAttempts($this->client->statsJob($job)->reserves);
+        $message->setAttempts((int) $this->client->statsJob($job)->reserves);
         $message->setBody(json_decode($job->getData(), true));
         $message->setRawBody($job->getData());
         $message->setChannel($channel ?: $this->channel);
