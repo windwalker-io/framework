@@ -63,6 +63,8 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  ResultIterator findList(string $entityClass, mixed $conditions = [], ?string $className = null)
  * @method  string|null   findResult(string $entityClass, string|RawWrapper $column, mixed $conditions = [])
  * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [])
+ * @method  int   countColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
+ * @method  float   sumColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
  * @method  object  createOne(string $entityClass, array|object $item = [])
  * @method  iterable      createMultiple(string $entityClass, iterable $items)
  * @method  StatementInterface|null  updateOne(string $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)

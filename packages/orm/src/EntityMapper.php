@@ -42,6 +42,7 @@ use Windwalker\ORM\Exception\NoResultException;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
+use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
@@ -221,6 +222,30 @@ class EntityMapper implements EventAwareInterface
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
             ->loadColumn();
+    }
+
+    public function countColumn(string $column, mixed $conditions = [], array|string $groups = null): int
+    {
+        return (int) $this->select()
+            ->selectRaw('IFNULL(COUNT(%n), 0)', $column)
+            ->where($this->conditionsToWheres($conditions))
+            ->tapIf(
+                $groups !== null,
+                fn (Query $query) => $query->group($groups)
+            )
+            ->result();
+    }
+
+    public function sumColumn(string $column, mixed $conditions = [], array|string $groups = null): float
+    {
+        return (float) $this->select()
+            ->selectRaw('IFNULL(SUM(%n), 0)', $column)
+            ->where($this->conditionsToWheres($conditions))
+            ->tapIf(
+                $groups !== null,
+                fn (Query $query) => $query->group($groups)
+            )
+            ->result();
     }
 
     /**
