@@ -27,6 +27,7 @@ use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Options\StateAccessTrait;
 use Windwalker\Utilities\Str;
 
+use function Windwalker\collect;
 use function Windwalker\DOM\h;
 
 /**
@@ -208,7 +209,7 @@ abstract class AbstractField
 
     public function buildId(string $suffix = ''): string
     {
-        return 'input-' . FormNormalizer::clearAttribute($this->getNamespaceName(true)) . $suffix;
+        return 'input-' . trim(FormNormalizer::clearAttribute($this->getNamespaceName(true)), '-') . $suffix;
     }
 
     /**
@@ -280,16 +281,26 @@ abstract class AbstractField
      */
     public function buildInputName(?string $name = null, string $suffix = ''): string
     {
-        $names = array_filter(
-            [
-                FormNormalizer::clearNamespace($this->getForm()->getNamespace()),
-                FormNormalizer::clearNamespace($this->getNamespace()),
-                FormNormalizer::clearNamespace($name ?? $this->getName()),
-            ],
-            'strlen'
-        );
+        $name = $name ?? $this->getName();
 
-        return static::buildName(implode('/', $names)) . $suffix;
+        preg_match('/(.*)(\[.*\])/', $name, $matches);
+
+        if ($matches) {
+            array_shift($matches);
+            $names = array_values(array_map(fn ($n) => trim($n, '[]'), $matches));
+        } else {
+            $names = [$name];
+        }
+
+        if ($selfNS = FormNormalizer::clearNamespace($this->getNamespace())) {
+            array_unshift($names, $selfNS);
+        }
+
+        if ($formNS = FormNormalizer::clearNamespace($this->getForm()->getNamespace())) {
+            array_unshift($names, $formNS);
+        }
+
+        return static::buildName($names) . $suffix;
     }
 
     /**
