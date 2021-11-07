@@ -35,7 +35,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The Form class.
  */
-class Form implements IteratorAggregate, Countable
+class Form implements IteratorAggregate, Countable, \ArrayAccess
 {
     use ObjectBuilderAwareTrait;
     use OptionAccessTrait;
@@ -265,6 +265,11 @@ class Form implements IteratorAggregate, Countable
     public function getField(string $namespace): ?AbstractField
     {
         return $this->fields[$namespace] ?? null;
+    }
+
+    public function hasField(string $namespace): bool
+    {
+        return isset($this->fields[$namespace]);
     }
 
     /**
@@ -595,5 +600,37 @@ class Form implements IteratorAggregate, Countable
     public function countFields(Symbol|string|null $fieldset = null, string $namespace = ''): int
     {
         return iterator_count($this->getFields($fieldset, $namespace));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetExists($offset)
+    {
+        return $this->hasField($offset);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetGet($offset): ?AbstractField
+    {
+        return $this->getField($offset);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->addField($offset, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetUnset($offset)
+    {
+        $this->removeField($offset);
     }
 }
