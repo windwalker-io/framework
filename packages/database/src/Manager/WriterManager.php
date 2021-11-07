@@ -31,9 +31,9 @@ class WriterManager
     /**
      * Property cursor.
      *
-     * @var  StatementInterface
+     * @var  StatementInterface|null
      */
-    protected StatementInterface $statement;
+    protected ?StatementInterface $statement = null;
 
     /**
      * Constructor.
@@ -362,7 +362,7 @@ class WriterManager
      */
     public function countAffected(): int
     {
-        return $this->getStatement()->countAffected();
+        return $this->getStatement()?->countAffected() ?? 0;
     }
 
     /**
@@ -376,7 +376,7 @@ class WriterManager
      */
     public function lastInsertId(?string $sequence = null): ?string
     {
-        return $this->getStatement()->lastInsertId($sequence);
+        return $this->getStatement()?->lastInsertId($sequence);
     }
 
     /**
@@ -404,9 +404,9 @@ class WriterManager
     /**
      * Method to get property Cursor
      *
-     * @return  StatementInterface
+     * @return  ?StatementInterface
      */
-    public function getStatement(): StatementInterface
+    public function getStatement(): ?StatementInterface
     {
         return $this->statement;
     }
@@ -414,11 +414,11 @@ class WriterManager
     /**
      * Method to set property cursor
      *
-     * @param  StatementInterface  $statement
+     * @param  ?StatementInterface  $statement
      *
      * @return  static  Return self to support chaining.
      */
-    public function setStatement(StatementInterface $statement): static
+    public function setStatement(?StatementInterface $statement): static
     {
         $this->statement = $statement;
 
