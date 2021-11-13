@@ -11,11 +11,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
+use MyCLabs\Enum\Enum;
 use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTMLFactory;
 use Windwalker\Filter\Rule\Length;
 
+use Windwalker\Form\Field\Concern\ListOptionsTrait;
+use Windwalker\Utilities\Assert\TypeAssert;
+
 use function Windwalker\DOM\h;
+use function Windwalker\value_compare;
 
 /**
  * The TextField class.
@@ -33,14 +38,9 @@ use function Windwalker\DOM\h;
  */
 class TextField extends AbstractInputField
 {
-    protected string $inputType = 'text';
+    use ListOptionsTrait;
 
-    /**
-     * Property options.
-     *
-     * @var  DOMElement[]
-     */
-    protected array $options = [];
+    protected string $inputType = 'text';
 
     public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
@@ -52,16 +52,34 @@ class TextField extends AbstractInputField
                 [],
                 [
                     $html,
-                    h(
-                        'datalist',
-                        ['id' => $this->buildListId()],
-                        $this->options
+                    $this->prepareListElement(
+                        h(
+                            'datalist',
+                            ['id' => $this->buildListId()],
+                        )
                     ),
                 ]
             );
         }
 
         return $html;
+    }
+
+    protected function appendOption(DOMElement $select, DOMElement|array $option, ?string $group = null): void
+    {
+        if (is_array($option)) {
+            $select->appendChild($optGroup = h('optgroup', ['label' => $group]));
+
+            foreach ($option as $opt) {
+                $this->appendOption($optGroup, $opt);
+            }
+
+            return;
+        }
+
+        $option = clone $option;
+
+        $select->appendChild($option);
     }
 
     /**
@@ -79,60 +97,6 @@ class TextField extends AbstractInputField
     public function buildListId(): ?string
     {
         return count($this->options) ? $this->getId() . '-list' : null;
-    }
-
-    /**
-     * addOption
-     *
-     * @param  DOMElement  $option
-     *
-     * @return  static
-     */
-    public function addOption(DOMElement $option): static
-    {
-        $this->options[] = $option;
-
-        return $this;
-    }
-
-    /**
-     * option
-     *
-     * @param  string|null  $value
-     * @param  string|null  $text
-     * @param  array        $attrs
-     *
-     * @return static
-     */
-    public function option(?string $value = null, ?string $text = null, array $attrs = []): static
-    {
-        $attrs['value'] = $value;
-
-        $this->addOption(HTMLFactory::option($attrs, $text));
-
-        return $this;
-    }
-
-    /**
-     * setOptions
-     *
-     * @param  array|DOMElement[]  $options
-     *
-     * @return  static
-     */
-    public function setOptions(array $options): static
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
-    /**
-     * @return DOMElement[]
-     */
-    public function getOptions(): array
-    {
-        return $this->options;
     }
 
     /**

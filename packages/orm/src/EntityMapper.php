@@ -201,7 +201,7 @@ class EntityMapper implements EventAwareInterface
         $metadata = $this->getMetadata();
 
         return new ResultIterator(
-            $this->from($metadata->getClassName())
+            $this->select()
                 ->where($this->conditionsToWheres($conditions))
                 ->getIterator($className ?? $metadata->getClassName())
         );
@@ -212,7 +212,6 @@ class EntityMapper implements EventAwareInterface
         $metadata = $this->getMetadata();
 
         return $this->select($column)
-            ->from($metadata->getClassName())
             ->where($this->conditionsToWheres($conditions))
             ->result();
     }

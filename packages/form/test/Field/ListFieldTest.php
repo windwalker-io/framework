@@ -134,7 +134,7 @@ HTML;
             ]
         );
 
-        $field->group(
+        $field->optionsGroup(
             'Europe',
             function (ListField $field) {
                 $field->option('Paris', 'Europe/Paris');
