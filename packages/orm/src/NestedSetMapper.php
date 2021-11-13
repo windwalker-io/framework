@@ -245,7 +245,7 @@ class NestedSetMapper extends EntityMapper
         if (is_object($pkOrEntity) && $metadata::isEntity($pkOrEntity)) {
             $node = $this->extract($pkOrEntity);
         } else {
-            $node = $this->getNode($pkOrEntity);
+            $node = $this->findOne($pkOrEntity);
 
             if ($node === null) {
                 return false;
@@ -305,52 +305,6 @@ class NestedSetMapper extends EntityMapper
         return $this->setPosition($entity, $referenceId, Position::BEFORE);
     }
 
-    /**
-     * getNode
-     *
-     * @param  string|int   $value
-     * @param  string|null  $key
-     * @param  string|null  $className
-     *
-     * @return  object|NestedEntityInterface
-     */
-    protected function getNode(
-        string|int $value,
-        ?string $key = null,
-        ?string $className = null
-    ): ?object {
-        // Determine which key to get the node base on.
-        $k = match ($key) {
-            static::PARENT => 'parent_id',
-            static::LEFT => 'lft',
-            static::RIGHT => 'rgt',
-            default => $this->getMainKey(),
-        };
-
-        $pk = $this->getMainKey();
-
-        if ($pk === null) {
-            throw new LogicException(
-                'Primary key not set for entity: ' . $this->getMetadata()->getClassName()
-            );
-        }
-
-        // Get the node data.
-        $row = $this->select($pk, 'parent_id', 'level', 'lft', 'rgt')
-            ->where($k, '=', $value)
-            ->limit(1)
-            ->get($className ?? $this->getMetadata()->getClassName());
-
-        // Check for no $row returned
-        if ($row === null) {
-            throw new NestedHandleException(
-                sprintf('%s::getNode(%s, %s) failed.', static::class, $value, $key ?? 'null')
-            );
-        }
-
-        return $row;
-    }
-
     protected function preprocessSave(BeforeSaveEvent $event, bool $new = false): void
     {
         $data = $event->getData();
@@ -387,7 +341,7 @@ class NestedSetMapper extends EntityMapper
                 // Get the reference node by primary key.
                 try {
                     /** @var NestedEntityInterface $reference */
-                    $reference = $this->getNode($position->getReferenceId(), $className);
+                    $reference = $this->findOne($position->getReferenceId(), $className);
                 } catch (NestedHandleException $e) {
                     throw new NestedHandleException(
                         sprintf('Reference ID %s not found.', $position->getReferenceId()),
@@ -437,7 +391,9 @@ class NestedSetMapper extends EntityMapper
                 $position->getPosition()
             );
 
-            $data = array_merge($data, $this->extractForSave($entity));
+            $data['lft'] = $entity->getLft();
+            $data['rgt'] = $entity->getRgt();
+            $data['level'] = $entity->getLevel();
 
             $event->setData($data);
         }
@@ -601,7 +557,7 @@ class NestedSetMapper extends EntityMapper
         // We are moving the tree relative to a reference node.
         if ($referenceId) {
             // Get the reference node by primary key.
-            $reference = $this->getNode($referenceId);
+            $reference = $this->findOne($referenceId);
 
             // Get the reposition data for shifting the tree and re-inserting the node.
             [$newData, $leftWhere, $rightWhere] = $this->getTreeRepositionData(
@@ -981,7 +937,7 @@ class NestedSetMapper extends EntityMapper
         }
 
         // Get the node by id.
-        return $this->getNode($pk);
+        return $this->findOne($pk);
     }
 
     private function sourceToPk(mixed $source): mixed
