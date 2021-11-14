@@ -26,6 +26,8 @@ class Fieldset implements AttributeInterface
 
     protected ?string $title;
 
+    protected Form $form;
+
     /**
      * Fieldset constructor.
      *
@@ -93,6 +95,33 @@ class Fieldset implements AttributeInterface
     public function title(?string $title): static
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function register(callable $handler): static
+    {
+        $this->getForm()->fieldset($this->getName(), $handler);
+
+        return $this;
+    }
+
+    /**
+     * @return Form
+     */
+    public function getForm(): Form
+    {
+        return $this->form;
+    }
+
+    /**
+     * @param  Form  $form
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setForm(Form $form): static
+    {
+        $this->form = $form;
 
         return $this;
     }

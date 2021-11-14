@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Contract;
 
 use JetBrains\PhpStorm\ArrayShape;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * Interface LanguageInterface
@@ -34,9 +35,9 @@ interface LanguageInterface
         bool $fallback = true
     ): array;
 
-    public function trans(string $id, ...$args): string;
+    public function trans(string|RawWrapper $id, ...$args): string;
 
-    public function choice(string $id, int|float $number, ...$args);
+    public function choice(string|RawWrapper $id, int|float $number, ...$args);
 
     public function replace(string $string, array $args = []): string;
 

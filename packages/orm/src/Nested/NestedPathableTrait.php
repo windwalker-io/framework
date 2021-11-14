@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Nested;
 
+use Lyrasoft\Luna\Attributes\Slugify;
 use Windwalker\ORM\Attributes\Column;
 
 /**
@@ -21,6 +22,7 @@ trait NestedPathableTrait
     use NestedEntityTrait;
 
     #[Column('alias')]
+    #[Slugify]
     protected string $alias = '';
 
     #[Column('path')]

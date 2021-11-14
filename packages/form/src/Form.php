@@ -302,8 +302,10 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     public function wrap(?string $fieldset = null, ?string $namespace = null, ?callable $handler = null): static
     {
         if ($fieldset) {
-            $this->fieldsets[$fieldset] ??= new Fieldset($fieldset, null);
-            $this->fieldset = $this->fieldsets[$fieldset];
+            $fs = $this->fieldsets[$fieldset] ??= new Fieldset($fieldset, null);
+            $this->fieldset = $fs;
+
+            $fs->setForm($this);
         }
 
         if ($namespace) {
@@ -337,6 +339,12 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         $this->wrap($name, null, $handler);
 
         return $this->fieldsets[$name];
+    }
+
+    public function fieldsetWithTitle(string $name, string $title, ?callable $handler = null): Fieldset
+    {
+        return $this->fieldset($name, $handler)
+            ->title($title);
     }
 
     public function removeFieldset(string $name): static

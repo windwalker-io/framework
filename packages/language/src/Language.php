@@ -19,6 +19,7 @@ use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Reflection\BacktraceHelper;
 use Windwalker\Utilities\Str;
 use Windwalker\Utilities\Utf8String;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * Class Language
@@ -206,8 +207,12 @@ class Language implements LanguageInterface
         return [$foundLocale, $string];
     }
 
-    public function trans(string $id, ...$args): string
+    public function trans(string|RawWrapper $id, ...$args): string
     {
+        if ($id instanceof RawWrapper) {
+            return $id();
+        }
+
         [$locale, $string] = $this->get($id);
 
         $string = $this->surroundsDebugSigns($string, (bool) $locale);
@@ -215,8 +220,12 @@ class Language implements LanguageInterface
         return $this->replace($string, $args);
     }
 
-    public function choice(string $id, int|float $number, ...$args): string
+    public function choice(string|RawWrapper $id, int|float $number, ...$args): string
     {
+        if ($id instanceof RawWrapper) {
+            return $id();
+        }
+
         [$locale, $string] = $this->get($id);
 
         if (!$locale) {
