@@ -28,20 +28,14 @@ use Windwalker\DI\Exception\DependencyResolutionException;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Inject implements ContainerAttributeInterface
 {
-    public ?string $id = null;
-
-    public bool $forceNew = false;
-
     /**
      * Inject constructor.
      *
      * @param  string|null  $id
      * @param  bool         $forceNew
      */
-    public function __construct(?string $id = null, bool $forceNew = false)
+    public function __construct(public ?string $id = null, public bool $forceNew = false)
     {
-        $this->id = $id;
-        $this->forceNew = $forceNew;
     }
 
     /**
@@ -64,7 +58,7 @@ class Inject implements ContainerAttributeInterface
             }
 
             if ($handler->getObject() === null) {
-                throw new RuntimeException('No object to inject.');
+                throw new RuntimeException('No target object to inject.');
             }
 
             $value = $this->resolveInjectable($handler->getContainer(), $reflector);
