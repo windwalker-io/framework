@@ -502,7 +502,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function updateBatch(array|object $data, mixed $conditions = null, int $options = 0): array
     {
-        $dataToSave = $this->extractForSave($data, (bool) ($options & static::UPDATE_NULLS));
+        $dataToSave = $this->extract($data);
 
         $results = [];
 
