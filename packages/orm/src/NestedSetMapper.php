@@ -559,6 +559,12 @@ class NestedSetMapper extends EntityMapper
             // Get the reference node by primary key.
             $reference = $this->findOne($referenceId);
 
+            if (!$reference) {
+                throw new NestedHandleException(
+                    "The reference ID: \"$referenceId\" not found."
+                );
+            }
+
             // Get the reposition data for shifting the tree and re-inserting the node.
             [$newData, $leftWhere, $rightWhere] = $this->getTreeRepositionData(
                 $reference,
