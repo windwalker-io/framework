@@ -22,6 +22,7 @@ use Windwalker\Utilities\Compare\WhereWrapper;
 use Windwalker\Utilities\Dumper\VarDumper;
 
 use function Windwalker\count;
+use function Windwalker\value_compare;
 
 /**
  * The ArrayHelper class
@@ -1098,19 +1099,19 @@ abstract class Arr
                 $results[] = $val($array);
             } elseif ($val instanceof Closure) {
                 $results[] = $val($array[$key], $key);
-            } elseif (substr($key, -2) === '>=') {
-                $results[] = (static::get($array, trim(substr($key, 0, -2))) >= $val);
-            } elseif (substr($key, -2) === '<=') {
-                $results[] = (static::get($array, trim(substr($key, 0, -2))) <= $val);
-            } elseif (substr($key, -1) === '>') {
-                $results[] = (static::get($array, trim(substr($key, 0, -1))) > $val);
-            } elseif (substr($key, -1) === '<') {
-                $results[] = (static::get($array, trim(substr($key, 0, -1))) < $val);
             } elseif (is_array($val)) {
-                $results[] = in_array(static::get($array, $key), $val, $strict);
+                if (
+                    is_numeric($key)
+                    && count($val) === 3
+                ) {
+                    $results[] = value_compare(static::get($array, $val[0]), $val[2], $val[1]);
+                } else {
+                    $results[] = in_array(static::get($array, $key), $val, $strict);
+                }
             } elseif ($strict) {
                 $results[] = static::get($array, $key) === $val;
             } else {
+                // Todo: Test this in php8 env.
                 // Workaround for PHP object compare bug, see: https://bugs.php.net/bug.php?id=62976
                 $compare1 = is_object(static::get($array, $key)) ? get_object_vars(
                     static::get(
