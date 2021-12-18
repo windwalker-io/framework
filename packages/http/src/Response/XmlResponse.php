@@ -14,6 +14,7 @@ namespace Windwalker\Http\Response;
 use DOMDocument;
 use InvalidArgumentException;
 use SimpleXMLElement;
+use Windwalker\DOM\DOMFactory;
 
 /**
  * The XmlResponse class.
@@ -55,15 +56,23 @@ class XmlResponse extends TextResponse
     protected function toString(mixed $data): string
     {
         if ($data instanceof SimpleXMLElement) {
-            return $data->asXML();
+            $dom = dom_import_simplexml($data);
+            $doc = DOMFactory::create();
+            $doc->importNode($dom, true);
+            $doc->appendChild($dom);
+
+            return $doc->saveXML();
+        }
+
+        if (is_string($data)) {
+            $doc = DOMFactory::create();
+            $doc->loadXML($data);
+
+            return $doc->saveXML();
         }
 
         if ($data instanceof DOMDocument) {
             return $data->saveXML();
-        }
-
-        if (is_string($data)) {
-            return $data;
         }
 
         throw new InvalidArgumentException(
