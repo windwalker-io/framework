@@ -100,7 +100,7 @@ class ListField extends AbstractField
      *
      * @return  array|string
      */
-    public function getValue(): array|string
+    public function getValue(): mixed
     {
         $value = parent::getValue();
 

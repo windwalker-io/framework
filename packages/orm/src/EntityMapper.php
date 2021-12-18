@@ -699,6 +699,14 @@ class EntityMapper implements EventAwareInterface
         return $this->createOne($data, $options);
     }
 
+    /**
+     * deleteWhere
+     *
+     * @param  mixed  $conditions
+     * @param  int    $options
+     *
+     * @return  array<StatementInterface>
+     */
     public function deleteWhere(mixed $conditions, int $options = 0): array
     {
         // Event

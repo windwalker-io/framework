@@ -84,7 +84,7 @@ class CheckboxesField extends ListField implements InputOptionsInterface
      *
      * @return  array
      */
-    public function getValue(): array
+    public function getValue(): mixed
     {
         $value = parent::getValue();
 
