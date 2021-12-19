@@ -29,8 +29,21 @@ class ValueObject implements
         $this->fill($data);
     }
 
+    public static function wrap(mixed $data): static
+    {
+        if ($data instanceof static) {
+            return $data;
+        }
+
+        return new static($data);
+    }
+
     public function fill(mixed $data): static
     {
+        if (is_string($data) && is_json($data)) {
+            $data = json_decode($data, true);
+        }
+
         $values = TypeCast::toArray($data);
 
         foreach ($values as $key => $value) {
