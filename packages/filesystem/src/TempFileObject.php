@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Part of earth project.
+ *
+ * @copyright  Copyright (C) 2021 __ORGANIZATION__.
+ * @license    __LICENSE__
+ */
+
+declare(strict_types=1);
+
+namespace Windwalker\Filesystem;
+
+/**
+ * The TempFileObject class.
+ */
+class TempFileObject extends FileObject
+{
+    public bool $deleteWhenDestruct = false;
+
+    public function deleteWhenShutdown(): void
+    {
+        register_shutdown_function(fn () => $this->deleteIfExistsAsync());
+    }
+
+    public function deleteWhenDestruct(bool $value = false): void
+    {
+        $this->deleteWhenDestruct = $value;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __destruct()
+    {
+        if ($this->deleteWhenDestruct) {
+            $this->deleteIfExistsAsync();
+        }
+    }
+}

@@ -28,7 +28,7 @@ use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Iterator\UniqueIterator;
 use Windwalker\Utilities\Str;
 
-use function Windwalker\filter;
+use function Windwalker\uid;
 
 /**
  * Class Filesystem
@@ -66,10 +66,14 @@ use function Windwalker\filter;
  */
 class Filesystem
 {
+    public const DELETE_WHEN_SHUTDOWN = 1 << 0;
+
+    public const DELETE_WHEN_DESTRUCT = 1 << 1;
+
     /**
      * Get a path as FileObject.
      *
-     * @param  string       $path
+     * @param  string  $path
      * @param  string|null  $root
      *
      * @return  FileObject
@@ -134,7 +138,7 @@ class Filesystem
         if ($excludePaths !== []) {
             $excludes = static::globAll($excludePaths)->toArray();
 
-            $excludes = array_map(fn ($path) => Path::normalize($path), $excludes);
+            $excludes = array_map(fn($path) => Path::normalize($path), $excludes);
         }
 
         $iter = new AppendIterator();
@@ -183,13 +187,17 @@ class Filesystem
      *
      * @param  string|null  $dir
      * @param  string|null  $prefix
+     * @param  int          $flags
      *
-     * @return  FileObject
+     * @return TempFileObject
      *
      * @since  3.5.12
      */
-    public static function createTemp(?string $dir = null, ?string $prefix = null): FileObject
-    {
+    public static function createTemp(
+        ?string $dir = null,
+        ?string $prefix = null,
+        int $flags = self::DELETE_WHEN_DESTRUCT
+    ): TempFileObject {
         $dir = $dir ?? sys_get_temp_dir();
         $prefix = $prefix ?? 'Windwalker-Temp-';
 
@@ -208,7 +216,43 @@ class Filesystem
             );
         }
 
-        return static::get($temp);
+        $file = new TempFileObject($temp);
+
+        if ($flags & static::DELETE_WHEN_DESTRUCT) {
+            $file->deleteWhenDestruct(true);
+        }
+
+        if ($flags & static::DELETE_WHEN_SHUTDOWN) {
+            $file->deleteWhenShutdown();
+        }
+
+        return $file;
+    }
+
+    public static function createTempFolder(
+        ?string $dir = null,
+        ?string $prefix = null,
+        int $flags = self::DELETE_WHEN_DESTRUCT
+    ): TempFileObject {
+        $dir = $dir ?? sys_get_temp_dir();
+        $prefix = $prefix ?? 'Windwalker-Temp-Folder-';
+
+        $temp = $prefix . uid();
+        $tempPath = $dir . DIRECTORY_SEPARATOR . $temp;
+
+        static::mkdir($dir . DIRECTORY_SEPARATOR . $temp);
+
+        $folder = new TempFileObject($tempPath);
+
+        if ($flags & static::DELETE_WHEN_DESTRUCT) {
+            $folder->deleteWhenDestruct(true);
+        }
+
+        if ($flags & static::DELETE_WHEN_SHUTDOWN) {
+            $folder->deleteWhenShutdown();
+        }
+
+        return $folder;
     }
 
     /**
