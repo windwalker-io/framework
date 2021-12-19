@@ -126,6 +126,13 @@ trait ManageInputTrait
         return $this->getInput()->getAttribute($name);
     }
 
+    public function hasAttribute(string $name): bool
+    {
+        $input = $this->getInput();
+
+        return $input->hasAttribute($name);
+    }
+
     public function getAttributes(): array
     {
         return $this->input->getAttributes(true);

@@ -85,11 +85,20 @@ trait ManageWrapperTrait
      *
      * @param  string  $name
      *
-     * @return  string
+     * @return string|null
      */
-    public function getWrapperAttribute(string $name): string
+    public function getWrapperAttribute(string $name): ?string
     {
+        if (!$this->hasWrapperAttribute($name)) {
+            return null;
+        }
+
         return $this->getWrapper()->getAttribute($name);
+    }
+
+    public function hasWrapperAttribute(string $name): bool
+    {
+        return $this->getWrapper()->hasAttribute($name);
     }
 
     /**

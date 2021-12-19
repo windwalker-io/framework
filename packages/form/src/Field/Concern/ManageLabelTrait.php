@@ -110,11 +110,20 @@ trait ManageLabelTrait
      *
      * @param  string  $name
      *
-     * @return  string
+     * @return string|null
      */
-    public function getLabelAttribute(string $name): string
+    public function getLabelAttribute(string $name): ?string
     {
+        if (!$this->hasLabelAttribute($name)) {
+            return null;
+        }
+
         return $this->getLabel()->getAttribute($name);
+    }
+
+    public function hasLabelAttribute(string $name): bool
+    {
+        return $this->getLabel()->hasAttribute($name);
     }
 
     /**
