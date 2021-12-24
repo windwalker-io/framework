@@ -20,7 +20,7 @@ class TempFileObject extends FileObject
 
     public function deleteWhenShutdown(): void
     {
-        register_shutdown_function(fn () => $this->deleteIfExistsAsync());
+        register_shutdown_function(fn () => $this->deleteIfExists());
     }
 
     public function deleteWhenDestruct(bool $value = false): void
@@ -34,7 +34,7 @@ class TempFileObject extends FileObject
     public function __destruct()
     {
         if ($this->deleteWhenDestruct) {
-            $this->deleteIfExistsAsync();
+            $this->deleteIfExists();
         }
     }
 }
