@@ -803,6 +803,7 @@ class FileObject extends SplFileInfo
             'copyTo',
             'moveTo',
             'delete',
+            'deleteIfExists',
             'files',
             'folders',
             'items',
