@@ -315,6 +315,17 @@ class TableManager extends AbstractMetaManager
         return $this;
     }
 
+    public function modifyColumnCallback(string $name, \Closure $callback): static
+    {
+        $column = $this->getColumn($name);
+
+        $column = $callback($column, $this) ?? $column;
+
+        $this->modifyColumn($column);
+
+        return $this;
+    }
+
     public function renameColumn(string $from, string $to): static
     {
         if ($this->hasColumn($from)) {
