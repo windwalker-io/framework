@@ -40,7 +40,7 @@ class SwooleScheduler implements SchedulerInterface
      */
     public static function isSupported(): bool
     {
-        return extension_loaded('swoole') && function_exists('\go');
+        return PHP_SAPI === 'cli' && extension_loaded('swoole') && function_exists('\go');
     }
 
     /**

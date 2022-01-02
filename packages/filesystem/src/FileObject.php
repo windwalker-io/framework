@@ -792,7 +792,7 @@ class FileObject extends SplFileInfo
         return $this;
     }
 
-    public static function __callStatic(string $name, $args): Promise
+    public function __call(string $name, $args): Promise
     {
         $allows = [
             'read',

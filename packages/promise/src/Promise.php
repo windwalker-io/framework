@@ -39,7 +39,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @var mixed
      */
-    protected $value;
+    protected mixed $value;
 
     /**
      * @var callable[]
@@ -47,7 +47,7 @@ class Promise implements ExtendedPromiseInterface
     protected array $handlers = [];
 
     /**
-     * @var ScheduleCursor
+     * @var ScheduleCursor|null
      */
     protected ?ScheduleCursor $scheduleCursor = null;
 
@@ -196,9 +196,7 @@ class Promise implements ExtendedPromiseInterface
 
         $onRejected = is_callable($onRejected)
             ? $onRejected
-            : static function ($e) {
-                throw new UncaughtException($e);
-            };
+            : static fn($e) => throw new UncaughtException($e);
 
         if ($this->getState() === static::PENDING) {
             $child = new static();
@@ -245,7 +243,7 @@ class Promise implements ExtendedPromiseInterface
      * @throws Throwable
      * @since  __DEPLOY_VERSION__
      */
-    public static function resolved($value = null): ExtendedPromiseInterface
+    public static function resolved(mixed $value = null): ExtendedPromiseInterface
     {
         return new static(
             static function (callable $resolve) use ($value) {
@@ -264,7 +262,7 @@ class Promise implements ExtendedPromiseInterface
      * @throws Throwable
      * @since  __DEPLOY_VERSION__
      */
-    public static function rejected($value = null): ExtendedPromiseInterface
+    public static function rejected(mixed $value = null): ExtendedPromiseInterface
     {
         return new Promise(
             static function ($resolve, callable $reject) use ($value) {
@@ -276,7 +274,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      */
-    public function resolve($value): void
+    public function resolve(mixed $value): void
     {
         $this->resolvePromise($this, $value);
     }
@@ -284,7 +282,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      */
-    public function reject($reason): void
+    public function reject(mixed $reason): void
     {
         if ($reason === $this) {
             $this->reject(new TypeError('Unable to resolve self.'));
