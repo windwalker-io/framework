@@ -185,6 +185,10 @@ class CastManager
 
                 // Pure class
                 return function (mixed $value, ORM $orm) use ($options, $cast) {
+                    if (is_subclass_of($cast, \BackedEnum::class)) {
+                        return $cast::from($value);
+                    }
+
                     if (!($options & Cast::USE_HYDRATOR) && !($options & Cast::USE_CONSTRUCTOR)) {
                         $options |= EntityMetadata::isEntity($cast)
                             ? Cast::USE_HYDRATOR

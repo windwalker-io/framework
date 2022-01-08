@@ -29,7 +29,9 @@ abstract class AbstractPdoConnection extends AbstractConnection
     protected static array $defaultAttributes = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_EMULATE_PREPARES => true,
-        PDO::ATTR_STRINGIFY_FETCHES => false,
+
+        // Todo: reset to FALSE if totally test in PHP8.1
+        PDO::ATTR_STRINGIFY_FETCHES => true,
     ];
 
     /**

@@ -49,6 +49,15 @@ abstract class TypeCast
 
     public const TYPE_OBJECT = 'object';
 
+    public static function extractEnum(\UnitEnum $data): string|int
+    {
+        if ($data instanceof \BackedEnum) {
+            return $data->value;
+        }
+
+        return $data->name;
+    }
+
     /**
      * Utility function to convert all types to an array.
      *
@@ -154,6 +163,10 @@ abstract class TypeCast
      */
     public static function toString(mixed $data, bool $dump = false): string
     {
+        if ($data instanceof \UnitEnum) {
+            return (string) static::extractEnum($data);
+        }
+
         if ($data instanceof Closure) {
             return static::toString($data());
         }
@@ -271,6 +284,10 @@ abstract class TypeCast
      */
     public static function try(mixed $value, string $type, bool $strict = false): mixed
     {
+        if ($value instanceof \UnitEnum) {
+            $value = static::extractEnum($value);
+        }
+
         switch (strtolower($type)) {
             case 'int':
             case 'integer':
