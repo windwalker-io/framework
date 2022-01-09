@@ -247,6 +247,8 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
         }
 
         if ($value === null || $value === false) {
+            $this->removeAttribute($name);
+
             return $this->ownerDocument->createAttribute($name);
         }
 

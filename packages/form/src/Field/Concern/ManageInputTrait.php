@@ -154,6 +154,20 @@ trait ManageInputTrait
     }
 
     /**
+     * removeAttribute
+     *
+     * @param  string  $name
+     *
+     * @return  static
+     */
+    public function removeAttribute(string $name): static
+    {
+        $this->getInput()->removeAttribute($name);
+
+        return $this;
+    }
+
+    /**
      * attr
      *
      * @param  string  $name

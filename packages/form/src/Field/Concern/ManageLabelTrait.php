@@ -142,6 +142,13 @@ trait ManageLabelTrait
         return $this;
     }
 
+    public function removeLabelAttribute(string $name): static
+    {
+        $this->getLabel()->removeAttribute($name);
+
+        return $this;
+    }
+
     public function getLabelAttributes(): array
     {
         return $this->getLabel()->getAttributes(true);

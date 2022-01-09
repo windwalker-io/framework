@@ -117,6 +117,13 @@ trait ManageWrapperTrait
         return $this;
     }
 
+    public function removeWrapperAttribute(string $name): static
+    {
+        $this->getWrapper()->removeAttribute($name);
+
+        return $this;
+    }
+
     public function getWrapperAttributes(): array
     {
         return $this->getWrapper()->getAttributes(true);
