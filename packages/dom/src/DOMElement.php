@@ -23,7 +23,6 @@ use JetBrains\PhpStorm\ArrayShape;
 use LogicException;
 use Masterminds\HTML5;
 use Symfony\Component\DomCrawler\Crawler;
-use Twig\Node\TextNode;
 use Windwalker\Utilities\Str;
 
 use function Windwalker\value;
@@ -151,7 +150,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
         return parent::appendChild($newnode);
     }
 
-    public function appendText(string $string): TextNode
+    public function appendText(string $string): \DOMText
     {
         return static::insertContentTo($string, $this);
     }
