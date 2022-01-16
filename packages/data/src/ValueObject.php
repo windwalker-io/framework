@@ -14,6 +14,7 @@ namespace Windwalker\Data;
 use IteratorAggregate;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Contract\DumpableInterface;
+use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -47,6 +48,7 @@ class ValueObject implements
         $values = TypeCast::toArray($data);
 
         foreach ($values as $key => $value) {
+            $key = StrNormalize::toCamelCase($key);
             $this->$key = $value;
         }
 
@@ -96,7 +98,7 @@ class ValueObject implements
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->dump());
     }
