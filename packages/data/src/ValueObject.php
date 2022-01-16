@@ -23,7 +23,8 @@ use Windwalker\Utilities\TypeCast;
 class ValueObject implements
     ArrayAccessibleInterface,
     DumpableInterface,
-    IteratorAggregate
+    IteratorAggregate,
+    \JsonSerializable
 {
     public function __construct(mixed $data)
     {
@@ -92,7 +93,7 @@ class ValueObject implements
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        return TypeCast::toArray($this, $recursive, $onlyDumpable);
+        return TypeCast::toArray(get_object_vars($this), $recursive, $onlyDumpable);
     }
 
     /**
@@ -101,5 +102,13 @@ class ValueObject implements
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->dump());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return $this->dump();
     }
 }
