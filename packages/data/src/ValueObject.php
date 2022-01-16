@@ -24,6 +24,7 @@ class ValueObject implements
     ArrayAccessibleInterface,
     DumpableInterface,
     IteratorAggregate,
+    \Stringable,
     \JsonSerializable
 {
     public function __construct(mixed $data)
@@ -49,7 +50,14 @@ class ValueObject implements
         $values = TypeCast::toArray($data);
 
         foreach ($values as $key => $value) {
-            $key = StrNormalize::toCamelCase($key);
+            if (!property_exists($this, (string) $key)) {
+                if (str_contains((string) $key, '_')) {
+                    $key = StrNormalize::toCamelCase((string) $key);
+                } else {
+                    $key = StrNormalize::toSnakeCase((string) $key);
+                }
+            }
+
             $this->$key = $value;
         }
 
@@ -107,8 +115,13 @@ class ValueObject implements
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->dump();
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this);
     }
 }
