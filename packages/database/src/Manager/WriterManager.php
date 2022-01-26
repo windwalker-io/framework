@@ -166,7 +166,9 @@ class WriterManager
                 }
             }
 
-            $v = TypeCast::toString($v);
+            if ($v !== null) {
+                $v = TypeCast::toString($v);
+            }
 
             if (in_array($k, $key, true)) {
                 // Set wheres later
