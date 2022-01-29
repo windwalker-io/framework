@@ -2409,6 +2409,7 @@ class Query implements QueryInterface, PreparableInterface, \IteratorAggregate
      *
      * @since  3.5.19
      */
+    #[\ReturnTypeWillChange]
     public function getIterator(string $class = 'stdClass')
     {
         if (!$this->connection instanceof AbstractDatabaseDriver) {

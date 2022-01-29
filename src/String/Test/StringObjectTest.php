@@ -158,6 +158,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
+    #[\ReturnTypeWillChange]
     public function offsetGetProvider()
     {
         return [
@@ -196,6 +197,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
+    #[\ReturnTypeWillChange]
     public function offsetSetProvider()
     {
         return [
@@ -230,6 +232,7 @@ class StringObjectTest extends TestCase
      *
      * @return  array
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnsetProvider()
     {
         return [

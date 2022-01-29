@@ -234,6 +234,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      *
      * @return  void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->input->getArgument($offset, $value);
@@ -246,6 +247,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      *
      * @return  void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->input->args[$offset]);
@@ -258,6 +260,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      *
      * @return  boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->input->args[$offset]);
@@ -270,6 +273,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      *
      * @return  mixed The value of this property.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getArgument($offset);
@@ -280,6 +284,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      *
      * @return  \Traversable The data to be iterator.
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->input->args);
@@ -309,11 +314,29 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
         return $this;
     }
 
+    public function __serialize(): array
+    {
+        return (array) $this->input;
+    }
+
+    /**
+     * Unserialize the data.
+     *
+     * @param string $serialized THe serialized data string.
+     *
+     * @return  IO Support chaining.
+     */
+    public function __unserialize($serialized): void
+    {
+        $this->input = $serialized;
+    }
+
     /**
      * Count data.
      *
      * @return  int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->input->args);
@@ -324,6 +347,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      *
      * @return  string Encoded json string.
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -200,6 +200,7 @@ class Input implements \Serializable, \Countable
      * @since   2.0
      * @see     Countable::count()
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->data);
@@ -502,6 +503,42 @@ class Input implements \Serializable, \Countable
     {
         // Unserialize the data, and inputs.
         list($this->data, $this->inputs) = unserialize($input);
+
+        $this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter() : new NullFilter();
+    }
+    /**
+     * Method to serialize the input.
+     *
+     * @return  string  The serialized input.
+     *
+     * @since   2.0
+     */
+    public function __serialize(): array
+    {
+        // Load all of the inputs.
+        $this->loadAllInputs();
+
+        // Remove $_ENV and $_SERVER from the inputs.
+        $inputs = $this->inputs;
+        unset($inputs['env'], $inputs['server']);
+
+        // Serialize the options, data, and inputs.
+        return [$this->data, $inputs];
+    }
+
+    /**
+     * Method to unserialize the input.
+     *
+     * @param   string $input The serialized input.
+     *
+     * @return  Input  The input object.
+     *
+     * @since   2.0
+     */
+    public function __unserialize(array $input): void
+    {
+        // Unserialize the data, and inputs.
+        list($this->data, $this->inputs) = $input;
 
         $this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter() : new NullFilter();
     }

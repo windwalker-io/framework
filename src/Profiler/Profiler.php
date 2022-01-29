@@ -371,6 +371,7 @@ class Profiler implements ProfilerInterface, \Countable
      *
      * @return  \ArrayIterator  An iterator on the profiler points.
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->points);
@@ -381,6 +382,7 @@ class Profiler implements ProfilerInterface, \Countable
      *
      * @return  integer  The number of points.
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->points);

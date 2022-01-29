@@ -269,6 +269,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->arguments);
@@ -309,6 +310,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($name)
     {
         return $this->hasArgument($name);
@@ -323,6 +325,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($name)
     {
         return $this->getArgument($name);
@@ -340,6 +343,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($name, $value)
     {
         if (is_null($name)) {
@@ -358,6 +362,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($name)
     {
         $this->removeArgument($name);

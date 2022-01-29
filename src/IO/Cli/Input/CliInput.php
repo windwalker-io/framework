@@ -118,7 +118,7 @@ class CliInput extends Input implements CliInputInterface
     public function unserialize($input)
     {
         // Unserialize the executable, args, options, data, and inputs.
-        list($this->calledScript, $this->args, $this->filter, $this->data, $this->inputs) = unserialize($input);
+        [$this->calledScript, $this->args, $this->filter, $this->data, $this->inputs] = unserialize($input);
 
         $this->filter = $this->filter ?: new NullFilter();
     }
@@ -282,5 +282,26 @@ class CliInput extends Input implements CliInputInterface
         $this->calledScript = $calledScript;
 
         return $this;
+    }
+
+    public function __serialize(): array
+    {
+        // Load all of the inputs.
+        $this->loadAllInputs();
+
+        // Remove $_ENV and $_SERVER from the inputs.
+        $inputs = $this->inputs;
+        unset($inputs['env'], $inputs['server']);
+
+        // Serialize the executable, args, options, data, and inputs.
+        return [$this->calledScript, $this->args, $this->filter, $this->data, $inputs];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        // Unserialize the executable, args, options, data, and inputs.
+        [$this->calledScript, $this->args, $this->filter, $this->data, $this->inputs] = $data;
+
+        $this->filter = $this->filter ?: new NullFilter();
     }
 }

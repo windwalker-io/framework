@@ -95,6 +95,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->data);
@@ -109,6 +110,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($name)
     {
         return isset($this->data[$name]);
@@ -123,6 +125,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($name)
     {
         return $this->get($name);
@@ -140,6 +143,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($name, $value)
     {
         if (is_null($name)) {
@@ -158,6 +162,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($name)
     {
         if ($this[$name]) {
@@ -170,6 +175,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      *
      * @return \Traversable An instance of an object implementing Iterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->data);

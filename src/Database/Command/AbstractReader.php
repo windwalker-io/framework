@@ -80,6 +80,7 @@ abstract class AbstractReader implements \IteratorAggregate
      *
      * @return  DataIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $this->execute();

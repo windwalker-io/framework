@@ -358,6 +358,7 @@ class QueueMessage implements \JsonSerializable
      *
      * @throws \InvalidArgumentException
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->body;
