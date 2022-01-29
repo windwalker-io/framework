@@ -58,7 +58,7 @@ class XmlResponse extends TextResponse
         if ($data instanceof SimpleXMLElement) {
             $dom = dom_import_simplexml($data);
             $doc = DOMFactory::create();
-            $doc->importNode($dom, true);
+            $dom = $doc->importNode($dom, true);
             $doc->appendChild($dom);
 
             return $doc->saveXML();

@@ -153,7 +153,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Primary Index',
                     'auto_increment' => true,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '11'
                     ],
                 ],
                 'category_id' => [
@@ -172,7 +173,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Category ID',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '11'
                     ],
                 ],
                 'page_id' => [
@@ -191,7 +193,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Page ID',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '11'
                     ],
                 ],
                 'type' => [
@@ -234,7 +237,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => '',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '20,6'
                     ],
                 ],
                 'title' => [
@@ -253,7 +257,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Title',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '255'
                     ],
                 ],
                 'alias' => [
@@ -272,7 +277,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Alias',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '255'
                     ],
                 ],
                 'introtext' => [
@@ -310,7 +316,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => '0: unpublished, 1:published',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '1'
                     ],
                 ],
                 'ordering' => [
@@ -329,7 +336,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Ordering',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '11'
                     ],
                 ],
                 'created' => [
@@ -367,7 +375,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Author',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '11'
                     ],
                 ],
                 'language' => [
@@ -386,7 +395,8 @@ class MySQLPlatformTest extends AbstractPlatformTest
                     'comment' => 'Language',
                     'auto_increment' => false,
                     'erratas' => [
-                        'is_json' => false
+                        'is_json' => false,
+                        'custom_length' => '7'
                     ],
                 ],
                 'params' => [

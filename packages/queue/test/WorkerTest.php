@@ -18,6 +18,8 @@ use Windwalker\Queue\Queue;
 use Windwalker\Queue\Worker;
 use Windwalker\Test\Traits\DatabaseTestTrait;
 
+use function Windwalker\uid;
+
 /**
  * The WorkerTest class.
  */
@@ -40,6 +42,10 @@ class WorkerTest extends TestCase
 
         $this->instance->getQueue()->push(
             static function () {
+                file_put_contents(
+                    __DIR__ . '/../tmp/test.log',
+                    uid()
+                );
                 static::$logs[] = 'Job executed.';
             },
             0,
@@ -109,7 +115,7 @@ class WorkerTest extends TestCase
     /**
      * @see  Worker::__construct
      */
-    public function test__construct(): void
+    public function testConstruct(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }

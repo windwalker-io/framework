@@ -1194,16 +1194,16 @@ SHOW;
         $this->assertEquals([$data[3]], Arr::query($data, ['data' => true], true));
 
         // Test id GT
-        $this->assertEquals([$data[1], $data[2], $data[3]], Arr::query($data, ['id >' => 1]));
+        $this->assertEquals([$data[1], $data[2], $data[3]], Arr::query($data, [['id', '>', 1]]));
 
         // Test id GTE
-        $this->assertEquals([$data[1], $data[2], $data[3]], Arr::query($data, ['id >=' => 2]));
+        $this->assertEquals([$data[1], $data[2], $data[3]], Arr::query($data, [['id', '>=', 2]]));
 
         // Test id LT
-        $this->assertEquals([$data[0], $data[1]], Arr::query($data, ['id <' => 3]));
+        $this->assertEquals([$data[0], $data[1]], Arr::query($data, [['id', '<', 3]]));
 
         // Test id LTE
-        $this->assertEquals([$data[0], $data[1]], Arr::query($data, ['id <=' => 2]));
+        $this->assertEquals([$data[0], $data[1]], Arr::query($data, [['id', '<=', 2]]));
 
         // Test in array
         $this->assertEquals([$data[0], $data[2]], Arr::query($data, ['id' => [1, 3]]));
@@ -1222,7 +1222,7 @@ SHOW;
         // Test Keep Index
         $this->assertEquals(
             [1 => $data[1], 2 => $data[2], 3 => $data[3]],
-            Arr::query($data, ['id >=' => 2], false, true)
+            Arr::query($data, [['id', '>=', 2]], false, true)
         );
     }
 

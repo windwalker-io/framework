@@ -23,6 +23,7 @@ use Windwalker\Form\Field\Concern\{ManageFilterTrait,
 use Windwalker\Form\Form;
 use Windwalker\Form\FormNormalizer;
 use Windwalker\Form\FormRegistry;
+use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Options\StateAccessTrait;
 use Windwalker\Utilities\Str;
@@ -293,11 +294,13 @@ abstract class AbstractField
         }
 
         if ($selfNS = FormNormalizer::clearNamespace($this->getNamespace())) {
-            array_unshift($names, $selfNS);
+            $selfNS = Arr::explodeAndClear('/', $selfNS);
+            array_unshift($names, ...$selfNS);
         }
 
         if ($formNS = FormNormalizer::clearNamespace($this->getForm()->getNamespace())) {
-            array_unshift($names, $formNS);
+            $formNS = Arr::explodeAndClear('/', $formNS);
+            array_unshift($names, ...$formNS);
         }
 
         return static::buildName($names) . $suffix;

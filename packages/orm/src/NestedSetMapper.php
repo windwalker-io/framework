@@ -339,14 +339,12 @@ class NestedSetMapper extends EntityMapper
             } else {
                 // We have a real node set as a location reference.
                 // Get the reference node by primary key.
-                try {
-                    /** @var NestedEntityInterface $reference */
-                    $reference = $this->findOne($position->getReferenceId(), $className);
-                } catch (NestedHandleException $e) {
+                /** @var NestedEntityInterface $reference */
+                $reference = $this->findOne($position->getReferenceId(), $className);
+
+                if (!$reference) {
                     throw new NestedHandleException(
-                        sprintf('Reference ID %s not found.', $position->getReferenceId()),
-                        $e->getCode(),
-                        $e
+                        sprintf('Reference ID %s not found.', $position->getReferenceId())
                     );
                 }
             }

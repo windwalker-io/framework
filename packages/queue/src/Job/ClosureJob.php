@@ -57,7 +57,7 @@ class ClosureJob
      * @return  void
      * @throws \Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException
      */
-    public function __invoke(?Container $container): mixed
+    public function __invoke(?Container $container = null): mixed
     {
         $callback = $this->callback;
 

@@ -119,7 +119,7 @@ class DatabaseQueueFailerTest extends TestCase
 
         self::assertEquals(
             ['test', 'hello'],
-            array_column($items, 'connection')
+            array_column(iterator_to_array($items), 'connection')
         );
     }
 
