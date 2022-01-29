@@ -84,7 +84,7 @@ class ParamType
      */
     public static function guessType(mixed $value): string
     {
-        return match(true) {
+        return match (true) {
             is_int($value) => static::INT,
             is_float($value) => static::FLOAT,
             $value === null => static::NULL,

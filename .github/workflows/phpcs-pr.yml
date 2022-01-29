@@ -1,0 +1,39 @@
+name: Code Styles for PR
+
+on: [ pull_request ]
+
+env:
+    COMPOSER_VENDOR: /home/runner/.composer/vendor
+
+jobs:
+    phpcs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0'
+                  coverage: none
+                  tools: composer, cs2pr, mbstring, intl
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Setup cache
+              uses: pat-s/always-upload-cache@v1.1.4
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  # Use the hash of composer.json as the key for your cache if you do not commit composer.lock.
+                  # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: composer global require squizlabs/php_codesniffer --prefer-dist --no-suggest --no-progress
+
+            - name: Detect coding standard violations
+              run: $COMPOSER_VENDOR/bin/phpcs packages -n --extensions=php --standard=PSR12 -q --report=checkstyle --ignore="packages/*/test" | cs2pr --graceful-warnings

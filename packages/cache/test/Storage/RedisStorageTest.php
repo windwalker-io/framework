@@ -38,7 +38,11 @@ class RedisStorageTest extends AbstractStorageTest
     {
         parent::setUp();
 
-        $this->instance = new RedisStorage();
+        $redis = new \Redis();
+        $port = (int) ($_SERVER['REDIS_PORT'] ?? $_ENV['REDIS_PORT'] ?? 6379);
+        $redis->connect('127.0.0.1', $port);
+
+        $this->instance = new RedisStorage($redis);
     }
 
     protected function tearDown(): void

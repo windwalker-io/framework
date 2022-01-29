@@ -1,4 +1,4 @@
-name: PHP Composer
+name: UnitTest
 
 on: [push, pull_request]
 
@@ -6,19 +6,23 @@ jobs:
   build:
     strategy:
       matrix:
-        php-versions: [ '8.0' ]
+        php-versions: [ '8.0', '8.1' ]
     runs-on: ubuntu-latest
     services:
+      memcached:
+        image: memcached:1.6-alpine
+        ports:
+          - 11211:11211
       redis:
         image: redis
         ports:
           - 6379/tcp
-        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --entrypoint redis-server
     steps:
       - uses: actions/checkout@v2
       # Memcached
-      - name: Setup Memcached
-        uses: KeisukeYamashita/memcached-actions@v1
+#      - name: Setup Memcached
+#        uses: niden/actions-memcached@v7
       # MySQL
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
@@ -37,7 +41,7 @@ jobs:
           extensions: |
             mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, mysqli,
             php-memcached, redis, sqlite3, swoole
-#          coverage: xdebug
+          coverage: none
 #          tools: php-cs-fixer, phpunit
       - name: Get composer cache directory
         id: composercache
@@ -58,3 +62,5 @@ jobs:
 
       - name: Run test suite
         run: php vendor/bin/phpunit --configuration phpunit.ci.xml
+        env:
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}

@@ -13,7 +13,6 @@ namespace Windwalker\Cache\Storage;
 
 use Memcached;
 use RuntimeException;
-use Windwalker\Cache\Pool\MemcachedPool;
 
 /**
  * The MemcachedStorage class.
@@ -23,12 +22,12 @@ class MemcachedStorage implements StorageInterface
     /**
      * @var Memcached
      */
-    protected Memcached $driver;
+    protected ?Memcached $driver;
 
     /**
      * MemcachedStorage constructor.
      *
-     * @param  Memcached  $driver
+     * @param  ?Memcached  $driver
      */
     public function __construct(?Memcached $driver = null)
     {
