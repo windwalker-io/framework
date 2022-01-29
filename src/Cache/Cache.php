@@ -264,6 +264,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @return  boolean
      * @throws \Psr\Cache\InvalidArgumentException
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -277,6 +278,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @return  mixed The value to return.
      * @throws \Psr\Cache\InvalidArgumentException
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -291,6 +293,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @return  void
      * @throws \Exception
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
@@ -304,6 +307,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @return  void
      * @throws \Psr\Cache\InvalidArgumentException
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->remove($offset);

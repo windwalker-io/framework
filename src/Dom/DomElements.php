@@ -66,6 +66,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return  \Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->elements);
@@ -78,6 +79,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return boolean true on success or false on failure.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->elements[$offset]);
@@ -90,6 +92,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return mixed Can return all value types.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->strict && !$this->offsetExists($offset)) {
@@ -107,6 +110,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if ($offset === '' || $offset === null) {
@@ -125,6 +129,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         if (!$this->strict && !$this->offsetExists($offset)) {
@@ -139,6 +144,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return int The custom count as an integer.
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->elements);

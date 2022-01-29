@@ -1007,6 +1007,7 @@ abstract class AbstractCommand implements \ArrayAccess
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->addCommand($value);
@@ -1021,6 +1022,7 @@ abstract class AbstractCommand implements \ArrayAccess
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->children[$offset]);
@@ -1035,6 +1037,7 @@ abstract class AbstractCommand implements \ArrayAccess
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->children[$offset]);
@@ -1049,6 +1052,7 @@ abstract class AbstractCommand implements \ArrayAccess
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->children[$offset] ?? null;

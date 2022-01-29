@@ -1468,6 +1468,7 @@ abstract class AbstractDataMapper implements DataMapperInterface, \IteratorAggre
      *
      * @since  3.5.19
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->findIterate();

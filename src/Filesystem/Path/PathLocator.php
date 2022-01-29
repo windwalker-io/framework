@@ -70,6 +70,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      *
      * @return  \FilesystemIterator|\RecursiveIteratorIterator  File & dir iterator.
      */
+    #[\ReturnTypeWillChange]
     public function getIterator($recursive = false)
     {
         // If we put this object into a foreach, return all files and folders to iterator.

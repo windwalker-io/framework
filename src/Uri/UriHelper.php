@@ -60,7 +60,7 @@ class UriHelper
      */
     public static function parseUrl($url)
     {
-        $result = false;
+        $result = [];
 
         // Build arrays of values we need to decode before parsing
         $entities = [
@@ -98,7 +98,7 @@ class UriHelper
             }
         }
 
-        return $result;
+        return $result ?: false;
     }
 
     /**

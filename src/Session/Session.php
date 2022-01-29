@@ -710,6 +710,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function getIterator($namespace = 'default')
     {
         $array = (array) $this->getAll($namespace);
@@ -1141,6 +1142,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -1156,6 +1158,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -1172,6 +1175,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
@@ -1187,6 +1191,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->remove($offset);

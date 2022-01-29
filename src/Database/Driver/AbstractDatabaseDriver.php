@@ -506,6 +506,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  DataIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator($class = 'stdClass')
     {
         return $this->getReader()->getIterator($class);

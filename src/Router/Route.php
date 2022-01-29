@@ -541,6 +541,7 @@ class Route implements \IteratorAggregate
      *
      * @return \Traversable An instance of an object implementing Iterator or Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator(get_object_vars($this));

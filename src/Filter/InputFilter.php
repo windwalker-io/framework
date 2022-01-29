@@ -379,4 +379,20 @@ class InputFilter implements \Serializable
 
         $this->loadDefaultHandlers();
     }
+
+    public function __serialize(): array
+    {
+        $this->handlers = null;
+        $this->defaultHandler = null;
+
+        // Serialize the options, data, and inputs.
+        return [$this->htmlCleaner];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->htmlCleaner = $data[0];
+
+        $this->loadDefaultHandlers();
+    }
 }

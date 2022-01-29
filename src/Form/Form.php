@@ -328,6 +328,7 @@ class Form implements \IteratorAggregate
      *
      * @return \Iterator|AbstractField[] An instance of an object implementing Iterator or Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->fields);

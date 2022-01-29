@@ -165,6 +165,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return Traversable An instance of an object implementing Iterator or Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator(get_object_vars($this));
@@ -178,6 +179,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      * @return boolean True on success or false on failure.
      *                 The return value will be casted to boolean if non-boolean was returned.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->$offset);
@@ -190,6 +192,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return mixed Can return all value types.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->$offset;
@@ -203,6 +206,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->$offset = $value;
@@ -215,6 +219,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->$offset);
@@ -226,6 +231,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
      * @return int The custom count as an integer.
      *             The return value is cast to an integer.
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count(get_object_vars($this));

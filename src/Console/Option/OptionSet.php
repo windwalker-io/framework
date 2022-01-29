@@ -45,6 +45,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->options);
@@ -79,6 +80,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($name)
     {
         return (bool) $this->findOption($name);
@@ -93,6 +95,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($name)
     {
         return $this->findOption($name);
@@ -108,6 +111,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($name, $option)
     {
         $name = $option->getName();
@@ -124,6 +128,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($name)
     {
         $option = $this->findOption($name);
@@ -140,6 +145,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->options);
@@ -181,5 +187,15 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
     public function toArray()
     {
         return $this->options;
+    }
+
+    public function __serialize(): array
+    {
+        return $this->options;
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->options = $data;
     }
 }

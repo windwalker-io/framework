@@ -1037,27 +1037,6 @@ class ArrTest extends TestCase
     {
         self::assertTrue(Arr::accessible([]));
         self::assertTrue(Arr::accessible(new \ArrayObject()));
-
-//        $array = new class implements \ArrayAccess
-//        {
-//            public function offsetExists($offset)
-//            {
-//            }
-//
-//            public function offsetGet($offset)
-//            {
-//            }
-//
-//            public function offsetSet($offset, $value)
-//            {
-//            }
-//
-//            public function offsetUnset($offset)
-//            {
-//            }
-//        };
-
-//        self::assertTrue(Arr::accessible($array));
         self::assertFalse(Arr::accessible(new \EmptyIterator()));
         self::assertFalse(Arr::accessible(new \stdClass()));
     }

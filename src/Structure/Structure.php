@@ -115,6 +115,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->data;
@@ -340,6 +341,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->get($offset) !== null;
@@ -354,6 +356,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -369,6 +372,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
@@ -383,6 +387,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->set($offset, null);
@@ -746,6 +751,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      * @see     IteratorAggregate::getIterator()
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \RecursiveArrayIterator($this->data);
@@ -759,6 +765,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      * @link    http://php.net/manual/en/countable.count.php
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return \count($this->data);

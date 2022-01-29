@@ -1034,6 +1034,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->dataStore);
@@ -1048,6 +1049,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -1062,6 +1064,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -1077,6 +1080,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->share($offset, $value);
@@ -1091,6 +1095,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->remove($offset);
@@ -1103,6 +1108,7 @@ class Container implements ContainerInterface, \ArrayAccess, \IteratorAggregate,
      *
      * @since   2.1
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->dataStore);

@@ -129,6 +129,7 @@ class DataIterator implements \Countable, \Iterator
      *
      * @return int The custom count as an integer.
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->reader->count();

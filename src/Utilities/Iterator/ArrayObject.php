@@ -175,6 +175,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->storage);
@@ -372,6 +373,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return isset($this->storage[$key]);
@@ -405,6 +407,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if ($key === null) {
@@ -423,6 +426,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         if ($this->offsetExists($key)) {
@@ -538,6 +542,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @since  3.5.2
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->storage;
