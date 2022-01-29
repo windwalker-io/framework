@@ -53,6 +53,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function read($id)
     {
         // Check if id exists
@@ -73,6 +74,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function write($id, $session_data)
     {
         return xcache_set($this->prefix . $id, $session_data, ini_get("session.gc_maxlifetime"));
@@ -87,6 +89,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function destroy($id)
     {
         $sess_id = $this->prefix . $id;
@@ -108,6 +111,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName)
     {
         return true;
@@ -120,6 +124,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function close()
     {
         return true;
@@ -134,6 +139,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         return true;

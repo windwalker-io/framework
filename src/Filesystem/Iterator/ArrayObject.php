@@ -305,6 +305,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function &offsetGet($key)
     {
         $ret = null;
@@ -436,6 +437,40 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     public function unserialize($data)
     {
         $ar = unserialize($data);
+
+        $this->protectedProperties = array_keys(get_object_vars($this));
+
+        $this->setFlags($ar['flag']);
+        $this->exchangeArray($ar['storage']);
+        $this->setIteratorClass($ar['iteratorClass']);
+
+        foreach ($ar as $k => $v) {
+            switch ($k) {
+                case 'flag':
+                    $this->setFlags($v);
+                    break;
+                case 'storage':
+                    $this->exchangeArray($v);
+                    break;
+                case 'iteratorClass':
+                    $this->setIteratorClass($v);
+                    break;
+                case 'protectedProperties':
+                    break;
+                default:
+                    $this->__set($k, $v);
+            }
+        }
+    }
+
+    public function __serialize(): array
+    {
+        return get_object_vars($this);
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $ar = $data;
 
         $this->protectedProperties = array_keys(get_object_vars($this));
 

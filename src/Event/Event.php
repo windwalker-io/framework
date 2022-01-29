@@ -276,32 +276,6 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
     }
 
     /**
-     * Serialize the event.
-     *
-     * @return  string  The serialized event.
-     *
-     * @since   2.0
-     */
-    public function serialize()
-    {
-        return serialize([$this->name, $this->arguments, $this->stopped]);
-    }
-
-    /**
-     * Unserialize the event.
-     *
-     * @param   string $serialized The serialized event.
-     *
-     * @return  void
-     *
-     * @since   2.0
-     */
-    public function unserialize($serialized)
-    {
-        list($this->name, $this->arguments, $this->stopped) = unserialize($serialized);
-    }
-
-    /**
      * Tell if the given event argument exists.
      *
      * @param   string $name The argument name.
@@ -366,5 +340,41 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
     public function offsetUnset($name)
     {
         $this->removeArgument($name);
+    }
+
+    public function __serialize(): array
+    {
+        return [$this->name, $this->arguments, $this->stopped];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        [$this->name, $this->arguments, $this->stopped] = $data;
+    }
+
+    /**
+     * Serialize the event.
+     *
+     * @return  string  The serialized event.
+     *
+     * @since   2.0
+     */
+    public function serialize()
+    {
+        return serialize([$this->name, $this->arguments, $this->stopped]);
+    }
+
+    /**
+     * Unserialize the event.
+     *
+     * @param   string $serialized The serialized event.
+     *
+     * @return  void
+     *
+     * @since   2.0
+     */
+    public function unserialize($serialized)
+    {
+        [$this->name, $this->arguments, $this->stopped] = unserialize($serialized);
     }
 }

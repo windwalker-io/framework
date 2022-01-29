@@ -56,6 +56,7 @@ class ApcHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function read($id)
     {
         return (string) apc_fetch($this->prefix . $id);
@@ -71,6 +72,7 @@ class ApcHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function write($id, $session_data)
     {
         return apc_store($this->prefix . $id, $session_data, ini_get("session.gc_maxlifetime"));
@@ -85,6 +87,7 @@ class ApcHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function destroy($id)
     {
         return apc_delete($this->prefix . $id);
@@ -101,6 +104,7 @@ class ApcHandler extends AbstractHandler
      * @return bool The return value (usually TRUE on success, FALSE on failure).
      *              Note this value is returned internally to PHP for processing.
      */
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         return true;
@@ -116,6 +120,7 @@ class ApcHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName)
     {
         return true;
@@ -128,6 +133,7 @@ class ApcHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function close()
     {
         return true;

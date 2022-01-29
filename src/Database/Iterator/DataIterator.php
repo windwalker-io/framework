@@ -74,6 +74,7 @@ class DataIterator implements \Countable, \Iterator
      *
      * @return mixed Can return any type.
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->current;
@@ -84,6 +85,7 @@ class DataIterator implements \Countable, \Iterator
      *
      * @return void Any returned value is ignored.
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         // Try to get an object
@@ -99,6 +101,7 @@ class DataIterator implements \Countable, \Iterator
      *
      * @return mixed scalar on success, or null on failure.
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->key;
@@ -110,6 +113,7 @@ class DataIterator implements \Countable, \Iterator
      * @return boolean The return value will be casted to boolean and then evaluated.
      *       Returns true on success or false on failure.
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return (bool) $this->current();
@@ -120,6 +124,7 @@ class DataIterator implements \Countable, \Iterator
      *
      * @return void Any returned value is ignored.
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
     }

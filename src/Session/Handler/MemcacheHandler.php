@@ -71,6 +71,7 @@ class MemcacheHandler extends AbstractHandler
      *
      * @return  bool
      */
+    #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName)
     {
         return true;
@@ -81,6 +82,7 @@ class MemcacheHandler extends AbstractHandler
      *
      * @return  bool
      */
+    #[\ReturnTypeWillChange]
     public function close()
     {
         $this->memcache->close();
@@ -95,6 +97,7 @@ class MemcacheHandler extends AbstractHandler
      *
      * @return  string
      */
+    #[\ReturnTypeWillChange]
     public function read($id)
     {
         return $this->memcache->get($this->prefix . $id) ?: '';
@@ -108,6 +111,7 @@ class MemcacheHandler extends AbstractHandler
      *
      * @return  bool
      */
+    #[\ReturnTypeWillChange]
     public function write($id, $data)
     {
         return $this->memcache->set($this->prefix . $id, $data, 0, time() + $this->ttl);
@@ -120,6 +124,7 @@ class MemcacheHandler extends AbstractHandler
      *
      * @return  bool
      */
+    #[\ReturnTypeWillChange]
     public function destroy($id)
     {
         return $this->memcache->delete($this->prefix . $id);
@@ -132,6 +137,7 @@ class MemcacheHandler extends AbstractHandler
      *
      * @return  bool
      */
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         // not required here because memcache will auto expire the records anyhow.

@@ -25,6 +25,7 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
      *
      * @since  2.0
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $name = $this->getPathname();

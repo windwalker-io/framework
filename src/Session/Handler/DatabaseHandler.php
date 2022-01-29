@@ -46,6 +46,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName)
     {
         return true;
@@ -56,6 +57,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return bool true on success, false on failure
      */
+    #[\ReturnTypeWillChange]
     public function close()
     {
         return true;
@@ -71,6 +73,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function read($id)
     {
         try {
@@ -91,6 +94,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function write($id, $data)
     {
         try {
@@ -110,6 +114,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function destroy($id)
     {
         try {
@@ -129,6 +134,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @since   2.0
      */
+    #[\ReturnTypeWillChange]
     public function gc($lifetime = 1440)
     {
         // Determine the timestamp threshold with which to purge old sessions.

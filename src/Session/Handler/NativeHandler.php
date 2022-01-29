@@ -30,6 +30,7 @@ class NativeHandler extends \SessionHandler implements HandlerInterface
      *
      * @return  mixed
      */
+    #[\ReturnTypeWillChange]
     public function register()
     {
         return true;
