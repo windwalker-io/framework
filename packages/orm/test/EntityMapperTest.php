@@ -1,10 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2019 LYRASOFT Taiwan, Inc.
  * @license    LGPL-2.0-or-later
  */
+
+declare(strict_types=1);
 
 namespace Windwalker\ORM\Test;
 

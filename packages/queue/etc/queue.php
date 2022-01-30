@@ -18,7 +18,6 @@ use Windwalker\Queue\Driver\RabbitmqQueueDriver;
 use Windwalker\Queue\Driver\ResqueQueueDriver;
 use Windwalker\Queue\Driver\SqsQueueDriver;
 use Windwalker\Queue\Driver\SyncQueueDriver;
-
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
 use Windwalker\Queue\QueuePackage;
 

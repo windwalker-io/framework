@@ -48,7 +48,7 @@ class EventTest extends TestCase
     /**
      * @see  Event::__construct
      */
-    public function test__construct(): void
+    public function testConstruct(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -171,10 +171,11 @@ class EventTest extends TestCase
     protected function setUp(): void
     {
         $this->instance = new Event(
-            'onHelloWelcome', [
-            'flower' => 'Sakura',
-            'starship' => 'Enterprise',
-        ]
+            'onHelloWelcome',
+            [
+                'flower' => 'Sakura',
+                'starship' => 'Enterprise',
+            ]
         );
     }
 

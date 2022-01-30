@@ -193,7 +193,7 @@ class ServerRequestFactoryTest extends TestCase
      *
      * @covers       \Windwalker\Http\Request\ServerRequestFactory::prepareUri
      *
-     * @dataProvider prepareUri_Provider
+     * @dataProvider prepareUriProvider
      */
     public function testPrepareUri($servers, $headers, $expected)
     {
@@ -203,11 +203,11 @@ class ServerRequestFactoryTest extends TestCase
     }
 
     /**
-     * prepareUri_Provider
+     * prepareUriProvider
      *
      * @return  array
      */
-    public function prepareUri_Provider(): array
+    public function prepareUriProvider(): array
     {
         return [
             '#apache-normal' => [
