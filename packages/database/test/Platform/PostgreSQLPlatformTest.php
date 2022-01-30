@@ -23,7 +23,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTest
 
     protected static string $driver = 'pdo_pgsql';
 
-    protected static $schema = 'public';
+    protected static string $schema = 'public';
 
     /**
      * @var PostgreSQLPlatform
@@ -571,8 +571,6 @@ class PostgreSQLPlatformTest extends AbstractPlatformTest
     protected function setUp(): void
     {
         parent::setUp();
-
-        static::$schema = static::$dbname;
     }
 
     protected function tearDown(): void
