@@ -78,6 +78,8 @@ class AsClause implements ClauseInterface
                     return $ele;
                 }
             );
+        } elseif ($column === null) {
+            $column = 'NULL';
         } else {
             $column = $this->query->$quoteMethod(
                 Query::convertClassToTable((string) $column, $entityAlias)

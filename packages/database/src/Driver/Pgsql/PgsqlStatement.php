@@ -16,6 +16,9 @@ use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Exception\StatementException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
+use Windwalker\Query\Grammar\AbstractGrammar;
+use Windwalker\Query\Grammar\PostgreSQLGrammar;
+use Windwalker\Query\Query;
 
 /**
  * The PgsqlStatement class.
@@ -123,7 +126,7 @@ class PgsqlStatement extends AbstractStatement
         $table = [$matches[1]];
 
         /* find sequence column name */
-        $colNameQuery = $this->driver->getPlatform()->createQuery();
+        $colNameQuery = $this->createQuery();
 
         $colNameQuery->select('column_default')
             ->from('information_schema.columns')
@@ -136,12 +139,22 @@ class PgsqlStatement extends AbstractStatement
 
         $changedColName = str_replace('nextval', 'currval', $colName);
 
-        $insertidQuery = $this->driver->getPlatform()->createQuery();
+        $insertidQuery = $this->createQuery();
 
         $insertidQuery->selectRaw($changedColName);
 
         $stmt = pg_query($this->conn, (string) $insertidQuery);
 
         return pg_fetch_result($stmt, 0, 0);
+    }
+
+    /**
+     * createQuery
+     *
+     * @return  Query
+     */
+    protected function createQuery(): Query
+    {
+        return new Query($this->driver, AbstractGrammar::create($this->driver->getPlatformName()));
     }
 }
