@@ -36,4 +36,4 @@ jobs:
               run: composer global require squizlabs/php_codesniffer --prefer-dist --no-suggest --no-progress
 
             - name: Detect coding standard violations
-              run: $COMPOSER_VENDOR/bin/phpcs packages -n --extensions=php --standard=PSR12 -q --report=checkstyle --ignore="packages/*/test" | cs2pr --graceful-warnings
+              run: $COMPOSER_VENDOR/bin/phpcs packages -n --extensions=php --standard=PSR12 -q --report=checkstyle | cs2pr --graceful-warnings
