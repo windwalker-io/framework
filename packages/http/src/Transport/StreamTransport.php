@@ -66,7 +66,7 @@ class StreamTransport extends AbstractTransport
         return $this->getResponse($headers, $content);
     }
 
-    public function createConnection(RequestInterface $request, array $options = []): bool
+    public function createConnection(RequestInterface $request, array $options = []): mixed
     {
         // Create the stream context options array with the required method offset.
         $opt = ['method' => $request->getMethod()];

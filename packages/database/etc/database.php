@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabasePackage;
-
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Subscriber\TruncateValueSubscriber;
+
 use function Windwalker\ref;
 
 return [
@@ -28,7 +28,7 @@ return [
 
         'backup' => [
             'dir' => '@temp/sql-backup',
-            'max' => 20
+            'max' => 10,
         ],
 
         'providers' => [
@@ -37,8 +37,8 @@ return [
 
         'listeners' => [
             ORM::class => [
-                TruncateValueSubscriber::class
-            ]
+                TruncateValueSubscriber::class,
+            ],
         ],
 
         'bindings' => [
@@ -47,7 +47,7 @@ return [
 
         'factories' => [
             'instances' => [
-                'local' => fn (DatabaseFactory $factory) => $factory->create(
+                'local' => fn(DatabaseFactory $factory) => $factory->create(
                     env('DATABASE_DRIVER'),
                     [
                         'host' => env('DATABASE_HOST') ?: 'localhost',
@@ -60,5 +60,5 @@ return [
                 ),
             ],
         ],
-    ]
+    ],
 ];

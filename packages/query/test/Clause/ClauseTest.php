@@ -82,10 +82,11 @@ class ClauseTest extends TestCase
         $clause->append(new Clause('OR', ['foo', '<', 5]));
         $clause->append(
             new Clause(
-                'AND ()', [
-                new Clause('', ['flower', '=', "'sakura'"]),
-                new Clause('OR', ['flower', 'IS', 'NULL']),
-            ]
+                'AND ()',
+                [
+                    new Clause('', ['flower', '=', "'sakura'"]),
+                    new Clause('OR', ['flower', 'IS', 'NULL']),
+                ]
             )
         );
 

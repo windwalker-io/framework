@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Platform;
 
 use Windwalker\Database\Platform\PostgreSQLPlatform;
-use Windwalker\Database\Schema\PostgreSQLSchemaManager;
 use Windwalker\Utilities\Str;
 
 /**
@@ -24,7 +23,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTest
 
     protected static string $driver = 'pdo_pgsql';
 
-    protected static $schema = 'public';
+    protected static string $schema = 'public';
 
     /**
      * @var PostgreSQLPlatform
@@ -39,7 +38,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTest
         $databases = $this->instance->listDatabases();
 
         self::assertContains(
-            self::getTestParams()['database'],
+            self::getTestParams()['dbname'],
             $databases
         );
     }
@@ -571,18 +570,10 @@ class PostgreSQLPlatformTest extends AbstractPlatformTest
 
     protected function setUp(): void
     {
-        $this->instance = static::$db->getDriver()->getPlatform();
+        parent::setUp();
     }
 
     protected function tearDown(): void
     {
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected static function setupDatabase(): void
-    {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
     }
 }

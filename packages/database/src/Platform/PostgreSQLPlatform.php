@@ -491,6 +491,21 @@ class PostgreSQLPlatform extends AbstractPlatform
         return $this->db->prepare('SELECT current_database()')->result();
     }
 
+    public function createDatabase(string $name, array $options = []): StatementInterface
+    {
+        return $this->db->execute(
+            $this->getGrammar()
+                ::build(
+                    'CREATE DATABASE',
+                    !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
+                    $this->db->quoteName($name),
+                    isset($options['lc_collate']) ? 'LC_COLLATE=' . $options['lc_collate'] : null,
+                    isset($options['lc_type']) ? 'LC_CTYPE=' . $options['lc_type'] : null,
+                    isset($options['tablespace']) ? 'TABLESPACE=' . $options['tablespace'] : null,
+                )
+        );
+    }
+
     public function dropDatabase(string $name, array $options = []): StatementInterface
     {
         // $pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';

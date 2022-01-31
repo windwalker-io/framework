@@ -184,7 +184,7 @@ trait ListOptionsTrait
                     $handler($this, $option, $name);
                 } elseif ($option instanceof DOMElement) {
                     $this->addOption($option, (string) $name);
-                }  else {
+                } else {
                     $this->option((string) $option, (string) $name);
                 }
             }

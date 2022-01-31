@@ -230,7 +230,7 @@ class Schema
 
         $column = $this->addColumn(new Column($column, $name));
 
-        return match($name) {
+        return match ($name) {
             'primary' => $column->dataType('integer')
                 ->autoIncrement(true)
                 ->primary(true),

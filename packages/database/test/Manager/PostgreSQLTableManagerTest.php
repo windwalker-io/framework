@@ -82,18 +82,18 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             ORDER BY "table_name" ASC;
             CREATE TABLE IF NOT EXISTS "enterprise" (
             "id" serial NOT NULL,
-            "type" CHAR(25) NOT NULL DEFAULT '',
-            "catid" INTEGER DEFAULT NULL,
-            "alias" VARCHAR(255) NOT NULL DEFAULT '',
-            "title" VARCHAR(255) NOT NULL DEFAULT 'H',
-            "price" DECIMAL(20,6) NOT NULL DEFAULT 0,
+            "type" char(25) NOT NULL DEFAULT '',
+            "catid" integer DEFAULT NULL,
+            "alias" varchar(255) NOT NULL DEFAULT '',
+            "title" varchar(255) NOT NULL DEFAULT 'H',
+            "price" decimal(20,6) NOT NULL DEFAULT 0,
             "intro" text NOT NULL DEFAULT '',
             "fulltext" text NOT NULL DEFAULT '',
-            "start_date" TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:00',
-            "created" TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:00',
-            "updated" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "deleted" TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:00',
-            "params" json NOT NULL
+            "start_date" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+            "created" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+            "updated" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "deleted" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+            "params" json DEFAULT NULL
             );
             ALTER TABLE "enterprise"
              ADD CONSTRAINT "pk_enterprise" PRIMARY KEY ("id");
@@ -186,16 +186,16 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             ALTER TABLE "enterprise"
                 ADD COLUMN "first_officer" varchar(512) NOT NULL DEFAULT '';
             ALTER TABLE "enterprise"
-                ALTER COLUMN "alias" TYPE CHAR(25),
+                ALTER COLUMN "alias" TYPE char(25),
                 ALTER COLUMN "alias" SET NOT NULL,
                 ALTER COLUMN "alias" SET DEFAULT '';
             SELECT "ix".*, tc.constraint_type = 'PRIMARY KEY' AS "is_primary"
             FROM "pg_indexes" AS "ix"
-                     LEFT JOIN "information_schema"."table_constraints" AS "tc"
-                               ON "tc"."table_schema" = "ix"."schemaname" AND "tc"."constraint_name" = "ix"."indexname" AND
-                                  tc.constraint_type = 'PRIMARY KEY'
-            WHERE "tablename" = 'enterprise'
-              AND "schemaname" NOT IN ('pg_catalog', 'information_schema')
+            LEFT JOIN "information_schema"."table_constraints" AS "tc"
+                ON "tc"."table_schema" = "ix"."schemaname" AND "tc"."constraint_name" = "ix"."indexname" AND
+                    tc.constraint_type = 'PRIMARY KEY'
+            WHERE "ix"."tablename" = 'enterprise'
+              AND "ix"."schemaname" NOT IN ('pg_catalog', 'information_schema')
             ORDER BY CASE tc.constraint_type WHEN 'PRIMARY KEY' THEN 1 ELSE 2 END;
             CREATE INDEX "idx_enterprise_captain" ON "enterprise" ("captain")
             SQL,
@@ -233,11 +233,11 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
               AND "table_schema" NOT IN ('pg_catalog', 'information_schema');
             SELECT "ix".*, tc.constraint_type = 'PRIMARY KEY' AS "is_primary"
             FROM "pg_indexes" AS "ix"
-                     LEFT JOIN "information_schema"."table_constraints" AS "tc"
-                               ON "tc"."table_schema" = "ix"."schemaname" AND "tc"."constraint_name" = "ix"."indexname" AND
-                                  tc.constraint_type = 'PRIMARY KEY'
-            WHERE "tablename" = 'enterprise'
-              AND "schemaname" NOT IN ('pg_catalog', 'information_schema')
+            LEFT JOIN "information_schema"."table_constraints" AS "tc"
+                ON "tc"."table_schema" = "ix"."schemaname" AND "tc"."constraint_name" = "ix"."indexname" AND
+                    tc.constraint_type = 'PRIMARY KEY'
+            WHERE "ix"."tablename" = 'enterprise'
+                AND "ix"."schemaname" NOT IN ('pg_catalog', 'information_schema')
             ORDER BY CASE tc.constraint_type WHEN 'PRIMARY KEY' THEN 1 ELSE 2 END;
             CREATE INDEX "idx_enterprise_created" ON "enterprise" ("created");
             CREATE INDEX "idx_enterprise_start_date_first_officer" ON "enterprise" ("start_date", "first_officer")

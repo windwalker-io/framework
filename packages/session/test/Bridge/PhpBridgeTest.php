@@ -222,7 +222,7 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::__construct
      */
-    public function test__construct(): void
+    public function testConstruct(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }

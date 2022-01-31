@@ -82,7 +82,7 @@ class StreamTest extends TestCase
      *
      * @covers \Windwalker\Stream\Stream::__toString
      */
-    public function test__toString()
+    public function testToString()
     {
         $message = 'foo bar';
 

@@ -15,6 +15,8 @@ use Windwalker\Http\Request\ServerRequestFactory;
 use Windwalker\Http\Server\HttpServer;
 use Windwalker\Http\Server\PhpServer;
 
+error_reporting(-1);
+
 $autoload = __DIR__ . '/../../vendor/autoload.php';
 
 if (!is_file($autoload)) {
@@ -30,7 +32,7 @@ $server->on(
     static function (RequestEvent $event) {
         $app = require __DIR__ . '/app.php';
 
-        $res = $app($event->getRequest(), $event->getResponse());
+        $res = $app($event->getRequest());
 
         $event->setResponse($res);
     }

@@ -47,7 +47,6 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 use Windwalker\Utilities\TypeCast;
-
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function is_object;

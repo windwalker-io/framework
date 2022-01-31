@@ -11,16 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use MyCLabs\Enum\Enum;
 use Windwalker\DOM\DOMElement;
-use Windwalker\DOM\HTMLFactory;
 use Windwalker\Filter\Rule\Length;
-
 use Windwalker\Form\Field\Concern\ListOptionsTrait;
-use Windwalker\Utilities\Assert\TypeAssert;
 
 use function Windwalker\DOM\h;
-use function Windwalker\value_compare;
 
 /**
  * The TextField class.
