@@ -9,6 +9,7 @@
 	<php>
 		<ini name="error_reporting" value="-1" />
 
+        <!-- Run `php -S localhost:8100 bin/test-server.php` first -->
 		<!--<const name="WINDWALKER_TEST_HTTP_URL" value="http://localhost:8100" />-->
 
 		<!--<const name="WINDWALKER_TEST_DB_DSN_MYSQL"  value="host=localhost;dbname=windwalker_test;user=root;password=ut1234;prefix=ww_" />-->
