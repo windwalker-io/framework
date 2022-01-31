@@ -27,7 +27,7 @@ class ValueObject implements
     \Stringable,
     \JsonSerializable
 {
-    public function __construct(mixed $data)
+    public function __construct(mixed $data = null)
     {
         $this->fill($data);
     }
