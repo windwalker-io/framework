@@ -243,6 +243,12 @@ class FilterRulesTest extends TestCase
                 false,
                 'Test email',
             ],
+            'Email no at' => [
+                EmailAddress::class,
+                'qwe.qwe',
+                false,
+                'Test email',
+            ],
             'Email T' => [
                 EmailAddress::class,
                 'qwe.qwe@gmail.com',

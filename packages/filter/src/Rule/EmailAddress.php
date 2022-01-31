@@ -23,6 +23,11 @@ class EmailAddress extends AbstractFilterVar
         return FILTER_SANITIZE_EMAIL;
     }
 
+    public function test(mixed $value, bool $strict = false): bool
+    {
+        return (bool) filter_var((string) $value, FILTER_VALIDATE_EMAIL);
+    }
+
     public function getOptions(): ?int
     {
         return null;
