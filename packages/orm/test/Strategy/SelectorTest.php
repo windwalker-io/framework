@@ -33,7 +33,7 @@ class SelectorTest extends AbstractORMTestCase
             ->from(StubFlower::class, 'f')
             ->leftJoin(StubCategory::class, 'c', 'c.id', 'f.catid')
             ->limit(3)
-            ->order('id', 'ASC')
+            ->order('f.id', 'ASC')
             ->groupByJoins();
 
         $items = $this->instance->all();
