@@ -28,7 +28,7 @@ class PdoSqliteConnectionTest extends AbstractPdoConnectionTest
         $conn = $this->instance;
 
         // Direct to self so that sqlite unable to create db
-        $conn->setOption('database', __DIR__);
+        $conn->setOption('dbname', __DIR__);
 
         $this->expectException(RuntimeException::class);
         $conn->connect();

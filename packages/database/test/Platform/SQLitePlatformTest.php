@@ -37,7 +37,7 @@ class SQLitePlatformTest extends AbstractPlatformTest
         $dbs = $this->instance->listDatabases();
 
         self::assertEquals(
-            realpath(self::getTestParams()['database']),
+            realpath(self::getTestParams()['dbname']),
             realpath($dbs[0])
         );
     }
@@ -94,7 +94,7 @@ class SQLitePlatformTest extends AbstractPlatformTest
     {
         $views = $this->instance->listViews(static::getTestSchema());
 
-        $views['ww_articles_view']['sql'] = Str::replaceCRLF($views['ww_articles_view']['sql'], ' ');
+        $views['ww_articles_view']['sql'] = str_replace(["\n", "\r\n"], ' ', $views['ww_articles_view']['sql']);
 
         self::assertEquals(
             [
@@ -507,7 +507,11 @@ class SQLitePlatformTest extends AbstractPlatformTest
 
     public function testGetCurrentDatabase(): void
     {
-        $file = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, self::$db->getOption('database'));
+        $file = str_replace(
+            ['/', '\\'],
+            DIRECTORY_SEPARATOR,
+            self::$db->getDriver()->getOption('dbname')
+        );
 
         self::assertEquals(
             $file,
@@ -541,11 +545,6 @@ class SQLitePlatformTest extends AbstractPlatformTest
     public function testCreateDropSchema(): void
     {
         self::markTestSkipped();
-    }
-
-    protected function setUp(): void
-    {
-        $this->instance = static::$db->getDriver()->getPlatform();
     }
 
     protected function tearDown(): void

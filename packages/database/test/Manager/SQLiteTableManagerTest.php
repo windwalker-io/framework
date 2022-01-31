@@ -85,19 +85,19 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
               AND `name` NOT LIKE 'sqlite_%'
             ORDER BY `name`;
             CREATE TABLE IF NOT EXISTS `enterprise` (
-             `id` INTEGER NOT NULL,
-            `type` CHAR(25) NOT NULL DEFAULT '',
-            `catid` INTEGER DEFAULT NULL,
-            `alias` VARCHAR(255) NOT NULL DEFAULT '',
-            `title` VARCHAR(255) NOT NULL DEFAULT 'H',
-            `price` DECIMAL(20,6) NOT NULL DEFAULT 0,
+             `id` integer NOT NULL,
+            `type` char(25) NOT NULL DEFAULT '',
+            `catid` integer DEFAULT NULL,
+            `alias` varchar(255) NOT NULL DEFAULT '',
+            `title` varchar(255) NOT NULL DEFAULT 'H',
+            `price` decimal(20,6) NOT NULL DEFAULT 0,
             `intro` text NOT NULL DEFAULT '',
             `fulltext` text NOT NULL DEFAULT '',
             `start_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
             `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-            `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `deleted` TIMESTAMP NOT NULL DEFAULT 1,
-            `params` json NOT NULL,
+            `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `deleted` timestamp NOT NULL DEFAULT 1,
+            `params` json DEFAULT NULL,
             CONSTRAINT `idx_enterprise_alias` UNIQUE (`alias`),
             CONSTRAINT `pk_enterprise` PRIMARY KEY (`id` AUTOINCREMENT)
             );
@@ -154,7 +154,7 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
                     `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
                     `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     `deleted` timestamp NOT NULL DEFAULT 1,
-                    `params` json NOT NULL,
+                    `params` json DEFAULT NULL,
                     CONSTRAINT `idx_enterprise_alias` UNIQUE (`alias`),
                     CONSTRAINT `pk_enterprise` PRIMARY KEY (`id` AUTOINCREMENT)
                     )
