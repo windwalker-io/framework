@@ -219,6 +219,10 @@ trait WhereConcernTrait
                 $this->bounded[$key] = $param;
             }
         }
+
+        foreach ($query->getSubQueries() as $subQuery) {
+            $this->injectSubQuery($subQuery);
+        }
     }
 
     /**
