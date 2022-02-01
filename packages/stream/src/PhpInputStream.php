@@ -25,14 +25,14 @@ class PhpInputStream extends Stream
      *
      * @var  string
      */
-    protected static $cache;
+    protected static string $cache;
 
     /**
      * Property reachedEof.
      *
      * @var  boolean
      */
-    protected static $reachedEof;
+    protected static bool $reachedEof;
 
     /**
      * Class init.
