@@ -288,6 +288,10 @@ class ComponentTagCompiler
             );
         }
 
+        if ($loader->has('@' . $component)) {
+            return '@' . $component;
+        }
+
         if ($loader->has($component)) {
             return $component;
         }
