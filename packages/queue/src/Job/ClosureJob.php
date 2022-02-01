@@ -45,6 +45,10 @@ class ClosureJob
     public function __construct(callable $callback)
     {
         if ($callback instanceof Closure) {
+            if (!class_exists(SerializableClosure::class)) {
+                throw new \DomainException('Please install `laravel/serializable-closure` first');
+            }
+
             $callback = new SerializableClosure($callback);
         }
 

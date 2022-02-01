@@ -62,14 +62,20 @@ class SqsQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
+        $channel = $message->getChannel() ?: $this->channel;
+
         $request = [
-            'QueueUrl' => $this->getQueueUrl($message->getChannel()),
+            'QueueUrl' => $this->getQueueUrl($channel),
             'MessageBody' => json_encode($message, JSON_THROW_ON_ERROR),
         ];
 
         $request['DelaySeconds'] = $message->getDelay();
 
         $options = $message->getOptions();
+
+        if (str_ends_with($channel, '.fifo')) {
+            $options['MessageGroupId'] ??= '1';
+        }
 
         $request = array_merge($request, $options);
 

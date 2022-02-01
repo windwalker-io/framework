@@ -19,6 +19,7 @@ use Windwalker\Queue\Driver\ResqueQueueDriver;
 use Windwalker\Queue\Driver\SqsQueueDriver;
 use Windwalker\Queue\Driver\SyncQueueDriver;
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
+use Windwalker\Queue\Queue;
 use Windwalker\Queue\QueuePackage;
 
 return [
@@ -38,7 +39,7 @@ return [
         ],
 
         'bindings' => [
-            //
+            Queue::class => fn (QueueManager $manager) => $manager->get()
         ],
 
         'factories' => [
