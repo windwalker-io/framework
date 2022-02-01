@@ -111,7 +111,7 @@ class FilterFactory
 
         $type = trim($type);
 
-        preg_match_all('/(\w+)(\s?=\s?(\w+))?/', $params, $matches, PREG_SET_ORDER);
+        preg_match_all('/(\w+)(\s?[=:]\s?(\w+))?/', $params, $matches, PREG_SET_ORDER);
 
         $options = [];
         foreach ($matches as $match) {

@@ -29,7 +29,7 @@ class FilterFactoryTest extends TestCase
      */
     public function testCreateFromSyntax(): void
     {
-        $filter = $this->instance->createFromSyntax('range(min = 5, max=10)');
+        $filter = $this->instance->createFromSyntax('range(min : 5, max:10)');
 
         self::assertEquals(
             10,
@@ -42,14 +42,21 @@ class FilterFactoryTest extends TestCase
             true,
             $filter->filter('Hello')
         );
+
+        $filter = $this->instance->createFromSyntax('default("foo")');
+
+        self::assertEquals(
+            'foo',
+            $filter->filter(null)
+        );
     }
 
     public function testCreateMap()
     {
         $map = $this->instance->createNested(
             [
-                'id' => 'required|int|range(min=1,max=100)',
-                'alias' => 'alnum|length(max=10)|default(hello)',
+                'id' => 'required|int|range(min:1,max:100)',
+                'alias' => 'alnum|length(max:10)|default(hello)',
                 'item' => [
                     'content' => 'func(strtoupper)',
                     'params' => fn($v) => json_decode($v, true, 512, JSON_THROW_ON_ERROR),
