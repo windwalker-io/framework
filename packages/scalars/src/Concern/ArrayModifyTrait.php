@@ -375,7 +375,7 @@ trait ArrayModifyTrait
      */
     public function group(?string $column = null, int $type = Arr::GROUP_TYPE_ARRAY): static
     {
-        return $this->newInstance(Arr::group($this->dump(), $column, $type));
+        return $this->newInstance(Arr::group($this->dump(), $column, $type))->wrapAll();
     }
 
     public function groupByPath(
