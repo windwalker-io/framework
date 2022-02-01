@@ -15,30 +15,43 @@ use Psr\Http\Message\StreamInterface;
 
 /**
  * The CachingStream class.
+ *
+ * This is a forked version from GuzzleHttp/Stream
  */
 class CachingStream extends AbstractDecoratorStream
 {
-    protected StreamInterface $targetStream;
+    /**
+     * Stream being wrapped
+     *
+     * @var StreamInterface
+     */
+    private StreamInterface $remoteStream;
 
-    protected int $lastCursor = 0;
+    /**
+     * Number of bytes to skip reading due to a write on the buffer
+     *
+     * @var int
+     */
+    private int $skipReadBytes = 0;
 
     /**
      * We will treat the buffer object as the body of the stream
      *
-     * @param StreamInterface   $target  Stream to cache
-     * @param ?StreamInterface  $cache   Optionally specify where data is cached
+     * @param StreamInterface|string|resource  $targetStream  Stream to cache
+     * @param StreamInterface                  $cacheStream   Optionally specify where data is cached
      */
     public function __construct(
-        StreamInterface $target,
-        StreamInterface $cache = null
+        mixed $targetStream,
+        StreamInterface $cacheStream = null
     ) {
-        $this->targetStream = $target;
-        parent::__construct($cache ?: new Stream('php://temp', 'rb+'));
+        $this->remoteStream = Stream::wrap($targetStream);
+
+        parent::__construct($cacheStream ?: new Stream('php://temp', 'rb+'));
     }
 
     public function getSize(): ?int
     {
-        return max($this->stream->getSize(), $this->targetStream->getSize());
+        return max($this->stream->getSize(), $this->remoteStream->getSize());
     }
 
     public function rewind(): void
@@ -49,21 +62,21 @@ class CachingStream extends AbstractDecoratorStream
     public function seek($offset, $whence = SEEK_SET): void
     {
         if ($whence === SEEK_SET) {
-            $cursor = $offset;
+            $byte = $offset;
         } elseif ($whence === SEEK_CUR) {
-            $cursor = $offset + $this->tell();
+            $byte = $offset + $this->tell();
         } elseif ($whence === SEEK_END) {
-            $size = $this->targetStream->getSize();
+            $size = $this->remoteStream->getSize();
             if ($size === null) {
                 $size = $this->cacheEntireStream();
             }
             // Because 0 is the first byte, we seek to size - 1.
-            $cursor = $size - 1 - $offset;
+            $byte = $size - 1 - $offset;
         } else {
             throw new \InvalidArgumentException('Invalid whence');
         }
 
-        $diff = $cursor - $this->stream->getSize();
+        $diff = $byte - $this->stream->getSize();
 
         if ($diff > 0) {
             // If the seek byte is greater the number of read bytes, then read
@@ -71,31 +84,34 @@ class CachingStream extends AbstractDecoratorStream
             $this->read($diff);
         } else {
             // We can just do a normal seek since we've already seen this byte.
-            $this->stream->seek($cursor);
+            $this->stream->seek($byte);
         }
     }
 
     public function read($length): string
     {
+        // Perform a regular read on any previously read data from the buffer
         $data = $this->stream->read($length);
+        $remaining = $length - strlen($data);
 
-        $remainLength = $length - strlen($data);
-
-        // If the length that we want to read was more than cached,
-        // We must read more from target stream and reset last cursor.
-        if ($remainLength) {
-            $readData = $this->targetStream->read(
-                $remainLength + $this->lastCursor
+        // More data was requested so read from the remote stream
+        if ($remaining) {
+            // If data was written to the buffer in a position that would have
+            // been filled from the remote stream, then we must skip bytes on
+            // the remote stream to emulate overwriting bytes from that
+            // position. This mimics the behavior of other PHP stream wrappers.
+            $remoteData = $this->remoteStream->read(
+                $remaining + $this->skipReadBytes
             );
 
-            if ($this->lastCursor > 0) {
-                $len = strlen($readData);
-                $readData = substr($readData, $this->lastCursor);
-                $this->lastCursor = max(0, $this->lastCursor - $len);
+            if ($this->skipReadBytes) {
+                $len = strlen($remoteData);
+                $remoteData = substr($remoteData, $this->skipReadBytes);
+                $this->skipReadBytes = max(0, $this->skipReadBytes - $len);
             }
 
-            $data .= $readData;
-            $this->stream->write($readData);
+            $data .= $remoteData;
+            $this->stream->write($remoteData);
         }
 
         return $data;
@@ -103,12 +119,13 @@ class CachingStream extends AbstractDecoratorStream
 
     public function write($string): int
     {
-        // If wrote string + exists string is longer than target stream,
-        // We must plus the last cursor position.
-        $overflow = strlen($string) + $this->tell() - $this->targetStream->tell();
-
+        // When appending to the end of the currently read stream, you'll want
+        // to skip bytes from being read from the remote stream to emulate
+        // other stream wrappers. Basically replacing bytes of data of a fixed
+        // length.
+        $overflow = (strlen($string) + $this->tell()) - $this->remoteStream->tell();
         if ($overflow > 0) {
-            $this->lastCursor += $overflow;
+            $this->skipReadBytes += $overflow;
         }
 
         return $this->stream->write($string);
@@ -116,7 +133,7 @@ class CachingStream extends AbstractDecoratorStream
 
     public function eof(): bool
     {
-        return $this->stream->eof() && $this->targetStream->eof();
+        return $this->stream->eof() && $this->remoteStream->eof();
     }
 
     /**
@@ -124,13 +141,14 @@ class CachingStream extends AbstractDecoratorStream
      */
     public function close(): void
     {
-        $this->targetStream->close();
+        $this->remoteStream->close();
         $this->stream->close();
     }
 
     private function cacheEntireStream(): int
     {
-        StreamHelper::copy($this->targetStream, $this->stream);
+        $tmp = new NullStream();
+        StreamHelper::copy($this, $tmp);
 
         return $this->tell();
     }

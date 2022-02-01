@@ -29,7 +29,7 @@ class NullHandler extends AbstractHandler
     /**
      * @inheritDoc
      */
-    public function destroy($id)
+    public function destroy(string $id): bool
     {
         return true;
     }
@@ -45,7 +45,7 @@ class NullHandler extends AbstractHandler
     /**
      * @inheritDoc
      */
-    public function write($id, $data)
+    public function write(string $id, string $data): bool
     {
         return true;
     }
@@ -53,7 +53,7 @@ class NullHandler extends AbstractHandler
     /**
      * @inheritDoc
      */
-    public function updateTimestamp($id, $data)
+    public function updateTimestamp(string $id, string $data): bool
     {
         return true;
     }
