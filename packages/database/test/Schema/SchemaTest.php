@@ -60,7 +60,11 @@ class SchemaTest extends AbstractDatabaseTestCase
         $cols = [];
 
         foreach ($this->instance->getColumns() as $column) {
-            $cols[] = sprintf('%s %s', $column->getColumnName(), $column->getTypeExpression());
+            $cols[] = sprintf(
+                '%s %s',
+                $column->getColumnName(),
+                $column->getTypeExpression()
+            );
         }
 
         self::assertStringSafeEquals(

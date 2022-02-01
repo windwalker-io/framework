@@ -64,4 +64,17 @@ class MySQLDataType extends DataType
         DataType::BIT => self::TINYINT,
         DataType::BOOLEAN => self::BOOLEAN,
     ];
+
+    /**
+     * Property noLength.
+     *
+     * @var  array
+     */
+    protected static array $noLength = [
+        self::TEXT,
+        self::LONGTEXT,
+        self::DATE,
+        self::DATETIME,
+        self::TIMESTAMP,
+    ];
 }

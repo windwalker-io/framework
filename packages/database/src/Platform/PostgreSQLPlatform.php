@@ -653,7 +653,7 @@ class PostgreSQLPlatform extends AbstractPlatform
                 [
                     $this->db->quoteName($column->getColumnName()),
                     'TYPE',
-                    $column->getTypeExpression(),
+                    $column->getTypeExpression($this->getDataType()),
                 ]
             );
 

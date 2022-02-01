@@ -529,9 +529,13 @@ class Column
         return $this;
     }
 
-    public function getTypeExpression(): string
+    public function getTypeExpression(?DataType $dt = null): string
     {
         $expr = $this->dataType;
+
+        if ($dt && $dt::isNoLength($expr)) {
+            return $expr;
+        }
 
         $length = $this->getLengthExpression();
 
@@ -544,7 +548,7 @@ class Column
 
     public function getCreateExpression(Query $query): string
     {
-        $expr = $this->getTypeExpression();
+        $expr = $this->getTypeExpression($this->getDataType());
 
         if (!$this->isNullable) {
             $expr .= ' NOT NULL';

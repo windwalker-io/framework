@@ -652,7 +652,7 @@ SQL;
     public function getColumnExpression(Column $column): Clause
     {
         return $this->getGrammar()::build(
-            $column->getTypeExpression(),
+            $column->getTypeExpression($this->getDataType()),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->isAutoIncrement() ? 'IDENTITY' : null,
             $column->canHasDefaultValue()
@@ -746,7 +746,7 @@ SQL;
             $query->qn($schema . '.' . $table),
             'ALTER COLUMN',
             $this->db->quoteName($column->getColumnName()),
-            $column->getTypeExpression(),
+            $column->getTypeExpression($this->getDataType()),
             $column->getIsNullable() ? 'NOT NULL' : null,
         );
 

@@ -536,7 +536,7 @@ class MySQLPlatform extends AbstractPlatform
         }
 
         return $this->getGrammar()::build(
-            $column->getTypeExpression(),
+            $column->getTypeExpression($this->getDataType()),
             $column->getNumericUnsigned() ? 'UNSIGNED' : '',
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->canHasDefaultValue()

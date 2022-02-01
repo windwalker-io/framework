@@ -273,7 +273,7 @@ abstract class AbstractPlatform
     public function getColumnExpression(Column $column): Clause
     {
         return $this->getGrammar()::build(
-            $column->getTypeExpression(),
+            $column->getTypeExpression($this->getDataType()),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->canHasDefaultValue()
                 ? 'DEFAULT ' . $this->db->quote($column->getColumnDefault())
