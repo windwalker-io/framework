@@ -140,7 +140,9 @@ class Language implements LanguageInterface
 
     public function find(string $id, ?string $locale = null, bool $fallback = true): array
     {
-        if ($string = $this->strings[$locale][$id] ?? null) {
+        $string = $this->strings[$locale][$id] ?? null;
+
+        if ($string !== null) {
             return [$locale, $string];
         }
 
