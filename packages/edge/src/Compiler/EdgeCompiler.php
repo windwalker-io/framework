@@ -11,11 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Compiler;
 
+use Windwalker\Edge\Compiler\Concern\CompileClassTrait;
 use Windwalker\Edge\Compiler\Concern\CompileCommentTrait;
 use Windwalker\Edge\Compiler\Concern\CompileComponentTrait;
 use Windwalker\Edge\Compiler\Concern\CompileConditional;
 use Windwalker\Edge\Compiler\Concern\CompileEchoTrait;
 use Windwalker\Edge\Compiler\Concern\CompileIncludeTrait;
+use Windwalker\Edge\Compiler\Concern\CompileJsonTrait;
 use Windwalker\Edge\Compiler\Concern\CompileLayoutTrait;
 use Windwalker\Edge\Compiler\Concern\CompileLoopTrait;
 use Windwalker\Edge\Compiler\Concern\CompileRawPhpTrait;
@@ -33,10 +35,12 @@ use Windwalker\Edge\Compiler\Concern\CompileStackTrait;
 class EdgeCompiler implements EdgeCompilerInterface
 {
     use CompileCommentTrait;
+    use CompileClassTrait;
     use CompileComponentTrait;
     use CompileConditional;
     use CompileEchoTrait;
     use CompileIncludeTrait;
+    use CompileJsonTrait;
     use CompileLayoutTrait;
     use CompileLoopTrait;
     use CompileRawPhpTrait;
