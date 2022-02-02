@@ -23,6 +23,7 @@ use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Session\Cookie\ArrayCookies;
 use Windwalker\Session\Cookie\Cookies;
+use Windwalker\Session\Cookie\CookiesInterface;
 
 /**
  * The SessionPackage class.
@@ -52,6 +53,9 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
 
         $container->bind(Session::class, fn(SessionManager $manager) => $manager->get())
             ->alias(SessionInterface::class, Session::class);
+
+        $container->bind(CookiesInterface::class, fn(SessionManager $manager) => $manager->get()->getCookies());
+
         $container->prepareSharedObject(CsrfService::class);
     }
 }
