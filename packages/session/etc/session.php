@@ -1,15 +1,16 @@
 <?php
 
 /**
- * Part of starter project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2020 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2020 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
 
 use Windwalker\Core\Manager\SessionManager;
+use Windwalker\Core\Session\CookiesAutoSecureSubscriber;
 use Windwalker\Core\Session\SessionRobotSubscriber;
 use Windwalker\DI\Container;
 use Windwalker\Session\Bridge\NativeBridge;
@@ -54,12 +55,15 @@ return [
         ],
 
         'listeners' => [
-            SessionRobotSubscriber::class
+            SessionRobotSubscriber::class,
+            create(
+                         CookiesAutoSecureSubscriber::class,
+                enabled: (bool) env('COOKIES_AUTO_SECURE', true)
+            )
         ],
 
         'bindings' => [
-            CookiesInterface::class => fn (Container $container)
-            => $container->resolve('session.factories.cookies.request')
+            //
         ],
 
         'factories' => [
@@ -117,7 +121,7 @@ return [
             ],
             'cookies' => [
                 'request' => SessionManager::psrCookies(),
-                'native' => create(Cookies::class, ref('session.cookie_params')),
+                'native' => SessionManager::nativeCookies(),
             ],
         ],
     ],
