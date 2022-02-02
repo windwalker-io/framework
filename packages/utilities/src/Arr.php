@@ -322,7 +322,7 @@ abstract class Arr
      *
      * @return  array
      */
-    public static function collapse(array|object $data, $keepKey = false): array
+    public static function collapse(array|object $data, bool $keepKey = false): array
     {
         $result = [];
 
