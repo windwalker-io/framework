@@ -57,8 +57,8 @@ return [
         'listeners' => [
             SessionRobotSubscriber::class,
             create(
-                         CookiesAutoSecureSubscriber::class,
-                enabled: (bool) env('COOKIES_AUTO_SECURE', true)
+                CookiesAutoSecureSubscriber::class,
+                enabled: (bool) env('COOKIES_AUTO_SECURE', '1')
             )
         ],
 

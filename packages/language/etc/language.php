@@ -19,7 +19,7 @@ return [
         'debug' => (bool) (env('LANG_DEBUG') ?? false),
 
         // The current locale
-        'locale' => 'zh-TW',
+        'locale' => 'en-US',
 
         // The default locale, if translated string in current locale not found, will fallback to default locale.
         'fallback' => 'en-US',
