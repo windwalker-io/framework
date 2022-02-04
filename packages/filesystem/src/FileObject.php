@@ -347,6 +347,10 @@ class FileObject extends SplFileInfo
             $dir->mkdir();
         }
 
+        if ($dest->isDir()) {
+            $dest = $dest->appendPath(DIRECTORY_SEPARATOR . $this->getBasename());
+        }
+
         // Check is a folder or file
         if ($dest->exists()) {
             if ($force) {
