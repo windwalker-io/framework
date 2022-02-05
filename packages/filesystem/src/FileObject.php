@@ -773,7 +773,7 @@ class FileObject extends SplFileInfo
         $isLink = parent::isLink();
 
         if (!$isLink && defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $isLink = array_diff(stat($this->getPathname()) ?: [], lstat($this->getPathname()) ?: []) !== [];
+            $isLink = @readlink($this->getPathname()) !== $this->getPathname();
         }
 
         return $isLink;
