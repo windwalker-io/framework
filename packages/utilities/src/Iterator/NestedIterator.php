@@ -78,6 +78,16 @@ class NestedIterator implements OuterIterator
         return $new;
     }
 
+    public function withSelf(callable $callback): self
+    {
+        $new = new self($this->getInnerIterator());
+
+        $new->callbacks = $this->callbacks;
+        $new->callbacks[] = $callback;
+
+        return $new;
+    }
+
     /**
      * @inheritDoc
      */
@@ -170,9 +180,9 @@ class NestedIterator implements OuterIterator
         );
     }
 
-    public function chunk(int $size, bool $preserveKeys = false): static
+    public function chunk(int $size, bool $preserveKeys = false): self
     {
-        return $this->with(
+        return $this->withSelf(
             static function (Iterator $iter) use ($preserveKeys, $size) {
                 // @see https://blog.kevingomez.fr/2016/02/26/efficiently-creating-data-chunks-in-php/
                 $closure = static function () use ($preserveKeys, $iter, $size) {
