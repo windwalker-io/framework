@@ -191,7 +191,7 @@ class AbstractDecoratorStream implements StreamInterface
      */
     public function getContents(): string
     {
-        return $this->stream->getContents();
+        return StreamHelper::copyToString($this);
     }
 
     /**

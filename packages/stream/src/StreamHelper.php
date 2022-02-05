@@ -73,4 +73,32 @@ abstract class StreamHelper
 
         $srcStream->close();
     }
+
+    public static function copyToString(StreamInterface $stream, int $maxLen = -1): string
+    {
+        $buffer = '';
+
+        if ($maxLen === -1) {
+            while (!$stream->eof()) {
+                $buf = $stream->read(1048576);
+                if ($buf === '') {
+                    break;
+                }
+                $buffer .= $buf;
+            }
+            return $buffer;
+        }
+
+        $len = 0;
+        while (!$stream->eof() && $len < $maxLen) {
+            $buf = $stream->read($maxLen - $len);
+            if ($buf === '') {
+                break;
+            }
+            $buffer .= $buf;
+            $len = strlen($buffer);
+        }
+
+        return $buffer;
+    }
 }
