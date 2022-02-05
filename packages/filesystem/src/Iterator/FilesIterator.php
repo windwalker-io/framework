@@ -77,9 +77,9 @@ class FilesIterator extends NestedIterator
         $path = Path::clean($path);
 
         if ($recursive) {
-            $options = $options ?: (FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO);
+            $options |= (FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO);
         } else {
-            $options = $options ?: (FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO
+            $options |= (FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO
                 | FilesystemIterator::SKIP_DOTS);
         }
 

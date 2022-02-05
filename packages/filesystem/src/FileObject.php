@@ -48,6 +48,8 @@ use Windwalker\Utilities\Str;
  */
 class FileObject extends SplFileInfo
 {
+    public const FOLLOW_SYMLINKS = \FilesystemIterator::FOLLOW_SYMLINKS;
+
     protected ?string $root;
 
     /**
@@ -256,12 +258,12 @@ class FileObject extends SplFileInfo
      *
      * @return  static|false
      */
-    public function copyTo(SplFileInfo|string $dest, bool $force = false): static
+    public function copyTo(SplFileInfo|string $dest, bool $force = false, int $options = 0): static
     {
         $dest = static::wrap($dest);
 
         if ($this->isDir()) {
-            return $this->copyFolderTo($dest, $force);
+            return $this->copyFolderTo($dest, $force, $options);
         }
 
         if ($this->isFile()) {
@@ -284,10 +286,11 @@ class FileObject extends SplFileInfo
      *
      * @param  FileObject  $dest
      * @param  bool        $force
+     * @param  int         $options
      *
      * @return  static
      */
-    private function copyFolderTo(FileObject $dest, bool $force = false): static
+    private function copyFolderTo(FileObject $dest, bool $force = false, int $options = 0): static
     {
         // Eliminate trailing directory separators, if any
         $src = $this->getPathname();
@@ -313,7 +316,7 @@ class FileObject extends SplFileInfo
 
         // Walk through the directory copying files and recursing into folders.
         /** @var FileObject $file */
-        foreach ($this->items(true) as $file) {
+        foreach ($this->items(true, $options) as $file) {
             $rFile = $file->getRelativePathname();
 
             $srcFile = static::wrap($src . '/' . $rFile);
@@ -471,7 +474,7 @@ class FileObject extends SplFileInfo
      *
      * @return  StreamInterface
      */
-    public function readStream(string $mode = Stream::MODE_READ_ONLY_FROM_BEGIN): StreamInterface
+    public function readStream(string $mode = 'rb'): StreamInterface
     {
         return $this->getStream($mode);
     }
@@ -643,11 +646,12 @@ class FileObject extends SplFileInfo
     /**
      * items
      *
-     * @param  bool  $recursive
+     * @param  bool      $recursive
+     * @param  int|null  $flags
      *
-     * @return  FilesIterator|FileObject[]
+     * @return FilesIterator
      */
-    public function items($recursive = false, ?int $flags = null): FilesIterator
+    public function items(bool $recursive = false, ?int $flags = null): FilesIterator
     {
         return FilesIterator::create($this->getPathname(), $recursive, $flags);
     }
@@ -759,6 +763,20 @@ class FileObject extends SplFileInfo
         }
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isLink(): bool
+    {
+        $isLink = parent::isLink();
+
+        if (!$isLink && defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $isLink = array_diff(stat($this->getPathname()), lstat($this->getPathname())) !== [];
+        }
+
+        return $isLink;
     }
 
     /**
