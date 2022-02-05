@@ -228,7 +228,11 @@ class Edge
             extract($__data, EXTR_OVERWRITE);
 
             if ($__path instanceof Closure) {
-                eval(' ?>' . $__edge->compile($__path($this, $__data)) . '<?php ');
+                try {
+                    eval(' ?>' . $code = $__edge->compile($__path($this, $__data)) . '<?php ');
+                } catch (\Throwable $e) {
+                    $this->wrapEvalException($e, $code);
+                }
 
                 return;
             }
@@ -236,9 +240,56 @@ class Edge
             if ($__edge->getCache() instanceof EdgeFileCache) {
                 include $__edge->getCache()->getCacheFile($__edge->getCache()->getCacheKey($__path));
             } else {
-                eval(' ?>' . $__edge->getCache()->load($__path) . '<?php ');
+                try {
+                    eval(' ?>' . $code = $__edge->getCache()->load($__path) . '<?php ');
+                } catch (\Throwable $e) {
+                    $this->wrapEvalException($e, $code);
+                }
             }
         };
+    }
+
+    protected function wrapEvalException(Throwable $e, string $code): void
+    {
+        $lines = explode("\n", $code);
+        $count = \count($lines);
+
+        $line = $e->getLine();
+        $start = $line - 3;
+
+        if ($start <= 0) {
+            $start = 0;
+        }
+
+        $end = $line + 3;
+
+        if ($end > $count) {
+            $end = $count;
+        }
+
+        $view = '';
+
+        foreach (range($start, $end) as $i) {
+            $l = trim($lines[$i], "\n\r");
+
+            $view .= $l . "\n";
+        }
+
+        $msg = <<<TEXT
+{$e->getMessage()} ({$e->getLine()})
+
+Error is near these lines.
+---------
+$view
+---------
+TEXT;
+        throw new EdgeException(
+            $msg,
+            $e->getCode(),
+            $e->getFile(),
+            $e->getLine(),
+            $e
+        );
     }
 
     /**
@@ -269,7 +320,7 @@ class Edge
             }
         }
 
-        throw new EdgeException($msg, $e->getCode(), null, null, $e);
+        throw new EdgeException($msg, $e->getCode(), $e->getFile(), $e->getLine(), $e);
     }
 
     /**
