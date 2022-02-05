@@ -254,19 +254,27 @@ class FileObject extends SplFileInfo
      * @param  string|SplFileInfo  $dest
      * @param  bool                $force
      *
-     * @return  static
+     * @return  static|false
      */
     public function copyTo(SplFileInfo|string $dest, bool $force = false): static
     {
         $dest = static::wrap($dest);
 
         if ($this->isDir()) {
-            $this->copyFolderTo($dest, $force);
-        } elseif ($this->isFile()) {
-            $this->copyFileTo($dest, $force);
-        } else {
-            throw new FilesystemException('Trying to copy a non-exists path: ' . $this->getPathname());
+            return $this->copyFolderTo($dest, $force);
         }
+
+        if ($this->isFile()) {
+            $result = $this->copyFileTo($dest, $force);
+
+            if (!$result) {
+                throw new FilesystemException('Copy file failure.');
+            }
+
+            return $result;
+        }
+
+        throw new FilesystemException('Trying to copy a non-exists path: ' . $this->getPathname());
 
         return $dest;
     }
@@ -277,9 +285,9 @@ class FileObject extends SplFileInfo
      * @param  FileObject  $dest
      * @param  bool        $force
      *
-     * @return  bool
+     * @return  static
      */
-    private function copyFolderTo(FileObject $dest, bool $force = false): bool
+    private function copyFolderTo(FileObject $dest, bool $force = false): static
     {
         // Eliminate trailing directory separators, if any
         $src = $this->getPathname();
@@ -318,7 +326,7 @@ class FileObject extends SplFileInfo
             }
         }
 
-        return true;
+        return $dest;
     }
 
     /**
@@ -327,13 +335,13 @@ class FileObject extends SplFileInfo
      * @param  FileObject  $dest
      * @param  bool        $force
      *
-     * @return  boolean  True on success
+     * @return  static|false  True on success
      *
      * @throws Exception\FilesystemException
      * @throws UnexpectedValueException
      * @since   2.0
      */
-    private function copyFileTo(FileObject $dest, bool $force = false): bool
+    private function copyFileTo(FileObject $dest, bool $force = false): static|false
     {
         // Check src path
         if (!$this->isReadable()) {
@@ -347,6 +355,10 @@ class FileObject extends SplFileInfo
             $dir->mkdir();
         }
 
+        if ($dest->isDir()) {
+            $dest = $dest->appendPath(DIRECTORY_SEPARATOR . $this->getBasename());
+        }
+
         // Check is a folder or file
         if ($dest->exists()) {
             if ($force) {
@@ -356,7 +368,11 @@ class FileObject extends SplFileInfo
             }
         }
 
-        return copy($this->getPathname(), $dest->getPathname());
+        if (!copy($this->getPathname(), $dest->getPathname())) {
+            return false;
+        }
+
+        return $dest;
     }
 
     /**
@@ -597,9 +613,9 @@ class FileObject extends SplFileInfo
      *
      * @return  FilesIterator|FileObject[]
      */
-    public function files(bool $recursive = false): FilesIterator
+    public function files(bool $recursive = false, ?int $flags = null): FilesIterator
     {
-        return FilesIterator::create($this->getPathname(), $recursive)
+        return FilesIterator::create($this->getPathname(), $recursive, $flags)
             ->filter(
                 static function (FileObject $file) {
                     return $file->isFile();
@@ -614,9 +630,9 @@ class FileObject extends SplFileInfo
      *
      * @return  FilesIterator|FileObject[]
      */
-    public function folders(bool $recursive = false): FilesIterator
+    public function folders(bool $recursive = false, ?int $flags = null): FilesIterator
     {
-        return FilesIterator::create($this->getPathname(), $recursive)
+        return FilesIterator::create($this->getPathname(), $recursive, $flags)
             ->filter(
                 static function (FileObject $file) {
                     return $file->isDir();
@@ -631,9 +647,9 @@ class FileObject extends SplFileInfo
      *
      * @return  FilesIterator|FileObject[]
      */
-    public function items($recursive = false): FilesIterator
+    public function items($recursive = false, ?int $flags = null): FilesIterator
     {
-        return FilesIterator::create($this->getPathname(), $recursive);
+        return FilesIterator::create($this->getPathname(), $recursive, $flags);
     }
 
     /**
