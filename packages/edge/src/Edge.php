@@ -231,7 +231,7 @@ class Edge
                 try {
                     eval(' ?>' . $code = $__edge->compile($__path($this, $__data)) . '<?php ');
                 } catch (\Throwable $e) {
-                    $this->wrapEvalException($e, $code);
+                    $this->wrapEvalException($e, $code, $__path);
                 }
 
                 return;
@@ -243,13 +243,13 @@ class Edge
                 try {
                     eval(' ?>' . $code = $__edge->getCache()->load($__path) . '<?php ');
                 } catch (\Throwable $e) {
-                    $this->wrapEvalException($e, $code);
+                    $this->wrapEvalException($e, $code, $__path);
                 }
             }
         };
     }
 
-    protected function wrapEvalException(Throwable $e, string $code): void
+    protected function wrapEvalException(Throwable $e, string $code, string|Closure $path): void
     {
         $lines = explode("\n", $code);
         $count = \count($lines);
@@ -275,10 +275,14 @@ class Edge
             $view .= $l . "\n";
         }
 
-        $msg = <<<TEXT
-{$e->getMessage()} ({$e->getLine()})
+        if ($path instanceof Closure) {
+            $path = '\Closure()';
+        }
 
-Error is near these lines.
+        $msg = <<<TEXT
+{$e->getMessage()}
+
+ERROR ON: $path (line: {$e->getLine()})
 ---------
 $view
 ---------
