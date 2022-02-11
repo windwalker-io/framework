@@ -93,6 +93,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function insert($datum, $priority)
     {
         if (!is_array($priority)) {
@@ -127,6 +128,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function serialize()
     {
         $clone = clone $this;
@@ -149,9 +151,38 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function unserialize($data)
     {
         foreach (unserialize($data) as $item) {
+            $this->insert($item['data'], $item['priority']);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __serialize(): array
+    {
+        $clone = clone $this;
+
+        $clone->setExtractFlags(self::EXTR_BOTH);
+
+        $data = [];
+
+        foreach ($clone as $item) {
+            $data[] = $item;
+        }
+
+        return $data;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __unserialize(array $data): void
+    {
+        foreach ($data as $item) {
             $this->insert($item['data'], $item['priority']);
         }
     }
@@ -190,6 +221,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
      *
      * @return  int
      */
+    #[\ReturnTypeWillChange]
     public function compare($priority1, $priority2)
     {
         $p1Count = count($priority1);
