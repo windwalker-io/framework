@@ -737,16 +737,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                     $value
                 );
 
+                ArgumentsAssert::assert(
+                    is_iterable($value),
+                    'Please set every value as array or iterator, ' .
+                    'example: value(array, array, array), {value} given.',
+                    $value
+                );
+
                 $clause = $this->clause('()', [], ', ');
 
                 foreach ($value as $val) {
                     $clause->append($this->castWriteValue($val));
                 }
-
-                ArgumentsAssert::assert(
-                    is_iterable($value),
-                    '{caller} values element should always be array or iterable, %s given.'
-                );
 
                 $this->values->append($clause);
             }
