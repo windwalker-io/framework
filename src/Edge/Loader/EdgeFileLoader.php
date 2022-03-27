@@ -122,7 +122,7 @@ class EdgeFileLoader implements EdgeLoaderInterface
      */
     protected function normalize($path)
     {
-        return str_replace('.', '/', $path);
+        return str_replace('.', '/', (string) $path);
     }
 
     /**
