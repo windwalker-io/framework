@@ -179,7 +179,7 @@ trait ArrayCreationTrait
      */
     public function countValues(): static
     {
-        return $this->group()->map('count');
+        return $this->groupBy()->map('count');
     }
 
     /**

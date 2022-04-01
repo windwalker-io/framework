@@ -122,18 +122,23 @@ trait ArrConverterTrait
     /**
      * Re-group an array to create a reverse lookup of an array of scalars, arrays or objects.
      *
-     * @param  array   $array  The source array data.
-     * @param  string  $key    Where the elements of the source array are objects or arrays, the key to pivot on.
-     * @param  int     $type   The group type.
+     * @param  array            $array  The source array data.
+     * @param  string|\Closure  $key    Where the elements of the source array are objects
+     *                                  or arrays, the key to pivot on.
+     * @param  int              $type   The group type.
      *
      * @return array An array of arrays grouped either on the value of the keys,
      *               or an individual key of an object or array.
      *
      * @since  2.0
      */
-    public static function group(array $array, ?string $key = null, int $type = self::GROUP_TYPE_ARRAY): array
+    public static function group(array $array, string|\Closure|null $key, int $type = self::GROUP_TYPE_ARRAY): array
     {
-        return static::groupByPath($array, $key, $type, '');
+        if (is_string($key) || $key === null) {
+            return static::groupByPath($array, $key, $type, '');
+        }
+
+        return static::groupByCallback($array, $key, $type);
     }
 
     public static function groupByPath(
@@ -142,23 +147,46 @@ trait ArrConverterTrait
         int $type = self::GROUP_TYPE_ARRAY,
         string $delimiter = '.'
     ): array {
+        return static::groupByCallback(
+            $array,
+            static function ($value, $i) use ($delimiter, $key) {
+                if (is_array($value) || is_object($value)) {
+                    if (!Arr::has($value, $key, $delimiter)) {
+                        yield null;
+                    }
+
+                    yield Arr::get($value, $key, $delimiter) => $value;
+                }
+
+                yield $value => $i;
+            },
+            $type
+        );
+    }
+
+    private static function groupByCallback(
+        array $array,
+        \Closure $handler,
+        int $type = self::GROUP_TYPE_ARRAY
+    ): array {
         $results = [];
         $hasArray = [];
 
         foreach ($array as $index => $value) {
             // List value
-            if (is_array($value) || is_object($value)) {
-                if (!Arr::has($value, $key, $delimiter)) {
-                    continue;
-                }
+            $result = $handler($value, $index);
 
-                $resultKey = (string) Arr::get($value, $key, $delimiter);
-                $resultValue = $array[$index];
-            } else {
-                // Scalar value.
-                $resultKey = $value;
-                $resultValue = $index;
+            if ($result instanceof \Generator) {
+                $value = $result->current();
+                $result = $result->key();
             }
+
+            if ($result === null || $result === false) {
+                continue;
+            }
+
+            $resultKey = (string) $result;
+            $resultValue = $value;
 
             // First set value if not exists.
             if (!isset($results[$resultKey])) {

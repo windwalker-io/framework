@@ -99,7 +99,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5
      */
-    public function push(...$value): int
+    public function push(mixed ...$value): int
     {
         return array_push($this->storage, ...$value);
     }
@@ -113,7 +113,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5
      */
-    public function unshift(...$value): int
+    public function unshift(mixed ...$value): int
     {
         return array_unshift($this->storage, ...$value);
     }
@@ -127,7 +127,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5.13
      */
-    public function append(...$args): static
+    public function append(mixed ...$args): static
     {
         $new = $this->storage;
         array_push($new, ...$args);
@@ -144,7 +144,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5.13
      */
-    public function prepend(...$args): static
+    public function prepend(mixed ...$args): static
     {
         $new = $this->storage;
         array_unshift($new, ...$args);
@@ -161,7 +161,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5.13
      */
-    public function removeLast($num = 1): static
+    public function removeLast(int $num = 1): static
     {
         return (clone $this)->splice(0, -$num);
     }
@@ -175,7 +175,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5.13
      */
-    public function removeFirst($num = 1): static
+    public function removeFirst(int $num = 1): static
     {
         return (clone $this)->splice($num);
     }
@@ -364,16 +364,21 @@ trait ArrayModifyTrait
     }
 
     /**
-     * groupBy
-     *
-     * @param  string  $column
-     * @param  int     $type
+     * @param  \Closure|string|null  $column
+     * @param  int                   $type
      *
      * @return  static
      *
-     * @since  3.5.3
+     * @since      3.5.3
+     *
+     * @deprecated Use groupBy() instead.
      */
-    public function group(?string $column = null, int $type = Arr::GROUP_TYPE_ARRAY): static
+    public function group(\Closure|string|null $column = null, int $type = Arr::GROUP_TYPE_ARRAY): static
+    {
+        return $this->groupBy($column, $type);
+    }
+
+    public function groupBy(\Closure|string|null $column = null, int $type = Arr::GROUP_TYPE_ARRAY): static
     {
         return $this->newInstance(Arr::group($this->dump(), $column, $type))->wrapAll();
     }
@@ -407,7 +412,7 @@ trait ArrayModifyTrait
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function union(...$args): static|ArrayModifyTrait
+    public function union(...$args): static
     {
         $new = clone $this;
 
