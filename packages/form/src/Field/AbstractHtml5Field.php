@@ -31,11 +31,11 @@ abstract class AbstractHtml5Field extends TextField
      * @param  int|null  $max
      * @param  bool      $addFilter
      *
-     * @return mixed
+     * @return static
      *
      * @since  3.4.2
      */
-    public function max(?int $max = null, bool $addFilter = true): mixed
+    public function max(?int $max = null, bool $addFilter = true): static
     {
         if ($addFilter) {
             $this->addFilter(new Range(null, $max));
@@ -50,11 +50,11 @@ abstract class AbstractHtml5Field extends TextField
      * @param  int|null  $min
      * @param  bool      $addFilter
      *
-     * @return mixed
+     * @return static
      *
      * @since  3.4.2
      */
-    public function min(?int $min = null, bool $addFilter = true): mixed
+    public function min(?int $min = null, bool $addFilter = true): static
     {
         if ($addFilter) {
             $this->addFilter(new Range($min, null));
@@ -66,10 +66,9 @@ abstract class AbstractHtml5Field extends TextField
     /**
      * range
      *
-     * @param  int   $min
-     * @param  int   $max
-     * @param  bool  $addFilter
-     * @param  bool  $forceInt
+     * @param  int|null  $min
+     * @param  int|null  $max
+     * @param  bool      $addFilter
      *
      * @return  $this
      *
