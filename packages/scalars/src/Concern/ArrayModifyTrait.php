@@ -391,14 +391,7 @@ trait ArrayModifyTrait
         return $this->newInstance(Arr::groupByPath($this->dump(), $column, $type, $delimiter));
     }
 
-    /**
-     * keyBy
-     *
-     * @param  string  $field
-     *
-     * @return  static
-     */
-    public function keyBy(string $field): static
+    public function keyBy(\Closure|string $field): static
     {
         return $this->newInstance(Arr::group($this->dump(), $field, Arr::GROUP_TYPE_KEY_BY));
     }
