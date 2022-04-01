@@ -107,6 +107,9 @@ class Assert
         return trim(($trace['class'] ?? '') . '::' . ($trace['function']), ':') . '()';
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public static function describeValue(mixed $value, ?int $truncate = 50): string
     {
         if ($value === null) {
@@ -126,7 +129,7 @@ class Assert
             $classRef = $ref->getClosureScopeClass();
             $line = $ref->getStartLine() . ':' . $ref->getEndLine();
 
-            return $classRef->getName() . "::{Closure} ($line)";
+            return $classRef?->getName() . "::{Closure} ($line)";
         }
 
         if (is_object($value)) {

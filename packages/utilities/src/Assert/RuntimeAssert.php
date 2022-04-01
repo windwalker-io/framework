@@ -11,15 +11,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Assert;
 
-use LogicException;
-
 /**
- * The LogicAssert class.
+ * The RuntimeAssert class.
  */
-class LogicAssert extends TypeAssert
+class RuntimeAssert extends TypeAssert
 {
     protected static function exception(): callable
     {
-        return static fn(string $message) => new LogicException($message);
+        return static fn(string $message) => new \RuntimeException($message);
     }
 }
