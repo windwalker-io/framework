@@ -14,6 +14,7 @@ namespace Windwalker\Edge\Component;
 use ArrayAccess;
 use ArrayIterator;
 use IteratorAggregate;
+use Windwalker\Data\Collection;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
@@ -206,6 +207,33 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
         }
 
         return $this->except($props);
+    }
+
+    public function props(...$keys): Collection
+    {
+        $ignore = [];
+        $props = [];
+
+        foreach ($keys as $key => $defaultValue) {
+            if (is_numeric($key)) {
+                $key = $defaultValue;
+                $defaultValue = null;
+            }
+
+            $ignore[] = $key;
+            $ignore[] = $pascalKey = StrNormalize::toKebabCase($key);
+
+            $props[$pascalKey] = $this->attributes[$key] ?? $this->attributes[$pascalKey] ?? $defaultValue;
+        }
+
+        $this->attributes = Arr::except($this->attributes, $ignore);
+
+        return collect($props);
+    }
+
+    public function propsValues(...$keys): array
+    {
+        return $this->props(...$keys)->values()->dump();
     }
 
     /**
