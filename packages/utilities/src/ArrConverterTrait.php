@@ -152,7 +152,7 @@ trait ArrConverterTrait
             static function ($value, $i) use ($delimiter, $key) {
                 if (is_array($value) || is_object($value)) {
                     if (!Arr::has($value, $key, $delimiter)) {
-                        yield null;
+                        yield null => null;
                     }
 
                     yield Arr::get($value, $key, $delimiter) => $value;

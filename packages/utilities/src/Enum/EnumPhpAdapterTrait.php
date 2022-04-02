@@ -79,10 +79,23 @@ trait EnumPhpAdapterTrait
     public function sameAs($variable = null): bool
     {
         if ($this instanceof \UnitEnum) {
-            return $this === static::from($variable);
+            return $this === static::tryWrap($variable);
         }
 
         return $this->equals(new static($variable));
+    }
+
+    public static function tryFrom(string|int $value): ?static
+    {
+        if (is_subclass_of(static::class, \UnitEnum::class)) {
+            return parent::tryFrom($value);
+        }
+
+        try {
+            return parent::from($value);
+        } catch (\UnexpectedValueException) {
+            return null;
+        }
     }
 
     /**
