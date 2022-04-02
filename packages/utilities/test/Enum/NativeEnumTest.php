@@ -18,6 +18,15 @@ use Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum;
  */
 class NativeEnumTest extends AbstractEnumTest
 {
+    protected function setUp(): void
+    {
+        if (PHP_VERSION_ID < 80100) {
+            self::markTestSkipped('native enum must test in 8.1');
+        }
+
+        parent::setUp();
+    }
+
     protected static function getEnumClass(): string
     {
         return StubBackedEnum::class;
