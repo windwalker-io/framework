@@ -457,7 +457,15 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
             $string .= ' ' . $key;
 
             if ($value !== true) {
-                $value = TypeCast::toString($value, false);
+                // Do not print array / object data into attributes
+                if (is_array($value)) {
+                    $value = 'Array()';
+                }
+
+                if (is_object($value)) {
+                    $value = sprintf('[Object %s]', get_class($value));
+                }
+
                 $string .= '="' . e(trim($value)) . '"';
             }
         }
