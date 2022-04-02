@@ -19,13 +19,15 @@ use Windwalker\Utilities\Contract\LanguageInterface;
  */
 trait EnumTranslatableTrait
 {
+    use EnumMetaTrait;
+
     public static function getTransItems(LanguageInterface $lang, ...$args): array
     {
         $items = [];
 
-        /** @var Enum|EnumTranslatableInterface $item */
+        /** @var static|Enum|EnumTranslatableInterface $item */
         foreach (static::values() as $item) {
-            $items[$item->getValue()] = $item->trans($lang, ...$args);
+            $items[$item->getValue()] = $item->getTitle($lang, ...$args);
         }
 
         return $items;

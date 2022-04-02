@@ -16,7 +16,7 @@ use Windwalker\Utilities\Contract\LanguageInterface;
 /**
  * Interface EnumTranslatableInterface
  */
-interface EnumTranslatableInterface
+interface EnumTranslatableInterface extends EnumMetaInterface
 {
     public function trans(LanguageInterface $lang, ...$args): string;
 

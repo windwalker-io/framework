@@ -99,6 +99,7 @@ namespace Windwalker {
     use Windwalker\Utilities\Proxy\CallableProxy;
     use Windwalker\Utilities\Proxy\DisposableCallable;
     use Windwalker\Utilities\Serial;
+    use Windwalker\Utilities\TypeCast;
     use Windwalker\Utilities\Wrapper\RawWrapper;
     use Windwalker\Utilities\Wrapper\ValueReference;
     use Windwalker\Utilities\Wrapper\WrapperInterface;
@@ -283,8 +284,8 @@ namespace Windwalker {
          */
         function value(mixed $value, mixed ...$args): mixed
         {
-            if ($value instanceof \BackedEnum) {
-                return $value->value;
+            if ($value instanceof \UnitEnum) {
+                return TypeCast::extractEnum($value);
             }
 
             if ($value instanceof Enum) {

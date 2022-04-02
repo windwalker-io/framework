@@ -99,7 +99,7 @@ class BoundedHelper
             }
 
             $v = match ($param['dataType']) {
-                ParamType::STRING => Escaper::tryQuote($escaper, (string) $v),
+                ParamType::STRING => Escaper::tryQuote($escaper, TypeCast::toString($v)),
                 default => $v,
             };
 
