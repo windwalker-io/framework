@@ -35,7 +35,7 @@ class TypeAssert
     public static function assert(
         mixed $assertion,
         string $message,
-        $value = null,
+        mixed $value = null,
         ?callable $exception = null
     ): void {
         if (is_callable($assertion)) {
@@ -56,7 +56,7 @@ class TypeAssert
 
     protected static function exception(): callable
     {
-        return fn(string $msg) => new TypeError($msg);
+        return static fn(string $msg) => new TypeError($msg);
     }
 
     public static function describeValue($value): string

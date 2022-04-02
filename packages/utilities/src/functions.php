@@ -90,6 +90,7 @@ namespace Windwalker {
     use Closure;
     use Exception;
     use JetBrains\PhpStorm\Pure;
+    use MyCLabs\Enum\Enum;
     use Traversable;
     use WeakReference;
     use Windwalker\Utilities\Compare\CompareHelper;
@@ -282,6 +283,14 @@ namespace Windwalker {
          */
         function value(mixed $value, mixed ...$args): mixed
         {
+            if ($value instanceof \BackedEnum) {
+                return $value->value;
+            }
+
+            if ($value instanceof Enum) {
+                return $value->getValue();
+            }
+
             if ($value instanceof WeakReference) {
                 return $value->get();
             }

@@ -175,7 +175,7 @@ trait ManageInputTrait
      *
      * @return  static
      */
-    public function attr(string $name, $value = null): static
+    public function attr(string $name, mixed $value = null): static
     {
         return $this->setAttribute($name, $value);
     }
