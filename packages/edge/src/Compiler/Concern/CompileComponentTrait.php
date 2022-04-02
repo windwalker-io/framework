@@ -76,6 +76,10 @@ trait CompileComponentTrait
      */
     public static function compileClassComponentOpening(string $component, string $name, string $data, string $hash)
     {
+        if (class_exists($component)) {
+            $component = Str::ensureLeft($component, '\\');
+        }
+
         $component = Str::ensureRight($component, '::class');
 
         return implode(
