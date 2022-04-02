@@ -50,7 +50,9 @@ class EntityHydrator implements FieldHydratorInterface
         $columns = $metadata->getColumns();
 
         foreach ($data as $colName => $value) {
+            // Get prop name
             if ($column = $columns[$colName] ?? null) {
+                // Skip if is relation field
                 if ($column instanceof Mapping && is_scalar($value)) {
                     continue;
                 }
@@ -60,11 +62,13 @@ class EntityHydrator implements FieldHydratorInterface
                 $prop = $props[$colName] ?? null;
             }
 
+            // No prop name, just assign value.
             if (!$prop) {
                 $item[$colName] = $value;
                 continue;
             }
 
+            // Has prop name, cast it.
             $propName = $prop->getName();
 
             $item[$propName] = static::castFieldForHydrate($metadata, $colName, $value, $object);
@@ -197,8 +201,15 @@ class EntityHydrator implements FieldHydratorInterface
         mixed $value,
         object $entity
     ): mixed {
+        // If this column name not exists, maybe this is property name.
         if (!$metadata->getColumn($colName)) {
-            return $value;
+            $column = $metadata->getColumnByPropertyName($colName);
+
+            if (!$column) {
+                return $value;
+            }
+
+            $colName = $column->getName();
         }
 
         $casts = $metadata->getCastManager()->getFieldCasts($colName);
