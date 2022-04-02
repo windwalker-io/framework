@@ -45,20 +45,24 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     /**
      * Fetch 1 row and close ths cursor.
      *
-     * @param  string|object  $class
-     * @param  array          $args
+     * @template T
      *
-     * @return  Collection|null
+     * @param  string|object|T  $class
+     * @param  array            $args
+     *
+     * @return  Collection|T|null
      */
     public function get(string|object $class = Collection::class, array $args = []): ?object;
 
     /**
      * Fetch all items and close cursor.
      *
-     * @param  string|object  $class
-     * @param  array          $args
+     * @template T
      *
-     * @return Collection
+     * @param  string|object|T  $class
+     * @param  array            $args
+     *
+     * @return Collection|T[]
      */
     public function all(string|object $class = Collection::class, array $args = []): Collection;
 

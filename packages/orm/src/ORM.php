@@ -271,6 +271,21 @@ class ORM implements EventAwareInterface
         return $this->getEntityHydrator()->hydrate($data, $entity);
     }
 
+    /**
+     * @template T
+     *
+     * @param  string|T      $entityClass
+     * @param  array|object  $data
+     *
+     * @return  object|T
+     *
+     * @throws ReflectionException
+     */
+    public function toEntity(string $entityClass, array|object $data): object
+    {
+        return $this->mapper($entityClass)->toEntity($data);
+    }
+
     public function extractEntity(array|object|null $entity): array
     {
         if ($entity === null) {
