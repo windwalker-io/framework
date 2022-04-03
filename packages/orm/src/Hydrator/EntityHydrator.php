@@ -164,7 +164,9 @@ class EntityHydrator implements FieldHydratorInterface
         mixed $value,
         object $entity
     ): mixed {
-        if (!$metadata->getColumn($colName)) {
+        $column = $metadata->getColumn($colName);
+
+        if (!$column) {
             return $value;
         }
 
@@ -179,11 +181,11 @@ class EntityHydrator implements FieldHydratorInterface
 
                 throw new CastingException(
                     sprintf(
-                        'Error when extracting %s:%s to %s with value %s : %s',
+                        'Error when extracting %s::$%s from value "%s" with cast: %s - %s',
                         $metadata->getClassName(),
                         $colName,
-                        $castName,
                         get_debug_type($value),
+                        $castName,
                         $e->getMessage()
                     ),
                     $e->getCode(),
@@ -201,8 +203,10 @@ class EntityHydrator implements FieldHydratorInterface
         mixed $value,
         object $entity
     ): mixed {
+        $column = $metadata->getColumn($colName);
+
         // If this column name not exists, maybe this is property name.
-        if (!$metadata->getColumn($colName)) {
+        if (!$column) {
             $column = $metadata->getColumnByPropertyName($colName);
 
             if (!$column) {
@@ -222,11 +226,12 @@ class EntityHydrator implements FieldHydratorInterface
 
                 throw new CastingException(
                     sprintf(
-                        'Error when hydrating %s:%s to %s with value %s : %s',
+                        'Error when hydrating %s::$%s from value "%s" to "%s" with cast: %s - %s',
                         $metadata->getClassName(),
                         $colName,
-                        $castName,
                         get_debug_type($value),
+                        $column->getProperty()->getType(),
+                        $castName,
                         $e->getMessage()
                     ),
                     $e->getCode(),
