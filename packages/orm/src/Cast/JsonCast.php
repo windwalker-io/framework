@@ -38,7 +38,7 @@ class JsonCast implements CastInterface
      * @inheritDoc
      * @throws JsonException
      */
-    public function extract(mixed $value): ?string
+    public function extract(mixed $value): mixed
     {
         return is_json($value) ? $value : json_encode($value, JSON_THROW_ON_ERROR);
     }

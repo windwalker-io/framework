@@ -28,7 +28,6 @@ use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventInterface;
 use Windwalker\ORM\Attributes\CastForSave;
-use Windwalker\ORM\Attributes\CurrentTime;
 use Windwalker\ORM\Event\{AbstractSaveEvent,
     AfterCopyEvent,
     AfterDeleteEvent,
@@ -42,6 +41,7 @@ use Windwalker\ORM\Exception\NoResultException;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
+use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
@@ -1165,13 +1165,15 @@ class EntityMapper implements EventAwareInterface
                 $value = json_encode($value);
             }
 
-            if (is_object($value) && method_exists($value, '__toString')) {
-                $value = (string) $value;
-            }
+            if (!$value instanceof ClauseInterface) {
+                if (is_object($value) && method_exists($value, '__toString')) {
+                    $value = (string) $value;
+                }
 
-            // Start prepare default value
-            if (is_array($value) || is_object($value)) {
-                $value = null;
+                // Start prepare default value
+                if (is_array($value) || is_object($value)) {
+                    $value = null;
+                }
             }
 
             if ($value === null) {
@@ -1198,6 +1200,8 @@ class EntityMapper implements EventAwareInterface
                     $def = $dataType::getDefaultValue($column->getDataType());
                     $item[$field] = $def !== false ? $def : '';
                 }
+            } elseif ($value instanceof ClauseInterface) {
+                $item[$field] = $value;
             } else {
                 $item[$field] = TypeCast::try(
                     $value,

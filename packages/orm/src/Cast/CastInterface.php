@@ -36,7 +36,7 @@ interface CastInterface
      *
      * @param  mixed  $value
      *
-     * @return  string|null
+     * @return  mixed
      */
-    public function extract(mixed $value): ?string;
+    public function extract(mixed $value): mixed;
 }

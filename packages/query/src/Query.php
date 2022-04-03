@@ -765,7 +765,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function set(iterable|string $column, $value = null): static
+    public function set(iterable|string $column, mixed $value = null): static
     {
         if (!$this->set) {
             $this->set = $this->clause('SET', [], ', ');

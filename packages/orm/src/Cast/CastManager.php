@@ -289,5 +289,10 @@ class CastManager
             'json',
             JsonCast::class
         );
+
+        $this->alias(
+            'uuid',
+            UuidCast::class
+        );
     }
 }
