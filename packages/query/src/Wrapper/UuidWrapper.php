@@ -37,7 +37,7 @@ class UuidWrapper implements WrapperInterface, \Stringable
 
     public function __invoke(mixed $src = null): mixed
     {
-        return $this->uuid->getBytes();
+        return $this->uuid->toString();
     }
 
     public function getRaw(): UuidInterface
@@ -45,8 +45,12 @@ class UuidWrapper implements WrapperInterface, \Stringable
         return $this->uuid;
     }
 
-    public static function wrap(string|UuidInterface $uuid): UuidInterface
+    public static function wrap(string|UuidInterface|null $uuid): ?UuidInterface
     {
+        if ($uuid === null || $uuid === '') {
+            return null;
+        }
+
         if ($uuid instanceof UuidInterface) {
             return $uuid;
         }
@@ -60,6 +64,6 @@ class UuidWrapper implements WrapperInterface, \Stringable
 
     public function __toString()
     {
-        return $this->uuid->getBytes();
+        return $this->uuid->toString();
     }
 }

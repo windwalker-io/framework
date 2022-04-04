@@ -14,13 +14,14 @@ namespace Windwalker\ORM\Attributes;
 use Ramsey\Uuid\UuidInterface;
 use Windwalker\Cache\Exception\LogicException;
 use Windwalker\ORM\Cast\CastInterface;
+use Windwalker\Query\Wrapper\UuidBinWrapper;
 use Windwalker\Query\Wrapper\UuidWrapper;
 
 /**
  * The UUID class.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
-class UUID extends CastForSave implements CastInterface
+class UUIDBin extends CastForSave implements CastInterface
 {
     /**
      * CastForSave constructor.
@@ -42,22 +43,22 @@ class UUID extends CastForSave implements CastInterface
 
             $method = $this->version;
 
-            return new UuidWrapper($value ?: \Ramsey\Uuid\Uuid::$method());
+            return new UuidBinWrapper($value ?: \Ramsey\Uuid\Uuid::$method());
         };
     }
 
     public function hydrate(mixed $value): mixed
     {
-        return UuidWrapper::wrap($value);
+        return UuidBinWrapper::wrap($value);
     }
 
     public function extract(mixed $value): mixed
     {
-        return UuidWrapper::wrap($value);
+        return UuidBinWrapper::wrap($value);
     }
 
     public static function wrap(mixed $value): UuidInterface
     {
-        return UuidWrapper::wrap($value);
+        return UuidBinWrapper::wrap($value);
     }
 }

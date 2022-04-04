@@ -15,6 +15,7 @@ use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ExprClause;
 use Windwalker\Query\Clause\QuoteNameClause;
 use Windwalker\Query\Clause\ValueClause;
+use Windwalker\Query\Wrapper\UuidBinWrapper;
 use Windwalker\Query\Wrapper\UuidWrapper;
 
 if (!function_exists(__NAMESPACE__ . '\clause')) {
@@ -99,10 +100,10 @@ if (!function_exists(__NAMESPACE__ . '\uuid2bin')) {
      *
      * @param  string  $value
      *
-     * @return UuidWrapper
+     * @return UuidBinWrapper
      */
-    function uuid2bin(mixed $value): UuidWrapper
+    function uuid2bin(mixed $value): UuidBinWrapper
     {
-        return new UuidWrapper($value);
+        return new UuidBinWrapper($value);
     }
 }

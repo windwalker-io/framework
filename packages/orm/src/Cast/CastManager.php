@@ -294,5 +294,10 @@ class CastManager
             'uuid',
             UuidCast::class
         );
+
+        $this->alias(
+            'uuid_bin',
+            UuidBinCast::class
+        );
     }
 }

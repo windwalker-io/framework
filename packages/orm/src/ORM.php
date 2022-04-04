@@ -35,6 +35,7 @@ use Windwalker\ORM\Attributes\OneToMany;
 use Windwalker\ORM\Attributes\OneToOne;
 use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
+use Windwalker\ORM\Attributes\UUID;
 use Windwalker\ORM\Attributes\Watch;
 use Windwalker\ORM\Event\AfterCopyEvent;
 use Windwalker\ORM\Event\AfterDeleteEvent;
