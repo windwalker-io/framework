@@ -129,6 +129,7 @@ class PdoDriver extends AbstractDatabaseDriver
         }
 
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->connection->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, true);
 
         return $this;
     }
