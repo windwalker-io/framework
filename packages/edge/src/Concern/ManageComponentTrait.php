@@ -77,11 +77,13 @@ trait ManageComponentTrait
         $staticSlot = ob_get_clean();
         $slot = $this->slots[$this->currentComponent()][Symbol::main()->getValue()] ?? null;
 
-        $slot ??= new SlotWrapper(
-            function (...$args) use ($staticSlot) {
-                echo $staticSlot;
-            }
-        );
+        if (trim($staticSlot) !== '') {
+            $slot = new SlotWrapper(
+                function (...$args) use ($staticSlot) {
+                    echo $staticSlot;
+                }
+            );
+        }
 
         $view = array_pop($this->componentStack);
 
