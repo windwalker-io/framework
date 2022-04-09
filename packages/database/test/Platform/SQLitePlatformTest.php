@@ -94,7 +94,7 @@ class SQLitePlatformTest extends AbstractPlatformTest
     {
         $views = $this->instance->listViews(static::getTestSchema());
 
-        $views['ww_articles_view']['sql'] = str_replace(["\n", "\r\n"], ' ', $views['ww_articles_view']['sql']);
+        $views['ww_articles_view']['sql'] = str_replace(["\r\n", "\n"], ' ', $views['ww_articles_view']['sql']);
 
         self::assertEquals(
             [

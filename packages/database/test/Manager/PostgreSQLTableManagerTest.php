@@ -89,8 +89,8 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             "price" decimal(20,6) NOT NULL DEFAULT 0,
             "intro" text NOT NULL DEFAULT '',
             "fulltext" text NOT NULL DEFAULT '',
-            "start_date" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
-            "created" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+            "start_date" timestamp DEFAULT NULL,
+            "created" timestamp DEFAULT NULL,
             "updated" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "deleted" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
             "params" json DEFAULT NULL

@@ -88,9 +88,9 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
                 [price] DECIMAL(20,6) NOT NULL DEFAULT 0,
                 [intro] nvarchar(MAX) NOT NULL DEFAULT 0,
                 [fulltext] nvarchar(MAX) NOT NULL DEFAULT 0,
-                [start_date] datetime2 NOT NULL DEFAULT '1900-01-01 00:00:00',
-                [created] datetime2 NOT NULL DEFAULT '1900-01-01 00:00:00',
-                [updated] datetime2 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                [start_date] datetime2 DEFAULT NULL,
+                [created] datetime2 DEFAULT NULL,
+                [updated] datetime2 DEFAULT CURRENT_TIMESTAMP,
                 [deleted] datetime2 NOT NULL DEFAULT '1900-01-01 00:00:00',
                 [params] nvarchar(MAX) NOT NULL DEFAULT 0
             );
