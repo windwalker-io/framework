@@ -494,7 +494,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
                     $value = sprintf('[Object %s]', get_class($value));
                 }
 
-                $string .= '="' . e(trim($value)) . '"';
+                $string .= '="' . e(trim((string) $value)) . '"';
             }
         }
 
