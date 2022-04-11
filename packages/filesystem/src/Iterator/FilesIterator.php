@@ -42,7 +42,7 @@ class FilesIterator extends NestedIterator
      *
      * @return  static
      */
-    public static function create(string $path, bool $recursive = false, int $options = null): static
+    public static function create(string $path, bool $recursive = false, ?int $options = null): static
     {
         $instance = new static(static::createInnerIterator($path, $recursive, $options));
 
@@ -75,6 +75,8 @@ class FilesIterator extends NestedIterator
     public static function createInnerIterator(string $path, bool $recursive = false, ?int $options = null): Iterator
     {
         $path = Path::clean($path);
+
+        $options ??= 0;
 
         if ($recursive) {
             $options |= (FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO);

@@ -15,9 +15,8 @@ use MyCLabs\Enum\Enum;
 use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTMLFactory;
 use Windwalker\Utilities\Assert\TypeAssert;
-
-use function Windwalker\DOM\h;
-use function Windwalker\value_compare;
+use Windwalker\Utilities\Contract\LanguageInterface;
+use Windwalker\Utilities\Enum\EnumTranslatableInterface;
 
 /**
  * The ListOptionsTrait class.
@@ -121,11 +120,37 @@ trait ListOptionsTrait
      *
      * @since  3.5.2
      */
-    public function register(callable $handler): self
+    public function register(callable $handler): static
     {
         $handler($this);
 
         return $this;
+    }
+
+    public function registerFromEnums(iterable|string $enums, ?LanguageInterface $lang = null): static
+    {
+        if (is_string($enums)) {
+            if (is_subclass_of($enums, Enum::class)) {
+                $enums = $enums::values();
+            } else {
+                /** @var \UnitEnum $enums */
+                $enums = $enums::cases();
+            }
+        }
+
+        $options = [];
+
+        foreach ($enums as $enum) {
+            if ($enum instanceof EnumTranslatableInterface) {
+                $options[$enum->getValue()] = $enum->getTitle($lang);
+            } elseif ($enum instanceof Enum) {
+                $options[$enum->getValue()] = $enum->getKey();
+            } elseif ($enum instanceof \UnitEnum) {
+                $options[$enum->name ?? $enum->value] = $enum->name;
+            }
+        }
+
+        return $this->registerOptions($options);
     }
 
     /**
@@ -138,7 +163,7 @@ trait ListOptionsTrait
      *
      * @since  3.5.2
      */
-    public function registerOptions(iterable|string $options, ?callable $handler = null): self
+    public function registerOptions(iterable|string $options, ?callable $handler = null): static
     {
         $isEnum = false;
 

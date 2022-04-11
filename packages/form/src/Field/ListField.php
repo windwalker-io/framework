@@ -12,12 +12,9 @@ declare(strict_types=1);
 namespace Windwalker\Form\Field;
 
 use DOMNode;
-use MyCLabs\Enum\Enum;
 use Windwalker\Data\Collection;
 use Windwalker\DOM\DOMElement;
-use Windwalker\DOM\HTMLFactory;
 use Windwalker\Form\Field\Concern\ListOptionsTrait;
-use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\DOM\h;
