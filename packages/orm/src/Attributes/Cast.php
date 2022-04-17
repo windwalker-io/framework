@@ -35,6 +35,8 @@ class Cast implements AttributeInterface
 
     public const DEFAULT_IF_NULL = 1 << 4;
 
+    public const EMPTY_STRING_TO_NULL = 1 << 5;
+
     protected mixed $hydrate;
 
     protected int $options;
