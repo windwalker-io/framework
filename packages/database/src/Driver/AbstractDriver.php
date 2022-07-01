@@ -186,6 +186,15 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return null;
     }
 
+    public function releaseConnection(ConnectionInterface $conn): void
+    {
+        if ($this->connection === $conn) {
+            $this->connection = null;
+        }
+
+        $conn->release();
+    }
+
     public function useConnection(callable $callback): mixed
     {
         $conn = $this->getConnection();
