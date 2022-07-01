@@ -17,6 +17,8 @@ use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
 
+use function Windwalker\tap;
+
 /**
  * The MysqliDriver class.
  */
@@ -66,15 +68,17 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     }
 
     /**
+     * @param  bool  $keep  *
+     *
      * @inheritDoc
      */
-    public function getConnection(): ConnectionInterface
+    public function getConnection(bool $keep = false): ConnectionInterface
     {
         if ($this->connection) {
             return $this->connection;
         }
 
-        return parent::getConnection();
+        return parent::getConnection($keep);
     }
 
     /**
@@ -83,7 +87,7 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     public function transactionStart(): bool
     {
         /** @var mysqli $mysqli */
-        $mysqli = $this->getConnection()->get();
+        $mysqli = $this->getConnection(true)->get();
 
         return $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
     }
@@ -96,7 +100,10 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var mysqli $mysqli */
         $mysqli = $this->getConnection()->get();
 
-        return $mysqli->commit();
+        return tap(
+            $mysqli->commit(),
+            fn () => $this->releaseKeptConnection()
+        );
     }
 
     /**
@@ -107,7 +114,10 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var mysqli $mysqli */
         $mysqli = $this->getConnection()->get();
 
-        return $mysqli->rollback();
+        return tap(
+            $mysqli->rollback(),
+            fn () => $this->releaseKeptConnection()
+        );
     }
 
     /**

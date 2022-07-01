@@ -497,6 +497,9 @@ abstract class AbstractPlatform
     {
         $driver = $this->db->getDriver();
 
+        // Keep connection
+        $driver->getConnection(true);
+
         if ($driver instanceof TransactionDriverInterface) {
             $driver->transactionStart();
         } else {
@@ -523,6 +526,8 @@ abstract class AbstractPlatform
             $this->db->execute('COMMIT;');
         }
 
+        $driver->releaseKeptConnection();
+
         $this->depth--;
 
         return $this;
@@ -542,6 +547,8 @@ abstract class AbstractPlatform
         } else {
             $this->db->execute('ROLLBACK;');
         }
+
+        $driver->releaseKeptConnection();
 
         $this->depth--;
 

@@ -51,6 +51,11 @@ abstract class AbstractDriver implements HydratorAwareInterface
     protected mixed $lastQuery = null;
 
     /**
+     * @var ?ConnectionInterface
+     */
+    protected ?ConnectionInterface $connection = null;
+
+    /**
      * @var ?AbstractSchemaManager
      */
     protected ?AbstractSchemaManager $schema = null;
@@ -137,11 +142,21 @@ abstract class AbstractDriver implements HydratorAwareInterface
     /**
      * Get a connection, must release manually.
      *
+     * @param  bool  $keep  Keep connection for reuse.
+     *
      * @return  ConnectionInterface
      */
-    public function getConnection(): ConnectionInterface
+    public function getConnection(bool $keep = false): ConnectionInterface
     {
+        if ($this->connection) {
+            return $this->connection;
+        }
+
         $conn = $this->getConnectionFromPool();
+
+        if ($keep) {
+            $this->connection = $conn;
+        }
 
         if ($conn->isConnected()) {
             return $conn;
@@ -151,9 +166,24 @@ abstract class AbstractDriver implements HydratorAwareInterface
             $conn->connect();
         } finally {
             $conn->release();
+            $this->connection = null;
         }
 
         return $conn;
+    }
+
+    public function releaseKeptConnection(): ?ConnectionInterface
+    {
+        if ($this->connection) {
+            $conn = $this->connection;
+            $conn->release();
+
+            $this->connection = null;
+
+            return $conn;
+        }
+
+        return null;
     }
 
     public function useConnection(callable $callback): mixed
@@ -164,6 +194,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
             $result = $callback($conn);
         } finally {
             $conn->release();
+            $this->connection = null;
         }
 
         return $result;

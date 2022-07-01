@@ -19,6 +19,8 @@ use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
 use Windwalker\Query\Escaper;
 
+use function Windwalker\tap;
+
 /**
  * The PdoDriver class.
  */
@@ -33,11 +35,6 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
      * @var string
      */
     protected string $platformName = 'odbc';
-
-    /**
-     * @var ?ConnectionInterface
-     */
-    protected ?ConnectionInterface $connection = null;
 
     protected function getConnectionClass(): string
     {
@@ -89,13 +86,9 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @inheritDoc
      */
-    public function getConnection(): ConnectionInterface
+    public function getConnection(bool $keep = false): ConnectionInterface
     {
-        if ($this->connection) {
-            return $this->connection;
-        }
-
-        return parent::getConnection();
+        return parent::getConnection($keep);
     }
 
     /**
@@ -103,12 +96,10 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
      */
     public function transactionStart(): bool
     {
-        $connection = $this->getConnection();
+        $connection = $this->getConnection(true);
 
         /** @var PDO $pdo */
         $pdo = $connection->get();
-
-        $this->connection = $connection;
 
         return $pdo->beginTransaction();
     }
@@ -121,7 +112,10 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var PDO $pdo */
         $pdo = $this->getConnection()->get();
 
-        return $pdo->commit();
+        return tap(
+            $pdo->commit(),
+            fn () => $this->releaseKeptConnection()
+        );
     }
 
     /**
@@ -132,11 +126,9 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var PDO $pdo */
         $pdo = $this->getConnection()->get();
 
-        return \Windwalker\tap(
+        return tap(
             $pdo->rollBack(),
-            function () {
-                $this->connection = null;
-            }
+            fn () => $this->releaseKeptConnection()
         );
     }
 
