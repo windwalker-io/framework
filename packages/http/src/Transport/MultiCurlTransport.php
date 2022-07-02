@@ -95,7 +95,7 @@ class MultiCurlTransport implements AsyncTransportInterface
     /**
      * @inheritDoc
      */
-    public function sendRequest(RequestInterface $request, array $options = [])
+    public function sendRequest(RequestInterface $request, array $options = []): PromiseInterface
     {
         /** @var CurlTransport $transport */
         $transport = $this->getTransport();
@@ -194,6 +194,7 @@ class MultiCurlTransport implements AsyncTransportInterface
      */
     public function download(RequestInterface $request, StreamInterface|string $dest, array $options = []): mixed
     {
+        return null;
     }
 
     /**
@@ -201,8 +202,9 @@ class MultiCurlTransport implements AsyncTransportInterface
      *
      * @return  mixed
      */
-    public static function isSupported(): mixed
+    public static function isSupported(): bool
     {
+        return true;
     }
 
     /**

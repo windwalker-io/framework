@@ -17,10 +17,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use UnexpectedValueException;
 use Windwalker\Http\Exception\HttpRequestException;
+use Windwalker\Http\File\HttpUploadFileInterface;
+use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\Response;
+use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
 use Windwalker\Stream\StreamHelper;
+use Windwalker\Utilities\Arr;
 
 /**
  * The StreamTransport class.
@@ -66,6 +71,9 @@ class StreamTransport extends AbstractTransport
         return $this->getResponse($headers, $content);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function createConnection(RequestInterface $request, array $options = []): mixed
     {
         // Create the stream context options array with the required method offset.
@@ -74,30 +82,67 @@ class StreamTransport extends AbstractTransport
         // Set HTTP Version
         $opt['protocol_version'] = $request->getProtocolVersion();
 
-        // If data exists let's encode it and make sure our Content-Type header is set.
-        $data = (string) $request->getBody();
+        // Handle data
+        $body = $request->getBody();
+        $forceMultipart = false;
 
-        if (isset($data)) {
-            // If the data is a scalar value simply add it to the stream context options.
+        if ($body instanceof RequestBodyStream) {
+            $data = $body->getData();
+
+            Arr::mapRecursive(
+                $data,
+                static function ($value) use (&$forceMultipart) {
+                    if ($value instanceof HttpUploadFileInterface) {
+                        $forceMultipart = true;
+                    }
+
+                    return $value;
+                }
+            );
+        } else {
+            $data = (string) $body;
+        }
+
+        $contentType = $request->getHeaderLine('Content-Type');
+
+        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
+            if (is_array($data)) {
+                $boundary = MultipartHelper::createBoundary();
+
+                $data = MultipartHelper::toFormData($boundary, $data);
+
+                $request = $request->withHeader('Content-Type', 'multipart/form-data; boundary=' . $boundary);
+            }
+
+            $opt['content'] = $data;
+        } else {
             if (is_scalar($data)) {
+                // If the data is a scalar value simply add it to the stream context options.
                 $opt['content'] = $data;
-            } else // Otherwise we need to encode the value first.
-            {
+            } else {
+                // Otherwise we need to encode the value first.
                 $opt['content'] = http_build_query($data);
             }
 
-            if (!$request->getHeader('Content-Type')) {
-                $request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+            if (!$request->getHeaderLine('Content-Type')) {
+                $request = $request->withHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded; charset=utf-8'
+                );
             }
-
-            // Add the relevant headers.
-            $request = $request->withHeader('Content-Length', (string) strlen($opt['content']));
         }
+
+        if (!$request->getHeader('Content-Type')) {
+            $request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+        }
+
+        // Add the relevant headers.
+        $request = $request->withHeader('Content-Length', (string) strlen($opt['content']));
 
         // Speed up stream get URL
         // @see http://stackoverflow.com/questions/3629504/php-file-get-contents-very-slow-when-using-full-url
         // @see http://stackoverflow.com/questions/13679976/how-to-speed-up-file-get-contents
-        $request = $request->withHeader('Connection', 'Close');
+        // $request = $request->withHeader('Connection', 'Close');
 
         // Build the headers string for the request.
         if ($headers = $request->getHeaders()) {

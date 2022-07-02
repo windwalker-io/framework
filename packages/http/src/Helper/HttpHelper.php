@@ -56,9 +56,8 @@ class HttpHelper
      * @since  3.5.15
      */
     #[Pure]
-    public static function isIPv6(
-        string $ip
-    ): bool {
+    public static function isIPv6(string $ip): bool
+    {
         return str_contains($ip, ':');
     }
 }

@@ -17,6 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use UnexpectedValueException;
+use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ServerHelper;
 use Windwalker\Http\UploadedFile;
@@ -80,7 +81,7 @@ class ServerRequestFactory
             if (str_contains($type, 'application/x-www-form-urlencoded')) {
                 parse_str($body->__toString(), $decodedBody);
             } elseif (str_contains($type, 'multipart/form-data')) {
-                [$decodedBody, $decodedFiles] = array_values(ServerHelper::parseFormData($body->__toString()));
+                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body->__toString()));
             } elseif (str_contains($type, 'application/json')) {
                 $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
             }

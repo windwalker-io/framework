@@ -13,6 +13,8 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 
+use Windwalker\Promise\PromiseInterface;
+
 use function Windwalker\Promise\async;
 
 /**
@@ -35,7 +37,7 @@ class SimpleAsyncTransport implements AsyncTransportInterface
     /**
      * @inheritDoc
      */
-    public function sendRequest(RequestInterface $request, array $options = [])
+    public function sendRequest(RequestInterface $request, array $options = []): PromiseInterface
     {
         return async(fn() => $this->getTransport()->request($request, $options));
     }

@@ -18,11 +18,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use UnexpectedValueException;
 use Windwalker\Http\Exception\HttpRequestException;
+use Windwalker\Http\File\HttpUploadFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\Response;
+use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
+use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Arr;
+
+use function Windwalker\DOM\h;
 
 /**
  * The CurlTransport class.
@@ -184,34 +189,48 @@ class CurlTransport extends AbstractTransport
                 }
         }
 
-        // If data exists let's encode it and make sure our Content-type header is set.
-        $data = (string) $request->getBody();
+        // Handle data
+        $body = $request->getBody();
+        $forceMultipart = false;
 
-        if (isset($data)) {
-            $contentType = $request->getHeaderLine('Content-Type');
+        if ($body instanceof RequestBodyStream) {
+            $data = $body->getData();
 
-            if (str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
-                $opt[CURLOPT_POSTFIELDS] = $opt['files'] ?? [];
-
-                // If no boundary, remove content-type and let CURL add it.
-                if (!str_contains($contentType, 'boundary')) {
-                    $request = $request->withoutHeader('Content-Type');
+            $data = Arr::mapRecursive($data, function ($value) use (&$forceMultipart) {
+                if ($value instanceof HttpUploadFileInterface) {
+                    $value = $value->toCurlFile();
+                    $forceMultipart = true;
                 }
-            } else {
-                $opt[CURLOPT_POSTFIELDS] = $data;
 
-                if (!$request->getHeaderLine('Content-Type')) {
-                    $request = $request->withHeader(
-                        'Content-Type',
-                        'application/x-www-form-urlencoded; charset=utf-8'
-                    );
-                }
-            }
+                return $value;
+            });
+        } else {
+            $data = (string) $body;
+        }
 
-            // Add the relevant headers.
-            if (is_scalar($opt[CURLOPT_POSTFIELDS])) {
-                $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
+        $contentType = $request->getHeaderLine('Content-Type');
+
+        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
+            $opt[CURLOPT_POSTFIELDS] = $data;
+
+            // If no boundary, remove content-type and let CURL add it.
+            if (!str_contains($contentType, 'boundary')) {
+                $request = $request->withoutHeader('Content-Type');
             }
+        } else {
+            $opt[CURLOPT_POSTFIELDS] = $data;
+
+            if (!$request->getHeaderLine('Content-Type')) {
+                $request = $request->withHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded; charset=utf-8'
+                );
+            }
+        }
+
+        // Add the relevant headers.
+        if (is_scalar($opt[CURLOPT_POSTFIELDS])) {
+            $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
         }
 
         // Build the headers string for the request.
@@ -287,7 +306,7 @@ class CurlTransport extends AbstractTransport
             $dest = Stream::fromFilePath($dest);
         }
 
-        $dest->write($response->getBody()->__toString());
+        StreamHelper::copy($response->getBody(), $dest);
 
         return $response;
     }

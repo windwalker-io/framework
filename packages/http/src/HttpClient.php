@@ -16,6 +16,9 @@ use Psr\Http\Message\ResponseInterface;
 use RangeException;
 use ReflectionMethod;
 use Stringable;
+use Windwalker\Http\File\HttpUploadFile;
+use Windwalker\Http\File\HttpUploadStream;
+use Windwalker\Http\File\HttpUploadStringFile;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Http\Transport\AsyncTransportInterface;
@@ -103,7 +106,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     public function download(
         Stringable|string $url,
         string $dest,
-        $body = null,
+        mixed $body = null,
         array $options = []
     ): ResponseInterface {
         $options = Arr::mergeRecursive($this->getOptions(), $options);
@@ -123,6 +126,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * Send a request to remote.
      *
      * @param  RequestInterface  $request  The Psr Request object.
+     * @param  array             $options
      *
      * @return  ResponseInterface
      */
@@ -177,7 +181,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @since   2.1
      */
-    public function get(Stringable|string $url, $options = []): ResponseInterface
+    public function get(Stringable|string $url, array $options = []): ResponseInterface
     {
         return $this->request('GET', $url, null, $options);
     }
@@ -380,7 +384,10 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         $request = static::prepareRequest(new Request(), $method, $url, $body, $options);
 
-        return $this->sendRequest($request, $options['transport'] ?? []);
+        $transportOptions = $options['transport'] ?? [];
+        $transportOptions['files'] = $options['files'] ?? null;
+
+        return $this->sendRequest($request, $transportOptions);
     }
 
     /**
@@ -458,5 +465,36 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $this->asyncTransport = $asyncTransport;
 
         return $this;
+    }
+
+    public static function uploadFile(
+        string $filename,
+        ?string $mimeType = null,
+        ?string $postname = null
+    ): HttpUploadFile {
+        return new HttpUploadFile($filename, $mimeType, $postname);
+    }
+
+    public static function uploadFileData(
+        string $data,
+        ?string $mimeType = null,
+        ?string $postname = null
+    ): HttpUploadStringFile {
+        return new HttpUploadStringFile($data, $mimeType, $postname);
+    }
+
+    /**
+     * @param  mixed        $stream
+     * @param  string|null  $mimeType
+     * @param  string|null  $postname
+     *
+     * @return  HttpUploadStream
+     */
+    public static function uploadFileStream(
+        mixed $stream,
+        ?string $mimeType = null,
+        ?string $postname = null
+    ): HttpUploadStream {
+        return new HttpUploadStream($stream, $mimeType, $postname);
     }
 }

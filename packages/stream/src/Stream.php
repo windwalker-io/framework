@@ -86,7 +86,7 @@ class Stream implements StreamInterface
      *
      * @return  StreamInterface
      */
-    public static function wrap($stream, string $mode = self::MODE_READ_WRITE_FROM_BEGIN): StreamInterface
+    public static function wrap(mixed $stream, string $mode = self::MODE_READ_WRITE_FROM_BEGIN): StreamInterface
     {
         if ($stream instanceof StreamInterface) {
             return $stream;
