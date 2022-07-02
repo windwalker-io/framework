@@ -306,6 +306,11 @@ class ServerRequestFactory
             ->withQuery($query);
     }
 
+    public static function createBaseUriFromRequest(ServerRequestInterface $request): RequestBaseUri
+    {
+        return RequestBaseUri::parseFromRequest($request);
+    }
+
     /**
      * Marshal the host and port from HTTP headers and/or the PHP environment
      *
