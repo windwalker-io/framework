@@ -164,9 +164,8 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
         try {
             $conn->connect();
-        } finally {
-            $conn->release();
-            $this->connection = null;
+        } catch (\Throwable $e) {
+            $this->releaseConnection($conn);
         }
 
         return $conn;
@@ -202,8 +201,9 @@ abstract class AbstractDriver implements HydratorAwareInterface
         try {
             $result = $callback($conn);
         } finally {
-            $conn->release();
-            $this->connection = null;
+            if (!$this->connection) {
+                $conn->release();
+            }
         }
 
         return $result;

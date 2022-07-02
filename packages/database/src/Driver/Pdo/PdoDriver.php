@@ -86,14 +86,6 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @inheritDoc
      */
-    public function getConnection(bool $keep = false): ConnectionInterface
-    {
-        return parent::getConnection($keep);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function transactionStart(): bool
     {
         $connection = $this->getConnection(true);
