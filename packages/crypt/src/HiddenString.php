@@ -24,7 +24,7 @@ class HiddenString
     /**
      * @var string
      */
-    protected $value;
+    protected string $value;
 
     /**
      * HiddenString constructor.
