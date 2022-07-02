@@ -35,6 +35,10 @@ use function Windwalker\raw;
 
 /**
  * The NestedSetMapper class.
+ *
+ * @template T
+ *
+ * @implements EntityMapper<T>
  */
 class NestedSetMapper extends EntityMapper
 {
@@ -154,7 +158,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @param  string|int|object  $pkOrEntity
      *
-     * @return  Collection
+     * @return  Collection|T[]
      */
     public function getPath(string|int|NestedEntityInterface $pkOrEntity): Collection
     {
@@ -183,6 +187,13 @@ class NestedSetMapper extends EntityMapper
             ->all($metadata->getClassName());
     }
 
+    /**
+     * getAncestors
+     *
+     * @param  string|int|NestedEntityInterface  $pkOrEntity
+     *
+     * @return  Collection|T[]
+     */
     public function getAncestors(string|int|NestedEntityInterface $pkOrEntity): Collection
     {
         ArgumentsAssert::assert(
@@ -211,6 +222,13 @@ class NestedSetMapper extends EntityMapper
             ->all($metadata->getClassName());
     }
 
+    /**
+     * getTree
+     *
+     * @param  string|int|NestedEntityInterface  $pkOrEntity
+     *
+     * @return  Collection|T[]
+     */
     public function getTree(string|int|NestedEntityInterface $pkOrEntity): Collection
     {
         ArgumentsAssert::assert(
@@ -464,6 +482,15 @@ class NestedSetMapper extends EntityMapper
         }
     }
 
+    /**
+     * move
+     *
+     * @param  array|object  $source
+     * @param  int           $delta
+     * @param  mixed         $conditions
+     *
+     * @return  false|NestedEntityInterface|T
+     */
     public function move(array|object $source, int $delta, mixed $conditions = []): false|NestedEntityInterface
     {
         $node = $this->sourceToEntity($source);
@@ -498,6 +525,17 @@ class NestedSetMapper extends EntityMapper
         return false;
     }
 
+    /**
+     * moveByReference
+     *
+     * @param  array|object  $source
+     * @param  mixed         $referenceId
+     * @param  int           $position
+     *
+     * @return  NestedEntityInterface|T
+     *
+     * @throws \ReflectionException
+     */
     public function moveByReference(
         mixed $source,
         mixed $referenceId,
@@ -632,6 +670,16 @@ class NestedSetMapper extends EntityMapper
         return $node;
     }
 
+    /**
+     * prependTo
+     *
+     * @param  array|object  $source
+     * @param  mixed         $referenceId
+     *
+     * @return  NestedEntityInterface|T
+     *
+     * @throws \ReflectionException
+     */
     public function prependTo(mixed $source, mixed $referenceId): NestedEntityInterface
     {
         $entity = $this->sourceToEntity($source);
@@ -641,6 +689,14 @@ class NestedSetMapper extends EntityMapper
         return $entity;
     }
 
+    /**
+     * @param  array|object  $source
+     * @param  mixed         $referenceId
+     *
+     * @return  NestedEntityInterface
+     *
+     * @throws \ReflectionException
+     */
     public function appendTo(mixed $source, mixed $referenceId): NestedEntityInterface
     {
         $entity = $this->sourceToEntity($source);
@@ -650,6 +706,14 @@ class NestedSetMapper extends EntityMapper
         return $entity;
     }
 
+    /**
+     * @param  array|object  $source
+     * @param  mixed         $referenceId
+     *
+     * @return  NestedEntityInterface|T
+     *
+     * @throws \ReflectionException
+     */
     public function putBefore(mixed $source, mixed $referenceId): NestedEntityInterface
     {
         $entity = $this->sourceToEntity($source);
@@ -659,6 +723,14 @@ class NestedSetMapper extends EntityMapper
         return $entity;
     }
 
+    /**
+     * @param  array|object  $source
+     * @param  mixed         $referenceId
+     *
+     * @return  NestedEntityInterface|T
+     *
+     * @throws \ReflectionException
+     */
     public function putAfter(mixed $source, mixed $referenceId): NestedEntityInterface
     {
         $entity = $this->sourceToEntity($source);
@@ -714,6 +786,9 @@ class NestedSetMapper extends EntityMapper
         $this->depth--;
     }
 
+    /**
+     * @return  NestedEntityInterface|T|null
+     */
     public function getRoot(): ?NestedEntityInterface
     {
         /** @var NestedEntityInterface $root */
@@ -897,6 +972,14 @@ class NestedSetMapper extends EntityMapper
         return (string) $segments->implode('/')->trim('/\\');
     }
 
+    /**
+     * @param  array  $data
+     *
+     * @return  NestedEntityInterface|T
+     *
+     * @throws \JsonException
+     * @throws \ReflectionException
+     */
     public function createRoot(array $data = []): NestedEntityInterface
     {
         $data = array_merge(
@@ -922,11 +1005,30 @@ class NestedSetMapper extends EntityMapper
     }
 
     /**
+     * @param  array  $data
+     *
+     * @return  NestedEntityInterface|T
+     *
+     * @throws \JsonException
+     * @throws \ReflectionException
+     */
+    public function createRootIfNotExist(array $data = []): NestedEntityInterface
+    {
+        $root = $this->getRoot();
+
+        if ($root) {
+            return $root;
+        }
+
+        return $this->createRoot($data);
+    }
+
+    /**
      * sourceToEntity
      *
      * @param  mixed  $source
      *
-     * @return  object|NestedEntityInterface
+     * @return  object|NestedEntityInterface|T
      */
     private function sourceToEntity(mixed $source): object
     {

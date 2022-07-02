@@ -279,6 +279,7 @@ class SelectorQuery extends Query implements EventAwareInterface
      * be changed. NOT CALLABLE DIRECTLY.
      *
      * @return void
+     * @throws \ReflectionException
      * @link https://php.net/manual/en/language.oop5.cloning.php
      */
     public function __clone(): void
