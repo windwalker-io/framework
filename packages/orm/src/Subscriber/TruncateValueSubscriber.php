@@ -13,6 +13,7 @@ namespace Windwalker\ORM\Subscriber;
 
 use Windwalker\Event\Attributes\EventSubscriber;
 use Windwalker\ORM\Event\BeforeSaveEvent;
+use Windwalker\ORM\Event\BeforeStoreEvent;
 
 /**
  * The TruncateValueSubscriber class.
@@ -20,8 +21,8 @@ use Windwalker\ORM\Event\BeforeSaveEvent;
 #[EventSubscriber]
 class TruncateValueSubscriber
 {
-    #[BeforeSaveEvent]
-    public function beforeSave(BeforeSaveEvent $event): void
+    #[BeforeStoreEvent]
+    public function beforeStore(BeforeStoreEvent $event): void
     {
         $orm = $event->getORM();
         $metadata = $event->getMetadata();

@@ -21,6 +21,7 @@ use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Cast\JsonCast;
 use Windwalker\ORM\Event\AfterSaveEvent;
+use Windwalker\ORM\Event\BeforeStoreEvent;
 
 /**
  * The Article class.
@@ -63,6 +64,8 @@ class StubArticle
 
     public static int $counter = 0;
 
+    public static array $diff = [];
+
     #[AfterSaveEvent]
     public static function afterSave(
         AfterSaveEvent $event
@@ -73,6 +76,13 @@ class StubArticle
         $data['category_id'] = 2;
 
         $event->setData($data);
+    }
+
+    #[BeforeStoreEvent]
+    public static function beforeStore(
+        BeforeStoreEvent $event
+    ): void {
+        static::$diff = $event->getData();
     }
 
     /**

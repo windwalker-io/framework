@@ -36,6 +36,7 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeCopyEvent,
     BeforeDeleteEvent,
     BeforeSaveEvent,
+    BeforeStoreEvent,
     BeforeUpdateWhereEvent};
 use Windwalker\ORM\Exception\NoResultException;
 use Windwalker\ORM\Hydrator\EntityHydrator;
@@ -289,9 +290,15 @@ class EntityMapper implements EventAwareInterface
 
         $data = $this->castForSave($this->extract($entity), true, $entity);
 
+        $type = BeforeStoreEvent::TYPE_CREATE;
+        $event = $this->emitEvent(
+            BeforeStoreEvent::class,
+            compact('data', 'type', 'metadata', 'source', 'options')
+        );
+
         $data = $this->getDb()->getWriter()->insertOne(
             $metadata->getTableName(),
-            $data,
+            $event->getData(),
             $pk,
             [
                 'incrementField' => $aiColumn && !empty($data[$aiColumn]),
@@ -400,9 +407,21 @@ class EntityMapper implements EventAwareInterface
 
             $metadata->getRelationManager()->beforeUpdate($writeData, $entity, $oldData);
 
+            $type = BeforeStoreEvent::TYPE_UPDATE;
+            $event = $this->emitEvent(
+                BeforeStoreEvent::class,
+                [
+                    'data' => $writeData,
+                    'type' => $type,
+                    'metadata' => $metadata,
+                    'source' => $source,
+                    'options' => $options
+                ]
+            );
+
             $result = $this->getDb()->getWriter()->updateOne(
                 $metadata->getTableName(),
-                $writeData,
+                $event->getData(),
                 $condFields,
                 [
                     'updateNulls' => $updateNulls,

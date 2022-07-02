@@ -88,7 +88,7 @@ class CastManager
                         if ($cast instanceof CastInterface || is_subclass_of($cast, CastInterface::class)) {
                             $extract = $cast;
                         } else {
-                            $extract = [TypeCast::class, 'tryString'];
+                            $extract = $this->getDefaultExtractHandler($cast, $options);
                         }
                     }
 
@@ -303,5 +303,26 @@ class CastManager
             'uuid_bin',
             UuidBinCast::class
         );
+    }
+
+    /**
+     * @param  mixed  $cast
+     * @param  int    $options
+     *
+     * @return  mixed
+     */
+    public function getDefaultExtractHandler(mixed $cast, int $options): mixed
+    {
+        if (is_subclass_of($cast, \DateTimeInterface::class)) {
+            return function (mixed $value, ORM $orm) {
+                if ($value instanceof \DateTimeInterface) {
+                    return $value->format($orm->getDb()->getDateFormat());
+                }
+
+                return (string) $value;
+            };
+        }
+
+        return [TypeCast::class, 'tryString'];
     }
 }
