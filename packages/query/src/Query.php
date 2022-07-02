@@ -181,6 +181,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     protected ?Escaper $escaper = null;
 
+    protected ?string $defaultItemClass = null;
+
     /**
      * Query constructor.
      *
@@ -1717,14 +1719,20 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  Generator
      */
-    public function getIterator(?string $class = Collection::class, array $args = []): Generator
+    public function getIterator(?string $class = null, array $args = []): Generator
     {
         return $this->prepareStatement()->getIterator($class, $args);
     }
 
     public function prepareStatement(): StatementInterface
     {
-        return $this->getDbConnection()->prepare($this);
+        $statement = $this->getDbConnection()->prepare($this);
+
+        if ($this->defaultItemClass) {
+            $statement->setDefaultItemClass($this->defaultItemClass);
+        }
+
+        return $statement;
     }
 
     private function getDbConnection(): DatabaseAdapter
@@ -1746,5 +1754,25 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         return $db;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDefaultItemClass(): ?string
+    {
+        return $this->defaultItemClass;
+    }
+
+    /**
+     * @param  string|null  $defaultItemClass
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDefaultItemClass(?string $defaultItemClass): static
+    {
+        $this->defaultItemClass = $defaultItemClass;
+
+        return $this;
     }
 }
