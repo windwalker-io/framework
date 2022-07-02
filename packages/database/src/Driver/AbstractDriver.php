@@ -15,8 +15,11 @@ use JetBrains\PhpStorm\Pure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Event\HydrateEvent;
+use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Database\Event\QueryEndEvent;
 use Windwalker\Database\Event\QueryFailedEvent;
+use Windwalker\Database\Event\QueryStartEvent;
 use Windwalker\Database\Exception\DatabaseQueryException;
 use Windwalker\Database\Hydrator\HydratorAwareInterface;
 use Windwalker\Database\Hydrator\HydratorInterface;
@@ -253,23 +256,24 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
         // Register monitor events
         $stmt->on(
+            QueryStartEvent::class,
+            fn(QueryStartEvent $event) => $event->setQuery($query)
+                ->setBounded($bounded)
+        );
+
+        $stmt->on(
             QueryFailedEvent::class,
-            function (QueryFailedEvent $event) use (
-                $query,
-                $sql,
-                $bounded
-            ) {
+            function (QueryFailedEvent $event) use ($query, $bounded) {
                 $event->setQuery($query)
-                    ->setSql($this->handleQuery($query, $bounded, true))
                     ->setBounded($bounded);
 
                 $e = $event->getException();
 
-                $sql = $this->replacePrefix(($query instanceof Query ? $query->render(true) : (string) $query));
+                $debugSql = $this->replacePrefix(($query instanceof Query ? $query->render(true) : (string) $query));
 
                 $event->setException(
                     new DatabaseQueryException(
-                        $e->getMessage() . ' - SQL: ' . $sql,
+                        $e->getMessage() . ' - SQL: ' . $debugSql,
                         (int) $e->getCode(),
                         $e
                     )
@@ -279,14 +283,20 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
         $stmt->on(
             QueryEndEvent::class,
-            function (QueryEndEvent $event) use (
-                $query,
-                $bounded
-            ) {
-                $event->setQuery($query)
-                    ->setSql($this->handleQuery($query, $bounded, true))
-                    ->setBounded($bounded);
-            }
+            fn(QueryEndEvent $event) => $event->setQuery($query)
+                ->setBounded($bounded)
+        );
+
+        $stmt->on(
+            HydrateEvent::class,
+            fn(HydrateEvent $event) => $event->setQuery($query)
+                ->setBounded($bounded)
+        );
+
+        $stmt->on(
+            ItemFetchedEvent::class,
+            fn(ItemFetchedEvent $event) => $event->setQuery($query)
+                ->setBounded($bounded)
         );
 
         return $stmt;

@@ -28,6 +28,7 @@ use Windwalker\Database\Manager\SchemaManager;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Manager\WriterManager;
 use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventListenableInterface;
 use Windwalker\ORM\EntityMapper;
@@ -45,7 +46,7 @@ use function Windwalker\raw;
  * @method Query delete(string $table, ?string $alias = null)
  * @method Query insert(string $table, bool $incrementField = false)
  */
-class DatabaseAdapter implements EventListenableInterface, HydratorAwareInterface
+class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 {
     use EventAwareTrait;
     use InstanceCacheTrait;

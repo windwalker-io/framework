@@ -18,6 +18,8 @@ use Windwalker\Event\AbstractEvent;
  */
 class QueryStartEvent extends AbstractEvent
 {
+    use QueryEventTrait;
+
     protected ?array $params = [];
 
     /**

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Event;
 
+use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Event\AbstractEvent;
 
 /**
@@ -18,12 +19,14 @@ use Windwalker\Event\AbstractEvent;
  */
 class ItemFetchedEvent extends AbstractEvent
 {
+    use QueryEventTrait;
+
     protected ?array $item;
 
     /**
      * @return object|null
      */
-    public function getItem(): ?array
+    public function &getItem(): ?array
     {
         return $this->item;
     }

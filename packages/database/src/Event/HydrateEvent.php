@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Event;
 
+use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Event\AbstractEvent;
 use Windwalker\Query\Query;
 
@@ -19,16 +20,16 @@ use Windwalker\Query\Query;
  */
 class HydrateEvent extends AbstractEvent
 {
+    use QueryEventTrait;
+
     protected array|object|null $item;
 
     protected object|string $class;
 
-    protected string|Query $query;
-
     /**
      * @return array|object|null
      */
-    public function getItem(): array|object|null
+    public function &getItem(): array|object|null
     {
         return $this->item;
     }
@@ -41,26 +42,6 @@ class HydrateEvent extends AbstractEvent
     public function setItem(array|object|null $item): static
     {
         $this->item = $item;
-
-        return $this;
-    }
-
-    /**
-     * @return string|Query
-     */
-    public function getQuery(): Query|string
-    {
-        return $this->query;
-    }
-
-    /**
-     * @param  string|Query  $query
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setQuery(Query|string $query): static
-    {
-        $this->query = $query;
 
         return $this;
     }

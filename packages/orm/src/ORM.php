@@ -19,6 +19,7 @@ use Windwalker\Attributes\AttributesResolver;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Database\Hydrator\FieldHydratorInterface;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
@@ -272,7 +273,15 @@ class ORM implements EventAwareInterface
      */
     public function hydrateEntity(array $data, object $entity): object
     {
-        return $this->getEntityHydrator()->hydrate($data, $entity);
+        $class = $entity::class;
+        $item = $data;
+
+        $event = $this->emit(
+            HydrateEvent::class,
+            compact('class', 'item')
+        );
+
+        return $this->getEntityHydrator()->hydrate($event->getItem(), $entity);
     }
 
     /**

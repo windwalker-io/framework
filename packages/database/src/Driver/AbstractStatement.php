@@ -60,6 +60,8 @@ abstract class AbstractStatement implements StatementInterface
 
     protected array $options = [];
 
+    protected string $defaultItemClass = Collection::class;
+
     /**
      * AbstractStatement constructor.
      *
@@ -80,7 +82,7 @@ abstract class AbstractStatement implements StatementInterface
      * @inheritDoc
      * @throws Throwable
      */
-    public function getIterator(string|object $class = Collection::class, array $args = []): Generator
+    public function getIterator(string|object|null $class = null, array $args = []): Generator
     {
         $this->execute();
 
@@ -92,17 +94,22 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @inheritDoc
      */
-    public function fetch(object|string $class = Collection::class, array $args = []): ?object
+    public function fetch(string|object|null $class = null, array $args = []): ?object
     {
         // todo: Implement more hydrators strategies.
         $hydrator = $this->driver->getHydrator();
 
         $item = $this->doFetch();
-        $query = $this->query;
+        $sql = $this->query;
+        $statement = $this;
+        $class ??= $this->getDefaultItemClass() ?: Collection::class;
 
         $item = $this->fetchedEvent($item);
 
-        $item = $this->emit(HydrateEvent::class, compact('item', 'class', 'query'))->getItem();
+        $item = $this->emit(
+            HydrateEvent::class,
+            compact('item', 'class', 'sql', 'statement')
+        )->getItem();
 
         if (!is_array($item)) {
             return $item;
@@ -131,8 +138,9 @@ abstract class AbstractStatement implements StatementInterface
         }
 
         $statement = $this;
+        $sql = $this->query;
 
-        $this->emit(QueryStartEvent::class, compact('params'));
+        $this->emit(QueryStartEvent::class, compact('params', 'statement', 'sql'));
 
         try {
             $result = $this->doExecute($params);
@@ -148,7 +156,7 @@ abstract class AbstractStatement implements StatementInterface
         }
 
         $statement = $this;
-        $this->emit(QueryEndEvent::class, compact('result', 'statement'));
+        $this->emit(QueryEndEvent::class, compact('result', 'statement', 'sql'));
 
         $this->executed = true;
 
@@ -207,7 +215,13 @@ abstract class AbstractStatement implements StatementInterface
      */
     protected function fetchedEvent(?array $item): ?array
     {
-        return $this->emit(ItemFetchedEvent::class, compact('item'))->getItem();
+        $statement = $this;
+        $sql = $this->query;
+
+        return $this->emit(
+            ItemFetchedEvent::class,
+            compact('item', 'statement', 'sql')
+        )->getItem();
     }
 
     /**
@@ -269,10 +283,38 @@ abstract class AbstractStatement implements StatementInterface
     }
 
     /**
+     * @return string
+     */
+    public function getQuery(): string
+    {
+        return $this->query;
+    }
+
+    /**
      * @inheritDoc
      */
     public function __destruct()
     {
         $this->close();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultItemClass(): string
+    {
+        return $this->defaultItemClass;
+    }
+
+    /**
+     * @param  string  $defaultItemClass
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDefaultItemClass(string $defaultItemClass): static
+    {
+        $this->defaultItemClass = $defaultItemClass;
+
+        return $this;
     }
 }

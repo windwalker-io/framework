@@ -35,12 +35,12 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     /**
      * Fetch 1 row and move cursor to next position.
      *
-     * @param  string|object  $class
-     * @param  array          $args
+     * @param  string|object|null  $class
+     * @param  array               $args
      *
      * @return  Collection|null
      */
-    public function fetch(string|object $class = Collection::class, array $args = []): ?object;
+    public function fetch(string|object|null $class = null, array $args = []): ?object;
 
     /**
      * Fetch 1 row and close ths cursor.
@@ -113,12 +113,12 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     /**
      * getIterator
      *
-     * @param  string|object  $class
-     * @param  array          $args
+     * @param  string|object|null  $class
+     * @param  array               $args
      *
      * @return  Generator
      */
-    public function getIterator(string|object $class = Collection::class, array $args = []): Generator;
+    public function getIterator(string|object|null $class = null, array $args = []): Generator;
 
     /**
      * addDispatcherDealer
@@ -137,4 +137,28 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
      * @return string|null
      */
     public function lastInsertId(?string $sequence = null): ?string;
+
+    /**
+     * @return string
+     */
+    public function getQuery(): string;
+
+    /**
+     * @param  mixed  $key
+     *
+     * @return  array|null
+     */
+    public function &getBounded(mixed $key = null): ?array;
+
+    /**
+     * @return string
+     */
+    public function getDefaultItemClass(): string;
+
+    /**
+     * @param  string  $defaultItemClass
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDefaultItemClass(string $defaultItemClass): static;
 }
