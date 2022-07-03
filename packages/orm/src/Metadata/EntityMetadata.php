@@ -531,4 +531,14 @@ class EntityMetadata implements EventAwareInterface
             }
         };
     }
+
+    public function watchBefore(string $column, callable $method, int $options = 0): Closure
+    {
+        return $this->watch($column, $method, $options | Watch::BEFORE_SAVE);
+    }
+
+    public function watchAfter(string $column, callable $method, int $options = 0): Closure
+    {
+        return $this->watch($column, $method, $options ^ Watch::BEFORE_SAVE);
+    }
 }
