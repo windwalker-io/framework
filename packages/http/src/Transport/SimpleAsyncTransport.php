@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
-
 use Windwalker\Promise\PromiseInterface;
 
 use function Windwalker\Promise\async;

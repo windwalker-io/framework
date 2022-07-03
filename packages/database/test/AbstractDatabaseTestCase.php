@@ -90,7 +90,7 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
     {
         $logs = [];
         $fp = function (QueryEndEvent $event) use (&$logs) {
-            return $logs[] = $event->getSql();
+            return $logs[] = $event->getDebugQueryString();
         };
 
         static::$db->on(QueryEndEvent::class, $fp);
