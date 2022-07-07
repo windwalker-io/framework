@@ -355,8 +355,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         // If not GET, convert data to query string.
         if (is_string($body)) {
             $body = Stream::fromString($body);
+        } elseif ($body instanceof FormData) {
+            $body = new RequestBodyStream($body->dump(true));
         } else {
-            $body = new RequestBodyStream(TypeCast::toArray($body));
+            if (!$request->hasHeader('Content-Type')) {
+                $request = $request->withHeader('Content-Type', 'application/json; charset=utf-8');
+            }
+
+            $body = Stream::fromString(json_encode($body));
         }
 
         return $request->withBody($body);
@@ -377,7 +383,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     public function request(
         string $method,
         Stringable|string $url,
-        $body = null,
+        mixed $body = null,
         array $options = []
     ): ResponseInterface {
         $options = Arr::mergeRecursive($this->getOptions(), $options);
@@ -496,5 +502,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         ?string $postname = null
     ): HttpUploadStream {
         return new HttpUploadStream($stream, $mimeType, $postname);
+    }
+
+    public static function formData(
+        mixed $data,
+    ): FormData {
+        return FormData::wrap($data);
     }
 }

@@ -204,34 +204,28 @@ class CurlTransport extends AbstractTransport
 
                 return $value;
             });
-        } else {
-            $data = (string) $body;
+
+            $body->setData($data);
         }
 
         $contentType = $request->getHeaderLine('Content-Type');
 
-        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
-            $opt[CURLOPT_POSTFIELDS] = $data;
+        $opt[CURLOPT_POSTFIELDS] = (string) $body;
 
+        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
             // If no boundary, remove content-type and let CURL add it.
             if (!str_contains($contentType, 'boundary')) {
                 $request = $request->withoutHeader('Content-Type');
             }
-        } else {
-            $opt[CURLOPT_POSTFIELDS] = $data;
-
-            if (!$request->getHeaderLine('Content-Type')) {
-                $request = $request->withHeader(
-                    'Content-Type',
-                    'application/x-www-form-urlencoded; charset=utf-8'
-                );
-            }
+        } elseif (!$request->hasHeader('Content-Type')) {
+            $request = $request->withHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded; charset=utf-8'
+            );
         }
 
         // Add the relevant headers.
-        if (is_scalar($opt[CURLOPT_POSTFIELDS])) {
-            $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
-        }
+        $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
 
         // Build the headers string for the request.
         if ($headers = $request->getHeaders()) {
@@ -267,9 +261,7 @@ class CurlTransport extends AbstractTransport
          * Follow redirects if server config allows
          */
         if (!ini_get('open_basedir')) {
-            $opt[CURLOPT_FOLLOWLOCATION] = (bool) isset($this->config['follow_location'])
-                ? $this->config['follow_location']
-                : true;
+            $opt[CURLOPT_FOLLOWLOCATION] = $this->getOption('follow_location') ?? true;
         }
 
         // Set any custom transport options

@@ -32,7 +32,7 @@ use Windwalker\Http\Transport\TransportInterface;
  * @method Promise head($url, $headers = [])
  * @method Promise options($url, $headers = [])
  * @method Promise sendRequest(RequestInterface $request)
- * @method Promise request($method, $url, $body = null, $headers = [])
+ * @method Promise request($method, $url, mixed $body = null, $headers = [])
  *
  * @since  3.2
  */
