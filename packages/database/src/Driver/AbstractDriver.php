@@ -148,6 +148,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
      * @param  bool  $keep  Keep connection for reuse.
      *
      * @return  ConnectionInterface
+     * @throws \Throwable
      */
     public function getConnection(bool $keep = false): ConnectionInterface
     {
@@ -169,6 +170,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
             $conn->connect();
         } catch (\Throwable $e) {
             $this->releaseConnection($conn);
+            throw $e;
         }
 
         return $conn;
