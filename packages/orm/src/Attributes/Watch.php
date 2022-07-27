@@ -79,6 +79,7 @@ class Watch implements AttributeInterface
         $watchEvent = (new WatchEvent())
             ->setOriginEvent($event)
             ->setValue($value)
+            ->setMetadata($event->getMetadata())
             ->setData($event->getData())
             ->setSource($event->getData());
 
