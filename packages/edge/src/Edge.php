@@ -231,7 +231,7 @@ class Edge
                 try {
                     eval(' ?>' . $code = $__edge->compile($__path($this, $__data)) . '<?php ');
                 } catch (\Throwable $e) {
-                    $this->wrapEvalException($e, $code, $__path);
+                    $__edge->wrapEvalException($e, $code, $__path);
                 }
 
                 return;
@@ -243,13 +243,13 @@ class Edge
                 try {
                     eval(' ?>' . $code = $__edge->getCache()->load($__path) . '<?php ');
                 } catch (\Throwable $e) {
-                    $this->wrapEvalException($e, $code, $__path);
+                    $__edge->wrapEvalException($e, $code, $__path);
                 }
             }
         };
     }
 
-    protected function wrapEvalException(Throwable $e, string $code, string|Closure $path): void
+    public function wrapEvalException(Throwable $e, string $code, string|Closure $path): void
     {
         $lines = explode("\n", $code);
         $count = \count($lines);
@@ -270,7 +270,7 @@ class Edge
         $view = '';
 
         foreach (range($start, $end) as $i) {
-            $l = trim($lines[$i], "\n\r");
+            $l = trim(($lines[$i] ?? ''), "\n\r");
 
             $view .= $l . "\n";
         }
