@@ -102,6 +102,11 @@ abstract class AbstractStatement implements StatementInterface
         $item = $this->doFetch();
         $sql = $this->query;
         $statement = $this;
+
+        if (is_object($class)) {
+            $class = $class::class;
+        }
+
         $class ??= $this->getDefaultItemClass() ?: Collection::class;
 
         $item = $this->fetchedEvent($item);
@@ -175,7 +180,7 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @inheritDoc
      */
-    public function get(string|object $class = Collection::class, array $args = []): ?object
+    public function get(string|object|null $class = null, array $args = []): ?object
     {
         return tap(
             $this->fetch($class, $args),
@@ -188,7 +193,7 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @inheritDoc
      */
-    public function all(string|object $class = Collection::class, array $args = []): Collection
+    public function all(string|object|null $class = null, array $args = []): Collection
     {
         $this->execute();
 
