@@ -106,6 +106,12 @@ class Schema
                 $columns = (array) $columns;
             }
 
+            foreach ($columns as $i => $column) {
+                if (is_string($column) && isset($this->columns[$column])) {
+                    $columns[$i] = $this->columns[$column];
+                }
+            }
+
             $index->columns($columns);
         } else {
             $index = $columns;
