@@ -52,7 +52,7 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
      *
      * @return  Collection|T|null
      */
-    public function get(string|object $class = Collection::class, array $args = []): ?object;
+    public function get(string|object|null $class = null, array $args = []): ?object;
 
     /**
      * Fetch all items and close cursor.
@@ -62,9 +62,9 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
      * @param  string|object|T  $class
      * @param  array            $args
      *
-     * @return Collection|T[]
+     * @return Collection|Collection[]|T[]
      */
-    public function all(string|object $class = Collection::class, array $args = []): Collection;
+    public function all(string|object|null $class = null, array $args = []): Collection;
 
     /**
      * Fetch all column values and close the cursor.
