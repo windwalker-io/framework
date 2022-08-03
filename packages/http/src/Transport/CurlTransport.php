@@ -227,7 +227,7 @@ class CurlTransport extends AbstractTransport
         }
 
         // Add the relevant headers.
-        if (isset($opt[CURLOPT_POSTFIELDS]) || $opt[CURLOPT_POSTFIELDS] !== '') {
+        if (isset($opt[CURLOPT_POSTFIELDS]) && $opt[CURLOPT_POSTFIELDS] !== '') {
             $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
         }
 

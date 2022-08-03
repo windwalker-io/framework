@@ -353,8 +353,8 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         }
 
         // If not GET, convert data to query string.
-        if (is_string($body)) {
-            $body = Stream::fromString($body);
+        if (is_scalar($body) || $body === null) {
+            $body = Stream::fromString((string) $body);
         } elseif ($body instanceof FormData) {
             $body = new RequestBodyStream($body->dump(true));
         } else {
