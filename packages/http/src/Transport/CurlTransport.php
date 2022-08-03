@@ -210,7 +210,9 @@ class CurlTransport extends AbstractTransport
 
         $contentType = $request->getHeaderLine('Content-Type');
 
-        $opt[CURLOPT_POSTFIELDS] = (string) $body;
+        if ((string) $body !== '') {
+            $opt[CURLOPT_POSTFIELDS] = (string) $body;
+        }
 
         if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
             // If no boundary, remove content-type and let CURL add it.
@@ -225,7 +227,9 @@ class CurlTransport extends AbstractTransport
         }
 
         // Add the relevant headers.
-        $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
+        if (isset($opt[CURLOPT_POSTFIELDS]) || $opt[CURLOPT_POSTFIELDS] !== '') {
+            $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
+        }
 
         // Build the headers string for the request.
         if ($headers = $request->getHeaders()) {
