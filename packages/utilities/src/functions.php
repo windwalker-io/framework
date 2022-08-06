@@ -82,6 +82,18 @@ namespace {
         }
     }
 
+    if (!function_exists('is_scalar_or_null')) {
+        /**
+         * @param  mixed  $value
+         *
+         * @return  bool
+         */
+        function is_scalar_or_null(mixed $value): bool
+        {
+            return is_scalar($value) || $value === null;
+        }
+    }
+
     include_once __DIR__ . '/serializer.php';
 }
 

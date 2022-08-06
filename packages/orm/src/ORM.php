@@ -38,6 +38,7 @@ use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Attributes\UUID;
 use Windwalker\ORM\Attributes\Watch;
+use Windwalker\ORM\Attributes\WatchBefore;
 use Windwalker\ORM\Event\AfterCopyEvent;
 use Windwalker\ORM\Event\AfterDeleteEvent;
 use Windwalker\ORM\Event\AfterSaveEvent;
@@ -157,6 +158,7 @@ class ORM implements EventAwareInterface
         $ar->registerAttribute(AfterCopyEvent::class, Attribute::TARGET_METHOD);
         $ar->registerAttribute(BeforeStoreEvent::class, Attribute::TARGET_METHOD);
         $ar->registerAttribute(Watch::class, Attribute::TARGET_METHOD);
+        $ar->registerAttribute(WatchBefore::class, Attribute::TARGET_METHOD);
     }
 
     /**

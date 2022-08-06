@@ -444,7 +444,13 @@ class EntityMetadata implements EventAwareInterface
                     $val = $event->getData()[$column] ?? null;
                     $oldVal = $event->getOldData()[$column] ?? null;
 
-                    if ($val !== $oldVal) {
+                    if (is_scalar($val) && is_scalar($oldVal)) {
+                        $isSame = (string) $val === (string) $oldVal;
+                    } else {
+                        $isSame = $val === $oldVal;
+                    }
+
+                    if (!$isSame) {
                         $watchEvent = Watch::createWatchEvent($event, $val, $oldVal);
 
                         $this->getORM()->getAttributesResolver()
@@ -489,7 +495,13 @@ class EntityMetadata implements EventAwareInterface
                     $val = $event->getData()[$column] ?? null;
                     $oldVal = $event->getOldData()[$column] ?? null;
 
-                    if ($val !== $oldVal) {
+                    if (is_scalar($val) && is_scalar($oldVal)) {
+                        $isSame = (string) $val === (string) $oldVal;
+                    } else {
+                        $isSame = $val === $oldVal;
+                    }
+
+                    if (!$isSame) {
                         $watchEvent = Watch::createWatchEvent($event, $val, $oldVal);
 
                         $this->getORM()->getAttributesResolver()
