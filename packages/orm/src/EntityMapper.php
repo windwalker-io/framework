@@ -865,7 +865,7 @@ class EntityMapper implements EventAwareInterface
             unset($data[$key]);
 
             if (is_callable($newValue)) {
-                $result = $newValue($data, $oldData, $conditions);
+                $result = $newValue($data, $conditions);
 
                 if ($result) {
                     $data = $result;
