@@ -354,6 +354,11 @@ class ORM implements EventAwareInterface
         return $this->getEntityMetadataCollection()->get($entity);
     }
 
+    public static function isEntity(object|string $entity): bool
+    {
+        return EntityMetadata::isEntity($entity);
+    }
+
     /**
      * @return DatabaseAdapter
      */
