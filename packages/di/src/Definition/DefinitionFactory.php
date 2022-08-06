@@ -27,7 +27,7 @@ class DefinitionFactory
 
         if (!$value instanceof DefinitionInterface) {
             if (!$value instanceof Closure) {
-                $value = fn() => $value;
+                $value = static fn() => $value;
             }
 
             $value = new ClosureDefinition($value);
@@ -56,7 +56,7 @@ class DefinitionFactory
     public static function getClassName(mixed $obj): mixed
     {
         if ($obj instanceof ObjectBuilderDefinition) {
-            return $obj->getClass();
+            $obj = $obj->getClass();
         }
 
         if ($obj instanceof Closure) {
