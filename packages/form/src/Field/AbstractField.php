@@ -392,11 +392,11 @@ abstract class AbstractField
     /**
      * Method to set property value
      *
-     * @param  null  $value
+     * @param  mixed  $value
      *
      * @return  static  Return self to support chaining.
      */
-    public function setValue($value): static
+    public function setValue(mixed $value): static
     {
         $this->value = $value;
 
