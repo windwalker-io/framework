@@ -53,7 +53,7 @@ class DefinitionFactory
         return strtolower(trim($class1, '\\')) === strtolower(trim($class2, '\\'));
     }
 
-    public static function getClassName(mixed $obj): mixed
+    public static function getClassName(mixed $obj): string
     {
         if ($obj instanceof ObjectBuilderDefinition) {
             $obj = $obj->getClass();
@@ -67,7 +67,7 @@ class DefinitionFactory
             return $obj::class;
         }
 
-        if (is_string($obj) || is_callable($obj)) {
+        if (is_string($obj) || is_stringable($obj)) {
             return $obj;
         }
 
