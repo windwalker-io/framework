@@ -27,7 +27,7 @@ trait EnumPhpAdapterTrait
         return self::from($value);
     }
 
-    public static function tryWrap(mixed $value): static
+    public static function tryWrap(mixed $value): ?static
     {
         if ($value instanceof self) {
             return $value;
