@@ -13,6 +13,7 @@ namespace Windwalker\Database\Test\Driver;
 
 use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\Arr;
 
@@ -60,16 +61,25 @@ abstract class AbstractConnectionTest extends AbstractDatabaseDriverTestCase
     {
         $className = static::$className;
 
+        $options = Arr::only(
+            $params = self::getTestParams(),
+            [
+                'host',
+                'user',
+                'password',
+                'database',
+                'port',
+            ]
+        );
+
+        if (static::$platform === AbstractPlatform::SQLITE) {
+            $options['host'] = $params['dbname'];
+        }
+
         return new $className(
             Arr::only(
                 self::getTestParams(),
-                [
-                    'host',
-                    'user',
-                    'password',
-                    'database',
-                    'port',
-                ]
+                $options
             )
         );
     }
