@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Http\FormData;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Test\Mock\MockTransport;
@@ -124,8 +125,20 @@ class HttpClientTest extends TestCase
 
         self::assertEquals('POST', $this->transport->request->getMethod());
         self::assertEquals('http://example.com/?foo=bar', $this->transport->request->getRequestTarget());
+        self::assertEquals('{"flower":"sakura"}', $this->transport->request->getBody()->__toString());
+        self::assertEquals(
+            [
+                'X-Foo' => ['Bar'],
+                'Content-Type' => ['application/json; charset=utf-8']
+            ],
+            $this->transport->request->getHeaders()
+        );
+
+        $this->instance->request('PUT', $url, 'flower=sakura', ['headers' => ['X-Foo' => 'Bar']]);
+
+        self::assertEquals('PUT', $this->transport->request->getMethod());
+        self::assertEquals('http://example.com/?foo=bar', $this->transport->request->getRequestTarget());
         self::assertEquals('flower=sakura', $this->transport->request->getBody()->__toString());
-        self::assertEquals(['X-Foo' => ['Bar']], $this->transport->request->getHeaders());
     }
 
     /**
@@ -214,12 +227,12 @@ class HttpClientTest extends TestCase
         $data = ['flower' => 'sakura'];
         $headers = ['X-Foo' => 'Bar'];
 
-        $this->instance->post($url, $data, compact('headers'));
+        $this->instance->post($url, FormData::create($data), compact('headers'));
 
         self::assertEquals('POST', $this->transport->request->getMethod());
         self::assertEquals($url, $this->transport->request->getRequestTarget());
         self::assertEquals('Bar', $this->transport->request->getHeaderLine('X-Foo'));
-        self::assertEquals(UriHelper::buildQuery($data), $this->transport->request->getBody()->__toString());
+        self::assertEquals(http_build_query($data), $this->transport->request->getBody()->__toString());
     }
 
     /**
@@ -235,7 +248,7 @@ class HttpClientTest extends TestCase
         $data = ['flower' => 'sakura'];
         $headers = ['X-Foo' => 'Bar'];
 
-        $this->instance->put($url, $data, compact('headers'));
+        $this->instance->put($url, FormData::create($data), compact('headers'));
 
         self::assertEquals('PUT', $this->transport->request->getMethod());
         self::assertEquals($url, $this->transport->request->getRequestTarget());
@@ -261,7 +274,7 @@ class HttpClientTest extends TestCase
         self::assertEquals('DELETE', $this->transport->request->getMethod());
         self::assertEquals($url, $this->transport->request->getRequestTarget());
         self::assertEquals('Bar', $this->transport->request->getHeaderLine('X-Foo'));
-        self::assertEquals(UriHelper::buildQuery($data), $this->transport->request->getBody()->__toString());
+        self::assertEquals(json_encode($data), $this->transport->request->getBody()->__toString());
     }
 
     /**
@@ -301,7 +314,7 @@ class HttpClientTest extends TestCase
         self::assertEquals('PATCH', $this->transport->request->getMethod());
         self::assertEquals($url, $this->transport->request->getRequestTarget());
         self::assertEquals('Bar', $this->transport->request->getHeaderLine('X-Foo'));
-        self::assertEquals(UriHelper::buildQuery($data), $this->transport->request->getBody()->__toString());
+        self::assertEquals(json_encode($data), $this->transport->request->getBody()->__toString());
     }
 
     /**

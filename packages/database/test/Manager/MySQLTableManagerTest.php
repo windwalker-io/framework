@@ -200,7 +200,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
             WHERE `TABLE_NAME` = 'enterprise'
               AND `TABLE_SCHEMA` = (SELECT DATABASE());
             ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_captain` (`captain`)
+                ADD INDEX `idx_enterprise_captain` (`captain`(150))
             SQL,
             implode("\n;", $logs)
         );
