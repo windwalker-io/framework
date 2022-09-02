@@ -25,9 +25,8 @@ use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
 use Windwalker\Stream\StreamHelper;
+use Windwalker\Uri\UriHelper;
 use Windwalker\Utilities\Arr;
-
-use function Windwalker\DOM\h;
 
 /**
  * The CurlTransport class.
@@ -155,7 +154,7 @@ class CurlTransport extends AbstractTransport
      * @param  RequestInterface  $request
      * @param  array             $options
      *
-     * @return  resource
+     * @return  \CurlHandle|false|resource
      *
      * @since  3.2
      */
@@ -164,6 +163,23 @@ class CurlTransport extends AbstractTransport
         // Setup the cURL handle.
         $ch = curl_init();
 
+        $opt = $this->prepareCurlOptions($request, $options);
+
+        curl_setopt_array($ch, $opt);
+
+        return $ch;
+    }
+
+    /**
+     * setTheRequestMethod
+     *
+     * @param  RequestInterface  $request
+     * @param  array             $options
+     *
+     * @return  array
+     */
+    protected function prepareCurlOptions(RequestInterface $request, array $options): array
+    {
         // Set the request method.
         $opt[CURLOPT_CUSTOMREQUEST] = $request->getMethod();
 
@@ -271,9 +287,7 @@ class CurlTransport extends AbstractTransport
         // Set any custom transport options
         $opt += $options['curl'] ?? $options['options'] ?? [];
 
-        curl_setopt_array($ch, $opt);
-
-        return $ch;
+        return $opt;
     }
 
     /**
@@ -345,5 +359,56 @@ class CurlTransport extends AbstractTransport
         }
 
         return $options;
+    }
+
+    public function toCurlCmd(RequestInterface $request, array $options = []): string
+    {
+        $opt = $this->prepareCurlOptions($request, $options);
+
+        $curl[] = sprintf(
+            "curl --location --request %s '%s'",
+            $opt[CURLOPT_CUSTOMREQUEST],
+            $opt[CURLOPT_URL]
+        );
+
+        $body = $opt[CURLOPT_POSTFIELDS];
+
+        $isFormUrlEncode = false;
+
+        foreach ($opt[CURLOPT_HTTPHEADER] as $header) {
+            $curl[] = sprintf("--header '%s'", addslashes($header));
+
+            $isFormUrlEncode = $isFormUrlEncode
+                || str_contains($header, 'Content-Type: application/x-www-form-urlencoded');
+        }
+
+        if (is_json($body)) {
+            $curl[] = sprintf(
+                "-d '%s'",
+                addslashes($opt[CURLOPT_POSTFIELDS])
+            );
+        } else {
+            $body = str_replace('&amp;', '__AND_SIGN__', $body);
+            $values = explode('&', $body);
+
+            foreach ($values as $value) {
+                $curl[] = sprintf(
+                    "%s '%s'",
+                    $isFormUrlEncode ? '--data-urlencode' : '--form',
+                    addslashes(
+                        str_replace(
+                            '__AND_SIGN__',
+                            '&',
+                            $value
+                        )
+                    )
+                );
+            }
+        }
+
+        return implode(
+            " \\\n",
+            $curl
+        );
     }
 }

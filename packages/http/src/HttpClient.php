@@ -31,7 +31,6 @@ use Windwalker\Uri\Uri;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\Options\OptionAccessTrait;
-use Windwalker\Utilities\TypeCast;
 
 /**
  * The HttpClient class.
@@ -508,5 +507,64 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         mixed $data,
     ): FormData {
         return FormData::wrap($data);
+    }
+
+    public function toCurlCmd(
+        string|RequestInterface $method,
+        Stringable|string $url,
+        mixed $body = null,
+        array $options = []
+    ) {
+        if (!$method instanceof RequestInterface) {
+            $options = Arr::mergeRecursive($this->getOptions(), $options);
+
+            $request = static::prepareRequest(new Request(), $method, $url, $body, $options);
+
+            $transportOptions = $options['transport'] ?? [];
+            $transportOptions['files'] = $options['files'] ?? null;
+        } else {
+            $request = $method;
+        }
+
+        $curl[] = sprintf(
+            "curl --location --request %s '%s'",
+            $request->getMethod(),
+            $request->getRequestTarget() ?: (string) $request->getUri(),
+        );
+
+        $body = (string) $request->getBody();
+
+        $isFormUrlEncode = false;
+
+        foreach ($opt[CURLOPT_HTTPHEADER] as $header) {
+            $curl[] = sprintf("--header '%s'", addslashes($header));
+
+            $isFormUrlEncode = $isFormUrlEncode
+                || str_contains($header, 'Content-Type: application/x-www-form-urlencoded');
+        }
+
+        if (is_json($body)) {
+            $curl[] = sprintf(
+                "-d '%s'",
+                addslashes($opt[CURLOPT_POSTFIELDS])
+            );
+        } else {
+            $body = str_replace('&amp;', '__AND_SIGN__', $body);
+            $values = explode('&', $body);
+
+            foreach ($values as $value) {
+                $curl[] = sprintf(
+                    "%s '%s'",
+                    $isFormUrlEncode ? '--data-urlencode' : '--form',
+                    addslashes(
+                        str_replace(
+                            '__AND_SIGN__',
+                            '&',
+                            $value
+                        )
+                    )
+                );
+            }
+        }
     }
 }
