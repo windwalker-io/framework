@@ -20,6 +20,11 @@ class PdoSqliteConnection extends AbstractPdoConnection
 
     public static function getParameters(array $options): array
     {
+        // If host is default, we should ignore it.
+        if ($options['host'] ?? null === 'localhost') {
+            unset($options['host']);
+        }
+
         $options['dsn'] ??= static::$dbtype . ':'
             . ($options['host'] ?? $options['file'] ?? $options['dbname'] ?? ':memory:');
 

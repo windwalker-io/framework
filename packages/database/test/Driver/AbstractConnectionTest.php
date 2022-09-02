@@ -72,16 +72,7 @@ abstract class AbstractConnectionTest extends AbstractDatabaseDriverTestCase
             ]
         );
 
-        if (static::$platform === AbstractPlatform::SQLITE) {
-            $options['host'] = $params['dbname'];
-        }
-
-        return new $className(
-            Arr::only(
-                self::getTestParams(),
-                $options
-            )
-        );
+        return new $className($options);
     }
 
     /**
