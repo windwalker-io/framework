@@ -16,6 +16,7 @@ use Closure;
 use DateTimeInterface;
 use Generator;
 use IteratorAggregate;
+use Lyrasoft\Luna\Entity\TagMap;
 use PDO;
 use ReflectionClass;
 use SqlFormatter;
@@ -420,6 +421,21 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         return [$value, $alias];
+    }
+
+    protected function toRawSqlString(): string
+    {
+        $type = $this->type;
+
+        if (!$type && $this->getFrom()) {
+            $type = static::TYPE_SELECT;
+        }
+
+        if (!$type) {
+            return '';
+        }
+
+        return $this->getGrammar()->compile((string) $type, $this);
     }
 
     private function prependPrimaryAlias(string $column): string
@@ -828,7 +844,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     private function injectSubQuery(Query $query, mixed $alias = null): void
     {
-        $alias = $alias ?: $query->getAlias() ?: uid('sq');
+        $alias = $alias ?: $query->getAlias() ?: spl_object_hash($query);
 
         $this->subQueries[$alias] = $query;
     }
@@ -1347,16 +1363,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     {
         $bounded = $bounded ?? [];
 
-        $type = $this->type;
-
-        if (!$type && $this->getFrom()) {
-            $type = static::TYPE_SELECT;
-        }
-
-        if (!$type) {
-            return '';
-        }
-
         $topLevel = !$this->sequence;
 
         // Only top level query rendering should create sequence and get merged bounded
@@ -1364,8 +1370,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $bounded = $this->mergeBounded();
         }
 
-        $sql = $this->getGrammar()->compile((string) $type, $this);
-
+        $sql = $this->toRawSqlString();
         $sql = $this->handleVariadicParams($sql);
 
         if ($topLevel) {
@@ -1431,13 +1436,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     {
         $bounded = $bounded ?: [];
 
-        $type = $this->type;
+        $sql = $this->toRawSqlString();
 
-        if (!$type && $this->getFrom()) {
-            $type = static::TYPE_SELECT;
-        }
-
-        if (!$type) {
+        if ($sql === '') {
             return '';
         }
 
@@ -1445,8 +1446,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         if (!$this->sequence) {
             $bounded = $this->mergeBounded();
         }
-
-        $sql = $this->getGrammar()->compile((string) $type, $this);
 
         [$sql, $bounded] = BoundedHelper::forPDO($sql, $bounded);
 

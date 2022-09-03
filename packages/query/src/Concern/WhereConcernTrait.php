@@ -372,7 +372,46 @@ trait WhereConcernTrait
         return $this->having($wheres, 'OR');
     }
 
-    private function whereVariant($type, $operator, array $args)
+    public function whereExists(Query|callable $conditions): static
+    {
+        return $this->handleWhereExists('where', $conditions, false);
+    }
+
+    public function whereNotExists(Query|callable $conditions): static
+    {
+        return $this->handleWhereExists('where', $conditions, true);
+    }
+
+    public function havingExists(Query|callable $conditions): static
+    {
+        return $this->handleWhereExists('having', $conditions, false);
+    }
+
+    public function havingNotExists(Query|callable $conditions): static
+    {
+        return $this->handleWhereExists('having', $conditions, true);
+    }
+
+    private function handleWhereExists(string $type, Query|callable $conditions, bool $not = false): static
+    {
+        if (is_callable($conditions)) {
+            $subQuery = $this->createSubQuery();
+            $subQuery = $conditions($subQuery) ?? $subQuery;
+        } else {
+            $subQuery = $conditions;
+        }
+
+        $exprName = $not ? 'NOT EXISTS()' : 'EXISTS()';
+
+        return $this->{$type . 'Raw'}(
+            $this->expr(
+                $exprName,
+                $subQuery
+            )
+        );
+    }
+
+    private function whereVariant(string $type, string $operator, array $args)
     {
         $maps = [
             'notin' => 'not in',
