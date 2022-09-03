@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Windwalker\Data;
 
 use IteratorAggregate;
+use Windwalker\Attributes\AttributesAccessor;
+use Windwalker\Database\Hydrator\SimpleHydrator;
+use Windwalker\ORM\Attributes\Cast;
+use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Contract\DumpableInterface;
 use Windwalker\Utilities\StrNormalize;
@@ -58,10 +62,53 @@ class ValueObject implements
                 }
             }
 
-            $this->$key = $value;
+            // Haydrating
+            $this->hydrateField($key, $value);
         }
 
         return $this;
+    }
+
+    private function hydrateField(string $key, mixed $value): void
+    {
+        $setter = 'set' . StrNormalize::toPascalCase($key);
+
+        if (method_exists($this, $setter)) {
+            $this->$setter($value);
+            return;
+        }
+
+        if (!property_exists($this, $key)) {
+            $this->$key = $value;
+            return;
+        }
+
+        $attrs = AttributesAccessor::getAttributesFromAny(
+            new \ReflectionProperty($this, $key),
+            Cast::class,
+            \ReflectionAttribute::IS_INSTANCEOF
+        );
+
+        foreach ($attrs as $attr) {
+            /**
+             * @var Cast $attrInstance
+             */
+            $attrInstance = $attr->newInstance();
+
+            if ($attrInstance instanceof CastNullable && $value === null) {
+                continue;
+            }
+
+            $hydrateTarget = $attrInstance->getHydrate();
+
+            if (class_exists($hydrateTarget)) {
+                $value = new $hydrateTarget($value);
+            } elseif (is_callable($hydrateTarget)) {
+                $value = $hydrateTarget($value);
+            }
+        }
+
+        $this->$key = $value;
     }
 
     /**

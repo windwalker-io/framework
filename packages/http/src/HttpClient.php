@@ -527,7 +527,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $request = CurlTransport::prepareBody($request, $forceMultipart);
         $request = CurlTransport::prepareHeaders($request, $forceMultipart);
 
-
         $curl[] = sprintf(
             "curl --location --request %s '%s'",
             $request->getMethod(),
