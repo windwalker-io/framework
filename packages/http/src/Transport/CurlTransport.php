@@ -25,7 +25,6 @@ use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
 use Windwalker\Stream\StreamHelper;
-use Windwalker\Uri\UriHelper;
 use Windwalker\Utilities\Arr;
 
 /**
@@ -38,9 +37,9 @@ class CurlTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface  $request  The request object to store request params.
+     * @param RequestInterface $request The request object to store request params.
      *
-     * @param  array             $options
+     * @param array            $options
      *
      * @return  ResponseInterface
      *
@@ -79,9 +78,9 @@ class CurlTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param  string  $content   The complete server response, including headers
+     * @param string $content     The complete server response, including headers
      *                            as a string if the response has no errors.
-     * @param  array   $info      The cURL request information.
+     * @param array  $info        The cURL request information.
      *
      * @return  Response
      *
@@ -151,8 +150,8 @@ class CurlTransport extends AbstractTransport
     /**
      * createHandle
      *
-     * @param  RequestInterface  $request
-     * @param  array             $options
+     * @param RequestInterface $request
+     * @param array            $options
      *
      * @return  \CurlHandle|false|resource
      *
@@ -173,8 +172,8 @@ class CurlTransport extends AbstractTransport
     /**
      * setTheRequestMethod
      *
-     * @param  RequestInterface  $request
-     * @param  array             $options
+     * @param RequestInterface $request
+     * @param array            $options
      *
      * @return  array
      */
@@ -206,41 +205,14 @@ class CurlTransport extends AbstractTransport
         }
 
         // Handle data
-        $body = $request->getBody();
-        $forceMultipart = false;
+        $request = static::prepareBody($request, $forceMultipart);
+        $data = (string) $request->getBody();
 
-        if ($body instanceof RequestBodyStream) {
-            $data = $body->getData();
-
-            $data = Arr::mapRecursive($data, function ($value) use (&$forceMultipart) {
-                if ($value instanceof HttpUploadFileInterface) {
-                    $value = $value->toCurlFile();
-                    $forceMultipart = true;
-                }
-
-                return $value;
-            });
-
-            $body->setData($data);
+        if ($data !== '') {
+            $opt[CURLOPT_POSTFIELDS] = $data;
         }
 
-        $contentType = $request->getHeaderLine('Content-Type');
-
-        if ((string) $body !== '') {
-            $opt[CURLOPT_POSTFIELDS] = (string) $body;
-        }
-
-        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
-            // If no boundary, remove content-type and let CURL add it.
-            if (!str_contains($contentType, 'boundary')) {
-                $request = $request->withoutHeader('Content-Type');
-            }
-        } elseif (!$request->hasHeader('Content-Type')) {
-            $request = $request->withHeader(
-                'Content-Type',
-                'application/x-www-form-urlencoded; charset=utf-8'
-            );
-        }
+        $request = $this->prepareHeaders($request, $forceMultipart);
 
         // Add the relevant headers.
         if (isset($opt[CURLOPT_POSTFIELDS]) && $opt[CURLOPT_POSTFIELDS] !== '') {
@@ -255,7 +227,7 @@ class CurlTransport extends AbstractTransport
 
         // If an explicit timeout is given user it.
         if ($timeout = $this->getOption('timeout')) {
-            $opt[CURLOPT_TIMEOUT] = (int) $timeout;
+            $opt[CURLOPT_TIMEOUT]        = (int) $timeout;
             $opt[CURLOPT_CONNECTTIMEOUT] = (int) $timeout;
         }
 
@@ -291,12 +263,67 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
+     * @param RequestInterface $request
+     * @param bool             $forceMultipart
+     *
+     * @return  RequestInterface
+     */
+    public static function prepareBody(RequestInterface $request, bool &$forceMultipart = null): RequestInterface
+    {
+        $body = $request->getBody();
+
+        $forceMultipart ??= false;
+
+        if ($body instanceof RequestBodyStream) {
+            $data = $body->getData();
+
+            $data = Arr::mapRecursive($data, static function ($value) use (&$forceMultipart) {
+                if ($value instanceof HttpUploadFileInterface) {
+                    $value          = $value->toCurlFile();
+                    $forceMultipart = true;
+                }
+
+                return $value;
+            });
+
+            $body->setData($data);
+        }
+
+        return $request->withBody($body);
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param bool             $forceMultipart
+     *
+     * @return  RequestInterface
+     */
+    public static function prepareHeaders(RequestInterface $request, bool $forceMultipart = false): RequestInterface
+    {
+        $contentType = $request->getHeaderLine('Content-Type');
+
+        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
+            // If no boundary, remove content-type and let CURL add it.
+            if (!str_contains($contentType, 'boundary')) {
+                $request = $request->withoutHeader('Content-Type');
+            }
+        } elseif (!$request->hasHeader('Content-Type')) {
+            $request = $request->withHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded; charset=utf-8'
+            );
+        }
+
+        return $request;
+    }
+
+    /**
      * Use stream to download file.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
-     * @param  string|StreamInterface  $dest     The dest path to store file.
+     * @param RequestInterface       $request The request object to store request params.
+     * @param string|StreamInterface $dest    The dest path to store file.
      *
-     * @param  array                   $options
+     * @param array                  $options
      *
      * @return  ResponseInterface
      * @since   2.1
@@ -336,7 +363,7 @@ class CurlTransport extends AbstractTransport
     /**
      * setCABundleToOptions
      *
-     * @param  array  $options
+     * @param array $options
      *
      * @return  array
      *
@@ -359,56 +386,5 @@ class CurlTransport extends AbstractTransport
         }
 
         return $options;
-    }
-
-    public function toCurlCmd(RequestInterface $request, array $options = []): string
-    {
-        $opt = $this->prepareCurlOptions($request, $options);
-
-        $curl[] = sprintf(
-            "curl --location --request %s '%s'",
-            $opt[CURLOPT_CUSTOMREQUEST],
-            $opt[CURLOPT_URL]
-        );
-
-        $body = $opt[CURLOPT_POSTFIELDS];
-
-        $isFormUrlEncode = false;
-
-        foreach ($opt[CURLOPT_HTTPHEADER] as $header) {
-            $curl[] = sprintf("--header '%s'", addslashes($header));
-
-            $isFormUrlEncode = $isFormUrlEncode
-                || str_contains($header, 'Content-Type: application/x-www-form-urlencoded');
-        }
-
-        if (is_json($body)) {
-            $curl[] = sprintf(
-                "-d '%s'",
-                addslashes($opt[CURLOPT_POSTFIELDS])
-            );
-        } else {
-            $body = str_replace('&amp;', '__AND_SIGN__', $body);
-            $values = explode('&', $body);
-
-            foreach ($values as $value) {
-                $curl[] = sprintf(
-                    "%s '%s'",
-                    $isFormUrlEncode ? '--data-urlencode' : '--form',
-                    addslashes(
-                        str_replace(
-                            '__AND_SIGN__',
-                            '&',
-                            $value
-                        )
-                    )
-                );
-            }
-        }
-
-        return implode(
-            " \\\n",
-            $curl
-        );
     }
 }

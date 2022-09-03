@@ -16,6 +16,7 @@ use Windwalker\Http\FormData;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Test\Mock\MockTransport;
+use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
 
@@ -26,6 +27,8 @@ use Windwalker\Uri\UriHelper;
  */
 class HttpClientTest extends TestCase
 {
+    use BaseAssertionTrait;
+
     /**
      * Test instance.
      *
@@ -315,6 +318,62 @@ class HttpClientTest extends TestCase
         self::assertEquals($url, $this->transport->request->getRequestTarget());
         self::assertEquals('Bar', $this->transport->request->getHeaderLine('X-Foo'));
         self::assertEquals(json_encode($data), $this->transport->request->getBody()->__toString());
+    }
+
+    public function testCurlCmd(): void
+    {
+        $request = new Request();
+
+        $request = $request->withRequestTarget('https://example.com?foo=123&bar=yoo')
+            ->withMethod('POST')
+            ->withAddedHeader('Content-Type', 'multipart/form-data');
+
+        $request->getBody()->write(
+            UriHelper::buildQuery(
+                [
+                    'foo' => 'bar',
+                    'yoo' => 'GOO'
+                ]
+            )
+        );
+
+        $curl = $this->instance->toCurlCmd($request);
+
+        self::assertStringSafeEquals(
+            <<<CMD
+            curl --location --request POST 'https://example.com?foo=123&bar=yoo' \
+            --form 'foo=bar' \
+            --form 'yoo=GOO'
+            CMD,
+            $curl
+        );
+
+        $curl = $this->instance->toCurlCmd(
+            'POST',
+            'https://example.com?foo=123&bar=yoo',
+            HttpClient::formData(
+                [
+                    'foo' => 'bar',
+                    'yoo' => 'GOO'
+                ]
+            ),
+            [
+                'headers' => [
+                    'X-CSRF-Token' => 'qETt34lmfd'
+                ]
+            ]
+        );
+
+        self::assertStringSafeEquals(
+            <<<CMD
+            curl --location --request POST 'https://example.com?foo=123&bar=yoo' \
+            --header 'X-CSRF-Token: qETt34lmfd' \
+            --header 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
+            --data-urlencode 'foo=bar' \
+            --data-urlencode 'yoo=GOO'
+            CMD,
+            $curl
+        );
     }
 
     /**

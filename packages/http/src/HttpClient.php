@@ -19,6 +19,7 @@ use Stringable;
 use Windwalker\Http\File\HttpUploadFile;
 use Windwalker\Http\File\HttpUploadStream;
 use Windwalker\Http\File\HttpUploadStringFile;
+use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Http\Transport\AsyncTransportInterface;
@@ -510,21 +511,22 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     }
 
     public function toCurlCmd(
-        string|RequestInterface $method,
-        Stringable|string $url,
+        string|RequestInterface $requestOrMethod,
+        Stringable|string $url = '',
         mixed $body = null,
         array $options = []
-    ) {
-        if (!$method instanceof RequestInterface) {
+    ): string {
+        if (!$requestOrMethod instanceof RequestInterface) {
             $options = Arr::mergeRecursive($this->getOptions(), $options);
 
-            $request = static::prepareRequest(new Request(), $method, $url, $body, $options);
-
-            $transportOptions = $options['transport'] ?? [];
-            $transportOptions['files'] = $options['files'] ?? null;
+            $request = static::prepareRequest(new Request(), $requestOrMethod, $url, $body, $options);
         } else {
-            $request = $method;
+            $request = $requestOrMethod;
         }
+
+        $request = CurlTransport::prepareBody($request, $forceMultipart);
+        $request = CurlTransport::prepareHeaders($request, $forceMultipart);
+
 
         $curl[] = sprintf(
             "curl --location --request %s '%s'",
@@ -532,25 +534,25 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             $request->getRequestTarget() ?: (string) $request->getUri(),
         );
 
-        $body = (string) $request->getBody();
+        $contentType = $request->getHeaderLine('Content-Type');
+        $isFormUrlEncode = str_contains($contentType, 'application/x-www-form-urlencoded');
 
-        $isFormUrlEncode = false;
-
-        foreach ($opt[CURLOPT_HTTPHEADER] as $header) {
-            $curl[] = sprintf("--header '%s'", addslashes($header));
-
-            $isFormUrlEncode = $isFormUrlEncode
-                || str_contains($header, 'Content-Type: application/x-www-form-urlencoded');
+        if ($headers = $request->getHeaders()) {
+            foreach (HeaderHelper::toHeaderLines($headers) as $headerLine) {
+                $curl[] = sprintf("--header '%s'", addslashes($headerLine));
+            }
         }
 
-        if (is_json($body)) {
+        $data = (string) $request->getBody();
+
+        if (is_json($data)) {
             $curl[] = sprintf(
                 "-d '%s'",
-                addslashes($opt[CURLOPT_POSTFIELDS])
+                addslashes($data)
             );
         } else {
-            $body = str_replace('&amp;', '__AND_SIGN__', $body);
-            $values = explode('&', $body);
+            $data = str_replace('&amp;', '__AND_SIGN__', $data);
+            $values = explode('&', $data);
 
             foreach ($values as $value) {
                 $curl[] = sprintf(
@@ -566,5 +568,10 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
                 );
             }
         }
+
+        return implode(
+            " \\\n",
+            $curl
+        );
     }
 }
