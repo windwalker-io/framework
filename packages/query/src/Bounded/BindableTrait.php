@@ -26,14 +26,14 @@ trait BindableTrait
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param  string|integer|array  $key            The key that will be used in your SQL query to reference the value.
+     * @param string|integer|array  $key             The key that will be used in your SQL query to reference the value.
      *                                               Usually of the form ':key', but can also be an integer.
-     * @param  mixed                &$value          The value that will be bound. The value is passed by reference to
+     * @param mixed                &$value           The value that will be bound. The value is passed by reference to
      *                                               support output parameters such as those possible with stored
      *                                               procedures.
-     * @param  mixed                 $dataType       Constant corresponding to a SQL datatype.
-     * @param  integer               $length         The length of the variable. Usually required for OUTPUT parameters.
-     * @param  array                 $driverOptions  Optional driver options to be used.
+     * @param mixed                 $dataType        Constant corresponding to a SQL datatype.
+     * @param integer               $length          The length of the variable. Usually required for OUTPUT parameters.
+     * @param array                 $driverOptions   Optional driver options to be used.
      *
      * @return  static
      *
@@ -55,6 +55,19 @@ trait BindableTrait
         if (is_array($key)) {
             foreach ($key as $k => &$v) {
                 $this->bindParam($k, $v, $dataType, $length, $driverOptions);
+            }
+
+            return $this;
+        }
+
+        // If value is array, loop as variadic params.
+        if (is_array($value)) {
+            foreach (array_values($value) as $i => $v) {
+                $k = $key . '_' . $i;
+
+                $this->bindParam($k, $v, $dataType, $length, $driverOptions);
+
+                unset($v);
             }
 
             return $this;
@@ -87,12 +100,12 @@ trait BindableTrait
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param  string|integer|array  $key            The key that will be used in your SQL query to reference the
+     * @param string|integer|array  $key             The key that will be used in your SQL query to reference the
      *                                               value. Usually of the form ':key', but can also be an integer.
-     * @param  mixed                &$value          The value that will be bound. The value is passed by reference to
+     * @param mixed                &$value           The value that will be bound. The value is passed by reference to
      *                                               support output parameters such as those possible with stored
      *                                               procedures.
-     * @param  mixed                 $dataType       Constant corresponding to a SQL datatype.
+     * @param mixed                 $dataType        Constant corresponding to a SQL datatype.
      *
      * @return  static
      *
@@ -110,7 +123,7 @@ trait BindableTrait
      * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then
      * that item is returned.
      *
-     * @param  mixed  $key  The bounded variable key to retrieve.
+     * @param mixed $key The bounded variable key to retrieve.
      *
      * @return  array|null
      *
@@ -146,7 +159,7 @@ trait BindableTrait
     /**
      * unbind
      *
-     * @param  string|array  $keys
+     * @param string|array $keys
      *
      * @return  static
      */
@@ -157,5 +170,32 @@ trait BindableTrait
         $this->bounded = array_diff_key($this->bounded, array_flip($keys));
 
         return $this;
+    }
+
+    protected function handleVariadicParams(string $sql): string
+    {
+        return preg_replace_callback(
+            '/:\.\.\.([\w_]+)/',
+            function ($matches) {
+                $paramsName = $matches[1];
+                $i = 0;
+                $params = [];
+
+                while (true) {
+                    $boundedName = $paramsName . '_' . $i;
+
+                    $i++;
+
+                    if (!$this->getBounded($boundedName)) {
+                        break;
+                    }
+
+                    $params[] = ':' . $boundedName;
+                }
+
+                return implode(', ', $params);
+            },
+            $sql
+        );
     }
 }

@@ -1255,7 +1255,30 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $expression = $this->getExpression();
 
         $i = 1;
-        $func = function ($match) use ($args, &$i, $expression) {
+        $replace = function ($sign, $replacement) use ($expression) {
+            return match ($sign) {
+                'a' => 0 + $replacement,
+                'e' => $this->escape($replacement),
+                'n' => $this->resolveColumn($replacement, QN_JSON_INSTANT),
+                'q' => $this->quote($replacement),
+                'r' => $replacement,
+                'y' => $expression->year($this->quote($replacement)),
+                'Y' => $expression->year($this->resolveColumn($replacement, QN_JSON_INSTANT)),
+                'm' => $expression->month($this->quote($replacement)),
+                'M' => $expression->month($this->resolveColumn($replacement, QN_JSON_INSTANT)),
+                'd' => $expression->day($this->quote($replacement)),
+                'D' => $expression->day($this->resolveColumn($replacement, QN_JSON_INSTANT)),
+                'h' => $expression->hour($this->quote($replacement)),
+                'H' => $expression->hour($this->resolveColumn($replacement, QN_JSON_INSTANT)),
+                'i' => $expression->minute($this->quote($replacement)),
+                'I' => $expression->minute($this->resolveColumn($replacement, QN_JSON_INSTANT)),
+                's' => $expression->second($this->quote($replacement)),
+                'S' => $expression->second($this->resolveColumn($replacement, QN_JSON_INSTANT)),
+                default => '',
+            };
+        };
+
+        $func = function ($match) use ($replace, $args, &$i, $expression) {
             if (isset($match[6]) && $match[6] === '%') {
                 return '%';
             }
@@ -1284,26 +1307,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 $replacement = $args[$index];
             }
 
-            return match ($match[5]) {
-                'a' => 0 + $replacement,
-                'e' => $this->escape($replacement),
-                'n' => $this->resolveColumn($replacement, QN_JSON_INSTANT),
-                'q' => $this->quote($replacement),
-                'r' => $replacement,
-                'y' => $expression->year($this->quote($replacement)),
-                'Y' => $expression->year($this->resolveColumn($replacement, QN_JSON_INSTANT)),
-                'm' => $expression->month($this->quote($replacement)),
-                'M' => $expression->month($this->resolveColumn($replacement, QN_JSON_INSTANT)),
-                'd' => $expression->day($this->quote($replacement)),
-                'D' => $expression->day($this->resolveColumn($replacement, QN_JSON_INSTANT)),
-                'h' => $expression->hour($this->quote($replacement)),
-                'H' => $expression->hour($this->resolveColumn($replacement, QN_JSON_INSTANT)),
-                'i' => $expression->minute($this->quote($replacement)),
-                'I' => $expression->minute($this->resolveColumn($replacement, QN_JSON_INSTANT)),
-                's' => $expression->second($this->quote($replacement)),
-                'S' => $expression->second($this->resolveColumn($replacement, QN_JSON_INSTANT)),
-                default => '',
-            };
+            // Handle array values
+            if (is_array($replacement)) {
+                $result = [];
+
+                foreach ($replacement as $v) {
+                    $result[] = $replace($match[5], $v);
+                }
+
+                return implode(', ', $result);
+            }
+
+            return $replace($match[5], $replacement);
         };
 
         /**
@@ -1350,6 +1365,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         $sql = $this->getGrammar()->compile((string) $type, $this);
+
+        $sql = $this->handleVariadicParams($sql);
 
         if ($topLevel) {
             // Convert the ValueClause to scalars,

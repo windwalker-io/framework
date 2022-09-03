@@ -1073,6 +1073,20 @@ SQL
         );
     }
 
+    public function testBindVariadicParams(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->whereRaw('id IN(:...ids)')
+            ->bind('ids', [1, 2, 3, 4, 'qwe']);
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" WHERE id IN(1, 2, 3, 4, \'qwe\')',
+            $q->render(true)
+        );
+    }
+
     public function testAutoAlias(): void
     {
         $q = $this->instance->select();
@@ -1540,6 +1554,35 @@ SQL
             ' WHERE ' . $this->instance->quoteName('date') .
             ' = ' . $this->instance->getExpression()->currentTimestamp() .
             ' OR ' . $this->instance->quoteName('date') . ' = ' . $this->instance->quote($this->instance->nullDate());
+
+        $this->assertEquals($sql, $result);
+    }
+
+    public function testFormatMultiple(): void
+    {
+        $result = $this->instance->format(
+            'SELECT %n FROM %n WHERE %n IN(%a)',
+            'foo',
+            '#__bar',
+            'id',
+            [10, 2, 3, 4]
+        );
+
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
+            ' WHERE ' . $this->instance->quoteName('id') . ' IN(10, 2, 3, 4)';
+
+        $this->assertEquals($sql, $result);
+
+        $result = $this->instance->format(
+            'SELECT %n FROM %n WHERE %n IN(%q)',
+            'foo',
+            '#__bar',
+            'type',
+            ['foo', 'bar', 'yoo']
+        );
+
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
+            ' WHERE ' . $this->instance->quoteName('type') . " IN('foo', 'bar', 'yoo')";
 
         $this->assertEquals($sql, $result);
     }
