@@ -97,4 +97,9 @@ class CheckboxesField extends ListField implements InputOptionsInterface
 
         return $value;
     }
+
+    public function isMultiple(): bool
+    {
+        return true;
+    }
 }
