@@ -565,10 +565,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function order(mixed $column, ?string $dir = null): static
     {
-        if (!$this->order) {
-            $this->order = $this->clause('ORDER BY', [], ', ');
-        }
-
         if (is_array($column)) {
             foreach ($column as $col) {
                 if (!is_array($col)) {
@@ -593,7 +589,24 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $order[] = $dir;
         }
 
-        $this->order->append($this->clause('', $order));
+        $this->orderRaw($this->clause('', $order));
+
+        return $this;
+    }
+
+    public function orderRaw(string|Clause $order, mixed ...$args): static
+    {
+        if (!$this->order) {
+            $this->order = $this->clause('ORDER BY', [], ', ');
+        }
+
+        if (is_string($order)) {
+            $order = $this->format($order, ...$args);
+        }
+
+        $this->findAndInjectSubQueries($order);
+
+        $this->order->append($order);
 
         return $this;
     }
