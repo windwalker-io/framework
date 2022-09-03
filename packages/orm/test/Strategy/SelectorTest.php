@@ -16,6 +16,8 @@ use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubCategory;
 use Windwalker\ORM\Test\Entity\StubFlower;
+use Windwalker\ORM\Test\Entity\StubLocation;
+use Windwalker\ORM\Test\Entity\StubPeony;
 use Windwalker\ORM\Test\Entity\StubRose;
 use Windwalker\ORM\Test\Entity\StubSakura;
 use Windwalker\ORM\Test\Entity\StubSakuraRoseMap;
@@ -90,10 +92,8 @@ class SelectorTest extends AbstractORMTestCase
         );
     }
 
-    public function testAutoJoin()
+    public function testAutoJoinByRelation(): void
     {
-        self::importFromFile(__DIR__ . '/../Stub/relations.sql');
-
         $mapper = self::$orm->mapper(StubSakura::class);
 
         $mapper->getMetadata()
@@ -138,6 +138,32 @@ class SelectorTest extends AbstractORMTestCase
                      LEFT JOIN `sakura_rose_maps` AS `sakura_rose_map` ON `sakura`.`no` = `sakura_rose_map`.`sakura_no`
                      LEFT JOIN `roses` AS `rose` ON `sakura_rose_map`.`rose_no` = `rose`.`no`
             WHERE `sakura`.`no` = 'S00001'
+            SQL,
+            $this->instance->debug(false, false, true)
+        );
+    }
+
+    public function testAutoJoinByColumns(): void
+    {
+        $this->instance->from(StubPeony::class)
+            ->leftJoin(StubLocation::class)
+            ->groupByJoins();
+
+        self::assertSqlFormatEquals(
+            <<<SQL
+            SELECT
+              `peony`.`id` AS `id`,
+              `peony`.`no` AS `no`,
+              `peony`.`location_id` AS `location_id`,
+              `peony`.`title` AS `title`,
+              `peony`.`state` AS `state`,
+              `location`.`id` AS `location.id`,
+              `location`.`no` AS `location.no`,
+              `location`.`title` AS `location.title`,
+              `location`.`state` AS `location.state`
+            FROM
+              `peonies` AS `peony`
+              LEFT JOIN `locations` AS `location` ON `peony`.`location_id` = `location`.`id`
             SQL,
             $this->instance->debug(false, false, true)
         );
@@ -195,6 +221,7 @@ class SelectorTest extends AbstractORMTestCase
     protected static function setupDatabase(): void
     {
         self::importFromFile(__DIR__ . '/../Stub/data.sql');
+        self::importFromFile(__DIR__ . '/../Stub/relations.sql');
     }
 
     protected function setUp(): void

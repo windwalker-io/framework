@@ -251,6 +251,23 @@ VALUES ('S00001', 'R00015', 'north', '2020-11-01 00:37:05'),
        ('S00025', 'R00024', 'south', '2020-12-13 15:52:19'),
        ('S00009', 'R00025', 'south', '2020-12-02 05:54:45');
 
+
+CREATE TABLE `peonies`
+(
+    `id`          int(11) UNSIGNED NOT NULL COMMENT 'Primary Key',
+    `no`          varchar(255) NOT NULL DEFAULT '',
+    `location_id` int(255) NOT NULL DEFAULT 0,
+    `title`       varchar(255) NOT NULL COMMENT 'Record title',
+    `state`       tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Record state'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `peonies` (`id`, `no`, `location_id`, `title`, `state`)
+VALUES (1, 'P00001', 1, 'Peony 1', 0),
+       (2, 'P00002', 1, 'Peony 2', 0),
+       (3, 'P00003', 2, 'Peony 3', 0),
+       (4, 'P00004', 2, 'Peony 4', 1),
+       (5, 'P00005', 3, 'Peony 5', 0);
+
 ALTER TABLE `locations`
     ADD PRIMARY KEY (`id`);
 
@@ -269,6 +286,12 @@ ALTER TABLE `sakuras`
   ADD KEY `cat_index` (`state`),
   ADD UNIQUE KEY `idx_sakuras_no` (`no`),
   ADD KEY `idx_sakuras_location_no` (`location_no`);
+
+ALTER TABLE `peonies`
+    ADD PRIMARY KEY (`id`),
+  ADD KEY `cat_index` (`state`),
+  ADD UNIQUE KEY `idx_peony_no` (`no`),
+  ADD KEY `idx_peony_location_id` (`location_id`);
 
 ALTER TABLE `locations`
     MODIFY `id` INT (11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;

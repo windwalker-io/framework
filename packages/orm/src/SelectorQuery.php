@@ -239,6 +239,30 @@ class SelectorQuery extends Query implements EventAwareInterface
             }
         }
 
+        // No relations, guess by columns
+
+        // many to one
+        // example: articles join categories
+        $myFk = $alias . '_id';
+        $themPk = $joinMetadata->getMainKey();
+
+        if ($themPk && $fromMetadata->getColumn($myFk)) {
+            $on[] = ["$fromAlias.$myFk", '=', "$alias.$themPk"];
+
+            return [$on];
+        }
+
+        // one to many
+        // example: categories join articles
+        $myPk = $fromMetadata->getMainKey();
+        $themFk = $fromAlias . '_id';
+
+        if ($myPk && $joinMetadata->getColumn($themFk)) {
+            $on[] = ["$fromAlias.$myPk", '=', "$alias.$themFk"];
+
+            return [$on];
+        }
+
         return $on;
     }
 
