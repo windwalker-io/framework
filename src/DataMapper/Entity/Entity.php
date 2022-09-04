@@ -546,7 +546,7 @@ class Entity extends Data implements \JsonSerializable
      */
     protected function toCamelCase($input)
     {
-        $input = str_replace('_', ' ', $input);
+        $input = str_replace('_', ' ', (string) $input);
         $input = ucwords($input);
 
         return str_ireplace(' ', '', $input);
