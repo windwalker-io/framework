@@ -1449,16 +1449,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     {
         $bounded = $bounded ?: [];
 
-        $sql = $this->toRawSqlString();
-
-        if ($sql === '') {
-            return '';
-        }
-
         // Only top level query rendering should create sequence and get merged bounded
         if (!$this->sequence) {
             $bounded = $this->mergeBounded();
         }
+
+        $sql = $this->toRawSqlString();
 
         [$sql, $bounded] = BoundedHelper::forPDO($sql, $bounded);
 
