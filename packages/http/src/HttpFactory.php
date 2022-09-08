@@ -127,7 +127,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createStream(string $content = ''): StreamInterface
     {
-        $stream = new Stream('php://mempry', Stream::MODE_READ_WRITE_FROM_BEGIN);
+        $stream = new Stream('php://memory', Stream::MODE_READ_WRITE_FROM_BEGIN);
         $stream->write($content);
         $stream->rewind();
 
