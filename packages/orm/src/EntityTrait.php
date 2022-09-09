@@ -15,7 +15,6 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use Windwalker\Data\Collection;
-use Windwalker\ORM\Attributes\MapperClass;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;

@@ -51,6 +51,10 @@ class Promise implements ExtendedPromiseInterface
      */
     protected ?ScheduleCursor $scheduleCursor = null;
 
+    public ?\Closure $uncaughtLogger = null;
+
+    public static ?\Closure $defaultUncaughtLogger = null;
+
     /**
      * create
      *
@@ -321,10 +325,17 @@ class Promise implements ExtendedPromiseInterface
      * @param  UncaughtException  $e
      *
      * @return  void
+     * @throws UncaughtException
      */
     private function log(UncaughtException $e): void
     {
-        //
+        $logger = $this->uncaughtLogger ?? static::$defaultUncaughtLogger;
+
+        if ($logger) {
+            $logger($e);
+        } else {
+            throw $e;
+        }
     }
 
     /**
