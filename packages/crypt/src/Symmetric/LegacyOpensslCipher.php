@@ -17,6 +17,7 @@ use Windwalker\Crypt\Exception\CryptException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
+
 use function sodium_memzero;
 
 /**

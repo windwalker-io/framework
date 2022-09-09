@@ -18,11 +18,13 @@ use Windwalker\Crypt\CryptHelper;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
+
 use function hash_equals;
 use function random_bytes;
 use function sodium_crypto_generichash;
 use function sodium_crypto_stream_xor;
 use function sodium_memzero;
+
 use const SODIUM_CRYPTO_AUTH_KEYBYTES;
 use const SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
 use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
@@ -56,8 +58,8 @@ class SodiumCipher implements CipherInterface
         $length = CryptHelper::strlen($message);
 
         // Split string
-        $salt      = CryptHelper::substr($message, 0, static::HKDF_SALT_LEN);
-        $nonce     = CryptHelper::substr($message, static::HKDF_SALT_LEN, static::NONCE_SIZE);
+        $salt = CryptHelper::substr($message, 0, static::HKDF_SALT_LEN);
+        $nonce = CryptHelper::substr($message, static::HKDF_SALT_LEN, static::NONCE_SIZE);
         $encrypted = CryptHelper::substr(
             $message,
             static::HKDF_SALT_LEN + static::NONCE_SIZE,
@@ -108,7 +110,7 @@ class SodiumCipher implements CipherInterface
         $str = HiddenString::strip($str);
 
         $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-        $salt  = random_bytes(static::HKDF_SALT_LEN);
+        $salt = random_bytes(static::HKDF_SALT_LEN);
 
         /*
         Split our key into two keys: One for encryption, the other for
@@ -146,8 +148,8 @@ class SodiumCipher implements CipherInterface
      *
      * Can dismiss likely cross-protocol attacks.
      *
-     * @param Key|string  $key
-     * @param string      $salt
+     * @param  Key|string  $key
+     * @param  string      $salt
      *
      * @return  array
      *
@@ -178,8 +180,8 @@ class SodiumCipher implements CipherInterface
     /**
      * hmac
      *
-     * @param string $message
-     * @param string $hmacKey
+     * @param  string  $message
+     * @param  string  $hmacKey
      *
      * @return  string
      *
@@ -197,7 +199,7 @@ class SodiumCipher implements CipherInterface
     /**
      * generateKey
      *
-     * @param int|null $length
+     * @param  int|null  $length
      *
      * @return  Key
      *

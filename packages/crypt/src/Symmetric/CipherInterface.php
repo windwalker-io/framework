@@ -47,8 +47,8 @@ interface CipherInterface
      * @return  string
      */
     public function encrypt(
-        HiddenString|string $str,
-        Key|string $key,
+        #[\SensitiveParameter] HiddenString|string $str,
+        #[\SensitiveParameter] Key|string $key,
         string $encoder = SafeEncoder::BASE64URLSAFE
     ): string;
 

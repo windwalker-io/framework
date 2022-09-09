@@ -17,6 +17,7 @@ use Windwalker\Crypt\Exception\CryptException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
+
 use function sodium_memzero;
 
 /**
@@ -56,8 +57,8 @@ class OpensslCipher implements CipherInterface
     /**
      * Constructor.
      *
-     * @param string $method
-     * @param array  $options
+     * @param  string  $method
+     * @param  array   $options
      *
      * @since  2.0
      */
@@ -199,7 +200,7 @@ class OpensslCipher implements CipherInterface
     /**
      * randomPseudoBytes
      *
-     * @param int|null $size
+     * @param  int|null  $size
      *
      * @return  string
      *
@@ -233,8 +234,8 @@ class OpensslCipher implements CipherInterface
     /**
      * Creates secure PBKDF2 derivatives out of the password.
      *
-     * @param string $key
-     * @param string $salt
+     * @param  string  $key
+     * @param  string  $salt
      *
      * @return array [$secureEncryptionKey, $secureHMACKey]
      * @throws CryptException
@@ -259,8 +260,8 @@ class OpensslCipher implements CipherInterface
     /**
      * Calculates HMAC for the message.
      *
-     * @param string $message
-     * @param string $hmacKey
+     * @param  string  $message
+     * @param  string  $hmacKey
      *
      * @return string
      */
@@ -272,12 +273,12 @@ class OpensslCipher implements CipherInterface
     /**
      * PBKDF2 key derivation function as defined by RSA's PKCS #5: https://www.ietf.org/rfc/rfc2898.txt
      *
-     * @param string $algorithm The hash algorithm to use. Recommended: SHA256
-     * @param string $password  The password
-     * @param string $salt      A salt that is unique to the password
-     * @param int    $count     Iteration count. Higher is better, but slower. Recommended: At least 1000
-     * @param int    $keyLength The length of the derived key in bytes
-     * @param bool   $rawOutput If true, the key is returned in raw binary format. Hex encoded otherwise
+     * @param  string  $algorithm  The hash algorithm to use. Recommended: SHA256
+     * @param  string  $password   The password
+     * @param  string  $salt       A salt that is unique to the password
+     * @param  int     $count      Iteration count. Higher is better, but slower. Recommended: At least 1000
+     * @param  int     $keyLength  The length of the derived key in bytes
+     * @param  bool    $rawOutput  If true, the key is returned in raw binary format. Hex encoded otherwise
      *
      * @return string A $keyLength-byte key derived from the password and salt
      */
