@@ -25,29 +25,37 @@ interface CipherInterface
     /**
      * Decrypt string.
      *
-     * @param  string  $str
-     * @param  Key     $key
-     * @param  string  $encoder
+     * @param string $str
+     * @param string|Key $key
+     * @param string $encoder
      *
      * @return  HiddenString
      */
-    public function decrypt(string $str, Key $key, string $encoder = SafeEncoder::BASE64URLSAFE): HiddenString;
+    public function decrypt(
+        string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64URLSAFE
+    ): HiddenString;
 
     /**
      * encrypt
      *
-     * @param  HiddenString  $str
-     * @param  Key           $key
-     * @param  string        $encoder
+     * @param string|HiddenString $str
+     * @param string|Key          $key
+     * @param string              $encoder
      *
      * @return  string
      */
-    public function encrypt(HiddenString $str, Key $key, string $encoder = SafeEncoder::BASE64URLSAFE): string;
+    public function encrypt(
+        HiddenString|string $str,
+        Key|string $key,
+        string $encoder = SafeEncoder::BASE64URLSAFE
+    ): string;
 
     /**
      * Generate Key.
      *
-     * @param  int|null  $length
+     * @param int|null $length
      *
      * @return  Key
      */

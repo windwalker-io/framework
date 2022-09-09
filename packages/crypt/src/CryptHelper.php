@@ -38,7 +38,7 @@ class CryptHelper
      *
      * @return  string
      */
-    public static function repeatToLength(string $string, int $length, bool $cut = false): string
+    public static function repeatToLength(#[\SensitiveParameter] string $string, int $length, bool $cut = false): string
     {
         if (strlen($string) >= $length) {
             return $string;
@@ -77,8 +77,8 @@ class CryptHelper
     public static function hkdfBlake2b(
         string $ikm,
         int $length,
-        string $info = '',
-        string $salt = ''
+        #[\SensitiveParameter] string $info = '',
+        #[\SensitiveParameter] string $salt = ''
     ): string {
         // Sanity-check the desired output length.
         if ($length < 0 || $length > (255 * SODIUM_CRYPTO_GENERICHASH_KEYBYTES)) {
@@ -131,7 +131,7 @@ class CryptHelper
      *
      * @since   2.0.4
      */
-    public static function strlen(string $binaryString): int
+    public static function strlen(#[\SensitiveParameter] string $binaryString): int
     {
         return mb_strlen($binaryString, '8bit');
     }
@@ -146,7 +146,7 @@ class CryptHelper
      * @return  string
      */
     public static function substr(
-        string $str,
+        #[\SensitiveParameter] string $str,
         int $start = 0,
         $length = null
     ): string {
@@ -165,7 +165,7 @@ class CryptHelper
      *
      * @return  string
      */
-    public static function strcpy(string $string): string
+    public static function strcpy(#[\SensitiveParameter] string $string): string
     {
         $len = mb_strlen($string);
 

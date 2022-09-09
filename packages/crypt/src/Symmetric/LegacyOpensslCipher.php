@@ -17,7 +17,6 @@ use Windwalker\Crypt\Exception\CryptException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
-
 use function sodium_memzero;
 
 /**
@@ -37,8 +36,13 @@ class LegacyOpensslCipher extends OpensslCipher
     /**
      * @inheritDoc
      */
-    public function decrypt(string $str, Key $key, string $encoder = SafeEncoder::BASE64): HiddenString
-    {
+    public function decrypt(
+        string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64
+    ): HiddenString {
+        $key = Key::strip($key);
+
         [$hmac, $salt, $iv, $encrypted] = explode(':', $str);
 
         $hmac = SafeEncoder::decode($encoder, $hmac);
@@ -46,7 +50,7 @@ class LegacyOpensslCipher extends OpensslCipher
         $iv = SafeEncoder::decode($encoder, $iv);
         $encrypted = SafeEncoder::decode($encoder, $encrypted);
 
-        [, $hmacKey] = $this->derivateSecureKeys($key->get(), $salt);
+        [, $hmacKey] = $this->derivateSecureKeys($key, $salt);
 
         $calc = $this->hmac($salt . $iv . $encrypted, $hmacKey);
 
@@ -54,7 +58,7 @@ class LegacyOpensslCipher extends OpensslCipher
             throw new CryptException('HMAC ERROR: Invalid HMAC.');
         }
 
-        $encKey = CryptHelper::repeatToLength($key->get(), 24, true);
+        $encKey = CryptHelper::repeatToLength($key, 24, true);
 
         $decrypted = openssl_decrypt($encrypted, $this->getMethod(), $encKey, OPENSSL_RAW_DATA, $iv);
 
@@ -82,19 +86,25 @@ class LegacyOpensslCipher extends OpensslCipher
     /**
      * @inheritDoc
      */
-    public function encrypt(HiddenString $str, Key $key, string $encoder = SafeEncoder::BASE64): string
-    {
+    public function encrypt(
+        #[\SensitiveParameter] HiddenString|string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64
+    ): string {
+        $str = HiddenString::strip($str);
+        $key = Key::strip($key);
+
         $salt = OpensslCipher::randomPseudoBytes(static::PBKDF2_SALT_BYTE_SIZE);
 
-        [, $hmacKey] = $this->derivateSecureKeys($key->get(), $salt);
+        [, $hmacKey] = $this->derivateSecureKeys($key, $salt);
 
         $iv = $this->getIV();
 
-        $encKey = CryptHelper::repeatToLength($key->get(), 24, true);
+        $encKey = CryptHelper::repeatToLength($key, 24, true);
 
         // Encrypt the data.
         $encrypted = openssl_encrypt(
-            $str->get(),
+            $str,
             $this->getMethod(),
             $encKey,
             OPENSSL_RAW_DATA,

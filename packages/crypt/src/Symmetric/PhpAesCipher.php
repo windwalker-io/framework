@@ -42,45 +42,56 @@ class PhpAesCipher implements CipherInterface
     /**
      * Method to decrypt a data string.
      *
-     * @param  string  $str
-     * @param  Key     $key  The private key.
-     * @param  string  $encoder
+     * @param string $str
+     * @param string|Key $key The private key.
+     * @param string $encoder
      *
      * @return HiddenString The decrypted data string.
      *
      * @since    2.0
      */
-    public function decrypt(string $str, Key $key, string $encoder = SafeEncoder::BASE64URLSAFE): HiddenString
-    {
+    public function decrypt(
+        string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64URLSAFE
+    ): HiddenString {
+        $key = Key::strip($key);
+
         include_once __DIR__ . '/../lib/aes.class.php';
 
         return new HiddenString(
-            (string) AesCtr::decrypt(base64_decode($str), $key->get(), $this->keyLength)
+            (string) AesCtr::decrypt(base64_decode($str), $key, $this->keyLength)
         );
     }
 
     /**
      * Method to encrypt a data string.
      *
-     * @param  HiddenString  $str
-     * @param  Key           $key  The private key.
-     * @param  string        $encoder
+     * @param string|HiddenString $str
+     * @param string|Key          $key The private key.
+     * @param string              $encoder
      *
      * @return  string  The encrypted data string.
      *
      * @since   2.0
      */
-    public function encrypt(HiddenString $str, Key $key, string $encoder = SafeEncoder::BASE64URLSAFE): string
-    {
+    public function encrypt(
+        #[\SensitiveParameter] HiddenString|string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64URLSAFE
+    ): string {
+        $str = HiddenString::strip($str);
+        $key = Key::strip($key);
+
         include_once __DIR__ . '/../lib/aes.class.php';
 
-        return base64_encode(AesCtr::encrypt($str->get(), $key->get(), $this->keyLength));
+        return base64_encode(AesCtr::encrypt($str, $key, $this->keyLength));
     }
 
     /**
      * Generate Key.
      *
-     * @param  int|null  $length
+     * @param int|null $length
      *
      * @return  Key
      * @throws Exception

@@ -24,7 +24,8 @@
         "ext-sodium": "*"
     },
     "suggest": {
-        "ext-openssl": "Install openssl to support legacy openssl cipher."
+        "ext-openssl": "Install openssl to support legacy openssl cipher.",
+        "ext-sodium": "Install sodium to support sodium cipher."
     },
     "minimum-stability": "beta",
     "autoload": {

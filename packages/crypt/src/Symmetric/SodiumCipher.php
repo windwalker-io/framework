@@ -18,13 +18,11 @@ use Windwalker\Crypt\CryptHelper;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
-
 use function hash_equals;
 use function random_bytes;
 use function sodium_crypto_generichash;
 use function sodium_crypto_stream_xor;
 use function sodium_memzero;
-
 use const SODIUM_CRYPTO_AUTH_KEYBYTES;
 use const SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
 use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
@@ -48,15 +46,18 @@ class SodiumCipher implements CipherInterface
      * @inheritDoc
      * @throws SodiumException
      */
-    public function decrypt(string $str, Key $key, string $encoder = SafeEncoder::BASE64URLSAFE): HiddenString
-    {
+    public function decrypt(
+        string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64URLSAFE
+    ): HiddenString {
         $message = SafeEncoder::decode($encoder, $str);
 
         $length = CryptHelper::strlen($message);
 
         // Split string
-        $salt = CryptHelper::substr($message, 0, static::HKDF_SALT_LEN);
-        $nonce = CryptHelper::substr($message, static::HKDF_SALT_LEN, static::NONCE_SIZE);
+        $salt      = CryptHelper::substr($message, 0, static::HKDF_SALT_LEN);
+        $nonce     = CryptHelper::substr($message, static::HKDF_SALT_LEN, static::NONCE_SIZE);
         $encrypted = CryptHelper::substr(
             $message,
             static::HKDF_SALT_LEN + static::NONCE_SIZE,
@@ -99,10 +100,15 @@ class SodiumCipher implements CipherInterface
      * @throws SodiumException
      * @throws Exception
      */
-    public function encrypt(HiddenString $str, Key $key, string $encoder = SafeEncoder::BASE64URLSAFE): string
-    {
+    public function encrypt(
+        #[\SensitiveParameter] HiddenString|string $str,
+        #[\SensitiveParameter] Key|string $key,
+        string $encoder = SafeEncoder::BASE64URLSAFE
+    ): string {
+        $str = HiddenString::strip($str);
+
         $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-        $salt = random_bytes(static::HKDF_SALT_LEN);
+        $salt  = random_bytes(static::HKDF_SALT_LEN);
 
         /*
         Split our key into two keys: One for encryption, the other for
@@ -115,7 +121,7 @@ class SodiumCipher implements CipherInterface
         [$encKey, $hmacKey] = static::derivateSecureKeys($key, $salt);
 
         $encrypted = sodium_crypto_stream_xor(
-            $str->get(),
+            $str,
             $nonce,
             $encKey
         );
@@ -140,18 +146,18 @@ class SodiumCipher implements CipherInterface
      *
      * Can dismiss likely cross-protocol attacks.
      *
-     * @param  Key     $key
-     * @param  string  $salt
+     * @param Key|string  $key
+     * @param string      $salt
      *
      * @return  array
      *
      * @throws SodiumException
      */
     public static function derivateSecureKeys(
-        Key $key,
+        #[\SensitiveParameter] Key|string $key,
         string $salt
     ): array {
-        $binary = $key->get();
+        $binary = Key::strip($key);
 
         return [
             CryptHelper::hkdfBlake2b(
@@ -172,8 +178,8 @@ class SodiumCipher implements CipherInterface
     /**
      * hmac
      *
-     * @param  string  $message
-     * @param  string  $hmacKey
+     * @param string $message
+     * @param string $hmacKey
      *
      * @return  string
      *
@@ -191,7 +197,7 @@ class SodiumCipher implements CipherInterface
     /**
      * generateKey
      *
-     * @param  int|null  $length
+     * @param int|null $length
      *
      * @return  Key
      *

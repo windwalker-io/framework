@@ -69,4 +69,19 @@ class SodiumCipherTest extends TestCase
 
         $this->assertEquals('windwalker', $data);
     }
+
+    public function testEncryptWithString()
+    {
+        if (PHP_VERSION_ID < 80200) {
+            $this->expectExceptionMessage('Do not use pure value for encrypting before PHP8.2');
+        }
+
+        $key = 'hello';
+
+        $data = $this->instance->encrypt('windwalker', $key);
+
+        $data = $this->instance->decrypt($data, $key);
+
+        $this->assertEquals('windwalker', $data);
+    }
 }
