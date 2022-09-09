@@ -25,6 +25,7 @@ use Windwalker\ORM\Metadata\EntityMetadata;
  * The User class.
  */
 #[Table('users')]
+#[\AllowDynamicProperties]
 class StubUser
 {
     #[Column('id')]

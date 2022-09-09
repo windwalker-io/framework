@@ -25,6 +25,7 @@ use Windwalker\ORM\Relation\RelationCollection;
  * The StubRose class.
  */
 #[Table('roses', 'rose')]
+#[\AllowDynamicProperties]
 class StubRose implements EntityInterface
 {
     use EntityTrait;

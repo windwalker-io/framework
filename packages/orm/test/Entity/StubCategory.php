@@ -22,6 +22,7 @@ use Windwalker\ORM\Cast\JsonCast;
  * The Category class.
  */
 #[Table('ww_categories')]
+#[\AllowDynamicProperties]
 class StubCategory
 {
     #[Column('id'), PK, AutoIncrement]

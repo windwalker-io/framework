@@ -23,6 +23,7 @@ use Windwalker\ORM\EntityTrait;
  * The LocationData class.
  */
 #[Table('location_data')]
+#[\AllowDynamicProperties]
 class StubLocationData implements EntityInterface
 {
     use EntityTrait;
@@ -34,7 +35,8 @@ class StubLocationData implements EntityInterface
     protected string $locationNo = '';
 
     #[Column('data')]
-    protected string|stdClass $data = '';
+    protected string|std#[\AllowDynamicProperties]
+class $data = '';
 
     /**
      * @return string

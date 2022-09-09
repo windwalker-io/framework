@@ -22,6 +22,7 @@ use Windwalker\ORM\Nested\NestedPathableTrait;
  * The StubNestedset class.
  */
 #[NestedSet('#__nestedsets')]
+#[\AllowDynamicProperties]
 class StubNestedSet implements NestedPathableInterface
 {
     use NestedPathableTrait;

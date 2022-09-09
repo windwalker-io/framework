@@ -34,6 +34,7 @@ use Windwalker\ORM\Relation\RelationCollection;
  * The StubMember class.
  */
 #[Table('members')]
+#[\AllowDynamicProperties]
 class StubMember implements EntityInterface
 {
     use EntityTrait;

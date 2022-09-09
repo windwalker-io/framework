@@ -27,6 +27,7 @@ use Windwalker\ORM\Event\BeforeStoreEvent;
  * The Article class.
  */
 #[Table('articles')]
+#[\AllowDynamicProperties]
 class StubArticle
 {
     #[Column('id'), PK, AutoIncrement]

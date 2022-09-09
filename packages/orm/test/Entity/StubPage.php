@@ -23,6 +23,7 @@ use Windwalker\ORM\Relation\RelationCollection;
  * The StubPage class.
  */
 #[Table('pages')]
+#[\AllowDynamicProperties]
 class StubPage implements EntityInterface
 {
     use EntityTrait;

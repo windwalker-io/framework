@@ -23,6 +23,7 @@ use Windwalker\ORM\EntityTrait;
  * The StubMemberActionMap class.
  */
 #[Table('member_action_maps')]
+#[\AllowDynamicProperties]
 class StubMemberActionMap implements EntityInterface
 {
     use EntityTrait;

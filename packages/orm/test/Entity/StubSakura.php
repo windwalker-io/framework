@@ -28,6 +28,7 @@ use Windwalker\ORM\Relation\RelationCollection;
  * The Sakura class.
  */
 #[Table('sakuras')]
+#[\AllowDynamicProperties]
 class StubSakura implements EntityInterface
 {
     use EntityTrait;

@@ -24,6 +24,7 @@ use Windwalker\ORM\Attributes\Table;
  * The Comment class.
  */
 #[Table('comments')]
+#[\AllowDynamicProperties]
 class StubComment
 {
     #[Column('id'), PK(true), AutoIncrement]

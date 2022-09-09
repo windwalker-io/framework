@@ -23,6 +23,7 @@ use Windwalker\ORM\EntityTrait;
  * The StubSakuraRoseMap class.
  */
 #[Table('sakura_rose_maps')]
+#[\AllowDynamicProperties]
 class StubSakuraRoseMap implements EntityInterface
 {
     use EntityTrait;

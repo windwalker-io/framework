@@ -27,6 +27,7 @@ use Windwalker\ORM\Relation\RelationCollection;
  * The StubAction class.
  */
 #[Table('actions')]
+#[\AllowDynamicProperties]
 class StubAction implements EntityInterface
 {
     use EntityTrait;

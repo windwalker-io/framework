@@ -25,6 +25,7 @@ use Windwalker\ORM\EntityTrait;
  * The StubAttachment class.
  */
 #[Table('attachments')]
+#[\AllowDynamicProperties]
 class StubAttachment implements EntityInterface
 {
     use EntityTrait;

@@ -29,6 +29,7 @@ use Windwalker\ORM\Relation\RelationCollection;
  * The Location class.
  */
 #[Table('locations')]
+#[\AllowDynamicProperties]
 class StubLocation implements EntityInterface
 {
     use EntityTrait;

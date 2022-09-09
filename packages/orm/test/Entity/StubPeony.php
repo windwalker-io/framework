@@ -20,6 +20,7 @@ use Windwalker\ORM\EntityTrait;
  * The StubPeony class.
  */
 #[Table('peonies')]
+#[\AllowDynamicProperties]
 class StubPeony implements EntityInterface
 {
     use EntityTrait;

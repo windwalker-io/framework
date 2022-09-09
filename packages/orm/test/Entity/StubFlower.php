@@ -22,6 +22,7 @@ use Windwalker\ORM\Cast\JsonCast;
  * The Flower class.
  */
 #[Table('ww_flower')]
+#[\AllowDynamicProperties]
 class StubFlower
 {
     #[Column('id'), PK, AutoIncrement]

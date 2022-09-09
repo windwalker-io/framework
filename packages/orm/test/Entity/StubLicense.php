@@ -25,6 +25,7 @@ use Windwalker\ORM\EntityTrait;
  * The StubLicense class.
  */
 #[Table('licenses')]
+#[\AllowDynamicProperties]
 class StubLicense implements EntityInterface
 {
     use EntityTrait;
