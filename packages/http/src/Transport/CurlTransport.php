@@ -302,16 +302,25 @@ class CurlTransport extends AbstractTransport
     {
         $contentType = $request->getHeaderLine('Content-Type');
 
-        if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
-            // If no boundary, remove content-type and let CURL add it.
-            if (!str_contains($contentType, 'boundary')) {
-                $request = $request->withoutHeader('Content-Type');
+        $postMethods = [
+            'post',
+            'put',
+            'patch',
+            'delete'
+        ];
+
+        if (in_array(strtolower($request->getMethod()), $postMethods, true)) {
+            if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
+                // If no boundary, remove content-type and let CURL add it.
+                if (!str_contains($contentType, 'boundary')) {
+                    $request = $request->withoutHeader('Content-Type');
+                }
+            } elseif (!$request->hasHeader('Content-Type')) {
+                $request = $request->withHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded; charset=utf-8'
+                );
             }
-        } elseif (!$request->hasHeader('Content-Type')) {
-            $request = $request->withHeader(
-                'Content-Type',
-                'application/x-www-form-urlencoded; charset=utf-8'
-            );
         }
 
         return $request;
