@@ -35,8 +35,7 @@ class StubLocationData implements EntityInterface
     protected string $locationNo = '';
 
     #[Column('data')]
-    protected string|std#[\AllowDynamicProperties]
-class $data = '';
+    protected string|stdClass $data = '';
 
     /**
      * @return string
