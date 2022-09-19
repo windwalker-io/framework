@@ -27,7 +27,7 @@ class UUIDBin extends CastForSave implements CastInterface
      * CastForSave constructor.
      */
     public function __construct(
-        public string $version = 'uuid6',
+        public string $version = 'uuid7',
         public mixed $caster = null,
         public int $options = 0
     ) {
