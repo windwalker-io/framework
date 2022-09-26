@@ -22,7 +22,7 @@ use Windwalker\Stream\Stream;
  *
  * @since  2.1
  */
-class UploadedFile implements UploadedFileInterface
+class UploadedFile implements UploadedFileInterface, \JsonSerializable
 {
     /**
      * Property clientFilename.
@@ -341,5 +341,16 @@ class UploadedFile implements UploadedFileInterface
         $this->sapi = $sapi;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'name' => $this->getClientFilename(),
+            'type' => $this->getClientMediaType(),
+            'tmp_name' => $this->file,
+            'error' => $this->getError(),
+            'size' => $this->getSize()
+        ];
     }
 }
