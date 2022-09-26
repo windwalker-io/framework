@@ -47,13 +47,13 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  static
      */
-    public static function create(?ListenerProviderInterface $provider = null): self
+    public static function create(?ListenerProviderInterface $provider = null): static
     {
         if (!$provider instanceof static) {
             if ($provider instanceof SubscribableListenerProvider || $provider === null) {
-                $provider = new CompositeListenerProvider($provider);
+                $provider = new static($provider);
             } else {
-                $provider = new CompositeListenerProvider(null, [$provider]);
+                $provider = new static(null, [$provider]);
             }
         }
 

@@ -142,7 +142,7 @@ trait ListOptionsTrait
 
         foreach ($enums as $enum) {
             if ($enum instanceof EnumTranslatableInterface) {
-                $options[$enum->getValue()] = $enum->getTitle($lang);
+                $options[$enum->getValue()] = $enum->getTitle($lang) ?: $enum->getKey();
             } elseif ($enum instanceof Enum) {
                 $options[$enum->getValue()] = $enum->getKey();
             } elseif ($enum instanceof \UnitEnum) {

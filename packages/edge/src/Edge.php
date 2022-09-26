@@ -229,9 +229,9 @@ class Edge
 
             if ($__path instanceof Closure) {
                 try {
-                    eval(' ?>' . $code = $__edge->compile($__path($this, $__data)) . '<?php ');
+                    eval(' ?>' . $__edge->compile($__path($this, $__data)) . '<?php ');
                 } catch (\Throwable $e) {
-                    $__edge->wrapEvalException($e, $code, $__path);
+                    $__edge->wrapEvalException($e, $__edge->compile($__path($this, $__data)), $__path);
                 }
 
                 return;
@@ -241,9 +241,9 @@ class Edge
                 include $__edge->getCache()->getCacheFile($__edge->getCache()->getCacheKey($__path));
             } else {
                 try {
-                    eval(' ?>' . $code = $__edge->getCache()->load($__path) . '<?php ');
+                    eval(' ?>' . $__edge->getCache()->load($__path) . '<?php ');
                 } catch (\Throwable $e) {
-                    $__edge->wrapEvalException($e, $code, $__path);
+                    $__edge->wrapEvalException($e, $__edge->getCache()->load($__path), $__path);
                 }
             }
         };
