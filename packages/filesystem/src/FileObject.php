@@ -535,7 +535,7 @@ class FileObject extends SplFileInfo
         // If the destination directory doesn't exist we need to create it
         $this->getParent()->mkdir();
 
-        StreamHelper::copy($stream, $dest = $this->getStream());
+        StreamHelper::copy($stream, $dest = $this->getStream(Stream::MODE_WRITE_ONLY_RESET));
 
         $dest->close();
 
