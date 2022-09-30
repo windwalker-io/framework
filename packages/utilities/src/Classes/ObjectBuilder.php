@@ -40,9 +40,7 @@ class ObjectBuilder
      */
     public function getBuilder(): Closure
     {
-        return $this->builder ??= function (string $class, ...$args) {
-            return new $class(...$args);
-        };
+        return $this->builder ??= static fn(string $class, ...$args) => new $class(...$args);
     }
 
     /**

@@ -37,7 +37,7 @@ class AttributeHandler
         protected ?object $object,
         protected AttributesResolver $resolver
     ) {
-        $this->set($handler);
+        $this->handler = $handler;
     }
 
     public function __invoke(&...$args): mixed
