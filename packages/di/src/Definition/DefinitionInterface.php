@@ -23,9 +23,9 @@ interface DefinitionInterface
      *
      * @param  Container  $container  The Container object.
      *
-     * @return
+     * @return mixed
      */
-    public function resolve(Container $container);
+    public function resolve(Container $container): mixed;
 
     /**
      * Set new value or factory callback to this definition.

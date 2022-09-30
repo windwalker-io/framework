@@ -23,7 +23,7 @@ class StoreDefinition extends DelegateDefinition implements StoreDefinitionInter
     /**
      * @var mixed
      */
-    protected $cache = null;
+    protected mixed $cache = null;
 
     protected int $options;
 

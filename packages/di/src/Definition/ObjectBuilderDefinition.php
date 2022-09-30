@@ -92,6 +92,9 @@ class ObjectBuilderDefinition implements DefinitionInterface
      */
     public function resolve(Container $container): object
     {
+        // Todo: this is tmp
+        $this->container = $container;
+
         $object = $container->newInstance(
             $this->getClass(),
             $this->getArguments()

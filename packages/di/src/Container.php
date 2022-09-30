@@ -26,6 +26,7 @@ use Windwalker\DI\Attributes\AttributesResolver;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
 use Windwalker\DI\Definition\DefinitionFactory;
 use Windwalker\DI\Definition\DefinitionInterface;
+use Windwalker\DI\Definition\NewStoreDefinition;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\DI\Definition\StoreDefinitionInterface;
 use Windwalker\DI\Exception\DefinitionException;
@@ -149,7 +150,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             );
         }
 
-        $this->setDefinition($id, DefinitionFactory::create($value, $options));
+        $this->setDefinition($id, new NewStoreDefinition($value, $options));
 
         return $this;
     }
@@ -250,10 +251,14 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function resolve(mixed $source, array $args = [], int $options = 0): mixed
     {
-        ArgumentsAssert::assert(
-            $source !== null,
-            '{caller} Argument #1 (source) can not be NULL'
-        );
+        if ($source === null) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '%s() Argument #1 (source) can not be NULL',
+                    __METHOD__
+                )
+            );
+        }
 
         if ($source instanceof RawWrapper) {
             return $source();
@@ -283,13 +288,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         if ($definition instanceof DefinitionInterface) {
-            if ($definition instanceof ObjectBuilderDefinition) {
-                $definition = clone $definition;
-                $definition->setContainer($this);
-                $definition->addArguments($args);
-            }
-
-            return $definition->resolve($this);
+            return $definition->resolve($this, $args);
         }
 
         return $this->get($source);
