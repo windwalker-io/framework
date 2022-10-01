@@ -193,7 +193,7 @@ trait CompileComponentTrait
             $destruct = [];
 
             foreach ($expr as $var) {
-                $varName = Str::removeLeft($var, '$');
+                $varName = Str::removeLeft($var, '$', 'ascii');
 
                 $destruct[] = "'$varName' => $var";
             }

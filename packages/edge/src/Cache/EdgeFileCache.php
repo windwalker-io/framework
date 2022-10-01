@@ -67,10 +67,12 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     public function getCacheKey(string $path): string
     {
-        $key = md5(realpath($path));
+        $path = str_replace(['/', '\\'], '/', $path);
+
+        $key = md5($path);
 
         if ($this->isDebug()) {
-            $prefix = Path::getFilename($path);
+            $prefix = basename($path);
             $prefix = Path::stripExtension($prefix);
             $prefix = Path::stripExtension($prefix);
 
