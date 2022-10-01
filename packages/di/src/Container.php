@@ -139,7 +139,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  mixed   $value
      * @param  int     $options
      *
-     * @return Container
+     * @return static
      * @throws DefinitionException
      */
     public function set(string $id, mixed $value, int $options = 0): static
@@ -536,6 +536,20 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function extend(string $id, Closure $closure): static
     {
+        if ($this->has($id)) {
+            $definition = $this->getDefinition($id);
+
+            // Do not affect parent
+            $definition = clone $definition;
+
+            $definition->extend($closure);
+
+            // Keep a clone at self
+            $this->setDefinition($id, $definition);
+
+            return $this;
+        }
+
         $this->extends[$id] ??= [];
         $this->extends[$id][] = $closure;
 
