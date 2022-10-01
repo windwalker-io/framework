@@ -31,4 +31,6 @@ interface StoreDefinitionInterface extends DefinitionInterface
     public function reset(): void;
 
     public function getOptions(): int;
+
+    public function getCache(): mixed;
 }

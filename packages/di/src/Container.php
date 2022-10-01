@@ -240,6 +240,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             $definition->reset();
         }
 
+        // Detect cache outside of definition to save some performance.
+        $cache = $definition->getCache();
+
+        if ($cache !== null) {
+            return $cache;
+        }
+
         try {
             return $definition->resolve($this);
         } catch (ContainerExceptionInterface $e) {

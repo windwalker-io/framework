@@ -29,7 +29,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function resolve(Container $container, array $args = []): mixed
     {
-        if ($this->cache !== null && ($this->options & Container::SHARED)) {
+        if ($this->cache !== null) {
             return $this->cache;
         }
 
@@ -131,5 +131,10 @@ class StoreDefinition implements StoreDefinitionInterface
         $this->id = $id;
 
         return $this;
+    }
+
+    public function getCache(): mixed
+    {
+        return $this->cache;
     }
 }
