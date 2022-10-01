@@ -596,8 +596,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         $target = $closure($target, $this);
 
-        $definition->set(fn() => $target);
-        $definition->reset();
+        $definition = new StoreDefinition(
+            $id,
+            $target,
+            $definition->getOptions()
+        );
+
+        $this->setDefinition($id, $definition);
 
         return $this;
     }

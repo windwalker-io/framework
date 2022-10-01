@@ -29,4 +29,6 @@ interface StoreDefinitionInterface extends DefinitionInterface
     public function extend(Closure $closure): static;
 
     public function reset(): void;
+
+    public function getOptions(): int;
 }
