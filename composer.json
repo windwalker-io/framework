@@ -67,7 +67,8 @@
         "webmozart/glob": "^4.1",
         "yosymfony/toml": "^1.0",
         "laravel/serializable-closure": "^1.0",
-        "symfony/polyfill-php82": "^1.26"
+        "symfony/polyfill-php82": "^1.26",
+        "asika/simple-benchmark": "^3.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~4.0 if you require YAML support.",

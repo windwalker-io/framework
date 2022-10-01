@@ -491,7 +491,7 @@ class ContainerTest extends TestCase
      *
      * @covers \Windwalker\DI\Container::extend
      */
-    public function testExtend()
+    public function testExtend(): void
     {
         $this->instance->extend(
             'Hello',
@@ -499,6 +499,21 @@ class ContainerTest extends TestCase
         );
 
         self::assertEquals('World~~~!!!', $this->instance->get('Hello'));
+    }
+
+    public function testExtendBeforeRegister(): void
+    {
+        $this->instance->extend(
+            'Hello2',
+            fn($value, $container) => $value . '~~~!!!'
+        );
+
+        $this->instance->share(
+            'Hello2',
+            'World2'
+        );
+
+        self::assertEquals('World2~~~!!!', $this->instance->get('Hello2'));
     }
 
     /**

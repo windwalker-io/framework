@@ -26,7 +26,7 @@ use Windwalker\DI\Attributes\AttributesResolver;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
 use Windwalker\DI\Definition\DefinitionFactory;
 use Windwalker\DI\Definition\DefinitionInterface;
-use Windwalker\DI\Definition\NewStoreDefinition;
+use Windwalker\DI\Definition\StoreDefinition;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\DI\Definition\StoreDefinitionInterface;
 use Windwalker\DI\Exception\DefinitionException;
@@ -98,6 +98,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
     protected AttributesResolver $attributesResolver;
 
+    /**
+     * @var callable[][]
+     */
+    protected array $extends = [];
+
     public static function define(string|callable $class, array $args): ObjectBuilderDefinition
     {
         $builder = new ObjectBuilderDefinition($class);
@@ -150,7 +155,15 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             );
         }
 
-        $this->setDefinition($id, new NewStoreDefinition($value, $options));
+        if (!$value instanceof StoreDefinition) {
+            $value = new StoreDefinition($id, $value, $options);
+        } else {
+            // Clone a new store to avoid side effect
+            $value = clone $value;
+            $value->setId($id);
+        }
+
+        $this->setDefinition($id, $value);
 
         return $this;
     }
@@ -523,23 +536,36 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function extend(string $id, Closure $closure): static
     {
-        $definition = $this->getDefinition($id);
-
-        if ($definition === null) {
-            throw new UnexpectedValueException(
-                sprintf('The requested id "%s" does not exist to extend.', $id)
-            );
-        }
-
-        // Do not affect parent
-        $definition = clone $definition;
-
-        $definition->extend($closure);
-
-        // Keep a clone at self
-        $this->setDefinition($id, $definition);
+        $this->extends[$id] ??= [];
+        $this->extends[$id][] = $closure;
 
         return $this;
+    }
+
+    /**
+     * @param  string  $id
+     *
+     * @return  array<callable>
+     */
+    public function findExtends(string $id): array
+    {
+        $nid = $id;
+
+        $extends = [];
+
+        if (isset($this->extends[$id])) {
+            $extends[] = $this->extends[$id];
+        }
+
+        while (isset($this->aliases[$nid])) {
+            $nid = $this->aliases[$nid];
+
+            if (isset($this->extends[$nid])) {
+                $extends[] = $this->extends[$nid];
+            }
+        }
+
+        return array_merge(...$extends);
     }
 
     public function modify(string $id, Closure $closure): static

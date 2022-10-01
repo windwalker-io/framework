@@ -21,28 +21,16 @@ class DefinitionFactory
 {
     public static function create(mixed $value, int $options = 0): StoreDefinitionInterface
     {
+        return new StoreDefinition('', $value, $options);
+    }
+
+    public static function wrap(mixed $value): StoreDefinitionInterface
+    {
         if ($value instanceof StoreDefinitionInterface) {
             return $value;
         }
 
-        if (!$value instanceof DefinitionInterface) {
-            if (!$value instanceof Closure) {
-                $value = static fn() => $value;
-            }
-
-            $value = new ClosureDefinition($value);
-        }
-
-        return new StoreDefinition($value, $options);
-    }
-
-    public static function wrap(mixed $value): DefinitionInterface
-    {
-        if ($value instanceof DefinitionInterface) {
-            return $value;
-        }
-
-        return new ValueDefinition($value);
+        return new StoreDefinition('', $value, 0);
     }
 
     public static function isSameClass(mixed $a, mixed $b): bool
@@ -64,7 +52,7 @@ class DefinitionFactory
         }
 
         if (is_object($obj)) {
-            return $obj::class;
+            return get_class($obj);
         }
 
         if (is_string($obj) || is_stringable($obj)) {

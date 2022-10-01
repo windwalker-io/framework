@@ -18,6 +18,10 @@ use Closure;
  */
 interface StoreDefinitionInterface extends DefinitionInterface
 {
+    public function getId(): string;
+
+    public function setId(string $id): static;
+
     public function isShared(): bool;
 
     public function isProtected(): bool;

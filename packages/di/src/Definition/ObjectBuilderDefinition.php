@@ -129,7 +129,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @throws DependencyResolutionException
      * @throws ReflectionException
      */
-    public function getArgument(mixed $name, $default = null): mixed
+    public function getArgument(mixed $name, mixed $default = null): mixed
     {
         if (!isset($this->arguments[$name])) {
             return $default;
@@ -149,7 +149,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
     public function setArgument(mixed $name, mixed $value): static
     {
         if (!$value instanceof Closure) {
-            $value = fn() => $value;
+            $value = static fn() => $value;
         }
 
         $this->arguments[$name] = $value;
@@ -337,7 +337,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
     /**
      * Method to get property Class
      *
-     * @return  string
+     * @return  callable|string
      *
      * @since  3.5.19
      */

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker project.
+ * Part of Windwalker Packages project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
- * @license    MIT
+ * @copyright  Copyright (C) 2022 __ORGANIZATION__.
+ * @license    __LICENSE__
  */
 
 declare(strict_types=1);
@@ -13,31 +13,62 @@ namespace Windwalker\DI\Definition;
 
 use Closure;
 use Windwalker\DI\Container;
-use Windwalker\DI\Exception\DefinitionException;
 
 /**
- * The StoreDefinition class.
+ * The NewStoreDefinition class.
  */
-class StoreDefinition extends DelegateDefinition implements StoreDefinitionInterface
+class StoreDefinition implements StoreDefinitionInterface
 {
-    /**
-     * @var mixed
-     */
     protected mixed $cache = null;
 
-    protected int $options;
+    protected array $extends = [];
 
-    /**
-     * StoreDefinition constructor.
-     *
-     * @param  DefinitionInterface  $definition
-     * @param  int                  $options
-     */
-    public function __construct(DefinitionInterface $definition, int $options)
+    public function __construct(protected string $id, protected mixed $value, protected int $options = 0)
     {
-        $this->options = $options;
+    }
 
-        parent::__construct($definition);
+    public function resolve(Container $container, array $args = []): mixed
+    {
+        if ($this->cache !== null && ($this->options & Container::SHARED)) {
+            return $this->cache;
+        }
+
+        $value = $this->value;
+
+        // Build object if is builder
+        if ($this->value instanceof ObjectBuilderDefinition) {
+            $this->value->addArguments($args);
+            $this->value->setContainer($container);
+
+            $value = $this->value->resolve($container);
+        }
+
+        // Invoke
+        if ($this->value instanceof Closure) {
+            $value = ($this->value)($container);
+        }
+
+        // Extends
+        foreach ($this->extends as $extend) {
+            $value = $extend($value, $container) ?? $value;
+        }
+
+        foreach ($container->findExtends($this->id) as $extend) {
+            $value = $extend($value, $container) ?? $value;
+        }
+
+        // Cache
+        if ($this->options & Container::SHARED) {
+            $this->cache = $value;
+        }
+
+        return $value;
+    }
+
+    public function set(mixed $value): void
+    {
+        $this->cache = null;
+        $this->value = $value;
     }
 
     public function isShared(): bool
@@ -50,57 +81,54 @@ class StoreDefinition extends DelegateDefinition implements StoreDefinitionInter
         return (bool) ($this->options & Container::PROTECTED);
     }
 
+    public function extend(Closure $closure): static
+    {
+        $this->extends[] = $closure;
+
+        return $this;
+    }
+
     public function reset(): void
     {
         $this->cache = null;
     }
 
     /**
-     * Resolve this definition.
-     *
-     * @param  Container  $container  The Container object.
-     *
-     * @return mixed
+     * @return int
      */
-    public function resolve(Container $container): mixed
+    public function getOptions(): int
     {
-        if (!$this->isShared()) {
-            $this->reset();
-        }
-
-        return $this->cache ??= parent::resolve($container);
+        return $this->options;
     }
 
     /**
-     * Set new value or factory callback to this definition.
+     * @param  int  $options
      *
-     * @param  mixed  $value  Value or callable.
-     *
-     * @return  void
-     * @throws DefinitionException
+     * @return  static  Return self to support chaining.
      */
-    public function set(mixed $value): void
+    public function setOptions(int $options): static
     {
-        if ($this->options & Container::PROTECTED) {
-            throw new DefinitionException('This value / definition is protected.');
-        }
+        $this->options = $options;
 
-        parent::set($value);
+        return $this;
     }
 
     /**
-     * extend
-     *
-     * @param  Closure  $closure
-     *
-     * @return  $this
+     * @return string
      */
-    public function extend(Closure $closure): static
+    public function getId(): string
     {
-        $this->definition = new DelegateDefinition(
-            $this->definition,
-            $closure
-        );
+        return $this->id;
+    }
+
+    /**
+     * @param  string  $id
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setId(string $id): static
+    {
+        $this->id = $id;
 
         return $this;
     }
