@@ -61,14 +61,13 @@ class EventEmitter extends EventDispatcher implements
      */
     public function dispatch(object $event): object
     {
-        return tap(
-            parent::dispatch($event),
-            function () use ($event) {
-                foreach ($this->dealers as $dealer) {
-                    $dealer->dispatch($event);
-                }
-            }
-        );
+        $event = parent::dispatch($event);
+
+        foreach ($this->dealers as $dealer) {
+            $event = $dealer->dispatch($event);
+        }
+
+        return $event;
     }
 
     /**
@@ -77,7 +76,14 @@ class EventEmitter extends EventDispatcher implements
     public function emit(object|string $event, array $args = []): object
     {
         if (is_string($event) || $event instanceof EventInterface) {
-            $event = Event::wrap($event, $args);
+            // do not use ::wrap() to enhance performance
+            if (is_string($event)) {
+                $class = class_exists($event) ? $event : static::class;
+
+                $event = new $class($event);
+            }
+
+            $event->merge($args);
         }
 
         $this->dispatch($event);
