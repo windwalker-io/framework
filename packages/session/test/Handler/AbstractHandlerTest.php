@@ -145,7 +145,9 @@ abstract class AbstractHandlerTest extends TestCase
         $bridge = $session->getBridge();
 
         $mock = Mockery::instanceMock($bridge->getHandler());
-        $mock->shouldReceive('updateTimestamp')->andReturnTrue();
+        $mock->shouldReceive('updateTimestamp')
+            ->once()
+            ->andReturnTrue();
         $mock->shouldIgnoreMissing();
         $bridge->setHandler($mock);
 
@@ -163,9 +165,12 @@ abstract class AbstractHandlerTest extends TestCase
 
         /** @var PhpBridge $bridge */
         $bridge = $session->getBridge();
+        $bridge->setOption('lazy_write', false);
 
         $mock = Mockery::instanceMock($bridge->getHandler());
-        $mock->shouldReceive('write')->andReturnTrue();
+        $mock->shouldReceive('write')
+            ->once()
+            ->andReturnTrue();
         $mock->shouldIgnoreMissing();
         $bridge->setHandler($mock);
 

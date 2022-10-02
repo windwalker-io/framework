@@ -1038,17 +1038,15 @@ class EntityMapper implements EventAwareInterface
     {
         $metadata = $this->getMetadata();
 
-        if ($entity = $metadata->getCachedEntity()) {
-            return clone $entity;
+        if (!$entity = $metadata->getCachedEntity()) {
+            $class = $metadata->getClassName();
+
+            $entity = $this->getORM()->getAttributesResolver()->createObject($class);
+
+            $metadata->setCachedEntity($entity);
         }
 
-        $class = $metadata->getClassName();
-
-        $entity = $this->getORM()->getAttributesResolver()->createObject($class);
-
-        $metadata->setCachedEntity($entity);
-
-        return $entity;
+        return clone $entity;
     }
 
     /**

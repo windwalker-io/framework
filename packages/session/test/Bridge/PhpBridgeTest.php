@@ -152,8 +152,10 @@ class PhpBridgeTest extends TestCase
 
         $handler = Mockery::mock(HandlerInterface::class);
         $handler->shouldReceive('open')
+            ->once()
             ->withArgs(fn($savePath, $name) => $name === 'WW_SESS');
         $handler->shouldReceive('write')
+            ->once()
             ->andReturnTrue();
         $handler->shouldIgnoreMissing();
 

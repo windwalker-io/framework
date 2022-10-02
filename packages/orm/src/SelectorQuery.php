@@ -18,6 +18,7 @@ use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
+use Windwalker\ORM\Attributes\Mapping;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
 use Windwalker\Query\Clause\AsClause;
@@ -117,7 +118,7 @@ class SelectorQuery extends Query implements EventAwareInterface
             $tableName = static::convertClassToTable($className, $alias);
 
             if (class_exists($className)) {
-                $cols = array_keys($this->orm->getEntityMetadata($className)->getColumns());
+                $cols = array_keys($this->orm->getEntityMetadata($className)->getPureColumns());
             } else {
                 $tbm = $db->getTable($tableName);
 

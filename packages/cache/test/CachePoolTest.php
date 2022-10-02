@@ -81,6 +81,7 @@ class CachePoolTest extends TestCase
 
         $storageMock = Mockery::mock(StorageInterface::class)
             ->shouldReceive('save')
+            ->once()
             ->with('foo', 'Flower', time() + 30)
             ->getMock();
 

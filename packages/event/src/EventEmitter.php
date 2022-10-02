@@ -76,9 +76,9 @@ class EventEmitter extends EventDispatcher implements
     public function emit(object|string $event, array $args = []): object
     {
         if (is_string($event) || $event instanceof EventInterface) {
-            // do not use ::wrap() to enhance performance
+            // do not use Event::wrap() to enhance performance
             if (is_string($event)) {
-                $class = class_exists($event) ? $event : static::class;
+                $class = class_exists($event) ? $event : Event::class;
 
                 $event = new $class($event);
             }

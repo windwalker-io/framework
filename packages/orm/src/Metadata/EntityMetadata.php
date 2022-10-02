@@ -20,7 +20,7 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\ORM\Attributes\{Column, PK, Table, Watch};
+use Windwalker\ORM\Attributes\{Column, Mapping, PK, Table, Watch};
 use Windwalker\ORM\Cast\CastManager;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Event\AfterSaveEvent;
@@ -29,7 +29,7 @@ use Windwalker\ORM\Event\BeforeSaveEvent;
 use Windwalker\ORM\Event\BeforeUpdateWhereEvent;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Relation\RelationManager;
-use Windwalker\Utilities\Cache\RuntimeCacheTrait;
+use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
@@ -39,8 +39,8 @@ use Windwalker\Utilities\Reflection\ReflectAccessor;
 class EntityMetadata implements EventAwareInterface
 {
     use EventAwareTrait;
-    use RuntimeCacheTrait;
     use OptionAccessTrait;
+    use InstanceCacheTrait;
 
     protected string $className;
 
@@ -87,8 +87,6 @@ class EntityMetadata implements EventAwareInterface
      * @var ORM
      */
     protected ORM $orm;
-
-    protected ?object $cachedEntity = null;
 
     /**
      * EntityMetadata constructor.
@@ -309,6 +307,24 @@ class EntityMetadata implements EventAwareInterface
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    public function getPureColumns(): array
+    {
+        return $this->once(
+            'pure.cols',
+            function () {
+                $cols = [];
+
+                foreach ($this->columns as $name => $column) {
+                    if (!$column instanceof Mapping) {
+                        $cols[$name] = $column;
+                    }
+                }
+
+                return $cols;
+            }
+        );
     }
 
     public function getColumn(string $name): ?Column
@@ -561,7 +577,7 @@ class EntityMetadata implements EventAwareInterface
      */
     public function getCachedEntity(): ?object
     {
-        return $this->cachedEntity;
+        return $this->cacheStorage['entity'] ?? null;
     }
 
     /**
@@ -571,7 +587,7 @@ class EntityMetadata implements EventAwareInterface
      */
     public function setCachedEntity(?object $cachedEntity): static
     {
-        $this->cachedEntity = $cachedEntity;
+        $this->cacheStorage['entity'] = $cachedEntity;
 
         return $this;
     }
