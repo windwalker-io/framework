@@ -88,6 +88,8 @@ class EntityMetadata implements EventAwareInterface
      */
     protected ORM $orm;
 
+    protected ?object $cachedEntity = null;
+
     /**
      * EntityMetadata constructor.
      *
@@ -552,5 +554,25 @@ class EntityMetadata implements EventAwareInterface
     public function watchAfter(string $column, callable $method, int $options = 0): Closure
     {
         return $this->watch($column, $method, $options ^ Watch::BEFORE_SAVE);
+    }
+
+    /**
+     * @return object|null
+     */
+    public function getCachedEntity(): ?object
+    {
+        return $this->cachedEntity;
+    }
+
+    /**
+     * @param  object|null  $cachedEntity
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCachedEntity(?object $cachedEntity): static
+    {
+        $this->cachedEntity = $cachedEntity;
+
+        return $this;
     }
 }

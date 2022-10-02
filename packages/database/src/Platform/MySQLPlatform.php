@@ -33,6 +33,8 @@ class MySQLPlatform extends AbstractPlatform
 {
     protected string $name = self::MYSQL;
 
+    protected ?bool $isMariaDB = null;
+
     /**
      * @inheritDoc
      */
@@ -706,7 +708,11 @@ class MySQLPlatform extends AbstractPlatform
 
     public function isMariaDB(): bool
     {
-        return str_contains(
+        if ($this->isMariaDB !== null) {
+            return true;
+        }
+
+        return $this->isMariaDB = str_contains(
             strtolower($this->db->getDriver()->getVersion()),
             'mariadb'
         );

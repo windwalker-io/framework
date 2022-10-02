@@ -84,7 +84,7 @@ class EdgeProvider implements ServiceProviderInterface
                 $cache = $edge->getCache();
 
                 if ($cache instanceof EdgeFileCache) {
-                    $cache->setDebug($container->getParam('app.debug'));
+                    $cache->setDebug(true);
                 }
 
                 return $edge;

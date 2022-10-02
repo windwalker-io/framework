@@ -425,7 +425,7 @@ class ComponentTagCompiler
                 $value = $this->stripQuotes($value);
 
                 if (Str::startsWith($attribute, 'bind:')) {
-                    $attribute = Str::removeLeft($attribute, 'bind:');
+                    $attribute = Str::removeLeft($attribute, 'bind:', 'ascii');
 
                     $this->boundAttributes[$attribute] = true;
                 } else {

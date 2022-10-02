@@ -51,10 +51,10 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
         $container->prepareSharedObject(Cookies::class);
         $container->prepareObject(ArrayCookies::class);
 
-        $container->bind(Session::class, fn(SessionManager $manager) => $manager->get())
+        $container->bindShared(Session::class, fn(SessionManager $manager) => $manager->get())
             ->alias(SessionInterface::class, Session::class);
 
-        $container->bind(CookiesInterface::class, fn(SessionManager $manager) => $manager->get()->getCookies());
+        $container->bindShared(CookiesInterface::class, fn(SessionManager $manager) => $manager->get()->getCookies());
 
         $container->prepareSharedObject(CsrfService::class);
     }

@@ -77,7 +77,11 @@ class SelectorQuery extends Query implements EventAwareInterface
                 $object = $event->getClass();
 
                 if (is_string($object)) {
-                    $object = $orm->getAttributesResolver()->createObject($object);
+                    if (EntityMetadata::isEntity($object)) {
+                        $object = $orm->createEntity($object);
+                    } else {
+                        $object = new $object();
+                    }
                 }
 
                 $object = $orm->hydrateEntity($item, $object);
@@ -104,15 +108,21 @@ class SelectorQuery extends Query implements EventAwareInterface
         $db = $this->getDb();
 
         foreach ($tables as $i => $clause) {
-            if ($clause->getValue() instanceof Query) {
+            $className = $clause->getValue();
+
+            if ($className instanceof Query) {
                 continue;
             }
 
-            $tbm = $db->getTable(
-                static::convertClassToTable($clause->getValue(), $alias)
-            );
+            $tableName = static::convertClassToTable($className, $alias);
 
-            $cols = $tbm->getColumnNames();
+            if (class_exists($className)) {
+                $cols = array_keys($this->orm->getEntityMetadata($className)->getColumns());
+            } else {
+                $tbm = $db->getTable($tableName);
+
+                $cols = $tbm->getColumnNames();
+            }
 
             foreach ($cols as $col) {
                 $alias = $clause->getAlias() ?? $alias;
