@@ -708,11 +708,7 @@ class MySQLPlatform extends AbstractPlatform
 
     public function isMariaDB(): bool
     {
-        if ($this->isMariaDB !== null) {
-            return true;
-        }
-
-        return $this->isMariaDB = str_contains(
+        return $this->isMariaDB ??= str_contains(
             strtolower($this->db->getDriver()->getVersion()),
             'mariadb'
         );
