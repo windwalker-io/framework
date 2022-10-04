@@ -150,7 +150,11 @@ class ReflectAccessor
             }
         }
 
-        return $value ?? settype($value, $types[0]->getName());
+        if ($value === null) {
+            settype($value, $types[0]->getName());
+        }
+
+        return $value;
     }
 
     public static function hasProperty(object $object, string $propertyName): bool
