@@ -40,7 +40,7 @@ class StringObjectTest extends TestCase
      */
     public function testFunctionCreate()
     {
-        $s = str('白日依山盡', StringObject::ENCODING_US_ASCII);
+        $s = \Windwalker\str('白日依山盡', StringObject::ENCODING_US_ASCII);
 
         self::assertInstanceOf(StringObject::class, $s);
         self::assertEquals('白日依山盡', $s->getString());
