@@ -104,10 +104,11 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var PDO $pdo */
         $pdo = $this->getConnection()->get();
 
-        return tap(
-            $pdo->commit(),
-            fn () => $this->releaseKeptConnection()
-        );
+        $r = $pdo->commit();
+
+        $this->releaseKeptConnection();
+
+        return $r;
     }
 
     /**
@@ -118,10 +119,11 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var PDO $pdo */
         $pdo = $this->getConnection()->get();
 
-        return tap(
-            $pdo->rollBack(),
-            fn () => $this->releaseKeptConnection()
-        );
+        $r = $pdo->rollBack();
+
+        $this->releaseKeptConnection();
+
+        return $r;
     }
 
     /**
