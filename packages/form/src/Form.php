@@ -62,7 +62,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
     protected ?FormRendererInterface $renderer = null;
 
-    protected AttributesResolver $attributeResolver;
+    protected ?AttributesResolver $attributeResolver = null;
 
     /**
      * Form constructor.
@@ -82,7 +82,9 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
             $options
         );
 
-        $this->prepareAttributesResolver();
+        if (class_exists(AttributesResolver::class)) {
+            $this->prepareAttributesResolver();
+        }
     }
 
     /**
@@ -329,7 +331,9 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
     public function register(callable $handler): static
     {
-        $this->attributeResolver->resolveCallable($handler)($this);
+        if ($this->attributeResolver) {
+            $this->attributeResolver->resolveCallable($handler)($this);
+        }
 
         return $this;
     }

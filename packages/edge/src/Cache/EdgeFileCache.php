@@ -73,8 +73,8 @@ class EdgeFileCache implements EdgeCacheInterface
 
         if ($this->isDebug()) {
             $prefix = basename($path);
-            $prefix = Path::stripExtension($prefix);
-            $prefix = Path::stripExtension($prefix);
+            $prefix = static::stripExtension($prefix);
+            $prefix = static::stripExtension($prefix);
 
             $key = $prefix . '-' . $key . '.php';
         }
@@ -190,5 +190,10 @@ class EdgeFileCache implements EdgeCacheInterface
         $this->debug = $debug;
 
         return $this;
+    }
+
+    public static function stripExtension(string $file): string
+    {
+        return preg_replace('#\.[^.]*$#', '', $file);
     }
 }

@@ -13,8 +13,6 @@ namespace Windwalker\Edge\Component;
 
 use InvalidArgumentException;
 use ReflectionClass;
-use ReflectionProperty;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
 use Windwalker\Edge\Edge;
 use Windwalker\Utilities\Attributes\Prop;
@@ -322,19 +320,17 @@ class ComponentTagCompiler
         $props = [];
 
         foreach ($properties as $property) {
-            AttributesAccessor::runAttributeIfExists(
-                $property,
-                Prop::class,
-                function ($prop, ReflectionProperty $property) use (&$attributes, &$props) {
-                    $propName = StrNormalize::toKebabCase($property->getName());
+            $attrs = $property->getAttributes(Prop::class, \ReflectionAttribute::IS_INSTANCEOF);
 
-                    if ($attributes[$propName] ?? null) {
-                        $props[$property->getName()] = $attributes[$propName];
+            foreach ($attrs as $attr) {
+                $propName = StrNormalize::toKebabCase($property->getName());
 
-                        unset($attributes[$propName]);
-                    }
+                if ($attributes[$propName] ?? null) {
+                    $props[$property->getName()] = $attributes[$propName];
+
+                    unset($attributes[$propName]);
                 }
-            );
+            }
         }
 
         return [collect($props), collect($attributes)];

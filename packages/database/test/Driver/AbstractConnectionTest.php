@@ -13,7 +13,6 @@ namespace Windwalker\Database\Test\Driver;
 
 use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
-use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\Arr;
 

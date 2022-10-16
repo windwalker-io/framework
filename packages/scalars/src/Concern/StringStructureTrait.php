@@ -20,11 +20,19 @@ trait StringStructureTrait
 {
     public function parseToCollection(string $format, array $options = []): Collection
     {
+        if (!class_exists(Collection::class)) {
+            throw new \DomainException('Please install windwalker/data first.');
+        }
+
         return Collection::from($this->string, $format, $options);
     }
 
     public function jsonDecode(int $depth = 512, int $options = 0): Collection
     {
+        if (!class_exists(Collection::class)) {
+            throw new \DomainException('Please install windwalker/data first.');
+        }
+
         return Collection::from($this->string, 'json', compact('depth', 'options'));
     }
 
