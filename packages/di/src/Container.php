@@ -912,13 +912,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  Parameters  $parameters
+     * @param  Parameters|array  $parameters
      *
      * @return  static  Return self to support chaining.
      */
-    public function setParameters(Parameters $parameters): static
+    public function setParameters(Parameters|array $parameters): static
     {
-        $this->parameters = $parameters;
+        $this->parameters = Parameters::wrap($parameters);
 
         return $this;
     }

@@ -7,10 +7,6 @@ jobs:
     strategy:
       matrix:
         php-versions: [ '8.0', '8.1', '8.2' ]
-
-        include:
-          - php: '8.2'
-            experimental: true
     runs-on: ubuntu-latest
     services:
       memcached:
