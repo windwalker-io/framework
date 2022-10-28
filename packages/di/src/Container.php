@@ -314,6 +314,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this->get($source);
     }
 
+    public function resolveParam(string $param, array $args = [], int $options = 0): mixed
+    {
+        return $this->resolve($param, $args, $options);
+    }
+
     /**
      * Returns true if the container can return an entry for the given identifier.
      * Returns false otherwise.
