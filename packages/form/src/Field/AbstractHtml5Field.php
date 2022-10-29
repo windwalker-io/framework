@@ -18,8 +18,6 @@ use Windwalker\Filter\Rule\Range;
  *
  * @method  $this  step(int|float|string $value)
  * @method  mixed  getStep()
- * @method  $this  pattern(string $value)
- * @method  mixed  getPattern()
  *
  * @since  3.0.1
  */
