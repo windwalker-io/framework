@@ -685,9 +685,9 @@ class Language implements LanguageInterface
 
                 $ref = null;
 
-                if (method_exists($traceData['class'], $traceData['function'])) {
+                if (method_exists((string) $traceData['class'], (string) $traceData['function'])) {
                     $ref = new \ReflectionMethod($traceData['class'], $traceData['function']);
-                } elseif (function_exists($traceData['function'])) {
+                } elseif (function_exists((string) $traceData['function'])) {
                     $ref = new \ReflectionFunction($traceData['function']);
                 }
 
