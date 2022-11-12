@@ -27,7 +27,7 @@ abstract class AbstractEngineRenderer implements
 {
     use OptionAccessTrait;
 
-    protected ?Closure $builder = null;
+    protected ?Closure $engineBuilder = null;
 
     /**
      * Property engine.
@@ -58,7 +58,7 @@ abstract class AbstractEngineRenderer implements
 
     public function createEngine(array $options = []): object
     {
-        $builder = $this->getBuilder();
+        $builder = $this->getEngineBuilder();
 
         $options = Arr::mergeRecursive($this->options, $options);
 
@@ -78,14 +78,14 @@ abstract class AbstractEngineRenderer implements
      *
      * @return  Closure
      */
-    abstract public function getDefaultBuilder(): Closure;
+    abstract public function getDefaultEngineBuilder(): Closure;
 
     /**
      * @inheritDoc
      */
     public function extend(callable $callable): static
     {
-        $builder = $this->getBuilder();
+        $builder = $this->getEngineBuilder();
 
         $callable = Closure::fromCallable($callable);
 
@@ -93,7 +93,7 @@ abstract class AbstractEngineRenderer implements
             return $callable($builder($options), $options);
         };
 
-        $this->setBuilder($builder);
+        $this->setEngineBuilder($builder);
 
         return $this;
     }
@@ -101,19 +101,19 @@ abstract class AbstractEngineRenderer implements
     /**
      * @return Closure|null
      */
-    public function getBuilder(): ?Closure
+    public function getEngineBuilder(): ?Closure
     {
-        return $this->builder ?? $this->getDefaultBuilder();
+        return $this->engineBuilder ?? $this->getDefaultEngineBuilder();
     }
 
     /**
-     * @param  Closure|null  $builder
+     * @param  Closure|null  $engineBuilder
      *
      * @return  static  Return self to support chaining.
      */
-    public function setBuilder(?Closure $builder): static
+    public function setEngineBuilder(?Closure $engineBuilder): static
     {
-        $this->builder = $builder;
+        $this->engineBuilder = $engineBuilder;
 
         return $this;
     }

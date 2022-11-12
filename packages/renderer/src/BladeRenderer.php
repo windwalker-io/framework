@@ -44,7 +44,7 @@ class BladeRenderer extends AbstractEngineRenderer
      *
      * @return  Closure
      */
-    public function getDefaultBuilder(): Closure
+    public function getDefaultEngineBuilder(): Closure
     {
         return function (array $options = []) {
             $fs = $this->createFilesystem();

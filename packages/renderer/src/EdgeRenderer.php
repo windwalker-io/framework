@@ -41,7 +41,7 @@ class EdgeRenderer extends AbstractEngineRenderer
      *
      * @return  Closure
      */
-    public function getDefaultBuilder(): Closure
+    public function getDefaultEngineBuilder(): Closure
     {
         return static function (array $options = []) {
             if ($options['cache_path'] ?? null) {
