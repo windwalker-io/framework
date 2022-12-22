@@ -16,13 +16,12 @@ use Windwalker\DOM\DOMElement;
 /**
  * The ButtonField class.
  *
- * @method  $this  content(string|callable $value = null)
- * @method  mixed  getContent()
- *
  * @since  2.1.8
  */
 class CustomHtmlField extends AbstractField
 {
+    protected mixed $content = '';
+
     /**
      * buildInput
      *
@@ -48,5 +47,25 @@ class CustomHtmlField extends AbstractField
     public function prepareInput(DOMElement $input): DOMElement
     {
         return $input;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent(): mixed
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param  string|callable  $content
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function content(string|callable $content): static
+    {
+        $this->content = $content;
+
+        return $this;
     }
 }
