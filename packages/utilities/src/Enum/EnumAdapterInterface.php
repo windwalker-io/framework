@@ -16,4 +16,5 @@ namespace Windwalker\Utilities\Enum;
  */
 interface EnumAdapterInterface extends \JsonSerializable
 {
+    public function getValue();
 }
