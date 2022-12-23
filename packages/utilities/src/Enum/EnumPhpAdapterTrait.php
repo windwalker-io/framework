@@ -82,7 +82,7 @@ trait EnumPhpAdapterTrait
             return $this === static::tryWrap($variable);
         }
 
-        return $this->equals(new static($variable));
+        return $this->equals(static::wrap($variable));
     }
 
     public static function tryFrom(string|int $value): ?static
