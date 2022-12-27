@@ -120,7 +120,8 @@ class MySQLPlatform extends AbstractPlatform
             ]
         )
             ->from('INFORMATION_SCHEMA.COLUMNS')
-            ->where('TABLE_NAME', $this->db->replacePrefix($table));
+            ->where('TABLE_NAME', $this->db->replacePrefix($table))
+            ->order('ORDINAL_POSITION');
 
         if ($schema !== null) {
             $query->where('TABLE_SCHEMA', $schema);
