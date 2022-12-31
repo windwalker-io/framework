@@ -20,6 +20,7 @@ class JsonCast implements CastInterface
 {
     /**
      * @inheritDoc
+     * @throws JsonException
      */
     public function hydrate(mixed $value): mixed
     {
@@ -27,7 +28,7 @@ class JsonCast implements CastInterface
             return $value;
         }
 
-        if ($value === '' || $value === null) {
+        if ($value === '') {
             return null;
         }
 
