@@ -19,6 +19,34 @@ use MyCLabs\Enum\Enum;
 class EnumSingleton extends Enum
 {
     /**
+     * @param mixed $value
+     * @return static
+     */
+    public static function from($value): self
+    {
+        $key = static::assertValidValueReturningKey($value);
+
+        return static::__callStatic($key, []);
+    }
+
+    /**
+     * Asserts valid enum value
+     *
+     * @psalm-pure
+     * @psalm-assert T $value
+     * @param mixed $value
+     * @return string
+     */
+    protected static function assertValidValueReturningKey($value): string
+    {
+        if (false === ($key = static::search($value))) {
+            throw new \UnexpectedValueException("Value '$value' is not part of the enum " . static::class);
+        }
+
+        return $key;
+    }
+
+    /**
      * @inheritDoc
      */
     public static function __callStatic($name, $arguments)
