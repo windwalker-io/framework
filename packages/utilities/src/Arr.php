@@ -134,17 +134,34 @@ abstract class Arr
         return array_values(array_filter(explode($delimiter, (string) $path), 'strlen'));
     }
 
-    public static function explodeAndClear(string $delimiter, string $string, ?int $limit = null): array
+    public static function explodeAndClear(string|array $delimiter, string $string, ?int $limit = null): array
     {
+        if (is_array($delimiter)) {
+            $pattern = '/[' . implode('', $delimiter) . ']/';
+            $chunk = preg_split($pattern, $string, $limit ?? -1, PREG_SPLIT_NO_EMPTY);
+        } else {
+            $chunk = explode(...func_get_args());
+        }
+
         return array_values(
             array_filter(
                 array_map(
                     'trim',
-                    explode(...func_get_args()),
+                    $chunk,
                 ),
                 'strlen'
             )
         );
+    }
+
+    public static function padEnd(array $array, int $length, mixed $value): array
+    {
+        return array_pad($array, abs($length), $value);
+    }
+
+    public static function padStart(array $array, int $length, mixed $value): array
+    {
+        return array_pad($array, -abs($length), $value);
     }
 
     /**
