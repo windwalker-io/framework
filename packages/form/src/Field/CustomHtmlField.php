@@ -28,9 +28,9 @@ class CustomHtmlField extends AbstractField
      * @param  DOMElement  $input
      * @param  array       $options
      *
-     * @return  mixed
+     * @return  string|DOMElement
      */
-    public function buildFieldElement(DOMElement $input, array $options = []): string
+    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
     {
         $content = $this->getContent();
 
@@ -58,11 +58,11 @@ class CustomHtmlField extends AbstractField
     }
 
     /**
-     * @param  string|callable  $content
+     * @param  string|DOMElement|callable  $content
      *
      * @return  static  Return self to support chaining.
      */
-    public function content(string|callable $content): static
+    public function content(mixed $content): static
     {
         $this->content = $content;
 

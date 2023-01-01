@@ -180,7 +180,9 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
                    `EXTRA`
             FROM `INFORMATION_SCHEMA`.`COLUMNS`
             WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
+              AND `TABLE_SCHEMA` = (SELECT DATABASE())
+            ORDER BY
+              `ORDINAL_POSITION`;
             ALTER TABLE `enterprise`
                 ADD COLUMN `captain` varchar(512) NOT NULL DEFAULT '' AFTER `catid`;
             ALTER TABLE `enterprise`
@@ -237,7 +239,9 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
                    `EXTRA`
             FROM `INFORMATION_SCHEMA`.`COLUMNS`
             WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
+              AND `TABLE_SCHEMA` = (SELECT DATABASE())
+            ORDER BY
+                `ORDINAL_POSITION`;
             SELECT `TABLE_SCHEMA`,
                    `TABLE_NAME`,
                    `NON_UNIQUE`,
@@ -337,7 +341,9 @@ SELECT `ORDINAL_POSITION`,
        `EXTRA`
 FROM `INFORMATION_SCHEMA`.`COLUMNS`
 WHERE `TABLE_NAME` = 'enterprise'
-  AND `TABLE_SCHEMA` = (SELECT DATABASE());
+  AND `TABLE_SCHEMA` = (SELECT DATABASE())
+ORDER BY
+  `ORDINAL_POSITION`;
 SELECT `TABLE_NAME`, `CONSTRAINT_NAME`, `CONSTRAINT_TYPE`
 FROM `INFORMATION_SCHEMA`.`TABLE_CONSTRAINTS`
 WHERE `TABLE_NAME` = 'enterprise'
@@ -604,6 +610,8 @@ SQL,
             FROM `INFORMATION_SCHEMA`.`COLUMNS`
             WHERE `TABLE_NAME` = 'enterprise'
               AND `TABLE_SCHEMA` = 'windwalker_test'
+            ORDER BY
+                `ORDINAL_POSITION`
             SQL,
             implode(";\n", $logs)
         );
