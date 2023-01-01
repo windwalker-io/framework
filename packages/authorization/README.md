@@ -13,7 +13,7 @@
 
 <p align="center">
     <img alt="GitHub" src="https://img.shields.io/github/license/windwalker-io/authorization?style=flat-square">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/windwalker-io/authorization/PHP%20Composer?label=test&style=flat-square">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/windwalker-io/authorization/ci.yml?label=test&style=flat-square">
     <img alt="Packagist Downloads" src="https://img.shields.io/packagist/dt/windwalker/authorization?style=flat-square">
     <img alt="Packagist Version" src="https://img.shields.io/packagist/v/windwalker/authorization?style=flat-square">
 </p>
