@@ -512,7 +512,9 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
             return $this->getAttribute('data-' . $name);
         }
 
-        return $this->setAttribute('data-' . $name, $value);
+        $this->setAttribute('data-' . $name, $value);
+
+        return $this;
     }
 
     /**
