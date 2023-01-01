@@ -85,7 +85,7 @@ class Watch implements AttributeInterface
             ->setValue($value)
             ->setType($type)
             ->setMetadata($event->getMetadata())
-            ->setData($event->getData())
+            ->setDataRef($event->getData())
             ->setSource($event->getData());
 
         if ($event instanceof AbstractSaveEvent) {

@@ -18,8 +18,6 @@ abstract class AbstractDeleteEvent extends AbstractEntityEvent
 {
     protected mixed $conditions;
 
-    protected ?array $data = null;
-
     protected int $options = 0;
 
     protected ?object $entity = null;
@@ -40,26 +38,6 @@ abstract class AbstractDeleteEvent extends AbstractEntityEvent
     public function setConditions(mixed $conditions): static
     {
         $this->conditions = $conditions;
-
-        return $this;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function &getData(): ?array
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param  array|null  $data
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setData(?array $data): static
-    {
-        $this->data = $data;
 
         return $this;
     }

@@ -24,33 +24,11 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
 
     protected string $type;
 
-    protected array $data;
-
     protected ?array $oldData = null;
 
     protected int $options = 0;
 
     protected array|object $source = [];
-
-    /**
-     * @return array
-     */
-    public function &getData(): array
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param  array  $data
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setData(array $data): static
-    {
-        $this->data = $data;
-
-        return $this;
-    }
 
     /**
      * @return string
