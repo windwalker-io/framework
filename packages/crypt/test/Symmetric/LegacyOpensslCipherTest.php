@@ -84,10 +84,11 @@ class LegacyOpensslCipherTest extends TestCase
                 'des-ede3-cbc',
                 'vH8xcBwXQiXZ/YSvw+h0eWLbnftFHJNb5dc/Ob2vOHU=:MZIUaSKqBsnb0ZeMG5vJDzVwbyrrAPqYoqXNTO6RoUw=:/cEHJARlmjg=:fd0YQLROmEQRiEIyoOcXag==',
             ],
-            'bf-cbc' => [
-                'bf-cbc',
-                '5ZTJ03ITnhshMxghJh/+b9d2+kSAPsGdHrcXXBp7Zso=:MS1jDSc5uxuf30ImrARNdXqn8oFexce+olpGj6PBbpA=:5WjBQfVXLuk=:S54cmXm3Lp3k42q7VRawVQ==',
-            ],
+            // Openssl 3.0 no longer support legacy unsafe cipher
+            // 'bf-cbc' => [
+            //     'bf-cbc',
+            //     '5ZTJ03ITnhshMxghJh/+b9d2+kSAPsGdHrcXXBp7Zso=:MS1jDSc5uxuf30ImrARNdXqn8oFexce+olpGj6PBbpA=:5WjBQfVXLuk=:S54cmXm3Lp3k42q7VRawVQ==',
+            // ],
         ];
         // phpcs:enable
     }
