@@ -138,7 +138,7 @@ trait ArrayCreationTrait
     /**
      * merge
      *
-     * @param  array[]|static[]  ...$args
+     * @param  array|static  ...$args
      *
      * @return  static
      *
