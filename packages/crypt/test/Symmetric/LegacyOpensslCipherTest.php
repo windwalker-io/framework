@@ -30,6 +30,20 @@ class LegacyOpensslCipherTest extends TestCase
      */
     protected $instance;
 
+    public static function setUpBeforeClass(): void
+    {
+        if (!function_exists('openssl_encrypt')) {
+            self::markTestSkipped('No openssl installed.');
+        }
+
+        // Openssl 3.0 no longer support legacy unsafe cipher
+        $version = explode(' ', OPENSSL_VERSION_TEXT)[1] ?? '';
+
+        if (version_compare($version, '3.0', '>=')) {
+            self::markTestSkipped('No-longer support openssl 3.0.');
+        }
+    }
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -84,11 +98,10 @@ class LegacyOpensslCipherTest extends TestCase
                 'des-ede3-cbc',
                 'vH8xcBwXQiXZ/YSvw+h0eWLbnftFHJNb5dc/Ob2vOHU=:MZIUaSKqBsnb0ZeMG5vJDzVwbyrrAPqYoqXNTO6RoUw=:/cEHJARlmjg=:fd0YQLROmEQRiEIyoOcXag==',
             ],
-            // Openssl 3.0 no longer support legacy unsafe cipher
-            // 'bf-cbc' => [
-            //     'bf-cbc',
-            //     '5ZTJ03ITnhshMxghJh/+b9d2+kSAPsGdHrcXXBp7Zso=:MS1jDSc5uxuf30ImrARNdXqn8oFexce+olpGj6PBbpA=:5WjBQfVXLuk=:S54cmXm3Lp3k42q7VRawVQ==',
-            // ],
+            'bf-cbc' => [
+                'bf-cbc',
+                '5ZTJ03ITnhshMxghJh/+b9d2+kSAPsGdHrcXXBp7Zso=:MS1jDSc5uxuf30ImrARNdXqn8oFexce+olpGj6PBbpA=:5WjBQfVXLuk=:S54cmXm3Lp3k42q7VRawVQ==',
+            ],
         ];
         // phpcs:enable
     }
