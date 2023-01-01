@@ -18,6 +18,10 @@ use JsonException;
  */
 class JsonCast implements CastInterface
 {
+    public int $decodeOptions = JSON_THROW_ON_ERROR;
+
+    public int $encodeOptions = JSON_THROW_ON_ERROR;
+
     /**
      * @inheritDoc
      * @throws JsonException
@@ -32,7 +36,7 @@ class JsonCast implements CastInterface
             return null;
         }
 
-        return json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?: [];
+        return json_decode($value, true, 512, $this->decodeOptions) ?: [];
     }
 
     /**
@@ -41,6 +45,6 @@ class JsonCast implements CastInterface
      */
     public function extract(mixed $value): mixed
     {
-        return is_json($value) ? $value : json_encode($value, JSON_THROW_ON_ERROR);
+        return is_json($value) ? $value : json_encode($value, $this->encodeOptions);
     }
 }
