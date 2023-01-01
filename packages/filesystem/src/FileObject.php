@@ -28,6 +28,10 @@ use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Str;
 
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+use const Windwalker\Stream\WRITE_ONLY_RESET;
+
 /**
  * The FileObject class.
  *
@@ -35,7 +39,7 @@ use Windwalker\Utilities\Str;
  * @method Promise copyAsync(string|SplFileInfo $dest, bool $force = false)
  * @method Promise moveAsync(string|SplFileInfo $dest, bool $force = false)
  * @method Promise readAsync(bool $useIncludePath = false, $context = null, int $offset = 0, ?int $maxlen = null)
- * @method Promise readStreamAsync(string $mode = Stream::MODE_READ_ONLY_FROM_BEGIN)
+ * @method Promise readStreamAsync(string $mode = READ_ONLY_FROM_BEGIN)
  * @method Promise writeAsync(string $buffer)
  * @method Promise writeStreamAsync(string|resource|StreamInterface $stream)
  * @method Promise deleteAsync()
@@ -43,7 +47,7 @@ use Windwalker\Utilities\Str;
  * @method Promise filesAsync(bool $recursive = false)
  * @method Promise foldersAsync(bool $recursive = false)
  * @method Promise itemsAsync(bool $recursive = false)
- * @method Promise getStreamAsync(string $mode = Stream::MODE_READ_WRITE_FROM_BEGIN)
+ * @method Promise getStreamAsync(string $mode = READ_WRITE_FROM_BEGIN)
  *
  */
 class FileObject extends SplFileInfo
@@ -474,7 +478,7 @@ class FileObject extends SplFileInfo
      *
      * @return  StreamInterface
      */
-    public function readStream(string $mode = 'rb'): StreamInterface
+    public function readStream(string $mode = READ_ONLY_FROM_BEGIN): StreamInterface
     {
         return $this->getStream($mode);
     }
@@ -529,13 +533,13 @@ class FileObject extends SplFileInfo
     public function writeStream(mixed $stream): static
     {
         if (!$stream instanceof StreamInterface) {
-            $stream = new Stream($stream, Stream::MODE_READ_ONLY_FROM_BEGIN);
+            $stream = new Stream($stream, READ_ONLY_FROM_BEGIN);
         }
 
         // If the destination directory doesn't exist we need to create it
         $this->getParent()->mkdir();
 
-        StreamHelper::copy($stream, $dest = $this->getStream(Stream::MODE_WRITE_ONLY_RESET));
+        StreamHelper::copy($stream, $dest = $this->getStream(WRITE_ONLY_RESET));
 
         $dest->close();
 
@@ -689,7 +693,7 @@ class FileObject extends SplFileInfo
      * @return  StreamInterface
      */
     public function getStream(
-        string $mode = Stream::MODE_READ_WRITE_FROM_BEGIN,
+        string $mode = READ_WRITE_FROM_BEGIN,
         string $className = Stream::class
     ): StreamInterface {
         if (!$this->exists()) {

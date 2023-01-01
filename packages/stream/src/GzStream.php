@@ -27,7 +27,7 @@ class GzStream extends Stream
      *
      * @return  static
      */
-    public static function fromFilePath(string $file, string $mode = self::MODE_READ_WRITE_RESET): static
+    public static function fromFilePath(string $file, string $mode = READ_WRITE_RESET): static
     {
         return new static(gzopen($file, $mode));
     }

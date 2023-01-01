@@ -19,6 +19,8 @@ use Windwalker\Stream\Stream;
 use Windwalker\Stream\StringStream;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
+
 /**
  * Test class of Stream
  *
@@ -48,7 +50,7 @@ class StringStreamTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->instance = new StringStream('', Stream::MODE_READ_WRITE_FROM_BEGIN);
+        $this->instance = new StringStream('', READ_WRITE_FROM_BEGIN);
     }
 
     /**
@@ -267,7 +269,7 @@ class StringStreamTest extends TestCase
      */
     public function testIsWritable()
     {
-        $stream = new StringStream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $stream = new StringStream('php://memory', READ_ONLY_FROM_BEGIN);
 
         $this->assertFalse($stream->isWritable());
     }

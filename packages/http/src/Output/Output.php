@@ -16,6 +16,8 @@ use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
+use const Windwalker\Stream\WRITE_ONLY_RESET;
+
 /**
  * Standard output object for PHP SAPI.
  *
@@ -171,7 +173,7 @@ class Output implements OutputInterface
     public function setOutputStream(StreamInterface|string|null $outputStream): static
     {
         if (!$outputStream instanceof StreamInterface) {
-            $outputStream = Stream::wrap($outputStream ?? 'php://output', Stream::MODE_WRITE_ONLY_RESET);
+            $outputStream = Stream::wrap($outputStream ?? 'php://output', WRITE_ONLY_RESET);
         }
 
         $this->outputStream = $outputStream;

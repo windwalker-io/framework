@@ -33,6 +33,7 @@ use Windwalker\Uri\UriFactory;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 use const UPLOAD_ERR_OK;
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 
 /**
  * The HttpFactory class.
@@ -127,7 +128,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createStream(string $content = ''): StreamInterface
     {
-        $stream = new Stream('php://memory', Stream::MODE_READ_WRITE_FROM_BEGIN);
+        $stream = new Stream('php://memory', READ_WRITE_FROM_BEGIN);
         $stream->write($content);
         $stream->rewind();
 

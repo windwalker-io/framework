@@ -23,16 +23,22 @@ use RuntimeException;
  */
 class Stream implements StreamInterface
 {
+    /** @deprecated Use global constants */
     public const MODE_READ_ONLY_FROM_BEGIN = 'rb';
 
+    /** @deprecated Use global constants */
     public const MODE_READ_WRITE_FROM_BEGIN = 'rb+';
 
+    /** @deprecated Use global constants */
     public const MODE_WRITE_ONLY_RESET = 'wb';
 
+    /** @deprecated Use global constants */
     public const MODE_READ_WRITE_RESET = 'wb+';
 
+    /** @deprecated Use global constants */
     public const MODE_WRITE_ONLY_FROM_END = 'ab';
 
+    /** @deprecated Use global constants */
     public const MODE_READ_WRITE_FROM_END = 'ab+';
 
     /**
@@ -57,7 +63,7 @@ class Stream implements StreamInterface
      *
      * @return  static
      */
-    public static function fromString(string $string, string $mode = self::MODE_READ_WRITE_FROM_BEGIN): static
+    public static function fromString(string $string, string $mode = READ_WRITE_FROM_BEGIN): static
     {
         $stream = new static(null, $mode);
         $stream->write($string);
@@ -73,7 +79,7 @@ class Stream implements StreamInterface
      *
      * @return  static
      */
-    public static function fromFilePath(string $file, string $mode = self::MODE_READ_WRITE_RESET): static
+    public static function fromFilePath(string $file, string $mode = READ_WRITE_RESET): static
     {
         return new static(fopen($file, $mode));
     }
@@ -86,7 +92,7 @@ class Stream implements StreamInterface
      *
      * @return  StreamInterface
      */
-    public static function wrap(mixed $stream, string $mode = self::MODE_READ_WRITE_FROM_BEGIN): StreamInterface
+    public static function wrap(mixed $stream, string $mode = READ_WRITE_FROM_BEGIN): StreamInterface
     {
         if ($stream instanceof StreamInterface) {
             return $stream;
@@ -101,7 +107,7 @@ class Stream implements StreamInterface
      * @param  string|resource  $stream  The stream resource cursor.
      * @param  string           $mode    Mode with which to open stream
      */
-    public function __construct($stream = null, string $mode = self::MODE_READ_WRITE_FROM_BEGIN)
+    public function __construct($stream = null, string $mode = READ_WRITE_FROM_BEGIN)
     {
         $this->attach($stream ?? 'php://memory', $mode);
     }

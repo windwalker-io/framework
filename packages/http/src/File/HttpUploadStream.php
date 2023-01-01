@@ -14,6 +14,8 @@ namespace Windwalker\Http\File;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Stream\Stream;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+
 /**
  * The HttpUploadFile class.
  */
@@ -33,7 +35,7 @@ class HttpUploadStream implements HttpUploadFileInterface
             throw new \LogicException(static::class . ' must use after PHP 8.1 or higher.');
         }
 
-        $this->setStream(Stream::wrap($stream, Stream::MODE_READ_ONLY_FROM_BEGIN));
+        $this->setStream(Stream::wrap($stream, READ_ONLY_FROM_BEGIN));
     }
 
     /**

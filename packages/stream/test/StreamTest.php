@@ -17,6 +17,11 @@ use RuntimeException;
 use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_RESET;
+use const Windwalker\Stream\WRITE_ONLY_RESET;
+
 /**
  * Test class of Stream
  *
@@ -46,7 +51,7 @@ class StreamTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->instance = new Stream('php://memory', Stream::MODE_READ_WRITE_RESET);
+        $this->instance = new Stream('php://memory', READ_WRITE_RESET);
     }
 
     /**
@@ -64,7 +69,7 @@ class StreamTest extends TestCase
 
     public function testConstruct()
     {
-        $resource = fopen('php://memory', Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen('php://memory', READ_WRITE_RESET);
         $stream = new Stream($resource);
 
         $this->assertInstanceOf('Windwalker\Stream\Stream', $stream);
@@ -112,7 +117,7 @@ class StreamTest extends TestCase
     {
         $this->createTempFile();
 
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen($this->tmpnam, READ_WRITE_RESET);
 
         $stream = new Stream($resource);
         $stream->write('Foo Bar');
@@ -134,7 +139,7 @@ class StreamTest extends TestCase
      */
     public function testDetach()
     {
-        $resource = fopen('php://memory', Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen('php://memory', READ_WRITE_RESET);
         $stream = new Stream($resource);
 
         $this->assertSame($resource, $stream->detach());
@@ -154,7 +159,7 @@ class StreamTest extends TestCase
         $this->createTempFile();
 
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
 
         $stream = new Stream($resource);
 
@@ -173,7 +178,7 @@ class StreamTest extends TestCase
         $this->createTempFile();
 
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen($this->tmpnam, READ_WRITE_RESET);
 
         $stream = new Stream($resource);
 
@@ -201,7 +206,7 @@ class StreamTest extends TestCase
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
         $stream = new Stream($resource);
 
         fseek($resource, 2);
@@ -237,7 +242,7 @@ class StreamTest extends TestCase
         $this->createTempFile();
 
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen($this->tmpnam, READ_WRITE_RESET);
         $stream = new Stream($resource);
 
         $this->assertTrue($stream->isSeekable());
@@ -255,7 +260,7 @@ class StreamTest extends TestCase
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
 
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
         $stream = new Stream($resource);
 
         $this->assertTrue($stream->seek(2));
@@ -279,7 +284,7 @@ class StreamTest extends TestCase
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen($this->tmpnam, READ_WRITE_RESET);
 
         $stream = new Stream($resource);
 
@@ -299,7 +304,7 @@ class StreamTest extends TestCase
      */
     public function testIsWritable()
     {
-        $stream = new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $stream = new Stream('php://memory', READ_ONLY_FROM_BEGIN);
 
         $this->assertFalse($stream->isWritable());
     }
@@ -314,7 +319,7 @@ class StreamTest extends TestCase
     public function testWrite()
     {
         $this->createTempFile();
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+        $resource = fopen($this->tmpnam, READ_WRITE_RESET);
 
         $stream = new Stream($resource);
         $stream->write('flower');
@@ -343,7 +348,7 @@ class StreamTest extends TestCase
     {
         $this->createTempFile();
 
-        $stream = new Stream($this->tmpnam, Stream::MODE_WRITE_ONLY_RESET);
+        $stream = new Stream($this->tmpnam, WRITE_ONLY_RESET);
         $this->assertFalse($stream->isReadable());
     }
 
@@ -358,7 +363,7 @@ class StreamTest extends TestCase
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
 
         $stream = new Stream($resource);
 
@@ -381,7 +386,7 @@ class StreamTest extends TestCase
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
 
         $stream = new Stream($resource);
 
@@ -398,12 +403,12 @@ class StreamTest extends TestCase
     public function testGetMetadata()
     {
         $this->createTempFile();
-        $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_FROM_BEGIN);
+        $resource = fopen($this->tmpnam, READ_WRITE_FROM_BEGIN);
         $this->instance->attach($resource);
 
         $this->assertEquals(stream_get_meta_data($resource), $this->instance->getMetadata());
 
-        $this->assertEquals(Stream::MODE_READ_WRITE_FROM_BEGIN, $this->instance->getMetadata('mode'));
+        $this->assertEquals(READ_WRITE_FROM_BEGIN, $this->instance->getMetadata('mode'));
 
         fclose($resource);
     }

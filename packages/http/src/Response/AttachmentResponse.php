@@ -19,6 +19,9 @@ use Windwalker\Stream\Stream;
 
 use function Windwalker\uid;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_RESET;
+
 /**
  * The AttachmentResponse class.
  *
@@ -52,7 +55,7 @@ class AttachmentResponse extends Response
 
     protected function createStream(mixed $body): Stream
     {
-        return new Stream($body, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        return new Stream($body, READ_ONLY_FROM_BEGIN);
     }
 
     /**
@@ -83,7 +86,7 @@ class AttachmentResponse extends Response
      */
     public function withFileData(string $data): static
     {
-        $stream = new Stream('php://temp', Stream::MODE_READ_WRITE_RESET);
+        $stream = new Stream('php://temp', READ_WRITE_RESET);
 
         $stream->write($data);
         $stream->rewind();
