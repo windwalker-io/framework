@@ -202,7 +202,15 @@ class EntityMapper implements EventAwareInterface
 
         return new ResultIterator(
             $this->select()
-                ->where($this->conditionsToWheres($conditions))
+                ->pipe(
+                    function (SelectorQuery $query) use ($conditions) {
+                        if ($conditions instanceof \Closure) {
+                            return $conditions($query, $this) ?? $query;
+                        }
+
+                        return $query->where($this->conditionsToWheres($conditions));
+                    }
+                )
                 ->getIterator($className ?? $metadata->getClassName())
         );
     }
