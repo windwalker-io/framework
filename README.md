@@ -2,8 +2,8 @@
 
 # Windwalker Framework
 
-![ci](https://img.shields.io/github/actions/workflow/status/windwalker-io/framework/ci.yml?label=test&style=flat-square)
-![ci](https://img.shields.io/github/actions/workflow/status/windwalker-io/framework/phpcs-push.yml?label=test&style=flat-square)
+![ci](https://img.shields.io/github/actions/workflow/status/windwalker-io/framework/ci.yml?label=Test&style=flat-square)
+![ci](https://img.shields.io/github/actions/workflow/status/windwalker-io/framework/phpcs-push.yml?label=Code%20Styles&style=flat-square)
 ![Packagist Version](https://img.shields.io/packagist/v/windwalker/framework?style=flat-square)
 ![Packagist PHP Version](https://img.shields.io/packagist/dependency-v/windwalker/framework/php?style=flat-square)
 
