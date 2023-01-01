@@ -16,6 +16,7 @@ use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
+use Windwalker\Utilities\Enum\EnumMetaInterface;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -187,6 +188,10 @@ class CastManager
                 return function (mixed $value, ORM $orm) use ($options, $cast) {
                     if (is_subclass_of($cast, \BackedEnum::class)) {
                         return $cast::from($value);
+                    }
+
+                    if (is_subclass_of($cast, EnumMetaInterface::class)) {
+                        return $cast::wrap($value);
                     }
 
                     if (!($options & Cast::USE_HYDRATOR) && !($options & Cast::USE_CONSTRUCTOR)) {
