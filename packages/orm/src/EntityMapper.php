@@ -781,10 +781,13 @@ class EntityMapper implements EventAwareInterface
         $results = [];
 
         foreach ($delItems as $item) {
+            $handleRelations = true;
+
             if (!$keys) {
                 $conditions = $this->conditionsToWheres($item);
-                $data = null;
+                $data = [];
                 $entity = null;
+                $handleRelations = false;
             } elseif ($entityObject !== null) {
                 $entity = $entityObject;
                 $data = $this->extract($entityObject);
@@ -802,7 +805,7 @@ class EntityMapper implements EventAwareInterface
                 compact('data', 'conditions', 'metadata', 'entity', 'options')
             );
 
-            if ($event->getData() !== null) {
+            if ($handleRelations) {
                 $metadata->getRelationManager()->beforeDelete($event->getData(), $entity);
             }
 
@@ -816,7 +819,7 @@ class EntityMapper implements EventAwareInterface
 
             $results[] = $event->getStatement();
 
-            if ($event->getData() !== null) {
+            if ($handleRelations) {
                 $metadata->getRelationManager()->delete($event->getData(), $entity);
             }
         }

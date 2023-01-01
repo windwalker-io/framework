@@ -19,6 +19,7 @@ use Windwalker\Stream\Stream;
 use Windwalker\Stream\StringStream;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
 use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 
 /**
