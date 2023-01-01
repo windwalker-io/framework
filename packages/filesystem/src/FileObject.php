@@ -101,7 +101,7 @@ class FileObject extends SplFileInfo
      * wrapIfNotNull
      *
      * @param  SplFileInfo|string|null  $file
-     * @param  string|null               $root
+     * @param  string|null              $root
      *
      * @return  static|null
      */
@@ -684,16 +684,19 @@ class FileObject extends SplFileInfo
      * getStream
      *
      * @param  string  $mode
+     * @param  string  $className
      *
      * @return  StreamInterface
      */
-    public function getStream(string $mode = Stream::MODE_READ_WRITE_FROM_BEGIN): StreamInterface
-    {
+    public function getStream(
+        string $mode = Stream::MODE_READ_WRITE_FROM_BEGIN,
+        string $className = Stream::class
+    ): StreamInterface {
         if (!$this->exists()) {
             $this->touch();
         }
 
-        return new Stream($this->getPathname(), $mode);
+        return new $className($this->getPathname(), $mode);
     }
 
     /**
