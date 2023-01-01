@@ -458,7 +458,7 @@ abstract class Arr
         $i = 0;
         $c = 0;
 
-        $callback ??= fn(mixed $v) => $v !== null;
+        $callback ??= static fn(mixed $v) => $v !== null;
 
         foreach ($data as $key => $value) {
             // If use global function, send only value as argument.
