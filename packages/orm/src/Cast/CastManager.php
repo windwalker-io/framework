@@ -16,7 +16,7 @@ use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
-use Windwalker\Utilities\Enum\EnumMetaInterface;
+use Windwalker\Utilities\Enum\EnumSingleton;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -190,7 +190,7 @@ class CastManager
                         return $cast::from($value);
                     }
 
-                    if (is_subclass_of($cast, EnumMetaInterface::class)) {
+                    if (is_subclass_of($cast, EnumSingleton::class)) {
                         return $cast::wrap($value);
                     }
 
