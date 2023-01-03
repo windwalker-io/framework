@@ -50,7 +50,7 @@ trait EnumPhpAdapterTrait
             return $cases;
         }
 
-        return parent::values();
+        return array_map(fn ($value) => static::wrap($value), static::toArray());
     }
 
     public static function cases(): array
