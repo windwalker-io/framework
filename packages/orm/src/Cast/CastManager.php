@@ -164,7 +164,7 @@ class CastManager
     public function castToCallback(mixed $cast, int $options, string $direction = 'hydrate'): callable
     {
         if ($cast === null) {
-            return fn(mixed $value) => $value;
+            return static fn(mixed $value) => $value;
         }
 
         if (is_callable($cast)) {
@@ -177,15 +177,15 @@ class CastManager
             if (class_exists($cast)) {
                 // Cast interface
                 if (is_subclass_of($cast, CastInterface::class)) {
-                    return function (mixed $value, ORM $orm) use ($options, $direction, $cast) {
-                        $castObject = $orm->getAttributesResolver()->createObject($cast);
-
-                        return $castObject->$direction($value);
+                    return static function (mixed $value, ORM $orm) use ($options, $direction, $cast) {
+                        return $orm->getAttributesResolver()
+                            ->createObject($cast)
+                            ->$direction($value);
                     };
                 }
 
                 // Pure class
-                return function (mixed $value, ORM $orm) use ($options, $cast) {
+                return static function (mixed $value, ORM $orm) use ($options, $cast) {
                     if (is_subclass_of($cast, \BackedEnum::class)) {
                         return $cast::from($value);
                     }
@@ -216,7 +216,7 @@ class CastManager
                 };
             }
 
-            return function (mixed $value) use ($options, $cast) {
+            return static function (mixed $value) use ($options, $cast) {
                 return TypeCast::try($value, $cast);
             };
         }
@@ -319,7 +319,7 @@ class CastManager
     public function getDefaultExtractHandler(mixed $cast, int $options): mixed
     {
         if (is_subclass_of($cast, \DateTimeInterface::class)) {
-            return function (mixed $value, ORM $orm) {
+            return static function (mixed $value, ORM $orm) {
                 if ($value instanceof \DateTimeInterface) {
                     return $value->format($orm->getDb()->getDateFormat());
                 }
