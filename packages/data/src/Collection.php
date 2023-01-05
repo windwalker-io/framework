@@ -19,7 +19,10 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The Collection class.
  *
+ * @template TKey of array-key
  * @template T
+ *
+ * @template-extends \IteratorAggregate<TKey, T>
  *
  * @method string toJson(array $options = [])
  * @method string toXml(array $options = [])

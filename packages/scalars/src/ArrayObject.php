@@ -28,7 +28,10 @@ use function Windwalker\str;
 /**
  * The ArrayObject class.
  *
+ * @template TKey of array-key
  * @template T
+ *
+ * @template-extends \IteratorAggregate<TKey, T>
  *
  * @since  __DEPLOY_VERSION__
  */
