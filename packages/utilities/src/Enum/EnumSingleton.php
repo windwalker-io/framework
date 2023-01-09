@@ -32,6 +32,10 @@ class EnumSingleton extends Enum
      */
     public static function __callStatic($name, $arguments)
     {
-        return self::$instances[static::class][$name] ??= parent::__callStatic($name, $arguments);
+        return self::$instances[static::class][$name] ??= (function () use ($name) {
+            $value = static::toArray()[$name] ?? $name;
+
+            return new static($value);
+        })();
     }
 }
