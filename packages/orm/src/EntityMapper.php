@@ -59,6 +59,8 @@ use function Windwalker\collect;
  * Similar to DataMapper pattern.
  *
  * @template T
+ *
+ * @psalm-type Conditions = array|int|string|\Closure|null
  */
 class EntityMapper implements EventAwareInterface
 {
@@ -161,8 +163,8 @@ class EntityMapper implements EventAwareInterface
     /**
      * findOne
      *
-     * @param  mixed            $conditions
-     * @param  class-string<T>  $className
+     * @param  Conditions        $conditions
+     * @param  ?class-string<T>  $className
      *
      * @return  object|null|T
      */
@@ -176,8 +178,8 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  mixed|array      $conditions
-     * @param  class-string<T>  $className
+     * @param  Conditions        $conditions
+     * @param  ?class-string<T>  $className
      *
      * @return  object|T
      */
@@ -191,8 +193,8 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  mixed|array      $conditions
-     * @param  class-string<T>  $className
+     * @param  Conditions            $conditions
+     * @param  class-string<T>|null  $className
      *
      * @return  ResultIterator<T>
      */
@@ -202,28 +204,30 @@ class EntityMapper implements EventAwareInterface
 
         return new ResultIterator(
             $this->select()
-                ->pipe(
-                    function (SelectorQuery $query) use ($conditions) {
-                        if ($conditions instanceof \Closure) {
-                            return $conditions($query, $this) ?? $query;
-                        }
-
-                        return $query->where($this->conditionsToWheres($conditions));
-                    }
-                )
+                ->where($this->conditionsToWheres($conditions))
                 ->getIterator($className ?? $metadata->getClassName())
         );
     }
 
+    /**
+     * @param  string|RawWrapper  $column
+     * @param  Conditions         $conditions
+     *
+     * @return  string|null
+     */
     public function findResult(string|RawWrapper $column, mixed $conditions = []): ?string
     {
-        $metadata = $this->getMetadata();
-
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
             ->result();
     }
 
+    /**
+     * @param  string      $column
+     * @param  Conditions  $conditions
+     *
+     * @return  Collection
+     */
     public function findColumn(string $column, mixed $conditions = []): Collection
     {
         return $this->select($column)
@@ -231,6 +235,13 @@ class EntityMapper implements EventAwareInterface
             ->loadColumn();
     }
 
+    /**
+     * @param  string             $column
+     * @param  Conditions         $conditions
+     * @param  array|string|null  $groups
+     *
+     * @return  int
+     */
     public function countColumn(string $column, mixed $conditions = [], array|string $groups = null): int
     {
         return (int) $this->select()
@@ -243,6 +254,13 @@ class EntityMapper implements EventAwareInterface
             ->result();
     }
 
+    /**
+     * @param  string             $column
+     * @param  Conditions         $conditions
+     * @param  array|string|null  $groups
+     *
+     * @return  float
+     */
     public function sumColumn(string $column, mixed $conditions = [], array|string $groups = null): float
     {
         return (float) $this->select()
@@ -477,9 +495,9 @@ class EntityMapper implements EventAwareInterface
      * `$mapper->updateWhere(new Data(array('published' => 0)), array('date' => '2014-03-02'))`
      * Means we make every records which date is 2014-03-02 unpublished.
      *
-     * @param  mixed  $source      The data we want to update to every rows.
-     * @param  mixed  $conditions  Where conditions, you can use array or Compare object.
-     * @param  int    $options     The options.
+     * @param  mixed       $source      The data we want to update to every rows.
+     * @param  Conditions  $conditions  Where conditions, you can use array or Compare object.
+     * @param  int         $options     The options.
      *
      * @return StatementInterface
      * @throws \ReflectionException
@@ -520,7 +538,7 @@ class EntityMapper implements EventAwareInterface
      * updateWhere
      *
      * @param  array|object  $data
-     * @param  mixed|null    $conditions
+     * @param  Conditions    $conditions
      * @param  int           $options
      *
      * @return  StatementInterface[]
@@ -630,7 +648,7 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  mixed       $conditions
+     * @param  Conditions  $conditions
      * @param  mixed|null  $initData
      * @param  bool        $mergeConditions
      * @param  int         $options
@@ -728,8 +746,8 @@ class EntityMapper implements EventAwareInterface
     /**
      * deleteWhere
      *
-     * @param  mixed  $conditions
-     * @param  int    $options
+     * @param  Conditions  $conditions
+     * @param  int         $options
      *
      * @return  array<StatementInterface>
      */
@@ -830,9 +848,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable     $items
-     * @param  mixed|array  $conditions
-     * @param  int          $options
+     * @param  iterable    $items
+     * @param  Conditions  $conditions
+     * @param  int         $options
      *
      * @return  iterable<T>
      */
@@ -853,7 +871,7 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  mixed|array             $conditions
+     * @param  Conditions              $conditions
      * @param  callable|iterable|null  $newValue
      * @param  int                     $options
      *
@@ -910,7 +928,7 @@ class EntityMapper implements EventAwareInterface
 
     /**
      * @param  iterable     $items
-     * @param  mixed|array  $conditions
+     * @param  Conditions   $conditions
      * @param  array|null   $compareKeys
      * @param  int          $options
      *
@@ -1141,26 +1159,30 @@ class EntityMapper implements EventAwareInterface
         return $this->getORM()->extractField($entity, $field);
     }
 
-    public function conditionsToWheres(mixed $conditions): array
+    public function conditionsToWheres(mixed $conditions): array|\Closure
     {
-        if (!is_array($conditions)) {
-            $metadata = $this->getMetadata();
-
-            $key = $metadata->getMainKey();
-
-            if ($key) {
-                $conditions = [$key => $conditions];
-            } else {
-                throw new LogicException(
-                    sprintf(
-                        'Conditions cannot be scalars since %s has no keys',
-                        $metadata->getClassName()
-                    )
-                );
-            }
+        if ($conditions instanceof \Closure) {
+            return $conditions;
         }
 
-        return $conditions;
+        if (is_array($conditions)) {
+            return $conditions;
+        }
+
+        $metadata = $this->getMetadata();
+
+        $key = $metadata->getMainKey();
+
+        if ($key) {
+            return [$key => $conditions];
+        }
+
+        throw new LogicException(
+            sprintf(
+                'Conditions cannot be scalars since %s has no keys',
+                $metadata->getClassName()
+            )
+        );
     }
 
     protected function extractForSave(object|array $data, bool $updateNulls = true): array
