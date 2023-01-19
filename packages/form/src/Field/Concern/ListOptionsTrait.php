@@ -250,7 +250,7 @@ trait ListOptionsTrait
      * @return static
      */
     public function option(
-        DOMNode|string|null $text = null,
+        \DOMNode|string|null $text = null,
         ?string $value = null,
         array $attrs = [],
         ?string $group = null
@@ -263,7 +263,7 @@ trait ListOptionsTrait
     }
 
     public static function createOption(
-        DOMNode|string|null $text = null,
+        \DOMNode|string|null $text = null,
         ?string $value = null,
         array $attrs = []
     ): DOMElement {
