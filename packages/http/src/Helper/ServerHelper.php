@@ -44,6 +44,13 @@ abstract class ServerHelper
             return $servers[$name];
         }
 
+        $name = strtolower($name);
+        $servers = array_change_key_case($servers, CASE_LOWER);
+
+        if (array_key_exists($name, $servers)) {
+            return $servers[$name];
+        }
+
         return $default;
     }
 
@@ -115,7 +122,7 @@ abstract class ServerHelper
         $out = [];
 
         foreach ($_SERVER as $key => $value) {
-            if (strpos($key, 'HTTP_') === 0) {
+            if (str_starts_with($key, 'HTTP_')) {
                 $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
 
                 $out[$key] = $value;

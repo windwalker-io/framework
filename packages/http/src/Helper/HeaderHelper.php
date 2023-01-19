@@ -62,6 +62,10 @@ abstract class HeaderHelper
         string $name,
         mixed $default = null
     ): mixed {
+        if (array_key_exists($name, $headers)) {
+            return is_array($headers[$name]) ? implode(', ', $headers[$name]) : $headers[$name];
+        }
+
         $name = strtolower($name);
         $headers = array_change_key_case($headers, CASE_LOWER);
 

@@ -13,7 +13,10 @@ namespace Windwalker\Http\Server;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Swoole\Server as SwooleServer;
+use Swoole\Http\Server as SwooleServer;
+use Windwalker\Http\Event\RequestEvent;
+use Windwalker\Http\Event\ResponseEvent;
+use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Request\ServerRequestFactory;
 
 /**
@@ -21,15 +24,19 @@ use Windwalker\Http\Request\ServerRequestFactory;
  */
 class SwooleHttpServer extends AbstractServer
 {
-    protected ?SwooleServer $swooleServer = null;
+    protected ?string $host = null;
 
     protected int $mode = SWOOLE_BASE;
 
     protected int $sockType = SWOOLE_TCP;
 
-    public function __construct()
+    protected ?SwooleServer $swooleServer = null;
+
+    protected HttpFactory $httpFactory;
+
+    public function __construct(?HttpFactory $httpFactory = null)
     {
-        //
+        $this->httpFactory = $httpFactory ?? new HttpFactory();
     }
 
     public function setConfig(array $config): bool
@@ -44,7 +51,29 @@ class SwooleHttpServer extends AbstractServer
         $server->on(
             'request',
             function (Request $request, Response $response) {
-                ServerRequestFactory::
+                $req = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
+
+                $event = $this->emit(
+                    RequestEvent::wrap('request')
+                        ->setRequest($req)
+                );
+
+                /** @var ResponseEvent $event */
+                $event = $this->emit(
+                    ResponseEvent::wrap('response')
+                        ->setRequest($event->getRequest())
+                        ->setResponse($event->getResponse() ?? $this->httpFactory->createResponse())
+                );
+
+                $res = $event->getResponse();
+
+                $response->status($res->getStatusCode(), $res->getReasonPhrase());
+
+                foreach ($res->getHeaders() as $header => $values) {
+                    $response->header($header, $res->getHeaderLine($header));
+                }
+
+                $response->end((string) $res->getBody());
             }
         );
 
@@ -110,6 +139,26 @@ class SwooleHttpServer extends AbstractServer
     public function setSockType(int $sockType): static
     {
         $this->sockType = $sockType;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHost(): ?string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param  string|null  $host
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setHost(?string $host): static
+    {
+        $this->host = $host;
 
         return $this;
     }

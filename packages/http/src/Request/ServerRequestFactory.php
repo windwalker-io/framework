@@ -66,7 +66,7 @@ class ServerRequestFactory
 
         $body = new PhpInputStream();
 
-        $method = $server['REQUEST_METHOD'] ?? 'GET';
+        $method = ServerHelper::getValue($server, 'REQUEST_METHOD') ?? 'GET';
 
         $decodedBody = $_POST;
         $decodedFiles = $_FILES;
@@ -142,6 +142,61 @@ class ServerRequestFactory
         return $request->withUri($uri);
     }
 
+    public static function createFromSwooleRequest(\Swoole\Http\Request $sReq, ?string $host): ServerRequestInterface
+    {
+        $server = static::prepareServers((array) $sReq->server);
+        $headers = (array) $sReq->header;
+        $files = (array) $sReq->files;
+
+        if ($host) {
+            $host = $server['remote_addr'];
+
+            if ($server['port']) {
+                $host .= ':' . $server['port'];
+            }
+        }
+
+        $server['http_host'] = $host;
+
+        $body = new PhpInputStream();
+
+        $method = ServerHelper::getValue($server, 'REQUEST_METHOD') ?? 'GET';
+
+        $decodedBody = $_POST;
+        $decodedFiles = $_FILES;
+        $method = strtoupper($method);
+        $type = (string) HeaderHelper::getValue($headers, 'Content-Type');
+
+        if ($method === 'POST') {
+            if (str_contains($type, 'application/json')) {
+                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+            }
+        } elseif (in_array($method, ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
+            if (str_contains($type, 'application/x-www-form-urlencoded')) {
+                parse_str($body->__toString(), $decodedBody);
+            } elseif (str_contains($type, 'multipart/form-data')) {
+                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body->__toString()));
+            } elseif (str_contains($type, 'application/json')) {
+                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+            }
+        }
+
+        $files = static::prepareFiles($files ?: $decodedFiles);
+
+        return new ServerRequest(
+            $server,
+            $files,
+            static::prepareUri($server, $headers),
+            $method,
+            $body,
+            $headers,
+            $sReq->cookie ?: $_COOKIE,
+            $sReq->get ?: $_GET,
+            $sReq->post ?: $decodedBody,
+            static::getProtocolVersion($server)
+        );
+    }
+
     /**
      * Prepare the $_SERVER variables.
      *
@@ -154,7 +209,9 @@ class ServerRequestFactory
         // Authorization can only get by apache_request_headers()
         $apacheRequestHeaders = static::$apacheRequestHeaders;
 
-        if (isset($server['HTTP_AUTHORIZATION']) || !is_callable($apacheRequestHeaders)) {
+        $httpAuth = ServerHelper::getValue($server, 'HTTP_AUTHORIZATION');
+
+        if (isset($httpAuth) || !is_callable($apacheRequestHeaders)) {
             return $server;
         }
 
@@ -224,7 +281,9 @@ class ServerRequestFactory
         $headers = [];
 
         foreach ($server as $key => $value) {
-            if ($value && str_starts_with($key, 'HTTP_')) {
+            $key = strtolower($key);
+
+            if ($value && str_starts_with($key, 'http_')) {
                 $name = str_replace('_', ' ', substr($key, 5));
                 $name = str_replace(' ', '-', ucwords(strtolower($name)));
                 $name = strtolower($name);
@@ -234,7 +293,7 @@ class ServerRequestFactory
                 continue;
             }
 
-            if ($value && str_starts_with($key, 'CONTENT_')) {
+            if ($value && str_starts_with($key, 'content_')) {
                 $name = substr($key, 8);
                 $name = 'content-' . strtolower($name);
 
@@ -279,7 +338,7 @@ class ServerRequestFactory
         $port = null;
 
         static::getHostAndPortFromHeaders($host, $port, $server, $headers);
-
+show($host, $port, 5);
         // URI path
         $path = static::getRequestUri($server);
         $path = static::stripQueryString($path);
@@ -316,7 +375,7 @@ class ServerRequestFactory
      * Marshal the host and port from HTTP headers and/or the PHP environment
      *
      * @param  string  $host     The uri host.
-     * @param  string  $port     The request port.
+     * @param  ?int    $port     The request port.
      * @param  array   $server   The $_SERVER superglobal.
      * @param  array   $headers  The headers variable from server.
      */
@@ -328,22 +387,27 @@ class ServerRequestFactory
             return;
         }
 
-        if (!isset($server['SERVER_NAME'])) {
+        $serverName = ServerHelper::getValue($server, 'SERVER_NAME');
+
+        if (!isset($serverName)) {
             return;
         }
 
-        $host = $server['SERVER_NAME'];
+        $host = $serverName;
+        $port = ServerHelper::getValue($server, 'SERVER_PORT');
 
-        if (isset($server['SERVER_PORT'])) {
-            $port = (int) $server['SERVER_PORT'];
+        if (isset($port)) {
+            $port = (int) $port;
         }
 
-        if (!isset($server['SERVER_ADDR']) || !preg_match('/^\[[0-9a-fA-F\:]+\]$/', $host)) {
+        $addr = ServerHelper::getValue($server, 'SERVER_ADDR');
+
+        if (!isset($addr) || !preg_match('/^\[[0-9a-fA-F\:]+\]$/', $host)) {
             return;
         }
 
         // Handle Ipv6
-        $host = '[' . $server['SERVER_ADDR'] . ']';
+        $host = '[' . $addr . ']';
         $port = $port ?: 80;
 
         if ($port . ']' === substr($host, strrpos($host, ':') + 1)) {

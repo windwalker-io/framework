@@ -389,7 +389,7 @@ class Uri implements UriInterface
      * A null value provided for the port is equivalent to removing the port
      * information.
      *
-     * @param  int  $port   The port to use with the new instance; a null value
+     * @param  ?int  $port   The port to use with the new instance; a null value
      *                      removes the port information.
      *
      * @return  static  A new instance with the specified port.
