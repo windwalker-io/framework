@@ -32,16 +32,14 @@ class Output implements OutputInterface
      */
     public $headerSent = 'headers_sent';
 
-    protected ?StreamInterface $outputStream = null;
-
     /**
      * Output constructor.
      *
      * @param  StreamInterface|string|null  $outputStream
      */
-    public function __construct(StreamInterface|string|null $outputStream = null)
+    public function __construct(protected StreamInterface|string|null $outputStream = null)
     {
-        $this->setOutputStream($outputStream);
+        //
     }
 
     /**
@@ -74,7 +72,7 @@ class Output implements OutputInterface
      */
     public function sendBody(ResponseInterface $response): void
     {
-        $stream = $this->getOutputStream();
+        $stream = $this->createOutputStream();
 
         $stream->write((string) $response->getBody());
 
@@ -84,10 +82,10 @@ class Output implements OutputInterface
     /**
      * Method to send a header to the client.  We wrap header() function with this method for testing reason.
      *
-     * @param  string  $string     The header string.
-     * @param  bool    $replace    The optional replace parameter indicates whether the header should
+     * @param  string    $string   The header string.
+     * @param  bool      $replace  The optional replace parameter indicates whether the header should
      *                             replace a previous similar header, or add a second header of the same type.
-     * @param  int     $code       Forces the HTTP response code to the specified value. Note that
+     * @param  int|null  $code     Forces the HTTP response code to the specified value. Note that
      *                             this parameter only has an effect if the string is not empty.
      *
      * @return  static  Return self to support chaining.
@@ -160,9 +158,9 @@ class Output implements OutputInterface
     /**
      * @return StreamInterface
      */
-    public function getOutputStream(): StreamInterface
+    public function createOutputStream(): StreamInterface
     {
-        return $this->outputStream;
+        return Stream::wrap($this->outputStream ?: 'php://output', WRITE_ONLY_RESET);
     }
 
     /**
@@ -172,10 +170,6 @@ class Output implements OutputInterface
      */
     public function setOutputStream(StreamInterface|string|null $outputStream): static
     {
-        if (!$outputStream instanceof StreamInterface) {
-            $outputStream = Stream::wrap($outputStream ?? 'php://output', WRITE_ONLY_RESET);
-        }
-
         $this->outputStream = $outputStream;
 
         return $this;

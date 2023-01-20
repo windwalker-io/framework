@@ -59,7 +59,7 @@ class StreamOutput extends Output
 
         $maxBufferLength = $this->getMaxBufferLength() ?: 8192;
 
-        $fp = fopen('php://output', 'wb+');
+        $stream = $this->createOutputStream();
 
         if ($range === false) {
             $body = $response->getBody();
@@ -69,7 +69,7 @@ class StreamOutput extends Output
             }
 
             while (!$body->eof()) {
-                fwrite($fp, $body->read($maxBufferLength));
+                $stream->write($body->read($maxBufferLength));
 
                 $this->delay();
             }
@@ -88,21 +88,21 @@ class StreamOutput extends Output
         while (!$body->eof() && $position < $last) {
             // The latest part
             if (($position + $maxBufferLength) > $last) {
-                fwrite($fp, $body->read($last - $position));
+                $stream->write($body->read($last - $position));
 
                 $this->delay();
 
                 break;
             }
 
-            fwrite($fp, $body->read($maxBufferLength));
+            $stream->write($body->read($maxBufferLength));
 
             $position = $body->tell();
 
             $this->delay();
         }
 
-        fclose($fp);
+        $stream->close();
     }
 
     /**

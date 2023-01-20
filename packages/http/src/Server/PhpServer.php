@@ -93,4 +93,18 @@ class PhpServer extends AbstractServer
 
         return $this;
     }
+
+    public function onRequest(callable $listener, ?int $priority = null): static
+    {
+        $this->on('request', $listener, $priority);
+
+        return $this;
+    }
+
+    public function onResponse(callable $listener, ?int $priority = null): static
+    {
+        $this->on('response', $listener, $priority);
+
+        return $this;
+    }
 }
