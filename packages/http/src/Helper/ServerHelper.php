@@ -18,8 +18,6 @@ use Psr\Http\Message\UploadedFileInterface;
  * The ServerHelper class.
  *
  * @since  2.1
- *
- * todo: Support php8 types hint
  */
 abstract class ServerHelper
 {
@@ -33,6 +31,8 @@ abstract class ServerHelper
      * @param  mixed   $default  Default value if not found.
      *
      * @return  mixed
+     *
+     * @deprecated Use {@see HttpParameters} instead.
      */
     #[Pure]
     public static function getValue(
@@ -96,7 +96,7 @@ abstract class ServerHelper
         $headers = [];
 
         foreach ($_SERVER as $name => $value) {
-            if (strpos($name, 'HTTP_') === 0) {
+            if (str_starts_with($name, 'HTTP_')) {
                 $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
             }
         }
@@ -124,11 +124,9 @@ abstract class ServerHelper
         foreach ($_SERVER as $key => $value) {
             if (str_starts_with($key, 'HTTP_')) {
                 $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
-
-                $out[$key] = $value;
-            } else {
-                $out[$key] = $value;
             }
+
+            $out[$key] = $value;
         }
 
         return $out;

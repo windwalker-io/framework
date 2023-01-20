@@ -16,10 +16,10 @@ use JsonException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
+use Swoole\Http\Request as SwooleRequest;
 use UnexpectedValueException;
 use Windwalker\Http\Helper\MultipartHelper;
-use Windwalker\Http\Helper\HeaderHelper;
-use Windwalker\Http\Helper\ServerHelper;
+use Windwalker\Http\HttpParameters;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\PhpInputStream;
 use Windwalker\Uri\Uri;
@@ -44,34 +44,35 @@ class ServerRequestFactory
      * If any argument is not supplied, the corresponding superglobal value will
      * be used.
      *
-     * @param  array       $server      The $_SERVER superglobal variable.
-     * @param  array       $query       The $_GET superglobal variable.
-     * @param  array|null  $parsedBody  The $_POST superglobal variable.
-     * @param  array       $cookies     The $_COOKIE superglobal variable.
-     * @param  array       $files       The $_FILES superglobal variable.
+     * @param  array|HttpParameters  $server      The $_SERVER superglobal variable.
+     * @param  array                 $query       The $_GET superglobal variable.
+     * @param  array|null            $parsedBody  The $_POST superglobal variable.
+     * @param  array                 $cookies     The $_COOKIE superglobal variable.
+     * @param  array                 $files       The $_FILES superglobal variable.
      *
      * @return ServerRequestInterface
      *
      * @throws JsonException
      */
     public static function createFromGlobals(
-        array $server = [],
+        array|HttpParameters $server = [],
         array $query = [],
         array $parsedBody = null,
         array $cookies = [],
         array $files = []
     ): ServerRequestInterface {
-        $server = static::prepareServers($server ?: $_SERVER);
+        $server = HttpParameters::wrap($server ?: $_SERVER);
+        $server = static::prepareServers($server);
         $headers = static::prepareHeaders($server);
 
         $body = new PhpInputStream();
 
-        $method = ServerHelper::getValue($server, 'REQUEST_METHOD') ?? 'GET';
+        $method = $server['REQUEST_METHOD'] ?? 'GET';
 
         $decodedBody = $_POST;
         $decodedFiles = $_FILES;
         $method = strtoupper($method);
-        $type = (string) HeaderHelper::getValue($headers, 'Content-Type');
+        $type = (string) $headers['Content-Type'];
 
         if ($method === 'POST') {
             if (str_contains($type, 'application/json')) {
@@ -90,12 +91,12 @@ class ServerRequestFactory
         $files = static::prepareFiles($files ?: $decodedFiles);
 
         return new ServerRequest(
-            $server,
+            array_change_key_case($server->dump(), CASE_UPPER),
             $files,
             static::prepareUri($server, $headers),
             $method,
             $body,
-            $headers,
+            $headers->dump(),
             $cookies ?: $_COOKIE,
             $query ?: $_GET,
             $parsedBody ?: $decodedBody,
@@ -106,20 +107,21 @@ class ServerRequestFactory
     /**
      * createFromUri
      *
-     * @param  string|UriInterface  $uri
-     * @param  string               $script
-     * @param  array                $server
-     * @param  array                $query
-     * @param  array                $parsedBody
-     * @param  array                $cookies
-     * @param  array                $files
+     * @param  string|UriInterface   $uri
+     * @param  string|null           $script
+     * @param  array|HttpParameters  $server
+     * @param  array                 $query
+     * @param  array|null            $parsedBody
+     * @param  array                 $cookies
+     * @param  array                 $files
      *
      * @return  ServerRequestInterface
+     * @throws JsonException
      */
     public static function createFromUri(
         string|UriInterface $uri,
         ?string $script = null,
-        array $server = [],
+        array|HttpParameters $server = [],
         array $query = [],
         ?array $parsedBody = null,
         array $cookies = [],
@@ -129,7 +131,7 @@ class ServerRequestFactory
             $uri = new Uri($uri);
         }
 
-        $server = $server ?: $_SERVER;
+        $server = HttpParameters::wrap($server ?: $_SERVER);
 
         if ($script) {
             $server['SCRIPT_NAME'] = $script;
@@ -142,10 +144,11 @@ class ServerRequestFactory
         return $request->withUri($uri);
     }
 
-    public static function createFromSwooleRequest(\Swoole\Http\Request $sReq, ?string $host): ServerRequestInterface
+    public static function createFromSwooleRequest(SwooleRequest $sReq, ?string $host): ServerRequestInterface
     {
-        $server = static::prepareServers((array) $sReq->server);
-        $headers = (array) $sReq->header;
+        $server = HttpParameters::wrap((array) $sReq->server);
+        $headers = HttpParameters::wrap((array) $sReq->header);
+
         $files = (array) $sReq->files;
 
         if ($host) {
@@ -160,12 +163,12 @@ class ServerRequestFactory
 
         $body = new PhpInputStream();
 
-        $method = ServerHelper::getValue($server, 'REQUEST_METHOD') ?? 'GET';
+        $method = $server['REQUEST_METHOD'] ?? 'GET';
 
         $decodedBody = $_POST;
         $decodedFiles = $_FILES;
         $method = strtoupper($method);
-        $type = (string) HeaderHelper::getValue($headers, 'Content-Type');
+        $type = (string) $headers['Content-Type'];
 
         if ($method === 'POST') {
             if (str_contains($type, 'application/json')) {
@@ -184,12 +187,12 @@ class ServerRequestFactory
         $files = static::prepareFiles($files ?: $decodedFiles);
 
         return new ServerRequest(
-            $server,
+            array_change_key_case($server->dump(), CASE_UPPER),
             $files,
             static::prepareUri($server, $headers),
             $method,
             $body,
-            $headers,
+            $headers->dump(),
             $sReq->cookie ?: $_COOKIE,
             $sReq->get ?: $_GET,
             $sReq->post ?: $decodedBody,
@@ -200,25 +203,27 @@ class ServerRequestFactory
     /**
      * Prepare the $_SERVER variables.
      *
-     * @param  array  $server  The $_SERVER superglobal variable.
+     * @param  array|HttpParameters  $server  The $_SERVER superglobal variable.
      *
-     * @return  array
+     * @return HttpParameters
      */
-    public static function prepareServers(array $server): array
+    public static function prepareServers(array|HttpParameters $server): HttpParameters
     {
+        $server = HttpParameters::wrap($server);
+
         // Authorization can only get by apache_request_headers()
         $apacheRequestHeaders = static::$apacheRequestHeaders;
 
-        $httpAuth = ServerHelper::getValue($server, 'HTTP_AUTHORIZATION');
+        $httpAuth = $server->get('HTTP_AUTHORIZATION');
 
         if (isset($httpAuth) || !is_callable($apacheRequestHeaders)) {
             return $server;
         }
 
-        $apacheRequestHeaders = array_change_key_case(call_user_func($apacheRequestHeaders), CASE_LOWER);
+        $apacheRequestHeaders = array_change_key_case($apacheRequestHeaders(), CASE_LOWER);
 
         if (isset($apacheRequestHeaders['authorization'])) {
-            $server['HTTP_AUTHORIZATION'] = $apacheRequestHeaders['authorization'];
+            $server->set('HTTP_AUTHORIZATION', $apacheRequestHeaders['authorization']);
 
             return $server;
         }
@@ -272,13 +277,15 @@ class ServerRequestFactory
     /**
      * Get headers from $_SERVER.
      *
-     * @param  array  $server  The $_SERVER superglobal variable.
+     * @param  array|HttpParameters  $server  The $_SERVER superglobal variable.
      *
-     * @return  array
+     * @return HttpParameters
      */
-    public static function prepareHeaders(array $server): array
+    public static function prepareHeaders(array|HttpParameters $server): HttpParameters
     {
-        $headers = [];
+        $server = HttpParameters::wrap($server);
+
+        $headers = new HttpParameters();
 
         foreach ($server as $key => $value) {
             $key = strtolower($key);
@@ -309,23 +316,29 @@ class ServerRequestFactory
     /**
      * Marshal the URI from the $_SERVER array and headers
      *
-     * @param  array       $server   The $_SERVER superglobal.
-     * @param  array|null  $headers  The headers variable from server.
+     * @param  array|HttpParameters       $server   The $_SERVER superglobal.
+     * @param  array|HttpParameters|null  $headers  The headers variable from server.
      *
      * @return  UriInterface  Prepared Uri object.
      */
-    public static function prepareUri(array $server, ?array $headers = null): UriInterface
-    {
+    public static function prepareUri(
+        array|HttpParameters $server,
+        array|HttpParameters|null $headers = null
+    ): UriInterface {
+        $server = HttpParameters::wrap($server);
+
         $headers ??= static::prepareHeaders($server);
+
+        $headers = HttpParameters::wrap($headers);
 
         $uri = new Uri('');
 
         // URI scheme
         $scheme = 'http';
-        $https = ServerHelper::getValue($server, 'HTTPS');
+        $https = $server['HTTPS'];
 
         // Is https or not
-        if (($https && $https !== 'off') || HeaderHelper::getValue($headers, 'x-forwarded-proto', false) === 'https') {
+        if (($https && $https !== 'off') || ($headers['x-forwarded-proto'] ?? false) === 'https') {
             $scheme = 'https';
         }
 
@@ -338,7 +351,7 @@ class ServerRequestFactory
         $port = null;
 
         static::getHostAndPortFromHeaders($host, $port, $server, $headers);
-show($host, $port, 5);
+
         // URI path
         $path = static::getRequestUri($server);
         $path = static::stripQueryString($path);
@@ -374,33 +387,40 @@ show($host, $port, 5);
     /**
      * Marshal the host and port from HTTP headers and/or the PHP environment
      *
-     * @param  string  $host     The uri host.
-     * @param  ?int    $port     The request port.
-     * @param  array   $server   The $_SERVER superglobal.
-     * @param  array   $headers  The headers variable from server.
+     * @param  string                $host     The uri host.
+     * @param  ?int                  $port     The request port.
+     * @param  array|HttpParameters  $server   The $_SERVER superglobal.
+     * @param  array|HttpParameters  $headers  The headers variable from server.
      */
-    public static function getHostAndPortFromHeaders(string &$host, ?int &$port, array $server, array $headers): void
-    {
-        if (HeaderHelper::getValue($headers, 'host', false)) {
-            static::getHostAndPortFromHeader($host, $port, HeaderHelper::getValue($headers, 'host'));
+    public static function getHostAndPortFromHeaders(
+        string &$host,
+        ?int &$port,
+        array|HttpParameters $server,
+        array|HttpParameters $headers
+    ): void {
+        $server = HttpParameters::wrap($server);
+        $headers = HttpParameters::wrap($headers);
+
+        if ($headers['host'] ?? false) {
+            static::getHostAndPortFromHeader($host, $port, $headers['host']);
 
             return;
         }
 
-        $serverName = ServerHelper::getValue($server, 'SERVER_NAME');
+        $serverName = $server['SERVER_NAME'];
 
         if (!isset($serverName)) {
             return;
         }
 
         $host = $serverName;
-        $port = ServerHelper::getValue($server, 'SERVER_PORT');
+        $port = $server['SERVER_PORT'];
 
         if (isset($port)) {
             $port = (int) $port;
         }
 
-        $addr = ServerHelper::getValue($server, 'SERVER_ADDR');
+        $addr = $server['SERVER_ADDR'];
 
         if (!isset($addr) || !preg_match('/^\[[0-9a-fA-F\:]+\]$/', $host)) {
             return;
@@ -429,32 +449,34 @@ show($host, $port, 5);
      * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
      * @license   http://framework.zend.com/license/new-bsd New BSD License
      *
-     * @param  array  $server
+     * @param  array|HttpParameters  $server
      *
      * @return string
      */
-    public static function getRequestUri(array $server): string
+    public static function getRequestUri(array|HttpParameters $server): string
     {
+        $server = HttpParameters::wrap($server);
+
         // IIS7 with URL Rewrite: make sure we get the unencoded url
         // (double slash problem).
-        $iisUrlRewritten = ServerHelper::getValue($server, 'IIS_WasUrlRewritten');
-        $unencodedUrl = ServerHelper::getValue($server, 'UNENCODED_URL', '');
+        $iisUrlRewritten = $server['IIS_WasUrlRewritten'];
+        $unencodedUrl = $server['UNENCODED_URL'] ?? '';
 
         if ('1' === (string) $iisUrlRewritten && !empty($unencodedUrl)) {
             return $unencodedUrl;
         }
 
-        $requestUri = ServerHelper::getValue($server, 'REQUEST_URI');
+        $requestUri = $server['REQUEST_URI'];
 
         // Check this first so IIS will catch.
-        $httpXRewriteUrl = ServerHelper::getValue($server, 'HTTP_X_REWRITE_URL');
+        $httpXRewriteUrl = $server['HTTP_X_REWRITE_URL'];
 
         if ($httpXRewriteUrl !== null) {
             $requestUri = $httpXRewriteUrl;
         }
 
         // Check for IIS 7.0 or later with ISAPI_Rewrite
-        $httpXOriginalUrl = ServerHelper::getValue($server, 'HTTP_X_ORIGINAL_URL');
+        $httpXOriginalUrl = $server['HTTP_X_ORIGINAL_URL'];
 
         if ($httpXOriginalUrl !== null) {
             $requestUri = $httpXOriginalUrl;
@@ -464,7 +486,7 @@ show($host, $port, 5);
             return preg_replace('#^[^/:]+://[^/]+#', '', $requestUri);
         }
 
-        $origPathInfo = ServerHelper::getValue($server, 'ORIG_PATH_INFO');
+        $origPathInfo = $server['ORIG_PATH_INFO'];
 
         if (empty($origPathInfo)) {
             return '/';
@@ -494,9 +516,9 @@ show($host, $port, 5);
     /**
      * Marshal the host and port from the request header
      *
-     * @param  string  $host
-     * @param  string  $port
-     * @param  string  $headerHost
+     * @param  string        $host
+     * @param  int|null      $port
+     * @param  string|array  $headerHost
      */
     protected static function getHostAndPortFromHeader(string &$host, ?int &$port, string|array $headerHost): void
     {
@@ -570,12 +592,14 @@ show($host, $port, 5);
     /**
      * Return HTTP protocol version (X.Y)
      *
-     * @param  array  $server  The $_SERVER supperglobal.
+     * @param  array|HttpParameters  $server  The $_SERVER supperglobal.
      *
      * @return  string  Protocol version.
      */
-    private static function getProtocolVersion(array $server): string
+    private static function getProtocolVersion(array|HttpParameters $server): string
     {
+        $server = HttpParameters::wrap($server);
+
         if (!isset($server['SERVER_PROTOCOL'])) {
             return '1.1';
         }

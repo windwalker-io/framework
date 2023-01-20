@@ -55,6 +55,8 @@ abstract class HeaderHelper
      * @return string  Found header value.
      *
      * @since  3.0
+     *
+     * @deprecated Use {@see HttpParameters} instead.
      */
     #[Pure]
     public static function getValue(
