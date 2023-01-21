@@ -32,13 +32,9 @@ class PhpServer extends AbstractHttpServer
     {
         $output = $this->getOutput();
 
-        $event = $this->handleRequest(
+        $this->handleRequest(
             $request ?? $this->getHttpFactory()->createServerRequestFromGlobals(),
             $output
-        );
-
-        $output->respond(
-            $event->getResponse()
         );
     }
 

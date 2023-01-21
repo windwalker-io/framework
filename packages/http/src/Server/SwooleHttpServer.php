@@ -46,11 +46,7 @@ class SwooleHttpServer extends AbstractHttpServer
 
                 $output = $this->output ?? new SwooleOutput($response);
 
-                $event = $this->handleRequest($psrRequest, $output);
-
-                $psrResponse = $event->getResponse();
-
-                $output->respond($psrResponse);
+                $this->handleRequest($psrRequest, $output);
             }
         );
 

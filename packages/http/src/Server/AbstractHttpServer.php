@@ -16,7 +16,6 @@ use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Output\OutputInterface;
-use Windwalker\Http\Output\StreamOutput;
 
 /**
  * The AbstractHttpServer class.
@@ -34,7 +33,7 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
         //
     }
 
-    protected function handleRequest(ServerRequestInterface $request, OutputInterface $output): ResponseEvent
+    protected function handleRequest(ServerRequestInterface $request, OutputInterface $output): void
     {
         /** @var RequestEvent $event */
         $event = $this->emit(
@@ -43,12 +42,14 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
                 ->setOutput($output)
         );
 
-        return $this->emit(
+        $event = $this->emit(
             ResponseEvent::wrap('response')
                 ->setRequest($event->getRequest())
                 ->setResponse($event->getResponse() ?? $this->getHttpFactory()->createResponse())
                 ->setOutput($output)
         );
+
+        $output->respond($event->getResponse());
     }
 
     public function onRequest(callable $listener, ?int $priority = null): static
