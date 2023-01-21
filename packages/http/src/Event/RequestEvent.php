@@ -14,6 +14,7 @@ namespace Windwalker\Http\Event;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Http\Output\OutputInterface;
 
 /**
  * The WebRequestEvent class.
@@ -23,6 +24,8 @@ class RequestEvent extends AbstractEvent
     public ServerRequestInterface $request;
 
     public ResponseInterface $response;
+
+    public OutputInterface $output;
 
     public int $id = 0;
 
@@ -82,6 +85,26 @@ class RequestEvent extends AbstractEvent
     public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return OutputInterface
+     */
+    public function getOutput(): OutputInterface
+    {
+        return $this->output;
+    }
+
+    /**
+     * @param  OutputInterface  $output
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setOutput(OutputInterface $output): static
+    {
+        $this->output = $output;
 
         return $this;
     }

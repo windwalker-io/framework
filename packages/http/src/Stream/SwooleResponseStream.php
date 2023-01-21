@@ -23,14 +23,23 @@ class SwooleResponseStream extends NullStream
     {
     }
 
-    public function close()
+    public function close(): void
     {
-        $this->response->end();
+        if ($this->isWritable()) {
+            $this->response->end();
+        }
+    }
+
+    public function isWritable(): bool
+    {
+        return $this->response->isWritable();
     }
 
     public function write($string): int
     {
-        $this->response->write((string) $string);
+        if ($string !== '') {
+            $this->response->write((string) $string);
+        }
 
         return strlen($string);
     }

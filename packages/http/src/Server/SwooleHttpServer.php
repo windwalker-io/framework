@@ -16,15 +16,16 @@ use Swoole\Http\Response;
 use Swoole\Http\Server as SwooleServer;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
-use Windwalker\Http\HttpFactory;
-use Windwalker\Http\Output\OutputInterface;
+use Windwalker\Http\Output\Output;
 use Windwalker\Http\Output\StreamOutput;
+use Windwalker\Http\Output\SwooleOutput;
 use Windwalker\Http\Request\ServerRequestFactory;
+use Windwalker\Http\Stream\SwooleResponseStream;
 
 /**
  * The SwooleServer class.
  */
-class SwooleHttpServer extends AbstractServer
+class SwooleHttpServer extends AbstractHttpServer
 {
     protected ?string $host = null;
 
@@ -34,21 +35,6 @@ class SwooleHttpServer extends AbstractServer
 
     protected ?SwooleServer $swooleServer = null;
 
-    protected ?OutputInterface $output = null;
-
-    protected HttpFactory $httpFactory;
-
-    public function __construct(?OutputInterface $output = null, ?HttpFactory $httpFactory = null)
-    {
-        $this->output = $output ?? $this->getOutput();
-        $this->httpFactory = $httpFactory ?? new HttpFactory();
-    }
-
-    public function setConfig(array $config): bool
-    {
-        return $this->swooleServer->set($config);
-    }
-
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
         $server = $this->getSwooleServer($host, $port, $this->mode, $this->sockType);
@@ -56,32 +42,15 @@ class SwooleHttpServer extends AbstractServer
         $server->on(
             'request',
             function (Request $request, Response $response) {
-                $req = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
+                $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
 
-                $event = $this->emit(
-                    RequestEvent::wrap('request')
-                        ->setRequest($req)
-                );
+                $output = $this->output ?? new SwooleOutput($response);
 
-                /** @var ResponseEvent $event */
-                $event = $this->emit(
-                    ResponseEvent::wrap('response')
-                        ->setRequest($event->getRequest())
-                        ->setResponse($event->getResponse() ?? $this->httpFactory->createResponse())
-                );
+                $event = $this->handleRequest($psrRequest, $output);
 
-                $res = $event->getResponse();
+                $psrResponse = $event->getResponse();
 
-                $response->status($res->getStatusCode(), $res->getReasonPhrase());
-
-                foreach ($res->getHeaders() as $header => $values) {
-                    $response->header($header, $res->getHeaderLine($header));
-                }
-
-                $this->getOutput();
-
-                $response->write((string) $res->getBody());
-                $response->end();
+                $output->respond($psrResponse);
             }
         );
 
@@ -91,6 +60,11 @@ class SwooleHttpServer extends AbstractServer
     public function stop(int $workerId = -1, bool $waitEvent = false): void
     {
         $this->getSwooleServer()->stop($workerId, $waitEvent);
+    }
+
+    public function setConfig(array $config): bool
+    {
+        return $this->swooleServer->set($config);
     }
 
     public function getSwooleServer(
@@ -167,44 +141,6 @@ class SwooleHttpServer extends AbstractServer
     public function setHost(?string $host): static
     {
         $this->host = $host;
-
-        return $this;
-    }
-
-    /**
-     * Method to get property Output
-     *
-     * @return  OutputInterface
-     */
-    public function getOutput(): OutputInterface
-    {
-        return $this->output ??= new StreamOutput();
-    }
-
-    /**
-     * Method to set property output
-     *
-     * @param  OutputInterface  $output
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setOutput(OutputInterface $output): static
-    {
-        $this->output = $output;
-
-        return $this;
-    }
-
-    public function onRequest(callable $listener, ?int $priority = null): static
-    {
-        $this->on('request', $listener, $priority);
-
-        return $this;
-    }
-
-    public function onResponse(callable $listener, ?int $priority = null): static
-    {
-        $this->on('response', $listener, $priority);
 
         return $this;
     }

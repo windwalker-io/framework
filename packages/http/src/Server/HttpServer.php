@@ -19,6 +19,8 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
  * The Server class.
  *
  * @since  3.0
+ *
+ * @deprecated no-longer need adapter pattern
  */
 class HttpServer extends AdaptableServer
 {

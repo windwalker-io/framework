@@ -32,14 +32,16 @@ class Output implements OutputInterface
      */
     public $headerSent = 'headers_sent';
 
+    protected StreamInterface $outputStream;
+
     /**
      * Output constructor.
      *
      * @param  StreamInterface|string|null  $outputStream
      */
-    public function __construct(protected StreamInterface|string|null $outputStream = null)
+    public function __construct(StreamInterface|string|null $outputStream = null)
     {
-        //
+        $this->outputStream = Stream::wrap($outputStream ?: 'php://output', WRITE_ONLY_RESET);
     }
 
     /**
@@ -72,11 +74,19 @@ class Output implements OutputInterface
      */
     public function sendBody(ResponseInterface $response): void
     {
-        $stream = $this->createOutputStream();
+        $this->write((string) $response->getBody());
 
-        $stream->write((string) $response->getBody());
+        $this->close();
+    }
 
-        $stream->close();
+    public function write(string $str): int
+    {
+        return $this->outputStream->write($str);
+    }
+
+    public function close(): void
+    {
+        $this->outputStream->close();
     }
 
     /**
@@ -158,9 +168,9 @@ class Output implements OutputInterface
     /**
      * @return StreamInterface
      */
-    public function createOutputStream(): StreamInterface
+    public function getOutputStream(): StreamInterface
     {
-        return Stream::wrap($this->outputStream ?: 'php://output', WRITE_ONLY_RESET);
+        return $this->outputStream;
     }
 
     /**
