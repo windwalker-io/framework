@@ -70,11 +70,12 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
                 $renderer->setOptions($container->getParam('renderer.options') ?? []);
 
                 return $renderer;
-            }
+            },
+            Container::ISOLATION
         )
             ->alias(RendererInterface::class, CompositeRenderer::class);
 
-        $container->prepareSharedObject(LayoutPathResolver::class);
+        $container->prepareSharedObject(LayoutPathResolver::class, null, Container::ISOLATION);
 
         $container->share(
             RendererService::class,
@@ -85,10 +86,11 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
                         'aliases' => $container->getParam('renderer.aliases'),
                     ]
                 );
-            }
+            },
+            Container::ISOLATION
         );
 
-        $container->prepareSharedObject(HtmlFrame::class);
+        $container->prepareSharedObject(HtmlFrame::class, null, Container::ISOLATION);
 
         $this->registerPagination($container);
     }
@@ -115,7 +117,8 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
                 );
 
                 return $paginationFactory;
-            }
+            },
+            Container::ISOLATION
         );
     }
 }

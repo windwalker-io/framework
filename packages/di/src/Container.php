@@ -46,13 +46,31 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 {
     use ConfigRegisterTrait;
 
+    /**
+     * Make a store definition singleton, always get same instance.
+     */
     public const SHARED = 1 << 0;
 
+    /**
+     * Make a store definition protected and unable to replace.
+     */
     public const PROTECTED = 1 << 1;
 
-    public const AUTO_WIRE = 1 << 2;
+    /**
+     * Make the store cache not share to children.
+     * Every children Container will create new one even if parent has cache.
+     */
+    public const ISOLATION = 1 << 2;
 
-    public const IGNORE_ATTRIBUTES = 1 << 3;
+    /**
+     * Auto create dependencies when creating an object.
+     */
+    public const AUTO_WIRE = 1 << 3;
+
+    /**
+     * Ignore all attributes when create object or call method.
+     */
+    public const IGNORE_ATTRIBUTES = 1 << 4;
 
     public const MERGE_OVERRIDE = 1 << 0;
 
@@ -396,6 +414,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             // Store parent definition as self
             if ($parentDefinition) {
                 $parentDefinition = clone $parentDefinition;
+
+                if ($parentDefinition->getOptions() & static::ISOLATION) {
+                    $parentDefinition->reset();
+                }
 
                 $this->setDefinition($id, $parentDefinition);
 
@@ -1075,6 +1097,20 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function dump(): array
     {
         return $this->storage;
+    }
+
+    public function dumpCached(): array
+    {
+
+        $cached = [];
+
+        foreach ($this->storage as $key => $store) {
+            if ($store->getCache()) {
+                $cached[$key] = $store->getCache();
+            }
+        }
+
+        return $cached;
     }
 
     /**

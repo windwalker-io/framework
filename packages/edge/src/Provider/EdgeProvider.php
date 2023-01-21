@@ -68,9 +68,13 @@ class EdgeProvider implements ServiceProviderInterface
 
                 $this->prepareComponents($container, $edge, $options);
 
-                $edge->addExtension(
-                    $container->newInstance(WindwalkerExtension::class)
-                );
+                // Windwalker Extension should only works in level 3 or higher.
+                if ($container->getLevel() > 2) {
+                    $edge->addExtension(
+                        $container->newInstance(WindwalkerExtension::class)
+                    );
+                }
+
                 $edge->setLoader(
                     $container->newInstance(
                         CoreFileLoader::class,

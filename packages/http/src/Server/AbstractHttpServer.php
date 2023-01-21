@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
+use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Output\OutputInterface;
 
@@ -57,7 +58,11 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
                 (new ErrorEvent('error'))
                     ->setException($e)
                     ->setRequest($request)
-                    ->setResponse($this->getHttpFactory()->createResponse())
+                    ->setResponse(
+                        $this->getHttpFactory()->createResponse(
+                            ResponseHelper::isClientError($e->getCode()) ? $e->getCode() : 500
+                        )
+                    )
                     ->setOutput($output)
             );
 
