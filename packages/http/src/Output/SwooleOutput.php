@@ -76,19 +76,14 @@ class SwooleOutput implements OutputInterface
 
         $reasonPhrase = ($reasonPhrase ? ' ' . $reasonPhrase : '');
 
-        $this->header(
-            sprintf(
-                'HTTP/%s %d%s',
-                $response->getProtocolVersion(),
-                $response->getStatusCode(),
-                $reasonPhrase
-            )
-        );
+        $this->response->status($response->getStatusCode(), $reasonPhrase);
     }
 
     public function write(string $str): int
     {
-        $this->response->write($str);
+        if ($str !== '') {
+            $this->response->write($str);
+        }
 
         return strlen($str);
     }

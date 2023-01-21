@@ -13,6 +13,7 @@ namespace Windwalker\Pool;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Swoole\Coroutine;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Throwable;
 use Windwalker\Pool\Exception\ConnectionPoolException;
@@ -342,6 +343,10 @@ abstract class AbstractPool implements PoolInterface
 
     public function __destruct()
     {
+        if (class_exists(Coroutine::class) && Coroutine::getCid() === -1) {
+            return;
+        }
+
         $this->close();
     }
 }

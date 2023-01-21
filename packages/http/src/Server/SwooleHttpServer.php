@@ -14,13 +14,8 @@ namespace Windwalker\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server as SwooleServer;
-use Windwalker\Http\Event\RequestEvent;
-use Windwalker\Http\Event\ResponseEvent;
-use Windwalker\Http\Output\Output;
-use Windwalker\Http\Output\StreamOutput;
 use Windwalker\Http\Output\SwooleOutput;
 use Windwalker\Http\Request\ServerRequestFactory;
-use Windwalker\Http\Stream\SwooleResponseStream;
 
 /**
  * The SwooleServer class.

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Http\HttpFactory;
@@ -35,21 +36,35 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
 
     protected function handleRequest(ServerRequestInterface $request, OutputInterface $output): void
     {
-        /** @var RequestEvent $event */
-        $event = $this->emit(
-            RequestEvent::wrap('request')
-                ->setRequest($request)
-                ->setOutput($output)
-        );
+        try {
+            /** @var RequestEvent $event */
+            $event = $this->emit(
+                RequestEvent::wrap('request')
+                    ->setRequest($request)
+                    ->setOutput($output)
+            );
 
-        $event = $this->emit(
-            ResponseEvent::wrap('response')
-                ->setRequest($event->getRequest())
-                ->setResponse($event->getResponse() ?? $this->getHttpFactory()->createResponse())
-                ->setOutput($output)
-        );
+            $event = $this->emit(
+                ResponseEvent::wrap('response')
+                    ->setRequest($event->getRequest())
+                    ->setResponse($event->getResponse() ?? $this->getHttpFactory()->createResponse())
+                    ->setOutput($output)
+            );
 
-        $output->respond($event->getResponse());
+            $output->respond($event->getResponse());
+        } catch (\Throwable $e) {
+            $event = $this->emit(
+                (new ErrorEvent('error'))
+                    ->setException($e)
+                    ->setRequest($request)
+                    ->setResponse($this->getHttpFactory()->createResponse())
+                    ->setOutput($output)
+            );
+
+            if (!$event->isPropagationStopped()) {
+                throw $event->getException();
+            }
+        }
     }
 
     public function onRequest(callable $listener, ?int $priority = null): static
@@ -62,6 +77,13 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
     public function onResponse(callable $listener, ?int $priority = null): static
     {
         $this->on('response', $listener, $priority);
+
+        return $this;
+    }
+
+    public function onError(callable $listener, ?int $priority = null): static
+    {
+        $this->on('error', $listener, $priority);
 
         return $this;
     }

@@ -40,8 +40,6 @@ class StreamOutput extends Output
     //     parent::respond($response);
     // }
 
-
-
     public function __destruct()
     {
         $this->outputStream->close();
