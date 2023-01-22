@@ -19,6 +19,7 @@ use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\MessageTrait;
 use Windwalker\Stream\Stream;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
 use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 use const Windwalker\Stream\READ_WRITE_RESET;
 
@@ -75,6 +76,11 @@ class Response implements ResponseInterface
             $response->getStatusCode(),
             $response->getHeaders()
         );
+    }
+
+    public static function readFrom(mixed $body, int $status = 200, array $headers = []): ResponseInterface
+    {
+        return new static(new Stream($body, READ_ONLY_FROM_BEGIN), $status, $headers);
     }
 
     /**

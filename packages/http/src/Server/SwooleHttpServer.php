@@ -14,8 +14,9 @@ namespace Windwalker\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server as SwooleServer;
+use Windwalker\DI\Container;
+use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Output\SwooleOutput;
-use Windwalker\Http\Request\ServerRequestFactory;
 
 /**
  * The SwooleServer class.
@@ -23,6 +24,8 @@ use Windwalker\Http\Request\ServerRequestFactory;
 class SwooleHttpServer extends AbstractHttpServer
 {
     protected ?string $host = null;
+
+    protected array $config = [];
 
     protected int $mode = SWOOLE_BASE;
 
@@ -53,9 +56,19 @@ class SwooleHttpServer extends AbstractHttpServer
         $this->getSwooleServer()->stop($workerId, $waitEvent);
     }
 
-    public function setConfig(array $config): bool
+    /**
+     * @return array
+     */
+    public function getConfig(): array
     {
-        return $this->swooleServer->set($config);
+        return $this->config;
+    }
+
+    public function setConfig(array $config): static
+    {
+        $this->config = $config;
+
+        return $this;
     }
 
     public function getSwooleServer(
@@ -64,7 +77,14 @@ class SwooleHttpServer extends AbstractHttpServer
         int $mode = SWOOLE_BASE,
         int $sockType = SWOOLE_SOCK_TCP
     ): SwooleServer {
-        return $this->swooleServer ??= static::createSwooleServer($host, $port, $mode, $sockType);
+        if (!$this->swooleServer) {
+            $server = static::createSwooleServer($host, $port, $mode, $sockType);
+            $server->set($this->config);
+
+            $this->swooleServer = $server;
+        }
+
+        return $this->swooleServer;
     }
 
     public static function createSwooleServer(
@@ -134,5 +154,31 @@ class SwooleHttpServer extends AbstractHttpServer
         $this->host = $host;
 
         return $this;
+    }
+
+    public static function factory(
+        ?int $mode = null,
+        ?int $sockType = null,
+        array $config = [],
+        array $middlewares = []
+    ): \Closure {
+        return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
+            $server = $container->newInstance(static::class);
+            $server->setMode($mode ?? SWOOLE_BASE);
+            $server->setSockType($sockType ?? SWOOLE_TCP);
+            $server->setConfig($config);
+            $server->setMiddlewares($middlewares);
+            $server->setMiddlewareResolver(
+                function ($entry) use ($container) {
+                    if ($entry instanceof \Closure) {
+                        return $entry;
+                    }
+
+                    return $container->resolve($entry);
+                }
+            );
+
+            return $server;
+        };
     }
 }

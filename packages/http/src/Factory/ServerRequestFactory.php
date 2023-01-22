@@ -9,17 +9,21 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Request;
+namespace Windwalker\Http\Factory;
 
 use InvalidArgumentException;
 use JsonException;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Swoole\Http\Request as SwooleRequest;
 use UnexpectedValueException;
 use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpParameters;
+use Windwalker\Http\Request\RequestBaseUri;
+use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\PhpInputStream;
 use Windwalker\Uri\Uri;
@@ -29,7 +33,7 @@ use Windwalker\Uri\Uri;
  *
  * @since  3.0
  */
-class ServerRequestFactory
+class ServerRequestFactory implements ServerRequestFactoryInterface
 {
     /**
      * Function name to get apache request headers. This property is for test use.
@@ -37,6 +41,19 @@ class ServerRequestFactory
      * @var callable
      */
     public static $apacheRequestHeaders = 'apache_request_headers';
+
+    /**
+     * @inheritDoc
+     */
+    public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
+    {
+        return new ServerRequest(
+            $serverParams,
+            [],
+            $uri,
+            $method
+        );
+    }
 
     /**
      * Create a request from the supplied superglobal values.

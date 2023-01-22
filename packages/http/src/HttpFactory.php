@@ -24,16 +24,14 @@ use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
-use Windwalker\Http\Request\Request;
-use Windwalker\Http\Request\ServerRequest;
-use Windwalker\Http\Request\ServerRequestFactory;
-use Windwalker\Http\Response\Response;
-use Windwalker\Stream\Stream;
+use Windwalker\Http\Factory\RequestFactory;
+use Windwalker\Http\Factory\ResponseFactory;
+use Windwalker\Http\Factory\ServerRequestFactory;
+use Windwalker\Http\Factory\StreamFactory;
+use Windwalker\Http\Factory\UploadedFileFactory;
 use Windwalker\Uri\UriFactory;
-use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 use const UPLOAD_ERR_OK;
-use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 
 /**
  * The HttpFactory class.
@@ -45,9 +43,33 @@ class HttpFactory extends UriFactory implements
     StreamFactoryInterface,
     UploadedFileFactoryInterface
 {
+    protected RequestFactoryInterface $requestFactory;
+
+    protected ServerRequestFactoryInterface $serverRequestFactory;
+
+    protected ResponseFactoryInterface $responseFactory;
+
+    protected StreamFactoryInterface $streamFactory;
+
+    protected UploadedFileFactoryInterface $uploadedFileFactory;
+
     public static function create(): static
     {
         return new static();
+    }
+
+    public function __construct(
+        ?RequestFactoryInterface $requestFactory = null,
+        ?ServerRequestFactoryInterface $serverRequestFactory = null,
+        ?ResponseFactoryInterface $responseFactory = null,
+        ?StreamFactoryInterface $streamFactory = null,
+        ?UploadedFileFactoryInterface $uploadedFileFactory = null,
+    ) {
+        $this->requestFactory = $requestFactory ?? new RequestFactory();
+        $this->serverRequestFactory = $serverRequestFactory ?? new ServerRequestFactory();
+        $this->responseFactory = $responseFactory ?? new ResponseFactory();
+        $this->streamFactory = $streamFactory ?? new StreamFactory();
+        $this->uploadedFileFactory = $uploadedFileFactory ?? new UploadedFileFactory();
     }
 
     /**
@@ -62,7 +84,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createRequest(string $method, $uri): RequestInterface
     {
-        return new Request($uri, $method);
+        return $this->requestFactory->createRequest($uri, $method);
     }
 
     /**
@@ -77,7 +99,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
-        return (new Response('php://memory'))->withStatus($code, $reasonPhrase);
+        return $this->responseFactory->createResponse($code, $reasonPhrase);
     }
 
     /**
@@ -98,13 +120,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        return new ServerRequest(
-            $serverParams,
-            [],
-            $uri,
-            $method,
-            $this->createStream()
-        );
+        return $this->serverRequestFactory->createServerRequest($method, $uri, $serverParams);
     }
 
     public function createServerRequestFromGlobals(): ServerRequestInterface
@@ -128,11 +144,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createStream(string $content = ''): StreamInterface
     {
-        $stream = new Stream('php://memory', READ_WRITE_FROM_BEGIN);
-        $stream->write($content);
-        $stream->rewind();
-
-        return $stream;
+        return $this->streamFactory->createStream($content);
     }
 
     /**
@@ -152,7 +164,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
-        return new Stream(fopen($filename, $mode));
+        return $this->streamFactory->createStreamFromFile($filename, $mode);
     }
 
     /**
@@ -166,13 +178,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createStreamFromResource($resource): StreamInterface
     {
-        ArgumentsAssert::assert(
-            is_resource($resource),
-            '{caller} argument 1 should be resource, {value} given.',
-            $resource
-        );
-
-        return new Stream($resource);
+        return $this->streamFactory->createStreamFromResource($resource);
     }
 
     /**
@@ -201,6 +207,12 @@ class HttpFactory extends UriFactory implements
         string $clientFilename = null,
         string $clientMediaType = null
     ): UploadedFileInterface {
-        return new UploadedFile($stream, $size, $error, $clientFilename, $clientMediaType);
+        return $this->uploadedFileFactory->createUploadedFile(
+            $stream,
+            $size,
+            $error,
+            $clientFilename,
+            $clientMediaType
+        );
     }
 }

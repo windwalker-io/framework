@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Request\Swoole;
 
 use Swoole\Http\Request;
+use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Request\ServerRequest;
-use Windwalker\Http\Request\ServerRequestFactory;
 
 /**
  * The SwooleHttpRequest class.

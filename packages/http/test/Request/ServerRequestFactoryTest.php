@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Request;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Request\ServerRequest;
-use Windwalker\Http\Request\ServerRequestFactory;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\Stream;
 

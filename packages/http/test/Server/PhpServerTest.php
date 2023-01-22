@@ -13,7 +13,7 @@ namespace Windwalker\Http\Test\Server;
 
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Event\RequestEvent;
-use Windwalker\Http\Request\ServerRequestFactory;
+use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Server\HttpServer;
 use Windwalker\Http\Server\PhpServer;

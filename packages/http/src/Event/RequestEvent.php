@@ -27,6 +27,8 @@ class RequestEvent extends AbstractEvent
 
     public OutputInterface $output;
 
+    public array $middlewares = [];
+
     public int $id = 0;
 
     /**
@@ -105,6 +107,26 @@ class RequestEvent extends AbstractEvent
     public function setOutput(OutputInterface $output): static
     {
         $this->output = $output;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    /**
+     * @param  array  $middlewares
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setMiddlewares(array $middlewares): static
+    {
+        $this->middlewares = $middlewares;
 
         return $this;
     }

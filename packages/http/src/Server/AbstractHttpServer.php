@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
+use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\OutputInterface;
 
 /**
@@ -24,35 +26,25 @@ use Windwalker\Http\Output\OutputInterface;
  */
 abstract class AbstractHttpServer extends AbstractServer implements HttpServerInterface
 {
-    /**
-     * WebAdapter constructor.
-     *
-     * @param  HttpFactory|null      $httpFactory
-     * @param  OutputInterface|null  $output
-     */
-    public function __construct(protected ?OutputInterface $output = null, protected ?HttpFactory $httpFactory = null)
-    {
+    protected \Closure|null $middlewareResolver = null;
+
+    public function __construct(
+        protected array $middlewares = [],
+        protected ?OutputInterface $output = null,
+        protected ?HttpFactory $httpFactory = null,
+    ) {
         //
     }
 
     protected function handleRequest(ServerRequestInterface $request, OutputInterface $output): void
     {
         try {
-            /** @var RequestEvent $event */
-            $event = $this->emit(
-                RequestEvent::wrap('request')
-                    ->setRequest($request)
-                    ->setOutput($output)
-            );
+            $middlewares = $this->getMiddlewares();
+            $middlewares[] = fn ($req) => $this->run($req, $output);
 
-            $event = $this->emit(
-                ResponseEvent::wrap('response')
-                    ->setRequest($event->getRequest())
-                    ->setResponse($event->getResponse() ?? $this->getHttpFactory()->createResponse())
-                    ->setOutput($output)
-            );
+            $runner = new RequestRunner($middlewares, $this->getMiddlewareResolver());
 
-            $output->respond($event->getResponse());
+            $output->respond($runner->handle($request));
         } catch (\Throwable $e) {
             $event = $this->emit(
                 (new ErrorEvent('error'))
@@ -70,6 +62,26 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
                 throw $event->getException();
             }
         }
+    }
+
+    public function run(ServerRequestInterface $request, OutputInterface $output): ResponseInterface
+    {
+        /** @var RequestEvent $event */
+        $event = $this->emit(
+            RequestEvent::wrap('request')
+                ->setRequest($request)
+                ->setOutput($output)
+                ->setMiddlewares($this->getMiddlewares())
+        );
+
+        $event = $this->emit(
+            ResponseEvent::wrap('response')
+                ->setRequest($event->getRequest())
+                ->setResponse($event->getResponse() ?? $this->getHttpFactory()->createResponse())
+                ->setOutput($output)
+        );
+
+        return $event->getResponse();
     }
 
     public function onRequest(callable $listener, ?int $priority = null): static
@@ -133,6 +145,46 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
     public function setHttpFactory(?HttpFactory $httpFactory): static
     {
         $this->httpFactory = $httpFactory;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    /**
+     * @param  array  $middlewares
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setMiddlewares(array $middlewares): static
+    {
+        $this->middlewares = $middlewares;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure
+     */
+    public function getMiddlewareResolver(): \Closure
+    {
+        return $this->middlewareResolver ?? static fn ($entry) => $entry;
+    }
+
+    /**
+     * @param  \Closure|null  $middlewareResolver
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setMiddlewareResolver(?\Closure $middlewareResolver): static
+    {
+        $this->middlewareResolver = $middlewareResolver;
 
         return $this;
     }
