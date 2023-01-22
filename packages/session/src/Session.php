@@ -616,6 +616,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
     public function __destruct()
     {
+        show(__METHOD__);
         $this->destruct();
     }
 

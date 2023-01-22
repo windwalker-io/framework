@@ -40,7 +40,7 @@ class EventEmitter extends EventDispatcher implements
     protected ListenerProviderInterface $provider;
 
     /**
-     * @var EventDispatcherInterface[]
+     * @var WeakMap<EventDispatcherInterface, int>
      */
     protected WeakMap $dealers;
 
@@ -63,7 +63,7 @@ class EventEmitter extends EventDispatcher implements
     {
         $event = parent::dispatch($event);
 
-        foreach ($this->dealers as $dealer) {
+        foreach ($this->dealers as $dealer => $id) {
             $event = $dealer->dispatch($event);
         }
 
@@ -215,7 +215,7 @@ class EventEmitter extends EventDispatcher implements
      */
     public function addDealer(EventDispatcherInterface $dispatcher): static
     {
-        $this->dealers[$dispatcher] = $dispatcher;
+        $this->dealers[$dispatcher] = spl_object_id($dispatcher);
 
         return $this;
     }
@@ -247,5 +247,13 @@ class EventEmitter extends EventDispatcher implements
         parent::__clone();
 
         $this->dealers = clone $this->dealers;
+    }
+
+    /**
+     * @return WeakMap
+     */
+    public function getDealers(): WeakMap
+    {
+        return $this->dealers;
     }
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\DI;
 
-use App\Module\Admin\Category\CategoryListView;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use ReflectionClass;
@@ -21,12 +20,10 @@ use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionType;
 use ReflectionUnionType;
-use Throwable;
 use TypeError;
 use UnexpectedValueException;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
-use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\Utilities\Reflection\ReflectionCallable;

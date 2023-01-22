@@ -41,10 +41,18 @@ class SwooleHttpServer extends AbstractHttpServer
             'request',
             function (Request $request, Response $response) {
                 $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
+                $fd = $request->fd;
+
+                $psrRequest->withAttribute(
+                    'swoole',
+                    compact('fd', 'request', 'response')
+                );
 
                 $output = $this->output ?? new SwooleOutput($response);
 
                 $this->handleRequest($psrRequest, $output);
+
+                gc_collect_cycles();
             }
         );
 

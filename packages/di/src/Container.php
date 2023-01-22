@@ -1120,4 +1120,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     {
         return $this->level;
     }
+
+    public function __destruct()
+    {
+        show(__METHOD__);
+    }
 }

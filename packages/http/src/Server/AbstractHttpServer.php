@@ -44,7 +44,9 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
 
             $runner = new RequestRunner($middlewares, $this->getMiddlewareResolver());
 
-            $output->respond($runner->handle($request));
+            $res = $runner->handle($request);
+
+            $output->respond($res);
         } catch (\Throwable $e) {
             $event = $this->emit(
                 (new ErrorEvent('error'))
