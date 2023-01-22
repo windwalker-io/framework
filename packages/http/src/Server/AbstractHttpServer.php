@@ -73,7 +73,6 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
             RequestEvent::wrap('request')
                 ->setRequest($request)
                 ->setOutput($output)
-                ->setMiddlewares($this->getMiddlewares())
         );
 
         $event = $this->emit(

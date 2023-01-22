@@ -23,7 +23,7 @@ class RequestEvent extends AbstractEvent
 {
     public ServerRequestInterface $request;
 
-    public ResponseInterface $response;
+    public ?ResponseInterface $response = null;
 
     public OutputInterface $output;
 
@@ -40,9 +40,9 @@ class RequestEvent extends AbstractEvent
     }
 
     /**
-     * @return ResponseInterface
+     * @return ?ResponseInterface
      */
-    public function getResponse(): ResponseInterface
+    public function getResponse(): ?ResponseInterface
     {
         return $this->response;
     }
