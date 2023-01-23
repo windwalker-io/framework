@@ -48,6 +48,13 @@ interface OutputInterface
     public function header(string $string, bool $replace = true, int $code = null): static;
 
     /**
+     * Is output stream still available.
+     *
+     * @return  bool
+     */
+    public function isWritable(): bool;
+
+    /**
      * Write string to output stream.
      *
      * @param  string  $str

@@ -27,7 +27,9 @@ class RequestEvent extends AbstractEvent
 
     public OutputInterface $output;
 
-    public array $middlewares = [];
+    public ?\Closure $endHandler = null;
+
+    public array $attributes = [];
 
     public int $id = 0;
 
@@ -114,19 +116,51 @@ class RequestEvent extends AbstractEvent
     /**
      * @return array
      */
-    public function getMiddlewares(): array
+    public function getAttributes(): array
     {
-        return $this->middlewares;
+        return $this->attributes;
     }
 
     /**
-     * @param  array  $middlewares
+     * @param  array  $attributes
      *
      * @return  static  Return self to support chaining.
      */
-    public function setMiddlewares(array $middlewares): static
+    public function setAttributes(array $attributes): static
     {
-        $this->middlewares = $middlewares;
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    public function setAttribute(string $name, mixed $value): static
+    {
+        $this->attributes[$name] = $value;
+
+        return $this;
+    }
+
+    public function getAttribute(string $name): mixed
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    /**
+     * @return \Closure|null
+     */
+    public function getEndHandler(): ?\Closure
+    {
+        return $this->endHandler;
+    }
+
+    /**
+     * @param  \Closure|null  $endHandler
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setEndHandler(?\Closure $endHandler): static
+    {
+        $this->endHandler = $endHandler;
 
         return $this;
     }

@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\ResponseInterface;
-use Windwalker\Data\StructureTrait;
 
 /**
  * The StreamOutput class.
@@ -21,7 +20,7 @@ use Windwalker\Data\StructureTrait;
  */
 class StreamOutput extends Output
 {
-    use StructureTrait;
+    use StreamOutputTrait;
 
     /**
      * Method to send the application response to the client.  All headers will be sent prior to the main

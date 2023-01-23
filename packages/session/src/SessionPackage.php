@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Session;
 
+use Windwalker\Core\DI\RequestReleasableProviderInterface;
 use Windwalker\Core\Manager\SessionManager;
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;

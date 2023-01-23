@@ -36,9 +36,14 @@ trait StreamOutputTrait
      */
     public function sendBody(ResponseInterface $response): void
     {
-        $range = $this->getContentRange($response->getHeaderLine('content-range'));
+        $maxBufferLength = $this->getMaxBufferLength();
 
-        $maxBufferLength = $this->getMaxBufferLength() ?: 8192;
+        if ($maxBufferLength <= 0) {
+            $this->write((string) $response->getBody());
+            return;
+        }
+
+        $range = $this->getContentRange($response->getHeaderLine('content-range'));
 
         if ($range === false) {
             $body = $response->getBody();
@@ -52,8 +57,6 @@ trait StreamOutputTrait
 
                 $this->delay();
             }
-
-            $this->close();
 
             return;
         }
@@ -82,8 +85,6 @@ trait StreamOutputTrait
 
             $this->delay();
         }
-
-        $this->close();
     }
 
     /**

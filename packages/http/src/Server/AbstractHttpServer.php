@@ -20,6 +20,8 @@ use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\OutputInterface;
+use Windwalker\Http\Output\StreamOutput;
+use Windwalker\Http\Response\Response;
 
 /**
  * The AbstractHttpServer class.
@@ -30,8 +32,8 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
 
     public function __construct(
         protected array $middlewares = [],
-        protected ?OutputInterface $output = null,
         protected ?HttpFactory $httpFactory = null,
+        protected \Closure|null $outputBuilder = null,
     ) {
         //
     }
@@ -39,14 +41,47 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
     protected function handleRequest(ServerRequestInterface $request, OutputInterface $output): void
     {
         try {
+            $event = null;
+
             $middlewares = $this->getMiddlewares();
-            $middlewares[] = fn ($req) => $this->run($req, $output);
+            $middlewares[] = function (ServerRequestInterface $req) use ($output, &$event) {
+                /** @var RequestEvent $event */
+                $event = $this->emit(
+                    RequestEvent::wrap('request')
+                        ->setRequest($req)
+                        ->setOutput($output)
+                );
+
+                return $event->getResponse() ?? $this->getHttpFactory()->createResponse();
+            };
 
             $runner = new RequestRunner($middlewares, $this->getMiddlewareResolver());
 
             $res = $runner->handle($request);
 
-            $output->respond($res);
+            /** @var ResponseEvent $event */
+            $event = $this->emit(
+                ResponseEvent::wrap('response')
+                    ->setRequest($request)
+                    ->setResponse($res)
+                    ->setOutput($output)
+                    ->setEndHandler($event?->getEndHandler())
+                    ->setAttributes($event?->getAttributes() ?? [])
+            );
+
+            $endHandler = $event->getEndHandler();
+
+            if ($event->getResponse()) {
+                $output->respond($event->getResponse());
+            }
+
+            if ($endHandler) {
+                $endHandler($output, $event->getResponse());
+            }
+
+            if ($output->isWritable()) {
+                $output->close();
+            }
         } catch (\Throwable $e) {
             $event = $this->emit(
                 (new ErrorEvent('error'))
@@ -64,25 +99,6 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
                 throw $event->getException();
             }
         }
-    }
-
-    public function run(ServerRequestInterface $request, OutputInterface $output): ResponseInterface
-    {
-        /** @var RequestEvent $event */
-        $event = $this->emit(
-            RequestEvent::wrap('request')
-                ->setRequest($request)
-                ->setOutput($output)
-        );
-
-        $event = $this->emit(
-            ResponseEvent::wrap('response')
-                ->setRequest($event->getRequest())
-                ->setResponse($event->getResponse() ?? $this->getHttpFactory()->createResponse())
-                ->setOutput($output)
-        );
-
-        return $event->getResponse();
     }
 
     public function onRequest(callable $listener, ?int $priority = null): static
@@ -109,25 +125,13 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
     /**
      * Method to get property Output
      *
-     * @return  ?OutputInterface
-     */
-    public function getOutput(): ?OutputInterface
-    {
-        return $this->output;
-    }
-
-    /**
-     * Method to set property output
+     * @param  mixed  ...$args
      *
-     * @param  ?OutputInterface  $output
-     *
-     * @return  static  Return self to support chaining.
+     * @return  OutputInterface
      */
-    public function setOutput(?OutputInterface $output): static
+    public function createOutput(...$args): OutputInterface
     {
-        $this->output = $output;
-
-        return $this;
+        return $this->getOutputBuilder()(...$args);
     }
 
     /**
@@ -186,6 +190,26 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
     public function setMiddlewareResolver(?\Closure $middlewareResolver): static
     {
         $this->middlewareResolver = $middlewareResolver;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure|null
+     */
+    public function getOutputBuilder(): ?\Closure
+    {
+        return $this->outputBuilder ??= static fn () => new StreamOutput();
+    }
+
+    /**
+     * @param  \Closure|null  $outputBuilder
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setOutputBuilder(?\Closure $outputBuilder): static
+    {
+        $this->outputBuilder = $outputBuilder;
 
         return $this;
     }

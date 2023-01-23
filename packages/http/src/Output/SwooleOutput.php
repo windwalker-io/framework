@@ -92,4 +92,9 @@ class SwooleOutput implements OutputInterface
     {
         $this->response->end();
     }
+
+    public function isWritable(): bool
+    {
+        return $this->response->isWritable();
+    }
 }

@@ -17,6 +17,7 @@ use Windwalker\Utilities\Assert\ArgumentsAssert;
 /**
  * The AbstractEvent class.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractEvent implements EventInterface
 {
     /**

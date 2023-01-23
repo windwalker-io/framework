@@ -30,7 +30,7 @@ class PhpServer extends AbstractHttpServer
 
     public function handle(?ServerRequestInterface $request = null): void
     {
-        $output = $this->getOutput();
+        $output = $this->createOutput();
 
         $this->handleRequest(
             $request ?? $this->getHttpFactory()->createServerRequestFromGlobals(),
@@ -41,15 +41,5 @@ class PhpServer extends AbstractHttpServer
     public function stop(): void
     {
         //
-    }
-
-    /**
-     * Method to get property Output
-     *
-     * @return  OutputInterface
-     */
-    public function getOutput(): OutputInterface
-    {
-        return $this->output ??= new StreamOutput();
     }
 }

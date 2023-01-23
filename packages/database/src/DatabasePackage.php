@@ -38,7 +38,9 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
     public function boot(Container $container): void
     {
         // Preload ORM here to keep all process uses global ORM instance
-        $container->get(ORM::class);
+        // $container->get(ORM::class);
+
+        // Todo: Should not cache ORM and DatabaseAdapter, we should cache connection pool.
     }
 
     /**

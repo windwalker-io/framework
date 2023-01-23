@@ -184,4 +184,9 @@ class Output implements OutputInterface
 
         return $this;
     }
+
+    public function isWritable(): bool
+    {
+        return $this->outputStream->isWritable();
+    }
 }
