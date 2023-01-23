@@ -11,16 +11,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Session;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Windwalker\Core\Application\AppContext;
-use Windwalker\Core\Attributes\Ref;
 use Windwalker\Core\Manager\SessionManager;
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
 use Windwalker\Core\Security\CsrfService;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
-use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Session\Cookie\ArrayCookies;
 use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
@@ -45,17 +41,27 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
      */
     public function register(Container $container): void
     {
-        $container->prepareSharedObject(SessionManager::class);
+        $container->prepareSharedObject(SessionManager::class, null, Container::ISOLATION);
 
         // Cookies
-        $container->prepareSharedObject(Cookies::class);
-        $container->prepareObject(ArrayCookies::class);
+        // $container->prepareSharedObject(Cookies::class, null, Container::ISOLATION);
+        // $container->prepareObject(ArrayCookies::class, null, Container::ISOLATION);
 
-        $container->bindShared(Session::class, fn(SessionManager $manager) => $manager->get())
+        $container->bindShared(
+            Session::class,
+            fn(SessionManager $manager) => $manager->get(),
+            Container::ISOLATION
+        )
             ->alias(SessionInterface::class, Session::class);
 
-        $container->bindShared(CookiesInterface::class, fn(SessionManager $manager) => $manager->get()->getCookies());
+        $container->bindShared(
+            CookiesInterface::class,
+            function (SessionManager $manager) {
+                return $manager->get()->getCookies();
+            },
+            Container::ISOLATION
+        );
 
-        $container->prepareSharedObject(CsrfService::class);
+        $container->prepareSharedObject(CsrfService::class, null, Container::ISOLATION);
     }
 }

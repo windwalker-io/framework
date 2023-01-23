@@ -17,6 +17,7 @@ use Windwalker\Core\Migration\MigrationService;
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
 use Windwalker\Core\Seed\FakerService;
+use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\ORM\ORM;
@@ -24,11 +25,20 @@ use Windwalker\ORM\ORM;
 /**
  * The DatabasePackage class.
  */
-class DatabasePackage extends AbstractPackage implements ServiceProviderInterface
+class DatabasePackage extends AbstractPackage implements ServiceProviderInterface, BootableProviderInterface
 {
     public function install(PackageInstaller $installer): void
     {
         $installer->installConfig(__DIR__ . '/../etc/*.php', 'config');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function boot(Container $container): void
+    {
+        // Preload ORM here to keep all process uses global ORM instance
+        $container->get(ORM::class);
     }
 
     /**
