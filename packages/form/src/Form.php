@@ -392,8 +392,8 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
         foreach ($this->fields as $name => $field) {
             if ($field instanceof CompositeFieldInterface) {
-                $filtered = array_merge(
-                    $data,
+                $filtered = Arr::mergeRecursive(
+                    $filtered,
                     $field->filter($data)
                 );
             } else {
