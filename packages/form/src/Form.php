@@ -178,12 +178,30 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      * fill
      *
      * @param  mixed  $data
+     * @param  bool   $decodeJson
      *
      * @return  $this
      */
-    public function fill(mixed $data): static
+    public function fill(mixed $data, bool $decodeJson = true): static
     {
         $data = TypeCast::toArray($data);
+
+        if ($decodeJson) {
+            $data = Arr::mapRecursive(
+                $data,
+                static function ($value) {
+                    if (is_string($value) && is_json($value)) {
+                        try {
+                            return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                        } catch (\JsonException) {
+                            return $value;
+                        }
+                    }
+
+                    return $value;
+                }
+            );
+        }
 
         foreach ($this->fields as $name => $field) {
             $value = Arr::get($data, $name, '/');
