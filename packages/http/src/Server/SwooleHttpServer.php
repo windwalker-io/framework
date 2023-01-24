@@ -11,13 +11,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server as SwooleServer;
 use Windwalker\DI\Container;
 use Windwalker\Http\Factory\ServerRequestFactory;
-use Windwalker\Http\Output\StreamOutput;
 use Windwalker\Http\Output\SwooleOutput;
 
 /**
@@ -45,7 +43,7 @@ class SwooleHttpServer extends AbstractHttpServer
                 $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
                 $fd = $request->fd;
 
-                $psrRequest->withAttribute(
+                $psrRequest = $psrRequest->withAttribute(
                     'swoole',
                     compact('fd', 'request', 'response')
                 );
@@ -55,12 +53,6 @@ class SwooleHttpServer extends AbstractHttpServer
                 $this->handleRequest($psrRequest, $output);
 
                 gc_collect_cycles();
-
-                show(
-                    memory_get_usage(true),
-                    memory_get_usage(),
-                    1
-                );
             }
         );
 
