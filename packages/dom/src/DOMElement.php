@@ -112,10 +112,15 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
         $content = value($content);
 
         if (is_array($content) || $content instanceof DOMNodeList) {
+            /** @var \DOMDocumentFragment $fragment */
             $fragment = $node->ownerDocument->createDocumentFragment();
 
             foreach ($content as $key => $c) {
                 static::insertContentTo($c, $fragment);
+            }
+
+            if ($fragment->childElementCount === 0) {
+                return $node;
             }
 
             return $node->appendChild($fragment);
