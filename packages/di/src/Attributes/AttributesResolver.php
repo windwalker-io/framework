@@ -29,8 +29,8 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * AttributesResolver constructor.
      *
-     * @param  Container  $container
-     * @param  array      $options
+     * @param Container $container
+     * @param array     $options
      */
     public function __construct(Container $container, array $options = [])
     {
@@ -48,7 +48,7 @@ class AttributesResolver extends BaseAttributesResolver
     }
 
     /**
-     * @param  Container  $container
+     * @param Container $container
      *
      * @return  static  Return self to support chaining.
      */
@@ -62,11 +62,10 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * Create object by class and resolve attributes.
      *
-     * @param  string  $class
-     * @param  mixed   ...$args
+     * @param string $class
+     * @param mixed  ...$args
      *
      * @return  object
-     * @throws ReflectionException
      */
     public function createObject(string $class, ...$args): object
     {
@@ -76,42 +75,47 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * Resolve class constructor and return create function.
      *
-     * @param  string  $class
-     * @param  callable|null  $builder
+     * @param string        $class
+     * @param callable|null $builder
+     * @param array         $options
      *
      * @return  BaseAttributeHandler
      *
      * @throws ReflectionException
      */
-    public function resolveClassCreate(string $class, ?callable $builder = null): BaseAttributeHandler
-    {
+    public function resolveClassCreate(
+        string $class,
+        ?callable $builder = null,
+        array $options = []
+    ): BaseAttributeHandler {
         /*
          * Container builder use `(array $args, int $options)` signature.
          * So we should change the default builder to fit it.
          */
         $builder = $builder ?? fn($args, int $options) => $this->getBuilder()($class, ...$args);
 
-        return parent::resolveClassCreate($class, $builder);
+        return parent::resolveClassCreate($class, $builder, $options);
     }
 
     /**
      * Decorate object by attributes.
      *
-     * @param  object  $object
+     * @param object $object
+     * @param array  $options
      *
      * @return  object
      */
-    public function decorateObject(object $object): object
+    public function decorateObject(object $object, array $options = []): object
     {
-        $args = [];
-        $options = 0;
+        $args    = [];
+        $containerOptions = 0;
 
         /*
          * Container builder use `(array $args, int $options)` signature.
          * So we must add 2 argument to polyfill it.
          */
 
-        return $this->resolveObjectDecorate($object)($args, $options);
+        return $this->resolveObjectDecorate($object, $options)($args, $options);
     }
 
     protected function prepareAttribute(object $attribute): void
@@ -134,13 +138,19 @@ class AttributesResolver extends BaseAttributesResolver
     protected function createHandler(
         callable $getter,
         Reflector $reflector,
-        ?object $object = null
+        ?object $object = null,
+        array $options = []
     ): BaseAttributeHandler {
-        return new AttributeHandler($getter, $reflector, $object, $this, $this->container);
+        return new AttributeHandler($getter, $reflector, $object, $this, $options, $this->container);
     }
 
-    public function call(callable $callable, $args = [], ?object $context = null): mixed
-    {
+    public function call(
+        callable $callable,
+        $args = [],
+        ?object $context = null,
+        array $options = []
+    ): mixed {
+        // call() for Container unable to send options into it.
         return $this->container->call($callable, $args, $context);
     }
 }

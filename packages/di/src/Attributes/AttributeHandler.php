@@ -27,9 +27,10 @@ class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
         Reflector $reflector,
         ?object $object,
         AttributesResolver $resolver,
-        protected Container $container
+        array $options,
+        protected Container $container,
     ) {
-        parent::__construct($handler, $reflector, $object, $resolver);
+        parent::__construct($handler, $reflector, $object, $resolver, $options);
     }
 
     /**
