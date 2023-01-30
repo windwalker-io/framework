@@ -137,7 +137,7 @@ class AttributesResolver extends ObjectBuilder
 
         foreach ($ref->getAttributes() as $attribute) {
             if ($this->hasAttribute($attribute, Attribute::TARGET_CLASS)) {
-                $builder = $this->runAttribute($attribute, $this->createHandler($builder, $ref, $object));
+                $builder = $this->runAttribute($attribute, $builder);
             }
         }
 
@@ -269,15 +269,17 @@ class AttributesResolver extends ObjectBuilder
                 ? $property->getValue($object)
                 : $property->getDefaultValue();
 
+            $handler = $this->createHandler($getter, $property, $object);
+
             foreach ($property->getAttributes() as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_PROPERTY)) {
-                    $getter = $this->runAttribute($attribute, $this->createHandler($getter, $property, $object));
+                    $handler = $this->runAttribute($attribute, $handler);
                     $shouldCall = true;
                 }
             }
 
             if ($shouldCall === true) {
-                $getter();
+                $handler();
             }
 
             if ($property->isPrivate() || $property->isProtected()) {
@@ -298,15 +300,17 @@ class AttributesResolver extends ObjectBuilder
             $getter = static fn(): array => [$target, $method->getName()];
             $shouldCall = false;
 
+            $handler = $this->createHandler($getter, $method, $object);
+
             foreach ($method->getAttributes() as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_METHOD)) {
-                    $getter = $this->runAttribute($attribute, $this->createHandler($getter, $method, $object));
+                    $handler = $this->runAttribute($attribute, $handler);
                     $shouldCall = true;
                 }
             }
 
             if ($shouldCall === true) {
-                $getter();
+                $handler();
             }
         }
 
@@ -324,15 +328,17 @@ class AttributesResolver extends ObjectBuilder
             $getter = static fn(): array => [$object, $constant];
             $shouldCall = false;
 
+            $handler = $this->createHandler($getter, $constant, $object);
+
             foreach ($constant->getAttributes() as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_METHOD)) {
-                    $getter = $this->runAttribute($attribute, $this->createHandler($getter, $constant, $object));
+                    $handler = $this->runAttribute($attribute, $handler);
                     $shouldCall = true;
                 }
             }
 
             if ($shouldCall === true) {
-                $getter();
+                $handler();
             }
         }
 
