@@ -88,6 +88,8 @@ class EntityMetadata implements EventAwareInterface
      */
     protected ORM $orm;
 
+    protected bool $hasSetup = false;
+
     /**
      * EntityMetadata constructor.
      *
@@ -106,8 +108,6 @@ class EntityMetadata implements EventAwareInterface
         $this->relationManager = new RelationManager($this);
 
         $this->addEventDealer($orm);
-
-        $this->setup();
     }
 
     public static function isEntity(string|object $object): bool
@@ -119,12 +119,15 @@ class EntityMetadata implements EventAwareInterface
 
     public function setup(): static
     {
+        if ($this->hasSetup) {
+            return $this;
+        }
+
         $resolver = $this->getORM()->getAttributesResolver();
-        $resolver->setOption('metadata', $this);
 
         $ref = $this->getReflector();
 
-        $resolver->resolveObjectDecorate($ref);
+        $resolver->resolveObjectDecorate($ref, ['metadata' => $this]);
 
         if (!$this->tableName) {
             throw new InvalidArgumentException(
@@ -135,9 +138,9 @@ class EntityMetadata implements EventAwareInterface
             );
         }
 
-        $resolver->resolveObjectMembers($ref);
+        $resolver->resolveObjectMembers($ref, ['metadata' => $this]);
 
-        $resolver->setOption('metadata', null);
+        $this->hasSetup = true;
 
         return $this;
     }

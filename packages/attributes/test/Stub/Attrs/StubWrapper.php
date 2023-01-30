@@ -23,8 +23,12 @@ class StubWrapper
 {
     public object $instance;
 
+    public array $options;
+
     public function __invoke(AttributeHandler $handler): Closure
     {
+        $this->options = $handler->getOptions();
+
         return function (...$args) use ($handler) {
             $this->instance = $handler(...$args);
 
