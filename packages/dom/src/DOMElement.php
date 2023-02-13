@@ -119,7 +119,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
                 static::insertContentTo($c, $fragment);
             }
 
-            if ($fragment->childElementCount === 0) {
+            if (count($fragment->childNodes) === 0) {
                 return $node;
             }
 
