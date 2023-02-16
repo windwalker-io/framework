@@ -143,6 +143,15 @@ class ReflectAccessor
                 continue;
             }
 
+            if (
+                ($type->getName() === 'int' || $type->getName() === 'float')
+                && $type->allowsNull()
+                && $value === ''
+            ) {
+                $value = null;
+                continue;
+            }
+
             $value = TypeCast::try($value, $type->getName());
 
             if ($value !== null) {
@@ -150,7 +159,7 @@ class ReflectAccessor
             }
         }
 
-        if ($value === null) {
+        if ($value === null && isset($types[0]) && !$types[0]->allowsNull()) {
             settype($value, $types[0]->getName());
         }
 
