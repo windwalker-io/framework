@@ -6,7 +6,7 @@
 
 // phpcs:disable
 
-namespace Windwalker\String\Tests;
+namespace Windwalker\String\Test;
 
 use Windwalker\String\StringNormalise;
 
