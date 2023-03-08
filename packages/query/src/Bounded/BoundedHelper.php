@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Bounded;
 
 use PDO;
+use Ramsey\Uuid\Uuid;
 use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
@@ -98,10 +99,18 @@ class BoundedHelper
                 $v = $param['value'];
             }
 
-            $v = match ($param['dataType']) {
-                ParamType::STRING => Escaper::tryQuote($escaper, TypeCast::toString($v)),
-                default => $v,
-            };
+            if ($param['dataType'] === ParamType::STRING) {
+                if (
+                    strlen($v) === 16
+                    && !mb_check_encoding((string) $v, 'UTF-8')
+                ) {
+                    $v = Escaper::tryQuote($escaper, static::binToUUID($v));
+
+                    $v = "UNHEX(REPLACE({$v}, '-', ''))";
+                } else {
+                    $v = Escaper::tryQuote($escaper, TypeCast::toString($v));
+                }
+            }
 
             $values[] = $v;
         }
@@ -147,5 +156,19 @@ class BoundedHelper
         }
 
         return TypeCast::toString($value);
+    }
+
+    public static function binToUUID(string $bin): string
+    {
+        $hex = bin2hex($bin);
+
+        return sprintf(
+            '%s-%s-%s-%s-%s',
+            SUBSTR($hex, 0, 8),
+            SUBSTR($hex, 8, 4),
+            SUBSTR($hex, 12, 4),
+            SUBSTR($hex, 16, 4),
+            SUBSTR($hex, 20),
+        );
     }
 }
