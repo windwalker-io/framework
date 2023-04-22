@@ -404,7 +404,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this->ns($name, $handler);
     }
 
-    public function filter(array $data, bool $keepAllData = false): array
+    public function filter(array $data, bool $keepAllData = false, bool $useDefaultValue = false): array
     {
         $filtered = $keepAllData ? $data : [];
 
@@ -412,7 +412,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
             if ($field instanceof CompositeFieldInterface) {
                 $filtered = Arr::mergeRecursive(
                     $filtered,
-                    $field->filter($data)
+                    $field->filter($data, $useDefaultValue)
                 );
             } else {
                 $name = $field->getNamespaceName(true);
@@ -422,7 +422,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
                 }
 
                 $value = Arr::get($data, $name, '/');
-                $filtered = Arr::set($filtered, $name, $field->filter($value), '/');
+                $filtered = Arr::set($filtered, $name, $field->filter($value, $useDefaultValue), '/');
             }
         }
 
@@ -496,7 +496,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      * renderFields
      *
      * @param  Symbol|string|null  $fieldset
-     * @param  string              $namespace
+     * @param  string|null         $namespace
      * @param  array               $options
      *
      * @return string
