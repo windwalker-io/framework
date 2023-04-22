@@ -17,6 +17,7 @@ use Windwalker\Filter\Exception\ValidateException;
 use Windwalker\Filter\FilterInterface;
 use Windwalker\Filter\Traits\FilterAwareTrait;
 use Windwalker\Filter\ValidatorInterface;
+use Windwalker\Form\Form;
 use Windwalker\Form\ValidateResult;
 use Windwalker\Utilities\TypeCast;
 
@@ -105,11 +106,11 @@ trait ManageFilterTrait
      * filter
      *
      * @param  mixed  $value
-     * @param  bool   $useDefaultValue
+     * @param  int    $formFilterOptions
      *
      * @return mixed
      */
-    public function filter(mixed $value, bool $useDefaultValue = false): mixed
+    public function filter(mixed $value, int $formFilterOptions = 0): mixed
     {
         if ($value === null || $this->isDisabled()) {
             return $value;
@@ -117,8 +118,10 @@ trait ManageFilterTrait
 
         $value = $this->getFilter()->filter($value);
 
+        $useDefault = (bool) ($formFilterOptions & Form::FILTER_USE_DEFAULT_VALUE);
+
         if ($value === []) {
-            return $useDefaultValue ? $value : $this->getDefaultValue();
+            return $useDefault ? $value : $this->getDefaultValue();
         }
 
         if (is_object($value)) {
@@ -126,7 +129,7 @@ trait ManageFilterTrait
         }
 
         if ((string) $value === '') {
-            return $useDefaultValue ? $value : $this->getDefaultValue();
+            return $useDefault ? $value : $this->getDefaultValue();
         }
 
         return $value;

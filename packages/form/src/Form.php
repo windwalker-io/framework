@@ -40,6 +40,10 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     use ObjectBuilderAwareTrait;
     use OptionAccessTrait;
 
+    public const FILTER_KEEP_DATA = 1 << 0;
+
+    public const FILTER_USE_DEFAULT_VALUE = 1 << 1;
+
     protected string $namespace = '';
 
     protected array $bounded = [];
@@ -404,15 +408,21 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this->ns($name, $handler);
     }
 
-    public function filter(array $data, bool $keepAllData = false, bool $useDefaultValue = false): array
+    public function filter(array $data, bool|int $options = 0): array
     {
+        if (is_bool($options)) {
+            $keepAllData = $options;
+        } else {
+            $keepAllData = (bool) ($options & static::FILTER_KEEP_DATA);
+        }
+
         $filtered = $keepAllData ? $data : [];
 
         foreach ($this->fields as $name => $field) {
             if ($field instanceof CompositeFieldInterface) {
                 $filtered = Arr::mergeRecursive(
                     $filtered,
-                    $field->filter($data, $useDefaultValue)
+                    $field->filter($data, $options)
                 );
             } else {
                 $name = $field->getNamespaceName(true);
@@ -422,7 +432,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
                 }
 
                 $value = Arr::get($data, $name, '/');
-                $filtered = Arr::set($filtered, $name, $field->filter($value, $useDefaultValue), '/');
+                $filtered = Arr::set($filtered, $name, $field->filter($value, $options), '/');
             }
         }
 
