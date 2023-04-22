@@ -89,7 +89,7 @@ class Watch implements AttributeInterface
             ->setSource($event->getData());
 
         if ($event instanceof AbstractSaveEvent) {
-            $watchEvent->setOldData([]);
+            $watchEvent->setOldData($event->getOldData());
             $watchEvent->setOldValue($oldValue);
             $watchEvent->setIsUpdateWhere(false);
         } else {
