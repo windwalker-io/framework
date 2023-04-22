@@ -112,16 +112,20 @@ trait ManageFilterTrait
      */
     public function filter(mixed $value, int $formFilterOptions = 0): mixed
     {
-        if ($value === null || $this->isDisabled()) {
+        if ($this->isDisabled()) {
             return $value;
+        }
+
+        $useDefault = (bool) ($formFilterOptions & Form::FILTER_USE_DEFAULT_VALUE);
+
+        if ($value === null && !$useDefault) {
+            return null;
         }
 
         $value = $this->getFilter()->filter($value);
 
-        $useDefault = (bool) ($formFilterOptions & Form::FILTER_USE_DEFAULT_VALUE);
-
         if ($value === []) {
-            return $useDefault ? $value : $this->getDefaultValue();
+            return $useDefault ? $this->getDefaultValue() : $value;
         }
 
         if (is_object($value)) {
@@ -129,7 +133,7 @@ trait ManageFilterTrait
         }
 
         if ((string) $value === '') {
-            return $useDefault ? $value : $this->getDefaultValue();
+            return $useDefault ? $this->getDefaultValue() : $value;
         }
 
         return $value;

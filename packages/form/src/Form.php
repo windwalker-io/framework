@@ -427,7 +427,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
             } else {
                 $name = $field->getNamespaceName(true);
 
-                if (!Arr::has($data, $name, '/')) {
+                if (!($options & static::FILTER_USE_DEFAULT_VALUE) && !Arr::has($data, $name, '/')) {
                     continue;
                 }
 
