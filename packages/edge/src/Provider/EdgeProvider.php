@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Provider;
 
+use Windwalker\Core\Application\ApplicationInterface;
 use Windwalker\Core\Edge\CoreFileLoader;
 use Windwalker\Core\Renderer\Edge\WindwalkerExtension;
 use Windwalker\DI\Container;
@@ -68,8 +69,13 @@ class EdgeProvider implements ServiceProviderInterface
 
                 $this->prepareComponents($container, $edge, $options);
 
-                // Windwalker Extension should only works in level 3 or higher.
-                if ($container->getLevel() > 2) {
+                $app = $container->get(ApplicationInterface::class);
+
+                // Windwalker Extension should only work on level 3 or higher, and console web simulator.
+                if (
+                    $app->getClientType() === 'console'
+                    || $container->getLevel() > 2
+                ) {
                     $edge->addExtension(
                         $container->newInstance(WindwalkerExtension::class)
                     );
