@@ -17,9 +17,11 @@ use RuntimeException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
+use function Windwalker\response;
 use function Windwalker\uid;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 use const Windwalker\Stream\READ_WRITE_RESET;
 
 /**
@@ -42,15 +44,26 @@ class AttachmentResponse extends Response
             $body = $this->createStream($body);
         }
 
+        $headers['Content-Type'] ??= 'application/octet-stream';
+        $headers['Cache-Control'] ??= 'no-store, no-cache, must-revalidate';
+        $headers['Content-Transfer-Encoding'] ??= 'binary';
+        $headers['Content-Encoding'] ??= 'none';
+
         parent::__construct($body, $status, $headers);
+    }
 
-        $res = HeaderHelper::prepareAttachmentHeaders($this);
+    public function withContentType(string $type): static
+    {
+        return $this->withContentTypeIfExists($type);
+    }
 
-        $this->headers = $res->headers;
-
-        foreach (array_keys($this->headers) as $header) {
-            $this->headerNames[strtolower($header)] = $header;
+    protected function withContentTypeIfExists(?string $type = null): static
+    {
+        if ($type !== null) {
+            return $this->withHeader('Content-Type', $type);
         }
+
+        return $this;
     }
 
     protected function createStream(mixed $body): Stream
@@ -61,37 +74,46 @@ class AttachmentResponse extends Response
     /**
      * withFile
      *
-     * @param  string  $file
+     * @param  string       $file
+     * @param  string|null  $contentType
      *
      * @return  static
-     * @throws InvalidArgumentException
      */
-    public function withFile(string $file): static
+    public function withFile(string $file, ?string $contentType = null): static
     {
         if (!is_file($file)) {
             throw new InvalidArgumentException('File: ' . $file . ' not exists.');
         }
 
-        return $this->withFileStream($this->createStream($file));
+        return $this->withStreamBody($this->createStream(fopen($file, READ_ONLY_FROM_BEGIN)))
+            ->withContentTypeIfExists($contentType);
     }
 
     /**
-     * withFileData
-     *
-     * @param  string  $data
+     * @param  string|resource|StreamInterface  $data
+     * @param  string|null                      $contentType
      *
      * @return  static
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
      */
-    public function withFileData(string $data): static
+    public function withFileData(mixed $data, ?string $contentType = null): static
     {
+        if ($data instanceof StreamInterface) {
+            return $this->withFileStream($data);
+        }
+
         $stream = new Stream('php://temp', READ_WRITE_RESET);
 
         $stream->write($data);
         $stream->rewind();
 
-        return $this->withFileStream($stream);
+        return $this->withStreamBody($stream)->withContentTypeIfExists($contentType);
+    }
+
+    public function withFileStream(mixed $file, ?string $contentType = null): static
+    {
+        $stream = Stream::wrap($file, READ_ONLY_FROM_BEGIN);
+
+        return $this->withStreamBody($stream)->withContentTypeIfExists($contentType);
     }
 
     /**
@@ -102,7 +124,7 @@ class AttachmentResponse extends Response
      * @return  static
      * @throws InvalidArgumentException
      */
-    protected function withFileStream(StreamInterface $stream): static
+    protected function withStreamBody(StreamInterface $stream): static
     {
         return $this->withBody($stream)->withHeader('Content-Length', (string) $stream->getSize());
     }
@@ -126,14 +148,24 @@ class AttachmentResponse extends Response
     /**
      * withInlineFilename
      *
-     * @param  string  $filename
+     * @param  string       $filename
+     * @param  string|null  $contentType
      *
      * @return  static
-     * @throws InvalidArgumentException
      */
-    public function withInlineFilename(string $filename): static
+    public function withInlineFilename(string $filename, ?string $contentType = null): static
     {
-        return $this->withHeader(
+        $new = clone $this;
+
+        if (str_contains($this->getHeaderLine('Content-Type'), 'application/octet-stream')) {
+            if ($contentType === null) {
+                $new = $new->withoutHeader('Content-Type');
+            } else {
+                $new = $new->withHeader('Content-Type', $contentType);
+            }
+        }
+
+        return $new->withHeader(
             'Content-Disposition',
             HeaderHelper::inlineContentDisposition($filename)
         );
