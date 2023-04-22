@@ -905,6 +905,24 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
+     * Extract closure as pure value.
+     *
+     * @param  mixed  $value
+     *
+     * @return  mixed
+     *
+     * @throws ReflectionException
+     */
+    public function extractValue(mixed $value): mixed
+    {
+        if ($value instanceof Closure) {
+            return $this->call($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * getParam
      *
      * @param  string  $path
