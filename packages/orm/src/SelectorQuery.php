@@ -204,7 +204,7 @@ class SelectorQuery extends Query implements EventAwareInterface
         $joinMetadata = $this->getORM()->getEntityMetadata($table);
         $relation = null;
 
-        $fromAlias = $fromMetadata->getTableAlias();
+        $fromAlias = $fromClause->getAlias() ?: $fromMetadata->getTableAlias();
         $alias ??= $joinMetadata->getTableAlias();
 
         foreach ($fromMetadata->getRelationManager()->getRelations() as $relation) {
