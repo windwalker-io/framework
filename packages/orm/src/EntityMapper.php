@@ -915,6 +915,10 @@ class EntityMapper implements EventAwareInterface
 
             $entity = $this->createOne($data = $event->getData(), $option = $event->getOptions());
 
+            $newData = $this->extract($entity);
+
+            $data[$key] = $newData[$key];
+
             $event = $this->emitEvent(
                 AfterCopyEvent::class,
                 compact('data', 'type', 'metadata', 'entity', 'oldData', 'source', 'options')
