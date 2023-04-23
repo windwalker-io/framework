@@ -65,7 +65,9 @@ class PhpServerTest extends TestCase
         $this->instance = new HttpServer(
             [],
             new PhpServer(
-                $this->output = new MockOutput()
+                [],
+                null,
+                fn () => $this->output = new MockOutput()
             )
         );
     }
