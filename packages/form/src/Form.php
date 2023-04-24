@@ -412,6 +412,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     {
         if (is_bool($options)) {
             $keepAllData = $options;
+            $options = static::FILTER_KEEP_DATA;
         } else {
             $keepAllData = (bool) ($options & static::FILTER_KEEP_DATA);
         }
