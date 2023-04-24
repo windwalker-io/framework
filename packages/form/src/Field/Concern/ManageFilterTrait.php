@@ -132,7 +132,7 @@ trait ManageFilterTrait
             return $value;
         }
 
-        if ((string) $value === '') {
+        if (!is_array($value) && (string) $value === '') {
             return $useDefault ? $this->getDefaultValue() : $value;
         }
 
