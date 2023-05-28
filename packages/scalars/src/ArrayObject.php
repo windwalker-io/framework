@@ -57,9 +57,9 @@ class ArrayObject implements AccessibleInterface
      *
      * @param  array  $storage
      */
-    public function __construct($storage = [])
+    public function __construct(mixed $storage = [], array $options = [])
     {
-        $this->storage = TypeCast::toArray($storage);
+        $this->fill($storage, $options);
     }
 
     /**
