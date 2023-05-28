@@ -47,6 +47,11 @@
         }
     },
     "extra": {
+        "windwalker": {
+            "packages": [
+                "Windwalker\\Queue\\QueuePackage"
+            ]
+        },
         "branch-alias": {
             "dev-master": "4.x-dev"
         }

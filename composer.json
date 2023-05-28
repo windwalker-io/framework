@@ -202,6 +202,7 @@
                 "Windwalker\\Database\\DatabasePackage",
                 "Windwalker\\Form\\FormPackage",
                 "Windwalker\\Language\\LanguagePackage",
+                "Windwalker\\Queue\\QueuePackage",
                 "Windwalker\\Renderer\\RendererPackage",
                 "Windwalker\\Session\\SessionPackage"
             ]

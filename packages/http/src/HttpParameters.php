@@ -19,7 +19,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * A parameter bag class that store a set or data, and make getters/setters key insensitive.
  */
-class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInterface ,\IteratorAggregate
+class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInterface, \IteratorAggregate
 {
     protected array $storage = [];
 

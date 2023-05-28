@@ -124,8 +124,12 @@ trait ManageFilterTrait
 
         $value = $this->getFilter()->filter($value);
 
-        if ($value === []) {
-            return $useDefault ? $this->getDefaultValue() : $value;
+        if (is_array($value)) {
+            if ($value === []) {
+                return $useDefault ? $this->getDefaultValue() : $value;
+            }
+
+            return $value;
         }
 
         if (is_object($value)) {

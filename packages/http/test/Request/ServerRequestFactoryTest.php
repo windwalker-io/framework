@@ -181,7 +181,7 @@ class ServerRequestFactoryTest extends TestCase
             'content-bird' => 'fly',
         ];
 
-        self::assertEquals($expected, ServerRequestFactory::prepareHeaders($headers));
+        self::assertEquals($expected, ServerRequestFactory::prepareHeaders($headers)->dump());
     }
 
     /**
@@ -190,8 +190,6 @@ class ServerRequestFactoryTest extends TestCase
      * @param  array   $servers
      * @param  array   $headers
      * @param  string  $expected
-     *
-     * @covers       \Windwalker\Http\Request\ServerRequestFactory::prepareUri
      *
      * @dataProvider prepareUriProvider
      */
