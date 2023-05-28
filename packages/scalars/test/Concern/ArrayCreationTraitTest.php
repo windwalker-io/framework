@@ -225,6 +225,33 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
+    public function testConcatStart(): void
+    {
+        $data1 = [
+            'green' => 'Hulk',
+            'red' => 'empty',
+            'human' => [
+                'dark' => 'empty',
+            ],
+        ];
+
+        $data2 = [
+            'ai' => 'Jarvis',
+            'agent' => 'Phil Coulson',
+            'red' => [
+                'left' => 'Pepper',
+            ],
+            'human' => [
+                'dark' => 'Nick Fury',
+            ],
+        ];
+
+        self::assertEquals(
+            array_merge(array_values($data2), array_values($data1)),
+            arr($data1)->concatStart(arr($data2))->dump()
+        );
+    }
+
     public function testFillWith(): void
     {
         $a = ArrayObject::fillWith(5, 3, 'Y');

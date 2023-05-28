@@ -178,6 +178,18 @@ trait ArrayCreationTrait
         return $this->values()->merge(...$args);
     }
 
+    public function concatStart(...$args): static
+    {
+        foreach ($args as &$arg) {
+            $arg = TypeCast::toArray(static::unwrap($arg));
+            $arg = array_values($arg);
+        }
+
+        $args[] = $this->values()->dump();
+
+        return $this->newInstance(array_merge(...$args));
+    }
+
     /**
      * countValues
      *
