@@ -48,9 +48,9 @@ class ReflectionCallable implements Reflector
     /**
      * ReflectionCallable constructor.
      *
-     * @param  callable  $callable
+     * @param  mixed  $callable
      */
-    public function __construct(callable $callable)
+    public function __construct(mixed $callable)
     {
         $this->callable = $callable;
 

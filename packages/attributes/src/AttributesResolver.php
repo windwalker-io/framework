@@ -167,7 +167,7 @@ class AttributesResolver extends ObjectBuilder
         return $this->resolveCallable($callable, $context, $options)(...$args);
     }
 
-    public function resolveCallable(callable $callable, ?object $context = null, array $options = []): callable
+    public function resolveCallable(mixed $callable, ?object $context = null, array $options = []): callable
     {
         $ref     = new ReflectionCallable($callable);
         $funcRef = $ref->getReflector();

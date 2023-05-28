@@ -373,16 +373,16 @@ class DependencyResolver
     /**
      * Execute a callable with dependencies.
      *
-     * @param  callable     $callable
+     * @param  mixed        $callable    Do not use callable hint, will check callable after context bounded.
      * @param  array        $args
      * @param  object|null  $context
      * @param  int          $options
      *
      * @return mixed
      *
-     * @throws ReflectionException
+     * @throws ReflectionException|DependencyResolutionException
      */
-    public function call(callable $callable, array $args = [], ?object $context = null, int $options = 0): mixed
+    public function call(mixed $callable, array $args = [], ?object $context = null, int $options = 0): mixed
     {
         $ref = new ReflectionCallable($callable);
 
