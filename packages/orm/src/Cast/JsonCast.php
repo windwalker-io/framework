@@ -45,6 +45,10 @@ class JsonCast implements CastInterface
      */
     public function extract(mixed $value): mixed
     {
+        if ($value === []) {
+            $value = new \stdClass();
+        }
+
         return is_json($value) ? $value : json_encode($value, $this->encodeOptions);
     }
 }
