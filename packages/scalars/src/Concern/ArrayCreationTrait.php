@@ -161,13 +161,21 @@ trait ArrayCreationTrait
     public function mergeRecursive(...$args): static
     {
         $args = array_map(
-            static function ($arg) {
-                return $arg instanceof ArrayObject ? $arg->dump() : $arg;
-            },
+            static fn($arg) => $arg instanceof ArrayObject ? $arg->dump() : $arg,
             $args
         );
 
         return $this->newInstance(Arr::mergeRecursive($this->storage, ...$args));
+    }
+
+    public function concat(...$args): static
+    {
+        foreach ($args as &$arg) {
+            $arg = TypeCast::toArray(static::unwrap($arg));
+            $arg = array_values($arg);
+        }
+
+        return $this->values()->merge(...$args);
     }
 
     /**
