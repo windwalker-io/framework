@@ -111,6 +111,17 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this;
     }
 
+    /**
+     * @template T
+     *
+     * @param  string                  $name
+     * @param  mixed|class-string<T>|T $field
+     * @param  string|null  $fieldset
+     *
+     * @return  AbstractField|T
+     *
+     * @throws ReflectionException
+     */
     public function add(string $name, mixed $field, ?string $fieldset = null): AbstractField
     {
         [$namespace, $name] = FormNormalizer::extractNamespace($name);
