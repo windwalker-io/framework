@@ -333,6 +333,11 @@ class EntityMapper implements EventAwareInterface
 
         if ($pk && isset($data[$pk])) {
             $fullData[$pk] = $data[$pk];
+
+            $entity = $this->hydrate(
+                [$pk => $data[$pk]],
+                $entity
+            );
         }
 
         $event = $this->emitEvent(
