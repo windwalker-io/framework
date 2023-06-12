@@ -100,6 +100,8 @@ class BoundedHelper
             }
 
             if ($param['dataType'] === ParamType::STRING) {
+                $v = TypeCast::toString($v);
+
                 if (
                     strlen($v) === 16
                     && !mb_check_encoding((string) $v, 'UTF-8')
@@ -108,7 +110,7 @@ class BoundedHelper
 
                     $v = "UNHEX(REPLACE({$v}, '-', ''))";
                 } else {
-                    $v = Escaper::tryQuote($escaper, TypeCast::toString($v));
+                    $v = Escaper::tryQuote($escaper, $v);
                 }
             }
 
@@ -164,11 +166,11 @@ class BoundedHelper
 
         return sprintf(
             '%s-%s-%s-%s-%s',
-            SUBSTR($hex, 0, 8),
-            SUBSTR($hex, 8, 4),
-            SUBSTR($hex, 12, 4),
-            SUBSTR($hex, 16, 4),
-            SUBSTR($hex, 20),
+            substr($hex, 0, 8),
+            substr($hex, 8, 4),
+            substr($hex, 12, 4),
+            substr($hex, 16, 4),
+            substr($hex, 20),
         );
     }
 }
