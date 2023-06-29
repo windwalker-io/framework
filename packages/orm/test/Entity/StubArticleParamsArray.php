@@ -28,7 +28,7 @@ use Windwalker\ORM\Event\BeforeStoreEvent;
  */
 #[Table('articles')]
 #[\AllowDynamicProperties]
-class StubArticle
+class StubArticleParamsArray
 {
     #[Column('id'), PK, AutoIncrement]
     protected ?int $id = null;
@@ -56,8 +56,8 @@ class StubArticle
     protected int $createdBy = 0;
 
     #[Column('params')]
-    #[Cast(new JsonCast())]
-    protected ?array $params = [];
+    #[Cast(new JsonCast(options: JsonCast::FORCE_ARRAY_LIST, encodeOptions: JSON_UNESCAPED_UNICODE))]
+    protected array $params = [];
 
     #[Cast(StubCategory::class, options: Cast::USE_HYDRATOR)]
     public StubCategory|Collection|null $c = null;
@@ -186,19 +186,19 @@ class StubArticle
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getParams(): ?array
+    public function getParams(): array
     {
         return $this->params;
     }
 
     /**
-     * @param  array|null  $params
+     * @param  array  $params
      *
      * @return  static  Return self to support chaining.
      */
-    public function setParams(?array $params): static
+    public function setParams(array $params): static
     {
         $this->params = $params;
 

@@ -12,15 +12,24 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Cast;
 
 use JsonException;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The JsonCast class.
  */
 class JsonCast implements CastInterface
 {
-    public int $decodeOptions = JSON_THROW_ON_ERROR;
+    public const EMPTY_ARRAY_AS_OBJECT = 1 << 0;
 
-    public int $encodeOptions = JSON_THROW_ON_ERROR;
+    public const FORCE_ARRAY_LIST = 1 << 1;
+
+    public function __construct(
+        public int $options = self::EMPTY_ARRAY_AS_OBJECT,
+        public int $encodeOptions = JSON_THROW_ON_ERROR,
+        public int $decodeOptions = JSON_THROW_ON_ERROR,
+    ) {
+        //
+    }
 
     /**
      * @inheritDoc
@@ -29,6 +38,10 @@ class JsonCast implements CastInterface
     public function hydrate(mixed $value): mixed
     {
         if (!is_string($value)) {
+            if ($this->options & static::FORCE_ARRAY_LIST) {
+                $value = array_values(TypeCast::toArray($value));
+            }
+
             return $value;
         }
 
@@ -45,10 +58,18 @@ class JsonCast implements CastInterface
      */
     public function extract(mixed $value): mixed
     {
-        if ($value === []) {
+        if (is_json($value)) {
+            return $value;
+        }
+
+        if ($value === [] && ($this->options & static::EMPTY_ARRAY_AS_OBJECT)) {
             $value = new \stdClass();
         }
 
-        return is_json($value) ? $value : json_encode($value, $this->encodeOptions);
+        if ($this->options & static::FORCE_ARRAY_LIST) {
+            $value = array_values(TypeCast::toArray($value));
+        }
+
+        return json_encode($value, $this->encodeOptions);
     }
 }
