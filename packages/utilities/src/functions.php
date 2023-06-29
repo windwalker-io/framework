@@ -67,8 +67,6 @@ namespace {
          * @return  bool
          *
          * @since  3.5.8
-         *
-         * @deprecated Use json_validate()
          */
         function is_json(mixed $string): bool
         {
@@ -76,9 +74,7 @@ namespace {
                 return false;
             }
 
-            json_decode($string);
-
-            return json_last_error() === JSON_ERROR_NONE;
+            return json_validate($string);
         }
     }
 
