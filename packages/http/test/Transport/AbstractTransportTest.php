@@ -289,7 +289,7 @@ abstract class AbstractTransportTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function runTest()
+    protected function runTest(): mixed
     {
         try {
             return parent::runTest();

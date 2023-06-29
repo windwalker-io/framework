@@ -287,12 +287,12 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * @template T
+     * @template E
      *
-     * @param  string|T      $entityClass
-     * @param  array|object  $data
+     * @param  class-string<E> $entityClass
+     * @param  array|object    $data
      *
-     * @return  object|T
+     * @return  E
      *
      * @throws ReflectionException
      */

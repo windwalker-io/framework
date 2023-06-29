@@ -165,13 +165,11 @@ class FileStorage implements StorageInterface
     {
         if (!is_dir($filePath)) {
             try {
-                mkdir($filePath, 0755, true);
+                if (!mkdir($filePath, 0755, true) && !is_dir($filePath)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $filePath));
+                }
             } catch (Throwable $e) {
-                throw new RuntimeException(
-                    sprintf('Directory "%s" was not created with error: %s', $filePath, $e->getMessage()),
-                    $e->getCode(),
-                    $e
-                );
+                throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
