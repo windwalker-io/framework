@@ -493,6 +493,27 @@ class FormTest extends TestCase
         self::assertEquals('123abc4456qweyui', $filtered['b']['password']);
     }
 
+    public function testFilterWithDefaultValues(): void
+    {
+        $form = $this->getByDefine();
+
+        $data = [
+            'id' => '123abc',
+            'u' => [
+                'username' => '',
+            ],
+            'b' => [
+                'email' => 'bar@gmail.com',
+                'password' => '123_ abc/\4,456qwe:$yui',
+            ],
+        ];
+
+        $filtered = $form->filter($data, Form::FILTER_USE_DEFAULT_VALUE);
+
+        self::assertEquals('Admin', $filtered['u']['username']);
+        self::assertEquals('Default Address', $filtered['address']);
+    }
+
     /**
      * testSetAndGetFieldRendererHandler
      *

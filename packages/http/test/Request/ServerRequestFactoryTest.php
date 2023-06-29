@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Request;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Request\ServerRequest;
-use Windwalker\Http\Request\ServerRequestFactory;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\Stream;
 
@@ -181,7 +181,7 @@ class ServerRequestFactoryTest extends TestCase
             'content-bird' => 'fly',
         ];
 
-        self::assertEquals($expected, ServerRequestFactory::prepareHeaders($headers));
+        self::assertEquals($expected, ServerRequestFactory::prepareHeaders($headers)->dump());
     }
 
     /**
@@ -190,8 +190,6 @@ class ServerRequestFactoryTest extends TestCase
      * @param  array   $servers
      * @param  array   $headers
      * @param  string  $expected
-     *
-     * @covers       \Windwalker\Http\Request\ServerRequestFactory::prepareUri
      *
      * @dataProvider prepareUriProvider
      */

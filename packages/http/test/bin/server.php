@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
-use Windwalker\Http\Request\ServerRequestFactory;
+use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Server\HttpServer;
 use Windwalker\Http\Server\PhpServer;
 

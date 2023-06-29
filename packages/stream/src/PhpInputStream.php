@@ -27,6 +27,6 @@ class PhpInputStream extends CachingStream
      */
     public function __construct(?StreamInterface $cache = null)
     {
-        parent::__construct(new Stream('php://input', Stream::MODE_READ_ONLY_FROM_BEGIN), $cache);
+        parent::__construct(new Stream('php://input', READ_ONLY_FROM_BEGIN), $cache);
     }
 }

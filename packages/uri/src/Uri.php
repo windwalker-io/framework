@@ -107,9 +107,9 @@ class Uri implements UriInterface
      *
      * @since   2.0
      */
-    public function __construct(string $uri = '')
+    public function __construct(string $uri = '', bool $utf8 = false)
     {
-        $this->parse($uri);
+        $this->parse($uri, $utf8);
     }
 
     /**
@@ -121,7 +121,7 @@ class Uri implements UriInterface
      *
      * @since   2.0
      */
-    protected function parse(string $uri): bool
+    protected function parse(string $uri, bool $utf8 = false): bool
     {
         // Set the original URI to fall back on
         $this->original = $uri;
@@ -131,7 +131,11 @@ class Uri implements UriInterface
          * set method return value to true.
          */
 
-        $parts = UriHelper::parseUrl($uri);
+        if ($utf8) {
+            $parts = UriHelper::parseUrl($uri);
+        } else {
+            $parts = parse_url($uri);
+        }
 
         $retval = $parts ? true : false;
 
@@ -385,7 +389,7 @@ class Uri implements UriInterface
      * A null value provided for the port is equivalent to removing the port
      * information.
      *
-     * @param  int  $port   The port to use with the new instance; a null value
+     * @param  ?int  $port   The port to use with the new instance; a null value
      *                      removes the port information.
      *
      * @return  static  A new instance with the specified port.

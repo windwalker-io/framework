@@ -24,11 +24,11 @@ trait ORMAttributeTrait
      */
     public function __invoke(AttributeHandler $handler): callable
     {
-        /** @var EntityMetadata $metadata */
-        $metadata = $handler->getResolver()->getOption('metadata');
+        /** @var ?EntityMetadata $metadata */
+        $metadata = $handler->getOptions()['metadata'] ?? null;
 
         // Not in setup process, return.
-        if (!$metadata) {
+        if (!$metadata instanceof EntityMetadata) {
             return $handler->get();
         }
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Response;
 
 use DOMDocument;
+use DOMImplementation;
 use InvalidArgumentException;
 use SimpleXMLElement;
 use Windwalker\DOM\DOMFactory;
@@ -57,7 +58,8 @@ class XmlResponse extends TextResponse
     {
         if ($data instanceof SimpleXMLElement) {
             $dom = dom_import_simplexml($data);
-            $doc = DOMFactory::create();
+            $doc = $this->createDocument();
+
             $dom = $doc->importNode($dom, true);
             $doc->appendChild($dom);
 
@@ -65,7 +67,7 @@ class XmlResponse extends TextResponse
         }
 
         if (is_string($data)) {
-            $doc = DOMFactory::create();
+            $doc = $this->createDocument();
             $doc->loadXML($data);
 
             return $doc->saveXML();
@@ -81,5 +83,25 @@ class XmlResponse extends TextResponse
                 gettype($data)
             )
         );
+    }
+
+    /**
+     * @return  DOMDocument
+     *
+     * @throws \DOMException
+     */
+    protected function createDocument(): DOMDocument
+    {
+        $impl = new DOMImplementation();
+
+        $doc = $impl->createDocument();
+
+        if (!$doc) {
+            throw new \RuntimeException('Unable to create DOMDocument');
+        }
+
+        $doc->encoding = 'UTF-8';
+
+        return $doc;
     }
 }

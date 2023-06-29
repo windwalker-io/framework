@@ -18,8 +18,6 @@ use RuntimeException;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 
-use function Windwalker\collect;
-
 /**
  * The DatabaseQueueFailer class.
  *

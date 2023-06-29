@@ -18,7 +18,7 @@ use Psr\Http\Message\StreamInterface;
  *
  * This is a forked version from GuzzleHttp/Stream
  */
-class CachingStream extends AbstractDecoratorStream
+class CachingStream extends DecoratorStream
 {
     /**
      * Stream being wrapped

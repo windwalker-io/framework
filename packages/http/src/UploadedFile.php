@@ -17,6 +17,9 @@ use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 use Windwalker\Stream\Stream;
 
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_RESET;
+
 /**
  * The UploadedFile class.
  *
@@ -100,7 +103,7 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
         if ($error === UPLOAD_ERR_OK) {
             if (is_string($file)) {
                 $this->file = $file;
-                $this->stream = new Stream($file, Stream::MODE_READ_WRITE_FROM_BEGIN);
+                $this->stream = new Stream($file, READ_WRITE_FROM_BEGIN);
             } elseif (is_resource($file)) {
                 $this->stream = new Stream($file);
             } elseif ($file instanceof StreamInterface) {
@@ -304,7 +307,7 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
      */
     protected function writeFile(string $path): void
     {
-        $handle = fopen($path, Stream::MODE_READ_WRITE_RESET);
+        $handle = fopen($path, READ_WRITE_RESET);
 
         if ($handle === false) {
             throw new RuntimeException('Unable to write to path: ' . $path);

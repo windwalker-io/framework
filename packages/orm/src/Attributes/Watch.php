@@ -76,15 +76,20 @@ class Watch implements AttributeInterface
         mixed $value,
         mixed $oldValue = null,
     ): WatchEvent {
+        $type = $event instanceof AbstractUpdateWhereEvent
+            ? AbstractSaveEvent::TYPE_UPDATE
+            : $event->getType();
+
         $watchEvent = (new WatchEvent())
             ->setOriginEvent($event)
             ->setValue($value)
+            ->setType($type)
             ->setMetadata($event->getMetadata())
-            ->setData($event->getData())
+            ->setDataRef($event->getData())
             ->setSource($event->getData());
 
         if ($event instanceof AbstractSaveEvent) {
-            $watchEvent->setOldData([]);
+            $watchEvent->setOldData($event->getOldData());
             $watchEvent->setOldValue($oldValue);
             $watchEvent->setIsUpdateWhere(false);
         } else {

@@ -457,6 +457,14 @@ class Str
 
         $encoding ??= mb_internal_encoding();
 
+        if ($encoding === 'ascii') {
+            if (!str_starts_with($string, $search)) {
+                return $string;
+            }
+
+            return substr($string, strlen($search));
+        }
+
         if (!static::startsWith($string, $search, true, $encoding)) {
             return $string;
         }
@@ -484,6 +492,14 @@ class Str
         }
 
         $encoding ??= mb_internal_encoding();
+
+        if ($encoding === 'ascii') {
+            if (!str_ends_with($string, $search)) {
+                return $string;
+            }
+
+            return substr($string, 0, -strlen($search));
+        }
 
         if (!static::endsWith($string, $search, true, $encoding)) {
             return $string;

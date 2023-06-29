@@ -584,9 +584,9 @@ abstract class AbstractField
         $option = null;
 
         if (str_starts_with($method, 'get')) {
-            $option = lcfirst(Str::removeLeft($method, 'get'));
+            $option = lcfirst(Str::removeLeft($method, 'get', 'ascii'));
         } elseif (str_starts_with($method, 'is')) {
-            $option = lcfirst(Str::removeLeft($method, 'is'));
+            $option = lcfirst(Str::removeLeft($method, 'is', 'ascii'));
             $is = true;
             // return $v !== null && $v !== false;
         }

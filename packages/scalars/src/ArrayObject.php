@@ -28,7 +28,10 @@ use function Windwalker\str;
 /**
  * The ArrayObject class.
  *
+ * @template TKey of array-key
  * @template T
+ *
+ * @template-extends \IteratorAggregate<TKey, T>
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -54,9 +57,11 @@ class ArrayObject implements AccessibleInterface
      *
      * @param  array  $storage
      */
-    public function __construct($storage = [])
+    public function __construct(mixed $storage = [], array $options = [])
     {
-        $this->storage = TypeCast::toArray($storage);
+        $options['replace_nulls'] = true;
+
+        $this->fill($storage, $options);
     }
 
     /**
@@ -321,6 +326,18 @@ class ArrayObject implements AccessibleInterface
      */
     public function search(mixed $value, bool $strict = false): bool|int|string
     {
+        if ($value instanceof \Closure) {
+            foreach ($this->storage as $k => $v) {
+                $r = (bool) $value($v, $k, $strict);
+
+                if ($r) {
+                    return $k;
+                }
+            }
+
+            return false;
+        }
+
         return array_search($value, $this->storage, $strict);
     }
 

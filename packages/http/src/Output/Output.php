@@ -16,6 +16,8 @@ use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
+use const Windwalker\Stream\WRITE_ONLY_RESET;
+
 /**
  * Standard output object for PHP SAPI.
  *
@@ -30,7 +32,7 @@ class Output implements OutputInterface
      */
     public $headerSent = 'headers_sent';
 
-    protected ?StreamInterface $outputStream = null;
+    protected StreamInterface $outputStream;
 
     /**
      * Output constructor.
@@ -39,7 +41,7 @@ class Output implements OutputInterface
      */
     public function __construct(StreamInterface|string|null $outputStream = null)
     {
-        $this->setOutputStream($outputStream);
+        $this->outputStream = Stream::wrap($outputStream ?: 'php://output', WRITE_ONLY_RESET);
     }
 
     /**
@@ -72,20 +74,28 @@ class Output implements OutputInterface
      */
     public function sendBody(ResponseInterface $response): void
     {
-        $stream = $this->getOutputStream();
+        $this->write((string) $response->getBody());
 
-        $stream->write((string) $response->getBody());
+        $this->close();
+    }
 
-        $stream->close();
+    public function write(string $str): int
+    {
+        return $this->outputStream->write($str);
+    }
+
+    public function close(): void
+    {
+        $this->outputStream->close();
     }
 
     /**
      * Method to send a header to the client.  We wrap header() function with this method for testing reason.
      *
-     * @param  string  $string     The header string.
-     * @param  bool    $replace    The optional replace parameter indicates whether the header should
+     * @param  string    $string   The header string.
+     * @param  bool      $replace  The optional replace parameter indicates whether the header should
      *                             replace a previous similar header, or add a second header of the same type.
-     * @param  int     $code       Forces the HTTP response code to the specified value. Note that
+     * @param  int|null  $code     Forces the HTTP response code to the specified value. Note that
      *                             this parameter only has an effect if the string is not empty.
      *
      * @return  static  Return self to support chaining.
@@ -170,12 +180,13 @@ class Output implements OutputInterface
      */
     public function setOutputStream(StreamInterface|string|null $outputStream): static
     {
-        if (!$outputStream instanceof StreamInterface) {
-            $outputStream = Stream::wrap($outputStream ?? 'php://output', Stream::MODE_WRITE_ONLY_RESET);
-        }
-
         $this->outputStream = $outputStream;
 
         return $this;
+    }
+
+    public function isWritable(): bool
+    {
+        return $this->outputStream->isWritable();
     }
 }

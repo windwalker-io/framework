@@ -17,6 +17,7 @@ use Windwalker\Utilities\Assert\ArgumentsAssert;
 /**
  * The AbstractEvent class.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractEvent implements EventInterface
 {
     /**
@@ -49,13 +50,7 @@ abstract class AbstractEvent implements EventInterface
         string|EventInterface $event,
         array $args = []
     ): EventInterface {
-        ArgumentsAssert::assert(
-            is_string($event) || $event instanceof EventInterface,
-            '{caller} argument 1 should be string or EventInterface, %s given.',
-            $event
-        );
-
-        if (!$event instanceof EventInterface) {
+        if (is_string($event)) {
             $class = class_exists($event) ? $event : static::class;
 
             $event = new $class($event);

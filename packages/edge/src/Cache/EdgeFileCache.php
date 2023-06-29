@@ -67,12 +67,14 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     public function getCacheKey(string $path): string
     {
-        $key = md5(realpath($path));
+        $path = str_replace(['/', '\\'], '/', $path);
+
+        $key = md5($path);
 
         if ($this->isDebug()) {
-            $prefix = Path::getFilename($path);
-            $prefix = Path::stripExtension($prefix);
-            $prefix = Path::stripExtension($prefix);
+            $prefix = basename($path);
+            $prefix = static::stripExtension($prefix);
+            $prefix = static::stripExtension($prefix);
 
             $key = $prefix . '-' . $key . '.php';
         }
@@ -188,5 +190,10 @@ class EdgeFileCache implements EdgeCacheInterface
         $this->debug = $debug;
 
         return $this;
+    }
+
+    public static function stripExtension(string $file): string
+    {
+        return preg_replace('#\.[^.]*$#', '', $file);
     }
 }

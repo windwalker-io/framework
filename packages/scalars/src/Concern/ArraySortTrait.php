@@ -67,12 +67,11 @@ trait ArraySortTrait
      */
     public function natureSortCaseInsensitive(): static
     {
-        return tap(
-            clone $this,
-            static function (ArrayObject $new) {
-                natcasesort($new->storage);
-            }
-        );
+        $new = clone $this;
+
+        natcasesort($new->storage);
+
+        return $new;
     }
 
     /**

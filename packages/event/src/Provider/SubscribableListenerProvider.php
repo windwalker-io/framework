@@ -14,7 +14,6 @@ namespace Windwalker\Event\Provider;
 use InvalidArgumentException;
 use ReflectionAttribute;
 use ReflectionObject;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Event\Attributes\EventSubscriber;
 use Windwalker\Event\Attributes\ListenTo;
 use Windwalker\Event\EventInterface;
@@ -81,8 +80,9 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
     public function subscribe(object $subscriber, ?int $priority = null): void
     {
         $ref = new ReflectionObject($subscriber);
+        $subscriberAttributes = $ref->getAttributes(EventSubscriber::class, ReflectionAttribute::IS_INSTANCEOF);
 
-        if (AttributesAccessor::getFirstAttribute($ref, EventSubscriber::class)) {
+        if (count($subscriberAttributes) > 0) {
             foreach ($ref->getMethods() as $method) {
                 // Handle ListenTo attributes
                 foreach ($method->getAttributes(ListenTo::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {

@@ -31,7 +31,15 @@ class UncaughtException extends Exception
     {
         $this->reason = $reason;
 
-        parent::__construct('', 0, $previous);
+        if ($reason instanceof Throwable) {
+            $message = $reason->getMessage();
+            $code = $reason->getCode();
+        } else {
+            $message = '';
+            $code = 0;
+        }
+
+        parent::__construct($message, $code, $previous);
     }
 
     /**

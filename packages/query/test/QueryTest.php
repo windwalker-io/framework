@@ -1040,6 +1040,76 @@ SQL
         );
     }
 
+    public function testAndWhere()
+    {
+        // Array
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('foo', 'bar')
+            ->andWhere(
+                [
+                    ['yoo', 'goo'],
+                    ['flower', '!=', 'Sakura'],
+                    ['hello', [1, 2, 3]],
+                ]
+            );
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" WHERE "foo" = \'bar\' AND ("yoo" = \'goo\' AND "flower" != \'Sakura\' AND "hello" IN (1, 2, 3))',
+            $q->render(true)
+        );
+
+        // Closure
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('foo', 'bar')
+            ->andWhere(
+                function (Query $query) {
+                    $query->where('yoo', 'goo');
+                    $query->where('flower', '!=', 'Sakura');
+                    $query->where('hello', [1, 2, 3]);
+                }
+            );
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" WHERE "foo" = \'bar\' AND ("yoo" = \'goo\' AND "flower" != \'Sakura\' AND "hello" IN (1, 2, 3))',
+            $q->render(true)
+        );
+
+        // Nested
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('foo', 'bar')
+            ->orWhere(
+                function (Query $query) {
+                    $query->where('yoo', 'goo');
+                    $query->where('flower', '!=', 'Sakura');
+                    $query->andWhere(
+                        function (Query $query) {
+                            $query->where('hello', [1, 2, 3]);
+                            $query->where('id', '<', 999);
+                        }
+                    );
+                }
+            );
+
+        self::assertSqlFormatEquals(
+            <<<SQL
+SELECT * FROM "foo" WHERE "foo" = 'bar'
+AND (
+    "yoo" = 'goo'
+    OR "flower" != 'Sakura'
+    OR ("hello" IN (1, 2, 3) AND "id" < 999)
+)
+SQL
+            ,
+            $q->render(true)
+        );
+    }
+
     public function testWhereVariant()
     {
         $q = self::createQuery()

@@ -75,6 +75,25 @@ class Column
         $this->fill($options);
     }
 
+    // public function fill(array $data): static
+    // {
+    //     $this->columnName = $data['column_name'] ?? '';
+    //     $this->ordinalPosition = (int) ($data['ordinal_position'] ?? 0);
+    //     $this->columnDefault = $data['column_default'] ?? '';
+    //     $this->isNullable = (bool) ($data['is_nullable'] ?? false);
+    //     $this->dataType = $data['data_type'] ?? '';
+    //     $this->characterOctetLength = (int) ($data['character_octet_length'] ?? 0);
+    //     $this->numericPrecision = (int) ($data['numeric_precision'] ?? 0);
+    //     $this->numericScale = (int) ($data['numeric_scale'] ?? 0);
+    //     $this->numericUnsigned = (bool) ($data['numeric_unsigned'] ?? false);
+    //     $this->comment = $data['comment'] ?? '';
+    //     $this->characterSetName = $data['character_set_name'] ?? '';
+    //     $this->collationName = $data['collation_name'] ?? '';
+    //     $this->autoIncrement = (bool) ($data['auto_increment'] ?? false);
+    //
+    //     return $this;
+    // }
+
     /**
      * @return string
      */

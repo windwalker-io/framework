@@ -19,6 +19,8 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
  * The Server class.
  *
  * @since  3.0
+ *
+ * @deprecated no-longer need adapter pattern
  */
 class HttpServer extends AdaptableServer
 {
@@ -85,6 +87,20 @@ class HttpServer extends AdaptableServer
     public function setHandler(Closure $handler): static
     {
         $this->handler = $handler;
+
+        return $this;
+    }
+
+    public function onRequest(callable $listener, ?int $priority = null): static
+    {
+        $this->on('request', $listener, $priority);
+
+        return $this;
+    }
+
+    public function onResponse(callable $listener, ?int $priority = null): static
+    {
+        $this->on('response', $listener, $priority);
 
         return $this;
     }

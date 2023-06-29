@@ -27,7 +27,7 @@ class MustacheRenderer extends AbstractEngineRenderer implements LayoutConverter
      *
      * @return  Closure
      */
-    public function getDefaultBuilder(): Closure
+    public function getDefaultEngineBuilder(): Closure
     {
         return function (array $options = []) {
             $engine = new Mustache_Engine($options['mustache'] ?? []);

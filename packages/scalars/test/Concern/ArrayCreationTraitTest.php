@@ -188,6 +188,70 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
+    public function testConcat(): void
+    {
+        $data1 = [
+            'green' => 'Hulk',
+            'red' => 'empty',
+            'human' => [
+                'dark' => 'empty',
+                'black' => [
+                    'male' => 'empty',
+                    'female' => 'empty',
+                    'no-gender' => 'empty',
+                ],
+            ],
+        ];
+
+        $data2 = [
+            'ai' => 'Jarvis',
+            'agent' => 'Phil Coulson',
+            'red' => [
+                'left' => 'Pepper',
+                'right' => 'Iron Man',
+            ],
+            'human' => [
+                'dark' => 'Nick Fury',
+                'black' => [
+                    'female' => 'Black Widow',
+                    'male' => 'Loki',
+                ],
+            ],
+        ];
+
+        self::assertEquals(
+            array_merge(array_values($data1), array_values($data2)),
+            arr($data1)->concat(arr($data2))->dump()
+        );
+    }
+
+    public function testConcatStart(): void
+    {
+        $data1 = [
+            'green' => 'Hulk',
+            'red' => 'empty',
+            'human' => [
+                'dark' => 'empty',
+            ],
+        ];
+
+        $data2 = [
+            'ai' => 'Jarvis',
+            'agent' => 'Phil Coulson',
+            'red' => [
+                'left' => 'Pepper',
+            ],
+            'human' => [
+                'dark' => 'Nick Fury',
+            ],
+        ];
+
+        self::assertEquals(
+            array_merge(array_values($data2), array_values($data1)),
+            arr($data1)->concatStart(arr($data2))->dump()
+        );
+    }
+
     public function testFillWith(): void
     {
         $a = ArrayObject::fillWith(5, 3, 'Y');

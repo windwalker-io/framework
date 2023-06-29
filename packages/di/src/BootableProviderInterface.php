@@ -19,7 +19,10 @@ namespace Windwalker\DI;
 interface BootableProviderInterface
 {
     /**
-     * boot
+     * Boot services before app run.
+     *
+     * Note that if you don't want your services share to child process, you should not boot it here,
+     * otherwise you must call Container::clearCache($serviceId) to clear it.
      *
      * @param  Container  $container
      *

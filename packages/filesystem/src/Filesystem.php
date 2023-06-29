@@ -30,6 +30,8 @@ use Windwalker\Utilities\Str;
 
 use function Windwalker\uid;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+
 /**
  * Class Filesystem
  *
@@ -39,7 +41,7 @@ use function Windwalker\uid;
  * @method static FileObject      copy(string $src, string $dest, bool $force = false)
  * @method static FileObject      move(string $src, string $dest, bool $force = false)
  * @method static StringObject    read(string $path)
- * @method static StreamInterface readStream(string $path, string $mode = Stream::MODE_READ_ONLY_FROM_BEGIN)
+ * @method static StreamInterface readStream(string $path, string $mode = READ_ONLY_FROM_BEGIN)
  * @method static Collection      readAndParse(?string $format = null, array $options = [])
  * @method static FileObject      write(string $path, string $buffer)
  * @method static FileObject      writeStream(string $path, string|resource|StreamInterface $stream)
@@ -52,7 +54,7 @@ use function Windwalker\uid;
  * @method static Promise copyAsync(string $src, string $dest, bool $force = false)
  * @method static Promise moveAsync(string $src, string $dest, bool $force = false)
  * @method static Promise readAsync(string $path)
- * @method static Promise readStreamAsync(string $path, string $mode = Stream::MODE_READ_ONLY_FROM_BEGIN)
+ * @method static Promise readStreamAsync(string $path, string $mode = READ_ONLY_FROM_BEGIN)
  * @method static Promise writeAsync(string $path, string $buffer)
  * @method static Promise writeStreamAsync(string $path, string|resource|StreamInterface $stream)
  * @method static Promise deleteAsync(string $path)

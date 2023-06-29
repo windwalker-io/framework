@@ -27,6 +27,8 @@ use Windwalker\Stream\Stream;
 use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Arr;
 
+use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+
 /**
  * The StreamTransport class.
  *
@@ -172,7 +174,7 @@ class StreamTransport extends AbstractTransport
         $context = stream_context_create(['http' => $opt]);
 
         // Capture PHP errors
-        return @fopen($request->getRequestTarget(), Stream::MODE_READ_ONLY_FROM_BEGIN, false, $context);
+        return @fopen($request->getRequestTarget(), READ_ONLY_FROM_BEGIN, false, $context);
     }
 
     /**

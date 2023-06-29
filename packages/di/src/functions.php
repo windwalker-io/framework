@@ -26,6 +26,7 @@ namespace Windwalker\DI {
         function share(string|callable $class, ...$args): StoreDefinition
         {
             return new StoreDefinition(
+                '',
                 Container::define($class, $args),
                 Container::SHARED
             );
@@ -36,6 +37,7 @@ namespace Windwalker\DI {
         function prepare(string $class, ?callable $extend, int $options = 0): StoreDefinition
         {
             $def = new StoreDefinition(
+                $class,
                 new ObjectBuilderDefinition($class),
                 $options
             );

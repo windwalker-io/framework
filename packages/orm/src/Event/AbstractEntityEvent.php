@@ -28,6 +28,28 @@ class AbstractEntityEvent extends AbstractEvent implements AttributeInterface
 
     protected EntityMetadata $metadata;
 
+    protected array $data;
+
+    /**
+     * @return array
+     */
+    public function &getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param  array  $data
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setData(array $data): static
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
     /**
      * @return EntityMetadata
      */

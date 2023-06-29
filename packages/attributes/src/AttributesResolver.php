@@ -25,7 +25,6 @@ use ReflectionProperty;
 use Reflector;
 use Windwalker\Utilities\Classes\ObjectBuilder;
 use Windwalker\Utilities\Options\OptionAccessTrait;
-use Windwalker\Utilities\Reflection\ReflectAccessor;
 use Windwalker\Utilities\Reflection\ReflectionCallable;
 
 /**
@@ -45,7 +44,7 @@ class AttributesResolver extends ObjectBuilder
     /**
      * AttributesResolver constructor.
      *
-     * @param  array  $options
+     * @param array $options
      */
     public function __construct(array $options = [])
     {
@@ -58,15 +57,15 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Create object by class and resolve attributes.
      *
-     * @param  string  $class
-     * @param  mixed   ...$args
+     * @param string $class
+     * @param mixed  ...$args
      *
      * @return  object
      * @throws ReflectionException
      */
     public function createObject(string $class, ...$args): object
     {
-        $ref = new ReflectionClass($class);
+        $ref         = new ReflectionClass($class);
         $constructor = $ref->getConstructor();
 
         if ($constructor) {
@@ -79,20 +78,24 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Resolve class constructor and return create function.
      *
-     * @param  string         $class
-     * @param  callable|null  $builder
+     * @param string        $class
+     * @param callable|null $builder
+     * @param array         $options
      *
      * @return  AttributeHandler
      *
      * @throws ReflectionException
      */
-    public function resolveClassCreate(string $class, ?callable $builder = null): AttributeHandler
-    {
+    public function resolveClassCreate(
+        string $class,
+        ?callable $builder = null,
+        array $options = []
+    ): AttributeHandler {
         $ref = new ReflectionClass($class);
 
         $builder = $builder ?? fn(...$args) => $this->getBuilder()($class, ...$args);
 
-        $handler = $this->createHandler($builder, $ref);
+        $handler = $this->createHandler($builder, $ref, null, $options);
 
         foreach ($ref->getAttributes() as $attribute) {
             if ($this->hasAttribute($attribute, Attribute::TARGET_CLASS)) {
@@ -106,38 +109,38 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Decorate object by attributes.
      *
-     * @param  object  $object
+     * @param object $object
+     * @param array  $options
      *
      * @return  object
      */
-    public function decorateObject(object $object): object
+    public function decorateObject(object $object, array $options = []): object
     {
-        return $this->resolveObjectDecorate($object)();
+        return $this->resolveObjectDecorate($object, $options)();
     }
 
     /**
      * Resolve object decorate function.
      *
-     * @param  object  $instance
+     * @param object $instance
      *
      * @return  AttributeHandler
      */
-    public function resolveObjectDecorate(object $instance): AttributeHandler
+    public function resolveObjectDecorate(object $instance, array $options = []): AttributeHandler
     {
-        $ref = ReflectAccessor::reflect($instance);
-        $object = $ref instanceof ReflectionObject ? $instance : null;
+        $ref = $instance instanceof Reflector ? $instance : new ReflectionObject($instance);
+//        $object = $ref instanceof ReflectionObject ? $instance : null;
 
         // If is closure, get closure back.
         if ($instance instanceof ReflectionFunction) {
-            $object = $instance->getClosure();
-            $instance = $object;
+            $instance = $instance->getClosure();
         }
 
-        $builder = $this->createHandler(fn() => $instance, $ref);
+        $builder = $this->createHandler(fn() => $instance, $ref, null, $options);
 
         foreach ($ref->getAttributes() as $attribute) {
             if ($this->hasAttribute($attribute, Attribute::TARGET_CLASS)) {
-                $builder = $this->runAttribute($attribute, $this->createHandler($builder, $ref, $object));
+                $builder = $this->runAttribute($attribute, $builder);
             }
         }
 
@@ -147,13 +150,13 @@ class AttributesResolver extends ObjectBuilder
     /**
      * call
      *
-     * @param  callable     $callable
-     * @param  mixed        ...$args
-     * @param  object|null  $context
+     * @param callable    $callable
+     * @param mixed       ...$args
+     * @param object|null $context
      *
      * @return mixed
      */
-    public function call(callable $callable, array $args = [], ?object $context = null): mixed
+    public function call(callable $callable, array $args = [], ?object $context = null, array $options = []): mixed
     {
         if ($this->invokeHandler) {
             return ($this->invokeHandler)($callable, $args, $context);
@@ -161,12 +164,12 @@ class AttributesResolver extends ObjectBuilder
 
         $args = $this->resolveCallArguments($callable, $args);
 
-        return $this->resolveCallable($callable, $context)(...$args);
+        return $this->resolveCallable($callable, $context, $options)(...$args);
     }
 
-    public function resolveCallable(callable $callable, ?object $context = null): callable
+    public function resolveCallable(mixed $callable, ?object $context = null, array $options = []): callable
     {
-        $ref = new ReflectionCallable($callable);
+        $ref     = new ReflectionCallable($callable);
         $funcRef = $ref->getReflector();
 
         $closure = $ref->getClosure();
@@ -181,7 +184,7 @@ class AttributesResolver extends ObjectBuilder
             return $closure;
         }
 
-        $handler = $this->createHandler($closure, $ref, $ref->getObject());
+        $handler = $this->createHandler($closure, $ref, $ref->getObject(), $options);
 
         foreach ($attributes as $attribute) {
             if ($this->hasAttribute($attribute, AttributeType::CALLABLE)) {
@@ -192,15 +195,17 @@ class AttributesResolver extends ObjectBuilder
         return $handler;
     }
 
-    public function resolveCallArguments(callable|ReflectionFunctionAbstract $ref, array $args): array
-    {
+    public function resolveCallArguments(
+        callable|ReflectionFunctionAbstract $ref,
+        array $args
+    ): array {
         if (!$ref instanceof ReflectionFunctionAbstract) {
             $callableRef = new ReflectionCallable($ref);
-            $ref = $callableRef->getReflector();
+            $ref         = $callableRef->getReflector();
         }
 
         $parameters = $ref->getParameters();
-        $newArgs = [];
+        $newArgs    = [];
 
         foreach ($parameters as $i => $parameter) {
             $key = $parameter->getName();
@@ -221,7 +226,7 @@ class AttributesResolver extends ObjectBuilder
                 }
 
                 $trailing = array_slice($trailing, $i);
-                $newArgs = array_merge($newArgs, $trailing);
+                $newArgs  = self::arrayMerge($newArgs, $trailing);
             } elseif (array_key_exists($parameter->getName(), $args)) {
                 $newArgs[$key] = &$args[$parameter->getName()];
             } elseif (array_key_exists($i, $args)) {
@@ -236,11 +241,11 @@ class AttributesResolver extends ObjectBuilder
         return $newArgs;
     }
 
-    public function &resolveParameter(&$value, ReflectionParameter $ref): mixed
+    public function &resolveParameter(&$value, ReflectionParameter $ref, array $options = []): mixed
     {
         $func = fn() => $value;
 
-        $handler = $this->createHandler($func, $ref);
+        $handler = $this->createHandler($func, $ref, null, $options);
 
         foreach ($ref->getAttributes() as $attribute) {
             if ($this->hasAttribute($attribute, Attribute::TARGET_PARAMETER)) {
@@ -253,9 +258,9 @@ class AttributesResolver extends ObjectBuilder
         return $value;
     }
 
-    public function resolveProperties(object $instance): object
+    public function resolveProperties(object $instance, array $options = []): object
     {
-        $ref = ReflectAccessor::reflect($instance);
+        $ref    = $instance instanceof Reflector ? $instance : new ReflectionObject($instance);
         $object = $ref instanceof ReflectionObject ? $instance : null;
 
         /** @var ReflectionProperty $property */
@@ -264,17 +269,23 @@ class AttributesResolver extends ObjectBuilder
                 $property->setAccessible(true);
             }
 
-            $getter = fn() => $object && $property->isInitialized($object)
+            $shouldCall = false;
+            $getter     = static fn() => $object && $property->isInitialized($object)
                 ? $property->getValue($object)
                 : $property->getDefaultValue();
 
+            $handler = $this->createHandler($getter, $property, $object, $options);
+
             foreach ($property->getAttributes() as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_PROPERTY)) {
-                    $getter = $this->runAttribute($attribute, $this->createHandler($getter, $property, $object));
+                    $handler    = $this->runAttribute($attribute, $handler);
+                    $shouldCall = true;
                 }
             }
 
-            $getter();
+            if ($shouldCall === true) {
+                $handler();
+            }
 
             if ($property->isPrivate() || $property->isProtected()) {
                 $property->setAccessible(false);
@@ -284,54 +295,79 @@ class AttributesResolver extends ObjectBuilder
         return $instance;
     }
 
-    public function resolveMethods(object $instance): object
+    public function resolveMethods(object $instance, array $options = []): object
     {
-        $ref = ReflectAccessor::reflect($instance);
+        $ref    = $instance instanceof Reflector ? $instance : new ReflectionObject($instance);
         $object = $ref instanceof ReflectionObject ? $instance : null;
         $target = $ref instanceof ReflectionObject ? $instance : $ref->getName();
 
         foreach ($ref->getMethods() as $method) {
-            $getter = fn(): array => [$target, $method->getName()];
+            $getter     = static fn(): array => [$target, $method->getName()];
+            $shouldCall = false;
+
+            $handler = $this->createHandler($getter, $method, $object, $options);
 
             foreach ($method->getAttributes() as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_METHOD)) {
-                    $getter = $this->runAttribute($attribute, $this->createHandler($getter, $method, $object));
+                    $handler    = $this->runAttribute($attribute, $handler);
+                    $shouldCall = true;
                 }
             }
 
-            $getter();
+            if ($shouldCall === true) {
+                $handler();
+            }
         }
 
         return $instance;
     }
 
-    public function resolveConstants(object $instance): object
+    public function resolveConstants(object $instance, array $options = []): object
     {
-        $ref = ReflectAccessor::reflect($instance);
+        $ref = $instance instanceof Reflector ? $instance : new ReflectionObject($instance);
+
         $object = $ref instanceof ReflectionObject ? $instance : null;
 
         /** @var ReflectionClassConstant $constant */
         foreach ($ref->getReflectionConstants() as $constant) {
-            $getter = fn(): array => [$object, $constant];
+            $getter     = static fn(): array => [$object, $constant];
+            $shouldCall = false;
+
+            $handler = $this->createHandler($getter, $constant, $object, $options);
 
             foreach ($constant->getAttributes() as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_METHOD)) {
-                    $getter = $this->runAttribute($attribute, $this->createHandler($getter, $constant, $object));
+                    $handler    = $this->runAttribute($attribute, $handler);
+                    $shouldCall = true;
                 }
             }
 
-            $getter();
+            if ($shouldCall === true) {
+                $handler();
+            }
         }
 
         return $instance;
     }
 
-    public function resolveObjectMembers(object $instance): object
+    public function resolveObjectMembers(object $instance, array $options = []): object
     {
-        $instance = $this->resolveConstants($instance);
-        $instance = $this->resolveMethods($instance);
+        /** @var ReflectionObject|ReflectionClass $ref */
+        $ref = $instance instanceof Reflector ? $instance : new ReflectionObject($instance);
 
-        return $this->resolveProperties($instance);
+        if ($ref->getConstants() !== []) {
+            $this->resolveConstants($instance, $options);
+        }
+
+        if ($ref->getMethods() !== []) {
+            $this->resolveMethods($instance, $options);
+        }
+
+        if ($ref->getProperties() !== []) {
+            $this->resolveProperties($instance, $options);
+        }
+
+        return $instance;
     }
 
     public function hasAttribute(
@@ -354,13 +390,15 @@ class AttributesResolver extends ObjectBuilder
     /**
      * registerAttribute
      *
-     * @param  string  $attributeClass
-     * @param  int     $target
+     * @param string $attributeClass
+     * @param int    $target
      *
      * @return  static
      */
-    public function registerAttribute(string $attributeClass, int $target = Attribute::TARGET_ALL): static
-    {
+    public function registerAttribute(
+        string $attributeClass,
+        int $target = Attribute::TARGET_ALL
+    ): static {
         $this->registry[strtolower($attributeClass)] ??= [
             strtolower($attributeClass),
             $target,
@@ -374,13 +412,15 @@ class AttributesResolver extends ObjectBuilder
     /**
      * removeAttribute
      *
-     * @param  string  $attributeClass
-     * @param  int     $target
+     * @param string $attributeClass
+     * @param int    $target
      *
      * @return  static
      */
-    public function removeAttribute(string $attributeClass, int $target = Attribute::TARGET_ALL): static
-    {
+    public function removeAttribute(
+        string $attributeClass,
+        int $target = Attribute::TARGET_ALL
+    ): static {
         if ($target === Attribute::TARGET_ALL || $target === AttributeType::ALL) {
             unset($this->registry[strtolower($attributeClass)]);
         } else {
@@ -390,8 +430,10 @@ class AttributesResolver extends ObjectBuilder
         return $this;
     }
 
-    public function runAttribute(ReflectionAttribute $attribute, AttributeHandler $handler): AttributeHandler
-    {
+    public function runAttribute(
+        ReflectionAttribute $attribute,
+        AttributeHandler $handler
+    ): AttributeHandler {
         /** @var callable|object $attrInstance */
         $attrInstance = $attribute->newInstance();
 
@@ -405,21 +447,31 @@ class AttributesResolver extends ObjectBuilder
         $result = $attrInstance($handler);
 
         // Attribute ran, create new handler for next.
-        return $this->createHandler($result, $handler->getReflector(), $handler->getObject());
+        return $this->createHandler(
+            $result,
+            $handler->getReflector(),
+            $handler->getObject(),
+            $handler->getOptions()
+        );
     }
 
     /**
      * createAttributeHandler
      *
-     * @param  callable     $getter
-     * @param  Reflector   $reflector
-     * @param  object|null  $object
+     * @param callable    $getter
+     * @param Reflector   $reflector
+     * @param object|null $object
+     * @param array       $options
      *
      * @return  AttributeHandler
      */
-    protected function createHandler(callable $getter, Reflector $reflector, ?object $object = null): AttributeHandler
-    {
-        return new AttributeHandler($getter, $reflector, $object, $this);
+    protected function createHandler(
+        callable $getter,
+        Reflector $reflector,
+        ?object $object = null,
+        array $options = [],
+    ): AttributeHandler {
+        return new AttributeHandler($getter, $reflector, $object, $this, $options);
     }
 
     protected function prepareAttribute(object $attribute): void
@@ -441,7 +493,7 @@ class AttributesResolver extends ObjectBuilder
     }
 
     /**
-     * @param  callable  $invokeHandler
+     * @param callable $invokeHandler
      *
      * @return  static  Return self to support chaining.
      */
@@ -450,5 +502,16 @@ class AttributesResolver extends ObjectBuilder
         $this->invokeHandler = $invokeHandler;
 
         return $this;
+    }
+
+    /**
+     * @param mixed $newArgs
+     * @param array $trailing
+     *
+     * @return  array
+     */
+    private function arrayMerge(mixed $newArgs, array $trailing): array
+    {
+        return array_merge($newArgs, $trailing);
     }
 }

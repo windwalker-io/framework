@@ -17,7 +17,9 @@ use Windwalker\Filter\Exception\ValidateException;
 use Windwalker\Filter\FilterInterface;
 use Windwalker\Filter\Traits\FilterAwareTrait;
 use Windwalker\Filter\ValidatorInterface;
+use Windwalker\Form\Form;
 use Windwalker\Form\ValidateResult;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * Trait ManageFilterTrait
@@ -104,16 +106,41 @@ trait ManageFilterTrait
      * filter
      *
      * @param  mixed  $value
+     * @param  int    $formFilterOptions
      *
      * @return mixed
      */
-    public function filter(mixed $value): mixed
+    public function filter(mixed $value, int $formFilterOptions = 0): mixed
     {
-        if ($value === null || $this->isDisabled()) {
+        if ($this->isDisabled()) {
             return $value;
         }
 
-        return $this->getFilter()->filter($value);
+        $useDefault = (bool) ($formFilterOptions & Form::FILTER_USE_DEFAULT_VALUE);
+
+        if ($value === null && !$useDefault) {
+            return null;
+        }
+
+        $value = $this->getFilter()->filter($value);
+
+        if (is_array($value)) {
+            if ($value === []) {
+                return $useDefault ? $this->getDefaultValue() : $value;
+            }
+
+            return $value;
+        }
+
+        if (is_object($value)) {
+            return $value;
+        }
+
+        if ((string) $value === '') {
+            return $useDefault ? $this->getDefaultValue() : $value;
+        }
+
+        return $value;
     }
 
     /**

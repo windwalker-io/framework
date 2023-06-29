@@ -19,13 +19,7 @@ use Windwalker\Attributes\AttributeInterface;
  * The EventSubscriber class.
  */
 #[Attribute(Attribute::TARGET_CLASS)]
-class EventSubscriber implements AttributeInterface
+class EventSubscriber
 {
-    /**
-     * @inheritDoc
-     */
-    public function __invoke(AttributeHandler $handler): callable
-    {
-        //
-    }
+    //
 }

@@ -40,7 +40,7 @@ class EventEmitter extends EventDispatcher implements
     protected ListenerProviderInterface $provider;
 
     /**
-     * @var EventDispatcherInterface[]
+     * @var WeakMap<EventDispatcherInterface, int>
      */
     protected WeakMap $dealers;
 
@@ -61,14 +61,13 @@ class EventEmitter extends EventDispatcher implements
      */
     public function dispatch(object $event): object
     {
-        return tap(
-            parent::dispatch($event),
-            function () use ($event) {
-                foreach ($this->dealers as $dealer) {
-                    $dealer->dispatch($event);
-                }
-            }
-        );
+        $event = parent::dispatch($event);
+
+        foreach ($this->dealers as $dealer => $id) {
+            $event = $dealer->dispatch($event);
+        }
+
+        return $event;
     }
 
     /**
@@ -77,7 +76,14 @@ class EventEmitter extends EventDispatcher implements
     public function emit(object|string $event, array $args = []): object
     {
         if (is_string($event) || $event instanceof EventInterface) {
-            $event = Event::wrap($event, $args);
+            // do not use Event::wrap() to enhance performance
+            if (is_string($event)) {
+                $class = class_exists($event) ? $event : Event::class;
+
+                $event = new $class($event);
+            }
+
+            $event->merge($args);
         }
 
         $this->dispatch($event);
@@ -209,7 +215,7 @@ class EventEmitter extends EventDispatcher implements
      */
     public function addDealer(EventDispatcherInterface $dispatcher): static
     {
-        $this->dealers[$dispatcher] = $dispatcher;
+        $this->dealers[$dispatcher] = spl_object_id($dispatcher);
 
         return $this;
     }
@@ -241,5 +247,13 @@ class EventEmitter extends EventDispatcher implements
         parent::__clone();
 
         $this->dealers = clone $this->dealers;
+    }
+
+    /**
+     * @return WeakMap
+     */
+    public function getDealers(): WeakMap
+    {
+        return $this->dealers;
     }
 }

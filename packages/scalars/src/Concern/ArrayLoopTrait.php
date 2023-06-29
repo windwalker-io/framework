@@ -118,12 +118,12 @@ trait ArrayLoopTrait
      *
      * @param  callable|null  $callback
      * @param  bool           $keepKey
-     * @param  null           $offset
-     * @param  null           $limit
+     * @param  int|null       $offset
+     * @param  int|null       $limit
      *
      * @return static
      */
-    public function find(?callable $callback, $keepKey = false, $offset = null, $limit = null): static
+    public function find(?callable $callback, bool $keepKey = false, ?int $offset = null, ?int $limit = null): static
     {
         return $this->newInstance(Arr::find($this->storage, $callback, $keepKey, $offset, $limit));
     }
@@ -139,7 +139,7 @@ trait ArrayLoopTrait
      *
      * @since  3.5.8
      */
-    public function query($queries = [], bool $strict = false, bool $keepKey = false): static
+    public function query(array|callable $queries = [], bool $strict = false, bool $keepKey = false): static
     {
         return $this->newInstance(Arr::query($this->storage, $queries, $strict, $keepKey));
     }
@@ -147,13 +147,14 @@ trait ArrayLoopTrait
     /**
      * filter
      *
-     * @param  callable  $callback
+     * @param  callable|null  $callback
+     * @param  int            $mode
      *
      * @return  static
      */
-    public function filter(callable $callback = null): static
+    public function filter(?callable $callback = null, int $mode = 0): static
     {
-        return $this->find($callback, true);
+        return $this->newInstance(array_filter($this->storage, $callback, $mode));
     }
 
     /**

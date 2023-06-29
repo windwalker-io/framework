@@ -33,6 +33,20 @@ class OpensslCipherTest extends TestCase
      */
     protected $instance;
 
+    public static function setUpBeforeClass(): void
+    {
+        if (!function_exists('openssl_encrypt')) {
+            self::markTestSkipped('No openssl installed.');
+        }
+
+        // Openssl 3.0 no longer support legacy unsafe cipher
+        $version = explode(' ', OPENSSL_VERSION_TEXT)[1] ?? '';
+
+        if (version_compare($version, '3.0', '>=')) {
+            self::markTestSkipped('No-longer support openssl 3.0.');
+        }
+    }
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.

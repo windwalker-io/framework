@@ -137,12 +137,14 @@ class AttributesResolverTest extends TestCase
             #[StubWrapper]
             class {
                 public $foo = 'bar';
-            }
+            },
+            ['foo' => 'bar']
         );
         // phpcs:enable
 
         self::assertInstanceOf(StubWrapper::class, $obj);
         self::assertEquals('bar', $obj->instance->foo);
+        self::assertEquals(['foo' => 'bar'], $obj->options);
     }
 
     public function testResolveObjectMembers()

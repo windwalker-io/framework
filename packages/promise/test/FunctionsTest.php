@@ -13,6 +13,7 @@ namespace Windwalker\Promise\Test;
 
 use Throwable;
 use Windwalker\Promise\ExtendedPromiseInterface;
+use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
 use Windwalker\Promise\Scheduler\SwooleScheduler;
@@ -113,7 +114,8 @@ class FunctionsTest extends AbstractPromiseTestCase
 
                 return $v1 . ' ' . $v2;
             }
-        )->wait();
+        )
+            ->wait();
 
         self::assertEquals('Sakura Rose', $v);
     }

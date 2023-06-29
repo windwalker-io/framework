@@ -103,4 +103,11 @@ class WatchEvent extends AbstractSaveEvent
 
         return $this;
     }
+
+    public function setDataRef(array &$data): static
+    {
+        $this->data = &$data;
+
+        return $this;
+    }
 }

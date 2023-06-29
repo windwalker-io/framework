@@ -62,13 +62,13 @@ namespace {
 
     if (!function_exists('is_json')) {
         /**
-         * is_json
-         *
          * @param  mixed  $string
          *
          * @return  bool
          *
          * @since  3.5.8
+         *
+         * @deprecated Use json_validate()
          */
         function is_json(mixed $string): bool
         {

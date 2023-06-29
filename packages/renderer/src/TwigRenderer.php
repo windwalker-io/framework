@@ -28,7 +28,7 @@ class TwigRenderer extends AbstractEngineRenderer implements LayoutConverterInte
      *
      * @return  Closure
      */
-    public function getDefaultBuilder(): Closure
+    public function getDefaultEngineBuilder(): Closure
     {
         return static function (array $options = []) {
             $twig = new Twig(

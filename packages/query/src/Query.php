@@ -1391,18 +1391,20 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             // ValueClause objects will set to linked when they were converted to string,
             // we only keep linked ValueClause and convert them to pure value.
             // so that we can keep the correct bounded values numbers if you cleared any Query clauses.
-            $bounded = collect($bounded)
-                ->filter(fn(mixed $param) => !$param['value'] instanceof ValueClause || $param['value']->isLinked())
-                ->map(
-                    function (array $param) {
-                        if ($param['value'] instanceof ValueClause) {
-                            $param['value'] = $this->castValue($param['value']->getValue());
-                        }
-
-                        return $param;
+            $bounded = array_filter(
+                $bounded,
+                static fn(mixed $param) => !$param['value'] instanceof ValueClause || $param['value']->isLinked()
+            );
+            $bounded = array_map(
+                function (array $param) {
+                    if ($param['value'] instanceof ValueClause) {
+                        $param['value'] = $this->castValue($param['value']->getValue());
                     }
-                )
-                ->dump();
+
+                    return $param;
+                },
+                $bounded
+            );
         }
 
         if ($emulatePrepared) {

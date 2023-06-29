@@ -40,6 +40,10 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     use ObjectBuilderAwareTrait;
     use OptionAccessTrait;
 
+    public const FILTER_KEEP_DATA = 1 << 0;
+
+    public const FILTER_USE_DEFAULT_VALUE = 1 << 1;
+
     protected string $namespace = '';
 
     protected array $bounded = [];
@@ -62,7 +66,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
     protected ?FormRendererInterface $renderer = null;
 
-    protected AttributesResolver $attributeResolver;
+    protected ?AttributesResolver $attributeResolver = null;
 
     /**
      * Form constructor.
@@ -82,7 +86,9 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
             $options
         );
 
-        $this->prepareAttributesResolver();
+        if (class_exists(AttributesResolver::class)) {
+            $this->prepareAttributesResolver();
+        }
     }
 
     /**
@@ -105,6 +111,17 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this;
     }
 
+    /**
+     * @template T
+     *
+     * @param  string                  $name
+     * @param  mixed|class-string<T>|T $field
+     * @param  string|null  $fieldset
+     *
+     * @return  AbstractField|T
+     *
+     * @throws ReflectionException
+     */
     public function add(string $name, mixed $field, ?string $fieldset = null): AbstractField
     {
         [$namespace, $name] = FormNormalizer::extractNamespace($name);
@@ -176,12 +193,30 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      * fill
      *
      * @param  mixed  $data
+     * @param  bool   $decodeJson
      *
      * @return  $this
      */
-    public function fill(mixed $data): static
+    public function fill(mixed $data, bool $decodeJson = true): static
     {
         $data = TypeCast::toArray($data);
+
+        if ($decodeJson) {
+            $data = Arr::mapRecursive(
+                $data,
+                static function ($value) {
+                    if (is_string($value) && is_json($value)) {
+                        try {
+                            return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                        } catch (\JsonException) {
+                            return $value;
+                        }
+                    }
+
+                    return $value;
+                }
+            );
+        }
 
         foreach ($this->fields as $name => $field) {
             $value = Arr::get($data, $name, '/');
@@ -329,7 +364,9 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
     public function register(callable $handler): static
     {
-        $this->attributeResolver->resolveCallable($handler)($this);
+        if ($this->attributeResolver) {
+            $this->attributeResolver->resolveCallable($handler)($this);
+        }
 
         return $this;
     }
@@ -382,25 +419,32 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this->ns($name, $handler);
     }
 
-    public function filter(array $data, bool $keepAllData = false): array
+    public function filter(array $data, bool|int $options = 0): array
     {
+        if (is_bool($options)) {
+            $keepAllData = $options;
+            $options = static::FILTER_KEEP_DATA;
+        } else {
+            $keepAllData = (bool) ($options & static::FILTER_KEEP_DATA);
+        }
+
         $filtered = $keepAllData ? $data : [];
 
         foreach ($this->fields as $name => $field) {
             if ($field instanceof CompositeFieldInterface) {
-                $filtered = array_merge(
-                    $data,
-                    $field->filter($data)
+                $filtered = Arr::mergeRecursive(
+                    $filtered,
+                    $field->filter($data, $options)
                 );
             } else {
                 $name = $field->getNamespaceName(true);
 
-                if (!Arr::has($data, $name, '/')) {
+                if (!($options & static::FILTER_USE_DEFAULT_VALUE) && !Arr::has($data, $name, '/')) {
                     continue;
                 }
 
                 $value = Arr::get($data, $name, '/');
-                $filtered = Arr::set($filtered, $name, $field->filter($value), '/');
+                $filtered = Arr::set($filtered, $name, $field->filter($value, $options), '/');
             }
         }
 
@@ -474,7 +518,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      * renderFields
      *
      * @param  Symbol|string|null  $fieldset
-     * @param  string              $namespace
+     * @param  string|null         $namespace
      * @param  array               $options
      *
      * @return string

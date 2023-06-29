@@ -26,6 +26,7 @@ use Windwalker\DI\Attributes\AttributesResolver;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
 use Windwalker\DI\Definition\DefinitionFactory;
 use Windwalker\DI\Definition\DefinitionInterface;
+use Windwalker\DI\Definition\StoreDefinition;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\DI\Definition\StoreDefinitionInterface;
 use Windwalker\DI\Exception\DefinitionException;
@@ -45,13 +46,31 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 {
     use ConfigRegisterTrait;
 
+    /**
+     * Make a store definition singleton, always get same instance.
+     */
     public const SHARED = 1 << 0;
 
+    /**
+     * Make a store definition protected and unable to replace.
+     */
     public const PROTECTED = 1 << 1;
 
-    public const AUTO_WIRE = 1 << 2;
+    /**
+     * Make the store cache not share to children.
+     * Every children Container will create new one even if parent has cache.
+     */
+    public const ISOLATION = 1 << 2;
 
-    public const IGNORE_ATTRIBUTES = 1 << 3;
+    /**
+     * Auto create dependencies when creating an object.
+     */
+    public const AUTO_WIRE = 1 << 3;
+
+    /**
+     * Ignore all attributes when create object or call method.
+     */
+    public const IGNORE_ATTRIBUTES = 1 << 4;
 
     public const MERGE_OVERRIDE = 1 << 0;
 
@@ -97,6 +116,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
     protected AttributesResolver $attributesResolver;
 
+    /**
+     * @var callable[][]
+     */
+    protected array $extends = [];
+
     public static function define(string|callable $class, array $args): ObjectBuilderDefinition
     {
         $builder = new ObjectBuilderDefinition($class);
@@ -133,7 +157,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  mixed   $value
      * @param  int     $options
      *
-     * @return Container
+     * @return static
      * @throws DefinitionException
      */
     public function set(string $id, mixed $value, int $options = 0): static
@@ -149,7 +173,15 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             );
         }
 
-        $this->setDefinition($id, DefinitionFactory::create($value, $options));
+        if (!$value instanceof StoreDefinition) {
+            $value = new StoreDefinition($id, $value, $options);
+        } else {
+            // Clone a new store to avoid side effect
+            $value = clone $value;
+            $value->setId($id);
+        }
+
+        $this->setDefinition($id, $value);
 
         return $this;
     }
@@ -226,6 +258,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             $definition->reset();
         }
 
+        // Detect cache outside of definition to save some performance.
+        $cache = $definition->getCache();
+
+        if ($cache !== null) {
+            return $cache;
+        }
+
         try {
             return $definition->resolve($this);
         } catch (ContainerExceptionInterface $e) {
@@ -250,10 +289,14 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function resolve(mixed $source, array $args = [], int $options = 0): mixed
     {
-        ArgumentsAssert::assert(
-            $source !== null,
-            '{caller} Argument #1 (source) can not be NULL'
-        );
+        if ($source === null) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '%s() Argument #1 (source) can not be NULL',
+                    __METHOD__
+                )
+            );
+        }
 
         if ($source instanceof RawWrapper) {
             return $source();
@@ -283,16 +326,15 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         if ($definition instanceof DefinitionInterface) {
-            if ($definition instanceof ObjectBuilderDefinition) {
-                $definition = clone $definition;
-                $definition->setContainer($this);
-                $definition->addArguments($args);
-            }
-
-            return $definition->resolve($this);
+            return $definition->resolve($this, $args);
         }
 
         return $this->get($source);
+    }
+
+    public function resolveParam(string $param, array $args = [], int $options = 0): mixed
+    {
+        return $this->resolve($param, $args, $options);
     }
 
     /**
@@ -372,6 +414,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             // Store parent definition as self
             if ($parentDefinition) {
                 $parentDefinition = clone $parentDefinition;
+
+                if ($parentDefinition->getOptions() & static::ISOLATION) {
+                    $parentDefinition->reset();
+                }
 
                 $this->setDefinition($id, $parentDefinition);
 
@@ -524,23 +570,50 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function extend(string $id, Closure $closure): static
     {
-        $definition = $this->getDefinition($id);
+        if ($this->has($id)) {
+            $definition = $this->getDefinition($id);
 
-        if ($definition === null) {
-            throw new UnexpectedValueException(
-                sprintf('The requested id "%s" does not exist to extend.', $id)
-            );
+            // Do not affect parent
+            $definition = clone $definition;
+
+            $definition->extend($closure);
+
+            // Keep a clone at self
+            $this->setDefinition($id, $definition);
+
+            return $this;
         }
 
-        // Do not affect parent
-        $definition = clone $definition;
-
-        $definition->extend($closure);
-
-        // Keep a clone at self
-        $this->setDefinition($id, $definition);
+        $this->extends[$id] ??= [];
+        $this->extends[$id][] = $closure;
 
         return $this;
+    }
+
+    /**
+     * @param  string  $id
+     *
+     * @return  array<callable>
+     */
+    public function findExtends(string $id): array
+    {
+        $nid = $id;
+
+        $extends = [];
+
+        if (isset($this->extends[$id])) {
+            $extends[] = $this->extends[$id];
+        }
+
+        while (isset($this->aliases[$nid])) {
+            $nid = $this->aliases[$nid];
+
+            if (isset($this->extends[$nid])) {
+                $extends[] = $this->extends[$nid];
+            }
+        }
+
+        return array_merge(...$extends);
     }
 
     public function modify(string $id, Closure $closure): static
@@ -557,8 +630,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         $target = $closure($target, $this);
 
-        $definition->set(fn() => $target);
-        $definition->reset();
+        $definition = new StoreDefinition(
+            $id,
+            $target,
+            $definition->getOptions()
+        );
+
+        $this->setDefinition($id, $definition);
 
         return $this;
     }
@@ -601,7 +679,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * Execute a callable with dependencies.
      *
-     * @param  callable     $callable
+     * @param  mixed        $callable  Do not use callable hint, will check callable after context bounded.
      * @param  array        $args
      * @param  object|null  $context
      * @param  int          $options
@@ -610,7 +688,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @throws ReflectionException
      */
-    public function call(callable $callable, array $args = [], ?object $context = null, int $options = 0): mixed
+    public function call(mixed $callable, array $args = [], ?object $context = null, int $options = 0): mixed
     {
         return $this->dependencyResolver->call($callable, $args, $context, $options);
     }
@@ -827,6 +905,24 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
+     * Extract closure as pure value.
+     *
+     * @param  mixed  $value
+     *
+     * @return  mixed
+     *
+     * @throws ReflectionException
+     */
+    public function extractValue(mixed $value): mixed
+    {
+        if ($value instanceof Closure) {
+            return $this->call($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * getParam
      *
      * @param  string  $path
@@ -861,13 +957,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  Parameters  $parameters
+     * @param  Parameters|array  $parameters
      *
      * @return  static  Return self to support chaining.
      */
-    public function setParameters(Parameters $parameters): static
+    public function setParameters(Parameters|array $parameters): static
     {
-        $this->parameters = $parameters;
+        $this->parameters = Parameters::wrap($parameters);
 
         return $this;
     }
@@ -1019,6 +1115,20 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function dump(): array
     {
         return $this->storage;
+    }
+
+    public function dumpCached(): array
+    {
+
+        $cached = [];
+
+        foreach ($this->storage as $key => $store) {
+            if ($store->getCache()) {
+                $cached[$key] = $store->getCache();
+            }
+        }
+
+        return $cached;
     }
 
     /**

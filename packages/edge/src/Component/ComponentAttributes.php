@@ -16,6 +16,7 @@ use ArrayIterator;
 use IteratorAggregate;
 use Windwalker\Data\Collection;
 use Windwalker\Utilities\Arr;
+use Windwalker\Utilities\Cache\RuntimeCacheTrait;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
@@ -27,6 +28,8 @@ use function Windwalker\value;
  */
 class ComponentAttributes implements ArrayAccess, IteratorAggregate
 {
+    use RuntimeCacheTrait;
+
     /**
      * The raw array of attributes.
      *
@@ -203,7 +206,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
             $key = is_numeric($key) ? $defaultValue : $key;
 
             $props[] = $key;
-            $props[] = StrNormalize::toKebabCase($key);
+            $props[] = static::toKebabCase($key);
         }
 
         return $this->except($props);
@@ -221,7 +224,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
             }
 
             $ignore[] = $key;
-            $ignore[] = $pascalKey = StrNormalize::toKebabCase($key);
+            $ignore[] = $pascalKey = static::toKebabCase($key);
 
             $props[$pascalKey] = $this->attributes[$key] ?? $this->attributes[$pascalKey] ?? $defaultValue;
         }
@@ -499,5 +502,10 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
         }
 
         return trim($string);
+    }
+
+    public static function toKebabCase(string $str): string
+    {
+        return static::$cacheStorage[$str] ??= StrNormalize::toKebabCase($str);
     }
 }

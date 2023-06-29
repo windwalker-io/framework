@@ -38,9 +38,7 @@ class NestedFilter extends AbstractFilter
      */
     public function filter(mixed $value): mixed
     {
-        $paths = \Windwalker\collect(TypeCast::toArray($value))
-            ->flatten()
-            ->keys();
+        $paths = array_keys(Arr::flatten(TypeCast::toArray($value)));
 
         foreach ($paths as $path) {
             if (Arr::has($this->map, $path)) {
@@ -61,9 +59,7 @@ class NestedFilter extends AbstractFilter
      */
     public function test(mixed $value, bool $strict = false): bool
     {
-        $paths = \Windwalker\collect(TypeCast::toArray($value))
-            ->flatten()
-            ->keys();
+        $paths = array_keys(Arr::flatten(TypeCast::toArray($value)));
 
         foreach ($paths as $path) {
             try {

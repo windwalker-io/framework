@@ -73,9 +73,11 @@ class ConnectionTest extends TestCase
     public function testRelease(): void
     {
         $pool = Mockery::mock(AbstractPool::class);
-        $pool->shouldReceive('release');
+        $pool->shouldReceive('release')
+            ->once();
 
         $pool->shouldReceive('getSerial')
+            ->once()
             ->andReturn(123);
 
         $this->instance->setPool($pool);

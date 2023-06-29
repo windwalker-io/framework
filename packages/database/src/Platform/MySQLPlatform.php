@@ -33,6 +33,8 @@ class MySQLPlatform extends AbstractPlatform
 {
     protected string $name = self::MYSQL;
 
+    protected ?bool $isMariaDB = null;
+
     /**
      * @inheritDoc
      */
@@ -118,7 +120,8 @@ class MySQLPlatform extends AbstractPlatform
             ]
         )
             ->from('INFORMATION_SCHEMA.COLUMNS')
-            ->where('TABLE_NAME', $this->db->replacePrefix($table));
+            ->where('TABLE_NAME', $this->db->replacePrefix($table))
+            ->order('ORDINAL_POSITION');
 
         if ($schema !== null) {
             $query->where('TABLE_SCHEMA', $schema);
@@ -706,7 +709,7 @@ class MySQLPlatform extends AbstractPlatform
 
     public function isMariaDB(): bool
     {
-        return str_contains(
+        return $this->isMariaDB ??= str_contains(
             strtolower($this->db->getDriver()->getVersion()),
             'mariadb'
         );

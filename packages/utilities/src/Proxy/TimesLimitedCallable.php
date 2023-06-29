@@ -44,18 +44,17 @@ class TimesLimitedCallable extends CallableProxy
     /**
      * @inheritDoc
      */
-    public function __invoke(...$args)
+    public function __invoke(...$args): mixed
     {
         if ($this->isOverLimits()) {
-            return;
+            return null;
         }
 
-        return tap(
-            parent::__invoke(...$args),
-            function () {
-                $this->callTimes++;
-            }
-        );
+        $value = parent::__invoke(...$args);
+
+        $this->callTimes++;
+
+        return $value;
     }
 
     /**

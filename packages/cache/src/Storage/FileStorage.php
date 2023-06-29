@@ -126,7 +126,13 @@ class FileStorage implements StorageInterface
      */
     public function remove(string $key): bool
     {
-        return unlink($this->fetchStreamUri($key));
+        $filePath = $this->fetchStreamUri($key);
+
+        if (!is_file($filePath)) {
+            return true;
+        }
+
+        return @unlink($filePath);
     }
 
     /**

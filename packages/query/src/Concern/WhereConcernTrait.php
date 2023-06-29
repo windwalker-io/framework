@@ -278,6 +278,34 @@ trait WhereConcernTrait
         return $this->where($wheres, 'OR');
     }
 
+    /**
+     * orWhere
+     *
+     * @param  array|Closure  $wheres
+     *
+     * @return  static
+     */
+    public function andWhere(array|Closure $wheres): static
+    {
+        if (is_array($wheres)) {
+            return $this->andWhere(
+                static function (Query $query) use ($wheres) {
+                    foreach ($wheres as $where) {
+                        $query->where(...$where);
+                    }
+                }
+            );
+        }
+
+        ArgumentsAssert::assert(
+            $wheres instanceof Closure,
+            '{caller} argument should be array or Closure, %s given.',
+            $wheres
+        );
+
+        return $this->where($wheres, 'AND');
+    }
+
     public function having(mixed $column, mixed ...$args): static
     {
         if ($column instanceof Closure) {

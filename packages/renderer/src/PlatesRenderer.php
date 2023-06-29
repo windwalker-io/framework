@@ -26,7 +26,7 @@ class PlatesRenderer extends AbstractEngineRenderer implements LayoutConverterIn
      *
      * @return  Closure
      */
-    public function getDefaultBuilder(): Closure
+    public function getDefaultEngineBuilder(): Closure
     {
         return fn(array $options = []) => $this->createPlates(
             $options['base_dir'] ?? $options['paths'][0] ?? '',

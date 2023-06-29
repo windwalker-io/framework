@@ -42,7 +42,8 @@ class StubFieldDefinition implements FieldDefinitionInterface
 
         $form->addField(new TextField('u/username', 'Username'), 'a')
             ->required(true)
-            ->addClass('control-input');
+            ->addClass('control-input')
+            ->defaultValue('Admin');
 
         $form->addField(new TextField('email', 'Email'), null, 'b')
             ->required(true)
@@ -52,6 +53,7 @@ class StubFieldDefinition implements FieldDefinitionInterface
         $form->addField(new PasswordField('password', 'Password'), 'pf', 'b')
             ->addFilter('alnum');
 
-        $form->addField(new TextField('address', 'Address'));
+        $form->addField(new TextField('address', 'Address'))
+            ->defaultValue('Default Address');
     }
 }

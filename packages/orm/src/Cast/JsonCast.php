@@ -18,8 +18,13 @@ use JsonException;
  */
 class JsonCast implements CastInterface
 {
+    public int $decodeOptions = JSON_THROW_ON_ERROR;
+
+    public int $encodeOptions = JSON_THROW_ON_ERROR;
+
     /**
      * @inheritDoc
+     * @throws JsonException
      */
     public function hydrate(mixed $value): mixed
     {
@@ -27,11 +32,11 @@ class JsonCast implements CastInterface
             return $value;
         }
 
-        if ($value === '' || $value === null) {
+        if ($value === '') {
             return null;
         }
 
-        return json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?: [];
+        return json_decode($value, true, 512, $this->decodeOptions) ?: [];
     }
 
     /**
@@ -40,6 +45,10 @@ class JsonCast implements CastInterface
      */
     public function extract(mixed $value): mixed
     {
-        return is_json($value) ? $value : json_encode($value, JSON_THROW_ON_ERROR);
+        if ($value === []) {
+            $value = new \stdClass();
+        }
+
+        return is_json($value) ? $value : json_encode($value, $this->encodeOptions);
     }
 }

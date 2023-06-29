@@ -184,7 +184,7 @@ class Edge
         try {
             $closure($__path);
         } catch (Throwable $e) {
-            ob_clean();
+            ob_end_clean();
 
             $this->level--;
 
@@ -489,7 +489,7 @@ TEXT;
      *
      * @return array
      */
-    public function getGlobals($withExtensions = false): array
+    public function getGlobals(bool $withExtensions = false): array
     {
         $globals = $this->globals;
 

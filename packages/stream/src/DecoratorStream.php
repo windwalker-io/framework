@@ -14,9 +14,9 @@ namespace Windwalker\Stream;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * The StreamDecorator class.
+ * The DecoratorStream class.
  */
-class AbstractDecoratorStream implements StreamInterface
+class DecoratorStream implements StreamInterface
 {
     protected StreamInterface $stream;
 

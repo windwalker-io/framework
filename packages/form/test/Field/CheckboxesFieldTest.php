@@ -86,19 +86,19 @@ class CheckboxesFieldTest extends TestCase
         $html = <<<HTML
 <div id="input-flower" class="stub-flower" data-field-input disabled onchange="return false;" size="10">
     <div id="input-flower-Asia-Tokyo-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-Asia-Tokyo" value="Asia/Tokyo" name="flower[]" class="opt" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-Asia-Tokyo" value="Asia/Tokyo" name="flower[]" class="opt" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-Asia-Tokyo" id="input-flower-Asia-Tokyo-label" data-checkbox-item-label>Asia - Tokyo</label>
     </div>
     <div id="input-flower-Asia-Taipei-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-Asia-Taipei" value="Asia/Taipei" name="flower[]" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-Asia-Taipei" value="Asia/Taipei" name="flower[]" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-Asia-Taipei" id="input-flower-Asia-Taipei-label" data-checkbox-item-label>Asia - Taipei</label>
     </div>
     <div id="input-flower-Asia-Paris-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-Asia-Paris" value="Asia/Paris" name="flower[]" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-Asia-Paris" value="Asia/Paris" name="flower[]" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-Asia-Paris" id="input-flower-Asia-Paris-label" data-checkbox-item-label>Europe - Paris</label>
     </div>
     <div id="input-flower-UTC-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-UTC" value="UTC" name="flower[]" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-UTC" value="UTC" name="flower[]" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-UTC" id="input-flower-UTC-label" data-checkbox-item-label>UTC</label>
     </div>
 </div>
@@ -113,19 +113,19 @@ HTML;
         $html = <<<HTML
 <div id="input-flower" class="stub-flower" data-field-input disabled onchange="return false;" size="10">
     <div id="input-flower-Asia-Tokyo-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-Asia-Tokyo" value="Asia/Tokyo" name="flower[]" class="opt" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-Asia-Tokyo" value="Asia/Tokyo" name="flower[]" class="opt" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-Asia-Tokyo" id="input-flower-Asia-Tokyo-label" data-checkbox-item-label>Asia - Tokyo</label>
     </div>
     <div id="input-flower-Asia-Taipei-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-Asia-Taipei" value="Asia/Taipei" name="flower[]" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-Asia-Taipei" value="Asia/Taipei" name="flower[]" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-Asia-Taipei" id="input-flower-Asia-Taipei-label" data-checkbox-item-label>Asia - Taipei</label>
     </div>
     <div id="input-flower-Asia-Paris-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-Asia-Paris" value="Asia/Paris" name="flower[]" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-Asia-Paris" value="Asia/Paris" name="flower[]" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-Asia-Paris" id="input-flower-Asia-Paris-label" data-checkbox-item-label>Europe - Paris</label>
     </div>
     <div id="input-flower-UTC-item" class="checkbox" data-checkbox-item-wrapper>
-        <input id="input-flower-UTC" value="UTC" name="flower[]" checked="checked" data-checkbox-item-input type="checkbox">
+        <input id="input-flower-UTC" value="UTC" name="flower[]" checked="checked" data-checkbox-item-input disabled type="checkbox">
         <label for="input-flower-UTC" id="input-flower-UTC-label" data-checkbox-item-label>UTC</label>
     </div>
 </div>

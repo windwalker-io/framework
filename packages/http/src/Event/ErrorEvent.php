@@ -17,7 +17,7 @@ use Windwalker\Event\Events\ErrorEventTrait;
 /**
  * The ErrorEvent class.
  */
-class ErrorEvent extends AbstractEvent
+class ErrorEvent extends RequestEvent
 {
     use ErrorEventTrait;
 }

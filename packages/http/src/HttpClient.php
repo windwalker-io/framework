@@ -547,7 +547,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         if (is_json($data)) {
             $curl[] = sprintf(
                 "-d '%s'",
-                addslashes($data)
+                addcslashes($data, "'")
             );
         } else {
             $data = str_replace('&amp;', '__AND_SIGN__', $data);

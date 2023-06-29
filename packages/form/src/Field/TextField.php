@@ -28,6 +28,8 @@ use function Windwalker\DOM\h;
  * @method  mixed  getAutofocus()
  * @method  $this  autocomplete(string $value = null)
  * @method  mixed  getAutocomplete()
+ * @method  $this  pattern(string $value)
+ * @method  mixed  getPattern()
  *
  * @since  2.0
  */

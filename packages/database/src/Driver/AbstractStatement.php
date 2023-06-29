@@ -182,12 +182,11 @@ abstract class AbstractStatement implements StatementInterface
      */
     public function get(string|object|null $class = null, array $args = []): ?object
     {
-        return tap(
-            $this->fetch($class, $args),
-            function () {
-                $this->close();
-            }
-        );
+        $result = $this->fetch($class, $args);
+
+        $this->close();
+
+        return $result;
     }
 
     /**

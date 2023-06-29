@@ -125,7 +125,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
      */
     public function suffix(string $name, string $url): string
     {
-        return rtrim($this->$name, '/') . '/' . $url;
+        return rtrim($this->$name, '/') . '/' . ltrim($url, '/');
     }
 
     public function absolute(string $url, bool $full = false): string
@@ -212,6 +212,17 @@ class RequestBaseUri extends Uri implements \JsonSerializable
             $base ??= $this->path;
 
             $uri = $this::normalize($base . '/' . $uri);
+        }
+
+        return $uri;
+    }
+
+    public function makeFull(string $uri): string
+    {
+        $uri = $this->addUriBase($uri, $this->root);
+
+        if ($uri[0] === '/') {
+            $uri = $this->host($uri);
         }
 
         return $uri;

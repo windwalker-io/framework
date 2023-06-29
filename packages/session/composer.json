@@ -15,8 +15,11 @@
         "windwalker/utilities": "^4.0"
     },
     "require-dev": {
+        "asika/sql-splitter": "^1.0",
         "phpunit/phpunit": "^8.0||^9.0||^10.0",
+        "mockery/mockery": "^1.4",
         "windwalker/test": "^4.0",
+        "windwalker/data": "^4.0",
         "windwalker/database": "^4.0",
         "windwalker/filesystem": "^4.0",
         "mikey179/vfsstream": "^1.6",

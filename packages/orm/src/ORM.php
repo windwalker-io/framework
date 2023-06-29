@@ -192,7 +192,7 @@ class ORM implements EventAwareInterface
     public function from(mixed $tables, ?string $alias = null): SelectorQuery
     {
         if (is_string($tables) && class_exists($tables)) {
-            return $this->mapper($tables)->select();
+            return $this->mapper($tables)->from($tables, $alias);
         }
 
         return $this->createSelectorQuery()->from($tables, $alias);

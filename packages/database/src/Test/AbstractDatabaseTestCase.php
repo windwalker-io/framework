@@ -51,7 +51,7 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
             $params
         );
 
-        $logFile = __DIR__ . '/../tmp/test-sql.sql';
+        $logFile = __DIR__ . '/../../tmp/test-sql.sql';
 
         if (!self::$logInited) {
             @unlink($logFile);

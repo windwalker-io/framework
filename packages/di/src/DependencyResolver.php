@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\DI;
 
-use App\Module\Admin\Category\CategoryListView;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use ReflectionClass;
@@ -21,12 +20,10 @@ use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionType;
 use ReflectionUnionType;
-use Throwable;
 use TypeError;
 use UnexpectedValueException;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
-use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\Utilities\Reflection\ReflectionCallable;
@@ -376,16 +373,16 @@ class DependencyResolver
     /**
      * Execute a callable with dependencies.
      *
-     * @param  callable     $callable
+     * @param  mixed        $callable    Do not use callable hint, will check callable after context bounded.
      * @param  array        $args
      * @param  object|null  $context
      * @param  int          $options
      *
      * @return mixed
      *
-     * @throws ReflectionException
+     * @throws ReflectionException|DependencyResolutionException
      */
-    public function call(callable $callable, array $args = [], ?object $context = null, int $options = 0): mixed
+    public function call(mixed $callable, array $args = [], ?object $context = null, int $options = 0): mixed
     {
         $ref = new ReflectionCallable($callable);
 

@@ -112,10 +112,15 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
         $content = value($content);
 
         if (is_array($content) || $content instanceof DOMNodeList) {
+            /** @var \DOMDocumentFragment $fragment */
             $fragment = $node->ownerDocument->createDocumentFragment();
 
             foreach ($content as $key => $c) {
                 static::insertContentTo($c, $fragment);
+            }
+
+            if (count($fragment->childNodes) === 0) {
+                return $node;
             }
 
             return $node->appendChild($fragment);
@@ -419,7 +424,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
 
         $ele = static::create('root', $attributes, '')->render($type);
 
-        return trim(Str::removeLeft(Str::removeRight($ele, '></root>'), '<root'));
+        return trim(Str::removeLeft(Str::removeRight($ele, '></root>', 'ascii'), '<root', 'ascii'));
     }
 
     public function attributesToString(?string $type = null): string
@@ -512,7 +517,9 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
             return $this->getAttribute('data-' . $name);
         }
 
-        return $this->setAttribute('data-' . $name, $value);
+        $this->setAttribute('data-' . $name, $value);
+
+        return $this;
     }
 
     /**

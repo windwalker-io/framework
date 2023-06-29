@@ -100,10 +100,11 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var mysqli $mysqli */
         $mysqli = $this->getConnection()->get();
 
-        return tap(
-            $mysqli->commit(),
-            fn () => $this->releaseKeptConnection()
-        );
+        $r = $mysqli->commit();
+
+        $this->releaseKeptConnection();
+
+        return $r;
     }
 
     /**
@@ -114,10 +115,11 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
         /** @var mysqli $mysqli */
         $mysqli = $this->getConnection()->get();
 
-        return tap(
-            $mysqli->rollback(),
-            fn () => $this->releaseKeptConnection()
-        );
+        $r = $mysqli->rollback();
+
+        $this->releaseKeptConnection();
+
+        return $r;
     }
 
     /**

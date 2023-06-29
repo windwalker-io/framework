@@ -64,8 +64,15 @@ class OpensslCipher implements CipherInterface
      */
     public function __construct(string $method, array $options = [])
     {
-        if (!is_callable('openssl_encrypt')) {
+        if (!function_exists('openssl_encrypt')) {
             throw new CryptException('The openssl extension is not available.');
+        }
+
+        // Openssl 3.0 no longer support legacy unsafe cipher
+        $version = explode(' ', OPENSSL_VERSION_TEXT)[1] ?? '';
+
+        if (version_compare($version, '3.0', '>=')) {
+            throw new CryptException('No-longer support openssl 3.0.');
         }
 
         $this->options = array_merge(

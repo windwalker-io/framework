@@ -20,6 +20,8 @@ use Windwalker\Http\MessageTrait;
 use Windwalker\Stream\Stream;
 use Windwalker\Uri\Uri;
 
+use const Windwalker\Stream\READ_WRITE_RESET;
+
 /**
  * The AbstractRequest class.
  */
@@ -80,7 +82,7 @@ abstract class AbstractRequest implements RequestInterface
         array $headers = []
     ) {
         if (!$body instanceof StreamInterface) {
-            $body = new Stream($body, Stream::MODE_READ_WRITE_RESET);
+            $body = new Stream($body, READ_WRITE_RESET);
         }
 
         if (!$uri instanceof UriInterface) {

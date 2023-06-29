@@ -20,7 +20,7 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\ORM\Attributes\{Column, PK, Table, Watch};
+use Windwalker\ORM\Attributes\{Column, Mapping, PK, Table, Watch};
 use Windwalker\ORM\Cast\CastManager;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Event\AfterSaveEvent;
@@ -29,7 +29,7 @@ use Windwalker\ORM\Event\BeforeSaveEvent;
 use Windwalker\ORM\Event\BeforeUpdateWhereEvent;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Relation\RelationManager;
-use Windwalker\Utilities\Cache\RuntimeCacheTrait;
+use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
@@ -39,8 +39,8 @@ use Windwalker\Utilities\Reflection\ReflectAccessor;
 class EntityMetadata implements EventAwareInterface
 {
     use EventAwareTrait;
-    use RuntimeCacheTrait;
     use OptionAccessTrait;
+    use InstanceCacheTrait;
 
     protected string $className;
 
@@ -88,6 +88,8 @@ class EntityMetadata implements EventAwareInterface
      */
     protected ORM $orm;
 
+    protected bool $hasSetup = false;
+
     /**
      * EntityMetadata constructor.
      *
@@ -106,8 +108,6 @@ class EntityMetadata implements EventAwareInterface
         $this->relationManager = new RelationManager($this);
 
         $this->addEventDealer($orm);
-
-        $this->setup();
     }
 
     public static function isEntity(string|object $object): bool
@@ -119,12 +119,15 @@ class EntityMetadata implements EventAwareInterface
 
     public function setup(): static
     {
+        if ($this->hasSetup) {
+            return $this;
+        }
+
         $resolver = $this->getORM()->getAttributesResolver();
-        $resolver->setOption('metadata', $this);
 
         $ref = $this->getReflector();
 
-        $resolver->resolveObjectDecorate($ref);
+        $resolver->resolveObjectDecorate($ref, ['metadata' => $this]);
 
         if (!$this->tableName) {
             throw new InvalidArgumentException(
@@ -135,9 +138,9 @@ class EntityMetadata implements EventAwareInterface
             );
         }
 
-        $resolver->resolveObjectMembers($ref);
+        $resolver->resolveObjectMembers($ref, ['metadata' => $this]);
 
-        $resolver->setOption('metadata', null);
+        $this->hasSetup = true;
 
         return $this;
     }
@@ -307,6 +310,24 @@ class EntityMetadata implements EventAwareInterface
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    public function getPureColumns(): array
+    {
+        return $this->once(
+            'pure.cols',
+            function () {
+                $cols = [];
+
+                foreach ($this->columns as $name => $column) {
+                    if (!$column instanceof Mapping) {
+                        $cols[$name] = $column;
+                    }
+                }
+
+                return $cols;
+            }
+        );
     }
 
     public function getColumn(string $name): ?Column
@@ -552,5 +573,25 @@ class EntityMetadata implements EventAwareInterface
     public function watchAfter(string $column, callable $method, int $options = 0): Closure
     {
         return $this->watch($column, $method, $options ^ Watch::BEFORE_SAVE);
+    }
+
+    /**
+     * @return object|null
+     */
+    public function getCachedEntity(): ?object
+    {
+        return $this->cacheStorage['entity'] ?? null;
+    }
+
+    /**
+     * @param  object|null  $cachedEntity
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCachedEntity(?object $cachedEntity): static
+    {
+        $this->cacheStorage['entity'] = $cachedEntity;
+
+        return $this;
     }
 }

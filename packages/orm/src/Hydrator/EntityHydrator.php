@@ -218,6 +218,10 @@ class EntityHydrator implements FieldHydratorInterface
 
         $casts = $metadata->getCastManager()->getFieldCasts($colName);
 
+        if ($casts === []) {
+            return $value;
+        }
+
         foreach ($casts as [$hydrator]) {
             try {
                 $value = $hydrator($value, $metadata->getORM(), $entity);
