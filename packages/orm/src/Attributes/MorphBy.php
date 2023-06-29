@@ -20,7 +20,7 @@ use Windwalker\ORM\Relation\Strategy\RelationConfigureInterface;
 #[Attribute]
 class MorphBy implements RelationConfigureAttributeInterface
 {
-    protected array $columns;
+    public array $columns;
 
     /**
      * MorphBy constructor.

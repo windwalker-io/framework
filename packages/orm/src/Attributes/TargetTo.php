@@ -20,7 +20,7 @@ use Windwalker\ORM\Relation\Strategy\RelationConfigureInterface;
 #[Attribute]
 class TargetTo implements RelationConfigureAttributeInterface
 {
-    protected array $columns;
+    public array $columns;
 
     /**
      * OneToOne constructor.
@@ -29,7 +29,7 @@ class TargetTo implements RelationConfigureAttributeInterface
      * @param  mixed   ...$columns
      */
     public function __construct(
-        protected string $target,
+        public string $target,
         ...$columns
     ) {
         $this->columns = $columns;

@@ -16,6 +16,8 @@ use ReflectionProperty;
 use Windwalker\ORM\Relation\RelationManager;
 use Windwalker\ORM\Relation\Strategy\RelationConfigureInterface;
 
+use function React\Promise\map;
+
 /**
  * The ManyToMany class.
  */
@@ -23,18 +25,48 @@ use Windwalker\ORM\Relation\Strategy\RelationConfigureInterface;
 class ManyToMany extends AbstractRelationAttribute
 {
     /**
+     * @var RelationConfigureAttributeInterface[]
+     */
+    public array $attributes;
+
+    /**
      * ManyToMany constructor.
      *
-     * @param  string|null  $mapTable
-     * @param  mixed        ...$mapColumns
+     * @param  RelationConfigureAttributeInterface  ...$attributes
      */
-    public function __construct(?string $mapTable = null, ...$mapColumns)
+    public function __construct(RelationConfigureAttributeInterface ...$attributes)
     {
-        parent::__construct($mapTable, ...$mapColumns);
+        foreach ($attributes as $attribute) {
+            if ($attribute instanceof TargetTo) {
+                parent::__construct($attribute->target, ...$attribute->columns);
+            }
+        }
+
+        $this->attributes = $attributes;
     }
 
     protected function createRelation(RelationManager $rm, ReflectionProperty $prop): RelationConfigureInterface
     {
-        return $rm->manyToMany($prop->getName())->targetTo($this->target, ...$this->columns);
+        $relation = $rm->manyToMany($prop->getName());
+
+        foreach ($this->attributes as $attribute) {
+            if ($attribute instanceof TargetTo) {
+                $relation = $relation->targetTo($attribute->target, ...$attribute->columns);
+            }
+
+            if ($attribute instanceof MapBy) {
+                $relation = $relation->mapBy($attribute->target, ...$attribute->columns);
+            }
+
+            if ($attribute instanceof MapMorphBy) {
+                $relation = $relation->mapMorphBy(...$attribute->columns);
+            }
+
+            if ($attribute instanceof MorphBy) {
+                $relation = $relation->morphBy(...$attribute->columns);
+            }
+        }
+
+        return $relation;
     }
 }

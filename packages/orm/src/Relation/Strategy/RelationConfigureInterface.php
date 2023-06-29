@@ -18,9 +18,9 @@ use Windwalker\ORM\Metadata\EntityMetadata;
  */
 interface RelationConfigureInterface
 {
-    public function targetTo(?string $table, ...$columns): static;
+    public function targetTo(?string $table, mixed ...$columns): static;
 
-    public function foreignKeys(...$columns): static;
+    public function foreignKeys(mixed ...$columns): static;
 
     /**
      * @param  bool  $flush
@@ -64,7 +64,7 @@ interface RelationConfigureInterface
      *
      * @return  static
      */
-    public function morphBy(...$columns): static;
+    public function morphBy(mixed ...$columns): static;
 
     /**
      * @param  EntityMetadata  $metadata

@@ -13,6 +13,8 @@ namespace Windwalker\ORM\Relation\Strategy;
 
 use LogicException;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\ORM\Attributes\MapMorphBy;
+use Windwalker\ORM\Attributes\MorphBy;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Exception\RelationRejectException;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -277,12 +279,24 @@ class ManyToMany extends AbstractRelation
     {
         $this->map->setName($mapTable);
 
+        foreach ($columns as $k => $column) {
+            if ($column instanceof MorphBy) {
+                $this->mapMorphBy(...$column->columns);
+                unset($columns[$k]);
+            }
+        }
+
         $this->setMapForeignKeys(...$columns);
 
         return $this;
     }
 
-    public function mapMorphBy(...$columns): static
+    /**
+     * @param  mixed  ...$columns  Can be ['a' => 'b'], or (a: 'b') or ('a', 'b') and new MorphBy(c: 'd')
+     *
+     * @return  static
+     */
+    public function mapMorphBy(mixed ...$columns): static
     {
         $this->map->setMorphs($this->handleColumnMapping($columns));
 
@@ -290,7 +304,7 @@ class ManyToMany extends AbstractRelation
     }
 
     /**
-     * @param  array  $columns
+     * @param  mixed  ...$columns
      *
      * @return  static  Return self to support chaining.
      */

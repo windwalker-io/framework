@@ -22,7 +22,7 @@ use Windwalker\ORM\Relation\Strategy\RelationConfigureInterface;
 #[Attribute]
 class MapBy implements RelationConfigureAttributeInterface
 {
-    protected array $columns;
+    public array $columns;
 
     /**
      * OneToOne constructor.
@@ -31,7 +31,7 @@ class MapBy implements RelationConfigureAttributeInterface
      * @param  mixed   ...$columns
      */
     public function __construct(
-        protected string $target,
+        public string $target,
         ...$columns
     ) {
         $this->columns = $columns;
@@ -52,6 +52,6 @@ class MapBy implements RelationConfigureAttributeInterface
             );
         }
 
-        $relation->mapBy($this->target, $this->columns);
+        $relation->mapBy($this->target, ...$this->columns);
     }
 }

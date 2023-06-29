@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Relation\Strategy;
 
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\ORM\Attributes\MorphBy;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Relation\Action;
@@ -233,16 +234,29 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
         );
     }
 
-    public function targetTo(?string $table, ...$columns): static
+    /**
+     * @param  string|null           $table
+     * @param  string|array|MorphBy  ...$columns  Can be ['a' => 'b'], or (a: 'b') or ('a', 'b') and new MorphBy(c: 'd')
+     *
+     * @return  $this
+     */
+    public function targetTo(?string $table, mixed ...$columns): static
     {
         $this->target->setName($table);
+
+        foreach ($columns as $k => $column) {
+            if ($column instanceof MorphBy) {
+                $this->morphBy(...$column->columns);
+                unset($columns[$k]);
+            }
+        }
 
         $this->foreignKeys(...$columns);
 
         return $this;
     }
 
-    public function foreignKeys(...$columns): static
+    public function foreignKeys(mixed ...$columns): static
     {
         $this->target->setFks($this->handleColumnMapping($columns));
 
@@ -393,7 +407,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
         return array_keys($this->getForeignKeys());
     }
 
-    public function morphBy(...$columns): static
+    public function morphBy(mixed ...$columns): static
     {
         $this->target->setMorphs($this->handleColumnMapping($columns));
 
