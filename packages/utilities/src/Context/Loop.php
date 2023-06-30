@@ -46,7 +46,7 @@ class Loop
     /**
      * @var mixed
      */
-    protected $target;
+    protected mixed $target;
 
     /**
      * LoopContext constructor.

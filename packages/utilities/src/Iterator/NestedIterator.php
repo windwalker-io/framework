@@ -16,6 +16,7 @@ use Generator;
 use Iterator;
 use OuterIterator;
 use Traversable;
+use Windwalker\Utilities\Context\Loop;
 
 /**
  * The MultiLevelIterator class.
@@ -30,6 +31,8 @@ class NestedIterator implements OuterIterator
      * @var callable[]
      */
     protected array $callbacks = [];
+
+    protected static ?Loop $currentLoop = null;
 
     /**
      * FilesIterator constructor.
@@ -151,6 +154,31 @@ class NestedIterator implements OuterIterator
                 }
             }
         );
+    }
+
+    public function each(callable $callback): static
+    {
+        $i = 0;
+
+        $target = [];
+
+        static::$currentLoop = new Loop(iterator_count($this), $target, static::$currentLoop);
+
+        foreach ($this as $key => $value) {
+            $target[$key] = $value;
+
+            $callback($value, $key, static::$currentLoop->loop($i, $key));
+
+            if (static::$currentLoop->isStop()) {
+                break;
+            }
+
+            $i++;
+        }
+
+        static::$currentLoop = static::$currentLoop->parent();
+
+        return $this;
     }
 
     public function map(callable $callback): static
