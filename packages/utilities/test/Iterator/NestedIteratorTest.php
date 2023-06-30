@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Test\Iterator;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Utilities\Context\Loop;
 use Windwalker\Utilities\Iterator\NestedIterator;
 
 /**
@@ -52,6 +53,77 @@ class NestedIteratorTest extends TestCase
         self::assertEquals(
             ['A', 'B', 'C', 'E', 'F'],
             iterator_to_array($iter)
+        );
+    }
+
+    public function testEach(): void
+    {
+        $iter = new NestedIterator([1, 2, 3]);
+
+        $r = [];
+        $iter->each(
+            function ($v, $k) use (&$r) {
+                return $r[] = $k . '-' . $v;
+            }
+        );
+
+        self::assertEquals(
+            [
+                '0-1',
+                '1-2',
+                '2-3',
+            ],
+            $r
+        );
+
+        $r = [];
+        $iter->each(
+            static function ($v, $k, Loop $loop) use (&$r) {
+                if ($v > 1) {
+                    return $loop->stop();
+                }
+
+                return $r[] = $k . '-' . $v;
+            }
+        );
+
+        self::assertEquals(
+            [
+                '0-1',
+            ],
+            $r
+        );
+
+        $a = new NestedIterator(
+            [
+                new NestedIterator([1, 2, 3]),
+                new NestedIterator([4, 5, 6]),
+                new NestedIterator([7, 8, 9]),
+                new NestedIterator([10, 11, 12]),
+            ]
+        );
+
+        $r = [];
+
+        $a->each(
+            function (NestedIterator $v, $k, $l) use (&$r) {
+                $v->each(
+                    function ($v, $k, Loop $loop) use (&$r) {
+                        if ($v === 4) {
+                            $loop->stop(2);
+
+                            return;
+                        }
+
+                        $r[] = $v;
+                    }
+                );
+            }
+        );
+
+        self::assertEquals(
+            [1, 2, 3],
+            $r
         );
     }
 

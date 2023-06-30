@@ -30,7 +30,7 @@ class CompareHelperTest extends TestCase
      *
      * @return  array
      */
-    public function getCompareData(): array
+    public static function getCompareData(): array
     {
         return [
             // Equals

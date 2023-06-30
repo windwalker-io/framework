@@ -58,7 +58,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestDef(): array
+    public static function providerTestDef(): array
     {
         return [
             [
@@ -359,7 +359,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestRemove(): array
+    public static function providerTestRemove(): array
     {
         return [
             [
@@ -721,7 +721,7 @@ class ArrTest extends TestCase
      *
      * @dataProvider providerTestSort
      */
-    public function testSort($data, $expected, $condition, $descending)
+    public static function testSort($data, $expected, $condition, $descending)
     {
         $return = Arr::sort($data, $condition, $descending);
 
@@ -733,7 +733,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestSort(): array
+    public static function providerTestSort(): array
     {
         return [
             'simple array' => [
@@ -819,7 +819,7 @@ class ArrTest extends TestCase
      *
      * @return  array
      */
-    public function providerTestInvert(): array
+    public static function providerTestInvert(): array
     {
         return [
             'Case 1' => [

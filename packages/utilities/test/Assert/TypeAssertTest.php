@@ -66,7 +66,7 @@ class TypeAssertTest extends TestCase
         }
     }
 
-    public function providerThrowException(): array
+    public static function providerThrowException(): array
     {
         return [
             'Auto get caller' => [

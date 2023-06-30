@@ -39,7 +39,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function getCharProvider(): array
+    public static function getCharProvider(): array
     {
         return [
             [0, '白'],
@@ -74,7 +74,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function betweenProvider(): array
+    public static function betweenProvider(): array
     {
         return [
             ['fòôbàř', 'ôb', 'ò', 'à'],
@@ -119,7 +119,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function containsProvider(): array
+    public static function containsProvider(): array
     {
         return [
             [true, 'foobar', 'oba'],
@@ -150,7 +150,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function endsWithProvider(): array
+    public static function endsWithProvider(): array
     {
         return [
             ['Foo', 'oo', Str::CASE_SENSITIVE, true],
@@ -186,7 +186,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function estartsWithProvider(): array
+    public static function estartsWithProvider(): array
     {
         return [
             ['Foo', 'Fo', Str::CASE_SENSITIVE, true],
@@ -221,7 +221,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function ensureLeftProvider(): array
+    public static function ensureLeftProvider(): array
     {
         return [
             ['FlowerSakura', 'Flower', 'FlowerSakura'],
@@ -255,7 +255,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function ensureRightProvider(): array
+    public static function ensureRightProvider(): array
     {
         return [
             ['FlowerSakura', 'Sakura', 'FlowerSakura'],
@@ -288,7 +288,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function hasLowerCaseProvider(): array
+    public static function hasLowerCaseProvider(): array
     {
         return [
             ['Foo', true],
@@ -319,7 +319,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function hasUpperCaseProvider(): array
+    public static function hasUpperCaseProvider(): array
     {
         return [
             ['Foo', true],
@@ -352,7 +352,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function insertProvider(): array
+    public static function insertProvider(): array
     {
         return [
             ['FlowerSakura', 'And', 6, 'FlowerAndSakura'],
@@ -382,7 +382,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function isLowerCaseProvider(): array
+    public static function isLowerCaseProvider(): array
     {
         return [
             ['flower', true],
@@ -411,7 +411,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function isUpperCaseProvider(): array
+    public static function isUpperCaseProvider(): array
     {
         return [
             ['FLOWER', true],
@@ -443,7 +443,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function firstProvider(): array
+    public static function firstProvider(): array
     {
         return [
             ['Foobar', 1, 'F'],
@@ -480,7 +480,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function lastProvider(): array
+    public static function lastProvider(): array
     {
         return [
             ['Foobar', 1, 'r'],
@@ -513,7 +513,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function intersectLeftProvider(): array
+    public static function intersectLeftProvider(): array
     {
         return [
             ['foobar', 'foo bar', 'foo'],
@@ -549,7 +549,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function intersectRightProvider(): array
+    public static function intersectRightProvider(): array
     {
         return [
             ['foobar', 'foo bar', 'bar'],
@@ -585,7 +585,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function intersectProvider(): array
+    public static function intersectProvider(): array
     {
         return [
             ['foobar', 'f oob ar', 'oob'],
@@ -620,7 +620,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function padProvider(): array
+    public static function padProvider(): array
     {
         return [
             ['foobar', '_', -1, 'foobar'],
@@ -655,7 +655,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function padLeftProvider(): array
+    public static function padLeftProvider(): array
     {
         return [
             ['foobar', '_', -1, 'foobar'],
@@ -690,7 +690,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function padRightProvider(): array
+    public static function padRightProvider(): array
     {
         return [
             ['foobar', '_', -1, 'foobar'],
@@ -724,7 +724,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function removeProvider(): array
+    public static function removeProvider(): array
     {
         return [
             ['Foobar', 3, 'Fooar'],
@@ -759,7 +759,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function removeLeftProvider(): array
+    public static function removeLeftProvider(): array
     {
         return [
             ['foobar', 'hoo', 'foobar'],
@@ -790,7 +790,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function removeRightProvider(): array
+    public static function removeRightProvider(): array
     {
         return [
             ['foobar', 'hoo', 'foobar'],
@@ -824,7 +824,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function sliceProvider(): array
+    public static function sliceProvider(): array
     {
         return [
             ['Foobar Allstar', 0, 3, 'Foo'],
@@ -865,7 +865,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function substringProvider(): array
+    public static function substringProvider(): array
     {
         return [
             ['Foobar Allstar', 0, 3, 'Foo'],
@@ -909,7 +909,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function wrapProvider(): array
+    public static function wrapProvider(): array
     {
         return [
             ['foo', '"foo"'],
@@ -939,7 +939,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function toggleCaseProvider(): array
+    public static function toggleCaseProvider(): array
     {
         return [
             ['FooBar', 'fOObAR'],
@@ -976,7 +976,7 @@ class StrTest extends TestCase
      *
      * @return  array
      */
-    public function truncateProvider(): array
+    public static function truncateProvider(): array
     {
         return [
             ['Hello foo bar', 5, 'Hello'],
