@@ -20,41 +20,15 @@ use Windwalker\Filter\Unicode\UnicodeHelper;
  */
 class OutputFilter
 {
-    /**
-     * Makes an object safe to display in forms
-     *
-     * Object parameters that are non-string, array, object or start with underscore
-     * will be converted
-     *
-     * @param  object   $mixed          An object to be parsed
-     * @param  integer  $quoteStyle     The optional quote style for the htmlspecialchars function
-     * @param  mixed    $exclude_keys   An optional string single field name or array of field names not
-     *                                  to be parsed (eg, for a textarea)
-     *
-     * @return  object
-     */
-    public static function objectHTMLSafe(object $mixed, $quoteStyle = ENT_QUOTES, $exclude_keys = ''): object
-    {
-        if (is_object($mixed)) {
-            foreach (get_object_vars($mixed) as $k => $v) {
-                if (is_array($v) || is_object($v) || $v == null || $k[1] === '_') {
-                    continue;
-                }
+    public const KEEP_IMAGES = 1 << 0;
 
-                if (is_string($exclude_keys) && $k == $exclude_keys) {
-                    continue;
-                }
+    public const KEEP_IFRAMES = 1 << 1;
 
-                if (is_array($exclude_keys) && in_array($k, $exclude_keys)) {
-                    continue;
-                }
+    public const KEEP_SCRIPTS = 1 << 2;
 
-                $mixed->$k = htmlspecialchars($v, $quoteStyle, 'UTF-8');
-            }
-        }
+    public const KEEP_STYLES = 1 << 3;
 
-        return $mixed;
-    }
+    public const KEEP_LINKS = 1 << 4;
 
     /**
      * This method processes a string and replaces all instances of & with &amp; in links only.
@@ -240,5 +214,30 @@ class OutputFilter
     public static function stripLinks(string $string): string
     {
         return (string) preg_replace('/<link[^>]*>/', '', $string);
+    }
+
+    public static function safeHTML(string $html, int $flags = 0): string
+    {
+        if (!($flags & static::KEEP_IMAGES)) {
+            $html = static::stripImages($html);
+        }
+
+        if (!($flags & static::KEEP_IFRAMES)) {
+            $html = static::stripIframes($html);
+        }
+
+        if (!($flags & static::KEEP_SCRIPTS)) {
+            $html = static::stripScript($html);
+        }
+
+        if (!($flags & static::KEEP_STYLES)) {
+            $html = static::stripStyle($html);
+        }
+
+        if (!($flags & static::KEEP_LINKS)) {
+            $html = static::stripLinks($html);
+        }
+
+        return $html;
     }
 }

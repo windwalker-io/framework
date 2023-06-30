@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Filter\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\FilterInterface;
 use Windwalker\Filter\Rule\Absolute;
@@ -32,19 +33,8 @@ use Windwalker\Filter\ValidatorInterface;
  */
 class FilterRulesTest extends TestCase
 {
-    /**
-     * testFilter
-     *
-     * @param  callable|string  $filter
-     * @param  mixed            $value
-     * @param  mixed            $expected
-     * @param  string           $message
-     *
-     * @return  void
-     *
-     * @dataProvider provideFilter
-     */
-    public function testFilter(string|callable $filter, $value, $expected, string $message = '')
+    #[DataProvider('provideFilter')]
+    public function testFilter(string|callable $filter, mixed $value, mixed $expected, string $message = '')
     {
         if (is_string($filter)) {
             $filter = fn() => new $filter();
@@ -60,7 +50,7 @@ class FilterRulesTest extends TestCase
         );
     }
 
-    public function provideFilter(): array
+    public static function provideFilter(): array
     {
         return [
             [
@@ -148,19 +138,8 @@ class FilterRulesTest extends TestCase
         ];
     }
 
-    /**
-     * testFilter
-     *
-     * @param  callable|string  $filter
-     * @param  mixed            $value
-     * @param  bool             $expected
-     * @param  string           $message
-     *
-     * @return  void
-     *
-     * @dataProvider provideValidate
-     */
-    public function testValidate(string|callable $filter, $value, $expected, string $message = '')
+    #[DataProvider('provideValidate')]
+    public function testValidate(string|callable $filter, mixed $value, mixed $expected, string $message = '')
     {
         if (is_string($filter)) {
             $filter = fn() => new $filter();
@@ -176,7 +155,7 @@ class FilterRulesTest extends TestCase
         );
     }
 
-    public function provideValidate(): array
+    public static function provideValidate(): array
     {
         return [
             'Absolute F' => [
