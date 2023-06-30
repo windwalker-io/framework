@@ -13,6 +13,7 @@ namespace Windwalker\DI;
 
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunctionAbstract;
@@ -49,6 +50,10 @@ class DependencyResolver
         $this->container = $container;
     }
 
+    /**
+     * @throws DefinitionResolveException
+     * @throws ReflectionException
+     */
     public function newInstance(mixed $class, array $args = [], int $options = 0): object
     {
         if ($class instanceof DefinitionInterface) {
@@ -125,6 +130,10 @@ class DependencyResolver
         return $instance;
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws DependencyResolutionException
+     */
     public function newInstanceByClassName(string $class, array $args = [], int $options = 0): object
     {
         $reflection = new ReflectionClass($class);
@@ -165,7 +174,10 @@ class DependencyResolver
      *
      * @return array Array of arguments to pass to the method.
      *
+     * @throws ContainerExceptionInterface
+     * @throws DefinitionResolveException
      * @throws DependencyResolutionException
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      * @since   2.0
      */
@@ -193,7 +205,7 @@ class DependencyResolver
                 }
 
                 $trailing = array_slice($trailing, $i);
-                $methodArgs = array_merge($methodArgs, $trailing);
+                $methodArgs = static::merge($methodArgs, $trailing);
                 continue;
             }
 
@@ -243,13 +255,19 @@ class DependencyResolver
                 )
             );
 
-            $methodArgs[$i] = null;
+            // $methodArgs[$i] = null;
         }
 
         return $methodArgs;
     }
 
-    public function &resolveParameterDependency(ReflectionParameter $param, array $args = [], int $options = 0)
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws DefinitionResolveException
+     * @throws ContainerExceptionInterface
+     * @throws ReflectionException
+     */
+    public function &resolveParameterDependency(ReflectionParameter $param, array $args = [], int $options = 0): mixed
     {
         $nope = null;
         $options |= $this->container->getOptions();
@@ -257,22 +275,30 @@ class DependencyResolver
         $autowire = $options & Container::AUTO_WIRE;
 
         $type = $param->getType();
-        $dependencyVarName = $param->getName();
+        // $dependencyVarName = $param->getName();
 
-        if (!$type) {
+        // Currently we don't support IntersectionType
+        if (!$type || $type instanceof \ReflectionIntersectionType) {
             return $nope;
         }
 
         if ($type instanceof ReflectionUnionType) {
             $dependencies = $type->getTypes();
         } else {
+            /** @var array<\ReflectionNamedType> $dependencies */
             $dependencies = [$type];
         }
 
         foreach ($dependencies as $type) {
+            // Currently we don't support IntersectionType
+            if ($type instanceof \ReflectionIntersectionType) {
+                continue;
+            }
+
             $depObject = null;
             $dependencyClassName = $type->getName();
 
+            // Todo: Support enum
             if (!class_exists($dependencyClassName) && !interface_exists($dependencyClassName)) {
                 // Next dependency
                 continue;
@@ -318,10 +344,10 @@ class DependencyResolver
             throw new DefinitionResolveException(
                 sprintf(
                     'Unable to resolve %s argument #%s type: %s with %s given',
-                    $param->getDeclaringClass()->getName(),
+                    $param->getDeclaringClass()?->getName() ?? '*UnknownClass*',
                     $param->getPosition(),
                     (string) $types,
-                    get_debug_type($depObject ?? null)
+                    get_debug_type($depObject)
                 )
             );
         }
@@ -338,6 +364,7 @@ class DependencyResolver
      *
      * @return mixed
      *
+     * @throws ReflectionException
      * @since  3.5.1
      */
     public function &resolveParameterValue(mixed &$value, ReflectionParameter $param, int $options = 0): mixed
@@ -373,14 +400,18 @@ class DependencyResolver
     /**
      * Execute a callable with dependencies.
      *
-     * @param  mixed        $callable    Do not use callable hint, will check callable after context bounded.
+     * @param  mixed        $callable  Do not use callable hint, will check callable after context bounded.
      * @param  array        $args
      * @param  object|null  $context
      * @param  int          $options
      *
      * @return mixed
      *
-     * @throws ReflectionException|DependencyResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws DefinitionResolveException
+     * @throws DependencyResolutionException
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
     public function call(mixed $callable, array $args = [], ?object $context = null, int $options = 0): mixed
     {
@@ -400,5 +431,10 @@ class DependencyResolver
         };
 
         return $closure($args, $options);
+    }
+
+    public static function merge(array ...$args): array
+    {
+        return array_merge(...$args);
     }
 }

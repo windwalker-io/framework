@@ -32,6 +32,7 @@ use Windwalker\DI\Test\Injection\StubService;
 use Windwalker\DI\Test\Mock\Bar;
 use Windwalker\DI\Test\Mock\Bar2;
 use Windwalker\DI\Test\Mock\Foo;
+use Windwalker\DI\Test\Mock\IntersectionTypeStub;
 use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Mock\UnionTypeStub;
 use Windwalker\DI\Test\Mock\WithVariadic;
@@ -325,12 +326,25 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(Bar::class, $foo->bar);
     }
 
-    public function testNewInstanceWithUnionTypes()
+    public function testNewInstanceWithUnionTypes(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
         $obj = $container->newInstance(UnionTypeStub::class);
 
+        self::assertInstanceOf(
+            ArrayObject::class,
+            $obj->iter,
+        );
+    }
+
+    public function testNewInstanceWithIntersectionTypes(): void
+    {
+        $container = new Container(null, Container::AUTO_WIRE);
+
+        $obj = $container->newInstance(IntersectionTypeStub::class);
+
+        // Intersection type will be ignored and only get named type.
         self::assertInstanceOf(
             ArrayObject::class,
             $obj->iter,
