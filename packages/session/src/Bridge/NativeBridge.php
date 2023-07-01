@@ -64,9 +64,7 @@ class NativeBridge implements BridgeInterface
             session_cache_limiter('private');
         }
 
-        session_start();
-
-        return true;
+        return session_start();
     }
 
     /**

@@ -109,7 +109,6 @@ class SessionTest extends TestCase
         $sess = $this->createInstance(
             [
                 'ini' => [
-                    'save_path' => self::getSessionPath(),
                     'use_cookies' => '0',
                 ],
             ],
@@ -542,6 +541,8 @@ class SessionTest extends TestCase
         ?BridgeInterface $bridge = null,
         ?CookiesInterface $cookies = null
     ): Session {
+        $options['ini']['save_path'] = self::getSessionPath();
+
         return $this->instance = new Session(
             $options,
             $bridge,

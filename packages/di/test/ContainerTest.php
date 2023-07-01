@@ -670,7 +670,7 @@ class ContainerTest extends TestCase
             }
         };
 
-        $result = include __DIR__ . '/php8.1/call-first-callable.php';
+        $result = $this->instance->call($object->foo(...), [], null, Container::AUTO_WIRE);
 
         self::assertSame(
             'FOOOOO',
