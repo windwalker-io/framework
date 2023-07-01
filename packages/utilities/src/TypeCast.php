@@ -102,8 +102,6 @@ abstract class TypeCast
     }
 
     /**
-     * toIterable
-     *
      * @param  mixed  $iterable
      *
      * @return  iterable
@@ -292,7 +290,7 @@ abstract class TypeCast
             case 'int':
             case 'integer':
                 if ($strict) {
-                    return is_numeric($value) && floor((float) $value) == $value ? (int) $value : null;
+                    return static::canSafeConvert($value, 'integer') ? (int) $value : null;
                 }
 
                 if (is_scalar($value)) {
@@ -305,7 +303,7 @@ abstract class TypeCast
             case 'double':
             case 'real':
                 if ($strict) {
-                    return is_numeric($value) ? (float) $value : null;
+                    return static::canSafeConvert($value, 'float') ? (float) $value : null;
                 }
 
                 if (is_scalar($value)) {
@@ -316,36 +314,124 @@ abstract class TypeCast
 
             case 'number':
             case 'numeric':
-                // int
-                if (is_numeric($value)) {
-                    if (floor((float) $value) == $value) {
-                        return static::tryInteger($value, $strict);
-                    }
+                if (static::canSafeConvert($value, 'integer')) {
+                    return static::tryInteger($value);
+                }
 
-                    return static::tryFloat($value, $strict);
+                if (static::canSafeConvert($value, 'float')) {
+                    return static::tryFloat($value);
                 }
 
                 return $strict ? null : (int) $value;
 
             case 'string':
-                if ($strict && ($value === null || is_bool($value))) {
-                    return null;
+                if ($strict) {
+                    return static::canSafeConvert($value, 'string') ? (string) $value : null;
                 }
 
                 return is_stringable($value) ? (string) $value : null;
 
             case 'bool':
             case 'boolean':
+                if ($strict) {
+                    return static::canSafeConvert($value, 'bool') ? (bool) $value : null;
+                }
+
                 return (bool) $value;
 
             case 'array':
+                if ($strict) {
+                    return static::canSafeConvert($value, 'array') ? (array) $value : null;
+                }
+
                 return (array) $value;
 
             case 'object':
+                if ($strict) {
+                    return static::canSafeConvert($value, 'object') ? $value : null;
+                }
+
                 return (object) $value;
 
             default:
                 return null;
+        }
+    }
+
+    public static function canSafeConvert(mixed $value, string $type): bool
+    {
+        switch (strtolower($type)) {
+            case 'int':
+            case 'integer':
+                // Fork from: https://github.com/theodorejb/PolyCast
+                switch (gettype($value)) {
+                    case 'integer':
+                        return true;
+                    case 'float':
+                    case 'double':
+                        return $value === (float) (int) $value;
+                    case 'string':
+                        $intString = (string) (int) $value;
+                        $floatString = (string) (float) $value;
+
+                        if ($floatString !== $intString && $value !== "+$intString") {
+                            return false;
+                        }
+
+                        return $value <= PHP_INT_MAX && $value >= PHP_INT_MIN;
+                    default:
+                        return false;
+                }
+
+            case 'float':
+            case 'double':
+            case 'real':
+            case 'number':
+            case 'numeric':
+                // Fork from: https://github.com/theodorejb/PolyCast
+                switch (gettype($value)) {
+                    case "double":
+                    case "integer":
+                        return true;
+                    case "string":
+                        // Reject leading zeros unless they are followed by a decimal point
+                        if (strlen($value) > 1 && $value[0] === '0' && $value[1] !== '.') {
+                            return false;
+                        }
+
+                        // Use regular expressions to check is valid float expression.
+                        // Based on http://php.net/manual/en/language.types.float.php
+                        $lnum    = "[0-9]+";
+                        $dnum    = "([0-9]*[\.]{$lnum})|({$lnum}[\.][0-9]*)";
+                        $expDnum = "/^[+-]?(({$lnum}|{$dnum})[eE][+-]?{$lnum})$/";
+
+                        return
+                            preg_match("/^[+-]?{$lnum}$/", $value) ||
+                            preg_match("/^[+-]?{$dnum}$/", $value) ||
+                            preg_match($expDnum, $value);
+                    default:
+                        return false;
+                }
+
+            case 'string':
+                return match (gettype($value)) {
+                    'string', 'integer', 'double' => true,
+                    'object' => $value instanceof \Stringable,
+                    default => false,
+                };
+
+            case 'bool':
+            case 'boolean':
+                return is_bool($value);
+
+            case 'array':
+                return is_array($value);
+
+            case 'object':
+                return is_object($value);
+
+            default:
+                return false;
         }
     }
 

@@ -459,7 +459,7 @@ class TypeCastTest extends TestCase
      *
      * @dataProvider providerTryStrict
      */
-    public function testTryStrict($value, $expt, string $type): void
+    public function testTryStrict(mixed $value, mixed $expt, string $type): void
     {
         $failMsg = sprintf(
             'Try convert %s to %s failed',
