@@ -123,12 +123,15 @@ class FilesystemHandler extends AbstractHandler
         $files = Filesystem::files($this->path)
             ->filter(fn(FileObject $file) => $file->getMTime() < $past);
 
+        $count = 0;
+
         /** @var FileObject $file */
         foreach ($files as $file) {
+            $count++;
             $file->delete();
         }
 
-        return count($files);
+        return $count;
     }
 
     /**

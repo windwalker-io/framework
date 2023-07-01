@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test;
 
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\BridgeInterface;
 use Windwalker\Session\Bridge\NativeBridge;
@@ -42,6 +44,8 @@ class SessionTest extends TestCase
      */
     public function testNativeBridgeNativeCookieWithoutId(): void
     {
+        error_reporting(-1);
+
         $sess = $this->createInstance(
             [],
             new NativeBridge([]),
@@ -50,6 +54,7 @@ class SessionTest extends TestCase
         // With no name
         $sess->start();
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             [],
             $_SESSION
@@ -83,6 +88,7 @@ class SessionTest extends TestCase
         // With no name
         $sess->start();
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             [],
             $_SESSION
@@ -109,6 +115,7 @@ class SessionTest extends TestCase
         $sess = $this->createInstance(
             [
                 'ini' => [
+                    'save_path' => self::getSessionPath(),
                     'use_cookies' => '0',
                 ],
             ],
@@ -124,6 +131,7 @@ class SessionTest extends TestCase
         $sess->setName('WW_SESS_ID');
         $sess->start();
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             [],
             $_SESSION
@@ -165,6 +173,7 @@ class SessionTest extends TestCase
 
         $sess->start();
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             ['flower' => 'Sakura'],
             $sess->all()
@@ -216,6 +225,7 @@ class SessionTest extends TestCase
 
         $sess->start();
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             [],
             $_SESSION
@@ -261,6 +271,7 @@ class SessionTest extends TestCase
         $sess->setName('FOO_SESS');
         $sess->start();
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             ['flower' => 'Sakura'],
             $_SESSION
@@ -302,6 +313,7 @@ class SessionTest extends TestCase
             'info'
         );
 
+        self::assertTrue($sess->isStarted());
         self::assertEquals(
             [
                 'info' => [
@@ -365,6 +377,7 @@ class SessionTest extends TestCase
 
         $sess2['tree'] = 'Oak';
 
+        self::assertTrue($sess->isStarted());
         self::assertNotEquals(
             $sess['tree'] ?? null,
             $sess2['tree']
@@ -541,8 +554,6 @@ class SessionTest extends TestCase
         ?BridgeInterface $bridge = null,
         ?CookiesInterface $cookies = null
     ): Session {
-        $options['ini']['save_path'] = self::getSessionPath();
-
         return $this->instance = new Session(
             $options,
             $bridge,
