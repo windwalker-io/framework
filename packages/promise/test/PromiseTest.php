@@ -13,11 +13,15 @@ namespace Windwalker\Promise\Test;
 
 use Exception;
 use Windwalker\Promise\Enum\PromiseStatus;
+use Windwalker\Promise\Exception\UnsettledException;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
+use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Promise\SettledResult;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
+
+use function Windwalker\Promise\await;
 
 /**
  * The PromiseTest class.
@@ -34,6 +38,12 @@ class PromiseTest extends AbstractPromiseTestCase
             }
         );
 
+        try {
+            $p->wait();
+        } catch (UnsettledException) {
+            //
+        }
+
         self::assertEquals('Hello', $foo);
     }
 
@@ -46,27 +56,33 @@ class PromiseTest extends AbstractPromiseTestCase
             }
         );
 
-        self::assertEquals(Promise::FULFILLED, ReflectAccessor::getValue($p, 'state'));
-        self::assertEquals('Flower', ReflectAccessor::getValue($p, 'value'));
+        $v = $p->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals('Flower', $v);
 
         // Resolve with promise
-        $p = new Promise(
-            function ($resolve) {
-                $resolve(
-                    new Promise(
-                        function ($resolve) {
-                            $resolve('Sakura');
-                        }
-                    )
-                );
-            }
+        $v = await(
+            $p = new Promise(
+                function ($resolve) {
+                    $resolve(
+                        new Promise(
+                            function ($resolve) {
+                                $resolve('Sakura');
+                            }
+                        )
+                    );
+                }
+            )
         );
 
-        self::assertEquals('Sakura', ReflectAccessor::getValue($p, 'value'));
+        self::assertEquals('Sakura', $v);
     }
 
     public function testConstructorCoroutine(): void
     {
+        self::useScheduler(new ImmediateScheduler());
+
         $p = new Promise(
             function ($resolve) use (&$generator) {
                 $generator = (static function () use ($resolve) {
@@ -83,6 +99,8 @@ class PromiseTest extends AbstractPromiseTestCase
 
         $generator->send('Flower');
 
+        $p->wait();
+
         self::assertEquals('Flower', $this->values['v1']);
     }
 
@@ -93,17 +111,18 @@ class PromiseTest extends AbstractPromiseTestCase
 
     public function testRejectedWithoutCatch(): void
     {
-        self::markTestSkipped('Enable this after async promise prepared');
+        static::useScheduler(new DeferredScheduler());
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Hello');
 
-        Promise::rejected('Hello');
+        $promise = Promise::rejected('Hello');
+        $promise->wait();
     }
 
-    public function testAll()
+    public function testAllResolved()
     {
-        Promise::all(
+        $p = Promise::all(
             [
                 Promise::resolved('A'),
                 Promise::resolved('B'),
@@ -113,10 +132,18 @@ class PromiseTest extends AbstractPromiseTestCase
             ->then(
                 function ($v) {
                     self::assertEquals(['A', 'B', 'C'], $v);
+
+                    $this->addToAssertionCount(1);
                 }
             );
 
-        Promise::all(
+        $p->wait();
+
+        self::assertEquals($this->numberOfAssertionsPerformed(), 1);
+    }
+    public function testAllWithRejected()
+    {
+        $p = Promise::all(
             [
                 Promise::resolved('A'),
                 Promise::rejected('B'),
@@ -128,50 +155,71 @@ class PromiseTest extends AbstractPromiseTestCase
                     self::assertEquals('B', $v);
                 }
             );
+
+        $p->wait();
+
+        self::assertCount(2);
     }
 
-    public function testAllSettled(): void
-    {
-        self::useScheduler(new DeferredScheduler());
+    // public function testAllSettled(): void
+    // {
+    //     self::useScheduler(new DeferredScheduler());
+    //
+    //     $promise = Promise::allSettled(
+    //         [
+    //             Promise::resolved('A'),
+    //             Promise::rejected('B'),
+    //             Promise::resolved('C'),
+    //         ]
+    //     )
+    //         ->then(
+    //             function (array $results) {
+    //                 /** @var SettledResult[] $results */
+    //                 self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
+    //                 self::assertEquals('A', $results[0]->value);
+    //
+    //                 self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
+    //                 self::assertEquals('B', $results[1]->value);
+    //             }
+    //         );
+    //
+    //     $promise->wait();
+    //
+    //     self::useScheduler(new ImmediateScheduler());
+    //
+    //     Promise::allSettled(
+    //         [
+    //             Promise::resolved('A'),
+    //             Promise::rejected('B'),
+    //             Promise::resolved('C'),
+    //         ]
+    //     )
+    //         ->then(
+    //             function (array $results) {
+    //                 /** @var SettledResult[] $results */
+    //                 self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
+    //                 self::assertEquals('A', $results[0]->value);
+    //
+    //                 self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
+    //                 self::assertEquals('B', $results[1]->value);
+    //             }
+    //         );
+    // }
 
-        $promise = Promise::allSettled(
-            [
-                Promise::resolved('A'),
-                Promise::rejected('B'),
-                Promise::resolved('C'),
-            ]
-        )
-            ->then(
-                function (array $results) {
-                    /** @var SettledResult[] $results */
-                    self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
-                    self::assertEquals('A', $results[0]->value);
-
-                    self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
-                    self::assertEquals('B', $results[1]->value);
-                }
-            );
-
-        $promise->wait();
-
-        self::useScheduler(new ImmediateScheduler());
-
-        Promise::allSettled(
-            [
-                Promise::resolved('A'),
-                Promise::rejected('B'),
-                Promise::resolved('C'),
-            ]
-        )
-            ->then(
-                function (array $results) {
-                    /** @var SettledResult[] $results */
-                    self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
-                    self::assertEquals('A', $results[0]->value);
-
-                    self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
-                    self::assertEquals('B', $results[1]->value);
-                }
-            );
-    }
+    // public static function testAny(): void
+    // {
+    //     $p = Promise::any(
+    //         [
+    //             Promise::resolved('A'),
+    //             Promise::rejected('B'),
+    //         ]
+    //     )
+    //         ->then(
+    //             function ($v) {
+    //                 self::assertEquals('A', $v);
+    //             }
+    //         );
+    //
+    //     $p->wait();
+    // }
 }

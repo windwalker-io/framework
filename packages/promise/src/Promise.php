@@ -16,7 +16,9 @@ use ReflectionFunction;
 use ReflectionMethod;
 use Throwable;
 use TypeError;
+use Windwalker\Promise\Exception\AggregateException;
 use Windwalker\Promise\Exception\UncaughtException;
+use Windwalker\Promise\Exception\UnsettledException;
 use Windwalker\Promise\Scheduler\ScheduleCursor;
 use Windwalker\Promise\Scheduler\ScheduleRunner;
 
@@ -39,7 +41,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @var mixed
      */
-    protected mixed $value;
+    protected mixed $value = null;
 
     /**
      * @var callable[]
@@ -109,15 +111,59 @@ class Promise implements ExtendedPromiseInterface
     {
         return static::all(
             array_map(
-                static function ($value) {
-                    return Promise::resolved($value)
-                        ->then(
-                            fn($value) => SettledResult::fulfilled($value),
-                            fn($value) => SettledResult::rejected($value)
-                        );
-                },
+                static fn($value) => Promise::resolved($value)
+                    ->then(
+                        fn($value) => SettledResult::fulfilled($value),
+                        fn($value) => SettledResult::rejected($value)
+                    ),
                 $values
             )
+        );
+    }
+
+    /**
+     * @see https://github.com/tc39/proposal-promise-any
+     *
+     * @param  array  $values
+     *
+     * @return  ExtendedPromiseInterface
+     */
+    public static function any(array $values): ExtendedPromiseInterface
+    {
+        if ($values === []) {
+            return static::rejected(new AggregateException('All promises were rejected'));
+        }
+
+        $errors = [];
+        $counter = 0;
+        $done = false;
+
+        return new static(
+            function ($resolve, $reject) use (&$counter, $values, &$done, &$errors) {
+                foreach (array_values($values) as $i => $value) {
+                    Promise::resolved($value)
+                        ->then(
+                            function ($v) use (&$done, $resolve) {
+                                if (!$done) {
+                                    $resolve($v);
+                                    $done = true;
+                                }
+
+                                return $v;
+                            }
+                        )
+                        ->catch(
+                            function ($e) use ($reject, $values, &$counter, &$errors, $i) {
+                                $errors[$i] = $e;
+                                $counter++;
+
+                                if ($counter === count($values)) {
+                                    $reject($errors);
+                                }
+                            }
+                        );
+                }
+            }
         );
     }
 
@@ -215,10 +261,6 @@ class Promise implements ExtendedPromiseInterface
             ? $onFulfilled
             : nope();
 
-        $onRejected = is_callable($onRejected)
-            ? $onRejected
-            : static fn($e) => throw new UncaughtException($e);
-
         if ($this->getState() === static::PENDING) {
             $child = new static();
 
@@ -231,14 +273,25 @@ class Promise implements ExtendedPromiseInterface
             return $child;
         }
 
-        $handler = $this->getState() === static::FULFILLED
-            ? $onFulfilled
-            : $onRejected;
-
         return new static(
-            function ($resolve, $reject) use ($handler) {
+            function ($resolve, $reject) use ($onRejected, $onFulfilled) {
                 try {
-                    $resolve($handler($this->value));
+                    if ($this->getState() === static::FULFILLED) {
+                        $resolve($onFulfilled($this->value));
+                    } elseif ($onRejected) {
+                        $resolve($onRejected($this->value));
+                    } else {
+                        $reject($this->value);
+                    }
+                // } catch (UncaughtException $e) {
+                //     show($e);
+                //     $reason = $e->getReason();
+                //
+                //     if ($reason instanceof \Throwable) {
+                //         throw $reason;
+                //     }
+                //
+                //     throw new UncaughtException($e->getReason());
                 } catch (\Throwable $e) {
                     $reject($e);
                 }
@@ -327,6 +380,10 @@ class Promise implements ExtendedPromiseInterface
     {
         if ($this->getState() === static::PENDING) {
             $this->scheduleWait();
+
+            if ($this->getState() === static::PENDING) {
+                throw new UnsettledException('Error, this promise has not settled.');
+            }
         }
 
         if ($this->value instanceof Throwable && $this->getState() === static::REJECTED) {
@@ -344,7 +401,7 @@ class Promise implements ExtendedPromiseInterface
      * @return  void
      * @throws UncaughtException
      */
-    private function log(UncaughtException $e): void
+    private function logOrThrow(UncaughtException $e): void
     {
         $logger = $this->uncaughtLogger ?? static::$defaultUncaughtLogger;
 
@@ -446,7 +503,7 @@ class Promise implements ExtendedPromiseInterface
         $this->scheduleDone();
 
         if ($handlers === [] && $state === static::REJECTED) {
-            $this->log(new UncaughtException($value));
+            $this->logOrThrow(new UncaughtException($value));
 
             return;
         }
@@ -455,14 +512,17 @@ class Promise implements ExtendedPromiseInterface
             /** @var PromiseInterface $promise */
             [$promise, $onFulfilled, $onRejected] = $handler;
 
-            $handler = $this->getState() === static::FULFILLED
-                ? $onFulfilled
-                : $onRejected;
-
             try {
-                $promise->resolve($handler($value));
+                if ($this->getState() === static::FULFILLED) {
+                    $promise->resolve($onFulfilled($this->value));
+                } elseif ($onRejected) {
+                    $promise->resolve($onRejected($this->value));
+                } else {
+                    $promise->reject($this->value);
+                }
             } catch (UncaughtException $e) {
                 $promise->reject($e->getReason());
+                throw $e;
             } catch (Throwable $e) {
                 $promise->reject($e);
             }
@@ -485,7 +545,8 @@ class Promise implements ExtendedPromiseInterface
     {
         // Explicitly overwrite argument with null value. This ensure that this
         // argument does not show up in the stack trace in PHP 7+ only.
-        $callback = $cb;
+        $callback = Closure::fromCallable($cb);
+        // $callback->bindTo($this); // For test
         $cb = null;
 
         // Use reflection to inspect number of arguments expected by this callback.
@@ -531,6 +592,8 @@ class Promise implements ExtendedPromiseInterface
                     }
                 );
             }
+        } catch (UncaughtException $e) {
+            throw $e;
         } catch (Throwable $e) {
             $target = null;
             $this->reject($e);

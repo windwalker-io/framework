@@ -13,11 +13,13 @@ namespace Windwalker\Promise\Test;
 
 use Exception;
 use ReflectionException;
+use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Promise\Promise;
 use Windwalker\Test\Traits\TestAccessorTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\nope;
+use function Windwalker\Promise\await;
 
 /**
  * The SwoolePromiseTest class.
@@ -58,21 +60,95 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertSame($handlers[0][2], $rej3);
     }
 
+    public function testResolvedThenWithFulfilledHandler(): void
+    {
+        $p = Promise::resolved(1)
+            ->then(
+                function ($v) {
+                    return $v + 1;
+                }
+            );
+
+        $v = $p->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(2, $v);
+    }
+
+    public function testResolvedThenWithRejectedHandler(): void
+    {
+        $p = Promise::resolved(1)
+            ->then(
+                null,
+                function ($v) {
+                    return $v + 1;
+                }
+            );
+
+        $v = $p->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(1, $v);
+    }
+
+    public function testRejectedThenWithFulfilledHandler(): void
+    {
+        $this->expectException(UncaughtException::class);
+
+        $p = Promise::rejected(1)
+            ->then(
+                function ($v) {
+                    return $v + 1;
+                },
+            );
+
+        $v = $p->wait();
+
+        self::assertEquals(Promise::REJECTED, $p->getState());
+        self::assertEquals(1, $v);
+    }
+
+    public function testRejectedThenWithRejectedHandler(): void
+    {
+        $p = Promise::rejected(1)
+            ->then(
+                null,
+                function ($v) {
+                    return $v + 1;
+                }
+            );
+
+        $v = $p->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(2, $v);
+    }
+
+    public function testRejectedThenWithBoth(): void
+    {
+        $p = Promise::rejected(1)
+            ->then(
+                function ($v) {
+                    return $v + 10;
+                },
+                function ($v) {
+                    return $v + 1;
+                }
+            );
+
+        $v = $p->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(2, $v);
+    }
+
     /**
      * @throws ReflectionException
      * @see  Promise::then
      */
     public function testThenAlreadyFulfilled(): void
     {
-        $p = new Promise(
-            function ($resolve, $reject) {
-                $resolve(1);
-            }
-        );
-
-        $state = ReflectAccessor::getValue($p, 'state');
-
-        self::assertEquals(Promise::FULFILLED, $state);
+        $p = Promise::resolved(1);
 
         $p2 = $p
             ->then(
@@ -85,8 +161,6 @@ class PromiseThenTest extends AbstractPromiseTestCase
                     return ++$v;
                 }
             );
-
-        self::assertEquals(3, ReflectAccessor::getValue($p2, 'value'));
 
         // Test return new Promise
         $p3 = $p->then(
@@ -107,6 +181,10 @@ class PromiseThenTest extends AbstractPromiseTestCase
             }
         );
 
+        $p->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(3, ReflectAccessor::getValue($p2, 'value'));
         self::assertEquals('Hello', ReflectAccessor::getValue($p3, 'value'));
         self::assertNull(ReflectAccessor::getValue($p4, 'value'));
         self::assertEquals('Hello', $newValue);
@@ -160,13 +238,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
      */
     public function testThenAlreadyRejected(): void
     {
-        $p = new Promise(
-            function ($resolve, $reject) {
-                $reject($this->values['e1'] = new Exception('Sakura'));
-            }
-        );
-
-        self::assertEquals(Promise::REJECTED, $p->getState());
+        $p = Promise::rejected($this->values['e1'] = new Exception('Sakura'));
 
         $p2 = $p
             ->then(
@@ -190,10 +262,6 @@ class PromiseThenTest extends AbstractPromiseTestCase
                 }
             );
 
-        self::assertSame($this->values['e1'], $this->values['e2']);
-        self::assertEquals('New state', $this->values['t1']);
-        self::assertArrayNotHasKey('t2', $this->values);
-
         // Test return new Promise
         $p3 = $p->then(
             null,
@@ -214,6 +282,12 @@ class PromiseThenTest extends AbstractPromiseTestCase
             }
         );
 
+        $p4->wait();
+
+        self::assertEquals(Promise::REJECTED, $p->getState());
+        self::assertSame($this->values['e1'], $this->values['e2']);
+        self::assertEquals('New state', $this->values['t1']);
+        self::assertArrayNotHasKey('t2', $this->values);
         self::assertEquals('Hello', $this->getValue($p3, 'value'));
         self::assertNull($this->getValue($p4, 'value'));
         self::assertEquals('Hello', $newValue);
@@ -281,6 +355,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
                 null,
                 function ($r) {
                     $this->values['r1'] = $r;
+                    exit(' @Checkpoint');
 
                     return 'Olive';
                 }
@@ -294,6 +369,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $p1->resolve('Rose');
 
+        $p2->wait();
+
         self::assertEquals('Rose', $this->values['v1']);
         self::assertEquals('Sakura', $this->values['r1']->getMessage());
         self::assertEquals('Olive', $this->values['v2']);
@@ -304,7 +381,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
      */
     public function testThenWithRejectedPromise(): void
     {
-        Promise::create(
+        $p = Promise::create(
             function ($re) {
                 $re('Hello');
             }
@@ -335,6 +412,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
                     $this->values['r2'] = $r2;
                 }
             );
+
+        $p->wait();
 
         self::assertEquals('Error', $this->values['r1']);
         self::assertEquals('Error', $this->values['r2']);
@@ -342,7 +421,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testThenWithRejectedThenable(): void
     {
-        Promise::create(
+        $p = Promise::create(
             function ($re) {
                 $re('Hello');
             }
@@ -373,6 +452,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
                     $this->values['r2'] = $r2;
                 }
             );
+
+        $p->wait();
 
         self::assertEquals('Error', $this->values['r1']);
         self::assertEquals('Error', $this->values['r2']);

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Test;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
 use Windwalker\Promise\Scheduler\SchedulerInterface;
 use Windwalker\Promise\Scheduler\ScheduleRunner;
@@ -35,13 +36,24 @@ abstract class AbstractPromiseTestCase extends TestCase
         parent::setUpBeforeClass();
 
         TaskQueue::getInstance()->disableShutdownRunner();
-
-        self::useScheduler(new ImmediateScheduler());
     }
 
     protected function setUp(): void
     {
         $this->values = [];
+
+        // Reset every test
+        static::prepareDefaultScheduler();
+    }
+
+    protected function tearDown(): void
+    {
+        TaskQueue::getInstance()->clear();
+    }
+
+    protected static function prepareDefaultScheduler(): void
+    {
+        static::useScheduler(new DeferredScheduler());
     }
 
     /**

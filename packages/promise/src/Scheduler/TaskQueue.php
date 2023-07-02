@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Scheduler;
 
+use function Windwalker\Promise\reject;
+
 /**
  * The TaskQueue class which inspired by Guzzle.
  */
@@ -108,5 +110,14 @@ class TaskQueue
         while ($task = array_shift($this->queue)) {
             $task();
         }
+    }
+
+    public function clear(): array
+    {
+        $queue = $this->queue;
+
+        $this->queue = [];
+
+        return $queue;
     }
 }

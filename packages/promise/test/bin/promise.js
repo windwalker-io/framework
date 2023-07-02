@@ -5,12 +5,19 @@
  * @license    __LICENSE__
  */
 
-const promise = Promise.reject('BBB')
-    .then((v) => {
-        console.log('Then', v);
-    });
+// const promise = Promise.any(
+//     [
+//         Promise.resolve('A'),
+//         Promise.reject('B'),
+//     ]
+//     )
+//     .then((v) => {
+//         console.log('Then', v);
+//     });
 
+const p = Promise.reject(123)
+    .then(null, () => 'GGGG');
 
-Promise.allSettled().then((v) => {
-
-})
+setTimeout(() => {
+    console.dir(Promise.resolve(123));
+}, 10);

@@ -28,13 +28,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
 {
     use SwooleTestTrait;
 
-    /**
-     * This method is called before the first test of this test class is run.
-     */
-    public static function setUpBeforeClass(): void
+    protected static function prepareDefaultScheduler(): void
     {
-        parent::setUpBeforeClass();
-
         self::useScheduler(new DeferredScheduler());
     }
 
@@ -131,6 +126,19 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         TaskQueue::getInstance()->run();
 
         self::assertEquals('YOO', $this->values['v1']);
+    }
+
+    public function testErrorInThen()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Test Error');
+
+        $p = Promise::resolved('123')
+            ->then(
+                fn () => throw new \Exception('Test Error')
+            );
+
+        TaskQueue::getInstance()->run();
     }
 
     public function testSwooleAsync()
