@@ -166,22 +166,7 @@ class FileObject extends SplFileInfo
             throw new InvalidArgumentException('No root path provided');
         }
 
-        $path = Path::normalize($this->getPath());
-        $root = Path::normalize(static::unwrap($root));
-
-        if ((string) $root === '') {
-            return $path;
-        }
-
-        if ($path === $root) {
-            return '';
-        }
-
-        if (!str_starts_with($path, $root)) {
-            return $path;
-        }
-
-        return ltrim(substr($path, strlen($root)), DIRECTORY_SEPARATOR);
+        return Path::relative(static::unwrap($root), $this->getPath());
     }
 
     /**

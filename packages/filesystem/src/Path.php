@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Filesystem;
 
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
 use UnexpectedValueException;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Utilities\Arr;
@@ -418,7 +419,7 @@ class Path
      */
     public static function makeUtf8Safe(string $file): bool|string
     {
-        $file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
+        $file = (string) mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
 
         return mb_ereg_replace("([\.]{2,})", '', $file);
     }
@@ -437,24 +438,22 @@ class Path
             return false;
         }
 
-        // Strip scheme
-        if (false !== ($pos = strpos($path, '://'))) {
-            $path = substr($path, $pos + 3);
+        if (str_contains($path, '://')) {
+            return true;
         }
 
-        // UNIX root "/" or "\" (Windows style)
-        if ('/' === $path[0] || '\\' === $path[0]) {
+        if (str_starts_with($path, '/') || str_starts_with($path, '\\')) {
             return true;
         }
 
         // Windows root
-        if (strlen($path) > 1 && ctype_alpha($path[0]) && ':' === $path[1]) {
-            // Special case: "C:"
+        if (strlen($path) > 1 && ':' === $path[1] && ctype_alpha($path[0])) {
+            // C:
             if (2 === strlen($path)) {
                 return true;
             }
 
-            // Normal case: "C:/ or "C:\"
+            // C:/ or C:\
             if ('/' === $path[2] || '\\' === $path[2]) {
                 return true;
             }
@@ -470,9 +469,6 @@ class Path
      *
      * @return bool Returns true if the path is relative or empty, false if
      *              it is absolute.
-     *
-     * @since 1.0 Added method.
-     * @since 2.0 Method now fails if $path is not a string.
      */
     public static function isRelative(string $path): bool
     {
@@ -488,8 +484,10 @@ class Path
      */
     public static function findRoot(string $path): string
     {
-        if (DIRECTORY_SEPARATOR === '/') {
-            return '/';
+        $path = static::normalize($path);
+
+        if (str_starts_with($path, DIRECTORY_SEPARATOR)) {
+            return DIRECTORY_SEPARATOR;
         }
 
         if (!static::isAbsolute($path)) {
@@ -503,6 +501,35 @@ class Path
         return Str::ensureRight($root, DIRECTORY_SEPARATOR);
     }
 
+    public static function makeAbsolute(string $path, string $base): string
+    {
+        if (static::isAbsolute($path)) {
+            $root = static::findRoot($path);
+            $baseRoot = static::findRoot($base);
+
+            if ($root !== $baseRoot) {
+                throw new FilesystemException('The roots of $path and $base are different.');
+            }
+
+            return $path;
+        }
+
+        return static::normalize($base . '/' . $path);
+    }
+
+    /**
+     * An alias of makeRelative() but flip params.
+     *
+     * @param  string  $from
+     * @param  string  $to
+     *
+     * @return  string
+     */
+    public static function relative(string $from, string $to): string
+    {
+        return static::makeRelative($to, $from);
+    }
+
     /**
      * Method to find the relative path from a given path to another path based on the current working directory.
      * If both the given paths are the same, it would resolve to a zero-length string.
@@ -513,18 +540,22 @@ class Path
      *
      * Path::relative('/root/path', '/root/path/images/a.jpg') => `images/a.jpg`
      *
-     * @param  string  $from
-     * @param  string  $to
+     * @param  string  $path
+     * @param  string  $base
      *
      * @return  string
      */
-    public static function relative(string $from, string $to): string
+    public static function makeRelative(string $path, string $base): string
     {
-        $to = static::normalize($to);
-        $from = static::normalize($from);
+        $path = static::normalize($path);
+        $base = static::normalize($base);
 
-        $fromParts = Arr::explodeAndClear(DIRECTORY_SEPARATOR, $from);
-        $toParts = Arr::explodeAndClear(DIRECTORY_SEPARATOR, $to);
+        if ($base === '') {
+            return $path;
+        }
+
+        $fromParts = explode(DIRECTORY_SEPARATOR, $base);
+        $toParts = explode(DIRECTORY_SEPARATOR, $path);
 
         $length = min(count($fromParts), count($toParts));
         $samePartsLength = $length;
@@ -553,5 +584,20 @@ class Path
         $relative = static::relative($root, $path);
 
         return !str_starts_with($relative, '..');
+    }
+
+    public static function getHomeDirectory(): string
+    {
+        // UNIX and Linux
+        if (getenv('HOME')) {
+            return getenv('HOME');
+        }
+
+        // Windows
+        if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
+            return getenv('HOMEDRIVE') . getenv('HOMEPATH');
+        }
+
+        throw new \RuntimeException('Unable to find home directory or OS is not support.');
     }
 }

@@ -305,7 +305,7 @@ class FileObjectTest extends AbstractVfsTestCase
             $file->getRelativePathname('vfs://root/files\\folder1/foo')
         );
         self::assertPathEquals(
-            'vfs://root/files/folder1/foo/bar',
+            '../bar',
             $file->getRelativePathname('vfs://root/files\\folder1/foo/yoo')
         );
     }

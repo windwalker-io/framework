@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\File;
 use Windwalker\Filesystem\Path;
 
@@ -92,9 +94,8 @@ class PathTest extends AbstractVfsTestCase
      * @return void
      *
      * @covers        \Windwalker\Filesystem\Path::clean
-     *
-     * @dataProvider  cleanProvider
      */
+    #[DataProvider('cleanProvider')]
     public function testClean(string $input, string $ds, string $expected): void
     {
         $this->assertEquals(
@@ -111,8 +112,8 @@ class PathTest extends AbstractVfsTestCase
      * @param  bool    $iExists
      *
      * @return void
-     * @dataProvider existsProvider
      */
+    #[DataProvider('existsProvider')]
     public function testExists(string $path, bool $sExists, bool $iExists): void
     {
         self::assertSame($sExists, Path::exists($path, Path::CASE_SENSITIVE));
@@ -214,7 +215,7 @@ class PathTest extends AbstractVfsTestCase
      *
      * @since   2.0
      */
-    public function dataTestMakeSafe(): array
+    public function makeSafeProvider(): array
     {
         return [
             [
@@ -265,9 +266,8 @@ class PathTest extends AbstractVfsTestCase
      * @param  string  $message     The message to show on failure of test
      *
      * @return void
-     *
-     * @dataProvider  dataTestMakeSafe
      */
+    #[DataProvider('makeSafeProvider')]
     public function testMakeSafe($name, $stripChars, $expected, $message)
     {
         $this->assertEquals(Path::makeSafe($name, $stripChars), $expected, $message);
@@ -310,9 +310,8 @@ class PathTest extends AbstractVfsTestCase
      * testIsChild
      *
      * @return  void
-     *
-     * @dataProvider isChildProvider
      */
+    #[DataProvider('isChildProvider')]
     public function testIsChild(string $path, string $root, bool $isChild)
     {
         self::assertEquals(
@@ -358,6 +357,82 @@ class PathTest extends AbstractVfsTestCase
                 'foo/bar/yoo.inc.sh',
                 '/var/foo/',
                 false
+            ],
+        ];
+    }
+
+    public function testFindRoot(): void
+    {
+        self::assertPathEquals(
+            '/',
+            Path::findRoot('/foo/bar')
+        );
+
+        self::assertPathEquals(
+            'C:/',
+            Path::findRoot('C:/foo/bar')
+        );
+
+        self::assertPathEquals(
+            'C:/',
+            Path::findRoot('C:\\foo/bar')
+        );
+
+        $this->expectException(FilesystemException::class);
+
+        self::assertPathEquals(
+            'C:/',
+            Path::findRoot('foo/bar')
+        );
+    }
+
+    #[DataProvider('makeAbsoluteProvider')]
+    public function testMakeAbsolute(string $path, string $base, string $expected)
+    {
+        if ($expected === FilesystemException::class) {
+            $this->expectException(FilesystemException::class);
+        }
+
+        self::assertPathEquals(
+            $expected,
+            Path::makeAbsolute($path, $base)
+        );
+    }
+
+    public static function makeAbsoluteProvider(): array
+    {
+        return [
+            [
+                'foo/bar',
+                '/home/man',
+                '/home/man/foo/bar'
+            ],
+            [
+                'foo/bar',
+                'C:\\Data',
+                'C:/Data/foo/bar'
+            ],
+            [
+                'C:/Hello/yoo/goz',
+                'C:\\Data/foo',
+                'C:/Hello/yoo/goz'
+            ],
+            // Same root
+            [
+                'C:/Hello/yoo/goz',
+                'C:\\Data/foo',
+                'C:/Hello/yoo/goz'
+            ],
+            [
+                '/var/yoo/goz',
+                '/Data/foo',
+                '/var/yoo/goz'
+            ],
+            // Different root
+            [
+                '/Hello/yoo/goz',
+                'C:\\Data/foo',
+                FilesystemException::class
             ],
         ];
     }
