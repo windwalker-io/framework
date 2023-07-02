@@ -19,6 +19,8 @@ use stdClass;
 use Traversable;
 use Windwalker\Utilities\Classes\PreventInitialTrait;
 use Windwalker\Utilities\Contract\DumpableInterface;
+use Windwalker\Utilities\Exception\CastingException;
+use Windwalker\Utilities\Exception\ExceptionFactory;
 
 /**
  * The TypeCast class.
@@ -30,8 +32,22 @@ use Windwalker\Utilities\Contract\DumpableInterface;
  * @method static bool|null tryBoolean($value, bool $strict = false)
  * @method static array|null tryArray($value, bool $strict = false)
  * @method static object|null tryObject($value, bool $strict = false)
+ * @method static int|null safeInteger($value)
+ * @method static float|null safeFloat($value)
+ * @method static int|float|null safeNumeric($value)
+ * @method static string|null safeString($value)
+ * @method static bool|null safeBoolean($value)
+ * @method static array|null safeArray($value)
+ * @method static object|null safeObject($value)
+ * @method static int mustInteger($value)
+ * @method static float mustFloat($value)
+ * @method static int|float mustNumeric($value)
+ * @method static string mustString($value)
+ * @method static bool mustBoolean($value)
+ * @method static array mustArray($value)
+ * @method static object mustObject($value)
  *
- * @since  __DEPLOY_VERSION__
+ * @since  4.0
  */
 abstract class TypeCast
 {
@@ -277,8 +293,6 @@ abstract class TypeCast
      * @param  bool    $strict
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function try(mixed $value, string $type, bool $strict = false): mixed
     {
@@ -358,6 +372,38 @@ abstract class TypeCast
         }
     }
 
+    public static function safe(mixed $value, string $type): mixed
+    {
+        return static::try($value, $type, true);
+    }
+
+    public static function must(mixed $value, string $type): mixed
+    {
+        $converted = static::try($value, $type, true);
+
+        if ($converted === null) {
+            throw new CastingException(
+                sprintf(
+                    'Safe convert value "%s" to type "%s" failed.',
+                    gettype($value),
+                    $type
+                )
+            );
+        }
+
+        return $converted;
+    }
+
+    /**
+     * The safe cast method. This method is based on:
+     * - PHP Safe Casting Functions RFC: https://wiki.php.net/rfc/safe_cast
+     * - PolyCast: https://github.com/theodorejb/PolyCast
+     *
+     * @param  mixed   $value
+     * @param  string  $type
+     *
+     * @return  bool
+     */
     public static function canSafeConvert(mixed $value, string $type): bool
     {
         switch (strtolower($type)) {
@@ -436,8 +482,6 @@ abstract class TypeCast
     }
 
     /**
-     * __callStatic
-     *
      * @param  string  $name
      * @param  array   $args
      *
@@ -447,26 +491,51 @@ abstract class TypeCast
      */
     public static function __callStatic(string $name, array $args): mixed
     {
-        $tryMethods = [
-            'tryInteger',
-            'tryFloat',
-            'tryNumeric',
-            'tryString',
-            'tryBoolean',
-            'tryArray',
-            'tryObject',
-        ];
+        $tryType = match ($name) {
+            'tryInteger' => static::TYPE_INT,
+            'tryFloat' => static::TYPE_FLOAT,
+            'tryNumeric' => 'numeric',
+            'tryString' => static::TYPE_STRING,
+            'tryBoolean' => static::TYPE_BOOL,
+            'tryArray' => static::TYPE_ARRAY,
+            'tryObject' => static::TYPE_OBJECT,
+            default => null
+        };
 
-        if (in_array(strtolower($name), array_map('strtolower', $tryMethods), true)) {
-            return static::try($args[0], strtolower(substr($name, 3)), $args[1] ?? false);
+        if ($tryType) {
+            return static::try($args[0], $tryType, $args[1] ?? false);
         }
 
-        throw new BadMethodCallException(
-            sprintf(
-                'Method: %s::%s() not found',
-                static::class,
-                $name
-            )
-        );
+        $safeType = match ($name) {
+            'safeInteger' => static::TYPE_INT,
+            'safeFloat' => static::TYPE_FLOAT,
+            'safeNumeric' => 'numeric',
+            'safeString' => static::TYPE_STRING,
+            'safeBoolean' => static::TYPE_BOOL,
+            'safeArray' => static::TYPE_ARRAY,
+            'safeObject' => static::TYPE_OBJECT,
+            default => null
+        };
+
+        if ($safeType) {
+            return static::safe($args[0], $safeType);
+        }
+
+        $mustType = match ($name) {
+            'mustInteger' => static::TYPE_INT,
+            'mustFloat' => static::TYPE_FLOAT,
+            'mustNumeric' => 'numeric',
+            'mustString' => static::TYPE_STRING,
+            'mustBoolean' => static::TYPE_BOOL,
+            'mustArray' => static::TYPE_ARRAY,
+            'mustObject' => static::TYPE_OBJECT,
+            default => null
+        };
+
+        if ($mustType) {
+            return static::must($args[0], $mustType);
+        }
+
+        throw ExceptionFactory::badMethodCall($name, static::class);
     }
 }

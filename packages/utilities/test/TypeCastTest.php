@@ -13,16 +13,16 @@ namespace Windwalker\Utilities\Test;
 
 use ArrayIterator;
 use ArrayObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Assert\TypeAssert;
+use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\TypeCast;
 
 /**
- * The ArrayHelperTest class.
- *
- * @since  __DEPLOY_VERSION__
+ * The TypeCastTest class.
  */
 class TypeCastTest extends TestCase
 {
@@ -248,9 +248,8 @@ class TypeCastTest extends TestCase
      * @param  string  $type
      *
      * @see          TypeCast::try()
-     *
-     * @dataProvider providerTry
      */
+    #[DataProvider('tryProvider')]
     public function testTry($value, $expt, string $type): void
     {
         if ($type === 'object') {
@@ -260,7 +259,7 @@ class TypeCastTest extends TestCase
         }
     }
 
-    public static function providerTry(): array
+    public static function tryProvider(): array
     {
         return [
             // To int
@@ -450,31 +449,37 @@ class TypeCastTest extends TestCase
         ];
     }
 
+    public function testTryShortCut()
+    {
+        $r = TypeCast::tryInteger('123');
+
+        self::assertSame(123, $r);
+    }
+
     /**
      * @param  mixed   $value
      * @param  mixed   $expt
      * @param  string  $type
      *
-     * @see          TypeCast::try()
-     *
-     * @dataProvider providerTryStrict
+     * @see          TypeCast::safe()
      */
-    public function testTryStrict(mixed $value, mixed $expt, string $type): void
+    #[DataProvider('safeProvider')]
+    public function testSafe(mixed $value, mixed $expt, string $type): void
     {
         $failMsg = sprintf(
-            'Try convert %s to %s failed',
+            'Safe convert %s to %s failed',
             TypeAssert::describeValue($value),
             TypeAssert::describeValue($expt)
         );
 
         if ($type === 'object') {
-            self::assertEquals($expt, TypeCast::try($value, $type, true), $failMsg);
+            self::assertEquals($expt, TypeCast::safe($value, $type), $failMsg);
         } else {
-            self::assertSame($expt, TypeCast::try($value, $type, true), $failMsg);
+            self::assertSame($expt, TypeCast::safe($value, $type), $failMsg);
         }
     }
 
-    public static function providerTryStrict(): array
+    public static function safeProvider(): array
     {
         return [
             // To int
@@ -603,10 +608,180 @@ class TypeCastTest extends TestCase
         ];
     }
 
-    public function testTryShortCut()
+    #[DataProvider('mustProvider')]
+    public function testMust(mixed $value, mixed $expt, bool $hasException, string $type): void
     {
-        $r = TypeCast::tryInteger('123');
+        if ($hasException) {
+            $this->expectException(CastingException::class);
+        }
 
-        self::assertSame(123, $r);
+        $result = TypeCast::must($value, $type);
+
+        if (!$hasException) {
+            if ($type === 'object') {
+                self::assertEquals($expt, $result);
+            } else {
+                self::assertSame($expt, $result);
+            }
+        }
+    }
+
+    public static function mustProvider(): array
+    {
+        return [
+            // To int
+            [
+                'foo',
+                null,
+                true,
+                'int',
+            ],
+            [
+                '3',
+                3,
+                false,
+                'int',
+            ],
+            [
+                '10.0',
+                10,
+                false,
+                'int',
+            ],
+            [
+                10.0,
+                10,
+                false,
+                'int',
+            ],
+            [
+                10.3,
+                null,
+                true,
+                'int',
+            ],
+            [
+                [],
+                null,
+                true,
+                'int',
+            ],
+            [
+                new stdClass(),
+                null,
+                true,
+                'int',
+            ],
+            [
+                true,
+                null,
+                true,
+                'int',
+            ],
+            [
+                false,
+                null,
+                true,
+                'int',
+            ],
+            // To float
+            [
+                'foo',
+                null,
+                true,
+                'float',
+            ],
+            [
+                '3',
+                3.0,
+                false,
+                'float',
+            ],
+            [
+                '10.0',
+                10.0,
+                false,
+                'float',
+            ],
+            [
+                10.0,
+                10.0,
+                false,
+                'float',
+            ],
+            [
+                10.3,
+                10.3,
+                false,
+                'float',
+            ],
+            [
+                [],
+                null,
+                true,
+                'float',
+            ],
+            [
+                new stdClass(),
+                null,
+                true,
+                'float',
+            ],
+            [
+                true,
+                null,
+                true,
+                'float',
+            ],
+            [
+                false,
+                null,
+                true,
+                'float',
+            ],
+            // To string
+            [
+                'foo',
+                'foo',
+                false,
+                'string',
+            ],
+            [
+                1,
+                '1',
+                false,
+                'string',
+            ],
+            [
+                1.23000,
+                '1.23',
+                false,
+                'string',
+            ],
+            [
+                [],
+                null,
+                true,
+                'string',
+            ],
+            [
+                new stdClass(),
+                null,
+                true,
+                'string',
+            ],
+            [
+                75e-5,
+                '0.00075',
+                false,
+                'string',
+            ],
+            [
+                1_234.567,
+                '1234.567',
+                false,
+                'string',
+            ]
+        ];
     }
 }

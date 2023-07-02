@@ -16,6 +16,6 @@ use RuntimeException;
 /**
  * The CastingException class.
  */
-class CastingException extends RuntimeException
+class CastingException extends \Windwalker\Utilities\Exception\CastingException
 {
 }
