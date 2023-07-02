@@ -12,7 +12,11 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Test;
 
 use Exception;
+use Windwalker\Promise\Enum\PromiseStatus;
 use Windwalker\Promise\Promise;
+use Windwalker\Promise\Scheduler\DeferredScheduler;
+use Windwalker\Promise\Scheduler\ImmediateScheduler;
+use Windwalker\Promise\SettledResult;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 /**
@@ -95,5 +99,79 @@ class PromiseTest extends AbstractPromiseTestCase
         $this->expectExceptionMessage('Hello');
 
         Promise::rejected('Hello');
+    }
+
+    public function testAll()
+    {
+        Promise::all(
+            [
+                Promise::resolved('A'),
+                Promise::resolved('B'),
+                Promise::resolved('C'),
+            ]
+        )
+            ->then(
+                function ($v) {
+                    self::assertEquals(['A', 'B', 'C'], $v);
+                }
+            );
+
+        Promise::all(
+            [
+                Promise::resolved('A'),
+                Promise::rejected('B'),
+                Promise::resolved('C'),
+            ]
+        )
+            ->catch(
+                function ($v) {
+                    self::assertEquals('B', $v);
+                }
+            );
+    }
+
+    public function testAllSettled(): void
+    {
+        self::useScheduler(new DeferredScheduler());
+
+        $promise = Promise::allSettled(
+            [
+                Promise::resolved('A'),
+                Promise::rejected('B'),
+                Promise::resolved('C'),
+            ]
+        )
+            ->then(
+                function (array $results) {
+                    /** @var SettledResult[] $results */
+                    self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
+                    self::assertEquals('A', $results[0]->value);
+
+                    self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
+                    self::assertEquals('B', $results[1]->value);
+                }
+            );
+
+        $promise->wait();
+
+        self::useScheduler(new ImmediateScheduler());
+
+        Promise::allSettled(
+            [
+                Promise::resolved('A'),
+                Promise::rejected('B'),
+                Promise::resolved('C'),
+            ]
+        )
+            ->then(
+                function (array $results) {
+                    /** @var SettledResult[] $results */
+                    self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
+                    self::assertEquals('A', $results[0]->value);
+
+                    self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
+                    self::assertEquals('B', $results[1]->value);
+                }
+            );
     }
 }

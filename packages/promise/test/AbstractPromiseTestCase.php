@@ -25,7 +25,7 @@ abstract class AbstractPromiseTestCase extends TestCase
     /**
      * @var array
      */
-    protected $values = '';
+    protected array $values = [];
 
     /**
      * This method is called before the first test of this test class is run.

@@ -71,8 +71,6 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * all
-     *
      * @param  array  $values
      *
      * @return  ExtendedPromiseInterface
@@ -87,7 +85,7 @@ class Promise implements ExtendedPromiseInterface
                 foreach ($values as $i => $value) {
                     static::resolved($value)
                         ->then(
-                            static function ($v) use (&$done, &$count, $resolve, $i, $values) {
+                            static function ($v) use (&$done, &$count, $resolve, $i, &$values) {
                                 $values[$i] = $v;
                                 $done++;
 
@@ -101,6 +99,25 @@ class Promise implements ExtendedPromiseInterface
                         );
                 }
             }
+        );
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public static function allSettled(array $values): ExtendedPromiseInterface
+    {
+        return static::all(
+            array_map(
+                static function ($value) {
+                    return Promise::resolved($value)
+                        ->then(
+                            fn($value) => SettledResult::fulfilled($value),
+                            fn($value) => SettledResult::rejected($value)
+                        );
+                },
+                $values
+            )
         );
     }
 
@@ -192,7 +209,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      */
-    public function then($onFulfilled = null, $onRejected = null): static
+    public function then(?callable $onFulfilled = null, ?callable $onRejected = null): static
     {
         $onFulfilled = is_callable($onFulfilled)
             ? $onFulfilled
@@ -219,11 +236,11 @@ class Promise implements ExtendedPromiseInterface
             : $onRejected;
 
         return new static(
-            function ($resolve) use ($handler) {
+            function ($resolve, $reject) use ($handler) {
                 try {
                     $resolve($handler($this->value));
-                } catch (UncaughtException $e) {
-                    throw $e->getReason();
+                } catch (\Throwable $e) {
+                    $reject($e);
                 }
             }
         );

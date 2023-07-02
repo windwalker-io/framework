@@ -38,8 +38,8 @@ interface PromiseInterface
      * @return static
      */
     public function then(
-        $onFulfilled = null,
-        $onRejected = null
+        ?callable $onFulfilled = null,
+        ?callable $onRejected = null
     ): static;
 
     /**

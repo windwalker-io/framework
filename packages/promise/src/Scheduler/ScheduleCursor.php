@@ -19,14 +19,14 @@ class ScheduleCursor
     /**
      * @var mixed
      */
-    protected $cursor;
+    protected mixed $cursor;
 
     /**
      * AsyncCursor constructor.
      *
      * @param  mixed  $cursor
      */
-    public function __construct($cursor = null)
+    public function __construct(mixed $cursor = null)
     {
         $this->cursor = $cursor;
     }

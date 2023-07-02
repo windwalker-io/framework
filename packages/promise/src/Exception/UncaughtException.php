@@ -19,7 +19,7 @@ use Throwable;
  */
 class UncaughtException extends Exception
 {
-    private $reason;
+    private mixed $reason;
 
     /**
      * UncaughtException constructor.
@@ -31,12 +31,17 @@ class UncaughtException extends Exception
     {
         $this->reason = $reason;
 
+        $message = '';
+        $code = 0;
+
         if ($reason instanceof Throwable) {
             $message = $reason->getMessage();
             $code = $reason->getCode();
+            $previous = $reason;
         } else {
-            $message = '';
-            $code = 0;
+            if (is_scalar($reason)) {
+                $message = (string) $reason;
+            }
         }
 
         parent::__construct($message, $code, $previous);
