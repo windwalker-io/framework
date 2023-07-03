@@ -57,6 +57,8 @@ class Promise implements ExtendedPromiseInterface
 
     public static ?\Closure $defaultUncaughtLogger = null;
 
+    protected bool $initialising = false;
+
     /**
      * create
      *
@@ -210,11 +212,11 @@ class Promise implements ExtendedPromiseInterface
             //
         };
 
-        $this->schedule(
-            function () use ($cb) {
-                $this->call($cb);
-            }
-        );
+        $this->initialising = true;
+
+        $this->call($cb);
+
+        $this->initialising = false;
     }
 
     /**
@@ -273,29 +275,33 @@ class Promise implements ExtendedPromiseInterface
             return $child;
         }
 
-        return new static(
-            function ($resolve, $reject) use ($onRejected, $onFulfilled) {
+        $newPromise = static::create();
+
+        $this->chainNewPromise($newPromise, $onFulfilled, $onRejected);
+
+        return $newPromise;
+    }
+
+    private function chainNewPromise(self $promise, ?callable $onFulfilled, ?callable $onRejected): void
+    {
+        $this->scheduleFor(
+            function () use ($onRejected, $onFulfilled, $promise) {
                 try {
                     if ($this->getState() === static::FULFILLED) {
-                        $resolve($onFulfilled($this->value));
+                        $promise->resolve($onFulfilled($this->value));
                     } elseif ($onRejected) {
-                        $resolve($onRejected($this->value));
+                        $promise->resolve($onRejected($this->value));
                     } else {
-                        $reject($this->value);
+                        $promise->reject($this->value);
                     }
-                // } catch (UncaughtException $e) {
-                //     show($e);
-                //     $reason = $e->getReason();
-                //
-                //     if ($reason instanceof \Throwable) {
-                //         throw $reason;
-                //     }
-                //
-                //     throw new UncaughtException($e->getReason());
+                } catch (UncaughtException $e) {
+                    $promise->reject($e->getReason());
+                    throw $e;
                 } catch (\Throwable $e) {
-                    $reject($e);
+                    $promise->reject($e);
                 }
-            }
+            },
+            $promise
         );
     }
 
@@ -312,15 +318,19 @@ class Promise implements ExtendedPromiseInterface
      *
      * @param  mixed  $value
      *
-     * @return  ExtendedPromiseInterface
+     * @return  static
      *
      * @throws Throwable
      * @since  __DEPLOY_VERSION__
      */
-    public static function resolved(mixed $value = null): ExtendedPromiseInterface
+    public static function resolved(mixed $value = null): static
     {
+        // $promise = static::create();
+        //
+        // $promise->resolve($value);
+
         return new static(
-            static function (callable $resolve) use ($value) {
+            function ($resolve) use ($value) {
                 $resolve($value);
             }
         );
@@ -331,15 +341,15 @@ class Promise implements ExtendedPromiseInterface
      *
      * @param  mixed  $value
      *
-     * @return  ExtendedPromiseInterface
+     * @return  static
      *
      * @throws Throwable
      * @since  __DEPLOY_VERSION__
      */
-    public static function rejected(mixed $value = null): ExtendedPromiseInterface
+    public static function rejected(mixed $value = null): static
     {
-        return new Promise(
-            static function ($resolve, callable $reject) use ($value) {
+        return new static(
+            function ($resolve, $reject) use ($value) {
                 $reject($value);
             }
         );
@@ -347,10 +357,13 @@ class Promise implements ExtendedPromiseInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function resolve(mixed $value): void
     {
-        $this->resolvePromise($this, $value);
+        static::resolvePromise($this, $value);
+
+        $this->scheduleWait();
     }
 
     /**
@@ -369,6 +382,8 @@ class Promise implements ExtendedPromiseInterface
         }
 
         $this->settle(static::REJECTED, $reason);
+
+        $this->scheduleWait();
     }
 
     /**
@@ -386,8 +401,12 @@ class Promise implements ExtendedPromiseInterface
             }
         }
 
-        if ($this->value instanceof Throwable && $this->getState() === static::REJECTED) {
-            throw $this->value;
+        if ($this->getState() === static::REJECTED) {
+            if ($this->value instanceof Throwable) {
+                $this->logOrThrow(new UncaughtException($this->value, $this->value));
+            }
+
+            $this->logOrThrow(new UncaughtException($this->value));
         }
 
         return $this->value;
@@ -413,14 +432,13 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * resolvePromise
-     *
      * @param  PromiseInterface  $promise
      * @param  mixed             $value
      *
      * @return  PromiseInterface
+     * @throws Throwable
      */
-    private function resolvePromise(PromiseInterface $promise, mixed $value): PromiseInterface
+    private static function resolvePromise(PromiseInterface $promise, mixed $value): PromiseInterface
     {
         if ($value === $promise) {
             $promise->reject(new TypeError('Unable to resolve self.'));
@@ -432,8 +450,12 @@ class Promise implements ExtendedPromiseInterface
             return $promise;
         }
 
-        // If value is promise, start resolving after it resolved.
-        if ($value instanceof PromiseInterface || is_thenable($value)) {
+        if ($value instanceof self) {
+            $promise->settle($value->getState(), $value->value);
+            return $promise;
+        }
+
+        if (is_thenable($value)) {
             $value->then(
                 [$promise, 'resolve'],
                 [$promise, 'reject']
@@ -448,15 +470,14 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * runAsync
-     *
      * @param  callable  $callback
+     * @param  Promise   $promise
      *
      * @return  void
      */
-    protected function schedule(callable $callback): void
+    protected function scheduleFor(callable $callback, self $promise): void
     {
-        $this->scheduleCursor = ScheduleRunner::getInstance()->schedule($callback);
+        $promise->scheduleCursor = ScheduleRunner::getInstance()->schedule($callback);
     }
 
     /**
@@ -466,6 +487,15 @@ class Promise implements ExtendedPromiseInterface
      */
     protected function scheduleWait(): void
     {
+        if (!$this->scheduleCursor) {
+            $this->scheduleFor(
+                static function () {
+                    //
+                },
+                $this
+            );
+        }
+
         ScheduleRunner::getInstance()->wait($this->scheduleCursor);
     }
 
@@ -495,37 +525,21 @@ class Promise implements ExtendedPromiseInterface
      */
     private function settle(string $state, mixed $value): void
     {
-        $handlers = $this->handlers;
-
         $this->state = $state;
         $this->value = $value;
 
         $this->scheduleDone();
 
-        if ($handlers === [] && $state === static::REJECTED) {
+        if ($this->handlers === [] && $state === static::REJECTED && !$this->initialising) {
             $this->logOrThrow(new UncaughtException($value));
 
             return;
         }
 
-        foreach ($handlers as $handler) {
-            /** @var PromiseInterface $promise */
+        foreach ($this->handlers as $handler) {
             [$promise, $onFulfilled, $onRejected] = $handler;
 
-            try {
-                if ($this->getState() === static::FULFILLED) {
-                    $promise->resolve($onFulfilled($this->value));
-                } elseif ($onRejected) {
-                    $promise->resolve($onRejected($this->value));
-                } else {
-                    $promise->reject($this->value);
-                }
-            } catch (UncaughtException $e) {
-                $promise->reject($e->getReason());
-                throw $e;
-            } catch (Throwable $e) {
-                $promise->reject($e);
-            }
+            $this->chainNewPromise($promise, $onFulfilled, $onRejected);
         }
     }
 

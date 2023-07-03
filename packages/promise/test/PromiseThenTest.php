@@ -15,6 +15,7 @@ use Exception;
 use ReflectionException;
 use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Promise\Promise;
+use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\TestAccessorTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
@@ -142,6 +143,60 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals(2, $v);
     }
 
+    public function testRejectedWithoutThen(): void
+    {
+        $this->expectException(UncaughtException::class);
+        $this->expectExceptionMessage('1');
+
+        $p = Promise::rejected('1');
+
+        $p->wait();
+    }
+
+    public function testRejectedWithCatchAndThrowAgain(): void
+    {
+        $this->expectException(UncaughtException::class);
+        $this->expectExceptionMessage('2');
+
+        $p = Promise::rejected('1')
+            ->catch(
+                function ($reason) {
+                    self::assertEquals('1', $reason);
+                    $this->addToAssertionCount(1);
+
+                    throw new \RuntimeException('2');
+                }
+            );
+
+        try {
+            $p->wait();
+        } catch (UncaughtException $e) {
+            $previous = $e->getPrevious();
+
+            self::assertInstanceOf(\RuntimeException::class, $previous);
+            self::assertEquals('2', $previous->getMessage());
+
+            throw $e;
+        }
+    }
+
+    public function testResolveRejected(): void
+    {
+        $this->expectException(UncaughtException::class);
+        $this->expectExceptionMessage('1');
+
+        $p = Promise::resolved(Promise::rejected('1'));
+
+        try {
+            $p->wait();
+        } finally {
+            self::assertEquals(Promise::REJECTED, $p->getState());
+            $this->addToAssertionCount(1);
+        }
+
+        self::assertEquals(3, $this->numberOfAssertionsPerformed());
+    }
+
     /**
      * @throws ReflectionException
      * @see  Promise::then
@@ -181,12 +236,23 @@ class PromiseThenTest extends AbstractPromiseTestCase
             }
         );
 
-        $p->wait();
+        $v = $p->wait();
 
         self::assertEquals(Promise::FULFILLED, $p->getState());
-        self::assertEquals(3, ReflectAccessor::getValue($p2, 'value'));
-        self::assertEquals('Hello', ReflectAccessor::getValue($p3, 'value'));
-        self::assertNull(ReflectAccessor::getValue($p4, 'value'));
+        self::assertEquals(1, $v);
+
+        $v2 = $p2->wait();
+
+        self::assertEquals(Promise::FULFILLED, $p3->getState());
+        self::assertEquals(3, $v2);
+
+        $v3 = $p3->wait();
+
+        self::assertEquals('Hello', $v3);
+
+        $v4 = $p4->wait();
+
+        self::assertNull($v4);
         self::assertEquals('Hello', $newValue);
     }
 
@@ -226,6 +292,9 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $p->resolve('Hello');
 
+        $p->wait();
+
+        self::assertEquals('Init', $this->values['v0']);
         self::assertEquals('Hello', $this->values['v1']);
         self::assertEquals('Hello World', $this->values['v2']);
         self::assertArrayNotHasKey('r1', $this->values);
@@ -328,6 +397,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
         );
 
         $p->reject($e = new Exception('Hello'));
+        $v3 = $p3->wait();
 
         self::assertSame($e, $this->values['r1']);
         self::assertEquals('Hello World', $this->values['v2']);
@@ -336,6 +406,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         self::assertEquals(Promise::REJECTED, $p->getState());
         self::assertEquals(Promise::FULFILLED, $p2->getState());
+        self::assertEquals(Promise::FULFILLED, $p3->getState());
+        self::assertEquals('Hello World', $v3);
     }
 
     public function testThenWithNope(): void
@@ -355,7 +427,6 @@ class PromiseThenTest extends AbstractPromiseTestCase
                 null,
                 function ($r) {
                     $this->values['r1'] = $r;
-                    exit(' @Checkpoint');
 
                     return 'Olive';
                 }
