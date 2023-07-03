@@ -257,6 +257,18 @@ class NestedIterator implements OuterIterator
         );
     }
 
+    /**
+     * Alias of concat().
+     *
+     * @param  iterable  ...$iterables
+     *
+     * @return  static
+     */
+    public function chain(iterable ...$iterables): static
+    {
+        return $this->concat(...$iterables);
+    }
+
     public function slice(int $start, ?int $length = null): static
     {
         return $this->with(
