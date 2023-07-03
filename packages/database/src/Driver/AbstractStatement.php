@@ -26,7 +26,6 @@ use Windwalker\Event\EventAwareTrait;
 use Windwalker\Query\Bounded\BindableTrait;
 
 use function Windwalker\collect;
-use function Windwalker\tap;
 
 /**
  * The AbstractStatement class.

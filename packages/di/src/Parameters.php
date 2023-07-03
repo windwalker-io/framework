@@ -17,8 +17,6 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
-use function Windwalker\tap;
-
 /**
  * The Config class.
  */

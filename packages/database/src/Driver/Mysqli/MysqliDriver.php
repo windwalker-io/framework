@@ -17,8 +17,6 @@ use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
 
-use function Windwalker\tap;
-
 /**
  * The MysqliDriver class.
  */

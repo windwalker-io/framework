@@ -19,8 +19,6 @@ use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
 use Windwalker\Query\Escaper;
 
-use function Windwalker\tap;
-
 /**
  * The PdoDriver class.
  */

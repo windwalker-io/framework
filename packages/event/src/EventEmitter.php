@@ -22,7 +22,6 @@ use Windwalker\Event\Provider\CompositeListenerProvider;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 
 use function Windwalker\disposable;
-use function Windwalker\tap;
 
 /**
  * The AttachableEventDispatcher class.
