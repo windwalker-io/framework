@@ -48,6 +48,8 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      * @param  array                  $options
      * @param  BridgeInterface|null   $bridge
      * @param  CookiesInterface|null  $cookies
+     *
+     * @throws \Exception
      */
     public function __construct(array $options = [], ?BridgeInterface $bridge = null, ?CookiesInterface $cookies = null)
     {

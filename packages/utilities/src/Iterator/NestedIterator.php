@@ -192,6 +192,17 @@ class NestedIterator implements OuterIterator
         );
     }
 
+    public function flatMap(callable $callback): static
+    {
+        return $this->with(
+            function (iterable $items) use ($callback) {
+                foreach ($items as $item) {
+                    yield from $callback($item);
+                }
+            }
+        );
+    }
+
     public function mapWithKey(callable $callback): static
     {
         return $this->with(

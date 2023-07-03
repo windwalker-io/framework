@@ -138,6 +138,19 @@ class NestedIteratorTest extends TestCase
         );
     }
 
+    public function testFlatMap(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+        $iter = $iter->flatMap(
+            fn ($v) => [strtoupper($v), $v]
+        );
+
+        self::assertEquals(
+            ['A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f'],
+            iterator_to_array($iter, false)
+        );
+    }
+
     public function testMapWithKey(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
