@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Test;
 
 use Exception;
-use Windwalker\Promise\Enum\PromiseStatus;
+use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Promise\Exception\UnsettledException;
 use Windwalker\Promise\Promise;
@@ -52,7 +52,7 @@ class PromiseTest extends AbstractPromiseTestCase
             }
         );
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals('Flower', $p->wait());
     }
 
@@ -64,7 +64,7 @@ class PromiseTest extends AbstractPromiseTestCase
             }
         );
 
-        self::assertEquals(Promise::FULFILLED, $p1->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p1->getState());
 
         $p = new Promise(
             function ($resolve) use ($p1) {
@@ -72,7 +72,7 @@ class PromiseTest extends AbstractPromiseTestCase
             }
         );
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
 
         // Resolve with promise
         $v = await($p);
@@ -113,7 +113,7 @@ class PromiseTest extends AbstractPromiseTestCase
 
         $p->resolve('Flower');
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
     }
 
     public function testReject(): void
@@ -123,7 +123,7 @@ class PromiseTest extends AbstractPromiseTestCase
         try {
             $p->reject('Flower');
         } catch (UncaughtException $e) {
-            self::assertEquals(Promise::REJECTED, $p->getState());
+            self::assertEquals(PromiseState::REJECTED, $p->getState());
         }
     }
 
@@ -198,10 +198,10 @@ class PromiseTest extends AbstractPromiseTestCase
             ->then(
                 function (array $results) {
                     /** @var SettledResult[] $results */
-                    self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
+                    self::assertEquals(PromiseState::FULFILLED, $results[0]->status);
                     self::assertEquals('A', $results[0]->value);
 
-                    self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
+                    self::assertEquals(PromiseState::REJECTED, $results[1]->status);
                     self::assertEquals('B', $results[1]->value);
                 }
             );
@@ -220,10 +220,10 @@ class PromiseTest extends AbstractPromiseTestCase
             ->then(
                 function (array $results) {
                     /** @var SettledResult[] $results */
-                    self::assertEquals(PromiseStatus::FULFILLED, $results[0]->status);
+                    self::assertEquals(PromiseState::FULFILLED, $results[0]->status);
                     self::assertEquals('A', $results[0]->value);
 
-                    self::assertEquals(PromiseStatus::REJECTED, $results[1]->status);
+                    self::assertEquals(PromiseState::REJECTED, $results[1]->status);
                     self::assertEquals('B', $results[1]->value);
                 }
             );

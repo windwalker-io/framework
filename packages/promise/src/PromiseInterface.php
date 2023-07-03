@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Promise;
 
 use LogicException;
+use Windwalker\Promise\Enum\PromiseState;
 
 /**
  * Interface PromiseInterface
@@ -20,11 +21,20 @@ use LogicException;
  */
 interface PromiseInterface
 {
-    public const PENDING = 'pending';
+    /**
+     * @deprecated  Use PromiseState enum instead.
+     */
+    public const PENDING = PromiseState::PENDING;
 
-    public const FULFILLED = 'fulfilled';
+    /**
+     * @deprecated  Use PromiseState enum instead.
+     */
+    public const FULFILLED = PromiseState::FULFILLED;
 
-    public const REJECTED = 'rejected';
+    /**
+     * @deprecated  Use PromiseState enum instead.
+     */
+    public const REJECTED = PromiseState::REJECTED;
 
     /**
      * Appends fulfillment and rejection handlers to the promise, and returns
@@ -46,11 +56,11 @@ interface PromiseInterface
      * Get the state of the promise ("pending", "rejected", or "fulfilled").
      *
      * The three states can be checked against the constants defined on
-     * PromiseInterface: PENDING, FULFILLED, and REJECTED.
+     * PromiseState: PENDING, FULFILLED, and REJECTED.
      *
-     * @return string
+     * @return PromiseState
      */
-    public function getState(): string;
+    public function getState(): PromiseState;
 
     /**
      * Resolve the promise with the given value.

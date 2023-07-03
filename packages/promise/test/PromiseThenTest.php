@@ -13,6 +13,7 @@ namespace Windwalker\Promise\Test;
 
 use Exception;
 use ReflectionException;
+use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\TaskQueue;
@@ -72,7 +73,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $v = $p->wait();
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals(2, $v);
     }
 
@@ -88,7 +89,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $v = $p->wait();
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals(1, $v);
     }
 
@@ -105,7 +106,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $v = $p->wait();
 
-        self::assertEquals(Promise::REJECTED, $p->getState());
+        self::assertEquals(PromiseState::REJECTED, $p->getState());
         self::assertEquals(1, $v);
     }
 
@@ -121,7 +122,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $v = $p->wait();
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals(2, $v);
     }
 
@@ -139,7 +140,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $v = $p->wait();
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals(2, $v);
     }
 
@@ -190,7 +191,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
         try {
             $p->wait();
         } finally {
-            self::assertEquals(Promise::REJECTED, $p->getState());
+            self::assertEquals(PromiseState::REJECTED, $p->getState());
             $this->addToAssertionCount(1);
         }
 
@@ -238,12 +239,12 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $v = $p->wait();
 
-        self::assertEquals(Promise::FULFILLED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals(1, $v);
 
         $v2 = $p2->wait();
 
-        self::assertEquals(Promise::FULFILLED, $p3->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p3->getState());
         self::assertEquals(3, $v2);
 
         $v3 = $p3->wait();
@@ -353,7 +354,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
         $p4->wait();
 
-        self::assertEquals(Promise::REJECTED, $p->getState());
+        self::assertEquals(PromiseState::REJECTED, $p->getState());
         self::assertSame($this->values['e1'], $this->values['e2']);
         self::assertEquals('New state', $this->values['t1']);
         self::assertArrayNotHasKey('t2', $this->values);
@@ -404,9 +405,9 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertArrayNotHasKey('v1', $this->values);
         self::assertArrayNotHasKey('r2', $this->values);
 
-        self::assertEquals(Promise::REJECTED, $p->getState());
-        self::assertEquals(Promise::FULFILLED, $p2->getState());
-        self::assertEquals(Promise::FULFILLED, $p3->getState());
+        self::assertEquals(PromiseState::REJECTED, $p->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p2->getState());
+        self::assertEquals(PromiseState::FULFILLED, $p3->getState());
         self::assertEquals('Hello World', $v3);
     }
 

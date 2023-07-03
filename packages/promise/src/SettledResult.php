@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise;
 
-use Windwalker\Promise\Enum\PromiseStatus;
+use Windwalker\Promise\Enum\PromiseState;
 
 /**
  * The SettledResult class.
@@ -19,7 +19,7 @@ use Windwalker\Promise\Enum\PromiseStatus;
 readonly class SettledResult
 {
     public function __construct(
-        public PromiseStatus $status,
+        public PromiseState $status,
         public mixed $value
     ) {
         //
@@ -27,11 +27,11 @@ readonly class SettledResult
 
     public static function fulfilled(mixed $value): static
     {
-        return new static(PromiseStatus::FULFILLED, $value);
+        return new static(PromiseState::FULFILLED, $value);
     }
 
     public static function rejected(mixed $value): static
     {
-        return new static(PromiseStatus::REJECTED, $value);
+        return new static(PromiseState::REJECTED, $value);
     }
 }

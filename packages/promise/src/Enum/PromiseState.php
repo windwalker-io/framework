@@ -14,7 +14,7 @@ namespace Windwalker\Promise\Enum;
 /**
  * The PromiseStatus class.
  */
-enum PromiseStatus
+enum PromiseState
 {
     case PENDING;
 

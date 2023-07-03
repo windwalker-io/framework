@@ -16,6 +16,7 @@ use ReflectionFunction;
 use ReflectionMethod;
 use Throwable;
 use TypeError;
+use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\AggregateException;
 use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Promise\Exception\UnsettledException;
@@ -33,10 +34,7 @@ use function Windwalker\nope;
  */
 class Promise implements ExtendedPromiseInterface
 {
-    /**
-     * @var string
-     */
-    protected string $state = self::PENDING;
+    protected PromiseState $state = PromiseState::PENDING;
 
     /**
      * @var mixed
@@ -66,12 +64,9 @@ class Promise implements ExtendedPromiseInterface
      *
      * @return static
      */
-    public static function create(?callable $resolver = null): static
+    public static function create(#[\SensitiveParameter] ?callable $resolver = null): static
     {
-        $cb = $resolver;
-        $resolver = null;
-
-        return new static($cb);
+        return new static($resolver);
     }
 
     /**
@@ -198,23 +193,17 @@ class Promise implements ExtendedPromiseInterface
     /**
      * Promise constructor.
      *
-     * @param  callable  $resolver
+     * @param  ?callable  $resolver
      */
-    public function __construct(?callable $resolver = null)
+    public function __construct(#[\SensitiveParameter] ?callable $resolver = null)
     {
-        // Explicitly overwrite arguments with null values before invoking
-        // resolver function. This ensure that these arguments do not show up
-        // in the stack trace in PHP 7+ only.
-        $cb = $resolver;
-        $resolver = null;
-
-        $cb = $cb ?: static function () {
+        $resolver = $resolver ?: static function () {
             //
         };
 
         $this->initialising = true;
 
-        $this->call($cb);
+        $this->call($resolver);
 
         $this->initialising = false;
     }
@@ -263,7 +252,7 @@ class Promise implements ExtendedPromiseInterface
             ? $onFulfilled
             : nope();
 
-        if ($this->getState() === static::PENDING) {
+        if ($this->getState() === PromiseState::PENDING) {
             $child = new static();
 
             $this->handlers[] = [
@@ -287,7 +276,7 @@ class Promise implements ExtendedPromiseInterface
         $this->scheduleFor(
             function () use ($onRejected, $onFulfilled, $promise) {
                 try {
-                    if ($this->getState() === static::FULFILLED) {
+                    if ($this->getState() === PromiseState::FULFILLED) {
                         $promise->resolve($onFulfilled($this->value));
                     } elseif ($onRejected) {
                         $promise->resolve($onRejected($this->value));
@@ -308,7 +297,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      */
-    public function getState(): string
+    public function getState(): PromiseState
     {
         return $this->state;
     }
@@ -325,10 +314,6 @@ class Promise implements ExtendedPromiseInterface
      */
     public static function resolved(mixed $value = null): static
     {
-        // $promise = static::create();
-        //
-        // $promise->resolve($value);
-
         return new static(
             function ($resolve) use ($value) {
                 $resolve($value);
@@ -377,11 +362,11 @@ class Promise implements ExtendedPromiseInterface
             return;
         }
 
-        if ($this->getState() !== static::PENDING) {
+        if ($this->getState() !== PromiseState::PENDING) {
             return;
         }
 
-        $this->settle(static::REJECTED, $reason);
+        $this->settle(PromiseState::REJECTED, $reason);
 
         $this->scheduleWait();
     }
@@ -393,15 +378,15 @@ class Promise implements ExtendedPromiseInterface
      */
     public function wait(): mixed
     {
-        if ($this->getState() === static::PENDING) {
+        if ($this->getState() === PromiseState::PENDING) {
             $this->scheduleWait();
 
-            if ($this->getState() === static::PENDING) {
+            if ($this->getState() === PromiseState::PENDING) {
                 throw new UnsettledException('Error, this promise has not settled.');
             }
         }
 
-        if ($this->getState() === static::REJECTED) {
+        if ($this->getState() === PromiseState::REJECTED) {
             if ($this->value instanceof Throwable) {
                 $this->logOrThrow(new UncaughtException($this->value, $this->value));
             }
@@ -446,7 +431,7 @@ class Promise implements ExtendedPromiseInterface
             return $promise;
         }
 
-        if ($promise->getState() !== static::PENDING) {
+        if ($promise->getState() !== PromiseState::PENDING) {
             return $promise;
         }
 
@@ -464,7 +449,7 @@ class Promise implements ExtendedPromiseInterface
             return $promise;
         }
 
-        $promise->settle(static::FULFILLED, $value);
+        $promise->settle(PromiseState::FULFILLED, $value);
 
         return $promise;
     }
@@ -515,22 +500,22 @@ class Promise implements ExtendedPromiseInterface
     /**
      * settle
      *
-     * @param  string  $state
-     * @param  mixed   $value
+     * @param  PromiseState  $state
+     * @param  mixed         $value
      *
      * @return  void
      *
      * @throws Throwable
      * @since  __DEPLOY_VERSION__
      */
-    private function settle(string $state, mixed $value): void
+    private function settle(PromiseState $state, mixed $value): void
     {
         $this->state = $state;
         $this->value = $value;
 
         $this->scheduleDone();
 
-        if ($this->handlers === [] && $state === static::REJECTED && !$this->initialising) {
+        if ($this->handlers === [] && $state === PromiseState::REJECTED && !$this->initialising) {
             $this->logOrThrow(new UncaughtException($value));
 
             return;
@@ -550,66 +535,34 @@ class Promise implements ExtendedPromiseInterface
      *
      * @see https://github.com/reactphp/promise
      *
-     * @param  callable|null  $cb
+     * @param  callable  $cb
      *
      * @return  void
      * @throws Throwable
      */
-    private function call(callable $cb): void
+    private function call(#[\SensitiveParameter] callable $cb): void
     {
-        // Explicitly overwrite argument with null value. This ensure that this
-        // argument does not show up in the stack trace in PHP 7+ only.
         $callback = Closure::fromCallable($cb);
-        // $callback->bindTo($this); // For test
-        $cb = null;
+        $ref = new ReflectionFunction($callback);
 
-        // Use reflection to inspect number of arguments expected by this callback.
-        // We did some careful benchmarking here: Using reflection to avoid unneeded
-        // function arguments is actually faster than blindly passing them.
-        // Also, this helps avoiding unnecessary function arguments in the call stack
-        // if the callback creates an Exception (creating garbage cycles).
-        if (is_array($callback)) {
-            $ref = new ReflectionMethod($callback[0], $callback[1]);
-        } elseif (is_object($callback) && !$callback instanceof Closure) {
-            $ref = new ReflectionMethod($callback, '__invoke');
-        } else {
-            $ref = new ReflectionFunction($callback);
-        }
         $args = $ref->getNumberOfParameters();
 
         try {
             if ($args === 0) {
                 $callback();
             } else {
-                // Keep references to this promise instance for the static resolve/reject functions.
-                // By using static callbacks that are not bound to this instance
-                // and passing the target promise instance by reference, we can
-                // still execute its resolving logic and still clear this
-                // reference when settling the promise. This helps avoiding
-                // garbage cycles if any callback creates an Exception.
-                // These assumptions are covered by the test suite, so if you ever feel like
-                // refactoring this, go ahead, any alternative suggestions are welcome!
-                $target =& $this;
-
                 $callback(
-                    static function ($value = null) use (&$target) {
-                        if ($target !== null) {
-                            $target->resolve($value);
-                            $target = null;
-                        }
+                    function ($value = null) {
+                        $this->resolve($value);
                     },
-                    static function ($reason = null) use (&$target) {
-                        if ($target !== null) {
-                            $target->reject($reason);
-                            $target = null;
-                        }
+                    function ($reason = null) {
+                        $this->reject($reason);
                     }
                 );
             }
         } catch (UncaughtException $e) {
             throw $e;
         } catch (Throwable $e) {
-            $target = null;
             $this->reject($e);
         }
     }
