@@ -23,6 +23,7 @@ use Windwalker\Promise\SettledResult;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\Promise\await;
+use function Windwalker\Promise\resolve;
 
 /**
  * The PromiseTest class.
@@ -248,5 +249,91 @@ class PromiseTest extends AbstractPromiseTestCase
         $p->wait();
 
         self::assertEquals(1, $this->numberOfAssertionsPerformed());
+    }
+
+    public function testAnyAllRejected(): void
+    {
+        $p = Promise::any(
+            [
+                Promise::rejected('A'),
+                Promise::rejected('B'),
+            ]
+        )
+            ->catch(
+                function ($e) {
+                    self::assertEquals(['A', 'B'], $e);
+
+                    $this->addToAssertionCount(1);
+                }
+            );
+
+        $p->wait();
+
+        self::assertEquals(1, $this->numberOfAssertionsPerformed());
+    }
+
+    public function testTryResolved()
+    {
+        $reactPromiseFunction = function () {
+            $deferred = new \React\Promise\Deferred();
+
+            $promise = $deferred->promise();
+
+            $deferred->resolve('Hello');
+
+            return $promise;
+        };
+
+        $p = Promise::try(
+            static fn() => $reactPromiseFunction()
+        );
+
+        self::assertInstanceOf(Promise::class, $p);
+
+        $p->wait();
+
+        self::assertEquals(PromiseState::FULFILLED, $p->getState());
+    }
+
+    public function testTryRejected()
+    {
+        $reactPromiseFunction = function () {
+            $deferred = new \React\Promise\Deferred();
+
+            $promise = $deferred->promise();
+
+            $deferred->reject('Hello');
+
+            return $promise;
+        };
+
+        $p = Promise::try(
+            static fn() => $reactPromiseFunction()
+        );
+
+        $this->expectException(UncaughtException::class);
+        $this->expectExceptionMessage('Hello');
+
+        self::assertInstanceOf(Promise::class, $p);
+
+        $p->wait();
+    }
+
+    public function testTrySyncThrow()
+    {
+        $reactPromiseFunction = function () {
+            throw new \RuntimeException('Error');
+        };
+
+        $p = Promise::try(
+            static fn() => $reactPromiseFunction()
+        );
+
+        $this->expectException(UncaughtException::class);
+        $this->expectExceptionMessage('Error');
+
+        self::assertInstanceOf(Promise::class, $p);
+
+        $p->wait();
     }
 }

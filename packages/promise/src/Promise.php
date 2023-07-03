@@ -191,6 +191,14 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
+     * @throws Throwable
+     */
+    public static function try(callable $callback): static
+    {
+        return static::resolved()->then(fn () => $callback());
+    }
+
+    /**
      * Promise constructor.
      *
      * @param  ?callable  $resolver
