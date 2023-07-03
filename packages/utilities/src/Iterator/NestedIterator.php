@@ -16,6 +16,7 @@ use Generator;
 use Iterator;
 use OuterIterator;
 use Traversable;
+use Windwalker\Scalars\StringObject;
 use Windwalker\Utilities\Context\Loop;
 
 /**
@@ -215,6 +216,147 @@ class NestedIterator implements OuterIterator
 
                     yield $k => $value;
                 }
+            }
+        );
+    }
+
+    public function reduce(callable $callback, mixed $initial = null): mixed
+    {
+        $acc = $initial;
+        foreach ($this as $key => $item) {
+            $acc = $callback($acc, $item, $key);
+        }
+
+        return $acc;
+    }
+
+    public function concat(iterable ...$iterables): static
+    {
+        return $this->with(
+            function (iterable $items) use ($iterables) {
+                $k = 0;
+
+                foreach ($items as $key => $item) {
+                    if (is_numeric($key)) {
+                        yield $k++ => $item;
+                    } else {
+                        yield $key => $item;
+                    }
+                }
+
+                foreach ($iterables as $iterable) {
+                    foreach ($iterable as $key => $item) {
+                        if (is_numeric($key)) {
+                            yield $k++ => $item;
+                        } else {
+                            yield $key => $item;
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    public function slice(int $start, ?int $length = null): static
+    {
+        return $this->with(
+            function (iterable $items) use ($length, $start) {
+                if ($start < 0) {
+                    throw new \InvalidArgumentException('Start offset must be non-negative');
+                }
+
+                if ($length !== null && $length < 0) {
+                    throw new \InvalidArgumentException('Length must be non-negative');
+                }
+
+                if ($length === 0) {
+                    return;
+                }
+
+                $i = 0;
+                $k = 0;
+                foreach ($items as $key => $value) {
+                    if ($i++ < $start) {
+                        continue;
+                    }
+
+                    if (!is_numeric($key)) {
+                        yield $key => $value;
+                    } else {
+                        yield $k++ => $value;
+                    }
+
+                    if ($length !== null && $i >= $start + $length) {
+                        break;
+                    }
+                }
+            }
+        );
+    }
+
+    public function keys(): static
+    {
+        return $this->with(
+            function (iterable $items) {
+                foreach ($items as $key => $item) {
+                    yield $key;
+                }
+            }
+        );
+    }
+
+    public function values(): static
+    {
+        return $this->with(
+            function (iterable $items) {
+                foreach ($items as $key => $item) {
+                    yield $item;
+                }
+            }
+        );
+    }
+
+    public function implode(string $separator): StringObject
+    {
+        $str = '';
+        $first = true;
+
+        foreach ($this as $item) {
+            if ($first) {
+                $str .= $item;
+                $first = false;
+            } else {
+                $str .= $separator . $item;
+            }
+        }
+
+        return \Windwalker\str($str);
+    }
+
+    public static function explode(string $separator, string $str, ?int $limit = null): static
+    {
+        if ($separator === '') {
+            throw new \InvalidArgumentException('Separator must be non-empty string');
+        }
+
+        return new static(
+            function () use ($limit, $str, $separator) {
+                $offset = 0;
+                $count = 0;
+                while (
+                    $offset < \strlen($str)
+                    && false !== $nextOffset = strpos($str, $separator, $offset)
+                ) {
+                    yield \substr($str, $offset, $nextOffset - $offset);
+                    $offset = $nextOffset + \strlen($separator);
+
+                    $count++;
+
+                    if ($count + 1 === $limit) {
+                        break;
+                    }
+                }
+                yield \substr($str, $offset);
             }
         );
     }

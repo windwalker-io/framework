@@ -169,6 +169,129 @@ class NestedIteratorTest extends TestCase
         );
     }
 
+    /**
+     * @see  NestedIterator::slice
+     */
+    public function testSlice(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+
+        $sliced = $iter->slice(0, 3);
+
+        self::assertEquals(['a', 'b', 'c'], iterator_to_array($sliced));
+
+        $sliced = $iter->slice(3);
+
+        self::assertEquals(['d', 'e', 'f'], iterator_to_array($sliced));
+
+        $sliced = $iter->slice(2, 2);
+
+        self::assertEquals(['c', 'd'], iterator_to_array($sliced));
+    }
+
+    /**
+     * @see  NestedIterator::explode
+     */
+    public function testExplode(): void
+    {
+        $iter = NestedIterator::explode('|', 'foo|bar|yoo|goz');
+
+        self::assertEquals(
+            [
+                'foo',
+                'bar',
+                'yoo',
+                'goz'
+            ],
+            iterator_to_array($iter)
+        );
+        $iter = NestedIterator::explode('|', 'foo|bar|yoo|goz', 2);
+
+        self::assertEquals(
+            [
+                'foo',
+                'bar|yoo|goz',
+            ],
+            iterator_to_array($iter)
+        );
+    }
+
+    /**
+     * @see  NestedIterator::reduce
+     */
+    public function testReduce(): void
+    {
+        $iter = new NestedIterator([1, 2, 3, 4, 5]);
+
+        $r = $iter->reduce(
+            function ($sum, $value) {
+                return $sum + $value;
+            },
+            3
+        );
+
+        self::assertEquals(18, $r);
+    }
+
+    /**
+     * @see  NestedIterator::concat
+     */
+    public function testConcat(): void
+    {
+        $iter = new NestedIterator([1, 2, 3]);
+
+        $iter = $iter->concat(
+            [4, 5, 6],
+            new NestedIterator([7, 8, 9])
+        );
+
+        self::assertEquals(
+            [1, 2, 3, 4, 5, 6 ,7 ,8 ,9],
+            iterator_to_array($iter)
+        );
+    }
+
+    /**
+     * @see  NestedIterator::implode
+     */
+    public function testImplode(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+
+        $str = $iter->implode('|');
+
+        self::assertEquals(
+            'a|b|c|d|e|f',
+            (string) $str
+        );
+    }
+
+    /**
+     * @see  NestedIterator::keys
+     */
+    public function testKeys(): void
+    {
+        $iter = new NestedIterator(['a' => 'foo', 'b' => 'bar', 'c' => 'baz']);
+
+        self::assertEquals(
+            ['a', 'b', 'c'],
+            iterator_to_array($iter->keys())
+        );
+    }
+
+    /**
+     * @see  NestedIterator::values
+     */
+    public function testValues(): void
+    {
+        $iter = new NestedIterator(['a' => 'foo', 'b' => 'bar', 'c' => 'baz']);
+
+        self::assertEquals(
+            ['foo', 'bar', 'baz'],
+            iterator_to_array($iter->values())
+        );
+    }
+
     public function testFilter()
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
