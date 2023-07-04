@@ -1067,4 +1067,26 @@ class StrTest extends TestCase
         self::assertEquals('Foo Bar-2', $title = Str::increment($title, '%s-%d'));
         self::assertEquals('Foo Bar-3', $title = Str::increment($title, '%s-%d'));
     }
+
+    public function testNumToAlpha(): void
+    {
+        self::assertEquals('A', Str::numToAlpha(0));
+        self::assertEquals('F', Str::numToAlpha(5));
+        self::assertEquals('Z', Str::numToAlpha(25));
+        self::assertEquals('AA', Str::numToAlpha(26));
+        self::assertEquals('AB', Str::numToAlpha(27));
+        self::assertEquals('HJUNYVA', Str::numToAlpha(26 * 100000000));
+        self::assertEquals('OHNRDMZI', Str::numToAlpha(123123123456));
+    }
+
+    public function testAlphaToNum(): void
+    {
+        self::assertEquals(0, Str::alphaToNum('A'));
+        self::assertEquals(5, Str::alphaToNum('F'));
+        self::assertEquals(25, Str::alphaToNum('Z'));
+        self::assertEquals(26, Str::alphaToNum('AA'));
+        self::assertEquals(27, Str::alphaToNum('AB'));
+        self::assertEquals(26 * 100000000, Str::alphaToNum('HJUNYVA'));
+        self::assertEquals(123123123456, Str::alphaToNum('OHNRDMZI'));
+    }
 }
