@@ -42,7 +42,8 @@ class FileStorage implements StorageInterface
 
         $this->prepareOptions(
             [
-                'lock' => false,
+                'lock' => true,
+                'deny_access' => false,
                 'extension' => '.data',
                 'expiration_format' => '/////---------- Expired At: %d ----------/////',
             ],
@@ -277,7 +278,7 @@ class FileStorage implements StorageInterface
         $this->checkFilePath($filePath);
 
         if ($this->getOption('deny_access', false)) {
-            $this->config['extension'] = '.php';
+            $this->options['extension'] = '.php';
         }
 
         return sprintf(
