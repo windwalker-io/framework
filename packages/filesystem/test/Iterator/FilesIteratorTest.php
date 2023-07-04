@@ -14,6 +14,7 @@ namespace Windwalker\Filesystem\Test\Iterator;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Iterator\FilesIterator;
 use Windwalker\Filesystem\Test\AbstractVfsTestCase;
+use Windwalker\Filter\Rule\Regex;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 
 use function Windwalker\regex;
@@ -21,7 +22,7 @@ use function Windwalker\regex;
 /**
  * The FilesIteratorTest class.
  */
-class FilesIteratorTestVfsCase extends AbstractVfsTestCase
+class FilesIteratorTest extends AbstractVfsTestCase
 {
     use BaseAssertionTrait;
 
@@ -61,7 +62,7 @@ class FilesIteratorTestVfsCase extends AbstractVfsTestCase
     {
         $it = FilesIterator::create(static::$baseDir, true);
 
-        self::assertEquals(
+        self::assertPathEquals(
             'vfs://root/files/folder1',
             $it->current()->getPathname()
         );
@@ -113,16 +114,67 @@ class FilesIteratorTestVfsCase extends AbstractVfsTestCase
         $it = FilesIterator::create('vfs://root/files');
 
         $it = $it
-            ->filter(regex('folder2'))
+            ->filter(
+                static fn(FileObject $v) => str_contains($v->getPathname(), 'folder2')
+            )
             ->map(
-                static function (FileObject $file) {
-                    return $file->getFilename();
-                }
+                static fn(FileObject $file) => $file->getFilename()
             );
 
         self::assertEquals(
             ['folder2'],
             $it->toArray()
+        );
+    }
+
+    public function testObserve()
+    {
+        $ob = FilesIterator::observable('vfs://root/files');
+
+        $values = [];
+
+        $ob
+            ->filter(
+                static function (FileObject $file) {
+                    return $file->isDir();
+                }
+            )
+            ->map(
+                static function (FileObject $file) {
+                    return $file->getFilename();
+                }
+            )
+            ->subscribe(
+                function ($v) use (&$values) {
+                    $values[] = $v;
+                }
+            );
+
+        self::assertArraySimilar(
+            ['folder2', 'folder1'],
+            $values
+        );
+
+        $ob = FilesIterator::observable('vfs://root/files');
+
+        $values = [];
+
+        $ob = $ob
+            ->filter(
+                static fn(FileObject $file) => str_contains($file->getPathname(), 'folder2')
+            )
+            ->map(
+                static fn(FileObject $file) => $file->getFilename()
+            )
+            ->subscribe(
+                function ($v) use (&$values) {
+                    $values[] = $v;
+                }
+            );
+
+        self::assertEquals(
+            ['folder2'],
+            $values
         );
     }
 }

@@ -148,8 +148,6 @@ class EventEmitter extends EventDispatcher implements
     }
 
     /**
-     * off
-     *
      * @param  callable|object  $listenerOrSubscriber
      *
      * @return  static
@@ -164,8 +162,6 @@ class EventEmitter extends EventDispatcher implements
     }
 
     /**
-     * offEvent
-     *
      * @param  string|EventInterface  $event
      * @param  callable|object        $listenerOrSubscriber
      *
