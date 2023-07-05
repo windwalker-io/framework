@@ -23,8 +23,6 @@ use Windwalker\Promise\Exception\UnsettledException;
 use Windwalker\Promise\Scheduler\ScheduleCursor;
 use Windwalker\Promise\Scheduler\ScheduleRunner;
 
-use function is_array;
-use function is_object;
 use function Windwalker\nope;
 
 /**
@@ -42,7 +40,7 @@ class Promise implements ExtendedPromiseInterface
     protected mixed $value = null;
 
     /**
-     * @var callable[]
+     * @var static[]
      */
     protected array $handlers = [];
 
@@ -260,27 +258,27 @@ class Promise implements ExtendedPromiseInterface
             ? $onFulfilled
             : nope();
 
-        if ($this->getState() === PromiseState::PENDING) {
-            $child = new static();
+        // if ($this->getState() === PromiseState::PENDING) {
+        //     $child = new static();
+        //
+        //     $this->handlers[] = [
+        //         $child,
+        //         $onFulfilled,
+        //         $onRejected,
+        //     ];
+        //
+        //     return $child;
+        // }
 
-            $this->handlers[] = [
-                $child,
-                $onFulfilled,
-                $onRejected,
-            ];
-
-            return $child;
-        }
-
-        return $this->chainNewPromise($onFulfilled, $onRejected);
+        return $this->handlers[] = $this->chainNewPromise($onFulfilled, $onRejected);
     }
 
-    private function chainNewPromise(?callable $onFulfilled, ?callable $onRejected): static
+    private function chainNewPromise(callable $onFulfilled, ?callable $onRejected): static
     {
         return $this->chainPromise(static::create(), $onFulfilled, $onRejected);
     }
 
-    private function chainPromise(self $promise, ?callable $onFulfilled, ?callable $onRejected): self
+    private function chainPromise(self $promise, callable $onFulfilled, ?callable $onRejected): self
     {
         $this->scheduleFor(
             function () use ($onRejected, $onFulfilled, $promise) {
@@ -501,8 +499,9 @@ class Promise implements ExtendedPromiseInterface
     {
         if (!$this->scheduleCursor) {
             $this->scheduleFor(
+                // We must done schedule instantly, otherwise the waiting will be forever.
                 function () {
-                    // $this->scheduleDone();
+                    $this->scheduleDone();
                 },
                 $this
             );
@@ -518,10 +517,16 @@ class Promise implements ExtendedPromiseInterface
      */
     protected function scheduleDone(): void
     {
-        ScheduleRunner::getInstance()->done($this->scheduleCursor);
+        $scheduleRunner = ScheduleRunner::getInstance();
+
+        $scheduleRunner->done($this->scheduleCursor);
 
         // Free cursor
-        $this->scheduleCursor = null;
+        if ($this->scheduleCursor) {
+            $scheduleRunner->release($this->scheduleCursor);
+
+            $this->scheduleCursor = null;
+        }
     }
 
     /**
@@ -549,9 +554,9 @@ class Promise implements ExtendedPromiseInterface
         }
 
         foreach ($this->handlers as $handler) {
-            [$promise, $onFulfilled, $onRejected] = $handler;
+            $promise = $handler;
 
-            $this->chainPromise($promise, $onFulfilled, $onRejected);
+            $promise->settle($this->getState(), $this->value);
         }
     }
 

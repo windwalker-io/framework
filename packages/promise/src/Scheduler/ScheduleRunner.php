@@ -150,4 +150,9 @@ class ScheduleRunner implements SchedulerInterface
     {
         return true;
     }
+
+    public function release(ScheduleCursor $cursor): void
+    {
+        $this->getAvailableScheduler()->release($cursor);
+    }
 }

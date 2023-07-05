@@ -73,7 +73,7 @@ class SwooleScheduler implements SchedulerInterface
         if (!$chan instanceof Channel) {
             throw new LogicException('Cursor should be ' . Channel::class);
         }
-show(__METHOD__, spl_object_id($chan), 5);
+
         // SwooleScheduler should always called into coroutine,
         // so we don't need to create new coroutine to wrap $chan->pop().
         // This can make current coroutine blocked and wait for IO end.
@@ -89,10 +89,14 @@ show(__METHOD__, spl_object_id($chan), 5);
      */
     public function done(?ScheduleCursor $cursor): void
     {
-        $chan = $cursor?->get();
+        if (!$cursor) {
+            return;
+        }
+
+        $chan = $cursor->get();
 
         if (!$chan instanceof Channel) {
-            throw new LogicException('Cursor should be ' . Channel::class);
+            throw new LogicException('Cursor should be ' . Channel::class . ', got ' . get_debug_type($chan) . '.');
         }
 
         // Done() may be called at next event loop,
@@ -102,5 +106,15 @@ show(__METHOD__, spl_object_id($chan), 5);
                 $chan->push(true);
             }
         );
+    }
+
+    public function release(ScheduleCursor $cursor): void
+    {
+        /** @var Channel $channel */
+        $channel = $cursor->get();
+
+        if ($channel->length() > 0) {
+            throw new \LogicException('Channel release but not empty');
+        }
     }
 }

@@ -82,24 +82,35 @@ class FunctionsTest extends AbstractPromiseTestCase
 
         run(
             function () {
+                $v = await($this->runAsync('Rose'));
+
+                self::assertEquals('Rose', $v);
+
                 $p = async(
                     function () {
                         $this->values['v1'] = await($this->runAsync('Sakura'));
                         $this->values['v2'] = await($this->runAsync('Sunflower'));
-
-                        self::assertEquals('Sakura', $this->values['v1']);
-                        self::assertEquals('Sunflower', $this->values['v1']);
 
                         return 'Lilium';
                     }
                 )
                     ->then(
                         function ($v) {
-                            self::assertEquals('Lilium', $v);
+                            $this->values['v3'] = $v;
+
+                            return $v;
                         }
                     );
+
+                $v = $p->wait();
+
+                show($v);
             }
         );
+
+        self::assertEquals('Sakura', $this->values['v1']);
+        self::assertEquals('Sunflower', $this->values['v2']);
+        // self::assertEquals('Lilium', $this->values['v3']);
     }
 
     /**

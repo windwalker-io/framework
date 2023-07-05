@@ -17,6 +17,7 @@ include __DIR__ . '/../../../../vendor/autoload.php';
     function () {
         $promise = Promise::resolved('YYYY');
 
+        // Schedule 1
         $p = $promise->then(
             function ($v) {
                 return $v;
@@ -37,6 +38,7 @@ include __DIR__ . '/../../../../vendor/autoload.php';
 
         // self::assertArrayNotHasKey('v1', $this->values);
 
+        // No schedule, so auto create Schedule 2
         $value = $p->wait();
 
         show($value);

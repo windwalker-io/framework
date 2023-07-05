@@ -156,7 +156,7 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
 
         run(
             function () {
-                $promise = new Promise(
+                $p = new Promise(
                     function ($resolve) {
                         $resolve(
                             new Promise(
@@ -168,7 +168,7 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
                     }
                 );
 
-                $p = $promise->then(
+                $p = $p->then(
                     function ($v) {
                         return new Promise(
                             function ($re) {
