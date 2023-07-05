@@ -733,4 +733,28 @@ class Str
 
         return sprintf($pattern, $matches[1], $n ?? ($matches[2] + 1));
     }
+
+    public static function numToAlpha(int $n): string
+    {
+        $r = '';
+
+        for ($i = 1; $n >= 0 && $i < 10; $i++) {
+            $r = chr((int) (0x41 + ($n % (26 ** $i) / (26 ** ($i - 1))))) . $r;
+            $n -= 26 ** $i;
+        }
+
+        return $r;
+    }
+
+    public static function alphaToNum(string $str): int
+    {
+        $n = 0;
+        $l = strlen($str);
+
+        for ($i = 0; $i < $l; $i++) {
+            $n += (26 ** $i) * (ord($str[$l - $i - 1]) - 0x40);
+        }
+
+        return $n - 1;
+    }
 }

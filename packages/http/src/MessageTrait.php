@@ -46,7 +46,7 @@ trait MessageTrait
     /**
      * Property stream.
      *
-     * @var  StreamInterface
+     * @var  ?StreamInterface
      */
     protected ?StreamInterface $stream = null;
 

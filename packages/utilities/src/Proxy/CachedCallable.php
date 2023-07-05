@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Proxy;
 
-use function Windwalker\tap;
-
 /**
  * The CachedCallable class.
  */

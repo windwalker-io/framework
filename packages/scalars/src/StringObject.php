@@ -193,7 +193,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
     {
         $new = $this->cloneInstance();
 
-        $closure = Closure::fromCallable([$class, $method]);
+        $closure = $class::$method(...);
 
         if (method_exists($class, $method)) {
             $ref = new ReflectionMethod($class, $method);
@@ -208,7 +208,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
         /** @var ReflectionParameter $param */
         foreach (array_values($params) as $k => $param) {
             if (!array_key_exists($k, $args)) {
-                if ($param->getName() === 'encoding' && !isset($args[$k])) {
+                if (!isset($args[$k]) && $param->getName() === 'encoding') {
                     $args[$k] = $this->encoding;
                     continue;
                 }

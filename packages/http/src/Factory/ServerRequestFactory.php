@@ -24,6 +24,7 @@ use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpParameters;
 use Windwalker\Http\Request\RequestBaseUri;
 use Windwalker\Http\Request\ServerRequest;
+use Windwalker\Http\SafeJson;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\PhpInputStream;
 use Windwalker\Uri\Uri;
@@ -93,7 +94,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
 
         if ($method === 'POST') {
             if (str_contains($type, 'application/json')) {
-                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+                $decodedBody = new SafeJson($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
             }
         } elseif (in_array($method, ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
             if (str_contains($type, 'application/x-www-form-urlencoded')) {
@@ -101,7 +102,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             } elseif (str_contains($type, 'multipart/form-data')) {
                 [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body->__toString()));
             } elseif (str_contains($type, 'application/json')) {
-                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+                $decodedBody = new SafeJson($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
             }
         }
 

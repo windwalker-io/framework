@@ -12,10 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Scalars\Concern;
 
 use Closure;
-use Windwalker\Scalars\ArrayObject;
 use Windwalker\Utilities\Arr;
-
-use function Windwalker\tap;
 
 /**
  * The ArraySortConcern class.

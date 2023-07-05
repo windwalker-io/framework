@@ -15,6 +15,8 @@ use FilesystemIterator;
 use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Rx\Observable;
+use Rx\ObserverInterface;
 use SplFileInfo;
 use UnexpectedValueException;
 use Windwalker\Filesystem\Exception\FileNotFoundException;
@@ -97,7 +99,7 @@ class FilesIterator extends NestedIterator
 
         $iterator->setInfoClass(FileObject::class);
 
-        // If rescurive set to true, use RecursiveIteratorIterator
+        // If recursive set to true, use RecursiveIteratorIterator
         return $recursive ? new RecursiveIteratorIterator($iterator) : $iterator;
     }
 
@@ -178,5 +180,25 @@ class FilesIterator extends NestedIterator
         $iter->path = $this->path;
 
         return $iter;
+    }
+
+    public static function observable(string $path, bool $recursive = false, ?int $options = null): Observable
+    {
+        return static::create($path, $recursive, $options)->observe();
+    }
+
+    public function observe(): Observable
+    {
+        if (!class_exists(Observable::class)) {
+            throw new \DomainException('Please install reactivex/rxphp to support Observable.');
+        }
+
+        return Observable::create(
+            function (ObserverInterface $subscriber) {
+                foreach ($this as $file) {
+                    $subscriber->onNext($file);
+                }
+            }
+        );
     }
 }
