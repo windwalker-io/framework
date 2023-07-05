@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Test;
 
+use Swoole\Coroutine\Channel;
 use Throwable;
 use Windwalker\Promise\ExtendedPromiseInterface;
 use Windwalker\Promise\Promise;
@@ -23,6 +24,7 @@ use function Windwalker\Promise\async;
 use function Windwalker\Promise\await;
 use function Windwalker\Promise\coroutine;
 use function Windwalker\Promise\coroutineable;
+use function Windwalker\run;
 
 /**
  * The FunctionsTest class.
@@ -78,22 +80,26 @@ class FunctionsTest extends AbstractPromiseTestCase
 
         static::useScheduler(new SwooleScheduler());
 
-        async(
+        run(
             function () {
-                $this->values['v1'] = await($this->runAsync('Sakura'));
-                $this->values['v2'] = await($this->runAsync('Sunflower'));
+                $p = async(
+                    function () {
+                        $this->values['v1'] = await($this->runAsync('Sakura'));
+                        $this->values['v2'] = await($this->runAsync('Sunflower'));
 
-                self::assertEquals('Sakura', $this->values['v1']);
-                self::assertEquals('Sunflower', $this->values['v1']);
+                        self::assertEquals('Sakura', $this->values['v1']);
+                        self::assertEquals('Sunflower', $this->values['v1']);
 
-                return 'Lilium';
+                        return 'Lilium';
+                    }
+                )
+                    ->then(
+                        function ($v) {
+                            self::assertEquals('Lilium', $v);
+                        }
+                    );
             }
-        )
-            ->then(
-                function ($v) {
-                    self::assertEquals('Lilium', $v);
-                }
-            );
+        );
     }
 
     /**

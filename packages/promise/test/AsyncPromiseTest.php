@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Test;
 
 use React\EventLoop\StreamSelectLoop;
+use Swoole\Coroutine\Channel;
 use Swoole\Event;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
@@ -20,6 +21,8 @@ use Windwalker\Promise\Scheduler\ScheduleRunner;
 use Windwalker\Promise\Scheduler\SwooleScheduler;
 use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\Reactor\SwooleTestTrait;
+
+use function Co\run;
 
 /**
  * The AsyncPromiseTest class.
@@ -151,7 +154,7 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
             ]
         );
 
-        go(
+        run(
             function () {
                 $promise = new Promise(
                     function ($resolve) {
@@ -165,7 +168,7 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
                     }
                 );
 
-                $value = $promise->then(
+                $p = $promise->then(
                     function ($v) {
                         return new Promise(
                             function ($re) {
@@ -180,15 +183,18 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
 
                             return 'GOO';
                         }
-                    )
-                    ->wait();
+                    );
+
+                self::assertArrayNotHasKey('v1', $this->values);
+
+                $value = $p->wait();
 
                 self::assertEquals('YOO', $this->values['v1']);
                 self::assertEquals('GOO', $value);
             }
         );
 
-        self::assertArrayNotHasKey('v1', $this->values);
+        self::assertArrayHasKey('v1', $this->values);
     }
 
     public function testEventLoopDeferred(): void
@@ -240,17 +246,50 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $this->values['v1']);
     }
 
-    public function testEventLoopSwoole()
+    public function testEventLoopSwooleWithWait()
     {
         static::skipIfSwooleNotInstalled();
 
-        self::useScheduler(new EventLoopScheduler(EventLoopScheduler::createSwooleTimer()));
+        self::useScheduler(EventLoopScheduler::swoole());
 
         go(
             function () {
                 $p = new Promise(
                     static function (callable $resolve) {
                         $resolve('Hello');
+                    }
+                );
+                $p = $p->then(
+                    function ($v) {
+                        $this->values['v1'] = $v;
+
+                        return $v;
+                    }
+                );
+
+                $v = $p->wait();
+
+                self::assertEquals('Hello', $v);
+                self::assertEquals('Hello', $this->values['v1']);
+            }
+        );
+    }
+
+    public function testEventLoopSwooleResolveDeferred()
+    {
+        static::skipIfSwooleNotInstalled();
+
+        self::useScheduler(EventLoopScheduler::swoole());
+
+        go(
+            function () {
+                $p = new Promise(
+                    static function (callable $resolve) {
+                        \Windwalker\go(
+                            function () use ($resolve) {
+                                $resolve('Hello');
+                            }
+                        );
                     }
                 );
                 $p->then(

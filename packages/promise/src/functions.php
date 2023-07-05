@@ -93,18 +93,11 @@ if (!function_exists('\Windwalker\Promise\async')) {
      * @param  callable  $callable
      *
      * @return  ExtendedPromiseInterface
+     * @throws Throwable
      */
     function async(callable $callable): ExtendedPromiseInterface
     {
-        return new Promise(
-            static function ($resolve, $reject) use ($callable) {
-                try {
-                    $resolve($callable());
-                } catch (Throwable $e) {
-                    $reject($e);
-                }
-            }
-        );
+        return Promise::resolved()->then($callable);
     }
 }
 

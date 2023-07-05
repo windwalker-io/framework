@@ -13,6 +13,7 @@ namespace Windwalker\Promise\Scheduler;
 
 use DomainException;
 use React\EventLoop\LoopInterface;
+use React\EventLoop\StreamSelectLoop;
 use Swoole\Coroutine\Channel;
 use Swoole\Event;
 
@@ -70,41 +71,44 @@ class EventLoopScheduler implements SchedulerInterface
     /**
      * createSwooleTimer
      *
+     * @param  int|null  $timeout
+     *
      * @return  callable
      */
-    public static function createSwooleTimer(): callable
+    public static function createSwooleTimer(?int $timeout = null): callable
     {
         if (!extension_loaded('swoole')) {
             throw new DomainException('Swoole not installed');
         }
 
-        return static function (callable $callable) {
-            $channel = new Channel(1);
+        return static function (callable $callable) use ($timeout) {
+            $scheduler = new SwooleScheduler($timeout);
 
-            go(
-                static function () use ($callable) {
-                    Event::defer(
-                        static function () use ($callable) {
-                            $callable();
-                        }
-                    );
-                }
-            );
+            $cursor = $scheduler->schedule($callable);
+
+            // go(
+            //     static function () use ($callable) {
+            //         Event::defer(
+            //             static function () use ($callable) {
+            //                 $callable();
+            //             }
+            //         );
+            //     }
+            // );
 
             // Return waiter/doner
             return [
-                static function () use ($channel) {
-                    $channel->pop();
-                },
-                static function () use ($channel) {
-                    go(
-                        static function () use ($channel) {
-                            $channel->push(true);
-                        }
-                    );
-                },
+                fn () => $scheduler->wait($cursor),
+                fn () => $scheduler->done($cursor),
             ];
         };
+    }
+
+    public static function swoole(?int $timeout = null): static
+    {
+        return new static(
+            static::createSwooleTimer($timeout)
+        );
     }
 
     /**

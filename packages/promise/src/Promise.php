@@ -272,34 +272,37 @@ class Promise implements ExtendedPromiseInterface
             return $child;
         }
 
-        $newPromise = static::create();
-
-        $this->chainNewPromise($newPromise, $onFulfilled, $onRejected);
-
-        return $newPromise;
+        return $this->chainNewPromise($onFulfilled, $onRejected);
     }
 
-    private function chainNewPromise(self $promise, ?callable $onFulfilled, ?callable $onRejected): void
+    private function chainNewPromise(?callable $onFulfilled, ?callable $onRejected): static
+    {
+        return $this->chainPromise(static::create(), $onFulfilled, $onRejected);
+    }
+
+    private function chainPromise(self $promise, ?callable $onFulfilled, ?callable $onRejected): self
     {
         $this->scheduleFor(
             function () use ($onRejected, $onFulfilled, $promise) {
                 try {
                     if ($this->getState() === PromiseState::FULFILLED) {
-                        $promise->resolve($onFulfilled($this->value));
+                        $promise->innerResolve($onFulfilled($this->value));
                     } elseif ($onRejected) {
-                        $promise->resolve($onRejected($this->value));
+                        $promise->innerResolve($onRejected($this->value));
                     } else {
-                        $promise->reject($this->value);
+                        $promise->innerReject($this->value);
                     }
                 } catch (UncaughtException $e) {
-                    $promise->reject($e->getReason());
+                    $promise->innerReject($e->getReason());
                     throw $e;
                 } catch (\Throwable $e) {
-                    $promise->reject($e);
+                    $promise->innerReject($e);
                 }
             },
             $promise
         );
+
+        return $promise;
     }
 
     /**
@@ -354,9 +357,14 @@ class Promise implements ExtendedPromiseInterface
      */
     public function resolve(mixed $value): void
     {
-        static::resolvePromise($this, $value);
+        if ($this->innerResolve($value)) {
+            $this->scheduleWait();
+        }
+    }
 
-        $this->scheduleWait();
+    private function innerResolve(mixed $value): bool
+    {
+        return static::resolvePromise($this, $value);
     }
 
     /**
@@ -364,19 +372,26 @@ class Promise implements ExtendedPromiseInterface
      */
     public function reject(mixed $reason): void
     {
+        if ($this->innerReject($reason)) {
+            $this->scheduleWait();
+        }
+    }
+
+    private function innerReject(mixed $reason): bool
+    {
         if ($reason === $this) {
             $this->reject(new TypeError('Unable to resolve self.'));
 
-            return;
+            return false;
         }
 
         if ($this->getState() !== PromiseState::PENDING) {
-            return;
+            return false;
         }
 
         $this->settle(PromiseState::REJECTED, $reason);
 
-        $this->scheduleWait();
+        return true;
     }
 
     /**
@@ -428,24 +443,24 @@ class Promise implements ExtendedPromiseInterface
      * @param  PromiseInterface  $promise
      * @param  mixed             $value
      *
-     * @return  PromiseInterface
+     * @return  bool
      * @throws Throwable
      */
-    private static function resolvePromise(PromiseInterface $promise, mixed $value): PromiseInterface
+    private static function resolvePromise(PromiseInterface $promise, mixed $value): bool
     {
         if ($value === $promise) {
             $promise->reject(new TypeError('Unable to resolve self.'));
 
-            return $promise;
+            return false;
         }
 
         if ($promise->getState() !== PromiseState::PENDING) {
-            return $promise;
+            return false;
         }
 
         if ($value instanceof self) {
             $promise->settle($value->getState(), $value->value);
-            return $promise;
+            return true;
         }
 
         if (is_thenable($value)) {
@@ -454,12 +469,12 @@ class Promise implements ExtendedPromiseInterface
                 [$promise, 'reject']
             );
 
-            return $promise;
+            return true;
         }
 
         $promise->settle(PromiseState::FULFILLED, $value);
 
-        return $promise;
+        return true;
     }
 
     /**
@@ -470,6 +485,10 @@ class Promise implements ExtendedPromiseInterface
      */
     protected function scheduleFor(callable $callback, self $promise): void
     {
+        if ($promise->scheduleCursor) {
+            throw new \LogicException('A promise should not schedule again.');
+        }
+
         $promise->scheduleCursor = ScheduleRunner::getInstance()->schedule($callback);
     }
 
@@ -482,8 +501,8 @@ class Promise implements ExtendedPromiseInterface
     {
         if (!$this->scheduleCursor) {
             $this->scheduleFor(
-                static function () {
-                    //
+                function () {
+                    // $this->scheduleDone();
                 },
                 $this
             );
@@ -532,7 +551,7 @@ class Promise implements ExtendedPromiseInterface
         foreach ($this->handlers as $handler) {
             [$promise, $onFulfilled, $onRejected] = $handler;
 
-            $this->chainNewPromise($promise, $onFulfilled, $onRejected);
+            $this->chainPromise($promise, $onFulfilled, $onRejected);
         }
     }
 
@@ -561,17 +580,17 @@ class Promise implements ExtendedPromiseInterface
             } else {
                 $callback(
                     function ($value = null) {
-                        $this->resolve($value);
+                        $this->innerResolve($value);
                     },
                     function ($reason = null) {
-                        $this->reject($reason);
+                        $this->innerReject($reason);
                     }
                 );
             }
         } catch (UncaughtException $e) {
             throw $e;
         } catch (Throwable $e) {
-            $this->reject($e);
+            $this->innerResolve($e);
         }
     }
 }

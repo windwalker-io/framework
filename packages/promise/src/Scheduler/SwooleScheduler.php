@@ -48,9 +48,9 @@ class SwooleScheduler implements SchedulerInterface
      */
     public function schedule(callable $callback): ScheduleCursor
     {
-        Event::defer(
+        go(
             static function () use ($callback) {
-                go(
+                Event::defer(
                     static function () use ($callback) {
                         $callback();
                     }
@@ -59,8 +59,8 @@ class SwooleScheduler implements SchedulerInterface
         );
 
         // Return Channel as cursor, when Promise resolved,
-        // it will call SwooleAsync::done() to push value into Channel.
-        return new ScheduleCursor(new Channel());
+        // it will call SwooleScheduler::done() to push value into Channel.
+        return new ScheduleCursor(new Channel(1));
     }
 
     /**
@@ -73,8 +73,8 @@ class SwooleScheduler implements SchedulerInterface
         if (!$chan instanceof Channel) {
             throw new LogicException('Cursor should be ' . Channel::class);
         }
-
-        // SwooleAsync should always called into coroutine,
+show(__METHOD__, spl_object_id($chan), 5);
+        // SwooleScheduler should always called into coroutine,
         // so we don't need to create new coroutine to wrap $chan->pop().
         // This can make current coroutine blocked and wait for IO end.
         if ($this->timeout) {
@@ -89,7 +89,7 @@ class SwooleScheduler implements SchedulerInterface
      */
     public function done(?ScheduleCursor $cursor): void
     {
-        $chan = $cursor->get();
+        $chan = $cursor?->get();
 
         if (!$chan instanceof Channel) {
             throw new LogicException('Cursor should be ' . Channel::class);

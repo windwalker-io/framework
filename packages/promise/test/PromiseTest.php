@@ -128,11 +128,6 @@ class PromiseTest extends AbstractPromiseTestCase
         }
     }
 
-    public function testRejected(): void
-    {
-        self::markTestIncomplete();
-    }
-
     public function testRejectedWithoutCatch(): void
     {
         $this->expectException(Exception::class);
