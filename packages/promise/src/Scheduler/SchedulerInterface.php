@@ -52,13 +52,4 @@ interface SchedulerInterface
      * @return  void
      */
     public function done(?ScheduleCursor $cursor): void;
-
-    /**
-     * Release cursor from memory.
-     *
-     * @param  ScheduleCursor  $cursor
-     *
-     * @return  void
-     */
-    public function release(ScheduleCursor $cursor): void;
 }

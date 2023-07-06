@@ -572,9 +572,6 @@ class Promise implements ExtendedPromiseInterface
         $scheduleRunner = ScheduleRunner::getInstance();
 
         $scheduleRunner->done($this->scheduleCursor);
-
-        // Free cursor
-        // $scheduleRunner->release($this->scheduleCursor);
     }
 
     public function isSettled(): bool

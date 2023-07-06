@@ -72,9 +72,4 @@ class ImmediateScheduler implements SchedulerInterface
     {
         //
     }
-
-    public function release(ScheduleCursor $cursor): void
-    {
-        //
-    }
 }

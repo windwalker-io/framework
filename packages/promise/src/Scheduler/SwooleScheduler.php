@@ -108,18 +108,4 @@ class SwooleScheduler implements SchedulerInterface
             }
         );
     }
-
-    public function release(ScheduleCursor $cursor): void
-    {
-        /** @var Channel $channel */
-        $channel = $cursor->get();
-
-        if ($channel->length() > 0) {
-            show('[WARNING] Channel released but not empty');
-            trigger_error(
-                'Channel released but not empty',
-                E_USER_WARNING
-            );
-        }
-    }
 }

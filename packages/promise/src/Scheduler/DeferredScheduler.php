@@ -85,9 +85,4 @@ class DeferredScheduler implements SchedulerInterface
 
         return new static();
     }
-
-    public function release(ScheduleCursor $cursor): void
-    {
-        //
-    }
 }

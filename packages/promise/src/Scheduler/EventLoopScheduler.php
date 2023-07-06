@@ -150,9 +150,4 @@ class EventLoopScheduler implements SchedulerInterface
             $done();
         }
     }
-
-    public function release(ScheduleCursor $cursor): void
-    {
-        //
-    }
 }
