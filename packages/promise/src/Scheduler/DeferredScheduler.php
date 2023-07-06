@@ -26,18 +26,21 @@ class DeferredScheduler implements SchedulerInterface
         return true;
     }
 
+    public function createCursor(): ScheduleCursor
+    {
+        return new ScheduleCursor(
+            static fn() => TaskQueue::getInstance()->run()
+        );
+    }
+
     /**
+     * @param  ScheduleCursor  $cursor  *
+     *
      * @inheritDoc
      */
-    public function schedule(callable $callback): ScheduleCursor
+    public function schedule(ScheduleCursor $cursor, callable $callback): void
     {
         TaskQueue::getInstance()->push($callback);
-
-        return new ScheduleCursor(
-            static function () {
-                TaskQueue::getInstance()->run();
-            }
-        );
     }
 
     /**

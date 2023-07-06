@@ -103,14 +103,12 @@ class FunctionsTest extends AbstractPromiseTestCase
                     );
 
                 $v = $p->wait();
-
-                show($v);
             }
         );
 
         self::assertEquals('Sakura', $this->values['v1']);
         self::assertEquals('Sunflower', $this->values['v2']);
-        // self::assertEquals('Lilium', $this->values['v3']);
+        self::assertEquals('Lilium', $this->values['v3']);
     }
 
     /**

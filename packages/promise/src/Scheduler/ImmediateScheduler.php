@@ -42,14 +42,19 @@ class ImmediateScheduler implements SchedulerInterface
         return true;
     }
 
+    public function createCursor(): ScheduleCursor
+    {
+        return new ScheduleCursor();
+    }
+
     /**
+     * @param  ScheduleCursor  $cursor  *
+     *
      * @inheritDoc
      */
-    public function schedule(callable $callback): ScheduleCursor
+    public function schedule(ScheduleCursor $cursor, callable $callback): void
     {
         $callback();
-
-        return new ScheduleCursor();
     }
 
     /**

@@ -23,14 +23,17 @@ interface SchedulerInterface
      */
     public static function isSupported(): bool;
 
+    public function createCursor(): ScheduleCursor;
+
     /**
      * runAsync
      *
-     * @param  callable  $callback
+     * @param  ScheduleCursor  $cursor
+     * @param  callable        $callback
      *
-     * @return  ScheduleCursor
+     * @return  void
      */
-    public function schedule(callable $callback): ScheduleCursor;
+    public function schedule(ScheduleCursor $cursor, callable $callback): void;
 
     /**
      * wait

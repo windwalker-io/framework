@@ -45,10 +45,11 @@ class VarDumper
 
             $cloner = new VarCloner();
             $cloner->setMaxItems(-1);
-            $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+            // $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
             $cloner->addCasters(
                 [
-                    \DateTimeInterface::class => [DateCaster::class, 'castDateTime']
+                    \DateTimeInterface::class => [DateCaster::class, 'castDateTime'],
+                    \Closure::class => [ClosureCaster::class, 'castClosure']
                 ]
             );
 

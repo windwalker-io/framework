@@ -48,13 +48,12 @@ class EventLoopScheduler implements SchedulerInterface
      */
     public static function createReactTimer(LoopInterface $loop): callable
     {
-        return static function (callable $callable) use ($loop) {
+        return static function () use ($loop) {
             $done = false;
 
-            $loop->addTimer(0.001, $callable);
-
-            // Return waiter/doner
+            // Return schedule/waiter/doner
             return [
+                static fn(callable $callable) => $loop->addTimer(0.001, $callable),
                 static function () use (&$done) {
                     // todo: Truly support reactphp stream
                     // while (!$done) {
@@ -81,23 +80,14 @@ class EventLoopScheduler implements SchedulerInterface
             throw new DomainException('Swoole not installed');
         }
 
-        return static function (callable $callable) use ($timeout) {
+        return static function () use ($timeout) {
             $scheduler = new SwooleScheduler($timeout);
 
-            $cursor = $scheduler->schedule($callable);
+            $cursor = $scheduler->createCursor();
 
-            // go(
-            //     static function () use ($callable) {
-            //         Event::defer(
-            //             static function () use ($callable) {
-            //                 $callable();
-            //             }
-            //         );
-            //     }
-            // );
-
-            // Return waiter/doner
+            // Return schedule/waiter/doner
             return [
+                fn (callable $callable) => $scheduler->schedule($cursor, $callable),
                 fn () => $scheduler->wait($cursor),
                 fn () => $scheduler->done($cursor),
             ];
@@ -119,14 +109,24 @@ class EventLoopScheduler implements SchedulerInterface
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function schedule(callable $callback): ScheduleCursor
+    public function createCursor(): ScheduleCursor
     {
         $timerCallback = $this->timerCallback;
 
-        return new ScheduleCursor($timerCallback($callback));
+        return new ScheduleCursor(
+            $timerCallback()
+        );
+    }
+
+    /**
+     * @param  ScheduleCursor  $cursor  *
+     * @inheritDoc
+     */
+    public function schedule(ScheduleCursor $cursor, callable $callback): void
+    {
+        [$schedule] = $cursor->get();
+
+        $schedule($callback);
     }
 
     /**
@@ -134,7 +134,7 @@ class EventLoopScheduler implements SchedulerInterface
      */
     public function wait(ScheduleCursor $cursor): void
     {
-        [$waiter] = $cursor->get();
+        [, $waiter] = $cursor->get();
 
         $waiter();
     }
@@ -145,7 +145,7 @@ class EventLoopScheduler implements SchedulerInterface
     public function done(?ScheduleCursor $cursor): void
     {
         if ($cursor) {
-            [, $done] = $cursor->get();
+            [,, $done] = $cursor->get();
 
             $done();
         }

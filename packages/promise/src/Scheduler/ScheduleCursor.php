@@ -19,7 +19,9 @@ class ScheduleCursor
     /**
      * @var mixed
      */
-    protected mixed $cursor;
+    readonly protected mixed $cursor;
+
+    protected bool $scheduled = false;
 
     /**
      * AsyncCursor constructor.
@@ -41,5 +43,25 @@ class ScheduleCursor
     public function get(): mixed
     {
         return $this->cursor;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isScheduled(): bool
+    {
+        return $this->scheduled;
+    }
+
+    /**
+     * @param  bool  $scheduled
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setScheduled(bool $scheduled): static
+    {
+        $this->scheduled = $scheduled;
+
+        return $this;
     }
 }

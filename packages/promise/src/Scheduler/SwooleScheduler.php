@@ -43,10 +43,15 @@ class SwooleScheduler implements SchedulerInterface
         return PHP_SAPI === 'cli' && extension_loaded('swoole') && function_exists('\go');
     }
 
+    public function createCursor(): ScheduleCursor
+    {
+        return new ScheduleCursor(new Channel(1));
+    }
+
     /**
      * @inheritDoc
      */
-    public function schedule(callable $callback): ScheduleCursor
+    public function schedule(ScheduleCursor $cursor, callable $callback): void
     {
         go(
             static function () use ($callback) {
@@ -57,10 +62,6 @@ class SwooleScheduler implements SchedulerInterface
                 );
             }
         );
-
-        // Return Channel as cursor, when Promise resolved,
-        // it will call SwooleScheduler::done() to push value into Channel.
-        return new ScheduleCursor(new Channel(1));
     }
 
     /**
@@ -114,7 +115,11 @@ class SwooleScheduler implements SchedulerInterface
         $channel = $cursor->get();
 
         if ($channel->length() > 0) {
-            throw new \LogicException('Channel release but not empty');
+            show('[WARNING] Channel released but not empty');
+            trigger_error(
+                'Channel released but not empty',
+                E_USER_WARNING
+            );
         }
     }
 }

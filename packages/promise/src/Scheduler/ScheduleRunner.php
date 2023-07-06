@@ -58,16 +58,22 @@ class ScheduleRunner implements SchedulerInterface
         $this->schedulers = $schedulers;
     }
 
+    public function createCursor(): ScheduleCursor
+    {
+        return $this->getAvailableScheduler()->createCursor();
+    }
+
     /**
      * run
      *
-     * @param  callable  $callback
+     * @param  ScheduleCursor  $cursor
+     * @param  callable        $callback
      *
-     * @return  ScheduleCursor
+     * @return  void
      */
-    public function schedule(callable $callback): ScheduleCursor
+    public function schedule(ScheduleCursor $cursor, callable $callback): void
     {
-        return $this->getAvailableScheduler()->schedule($callback);
+        $this->getAvailableScheduler()->schedule($cursor, $callback);
     }
 
     /**

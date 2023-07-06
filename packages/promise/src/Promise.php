@@ -40,20 +40,22 @@ class Promise implements ExtendedPromiseInterface
     protected mixed $value = null;
 
     /**
-     * @var static[]
+     * @var array<array{ 0: static, 1: callable, 2: ?callable }>
      */
-    protected array $handlers = [];
+    protected array $children = [];
 
     /**
-     * @var ScheduleCursor|null
+     * @var ScheduleCursor
      */
-    protected ?ScheduleCursor $scheduleCursor = null;
+    protected ScheduleCursor $scheduleCursor;
 
     public ?\Closure $uncaughtLogger = null;
 
     public static ?\Closure $defaultUncaughtLogger = null;
 
-    protected bool $initialising = false;
+    protected bool $constructingSynchronously = false;
+
+    protected int $i = 0;
 
     /**
      * create
@@ -61,6 +63,8 @@ class Promise implements ExtendedPromiseInterface
      * @param  callable|null  $resolver
      *
      * @return static
+     * @throws Throwable
+     * @throws \ReflectionException
      */
     public static function create(#[\SensitiveParameter] ?callable $resolver = null): static
     {
@@ -200,18 +204,24 @@ class Promise implements ExtendedPromiseInterface
      * Promise constructor.
      *
      * @param  ?callable  $resolver
+     *
+     * @throws Throwable
+     * @throws \ReflectionException
      */
     public function __construct(#[\SensitiveParameter] ?callable $resolver = null)
     {
-        $resolver = $resolver ?: static function () {
-            //
-        };
+        $this->scheduleCursor = ScheduleRunner::getInstance()->createCursor();
 
-        $this->initialising = true;
+        $this->constructingSynchronously = true;
 
-        $this->call($resolver);
+        if ($resolver) {
+            $this->constructing($resolver);
+        }
 
-        $this->initialising = false;
+        $this->constructingSynchronously = false;
+
+        static $i = 0;
+        $this->i = ++$i;
     }
 
     /**
@@ -254,53 +264,113 @@ class Promise implements ExtendedPromiseInterface
      */
     public function then(?callable $onFulfilled = null, ?callable $onRejected = null): static
     {
-        $onFulfilled = is_callable($onFulfilled)
-            ? $onFulfilled
-            : nope();
+        $onFulfilled ??= nope();
 
-        // if ($this->getState() === PromiseState::PENDING) {
-        //     $child = new static();
-        //
-        //     $this->handlers[] = [
-        //         $child,
-        //         $onFulfilled,
-        //         $onRejected,
-        //     ];
-        //
-        //     return $child;
-        // }
+        $child = new static();
 
-        return $this->handlers[] = $this->chainNewPromise($onFulfilled, $onRejected);
+        // Handle SETTLED
+        if ($this->isSettled()) {
+            // Self is settled, we push callback to schedule and run after a mini time.
+            $this->scheduleFor(
+                fn() => $this->settleChild($child, $onFulfilled, $onRejected),
+                $child
+            );
+
+            return $child;
+        }
+
+        // Handle PENDING
+        // Self is still pending, we don't know when will be settled,
+        // push child and callbacks to waiting list and settle them later.
+        $this->children[] = [$child, $onFulfilled, $onRejected];
+
+        return $child;
     }
 
-    private function chainNewPromise(callable $onFulfilled, ?callable $onRejected): static
+    /**
+     * @param  Promise        $child
+     * @param  callable       $onFulfilled
+     * @param  callable|null  $onRejected
+     *
+     * @return  void
+     *
+     * @throws UncaughtException
+     */
+    private function settleChild(self $child, callable $onFulfilled, ?callable $onRejected): void
     {
-        return $this->chainPromise(static::create(), $onFulfilled, $onRejected);
+        if ($this->getState()->isPending()) {
+            throw new TypeError('Parent should not be pending if settling children.');
+        }
+
+        try {
+            if ($this->getState() === PromiseState::FULFILLED) {
+                $child->resolve($onFulfilled($this->value));
+            } elseif ($onRejected) {
+                $child->resolve($onRejected($this->value));
+            } else {
+                $child->reject($this->value);
+            }
+        } catch (UncaughtException | TypeError $e) {
+            $child->reject($e->getReason());
+            throw $e;
+        } catch (\Throwable $e) {
+            $child->reject($e);
+        }
     }
 
-    private function chainPromise(self $promise, callable $onFulfilled, ?callable $onRejected): self
+    /**
+     * This method will make a pending promise settled. May be called immediately or deferred.
+     *
+     * @param  PromiseState  $state
+     * @param  mixed         $value
+     *
+     * @return  void
+     *
+     * @throws Throwable
+     */
+    private function settle(PromiseState $state, mixed $value): void
     {
-        $this->scheduleFor(
-            function () use ($onRejected, $onFulfilled, $promise) {
-                try {
-                    if ($this->getState() === PromiseState::FULFILLED) {
-                        $promise->innerResolve($onFulfilled($this->value));
-                    } elseif ($onRejected) {
-                        $promise->innerResolve($onRejected($this->value));
-                    } else {
-                        $promise->innerReject($this->value);
-                    }
-                } catch (UncaughtException $e) {
-                    $promise->innerReject($e->getReason());
-                    throw $e;
-                } catch (\Throwable $e) {
-                    $promise->innerReject($e);
-                }
-            },
-            $promise
-        );
+        if ($this->isSettled()) {
+            return;
+        }
 
-        return $promise;
+        if ($state->isPending()) {
+            throw new TypeError('Cannot settle as pending state.');
+        }
+
+        $this->state = $state;
+        $this->value = $value;
+
+        // Make scheduler done.
+        // Scheduler may wait this promise before or after we do it.
+        // If before done, the scheduler should sleep and block until done.
+        // If after done, it should stop waiting immediately.
+        $this->scheduleDone();
+
+        if (
+            // If now is not Promise constructing. Maybe we call resolve() deferred.
+            // We should throw or log reject reasons.
+            !$this->constructingSynchronously
+            // If no children, handle rejection instantly.
+            && $this->children === []
+            && $state->isRejected()
+        ) {
+            $this->logOrThrow(new UncaughtException($value));
+
+            return;
+        }
+
+        // If now is Promise constructing and synchronous settled
+        // We should not throw Error. Just make self rejected and handle all children.
+        foreach ($this->children as $child) {
+            [$childPromise, $onFulfilled, $onRejected] = $child;
+
+            $this->settleChild(
+                $childPromise,
+                $onFulfilled,
+                $onRejected
+            );
+        }
     }
 
     /**
@@ -338,7 +408,6 @@ class Promise implements ExtendedPromiseInterface
      * @return  static
      *
      * @throws Throwable
-     * @since  __DEPLOY_VERSION__
      */
     public static function rejected(mixed $value = null): static
     {
@@ -355,14 +424,52 @@ class Promise implements ExtendedPromiseInterface
      */
     public function resolve(mixed $value): void
     {
-        if ($this->innerResolve($value)) {
-            $this->scheduleWait();
-        }
+        static::resolvePromise($this, $value);
     }
 
-    private function innerResolve(mixed $value): bool
+    /**
+     * @param  PromiseInterface  $promise
+     * @param  mixed             $value
+     *
+     * @return void
+     * @throws Throwable
+     */
+    private static function resolvePromise(PromiseInterface $promise, mixed $value): void
     {
-        return static::resolvePromise($this, $value);
+        if ($value === $promise) {
+            $promise->reject(new TypeError('Unable to resolve self.'));
+
+            return;
+        }
+
+        // Case1: Do not do anything if is settled
+        // @sync
+        if ($promise->getState()->isSettled()) {
+            return;
+        }
+
+        // Case2: If value is a settled self promise class, just sync it.
+        // @sync
+        if ($value instanceof self && !$value->isPending()) {
+            $promise->settle($value->getState(), $value->value);
+            return;
+        }
+
+        // Case3: If is a pending self class or a promise from other library with any state,
+        // we call then() to sync from it. Note this flow will be asynchronous.
+        // @async
+        if ($value instanceof self || is_thenable($value)) {
+            $value->then(
+                [$promise, 'resolve'],
+                [$promise, 'reject']
+            );
+
+            return;
+        }
+
+        // Case4: Otherwise we make self settled and fulfilled
+        // @sync
+        $promise->settle(PromiseState::FULFILLED, $value);
     }
 
     /**
@@ -370,26 +477,17 @@ class Promise implements ExtendedPromiseInterface
      */
     public function reject(mixed $reason): void
     {
-        if ($this->innerReject($reason)) {
-            $this->scheduleWait();
-        }
-    }
-
-    private function innerReject(mixed $reason): bool
-    {
         if ($reason === $this) {
             $this->reject(new TypeError('Unable to resolve self.'));
 
-            return false;
+            return;
         }
 
         if ($this->getState() !== PromiseState::PENDING) {
-            return false;
+            return;
         }
 
         $this->settle(PromiseState::REJECTED, $reason);
-
-        return true;
     }
 
     /**
@@ -438,44 +536,6 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @param  PromiseInterface  $promise
-     * @param  mixed             $value
-     *
-     * @return  bool
-     * @throws Throwable
-     */
-    private static function resolvePromise(PromiseInterface $promise, mixed $value): bool
-    {
-        if ($value === $promise) {
-            $promise->reject(new TypeError('Unable to resolve self.'));
-
-            return false;
-        }
-
-        if ($promise->getState() !== PromiseState::PENDING) {
-            return false;
-        }
-
-        if ($value instanceof self) {
-            $promise->settle($value->getState(), $value->value);
-            return true;
-        }
-
-        if (is_thenable($value)) {
-            $value->then(
-                [$promise, 'resolve'],
-                [$promise, 'reject']
-            );
-
-            return true;
-        }
-
-        $promise->settle(PromiseState::FULFILLED, $value);
-
-        return true;
-    }
-
-    /**
      * @param  callable  $callback
      * @param  Promise   $promise
      *
@@ -483,11 +543,13 @@ class Promise implements ExtendedPromiseInterface
      */
     protected function scheduleFor(callable $callback, self $promise): void
     {
-        if ($promise->scheduleCursor) {
-            throw new \LogicException('A promise should not schedule again.');
+        if ($promise->scheduleCursor->isScheduled()) {
+            throw new \LogicException('A promise should not schedule more than once.');
         }
 
-        $promise->scheduleCursor = ScheduleRunner::getInstance()->schedule($callback);
+        ScheduleRunner::getInstance()->schedule($promise->scheduleCursor, $callback);
+
+        $promise->scheduleCursor->setScheduled(true);
     }
 
     /**
@@ -497,16 +559,6 @@ class Promise implements ExtendedPromiseInterface
      */
     protected function scheduleWait(): void
     {
-        if (!$this->scheduleCursor) {
-            $this->scheduleFor(
-                // We must done schedule instantly, otherwise the waiting will be forever.
-                function () {
-                    $this->scheduleDone();
-                },
-                $this
-            );
-        }
-
         ScheduleRunner::getInstance()->wait($this->scheduleCursor);
     }
 
@@ -522,57 +574,39 @@ class Promise implements ExtendedPromiseInterface
         $scheduleRunner->done($this->scheduleCursor);
 
         // Free cursor
-        if ($this->scheduleCursor) {
-            $scheduleRunner->release($this->scheduleCursor);
-
-            $this->scheduleCursor = null;
-        }
+        // $scheduleRunner->release($this->scheduleCursor);
     }
 
-    /**
-     * settle
-     *
-     * @param  PromiseState  $state
-     * @param  mixed         $value
-     *
-     * @return  void
-     *
-     * @throws Throwable
-     * @since  __DEPLOY_VERSION__
-     */
-    private function settle(PromiseState $state, mixed $value): void
+    public function isSettled(): bool
     {
-        $this->state = $state;
-        $this->value = $value;
+        return $this->getState()->isSettled();
+    }
 
-        $this->scheduleDone();
+    public function isPending(): bool
+    {
+        return $this->getState()->isPending();
+    }
 
-        if ($this->handlers === [] && $state === PromiseState::REJECTED && !$this->initialising) {
-            $this->logOrThrow(new UncaughtException($value));
+    public function isFulfilled(): bool
+    {
+        return $this->getState()->isFulfilled();
+    }
 
-            return;
-        }
-
-        foreach ($this->handlers as $handler) {
-            $promise = $handler;
-
-            $promise->settle($this->getState(), $this->value);
-        }
+    public function isRejected(): bool
+    {
+        return $this->getState()->isRejected();
     }
 
     /**
-     * Calling callback.
-     *
-     * This method is a clone of Reactphp/Promise
-     *
-     * @see https://github.com/reactphp/promise
+     * Call construction callback.
      *
      * @param  callable  $cb
      *
      * @return  void
      * @throws Throwable
+     * @throws \ReflectionException
      */
-    private function call(#[\SensitiveParameter] callable $cb): void
+    private function constructing(#[\SensitiveParameter] callable $cb): void
     {
         $callback = Closure::fromCallable($cb);
         $ref = new ReflectionFunction($callback);
@@ -584,18 +618,20 @@ class Promise implements ExtendedPromiseInterface
                 $callback();
             } else {
                 $callback(
+                    // This is resolve() function in promise constructor.
+                    // May be call instantly or deferred.
                     function ($value = null) {
-                        $this->innerResolve($value);
+                        $this->resolve($value);
                     },
+                    // This is reject() function in promise constructor.
+                    // May be call instantly or deferred.
                     function ($reason = null) {
-                        $this->innerReject($reason);
+                        $this->reject($reason);
                     }
                 );
             }
-        } catch (UncaughtException $e) {
-            throw $e;
         } catch (Throwable $e) {
-            $this->innerResolve($e);
+            $this->resolve($e);
         }
     }
 }

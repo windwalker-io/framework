@@ -28,6 +28,8 @@ abstract class AbstractPromiseTestCase extends TestCase
      */
     protected array $values = [];
 
+    protected array $serial = [];
+
     /**
      * This method is called before the first test of this test class is run.
      */
@@ -41,6 +43,7 @@ abstract class AbstractPromiseTestCase extends TestCase
     protected function setUp(): void
     {
         $this->values = [];
+        $this->serial = [];
 
         // Reset every test
         static::prepareDefaultScheduler();

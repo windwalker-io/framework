@@ -21,4 +21,24 @@ enum PromiseState
     case FULFILLED;
 
     case REJECTED;
+
+    public function isSettled(): bool
+    {
+        return $this === self::FULFILLED || $this === self::REJECTED;
+    }
+
+    public function isFulfilled(): bool
+    {
+        return $this === self::FULFILLED;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this === self::REJECTED;
+    }
+
+    public function isPending(): bool
+    {
+        return $this === self::PENDING;
+    }
 }

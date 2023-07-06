@@ -137,6 +137,24 @@ class PromiseTest extends AbstractPromiseTestCase
         $promise->wait();
     }
 
+    public function testResolvePendingPromise(): void
+    {
+        $promise = new Promise();
+
+        $p = Promise::resolved($promise)
+            ->then(
+                function ($v) {
+                    return $v . ' World';
+                }
+            );
+
+        $promise->resolve('Hello');
+
+        $r = $p->wait();
+
+        self::assertEquals('Hello World', $r);
+    }
+
     public function testAllResolved()
     {
         $p = Promise::all(

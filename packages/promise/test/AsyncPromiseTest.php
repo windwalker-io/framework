@@ -23,6 +23,7 @@ use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\Reactor\SwooleTestTrait;
 
 use function Co\run;
+use function Windwalker\serial;
 
 /**
  * The AsyncPromiseTest class.
@@ -191,10 +192,12 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
 
                 self::assertEquals('YOO', $this->values['v1']);
                 self::assertEquals('GOO', $value);
+
+                $this->addToAssertionCount(3);
             }
         );
 
-        self::assertArrayHasKey('v1', $this->values);
+        self::assertEquals(3, $this->numberOfAssertionsPerformed());
     }
 
     public function testEventLoopDeferred(): void
