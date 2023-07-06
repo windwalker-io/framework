@@ -209,7 +209,8 @@
             ]
         },
         "branch-alias": {
-            "dev-master": "4.x-dev"
+            "dev-master": "4.x-dev",
+            "4.1.0": "4.1-dev"
         }
     },
     "provide": {
