@@ -563,11 +563,6 @@ class FileObject extends SplFileInfo
             }
         }
 
-        // Try making the file writable first. If it's read-only, it can't be deleted
-        // on Windows, even if the parent folder is writable
-        // Todo: Remove in the future versions
-        @chmod($path, 0777);
-
         // In case of restricted permissions we zap it one way or the other
         // as long as the owner is either the webserver or the ftp
         try {
