@@ -187,7 +187,7 @@ class CastManager
                 // Pure class
                 return static function (mixed $value, ORM $orm) use ($options, $cast) {
                     if (is_subclass_of($cast, \BackedEnum::class)) {
-                        return $cast::from($value);
+                        return $cast::wrap($value);
                     }
 
                     if (is_subclass_of($cast, EnumSingleton::class)) {
