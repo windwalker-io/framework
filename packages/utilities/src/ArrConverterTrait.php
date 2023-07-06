@@ -20,6 +20,14 @@ use Windwalker\Utilities\Assert\TypeAssert;
  */
 trait ArrConverterTrait
 {
+    public const GROUP_TYPE_ARRAY = 1 << 0;
+
+    public const GROUP_TYPE_KEY_BY = 1 << 1;
+
+    public const GROUP_TYPE_MIX = 1 << 2;
+
+    public const SAME_KEY_OVERRIDE = 1 << 3;
+
     /**
      * Flip array key and value and make 2-dimensional array to 1-dimensional.
      *
@@ -125,26 +133,26 @@ trait ArrConverterTrait
      * @param  array            $array  The source array data.
      * @param  string|\Closure  $key    Where the elements of the source array are objects
      *                                  or arrays, the key to pivot on.
-     * @param  int              $type   The group type.
+     * @param  int              $flags  The group flags.
      *
      * @return array An array of arrays grouped either on the value of the keys,
      *               or an individual key of an object or array.
      *
      * @since  2.0
      */
-    public static function group(array $array, string|\Closure|null $key, int $type = self::GROUP_TYPE_ARRAY): array
+    public static function group(array $array, string|\Closure|null $key, int $flags = self::GROUP_TYPE_ARRAY): array
     {
         if (is_string($key) || $key === null) {
-            return static::groupByPath($array, $key, $type, '');
+            return static::groupByPath($array, $key, $flags, '');
         }
 
-        return static::groupByCallback($array, $key, $type);
+        return static::groupByCallback($array, $key, $flags);
     }
 
     public static function groupByPath(
         array $array,
         ?string $key = null,
-        int $type = self::GROUP_TYPE_ARRAY,
+        int $flags = self::GROUP_TYPE_ARRAY,
         string $delimiter = '.'
     ): array {
         return static::groupByCallback(
@@ -160,17 +168,25 @@ trait ArrConverterTrait
 
                 yield $value => $i;
             },
-            $type
+            $flags
         );
     }
 
     private static function groupByCallback(
         array $array,
         \Closure $handler,
-        int $type = self::GROUP_TYPE_ARRAY
+        int $flags = self::GROUP_TYPE_ARRAY
     ): array {
         $results = [];
         $hasArray = [];
+
+        $type = match (true) {
+            (bool) ($flags & static::GROUP_TYPE_KEY_BY) => static::GROUP_TYPE_KEY_BY,
+            (bool) ($flags & static::GROUP_TYPE_MIX) => static::GROUP_TYPE_MIX,
+            default => static::GROUP_TYPE_ARRAY
+        };
+
+        $isOverride = $flags & static::SAME_KEY_OVERRIDE;
 
         foreach ($array as $index => $value) {
             // List value
@@ -207,7 +223,9 @@ trait ArrConverterTrait
 
                 $hasArray[$resultKey] = true;
             } elseif ($type === static::GROUP_TYPE_KEY_BY) {
-                $results[$resultKey] = $resultValue;
+                if (!array_key_exists($resultKey, $results) || $isOverride) {
+                    $results[$resultKey] = $resultValue;
+                }
             } else {
                 // Now always push results elements.
                 $results[$resultKey][] = $resultValue;

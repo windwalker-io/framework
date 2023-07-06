@@ -153,10 +153,29 @@ class ArrConverterTraitTest extends TestCase
                 // Expected
                 [
                     41 => ['id' => 41, 'title' => 'boo'],
-                    42 => ['id' => 42, 'title' => 'boo2'],
+                    42 => ['id' => 42, 'title' => 'boo1'],
                     43 => ['id' => 43, 'title' => 'boo'],
                 ],
                 Arr::GROUP_TYPE_KEY_BY,
+            ],
+            'An array of associative arrays but use key by and override same key' => [
+                // Source
+                [
+                    1 => ['id' => 41, 'title' => 'boo'],
+                    2 => ['id' => 42, 'title' => 'boo1'],
+                    3 => ['title' => 'boo'],
+                    4 => ['id' => 42, 'title' => 'boo2'],
+                    5 => ['id' => 43, 'title' => 'boo'],
+                ],
+                // Index
+                'id',
+                // Expected
+                [
+                    41 => ['id' => 41, 'title' => 'boo'],
+                    42 => ['id' => 42, 'title' => 'boo2'],
+                    43 => ['id' => 43, 'title' => 'boo'],
+                ],
+                Arr::GROUP_TYPE_KEY_BY | Arr::SAME_KEY_OVERRIDE,
             ],
             'An array of associative arrays force child array' => [
                 // Source

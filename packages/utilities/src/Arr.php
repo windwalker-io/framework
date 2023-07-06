@@ -34,12 +34,6 @@ abstract class Arr
     use PreventInitialTrait;
     use ArrConverterTrait;
 
-    public const GROUP_TYPE_ARRAY = 1;
-
-    public const GROUP_TYPE_KEY_BY = 2;
-
-    public const GROUP_TYPE_MIX = 3;
-
     /**
      * Output mock to support test.
      *
