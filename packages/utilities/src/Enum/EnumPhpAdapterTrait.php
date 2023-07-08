@@ -183,8 +183,9 @@ trait EnumPhpAdapterTrait
             if ($ref->hasCase($name)) {
                 return constant(static::class . '::' . $name);
             }
+        } else {
+            // For legacy enum class
+            return parent::__callStatic($name, $args);
         }
-
-        return parent::__callStatic($name, $args);
     }
 }
