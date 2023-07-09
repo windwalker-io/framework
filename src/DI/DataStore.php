@@ -41,7 +41,7 @@ class DataStore
      *
      * @var mixed
      */
-    protected $instance;
+    protected $instances;
 
     /**
      * Class init.

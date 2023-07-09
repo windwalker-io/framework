@@ -15,6 +15,7 @@ use Windwalker\Data\Traits\CollectionTrait;
  *
  * @since 2.0
  */
+#[\AllowDynamicProperties]
 class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable
 {
     use CollectionTrait;
