@@ -14,6 +14,8 @@ namespace Windwalker\Query\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
+use function Windwalker\unwrap_enum;
+
 /**
  * The ValueCaluse class.
  */
@@ -38,7 +40,7 @@ class ValueClause implements ClauseInterface
      */
     public function __construct(mixed $value)
     {
-        $this->value = $value;
+        $this->value = unwrap_enum($value);
     }
 
     public function __toString(): string

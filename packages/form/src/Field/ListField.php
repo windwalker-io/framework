@@ -120,6 +120,6 @@ class ListField extends AbstractField
             return TypeCast::toArray($value);
         }
 
-        return (string) $value;
+        return TypeCast::toString($value);
     }
 }
