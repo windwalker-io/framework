@@ -177,6 +177,11 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
         if ($type === static::XML) {
             $result = $this->ownerDocument->saveXML($this);
         } elseif (class_exists(HTML5::class)) {
+            /*
+             * Native PHP DOMDocument will wrap `foo " bar` with single quote like: `attr='foo " bar'`
+             * Some scanning software will consider it is a XSS vulnerabilities.
+             * Use HTML5 package that can render it to correct `attr="foo &quote; bar"`
+             */
             $result = DOMFactory::html5()->saveHTML($this);
         } else {
             $dom = HTMLFactory::document();
