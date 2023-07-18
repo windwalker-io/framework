@@ -13,6 +13,7 @@ namespace Windwalker\Authentication;
  *
  * @since  2.0
  */
+#[\AllowDynamicProperties]
 class Credential implements \ArrayAccess
 {
     /**
