@@ -13,6 +13,7 @@ namespace Windwalker\DI;
  *
  * @since  2.0
  */
+#[\AllowDynamicProperties]
 class DataStore
 {
     /**
@@ -41,7 +42,7 @@ class DataStore
      *
      * @var mixed
      */
-    protected $instances;
+    protected $instance;
 
     /**
      * Class init.
