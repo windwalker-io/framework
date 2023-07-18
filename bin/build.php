@@ -24,7 +24,7 @@ class Build extends AbstractCliApplication
      *
      * @var  string
      */
-    protected $organization = 'ventoviro';
+    protected $organization = 'windwalker-io';
 
     /**
      * Property lastOutput.
@@ -184,7 +184,7 @@ class Build extends AbstractCliApplication
         // Add remote repo
         $this->exec(
             sprintf(
-                'git remote add %s git@github.com:%s/windwalker-%s.git', $subtree, $this->organization,
+                'git remote add %s git@github.com:%s/%s.git', $subtree, $this->organization,
                 $subtree
             )
         );
