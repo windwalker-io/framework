@@ -13,6 +13,7 @@ namespace Windwalker\Authentication;
  * 
  * @since  2.0
  */
+#[\AllowDynamicProperties]
 class Credential implements \ArrayAccess
 {
 	/**
@@ -76,6 +77,7 @@ class Credential implements \ArrayAccess
 	 *
 	 * @return  boolean
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($offset)
 	{
 		return property_exists($this, $offset);
@@ -89,6 +91,7 @@ class Credential implements \ArrayAccess
 	 * @throws  \InvalidArgumentException
 	 * @return  mixed The value to return.
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		return $this->$offset;
@@ -103,6 +106,7 @@ class Credential implements \ArrayAccess
 	 * @throws  \InvalidArgumentException
 	 * @return  void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($offset, $value)
 	{
 		$this->$offset = $value;
@@ -116,6 +120,7 @@ class Credential implements \ArrayAccess
 	 * @throws  \InvalidArgumentException
 	 * @return  void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($offset)
 	{
 		if (property_exists($this, $offset))
