@@ -13,7 +13,7 @@ namespace Windwalker\Utilities\Queue;
  * 
  * @since  2.1.1
  */
-class PriorityQueue extends \SplPriorityQueue implements \Serializable
+class PriorityQueue extends \SplPriorityQueue
 {
 	/**
 	 * @var int Seed used to ensure queue order for items of the same priority
@@ -110,7 +110,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 *
 	 * @return string
 	 */
-	public function serialize()
+	public function __serialize()
 	{
 		$clone = clone $this;
 
@@ -133,7 +133,8 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 *
 	 * @return void
 	 */
-	public function unserialize($data)
+
+	public function __unserialize($data)
 	{
 		foreach (unserialize($data) as $item)
 		{
@@ -178,6 +179,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 *
 	 * @return  int
 	 */
+	#[\ReturnTypeWillChange]
 	public function compare($priority1, $priority2)
 	{
 		$p1Count = count($priority1);

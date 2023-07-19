@@ -702,7 +702,7 @@ class Query implements QueryInterface, PreparableInterface
 			return $text;
 		}
 
-		if (!method_exists($this->connection, 'quote'))
+		if (!$this->connection || !method_exists($this->connection, 'quote'))
 		{
 			$result = $this->escapeWithNoConnection($text);
 		}

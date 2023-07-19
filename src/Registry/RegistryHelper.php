@@ -63,7 +63,7 @@ class RegistryHelper
 		// Load a string into the given namespace [or default namespace if not given]
 		$class = static::getFormatClass($format);
 
-		return $class::stringToStruct($data, $options);
+		return $class::stringToStruct((string) $data, $options);
 	}
 
 	/**

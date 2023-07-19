@@ -70,12 +70,12 @@ class DataStore
 	{
 		if ($this->shared)
 		{
-			if (empty($this->instances) || $forceNew)
+			if (empty($this->instance) || $forceNew)
 			{
-				$this->instances = call_user_func($this->callback, $container);
+				$this->instance = call_user_func($this->callback, $container);
 			}
 
-			return $this->instances;
+			return $this->instance;
 		}
 
 		return call_user_func($this->callback, $container);

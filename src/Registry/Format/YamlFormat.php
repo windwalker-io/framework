@@ -67,7 +67,7 @@ class YamlFormat implements FormatInterface
 	 */
 	static public function stringToStruct($data, array $options = array())
 	{
-		$array = static::getParser()->parse(trim($data));
+		$array = static::getParser()->parse(trim((string) $data));
 
 		return json_decode(json_encode($array));
 	}
