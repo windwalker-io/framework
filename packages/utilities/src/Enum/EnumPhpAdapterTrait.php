@@ -45,6 +45,11 @@ trait EnumPhpAdapterTrait
         return static::tryFrom($value);
     }
 
+    /**
+     * @return  array<static>
+     *
+     * @throws \ReflectionException
+     */
     public static function values(): array
     {
         if (is_subclass_of(static::class, \UnitEnum::class)) {
@@ -62,6 +67,11 @@ trait EnumPhpAdapterTrait
         return array_map(fn ($value) => static::wrap($value), static::toArray());
     }
 
+    /**
+     * @return  array<static>
+     *
+     * @throws \ReflectionException
+     */
     public static function cases(): array
     {
         return array_values(static::values());
