@@ -17,10 +17,22 @@ use ParagonIE\ConstantTime\EncoderInterface;
 use ParagonIE\ConstantTime\Hex;
 
 /**
- * The SecretEncoder class.
+ * The SecretToolkit class.
  */
-class SecretEncoder
+class SecretToolkit
 {
+    /**
+     * @throws \Exception
+     */
+    public static function genSecretString(
+        int $length = SECRET_128BIT,
+        string $encoder = ENCODER_BASE64URLSAFE
+    ): string {
+        $secret = random_bytes($length);
+
+        return static::encode($secret, $encoder);
+    }
+
     /**
      * @throws \Exception
      */
@@ -28,19 +40,7 @@ class SecretEncoder
         int $length = SECRET_128BIT,
         string $encoder = ENCODER_BASE64URLSAFE
     ): string {
-        $secret = random_bytes($length);
-
-        return $encoder . ':' . static::encode($secret, $encoder);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public static function genSecretWithPrefix(
-        int $length = SECRET_128BIT,
-        string $encoder = ENCODER_BASE64URLSAFE
-    ): string {
-        return $encoder . ':' . static::genSecret($length, $encoder);
+        return $encoder . ':' . static::genSecretString($length, $encoder);
     }
 
     public static function encode(string $binaryString, string $encoder = ENCODER_BASE64URLSAFE): string
@@ -74,7 +74,13 @@ class SecretEncoder
      */
     public static function extract(string $string): array
     {
-        return explode(':', $string, 2);
+        $extracted = explode(':', $string, 2);
+
+        if (count($extracted) === 1) {
+            throw new \InvalidArgumentException('Invalid secret string.');
+        }
+
+        return $extracted;
     }
 
     public static function getEncoder(string $string): ?string
@@ -85,6 +91,10 @@ class SecretEncoder
 
         [$encoder] = static::extract($string);
 
+        if (!in_array($encoder, ENCODERS, true)) {
+            return null;
+        }
+
         return $encoder;
     }
 
@@ -92,7 +102,7 @@ class SecretEncoder
     {
         $encoder = static::getEncoder($string);
 
-        return $encoder !== null;
+        return $encoder !== null && in_array($encoder, ENCODERS, true);
     }
 
     public static function decode(string $string): string
@@ -120,5 +130,14 @@ class SecretEncoder
         }
 
         return $decoder::decode($string);
+    }
+
+    public static function decodeIfHasPrefix(string $string): string
+    {
+        if (static::canDecode($string)) {
+            return static::decode($string);
+        }
+
+        return $string;
     }
 }
