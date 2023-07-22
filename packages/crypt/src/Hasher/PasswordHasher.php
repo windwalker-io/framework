@@ -17,6 +17,7 @@ namespace Windwalker\Crypt\Hasher;
 class PasswordHasher implements PasswordHasherInterface
 {
     public const SEED_ALNUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    public const SEED_ALNUM_SPECIAL_CHARS = self::SEED_ALNUM . '!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~';
 
     public function __construct(
         protected string|int|null $algo = null,

@@ -17,6 +17,8 @@ use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
 
+use const Windwalker\Crypt\ENCODER_BASE64URLSAFE;
+
 /**
  * The PhpAesCipher class.
  *
@@ -44,9 +46,9 @@ class PhpAesCipher implements CipherInterface
     /**
      * Method to decrypt a data string.
      *
-     * @param string $str
-     * @param string|Key $key The private key.
-     * @param string $encoder
+     * @param string            $str
+     * @param string|Key        $key  The private key.
+     * @param  string|callable  $encoder
      *
      * @return HiddenString The decrypted data string.
      *
@@ -55,7 +57,7 @@ class PhpAesCipher implements CipherInterface
     public function decrypt(
         string $str,
         #[\SensitiveParameter] Key|string $key,
-        string $encoder = SafeEncoder::BASE64URLSAFE
+        string|callable $encoder = ENCODER_BASE64URLSAFE
     ): HiddenString {
         $key = Key::strip($key);
 
@@ -69,9 +71,9 @@ class PhpAesCipher implements CipherInterface
     /**
      * Method to encrypt a data string.
      *
-     * @param string|HiddenString $str
-     * @param string|Key          $key The private key.
-     * @param string              $encoder
+     * @param string|HiddenString  $str
+     * @param string|Key           $key  The private key.
+     * @param  string|callable     $encoder
      *
      * @return  string  The encrypted data string.
      *
@@ -80,7 +82,7 @@ class PhpAesCipher implements CipherInterface
     public function encrypt(
         #[\SensitiveParameter] HiddenString|string $str,
         #[\SensitiveParameter] Key|string $key,
-        string $encoder = SafeEncoder::BASE64URLSAFE
+        string|callable $encoder = ENCODER_BASE64URLSAFE
     ): string {
         $str = HiddenString::strip($str);
         $key = Key::strip($key);
