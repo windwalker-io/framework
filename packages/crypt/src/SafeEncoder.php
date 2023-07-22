@@ -43,7 +43,7 @@ class SafeEncoder
      */
     public static function encode(string $encoder, string $data): string
     {
-        return static::chooseEncoder($encoder)::encode($data);
+        return static::encodeBy($encoder, $data);
     }
 
     /**
@@ -56,7 +56,39 @@ class SafeEncoder
      */
     public static function decode(string $encoder, string $data): string
     {
-        return static::chooseEncoder($encoder)::decode($data);
+        return static::decodeBy($encoder, $data);
+    }
+
+    /**
+     * Workaround for https://youtrack.jetbrains.com/issue/WI-70511
+     *
+     * @param  string  $encoder
+     * @param  string  $data
+     *
+     * @return  string
+     */
+    protected static function encodeBy(string $encoder, string $data): string
+    {
+        /** @var class-string<EncoderInterface> $encoder */
+        $encoder = static::chooseEncoder($encoder);
+
+        return $encoder::encode($data);
+    }
+
+    /**
+     * Workaround for https://youtrack.jetbrains.com/issue/WI-70511
+     *
+     * @param  string  $encoder
+     * @param  string  $data
+     *
+     * @return  string
+     */
+    protected static function decodeBy(string $encoder, string $data): string
+    {
+        /** @var class-string<EncoderInterface> $encoder */
+        $encoder = static::chooseEncoder($encoder);
+
+        return $encoder::decode($data);
     }
 
     /**
@@ -64,7 +96,7 @@ class SafeEncoder
      *
      * @param  string  $encoder
      *
-     * @return  string|EncoderInterface
+     * @return  class-string<EncoderInterface>
      */
     public static function chooseEncoder(string $encoder): string
     {

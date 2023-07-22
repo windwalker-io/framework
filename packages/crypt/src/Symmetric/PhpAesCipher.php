@@ -23,6 +23,8 @@ use Windwalker\Crypt\SafeEncoder;
  * @see    https://gist.github.com/chrisns/3992815
  *
  * @since  3.0
+ *
+ * @deprecated  This class is keep for B/C, use SodiumCipher instead.
  */
 class PhpAesCipher implements CipherInterface
 {
