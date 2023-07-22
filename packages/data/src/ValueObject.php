@@ -24,6 +24,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The ValueObject class.
  */
+#[\AllowDynamicProperties]
 class ValueObject implements
     ArrayAccessibleInterface,
     DumpableInterface,
