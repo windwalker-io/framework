@@ -67,9 +67,37 @@ class SecretEncoder
         return $encoder::encode($binaryString);
     }
 
+    /**
+     * @param  string  $string
+     *
+     * @return  array{ 0: string, 1: string }
+     */
+    public static function extract(string $string): array
+    {
+        return explode(':', $string, 2);
+    }
+
+    public static function getEncoder(string $string): ?string
+    {
+        if (!str_contains($string, ':')) {
+            return null;
+        }
+
+        [$encoder] = static::extract($string);
+
+        return $encoder;
+    }
+
+    public static function canDecode(string $string): bool
+    {
+        $encoder = static::getEncoder($string);
+
+        return $encoder !== null;
+    }
+
     public static function decode(string $string): string
     {
-        [$decoder, $string] = explode(':', $string, 2);
+        [$decoder, $string] = static::extract($string);
 
         return static::decodeBy($string, $decoder);
     }
