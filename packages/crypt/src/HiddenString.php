@@ -57,17 +57,11 @@ class HiddenString
 
     public static function strip(#[\SensitiveParameter] self|string $value): string
     {
-        if (!$value instanceof static && PHP_VERSION_ID < 80200) {
-            throw new \LogicException(
-                'Do not use pure value for encrypting before PHP8.2'
-            );
-        }
-
         if ($value instanceof static) {
             $value = $value->get();
         }
 
-        return $value;
+        return SecretToolkit::decodeIfHasPrefix($value);
     }
 
     /**

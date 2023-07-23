@@ -29,6 +29,7 @@ use const SODIUM_CRYPTO_AUTH_KEYBYTES;
 use const SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
 use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 use const SODIUM_CRYPTO_STREAM_KEYBYTES;
+use const Windwalker\Crypt\ENCODER_BASE64URLSAFE;
 
 /**
  * A cipher to encrypt/decrypt data by libsodium.
@@ -51,7 +52,7 @@ class SodiumCipher implements CipherInterface
     public function decrypt(
         string $str,
         #[\SensitiveParameter] Key|string $key,
-        string $encoder = SafeEncoder::BASE64URLSAFE
+        string|callable $encoder = ENCODER_BASE64URLSAFE
     ): HiddenString {
         $message = SafeEncoder::decode($encoder, $str);
 
@@ -105,7 +106,7 @@ class SodiumCipher implements CipherInterface
     public function encrypt(
         #[\SensitiveParameter] HiddenString|string $str,
         #[\SensitiveParameter] Key|string $key,
-        string $encoder = SafeEncoder::BASE64URLSAFE
+        string|callable $encoder = ENCODER_BASE64URLSAFE
     ): string {
         $str = HiddenString::strip($str);
 

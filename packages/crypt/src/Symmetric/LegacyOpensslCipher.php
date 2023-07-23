@@ -20,6 +20,8 @@ use Windwalker\Crypt\SafeEncoder;
 
 use function sodium_memzero;
 
+use const Windwalker\Crypt\ENCODER_BASE64;
+
 /**
  * The Openssl Cipher class.
  *
@@ -40,7 +42,7 @@ class LegacyOpensslCipher extends OpensslCipher
     public function decrypt(
         string $str,
         #[\SensitiveParameter] Key|string $key,
-        string $encoder = SafeEncoder::BASE64
+        string|callable $encoder = ENCODER_BASE64
     ): HiddenString {
         $key = Key::strip($key);
 
@@ -90,7 +92,7 @@ class LegacyOpensslCipher extends OpensslCipher
     public function encrypt(
         #[\SensitiveParameter] HiddenString|string $str,
         #[\SensitiveParameter] Key|string $key,
-        string $encoder = SafeEncoder::BASE64
+        string|callable $encoder = ENCODER_BASE64
     ): string {
         $str = HiddenString::strip($str);
         $key = Key::strip($key);
