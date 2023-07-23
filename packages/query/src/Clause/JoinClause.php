@@ -170,6 +170,10 @@ class JoinClause implements ClauseInterface
             $value($value = $this->query->createSubQuery());
         }
 
+        if ($value instanceof \BackedEnum) {
+            $value = val($value->value);
+        }
+
         if ($value instanceof Enum) {
             $value = val($value->getValue());
         }
