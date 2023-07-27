@@ -31,6 +31,7 @@ use const Windwalker\Stream\READ_WRITE_RESET;
 class Response implements ResponseInterface
 {
     use MessageTrait;
+    use ResponseTrait;
 
     /**
      * Property statusCode.

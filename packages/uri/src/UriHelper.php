@@ -297,4 +297,34 @@ class UriHelper
 
         return $string;
     }
+
+    public static function isAbsolute(string $path): bool
+    {
+        if ('' === $path) {
+            return false;
+        }
+
+        if (str_contains($path, '://')) {
+            return true;
+        }
+
+        if (str_starts_with($path, '/') || str_starts_with($path, '\\')) {
+            return true;
+        }
+
+        // Windows root
+        if (strlen($path) > 1 && ':' === $path[1] && ctype_alpha($path[0])) {
+            // C:
+            if (2 === strlen($path)) {
+                return true;
+            }
+
+            // C:/ or C:\
+            if ('/' === $path[2] || '\\' === $path[2]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

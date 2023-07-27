@@ -21,7 +21,7 @@ trait EventAwareTrait
     /**
      * Property dispatcher.
      *
-     * @var  EventEmitter
+     * @var  ?EventEmitter
      */
     protected ?EventEmitter $dispatcher = null;
 
