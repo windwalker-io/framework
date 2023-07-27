@@ -15,6 +15,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Windwalker\Http\Exception\HttpRequestException;
+use Windwalker\Http\Response\Response;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
@@ -26,10 +27,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 {
     use OptionAccessTrait;
 
-    /**
-     * @var resource
-     */
-    protected $mh;
+    protected ?\CurlMultiHandle $mh = null;
 
     protected ?PromiseInterface $promise = null;
 
@@ -41,33 +39,26 @@ class MultiCurlTransport implements AsyncTransportInterface
     protected array $tasks = [];
 
     /**
-     * @var TransportInterface|null
+     * @var CurlTransportInterface|null
      */
-    protected ?TransportInterface $transport;
+    protected ?CurlTransportInterface $transport;
 
     /**
      * Class init.
      *
-     * @param  array               $options    The options of this client object.
-     * @param  CurlTransport|null  $transport  The Transport handler, default is CurlTransport.
+     * @param  array                        $options    The options of this client object.
+     * @param  CurlTransportInterface|null  $transport  The Transport handler, default is CurlTransport.
      */
-    public function __construct($options = [], CurlTransport $transport = null)
+    public function __construct(array $options = [], CurlTransportInterface $transport = null)
     {
         $this->prepareOptions([], $options);
 
         $this->transport = $transport ?? new CurlTransport();
     }
 
-    /**
-     * getHandle
-     *
-     * @return  resource
-     */
-    public function getMainHandle()
+    public function getMainHandle(): \CurlMultiHandle
     {
-        if (!$this->mh) {
-            $this->mh = curl_multi_init();
-        }
+        $this->mh ??= curl_multi_init();
 
         return $this->mh;
     }
@@ -97,7 +88,6 @@ class MultiCurlTransport implements AsyncTransportInterface
      */
     public function sendRequest(RequestInterface $request, array $options = []): PromiseInterface
     {
-        /** @var CurlTransport $transport */
         $transport = $this->getTransport();
 
         $this->tasks[] = [
@@ -157,7 +147,6 @@ class MultiCurlTransport implements AsyncTransportInterface
                     );
                 }
 
-                /** @var CurlTransport $transport */
                 $transport = $this->getTransport();
 
                 foreach ($this->tasks as $task) {
@@ -169,7 +158,11 @@ class MultiCurlTransport implements AsyncTransportInterface
                     $error = curl_error($handle);
 
                     if (!$error) {
-                        $res = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+                        $res = $transport->toResponse(
+                            curl_multi_getcontent($handle),
+                            curl_getinfo($handle),
+                            new Response()
+                        );
                         $promise->resolve($res);
                     } else {
                         $promise->reject(new HttpRequestException($error, curl_errno($handle)));

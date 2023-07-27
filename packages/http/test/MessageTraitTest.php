@@ -63,14 +63,6 @@ class MessageTraitTest extends TestCase
 
         self::assertNotSame($this->message, $message);
         self::assertEquals('1.0', $message->getProtocolVersion());
-
-        // Wrong type
-        self::assertExpectedException(
-            function () use ($message) {
-                $message->withProtocolVersion(1.0);
-            },
-            InvalidArgumentException::class
-        );
     }
 
     /**

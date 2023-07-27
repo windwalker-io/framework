@@ -48,7 +48,7 @@ class HiddenString
 
     public static function wrap(#[\SensitiveParameter] mixed $value): HiddenString
     {
-        if (!$value instanceof static) {
+        if (!$value instanceof self) {
             $value = new static((string) $value);
         }
 
@@ -57,7 +57,7 @@ class HiddenString
 
     public static function strip(#[\SensitiveParameter] self|string $value): string
     {
-        if ($value instanceof static) {
+        if ($value instanceof self) {
             $value = $value->get();
         }
 

@@ -32,14 +32,14 @@ use Windwalker\Utilities\Arr;
  *
  * @since  2.1
  */
-class CurlTransport extends AbstractTransport
+class CurlTransport extends AbstractTransport implements CurlTransportInterface
 {
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param RequestInterface $request The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
-     * @param array            $options
+     * @param  array             $options
      *
      * @return  ResponseInterface
      *
@@ -67,30 +67,39 @@ class CurlTransport extends AbstractTransport
         }
 
         // Get the request information.
-        $info = curl_getinfo($ch);
+        $info = (array) curl_getinfo($ch);
 
         // Close the connection.
         curl_close($ch);
 
-        return $this->getResponse((string) $content, $info);
+        return $this->toResponse((string) $content, $info, $this->createResponse());
     }
 
     /**
      * Method to get a response object from a server response.
      *
-     * @param string $content     The complete server response, including headers
+     * @param  string  $content   The complete server response, including headers
      *                            as a string if the response has no errors.
-     * @param array  $info        The cURL request information.
+     * @param  array   $info      The cURL request information.
      *
-     * @return  Response
+     * @return  Response|ResponseInterface
      *
      * @throws  UnexpectedValueException
-     * @since   2.0
+     * @since       2.0
+     *
+     * @deprecated  Use toResponse()
      */
-    public function getResponse(string $content, mixed $info): Response|ResponseInterface
+    public function getResponse(string $content, array $info): Response|ResponseInterface
     {
         // Create the response object.
         $return = $this->createResponse();
+
+        return $this->toResponse($content, $info, $return);
+    }
+
+    public function toResponse(string $content, array $info, ?ResponseInterface $response = null): ResponseInterface
+    {
+        $response ??= $this->createResponse();
 
         // Get the number of redirects that occurred.
         $redirects = $info['redirect_count'] ?? 0;
@@ -101,15 +110,15 @@ class CurlTransport extends AbstractTransport
          * also be included. So we split the response into header + body + the number of redirects
          * and only use the last two sections which should be the last set of headers and the actual body.
          */
-        $response = explode("\r\n\r\n", $content, 2 + $redirects);
+        $parts = explode("\r\n\r\n", $content, 2 + $redirects);
 
         // Set the body for the response.
-        $return->getBody()->write(array_pop($response));
+        $response->getBody()->write(array_pop($parts));
 
-        $return->getBody()->rewind();
+        $response->getBody()->rewind();
 
         // Get the last set of response headers as an array.
-        $headers = explode("\r\n", (string) array_pop($response));
+        $headers = explode("\r\n", (string) array_pop($parts));
 
         // Get the response code from the first offset of the response headers.
         preg_match('/[0-9]{3}/', array_shift($headers), $matches);
@@ -117,7 +126,7 @@ class CurlTransport extends AbstractTransport
         $code = count($matches) ? $matches[0] : null;
 
         if (is_numeric($code)) {
-            $return = $return->withStatus($code);
+            $response = $response->withStatus($code);
         } elseif (!$this->getOption('allow_empty_status_code', false)) {
             // No valid response code was detected.
             throw new HttpRequestException('No HTTP response code found.');
@@ -127,10 +136,10 @@ class CurlTransport extends AbstractTransport
         foreach ($headers as $header) {
             $pos = strpos($header, ':');
 
-            $return = $return->withHeader(trim(substr($header, 0, $pos)), trim(substr($header, ($pos + 1))));
+            $response = $response->withHeader(trim(substr($header, 0, $pos)), trim(substr($header, ($pos + 1))));
         }
 
-        return $return;
+        return $response;
     }
 
     /**
@@ -150,14 +159,14 @@ class CurlTransport extends AbstractTransport
     /**
      * createHandle
      *
-     * @param RequestInterface $request
-     * @param array            $options
+     * @param  RequestInterface  $request
+     * @param  array             $options
      *
-     * @return  \CurlHandle|false|resource
+     * @return  \CurlHandle|false
      *
      * @since  3.2
      */
-    public function createHandle(RequestInterface $request, array $options)
+    public function createHandle(RequestInterface $request, array $options): \CurlHandle|false
     {
         // Setup the cURL handle.
         $ch = curl_init();
@@ -172,8 +181,8 @@ class CurlTransport extends AbstractTransport
     /**
      * setTheRequestMethod
      *
-     * @param RequestInterface $request
-     * @param array            $options
+     * @param  RequestInterface  $request
+     * @param  array             $options
      *
      * @return  array
      */
@@ -212,7 +221,7 @@ class CurlTransport extends AbstractTransport
             $opt[CURLOPT_POSTFIELDS] = $data;
         }
 
-        $request = $this->prepareHeaders($request, $forceMultipart);
+        $request = static::prepareHeaders($request, $forceMultipart);
 
         // Add the relevant headers.
         if (isset($opt[CURLOPT_POSTFIELDS]) && $opt[CURLOPT_POSTFIELDS] !== '') {
@@ -227,7 +236,7 @@ class CurlTransport extends AbstractTransport
 
         // If an explicit timeout is given user it.
         if ($timeout = $this->getOption('timeout')) {
-            $opt[CURLOPT_TIMEOUT]        = (int) $timeout;
+            $opt[CURLOPT_TIMEOUT] = (int) $timeout;
             $opt[CURLOPT_CONNECTTIMEOUT] = (int) $timeout;
         }
 
@@ -263,8 +272,8 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
-     * @param RequestInterface $request
-     * @param bool             $forceMultipart
+     * @param  RequestInterface  $request
+     * @param  bool              $forceMultipart
      *
      * @return  RequestInterface
      */
@@ -279,7 +288,7 @@ class CurlTransport extends AbstractTransport
 
             $data = Arr::mapRecursive($data, static function ($value) use (&$forceMultipart) {
                 if ($value instanceof HttpUploadFileInterface) {
-                    $value          = $value->toCurlFile();
+                    $value = $value->toCurlFile();
                     $forceMultipart = true;
                 }
 
@@ -293,8 +302,8 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
-     * @param RequestInterface $request
-     * @param bool             $forceMultipart
+     * @param  RequestInterface  $request
+     * @param  bool              $forceMultipart
      *
      * @return  RequestInterface
      */
@@ -306,7 +315,7 @@ class CurlTransport extends AbstractTransport
             'post',
             'put',
             'patch',
-            'delete'
+            'delete',
         ];
 
         if (in_array(strtolower($request->getMethod()), $postMethods, true)) {
@@ -329,10 +338,10 @@ class CurlTransport extends AbstractTransport
     /**
      * Use stream to download file.
      *
-     * @param RequestInterface       $request The request object to store request params.
-     * @param string|StreamInterface $dest    The dest path to store file.
+     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  string|StreamInterface  $dest     The dest path to store file.
      *
-     * @param array                  $options
+     * @param  array                   $options
      *
      * @return  ResponseInterface
      * @since   2.1
@@ -372,7 +381,7 @@ class CurlTransport extends AbstractTransport
     /**
      * setCABundleToOptions
      *
-     * @param array $options
+     * @param  array  $options
      *
      * @return  array
      *

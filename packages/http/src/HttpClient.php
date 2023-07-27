@@ -51,13 +51,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 {
     use OptionAccessTrait;
 
-    /**
-     * Property transport.
-     *
-     * @var  TransportInterface
-     */
-    protected TransportInterface $transport;
-
     protected ?AsyncTransportInterface $asyncTransport = null;
 
     /**
@@ -83,14 +76,12 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  array                    $options    The options of this client object.
      * @param  TransportInterface|null  $transport  The Transport handler, default is CurlTransport.
      */
-    public function __construct(array $options = [], ?TransportInterface $transport = null)
+    public function __construct(array $options = [], protected ?TransportInterface $transport = null)
     {
         $this->prepareOptions(
             [],
             $options
         );
-
-        $this->transport = $transport ?? new CurlTransport();
     }
 
     /**
@@ -272,7 +263,13 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      */
     public function getTransport(): TransportInterface
     {
-        return $this->transport;
+        $transport = $this->transport ??= new CurlTransport();
+
+        foreach ($this->getOptions()['transport'] ?? [] as $key => $value) {
+            $transport->setOption($key, $value);
+        }
+
+        return $transport;
     }
 
     /**
@@ -457,8 +454,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      */
     public function getAsyncTransport(): AsyncTransportInterface
     {
+        $transport = $this->getTransport();
+
+        if (!$transport instanceof CurlTransport) {
+            throw new \DomainException('Async request only support CurlTransport now.');
+        }
+
         return $this->asyncTransport
-            ??= new MultiCurlTransport([], $this->getTransport());
+            ??= new MultiCurlTransport([], $transport);
     }
 
     /**

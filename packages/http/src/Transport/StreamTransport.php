@@ -18,8 +18,8 @@ use Psr\Http\Message\StreamInterface;
 use UnexpectedValueException;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\File\HttpUploadFileInterface;
-use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
@@ -70,7 +70,7 @@ class StreamTransport extends AbstractTransport
             $headers = [];
         }
 
-        return $this->getResponse($headers, $content);
+        return $this->toResponse($headers, $content);
     }
 
     /**
@@ -201,30 +201,33 @@ class StreamTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param  array   $headers  The response headers as an array.
-     * @param  string  $body     The response body as a string.
+     * @param  array                   $headers  The response headers as an array.
+     * @param  string                  $body     The response body as a string.
+     * @param  ResponseInterface|null  $response
      *
-     * @return  Response
+     * @return ResponseInterface
      *
-     * @throws  UnexpectedValueException
-     * @since   2.1
+     * @psalm-template R
+     * @psalm-param R $response
+     * @psalm-return R
+     *
+     * @since    2.1
      */
-    protected function getResponse(array $headers, string $body): Response
+    public function toResponse(array $headers, string $body, ?ResponseInterface $response = null): ResponseInterface
     {
-        // Create the response object.
-        $return = new Response();
+        $response ??= new Response();
 
         // Set the body for the response.
-        $return->getBody()->write($body);
+        $response->getBody()->write($body);
 
-        $return->getBody()->rewind();
+        $response->getBody()->rewind();
 
         // Get the response code from the first offset of the response headers.
         preg_match('/[0-9]{3}/', array_shift($headers), $matches);
         $code = $matches[0];
 
         if (is_numeric($code)) {
-            $return = $return->withStatus($code);
+            $response = $response->withStatus($code);
         } elseif (!$this->getOption('allow_empty_status_code', false)) {
             // No valid response code was detected.
             throw new UnexpectedValueException('No HTTP response code found.');
@@ -233,10 +236,10 @@ class StreamTransport extends AbstractTransport
         foreach ($headers as $header) {
             $pos = strpos($header, ':');
 
-            $return = $return->withHeader(trim(substr($header, 0, $pos)), trim(substr($header, ($pos + 1))));
+            $response = $response->withHeader(trim(substr($header, 0, $pos)), trim(substr($header, ($pos + 1))));
         }
 
-        return $return;
+        return $response;
     }
 
     /**
