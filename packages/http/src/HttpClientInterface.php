@@ -14,6 +14,7 @@ namespace Windwalker\Http;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Stringable;
+use Windwalker\Http\Response\HttpClientResponse;
 
 /**
  * Interface HttpClientInterface
@@ -34,12 +35,12 @@ interface HttpClientInterface extends ClientInterface
      * @param  mixed              $body     The request body data, can be an array of POST data.
      * @param  array              $options  The options array.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      */
     public function request(
         string $method,
         Stringable|string $url,
-        $body = null,
+        mixed $body = null,
         array $options = []
-    ): ResponseInterface;
+    ): HttpClientResponse;
 }

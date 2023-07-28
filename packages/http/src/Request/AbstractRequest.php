@@ -184,7 +184,7 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Retrieves the HTTP method of the request.
      *
-     * @return string Returns the request method.
+     * @return ?string Returns the request method.
      */
     public function getMethod(): ?string
     {

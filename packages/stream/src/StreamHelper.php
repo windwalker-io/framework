@@ -49,7 +49,7 @@ abstract class StreamHelper
      */
     public static function copyTo(StreamInterface $src, mixed $dest): void
     {
-        $destStream = $dest instanceof StreamInterface ? $dest : new Stream($dest, READ_WRITE_RESET);
+        $destStream = Stream::wrap($dest, READ_WRITE_RESET);
 
         static::copy($src, $destStream);
 

@@ -17,6 +17,7 @@ use Windwalker\Http\Event\HttpClient\BeforeRequestEvent;
 use Windwalker\Http\FormData;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\Request\Request;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\JsonResponse;
 use Windwalker\Http\Test\Mock\MockTransport;
 use Windwalker\Http\Transport\CurlTransport;
@@ -373,7 +374,7 @@ class HttpClientTest extends TestCase
         $this->instance->on(
             AfterRequestEvent::class,
             function (AfterRequestEvent $event) {
-                $event->setResponse(new JsonResponse([123]));
+                $event->setResponse(new JsonResponse([123])); // Will be converted to HttpClientResponse
             }
         );
 
@@ -382,10 +383,7 @@ class HttpClientTest extends TestCase
         self::assertTrue($res->isSuccess());
         self::assertEquals('TokenValue', $this->transport->request->getHeaderLine('X-XSRF-Token'));
         self::assertEquals('https://api.foo.com/validate', $this->transport->request->getRequestTarget());
-        self::assertInstanceOf(
-            JsonResponse::class,
-            $res
-        );
+
         self::assertEquals(
             '[123]',
             (string) $res->getBody()

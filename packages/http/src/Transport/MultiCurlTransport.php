@@ -158,7 +158,7 @@ class MultiCurlTransport implements AsyncTransportInterface
                     $error = curl_error($handle);
 
                     if (!$error) {
-                        $res = $transport->toResponse(
+                        $res = $transport->contentToResponse(
                             curl_multi_getcontent($handle),
                             curl_getinfo($handle),
                             new Response()

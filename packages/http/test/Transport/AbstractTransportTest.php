@@ -95,7 +95,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(WINDWALKER_TEST_HTTP_URL . '/json?foo=bar'))
+        $request = $request->withUri(new Uri(AbstractTransportTest::getTestUrlFromConstant() . '/json?foo=bar'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
@@ -105,7 +105,7 @@ abstract class AbstractTransportTest extends TestCase
 
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(WINDWALKER_TEST_HTTP_URL . '/json?foo=bar&baz[3]=yoo'))
+        $request = $request->withUri(new Uri(AbstractTransportTest::getTestUrlFromConstant() . '/json?foo=bar&baz[3]=yoo'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
@@ -140,7 +140,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(WINDWALKER_TEST_HTTP_URL . '/wrong'))
+        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/wrong'))
             ->withMethod('POST');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -160,7 +160,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(WINDWALKER_TEST_HTTP_URL))
+        $request = $request->withUri(new Uri(static::getTestUrlFromConstant()))
             ->withMethod('POST');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -182,7 +182,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(WINDWALKER_TEST_HTTP_URL))
+        $request = $request->withUri(new Uri(static::getTestUrlFromConstant()))
             ->withMethod('PUT');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -204,7 +204,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $uri = new Uri(WINDWALKER_TEST_HTTP_URL . '/auth');
+        $uri = new Uri(static::getTestUrlFromConstant() . '/auth');
         $uri = $uri->withUserInfo('username', 'pass1234');
 
         $request = $request->withUri($uri)
@@ -227,7 +227,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(WINDWALKER_TEST_HTTP_URL . '?foo=bar'))
+        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '?foo=bar'))
             ->withMethod('POST');
 
         $request->getBody()->write('flower=sakura');
@@ -261,7 +261,7 @@ abstract class AbstractTransportTest extends TestCase
 
         $request = $this->createRequest(new Stream());
 
-        $src = WINDWALKER_TEST_HTTP_URL;
+        $src = static::getTestUrlFromConstant();
 
         $request = $request->withUri(new Uri($src . '/json?foo=bar'))
             ->withMethod('GET');
@@ -274,16 +274,47 @@ abstract class AbstractTransportTest extends TestCase
         );
     }
 
+    public function testWriteStream(): void
+    {
+        $root = vfsStream::setup(
+            'root',
+            0755,
+            [
+                'download' => [],
+            ]
+        );
+
+        $dest = 'vfs://root/download/stream.tmp';
+
+        self::assertFileDoesNotExist($dest);
+
+        $request = $this->createRequest();
+        $src = static::getTestUrlFromConstant();
+
+        $request = $request->withUri(new Uri($src . '/json?foo=bar'))
+            ->withMethod('GET');
+
+        $res = $this->instance->request(
+            $request,
+            [
+                'write_stream' => Stream::fromFilePath($dest)
+            ]
+        );
+
+        self::assertStringSafeEquals(
+            '{"foo":"bar"}',
+            trim(file_get_contents($dest))
+        );
+    }
+
     protected function getTestUrl(): Uri
     {
-        return new Uri(WINDWALKER_TEST_HTTP_URL);
+        return new Uri(static::getTestUrlFromConstant());
     }
 
     protected function getHost(): string
     {
-        $uri = $this->getTestUrl();
-
-        return $uri->toString(Uri::HOST | Uri::PORT);
+        return $this->getTestUrl()->toString(Uri::HOST | Uri::PORT);
     }
 
     /**
@@ -306,5 +337,13 @@ abstract class AbstractTransportTest extends TestCase
 
             throw $e;
         }
+    }
+
+    /**
+     * @return  mixed
+     */
+    protected static function getTestUrlFromConstant()
+    {
+        return WINDWALKER_TEST_HTTP_URL;
     }
 }

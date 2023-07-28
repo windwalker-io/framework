@@ -21,6 +21,7 @@ use Windwalker\Http\File\HttpUploadFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpClientInterface;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
@@ -43,15 +44,17 @@ class StreamTransport extends AbstractTransport
      *
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    protected function doRequest(RequestInterface $request, array $options = []): ResponseInterface
+    protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse
     {
         $stream = $this->createStream($request, $options);
 
-        if ($dest = ($options['target_file'] ?? null)) {
+        $dest = ($options['write_stream'] ?? $options['target_file'] ?? null);
+
+        if ($dest) {
             $content = '';
             StreamHelper::copyTo($stream, $dest);
         } else {
@@ -70,10 +73,15 @@ class StreamTransport extends AbstractTransport
             $headers = [];
         }
 
-        return $this->toResponse($headers, $content);
+        return $this->toResponse($headers, $content, (new HttpClientResponse())->withInfo($metadata));
     }
 
     /**
+     * @param  RequestInterface  $request
+     * @param  array             $options
+     *
+     * @return  resource|false
+     *
      * @throws \Exception
      */
     public function createConnection(RequestInterface $request, array $options = []): mixed
@@ -215,7 +223,7 @@ class StreamTransport extends AbstractTransport
      */
     public function toResponse(array $headers, string $body, ?ResponseInterface $response = null): ResponseInterface
     {
-        $response ??= new Response();
+        $response ??= new HttpClientResponse();
 
         // Set the body for the response.
         $response->getBody()->write($body);
@@ -250,14 +258,14 @@ class StreamTransport extends AbstractTransport
      *
      * @param  array                   $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      * @since   2.1
      */
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
         array $options = []
-    ): ResponseInterface {
+    ): HttpClientResponse {
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is emptty.');
         }
@@ -266,13 +274,9 @@ class StreamTransport extends AbstractTransport
             $dest = Stream::fromFilePath($dest);
         }
 
-        $options['target_file'] = $dest;
+        $options['write_stream'] = $dest;
 
-        $response = $this->request($request, $options);
-
-        $dest->close();
-
-        return $response;
+        return $this->request($request, $options);
     }
 
     /**

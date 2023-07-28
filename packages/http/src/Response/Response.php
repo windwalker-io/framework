@@ -54,7 +54,7 @@ class Response implements ResponseInterface
      * @param  string  $body
      * @param  array   $headers
      *
-     * @return  static
+     * @return  T
      */
     public static function fromString(string $body, int $status = 200, array $headers = []): static
     {
@@ -62,16 +62,18 @@ class Response implements ResponseInterface
     }
 
     /**
-     * from
-     *
      * @param  ResponseInterface  $response
      *
      * @return  static
      *
      * @since  3.5.19
      */
-    public static function from(ResponseInterface $response): ResponseInterface
+    public static function from(ResponseInterface $response): static
     {
+        if (static::class === $response::class) {
+            return $response;
+        }
+
         return new static(
             $response->getBody(),
             $response->getStatusCode(),
@@ -79,7 +81,7 @@ class Response implements ResponseInterface
         );
     }
 
-    public static function readFrom(mixed $body, int $status = 200, array $headers = []): ResponseInterface
+    public static function readFrom(mixed $body, int $status = 200, array $headers = []): static
     {
         return new static(new Stream($body, READ_ONLY_FROM_BEGIN), $status, $headers);
     }

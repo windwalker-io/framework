@@ -24,6 +24,7 @@ use Windwalker\Http\File\HttpUploadStream;
 use Windwalker\Http\File\HttpUploadStringFile;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Request\Request;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Http\Transport\AsyncTransportInterface;
@@ -105,14 +106,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed                $body     The request body data, can be an array of POST data.
      * @param  array                $options  The options array.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      */
     public function download(
         Stringable|string $url,
         string $dest,
         mixed $body = null,
         array $options = []
-    ): Response {
+    ): HttpClientResponse {
         $request = $this->hydrateRequest(new Request(), 'GET', $url, $body, $options);
 
         $transport = $this->getTransport();
@@ -121,7 +122,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             throw new RangeException(get_class($transport) . ' driver not supported.');
         }
 
-        return Response::from($transport->download($request, $dest));
+        return HttpClientResponse::from($transport->download($request, $dest));
     }
 
     /**
@@ -130,9 +131,9 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  RequestInterface  $request  The Psr Request object.
      * @param  array             $options
      *
-     * @return  Response
+     * @return  HttpClientResponse
      */
-    public function sendRequest(RequestInterface $request, array $options = []): Response
+    public function sendRequest(RequestInterface $request, array $options = []): HttpClientResponse
     {
         $transport = $this->getTransport();
 
@@ -140,9 +141,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             throw new RangeException(get_class($transport) . ' driver not supported.');
         }
 
-        $response = $transport->request($request, $options);
-
-        return Response::from($response);
+        return $transport->request($request, $options);
     }
 
     /**
@@ -151,11 +150,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function options(Stringable|string $url, array $options = []): Response
+    public function options(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('OPTIONS', $url, null, $options);
     }
@@ -166,11 +165,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function head(Stringable|string $url, array $options = []): Response
+    public function head(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('HEAD', $url, null, $options);
     }
@@ -181,11 +180,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function get(Stringable|string $url, array $options = []): Response
+    public function get(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('GET', $url, null, $options);
     }
@@ -197,11 +196,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function post(Stringable|string $url, mixed $body, array $options = []): Response
+    public function post(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
     {
         return $this->request('POST', $url, $body, $options);
     }
@@ -213,11 +212,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function put(Stringable|string $url, mixed $body, array $options = []): Response
+    public function put(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
     {
         return $this->request('PUT', $url, $body, $options);
     }
@@ -229,11 +228,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function delete(Stringable|string $url, mixed $body = null, array $options = []): Response
+    public function delete(Stringable|string $url, mixed $body = null, array $options = []): HttpClientResponse
     {
         return $this->request('DELETE', $url, $body, $options);
     }
@@ -244,11 +243,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function trace(Stringable|string $url, array $options = []): Response
+    public function trace(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('TRACE', $url, null, $options);
     }
@@ -260,11 +259,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function patch(Stringable|string $url, mixed $body, array $options = []): Response
+    public function patch(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
     {
         return $this->request('PATCH', $url, $body, $options);
     }
@@ -404,14 +403,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     The request body data, can be an array of POST data.
      * @param  array              $options  The options array.
      *
-     * @return  Response
+     * @return  HttpClientResponse
      */
     public function request(
         string $method,
         Stringable|string $url,
         mixed $body = null,
         array $options = []
-    ): Response {
+    ): HttpClientResponse {
         $request = $this->hydrateRequest(new Request(), $method, $url, $body, $options);
 
         $transportOptions = $options['transport'] ?? [];
@@ -426,7 +425,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             compact('request', 'response', 'httpClient')
         );
 
-        return $event->getResponse();
+        return HttpClientResponse::from($event->getResponse());
     }
 
     public function hydrateRequest(

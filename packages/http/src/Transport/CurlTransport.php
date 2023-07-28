@@ -21,11 +21,13 @@ use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\File\HttpUploadFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\HttpClientInterface;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
-use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Arr;
+
+use const Windwalker\Stream\READ_WRITE_RESET;
 
 /**
  * The CurlTransport class.
@@ -41,15 +43,16 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      *
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since    2.1
      */
-    protected function doRequest(RequestInterface $request, array $options = []): ResponseInterface
+    protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse
     {
         $options = Arr::mergeRecursive(
             [
                 'ignore_curl_error' => false,
+                'write_stream' => 'php://memory',
             ],
             $this->getOptions(),
             $options
@@ -57,8 +60,36 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
 
         $ch = $this->createHandle($request, $options);
 
+        $headerGroup = [];
+        $content = Stream::wrap($options['write_stream'], READ_WRITE_RESET);
+        $i = 0;
+
+        curl_setopt(
+            $ch,
+            CURLOPT_HEADERFUNCTION,
+            static function (\CurlHandle $ch, string $header) use (&$headerGroup, &$i) {
+                if ($header === "\r\n") {
+                    $i++;
+                } else {
+                    $headerGroup[$i][] = $header;
+                }
+
+                return strlen($header);
+            }
+        );
+
+        curl_setopt(
+            $ch,
+            CURLOPT_WRITEFUNCTION,
+            static function ($ch, $str) use ($content) {
+                $content->write($str);
+
+                return strlen($str);
+            }
+        );
+
         // Execute the request and close the connection.
-        $content = curl_exec($ch);
+        $c = curl_exec($ch);
 
         $error = curl_error($ch);
 
@@ -72,7 +103,12 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         // Close the connection.
         curl_close($ch);
 
-        return $this->toResponse((string) $content, $info, $this->createResponse());
+        $content->rewind();
+
+        return $this->injectHeadersToResponse(
+            (new HttpClientResponse($content))->withInfo($info),
+            array_pop($headerGroup),
+        );
     }
 
     /**
@@ -94,32 +130,19 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         // Create the response object.
         $return = $this->createResponse();
 
-        return $this->toResponse($content, $info, $return);
+        return $this->contentToResponse($content, $info, $return);
     }
 
-    public function toResponse(string $content, array $info, ?ResponseInterface $response = null): ResponseInterface
+    /**
+     * @template R
+     *
+     * @param  R      $response
+     * @param  array  $headers
+     *
+     * @return  R
+     */
+    public function injectHeadersToResponse(ResponseInterface $response, array $headers): ResponseInterface
     {
-        $response ??= $this->createResponse();
-
-        // Get the number of redirects that occurred.
-        $redirects = $info['redirect_count'] ?? 0;
-
-        /*
-         * Split the response into headers and body. If cURL encountered redirects,
-         * the headers for the redirected requests will
-         * also be included. So we split the response into header + body + the number of redirects
-         * and only use the last two sections which should be the last set of headers and the actual body.
-         */
-        $parts = explode("\r\n\r\n", $content, 2 + $redirects);
-
-        // Set the body for the response.
-        $response->getBody()->write(array_pop($parts));
-
-        $response->getBody()->rewind();
-
-        // Get the last set of response headers as an array.
-        $headers = explode("\r\n", (string) array_pop($parts));
-
         // Get the response code from the first offset of the response headers.
         preg_match('/[0-9]{3}/', array_shift($headers), $matches);
 
@@ -142,18 +165,47 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         return $response;
     }
 
+    public function contentToResponse(
+        string $content,
+        array $info = [],
+        ?ResponseInterface $response = null
+    ): ResponseInterface {
+        $response ??= $this->createResponse();
+
+        // Get the number of redirects that occurred.
+        $redirects = $info['redirect_count'] ?? 0;
+
+        /*
+         * Split the response into headers and body. If cURL encountered redirects,
+         * the headers for the redirected requests will
+         * also be included. So we split the response into header + body + the number of redirects
+         * and only use the last two sections which should be the last set of headers and the actual body.
+         */
+        $parts = explode("\r\n\r\n", $content, 2 + $redirects);
+
+        // Set the body for the response.
+        $response->getBody()->write(array_pop($parts));
+
+        $response->getBody()->rewind();
+
+        // Get the last set of response headers as an array.
+        $headers = explode("\r\n", (string) array_pop($parts));
+
+        return $this->injectHeadersToResponse($response, $headers);
+    }
+
     /**
-     * createResponse
+     * @param  mixed  $body
      *
      * @return  ResponseInterface
      *
      * @since  3.5.19
      */
-    protected function createResponse(): ResponseInterface
+    protected function createResponse(mixed $body = 'php://memory'): ResponseInterface
     {
-        $class = $this->config['response_class'] ?? Response::class;
+        $class = $this->getOption('response_class') ?? Response::class;
 
-        return new $class();
+        return new $class($body);
     }
 
     /**
@@ -249,7 +301,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $opt[CURLOPT_URL] = (string) $request->getRequestTarget();
 
         // We want our headers. :-)
-        $opt[CURLOPT_HEADER] = true;
+        // $opt[CURLOPT_HEADER] = true;
 
         // Return it... echoing it would be tacky.
         $opt[CURLOPT_RETURNTRANSFER] = true;
@@ -318,7 +370,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
             'delete',
         ];
 
-        if (in_array(strtolower($request->getMethod()), $postMethods, true)) {
+        if (in_array(strtolower((string) $request->getMethod()), $postMethods, true)) {
             if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
                 // If no boundary, remove content-type and let CURL add it.
                 if (!str_contains($contentType, 'boundary')) {
@@ -343,27 +395,24 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      *
      * @param  array                   $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      * @since   2.1
      */
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
         array $options = []
-    ): ResponseInterface {
+    ): HttpClientResponse {
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is empty.');
         }
 
-        $response = $this->request($request);
+        $options['write_stream'] = $dest;
 
-        if (!$dest instanceof StreamInterface) {
-            $dest = Stream::fromFilePath($dest);
-        }
-
-        StreamHelper::copy($response->getBody(), $dest);
-
-        return $response;
+        return $this->request(
+            $request,
+            $options
+        );
     }
 
     /**

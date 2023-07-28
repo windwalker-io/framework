@@ -14,6 +14,7 @@ namespace Windwalker\Http\Transport;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Response\HttpClientResponse;
 
 /**
  * The TransportInterface class.
@@ -28,11 +29,11 @@ interface TransportInterface
      * @param  RequestInterface  $request  The request object to store request params.
      * @param  array             $options  Options array.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function request(RequestInterface $request, array $options = []): ResponseInterface;
+    public function request(RequestInterface $request, array $options = []): HttpClientResponse;
 
     /**
      * Use stream to download file.
@@ -42,14 +43,14 @@ interface TransportInterface
      *
      * @param  array                   $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      * @since   2.1
      */
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
         array $options = []
-    ): ResponseInterface;
+    ): HttpClientResponse;
 
     /**
      * Method to check if HTTP transport layer available for using

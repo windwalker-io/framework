@@ -27,10 +27,14 @@ interface CurlTransportInterface extends TransportInterface
      * @return  ResponseInterface
      *
      * @psalm-template R
-     * @psalm-param R $response
+     * @psalm-param R  $response
      * @psalm-return R
      */
-    public function toResponse(string $content, array $info, ?ResponseInterface $response = null): ResponseInterface;
+    public function contentToResponse(
+        string $content,
+        array $info,
+        ?ResponseInterface $response = null
+    ): ResponseInterface;
 
     /**
      * @param  RequestInterface  $request
