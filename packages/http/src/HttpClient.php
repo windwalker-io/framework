@@ -34,9 +34,12 @@ use Windwalker\Promise\PromiseInterface;
 use Windwalker\Stream\Stream;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
+use Windwalker\Uri\UriTemplate;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\Options\OptionAccessTrait;
+
+use function Windwalker\Uri\uri_template;
 
 /**
  * The HttpClient class.
@@ -335,8 +338,12 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         mixed $body = '',
         array $options = []
     ): RequestInterface {
-        // If is GET, we merge data into URL.
+        if ($options['vars'] ?? []) {
+            $url = uri_template($url, $options['vars']);
+        }
+
         if ($options['params'] ?? []) {
+            // Merge params into URL.
             $uri = Uri::wrap((string) $url);
 
             foreach ($options['params'] as $k => $v) {
@@ -344,7 +351,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             }
 
             $url = (string) $uri;
-            $body = null;
         }
 
         $url = (string) $url;
@@ -381,11 +387,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             return $url;
         }
 
-        if (!$base = $this->getBaseUri()) {
-            return $url;
+        if ($base = $this->getBaseUri()) {
+            $url = $base . $url;
         }
 
-        return $base . $url;
+        return $url;
     }
 
     /**

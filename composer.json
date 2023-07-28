@@ -27,7 +27,7 @@
         "paragonie/constant_time_encoding": "^2.3",
         "composer/ca-bundle": "^1.2",
         "symfony/options-resolver": "^5.0||^6.0",
-        "symfony/polyfill-php81": "^1.0",
+        "symfony/polyfill-php81": "^1.27",
         "symfony/polyfill-php83": "^1.27"
     },
     "require-dev": {
@@ -69,7 +69,9 @@
         "yosymfony/toml": "^1.0",
         "laravel/serializable-closure": "^1.0",
         "symfony/polyfill-php82": "^1.26",
-        "asika/simple-benchmark": "^3.0"
+        "asika/simple-benchmark": "^3.0",
+        "rize/uri-template": "^0.3.5",
+        "guzzlehttp/uri-template": "^1.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~4.0 if you require YAML support.",
@@ -85,7 +87,8 @@
         "reactivex/rxphp": "Support EventEmitter::observe() pattern.",
         "relay/relay": "Install ^2.0 to support PSR-15 middlewares.",
         "symfony/string": "Install ^5.2 to use inflector.",
-        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure."
+        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure.",
+        "ext-sodium": "Install sodium to support sodium cipher."
     },
     "autoload": {
         "psr-4": {

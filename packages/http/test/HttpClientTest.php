@@ -24,6 +24,8 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
 
+use function Windwalker\Uri\uri_template;
+
 /**
  * Test class of HttpClient
  *
@@ -387,6 +389,43 @@ class HttpClientTest extends TestCase
         self::assertEquals(
             '[123]',
             (string) $res->getBody()
+        );
+    }
+
+    public function testUriTemplate(): void
+    {
+        $this->instance->setOption('base_uri', 'https://example.org/');
+
+        $res = $this->instance->get(
+            uri_template('foo/{foo}{?bar}')
+                ->bindValue('foo', '123')
+                ->bindValue('bar', 'yoo'),
+        );
+
+        self::assertEquals(
+            'https://example.org/foo/123?bar=yoo',
+            $this->transport->request->getRequestTarget()
+        );
+    }
+
+    public function testUriTemplateUseVars(): void
+    {
+        $this->instance->setOption('base_uri', 'https://example.org/{v}/');
+
+        $res = $this->instance->get(
+            'foo/{foo}{?bar}',
+            [
+                'vars' => [
+                    'foo' => 123,
+                    'bar' => 'yoo',
+                    'v' => 'v3'
+                ]
+            ]
+        );
+
+        self::assertEquals(
+            'https://example.org/v3/foo/123?bar=yoo',
+            $this->transport->request->getRequestTarget()
         );
     }
 
