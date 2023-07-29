@@ -40,7 +40,7 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
-use function Windwalker\Uri\uri_template;
+use function Windwalker\Uri\uri_prepare;
 
 /**
  * The HttpClient class.
@@ -338,7 +338,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         array $options = []
     ): RequestInterface {
         if ($options['vars'] ?? []) {
-            $url = uri_template($url, $options['vars']);
+            $url = uri_prepare($url, $options['vars']);
         }
 
         if ($options['params'] ?? []) {

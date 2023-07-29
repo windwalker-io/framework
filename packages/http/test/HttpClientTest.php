@@ -25,7 +25,7 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
 
-use function Windwalker\Uri\uri_template;
+use function Windwalker\Uri\uri_prepare;
 
 /**
  * Test class of HttpClient
@@ -395,7 +395,7 @@ class HttpClientTest extends TestCase
         $this->instance->setOption('base_uri', 'https://example.org/');
 
         $res = $this->instance->get(
-            uri_template('foo/{foo}{?bar}')
+            uri_prepare('foo/{foo}{?bar}')
                 ->bindValue('foo', '123')
                 ->bindValue('bar', 'yoo'),
         );
