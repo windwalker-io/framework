@@ -235,28 +235,28 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $content = Stream::wrap($options['write_stream'], READ_WRITE_RESET);
         $headerItems = [];
 
-        // $opt[CURLOPT_HEADERFUNCTION] ??= static function (
-        //     \CurlHandle $ch,
-        //     string $header
-        // ) use (
-        //     &$headers,
-        //     &$headerItems
-        // ) {
-        //     if ($header === "\r\n") {
-        //         $headers = $headerItems;
-        //         $headerItems = [];
-        //     } else {
-        //         $headerItems[] = $header;
-        //     }
-        //
-        //     return strlen($header);
-        // };
-        //
-        // $opt[CURLOPT_WRITEFUNCTION] ??= static function ($ch, $str) use ($content) {
-        //     $content->write($str);
-        //
-        //     return strlen($str);
-        // };
+        $opt[CURLOPT_HEADERFUNCTION] ??= static function (
+            \CurlHandle $ch,
+            string $header
+        ) use (
+            &$headers,
+            &$headerItems
+        ) {
+            if ($header === "\r\n") {
+                $headers = $headerItems;
+                $headerItems = [];
+            } else {
+                $headerItems[] = $header;
+            }
+
+            return strlen($header);
+        };
+
+        $opt[CURLOPT_WRITEFUNCTION] ??= static function ($ch, $str) use ($content) {
+            $content->write($str);
+
+            return strlen($str);
+        };
 
         curl_setopt_array($ch, $opt);
 

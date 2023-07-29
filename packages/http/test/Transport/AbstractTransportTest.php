@@ -95,7 +95,7 @@ abstract class AbstractTransportTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(AbstractTransportTest::getTestUrlFromConstant() . '/json?foo=bar'))
+        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
@@ -105,7 +105,7 @@ abstract class AbstractTransportTest extends TestCase
 
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(AbstractTransportTest::getTestUrlFromConstant() . '/json?foo=bar&baz[3]=yoo'))
+        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar&baz[3]=yoo'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);

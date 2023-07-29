@@ -21,6 +21,8 @@ use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
+use function Windwalker\Promise\async;
+
 /**
  * The MultiCurlHandler class.
  */
@@ -86,6 +88,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 
     /**
      * @inheritDoc
+     * @throws \Throwable
      */
     public function sendRequest(RequestInterface $request, array $options = []): PromiseInterface
     {
@@ -110,6 +113,7 @@ class MultiCurlTransport implements AsyncTransportInterface
      * resolve
      *
      * @return  mixed|PromiseInterface
+     * @throws \Throwable
      */
     public function resolve(): mixed
     {
@@ -118,74 +122,78 @@ class MultiCurlTransport implements AsyncTransportInterface
         return $this->promise->wait();
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function prepareResolvePromise(): PromiseInterface
     {
-        return $this->promise ??= Promise::resolved()
-            ->then(
-                function () {
-                    if ($this->tasks === []) {
-                        $this->promise->resolve();
+        return $this->promise ??= async(
+            function () {
+                if ($this->tasks === []) {
+                    $this->promise->resolve();
 
-                        return;
+                    return;
+                }
+
+                $active = null;
+                $mh = $this->getMainHandle();
+                $promises = [];
+
+                do {
+                    $mrc = curl_multi_exec($mh, $active);
+                } while ($mrc === CURLM_CALL_MULTI_PERFORM);
+
+                while ($active && $mrc === CURLM_OK) {
+                    if (curl_multi_select($mh) === -1) {
+                        usleep(100);
                     }
-
-                    $active = null;
-                    $mh = $this->getMainHandle();
-                    $promises = [];
 
                     do {
                         $mrc = curl_multi_exec($mh, $active);
                     } while ($mrc === CURLM_CALL_MULTI_PERFORM);
-
-                    while ($active && $mrc === CURLM_OK) {
-                        if (curl_multi_select($mh) === -1) {
-                            usleep(100);
-                        }
-
-                        do {
-                            $mrc = curl_multi_exec($mh, $active);
-                        } while ($mrc === CURLM_CALL_MULTI_PERFORM);
-                    }
-
-                    if ($mrc !== CURLM_OK) {
-                        throw new RuntimeException(
-                            "Curl multi read error $mrc\n",
-                            E_USER_WARNING
-                        );
-                    }
-
-                    $transport = $this->getTransport();
-
-                    foreach ($this->tasks as $task) {
-                        /** @var array{ handle: \CurlHandle, options: array, promise: PromiseInterface, content: StreamInterface } $task */
-                        $handle = $task['handle'];
-                        $options = $task['options'];
-                        $promise = $task['promise'];
-                        $content = $task['content'];
-                        $promises[] = $promise;
-
-                        $error = curl_error($handle);
-
-                        if (!$error) {
-                            $c = curl_multi_getcontent($handle);
-                            // $content->rewind();
-
-                            $res = $transport->injectHeadersToResponse(
-                                (new HttpClientResponse($content))->withInfo(curl_getinfo($handle)),
-                                (array) $task['headers'],
-                                (bool) $options['allow_empty_status_code']
-                            );
-                            $promise->resolve($res);
-                        } else {
-                            $promise->reject(new HttpRequestException($error, curl_errno($handle)));
-                        }
-                    }
-
-                    $this->reset();
-
-                    $this->promise->resolve(Promise::all($promises));
                 }
-            );
+
+                if ($mrc !== CURLM_OK) {
+                    throw new RuntimeException(
+                        "Curl multi read error $mrc\n",
+                        E_USER_WARNING
+                    );
+                }
+
+                $transport = $this->getTransport();
+
+                foreach ($this->tasks as $task) {
+                    /** @var array{ handle: \CurlHandle, options: array, promise: PromiseInterface, content: StreamInterface } $task */
+                    $handle = $task['handle'];
+                    $options = $task['options'];
+                    $promise = $task['promise'];
+                    $content = $task['content'];
+                    $promises[] = $promise;
+
+                    $error = curl_error($handle);
+
+                    if (!$error) {
+                        $c = curl_multi_getcontent($handle);
+                        // $content->rewind();
+
+                        $res = $transport->injectHeadersToResponse(
+                            (new HttpClientResponse($content))->withInfo(curl_getinfo($handle)),
+                            (array) $task['headers'],
+                            (bool) $options['allow_empty_status_code']
+                        );
+                        $promise->resolve($res);
+                    } else {
+                        $promise->reject(new HttpRequestException($error, curl_errno($handle)));
+                    }
+                }
+
+                $p = $this->promise;
+
+                $this->reset();
+
+                $p->resolve(Promise::all($promises));
+            }
+        );
     }
 
     /**

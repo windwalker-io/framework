@@ -21,9 +21,13 @@ use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\JsonResponse;
 use Windwalker\Http\Test\Mock\MockTransport;
 use Windwalker\Http\Transport\CurlTransport;
+use Windwalker\Promise\Promise;
+use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
+
+use Windwalker\Utilities\Str;
 
 use function Windwalker\Uri\uri_prepare;
 
@@ -356,6 +360,32 @@ class HttpClientTest extends TestCase
         self::assertEquals($url, $this->transport->request->getRequestTarget());
         self::assertEquals('Bar', $this->transport->request->getHeaderLine('X-Foo'));
         self::assertEquals(json_encode($data), $this->transport->request->getBody()->__toString());
+    }
+
+    public function testGetAsync(): void
+    {
+        if (!defined('WINDWALKER_TEST_HTTP_URL')) {
+            static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
+        }
+
+        $http = new HttpClient(['base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/')]);
+
+        $pall = Promise::all(
+            [
+                $http->getAsync('json?a=1'),
+                $http->getAsync('json?a=2'),
+                $http->getAsync('json?a=3')
+            ]
+        );
+
+        /** @var HttpClientResponse $res1 */
+        /** @var HttpClientResponse $res2 */
+        /** @var HttpClientResponse $res3 */
+        [$res1, $res2, $res3] = $pall->wait();
+
+        self::assertEquals('{"a":"1"}', $res1->getContent());
+        self::assertEquals('{"a":"2"}', $res2->getContent());
+        self::assertEquals('{"a":"3"}', $res3->getContent());
     }
 
     public function testEvent(): void

@@ -310,7 +310,7 @@ class Promise implements ExtendedPromiseInterface
             } else {
                 $child->reject($this->value);
             }
-        } catch (UncaughtException | TypeError $e) {
+        } catch (UncaughtException $e) {
             $child->reject($e->getReason());
             throw $e;
         } catch (\Throwable $e) {
@@ -422,7 +422,7 @@ class Promise implements ExtendedPromiseInterface
      * @inheritDoc
      * @throws Throwable
      */
-    public function resolve(mixed $value): void
+    public function resolve(mixed $value = null): void
     {
         static::resolvePromise($this, $value);
     }
@@ -475,7 +475,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      */
-    public function reject(mixed $reason): void
+    public function reject(mixed $reason = null): void
     {
         if ($reason === $this) {
             $this->reject(new TypeError('Unable to resolve self.'));
