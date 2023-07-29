@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Response;
 
+use Windwalker\Data\Collection;
 use Windwalker\Http\Helper\ResponseHelper;
 
 /**
@@ -49,5 +50,15 @@ trait ResponseTrait
     public function jsonDecode(?bool $associative = null, int $depth = 512, int $flags = 0): mixed
     {
         return json_decode($this->getContent(), $associative, $depth, JSON_THROW_ON_ERROR | $flags);
+    }
+
+    public function decode(string $format = 'json', array $options = []): Collection
+    {
+        return Collection::from($this->getContent(), $format, $options);
+    }
+
+    public function toArray(string $format = 'json', array $options = []): array
+    {
+        return $this->decode($format, $options)->dump();
     }
 }
