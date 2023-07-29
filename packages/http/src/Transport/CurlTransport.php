@@ -120,14 +120,15 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         // Create the response object.
         $return = $this->createResponse();
 
-        return $this->contentToResponse($content, $info, $return);
+        return $this->contentToResponse($content, $info, $return, $this->getOption('allow_empty_status_code'));
     }
 
     /**
      * @template R
      *
-     * @param  R      $response
-     * @param  array  $headers
+     * @param  ResponseInterface|R  $response
+     * @param  array|string         $headers
+     * @param  bool                 $allowEmptyStatusCode
      *
      * @return  R
      */
@@ -165,7 +166,8 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     public function contentToResponse(
         string $content,
         array $info = [],
-        ?ResponseInterface $response = null
+        ?ResponseInterface $response = null,
+        bool $allowEmptyStatusCode = false
     ): ResponseInterface {
         $response ??= $this->createResponse();
 
@@ -191,7 +193,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         return $this->injectHeadersToResponse(
             $response,
             $headers,
-            (bool) $this->getOption('allow_empty_status_code', false)
+            $allowEmptyStatusCode
         );
     }
 
@@ -475,7 +477,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
             return $curlOptions;
         }
 
-        $caPathOrFile = CaBundle::getBundledCaBundlePath();
+        $caPathOrFile = $this->findCAPathOrFile();
 
         if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
             $curlOptions[CURLOPT_CAPATH] = $caPathOrFile;

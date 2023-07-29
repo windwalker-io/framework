@@ -22,7 +22,6 @@ use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\HttpClientResponse;
-use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Stream\Stream;
 use Windwalker\Stream\StreamHelper;
@@ -50,6 +49,21 @@ class StreamTransport extends AbstractTransport
      */
     protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse
     {
+        $options = Arr::mergeRecursive(
+            [
+                'allow_empty_status_code' => false,
+                'write_stream' => null,
+                'timeout' => null,
+                'user_agent' => null,
+                'follow_location' => true,
+                'certpath' => null,
+                'verify_peer' => true,
+                'context' => [],
+            ],
+            $this->getOptions(),
+            $options
+        );
+
         $stream = $this->createStream($request, $options);
 
         $dest = ($options['write_stream'] ?? $options['target_file'] ?? null);
@@ -73,7 +87,12 @@ class StreamTransport extends AbstractTransport
             $headers = [];
         }
 
-        return $this->toResponse($headers, $content, (new HttpClientResponse())->withInfo($metadata));
+        return $this->toResponse(
+            $headers,
+            $content,
+            (new HttpClientResponse())->withInfo($metadata),
+            (bool) $options['allow_empty_status_code']
+        );
     }
 
     /**
@@ -161,25 +180,34 @@ class StreamTransport extends AbstractTransport
         }
 
         // If an explicit timeout is given user it.
-        if ($this->getOption('timeout')) {
-            $opt['timeout'] = (int) $this->getOption('timeout');
+        if ($timeout = $options['timeout']) {
+            $opt['timeout'] = (int) $timeout;
         }
 
         // If an explicit user agent is given use it.
-        if ($this->getOption('userAgent')) {
-            $opt['user_agent'] = $this->getOption('userAgent');
+        if ($userAgent = $options['user_agent']) {
+            $opt['user_agent'] = $userAgent;
         }
 
         // Ignore HTTP errors so that we can capture them.
         $opt['ignore_errors'] = 1;
 
         // Follow redirects.
-        $opt['follow_location'] = (int) $this->getOption('follow_location', 1);
+        $opt['follow_location'] = (int) ($options['follow_location'] ?? true);
 
-        $opt = array_merge($opt, $options);
+        $opt['ssl']['verify_peer'] = (int) $options['verify_peer'];
+
+        $opt = $this->setCABundleToOptions($opt, $options);
 
         // Create the stream context for the request.
-        $context = stream_context_create(['http' => $opt]);
+        $context = stream_context_create(
+            Arr::mergeRecursive(
+                [
+                    'http' => $opt
+                ],
+                $options['context'] ?? []
+            )
+        );
 
         // Capture PHP errors
         return @fopen($request->getRequestTarget(), READ_ONLY_FROM_BEGIN, false, $context);
@@ -216,13 +244,17 @@ class StreamTransport extends AbstractTransport
      * @return ResponseInterface
      *
      * @psalm-template R
-     * @psalm-param R $response
+     * @psalm-param R                  $response
      * @psalm-return R
      *
-     * @since    2.1
+     * @since          2.1
      */
-    public function toResponse(array $headers, string $body, ?ResponseInterface $response = null): ResponseInterface
-    {
+    public function toResponse(
+        array $headers,
+        string $body,
+        ?ResponseInterface $response = null,
+        bool $allowEmptyStatusCode = false
+    ): ResponseInterface {
         $response ??= new HttpClientResponse();
 
         // Set the body for the response.
@@ -236,7 +268,7 @@ class StreamTransport extends AbstractTransport
 
         if (is_numeric($code)) {
             $response = $response->withStatus($code);
-        } elseif (!$this->getOption('allow_empty_status_code', false)) {
+        } elseif (!$allowEmptyStatusCode) {
             // No valid response code was detected.
             throw new UnexpectedValueException('No HTTP response code found.');
         }
@@ -289,5 +321,24 @@ class StreamTransport extends AbstractTransport
     public static function isSupported(): bool
     {
         return function_exists('fopen') && is_callable('fopen') && ini_get('allow_url_fopen');
+    }
+
+    protected function setCABundleToOptions(array $context, array $options): array
+    {
+        if ($options['certpath']) {
+            $context['ssl']['capath'] = $options['certpath'];
+
+            return $context;
+        }
+
+        $caPathOrFile = $this->findCAPathOrFile();
+
+        if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
+            $context['ssl']['cafile'] = $caPathOrFile;
+        } else {
+            $context['ssl']['capath'] = $caPathOrFile;
+        }
+
+        return $context;
     }
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
+use Composer\CaBundle\CaBundle;
 use Psr\Http\Message\RequestInterface;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Utilities\Options\OptionAccessTrait;
@@ -74,4 +75,12 @@ abstract class AbstractTransport implements TransportInterface
      * @since   2.1
      */
     abstract protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse;
+
+    /**
+     * @return  string
+     */
+    protected function findCAPathOrFile(): string
+    {
+        return CaBundle::getBundledCaBundlePath();
+    }
 }
