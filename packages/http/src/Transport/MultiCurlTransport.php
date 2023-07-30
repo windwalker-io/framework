@@ -173,8 +173,8 @@ class MultiCurlTransport implements AsyncTransportInterface
                     $error = curl_error($handle);
 
                     if (!$error) {
-                        $c = curl_multi_getcontent($handle);
-                        // $content->rewind();
+                        // $c = curl_multi_getcontent($handle);
+                        $content->rewind();
 
                         $res = $transport->injectHeadersToResponse(
                             (new HttpClientResponse($content))->withInfo(curl_getinfo($handle)),
