@@ -107,6 +107,12 @@ class TaskQueue
      */
     public function run(): void
     {
+        if ($this->queue === []) {
+            throw new \RuntimeException(
+                'Running empty TaskQueue is not allowed, this may cause Promise lock.'
+            );
+        }
+
         while ($task = array_shift($this->queue)) {
             $task();
         }
