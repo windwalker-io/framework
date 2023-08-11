@@ -432,9 +432,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
         }
 
         $pool->setConnectionBuilder(
-            function () {
-                return $this->createConnection();
-            }
+            fn() => $this->createConnection()
         );
         $pool->init();
 
