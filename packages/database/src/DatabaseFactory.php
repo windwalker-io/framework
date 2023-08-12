@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Database;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Driver\Mysqli\MysqliDriver;
 use Windwalker\Database\Driver\Pdo\PdoDriver;
@@ -52,7 +53,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
                 $pool ?? $this->createConnectionPool($options['pool'] ?? [])
             ),
             $this->createPlatform($platformShortName),
-            $logger
+            $logger ?? new NullLogger()
         );
     }
 
