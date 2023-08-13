@@ -27,7 +27,7 @@ interface DatabaseFactoryInterface
     /**
      * createByDriverName
      *
-     * @param  string                $driverName
+     * @param  string                $driver
      * @param  array                 $options
      * @param  PoolInterface|null    $pool
      * @param  LoggerInterface|null  $logger
@@ -35,7 +35,7 @@ interface DatabaseFactoryInterface
      * @return  DatabaseAdapter
      */
     public function create(
-        string $driverName,
+        string $driver,
         array $options,
         ?PoolInterface $pool = null,
         ?LoggerInterface $logger = null,

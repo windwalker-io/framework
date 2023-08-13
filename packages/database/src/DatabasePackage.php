@@ -86,34 +86,32 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         $databaseFactory = $container->newInstance(DatabaseFactory::class);
         $connections = $container->getParam('database.connections');
 
-        foreach ($connections as $connection => $config) {
-            unset($config['adapter']);
-
-            $this->app->log('[DB] Create connection pool for driver: ' . $config['driver']);
+        foreach ($connections as $connection => $connConfig) {
+            $this->app->log("[DB][$connection] Init connection pool");
 
             // todo: Add logger to driver
 
             $pool = $databaseFactory->createConnectionPool(
-                $config['pool'],
+                $connConfig['pool'],
                 $this->app->isCliRuntime()
                     ? new SwooleStack()
                     : new SingleStack()
             );
 
             $driver = $databaseFactory->createDriver(
-                $config['driver'],
-                $config,
+                $connConfig['driver'],
+                $connConfig['options'],
                 $pool
             );
 
             $pool->setConnectionBuilder(fn () => $driver->createConnection());
             $pool->init();
 
-            $this->app->log('[DB] Connections created, count: ' . $pool->count());
+            $this->app->log("[DB][$connection] Connections created, count: " . $pool->count());
 
             $container->share('database.connection.driver.' . $connection, $driver);
 
-            $this->app->log('[DB] Create driver: ' . $config['driver']);
+            $this->app->log("[DB][$connection] Create driver: " . $connConfig['driver']);
         }
     }
 }

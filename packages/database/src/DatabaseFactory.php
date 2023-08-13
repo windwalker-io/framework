@@ -37,21 +37,27 @@ class DatabaseFactory implements DatabaseFactoryInterface
      * @inheritDoc
      */
     public function create(
-        string $driverName,
+        string|AbstractDriver $driver,
         array $options,
         ?PoolInterface $pool = null,
         ?LoggerInterface $logger = null,
     ): DatabaseAdapter {
-        [, $platformShortName] = static::extractDriverName($driverName);
+        if ($driver instanceof AbstractDriver) {
+            $platformShortName = $driver->getPlatformName();
+        } else {
+            [, $platformShortName] = static::extractDriverName($driver);
 
-        $options['driver'] = $driverName;
+            $options['driver'] = $driver;
 
-        return new DatabaseAdapter(
-            $this->createDriver(
-                $driverName,
+            $driver = $this->createDriver(
+                $driver,
                 $options,
                 $pool ?? $this->createConnectionPool($options['pool'] ?? [])
-            ),
+            );
+        }
+
+        return new DatabaseAdapter(
+            $driver,
             $this->createPlatform($platformShortName),
             $logger ?? new NullLogger()
         );
@@ -69,6 +75,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
 
         $driverName = ucfirst(static::getDriverShortName($driverName));
 
+        /** @var class-string<AbstractDriver> $driverClass */
         $driverClass = match ($driverName) {
             'pdo' => PdoDriver::class,
             'pgsql' => PgsqlDriver::class,
@@ -81,7 +88,8 @@ class DatabaseFactory implements DatabaseFactoryInterface
             )
         };
 
-        $options['platform'] = $platformName;
+        $options['driver'] = $driverName;
+        $options['platform'] = static::getPlatformName($platformName);
 
         return new $driverClass(
             $options,

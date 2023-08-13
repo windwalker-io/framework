@@ -9,11 +9,15 @@
 
 declare(strict_types=1);
 
-use Windwalker\Database\DatabaseFactory;
+namespace App\Config;
+
+use Windwalker\Core\Manager\DatabaseManager;
 use Windwalker\Database\DatabasePackage;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Subscriber\TruncateValueSubscriber;
+use Windwalker\Pool\PoolInterface;
 
+use function Windwalker\DI\create;
 use function Windwalker\ref;
 
 return [
@@ -23,7 +27,26 @@ return [
         'default' => 'local',
 
         'connections' => [
-            'local' => ref('factories.instances.local'),
+            'local' => [
+                'factory' => ref('database.factories.instances.main'),
+                'driver' => env('DATABASE_DRIVER'),
+                'options' => [
+                    'host' => env('DATABASE_HOST') ?: 'localhost',
+                    'dbname' => env('DATABASE_NAME'),
+                    'user' => env('DATABASE_USER'),
+                    'password' => env('DATABASE_PASSWORD'),
+                    'port' => env('DATABASE_PORT'),
+                    'prefix' => env('DATABASE_TABLE_PREFIX'),
+                ],
+                'pool' => [
+                    PoolInterface::MAX_SIZE => 4,
+                    PoolInterface::MIN_SIZE => 1,
+                    PoolInterface::MAX_WAIT => -1,
+                    PoolInterface::WAIT_TIMEOUT => -1,
+                    PoolInterface::IDLE_TIMEOUT => 60,
+                    PoolInterface::CLOSE_TIMEOUT => 3,
+                ],
+            ],
         ],
 
         'backup' => [
@@ -47,17 +70,7 @@ return [
 
         'factories' => [
             'instances' => [
-                'local' => fn(DatabaseFactory $factory) => $factory->create(
-                    env('DATABASE_DRIVER'),
-                    [
-                        'host' => env('DATABASE_HOST') ?: 'localhost',
-                        'dbname' => env('DATABASE_NAME'),
-                        'user' => env('DATABASE_USER'),
-                        'password' => env('DATABASE_PASSWORD'),
-                        'port' => env('DATABASE_PORT'),
-                        'prefix' => env('DATABASE_TABLE_PREFIX'),
-                    ]
-                ),
+                'main' => static fn(string $instanceName) => create(DatabaseManager::createAdapter($instanceName)),
             ],
         ],
     ],

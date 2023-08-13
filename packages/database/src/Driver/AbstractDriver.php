@@ -81,6 +81,10 @@ abstract class AbstractDriver implements HydratorAwareInterface
         );
 
         $this->setPool($pool);
+
+        if ($this->options['platform']) {
+            $this->setPlatformName($this->options['platform']);
+        }
     }
 
     /**
