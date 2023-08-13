@@ -14,7 +14,6 @@ namespace Windwalker\Database\Platform;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Schema\Ddl\Column;
-use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\AlterClause;
@@ -713,5 +712,24 @@ class MySQLPlatform extends AbstractPlatform
             strtolower($this->db->getDriver()->getVersion()),
             'mariadb'
         );
+    }
+
+    public function enableStrictMode(?array $modes = null): StatementInterface
+    {
+        $modes ??= [
+            'ONLY_FULL_GROUP_BY',
+            'STRICT_TRANS_TABLES',
+            'ERROR_FOR_DIVISION_BY_ZERO',
+            'NO_ENGINE_SUBSTITUTION',
+            'NO_ZERO_IN_DATE',
+            'NO_ZERO_DATE',
+        ];
+
+        return $this->setModes($modes);
+    }
+
+    public function setModes(array $modes): StatementInterface
+    {
+        return $this->db->execute("SET @@SESSION.sql_mode = '" . implode(',', $modes) . "';");
     }
 }

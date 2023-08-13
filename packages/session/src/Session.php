@@ -162,6 +162,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
     public function stop(bool $unset = true): bool
     {
+        if (!$this->isStarted()) {
+            return true;
+        }
+
         return $this->bridge->writeClose($unset);
     }
 
