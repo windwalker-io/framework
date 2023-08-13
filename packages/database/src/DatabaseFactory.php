@@ -71,6 +71,8 @@ class DatabaseFactory implements DatabaseFactoryInterface
         array $options,
         ?PoolInterface $pool = null
     ): AbstractDriver {
+        $driverFullName = $driverName;
+
         [$driverName, $platformName] = static::extractDriverName($driverName);
 
         $driverName = ucfirst(static::getDriverShortName($driverName));
@@ -88,7 +90,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
             )
         };
 
-        $options['driver'] = $driverName;
+        $options['driver'] = $driverFullName;
         $options['platform'] = static::getPlatformName($platformName);
 
         return new $driverClass(
