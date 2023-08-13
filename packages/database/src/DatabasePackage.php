@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database;
 
+use Windwalker\Core\Application\ApplicationInterface;
+use Windwalker\Core\Application\AppType;
 use Windwalker\Core\Database\DatabaseExportService;
 use Windwalker\Core\Manager\DatabaseManager;
 use Windwalker\Core\Migration\MigrationService;
@@ -21,12 +23,18 @@ use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\ORM\ORM;
+use Windwalker\Pool\Stack\SingleStack;
+use Windwalker\Pool\Stack\SwooleStack;
 
 /**
  * The DatabasePackage class.
  */
 class DatabasePackage extends AbstractPackage implements ServiceProviderInterface, BootableProviderInterface
 {
+    public function __construct(protected ApplicationInterface $app)
+    {
+    }
+
     public function install(PackageInstaller $installer): void
     {
         $installer->installConfig(__DIR__ . '/../etc/*.php', 'config');
@@ -41,6 +49,13 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         // $container->get(ORM::class);
 
         // Todo: Should not cache ORM and DatabaseAdapter, we should cache connection pool.
+
+        // show(static::class);
+
+        if ($this->app->getType() === AppType::CLI_WEB) {
+            // Init Connection Pools
+            $this->initDriverAndConnectionPools($container);
+        }
     }
 
     /**
@@ -64,5 +79,41 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         // Services
         $container->prepareSharedObject(DatabaseExportService::class);
         $container->prepareObject(MigrationService::class);
+    }
+
+    public function initDriverAndConnectionPools(Container $container): void
+    {
+        $databaseFactory = $container->newInstance(DatabaseFactory::class);
+        $connections = $container->getParam('database.connections');
+
+        foreach ($connections as $connection => $config) {
+            unset($config['adapter']);
+
+            $this->app->log('[DB] Create connection pool for driver: ' . $config['driver']);
+
+            // todo: Add logger to driver
+
+            $pool = $databaseFactory->createConnectionPool(
+                $config['pool'],
+                $this->app->isCliRuntime()
+                    ? new SwooleStack()
+                    : new SingleStack()
+            );
+
+            $driver = $databaseFactory->createDriver(
+                $config['driver'],
+                $config,
+                $pool
+            );
+
+            $pool->setConnectionBuilder(fn () => $driver->createConnection());
+            $pool->init();
+
+            $this->app->log('[DB] Connections created, count: ' . $pool->count());
+
+            $container->share('database.connection.driver.' . $connection, $driver);
+
+            $this->app->log('[DB] Create driver: ' . $config['driver']);
+        }
     }
 }

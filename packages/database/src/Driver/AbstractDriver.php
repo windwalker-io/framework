@@ -108,6 +108,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
                 'platform' => null,
                 'dsn' => null,
                 'driverOptions' => [],
+                'pool' => [],
                 'strict' => true,
                 'modes' => [
                     'ONLY_FULL_GROUP_BY',
@@ -375,8 +376,11 @@ abstract class AbstractDriver implements HydratorAwareInterface
      */
     public function getConnectionFromPool(): ConnectionInterface
     {
+        $pool = $this->getPool();
+        $pool->init();
+
         /** @var ConnectionInterface $connection */
-        $connection = $this->getPool()->getConnection();
+        $connection = $pool->getConnection();
 
         return $connection;
     }
@@ -417,24 +421,32 @@ abstract class AbstractDriver implements HydratorAwareInterface
      */
     public function setPool(?PoolInterface $pool): static
     {
-        $this->pool = $this->preparePool($pool);
+        $this->pool = $pool;
+
+        if ($this->pool) {
+            $this->preparePool($this->pool);
+        }
 
         return $this;
     }
 
-    protected function preparePool(?PoolInterface $pool): ConnectionPool
+    protected function preparePool(PoolInterface $pool): PoolInterface
     {
-        if (!$pool) {
-            $options = $this->getOptions();
-
-            $pool = (new DatabaseFactory())
-                ->createConnectionPool($options['pool'] ?? []);
-        }
-
         $pool->setConnectionBuilder(
             fn() => $this->createConnection()
         );
-        $pool->init();
+
+        return $pool;
+    }
+
+    protected function createDefaultPool(): ConnectionPool
+    {
+        $options = $this->getOptions();
+
+        $pool = (new DatabaseFactory())
+            ->createConnectionPool($options['pool'] ?? []);
+
+        $this->preparePool($pool);
 
         return $pool;
     }
@@ -444,7 +456,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
      */
     public function getPool(): PoolInterface
     {
-        return $this->pool ??= $this->preparePool(null);
+        return $this->pool ??= $this->createDefaultPool();
     }
 
     public function getHydrator(): HydratorInterface

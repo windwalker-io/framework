@@ -31,18 +31,6 @@ abstract class AbstractPool implements PoolInterface
 {
     use OptionsResolverTrait;
 
-    public const MAX_SIZE = 'max_size';
-
-    public const MIN_SIZE = 'min_size';
-
-    public const MAX_WAIT = 'max_wait';
-
-    public const WAIT_TIMEOUT = 'wait_timeout';
-
-    public const IDLE_TIMEOUT = 'idle_timeout';
-
-    public const CLOSE_TIMEOUT = 'close_timeout';
-
     /**
      * @var StackInterface|null
      */
