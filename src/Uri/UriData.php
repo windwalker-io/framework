@@ -35,6 +35,7 @@ use Traversable;
  *
  * @since  3.0
  */
+#[\AllowDynamicProperties]
 class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
