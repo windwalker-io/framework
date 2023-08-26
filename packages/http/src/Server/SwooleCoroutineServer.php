@@ -11,81 +11,52 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
+use Swoole\Coroutine\Http\Server as SwooleServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Swoole\Http\Server as SwooleServer;
-use Swoole\Server\Port;
 use Windwalker\DI\Container;
 use Windwalker\Http\Factory\ServerRequestFactory;
-use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Output\SwooleOutput;
 
+use function Windwalker\run;
+
 /**
- * The SwooleServer class.
+ * The SwooleCoroutineServer class.
  */
-class SwooleHttpServer extends AbstractHttpServer
+class SwooleCoroutineServer extends AbstractHttpServer
 {
     protected ?string $host = null;
 
     protected array $config = [];
 
-    protected int $mode = SWOOLE_BASE;
+    protected bool $ssl = false;
 
-    protected int $sockType = SWOOLE_TCP;
+    protected bool $reusePort = false;
 
     protected ?SwooleServer $swooleServer = null;
 
-    protected bool $isSubServer = false;
-
-    /**
-     * @var array<static>
-     */
-    protected array $subServers = [];
-
-    protected \Closure $listenCallback;
-
-    public function createSubServer(
-        array $middlewares = [],
-        ?HttpFactory $httpFactory = null,
-        \Closure|null $outputBuilder = null,
-    ): static {
-        $subServer = new static(
-            $middlewares,
-            $httpFactory ?? $this->httpFactory,
-            $outputBuilder ?? $this->outputBuilder
-        );
-        $subServer->isSubServer = true;
-
-        $this->subServers[] = $subServer;
-
-        return $subServer;
-    }
-
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
-        if ($this->isSubServer) {
-            $this->listenCallback = function (SwooleServer $parentServer) use ($port, $host) {
-                $serverPort = $parentServer->listen($host, $port, $this->sockType);
+        $server = $this->getSwooleServer(
+            $host,
+            $port,
+            $this->ssl,
+            $this->reusePort
+        );
 
-                $this->startListen($serverPort);
-            };
-        } else {
-            $server = $this->getSwooleServer($host, $port, $this->mode, $this->sockType);
+        $this->startListen($server);
 
-            $this->startListen($server);
-
-            foreach ($this->subServers as $subServer) {
-                ($subServer->listenCallback)($server);
+        run(
+            function () use ($server) {
+                $server->start();
             }
-
-            $server->start();
-        }
+        );
     }
 
-    protected function startListen(SwooleServer|Port $server): void
+    protected function startListen(SwooleServer $server): void
     {
-        $server->on(
-            'request',
+        $server->handle(
+            '/',
             function (Request $request, Response $response) {
                 $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
                 $fd = $request->fd;
@@ -127,11 +98,11 @@ class SwooleHttpServer extends AbstractHttpServer
     public function getSwooleServer(
         string $host = '0.0.0.0',
         int $port = 0,
-        int $mode = SWOOLE_BASE,
-        int $sockType = SWOOLE_SOCK_TCP
+        bool $ssl = false,
+        bool $reusePort = false
     ): SwooleServer {
         if (!$this->swooleServer) {
-            $server = static::createSwooleServer($host, $port, $mode, $sockType);
+            $server = static::createSwooleServer($host, $port, $ssl, $reusePort);
             $server->set($this->config);
 
             $this->swooleServer = $server;
@@ -143,50 +114,10 @@ class SwooleHttpServer extends AbstractHttpServer
     public static function createSwooleServer(
         string $host = '0.0.0.0',
         int $port = 0,
-        int $mode = SWOOLE_BASE,
-        int $sockType = SWOOLE_SOCK_TCP
+        bool $ssl = false,
+        bool $reusePort = false
     ): SwooleServer {
-        return new SwooleServer($host, $port, $mode, $sockType);
-    }
-
-    /**
-     * @return int
-     */
-    public function getMode(): int
-    {
-        return $this->mode;
-    }
-
-    /**
-     * @param  int  $mode
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setMode(int $mode): static
-    {
-        $this->mode = $mode;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSockType(): int
-    {
-        return $this->sockType;
-    }
-
-    /**
-     * @param  int  $sockType
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setSockType(int $sockType): static
-    {
-        $this->sockType = $sockType;
-
-        return $this;
+        return new SwooleServer($host, $port, $ssl, $reusePort);
     }
 
     /**
@@ -220,15 +151,15 @@ class SwooleHttpServer extends AbstractHttpServer
     }
 
     public static function factory(
-        ?int $mode = null,
-        ?int $sockType = null,
         array $config = [],
-        array $middlewares = []
+        array $middlewares = [],
+        bool $ssl = false,
+        bool $reusePort = false,
     ): \Closure {
-        return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
+        return static function (Container $container) use ($middlewares, $config, $ssl, $reusePort) {
             $server = $container->newInstance(static::class);
-            $server->setMode($mode ?? SWOOLE_BASE);
-            $server->setSockType($sockType ?? SWOOLE_TCP);
+            $server->setSsl($ssl);
+            $server->setReusePort($reusePort);
             $server->setConfig($config);
             $server->setMiddlewares($middlewares);
             $server->setMiddlewareResolver(
@@ -245,8 +176,37 @@ class SwooleHttpServer extends AbstractHttpServer
         };
     }
 
-    public function isSubServer(): bool
+    public function isSsl(): bool
     {
-        return $this->isSubServer;
+        return $this->ssl;
+    }
+
+    /**
+     * @param  bool  $ssl
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setSsl(bool $ssl): static
+    {
+        $this->ssl = $ssl;
+
+        return $this;
+    }
+
+    public function isReusePort(): bool
+    {
+        return $this->reusePort;
+    }
+
+    /**
+     * @param  bool  $reusePort
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setReusePort(bool $reusePort): static
+    {
+        $this->reusePort = $reusePort;
+
+        return $this;
     }
 }

@@ -44,6 +44,7 @@ abstract class AbstractHttpServer extends AbstractServer implements HttpServerIn
             $event = null;
 
             $middlewares = $this->getMiddlewares();
+
             $middlewares[] = function (ServerRequestInterface $req) use ($output, &$event) {
                 /** @var RequestEvent $event */
                 $event = $this->emit(
