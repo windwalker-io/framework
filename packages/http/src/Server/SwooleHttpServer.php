@@ -15,7 +15,9 @@ use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server as SwooleServer;
 use Swoole\Server\Port;
+use Windwalker\Core\CliServer\CliServerState;
 use Windwalker\DI\Container;
+use Windwalker\Http\Event\Swoole\StartEvent;
 use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Output\SwooleOutput;
@@ -64,26 +66,41 @@ class SwooleHttpServer extends AbstractHttpServer
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
         if ($this->isSubServer) {
-            $this->listenCallback = function (SwooleServer $parentServer) use ($port, $host) {
+            $this->listenCallback = function (SwooleServer $parentServer, array &$servers = []) use ($port, $host) {
                 $serverPort = $parentServer->listen($host, $port, $this->sockType);
 
-                $this->startListen($serverPort);
+                $this->registerEvents($serverPort);
             };
         } else {
+            $servers = [];
+
             $server = $this->getSwooleServer($host, $port, $this->mode, $this->sockType);
 
-            $this->startListen($server);
+            $this->registerEvents($server);
 
             foreach ($this->subServers as $subServer) {
-                ($subServer->listenCallback)($server);
+                ($subServer->listenCallback)($server, $servers);
             }
 
             $server->start();
         }
     }
 
-    protected function startListen(SwooleServer|Port $server): void
+    protected function registerEvents(SwooleServer|Port $server): void
     {
+        $server->on(
+            'start',
+            function (SwooleServer $server) {
+                $this->emit(
+                    StartEvent::class,
+                    [
+                        'swooleServer' => $server,
+                        'httpServer' => $this,
+                    ]
+                );
+            }
+        );
+
         $server->on(
             'request',
             function (Request $request, Response $response) {
@@ -102,6 +119,15 @@ class SwooleHttpServer extends AbstractHttpServer
                 gc_collect_cycles();
             }
         );
+
+        // Todo: support tasks and workers
+    }
+
+    public function onStart(callable $handler): static
+    {
+        $this->on(StartEvent::class, $handler);
+
+        return $this;
     }
 
     public function stop(int $workerId = -1, bool $waitEvent = false): void
@@ -220,10 +246,10 @@ class SwooleHttpServer extends AbstractHttpServer
     }
 
     public static function factory(
+        array $config = [],
+        array $middlewares = [],
         ?int $mode = null,
         ?int $sockType = null,
-        array $config = [],
-        array $middlewares = []
     ): \Closure {
         return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
             $server = $container->newInstance(static::class);
@@ -248,5 +274,37 @@ class SwooleHttpServer extends AbstractHttpServer
     public function isSubServer(): bool
     {
         return $this->isSubServer;
+    }
+
+    public function getServersInfo(): array
+    {
+        $servers = [];
+        $swooleServer = $this->getSwooleServer();
+
+        $servers[] = [
+            'class' => $swooleServer::class,
+            'host' => $swooleServer->host,
+            'port' => $swooleServer->port,
+            'mode' => $this->mode,
+            'sockType' => $this->sockType,
+            'config' => $this->config,
+            'middlewares' => $this->getMiddlewares(),
+        ];
+
+        foreach ($this->subServers as $subServer) {
+            $swooleServer = $subServer->getSwooleServer();
+
+            $servers[] = [
+                'class' => $swooleServer::class,
+                'host' => $swooleServer->host,
+                'port' => $swooleServer->port,
+                'mode' => $subServer->mode,
+                'sockType' => $subServer->sockType,
+                'config' => $subServer->config,
+                'middlewares' => $subServer->getMiddlewares(),
+            ];
+        }
+
+        return $servers;
     }
 }
