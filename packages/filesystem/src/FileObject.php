@@ -496,6 +496,10 @@ class FileObject extends SplFileInfo
             $buffer
         );
 
+        if ($this->getPathname() === '') {
+            throw new FilesystemException('Writing to empty path');
+        }
+
         // If the destination directory doesn't exist we need to create it
         $this->getParent()->mkdir();
 

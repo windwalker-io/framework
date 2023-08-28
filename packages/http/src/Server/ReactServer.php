@@ -19,6 +19,7 @@ use React\Socket\Server as SocketServer;
 use React\Socket\ServerInterface as ReactServerInterface;
 use RuntimeException;
 use Throwable;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
@@ -28,8 +29,10 @@ use Windwalker\Http\HttpFactory;
 /**
  * The ReactServerAdapter class.
  */
-class ReactServer extends AbstractServer
+class ReactServer implements ServerInterface
 {
+    use EventAwareTrait;
+
     protected ?LoopInterface $loop = null;
 
     /**

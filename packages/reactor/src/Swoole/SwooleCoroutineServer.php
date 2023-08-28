@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Server;
+namespace Windwalker\Reactor\Swoole;
 
 use Swoole\Coroutine\Http\Server as SwooleServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Windwalker\DI\Container;
 use Windwalker\Http\Factory\ServerRequestFactory;
-use Windwalker\Http\Output\SwooleOutput;
+use Windwalker\Http\Server\AbstractHttpServer;
 
 use function Windwalker\run;
 

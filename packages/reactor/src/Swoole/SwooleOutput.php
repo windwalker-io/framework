@@ -9,11 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Output;
+namespace Windwalker\Reactor\Swoole;
 
 use Psr\Http\Message\ResponseInterface;
 use Swoole\Http\Response as SwooleResponse;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Output\OutputInterface;
+use Windwalker\Http\Output\StreamOutputTrait;
 
 /**
  * The SwooleOutput class.

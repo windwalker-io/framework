@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Reactor;
+namespace Windwalker\Reactor\Swoole;
 
 use Rx\Disposable\CallbackDisposable;
 use Rx\Scheduler\EventLoopScheduler;

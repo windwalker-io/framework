@@ -9,20 +9,21 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Event\Swoole;
+namespace Windwalker\Reactor\Swoole\Event;
 
 use Swoole\Http\Server;
-use Windwalker\Event\AbstractEvent;
-use Windwalker\Http\Server\SwooleHttpServer;
+use Windwalker\Http\Server\ServerInterface;
+use Windwalker\Reactor\Swoole\SwooleHttpServer;
+use Windwalker\Reactor\Swoole\SwooleTcpServer;
 
 /**
- * The StartEvent class.
+ * Trait ServerEventTrait
  */
-class StartEvent extends AbstractEvent
+trait ServerEventTrait
 {
     protected Server $swooleServer;
 
-    protected SwooleHttpServer $httpServer;
+    protected ServerInterface $server;
 
     public function getSwooleServer(): Server
     {
@@ -41,19 +42,19 @@ class StartEvent extends AbstractEvent
         return $this;
     }
 
-    public function getHttpServer(): SwooleHttpServer
+    public function getServer(): ServerInterface
     {
-        return $this->httpServer;
+        return $this->server;
     }
 
     /**
-     * @param  SwooleHttpServer  $httpServer
+     * @param  ServerInterface  $server
      *
      * @return  static  Return self to support chaining.
      */
-    public function setHttpServer(SwooleHttpServer $httpServer): static
+    public function setServer(ServerInterface $server): static
     {
-        $this->httpServer = $httpServer;
+        $this->server = $server;
 
         return $this;
     }

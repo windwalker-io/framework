@@ -13,6 +13,7 @@ namespace Windwalker\Database;
 
 use Windwalker\Core\Application\ApplicationInterface;
 use Windwalker\Core\Application\AppType;
+use Windwalker\Core\CliServer\CliServerClient;
 use Windwalker\Core\Database\DatabaseExportService;
 use Windwalker\Core\Manager\DatabaseManager;
 use Windwalker\Core\Migration\MigrationService;
