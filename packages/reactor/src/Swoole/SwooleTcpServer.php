@@ -283,7 +283,7 @@ class SwooleTcpServer implements ServerInterface
     ): \Closure {
         return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
             $server = $container->newInstance(static::class);
-            $server->setMode($mode ?? SWOOLE_BASE);
+            $server->setMode($mode ?? SWOOLE_PROCESS);
             $server->setSockType($sockType ?? SWOOLE_TCP);
             $server->setConfig($config);
             $server->setMiddlewares($middlewares);
