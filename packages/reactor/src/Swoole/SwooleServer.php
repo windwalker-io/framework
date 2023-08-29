@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace Windwalker\Reactor\Swoole;
 
 use Swoole\Http\Response;
-use Swoole\Server as SwooleServer;
+use Swoole\Server as SwooleBaseServer;
 use Swoole\Server\Port;
 use Windwalker\DI\Container;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Server\ServerInterface;
+use Windwalker\Reactor\Protocol;
 use Windwalker\Reactor\Swoole\Event\AfterReloadEvent;
 use Windwalker\Reactor\Swoole\Event\BeforeReloadEvent;
 use Windwalker\Reactor\Swoole\Event\BeforeShutdownEvent;
@@ -60,8 +60,28 @@ use Windwalker\Utilities\StrNormalize;
  * @method $this onManagerStop(callable $handler)
  * @method $this onBeforeReload(callable $handler)
  * @method $this onAfterReload(callable $handler)
+ *
+ * @method bool reload(bool $onlyReloadTaskWorker = false)
+ * @method bool shutdown()
+ * @method void tick(int $millisecond, callable $callback)
+ * @method void after(int $millisecond, callable $callback)
+ * @method bool clearTimer(int $timerId)
+ * @method bool close(int $fd, bool $reset = false)
+ * @method bool send(int|string $fd, string $data, int $serverSocket = -1)
+ * @method bool sendfile(int $fd, string $filename, int $offset = 0, int $length = 0)
+ * @method array stats()
+ * @method int task(mixed $data, int $dstWorkerId = -1, callable $finishCallback = null)
+ * @method mixed taskwait(mixed $data, float $timeout = 0.5, int $dstWorkerId = -1)
+ * @method false|array taskWaitMulti(array $tasks, float $timeout = 0.5)
+ * @method false|array taskCo(array $tasks, float $timeout = 0.5)
+ * @method bool finish(mixed $data)
+ * @method int|false getWorkerId()
+ * @method int|false getWorkerPid(int $worker_id = -1)
+ * @method int|false getWorkerStatus(int $worker_id = -1)
+ * @method int getManagerPid()
+ * @method int getMasterPid()
  */
-class SwooleTcpServer implements ServerInterface
+class SwooleServer implements ServerInterface
 {
     use EventAwareTrait;
 
@@ -73,9 +93,9 @@ class SwooleTcpServer implements ServerInterface
 
     protected int $sockType = SWOOLE_TCP;
 
-    protected ?SwooleServer $swooleServer = null;
+    protected SwooleBaseServer|Port|null $swooleServer = null;
 
-    public static string $swooleServerClass = SwooleServer::class;
+    public static string $swooleServerClass = SwooleBaseServer::class;
 
     protected bool $isSubServer = false;
 
@@ -107,15 +127,17 @@ class SwooleTcpServer implements ServerInterface
 
     protected \Closure $listenCallback;
 
-    public function createSubServer(
-        array $middlewares = [],
-        ?HttpFactory $httpFactory = null,
-        \Closure|null $outputBuilder = null,
-    ): static {
-        $subServer = new static();
+    public function createSubServer(int $protocol = 0): static
+    {
+        $subServer = clone $this;
         $subServer->isSubServer = true;
+        $subServer->swooleServer = null;
 
         $this->subServers[] = $subServer;
+
+        if ($protocol > 0) {
+            $this->setProtocols($protocol);
+        }
 
         return $subServer;
     }
@@ -123,8 +145,9 @@ class SwooleTcpServer implements ServerInterface
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
         if ($this->isSubServer) {
-            $this->listenCallback = function (SwooleServer $parentServer) use ($port, $host) {
+            $this->listenCallback = function (SwooleBaseServer $parentServer) use ($port, $host) {
                 $serverPort = $parentServer->listen($host, $port, $this->sockType);
+                $this->swooleServer = $serverPort;
 
                 $this->registerEvents($serverPort);
             };
@@ -178,12 +201,19 @@ class SwooleTcpServer implements ServerInterface
         return $this;
     }
 
+    public function set(string $key, mixed $value): static
+    {
+        $this->config[$key] = $value;
+
+        return $this;
+    }
+
     public function getSwooleServer(
         string $host = '0.0.0.0',
         int $port = 0,
         int $mode = SWOOLE_BASE,
         int $sockType = SWOOLE_SOCK_TCP
-    ): SwooleServer {
+    ): SwooleBaseServer|Port {
         if (!$this->swooleServer) {
             $server = static::createSwooleServer($host, $port, $mode, $sockType);
             $server->set($this->config);
@@ -199,7 +229,7 @@ class SwooleTcpServer implements ServerInterface
         int $port = 0,
         int $mode = SWOOLE_BASE,
         int $sockType = SWOOLE_SOCK_TCP
-    ): SwooleServer {
+    ): SwooleBaseServer {
         $class = static::$swooleServerClass;
 
         return new $class($host, $port, $mode, $sockType);
@@ -308,6 +338,10 @@ class SwooleTcpServer implements ServerInterface
 
     public function getServersInfo(): array
     {
+        if ($this->isSubServer) {
+            throw new \LogicException(__METHOD__ . ' cannot call on sub server.');
+        }
+
         $servers = [];
         $swooleServer = $this->getSwooleServer();
 
@@ -317,7 +351,7 @@ class SwooleTcpServer implements ServerInterface
             'port' => $swooleServer->port,
             'mode' => $this->mode,
             'sockType' => $this->sockType,
-            'config' => $this->config,
+            'config' => $swooleServer->setting,
         ];
 
         foreach ($this->subServers as $subServer) {
@@ -329,7 +363,7 @@ class SwooleTcpServer implements ServerInterface
                 'port' => $swooleServer->port,
                 'mode' => $subServer->mode,
                 'sockType' => $subServer->sockType,
-                'config' => $subServer->config,
+                'config' => $swooleServer->setting,
             ];
         }
 
@@ -348,41 +382,24 @@ class SwooleTcpServer implements ServerInterface
             }
         }
 
+        if (method_exists(SwooleBaseServer::class, $name)) {
+            if (!$this->swooleServer) {
+                throw new \BadMethodCallException('You must call this method after swoole server started.');
+            }
+
+            return $this->swooleServer->$name(...$args);
+        }
+
         throw ExceptionFactory::badMethodCall($name);
     }
 
-    protected function registerEvents(SwooleServer|Port $port): void
+    protected function registerEvents(SwooleBaseServer|Port $port): void
     {
-        // $events = $this->eventMapping;
-
-        // foreach ($events as $event => $eventClass) {
-        //     $port->on(
-        //         $event,
-        //         function (SwooleServer $swooleServer, ...$args) use ($eventClass) {
-        //             $eventObject = $args[0] ?? null;
-        //
-        //             if (is_object($eventObject)) {
-        //
-        //             }
-        //
-        //
-        //             $args = static::keysToCamel($args);
-        //             $args['server'] = $this;
-        //             $args['swooleServer'] = $swooleServer;
-        //
-        //             $this->emit(
-        //                 $eventClass,
-        //                 $args
-        //             );
-        //         }
-        //     );
-        // }
-
         $server = $this;
 
         $port->on(
             'start',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 return $this->emit(
                     StartEvent::class,
                     compact(
@@ -395,7 +412,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'beforeShutdown',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     BeforeShutdownEvent::class,
                     compact(
@@ -408,7 +425,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'shutdown',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     BeforeShutdownEvent::class,
                     compact(
@@ -421,7 +438,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'workerStart',
-            function (SwooleServer $swooleServer, int $workerId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
                     WorkerStartEvent::class,
                     compact(
@@ -435,7 +452,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'workerStop',
-            function (SwooleServer $swooleServer, int $workerId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
                     WorkerStopEvent::class,
                     compact(
@@ -449,7 +466,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'workerExit',
-            function (SwooleServer $swooleServer, int $workerId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
                     WorkerExitEvent::class,
                     compact(
@@ -463,7 +480,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'connect',
-            function (SwooleServer $swooleServer, int $reactorId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $reactorId) use ($server) {
                 $this->emit(
                     ConnectEvent::class,
                     compact(
@@ -477,7 +494,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'receive',
-            function (SwooleServer $swooleServer, int $reactorId, string $data) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $reactorId, string $data) use ($server) {
                 $this->emit(
                     ReceiveEvent::class,
                     compact(
@@ -492,7 +509,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'packet',
-            function (SwooleServer $swooleServer, string $data, array $clientInfo) use ($server) {
+            function (SwooleBaseServer $swooleServer, string $data, array $clientInfo) use ($server) {
                 $this->emit(
                     PacketEvent::class,
                     compact(
@@ -507,7 +524,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'close',
-            function (SwooleServer $swooleServer, int $reactorId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $reactorId) use ($server) {
                 $this->emit(
                     CloseEvent::class,
                     compact(
@@ -521,14 +538,15 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'task',
-            function (SwooleServer $swooleServer, int $taskId, int $srcWorkerId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $taskId, int $srcWorkerId, mixed $data) use ($server) {
                 $this->emit(
                     TaskEvent::class,
                     compact(
                         'swooleServer',
                         'server',
                         'taskId',
-                        'srcWorkerId'
+                        'srcWorkerId',
+                        'data'
                     )
                 );
             }
@@ -536,7 +554,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'finish',
-            function (SwooleServer $swooleServer, int $taskId, mixed $data) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $taskId, mixed $data) use ($server) {
                 $this->emit(
                     FinishEvent::class,
                     compact(
@@ -551,7 +569,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'pipeMessage',
-            function (SwooleServer $swooleServer, int $srcWorkerId, mixed $message) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $srcWorkerId, mixed $message) use ($server) {
                 $this->emit(
                     PipeMessageEvent::class,
                     compact(
@@ -567,7 +585,7 @@ class SwooleTcpServer implements ServerInterface
         $port->on(
             'workerError',
             function (
-                SwooleServer $swooleServer,
+                SwooleBaseServer $swooleServer,
                 int $workerId,
                 int $workerPid,
                 int $exitCode,
@@ -591,7 +609,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'managerStart',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     ManagerStartEvent::class,
                     compact(
@@ -604,7 +622,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'managerStop',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     ManagerStopEvent::class,
                     compact(
@@ -617,7 +635,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'beforeReload',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     BeforeReloadEvent::class,
                     compact(
@@ -630,7 +648,7 @@ class SwooleTcpServer implements ServerInterface
 
         $port->on(
             'afterReload',
-            function (SwooleServer $swooleServer) use ($server) {
+            function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     AfterReloadEvent::class,
                     compact(
@@ -640,5 +658,18 @@ class SwooleTcpServer implements ServerInterface
                 );
             }
         );
+    }
+
+    /**
+     * @param  int  $protocol
+     *
+     * @return  void
+     */
+    public function setProtocols(int $protocol): void
+    {
+        $this->set('open_http_protocol', (bool) ($protocol & Protocol::HTTP));
+        $this->set('open_http2_protocol', (bool) ($protocol & Protocol::HTTP2));
+        $this->set('open_websocket_protocol', (bool) ($protocol & Protocol::WEBSOCKET));
+        $this->set('open_mqtt_protocol', (bool) ($protocol & Protocol::MQTT));
     }
 }

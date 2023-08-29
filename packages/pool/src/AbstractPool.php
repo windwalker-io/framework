@@ -147,6 +147,8 @@ abstract class AbstractPool implements PoolInterface
         $connection->updateLastTime();
         $connection->release(true);
 
+        $this->logger->info("Connection created: {$connection->getId()}");
+
         return $connection;
     }
 
@@ -283,6 +285,8 @@ abstract class AbstractPool implements PoolInterface
                 );
             }
 
+            $this->logger->info("Connection closed: {$connection->getId()}");
+
             $length--;
         }
 
@@ -302,6 +306,8 @@ abstract class AbstractPool implements PoolInterface
             if (($time - $lastTime) > $this->getOption(self::IDLE_TIMEOUT)) {
                 $connection->disconnect();
                 $this->totalCount--;
+
+                $this->logger->info("Connection reach max idle timeout and disconnected: {$connection->getId()}");
                 continue;
             }
 

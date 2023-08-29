@@ -23,7 +23,7 @@ class SwooleStack implements StackInterface
 {
     protected int $maxSize = 1;
 
-    protected ?Channel $channel = null;
+    protected ?Channel $pool = null;
 
     /**
      * SwooleDriver constructor.
@@ -34,7 +34,7 @@ class SwooleStack implements StackInterface
     {
         $this->maxSize = $maxSize;
 
-        $this->channel ??= new Channel($this->maxSize);
+        $this->pool ??= new Channel($this->maxSize);
     }
 
     /**
@@ -42,7 +42,7 @@ class SwooleStack implements StackInterface
      */
     public function push(ConnectionInterface $connection): void
     {
-        $this->channel->push($connection);
+        $this->pool->push($connection);
     }
 
     /**
@@ -50,11 +50,11 @@ class SwooleStack implements StackInterface
      */
     public function pop(?int $timeout = null): ConnectionInterface
     {
-        if (!$this->channel) {
+        if (!$this->pool) {
             throw new LogicException('Channel not exists in ' . static::class);
         }
 
-        $conn = $this->channel->pop($timeout ?? -1);
+        $conn = $this->pool->pop($timeout ?? -1);
 
         if ($conn === false) {
             throw new WaitTimeoutException('Wait connection timeout or channel closed.');
@@ -68,7 +68,7 @@ class SwooleStack implements StackInterface
      */
     public function count(): int
     {
-        return $this->channel->length();
+        return $this->pool->length();
     }
 
     /**
@@ -76,6 +76,6 @@ class SwooleStack implements StackInterface
      */
     public function waitingCount(): int
     {
-        return $this->channel->stats()['consumer_num'] ?? 0;
+        return $this->pool->stats()['consumer_num'] ?? 0;
     }
 }

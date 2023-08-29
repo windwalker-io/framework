@@ -14,7 +14,7 @@ namespace Windwalker\Reactor\Swoole\Event;
 use Swoole\Http\Server;
 use Windwalker\Http\Server\ServerInterface;
 use Windwalker\Reactor\Swoole\SwooleHttpServer;
-use Windwalker\Reactor\Swoole\SwooleTcpServer;
+use Windwalker\Reactor\Swoole\SwooleServer;
 
 /**
  * Trait ServerEventTrait

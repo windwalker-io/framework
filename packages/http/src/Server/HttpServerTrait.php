@@ -21,6 +21,8 @@ use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\OutputInterface;
 use Windwalker\Http\Output\StreamOutput;
 
+use function Windwalker\DI\create;
+
 /**
  * Trait HttpServerTrait
  */
@@ -149,6 +151,17 @@ trait HttpServerTrait
     public function setHttpFactory(?HttpFactory $httpFactory): static
     {
         $this->httpFactory = $httpFactory;
+
+        return $this;
+    }
+
+    public function middleware(mixed $middleware, mixed ...$args): static
+    {
+        if (is_string($middleware)) {
+            $middleware = create($middleware, ...$args);
+        }
+
+        $this->middlewares[] = $middleware;
 
         return $this;
     }

@@ -13,11 +13,10 @@ namespace Windwalker\Reactor\Swoole;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Swoole\Server as SwooleServer;
 use Swoole\Http\Server as SwooleNativeHttpServer;
+use Swoole\Server as SwooleBaseServer;
 use Swoole\Server\Port;
 use Windwalker\Http\Factory\ServerRequestFactory;
-use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Server\HttpServerInterface;
 use Windwalker\Http\Server\HttpServerTrait;
 
@@ -26,13 +25,13 @@ use Windwalker\Http\Server\HttpServerTrait;
  *
  * @method $this onRequest(callable $handler)
  */
-class SwooleHttpServer extends SwooleTcpServer implements HttpServerInterface
+class SwooleHttpServer extends SwooleServer implements HttpServerInterface
 {
     use HttpServerTrait;
 
     public static string $swooleServerClass = SwooleNativeHttpServer::class;
 
-    protected function registerEvents(Port|SwooleServer $port): void
+    protected function registerEvents(Port|SwooleBaseServer $port): void
     {
         $port->on(
             'request',
@@ -58,22 +57,5 @@ class SwooleHttpServer extends SwooleTcpServer implements HttpServerInterface
         );
 
         parent::registerEvents($port);
-    }
-
-    public function createSubServer(
-        array $middlewares = [],
-        ?HttpFactory $httpFactory = null,
-        \Closure|null $outputBuilder = null,
-    ): static {
-        $subServer = new static(
-            $middlewares,
-            $httpFactory ?? $this->httpFactory,
-            $outputBuilder ?? $this->outputBuilder
-        );
-        $subServer->isSubServer = true;
-
-        $this->subServers[] = $subServer;
-
-        return $subServer;
     }
 }

@@ -11,9 +11,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Database;
 
+use Monolog\Handler\AbstractHandler;
+use Monolog\Handler\Handler;
+use Monolog\Handler\HandlerWrapper;
+use Monolog\Logger;
+use Monolog\LogRecord;
 use Windwalker\Core\Application\ApplicationInterface;
 use Windwalker\Core\Application\AppType;
 use Windwalker\Core\CliServer\CliServerClient;
+use Windwalker\Core\CliServer\CliServerRuntime;
 use Windwalker\Core\Database\DatabaseExportService;
 use Windwalker\Core\Manager\DatabaseManager;
 use Windwalker\Core\Migration\MigrationService;
@@ -24,6 +30,7 @@ use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\ORM\ORM;
+use Windwalker\Pool\PoolInterface;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\SwooleStack;
 
@@ -46,14 +53,10 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
      */
     public function boot(Container $container): void
     {
-        // Preload ORM here to keep all process uses global ORM instance
-        // $container->get(ORM::class);
-
-        // Todo: Should not cache ORM and DatabaseAdapter, we should cache connection pool.
-
-        // show(static::class);
-
-        if ($this->app->getType() === AppType::CLI_WEB) {
+        if (
+            $this->app->getType() === AppType::CLI_WEB
+            && CliServerRuntime::getInspector()->shouldEnableConnectionPool()
+        ) {
             // Init Connection Pools
             $this->initDriverAndConnectionPools($container);
         }
@@ -87,16 +90,20 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         $databaseFactory = $container->newInstance(DatabaseFactory::class);
         $connections = $container->getParam('database.connections');
 
-        foreach ($connections as $connection => $connConfig) {
-            $this->app->log("[DB][$connection] Init connection pool");
+        $this->app->log("Enable DB Connection Pool");
 
-            // todo: Add logger to driver
+        foreach ($connections as $connection => $connConfig) {
+            $this->app->log("[DB][$connection] Initializing connection pool");
+
+            $poolConfig = $connConfig['pool'] ?? [];
+            $poolConfig = $this->preparePoolConfig($poolConfig);
 
             $pool = $databaseFactory->createConnectionPool(
-                $connConfig['pool'],
+                $poolConfig,
                 $this->app->isCliRuntime()
                     ? new SwooleStack()
-                    : new SingleStack()
+                    : new SingleStack(),
+                $this->createPoolLogger($connection)
             );
 
             $driver = $databaseFactory->createDriver(
@@ -108,11 +115,63 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
             $pool->setConnectionBuilder(fn () => $driver->createConnection());
             $pool->init();
 
-            $this->app->log("[DB][$connection] Connections created, count: " . $pool->count());
+            $this->app->log("  Connections created, count: " . $pool->count());
 
             $container->share('database.connection.driver.' . $connection, $driver);
 
-            $this->app->log("[DB][$connection] Create driver: " . $connConfig['driver']);
+            $this->app->log("  Create DB driver: " . $connConfig['driver']);
         }
+    }
+
+    protected function preparePoolConfig(array $poolConfig): array
+    {
+        $state = CliServerRuntime::getServerState();
+        $mainServState = $state->getServer();
+
+        $default = [
+            PoolInterface::MIN_SIZE => 1,
+            PoolInterface::MAX_WAIT => -1,
+            PoolInterface::WAIT_TIMEOUT => -1,
+            PoolInterface::IDLE_TIMEOUT => 60,
+            PoolInterface::CLOSE_TIMEOUT => 3,
+        ];
+
+        $poolConfig = array_merge($default, $poolConfig);
+
+        // Set MAX_SIZE if not exists
+        if ($poolConfig[PoolInterface::MAX_SIZE] ?? null) {
+            $poolMaxSize = $mainServState['worker_num'] ?? null;
+
+            $poolConfig[PoolInterface::MAX_SIZE] = $poolMaxSize ?? swoole_cpu_num();
+        }
+
+        return $poolConfig;
+    }
+
+    /**
+     * @param  int|string  $connection
+     *
+     * @return  Logger
+     */
+    protected function createPoolLogger(int|string $connection): Logger
+    {
+        $logger = new Logger('connection-pool-' . $connection);
+
+        $handler = new class extends AbstractHandler {
+            public ApplicationInterface $app;
+
+            public function handle(LogRecord $record): bool
+            {
+                $this->app->log(
+                    '  ' . $record->message,
+                    [],
+                    $record->level->toPsrLogLevel()
+                );
+                return true;
+            }
+        };
+        $handler->app = $this->app;
+
+        return $logger->pushHandler($handler);
     }
 }
