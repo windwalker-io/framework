@@ -27,7 +27,10 @@ use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\SafeJson;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\PhpInputStream;
+use Windwalker\Stream\Stream;
 use Windwalker\Uri\Uri;
+
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 
 /**
  * The ServerRequestFactory class.
@@ -162,12 +165,12 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         return $request->withUri($uri);
     }
 
-    public static function createFromSwooleRequest(SwooleRequest $sReq, ?string $host): ServerRequestInterface
+    public static function createFromSwooleRequest(SwooleRequest $request, ?string $host): ServerRequestInterface
     {
-        $server = HttpParameters::wrap((array) $sReq->server);
-        $headers = HttpParameters::wrap((array) $sReq->header);
+        $server = HttpParameters::wrap((array) $request->server);
+        $headers = HttpParameters::wrap((array) $request->header);
 
-        $files = (array) $sReq->files;
+        $files = (array) $request->files;
 
         if ($host) {
             $host = $server['remote_addr'];
@@ -179,7 +182,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
 
         $server['http_host'] = $host;
 
-        $body = new PhpInputStream();
+        $body = (string) $request->rawContent();
 
         $method = $server['REQUEST_METHOD'] ?? 'GET';
 
@@ -190,30 +193,34 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
 
         if ($method === 'POST') {
             if (str_contains($type, 'application/json')) {
-                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+                $decodedBody = new SafeJson($body, true, 512, JSON_THROW_ON_ERROR);
             }
         } elseif (in_array($method, ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
             if (str_contains($type, 'application/x-www-form-urlencoded')) {
-                parse_str($body->__toString(), $decodedBody);
+                parse_str($body, $decodedBody);
             } elseif (str_contains($type, 'multipart/form-data')) {
-                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body->__toString()));
+                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body));
             } elseif (str_contains($type, 'application/json')) {
-                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
+                $decodedBody = new SafeJson($body, true, 512, JSON_THROW_ON_ERROR);
             }
         }
 
         $files = static::prepareFiles($files ?: $decodedFiles);
+
+        $stream = new Stream('php://memory', READ_WRITE_FROM_BEGIN);
+        $stream->write($body);
+        $stream->rewind();
 
         return new ServerRequest(
             array_change_key_case($server->dump(), CASE_UPPER),
             $files,
             static::prepareUri($server, $headers),
             $method,
-            $body,
+            $stream,
             $headers->dump(),
-            $sReq->cookie ?: $_COOKIE,
-            $sReq->get ?: $_GET,
-            $sReq->post ?: $decodedBody,
+            $request->cookie ?: $_COOKIE,
+            $request->get ?: $_GET,
+            $request->post ?: $decodedBody,
             static::getProtocolVersion($server)
         );
     }

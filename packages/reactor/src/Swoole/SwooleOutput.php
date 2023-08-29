@@ -26,6 +26,7 @@ class SwooleOutput implements OutputInterface
 
     public function __construct(protected SwooleResponse $response)
     {
+        $this->setDelay(1);
     }
 
     public function respond(ResponseInterface $response): void
