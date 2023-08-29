@@ -15,10 +15,8 @@ use InvalidArgumentException;
 use JsonException;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Swoole\Http\Request as SwooleRequest;
 use UnexpectedValueException;
 use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpParameters;
@@ -27,10 +25,7 @@ use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\SafeJson;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\PhpInputStream;
-use Windwalker\Stream\Stream;
 use Windwalker\Uri\Uri;
-
-use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 
 /**
  * The ServerRequestFactory class.
@@ -163,66 +158,6 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         $request = static::createFromGlobals($server, $query, $parsedBody, $cookies, $files);
 
         return $request->withUri($uri);
-    }
-
-    public static function createFromSwooleRequest(SwooleRequest $request, ?string $host): ServerRequestInterface
-    {
-        $server = HttpParameters::wrap((array) $request->server);
-        $headers = HttpParameters::wrap((array) $request->header);
-
-        $files = (array) $request->files;
-
-        if ($host) {
-            $host = $server['remote_addr'];
-
-            if ($server['port']) {
-                $host .= ':' . $server['port'];
-            }
-        }
-
-        $server['http_host'] = $host;
-
-        $body = (string) $request->rawContent();
-
-        $method = $server['REQUEST_METHOD'] ?? 'GET';
-
-        $decodedBody = $_POST;
-        $decodedFiles = $_FILES;
-        $method = strtoupper($method);
-        $type = (string) $headers['Content-Type'];
-
-        if ($method === 'POST') {
-            if (str_contains($type, 'application/json')) {
-                $decodedBody = new SafeJson($body, true, 512, JSON_THROW_ON_ERROR);
-            }
-        } elseif (in_array($method, ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
-            if (str_contains($type, 'application/x-www-form-urlencoded')) {
-                parse_str($body, $decodedBody);
-            } elseif (str_contains($type, 'multipart/form-data')) {
-                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body));
-            } elseif (str_contains($type, 'application/json')) {
-                $decodedBody = new SafeJson($body, true, 512, JSON_THROW_ON_ERROR);
-            }
-        }
-
-        $files = static::prepareFiles($files ?: $decodedFiles);
-
-        $stream = new Stream('php://memory', READ_WRITE_FROM_BEGIN);
-        $stream->write($body);
-        $stream->rewind();
-
-        return new ServerRequest(
-            array_change_key_case($server->dump(), CASE_UPPER),
-            $files,
-            static::prepareUri($server, $headers),
-            $method,
-            $stream,
-            $headers->dump(),
-            $request->cookie ?: $_COOKIE,
-            $request->get ?: $_GET,
-            $request->post ?: $decodedBody,
-            static::getProtocolVersion($server)
-        );
     }
 
     /**
@@ -621,7 +556,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @return  string  Protocol version.
      */
-    private static function getProtocolVersion(array|HttpParameters $server): string
+    public static function getProtocolVersion(array|HttpParameters $server): string
     {
         $server = HttpParameters::wrap($server);
 

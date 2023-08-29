@@ -18,7 +18,7 @@ use Swoole\Server\Port;
 use Swoole\WebSocket\Frame;
 use Windwalker\DI\Container;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\Http\Factory\ServerRequestFactory;
+use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Server\HttpServerTrait;
 use Windwalker\Http\Server\ServerInterface;
 use Windwalker\Reactor\Protocol;
@@ -28,9 +28,13 @@ use Windwalker\Reactor\Swoole\Event\BeforeReloadEvent;
 use Windwalker\Reactor\Swoole\Event\BeforeShutdownEvent;
 use Windwalker\Reactor\Swoole\Event\CloseEvent;
 use Windwalker\Reactor\Swoole\Event\ConnectEvent;
+use Windwalker\Reactor\Swoole\Event\DisconnectEvent;
 use Windwalker\Reactor\Swoole\Event\FinishEvent;
+use Windwalker\Reactor\Swoole\Event\HandshakeEvent;
 use Windwalker\Reactor\Swoole\Event\ManagerStartEvent;
 use Windwalker\Reactor\Swoole\Event\ManagerStopEvent;
+use Windwalker\Reactor\Swoole\Event\MessageEvent;
+use Windwalker\Reactor\Swoole\Event\OpenEvent;
 use Windwalker\Reactor\Swoole\Event\PacketEvent;
 use Windwalker\Reactor\Swoole\Event\PipeMessageEvent;
 use Windwalker\Reactor\Swoole\Event\ReceiveEvent;
@@ -140,7 +144,13 @@ class SwooleServer implements ServerInterface
         'ManagerStop' => ManagerStopEvent::class,
         'BeforeReload' => BeforeReloadEvent::class,
         'AfterReload' => AfterReloadEvent::class,
+
+        // Websocket
         'BeforeHandshakeResponse' => BeforeHandshakeResponseEvent::class,
+        'Handshake' => HandshakeEvent::class,
+        'Open' => BeforeHandshakeResponseEvent::class,
+        'Message' => MessageEvent::class,
+        'Disconnect' => DisconnectEvent::class,
     ];
 
     /**
@@ -418,9 +428,9 @@ class SwooleServer implements ServerInterface
 
     protected function registerEvents(SwooleBaseServer|Port $port): void
     {
-        $this->registerHttpEvents($port);
-
         $this->registerBaseEvents($port);
+        $this->registerHttpEvents($port);
+        $this->registerWebsocketEvents($port);
     }
 
     /**
@@ -715,20 +725,105 @@ class SwooleServer implements ServerInterface
      */
     protected function registerHttpEvents(Port|SwooleBaseServer $port): void
     {
+        if ($this->dispatcher->getListeners(RequestEvent::class)) {
+            $port->on(
+                'request',
+                function (Request $request, Response $response) {
+                    $psrRequest = SwooleRequestFactory::createPsrFromSwooleRequest($request, $this->getHost());
+                    $fd = $request->fd;
+                    $server = $this;
+                    $swooleServer = $this;
+
+                    $psrRequest = $psrRequest->withAttribute(
+                        'swoole',
+                        compact('fd', 'request', 'response', 'server', 'swooleServer')
+                    );
+
+                    $output = $this->createOutput($response);
+
+                    $this->handleRequest($psrRequest, $output);
+                }
+            );
+        }
+    }
+
+    protected function registerWebsocketEvents(Port|SwooleBaseServer $port): void
+    {
+        $server = $this;
+
+        if ($this->dispatcher->getListeners(BeforeHandshakeResponseEvent::class)) {
+            $port->on(
+                'beforeHandshakeResponse',
+                function (Request $request, Response $response) {
+                    $this->emit(
+                        BeforeHandshakeResponseEvent::class,
+                        compact(
+                            'request',
+                            'response'
+                        )
+                    );
+                }
+            );
+        }
+
+        if ($this->dispatcher->getListeners(HandshakeEvent::class)) {
+            $port->on(
+                'handshake',
+                function (Request $request, Response $response) {
+                    $this->emit(
+                        HandshakeEvent::class,
+                        compact(
+                            'request',
+                            'response'
+                        )
+                    );
+                }
+            );
+        }
+
+        if ($this->dispatcher->getListeners(OpenEvent::class)) {
+            dump('dddd');
+            $port->on(
+                'open',
+                function (SwooleBaseServer $swooleServer, Request $swooleRequest) use ($server) {
+                    // $request = WebSocketRequest::createFromSwooleRequest($swooleRequest);
+dump('dfgdfg');
+                    $this->emit(
+                        OpenEvent::class,
+                        compact(
+                            'swooleServer',
+                            'server',
+                        )
+                    );
+                }
+            );
+        }
+
         $port->on(
-            'request',
-            function (Request $request, Response $response) {
-                $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
-                $fd = $request->fd;
-
-                $psrRequest = $psrRequest->withAttribute(
-                    'swoole',
-                    compact('fd', 'request', 'response')
+            'message',
+            function (SwooleBaseServer $swooleServer, Frame $frame) use ($server) {
+                $this->emit(
+                    MessageEvent::class,
+                    compact(
+                        'swooleServer',
+                        'server',
+                        'frame'
+                    )
                 );
+            }
+        );
 
-                $output = $this->createOutput($response);
-
-                $this->handleRequest($psrRequest, $output);
+        $port->on(
+            'disconnect',
+            function (SwooleBaseServer $swooleServer, int $fd) use ($server) {
+                $this->emit(
+                    DisconnectEvent::class,
+                    compact(
+                        'swooleServer',
+                        'server',
+                        'fd'
+                    )
+                );
             }
         );
     }

@@ -15,7 +15,6 @@ use Swoole\Coroutine\Http\Server as SwooleServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Windwalker\DI\Container;
-use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Server\AbstractHttpServer;
 
 use function Windwalker\run;
@@ -58,7 +57,7 @@ class SwooleCoroutineServer extends AbstractHttpServer
         $server->handle(
             '/',
             function (Request $request, Response $response) {
-                $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
+                $psrRequest = SwooleRequestFactory::createPsrFromSwooleRequest($request, $this->getHost());
                 $fd = $request->fd;
 
                 $psrRequest = $psrRequest->withAttribute(
