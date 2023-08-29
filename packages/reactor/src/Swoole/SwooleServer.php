@@ -11,14 +11,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole;
 
+use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Server as SwooleBaseServer;
 use Swoole\Server\Port;
+use Swoole\WebSocket\Frame;
 use Windwalker\DI\Container;
 use Windwalker\Event\EventAwareTrait;
+use Windwalker\Http\Factory\ServerRequestFactory;
+use Windwalker\Http\Server\HttpServerTrait;
 use Windwalker\Http\Server\ServerInterface;
 use Windwalker\Reactor\Protocol;
 use Windwalker\Reactor\Swoole\Event\AfterReloadEvent;
+use Windwalker\Reactor\Swoole\Event\BeforeHandshakeResponseEvent;
 use Windwalker\Reactor\Swoole\Event\BeforeReloadEvent;
 use Windwalker\Reactor\Swoole\Event\BeforeShutdownEvent;
 use Windwalker\Reactor\Swoole\Event\CloseEvent;
@@ -61,6 +66,13 @@ use Windwalker\Utilities\StrNormalize;
  * @method $this onBeforeReload(callable $handler)
  * @method $this onAfterReload(callable $handler)
  *
+ * @method $this onRequest(callable $handler)
+ * @method $this onOpen(callable $handler)
+ * @method $this onBeforeHandshakeResponse(callable $handler)
+ * @method $this onHandshake(callable $handler)
+ * @method $this onMessage(callable $handler)
+ * @method $this onDisconnect(callable $handler)
+ *
  * @method bool reload(bool $onlyReloadTaskWorker = false)
  * @method bool shutdown()
  * @method void tick(int $millisecond, callable $callback)
@@ -69,6 +81,8 @@ use Windwalker\Utilities\StrNormalize;
  * @method bool close(int $fd, bool $reset = false)
  * @method bool send(int|string $fd, string $data, int $serverSocket = -1)
  * @method bool sendfile(int $fd, string $filename, int $offset = 0, int $length = 0)
+ * @method bool sendMessage(mixed $message, int $workerId)
+ * @method bool exist(int $fd)
  * @method array stats()
  * @method int task(mixed $data, int $dstWorkerId = -1, callable $finishCallback = null)
  * @method mixed taskwait(mixed $data, float $timeout = 0.5, int $dstWorkerId = -1)
@@ -80,10 +94,18 @@ use Windwalker\Utilities\StrNormalize;
  * @method int|false getWorkerStatus(int $worker_id = -1)
  * @method int getManagerPid()
  * @method int getMasterPid()
+ *
+ * // phpcs:ignore
+ * @method int push(int $fd, Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
+ * @method string pack(Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
+ * @method Frame|false unpack(string $data)
+ * @method bool disconnect(int $fd, int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL, string $reason = '')
+ * @method bool isEstablished(int $fd)
  */
 class SwooleServer implements ServerInterface
 {
     use EventAwareTrait;
+    use HttpServerTrait;
 
     protected ?string $host = null;
 
@@ -118,6 +140,7 @@ class SwooleServer implements ServerInterface
         'ManagerStop' => ManagerStopEvent::class,
         'BeforeReload' => BeforeReloadEvent::class,
         'AfterReload' => AfterReloadEvent::class,
+        'BeforeHandshakeResponse' => BeforeHandshakeResponseEvent::class,
     ];
 
     /**
@@ -395,6 +418,31 @@ class SwooleServer implements ServerInterface
 
     protected function registerEvents(SwooleBaseServer|Port $port): void
     {
+        $this->registerHttpEvents($port);
+
+        $this->registerBaseEvents($port);
+    }
+
+    /**
+     * @param  int  $protocol
+     *
+     * @return  void
+     */
+    public function setProtocols(int $protocol): void
+    {
+        $this->set('open_http_protocol', (bool) ($protocol & Protocol::HTTP));
+        $this->set('open_http2_protocol', (bool) ($protocol & Protocol::HTTP2));
+        $this->set('open_websocket_protocol', (bool) ($protocol & Protocol::WEBSOCKET));
+        $this->set('open_mqtt_protocol', (bool) ($protocol & Protocol::MQTT));
+    }
+
+    /**
+     * @param  Port|SwooleBaseServer  $port
+     *
+     * @return  void
+     */
+    protected function registerBaseEvents(Port|SwooleBaseServer $port): void
+    {
         $server = $this;
 
         $port->on(
@@ -661,15 +709,27 @@ class SwooleServer implements ServerInterface
     }
 
     /**
-     * @param  int  $protocol
+     * @param  Port|SwooleBaseServer  $port
      *
      * @return  void
      */
-    public function setProtocols(int $protocol): void
+    protected function registerHttpEvents(Port|SwooleBaseServer $port): void
     {
-        $this->set('open_http_protocol', (bool) ($protocol & Protocol::HTTP));
-        $this->set('open_http2_protocol', (bool) ($protocol & Protocol::HTTP2));
-        $this->set('open_websocket_protocol', (bool) ($protocol & Protocol::WEBSOCKET));
-        $this->set('open_mqtt_protocol', (bool) ($protocol & Protocol::MQTT));
+        $port->on(
+            'request',
+            function (Request $request, Response $response) {
+                $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
+                $fd = $request->fd;
+
+                $psrRequest = $psrRequest->withAttribute(
+                    'swoole',
+                    compact('fd', 'request', 'response')
+                );
+
+                $output = $this->createOutput($response);
+
+                $this->handleRequest($psrRequest, $output);
+            }
+        );
     }
 }

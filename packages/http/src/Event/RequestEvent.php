@@ -31,7 +31,7 @@ class RequestEvent extends AbstractEvent
 
     public array $attributes = [];
 
-    public int $id = 0;
+    public int $fd = 0;
 
     /**
      * @return ServerRequestInterface
@@ -76,19 +76,19 @@ class RequestEvent extends AbstractEvent
     /**
      * @return int
      */
-    public function getId(): int
+    public function getFd(): int
     {
-        return $this->id;
+        return $this->fd;
     }
 
     /**
-     * @param  int  $id
+     * @param  int  $fd
      *
      * @return  static  Return self to support chaining.
      */
-    public function setId(int $id): static
+    public function setFd(int $fd): static
     {
-        $this->id = $id;
+        $this->fd = $fd;
 
         return $this;
     }

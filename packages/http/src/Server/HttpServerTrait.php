@@ -35,7 +35,7 @@ trait HttpServerTrait
         protected ?HttpFactory $httpFactory = null,
         protected \Closure|null $outputBuilder = null,
     ) {
-        //
+        $this->adaptLegacyEvents();
     }
 
     protected function handleRequest(ServerRequestInterface $request, OutputInterface $output): void
@@ -48,7 +48,7 @@ trait HttpServerTrait
             $middlewares[] = function (ServerRequestInterface $req) use ($output, &$event) {
                 /** @var RequestEvent $event */
                 $event = $this->emit(
-                    RequestEvent::wrap('request')
+                    (new RequestEvent())
                         ->setRequest($req)
                         ->setOutput($output)
                 );
@@ -62,7 +62,7 @@ trait HttpServerTrait
 
             /** @var ResponseEvent $event */
             $event = $this->emit(
-                ResponseEvent::wrap('response')
+                (new ResponseEvent())
                     ->setRequest($request)
                     ->setResponse($res)
                     ->setOutput($output)
@@ -85,7 +85,7 @@ trait HttpServerTrait
             }
         } catch (\Throwable $e) {
             $event = $this->emit(
-                (new ErrorEvent('error'))
+                (new ErrorEvent())
                     ->setException($e)
                     ->setRequest($request)
                     ->setResponse(
@@ -104,23 +104,47 @@ trait HttpServerTrait
 
     public function onRequest(callable $listener, ?int $priority = null): static
     {
-        $this->on('request', $listener, $priority);
+        $this->on(RequestEvent::class, $listener, $priority);
 
         return $this;
     }
 
     public function onResponse(callable $listener, ?int $priority = null): static
     {
-        $this->on('response', $listener, $priority);
+        $this->on(ResponseEvent::class, $listener, $priority);
 
         return $this;
     }
 
     public function onError(callable $listener, ?int $priority = null): static
     {
-        $this->on('error', $listener, $priority);
+        $this->on(ErrorEvent::class, $listener, $priority);
 
         return $this;
+    }
+
+    public function adaptLegacyEvents(): void
+    {
+        $this->on(
+            RequestEvent::class,
+            function (RequestEvent $event) {
+                $this->emit($event->mirror('request'));
+            }
+        );
+
+        $this->on(
+            ResponseEvent::class,
+            function (ResponseEvent $event) {
+                $this->emit($event->mirror('response'));
+            }
+        );
+
+        $this->on(
+            ErrorEvent::class,
+            function (ErrorEvent $event) {
+                $this->emit($event->mirror('error'));
+            }
+        );
     }
 
     /**
