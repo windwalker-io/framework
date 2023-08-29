@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Windwalker\Event\AbstractEvent;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
@@ -128,23 +129,31 @@ trait HttpServerTrait
         $this->on(
             RequestEvent::class,
             function (RequestEvent $event) {
-                $this->emit($event->mirror('request'));
+                $this->eventPassthrough('request', $event);
             }
         );
 
         $this->on(
             ResponseEvent::class,
             function (ResponseEvent $event) {
-                $this->emit($event->mirror('response'));
+                $this->eventPassthrough('reponse', $event);
             }
         );
 
         $this->on(
             ErrorEvent::class,
             function (ErrorEvent $event) {
-                $this->emit($event->mirror('error'));
+                $this->eventPassthrough('error', $event);
             }
         );
+    }
+
+    protected function eventPassthrough(string $eventName, AbstractEvent $event): AbstractEvent
+    {
+        $this->emit($newEvent = $event->mirror('request'));
+        $event->merge($newEvent->getArguments());
+
+        return $newEvent;
     }
 
     /**
