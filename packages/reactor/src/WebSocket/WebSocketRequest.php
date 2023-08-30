@@ -11,10 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\WebSocket;
 
-use Swoole\Http\Request;
-use Swoole\WebSocket\Frame;
 use Windwalker\Http\Request\ServerRequest;
-use Windwalker\Reactor\Swoole\WebSocketFrameWrapper;
 
 /**
  * The WebSocketRequest class.
@@ -22,32 +19,6 @@ use Windwalker\Reactor\Swoole\WebSocketFrameWrapper;
 class WebSocketRequest extends ServerRequest implements WebSocketRequestInterface
 {
     protected WebSocketFrameInterface $frame;
-
-    public static function createFromSwooleRequest(Request $request, string $data = ''): static
-    {
-        $frame = new Frame();
-        $frame->fd = $request->fd;
-        $frame->data = $data;
-
-        $instance = new static(
-            (array) $request->server,
-            [],
-            null,
-            null,
-            'php://input',
-            (array) $request->header,
-            (array) $request->cookie,
-            (array) $request->get
-        );
-
-        return $instance->withFrame(new WebSocketFrameWrapper($frame))
-            ->withParsedBody($request->post);
-    }
-
-    public static function createFromSwooleFrame(Frame $frame): static
-    {
-        return (new static())->withFrame(new WebSocketFrameWrapper($frame));
-    }
 
     public static function createFromFrame(WebSocketFrameInterface $frame): static
     {

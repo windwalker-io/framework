@@ -19,6 +19,7 @@ use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpParameters;
 use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\SafeJson;
+use Windwalker\Reactor\WebSocket\WebSocketRequest;
 use Windwalker\Stream\Stream;
 
 use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
@@ -35,7 +36,7 @@ class SwooleRequestFactory
 
         $files = (array) $request->files;
 
-        if ($host) {
+        if (!$host) {
             $host = $server['remote_addr'];
 
             if ($server['port']) {
@@ -88,8 +89,52 @@ class SwooleRequestFactory
         );
     }
 
-    public static function createPsrFromFrame(Frame $frame)
+    public static function createPsrSwooleRequest(SwooleRequest $request, string $data = ''): WebSocketRequest
     {
-        
+        $frame = new Frame();
+        $frame->fd = $request->fd;
+        $frame->data = $data;
+
+        $server = HttpParameters::wrap((array) $request->server);
+        $headers = HttpParameters::wrap((array) $request->header);
+
+        $host = $server['remote_addr'];
+
+        if ($server['port']) {
+            $host .= ':' . $server['port'];
+        }
+
+        $server['http_host'] = $host;
+
+        $body = (string) $request->rawContent();
+
+        $method = $server['REQUEST_METHOD'] ?? 'GET';
+
+        $decodedBody = $request->post;
+        $method = strtoupper($method);
+
+        $stream = new Stream('php://memory', READ_WRITE_FROM_BEGIN);
+        $stream->write($body);
+        $stream->rewind();
+
+        $instance = new WebSocketRequest(
+            array_change_key_case($server->dump(), CASE_UPPER),
+            [],
+            ServerRequestFactory::prepareUri($server, $headers),
+            $method,
+            $stream,
+            $headers->dump(),
+            $request->cookie ?: $_COOKIE,
+            $request->get ?: $_GET,
+            $request->post ?: $decodedBody,
+            ServerRequestFactory::getProtocolVersion($server)
+        );
+
+        return $instance->withFrame(new WebSocketFrameWrapper($frame));
+    }
+
+    public static function createFromSwooleFrame(Frame $frame): WebSocketRequest
+    {
+        return (new WebSocketRequest())->withFrame(new WebSocketFrameWrapper($frame));
     }
 }

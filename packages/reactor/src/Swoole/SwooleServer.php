@@ -46,7 +46,6 @@ use Windwalker\Reactor\Swoole\Event\WorkerExitEvent;
 use Windwalker\Reactor\Swoole\Event\WorkerStartEvent;
 use Windwalker\Reactor\Swoole\Event\WorkerStopEvent;
 use Windwalker\Reactor\WebSocket\MessageEmitterInterface;
-use Windwalker\Reactor\WebSocket\WebSocketRequest;
 use Windwalker\Reactor\WebSocket\WebSocketServerInterface;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\StrNormalize;
@@ -812,7 +811,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             $port,
             'Open',
             function (SwooleBaseServer $swooleServer, Request $swooleRequest) use ($server) {
-                $request = WebSocketRequest::createFromSwooleRequest($swooleRequest);
+                $request = SwooleRequestFactory::createPsrSwooleRequest($swooleRequest);
                 $this->emit(
                     OpenEvent::class,
                     compact(
