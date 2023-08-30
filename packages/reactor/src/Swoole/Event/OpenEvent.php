@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Event;
 
-use Psr\Http\Message\RequestInterface;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Reactor\WebSocket\WebSocketRequest;
 
 /**
  * The OpenEvent class.
@@ -21,19 +21,19 @@ class OpenEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected RequestInterface $request;
+    protected WebSocketRequest $request;
 
-    public function getRequest(): RequestInterface
+    public function getRequest(): WebSocketRequest
     {
         return $this->request;
     }
 
     /**
-     * @param  RequestInterface  $request
+     * @param  WebSocketRequest  $request
      *
      * @return  static  Return self to support chaining.
      */
-    public function setRequest(RequestInterface $request): static
+    public function setRequest(WebSocketRequest $request): static
     {
         $this->request = $request;
 

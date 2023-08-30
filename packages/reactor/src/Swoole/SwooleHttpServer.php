@@ -19,5 +19,8 @@ use Windwalker\Http\Server\HttpServerInterface;
  */
 class SwooleHttpServer extends SwooleServer implements HttpServerInterface
 {
-    public static string $swooleServerClass = SwooleNativeHttpServer::class;
+    protected static function getSwooleServerClassName(): string
+    {
+        return SwooleNativeHttpServer::class;
+    }
 }

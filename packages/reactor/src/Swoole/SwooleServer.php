@@ -45,11 +45,17 @@ use Windwalker\Reactor\Swoole\Event\WorkerErrorEvent;
 use Windwalker\Reactor\Swoole\Event\WorkerExitEvent;
 use Windwalker\Reactor\Swoole\Event\WorkerStartEvent;
 use Windwalker\Reactor\Swoole\Event\WorkerStopEvent;
+use Windwalker\Reactor\WebSocket\MessageEmitterInterface;
+use Windwalker\Reactor\WebSocket\WebSocketRequest;
+use Windwalker\Reactor\WebSocket\WebSocketServerInterface;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\StrNormalize;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The SwooleTcpServer class.
+ *
+ * @formatter:off
  *
  * @method $this onStart(callable $handler)
  * @method $this onBeforeShutdown(callable $handler)
@@ -99,14 +105,16 @@ use Windwalker\Utilities\StrNormalize;
  * @method int getManagerPid()
  * @method int getMasterPid()
  *
- * // phpcs:ignore
+ * phpcs:ignore
  * @method int push(int $fd, Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
  * @method string pack(Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
  * @method Frame|false unpack(string $data)
  * @method bool disconnect(int $fd, int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL, string $reason = '')
  * @method bool isEstablished(int $fd)
+ *
+ * @formatter:on
  */
-class SwooleServer implements ServerInterface
+class SwooleServer implements ServerInterface, WebSocketServerInterface
 {
     use EventAwareTrait;
     use HttpServerTrait;
@@ -120,8 +128,6 @@ class SwooleServer implements ServerInterface
     protected int $sockType = SWOOLE_TCP;
 
     protected SwooleBaseServer|Port|null $swooleServer = null;
-
-    public static string $swooleServerClass = SwooleBaseServer::class;
 
     protected bool $isSubServer = false;
 
@@ -145,10 +151,13 @@ class SwooleServer implements ServerInterface
         'BeforeReload' => BeforeReloadEvent::class,
         'AfterReload' => AfterReloadEvent::class,
 
+        // HTTP
+        'Request' => RequestEvent::class,
+
         // Websocket
         'BeforeHandshakeResponse' => BeforeHandshakeResponseEvent::class,
         'Handshake' => HandshakeEvent::class,
-        'Open' => BeforeHandshakeResponseEvent::class,
+        'Open' => OpenEvent::class,
         'Message' => MessageEvent::class,
         'Disconnect' => DisconnectEvent::class,
     ];
@@ -160,20 +169,7 @@ class SwooleServer implements ServerInterface
 
     protected \Closure $listenCallback;
 
-    public function createSubServer(int $protocol = 0): static
-    {
-        $subServer = clone $this;
-        $subServer->isSubServer = true;
-        $subServer->swooleServer = null;
-
-        $this->subServers[] = $subServer;
-
-        if ($protocol > 0) {
-            $this->setProtocols($protocol);
-        }
-
-        return $subServer;
-    }
+    protected MessageEmitterInterface $messageEmitter;
 
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
@@ -263,9 +259,29 @@ class SwooleServer implements ServerInterface
         int $mode = SWOOLE_BASE,
         int $sockType = SWOOLE_SOCK_TCP
     ): SwooleBaseServer {
-        $class = static::$swooleServerClass;
+        $class = static::getSwooleServerClassName();
 
         return new $class($host, $port, $mode, $sockType);
+    }
+
+    protected static function getSwooleServerClassName(): string
+    {
+        return SwooleBaseServer::class;
+    }
+
+    public function createSubServer(int $protocol = 0): static
+    {
+        $subServer = clone $this;
+        $subServer->isSubServer = true;
+        $subServer->swooleServer = null;
+
+        $this->subServers[] = $subServer;
+
+        if ($protocol > 0) {
+            $this->setProtocols($protocol);
+        }
+
+        return $subServer;
     }
 
     /**
@@ -338,35 +354,22 @@ class SwooleServer implements ServerInterface
         };
     }
 
-    public static function factory(
-        array $config = [],
-        array $middlewares = [],
-        ?int $mode = null,
-        ?int $sockType = null,
-    ): \Closure {
-        return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
-            $server = $container->newInstance(static::class);
-            $server->setMode($mode ?? SWOOLE_PROCESS);
-            $server->setSockType($sockType ?? SWOOLE_TCP);
-            $server->setConfig($config);
-            $server->setMiddlewares($middlewares);
-            $server->setMiddlewareResolver(
-                function ($entry) use ($container) {
-                    if ($entry instanceof \Closure) {
-                        return $entry;
-                    }
-
-                    return $container->resolve($entry);
-                }
-            );
-
-            return $server;
-        };
-    }
-
     public function isSubServer(): bool
     {
         return $this->isSubServer;
+    }
+
+    /**
+     * @param  int  $protocol
+     *
+     * @return  void
+     */
+    public function setProtocols(int $protocol): void
+    {
+        $this->set('open_http_protocol', (bool) ($protocol & Protocol::HTTP));
+        $this->set('open_http2_protocol', (bool) ($protocol & Protocol::HTTP2));
+        $this->set('open_websocket_protocol', (bool) ($protocol & Protocol::WEBSOCKET));
+        $this->set('open_mqtt_protocol', (bool) ($protocol & Protocol::MQTT));
     }
 
     public function getServersInfo(): array
@@ -433,17 +436,24 @@ class SwooleServer implements ServerInterface
         $this->registerWebsocketEvents($port);
     }
 
-    /**
-     * @param  int  $protocol
-     *
-     * @return  void
-     */
-    public function setProtocols(int $protocol): void
-    {
-        $this->set('open_http_protocol', (bool) ($protocol & Protocol::HTTP));
-        $this->set('open_http2_protocol', (bool) ($protocol & Protocol::HTTP2));
-        $this->set('open_websocket_protocol', (bool) ($protocol & Protocol::WEBSOCKET));
-        $this->set('open_mqtt_protocol', (bool) ($protocol & Protocol::MQTT));
+    protected function proxySwooleEvent(
+        SwooleBaseServer|Port $port,
+        string $eventName,
+        callable $handler
+    ): void {
+        $eventClass = $this->eventMapping[$eventName] ?? null;
+
+        if (!$eventClass) {
+            throw new \LogicException(
+                "Event mapping not found for: $eventName"
+            );
+        }
+
+        $hasListeners = TypeCast::toArray($this->dispatcher->getListeners($eventClass)) !== [];
+
+        if ($hasListeners) {
+            $port->on($eventName, $handler);
+        }
     }
 
     /**
@@ -455,8 +465,9 @@ class SwooleServer implements ServerInterface
     {
         $server = $this;
 
-        $port->on(
-            'start',
+        $this->proxySwooleEvent(
+            $port,
+            'Start',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 return $this->emit(
                     StartEvent::class,
@@ -468,8 +479,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'beforeShutdown',
+        $this->proxySwooleEvent(
+            $port,
+            'BeforeShutdown',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     BeforeShutdownEvent::class,
@@ -481,8 +493,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'shutdown',
+        $this->proxySwooleEvent(
+            $port,
+            'Shutdown',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     BeforeShutdownEvent::class,
@@ -494,8 +507,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'workerStart',
+        $this->proxySwooleEvent(
+            $port,
+            'WorkerStart',
             function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
                     WorkerStartEvent::class,
@@ -508,8 +522,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'workerStop',
+        $this->proxySwooleEvent(
+            $port,
+            'WorkerStop',
             function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
                     WorkerStopEvent::class,
@@ -522,8 +537,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'workerExit',
+        $this->proxySwooleEvent(
+            $port,
+            'WorkerExit',
             function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
                     WorkerExitEvent::class,
@@ -536,8 +552,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'connect',
+        $this->proxySwooleEvent(
+            $port,
+            'Connect',
             function (SwooleBaseServer $swooleServer, int $reactorId) use ($server) {
                 $this->emit(
                     ConnectEvent::class,
@@ -550,8 +567,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'receive',
+        $this->proxySwooleEvent(
+            $port,
+            'Receive',
             function (SwooleBaseServer $swooleServer, int $reactorId, string $data) use ($server) {
                 $this->emit(
                     ReceiveEvent::class,
@@ -565,8 +583,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'packet',
+        $this->proxySwooleEvent(
+            $port,
+            'Packet',
             function (SwooleBaseServer $swooleServer, string $data, array $clientInfo) use ($server) {
                 $this->emit(
                     PacketEvent::class,
@@ -580,8 +599,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'close',
+        $this->proxySwooleEvent(
+            $port,
+            'Close',
             function (SwooleBaseServer $swooleServer, int $reactorId) use ($server) {
                 $this->emit(
                     CloseEvent::class,
@@ -594,8 +614,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'task',
+        $this->proxySwooleEvent(
+            $port,
+            'Task',
             function (SwooleBaseServer $swooleServer, int $taskId, int $srcWorkerId, mixed $data) use ($server) {
                 $this->emit(
                     TaskEvent::class,
@@ -610,8 +631,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'finish',
+        $this->proxySwooleEvent(
+            $port,
+            'Finish',
             function (SwooleBaseServer $swooleServer, int $taskId, mixed $data) use ($server) {
                 $this->emit(
                     FinishEvent::class,
@@ -625,8 +647,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'pipeMessage',
+        $this->proxySwooleEvent(
+            $port,
+            'PipeMessage',
             function (SwooleBaseServer $swooleServer, int $srcWorkerId, mixed $message) use ($server) {
                 $this->emit(
                     PipeMessageEvent::class,
@@ -640,8 +663,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'workerError',
+        $this->proxySwooleEvent(
+            $port,
+            'WorkerError',
             function (
                 SwooleBaseServer $swooleServer,
                 int $workerId,
@@ -665,8 +689,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'managerStart',
+        $this->proxySwooleEvent(
+            $port,
+            'ManagerStart',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     ManagerStartEvent::class,
@@ -678,8 +703,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'managerStop',
+        $this->proxySwooleEvent(
+            $port,
+            'ManagerStop',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     ManagerStopEvent::class,
@@ -691,8 +717,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'beforeReload',
+        $this->proxySwooleEvent(
+            $port,
+            'BeforeReload',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     BeforeReloadEvent::class,
@@ -704,8 +731,9 @@ class SwooleServer implements ServerInterface
             }
         );
 
-        $port->on(
-            'afterReload',
+        $this->proxySwooleEvent(
+            $port,
+            'AfterReload',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
                     AfterReloadEvent::class,
@@ -725,83 +753,83 @@ class SwooleServer implements ServerInterface
      */
     protected function registerHttpEvents(Port|SwooleBaseServer $port): void
     {
-        if ($this->dispatcher->getListeners(RequestEvent::class)) {
-            $port->on(
-                'request',
-                function (Request $request, Response $response) {
-                    $psrRequest = SwooleRequestFactory::createPsrFromSwooleRequest($request, $this->getHost());
-                    $fd = $request->fd;
-                    $server = $this;
-                    $swooleServer = $this;
+        $this->proxySwooleEvent(
+            $port,
+            'Request',
+            function (Request $request, Response $response) {
+                $psrRequest = SwooleRequestFactory::createPsrFromSwooleRequest($request, $this->getHost());
+                $fd = $request->fd;
+                $server = $this;
+                $swooleServer = $this;
 
-                    $psrRequest = $psrRequest->withAttribute(
-                        'swoole',
-                        compact('fd', 'request', 'response', 'server', 'swooleServer')
-                    );
+                $psrRequest = $psrRequest->withAttribute(
+                    'swoole',
+                    compact('fd', 'request', 'response', 'server', 'swooleServer')
+                );
 
-                    $output = $this->createOutput($response);
+                $output = $this->createOutput($response);
 
-                    $this->handleRequest($psrRequest, $output);
-                }
-            );
-        }
+                $this->handleRequest($psrRequest, $output);
+            }
+        );
     }
 
     protected function registerWebsocketEvents(Port|SwooleBaseServer $port): void
     {
         $server = $this;
 
-        if ($this->dispatcher->getListeners(BeforeHandshakeResponseEvent::class)) {
-            $port->on(
-                'beforeHandshakeResponse',
-                function (Request $request, Response $response) {
-                    $this->emit(
-                        BeforeHandshakeResponseEvent::class,
-                        compact(
-                            'request',
-                            'response'
-                        )
-                    );
-                }
-            );
-        }
+        $this->proxySwooleEvent(
+            $port,
+            'BeforeHandshakeResponse',
+            function (SwooleBaseServer $swooleServer, Request $request, Response $response) use ($server) {
+                $this->emit(
+                    BeforeHandshakeResponseEvent::class,
+                    compact(
+                        'swooleServer',
+                        'server',
+                        'request',
+                        'response'
+                    )
+                );
+            }
+        );
 
-        if ($this->dispatcher->getListeners(HandshakeEvent::class)) {
-            $port->on(
-                'handshake',
-                function (Request $request, Response $response) {
-                    $this->emit(
-                        HandshakeEvent::class,
-                        compact(
-                            'request',
-                            'response'
-                        )
-                    );
-                }
-            );
-        }
+        $this->proxySwooleEvent(
+            $port,
+            'Handshake',
+            function (Request $request, Response $response) {
+                $this->emit(
+                    HandshakeEvent::class,
+                    compact(
+                        'request',
+                        'response'
+                    )
+                );
+            }
+        );
 
-        if ($this->dispatcher->getListeners(OpenEvent::class)) {
-            dump('dddd');
-            $port->on(
-                'open',
-                function (SwooleBaseServer $swooleServer, Request $swooleRequest) use ($server) {
-                    // $request = WebSocketRequest::createFromSwooleRequest($swooleRequest);
-dump('dfgdfg');
-                    $this->emit(
-                        OpenEvent::class,
-                        compact(
-                            'swooleServer',
-                            'server',
-                        )
-                    );
-                }
-            );
-        }
+        $this->proxySwooleEvent(
+            $port,
+            'Open',
+            function (SwooleBaseServer $swooleServer, Request $swooleRequest) use ($server) {
+                $request = WebSocketRequest::createFromSwooleRequest($swooleRequest);
+                $this->emit(
+                    OpenEvent::class,
+                    compact(
+                        'swooleServer',
+                        'server',
+                        'request',
+                    )
+                );
+            }
+        );
 
-        $port->on(
-            'message',
-            function (SwooleBaseServer $swooleServer, Frame $frame) use ($server) {
+        $this->proxySwooleEvent(
+            $port,
+            'Message',
+            function (SwooleBaseServer $swooleServer, Frame $swooleFrame) use ($server) {
+                $frame = new WebSocketFrameWrapper($swooleFrame);
+
                 $this->emit(
                     MessageEvent::class,
                     compact(
@@ -813,8 +841,9 @@ dump('dfgdfg');
             }
         );
 
-        $port->on(
-            'disconnect',
+        $this->proxySwooleEvent(
+            $port,
+            'Disconnect',
             function (SwooleBaseServer $swooleServer, int $fd) use ($server) {
                 $this->emit(
                     DisconnectEvent::class,
@@ -826,5 +855,52 @@ dump('dfgdfg');
                 );
             }
         );
+    }
+
+    public static function factory(
+        array $config = [],
+        array $middlewares = [],
+        ?int $mode = null,
+        ?int $sockType = null,
+    ): \Closure {
+        return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
+            $server = $container->newInstance(static::class);
+            $server->setMode($mode ?? SWOOLE_PROCESS);
+            $server->setSockType($sockType ?? SWOOLE_TCP);
+            $server->setConfig($config);
+            $server->setMiddlewares($middlewares);
+            $server->setMiddlewareResolver(
+                function ($entry) use ($container) {
+                    if ($entry instanceof \Closure) {
+                        return $entry;
+                    }
+
+                    return $container->resolve($entry);
+                }
+            );
+
+            return $server;
+        };
+    }
+
+    public function getMessageEmitter(): MessageEmitterInterface
+    {
+        if (!$this->swooleServer) {
+            throw new \RuntimeException('Swoole server not exists to get message emitter');
+        }
+
+        return $this->messageEmitter ??= new SwooleMessageTextEmitter($this->swooleServer);
+    }
+
+    /**
+     * @param  MessageEmitterInterface  $messageEmitter
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setMessageEmitter(MessageEmitterInterface $messageEmitter): static
+    {
+        $this->messageEmitter = $messageEmitter;
+
+        return $this;
     }
 }

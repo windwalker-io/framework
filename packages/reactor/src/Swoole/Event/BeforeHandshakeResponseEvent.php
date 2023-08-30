@@ -12,14 +12,16 @@ declare(strict_types=1);
 namespace Windwalker\Reactor\Swoole\Event;
 
 use Swoole\Http\Request;
+use Swoole\Http\Response;
 use Windwalker\Event\AbstractEvent;
-use Windwalker\Http\Response\Response;
 
 /**
  * The BeforeHandshakeResponseEvent class.
  */
 class BeforeHandshakeResponseEvent extends AbstractEvent
 {
+    use ServerEventTrait;
+
     protected Request $request;
 
     protected Response $response;

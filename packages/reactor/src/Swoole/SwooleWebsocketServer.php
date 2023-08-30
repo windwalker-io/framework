@@ -13,14 +13,14 @@ namespace Windwalker\Reactor\Swoole;
 
 use Swoole\WebSocket\Server as SwooleNativeWebsocketServer;
 use Windwalker\Http\Server\HttpServerInterface;
-use Windwalker\Http\Server\HttpServerTrait;
 
 /**
  * The SwooleServer class.
  */
 class SwooleWebsocketServer extends SwooleServer implements HttpServerInterface
 {
-    use HttpServerTrait;
-
-    public static string $swooleServerClass = SwooleNativeWebsocketServer::class;
+    protected static function getSwooleServerClassName(): string
+    {
+        return SwooleNativeWebsocketServer::class;
+    }
 }
