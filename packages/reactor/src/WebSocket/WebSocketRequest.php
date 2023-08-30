@@ -20,6 +20,8 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
 {
     protected WebSocketFrameInterface $frame;
 
+    protected mixed $parsedData = null;
+
     public static function createFromFrame(WebSocketFrameInterface $frame): static
     {
         return (new static())->withFrame($frame);
@@ -44,30 +46,6 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
         return $new;
     }
 
-    // public function withFrame(WebSocketFrame $frame): static
-    // {
-    //     $new = clone $this;
-    //
-    //     $new->frame = $frame;
-    //     $data = is_array($frame->data)
-    //         ? $frame->data
-    //         : (array) json_decode(
-    //             $frame->data,
-    //             true,
-    //             512,
-    //             JSON_THROW_ON_ERROR
-    //         );
-    //
-    //     if (count($data) === 2) {
-    //         [$route, $data] = $data;
-    //
-    //         $new->uri = (new Uri())->withPath($route);
-    //         $new->attributes = (array) $data;
-    //     }
-    //
-    //     return $new;
-    // }
-
     public function get(string $name): mixed
     {
         return $this->getQueryParams()[$name] ?? null;
@@ -84,6 +62,19 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
 
     public function getData(): string
     {
-        return $this->data;
+        return $this->frame?->getData() ?? '';
+    }
+
+    public function getParsedData(): mixed
+    {
+        return $this->parsedData;
+    }
+
+    public function withParsedData(mixed $data): static
+    {
+        $new = clone $this;
+        $new->parsedData = $data;
+
+        return $new;
     }
 }

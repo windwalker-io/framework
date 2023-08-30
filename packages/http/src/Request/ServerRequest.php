@@ -178,7 +178,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *
      * @return  static
      */
-    public function withCookieParams(array $cookies): static|ServerRequest
+    public function withCookieParams(array $cookies): static
     {
         $new = clone $this;
 

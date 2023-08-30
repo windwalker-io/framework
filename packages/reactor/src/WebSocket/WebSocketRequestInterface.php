@@ -21,4 +21,8 @@ interface WebSocketRequestInterface extends ServerRequestInterface
     public function getFd(): int;
 
     public function getData(): string;
+
+    public function getParsedData(): mixed;
+
+    public function withParsedData(mixed $data): static;
 }

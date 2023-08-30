@@ -794,7 +794,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @since   2.0
      */
-    protected function resolveAlias(string $id): string
+    public function resolveAlias(string $id): string
     {
         while (isset($this->aliases[$id])) {
             $id = $this->aliases[$id];
@@ -857,6 +857,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     {
         $child = new static($this);
         $child->level = $this->level + 1;
+        $child->aliases = $this->aliases;
         $params = $this->getParameters()->createChild();
         $child->setParameters($params->reset());
 

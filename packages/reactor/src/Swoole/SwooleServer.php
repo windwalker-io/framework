@@ -601,12 +601,13 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
         $this->proxySwooleEvent(
             $port,
             'Close',
-            function (SwooleBaseServer $swooleServer, int $reactorId) use ($server) {
+            function (SwooleBaseServer $swooleServer, int $fd, int $reactorId) use ($server) {
                 $this->emit(
                     CloseEvent::class,
                     compact(
                         'swooleServer',
                         'server',
+                        'fd',
                         'reactorId'
                     )
                 );

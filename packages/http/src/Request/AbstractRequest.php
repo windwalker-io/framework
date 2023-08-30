@@ -264,7 +264,7 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @return static
      */
-    public function withUri(UriInterface $uri, $preserveHost = false): AbstractRequest|static
+    public function withUri(UriInterface $uri, $preserveHost = false): static
     {
         $new = clone $this;
         $new->uri = $uri;
