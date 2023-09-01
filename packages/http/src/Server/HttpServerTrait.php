@@ -150,7 +150,7 @@ trait HttpServerTrait
 
     protected function eventPassthrough(string $eventName, AbstractEvent $event): AbstractEvent
     {
-        $this->emit($newEvent = $event->mirror('request'));
+        $this->emit($newEvent = $event->mirror($eventName));
         $event->merge($newEvent->getArguments());
 
         return $newEvent;
