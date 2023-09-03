@@ -16,6 +16,7 @@ use Windwalker\Attributes\AttributeInterface;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Event\AbstractEvent;
 use Windwalker\ORM\Attributes\ORMAttributeTrait;
+use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 
@@ -73,6 +74,11 @@ class AbstractEntityEvent extends AbstractEvent implements AttributeInterface
     public function getORM(): ORM
     {
         return $this->getMetadata()->getORM();
+    }
+
+    public function getEntityMapper(): EntityMapper
+    {
+        return $this->getMetadata()->getEntityMapper();
     }
 
     public function getDb(): DatabaseAdapter

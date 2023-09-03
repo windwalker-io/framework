@@ -380,6 +380,20 @@ class ORM implements EventAwareInterface
     }
 
     /**
+     * @param  callable  $callback
+     * @param  bool      $autoCommit
+     * @param  bool      $enabled
+     *
+     * @return  mixed
+     *
+     * @throws \Throwable
+     */
+    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
+    {
+        return $this->db->transaction($callback, $autoCommit, $enabled);
+    }
+
+    /**
      * @return EntityMetadataCollection
      */
     public function getEntityMetadataCollection(): EntityMetadataCollection

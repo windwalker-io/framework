@@ -119,4 +119,9 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
 
         return $this;
     }
+
+    public function getTempEntity(): object
+    {
+        return $this->getMetadata()->getEntityMapper()->toEntity($this->getData());
+    }
 }
