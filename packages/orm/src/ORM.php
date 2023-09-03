@@ -70,9 +70,6 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [])
  * @method  int   countColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
  * @method  float   sumColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
- * @method  object  createOne(string $entityClass, array|object $item = [])
- * @method  iterable      createMultiple(string $entityClass, iterable $items)
- * @method  StatementInterface|null  updateOne(string $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
  * @method  object[]      updateMultiple(string $entityClass, iterable $items, array|string $condFields = null, int $options = 0)
  * @method  StatementInterface  updateWhere(string $entityClass, array|object $data, mixed $conditions = null)
  * @method  StatementInterface[]  updateBatch(string $entityClass, array|object $data, mixed $conditions = null, int $options = 0)
@@ -233,6 +230,44 @@ class ORM implements EventAwareInterface
         }
 
         return $this->createSelectorQuery()->delete($table, $alias);
+    }
+
+    /**
+     * @template E
+     *
+     * @param  string|object  $entityClass
+     * @param  array|object   $item
+     *
+     * @psalm-param class-string<E>|object $entityClass
+     *
+     * @return object
+     * @psalm-return E
+     *
+     * @throws ReflectionException
+     * @throws \JsonException
+     */
+    public function createOne(string|object $entityClass, array|object $item = [], int $options = 0): object
+    {
+        if (is_object($entityClass)) {
+            $item = $entityClass;
+            $entityClass = $entityClass::class;
+        }
+
+        return $this->mapper($entityClass)->createOne($item, $options);
+    }
+
+    public function updateOne(
+        string|object $entityClass,
+        array|object $source = [],
+        array|string $condFields = null,
+        int $options = 0,
+    ): ?StatementInterface {
+        if (is_object($entityClass)) {
+            $source = $entityClass;
+            $entityClass = $entityClass::class;
+        }
+
+        return $this->mapper($entityClass)->updateOne($source, $condFields, $options);
     }
 
     public function prepareRelations(object $entity): object
