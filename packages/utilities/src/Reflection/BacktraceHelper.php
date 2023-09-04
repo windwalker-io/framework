@@ -124,10 +124,11 @@ class BacktraceHelper
     /**
      * normalizeBacktraces
      *
-     * @param  array  $traces
-     * @param  bool   $replaceRoot
+     * @param  array        $traces
+     * @param  string|null  $replaceRoot
      *
      * @return  array
+     * @throws ReflectionException
      */
     public static function normalizeBacktraces(array $traces, ?string $replaceRoot = null): array
     {
