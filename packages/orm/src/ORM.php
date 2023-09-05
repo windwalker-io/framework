@@ -36,7 +36,6 @@ use Windwalker\ORM\Attributes\OneToMany;
 use Windwalker\ORM\Attributes\OneToOne;
 use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
-use Windwalker\ORM\Attributes\UUID;
 use Windwalker\ORM\Attributes\Watch;
 use Windwalker\ORM\Attributes\WatchBefore;
 use Windwalker\ORM\Event\AfterCopyEvent;
@@ -60,6 +59,7 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * The ORM class.
  *
  * phpcs:disable
+ * @formatter:off
  *
  * @see EntityMapper
  *
@@ -74,13 +74,13 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  StatementInterface  updateWhere(string $entityClass, array|object $data, mixed $conditions = null)
  * @method  StatementInterface[]  updateBatch(string $entityClass, array|object $data, mixed $conditions = null, int $options = 0)
  * @method  iterable|object[] saveMultiple(string $entityClass, iterable $items, string|array $condFields = null, int $options = 0)
- * @method  object        saveOne(string $entityClass, array|object $item, array|string $condFields = null, int $options = 0)
  * @method  object        findOneOrCreate(string $entityClass, mixed $conditions, mixed $initData = null, bool $mergeConditions = true)
  * @method  object        updateOneOrCreate(string $entityClass, array|object $item, mixed $initData = null, ?array $condFields = null, int $options = 0)
  * @method  StatementInterface[]  deleteWhere(string $entityClass, mixed $conditions)
  * @method  iterable|object[]     flush(string $entityClass, iterable $items, mixed $conditions = [])
  * @method  StatementInterface[]  sync(string $entityClass, iterable $items, mixed $conditions = [], ?array $compareKeys = null)
  *
+ * @formatter:on
  * phpcs:enable
  */
 class ORM implements EventAwareInterface
@@ -161,8 +161,8 @@ class ORM implements EventAwareInterface
     /**
      * @template K
      *
-     * @param  class-string<K> $entityClass
-     * @param  ?string         $mapperClass
+     * @param  class-string<K>  $entityClass
+     * @param  ?string          $mapperClass
      *
      * @return  EntityMapper<K>
      * @throws ReflectionException
@@ -235,8 +235,8 @@ class ORM implements EventAwareInterface
     /**
      * @template E
      *
-     * @param  string|object  $entityClass
-     * @param  array|object   $item
+     * @param  string|object               $entityClass
+     * @param  array|object                $item
      *
      * @psalm-param class-string<E>|object $entityClass
      *
@@ -268,6 +268,35 @@ class ORM implements EventAwareInterface
         }
 
         return $this->mapper($entityClass)->updateOne($source, $condFields, $options);
+    }
+
+    /**
+     * @template E
+     *
+     * @param  string|object      $entityClass
+     * @param  array|object       $item
+     * @param  array|string|null  $condFields
+     * @param  int                $options
+     *
+     * @psalm-param class-string<E>|object $entityClass
+     *
+     * @return object
+     * @psalm-return E
+     *
+     * @throws ReflectionException
+     */
+    public function saveOne(
+        string|object $entityClass,
+        array|object $item = [],
+        array|string $condFields = null,
+        int $options = 0
+    ): object {
+        if (is_object($entityClass)) {
+            $item = $entityClass;
+            $entityClass = $entityClass::class;
+        }
+
+        return $this->mapper($entityClass)->saveOne($item, $condFields, $options);
     }
 
     public function prepareRelations(object $entity): object
@@ -324,8 +353,8 @@ class ORM implements EventAwareInterface
     /**
      * @template E
      *
-     * @param  class-string<E> $entityClass
-     * @param  array|object    $data
+     * @param  class-string<E>  $entityClass
+     * @param  array|object     $data
      *
      * @return  E
      *
