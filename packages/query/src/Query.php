@@ -1598,14 +1598,16 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @template E
-     *
-     * @param  string|E|null  $class
+     * @param  string|null  $class
      * @param  array        $args
      *
-     * @return  object|Collection|E
+     * @return  object|Collection
+     *
+     * @psalm-template E
+     * @psalm-param class-string<E> $class
+     * @psalm-return E
      */
-    public function mustGet(?string $class, array $args = []): object
+    public function mustGet(?string $class = null, array $args = []): object
     {
         return $this->get($class, $args)
             ?? throw new NoResultException(

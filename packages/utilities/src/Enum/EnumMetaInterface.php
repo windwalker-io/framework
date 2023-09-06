@@ -33,4 +33,6 @@ interface EnumMetaInterface extends EnumAdapterInterface
     public function getMeta(): array;
 
     public static function getMetas(): array;
+
+    public static function maxLength(): int;
 }

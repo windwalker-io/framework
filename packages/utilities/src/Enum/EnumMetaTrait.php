@@ -133,4 +133,21 @@ trait EnumMetaTrait
         return $attrs[$this->getValue()][$attr]
             ??= AttributesAccessor::getFirstAttributeInstance($constant, $attr);
     }
+
+    public static function maxLength(): int
+    {
+        static $max = null;
+
+        if ($max !== null) {
+            return $max;
+        }
+
+        $max = 0;
+
+        foreach (self::values() as $value) {
+            $max = max($max, strlen($value->value));
+        }
+
+        return $max;
+    }
 }
