@@ -78,9 +78,11 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     /**
      * Fetch first cell and close the cursor.
      *
+     * @param  bool  $throwsIfNotFound  Throws Exception if not found.
+     *
      * @return  mixed
      */
-    public function result(): mixed;
+    public function result(bool $throwsIfNotFound = false): mixed;
 
     /**
      * Close cursor and free result.

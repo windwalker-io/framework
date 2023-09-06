@@ -41,7 +41,6 @@ use Windwalker\ORM\Attributes\WatchBefore;
 use Windwalker\ORM\Event\AfterCopyEvent;
 use Windwalker\ORM\Event\AfterDeleteEvent;
 use Windwalker\ORM\Event\AfterSaveEvent;
-use Windwalker\ORM\Event\AfterStoreEvent;
 use Windwalker\ORM\Event\AfterUpdateWhereEvent;
 use Windwalker\ORM\Event\BeforeCopyEvent;
 use Windwalker\ORM\Event\BeforeDeleteEvent;
@@ -70,15 +69,20 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [])
  * @method  int   countColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
  * @method  float   sumColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
- * @method  object[]      updateMultiple(string $entityClass, iterable $items, array|string $condFields = null, int $options = 0)
+ * @method  object  createOne(string|object $entityClass, array|object $item = [])
+ * @method  iterable      createMultiple(string|object $entityClass, iterable $items = [])
+ * @method  StatementInterface|null  updateOne(string|object $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
+ * @method  object[]      updateMultiple(string|object $entityClass, iterable $items = [], array|string $condFields = null, int $options = 0)
  * @method  StatementInterface  updateWhere(string $entityClass, array|object $data, mixed $conditions = null)
  * @method  StatementInterface[]  updateBatch(string $entityClass, array|object $data, mixed $conditions = null, int $options = 0)
- * @method  iterable|object[] saveMultiple(string $entityClass, iterable $items, string|array $condFields = null, int $options = 0)
+ * @method  iterable|object[] saveMultiple(string|object $entityClass, iterable $items = [], string|array $condFields = null, int $options = 0)
+ * @method  object        saveOne(string|object $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
  * @method  object        findOneOrCreate(string $entityClass, mixed $conditions, mixed $initData = null, bool $mergeConditions = true)
  * @method  object        updateOneOrCreate(string $entityClass, array|object $item, mixed $initData = null, ?array $condFields = null, int $options = 0)
  * @method  StatementInterface[]  deleteWhere(string $entityClass, mixed $conditions)
  * @method  iterable|object[]     flush(string $entityClass, iterable $items, mixed $conditions = [])
  * @method  StatementInterface[]  sync(string $entityClass, iterable $items, mixed $conditions = [], ?array $compareKeys = null)
+ * @method  object[]  copy(string $entityClass, mixed $conditions = [], callable|iterable $newValue = null, int $options = 0)
  *
  * @formatter:on
  * phpcs:enable
@@ -230,73 +234,6 @@ class ORM implements EventAwareInterface
         }
 
         return $this->createSelectorQuery()->delete($table, $alias);
-    }
-
-    /**
-     * @template E
-     *
-     * @param  string|object               $entityClass
-     * @param  array|object                $item
-     *
-     * @psalm-param class-string<E>|object $entityClass
-     *
-     * @return object
-     * @psalm-return E
-     *
-     * @throws ReflectionException
-     * @throws \JsonException
-     */
-    public function createOne(string|object $entityClass, array|object $item = [], int $options = 0): object
-    {
-        if (is_object($entityClass)) {
-            $item = $entityClass;
-            $entityClass = $entityClass::class;
-        }
-
-        return $this->mapper($entityClass)->createOne($item, $options);
-    }
-
-    public function updateOne(
-        string|object $entityClass,
-        array|object $source = [],
-        array|string $condFields = null,
-        int $options = 0,
-    ): ?StatementInterface {
-        if (is_object($entityClass)) {
-            $source = $entityClass;
-            $entityClass = $entityClass::class;
-        }
-
-        return $this->mapper($entityClass)->updateOne($source, $condFields, $options);
-    }
-
-    /**
-     * @template E
-     *
-     * @param  string|object      $entityClass
-     * @param  array|object       $item
-     * @param  array|string|null  $condFields
-     * @param  int                $options
-     *
-     * @psalm-param class-string<E>|object $entityClass
-     *
-     * @return object
-     * @psalm-return E
-     *
-     * @throws ReflectionException
-     */
-    public function saveOne(
-        string|object $entityClass,
-        array|object $item = [],
-        array|string $condFields = null,
-        int $options = 0
-    ): object {
-        if (is_object($entityClass)) {
-            $item = $entityClass;
-            $entityClass = $entityClass::class;
-        }
-
-        return $this->mapper($entityClass)->saveOne($item, $condFields, $options);
     }
 
     public function prepareRelations(object $entity): object
@@ -512,6 +449,24 @@ class ORM implements EventAwareInterface
     {
         if (method_exists(EntityMapper::class, $name)) {
             $entity = array_shift($args);
+
+            $maps = [
+                'createone',
+                'createmultiple',
+                'updateone',
+                'updatemultiple',
+                'saveone',
+                'savemultiple',
+                'savemultiple',
+            ];
+
+            if (
+                is_object($entity)
+                && in_array(strtolower($name), $maps, true)
+            ) {
+                $args[0] = $entity;
+                $entity = $entity::class;
+            }
 
             return $this->mapper($entity)->$name(...$args);
         }

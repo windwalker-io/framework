@@ -16,7 +16,6 @@ use Closure;
 use DateTimeInterface;
 use Generator;
 use IteratorAggregate;
-use Lyrasoft\Luna\Entity\TagMap;
 use PDO;
 use ReflectionClass;
 use SqlFormatter;
@@ -27,6 +26,7 @@ use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Driver\AbstractStatement;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\Database\Exception\StatementException;
 use Windwalker\ORM\ORM;
 use Windwalker\Query\Bounded\BindableInterface;
 use Windwalker\Query\Bounded\BindableTrait;
@@ -44,6 +44,7 @@ use Windwalker\Query\Concern\JsonConcernTrait;
 use Windwalker\Query\Concern\QueryConcernTrait;
 use Windwalker\Query\Concern\ReflectConcernTrait;
 use Windwalker\Query\Concern\WhereConcernTrait;
+use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Wrapper\FormatRawWrapper;
@@ -51,12 +52,11 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
+use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\WrapperInterface;
 
-use function Windwalker\collect;
 use function Windwalker\raw;
-use function Windwalker\uid;
 use function Windwalker\value;
 
 /**
@@ -108,7 +108,7 @@ use function Windwalker\value;
  * @method Collection|object|null get(?string $class = null, array $args = [])
  * @method Collection|Collection[]|object[] all(?string $class = null, array $args = [])
  * @method Collection loadColumn(int|string $offset = 0)
- * @method mixed result()
+ * @method mixed result(bool $throwsIfNotFound = false)
  * @method int count()
  * @method StatementInterface execute(?array $params = null)
  */
@@ -1594,6 +1594,40 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             if (is_object($v)) {
                 $this->{$k} = clone $v;
             }
+        }
+    }
+
+    /**
+     * @template E
+     *
+     * @param  string|E|null  $class
+     * @param  array        $args
+     *
+     * @return  object|Collection|E
+     */
+    public function mustGet(?string $class, array $args = []): object
+    {
+        return $this->get($class, $args)
+            ?? throw new NoResultException(
+                TypeCast::tryString($this->getFrom()),
+                $this
+            );
+    }
+
+    public function mustGetResult(): mixed
+    {
+        try {
+            return $this->result(true);
+        } catch (StatementException $e) {
+            if ($e->getCode() === 404) {
+                throw new NoResultException(
+                    TypeCast::tryString($this->getFrom()),
+                    $this,
+                    $e
+                );
+            }
+
+            throw $e;
         }
     }
 

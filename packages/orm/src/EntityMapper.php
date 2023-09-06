@@ -38,11 +38,11 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
     BeforeUpdateWhereEvent};
-use Windwalker\ORM\Exception\NoResultException;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\Query\Clause\ClauseInterface;
+use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
@@ -881,6 +881,8 @@ class EntityMapper implements EventAwareInterface
      * @param  int                     $options
      *
      * @return  array<T>
+     * @throws JsonException
+     * @throws \ReflectionException
      */
     public function copy(mixed $conditions = [], callable|iterable $newValue = null, int $options = 0): array
     {
