@@ -428,13 +428,13 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $this->pool = $pool;
 
         if ($this->pool) {
-            $this->preparePool($this->pool);
+            $this->preparePoolConnectionBuilder($this->pool);
         }
 
         return $this;
     }
 
-    protected function preparePool(PoolInterface $pool): PoolInterface
+    public function preparePoolConnectionBuilder(PoolInterface $pool): PoolInterface
     {
         $pool->setConnectionBuilder(
             fn() => $this->createConnection()
@@ -450,7 +450,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $pool = (new DatabaseFactory())
             ->createConnectionPool($options['pool'] ?? []);
 
-        $this->preparePool($pool);
+        $this->preparePoolConnectionBuilder($pool);
 
         return $pool;
     }
