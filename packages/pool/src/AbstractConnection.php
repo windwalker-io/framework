@@ -24,6 +24,12 @@ abstract class AbstractConnection implements ConnectionInterface
 
     protected int $lastTime = 0;
 
+    /**
+     * The connection pool instance must store in WeakReference to prevent circular reference
+     * and memory leak.
+     *
+     * @var \WeakReference|null
+     */
     protected ?\WeakReference $pool = null;
 
     /**

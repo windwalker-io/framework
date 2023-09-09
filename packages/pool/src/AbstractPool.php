@@ -248,8 +248,7 @@ abstract class AbstractPool implements PoolInterface
         }
 
         // Disconnect then drop it.
-        $connection->disconnect();
-        $this->totalCount--;
+        $this->dropConnection($connection);
     }
 
     /**
@@ -304,8 +303,7 @@ abstract class AbstractPool implements PoolInterface
 
             // If out of max idle time, drop this connection.
             if (($time - $lastTime) > $this->getOption(self::IDLE_TIMEOUT)) {
-                $connection->disconnect();
-                $this->totalCount--;
+                $this->dropConnection($connection);
 
                 $this->logger->info("Connection reach max idle timeout and disconnected: {$connection->getId()}");
                 continue;

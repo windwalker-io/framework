@@ -587,7 +587,9 @@ abstract class AbstractPlatform
 
             throw $e;
         } finally {
-            $this->db->getDriver()->releaseKeptConnection();
+            if ($autoCommit) {
+                $this->db->getDriver()->releaseKeptConnection();
+            }
         }
     }
 
