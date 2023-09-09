@@ -19,10 +19,7 @@ use Throwable;
 use Windwalker\Pool\Exception\ConnectionPoolException;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\StackInterface;
-use Windwalker\Pool\Stack\SwooleStack;
 use Windwalker\Utilities\Options\OptionsResolverTrait;
-
-use function Windwalker\swoole_in_coroutine;
 
 /**
  * The AbstractPool class.
@@ -76,10 +73,6 @@ abstract class AbstractPool implements PoolInterface
 
     protected function createStack(): StackInterface
     {
-        if (swoole_in_coroutine()) {
-            return new SwooleStack($this->getOption(self::MAX_SIZE));
-        }
-
         return new SingleStack();
     }
 

@@ -34,6 +34,8 @@ use Windwalker\Pool\PoolInterface;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\SwooleStack;
 
+use function Windwalker\swoole_in_coroutine;
+
 /**
  * The DatabasePackage class.
  */
@@ -100,7 +102,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
 
             $pool = $databaseFactory->createConnectionPool(
                 $poolConfig,
-                $this->app->isCliRuntime()
+                $this->app->isCliRuntime() && swoole_in_coroutine()
                     ? new SwooleStack()
                     : new SingleStack(),
                 $this->createPoolLogger($connection)
