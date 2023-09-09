@@ -24,7 +24,7 @@ abstract class AbstractConnection implements ConnectionInterface
 
     protected int $lastTime = 0;
 
-    protected ?PoolInterface $pool;
+    protected ?\WeakReference $pool = null;
 
     /**
      * Set this to TRUE, if a connection not released back to pool but destructed, will throw an exception.
@@ -38,10 +38,10 @@ abstract class AbstractConnection implements ConnectionInterface
      */
     public function setPool(?PoolInterface $pool): void
     {
-        $this->pool = $pool;
+        $this->pool = $pool ? \WeakReference::create($pool) : null;
 
         if ($pool !== null) {
-            $this->id = $this->pool->getSerial();
+            $this->id = $pool->getSerial();
         }
     }
 
@@ -73,7 +73,7 @@ abstract class AbstractConnection implements ConnectionInterface
         }
 
         if ($this->active || $force) {
-            $this->pool->release($this);
+            $this->pool?->get()?->release($this);
         }
     }
 

@@ -586,6 +586,8 @@ abstract class AbstractPlatform
             $this->transactionRollback();
 
             throw $e;
+        } finally {
+            $this->db->getDriver()->releaseKeptConnection();
         }
     }
 
