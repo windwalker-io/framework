@@ -20,7 +20,9 @@ use Windwalker\DI\Exception\DependencyResolutionException;
 /**
  * The ObjectBuilder class.
  *
- * @method object newInstance(string $class, array $args = [], int $options = 0)
+ * @method object newInstance(Container $container, string $class, array $args = [], int $options = 0)
+ * @method object createObject(Container $container, string $class, array $args = [], int $options = 0)
+ * @method object createSharedObject(Container $container, string $class, array $args = [], int $options = 0)
  */
 class ObjectBuilderDefinition implements DefinitionInterface
 {
@@ -46,13 +48,6 @@ class ObjectBuilderDefinition implements DefinitionInterface
     protected array $caches = [];
 
     /**
-     * Property container.
-     *
-     * @var  ?Container
-     */
-    protected ?Container $container = null;
-
-    /**
      * @var callable[]
      */
     protected array $extends = [];
@@ -74,11 +69,9 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * ClassMeta constructor.
      *
      * @param  string|callable  $class
-     * @param  Container|null   $container
      */
-    public function __construct(callable|string $class, ?Container $container = null)
+    public function __construct(callable|string $class)
     {
-        $this->container = $container;
         $this->class = $class;
     }
 
@@ -92,12 +85,9 @@ class ObjectBuilderDefinition implements DefinitionInterface
      */
     public function resolve(Container $container): object
     {
-        // Todo: this is tmp
-        $this->container = $container;
-
         $object = $container->newInstance(
             $this->getClass(),
-            $this->getArguments()
+            $this->resolveArguments($container)
         );
 
         foreach ($this->extends as $extend) {
@@ -126,16 +116,20 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  mixed   $default
      *
      * @return array
-     * @throws DependencyResolutionException
      * @throws ReflectionException
      */
     public function getArgument(mixed $name, mixed $default = null): mixed
+    {
+        return $this->arguments[$name] ?? $default;
+    }
+
+    public function resolveArgument(Container $container, mixed $name, mixed $default = null): mixed
     {
         if (!isset($this->arguments[$name])) {
             return $default;
         }
 
-        return $this->caches[$name] ??= $this->container->call($this->arguments[$name]);
+        return $this->caches[$name] ??= $container->call($this->arguments[$name]);
     }
 
     /**
@@ -190,15 +184,18 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * Method to get property Arguments
      *
      * @return  array
-     * @throws DependencyResolutionException
-     * @throws ReflectionException
      */
     public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
+    public function resolveArguments(Container $container): array
     {
         $args = [];
 
         foreach ($this->arguments as $name => $callable) {
-            $args[$name] = $this->getArgument($name);
+            $args[$name] = $this->resolveArgument($container, $name);
         }
 
         return $args;
@@ -277,61 +274,27 @@ class ObjectBuilderDefinition implements DefinitionInterface
     public function __call(string $name, array $args): mixed
     {
         $allowMethods = [
-            'bind',
-            'bindShared',
-        ];
-
-        if (in_array($name, $allowMethods, true)) {
-            return $this->container->$name($this->class, ...$args);
-        }
-
-        $allowMethods = [
             'newInstance',
             'createObject',
             'createSharedObject',
         ];
 
         if (in_array($name, $allowMethods, true)) {
-            $arguments = array_merge($this->getArguments(), $args[0] ?? []);
+            /** @var Container $container */
+            $container = $args[0];
 
-            $object = $this->container->$name($this->class, $arguments);
+            $arguments = array_merge($this->resolveArguments($container), $args[1] ?? []);
+
+            $object = $container->$name($this->class, $arguments);
 
             foreach ($this->extends as $extend) {
-                $object = $extend($this->container, $object);
+                $object = $extend($container, $object);
             }
 
             return $object;
         }
 
         throw new BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');
-    }
-
-    /**
-     * Method to get property Container
-     *
-     * @return  Container
-     *
-     * @since  3.5.1
-     */
-    public function getContainer(): Container
-    {
-        return $this->container;
-    }
-
-    /**
-     * Method to set property container
-     *
-     * @param  Container  $container
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @since  3.5.1
-     */
-    public function setContainer(Container $container): static
-    {
-        $this->container = $container;
-
-        return $this;
     }
 
     /**

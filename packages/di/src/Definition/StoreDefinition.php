@@ -38,7 +38,6 @@ class StoreDefinition implements StoreDefinitionInterface
         // Build object if is builder
         if ($this->value instanceof ObjectBuilderDefinition) {
             $this->value->addArguments($args);
-            $this->value->setContainer($container);
 
             $value = $this->value->resolve($container);
         }
@@ -136,5 +135,12 @@ class StoreDefinition implements StoreDefinitionInterface
     public function getCache(): mixed
     {
         return $this->cache;
+    }
+
+    public function __clone(): void
+    {
+        if (is_object($this->value)) {
+            $this->value = clone $this->value;
+        }
     }
 }

@@ -191,6 +191,10 @@ class Escaper
             $connection = $connection->getDriver();
         }
 
+        if (!$connection instanceof WeakReference) {
+            $connection = WeakReference::create($connection);
+        }
+
         $this->connection = $connection;
 
         return $this;
