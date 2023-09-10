@@ -189,6 +189,8 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         $this->setDefinition($id, $value);
 
+        $this->removeAlias($id);
+
         return $this;
     }
 
@@ -233,9 +235,6 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function setDefinition(string $id, StoreDefinitionInterface $value): static
     {
         $this->storage[$id] = $value;
-
-        // 3.2 Remove alias
-        $this->removeAlias($id);
 
         return $this;
     }
@@ -283,15 +282,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * resolve
-     *
      * @param  string|callable|DefinitionInterface|ValueReference  $source
      * @param  array                                               $args
      * @param  int                                                 $options
      *
      * @return  mixed|object|string
-     *
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function resolve(mixed $source, array $args = [], int $options = 0): mixed
     {
@@ -386,7 +383,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @return  mixed  Forked instance.
      *
-     * @since   2.0.7
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @since  2.0.7
      */
     public function fork(string $id, string $newId, bool $forceNew = false): mixed
     {
