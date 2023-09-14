@@ -93,24 +93,24 @@ class ORM implements EventAwareInterface
 
     use AttributesAwareTrait;
 
-    protected DatabaseAdapter $db;
-
     protected ?FieldHydratorInterface $hydrator = null;
 
     protected EntityMetadataCollection $entityMetadataCollection;
+
+    protected BaseCaster $caster;
 
     /**
      * ORM constructor.
      *
      * @param  DatabaseAdapter  $db
      */
-    public function __construct(DatabaseAdapter $db)
+    public function __construct(protected DatabaseAdapter $db)
     {
-        $this->db = $db;
-
         $this->entityMetadataCollection = new EntityMetadataCollection($this);
 
         $this->setAttributesResolver(new AttributesResolver());
+
+        $this->caster ??= new BaseCaster($this->db);
     }
 
     /**
@@ -478,5 +478,22 @@ class ORM implements EventAwareInterface
                 $name
             )
         );
+    }
+
+    public function getCaster(): BaseCaster
+    {
+        return $this->caster;
+    }
+
+    /**
+     * @param  BaseCaster  $caster
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCaster(BaseCaster $caster): static
+    {
+        $this->caster = $caster;
+
+        return $this;
     }
 }

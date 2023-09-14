@@ -1229,22 +1229,16 @@ class EntityMapper implements EventAwareInterface
 
             // Convert value type
             if ($value instanceof DateTimeInterface) {
-                $value = $value->format($db->getDateFormat());
+                $value = $this->orm->getCaster()->castDateTime($value);
             }
 
-            if ($value instanceof JsonSerializer) {
-                $value = json_encode($value);
+            if ($value instanceof \JsonSerializable) {
+                $value = $this->orm->getCaster()->castJsonSerializable($value);
             }
 
+            // Todo: Check why we need detect which is not ClauseInterface
             if (!$value instanceof ClauseInterface) {
-                if (is_object($value) && method_exists($value, '__toString')) {
-                    $value = (string) $value;
-                }
-
-                // Start prepare default value
-                if (is_array($value) || is_object($value)) {
-                    $value = null;
-                }
+                $value = $this->orm->getCaster()->castValue($value);
             }
 
             if ($value === null) {
