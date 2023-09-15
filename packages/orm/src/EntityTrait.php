@@ -105,8 +105,6 @@ trait EntityTrait
      */
     public function jsonSerialize(): array
     {
-        $this->loadAllRelations();
-
         return $this->dump();
     }
 
