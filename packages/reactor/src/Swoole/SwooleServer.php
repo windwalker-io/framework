@@ -819,6 +819,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
                         'swooleServer',
                         'server',
                         'request',
+                        'swooleRequest',
                     )
                 );
             }

@@ -25,6 +25,9 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function __construct(protected string $id, protected mixed $value, protected int $options = 0)
     {
+        if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
+            $this->cache = $this->value;
+        }
     }
 
     public function resolve(Container $container, array $args = []): mixed
