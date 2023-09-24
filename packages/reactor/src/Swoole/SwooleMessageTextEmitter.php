@@ -25,6 +25,10 @@ class SwooleMessageTextEmitter implements MessageEmitterInterface
 
     public function emit(int $fd, string $data): bool
     {
+        if (!$this->server->exists($fd)) {
+            return false;
+        }
+
         return $this->server->push($fd, $data);
     }
 }
