@@ -1450,7 +1450,7 @@ SQL
         );
     }
 
-    public function testOrder()
+    public function testOrder(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1464,10 +1464,11 @@ SQL
                 ]
             )
             ->order('f4', 'DESC')
+            ->order('p1', 'ASC', Query::PREPEND)
             ->order(raw('COUNT(f5)'));
 
         self::assertSqlEquals(
-            'SELECT * FROM "foo" ORDER BY "id" ASC, "f1", "f2" DESC, "f3", "f4" DESC, COUNT(f5)',
+            'SELECT * FROM "foo" ORDER BY "p1" ASC, "id" ASC, "f1", "f2" DESC, "f3", "f4" DESC, COUNT(f5)',
             $q->render()
         );
     }
@@ -1816,7 +1817,7 @@ SQL
             'having' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             // Union should before order because it will clear order.
             'union' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
-            'order' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
+            'order' => [['foo', 'asc', 'yoo', 'goo', 'hoo']],
             'columns' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'values' => [['foo', 'asc'], ['yoo', 'goo']],
         ];
@@ -1874,7 +1875,7 @@ SQL
             'group' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'having' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'union' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
-            'order' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
+            'order' => [['foo', 'asc', 'yoo', 'goo', 'hoo']],
             'columns' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'values' => [['foo', 'asc'], ['yoo', 'goo']],
         ];
