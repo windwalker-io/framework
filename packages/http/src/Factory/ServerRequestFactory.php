@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -406,7 +406,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @see       https://github.com/zendframework/zend-http/blob/master/src/PhpEnvironment/Request.php
      *
-     * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+     * @copyright Copyright (C) 2023-2015 Zend Technologies USA Inc. (http://www.zend.com)
      * @license   http://framework.zend.com/license/new-bsd New BSD License
      *
      * @param  array|HttpParameters  $server

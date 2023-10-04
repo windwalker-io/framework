@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -95,7 +95,7 @@ class PluralSelector
      *
      * The plural rules are derived from code of the Zend Framework (2010-09-25), which
      * is subject to the new BSD license (http://framework.zend.com/license/new-bsd)
-     * Copyright (c) 2005-2010 - Zend Technologies USA Inc. (http://www.zend.com)
+     * Copyright (C) 2023-2010 - Zend Technologies USA Inc. (http://www.zend.com)
      *
      * @param  string  $locale
      * @param  int     $number

@@ -3,15 +3,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
 declare(strict_types=1);
 
 namespace Windwalker\Promise\Scheduler;
-
-use function Windwalker\Promise\reject;
 
 /**
  * The TaskQueue class which inspired by Guzzle.
