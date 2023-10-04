@@ -92,10 +92,10 @@ if (!function_exists('\Windwalker\Promise\async')) {
      *
      * @param  callable  $callable
      *
-     * @return  ExtendedPromiseInterface
+     * @return  Promise
      * @throws Throwable
      */
-    function async(callable $callable): ExtendedPromiseInterface
+    function async(callable $callable): Promise
     {
         return Promise::resolved()->then($callable);
     }

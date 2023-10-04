@@ -28,6 +28,8 @@ use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Str;
 
+use function Windwalker\Promise\async;
+
 use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
 use const Windwalker\Stream\WRITE_ONLY_RESET;
@@ -771,16 +773,16 @@ class FileObject extends SplFileInfo
     }
 
     /**
-     * doAsync
-     *
      * @param  string  $name
      * @param  array   $args
      *
      * @return  Promise
+     * @throws Throwable
+     * @throws \ReflectionException
      */
-    protected static function doAsync(string $name, array $args = []): Promise
+    protected function doAsync(string $name, array $args = []): Promise
     {
-        return new Promise(
+        return async(
             function ($resolve) use ($name, $args) {
                 $resolve(static::$name(...$args));
             }
