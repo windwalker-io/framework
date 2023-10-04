@@ -418,9 +418,8 @@ abstract class TypeCast
                         return $value === (float) (int) $value;
                     case 'string':
                         $intString = (string) (int) $value;
-                        $floatString = (string) (float) $value;
 
-                        if ($floatString !== $intString && $value !== "+$intString") {
+                        if ($value !== $intString && $value !== "+$intString") {
                             return false;
                         }
 

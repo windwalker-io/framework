@@ -16,7 +16,7 @@ use Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum;
 /**
  * The NativeEnumTest class.
  */
-class NativeEnumTest extends AbstractEnumTest
+class NativeEnumTest extends AbstractEnumTestCase
 {
     protected function setUp(): void
     {

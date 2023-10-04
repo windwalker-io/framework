@@ -1286,7 +1286,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $i = 1;
         $replace = function ($sign, $replacement) use ($expression) {
             return match ($sign) {
-                'a' => 0 + $replacement,
+                'a' => TypeCast::mustNumeric($replacement),
                 'e' => $this->escape($replacement),
                 'n' => $this->resolveColumn($replacement, QN_JSON_INSTANT),
                 'q' => $this->quote($replacement),

@@ -55,7 +55,7 @@ class PostgreSQLQueryTest extends QueryTest
         $this->instance->render(true);
     }
 
-    public function parseJsonSelectorProvider(): array
+    public static function parseJsonSelectorProvider(): array
     {
         return [
             [

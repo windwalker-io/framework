@@ -44,7 +44,7 @@ class ClauseTest extends TestCase
         );
     }
 
-    public function basicUsageProvider(): array
+    public static function basicUsageProvider(): array
     {
         return [
             [

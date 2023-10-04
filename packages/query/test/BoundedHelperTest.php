@@ -57,7 +57,7 @@ class BoundedHelperTest extends TestCase
         );
     }
 
-    public function replaceParamsProvider(): array
+    public static function replaceParamsProvider(): array
     {
         return [
             [

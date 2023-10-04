@@ -20,6 +20,7 @@ use Windwalker\Query\Grammar\BaseGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
+use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\Query\expr;
@@ -78,7 +79,7 @@ class QueryTest extends TestCase
         }
     }
 
-    public function selectProvider(): array
+    public static function selectProvider(): array
     {
         return [
             'array and args' => [
@@ -186,7 +187,7 @@ class QueryTest extends TestCase
         self::assertSqlEquals($expected, (string) $q);
     }
 
-    public function fromProvider(): array
+    public static function fromProvider(): array
     {
         return [
             'Simple from' => [
@@ -296,7 +297,7 @@ class QueryTest extends TestCase
         );
     }
 
-    public function joinProvider(): array
+    public static function joinProvider(): array
     {
         // phpcs:disable
         return [
@@ -678,7 +679,7 @@ SQL
         self::assertEquals(static::replaceQn($expt), (string) $this->instance->as($value, $alias, $isColumn));
     }
 
-    public function asProvider(): array
+    public static function asProvider(): array
     {
         return [
             'Simple quote name' => [
@@ -791,7 +792,7 @@ SQL
         );
     }
 
-    public function whereProvider(): array
+    public static function whereProvider(): array
     {
         // phpcs:disable
         return [
@@ -1189,7 +1190,7 @@ SQL
      *
      * @dataProvider havingProvider
      */
-    public function testHaving(string $expt, ...$wheres)
+    public function testHaving(string $expt, ...$wheres): void
     {
         $this->instance->select('*')
             ->from('a');
@@ -1225,7 +1226,7 @@ SQL
         );
     }
 
-    public function havingProvider(): array
+    public static function havingProvider(): array
     {
         return [
             'Simple having =' => [
@@ -1655,6 +1656,13 @@ SQL
             ' WHERE ' . $this->instance->quoteName('type') . " IN('foo', 'bar', 'yoo')";
 
         $this->assertEquals($sql, $result);
+    }
+
+    public function testFormatWrongType()
+    {
+        $this->expectException(CastingException::class);
+
+        $this->instance->format('SELECT * FROM foo WHERE id = %a', 'bar');
     }
 
     /**

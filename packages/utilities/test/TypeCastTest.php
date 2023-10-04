@@ -739,6 +739,37 @@ class TypeCastTest extends TestCase
                 true,
                 'float',
             ],
+            // To Numeric
+            [
+                123,
+                123,
+                false,
+                'numeric',
+            ],
+            [
+                123.123,
+                123.123,
+                false,
+                'numeric',
+            ],
+            [
+                '123',
+                123,
+                false,
+                'numeric',
+            ],
+            [
+                '123.123',
+                123.123,
+                false,
+                'numeric',
+            ],
+            [
+                '123string',
+                null,
+                true,
+                'numeric',
+            ],
             // To string
             [
                 'foo',
