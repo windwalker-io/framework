@@ -1090,8 +1090,6 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * toEntity
-     *
      * @param  array|object  $data
      *
      * @return  object|T
@@ -1114,6 +1112,22 @@ class EntityMapper implements EventAwareInterface
             $data,
             $this->createEntity()
         );
+    }
+
+    /**
+     * @param  array|object|null  $data
+     *
+     * @return  object|T|null
+     *
+     * @throws \ReflectionException
+     */
+    public function toEntityOrNull(object|array|null $data): ?object
+    {
+        if ($data === null) {
+            return null;
+        }
+
+        return $this->toEntity($data);
     }
 
     public function toCollection(array|object $data): Collection
