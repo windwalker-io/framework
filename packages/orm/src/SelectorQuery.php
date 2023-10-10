@@ -187,6 +187,8 @@ class SelectorQuery extends Query implements EventAwareInterface
 
         if (static::$emptyCollectionAsNull) {
             foreach ($subItems as $prefix => $subItem) {
+                $subItem = $subItem->filter(fn ($v) => $v !== null);
+
                 if ($subItem->isEmpty()) {
                     $item[$prefix] = null;
                 }
