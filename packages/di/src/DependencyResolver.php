@@ -145,6 +145,12 @@ class DependencyResolver
             return new $class();
         }
 
+        $parameters = $constructor->getParameters();
+
+        if (array_diff(array_column($parameters, 'name'), array_keys($args)) === []) {
+            return new $class(...$args);
+        }
+
         try {
             $args = array_merge($this->container->whenCreating($class)->resolveArguments($this->container), $args);
 
@@ -298,7 +304,7 @@ class DependencyResolver
             $depObject = null;
             $dependencyClassName = $type->getName();
 
-            // Todo: Support enum
+            // Todo: Support enum https://github.com/windwalker-io/framework/issues/1086
             if (!class_exists($dependencyClassName) && !interface_exists($dependencyClassName)) {
                 // Next dependency
                 continue;

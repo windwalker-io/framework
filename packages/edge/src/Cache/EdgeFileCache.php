@@ -13,6 +13,8 @@ namespace Windwalker\Edge\Cache;
 
 use RuntimeException;
 use Windwalker\Filesystem\Path;
+use Windwalker\Utilities\Cache\InstanceCacheTrait;
+use Windwalker\Utilities\Cache\RuntimeCacheTrait;
 
 /**
  * The FileCacheHandler class.
@@ -21,6 +23,8 @@ use Windwalker\Filesystem\Path;
  */
 class EdgeFileCache implements EdgeCacheInterface
 {
+    use RuntimeCacheTrait;
+
     /**
      * Property path.
      *
@@ -49,13 +53,26 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     public function isExpired(string $path): bool
     {
+        $key = 'cache:' . $path;
+
+        if (isset(static::$cacheStorage[$key])) {
+            return static::$cacheStorage[$key];
+        }
+
         $cachePath = $this->getCacheFile($this->getCacheKey($path));
 
         if (!is_file($cachePath)) {
-            return true;
+            $expired = true;
+        } else {
+            $expired = filemtime($path) >= filemtime($cachePath);
         }
 
-        return filemtime($path) >= filemtime($cachePath);
+        if ($expired === false) {
+            // Only cache if not expired
+            static::$cacheStorage[$key] = false;
+        }
+
+        return $expired;
     }
 
     /**
@@ -67,6 +84,10 @@ class EdgeFileCache implements EdgeCacheInterface
      */
     public function getCacheKey(string $path): string
     {
+        if (static::$cacheStorage[$path] ?? null) {
+            return static::$cacheStorage[$path];
+        }
+
         $path = str_replace(['/', '\\'], '/', $path);
 
         $key = md5($path);
@@ -79,7 +100,7 @@ class EdgeFileCache implements EdgeCacheInterface
             $key = $prefix . '-' . $key . '.php';
         }
 
-        return $key;
+        return static::$cacheStorage[$path] = $key;
     }
 
     /**

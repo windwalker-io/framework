@@ -54,7 +54,7 @@ abstract class AbstractComponent
     /**
      * The component attributes.
      *
-     * @var ComponentAttributes
+     * @var ComponentAttributes|null
      */
     public ?ComponentAttributes $attributes = null;
 
@@ -133,6 +133,7 @@ abstract class AbstractComponent
      * Extract the public methods for the component.
      *
      * @return array
+     * @throws \ReflectionException
      */
     protected function extractPublicMethods(): array
     {

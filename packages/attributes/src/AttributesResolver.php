@@ -243,6 +243,12 @@ class AttributesResolver extends ObjectBuilder
 
     public function &resolveParameter(&$value, ReflectionParameter $ref, array $options = []): mixed
     {
+        $attributes = $ref->getAttributes();
+
+        if ($attributes === []) {
+            return $value;
+        }
+
         $func = fn() => $value;
 
         $handler = $this->createHandler($func, $ref, null, $options);
@@ -265,6 +271,12 @@ class AttributesResolver extends ObjectBuilder
 
         /** @var ReflectionProperty $property */
         foreach ($ref->getProperties() as $property) {
+            $attributes = $property->getAttributes();
+
+            if ($attributes === []) {
+                continue;
+            }
+
             if ($property->isPrivate() || $property->isProtected()) {
                 $property->setAccessible(true);
             }
@@ -276,7 +288,7 @@ class AttributesResolver extends ObjectBuilder
 
             $handler = $this->createHandler($getter, $property, $object, $options);
 
-            foreach ($property->getAttributes() as $attribute) {
+            foreach ($attributes as $attribute) {
                 if ($this->hasAttribute($attribute, Attribute::TARGET_PROPERTY)) {
                     $handler    = $this->runAttribute($attribute, $handler);
                     $shouldCall = true;
@@ -302,6 +314,12 @@ class AttributesResolver extends ObjectBuilder
         $target = $ref instanceof ReflectionObject ? $instance : $ref->getName();
 
         foreach ($ref->getMethods() as $method) {
+            $attributes = $method->getAttributes();
+
+            if ($attributes === []) {
+                continue;
+            }
+
             $getter     = static fn(): array => [$target, $method->getName()];
             $shouldCall = false;
 
@@ -330,6 +348,12 @@ class AttributesResolver extends ObjectBuilder
 
         /** @var ReflectionClassConstant $constant */
         foreach ($ref->getReflectionConstants() as $constant) {
+            $attributes = $constant->getAttributes();
+
+            if ($attributes === []) {
+                continue;
+            }
+
             $getter     = static fn(): array => [$object, $constant];
             $shouldCall = false;
 

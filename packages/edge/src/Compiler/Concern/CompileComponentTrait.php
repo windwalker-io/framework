@@ -14,6 +14,8 @@ namespace Windwalker\Edge\Compiler\Concern;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Str;
 
+use function Windwalker\uid;
+
 /**
  * The CompileComponentTrait class.
  *
@@ -26,7 +28,7 @@ trait CompileComponentTrait
      *
      * @var array
      */
-    protected static array $componentHashStack = [];
+    protected static array $componentUidStack = [];
 
     /**
      * Compile the component statements into valid PHP.
@@ -41,10 +43,10 @@ trait CompileComponentTrait
 
         $component = trim($component, '\'"');
 
-        $hash = static::newComponentHash($component);
+        $uid = static::newComponentUid($component);
 
         if (Str::contains($component, '::class') || class_exists($component)) {
-            return static::compileClassComponentOpening($component, $name, $data, $hash);
+            return static::compileClassComponentOpening($component, $name, $data, $uid);
         }
 
         return "<?php \$__edge->startComponent{$expression}; ?>";
@@ -53,13 +55,12 @@ trait CompileComponentTrait
     /**
      * Get a new component hash for a component name.
      *
-     * @param  string  $component
-     *
      * @return string
+     * @throws \Exception
      */
-    public static function newComponentHash(string $component): string
+    public static function newComponentUid(): string
     {
-        static::$componentHashStack[] = $hash = sha1($component);
+        static::$componentUidStack[] = $hash = uid();
 
         return $hash;
     }
@@ -70,11 +71,11 @@ trait CompileComponentTrait
      * @param  string  $component
      * @param  string  $name
      * @param  string  $data
-     * @param  string  $hash
+     * @param  string  $uid
      *
      * @return string
      */
-    public static function compileClassComponentOpening(string $component, string $name, string $data, string $hash)
+    public static function compileClassComponentOpening(string $component, string $name, string $data, string $uid)
     {
         if (class_exists($component)) {
             $component = Str::ensureLeft($component, '\\');
@@ -85,7 +86,7 @@ trait CompileComponentTrait
         return implode(
             "\n",
             [
-                '<?php if (isset($component)) { $__componentOriginal' . $hash . ' = $component; } ?>',
+                '<?php if (isset($component)) { $__componentOriginal' . $uid . ' = $component; } ?>',
                 '<?php $component = $__edge->make(' . $component . ', ' . ($data ?: '[]') . '); ?>',
                 '<?php $component->withName(' . $name . '); ?>',
                 '<?php if ($component->shouldRender()): ?>',
@@ -101,14 +102,14 @@ trait CompileComponentTrait
      */
     protected function compileEndComponent(): string
     {
-        $hash = array_pop(static::$componentHashStack);
+        $uid = array_pop(static::$componentUidStack);
 
         return implode(
             "\n",
             [
-                '<?php if (isset($__componentOriginal' . $hash . ')): ?>',
-                '<?php $component = $__componentOriginal' . $hash . '; ?>',
-                '<?php unset($__componentOriginal' . $hash . '); ?>',
+                '<?php if (isset($__componentOriginal' . $uid . ')): ?>',
+                '<?php $component = $__componentOriginal' . $uid . '; ?>',
+                '<?php unset($__componentOriginal' . $uid . '); ?>',
                 '<?php endif ?>',
                 '<?php echo $__edge->renderComponent(); ?>',
             ]

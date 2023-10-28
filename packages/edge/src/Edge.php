@@ -18,6 +18,8 @@ use Windwalker\Edge\Cache\EdgeCacheInterface;
 use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 use Windwalker\Edge\Compiler\EdgeCompilerInterface;
+use Windwalker\Edge\Component\AnonymousComponent;
+use Windwalker\Edge\Component\DynamicComponent;
 use Windwalker\Edge\Concern\ManageComponentTrait;
 use Windwalker\Edge\Concern\ManageEventTrait;
 use Windwalker\Edge\Concern\ManageLayoutTrait;
@@ -31,6 +33,8 @@ use Windwalker\Edge\Loader\EdgeLoaderInterface;
 use Windwalker\Edge\Loader\EdgeStringLoader;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\Assert;
+use Windwalker\Utilities\Attributes\Prop;
+use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -51,6 +55,7 @@ class Edge
     use ManageLayoutTrait;
     use ManageStackTrait;
     use ObjectBuilderAwareTrait;
+    use InstanceCacheTrait;
 
     public int $level = 0;
 
@@ -158,7 +163,8 @@ class Edge
         if ($__layout instanceof Closure) {
             $__path = $__layout;
         } else {
-            $__path = is_file($__layout) ? $__layout : $this->loader->find($__layout);
+            $__path = $this->cacheStorage['layout:' . $__layout]
+                ??= (is_file($__layout) ? $__layout : $this->loader->find($__layout));
 
             if ($this->cache->isExpired($__path)) {
                 $compiled = $this->compile($this->loader->load($__path));
@@ -494,17 +500,22 @@ TEXT;
         $globals = $this->globals;
 
         if ($withExtensions) {
-            $values = [];
+            $globals = $this->once(
+                'global.with.extensions',
+                function () use ($globals) {
+                    $values = [];
 
-            foreach ($this->getExtensions() as $extension) {
-                if ($extension instanceof GlobalVariablesExtensionInterface) {
-                    $values[] = $extension->getGlobals();
+                    foreach ($this->getExtensions() as $extension) {
+                        if ($extension instanceof GlobalVariablesExtensionInterface) {
+                            $values[] = $extension->getGlobals();
+                        }
+                    }
+
+                    $values[] = $globals;
+
+                    return array_merge(...$values);
                 }
-            }
-
-            $values[] = $globals;
-
-            $globals = array_merge(...$values);
+            );
         }
 
         return $globals;
@@ -723,10 +734,29 @@ TEXT;
 
     public function make(string $class, array $props = []): object
     {
-        $object = $this->getObjectBuilder()->createObject($class);
+        if ($class === AnonymousComponent::class || $class === DynamicComponent::class) {
+            $object = new $class();
 
-        foreach ($props as $key => $value) {
-            ReflectAccessor::setValue($object, $key, $value);
+            foreach ($props as $key => $value) {
+                ReflectAccessor::setValue($object, $key, $value);
+            }
+
+            return $object;
+        }
+
+        $object = $this->getObjectBuilder()->createObject($class, ...$props);
+
+        $ref = new \ReflectionObject($object);
+
+        foreach ($ref->getProperties() as $property) {
+            $name = $property->getName();
+
+            if (
+                array_key_exists($name, $props)
+                && $property->getAttributes(Prop::class, \ReflectionAttribute::IS_INSTANCEOF)
+            ) {
+                ReflectAccessor::setValue($object, $name, $props[$name]);
+            }
         }
 
         return $object;

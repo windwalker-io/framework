@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Edge\Concern;
 
 use Closure;
+use Windwalker\Edge\Exception\EdgeException;
 use Windwalker\Edge\Wrapper\SlotWrapper;
 use Windwalker\Utilities\Symbol;
 
@@ -58,7 +59,7 @@ trait ManageComponentTrait
      *
      * @return void
      */
-    public function startComponent(string|callable $name, array $data = [])
+    public function startComponent(string|callable $name, array $data = []): void
     {
         if (ob_start()) {
             $this->componentStack[] = $name;
@@ -71,11 +72,12 @@ trait ManageComponentTrait
      * Render the current component.
      *
      * @return string
+     * @throws EdgeException
      */
     public function renderComponent(): string
     {
         $staticSlot = ob_get_clean();
-        $slot = $this->slots[$this->currentComponent()][Symbol::main()->getValue()] ?? null;
+        $slot = $this->slots[$this->currentComponent()]['__MAIN__'] ?? null;
 
         if (trim($staticSlot) !== '') {
             $slot = new SlotWrapper(
@@ -124,7 +126,7 @@ trait ManageComponentTrait
      */
     public function slot(?string $name = null, ?string $content = null): Closure
     {
-        $name ??= Symbol::main()->getValue();
+        $name ??= '__MAIN__';
 
         if ($content !== null) {
             $this->slots[$this->currentComponent()][$name] = new SlotWrapper(
