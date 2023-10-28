@@ -48,31 +48,17 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     protected array $deferredItems = [];
 
     /**
-     * @var StorageInterface
-     */
-    protected StorageInterface $storage;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected SerializerInterface $serializer;
-
-    /**
      * @var bool
      */
     private bool $autoCommit = true;
 
-    protected DateInterval|int|null $defaultTtl = null;
-
     public function __construct(
-        ?StorageInterface $storage = null,
-        ?SerializerInterface $serializer = null,
-        ?LoggerInterface $logger = null
+        protected StorageInterface $storage = new ArrayStorage(),
+        protected SerializerInterface $serializer = new RawSerializer(),
+        LoggerInterface $logger = new NullLogger(),
+        protected DateInterval|int|null $defaultTtl = null
     ) {
-        $this->storage = $storage ?? new ArrayStorage();
-        $this->serializer = $serializer ?? new RawSerializer();
-
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger = $logger;
     }
 
     /**
