@@ -575,20 +575,6 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function extend(string $id, Closure $closure): static
     {
-        if ($this->has($id)) {
-            $definition = $this->getDefinition($id);
-
-            // Do not affect parent
-            $definition = clone $definition;
-
-            $definition->extend($closure);
-
-            // Keep a clone at self
-            $this->setDefinition($id, $definition);
-
-            return $this;
-        }
-
         $this->extends[$id] ??= [];
         $this->extends[$id][] = $closure;
 
@@ -605,6 +591,12 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $nid = $id;
 
         $extends = [];
+
+        if ($this->parent) {
+            foreach ($this->parent->findExtends($id) as $extend) {
+                $extends[] = $extend;
+            }
+        }
 
         if (isset($this->extends[$id])) {
             $extends[] = $this->extends[$id];

@@ -524,7 +524,7 @@ class ContainerTest extends TestCase
 
         $this->instance->share(
             'Hello2',
-            'World2'
+            fn () => 'World2'
         );
 
         self::assertEquals('World2~~~!!!', $this->instance->get('Hello2'));
