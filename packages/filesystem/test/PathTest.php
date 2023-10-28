@@ -49,6 +49,7 @@ class PathTest extends AbstractVfsTestCase
             'Stream URL empty.' => ['vfs://', '/', 'vfs://'],
             'Windows path.' => ['C:\\files\\\\foo//bar', '\\', 'C:\\files\\foo\\bar'],
             'Windows path empty.' => ['C:\\', '\\', 'C:\\'],
+            'Windows path empty 2.' => ['C:/', '\\', 'C:\\'],
         ];
     }
 

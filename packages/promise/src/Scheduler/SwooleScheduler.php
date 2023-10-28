@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Scheduler;
 
 use LogicException;
+use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use Swoole\Event;
 
@@ -40,7 +41,10 @@ class SwooleScheduler implements SchedulerInterface
      */
     public static function isSupported(): bool
     {
-        return PHP_SAPI === 'cli' && extension_loaded('swoole') && function_exists('\go');
+        return PHP_SAPI === 'cli'
+            && extension_loaded('swoole')
+            && function_exists('\go')
+            && Coroutine::getCid() !== -1;
     }
 
     public function createCursor(): ScheduleCursor

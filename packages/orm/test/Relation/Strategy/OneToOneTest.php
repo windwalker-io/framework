@@ -37,12 +37,14 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testAutoLoadRelations()
+    public function testLoadRelations()
     {
         $mapper = $this->createTestMapper();
 
         /** @var StubLocation $item */
         $item = $mapper->findOne(1);
+
+        $item->loadAllRelations();
 
         $encoded = json_encode($item);
 

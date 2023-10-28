@@ -609,15 +609,15 @@ class TypeCastTest extends TestCase
     }
 
     #[DataProvider('mustProvider')]
-    public function testMust(mixed $value, mixed $expt, bool $hasException, string $type): void
+    public function testMust(mixed $value, mixed $expt, bool $success, string $type): void
     {
-        if ($hasException) {
+        if (!$success) {
             $this->expectException(CastingException::class);
         }
 
         $result = TypeCast::must($value, $type);
 
-        if (!$hasException) {
+        if ($success) {
             if ($type === 'object') {
                 self::assertEquals($expt, $result);
             } else {
@@ -633,184 +633,184 @@ class TypeCastTest extends TestCase
             [
                 'foo',
                 null,
-                true,
+                false,
                 'int',
             ],
             [
                 '3',
                 3,
-                false,
+                true,
                 'int',
             ],
             [
                 '10.0',
                 10,
-                false,
+                true,
                 'int',
             ],
             [
                 10.0,
                 10,
-                false,
+                true,
                 'int',
             ],
             [
                 10.3,
                 null,
-                true,
+                false,
                 'int',
             ],
             [
                 [],
                 null,
-                true,
+                false,
                 'int',
             ],
             [
                 new stdClass(),
                 null,
-                true,
+                false,
                 'int',
             ],
             [
                 true,
                 null,
-                true,
+                false,
                 'int',
             ],
             [
                 false,
                 null,
-                true,
+                false,
                 'int',
             ],
             // To float
             [
                 'foo',
                 null,
-                true,
+                false,
                 'float',
             ],
             [
                 '3',
                 3.0,
-                false,
+                true,
                 'float',
             ],
             [
                 '10.0',
                 10.0,
-                false,
+                true,
                 'float',
             ],
             [
                 10.0,
                 10.0,
-                false,
+                true,
                 'float',
             ],
             [
                 10.3,
                 10.3,
-                false,
+                true,
                 'float',
             ],
             [
                 [],
                 null,
-                true,
+                false,
                 'float',
             ],
             [
                 new stdClass(),
                 null,
-                true,
+                false,
                 'float',
             ],
             [
                 true,
                 null,
-                true,
+                false,
                 'float',
             ],
             [
                 false,
                 null,
-                true,
+                false,
                 'float',
             ],
             // To Numeric
             [
                 123,
                 123,
-                false,
+                true,
                 'numeric',
             ],
             [
                 123.123,
                 123.123,
-                false,
+                true,
                 'numeric',
             ],
             [
                 '123',
                 123,
-                false,
+                true,
                 'numeric',
             ],
             [
                 '123.123',
                 123.123,
-                false,
+                true,
                 'numeric',
             ],
             [
                 '123string',
                 null,
-                true,
+                false,
                 'numeric',
             ],
             // To string
             [
                 'foo',
                 'foo',
-                false,
+                true,
                 'string',
             ],
             [
                 1,
                 '1',
-                false,
+                true,
                 'string',
             ],
             [
                 1.23000,
                 '1.23',
-                false,
+                true,
                 'string',
             ],
             [
                 [],
                 null,
-                true,
+                false,
                 'string',
             ],
             [
                 new stdClass(),
                 null,
-                true,
+                false,
                 'string',
             ],
             [
                 75e-5,
                 '0.00075',
-                false,
+                true,
                 'string',
             ],
             [
                 1_234.567,
                 '1234.567',
-                false,
+                true,
                 'string',
             ]
         ];

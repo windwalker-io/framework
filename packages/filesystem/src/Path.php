@@ -148,7 +148,7 @@ class Path
             $path = $extracted[1];
         } elseif (preg_match('/(\w+):[\/\\\\](.*)/', $path, $matches)) {
             if ($matches[2] === '') {
-                return $path;
+                return $matches[1] . ':' . $ds;
             }
 
             $prefix = $matches[1] . ':' . $ds;

@@ -47,6 +47,15 @@ class OneToManyTest extends AbstractORMTestCase
         $encoded = json_encode($item);
 
         self::assertEquals(
+            null,
+            json_decode($encoded, true)['sakuras'],
+        );
+
+        $item->loadAllRelations();
+
+        $encoded = json_encode($item);
+
+        self::assertEquals(
             [],
             json_decode($encoded, true)['sakuras'],
         );

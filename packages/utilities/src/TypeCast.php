@@ -17,6 +17,8 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use stdClass;
 use Traversable;
+use Windwalker\Utilities\Assert\Assert;
+use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Classes\PreventInitialTrait;
 use Windwalker\Utilities\Contract\DumpableInterface;
 use Windwalker\Utilities\Exception\CastingException;
@@ -384,8 +386,8 @@ abstract class TypeCast
         if ($converted === null) {
             throw new CastingException(
                 sprintf(
-                    'Safe convert value "%s" to type "%s" failed.',
-                    gettype($value),
+                    'Safe convert value %s to type "%s" failed.',
+                    TypeAssert::describeValue($value),
                     $type
                 )
             );
@@ -418,8 +420,13 @@ abstract class TypeCast
                         return $value === (float) (int) $value;
                     case 'string':
                         $intString = (string) (int) $value;
+                        $floatString = (string) $value;
 
-                        if ($value !== $intString && $value !== "+$intString") {
+                        if (str_contains($floatString, '.')) {
+                            $floatString = rtrim(rtrim($floatString, '0'), '.');
+                        }
+
+                        if ($floatString !== $intString && (string) $value !== "+$intString") {
                             return false;
                         }
 
