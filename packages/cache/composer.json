@@ -12,9 +12,9 @@
     "homepage": "https://github.com/windwalker-io/cache",
     "license": "MIT",
     "require": {
-        "php": ">=8.0.0",
-        "psr/cache": "^1.0||^2.0",
-        "psr/simple-cache": "^1.0||^2.0",
+        "php": ">=8.2.0",
+        "psr/cache": "^1.0||^2.0||^3.0",
+        "psr/simple-cache": "^1.0||^2.0||^3.0",
         "psr/log": "^1.0||^2.0||^3.0",
         "windwalker/utilities": "^4.0"
     },
@@ -57,7 +57,7 @@
         }
     },
     "provide": {
-        "psr/cache-implementation": "1.0|2.0",
-        "psr/simple-cache-implementation": "1.0"
+        "psr/cache-implementation": "1.0|2.0|3.0",
+        "psr/simple-cache-implementation": "1.0|2,0|3.0"
     }
 }

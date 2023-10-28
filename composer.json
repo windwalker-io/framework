@@ -21,13 +21,13 @@
         "psr/http-factory": "^1.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
-        "psr/cache": "^1.0||^2.0",
-        "psr/simple-cache": "^1.0||^2.0",
+        "psr/cache": "^1.0||^2.0||^3.0",
+        "psr/simple-cache": "^1.0||^2.0||^3.0",
         "psr/event-dispatcher": "^1.0",
         "paragonie/constant_time_encoding": "^2.3",
         "composer/ca-bundle": "^1.2",
         "symfony/options-resolver": "^5.0||^6.0",
-        "symfony/polyfill-php81": "^1.0",
+        "symfony/polyfill-php81": "^1.27",
         "symfony/polyfill-php83": "^1.27"
     },
     "require-dev": {
@@ -85,7 +85,8 @@
         "reactivex/rxphp": "Support EventEmitter::observe() pattern.",
         "relay/relay": "Install ^2.0 to support PSR-15 middlewares.",
         "symfony/string": "Install ^5.2 to use inflector.",
-        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure."
+        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure.",
+        "ext-sodium": "Install sodium to support sodium cipher."
     },
     "autoload": {
         "psr-4": {
@@ -215,8 +216,8 @@
     },
     "provide": {
         "psr/container-implementation": "1.0|2.0",
-        "psr/cache-implementation": "1.0|2.0",
-        "psr/simple-cache-implementation": "1.0",
+        "psr/cache-implementation": "1.0|2.0|3.0",
+        "psr/simple-cache-implementation": "1.0|2,0|3.0",
         "psr/http-message-implementation": "1.0",
         "psr/http-client-implementation": "1.0",
         "psr/http-factory-implementation": "1.0",

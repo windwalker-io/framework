@@ -76,7 +76,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function getItem(string $key): CacheItemInterface|CacheItem
+    public function getItem(string $key): CacheItemInterface
     {
         $item = new CacheItem($key);
         $item->setLogger($this->logger);
@@ -95,7 +95,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return Traversable|CacheItemInterface[]
      */
-    public function getItems(iterable $keys = []): Traversable|array|Generator
+    public function getItems(iterable $keys = []): iterable
     {
         foreach ($keys as $key) {
             yield $key => $this->getItem($key);
@@ -238,7 +238,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function get($key, $default = null)
+    public function get($key, $default = null): mixed
     {
         $item = $this->getItem($key);
 

@@ -17,7 +17,7 @@ use Windwalker\Cache\Storage\StorageInterface;
 /**
  * The AbstractStorageTest class.
  */
-abstract class AbstractStorageTest extends TestCase
+abstract class AbstractStorageTestCase extends TestCase
 {
     /**
      * @var StorageInterface

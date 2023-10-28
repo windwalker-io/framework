@@ -12,7 +12,7 @@
     "homepage": "https://github.com/windwalker-io/edge",
     "license": "MIT",
     "require": {
-        "php": ">=8.0.0",
+        "php": ">=8.2.0",
         "windwalker/data": "^4.0",
         "windwalker/utilities": "^4.0"
     },

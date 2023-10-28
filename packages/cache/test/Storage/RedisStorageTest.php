@@ -17,7 +17,7 @@ use Windwalker\Utilities\Env;
 /**
  * The RedisStorageTest class.
  */
-class RedisStorageTest extends AbstractStorageTest
+class RedisStorageTest extends AbstractStorageTestCase
 {
     /**
      * @var RedisStorage

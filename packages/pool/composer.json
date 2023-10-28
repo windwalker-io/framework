@@ -10,7 +10,7 @@
     "homepage": "https://github.com/windwalker-io/pool",
     "license": "MIT",
     "require": {
-        "php": ">=8.0.0",
+        "php": ">=8.2.0",
         "symfony/options-resolver": "^5.0||^6.0",
         "windwalker/reactor": "^4.0",
         "windwalker/utilities": "^4.0",

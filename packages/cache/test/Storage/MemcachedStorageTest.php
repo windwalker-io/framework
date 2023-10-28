@@ -17,7 +17,7 @@ use Windwalker\Utilities\Env;
 /**
  * The MemcachedStorageTest class.
  */
-class MemcachedStorageTest extends AbstractStorageTest
+class MemcachedStorageTest extends AbstractStorageTestCase
 {
     /**
      * @var MemcachedStorage
