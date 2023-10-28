@@ -34,11 +34,11 @@ class CacheItem implements CacheItemInterface
     /**
      * @var mixed
      */
-    protected $value;
+    protected mixed $value;
 
     protected bool $hit = false;
 
-    protected ?DateTimeInterface $expiration = null;
+    protected DateTimeInterface $expiration;
 
     /**
      * Property defaultExpiration.

@@ -62,6 +62,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     private bool $autoCommit = true;
 
+    protected DateInterval|int|null $defaultTtl = null;
+
     public function __construct(
         ?StorageInterface $storage = null,
         ?SerializerInterface $serializer = null,
@@ -256,7 +258,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     {
         $item = $this->getItem($key);
 
-        $item->expiresAfter($ttl);
+        $item->expiresAfter($ttl ?? $this->defaultTtl);
         $item->set($value);
 
         return $this->save($item);
@@ -341,7 +343,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function call(string $key, callable $handler, $ttl = null): mixed
+    public function call(string $key, callable $handler, DateInterval|int|null $ttl = null): mixed
     {
         $item = $this->getItem($key);
 
@@ -372,7 +374,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             $message,
             [
                 'exception' => $e,
-                'key' => $item ? $item->getKey() : null,
+                'key' => $item?->getKey(),
             ]
         );
     }
@@ -469,5 +471,22 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         if ($this->autoCommit) {
             $this->commit();
         }
+    }
+
+    public function getDefaultTtl(): DateInterval|int|null
+    {
+        return $this->defaultTtl;
+    }
+
+    /**
+     * @param  DateInterval|int|null  $defaultTtl
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDefaultTtl(DateInterval|int|null $defaultTtl): static
+    {
+        $this->defaultTtl = $defaultTtl;
+
+        return $this;
     }
 }
