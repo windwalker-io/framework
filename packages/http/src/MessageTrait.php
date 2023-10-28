@@ -76,7 +76,7 @@ trait MessageTrait
      *
      * @return static
      */
-    public function withProtocolVersion(string $version): MessageTrait|static
+    public function withProtocolVersion(string $version): static
     {
         if (!HeaderHelper::isValidProtocolVersion($version)) {
             throw new InvalidArgumentException(

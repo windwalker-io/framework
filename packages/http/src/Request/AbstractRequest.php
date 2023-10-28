@@ -32,9 +32,9 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Property method.
      *
-     * @var string|null
+     * @var string
      */
-    protected ?string $method;
+    protected string $method = '';
 
     /**
      * Property uri.
@@ -184,9 +184,10 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Retrieves the HTTP method of the request.
      *
-     * @return ?string Returns the request method.
+     * @return string Returns the request method.
      */
-    public function getMethod(): ?string
+    #[\ReturnTypeWillChange]
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -227,7 +228,8 @@ abstract class AbstractRequest implements RequestInterface
      * @return UriInterface Returns a UriInterface instance
      *     representing the URI of the request.
      */
-    public function getUri(): Uri|UriInterface|StreamInterface|string|null
+    #[\ReturnTypeWillChange]
+    public function getUri(): UriInterface
     {
         return $this->uri;
     }

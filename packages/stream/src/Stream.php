@@ -85,8 +85,6 @@ class Stream implements StreamInterface
     }
 
     /**
-     * wrap
-     *
      * @param  string|resource|StreamInterface  $stream
      * @param  string                           $mode
      *
@@ -146,7 +144,8 @@ class Stream implements StreamInterface
      *
      * @return void
      */
-    public function close()
+    #[\ReturnTypeWillChange]
+    public function close(): void
     {
         if (!$this->resource) {
             return;
@@ -276,11 +275,10 @@ class Stream implements StreamInterface
      *                       offset bytes SEEK_CUR: Set position to current location plus offset
      *                       SEEK_END: Set position to end-of-stream plus offset.
      *
-     * @return boolean
-     *
      * @throws RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET): bool
+    #[\ReturnTypeWillChange]
+    public function seek($offset, $whence = SEEK_SET): void
     {
         if (!is_resource($this->resource)) {
             throw new RuntimeException('No resource available.');
@@ -295,8 +293,6 @@ class Stream implements StreamInterface
         if ($result !== 0) {
             throw new RuntimeException('Error seeking within stream');
         }
-
-        return true;
     }
 
     /**
@@ -309,9 +305,10 @@ class Stream implements StreamInterface
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
-    public function rewind(): bool
+    #[\ReturnTypeWillChange]
+    public function rewind(): void
     {
-        return $this->seek(0);
+        $this->seek(0);
     }
 
     /**
