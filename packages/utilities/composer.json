@@ -17,8 +17,8 @@
         "windwalker/attributes": "^4.0",
         "windwalker/test": "^4.0",
         "windwalker/scalars": "^4.0",
-        "symfony/string": "^5.2||^6.0",
-        "symfony/options-resolver": "^5.0||^6.0",
+        "symfony/string": "^5.2||^6.0||^7.0",
+        "symfony/options-resolver": "^5.0||^6.0||^7.0",
         "myclabs/php-enum": "^1.8"
     },
     "suggest": {

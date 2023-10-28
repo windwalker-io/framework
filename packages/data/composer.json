@@ -19,7 +19,7 @@
         "windwalker/filesystem": "^4.0",
         "windwalker/stream": "^4.0",
         "windwalker/test": "^4.0",
-        "symfony/yaml": "^5.0||^6.0",
+        "symfony/yaml": "^5.0||^6.0||^7.0",
         "laktak/hjson": "^2.1",
         "yosymfony/toml": "^1.0"
     },
