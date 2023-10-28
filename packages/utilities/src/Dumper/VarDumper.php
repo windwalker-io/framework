@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Dumper;
 
-use Symfony\Component\VarDumper\Caster\ReflectionCaster;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 /**
@@ -29,8 +28,6 @@ class VarDumper
     private static $handler;
 
     /**
-     * dump
-     *
      * @param  mixed  $var
      * @param  int    $depth
      *
@@ -45,19 +42,12 @@ class VarDumper
 
             $cloner = new VarCloner();
             $cloner->setMaxItems(-1);
-            // $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+
             $cloner->addCasters(
                 [
                     \DateTimeInterface::class => [DateCaster::class, 'castDateTime'],
-                    \Closure::class => [ClosureCaster::class, 'castClosure']
                 ]
             );
-
-//            if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
-//                $dumper = 'html' === $_SERVER['VAR_DUMPER_FORMAT'] ? new PrintRDumper() : new PrintRDumper();
-//            } else {
-//                $dumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new PrintRDumper() : new PrintRDumper();
-//            }
 
             $dumper = new PrintRDumper();
 

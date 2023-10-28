@@ -593,9 +593,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $extends = [];
 
         if ($this->parent) {
-            foreach ($this->parent->findExtends($id) as $extend) {
-                $extends[] = $extend;
-            }
+            $extends[] = $this->parent->findExtends($id);
         }
 
         if (isset($this->extends[$id])) {
