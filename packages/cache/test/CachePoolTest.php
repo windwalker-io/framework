@@ -75,7 +75,8 @@ class CachePoolTest extends TestCase
      */
     public function testSave(): void
     {
-        $item = new CacheItem('foo');
+        $item = $this->instance->getItem('foo');
+
         $item->set('Flower');
         $item->expiresAfter(30);
 
@@ -96,7 +97,8 @@ class CachePoolTest extends TestCase
     {
         self::assertFalse($this->instance->hasItem('foo'));
 
-        $this->instance->save((new CacheItem('foo'))->set('Hello'));
+        $item = $this->instance->getItem('foo');
+        $this->instance->save($item->set('Hello'));
 
         self::assertTrue($this->instance->hasItem('foo'));
     }
@@ -152,9 +154,9 @@ class CachePoolTest extends TestCase
      */
     public function testDeleteItems(): void
     {
-        $this->instance->save(new CacheItem('foo', 'FOO'));
-        $this->instance->save(new CacheItem('bar', 'BAR'));
-        $this->instance->save(new CacheItem('yoo', 'YOO'));
+        $this->instance->save($this->createItem('foo', 'FOO'));
+        $this->instance->save($this->createItem('bar', 'BAR'));
+        $this->instance->save($this->createItem('yoo', 'YOO'));
 
         $this->instance->deleteItems(['foo', 'bar']);
 
@@ -168,9 +170,9 @@ class CachePoolTest extends TestCase
      */
     public function testGetItems(): void
     {
-        $this->instance->save(new CacheItem('foo', 'FOO'));
-        $this->instance->save(new CacheItem('bar', 'BAR'));
-        $this->instance->save(new CacheItem('yoo', 'YOO'));
+        $this->instance->save($this->createItem('foo', 'FOO'));
+        $this->instance->save($this->createItem('bar', 'BAR'));
+        $this->instance->save($this->createItem('yoo', 'YOO'));
 
         $items = iterator_to_array($this->instance->getItems(['foo', 'yoo']));
 
@@ -186,8 +188,8 @@ class CachePoolTest extends TestCase
         $storage = new ArrayStorage();
         $this->instance->setStorage($storage);
 
-        $this->instance->saveDeferred(new CacheItem('foo', 'FOO'));
-        $this->instance->saveDeferred(new CacheItem('yoo', 'YOO'));
+        $this->instance->saveDeferred($this->createItem('foo', 'FOO'));
+        $this->instance->saveDeferred($this->createItem('yoo', 'YOO'));
 
         self::assertEmpty($storage->getData());
 
@@ -206,8 +208,8 @@ class CachePoolTest extends TestCase
         $storage = new ArrayStorage();
         $this->instance->setStorage($storage);
 
-        $this->instance->saveDeferred(new CacheItem('foo', 'FOO'));
-        $this->instance->saveDeferred(new CacheItem('yoo', 'YOO'));
+        $this->instance->saveDeferred($this->createItem('foo', 'FOO'));
+        $this->instance->saveDeferred($this->createItem('yoo', 'YOO'));
 
         self::assertEmpty($storage->getData());
 
@@ -225,9 +227,9 @@ class CachePoolTest extends TestCase
         $storage = new ArrayStorage();
         $this->instance->setStorage($storage);
 
-        $this->instance->save(new CacheItem('foo', 'FOO'));
-        $this->instance->save(new CacheItem('bar', 'BAR'));
-        $this->instance->save(new CacheItem('yoo', 'YOO'));
+        $this->instance->save($this->createItem('foo', 'FOO'));
+        $this->instance->save($this->createItem('bar', 'BAR'));
+        $this->instance->save($this->createItem('yoo', 'YOO'));
 
         $this->instance->clear();
 
@@ -350,6 +352,11 @@ class CachePoolTest extends TestCase
     public function testConstruct(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
+    }
+
+    public function createItem(string $key, mixed $value = null): CacheItem
+    {
+        return $this->instance->getItem($key)->set($value);
     }
 
     protected function setUp(): void

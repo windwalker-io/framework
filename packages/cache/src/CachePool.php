@@ -80,8 +80,9 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     public function getItem(string $key): CacheItemInterface
     {
-        $item = new CacheItem($key);
+        $item = CacheItem::create($key);
         $item->setLogger($this->logger);
+        $item->expiresAfter($this->getDefaultTtl());
 
         if (!$this->storage->has($key)) {
             return $item;

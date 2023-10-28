@@ -29,7 +29,7 @@ class CacheItem implements CacheItemInterface
 {
     use LoggerAwareTrait;
 
-    protected ?string $key = null;
+    protected string $key;
 
     /**
      * @var mixed
@@ -50,12 +50,12 @@ class CacheItem implements CacheItemInterface
     /**
      * Class constructor.
      *
-     * @param  string|null  $key    The key for the cache item.
-     * @param  mixed        $value  The value to cache.
+     * @param  string  $key    The key for the cache item.
+     * @param  mixed   $value  The value to cache.
      *
      * @since   2.0
      */
-    public function __construct(?string $key = null, $value = null)
+    protected function __construct(string $key, mixed $value = null)
     {
         $this->validateKey($key);
 
@@ -67,6 +67,11 @@ class CacheItem implements CacheItemInterface
         }
 
         $this->expiresAfter(null);
+    }
+
+    public static function create(?string $key = null, mixed $value = null): static
+    {
+        return new static($key, $value);
     }
 
     /**
@@ -108,10 +113,6 @@ class CacheItem implements CacheItemInterface
      */
     public function set(mixed $value): static
     {
-        if ($this->key === null) {
-            return $this;
-        }
-
         $this->value = $value;
         $this->hit = true;
 
