@@ -45,7 +45,7 @@ class Response implements ResponseInterface
      *
      * @var  string
      */
-    protected ?string $reasonPhrase = null;
+    protected string $reasonPhrase = '';
 
     /**
      * create
@@ -183,7 +183,8 @@ class Response implements ResponseInterface
      *
      * @return  string  Reason phrase; must return an empty string if none present.
      */
-    public function getReasonPhrase(): ?string
+    #[\ReturnTypeWillChange]
+    public function getReasonPhrase(): string
     {
         if (!$this->reasonPhrase) {
             $this->reasonPhrase = ResponseHelper::getPhrase($this->statusCode);

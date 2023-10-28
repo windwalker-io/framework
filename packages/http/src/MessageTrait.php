@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 
@@ -76,7 +77,7 @@ trait MessageTrait
      *
      * @return static
      */
-    public function withProtocolVersion(string $version): static
+    public function withProtocolVersion(string $version): MessageInterface
     {
         if (!HeaderHelper::isValidProtocolVersion($version)) {
             throw new InvalidArgumentException(
@@ -212,7 +213,7 @@ trait MessageTrait
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader(string $name, $value): static
+    public function withHeader(string $name, $value): MessageInterface
     {
         $new = $this->createHeader($name);
 
@@ -238,7 +239,7 @@ trait MessageTrait
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader(string $name, $value): static
+    public function withAddedHeader(string $name, $value): MessageInterface
     {
         $value = HeaderHelper::allToArray($value);
 
@@ -274,9 +275,9 @@ trait MessageTrait
      *
      * @param  string  $name  Case-insensitive header field name to remove.
      *
-     * @return $this
+     * @return static
      */
-    public function withoutHeader(string $name): static
+    public function withoutHeader(string $name): MessageInterface
     {
         if (!$this->hasHeader($name)) {
             return clone $this;
@@ -316,7 +317,7 @@ trait MessageTrait
      * @return static
      * @throws InvalidArgumentException When the body is not valid.
      */
-    public function withBody(StreamInterface $body): static
+    public function withBody(StreamInterface $body): MessageInterface
     {
         $new = clone $this;
 
@@ -332,7 +333,7 @@ trait MessageTrait
      *
      * @return  static
      */
-    protected function createHeader(string $name): static
+    protected function createHeader(string $name): MessageInterface
     {
         $new = clone $this;
 
