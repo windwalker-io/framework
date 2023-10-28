@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -18,6 +18,18 @@ use Countable;
  */
 interface PoolInterface extends Countable
 {
+    public const MAX_SIZE = 'max_size';
+
+    public const MIN_SIZE = 'min_size';
+
+    public const MAX_WAIT = 'max_wait';
+
+    public const WAIT_TIMEOUT = 'wait_timeout';
+
+    public const IDLE_TIMEOUT = 'idle_timeout';
+
+    public const CLOSE_TIMEOUT = 'close_timeout';
+
     /**
      * Initialize pool
      */

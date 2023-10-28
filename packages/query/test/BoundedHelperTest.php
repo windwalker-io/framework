@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -57,7 +57,7 @@ class BoundedHelperTest extends TestCase
         );
     }
 
-    public function replaceParamsProvider(): array
+    public static function replaceParamsProvider(): array
     {
         return [
             [

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -38,11 +38,11 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
     BeforeUpdateWhereEvent};
-use Windwalker\ORM\Exception\NoResultException;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\Query\Clause\ClauseInterface;
+use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
@@ -881,6 +881,8 @@ class EntityMapper implements EventAwareInterface
      * @param  int                     $options
      *
      * @return  array<T>
+     * @throws JsonException
+     * @throws \ReflectionException
      */
     public function copy(mixed $conditions = [], callable|iterable $newValue = null, int $options = 0): array
     {
@@ -1088,8 +1090,6 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * toEntity
-     *
      * @param  array|object  $data
      *
      * @return  object|T
@@ -1112,6 +1112,22 @@ class EntityMapper implements EventAwareInterface
             $data,
             $this->createEntity()
         );
+    }
+
+    /**
+     * @param  array|object|null  $data
+     *
+     * @return  object|T|null
+     *
+     * @throws \ReflectionException
+     */
+    public function toEntityOrNull(object|array|null $data): ?object
+    {
+        if ($data === null) {
+            return null;
+        }
+
+        return $this->toEntity($data);
     }
 
     public function toCollection(array|object $data): Collection
@@ -1227,22 +1243,16 @@ class EntityMapper implements EventAwareInterface
 
             // Convert value type
             if ($value instanceof DateTimeInterface) {
-                $value = $value->format($db->getDateFormat());
+                $value = $this->orm->getCaster()->castDateTime($value);
             }
 
-            if ($value instanceof JsonSerializer) {
-                $value = json_encode($value);
+            if ($value instanceof \JsonSerializable) {
+                $value = $this->orm->getCaster()->castJsonSerializable($value);
             }
 
+            // Todo: Check why we need detect which is not ClauseInterface
             if (!$value instanceof ClauseInterface) {
-                if (is_object($value) && method_exists($value, '__toString')) {
-                    $value = (string) $value;
-                }
-
-                // Start prepare default value
-                if (is_array($value) || is_object($value)) {
-                    $value = null;
-                }
+                $value = $this->orm->getCaster()->castValue($value);
             }
 
             if ($value === null) {

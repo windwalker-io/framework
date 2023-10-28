@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 .
+ * @copyright  Copyright (C) 2023 .
  * @license    MIT
  */
 

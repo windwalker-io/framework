@@ -1,46 +1,63 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2023 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Server;
+namespace Windwalker\Reactor\Swoole;
 
+use Swoole\Coroutine\Http\Server as SwooleServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Swoole\Http\Server as SwooleServer;
 use Windwalker\DI\Container;
-use Windwalker\Http\Factory\ServerRequestFactory;
-use Windwalker\Http\Output\SwooleOutput;
+use Windwalker\Http\Server\AbstractHttpServer;
+
+use function Windwalker\run;
 
 /**
- * The SwooleServer class.
+ * The SwooleCoroutineServer class.
  */
-class SwooleHttpServer extends AbstractHttpServer
+class SwooleCoroutineServer extends AbstractHttpServer
 {
     protected ?string $host = null;
 
     protected array $config = [];
 
-    protected int $mode = SWOOLE_BASE;
+    protected bool $ssl = false;
 
-    protected int $sockType = SWOOLE_TCP;
+    protected bool $reusePort = false;
 
     protected ?SwooleServer $swooleServer = null;
 
     public function listen(string $host = '0.0.0.0', int $port = 0, array $options = []): void
     {
-        $server = $this->getSwooleServer($host, $port, $this->mode, $this->sockType);
+        $server = $this->getSwooleServer(
+            $host,
+            $port,
+            $this->ssl,
+            $this->reusePort
+        );
 
-        $server->on(
-            'request',
+        $this->startListen($server);
+
+        run(
+            function () use ($server) {
+                $server->start();
+            }
+        );
+    }
+
+    protected function startListen(SwooleServer $server): void
+    {
+        $server->handle(
+            '/',
             function (Request $request, Response $response) {
-                $psrRequest = ServerRequestFactory::createFromSwooleRequest($request, $this->getHost());
+                $psrRequest = SwooleRequestFactory::createPsrFromSwooleRequest($request, $this->getHost());
                 $fd = $request->fd;
 
                 $psrRequest = $psrRequest->withAttribute(
@@ -55,8 +72,6 @@ class SwooleHttpServer extends AbstractHttpServer
                 gc_collect_cycles();
             }
         );
-
-        $server->start();
     }
 
     public function stop(int $workerId = -1, bool $waitEvent = false): void
@@ -82,11 +97,11 @@ class SwooleHttpServer extends AbstractHttpServer
     public function getSwooleServer(
         string $host = '0.0.0.0',
         int $port = 0,
-        int $mode = SWOOLE_BASE,
-        int $sockType = SWOOLE_SOCK_TCP
+        bool $ssl = false,
+        bool $reusePort = false
     ): SwooleServer {
         if (!$this->swooleServer) {
-            $server = static::createSwooleServer($host, $port, $mode, $sockType);
+            $server = static::createSwooleServer($host, $port, $ssl, $reusePort);
             $server->set($this->config);
 
             $this->swooleServer = $server;
@@ -98,50 +113,10 @@ class SwooleHttpServer extends AbstractHttpServer
     public static function createSwooleServer(
         string $host = '0.0.0.0',
         int $port = 0,
-        int $mode = SWOOLE_BASE,
-        int $sockType = SWOOLE_SOCK_TCP
+        bool $ssl = false,
+        bool $reusePort = false
     ): SwooleServer {
-        return new SwooleServer($host, $port, $mode, $sockType);
-    }
-
-    /**
-     * @return int
-     */
-    public function getMode(): int
-    {
-        return $this->mode;
-    }
-
-    /**
-     * @param  int  $mode
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setMode(int $mode): static
-    {
-        $this->mode = $mode;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSockType(): int
-    {
-        return $this->sockType;
-    }
-
-    /**
-     * @param  int  $sockType
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setSockType(int $sockType): static
-    {
-        $this->sockType = $sockType;
-
-        return $this;
+        return new SwooleServer($host, $port, $ssl, $reusePort);
     }
 
     /**
@@ -175,15 +150,15 @@ class SwooleHttpServer extends AbstractHttpServer
     }
 
     public static function factory(
-        ?int $mode = null,
-        ?int $sockType = null,
         array $config = [],
-        array $middlewares = []
+        array $middlewares = [],
+        bool $ssl = false,
+        bool $reusePort = false,
     ): \Closure {
-        return static function (Container $container) use ($middlewares, $config, $mode, $sockType) {
+        return static function (Container $container) use ($middlewares, $config, $ssl, $reusePort) {
             $server = $container->newInstance(static::class);
-            $server->setMode($mode ?? SWOOLE_BASE);
-            $server->setSockType($sockType ?? SWOOLE_TCP);
+            $server->setSsl($ssl);
+            $server->setReusePort($reusePort);
             $server->setConfig($config);
             $server->setMiddlewares($middlewares);
             $server->setMiddlewareResolver(
@@ -198,5 +173,39 @@ class SwooleHttpServer extends AbstractHttpServer
 
             return $server;
         };
+    }
+
+    public function isSsl(): bool
+    {
+        return $this->ssl;
+    }
+
+    /**
+     * @param  bool  $ssl
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setSsl(bool $ssl): static
+    {
+        $this->ssl = $ssl;
+
+        return $this;
+    }
+
+    public function isReusePort(): bool
+    {
+        return $this->reusePort;
+    }
+
+    /**
+     * @param  bool  $reusePort
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setReusePort(bool $reusePort): static
+    {
+        $this->reusePort = $reusePort;
+
+        return $this;
     }
 }

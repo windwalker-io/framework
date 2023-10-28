@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -12,13 +12,24 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Http\Event\HttpClient\AfterRequestEvent;
+use Windwalker\Http\Event\HttpClient\BeforeRequestEvent;
 use Windwalker\Http\FormData;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\Request\Request;
+use Windwalker\Http\Response\HttpClientResponse;
+use Windwalker\Http\Response\JsonResponse;
 use Windwalker\Http\Test\Mock\MockTransport;
+use Windwalker\Http\Transport\CurlTransport;
+use Windwalker\Promise\Promise;
+use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
+
+use Windwalker\Utilities\Str;
+
+use function Windwalker\Uri\uri_prepare;
 
 /**
  * Test class of HttpClient
@@ -132,7 +143,7 @@ class HttpClientTest extends TestCase
         self::assertEquals(
             [
                 'X-Foo' => ['Bar'],
-                'Content-Type' => ['application/json; charset=utf-8']
+                'Content-Type' => ['application/json; charset=utf-8'],
             ],
             $this->transport->request->getHeaders()
         );
@@ -142,6 +153,18 @@ class HttpClientTest extends TestCase
         self::assertEquals('PUT', $this->transport->request->getMethod());
         self::assertEquals('http://example.com/?foo=bar', $this->transport->request->getRequestTarget());
         self::assertEquals('flower=sakura', $this->transport->request->getBody()->__toString());
+    }
+
+    public function testRequestWithBaseUri(): void
+    {
+        $this->instance->setOption('base_uri', 'http://example.com/');
+
+        $this->instance->request('GET', 'foo/bar?foo=bar&flower=sakura');
+
+        self::assertEquals(
+            'http://example.com/foo/bar?foo=bar&flower=sakura',
+            $this->transport->request->getRequestTarget()
+        );
     }
 
     /**
@@ -173,6 +196,25 @@ class HttpClientTest extends TestCase
         self::assertEquals('OPTIONS', $this->transport->request->getMethod());
         self::assertEquals($url, $this->transport->request->getRequestTarget());
         self::assertEquals('Bar', $this->transport->request->getHeaderLine('X-Foo'));
+    }
+
+    public function testPushOptionsToTransport(): void
+    {
+        $http = new HttpClient(
+            [
+                'transport' => [
+                    'curl' => [
+                        CURLOPT_SSL_VERIFYPEER => false,
+                    ],
+                ],
+            ]
+        );
+
+        /** @var CurlTransport $transport */
+        $transport = $http->getTransport();
+        $curlopts = $transport->getOption('curl');
+
+        self::assertFalse($curlopts[CURLOPT_SSL_VERIFYPEER]);
     }
 
     /**
@@ -320,6 +362,101 @@ class HttpClientTest extends TestCase
         self::assertEquals(json_encode($data), $this->transport->request->getBody()->__toString());
     }
 
+    public function testGetAsync(): void
+    {
+        if (!defined('WINDWALKER_TEST_HTTP_URL')) {
+            static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
+        }
+
+        $http = new HttpClient(['base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/')]);
+
+        $pall = Promise::all(
+            [
+                $http->getAsync('json?a=1'),
+                $http->getAsync('json?a=2'),
+                $http->getAsync('json?a=3')
+            ]
+        );
+
+        /** @var HttpClientResponse $res1 */
+        /** @var HttpClientResponse $res2 */
+        /** @var HttpClientResponse $res3 */
+        [$res1, $res2, $res3] = $pall->wait();
+
+        self::assertEquals('{"a":"1"}', $res1->getContent());
+        self::assertEquals('{"a":"2"}', $res2->getContent());
+        self::assertEquals('{"a":"3"}', $res3->getContent());
+    }
+
+    public function testEvent(): void
+    {
+        $this->instance->on(
+            BeforeRequestEvent::class,
+            function (BeforeRequestEvent $event) {
+                $options = &$event->getOptions();
+
+                $event->getHttpClient()->setOption('base_uri', 'https://api.foo.com/');
+
+                $options['headers']['X-XSRF-Token'] = 'TokenValue';
+            }
+        );
+
+        $this->instance->on(
+            AfterRequestEvent::class,
+            function (AfterRequestEvent $event) {
+                $event->setResponse(new JsonResponse([123])); // Will be converted to HttpClientResponse
+            }
+        );
+
+        $res = $this->instance->get('validate');
+
+        self::assertTrue($res->isSuccess());
+        self::assertEquals('TokenValue', $this->transport->request->getHeaderLine('X-XSRF-Token'));
+        self::assertEquals('https://api.foo.com/validate', $this->transport->request->getRequestTarget());
+
+        self::assertEquals(
+            '[123]',
+            (string) $res->getBody()
+        );
+    }
+
+    public function testUriTemplate(): void
+    {
+        $this->instance->setOption('base_uri', 'https://example.org/');
+
+        $res = $this->instance->get(
+            uri_prepare('foo/{foo}{?bar}')
+                ->bindValue('foo', '123')
+                ->bindValue('bar', 'yoo'),
+        );
+
+        self::assertEquals(
+            'https://example.org/foo/123?bar=yoo',
+            $this->transport->request->getRequestTarget()
+        );
+    }
+
+    public function testUriTemplateUseVars(): void
+    {
+        $this->instance->setOption('base_uri', 'https://example.org/{v}/');
+
+        $res = $this->instance->get(
+            'foo/{foo}{?bar}',
+            [
+                'vars' => [
+                    'foo' => 123,
+                    'bar' => 'yoo',
+                    'v' => 'v3'
+                ]
+            ]
+        );
+
+        self::assertEquals(
+            'https://example.org/v3/foo/123?bar=yoo',
+            $this->transport->request->getRequestTarget()
+        );
+    }
+
     public function testCurlCmd(): void
     {
         $request = new Request();
@@ -332,7 +469,7 @@ class HttpClientTest extends TestCase
             UriHelper::buildQuery(
                 [
                     'foo' => 'bar',
-                    'yoo' => 'GOO'
+                    'yoo' => 'GOO',
                 ]
             )
         );
@@ -354,13 +491,13 @@ class HttpClientTest extends TestCase
             HttpClient::formData(
                 [
                     'foo' => 'bar',
-                    'yoo' => 'GOO'
+                    'yoo' => 'GOO',
                 ]
             ),
             [
                 'headers' => [
-                    'X-CSRF-Token' => 'qETt34lmfd'
-                ]
+                    'X-CSRF-Token' => 'qETt34lmfd',
+                ],
             ]
         );
 

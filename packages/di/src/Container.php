@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -24,7 +24,6 @@ use Traversable;
 use UnexpectedValueException;
 use Windwalker\DI\Attributes\AttributesResolver;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
-use Windwalker\DI\Definition\DefinitionFactory;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\StoreDefinition;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
@@ -34,7 +33,6 @@ use Windwalker\DI\Exception\DefinitionNotFoundException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\DI\Wrapper\CallbackWrapper;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
@@ -142,17 +140,25 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $this->parent = $parent;
         $this->options = $options;
         $this->parameters = new Parameters();
-
         $this->dependencyResolver = new DependencyResolver($this);
-        $this->attributesResolver = new AttributesResolver($this);
+
+        if ($parent) {
+            $this->level = $parent->level + 1;
+            $this->aliases = $parent->aliases;
+            $this->options = $parent->options;
+            $params = $parent->getParameters()->createChild();
+            $this->setParameters($params->reset());
+
+            $this->setAttributesResolver(clone $parent->getAttributesResolver());
+        } else {
+            $this->attributesResolver = new AttributesResolver($this);
+        }
 
         // Always set Container as self
         $this->share(static::class, $this);
     }
 
     /**
-     * set
-     *
      * @param  string  $id
      * @param  mixed   $value
      * @param  int     $options
@@ -182,6 +188,8 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         $this->setDefinition($id, $value);
+
+        $this->removeAlias($id);
 
         return $this;
     }
@@ -227,9 +235,6 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function setDefinition(string $id, StoreDefinitionInterface $value): static
     {
         $this->storage[$id] = $value;
-
-        // 3.2 Remove alias
-        $this->removeAlias($id);
 
         return $this;
     }
@@ -277,15 +282,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * resolve
-     *
      * @param  string|callable|DefinitionInterface|ValueReference  $source
      * @param  array                                               $args
      * @param  int                                                 $options
      *
      * @return  mixed|object|string
-     *
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function resolve(mixed $source, array $args = [], int $options = 0): mixed
     {
@@ -380,7 +383,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @return  mixed  Forked instance.
      *
-     * @since   2.0.7
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @since  2.0.7
      */
     public function fork(string $id, string $newId, bool $forceNew = false): mixed
     {
@@ -725,7 +730,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function whenCreating(string $class): ObjectBuilderDefinition
     {
-        $builder = $this->builders[$class] ??= new ObjectBuilderDefinition($class, $this);
+        $builder = $this->builders[$class] ??= new ObjectBuilderDefinition($class);
 
         // if (!$this->has($class)) {
         //     $this->setDefinition($class, new ObjectBuilderDefinition($builder));
@@ -794,7 +799,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @since   2.0
      */
-    protected function resolveAlias(string $id): string
+    public function resolveAlias(string $id): string
     {
         while (isset($this->aliases[$id])) {
             $id = $this->aliases[$id];
@@ -855,14 +860,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function createChild(): static
     {
-        $child = new static($this);
-        $child->level = $this->level + 1;
-        $params = $this->getParameters()->createChild();
-        $child->setParameters($params->reset());
-
-        $child->setAttributesResolver(clone $this->getAttributesResolver());
-
-        return $child;
+        return new static($this);
     }
 
     /**

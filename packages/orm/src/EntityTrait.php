@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -14,7 +14,9 @@ namespace Windwalker\ORM;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
+use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
+use Windwalker\ORM\Attributes\JsonSerializer;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
@@ -105,9 +107,27 @@ trait EntityTrait
      */
     public function jsonSerialize(): array
     {
-        $this->loadAllRelations();
+        $item = $this->dump();
 
-        return $this->dump();
+        foreach ($item as $key => $value) {
+            $prop = new ReflectionProperty($this, $key);
+            $attrs = AttributesAccessor::getAttributesFromAny(
+                $prop,
+                JsonSerializer::class,
+                ReflectionAttribute::IS_INSTANCEOF
+            );
+
+            /** @var ReflectionAttribute<JsonSerializer> $attr */
+            foreach ($attrs as $attr) {
+                $attrInstance = $attr->newInstance();
+
+                $value = $attrInstance->serialize($value);
+            }
+
+            $item[$key] = $value;
+        }
+
+        return $item;
     }
 
     public function &__get(string $name): mixed

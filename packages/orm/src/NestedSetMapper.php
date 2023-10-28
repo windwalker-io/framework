@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM;
 
 use InvalidArgumentException;
-use LogicException;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Event\EventInterface;
@@ -23,6 +22,7 @@ use Windwalker\ORM\Exception\NestedHandleException;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Nested\NestedEntityInterface;
 use Windwalker\ORM\Nested\NestedPathableInterface;
+use Windwalker\ORM\Nested\NestedPosition;
 use Windwalker\ORM\Nested\Position;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
@@ -285,15 +285,8 @@ class NestedSetMapper extends EntityMapper
     public function setPosition(
         NestedEntityInterface $entity,
         mixed $referenceId,
-        int $position = Position::LAST_CHILD
+        NestedPosition $position = NestedPosition::LAST_CHILD
     ): static {
-        // Make sure the location is valid.
-        ArgumentsAssert::assert(
-            in_array($position, Position::POSITIONS, true),
-            '{caller} position: {value} is invalid.',
-            $position
-        );
-
         $referenceId = $this->entityToPk($referenceId);
 
         $entity->getPosition()
@@ -490,6 +483,7 @@ class NestedSetMapper extends EntityMapper
      * @param  mixed         $conditions
      *
      * @return  false|NestedEntityInterface|T
+     * @throws \ReflectionException
      */
     public function move(array|object $source, int $delta, mixed $conditions = []): false|NestedEntityInterface
     {
@@ -528,18 +522,18 @@ class NestedSetMapper extends EntityMapper
     /**
      * moveByReference
      *
-     * @param  array|object  $source
-     * @param  mixed         $referenceId
-     * @param  int           $position
+     * @param  array|object    $source
+     * @param  mixed           $referenceId
+     * @param  NestedPosition  $position
      *
-     * @return  NestedEntityInterface|T
+     * @return NestedEntityInterface
      *
      * @throws \ReflectionException
      */
     public function moveByReference(
         mixed $source,
         mixed $referenceId,
-        int $position
+        NestedPosition $position
     ): NestedEntityInterface {
         $node = $this->sourceToEntity($source);
 
@@ -802,9 +796,9 @@ class NestedSetMapper extends EntityMapper
     /**
      * rebuild
      *
-     * @param  mixed|null   $source
-     * @param  int|null     $lft
-     * @param  int          $level
+     * @param  mixed|null  $source
+     * @param  int|null  $lft
+     * @param  int  $level
      * @param  string|null  $path
      *
      * @return  int  Return the right value of this node + 1
@@ -1076,8 +1070,11 @@ class NestedSetMapper extends EntityMapper
         return '';
     }
 
-    protected function getTreeRepositionData(NestedEntityInterface $reference, int $width, int $position): ?array
-    {
+    protected function getTreeRepositionData(
+        NestedEntityInterface $reference,
+        int $width,
+        NestedPosition $position
+    ): ?array {
         if ($width < 2) {
             throw new NestedHandleException('Node width less than 2.');
         }

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -36,13 +36,11 @@ use Windwalker\ORM\Attributes\OneToMany;
 use Windwalker\ORM\Attributes\OneToOne;
 use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
-use Windwalker\ORM\Attributes\UUID;
 use Windwalker\ORM\Attributes\Watch;
 use Windwalker\ORM\Attributes\WatchBefore;
 use Windwalker\ORM\Event\AfterCopyEvent;
 use Windwalker\ORM\Event\AfterDeleteEvent;
 use Windwalker\ORM\Event\AfterSaveEvent;
-use Windwalker\ORM\Event\AfterStoreEvent;
 use Windwalker\ORM\Event\AfterUpdateWhereEvent;
 use Windwalker\ORM\Event\BeforeCopyEvent;
 use Windwalker\ORM\Event\BeforeDeleteEvent;
@@ -60,6 +58,7 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * The ORM class.
  *
  * phpcs:disable
+ * @formatter:off
  *
  * @see EntityMapper
  *
@@ -70,20 +69,22 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [])
  * @method  int   countColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
  * @method  float   sumColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
- * @method  object  createOne(string $entityClass, array|object $item = [])
- * @method  iterable      createMultiple(string $entityClass, iterable $items)
- * @method  StatementInterface|null  updateOne(string $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
- * @method  object[]      updateMultiple(string $entityClass, iterable $items, array|string $condFields = null, int $options = 0)
+ * @method  object  createOne(string|object $entityClass, array|object $item = [])
+ * @method  iterable      createMultiple(string|object $entityClass, iterable $items = [])
+ * @method  StatementInterface|null  updateOne(string|object $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
+ * @method  object[]      updateMultiple(string|object $entityClass, iterable $items = [], array|string $condFields = null, int $options = 0)
  * @method  StatementInterface  updateWhere(string $entityClass, array|object $data, mixed $conditions = null)
  * @method  StatementInterface[]  updateBatch(string $entityClass, array|object $data, mixed $conditions = null, int $options = 0)
- * @method  iterable|object[] saveMultiple(string $entityClass, iterable $items, string|array $condFields = null, int $options = 0)
- * @method  object        saveOne(string $entityClass, array|object $item, array|string $condFields = null, int $options = 0)
+ * @method  iterable|object[] saveMultiple(string|object $entityClass, iterable $items = [], string|array $condFields = null, int $options = 0)
+ * @method  object        saveOne(string|object $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
  * @method  object        findOneOrCreate(string $entityClass, mixed $conditions, mixed $initData = null, bool $mergeConditions = true)
  * @method  object        updateOneOrCreate(string $entityClass, array|object $item, mixed $initData = null, ?array $condFields = null, int $options = 0)
  * @method  StatementInterface[]  deleteWhere(string $entityClass, mixed $conditions)
  * @method  iterable|object[]     flush(string $entityClass, iterable $items, mixed $conditions = [])
  * @method  StatementInterface[]  sync(string $entityClass, iterable $items, mixed $conditions = [], ?array $compareKeys = null)
+ * @method  object[]  copy(string $entityClass, mixed $conditions = [], callable|iterable $newValue = null, int $options = 0)
  *
+ * @formatter:on
  * phpcs:enable
  */
 class ORM implements EventAwareInterface
@@ -92,24 +93,24 @@ class ORM implements EventAwareInterface
 
     use AttributesAwareTrait;
 
-    protected DatabaseAdapter $db;
-
     protected ?FieldHydratorInterface $hydrator = null;
 
     protected EntityMetadataCollection $entityMetadataCollection;
+
+    protected BaseCaster $caster;
 
     /**
      * ORM constructor.
      *
      * @param  DatabaseAdapter  $db
      */
-    public function __construct(DatabaseAdapter $db)
+    public function __construct(protected DatabaseAdapter $db)
     {
-        $this->db = $db;
-
         $this->entityMetadataCollection = new EntityMetadataCollection($this);
 
         $this->setAttributesResolver(new AttributesResolver());
+
+        $this->caster ??= new BaseCaster($this->db);
     }
 
     /**
@@ -164,8 +165,8 @@ class ORM implements EventAwareInterface
     /**
      * @template K
      *
-     * @param  class-string<K> $entityClass
-     * @param  ?string         $mapperClass
+     * @param  class-string<K>  $entityClass
+     * @param  ?string          $mapperClass
      *
      * @return  EntityMapper<K>
      * @throws ReflectionException
@@ -289,8 +290,8 @@ class ORM implements EventAwareInterface
     /**
      * @template E
      *
-     * @param  class-string<E> $entityClass
-     * @param  array|object    $data
+     * @param  class-string<E>  $entityClass
+     * @param  array|object     $data
      *
      * @return  E
      *
@@ -299,6 +300,21 @@ class ORM implements EventAwareInterface
     public function toEntity(string $entityClass, array|object $data): object
     {
         return $this->mapper($entityClass)->toEntity($data);
+    }
+
+    /**
+     * @template E
+     *
+     * @param  class-string<E>    $entityClass
+     * @param  array|object|null  $data
+     *
+     * @return  E|null
+     *
+     * @throws ReflectionException
+     */
+    public function toEntityOrNull(string $entityClass, array|object|null $data): ?object
+    {
+        return $this->mapper($entityClass)->toEntityOrNull($data);
     }
 
     public function extractEntity(array|object|null $entity): array
@@ -380,6 +396,20 @@ class ORM implements EventAwareInterface
     }
 
     /**
+     * @param  callable  $callback
+     * @param  bool      $autoCommit
+     * @param  bool      $enabled
+     *
+     * @return  mixed
+     *
+     * @throws \Throwable
+     */
+    public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
+    {
+        return $this->db->transaction($callback, $autoCommit, $enabled);
+    }
+
+    /**
      * @return EntityMetadataCollection
      */
     public function getEntityMetadataCollection(): EntityMetadataCollection
@@ -435,6 +465,24 @@ class ORM implements EventAwareInterface
         if (method_exists(EntityMapper::class, $name)) {
             $entity = array_shift($args);
 
+            $maps = [
+                'createone',
+                'createmultiple',
+                'updateone',
+                'updatemultiple',
+                'saveone',
+                'savemultiple',
+                'savemultiple',
+            ];
+
+            if (
+                is_object($entity)
+                && in_array(strtolower($name), $maps, true)
+            ) {
+                $args[0] = $entity;
+                $entity = $entity::class;
+            }
+
             return $this->mapper($entity)->$name(...$args);
         }
 
@@ -445,5 +493,22 @@ class ORM implements EventAwareInterface
                 $name
             )
         );
+    }
+
+    public function getCaster(): BaseCaster
+    {
+        return $this->caster;
+    }
+
+    /**
+     * @param  BaseCaster  $caster
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCaster(BaseCaster $caster): static
+    {
+        $this->caster = $caster;
+
+        return $this;
     }
 }

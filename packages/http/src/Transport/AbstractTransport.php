@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
+use Composer\CaBundle\CaBundle;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Windwalker\Utilities\Arr;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
@@ -44,21 +44,20 @@ abstract class AbstractTransport implements TransportInterface
      * Send a request to the server and return a Response object with the response.
      *
      * @param  RequestInterface  $request  The request object to send.
-     *
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function request(RequestInterface $request, array $options = []): ResponseInterface
+    public function request(RequestInterface $request, array $options = []): HttpClientResponse
     {
-        $uri = $request->getUri()
-            ->withPath('')
-            ->withQuery('')
-            ->withFragment('');
+        $uri = (string) $request->getUri()
+            ?->withPath('')
+            ?->withQuery('')
+            ?->withFragment('');
 
-        $uri = $uri . $request->getRequestTarget();
+        $uri .= $request->getRequestTarget();
 
         $request = $request->withRequestTarget($uri);
 
@@ -71,9 +70,17 @@ abstract class AbstractTransport implements TransportInterface
      * @param  RequestInterface  $request  The request object to store request params.
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    abstract protected function doRequest(RequestInterface $request, array $options = []): ResponseInterface;
+    abstract protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse;
+
+    /**
+     * @return  string
+     */
+    protected function findCAPathOrFile(): string
+    {
+        return CaBundle::getBundledCaBundlePath();
+    }
 }

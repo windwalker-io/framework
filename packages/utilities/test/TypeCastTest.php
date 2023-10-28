@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -738,6 +738,37 @@ class TypeCastTest extends TestCase
                 null,
                 true,
                 'float',
+            ],
+            // To Numeric
+            [
+                123,
+                123,
+                false,
+                'numeric',
+            ],
+            [
+                123.123,
+                123.123,
+                false,
+                'numeric',
+            ],
+            [
+                '123',
+                123,
+                false,
+                'numeric',
+            ],
+            [
+                '123.123',
+                123.123,
+                false,
+                'numeric',
+            ],
+            [
+                '123string',
+                null,
+                true,
+                'numeric',
             ],
             // To string
             [

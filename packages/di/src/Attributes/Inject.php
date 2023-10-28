@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -13,6 +13,7 @@ namespace Windwalker\DI\Attributes;
 
 use Attribute;
 use JetBrains\PhpStorm\Pure;
+use Psr\Container\ContainerExceptionInterface;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionUnionType;
@@ -110,22 +111,20 @@ class Inject implements ContainerAttributeInterface
     {
         $id = $this->getTypeName($reflector);
 
-        if ($container->has($id)) {
-            return $container->get($id, $this->forceNew);
+        try {
+            if ($container->has($id)) {
+                return $container->get($id, $this->forceNew);
+            }
+
+            if (class_exists($id) || interface_exists($id)) {
+                return $this->createObject($container, $id);
+            }
+        } catch (ContainerExceptionInterface $e) {
+            $this->reportInjectingError($reflector, $id, $e);
+            return null;
         }
 
-        if (class_exists($id) || interface_exists($id)) {
-            return $this->createObject($container, $id);
-        }
-
-        if (!$reflector->allowsNull()) {
-            $class = $reflector->getDeclaringClass();
-            $member = $reflector->getName();
-
-            throw new DependencyResolutionException(
-                "Unable to inject object $id for class $class::$member"
-            );
-        }
+        $this->reportInjectingError($reflector, $id);
 
         return null;
     }
@@ -133,5 +132,31 @@ class Inject implements ContainerAttributeInterface
     protected function createObject(Container $container, string $id): object
     {
         return $container->newInstance($id);
+    }
+
+    /**
+     * @param  ReflectionParameter|ReflectionProperty  $reflector
+     * @param  mixed                                   $id
+     *
+     * @return  void
+     *
+     * @throws DependencyResolutionException
+     */
+    protected function reportInjectingError(
+        ReflectionParameter|ReflectionProperty $reflector,
+        mixed $id,
+        \Throwable $e = null
+    ): void {
+        if (!$reflector->getType()->allowsNull()) {
+            $class = $reflector->getDeclaringClass();
+            $member = $reflector->getName();
+
+            throw new DependencyResolutionException(
+                "Unable to inject object $id for class $class::$member" .
+                ($e ? ' - ' . $e->getMessage() : ''),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 }

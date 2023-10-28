@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -16,11 +16,16 @@ use Psr\Http\Message\ResponseInterface;
 use RangeException;
 use ReflectionMethod;
 use Stringable;
+use Windwalker\Event\EventAwareTrait;
+use Windwalker\Http\Event\HttpClient\AfterRequestEvent;
+use Windwalker\Http\Event\HttpClient\BeforeRequestEvent;
 use Windwalker\Http\File\HttpUploadFile;
 use Windwalker\Http\File\HttpUploadStream;
 use Windwalker\Http\File\HttpUploadStringFile;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Request\Request;
+use Windwalker\Http\Response\HttpClientResponse;
+use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Http\Transport\AsyncTransportInterface;
 use Windwalker\Http\Transport\CurlTransport;
@@ -29,9 +34,13 @@ use Windwalker\Http\Transport\TransportInterface;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Stream\Stream;
 use Windwalker\Uri\Uri;
+use Windwalker\Uri\UriHelper;
+use Windwalker\Uri\UriTemplate;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\Options\OptionAccessTrait;
+
+use function Windwalker\Uri\uri_prepare;
 
 /**
  * The HttpClient class.
@@ -49,16 +58,12 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
  */
 class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 {
+    use EventAwareTrait;
     use OptionAccessTrait;
 
-    /**
-     * Property transport.
-     *
-     * @var  TransportInterface
-     */
-    protected TransportInterface $transport;
-
     protected ?AsyncTransportInterface $asyncTransport = null;
+
+    protected TransportInterface $transport;
 
     /**
      * create
@@ -101,17 +106,15 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed                $body     The request body data, can be an array of POST data.
      * @param  array                $options  The options array.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      */
     public function download(
         Stringable|string $url,
         string $dest,
         mixed $body = null,
         array $options = []
-    ): ResponseInterface {
-        $options = Arr::mergeRecursive($this->getOptions(), $options);
-
-        $request = static::prepareRequest(new Request(), 'GET', $url, $body, $options);
+    ): HttpClientResponse {
+        $request = $this->hydrateRequest(new Request(), 'GET', $url, $body, $options);
 
         $transport = $this->getTransport();
 
@@ -119,7 +122,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             throw new RangeException(get_class($transport) . ' driver not supported.');
         }
 
-        return $transport->download($request, $dest);
+        return HttpClientResponse::from($transport->download($request, $dest));
     }
 
     /**
@@ -128,9 +131,9 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  RequestInterface  $request  The Psr Request object.
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      */
-    public function sendRequest(RequestInterface $request, array $options = []): ResponseInterface
+    public function sendRequest(RequestInterface $request, array $options = []): HttpClientResponse
     {
         $transport = $this->getTransport();
 
@@ -147,11 +150,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function options(Stringable|string $url, array $options = []): ResponseInterface
+    public function options(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('OPTIONS', $url, null, $options);
     }
@@ -162,11 +165,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function head(Stringable|string $url, array $options = []): ResponseInterface
+    public function head(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('HEAD', $url, null, $options);
     }
@@ -177,11 +180,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function get(Stringable|string $url, array $options = []): ResponseInterface
+    public function get(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('GET', $url, null, $options);
     }
@@ -193,11 +196,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function post(Stringable|string $url, mixed $body, array $options = []): ResponseInterface
+    public function post(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
     {
         return $this->request('POST', $url, $body, $options);
     }
@@ -209,11 +212,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function put(Stringable|string $url, mixed $body, array $options = []): ResponseInterface
+    public function put(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
     {
         return $this->request('PUT', $url, $body, $options);
     }
@@ -225,11 +228,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function delete(Stringable|string $url, mixed $body = null, array $options = []): ResponseInterface
+    public function delete(Stringable|string $url, mixed $body = null, array $options = []): HttpClientResponse
     {
         return $this->request('DELETE', $url, $body, $options);
     }
@@ -240,11 +243,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  Stringable|string  $url      Path to the resource.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function trace(Stringable|string $url, array $options = []): ResponseInterface
+    public function trace(Stringable|string $url, array $options = []): HttpClientResponse
     {
         return $this->request('TRACE', $url, null, $options);
     }
@@ -256,11 +259,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     Either an associative array or a string to be sent with the request.
      * @param  array              $options  An array of name-value pairs to include in the header of the request.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function patch(Stringable|string $url, mixed $body, array $options = []): ResponseInterface
+    public function patch(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
     {
         return $this->request('PATCH', $url, $body, $options);
     }
@@ -272,6 +275,10 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      */
     public function getTransport(): TransportInterface
     {
+        foreach ($this->getOptions()['transport'] ?? [] as $key => $value) {
+            $this->transport->setOption((string) $key, $value);
+        }
+
         return $this->transport;
     }
 
@@ -304,7 +311,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     public static function createRequest(
         string $method,
         Stringable|string $url,
-        $body = '',
+        mixed $body = '',
         array $options = []
     ): RequestInterface {
         return static::prepareRequest(new Request(), $method, $url, $body, $options);
@@ -330,8 +337,12 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         mixed $body = '',
         array $options = []
     ): RequestInterface {
-        // If is GET, we merge data into URL.
+        if ($options['vars'] ?? []) {
+            $url = uri_prepare($url, $options['vars']);
+        }
+
         if ($options['params'] ?? []) {
+            // Merge params into URL.
             $uri = Uri::wrap((string) $url);
 
             foreach ($options['params'] as $k => $v) {
@@ -339,7 +350,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             }
 
             $url = (string) $uri;
-            $body = null;
         }
 
         $url = (string) $url;
@@ -368,6 +378,21 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $request->withBody($body);
     }
 
+    public function prepareRequestUri(Stringable|string $url): string
+    {
+        $url = (string) $url;
+
+        if (UriHelper::isAbsolute($url)) {
+            return $url;
+        }
+
+        if ($base = $this->getBaseUri()) {
+            $url = $base . $url;
+        }
+
+        return $url;
+    }
+
     /**
      * Request a remote server.
      *
@@ -378,22 +403,60 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed              $body     The request body data, can be an array of POST data.
      * @param  array              $options  The options array.
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      */
     public function request(
         string $method,
         Stringable|string $url,
         mixed $body = null,
         array $options = []
-    ): ResponseInterface {
-        $options = Arr::mergeRecursive($this->getOptions(), $options);
-
-        $request = static::prepareRequest(new Request(), $method, $url, $body, $options);
+    ): HttpClientResponse {
+        $request = $this->hydrateRequest(new Request(), $method, $url, $body, $options);
 
         $transportOptions = $options['transport'] ?? [];
         $transportOptions['files'] = $options['files'] ?? null;
 
-        return $this->sendRequest($request, $transportOptions);
+        $response = $this->sendRequest($request, $transportOptions);
+
+        $httpClient = $this;
+
+        $event = $this->emit(
+            AfterRequestEvent::class,
+            compact('request', 'response', 'httpClient')
+        );
+
+        return HttpClientResponse::from($event->getResponse());
+    }
+
+    public function hydrateRequest(
+        RequestInterface $request,
+        string $method,
+        Stringable|string $url,
+        mixed $body = '',
+        array $options = []
+    ): RequestInterface {
+        $httpClient = $this;
+
+        $url = (string) $url;
+
+        $event = $this->emit(
+            BeforeRequestEvent::class,
+            compact(
+                'method',
+                'url',
+                'body',
+                'options',
+                'httpClient'
+            )
+        );
+
+        $options = Arr::mergeRecursive($this->getOptions(), $event->getOptions());
+        $url = $this->prepareRequestUri($event->getUrl());
+
+        $method = $event->getMethod();
+        $body = $event->getBody();
+
+        return static::prepareRequest($request, $method, $url, $body, $options);
     }
 
     /**
@@ -411,12 +474,44 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     public function requestAsync(
         string $method,
         Stringable|string $url,
-        $body = null,
+        mixed $body = null,
         array $options = []
     ): mixed {
-        $request = $this->preprocessRequest(new Request(), $method, $url, $body, $options);
+        $request = $this->hydrateRequest(new Request(), $method, $url, $body, $options);
 
         return $this->sendAsyncRequest($request);
+    }
+
+    public function withBaseUri(string|Stringable $uri): static
+    {
+        return $this->withOption('base_uri', (string) $uri);
+    }
+
+    public function getBaseUri(): string
+    {
+        return (string) $this->getOption('base_uri');
+    }
+
+    public function withOptions(array $options = []): static
+    {
+        $new = clone $this;
+        $new->options = $options;
+
+        return $new;
+    }
+
+    public function withOption(string $key, mixed $value): static
+    {
+        $new = clone $this;
+        $new->setOption($key, $value);
+
+        return $new;
+    }
+
+    public function __clone()
+    {
+        $this->transport = clone $this->getTransport();
+        $this->dispatcher = clone $this->getEventDispatcher();
     }
 
     public function __call(string $name, array $args)
@@ -457,8 +552,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      */
     public function getAsyncTransport(): AsyncTransportInterface
     {
+        $transport = $this->getTransport();
+
+        if (!$transport instanceof CurlTransport) {
+            throw new \DomainException('Async request only support CurlTransport now.');
+        }
+
         return $this->asyncTransport
-            ??= new MultiCurlTransport([], $this->getTransport());
+            ??= new MultiCurlTransport([], $transport);
     }
 
     /**
@@ -517,9 +618,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         array $options = []
     ): string {
         if (!$requestOrMethod instanceof RequestInterface) {
-            $options = Arr::mergeRecursive($this->getOptions(), $options);
-
-            $request = static::prepareRequest(new Request(), $requestOrMethod, $url, $body, $options);
+            $request = $this->hydrateRequest(new Request(), $requestOrMethod, $url, $body, $options);
         } else {
             $request = $requestOrMethod;
         }

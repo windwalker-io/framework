@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -24,6 +24,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The ValueObject class.
  */
+#[\AllowDynamicProperties]
 class ValueObject implements
     ArrayAccessibleInterface,
     DumpableInterface,

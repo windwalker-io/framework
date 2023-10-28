@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -146,7 +146,7 @@ class DependencyResolver
         }
 
         try {
-            $args = array_merge($this->container->whenCreating($class)->getArguments(), $args);
+            $args = array_merge($this->container->whenCreating($class)->resolveArguments($this->container), $args);
 
             $args = $this->getMethodArgs($constructor, $args, $options);
         } catch (ContainerExceptionInterface $e) {

@@ -1,19 +1,21 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2023 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Output;
+namespace Windwalker\Reactor\Swoole;
 
 use Psr\Http\Message\ResponseInterface;
 use Swoole\Http\Response as SwooleResponse;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Output\OutputInterface;
+use Windwalker\Http\Output\StreamOutputTrait;
 
 /**
  * The SwooleOutput class.
@@ -24,6 +26,7 @@ class SwooleOutput implements OutputInterface
 
     public function __construct(protected SwooleResponse $response)
     {
+        $this->setDelay(1);
     }
 
     public function respond(ResponseInterface $response): void

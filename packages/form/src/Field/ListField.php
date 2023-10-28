@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -120,6 +120,6 @@ class ListField extends AbstractField
             return TypeCast::toArray($value);
         }
 
-        return (string) $value;
+        return TypeCast::toString($value);
     }
 }

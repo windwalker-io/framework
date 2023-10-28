@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of framework project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2022 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -18,7 +18,7 @@ use Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum;
 /**
  * The NativeEnumTest class.
  */
-abstract class AbstractEnumTest extends TestCase
+abstract class AbstractEnumTestCase extends TestCase
 {
     /**
      * getEnumClass

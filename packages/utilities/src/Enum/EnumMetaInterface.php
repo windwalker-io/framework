@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2022 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -33,4 +33,6 @@ interface EnumMetaInterface extends EnumAdapterInterface
     public function getMeta(): array;
 
     public static function getMetas(): array;
+
+    public static function maxLength(): int;
 }

@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -78,9 +78,11 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     /**
      * Fetch first cell and close the cursor.
      *
+     * @param  bool  $throwsIfNotFound  Throws Exception if not found.
+     *
      * @return  mixed
      */
-    public function result(): mixed;
+    public function result(bool $throwsIfNotFound = false): mixed;
 
     /**
      * Close cursor and free result.

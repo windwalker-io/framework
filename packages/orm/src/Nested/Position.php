@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -20,30 +20,23 @@ class Position
 
     public const MOVE_DOWN = 1;
 
-    public const BEFORE = 2;
+    public const BEFORE = NestedPosition::BEFORE;
 
-    public const AFTER = 4;
+    public const AFTER = NestedPosition::AFTER;
 
-    public const FIRST_CHILD = 6;
+    public const FIRST_CHILD = NestedPosition::FIRST_CHILD;
 
-    public const LAST_CHILD = 8;
-
-    public const POSITIONS = [
-        self::BEFORE,
-        self::AFTER,
-        self::FIRST_CHILD,
-        self::LAST_CHILD,
-    ];
+    public const LAST_CHILD = NestedPosition::LAST_CHILD;
 
     /**
      * Position constructor.
      *
-     * @param  mixed  $referenceId
-     * @param  int    $position
+     * @param  mixed           $referenceId
+     * @param  NestedPosition  $position
      */
     public function __construct(
         protected mixed $referenceId = null,
-        protected int $position = self::LAST_CHILD
+        protected NestedPosition $position = self::LAST_CHILD
     ) {
         //
     }
@@ -69,19 +62,19 @@ class Position
     }
 
     /**
-     * @return int
+     * @return NestedPosition
      */
-    public function getPosition(): int
+    public function getPosition(): NestedPosition
     {
         return $this->position;
     }
 
     /**
-     * @param  int  $position
+     * @param  NestedPosition  $position
      *
      * @return  static  Return self to support chaining.
      */
-    public function setPosition(int $position): static
+    public function setPosition(NestedPosition $position): static
     {
         $this->position = $position;
 

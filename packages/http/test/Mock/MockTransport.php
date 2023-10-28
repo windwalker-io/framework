@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -14,6 +14,7 @@ namespace Windwalker\Http\Test\Mock;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Transport\AbstractTransport;
 
@@ -38,11 +39,11 @@ class MockTransport extends AbstractTransport
      *
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function request(RequestInterface $request, array $options = []): ResponseInterface
+    public function request(RequestInterface $request, array $options = []): HttpClientResponse
     {
         $this->request = $request;
 
@@ -56,13 +57,13 @@ class MockTransport extends AbstractTransport
      *
      * @param  array             $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    protected function doRequest(RequestInterface $request, array $options = []): ResponseInterface
+    protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse
     {
-        return new Response();
+        return new HttpClientResponse();
     }
 
     /**
@@ -85,14 +86,14 @@ class MockTransport extends AbstractTransport
      *
      * @param  array                   $options
      *
-     * @return  ResponseInterface
+     * @return  HttpClientResponse
      * @since   2.1
      */
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
         array $options = []
-    ): ResponseInterface {
+    ): HttpClientResponse {
         $this->setOption('target_file', $dest);
 
         return $this->request($request);

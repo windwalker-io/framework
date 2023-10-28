@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -293,7 +293,7 @@ namespace Windwalker {
         function value(mixed $value, mixed ...$args): mixed
         {
             if ($value instanceof \UnitEnum) {
-                return TypeCast::extractEnum($value);
+                return unwrap_enum($value);
             }
 
             if ($value instanceof Enum) {
@@ -311,6 +311,24 @@ namespace Windwalker {
             return ($value instanceof Closure || $value instanceof CallableProxy)
                 ? $value(...$args)
                 : $value;
+        }
+    }
+
+    if (!function_exists('\Windwalker\unwrap_enum')) {
+        /**
+         * value
+         *
+         * @param  mixed|Closure  $value
+         *
+         * @return  mixed
+         */
+        function unwrap_enum(mixed $value): mixed
+        {
+            if ($value instanceof \UnitEnum) {
+                return TypeCast::extractEnum($value);
+            }
+
+            return $value;
         }
     }
 

@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -92,10 +92,10 @@ if (!function_exists('\Windwalker\Promise\async')) {
      *
      * @param  callable  $callable
      *
-     * @return  ExtendedPromiseInterface
+     * @return  Promise
      * @throws Throwable
      */
-    function async(callable $callable): ExtendedPromiseInterface
+    function async(callable $callable): Promise
     {
         return Promise::resolved()->then($callable);
     }

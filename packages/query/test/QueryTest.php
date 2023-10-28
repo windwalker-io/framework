@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -20,6 +20,7 @@ use Windwalker\Query\Grammar\BaseGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
+use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\Query\expr;
@@ -78,7 +79,7 @@ class QueryTest extends TestCase
         }
     }
 
-    public function selectProvider(): array
+    public static function selectProvider(): array
     {
         return [
             'array and args' => [
@@ -186,7 +187,7 @@ class QueryTest extends TestCase
         self::assertSqlEquals($expected, (string) $q);
     }
 
-    public function fromProvider(): array
+    public static function fromProvider(): array
     {
         return [
             'Simple from' => [
@@ -296,7 +297,7 @@ class QueryTest extends TestCase
         );
     }
 
-    public function joinProvider(): array
+    public static function joinProvider(): array
     {
         // phpcs:disable
         return [
@@ -678,7 +679,7 @@ SQL
         self::assertEquals(static::replaceQn($expt), (string) $this->instance->as($value, $alias, $isColumn));
     }
 
-    public function asProvider(): array
+    public static function asProvider(): array
     {
         return [
             'Simple quote name' => [
@@ -791,7 +792,7 @@ SQL
         );
     }
 
-    public function whereProvider(): array
+    public static function whereProvider(): array
     {
         // phpcs:disable
         return [
@@ -1189,7 +1190,7 @@ SQL
      *
      * @dataProvider havingProvider
      */
-    public function testHaving(string $expt, ...$wheres)
+    public function testHaving(string $expt, ...$wheres): void
     {
         $this->instance->select('*')
             ->from('a');
@@ -1225,7 +1226,7 @@ SQL
         );
     }
 
-    public function havingProvider(): array
+    public static function havingProvider(): array
     {
         return [
             'Simple having =' => [
@@ -1449,7 +1450,7 @@ SQL
         );
     }
 
-    public function testOrder()
+    public function testOrder(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1463,10 +1464,11 @@ SQL
                 ]
             )
             ->order('f4', 'DESC')
+            ->order('p1', 'ASC', Query::PREPEND)
             ->order(raw('COUNT(f5)'));
 
         self::assertSqlEquals(
-            'SELECT * FROM "foo" ORDER BY "id" ASC, "f1", "f2" DESC, "f3", "f4" DESC, COUNT(f5)',
+            'SELECT * FROM "foo" ORDER BY "p1" ASC, "id" ASC, "f1", "f2" DESC, "f3", "f4" DESC, COUNT(f5)',
             $q->render()
         );
     }
@@ -1657,6 +1659,13 @@ SQL
         $this->assertEquals($sql, $result);
     }
 
+    public function testFormatWrongType()
+    {
+        $this->expectException(CastingException::class);
+
+        $this->instance->format('SELECT * FROM foo WHERE id = %a', 'bar');
+    }
+
     /**
      * @see  Query::quoteName
      */
@@ -1808,7 +1817,7 @@ SQL
             'having' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             // Union should before order because it will clear order.
             'union' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
-            'order' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
+            'order' => [['foo', 'asc', 'yoo', 'goo', 'hoo']],
             'columns' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'values' => [['foo', 'asc'], ['yoo', 'goo']],
         ];
@@ -1866,7 +1875,7 @@ SQL
             'group' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'having' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'union' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
-            'order' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
+            'order' => [['foo', 'asc', 'yoo', 'goo', 'hoo']],
             'columns' => ['foo', 'asc', 'yoo', 'goo', 'hoo'],
             'values' => [['foo', 'asc'], ['yoo', 'goo']],
         ];

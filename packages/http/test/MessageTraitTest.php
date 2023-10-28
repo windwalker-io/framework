@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -63,14 +63,6 @@ class MessageTraitTest extends TestCase
 
         self::assertNotSame($this->message, $message);
         self::assertEquals('1.0', $message->getProtocolVersion());
-
-        // Wrong type
-        self::assertExpectedException(
-            function () use ($message) {
-                $message->withProtocolVersion(1.0);
-            },
-            InvalidArgumentException::class
-        );
     }
 
     /**

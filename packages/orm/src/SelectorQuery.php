@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -42,6 +42,8 @@ class SelectorQuery extends Query implements EventAwareInterface
     use EventAwareTrait;
 
     protected ?string $groupDivider = null;
+
+    public static bool $emptyCollectionAsNull = true;
 
     /**
      * @inheritDoc
@@ -166,15 +168,30 @@ class SelectorQuery extends Query implements EventAwareInterface
             return null;
         }
 
+        /** @var Collection[] $subItems */
+        $subItems = [];
+
         foreach ($item as $k => $value) {
             if (str_contains($k, $this->groupDivider)) {
                 [$prefix, $key] = explode($this->groupDivider, $k, 2);
 
-                $item[$prefix] ??= new Collection();
+                $subItem = $subItems[$prefix] ??= new Collection();
 
-                $item[$prefix][$key] = $value;
+                $item[$prefix] = $subItem;
+
+                $subItem[$key] = $value;
 
                 unset($item[$k]);
+            }
+        }
+
+        if (static::$emptyCollectionAsNull) {
+            foreach ($subItems as $prefix => $subItem) {
+                $subItem = $subItem->filter(fn ($v) => $v !== null);
+
+                if ($subItem->isEmpty()) {
+                    $item[$prefix] = null;
+                }
             }
         }
 

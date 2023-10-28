@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -51,41 +51,25 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     use EventAwareTrait;
     use InstanceCacheTrait;
 
-    protected ?AbstractDriver $driver = null;
-
     /**
      * @var Query|string|Stringable|null
      */
     protected mixed $query = null;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    protected ?LoggerInterface $logger;
-
-    /**
-     * @var AbstractPlatform
-     */
-    protected AbstractPlatform $platform;
 
     protected ?ORM $orm = null;
 
     /**
      * DatabaseAdapter constructor.
      *
-     * @param  AbstractDriver        $driver
-     * @param  AbstractPlatform      $platform
-     * @param  LoggerInterface|null  $logger
+     * @param  AbstractDriver   $driver
+     * @param  AbstractPlatform $platform
+     * @param  LoggerInterface  $logger
      */
     public function __construct(
-        AbstractDriver $driver,
-        AbstractPlatform $platform,
-        ?LoggerInterface $logger = null,
+        protected AbstractDriver $driver,
+        protected AbstractPlatform $platform,
+        protected LoggerInterface $logger = new NullLogger(),
     ) {
-        $this->driver = $driver;
-        $this->logger = $logger ?? new NullLogger();
-        $this->platform = $platform;
-
         $this->platform->setDbAdapter($this);
     }
 
@@ -297,7 +281,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 
     public function countWith(Query|string $query): int
     {
-        // Use fast COUNT(*) on Query objects if there no GROUP BY or HAVING clause:
+        // Use fast COUNT(*) on Query objects if there is no GROUP BY or HAVING clause:
         if (
             $query instanceof Query
             && $query->getType() === Query::TYPE_SELECT
@@ -308,7 +292,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 
             $query->clear('select', 'order', 'limit')->selectRaw('COUNT(*)');
 
-            return (int) $query->result();
+            return (int) $this->prepare($query)->result();
         }
 
         // Otherwise fall back to inefficient way of counting all results.
@@ -351,6 +335,10 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 
     public function isNullDate(string|int|null|DateTimeInterface $date): bool
     {
+        if ($date === null || $date === '') {
+            return true;
+        }
+
         if (is_numeric($date)) {
             $date = new DateTime($date);
         }
@@ -359,16 +347,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
             $date = $date->format($this->getDateFormat());
         }
 
-        return in_array(
-            $date,
-            [
-                $this->getNullDate(),
-                '0000-00-00 00:00:00',
-                '',
-                null,
-            ],
-            true
-        );
+        return $date === $this->getNullDate() || $date === '0000-00-00 00:00:00';
     }
 
     public function __call(string $name, array $args)

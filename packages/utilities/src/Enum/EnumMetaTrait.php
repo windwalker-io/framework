@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2022 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -132,5 +132,22 @@ trait EnumMetaTrait
 
         return $attrs[$this->getValue()][$attr]
             ??= AttributesAccessor::getFirstAttributeInstance($constant, $attr);
+    }
+
+    public static function maxLength(): int
+    {
+        static $max = null;
+
+        if ($max !== null) {
+            return $max;
+        }
+
+        $max = 0;
+
+        foreach (self::values() as $value) {
+            $max = max($max, strlen($value->value));
+        }
+
+        return $max;
     }
 }

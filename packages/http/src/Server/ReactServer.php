@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -19,6 +19,7 @@ use React\Socket\Server as SocketServer;
 use React\Socket\ServerInterface as ReactServerInterface;
 use RuntimeException;
 use Throwable;
+use Windwalker\Event\EventAwareTrait;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
@@ -28,8 +29,10 @@ use Windwalker\Http\HttpFactory;
 /**
  * The ReactServerAdapter class.
  */
-class ReactServer extends AbstractServer
+class ReactServer implements ServerInterface
 {
+    use EventAwareTrait;
+
     protected ?LoopInterface $loop = null;
 
     /**

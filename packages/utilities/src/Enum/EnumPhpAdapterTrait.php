@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of earth project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2022 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -18,24 +18,38 @@ use function Windwalker\arr;
  */
 trait EnumPhpAdapterTrait
 {
+    public static function preprocessValue(mixed $value): mixed
+    {
+        return $value;
+    }
+
     public static function wrap(mixed $value): static
     {
+        $value = static::preprocessValue($value);
+
         if ($value instanceof self) {
             return $value;
         }
 
-        return self::from($value);
+        return static::from($value);
     }
 
     public static function tryWrap(mixed $value): ?static
     {
+        $value = static::preprocessValue($value);
+
         if ($value instanceof self) {
             return $value;
         }
 
-        return self::tryFrom($value);
+        return static::tryFrom($value);
     }
 
+    /**
+     * @return  array<static>
+     *
+     * @throws \ReflectionException
+     */
     public static function values(): array
     {
         if (is_subclass_of(static::class, \UnitEnum::class)) {
@@ -53,6 +67,11 @@ trait EnumPhpAdapterTrait
         return array_map(fn ($value) => static::wrap($value), static::toArray());
     }
 
+    /**
+     * @return  array<static>
+     *
+     * @throws \ReflectionException
+     */
     public static function cases(): array
     {
         return array_values(static::values());
@@ -64,34 +83,41 @@ trait EnumPhpAdapterTrait
             return $this->value ?? $this->name;
         }
 
+        // Legacy Enum
         return parent::getValue();
     }
 
     public function getKey(): mixed
     {
         if ($this instanceof \UnitEnum) {
+            // Native Enum
             return $this->name;
         }
 
+        // Legacy Enum
         return parent::getKey();
     }
 
     public function sameAs($variable = null): bool
     {
         if ($this instanceof \UnitEnum) {
+            // Native Enum
             return $this === static::tryWrap($variable);
         }
 
+        // Legacy Enum
         return $this->equals(static::wrap($variable));
     }
 
     public static function tryFrom(string|int $value): ?static
     {
         if (is_subclass_of(static::class, \UnitEnum::class)) {
-            return parent::tryFrom($value);
+            // Native Enum
+            return static::tryFrom($value);
         }
 
         try {
+            // Legacy Enum
             return parent::from($value);
         } catch (\UnexpectedValueException) {
             return null;
@@ -118,6 +144,7 @@ trait EnumPhpAdapterTrait
      *
      * @psalm-return array<string, mixed>
      * @return array Constant name in key, constant value in value
+     * @throws \ReflectionException
      */
     public static function toArray(): array
     {
@@ -166,8 +193,9 @@ trait EnumPhpAdapterTrait
             if ($ref->hasCase($name)) {
                 return constant(static::class . '::' . $name);
             }
+        } else {
+            // For legacy enum class
+            return parent::__callStatic($name, $args);
         }
-
-        return parent::__callStatic($name, $args);
     }
 }

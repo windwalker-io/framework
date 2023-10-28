@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -162,6 +162,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
     public function stop(bool $unset = true): bool
     {
+        if (!$this->isStarted()) {
+            return true;
+        }
+
         return $this->bridge->writeClose($unset);
     }
 

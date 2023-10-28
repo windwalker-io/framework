@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -184,7 +184,7 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Retrieves the HTTP method of the request.
      *
-     * @return string Returns the request method.
+     * @return ?string Returns the request method.
      */
     public function getMethod(): ?string
     {
@@ -264,7 +264,7 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @return static
      */
-    public function withUri(UriInterface $uri, $preserveHost = false): AbstractRequest|static
+    public function withUri(UriInterface $uri, $preserveHost = false): static
     {
         $new = clone $this;
         $new->uri = $uri;

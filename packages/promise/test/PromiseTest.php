@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -55,6 +55,30 @@ class PromiseTest extends AbstractPromiseTestCase
 
         self::assertEquals(PromiseState::FULFILLED, $p->getState());
         self::assertEquals('Flower', $p->wait());
+    }
+
+    public function testEmptyConstructorThen(): void
+    {
+        $p1 = new Promise();
+        $p2 = $p1->then(fn ($v) => $v);
+
+        $p1->resolve('Flower');
+
+        $v = $p2->wait();
+
+        self::assertEquals(PromiseState::FULFILLED, $p2->getState());
+        self::assertEquals('Flower', $v);
+    }
+
+    public function testWaitUnResolved(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Running empty TaskQueue is not allowed, this may cause Promise lock.');
+
+        $p = new Promise();
+        $p = $p->then(fn ($v) => $v);
+
+        $p->wait();
     }
 
     public function testConstructorResolveAnotherPromise(): void

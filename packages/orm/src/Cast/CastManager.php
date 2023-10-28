@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -187,7 +187,7 @@ class CastManager
                 // Pure class
                 return static function (mixed $value, ORM $orm) use ($options, $cast) {
                     if (is_subclass_of($cast, \BackedEnum::class)) {
-                        return $cast::from($value);
+                        return $cast::wrap($value);
                     }
 
                     if (is_subclass_of($cast, EnumSingleton::class)) {

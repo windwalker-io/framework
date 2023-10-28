@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -244,13 +244,19 @@ abstract class AbstractStatement implements StatementInterface
     }
 
     /**
+     * @param  bool  $throwsIfNotFound
+     *
      * @inheritDoc
      */
-    public function result(): mixed
+    public function result(bool $throwsIfNotFound = false): mixed
     {
         $assoc = $this->get();
 
         if ($assoc === null) {
+            if ($throwsIfNotFound) {
+                throw new StatementException('Query not found', 404);
+            }
+
             return null;
         }
 

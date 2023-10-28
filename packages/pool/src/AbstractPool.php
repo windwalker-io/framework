@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -19,10 +19,7 @@ use Throwable;
 use Windwalker\Pool\Exception\ConnectionPoolException;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\StackInterface;
-use Windwalker\Pool\Stack\SwooleStack;
 use Windwalker\Utilities\Options\OptionsResolverTrait;
-
-use function Windwalker\swoole_in_coroutine;
 
 /**
  * The AbstractPool class.
@@ -30,18 +27,6 @@ use function Windwalker\swoole_in_coroutine;
 abstract class AbstractPool implements PoolInterface
 {
     use OptionsResolverTrait;
-
-    public const MAX_SIZE = 'max_size';
-
-    public const MIN_SIZE = 'min_size';
-
-    public const MAX_WAIT = 'max_wait';
-
-    public const WAIT_TIMEOUT = 'wait_timeout';
-
-    public const IDLE_TIMEOUT = 'idle_timeout';
-
-    public const CLOSE_TIMEOUT = 'close_timeout';
 
     /**
      * @var StackInterface|null
@@ -88,10 +73,6 @@ abstract class AbstractPool implements PoolInterface
 
     protected function createStack(): StackInterface
     {
-        if (swoole_in_coroutine()) {
-            return new SwooleStack($this->getOption(self::MAX_SIZE));
-        }
-
         return new SingleStack();
     }
 
@@ -158,6 +139,8 @@ abstract class AbstractPool implements PoolInterface
         $connection->setPool($this);
         $connection->updateLastTime();
         $connection->release(true);
+
+        $this->logger->info("Connection created: {$connection->getId()}");
 
         return $connection;
     }
@@ -258,8 +241,7 @@ abstract class AbstractPool implements PoolInterface
         }
 
         // Disconnect then drop it.
-        $connection->disconnect();
-        $this->totalCount--;
+        $this->dropConnection($connection);
     }
 
     /**
@@ -295,6 +277,8 @@ abstract class AbstractPool implements PoolInterface
                 );
             }
 
+            $this->logger->info("Connection closed: {$connection->getId()}");
+
             $length--;
         }
 
@@ -312,8 +296,9 @@ abstract class AbstractPool implements PoolInterface
 
             // If out of max idle time, drop this connection.
             if (($time - $lastTime) > $this->getOption(self::IDLE_TIMEOUT)) {
-                $connection->disconnect();
-                $this->totalCount--;
+                $this->dropConnection($connection);
+
+                $this->logger->info("Connection reach max idle timeout and disconnected: {$connection->getId()}");
                 continue;
             }
 

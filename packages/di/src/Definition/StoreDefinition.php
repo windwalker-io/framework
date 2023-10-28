@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2022 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -25,6 +25,9 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function __construct(protected string $id, protected mixed $value, protected int $options = 0)
     {
+        if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
+            $this->cache = $this->value;
+        }
     }
 
     public function resolve(Container $container, array $args = []): mixed
@@ -38,7 +41,6 @@ class StoreDefinition implements StoreDefinitionInterface
         // Build object if is builder
         if ($this->value instanceof ObjectBuilderDefinition) {
             $this->value->addArguments($args);
-            $this->value->setContainer($container);
 
             $value = $this->value->resolve($container);
         }
@@ -136,5 +138,12 @@ class StoreDefinition implements StoreDefinitionInterface
     public function getCache(): mixed
     {
         return $this->cache;
+    }
+
+    public function __clone(): void
+    {
+        if (is_object($this->value)) {
+            $this->value = clone $this->value;
+        }
     }
 }

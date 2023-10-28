@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -16,10 +16,6 @@ use Windwalker\Utilities\Classes\FlowControlTrait;
 
 /**
  * Query Clause Class.
- *
- * @property-read  string $name      The name of the element.
- * @property-read  array  $elements  An array of elements.
- * @property-read  string $glue      Glue piece.
  *
  * @since  2.0
  */
@@ -136,8 +132,6 @@ class Clause implements Countable, ClauseInterface
     }
 
     /**
-     * each
-     *
      * @param  callable  $callable
      *
      * @return  static
@@ -262,8 +256,6 @@ class Clause implements Countable, ClauseInterface
      * @param  array|string  $elements
      *
      * @return  static  Return self to support chaining.
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function setElements(mixed $elements): static
     {

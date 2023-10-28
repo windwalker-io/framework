@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -15,9 +15,13 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Windwalker\Http\Exception\HttpRequestException;
+use Windwalker\Http\Response\HttpClientResponse;
+use Windwalker\Http\Response\Response;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
+
+use function Windwalker\Promise\async;
 
 /**
  * The MultiCurlHandler class.
@@ -26,10 +30,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 {
     use OptionAccessTrait;
 
-    /**
-     * @var resource
-     */
-    protected $mh;
+    protected ?\CurlMultiHandle $mh = null;
 
     protected ?PromiseInterface $promise = null;
 
@@ -41,33 +42,26 @@ class MultiCurlTransport implements AsyncTransportInterface
     protected array $tasks = [];
 
     /**
-     * @var TransportInterface|null
+     * @var CurlTransportInterface|null
      */
-    protected ?TransportInterface $transport;
+    protected ?CurlTransportInterface $transport;
 
     /**
      * Class init.
      *
-     * @param  array               $options    The options of this client object.
-     * @param  CurlTransport|null  $transport  The Transport handler, default is CurlTransport.
+     * @param  array                        $options    The options of this client object.
+     * @param  CurlTransportInterface|null  $transport  The Transport handler, default is CurlTransport.
      */
-    public function __construct($options = [], CurlTransport $transport = null)
+    public function __construct(array $options = [], CurlTransportInterface $transport = null)
     {
         $this->prepareOptions([], $options);
 
         $this->transport = $transport ?? new CurlTransport();
     }
 
-    /**
-     * getHandle
-     *
-     * @return  resource
-     */
-    public function getMainHandle()
+    public function getMainHandle(): \CurlMultiHandle
     {
-        if (!$this->mh) {
-            $this->mh = curl_multi_init();
-        }
+        $this->mh ??= curl_multi_init();
 
         return $this->mh;
     }
@@ -94,15 +88,20 @@ class MultiCurlTransport implements AsyncTransportInterface
 
     /**
      * @inheritDoc
+     * @throws \Throwable
      */
     public function sendRequest(RequestInterface $request, array $options = []): PromiseInterface
     {
-        /** @var CurlTransport $transport */
         $transport = $this->getTransport();
 
+        $options = $transport->prepareRequestOptions($options);
+
         $this->tasks[] = [
-            'handle' => $handle = $transport->createHandle($request, $options),
+            'handle' => $handle = $transport->createHandle($request, $options, $headers, $content),
             'promise' => $promise = new Promise(),
+            'options' => $options,
+            'headers' => &$headers,
+            'content' => $content
         ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
@@ -114,6 +113,7 @@ class MultiCurlTransport implements AsyncTransportInterface
      * resolve
      *
      * @return  mixed|PromiseInterface
+     * @throws \Throwable
      */
     public function resolve(): mixed
     {
@@ -122,12 +122,15 @@ class MultiCurlTransport implements AsyncTransportInterface
         return $this->promise->wait();
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function prepareResolvePromise(): PromiseInterface
     {
-        return $this->promise ??= new Promise(
-            function (callable $resolve) {
+        return $this->promise ??= async(
+            function () {
                 if ($this->tasks === []) {
-                    $resolve();
+                    $this->promise->resolve();
 
                     return;
                 }
@@ -157,28 +160,38 @@ class MultiCurlTransport implements AsyncTransportInterface
                     );
                 }
 
-                /** @var CurlTransport $transport */
                 $transport = $this->getTransport();
 
                 foreach ($this->tasks as $task) {
-                    /** @var Promise $promise */
+                    /** @var array{ handle: \CurlHandle, options: array, promise: PromiseInterface, content: StreamInterface } $task */
                     $handle = $task['handle'];
+                    $options = $task['options'];
                     $promise = $task['promise'];
+                    $content = $task['content'];
                     $promises[] = $promise;
 
                     $error = curl_error($handle);
 
                     if (!$error) {
-                        $res = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+                        // $c = curl_multi_getcontent($handle);
+                        $content->rewind();
+
+                        $res = $transport->injectHeadersToResponse(
+                            (new HttpClientResponse($content))->withInfo(curl_getinfo($handle)),
+                            (array) $task['headers'],
+                            (bool) $options['allow_empty_status_code']
+                        );
                         $promise->resolve($res);
                     } else {
                         $promise->reject(new HttpRequestException($error, curl_errno($handle)));
                     }
                 }
 
+                $p = $this->promise;
+
                 $this->reset();
 
-                $resolve(Promise::all($promises));
+                $p->resolve(Promise::all($promises));
             }
         );
     }

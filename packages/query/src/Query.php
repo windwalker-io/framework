@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -16,7 +16,6 @@ use Closure;
 use DateTimeInterface;
 use Generator;
 use IteratorAggregate;
-use Lyrasoft\Luna\Entity\TagMap;
 use PDO;
 use ReflectionClass;
 use SqlFormatter;
@@ -27,6 +26,7 @@ use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Driver\AbstractStatement;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\Database\Exception\StatementException;
 use Windwalker\ORM\ORM;
 use Windwalker\Query\Bounded\BindableInterface;
 use Windwalker\Query\Bounded\BindableTrait;
@@ -36,6 +36,7 @@ use Windwalker\Query\Clause\AlterClause;
 use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
+use Windwalker\Query\Clause\ClausePosition;
 use Windwalker\Query\Clause\ExprClause;
 use Windwalker\Query\Clause\JoinClause;
 use Windwalker\Query\Clause\QuoteNameClause;
@@ -44,6 +45,7 @@ use Windwalker\Query\Concern\JsonConcernTrait;
 use Windwalker\Query\Concern\QueryConcernTrait;
 use Windwalker\Query\Concern\ReflectConcernTrait;
 use Windwalker\Query\Concern\WhereConcernTrait;
+use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Wrapper\FormatRawWrapper;
@@ -51,12 +53,11 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
+use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\WrapperInterface;
 
-use function Windwalker\collect;
 use function Windwalker\raw;
-use function Windwalker\uid;
 use function Windwalker\value;
 
 /**
@@ -108,7 +109,7 @@ use function Windwalker\value;
  * @method Collection|object|null get(?string $class = null, array $args = [])
  * @method Collection|Collection[]|object[] all(?string $class = null, array $args = [])
  * @method Collection loadColumn(int|string $offset = 0)
- * @method mixed result()
+ * @method mixed result(bool $throwsIfNotFound = false)
  * @method int count()
  * @method StatementInterface execute(?array $params = null)
  */
@@ -131,6 +132,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public const TYPE_DELETE = 'delete';
 
     public const TYPE_CUSTOM = 'custom';
+
+    public const PREPEND = ClausePosition::PREPEND;
+    public const APPEND = ClausePosition::APPEND;
 
     protected ?string $type = self::TYPE_SELECT;
 
@@ -556,14 +560,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * order
-     *
      * @param  array|string|ClauseInterface  $column
      * @param  string|null                   $dir
+     * @param  ClausePosition                $pos
      *
      * @return  static
      */
-    public function order(mixed $column, ?string $dir = null): static
+    public function order(mixed $column, ?string $dir = null, ClausePosition $pos = ClausePosition::APPEND): static
     {
         if (is_array($column)) {
             foreach ($column as $col) {
@@ -589,7 +592,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $order[] = $dir;
         }
 
-        $this->orderRaw($this->clause('', $order));
+        $this->orderRaw($this->clause('', $order), $pos);
 
         return $this;
     }
@@ -600,13 +603,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->order = $this->clause('ORDER BY', [], ', ');
         }
 
+        $method = static::getClausePosition($args);
+
         if (is_string($order)) {
             $order = $this->format($order, ...$args);
         }
 
         $this->findAndInjectSubQueries($order);
 
-        $this->order->append($order);
+        $this->order->$method($order);
 
         return $this;
     }
@@ -624,7 +629,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->group = $this->clause('GROUP BY', [], ', ');
         }
 
-        $this->group->append(
+        $method = static::getClausePosition($columns);
+
+        $this->group->$method(
             $this->qnMultiple(
                 array_values(Arr::flatten($columns))
             )
@@ -633,10 +640,28 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
+    private static function getClausePosition(array &$args): string
+    {
+        if ($args === []) {
+            return 'append';
+        }
+
+        $last = $args[array_key_last($args)];
+
+        if ($last instanceof ClausePosition) {
+            array_pop($args);
+
+            return match ($last) {
+                ClausePosition::PREPEND => 'prepend',
+                ClausePosition::APPEND => 'append',
+            };
+        }
+
+        return 'append';
+    }
+
     /**
-     * limit
-     *
-     * @param  int  $limit
+     * @param  int|null  $limit
      *
      * @return  static
      */
@@ -648,9 +673,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * offset
-     *
-     * @param  int  $offset
+     * @param  int|null  $offset
      *
      * @return  static
      */
@@ -662,8 +685,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * insert
-     *
      * @param  string  $table
      * @param  bool    $incrementField
      *
@@ -679,8 +700,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * update
-     *
      * @param  string       $table
      * @param  string|null  $alias
      *
@@ -720,7 +739,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->columns = $this->clause('()', [], ', ');
         }
 
-        $this->columns->append(
+        $method = static::getClausePosition($columns);
+
+        $this->columns->$method(
             $this->qnMultiple(
                 array_values(Arr::flatten($columns))
             )
@@ -741,6 +762,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         if ($values === []) {
             return $this;
         }
+
+        $method = static::getClausePosition($values);
 
         foreach ($values as $value) {
             if ($value instanceof self) {
@@ -781,7 +804,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                     $clause->append($this->castWriteValue($val));
                 }
 
-                $this->values->append($clause);
+                $this->values->$method($clause);
             }
         }
 
@@ -820,7 +843,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    private function castWriteValue($value): ValueClause
+    private function castWriteValue(mixed $value): ValueClause
     {
         $origin = $value;
 
@@ -882,8 +905,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * clause
-     *
      * @param  string        $name
      * @param  array|string  $elements
      * @param  string        $glue
@@ -1059,8 +1080,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * prefix
-     *
      * @param  string|array  $prefix
      * @param  mixed         ...$args
      *
@@ -1131,8 +1150,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     /**
      * Add FOR UPDATE after query string.
      *
-     * @param  string  $for
-     * @param  string  $do
+     * @param  string       $for
+     * @param  string|null  $do
      *
      * @return  static
      */
@@ -1286,7 +1305,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $i = 1;
         $replace = function ($sign, $replacement) use ($expression) {
             return match ($sign) {
-                'a' => 0 + $replacement,
+                'a' => TypeCast::mustNumeric($replacement),
                 'e' => $this->escape($replacement),
                 'n' => $this->resolveColumn($replacement, QN_JSON_INSTANT),
                 'q' => $this->quote($replacement),
@@ -1594,6 +1613,42 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             if (is_object($v)) {
                 $this->{$k} = clone $v;
             }
+        }
+    }
+
+    /**
+     * @param  string|null  $class
+     * @param  array        $args
+     *
+     * @return  object|Collection
+     *
+     * @psalm-template E
+     * @psalm-param class-string<E> $class
+     * @psalm-return E
+     */
+    public function mustGet(?string $class = null, array $args = []): object
+    {
+        return $this->get($class, $args)
+            ?? throw new NoResultException(
+                TypeCast::tryString($this->getFrom()),
+                $this
+            );
+    }
+
+    public function mustGetResult(): mixed
+    {
+        try {
+            return $this->result(true);
+        } catch (StatementException $e) {
+            if ($e->getCode() === 404) {
+                throw new NoResultException(
+                    TypeCast::tryString($this->getFrom()),
+                    $this,
+                    $e
+                );
+            }
+
+            throw $e;
         }
     }
 

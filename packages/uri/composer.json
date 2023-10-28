@@ -20,9 +20,13 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0||^9.0||^10.0",
-        "windwalker/test": "^4.0"
+        "windwalker/test": "^4.0",
+        "rize/uri-template": "^0.3.5",
+        "guzzlehttp/uri-template": "^1.0"
     },
     "suggest": {
+        "rize/uri-template": "Install this to support URI Template expand() and extract()",
+        "guzzlehttp/uri-template": "Install this to support URI Template expand()"
     },
     "minimum-stability": "beta",
     "autoload": {

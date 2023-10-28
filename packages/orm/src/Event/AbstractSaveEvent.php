@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -118,5 +118,10 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
         $this->options = $options;
 
         return $this;
+    }
+
+    public function getTempEntity(): object
+    {
+        return $this->getMetadata()->getEntityMapper()->toEntity($this->getData());
     }
 }

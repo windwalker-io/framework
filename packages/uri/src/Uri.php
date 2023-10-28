@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -24,7 +24,7 @@ use Windwalker\Utilities\Assert\ArgumentsAssert;
  *
  * @since  2.0
  */
-class Uri implements UriInterface
+class Uri implements ExtendedUriInterface
 {
     public const SCHEME = 1 << 0;
 
@@ -301,7 +301,7 @@ class Uri implements UriInterface
      *
      * @return  static  A new instance with the specified user information.
      */
-    public function withUserInfo($user, $password = null): Uri|static
+    public function withUserInfo($user, $password = null): static
     {
         ArgumentsAssert::assert(
             is_string($user),
@@ -322,13 +322,11 @@ class Uri implements UriInterface
     }
 
     /**
-     * withUser
-     *
      * @param  string|null  $user
      *
      * @return  static
      */
-    public function withUser(?string $user): Uri|static
+    public function withUser(?string $user): static
     {
         $new = clone $this;
         $new->user = $user;
@@ -337,13 +335,11 @@ class Uri implements UriInterface
     }
 
     /**
-     * withPassword
-     *
      * @param  string|null  $password
      *
      * @return  static
      */
-    public function withPassword(?string $password): Uri|static
+    public function withPassword(?string $password): static
     {
         $new = clone $this;
         $new->pass = $password;
@@ -460,15 +456,13 @@ class Uri implements UriInterface
     }
 
     /**
-     * withQueryParams
-     *
      * @param  array|string  $query
      *
      * @return  static
      *
      * @since  3.5.2
      */
-    public function withQueryParams($query): Uri|static
+    public function withQueryParams(array|string $query): static
     {
         if (!is_string($query)) {
             $query = UriHelper::buildQuery((array) $query);
@@ -509,8 +503,6 @@ class Uri implements UriInterface
     }
 
     /**
-     * withVar
-     *
      * @param  string        $name
      * @param  array|string  $value
      *
@@ -518,7 +510,7 @@ class Uri implements UriInterface
      *
      * @since  3.5.2
      */
-    public function withVar(string $name, mixed $value): Uri|static
+    public function withVar(string $name, mixed $value): static
     {
         $new = clone $this;
 
@@ -534,15 +526,13 @@ class Uri implements UriInterface
     }
 
     /**
-     * delVar
-     *
      * @param  string  $name
      *
      * @return  static
      *
      * @since  3.5.2
      */
-    public function withoutVar(string $name): Uri|static
+    public function withoutVar(string $name): static
     {
         $new = clone $this;
 
@@ -582,7 +572,19 @@ class Uri implements UriInterface
         return $new;
     }
 
+    /**
+     * @param  string  $suffix
+     *
+     * @return  $this
+     *
+     * @deprecated Use withPathConcat()
+     */
     public function pathConcat(string $suffix): static
+    {
+        return $this->withPathAppend($suffix);
+    }
+
+    public function withPathAppend(string $suffix): static
     {
         $new = clone $this;
 

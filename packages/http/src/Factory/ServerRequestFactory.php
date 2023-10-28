@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -15,10 +15,8 @@ use InvalidArgumentException;
 use JsonException;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Swoole\Http\Request as SwooleRequest;
 use UnexpectedValueException;
 use Windwalker\Http\Helper\MultipartHelper;
 use Windwalker\Http\HttpParameters;
@@ -160,62 +158,6 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         $request = static::createFromGlobals($server, $query, $parsedBody, $cookies, $files);
 
         return $request->withUri($uri);
-    }
-
-    public static function createFromSwooleRequest(SwooleRequest $sReq, ?string $host): ServerRequestInterface
-    {
-        $server = HttpParameters::wrap((array) $sReq->server);
-        $headers = HttpParameters::wrap((array) $sReq->header);
-
-        $files = (array) $sReq->files;
-
-        if ($host) {
-            $host = $server['remote_addr'];
-
-            if ($server['port']) {
-                $host .= ':' . $server['port'];
-            }
-        }
-
-        $server['http_host'] = $host;
-
-        $body = new PhpInputStream();
-
-        $method = $server['REQUEST_METHOD'] ?? 'GET';
-
-        $decodedBody = $_POST;
-        $decodedFiles = $_FILES;
-        $method = strtoupper($method);
-        $type = (string) $headers['Content-Type'];
-
-        if ($method === 'POST') {
-            if (str_contains($type, 'application/json')) {
-                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
-            }
-        } elseif (in_array($method, ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK'])) {
-            if (str_contains($type, 'application/x-www-form-urlencoded')) {
-                parse_str($body->__toString(), $decodedBody);
-            } elseif (str_contains($type, 'multipart/form-data')) {
-                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body->__toString()));
-            } elseif (str_contains($type, 'application/json')) {
-                $decodedBody = json_decode($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
-            }
-        }
-
-        $files = static::prepareFiles($files ?: $decodedFiles);
-
-        return new ServerRequest(
-            array_change_key_case($server->dump(), CASE_UPPER),
-            $files,
-            static::prepareUri($server, $headers),
-            $method,
-            $body,
-            $headers->dump(),
-            $sReq->cookie ?: $_COOKIE,
-            $sReq->get ?: $_GET,
-            $sReq->post ?: $decodedBody,
-            static::getProtocolVersion($server)
-        );
     }
 
     /**
@@ -464,7 +406,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @see       https://github.com/zendframework/zend-http/blob/master/src/PhpEnvironment/Request.php
      *
-     * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+     * @copyright Copyright (C) 2023-2015 Zend Technologies USA Inc. (http://www.zend.com)
      * @license   http://framework.zend.com/license/new-bsd New BSD License
      *
      * @param  array|HttpParameters  $server
@@ -614,7 +556,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @return  string  Protocol version.
      */
-    private static function getProtocolVersion(array|HttpParameters $server): string
+    public static function getProtocolVersion(array|HttpParameters $server): string
     {
         $server = HttpParameters::wrap($server);
 

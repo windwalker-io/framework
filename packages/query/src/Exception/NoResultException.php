@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Part of datavideo project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
 
-namespace Windwalker\ORM\Exception;
+namespace Windwalker\Query\Exception;
 
 use Throwable;
 use Windwalker\Utilities\StrInflector;
@@ -22,7 +22,7 @@ class NoResultException extends \UnexpectedValueException
 {
     public function __construct(
         protected string $table,
-        protected mixed $conditions,
+        protected mixed $conditions = null,
         Throwable $previous = null
     ) {
         parent::__construct(

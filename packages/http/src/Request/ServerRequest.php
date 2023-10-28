@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -178,7 +178,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *
      * @return  static
      */
-    public function withCookieParams(array $cookies): static|ServerRequest
+    public function withCookieParams(array $cookies): static
     {
         $new = clone $this;
 

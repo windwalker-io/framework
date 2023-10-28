@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -32,7 +32,7 @@ use Windwalker\Http\Transport\TransportInterface;
  * @method Promise head($url, $headers = [])
  * @method Promise options($url, $headers = [])
  * @method Promise sendRequest(RequestInterface $request)
- * @method Promise request($method, $url, mixed $body = null, $headers = [])
+ * @method Promise request($method, $url, mixed $body = null, $options = []):HttpClientResponse
  *
  * @since  3.2
  */

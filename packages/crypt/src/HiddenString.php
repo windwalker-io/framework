@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -48,7 +48,7 @@ class HiddenString
 
     public static function wrap(#[\SensitiveParameter] mixed $value): HiddenString
     {
-        if (!$value instanceof static) {
+        if (!$value instanceof self) {
             $value = new static((string) $value);
         }
 
@@ -57,17 +57,11 @@ class HiddenString
 
     public static function strip(#[\SensitiveParameter] self|string $value): string
     {
-        if (!$value instanceof static && PHP_VERSION_ID < 80200) {
-            throw new \LogicException(
-                'Do not use pure value for encrypting before PHP8.2'
-            );
-        }
-
-        if ($value instanceof static) {
+        if ($value instanceof self) {
             $value = $value->get();
         }
 
-        return $value;
+        return SecretToolkit::decodeIfHasPrefix($value);
     }
 
     /**

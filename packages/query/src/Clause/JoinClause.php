@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -168,6 +168,10 @@ class JoinClause implements ClauseInterface
         // Closure means to create a sub query as value.
         if ($value instanceof Closure) {
             $value($value = $this->query->createSubQuery());
+        }
+
+        if ($value instanceof \BackedEnum) {
+            $value = val($value->value);
         }
 
         if ($value instanceof Enum) {

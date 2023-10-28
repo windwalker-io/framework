@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -67,14 +67,14 @@ interface PromiseInterface
      *
      * @param  mixed  $value
      */
-    public function resolve(mixed $value): void;
+    public function resolve(mixed $value = null): void;
 
     /**
      * Reject the promise with the given reason.
      *
      * @param  mixed  $reason
      */
-    public function reject(mixed $reason): void;
+    public function reject(mixed $reason = null): void;
 
     /**
      * Waits until the promise completes if possible.

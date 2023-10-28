@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Windwalker\Database;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Driver\Mysqli\MysqliDriver;
 use Windwalker\Database\Driver\Pdo\PdoDriver;
@@ -36,23 +37,29 @@ class DatabaseFactory implements DatabaseFactoryInterface
      * @inheritDoc
      */
     public function create(
-        string $driverName,
+        string|AbstractDriver $driver,
         array $options,
         ?PoolInterface $pool = null,
         ?LoggerInterface $logger = null,
     ): DatabaseAdapter {
-        [, $platformShortName] = static::extractDriverName($driverName);
+        if ($driver instanceof AbstractDriver) {
+            $platformShortName = $driver->getPlatformName();
+        } else {
+            [, $platformShortName] = static::extractDriverName($driver);
 
-        $options['driver'] = $driverName;
+            $options['driver'] = $driver;
 
-        return new DatabaseAdapter(
-            $this->createDriver(
-                $driverName,
+            $driver = $this->createDriver(
+                $driver,
                 $options,
                 $pool ?? $this->createConnectionPool($options['pool'] ?? [])
-            ),
+            );
+        }
+
+        return new DatabaseAdapter(
+            $driver,
             $this->createPlatform($platformShortName),
-            $logger
+            $logger ?? new NullLogger()
         );
     }
 
@@ -64,10 +71,13 @@ class DatabaseFactory implements DatabaseFactoryInterface
         array $options,
         ?PoolInterface $pool = null
     ): AbstractDriver {
+        $driverFullName = $driverName;
+
         [$driverName, $platformName] = static::extractDriverName($driverName);
 
         $driverName = ucfirst(static::getDriverShortName($driverName));
 
+        /** @var class-string<AbstractDriver> $driverClass */
         $driverClass = match ($driverName) {
             'pdo' => PdoDriver::class,
             'pgsql' => PgsqlDriver::class,
@@ -80,7 +90,8 @@ class DatabaseFactory implements DatabaseFactoryInterface
             )
         };
 
-        $options['platform'] = $platformName;
+        $options['driver'] = $driverFullName;
+        $options['platform'] = static::getPlatformName($platformName);
 
         return new $driverClass(
             $options,

@@ -3,7 +3,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
@@ -15,6 +15,8 @@ use Windwalker\Event\EventAwareTrait;
 
 /**
  * The Server class.
+ *
+ * @deprecated  Deprecated with no instead.
  */
 abstract class AbstractServer implements ServerInterface
 {

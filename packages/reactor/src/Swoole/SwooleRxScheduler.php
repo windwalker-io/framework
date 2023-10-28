@@ -3,13 +3,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @copyright  Copyright (C) 2023 LYRASOFT.
  * @license    MIT
  */
 
 declare(strict_types=1);
 
-namespace Windwalker\Reactor;
+namespace Windwalker\Reactor\Swoole;
 
 use Rx\Disposable\CallbackDisposable;
 use Rx\Scheduler\EventLoopScheduler;

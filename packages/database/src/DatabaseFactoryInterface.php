@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Part of Windwalker Packages project.
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2021 __ORGANIZATION__.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2023 LYRASOFT.
+ * @license    MIT
  */
 
 declare(strict_types=1);
@@ -27,7 +27,7 @@ interface DatabaseFactoryInterface
     /**
      * createByDriverName
      *
-     * @param  string                $driverName
+     * @param  string                $driver
      * @param  array                 $options
      * @param  PoolInterface|null    $pool
      * @param  LoggerInterface|null  $logger
@@ -35,7 +35,7 @@ interface DatabaseFactoryInterface
      * @return  DatabaseAdapter
      */
     public function create(
-        string $driverName,
+        string $driver,
         array $options,
         ?PoolInterface $pool = null,
         ?LoggerInterface $logger = null,
