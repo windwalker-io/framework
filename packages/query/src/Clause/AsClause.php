@@ -85,7 +85,15 @@ class AsClause implements ClauseInterface
                 Query::convertClassToTable((string) $column, $entityAlias)
             );
 
-            $alias ??= $entityAlias;
+            if (
+                $alias === null
+                && !(
+                    $this->query->getType() === 'update'
+                    && \Windwalker\count($this->query->getJoin()) === 0
+                )
+            ) {
+                $alias = $entityAlias;
+            }
         }
 
         if ($alias !== false && (string) $alias !== '') {

@@ -264,10 +264,10 @@ trait ListOptionsTrait
 
     public static function createOption(
         \DOMNode|string|null $text = null,
-        ?string $value = null,
+        mixed $value = null,
         array $attrs = []
     ): DOMElement {
-        $attrs['value'] = $value;
+        $attrs['value'] = (string) $value;
 
         return HTMLFactory::option($attrs, $text);
     }

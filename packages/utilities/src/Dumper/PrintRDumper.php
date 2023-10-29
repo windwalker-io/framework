@@ -40,7 +40,8 @@ class PrintRDumper extends AbstractDumper
      * @param  string                 $type    The PHP type of the value being dumped
      * @param  string|int|float|bool  $value   The scalar value being dumped
      */
-    public function dumpScalar(Cursor $cursor, string $type, mixed $value)
+    #[\ReturnTypeWillChange]
+    public function dumpScalar(Cursor $cursor, string $type, mixed $value): void
     {
         $this->dumpKey($cursor);
 
@@ -88,7 +89,8 @@ class PrintRDumper extends AbstractDumper
      * @param  bool    $bin     Whether $str is UTF-8 or binary encoded
      * @param  int     $cut     The number of characters $str has been cut by
      */
-    public function dumpString(Cursor $cursor, $str, $bin, $cut)
+    #[\ReturnTypeWillChange]
+    public function dumpString(Cursor $cursor, $str, $bin, $cut): void
     {
         $this->dumpKey($cursor);
 
@@ -105,7 +107,8 @@ class PrintRDumper extends AbstractDumper
      * @param  string  $class     The object class, resource type or array count
      * @param  bool    $hasChild  When the dump of the hash has child item
      */
-    public function enterHash(Cursor $cursor, $type, $class, $hasChild)
+    #[\ReturnTypeWillChange]
+    public function enterHash(Cursor $cursor, $type, $class, $hasChild): void
     {
         $this->dumpKey($cursor);
 
@@ -143,7 +146,8 @@ class PrintRDumper extends AbstractDumper
      * @param  bool    $hasChild  When the dump of the hash has child item
      * @param  int     $cut       The number of items the hash has been cut by
      */
-    public function leaveHash(Cursor $cursor, $type, $class, $hasChild, $cut)
+    #[\ReturnTypeWillChange]
+    public function leaveHash(Cursor $cursor, $type, $class, $hasChild, $cut): void
     {
         $depth = $cursor->depth;
 
