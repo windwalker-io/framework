@@ -324,14 +324,6 @@ abstract class AbstractGrammar
         return $sql;
     }
 
-    abstract public function compileJsonSelector(
-        Query $query,
-        string $column,
-        array $paths,
-        bool $unQuoteLast = true,
-        bool $instant = false
-    ): Clause;
-
     /**
      * If no connection set, we escape it with default function.
      *
@@ -416,42 +408,4 @@ abstract class AbstractGrammar
     {
         return new Query($this->escaper, $this);
     }
-
-    // /**
-    //  * dropTable
-    //  *
-    //  * @param  string  $table
-    //  * @param  bool    $ifExists
-    //  * @param  mixed   ...$options
-    //  *
-    //  * @return  Clause
-    //  */
-    // public function dropTable(string $table, bool $ifExists = false, ...$options): Clause
-    // {
-    //     return static::build(
-    //         'DROP TABLE',
-    //         $ifExists ? 'IF EXISTS' : null,
-    //         self::quoteName($table),
-    //         ...$options
-    //     );
-    // }
-    //
-    // /**
-    //  * dropTable
-    //  *
-    //  * @param  string  $table
-    //  * @param  bool    $ifExists
-    //  * @param  mixed   ...$options
-    //  *
-    //  * @return  Clause
-    //  */
-    // public function dropView(string $table, bool $ifExists = false, ...$options): Clause
-    // {
-    //     return static::build(
-    //         'DROP VIEW',
-    //         $ifExists ? 'IF EXISTS' : null,
-    //         self::quoteName($table),
-    //         ...$options
-    //     );
-    // }
 }

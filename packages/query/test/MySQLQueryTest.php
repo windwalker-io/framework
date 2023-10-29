@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\MySQLGrammar;
@@ -20,21 +21,12 @@ use function Windwalker\Query\qn;
 /**
  * The MySQLQueryTest class.
  */
-class MySQLQueryTest extends QueryTest
+class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
 {
     protected static array $nameQuote = ['`', '`'];
 
-    /**
-     * testParseJsonSelector
-     *
-     * @param  string  $selector
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     * @dataProvider parseJsonSelectorProvider
-     */
-    public function testParseJsonSelector(string $selector, string $expected)
+    #[DataProvider('parseJsonSelectorProvider')]
+    public function testParseJsonSelector(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);
 
@@ -59,16 +51,20 @@ class MySQLQueryTest extends QueryTest
                 'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$.bar\'))',
             ],
             [
-                'foo->bar[1]->>yoo',
+                'foo->bar->1->>yoo',
                 'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$.bar[1].yoo\'))',
             ],
             [
-                'foo->bar[1]->>\'yoo\'',
+                'foo->bar->1->>\'yoo\'',
                 'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$.bar[1].yoo\'))',
             ],
             [
-                'foo->bar[1]->\'yoo\'',
+                'foo->bar->1->\'yoo\'',
                 'JSON_EXTRACT(`foo`, \'$.bar[1].yoo\')',
+            ],
+            [
+                'foo -> 2',
+                'JSON_EXTRACT(`foo`, \'$[2]\')',
             ],
         ];
     }
@@ -113,6 +109,60 @@ class MySQLQueryTest extends QueryTest
               AND JSON_UNQUOTE(JSON_EXTRACT(`a`.`params`, '$.foo.bar')) = 'yoo'
               AND `a`.`state` = 1
               AND `c`.`state` = 1
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonContains(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM `articles` AS `a`
+                     LEFT JOIN `ww_categories` AS `c` ON `a`.`category_id` = `c`.`id`
+            WHERE JSON_CONTAINS(`a`.`params`, '[\"yoo\"]', '$.foo.bar')
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonNotContains(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonNotContains('params -> foo ->> bar', 'yoo');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM `articles` AS `a`
+                     LEFT JOIN `ww_categories` AS `c` ON `a`.`category_id` = `c`.`id`
+            WHERE NOT JSON_CONTAINS(`a`.`params`, '[\"yoo\"]', '$.foo.bar')
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonLength(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonLength('params -> foo ->> bar', '>', 3);
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM `articles` AS `a`
+                     LEFT JOIN `ww_categories` AS `c` ON `a`.`category_id` = `c`.`id`
+            WHERE JSON_LENGTH(`a`.`params`, '$.foo.bar') > 3
             SQL,
             $q->render(true)
         );

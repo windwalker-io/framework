@@ -21,7 +21,7 @@ use function Windwalker\raw;
 /**
  * The MySQLGrammar class.
  */
-class MySQLGrammar extends AbstractGrammar
+class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
     /**
      * @var string
@@ -77,6 +77,21 @@ class MySQLGrammar extends AbstractGrammar
         return $query;
     }
 
+    public static function compileJsonPath(array $segments): string
+    {
+        $path = '$';
+
+        foreach ($segments as $segment) {
+            if (is_numeric($segment)) {
+                $path .= "[$segment]";
+            } else {
+                $path .= '.' . $segment;
+            }
+        }
+
+        return $path;
+    }
+
     public function compileJsonSelector(
         Query $query,
         string $column,
@@ -86,12 +101,38 @@ class MySQLGrammar extends AbstractGrammar
     ): Clause {
         $expr = expr('JSON_EXTRACT()', qn($column, $query));
 
-        $expr->append($query->valueize('$.' . implode('.', $paths), $instant));
+        $expr->append($query->valueize(static::compileJsonPath($paths), $instant));
 
         if ($unQuoteLast) {
             $expr = expr('JSON_UNQUOTE()', $expr);
         }
 
         return $expr;
+    }
+
+    public function compileJsonContains(
+        Query $query,
+        string $column,
+        array $paths,
+        string $value,
+        bool $not = false
+    ): Clause {
+        return $query->expr(
+            $not
+                ? 'NOT JSON_CONTAINS()'
+                : 'JSON_CONTAINS()',
+            qn($column, $query),
+            $query->valueize($value, false),
+            $query->valueize(static::compileJsonPath($paths), false)
+        );
+    }
+
+    public function compileJsonLength(Query $query, string $column, array $paths): Clause
+    {
+        return $query->expr(
+            'JSON_LENGTH()',
+            qn($column, $query),
+            $query->valueize(static::compileJsonPath($paths), false)
+        );
     }
 }

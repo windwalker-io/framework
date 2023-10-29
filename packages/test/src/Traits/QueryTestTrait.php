@@ -40,11 +40,13 @@ trait QueryTestTrait
 
     protected static function replaceQn(string $sql): string
     {
-        if (static::$nameQuote === ['"', '"']) {
-            return $sql;
+        $sql = str_replace('\\"', '__QQ__', $sql);
+
+        if (static::$nameQuote !== ['"', '"']) {
+            $sql = preg_replace('/(\"([\w]+)\")/', Str::surrounds('$2', static::$nameQuote), $sql);
         }
 
-        return preg_replace('/(\"([\w]+)\")/', Str::surrounds('$2', static::$nameQuote), $sql);
+        return str_replace('__QQ__', '"', $sql);
     }
 
     protected static function renderQuery($query): string

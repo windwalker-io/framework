@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\PostgreSQLGrammar;
@@ -20,7 +21,7 @@ use function Windwalker\Query\qn;
 /**
  * The PostgresqlQueryTest class.
  */
-class PostgreSQLQueryTest extends QueryTest
+class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
 {
     protected function setUp(): void
     {
@@ -31,14 +32,12 @@ class PostgreSQLQueryTest extends QueryTest
      * testParseJsonSelector
      *
      * @param  string  $selector
-     * @param  bool    $unQuoteLast
      * @param  string  $expected
      *
      * @return  void
-     *
-     * @dataProvider parseJsonSelectorProvider
      */
-    public function testParseJsonSelector(string $selector, bool $unQuoteLast, string $expected)
+    #[DataProvider('parseJsonSelectorProvider')]
+    public function testParseJsonSelector(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);
 
@@ -60,45 +59,105 @@ class PostgreSQLQueryTest extends QueryTest
         return [
             [
                 'foo ->> bar',
-                true,
-                '"foo"->>\'bar\'',
+                '"foo"::jsonb->>\'bar\'',
             ],
             [
-                'foo->bar[1]->>yoo',
-                true,
-                '"foo"->\'bar\'->1->>\'yoo\'',
+                'foo->bar->1->>yoo',
+                '"foo"::jsonb->\'bar\'->1->>\'yoo\'',
             ],
             [
-                'foo->bar[1]->>\'yoo\'',
-                true,
-                '"foo"->\'bar\'->1->>\'yoo\'',
+                'foo->bar->1->>\'yoo\'',
+                '"foo"::jsonb->\'bar\'->1->>\'yoo\'',
             ],
             [
-                'foo->bar[1]->\'yoo\'',
-                false,
-                '"foo"->\'bar\'->1->\'yoo\'',
+                'foo->bar->1->\'yoo\'',
+                '"foo"::jsonb->\'bar\'->1->\'yoo\'',
+            ],
+            [
+                'foo->2',
+                '"foo"::jsonb->2',
             ],
         ];
     }
 
     public function testJsonQuote(): void
     {
-        $query = $this->instance->select('foo -> bar ->> yoo AS yoo')
-            ->selectRaw('%n AS l', 'foo -> bar -> loo')
+        $query = $this->instance->select('foo->bar ->> yoo AS yoo')
+            ->selectRaw('%n AS l', 'foo->bar->loo')
             ->from('test')
-            ->where('foo -> bar ->> yoo', 'www')
-            ->having('foo -> bar', '=', qn('hoo -> joo ->> moo'))
-            ->order('foo -> bar ->> yoo', 'DESC');
+            ->where('foo->bar ->> yoo', 'www')
+            ->having('foo->bar', '=', qn('hoo->joo ->> moo'))
+            ->order('foo->bar ->> yoo', 'DESC');
 
         self::assertSqlEquals(
             <<<SQL
-            SELECT "foo"->'bar'->>'yoo' AS "yoo", "foo"->'bar'->'loo' AS l
+            SELECT "foo"::jsonb->'bar'->>'yoo' AS "yoo", "foo"::jsonb->'bar'->'loo' AS l
             FROM "test"
-            WHERE "foo"->'bar'->>'yoo' = 'www'
-            HAVING "foo"->'bar' = "hoo"->'joo'->>'moo'
-            ORDER BY "foo"->'bar'->>'yoo' DESC
+            WHERE "foo"::jsonb->'bar'->>'yoo' = 'www'
+            HAVING "foo"::jsonb->'bar' = "hoo"::jsonb->'joo'->>'moo'
+            ORDER BY "foo"::jsonb->'bar'->>'yoo' DESC
             SQL,
             $query->render(true)
+        );
+    }
+
+    public function testJsonContains(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonContains('params->foo ->> bar', 'yoo');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM "articles" AS "a"
+                     LEFT JOIN "ww_categories" AS "c" ON "a"."category_id" = "c"."id"
+            WHERE ("a"."params"::jsonb->'foo'->'bar' @> '[\"yoo\"]')
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonNotContains(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonNotContains('params->foo ->> bar', 'yoo');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM "articles" AS "a"
+                     LEFT JOIN "ww_categories" AS "c" ON "a"."category_id" = "c"."id"
+            WHERE NOT ("a"."params"::jsonb->'foo'->'bar' @> '[\"yoo\"]')
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonLength(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonLength('params->foo ->> bar', '>', 3);
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT *
+            FROM "articles" AS "a"
+                     LEFT JOIN "ww_categories" AS "c" ON "a"."category_id" = "c"."id"
+            WHERE CASE
+                WHEN jsonb_typeof("a"."params"::jsonb->'foo'->'bar') = 'object'
+                    THEN array_length(ARRAY (SELECT * FROM jsonb_object_keys("a"."params"::jsonb->'foo'->'bar')), 1)
+                WHEN jsonb_typeof("a"."params"::jsonb->'foo'->'bar') = 'array'
+                    THEN jsonb_array_length("a"."params"::jsonb->'foo'->'bar')
+                ELSE 0
+            END > 3
+            SQL,
+            $q->render(true)
         );
     }
 
