@@ -17,7 +17,7 @@ use Windwalker\Utilities\Str;
 /**
  * The PostgreSQLPlatform class.
  */
-class PostgreSQLPlatformTest extends AbstractPlatformTest
+class PostgreSQLPlatformTest extends AbstractPlatformTestCase
 {
     protected static string $platform = 'PostgreSQL';
 

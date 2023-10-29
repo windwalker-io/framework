@@ -18,7 +18,7 @@ use Windwalker\Utilities\Str;
 /**
  * The SQLitePlatformTest class.
  */
-class SQLitePlatformTest extends AbstractPlatformTest
+class SQLitePlatformTest extends AbstractPlatformTestCase
 {
     protected static string $platform = 'SQLite';
 

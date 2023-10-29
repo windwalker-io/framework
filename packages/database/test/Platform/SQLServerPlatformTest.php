@@ -18,7 +18,7 @@ use Windwalker\Utilities\Str;
 /**
  * The SQLServerPlatformTest class.
  */
-class SQLServerPlatformTest extends AbstractPlatformTest
+class SQLServerPlatformTest extends AbstractPlatformTestCase
 {
     protected static string $platform = 'SQLServer';
 

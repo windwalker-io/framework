@@ -14,7 +14,7 @@ namespace Windwalker\Database\Test\Platform;
 /**
  * The MySQLSchemaTest class.
  */
-class MySQLPlatformTest extends AbstractPlatformTest
+class MySQLPlatformTest extends AbstractPlatformTestCase
 {
     protected static string $platform = 'MySQL';
 

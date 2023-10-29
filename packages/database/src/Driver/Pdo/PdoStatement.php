@@ -44,10 +44,14 @@ class PdoStatement extends AbstractStatement
                 /** @var PDO $pdo */
                 $this->conn = $pdo = $conn->get();
 
-                $this->cursor = $stmt = $pdo->prepare($this->query, $this->options);
+                $this->cursor = $stmt = $pdo->prepare($query = $this->query, $this->options);
 
                 foreach ($this->getBounded() as $key => $bound) {
-                    $key = is_int($key) ? $key + 1 : $key;
+                    if (is_int($key)) {
+                        ++$key;
+                    } elseif (!str_contains($query, ':' . ltrim($key, ':'))) {
+                        continue;
+                    }
 
                     $stmt->bindParam(
                         $key,

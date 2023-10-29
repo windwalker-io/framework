@@ -18,7 +18,7 @@ use Windwalker\Database\Test\Reseter\AbstractReseter;
 /**
  * The AbstractPlatformTest class.
  */
-abstract class AbstractPlatformTest extends AbstractDatabaseTestCase
+abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 {
     /**
      * @var MySQLPlatform
