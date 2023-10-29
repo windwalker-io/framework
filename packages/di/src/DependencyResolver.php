@@ -145,11 +145,11 @@ class DependencyResolver
             return new $class();
         }
 
-        $parameters = $constructor->getParameters();
-
-        if (array_diff(array_column($parameters, 'name'), array_keys($args)) === []) {
-            return new $class(...$args);
-        }
+        // $parameters = $constructor->getParameters();
+        //
+        // if (array_diff(array_column($parameters, 'name'), array_keys($args)) === []) {
+        //     return new $class(...$args);
+        // }
 
         try {
             $args = array_merge($this->container->whenCreating($class)->resolveArguments($this->container), $args);

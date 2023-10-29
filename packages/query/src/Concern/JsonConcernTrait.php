@@ -140,6 +140,18 @@ trait JsonConcernTrait
         );
     }
 
+    public function selectJsonLength(string $expr, string $as = ''): static
+    {
+        $grammar = $this->getJsonGrammar();
+
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->selectAs(
+            $grammar->compileJsonLength($this, $column, $paths),
+            $as
+        );
+    }
+
     public function whereJsonLength(string|array $expr, mixed ...$args): static
     {
         if (is_array($expr)) {

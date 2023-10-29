@@ -130,9 +130,13 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
     public function compileJsonLength(Query $query, string $column, array $paths): Clause
     {
         return $query->expr(
-            'JSON_LENGTH()',
-            qn($column, $query),
-            $query->valueize(static::compileJsonPath($paths), false)
+            'IFNULL()',
+            $query->expr(
+                'JSON_LENGTH()',
+                qn($column, $query),
+                $query->valueize(static::compileJsonPath($paths), false)
+            ),
+            0
         );
     }
 }

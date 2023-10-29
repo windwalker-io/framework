@@ -187,7 +187,7 @@ class Response implements ResponseInterface
     public function getReasonPhrase(): string
     {
         if (!$this->reasonPhrase) {
-            $this->reasonPhrase = ResponseHelper::getPhrase($this->statusCode);
+            $this->reasonPhrase = (string) ResponseHelper::getPhrase($this->statusCode);
         }
 
         return $this->reasonPhrase;

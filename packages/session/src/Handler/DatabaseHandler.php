@@ -130,8 +130,7 @@ class DatabaseHandler extends AbstractHandler
                 if ($sess === null) {
                     return $this->db->getWriter()->insertOne(
                         $this->getOption('table'),
-                        $item,
-                        $columns['id']
+                        $item
                     );
                 }
 
