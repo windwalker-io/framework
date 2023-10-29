@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Platform\Type;
 
+use Windwalker\Database\Schema\Ddl\Column;
+
 /**
  * The PostgresqlType class.
  *
@@ -19,8 +21,6 @@ namespace Windwalker\Database\Platform\Type;
 class PostgreSQLDataType extends DataType
 {
     public const INTEGER = 'integer';
-
-    public const BOOLEAN = 'bool';
 
     public const SERIAL = 'serial';
 
@@ -34,6 +34,7 @@ class PostgreSQLDataType extends DataType
      * @var  array
      */
     protected static array $typeMapping = [
+        'bool' => self::SMALLINT,
         DataType::TINYINT => self::SMALLINT,
         DataType::DATETIME => self::TIMESTAMP,
         'tinytext' => self::TEXT,
@@ -42,6 +43,7 @@ class PostgreSQLDataType extends DataType
         // MysqlType::ENUM => self::VARCHAR, // Postgres support ENUM after 8.3
         MySQLDataType::SET => self::TEXT,
         MySQLDataType::FLOAT => self::REAL,
+        MySQLDataType::CHAR => self::VARCHAR,
     ];
 
     /**
@@ -71,4 +73,13 @@ class PostgreSQLDataType extends DataType
         self::SERIAL,
         self::REAL,
     ];
+
+    public static function castForSave(mixed $value, Column $column): mixed
+    {
+        if ($column->getDataType() === static::BOOLEAN) {
+            return $value ? '1' : '0';
+        }
+
+        return parent::castForSave($value, $column);
+    }
 }

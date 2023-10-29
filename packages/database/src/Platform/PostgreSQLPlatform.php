@@ -628,12 +628,12 @@ class PostgreSQLPlatform extends AbstractPlatform
             $this->addConstraint($table->getName(), $constraint, $table->schemaName);
         }
 
-        foreach ($comments as $comment) {
+        foreach ($comments as $column => $comment) {
             $this->db->execute(
                 $this->getGrammar()::build(
                     'COMMENT ON',
                     'COLUMN',
-                    $tableName,
+                    $this->db->quoteName($table->getName() . '.' . $column),
                     'IS',
                     $this->db->quote($comment)
                 )

@@ -113,7 +113,7 @@ class DatabaseHandler extends AbstractHandler
         }
 
         $this->db->transaction(
-            function () use ($id, $data, $columns): StatementInterface {
+            function () use ($id, $data, $columns) {
                 $item = [
                     $columns['data'] => $data,
                     $columns['time'] => (int) time(),

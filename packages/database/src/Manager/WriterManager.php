@@ -96,9 +96,7 @@ class WriterManager
 
         // Update the primary key if it exists.
         if (!$options['incrementField']) {
-            $id = $this->lastInsertId();
-
-            if ($key !== null && $id) {
+            if ($key !== null && $id = $this->lastInsertId()) {
                 if (is_array($data)) {
                     $data[$key] = $id;
                 } else {

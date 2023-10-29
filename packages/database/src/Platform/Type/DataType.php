@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Platform\Type;
 
+use Windwalker\Database\Schema\Ddl\Column;
+use Windwalker\Utilities\TypeCast;
+
 /**
  * The ColumnType class.
  *
@@ -96,6 +99,7 @@ class DataType
         self::BOOLEAN => [1, 0, 'bool'],
 
         self::CHAR => [255, '', 'string'],
+        self::CHARACTER => [255, '', 'string'],
         self::VARCHAR => [255, '', 'string'],
         self::TEXT => [null, '', 'string'],
         self::LONGTEXT => [null, '', 'string'],
@@ -170,6 +174,14 @@ class DataType
         return static::getDefinition($type, 2) ?: 'string';
     }
 
+    public static function castForSave(mixed $value, Column $column): mixed
+    {
+        return TypeCast::try(
+            $value,
+            static::getPhpType($column->getDataType()),
+        );
+    }
+
     protected static function getDefinition(string $type, ?int $key = null)
     {
         $type = strtolower($type);
@@ -189,11 +201,7 @@ class DataType
     {
         $type = strtolower($type);
 
-        if (!isset(static::$typeMapping[$type])) {
-            return $type;
-        }
-
-        return static::$typeMapping[$type];
+        return static::$typeMapping[$type] ?? $type;
     }
 
     public static function isNoLength(string $type): bool

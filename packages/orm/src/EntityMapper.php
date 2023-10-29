@@ -299,10 +299,6 @@ class EntityMapper implements EventAwareInterface
 
         $data = $this->extract($source);
 
-        if ($aiColumn && isset($data[$aiColumn]) && !$data[$aiColumn]) {
-            unset($data[$aiColumn]);
-        }
-
         // Keep data field same as source, that developers can know what data has sent.
         $type = AbstractSaveEvent::TYPE_CREATE;
         $event = $this->emitEvent(
@@ -322,9 +318,15 @@ class EntityMapper implements EventAwareInterface
             compact('data', 'type', 'metadata', 'source', 'options')
         );
 
+        $data = $event->getData();
+
+        if ($aiColumn && array_key_exists($aiColumn, $data) && !$data[$aiColumn]) {
+            unset($data[$aiColumn]);
+        }
+
         $data = $this->getDb()->getWriter()->insertOne(
             $metadata->getTableName(),
-            $event->getData(),
+            $data,
             $pk,
             [
                 'incrementField' => $aiColumn && !empty($data[$aiColumn]),
@@ -1282,10 +1284,7 @@ class EntityMapper implements EventAwareInterface
             } elseif ($value instanceof ClauseInterface) {
                 $item[$field] = $value;
             } else {
-                $item[$field] = TypeCast::try(
-                    $value,
-                    $dataType::getPhpType($column->getDataType()),
-                );
+                $item[$field] = $dataType::castForSave($value, $column);
             }
         }
 
