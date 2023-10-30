@@ -42,7 +42,11 @@ class TruncateValueSubscriber
 
             $max = $column->getCharacterMaximumLength();
 
-            if ($max !== null && mb_strlen($datum) > $max) {
+            if ($max === -1 || $max === null) {
+                continue;
+            }
+
+            if (mb_strlen($datum) > $max) {
                 $data[$key] = mb_substr($datum, 0, (int) $max);
             }
         }

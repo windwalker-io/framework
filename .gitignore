@@ -23,6 +23,8 @@ composer.lock
 # Test #
 phpunit.xml
 .phpunit.result.cache
+.phpunit.cache
+.scannerwork
 
 # Extra #
 !.gitkeep

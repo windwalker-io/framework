@@ -84,10 +84,6 @@ trait JsonConcernTrait
     {
         $grammar = $this->getJsonGrammar();
 
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
-
         [$column, $paths] = $this->splitColumnAndPaths($expr);
 
         return $this->whereRaw(
@@ -98,10 +94,6 @@ trait JsonConcernTrait
     public function whereJsonNotContains(string $expr, mixed $value): static
     {
         $grammar = $this->getJsonGrammar();
-
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
 
         [$column, $paths] = $this->splitColumnAndPaths($expr);
 
@@ -114,10 +106,6 @@ trait JsonConcernTrait
     {
         $grammar = $this->getJsonGrammar();
 
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
-
         [$column, $paths] = $this->splitColumnAndPaths($expr);
 
         return $this->havingRaw(
@@ -128,10 +116,6 @@ trait JsonConcernTrait
     public function havingJsonNotContains(string $expr, mixed $value): static
     {
         $grammar = $this->getJsonGrammar();
-
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
 
         [$column, $paths] = $this->splitColumnAndPaths($expr);
 

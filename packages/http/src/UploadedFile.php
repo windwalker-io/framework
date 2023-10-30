@@ -205,7 +205,8 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
      * @throws  RuntimeException         on any error during the move operation, or on
      *                                    the second or subsequent call to the method.
      */
-    public function moveTo($targetPath)
+    #[\ReturnTypeWillChange]
+    public function moveTo($targetPath): void
     {
         $targetPath = (string) $targetPath;
 

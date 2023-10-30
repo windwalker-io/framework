@@ -87,6 +87,10 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $value,
         bool $not = false
     ): Clause {
+        if (!is_json($value)) {
+            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
+        }
+
         return clause(
             $not ? 'NOT ()' : '()',
             [

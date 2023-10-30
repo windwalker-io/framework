@@ -61,8 +61,9 @@ class SQLServerDataType extends DataType
         DataType::INTEGER => 'int',
         DataType::TINYINT => self::SMALLINT,
         DataType::BOOLEAN => self::BIT,
+        'bool' => self::BIT,
         DataType::VARCHAR => self::NVARCHAR,
-        DataType::CHAR => self::NCHAR,
+        DataType::CHAR => self::NVARCHAR,
         DataType::TEXT => self::NVARCHAR,
         DataType::LONGTEXT => self::NVARCHAR,
         DataType::DATETIME => self::DATETIME2,
@@ -79,5 +80,6 @@ class SQLServerDataType extends DataType
         self::INTEGER,
         self::SMALLINT,
         self::NTEXT,
+        self::BIT,
     ];
 }

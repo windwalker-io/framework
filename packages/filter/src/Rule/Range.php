@@ -16,37 +16,7 @@ use Windwalker\Filter\AbstractFilter;
 /**
  * The Range class.
  */
-class Range extends AbstractFilter
+class Range extends Clamp
 {
-    protected int|float|null $min;
-
-    protected int|float|null $max;
-
-    /**
-     * RangeFilter constructor.
-     *
-     * @param  int|float|null  $min
-     * @param  int|float|null  $max
-     */
-    public function __construct(int|float|null $min = null, int|float|null $max = null)
-    {
-        $this->min = $min;
-        $this->max = $max;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function filter(mixed $value): mixed
-    {
-        if ($this->min !== null && $value < $this->min) {
-            $value = $this->min;
-        }
-
-        if ($this->max !== null && $value > $this->max) {
-            $value = $this->max;
-        }
-
-        return $value;
-    }
+    //
 }

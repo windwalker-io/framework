@@ -23,6 +23,8 @@ use function Windwalker\raw;
  */
 class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
+    use JsonGrammarTrait;
+
     /**
      * @var string
      */
@@ -77,21 +79,6 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         return $query;
     }
 
-    public static function compileJsonPath(array $segments): string
-    {
-        $path = '$';
-
-        foreach ($segments as $segment) {
-            if (is_numeric($segment)) {
-                $path .= "[$segment]";
-            } else {
-                $path .= '.' . $segment;
-            }
-        }
-
-        return $path;
-    }
-
     public function compileJsonSelector(
         Query $query,
         string $column,
@@ -117,6 +104,10 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $value,
         bool $not = false
     ): Clause {
+        if (!is_json($value)) {
+            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
+        }
+
         return $query->expr(
             $not
                 ? 'NOT JSON_CONTAINS()'

@@ -45,7 +45,8 @@ class NullStream implements StreamInterface
      *
      * @return void
      */
-    public function close()
+    #[\ReturnTypeWillChange]
+    public function close(): void
     {
         //
     }
@@ -115,12 +116,13 @@ class NullStream implements StreamInterface
      *                       offset bytes SEEK_CUR: Set position to current location plus offset
      *                       SEEK_END: Set position to end-of-stream plus offset.
      *
-     * @return bool
+     * @return void
      * @throws RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET): bool
+    #[\ReturnTypeWillChange]
+    public function seek($offset, $whence = SEEK_SET): void
     {
-        return true;
+        //
     }
 
     /**
@@ -133,7 +135,8 @@ class NullStream implements StreamInterface
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
-    public function rewind()
+    #[\ReturnTypeWillChange]
+    public function rewind(): void
     {
         //
     }

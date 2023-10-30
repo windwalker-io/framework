@@ -16,6 +16,7 @@ use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Bounded\ParamType;
+use Windwalker\Query\Query;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
@@ -99,15 +100,10 @@ class DatabaseHandler extends AbstractHandler
     {
         $columns = $this->getOption('columns');
 
-        $mergeSql = $this->getMergeSql();
+        $mergeSql = $this->getMergeSql($id, $data);
 
         if ($mergeSql !== null) {
-            $this->db->createQuery()
-                ->sql($mergeSql)
-                ->bind('id', $id, ParamType::STRING)
-                ->bind('data', $data, ParamType::STRING)
-                ->bind('time', time(), ParamType::INT)
-                ->execute();
+            $mergeSql->execute();
 
             return true;
         }
@@ -212,45 +208,61 @@ class DatabaseHandler extends AbstractHandler
     /**
      * Returns a merge/upsert (i.e. insert or update) SQL query when supported by the database.
      *
-     * @return string|null The SQL string or null when not supported
+     * @return Query|null The SQL string or null when not supported
      */
-    private function getMergeSql(): ?string
+    private function getMergeSql(string $id, string $data): ?Query
     {
         $platformName = $this->db->getPlatform()->getName();
 
         $columns = $this->getOption('columns');
         $table = $this->getOption('table');
+        $time = time();
 
         $query = $this->db->createQuery();
 
         switch ($platformName) {
             case AbstractPlatform::MYSQL:
-                return $query->format(
-                    "INSERT INTO %n (%n, %n, %n) VALUES (:id, :data, :time)
+                $query->bind('id', $id, ParamType::STRING)
+                    ->bind('data', $data, ParamType::STRING)
+                    ->bind('time', $time, ParamType::INT);
+
+                return $query->sql(
+                    $query->format(
+                        "INSERT INTO %n (%n, %n, %n) VALUES (:id, :data, :time)
 ON DUPLICATE KEY UPDATE %n = VALUES(%n), %n = VALUES(%n)",
-                    $table,
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['data'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['time']
+                        $table,
+                        $columns['id'],
+                        $columns['data'],
+                        $columns['time'],
+                        $columns['data'],
+                        $columns['data'],
+                        $columns['time'],
+                        $columns['time']
+                    )
                 );
 
             case 'oci':
+                $query->bind('id1', $id, ParamType::STRING)
+                    ->bind('id2', $id, ParamType::STRING)
+                    ->bind('data1', $data, ParamType::STRING)
+                    ->bind('time1', $time, ParamType::INT)
+                    ->bind('data2', $data, ParamType::STRING)
+                    ->bind('time2', $time, ParamType::INT);
+
                 // DUAL is Oracle specific dummy table
-                return $query->format(
-                    " MERGE INTO %n USING DUAL ON (%n = :id) WHEN NOT MATCHED
-                    THEN INSERT (%n, %n, %n) VALUES (:id, :data, :time) WHEN MATCHED
-                    THEN UPDATE SET %n = :data, %n = :time",
-                    $table,
-                    $columns['id'],
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['data'],
-                    $columns['time']
+                return $query->sql(
+                    $query->format(
+                        " MERGE INTO %n USING DUAL ON (%n = :id1) WHEN NOT MATCHED
+                    THEN INSERT (%n, %n, %n) VALUES (:id2, :data1, :time1) WHEN MATCHED
+                    THEN UPDATE SET %n = :data2, %n = :time2",
+                        $table,
+                        $columns['id'],
+                        $columns['id'],
+                        $columns['data'],
+                        $columns['time'],
+                        $columns['data'],
+                        $columns['time']
+                    )
                 );
 
             case AbstractPlatform::SQLSERVER === $platformName
@@ -259,29 +271,44 @@ ON DUPLICATE KEY UPDATE %n = VALUES(%n), %n = VALUES(%n)",
                     '10',
                     '>='
                 ):
+                $query->bind('id1', $id, ParamType::STRING)
+                    ->bind('id2', $id, ParamType::STRING)
+                    ->bind('data1', $data, ParamType::STRING)
+                    ->bind('time1', $time, ParamType::INT)
+                    ->bind('data2', $data, ParamType::STRING)
+                    ->bind('time2', $time, ParamType::INT);
+
                 // phpcs:disable
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
                 // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-                return $query->format(
-                    "MERGE INTO %n WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON (%n = :id)
-                    WHEN NOT MATCHED THEN INSERT (%n, %n, %n) VALUES (:id, :data, :time)
-                    WHEN MATCHED THEN UPDATE SET %n = :data, %n = :time;",
-                    $table,
-                    $columns['id'],
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['data'],
-                    $columns['time']
+                return $query->sql(
+                    $query->format(
+                        "MERGE INTO %n WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON (%n = :id1)
+                    WHEN NOT MATCHED THEN INSERT (%n, %n, %n) VALUES (:id2, :data1, :time1)
+                    WHEN MATCHED THEN UPDATE SET %n = :data2, %n = :time2;",
+                        $table,
+                        $columns['id'],
+                        $columns['id'],
+                        $columns['data'],
+                        $columns['time'],
+                        $columns['data'],
+                        $columns['time']
+                    )
                 );
 
             case AbstractPlatform::SQLITE:
-                return $query->format(
-                    "INSERT OR REPLACE INTO %n (%n, %n, %n) VALUES (:id, :data, :time)",
-                    $table,
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time']
+                $query->bind('id', $id, ParamType::STRING)
+                    ->bind('data', $data, ParamType::STRING)
+                    ->bind('time', $time, ParamType::INT);
+
+                return $query->sql(
+                    $query->format(
+                        "INSERT OR REPLACE INTO %n (%n, %n, %n) VALUES (:id, :data, :time)",
+                        $table,
+                        $columns['id'],
+                        $columns['data'],
+                        $columns['time']
+                    )
                 );
         }
 
