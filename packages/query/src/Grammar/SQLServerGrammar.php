@@ -20,8 +20,10 @@ use function Windwalker\Query\qn;
 /**
  * The SqlsrvGrammar class.
  */
-class SQLServerGrammar extends AbstractGrammar
+class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
+    use JsonGrammarTrait;
+
     /**
      * @var string
      */
@@ -96,22 +98,6 @@ class SQLServerGrammar extends AbstractGrammar
             [$q],
             ['end_row_number' => ') AS A) AS A WHERE RowNumber > ' . (int) $offset]
         );
-    }
-
-    public function compileJsonSelector(
-        Query $query,
-        string $column,
-        array $paths,
-        bool $unQuoteLast = true,
-        bool $instant = false
-    ): Clause {
-        $vc = $query->valueize('$.' . implode('.', $paths), $instant);
-
-        $expr = $unQuoteLast
-            ? expr('JSON_VALUE()', $vc)
-            : expr('JSON_QUERY()', $vc);
-
-        return $expr->prepend(qn($column, $query));
     }
 
     /**
@@ -240,6 +226,57 @@ SQL;
             $ifExists ? 'IF EXISTS' : null,
             self::quoteName($table),
             ...$options
+        );
+    }
+
+    public function compileJsonSelector(
+        Query $query,
+        string $column,
+        array $paths,
+        bool $unQuoteLast = true,
+        bool $instant = false
+    ): Clause {
+        $vc = $query->valueize(static::compileJsonPath($paths), $instant);
+
+        $expr = $unQuoteLast
+            ? expr('JSON_VALUE()', $vc)
+            : expr('JSON_QUERY()', $vc);
+
+        return $expr->prepend(qn($column, $query));
+    }
+
+    public function compileJsonContains(
+        Query $query,
+        string $column,
+        array $paths,
+        string $value,
+        bool $not = false
+    ): Clause {
+        // if (!is_json($value)) {
+        //     $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
+        // }
+
+        $path = $query->valueize(static::compileJsonPath($paths), false);
+
+        return $query->expr(
+            $not ? 'NOT EXISTS()' : 'EXISTS()',
+            $query->createSubQuery()
+                ->selectRaw(1)
+                ->from(expr('OPENJSON()', qn($column, $query), $path))
+                ->where('value', $value)
+        );
+    }
+
+    public function compileJsonLength(Query $query, string $column, array $paths): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), false);
+
+        return $query->expr(
+            'ISNULL()',
+            $query->createSubQuery()
+                ->selectRaw('COUNT(*)')
+                ->from(expr('OPENJSON()', qn($column, $query), $path)),
+            0
         );
     }
 }

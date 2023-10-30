@@ -162,7 +162,7 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
             SELECT *
             FROM `articles` AS `a`
                      LEFT JOIN `ww_categories` AS `c` ON `a`.`category_id` = `c`.`id`
-            WHERE JSON_LENGTH(`a`.`params`, '$.foo.bar') > 3
+            WHERE IFNULL(JSON_LENGTH(`a`.`params`, '$.foo.bar'), 0) > 3
             SQL,
             $q->render(true)
         );

@@ -21,7 +21,7 @@ use function Windwalker\raw;
 /**
  * The SqlsrvQueryTest class.
  */
-class SQLServerQueryTest extends QueryTest
+class SQLServerQueryTest extends QueryTest implements QueryJsonTestInterface
 {
     protected static array $nameQuote = ['[', ']'];
 
@@ -46,7 +46,7 @@ class SQLServerQueryTest extends QueryTest
      *
      * @dataProvider parseJsonSelectorProvider
      */
-    public function testParseJsonSelector(string $selector, bool $unQuoteLast, string $expected)
+    public function testParseJsonSelector(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);
 
@@ -68,27 +68,22 @@ class SQLServerQueryTest extends QueryTest
         return [
             [
                 'foo ->> bar',
-                true,
                 'JSON_VALUE([foo], \'$.bar\')',
             ],
             [
                 'foo->bar[1]->>yoo',
-                true,
                 'JSON_VALUE([foo], \'$.bar[1].yoo\')',
             ],
             [
                 'foo->bar[1]->>\'yoo\'',
-                true,
                 'JSON_VALUE([foo], \'$.bar[1].yoo\')',
             ],
             [
                 'foo->bar[1]->>"yoo"',
-                true,
                 'JSON_VALUE([foo], \'$.bar[1]."yoo"\')',
             ],
             [
                 'foo->bar[1]->\'yoo\'',
-                false,
                 'JSON_QUERY([foo], \'$.bar[1].yoo\')',
             ],
         ];
@@ -111,6 +106,57 @@ class SQLServerQueryTest extends QueryTest
             ORDER BY JSON_VALUE([foo], '$.bar.yoo') DESC
             SQL,
             $query->render(true)
+        );
+    }
+
+    public function testJsonContains(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT * FROM [articles] AS [a]
+                LEFT JOIN [ww_categories] AS [c] ON [a].[category_id] = [c].[id]
+                WHERE EXISTS(SELECT 1 FROM OPENJSON([a].[params], '$.foo.bar') WHERE [value] = 'yoo')
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonNotContains(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonNotContains('params -> foo ->> bar', 'yoo');
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT * FROM [articles] AS [a]
+                LEFT JOIN [ww_categories] AS [c] ON [a].[category_id] = [c].[id]
+                WHERE NOT EXISTS(SELECT 1 FROM OPENJSON([a].[params], '$.foo.bar') WHERE [value] = 'yoo')
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    public function testJsonLength(): void
+    {
+        $q = $this->instance->select();
+        $q->from('articles', 'a')
+            ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
+            ->whereJsonLength('params -> foo ->> bar', '>', 3);
+
+        self::assertSqlEquals(
+            <<<SQL
+            SELECT * FROM [articles] AS [a]
+                LEFT JOIN [ww_categories] AS [c] ON [a].[category_id] = [c].[id]
+            WHERE ISNULL(SELECT COUNT(*) FROM OPENJSON([a].[params], '$.foo.bar'), 0) > 3
+            SQL,
+            $q->render(true)
         );
     }
 
