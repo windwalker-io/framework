@@ -48,6 +48,9 @@ class StubArticle
     #[Column('state')]
     protected int $state = 1;
 
+    #[Column('hits')]
+    protected int $hits = 0;
+
     #[Column('created')]
     #[CastNullable(DateTimeImmutable::class)]
     protected ?DateTimeImmutable $created;
@@ -261,6 +264,23 @@ class StubArticle
     public function setId(?int $id): static
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getHits(): int
+    {
+        return $this->hits;
+    }
+
+    /**
+     * @param  int  $hits
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setHits(int $hits): static
+    {
+        $this->hits = $hits;
 
         return $this;
     }

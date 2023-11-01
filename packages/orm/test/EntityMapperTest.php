@@ -15,6 +15,7 @@ use Exception;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\ORM\EntityMapper;
+use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubComment;
 use Windwalker\ORM\Test\Entity\StubFlower;
 use Windwalker\Utilities\Arr;
@@ -591,6 +592,40 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals(50, $flower->id);
         self::assertEquals('Lisianthus', $flower->getTitle());
         self::assertEquals('calming2', $flower->getMeaning());
+    }
+
+    public function testIncrement(): void
+    {
+        $mapper = static::$orm->mapper(StubArticle::class);
+
+        $mapper->increment('hits', 1);
+
+        $hits = $mapper->findOne(1)->getHits();
+
+        self::assertEquals(2, $hits);
+
+        $mapper->increment('hits', 2, 3, EntityMapper::IGNORE_EVENTS | EntityMapper::TRANSACTION);
+
+        $hits = $mapper->findOne(2)->getHits();
+
+        self::assertEquals(4, $hits);
+    }
+
+    public function testDecrement(): void
+    {
+        $mapper = static::$orm->mapper(StubArticle::class);
+
+        $mapper->decrement('hits', 1);
+
+        $hits = $mapper->findOne(1)->getHits();
+
+        self::assertEquals(1, $hits);
+
+        $mapper->decrement('hits', 2, 3, EntityMapper::IGNORE_EVENTS | EntityMapper::TRANSACTION);
+
+        $hits = $mapper->findOne(2)->getHits();
+
+        self::assertEquals(1, $hits);
     }
 
     /**

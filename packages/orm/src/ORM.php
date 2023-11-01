@@ -83,6 +83,8 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  iterable|object[]     flush(string $entityClass, iterable $items, mixed $conditions = [])
  * @method  StatementInterface[]  sync(string $entityClass, iterable $items, mixed $conditions = [], ?array $compareKeys = null)
  * @method  object[]  copy(string $entityClass, mixed $conditions = [], callable|iterable $newValue = null, int $options = 0)
+ * @method  void  increment(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
+ * @method  void  decrement(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
  *
  * @formatter:on
  * phpcs:enable

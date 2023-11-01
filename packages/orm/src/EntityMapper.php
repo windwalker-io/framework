@@ -18,7 +18,6 @@ use LogicException;
 use ReflectionAttribute;
 use ReflectionProperty;
 use Windwalker\Attributes\AttributesAccessor;
-use Windwalker\Cache\Serializer\JsonSerializer;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
@@ -52,6 +51,7 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function is_object;
 use function Windwalker\collect;
+use function Windwalker\raw;
 
 /**
  * EntityMapper is an entity & database mapping object.
@@ -71,6 +71,8 @@ class EntityMapper implements EventAwareInterface
     public const IGNORE_EVENTS = 1 << 1;
 
     public const IGNORE_OLD_DATA = 1 << 2;
+
+    public const TRANSACTION = 1 << 3;
 
     /**
      * @var ORM
@@ -249,7 +251,7 @@ class EntityMapper implements EventAwareInterface
             ->where($this->conditionsToWheres($conditions))
             ->tapIf(
                 $groups !== null,
-                fn (Query $query) => $query->group($groups)
+                fn(Query $query) => $query->group($groups)
             )
             ->result();
     }
@@ -268,7 +270,7 @@ class EntityMapper implements EventAwareInterface
             ->where($this->conditionsToWheres($conditions))
             ->tapIf(
                 $groups !== null,
-                fn (Query $query) => $query->group($groups)
+                fn(Query $query) => $query->group($groups)
             )
             ->result();
     }
@@ -448,7 +450,7 @@ class EntityMapper implements EventAwareInterface
                     'type' => $type,
                     'metadata' => $metadata,
                     'source' => $source,
-                    'options' => $options
+                    'options' => $options,
                 ]
             );
 
@@ -793,10 +795,10 @@ class EntityMapper implements EventAwareInterface
             // If Entity has keys, use this keys to delete once per item.
             $delItems = (function () use ($metadata, $conditions) {
                 while (
-                    $item = $this->getORM()
-                        ->from($metadata->getClassName())
-                        ->where($this->conditionsToWheres($conditions))
-                        ->get($metadata->getClassName())
+                $item = $this->getORM()
+                    ->from($metadata->getClassName())
+                    ->where($this->conditionsToWheres($conditions))
+                    ->get($metadata->getClassName())
                 ) {
                     yield $item;
                 }
@@ -940,10 +942,10 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable     $items
-     * @param  Conditions   $conditions
-     * @param  array|null   $compareKeys
-     * @param  int          $options
+     * @param  iterable    $items
+     * @param  Conditions  $conditions
+     * @param  array|null  $compareKeys
+     * @param  int         $options
      *
      * @return  array<array<T>>
      *
@@ -1041,6 +1043,82 @@ class EntityMapper implements EventAwareInterface
         }
 
         return [$creates, $keep];
+    }
+
+    public function increment(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0): void
+    {
+        if ($num < 0) {
+            throw new InvalidArgumentException('Increment value should be positive number.');
+        }
+
+        $this->fieldOffsets('+', $fields, $conditions, $num, $options);
+    }
+
+    public function decrement(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0): void
+    {
+        if ($num < 0) {
+            throw new InvalidArgumentException('Decrement value should be positive number.');
+        }
+
+        $this->fieldOffsets('-', $fields, $conditions, $num, $options);
+    }
+
+    public function fieldOffsets(
+        string $operator,
+        string|array $fields,
+        mixed $conditions,
+        int|float $num,
+        int $options = 0
+    ): void {
+        if ($fields === '' || $fields === []) {
+            throw new InvalidArgumentException('Fields is invalid or empty');
+        }
+
+        $fields = (array) $fields;
+
+        $transaction = (bool) ($options & static::TRANSACTION);
+
+        $this->getDb()->transaction(
+            function () use ($transaction, $operator, $num, $options, $fields, $conditions) {
+                $ignoreEvents = (bool) ($options & static::IGNORE_EVENTS);
+
+                if ($ignoreEvents) {
+                    $query = $this->update()
+                        ->where($this->conditionsToWheres($conditions));
+
+                    foreach ($fields as $field) {
+                        $expr = $operator . abs($num);
+
+                        $query->set($field, raw($query->qn($field) . ' ' . $expr));
+                    }
+
+                    $query->execute();
+
+                    return;
+                }
+
+                $items = $this->select()
+                    ->where($this->conditionsToWheres($conditions))
+                    ->tapIf(
+                        $transaction,
+                        fn(Query $query) => $query->forUpdate()
+                    )
+                    ->getIterator();
+
+                foreach ($items as $item) {
+                    foreach ($fields as $field) {
+                        if ($operator === '+') {
+                            $item->$field += $num;
+                        } else {
+                            $item->$field -= $num;
+                        }
+                    }
+
+                    $this->updateOne($item, options: $options);
+                }
+            },
+            enabled: $transaction
+        );
     }
 
     public function prepareRelations(object $entity): object
@@ -1156,8 +1234,8 @@ class EntityMapper implements EventAwareInterface
     /**
      * hydrate
      *
-     * @param  array    $data
-     * @param  object|T $entity
+     * @param  array     $data
+     * @param  object|T  $entity
      *
      * @return  object|T
      *
