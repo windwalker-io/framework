@@ -15,6 +15,8 @@ use Windwalker\DOM\DOMElement;
 use Windwalker\Filter\Rule\Length;
 use Windwalker\Form\Field\Concern\ListOptionsTrait;
 
+use Windwalker\Utilities\TypeCast;
+
 use function Windwalker\DOM\h;
 
 /**
@@ -114,5 +116,10 @@ class TextField extends AbstractInputField
         }
 
         return $this->setAttribute('maxlength', (string) $length);
+    }
+
+    protected function castToValidValue(mixed $value): mixed
+    {
+        return TypeCast::toString($value);
     }
 }
