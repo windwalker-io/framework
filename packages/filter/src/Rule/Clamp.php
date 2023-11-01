@@ -13,6 +13,10 @@ namespace Windwalker\Filter\Rule;
 
 use Windwalker\Filter\AbstractFilter;
 
+use Windwalker\Utilities\TypeCast;
+
+use function Windwalker\clamp;
+
 /**
  * The Range class.
  */
@@ -39,14 +43,8 @@ class Clamp extends AbstractFilter
      */
     public function filter(mixed $value): mixed
     {
-        if ($this->min !== null && $value < $this->min) {
-            $value = $this->min;
-        }
+        $value = TypeCast::mustNumeric($value);
 
-        if ($this->max !== null && $value > $this->max) {
-            $value = $this->max;
-        }
-
-        return $value;
+        return clamp($value, $this->min, $this->max);
     }
 }
