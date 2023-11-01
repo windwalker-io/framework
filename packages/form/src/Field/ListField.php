@@ -93,14 +93,12 @@ class ListField extends AbstractField
     }
 
     /**
-     * getValue
+     * @param  mixed  $value
      *
-     * @return  array|string
+     * @return  mixed
      */
-    public function getValue(): mixed
+    protected function castToValidValue(mixed $value): mixed
     {
-        $value = parent::getValue();
-
         if ($this->isMultiple()) {
             if (is_array($value)) {
                 return $value;

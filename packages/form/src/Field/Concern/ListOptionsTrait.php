@@ -33,7 +33,7 @@ trait ListOptionsTrait
     /**
      * Property currentGroup.
      *
-     * @var  string
+     * @var  string|null
      */
     protected ?string $currentGroup = null;
 

@@ -81,25 +81,6 @@ class CheckboxesField extends ListField implements InputOptionsInterface
         return $input;
     }
 
-    /**
-     * getValue
-     *
-     * @return  array
-     */
-    public function getValue(): mixed
-    {
-        $value = parent::getValue();
-
-        if (!is_array($value)) {
-            $value = Collection::explode(',', (string) $value)
-                ->map('trim')
-                ->filter('strlen')
-                ->dump();
-        }
-
-        return $value;
-    }
-
     public function isMultiple(): bool
     {
         return true;
