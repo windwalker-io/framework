@@ -352,7 +352,7 @@ class SQLitePlatform extends AbstractPlatform
 
     public function createDatabase(string $name, array $options = []): StatementInterface
     {
-        $as = $options['as'] ?? pathinfo($name, PATHINFO_BASENAME);
+        $as = $options['as'] ?? pathinfo($name, PATHINFO_FILENAME);
 
         return $this->db->execute(
             $this->getGrammar()

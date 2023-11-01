@@ -15,6 +15,7 @@ use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\JsonGrammarInterface;
 use Windwalker\Query\Grammar\MySQLGrammar;
+use Windwalker\Query\Grammar\SQLServerGrammar;
 
 /**
  * Trait JsonConcernTrait
@@ -127,6 +128,10 @@ trait JsonConcernTrait
     public function selectJsonLength(string $expr, string $as = ''): static
     {
         $grammar = $this->getJsonGrammar();
+
+        if ($grammar instanceof SQLServerGrammar) {
+            throw new \LogicException($grammar::class . ' does not supports selectJsonLength()');
+        }
 
         [$column, $paths] = $this->splitColumnAndPaths($expr);
 

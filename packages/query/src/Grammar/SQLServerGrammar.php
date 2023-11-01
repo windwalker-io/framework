@@ -273,9 +273,12 @@ SQL;
 
         return $query->expr(
             'ISNULL()',
-            $query->createSubQuery()
-                ->selectRaw('COUNT(*)')
-                ->from(expr('OPENJSON()', qn($column, $query), $path)),
+            $query->clause(
+                '()',
+                $query->createSubQuery()
+                    ->selectRaw('COUNT(*)')
+                    ->from(expr('OPENJSON()', qn($column, $query), $path))
+            ),
             0
         );
     }
