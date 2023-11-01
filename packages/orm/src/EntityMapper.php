@@ -471,10 +471,6 @@ class EntityMapper implements EventAwareInterface
 
         $metadata->getRelationManager()->save($event->getData(), $entity, $oldData);
 
-        // if (is_object($source)) {
-        //     $this->hydrate($event->getData(), $source);
-        // }
-
         // Event
 
         return $result ?? null;

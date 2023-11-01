@@ -485,26 +485,29 @@ class EntityMetadata implements EventAwareInterface
                     }
                 }
             );
-            $this->on(
-                BeforeUpdateWhereEvent::class,
-                $unwatches[BeforeUpdateWhereEvent::class] = function (BeforeUpdateWhereEvent $event) use (
-                    $column,
-                    $method
-                ) {
-                    $val = $event->getData()[$column] ?? null;
 
-                    $watchEvent = Watch::createWatchEvent($event, $val);
+            if ($options & Watch::INCLUDE_UPDATE_WHERE) {
+                $this->on(
+                    BeforeUpdateWhereEvent::class,
+                    $unwatches[BeforeUpdateWhereEvent::class] = function (BeforeUpdateWhereEvent $event) use (
+                        $column,
+                        $method
+                    ) {
+                        $val = $event->getData()[$column] ?? null;
 
-                    $this->getORM()->getAttributesResolver()
-                        ->call(
-                            $method,
-                            [
-                                $watchEvent::class => $watchEvent,
-                                'event' => $watchEvent,
-                            ]
-                        );
-                }
-            );
+                        $watchEvent = Watch::createWatchEvent($event, $val);
+
+                        $this->getORM()->getAttributesResolver()
+                            ->call(
+                                $method,
+                                [
+                                    $watchEvent::class => $watchEvent,
+                                    'event' => $watchEvent,
+                                ]
+                            );
+                    }
+                );
+            }
         } else {
             $this->on(
                 AfterSaveEvent::class,
@@ -536,26 +539,29 @@ class EntityMetadata implements EventAwareInterface
                     }
                 }
             );
-            $this->on(
-                AfterUpdateWhereEvent::class,
-                $unwatches[AfterUpdateWhereEvent::class] = function (AfterUpdateWhereEvent $event) use (
-                    $column,
-                    $method
-                ) {
-                    $val = $event->getData()[$column] ?? null;
 
-                    $watchEvent = Watch::createWatchEvent($event, $val);
+            if ($options & Watch::INCLUDE_UPDATE_WHERE) {
+                $this->on(
+                    AfterUpdateWhereEvent::class,
+                    $unwatches[AfterUpdateWhereEvent::class] = function (AfterUpdateWhereEvent $event) use (
+                        $column,
+                        $method
+                    ) {
+                        $val = $event->getData()[$column] ?? null;
 
-                    $this->getORM()->getAttributesResolver()
-                        ->call(
-                            $method,
-                            [
-                                $watchEvent::class => $watchEvent,
-                                'event' => $watchEvent,
-                            ]
-                        );
-                }
-            );
+                        $watchEvent = Watch::createWatchEvent($event, $val);
+
+                        $this->getORM()->getAttributesResolver()
+                            ->call(
+                                $method,
+                                [
+                                    $watchEvent::class => $watchEvent,
+                                    'event' => $watchEvent,
+                                ]
+                            );
+                    }
+                );
+            }
         }
 
         return function () use ($unwatches) {
