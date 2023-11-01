@@ -21,7 +21,7 @@ class Platform
     /**
      * Property os.
      *
-     * @var string
+     * @var string|null
      */
     protected ?string $os = null;
 
@@ -134,7 +134,7 @@ class Platform
     /**
      * Method to set property os
      *
-     * @param  string  $os
+     * @param  string|null  $os
      *
      * @return  static  Return self to support chaining.
      */
@@ -170,8 +170,6 @@ class Platform
     }
 
     /**
-     * getWorkingDirectory
-     *
      * @return  string
      */
     public function getWorkingDirectory(): string
@@ -192,8 +190,6 @@ class Platform
     }
 
     /**
-     * getDocumentRoot
-     *
      * @return  string
      */
     public function getServerPublicRoot(): string
@@ -202,8 +198,6 @@ class Platform
     }
 
     /**
-     * getEntry
-     *
      * @param  bool  $full
      *
      * @return  string
@@ -230,8 +224,6 @@ class Platform
     }
 
     /**
-     * getRequestUri
-     *
      * @param  bool  $withParams
      *
      * @return  string
@@ -246,8 +238,6 @@ class Platform
     }
 
     /**
-     * getHost
-     *
      * @return  string
      */
     public function getHost(): string
@@ -256,8 +246,6 @@ class Platform
     }
 
     /**
-     * getPort
-     *
      * @return  string
      */
     public function getPort(): string
@@ -266,8 +254,6 @@ class Platform
     }
 
     /**
-     * getScheme
-     *
      * @return  string
      */
     public function getScheme(): string
@@ -283,7 +269,7 @@ class Platform
      *
      * @return  mixed
      */
-    protected function getServerParam(string $key, $default = null): mixed
+    protected function getServerParam(string $key, mixed $default = null): mixed
     {
         return $this->server[$key] ?? $default;
     }

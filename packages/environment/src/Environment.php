@@ -28,7 +28,7 @@ class Environment
     /**
      * Class init.
      *
-     * @param  Platform  $platform
+     * @param  Platform|null  $platform
      */
     public function __construct(?Platform $platform = null)
     {
