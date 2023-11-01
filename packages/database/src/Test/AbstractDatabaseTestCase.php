@@ -66,7 +66,7 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
 
                 $fp = fopen($logFile, 'ab+');
 
-                fwrite($fp, $event->getSql() . ";\n\n");
+                fwrite($fp, $event->getDebugQueryString() . ";\n\n");
 
                 fclose($fp);
             }

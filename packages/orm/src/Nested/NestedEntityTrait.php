@@ -26,13 +26,13 @@ trait NestedEntityTrait
     protected mixed $parentId = null;
 
     #[Column('lft')]
-    protected ?int $lft = null;
+    protected int $lft = 0;
 
     #[Column('rgt')]
-    protected ?int $rgt = null;
+    protected int $rgt = 0;
 
     #[Column('level')]
-    protected ?int $level = null;
+    protected int $level = 0;
 
     // #[Column('path')]
     // protected string $path = '';

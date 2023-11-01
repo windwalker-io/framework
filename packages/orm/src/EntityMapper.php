@@ -291,7 +291,7 @@ class EntityMapper implements EventAwareInterface
         $pk = $this->getMainKey();
         $metadata = $this->getMetadata();
         $aiColumn = $this->getAutoIncrementColumn();
-        $className = $metadata->getClassName();
+        // $className = $metadata->getClassName();
 
         TypeAssert::assert(
             is_object($source) || is_array($source),
@@ -470,6 +470,10 @@ class EntityMapper implements EventAwareInterface
         );
 
         $metadata->getRelationManager()->save($event->getData(), $entity, $oldData);
+
+        // if (is_object($source)) {
+        //     $this->hydrate($event->getData(), $source);
+        // }
 
         // Event
 

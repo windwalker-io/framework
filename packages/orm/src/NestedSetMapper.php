@@ -20,6 +20,7 @@ use Windwalker\ORM\Event\BeforeDeleteEvent;
 use Windwalker\ORM\Event\BeforeSaveEvent;
 use Windwalker\ORM\Exception\NestedHandleException;
 use Windwalker\ORM\Metadata\EntityMetadata;
+use Windwalker\ORM\Nested\MultiTreeNestedEntityInterface;
 use Windwalker\ORM\Nested\NestedEntityInterface;
 use Windwalker\ORM\Nested\NestedPathableInterface;
 use Windwalker\ORM\Nested\NestedPosition;
@@ -27,6 +28,7 @@ use Windwalker\ORM\Nested\Position;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
 
@@ -127,6 +129,10 @@ class NestedSetMapper extends EntityMapper
                 ->where('n.lft', 'between', [qn('p.lft'), qn('p.rgt')])
                 ->where('n.' . $key, '=', $pk)
                 ->where('p.' . $key, '!=', $pk)
+                ->tapIf(
+                    $this->isMultiTree(),
+                    fn (Query $query) => $query->where('n.root_id', $item->getRootId())
+                )
                 ->order('p.lft')
         );
 
@@ -147,6 +153,10 @@ class NestedSetMapper extends EntityMapper
                 )
                 ->where('n.lft', 'between', [qn('p.lft'), qn('p.rgt')])
                 ->where('p.' . $key, '=', $pk)
+                ->tapIf(
+                    $this->isMultiTree(),
+                    fn (Query $query) => $query->where('n.root_id', $item->getRootId())
+                )
                 ->order('n.lft')
         );
 
@@ -183,6 +193,10 @@ class NestedSetMapper extends EntityMapper
             )
             ->where('n.lft', 'between', [qn('p.lft'), qn('p.rgt')])
             ->where('n.' . $key, '=', $pk)
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->whereRaw('n.root_id = p.root_id')
+            )
             ->order('p.lft')
             ->all($metadata->getClassName());
     }
@@ -218,6 +232,10 @@ class NestedSetMapper extends EntityMapper
             ->where('n.lft', 'between', [qn('p.lft'), qn('p.rgt')])
             ->where('n.' . $key, '=', $pk)
             ->where('p.' . $key, '!=', $pk)
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->whereRaw('n.root_id = p.root_id')
+            )
             ->order('p.lft')
             ->all($metadata->getClassName());
     }
@@ -252,6 +270,10 @@ class NestedSetMapper extends EntityMapper
             )
             ->where('n.lft', 'between', [qn('p.lft'), qn('p.rgt')])
             ->where('p.' . $key, '=', $pk)
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->whereRaw('n.root_id = p.root_id')
+            )
             ->order('n.lft')
             ->all($metadata->getClassName());
     }
@@ -361,7 +383,7 @@ class NestedSetMapper extends EntityMapper
             }
 
             // Get the reposition data for shifting the tree and re-inserting the node.
-            [$newData, $leftWhere, $rightWhere] = $this->getTreeRepositionData(
+            [$newData, $leftWhere, $rightWhere, $baseWhere] = $this->getTreeRepositionData(
                 $reference,
                 2,
                 $position->getPosition()
@@ -371,12 +393,14 @@ class NestedSetMapper extends EntityMapper
             $this->update()
                 ->set('lft', raw('lft + 2'))
                 ->where(...$leftWhere)
+                ->where($baseWhere)
                 ->execute();
 
             // Create space in the tree at the new location for the new node in right ids.
             $this->update()
                 ->set('rgt', raw('rgt + 2'))
                 ->where(...$rightWhere)
+                ->where($baseWhere)
                 ->execute();
 
             $data = array_merge($data, $newData);
@@ -393,10 +417,12 @@ class NestedSetMapper extends EntityMapper
              * or just updating its data fields.
              */
 
+            $reference = $this->findOne($position->getReferenceId(), $className);
+
             // If the location has been set, move the node to its new location.
             $entity = $this->moveByReference(
                 $data,
-                $position->getReferenceId(),
+                $reference,
                 $position->getPosition()
             );
 
@@ -427,13 +453,7 @@ class NestedSetMapper extends EntityMapper
         $source = $event->getSource();
 
         if (is_array($source) && ($source['is_root'] ?? null)) {
-            $root = $this->select('id')
-                ->where('parent_id', $this->getEmptyParentId())
-                ->result();
-
-            if ($root) {
-                throw new NestedHandleException('Root has already exists.');
-            }
+            $this->checkRootExists();
         } else {
             // Parent ID should not be NULL
             if (!$parentId) {
@@ -488,9 +508,8 @@ class NestedSetMapper extends EntityMapper
     public function move(array|object $source, int $delta, mixed $conditions = []): false|NestedEntityInterface
     {
         $node = $this->sourceToEntity($source);
-        $k = $this->getMainKey();
 
-        $query = $this->select($k)
+        $query = $this->select()
             ->where('parent_id', $node->getParentId())
             ->where($this->conditionsToWheres($conditions));
 
@@ -510,10 +529,10 @@ class NestedSetMapper extends EntityMapper
             );
         }
 
-        $referenceId = $query->result();
+        $reference = $query->get($this->getMetadata()->getClassName());
 
-        if ($referenceId) {
-            return $this->moveByReference($node, $referenceId, $position);
+        if ($reference) {
+            return $this->moveByReference($node, $reference, $position);
         }
 
         return false;
@@ -523,7 +542,7 @@ class NestedSetMapper extends EntityMapper
      * moveByReference
      *
      * @param  array|object    $source
-     * @param  mixed           $referenceId
+     * @param  mixed           $reference
      * @param  NestedPosition  $position
      *
      * @return NestedEntityInterface
@@ -532,29 +551,52 @@ class NestedSetMapper extends EntityMapper
      */
     public function moveByReference(
         mixed $source,
-        mixed $referenceId,
+        mixed $reference,
         NestedPosition $position
     ): NestedEntityInterface {
+        /** @var NestedEntityInterface|MultiTreeNestedEntityInterface $node */
         $node = $this->sourceToEntity($source);
 
         $k = $this->getMainKey();
 
         $className = $this->getMetadata()->getClassName();
 
+        // We are moving the tree relative to a reference node.
+        if ($reference) {
+            if (!$reference instanceof NestedEntityInterface) {
+                $reference = $this->mustFindOne($reference, $className);
+            }
+        } else {
+            // We are moving the tree to be the last child of the root node
+            // Get the last root node as the reference node.
+            /** @var NestedEntityInterface $reference */
+            $reference = $this->select($this->getMainKey(), 'parent_id', 'level', 'lft', 'rgt')
+                ->where('parent_id', $this->getEmptyParentId())
+                ->order('lft', 'DESC')
+                ->limit(1)
+                ->get($className);
+        }
+
+        /** @var NestedEntityInterface|MultiTreeNestedEntityInterface $reference */
+
         // Get the ids of child nodes.
         $children = $this->select($k)
             ->where('lft', 'between', [$node->getLft(), $node->getRgt()])
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->where('root_id', $reference->getRootId())
+            )
             ->loadColumn()
-            ?->dump() ?: [];
+            ->dump();
 
         // Cannot move the node to be a child of itself.
-        if (in_array($referenceId, $children)) {
+        if (in_array($reference->getPrimaryKeyValue(), $children)) {
             throw new NestedHandleException(
                 sprintf(
                     '%s::moveByReference(%d, %s) failed parenting to child.',
                     static::class,
-                    $referenceId,
-                    $position
+                    $reference->getPrimaryKeyValue(),
+                    $position->name
                 )
             );
         }
@@ -565,6 +607,11 @@ class NestedSetMapper extends EntityMapper
         $this->update()
             ->set('lft', raw('lft * (-1)'))
             ->set('rgt', raw('rgt * (-1)'))
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->set('root_id', $reference->getRootId())
+                    ->where('root_id', $node->getRootId())
+            )
             ->where('lft', 'between', [$node->getLft(), $node->getRgt()])
             ->execute();
 
@@ -576,48 +623,31 @@ class NestedSetMapper extends EntityMapper
         $this->update()
             ->set('lft', raw('lft - ' . $node->getWidth()))
             ->where('lft', '>', $node->getRgt())
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->where('root_id', $node->getRootId())
+            )
             ->execute();
 
         // Compress the right values.
         $this->update()
             ->set('rgt', raw('rgt - ' . $node->getWidth()))
             ->where('rgt', '>', $node->getRgt())
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->where('root_id', $node->getRootId())
+            )
             ->execute();
 
-        // We are moving the tree relative to a reference node.
-        if ($referenceId) {
-            // Get the reference node by primary key.
-            $reference = $this->findOne($referenceId);
+        // Re-load reference node since it may be updated above.
+        $reference = $this->mustFindOne($reference->getPrimaryKeyValue());
 
-            if (!$reference) {
-                throw new NestedHandleException(
-                    "The reference ID: \"$referenceId\" not found."
-                );
-            }
-
-            // Get the reposition data for shifting the tree and re-inserting the node.
-            [$newData, $leftWhere, $rightWhere] = $this->getTreeRepositionData(
-                $reference,
-                $node->getWidth(),
-                $position
-            );
-        } else {
-            // We are moving the tree to be the last child of the root node
-            // Get the last root node as the reference node.
-            /** @var NestedEntityInterface $reference */
-            $reference = $this->select($this->getMainKey(), 'parent_id', 'level', 'lft', 'rgt')
-                ->where('parent_id', $this->getEmptyParentId())
-                ->order('lft', 'DESC')
-                ->limit(1)
-                ->get($className);
-
-            // Get the reposition data for re-inserting the node after the found root.
-            [$newData, $leftWhere, $rightWhere] = $this->getTreeRepositionData(
-                $reference,
-                $node->getWidth(),
-                $position
-            );
-        }
+        // Get the reposition data for re-inserting the node after the found root.
+        [$newData, $leftWhere, $rightWhere, $baseWhere] = $this->getTreeRepositionData(
+            $reference,
+            $node->getWidth(),
+            $position
+        );
 
         /*
          * Create space in the nested sets at the new location for the moved sub-tree.
@@ -627,12 +657,14 @@ class NestedSetMapper extends EntityMapper
         $this->update()
             ->set('lft', raw('lft + ' . $node->getWidth()))
             ->where(...$leftWhere)
+            ->where($baseWhere)
             ->execute();
 
         // Shift right values.
         $this->update()
             ->set('rgt', raw('rgt + ' . $node->getWidth()))
             ->where(...$rightWhere)
+            ->where($baseWhere)
             ->execute();
 
         /*
@@ -649,6 +681,7 @@ class NestedSetMapper extends EntityMapper
             ->set('lft', raw(((int) $offset) . ' - lft'))
             ->set('level', raw('level + ' . ((int) $levelOffset)))
             ->where('lft', '<', 0)
+            ->where($baseWhere)
             ->execute();
 
         // Set the correct parent id for the moved node if required.
@@ -678,9 +711,8 @@ class NestedSetMapper extends EntityMapper
     {
         $entity = $this->sourceToEntity($source);
 
-        $this->setPositionPrependTo($source, $referenceId)->saveOne($entity);
-
-        return $entity;
+        return $this->setPositionPrependTo($source, $referenceId)
+            ->saveOne($entity);
     }
 
     /**
@@ -695,9 +727,8 @@ class NestedSetMapper extends EntityMapper
     {
         $entity = $this->sourceToEntity($source);
 
-        $this->setPositionAppendTo($source, $referenceId)->saveOne($entity);
-
-        return $entity;
+        return $this->setPositionAppendTo($source, $referenceId)
+            ->saveOne($entity);
     }
 
     /**
@@ -712,9 +743,8 @@ class NestedSetMapper extends EntityMapper
     {
         $entity = $this->sourceToEntity($source);
 
-        $this->setPositionBeforeOf($source, $referenceId)->saveOne($entity);
-
-        return $entity;
+        return $this->setPositionBeforeOf($source, $referenceId)
+            ->saveOne($entity);
     }
 
     /**
@@ -729,16 +759,15 @@ class NestedSetMapper extends EntityMapper
     {
         $entity = $this->sourceToEntity($source);
 
-        $this->setPositionAfterOf($source, $referenceId)->saveOne($entity);
-
-        return $entity;
+        return $this->setPositionAfterOf($source, $referenceId)
+            ->saveOne($entity);
     }
 
     protected function postProcessDelete(AfterDeleteEvent $event): void
     {
         $this->depth++;
 
-        /** @var ?NestedEntityInterface $entity */
+        /** @var NestedEntityInterface|MultiTreeNestedEntityInterface|null $entity */
         $entity = $event->getEntity();
 
         if ($entity === null) {
@@ -750,6 +779,10 @@ class NestedSetMapper extends EntityMapper
             // For triggering delete events, we loop all children and delete per-item.
             $iter = $this->select()
                 ->where('lft', 'between', [$entity->getLft(), $entity->getRgt()])
+                ->tapIf(
+                    $this->isMultiTree(),
+                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                )
                 ->getIterator($this->getMetadata()->getClassName());
 
             foreach ($iter as $item) {
@@ -759,6 +792,10 @@ class NestedSetMapper extends EntityMapper
             // No events found, just delete all children.
             $this->delete()
                 ->where('lft', 'between', [$entity->getLft(), $entity->getRgt()])
+                ->tapIf(
+                    $this->isMultiTree(),
+                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                )
                 ->execute();
         }
 
@@ -768,12 +805,20 @@ class NestedSetMapper extends EntityMapper
             $this->update()
                 ->set('lft', raw('lft - ' . $entity->getWidth()))
                 ->where('lft', '>', $entity->getLft())
+                ->tapIf(
+                    $this->isMultiTree(),
+                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                )
                 ->execute();
 
             // Compress the right values.
             $this->update()
                 ->set('rgt', raw('rgt - ' . $entity->getWidth()))
                 ->where('rgt', '>', $entity->getRgt())
+                ->tapIf(
+                    $this->isMultiTree(),
+                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                )
                 ->execute();
         }
 
@@ -783,11 +828,12 @@ class NestedSetMapper extends EntityMapper
     /**
      * @return  NestedEntityInterface|T|null
      */
-    public function getRoot(): ?NestedEntityInterface
+    public function getRoot(mixed $conditions = []): ?NestedEntityInterface
     {
         /** @var NestedEntityInterface $root */
         $root = $this->select()
             ->where('parent_id', $this->getEmptyParentId())
+            ->where($this->conditionsToWheres($conditions))
             ->get($this->getMetadata()->getClassName());
 
         return $root;
@@ -822,14 +868,10 @@ class NestedSetMapper extends EntityMapper
         }
 
         // Build the structure of the recursive query.
-        $query = $this->cacheStorage['rebuild.sql'] ??= $this->select()
-            ->whereRaw('parent_id = :parent_id')
-            ->order('parent_id')
-            ->order('lft');
+        $query = $this->getRebuildQuery($parentId);
 
         // Assemble the query to find all children of this node.
-        $children = $query->bind('parent_id', $parentId)
-            ->all($this->getMetadata()->getClassName());
+        $children = $query->all($this->getMetadata()->getClassName());
 
         // The right value of this node is the left value + 1
         $rgt = $lft + 1;
@@ -859,6 +901,10 @@ class NestedSetMapper extends EntityMapper
             ->set('level', $level)
             ->pipeIf($buildPath, fn(Query $query) => $query->set('path', $path))
             ->where($this->getMainKey(), $parentId)
+            ->tapIf(
+                $this->isMultiTree(),
+                fn (Query $query) => $query->where('root_id', $parent->getRootId())
+            )
             ->execute();
 
         // Return the right value of this node + 1.
@@ -909,14 +955,10 @@ class NestedSetMapper extends EntityMapper
             ->execute();
 
         // Build the structure of the recursive query.
-        $query = $this->cacheStorage['rebuild.sql'] ??= $this->select()
-            ->whereRaw('parent_id = :parent_id')
-            ->order('parent_id')
-            ->order('lft');
+        $query = $this->getRebuildQuery($pk);
 
         // Assemble the query to find all children of this node.
-        $children = $query->bind('parent_id', $pk)
-            ->all($this->getMetadata()->getClassName());
+        $children = $query->all($this->getMetadata()->getClassName());
 
         /** @var NestedPathableInterface $child */
         foreach ($children as $child) {
@@ -944,23 +986,9 @@ class NestedSetMapper extends EntityMapper
         }
 
         // Get the aliases for the path from the node to the root node.
-        $segments = $this->getORM()
-            ->select('p.alias')
-            ->from(
-                [
-                    [$this->getMetadata()->getClassName(), 'n'],
-                    [$this->getMetadata()->getClassName(), 'p'],
-                ]
-            )
-            ->where('n.lft', 'between', [qn('p.lft'), qn('p.rgt')])
-            ->where('n.' . $this->getMainKey(), $pk)
-            ->order('p.lft')
-            ->loadColumn();
-
-        // Make sure to remove the root path if it exists in the list.
-        if ($segments->first() === 'root') {
-            $segments = $segments->removeFirst();
-        }
+        $path = $this->getPath($pk);
+        $segments = $path->column('alias');
+        $segments->shift();
 
         // Build the path.
         return (string) $segments->implode('/')->trim('/\\');
@@ -988,27 +1016,41 @@ class NestedSetMapper extends EntityMapper
         );
 
         if ($this->isPathable()) {
-            $data['path'] = '';
-            $data['alias'] = 'root';
+            $data['path'] ??= '';
+            $data['alias'] ??= 'root';
         }
 
         /** @var NestedEntityInterface $root */
         $root = $this->createOne($data);
+
+        if ($this->isMultiTree()) {
+            $this->updateWhere(
+                ['root_id' => $root->getPrimaryKeyValue()],
+                ['id' => $root->getPrimaryKeyValue()]
+            );
+        }
 
         return $root;
     }
 
     /**
      * @param  array  $data
+     * @param  array  $condFields
      *
-     * @return  NestedEntityInterface|T
+     * @return NestedEntityInterface
      *
      * @throws \JsonException
      * @throws \ReflectionException
      */
-    public function createRootIfNotExist(array $data = []): NestedEntityInterface
+    public function createRootIfNotExist(array $data = [], array $condFields = ['title']): NestedEntityInterface
     {
-        $root = $this->getRoot();
+        $conditions = [];
+
+        if ($this->isMultiTree()) {
+            $conditions = Arr::only($data, $condFields);
+        }
+
+        $root = $this->getRoot($conditions);
 
         if ($root) {
             return $root;
@@ -1038,6 +1080,47 @@ class NestedSetMapper extends EntityMapper
 
         // Get the node by id.
         return $this->findOne($pk);
+    }
+
+    /**
+     * @param  mixed|null  $conditions
+     *
+     * @return  void
+     */
+    protected function checkRootExists(mixed $conditions = null): void
+    {
+        $root = $this->getRoot($conditions);
+
+        if ($root) {
+            throw new NestedHandleException('Root has already exists.');
+        }
+    }
+
+    /**
+     * @param  int|null  $parentId
+     *
+     * @return  SelectorQuery
+     */
+    protected function getRebuildQuery(?int $parentId): SelectorQuery
+    {
+        $query = $this->cacheStorage['rebuild.sql'] ??= $this->createSelectorQuery()
+            ->select('n.*')
+            ->from(
+                [
+                    [$this->getMetadata()->getClassName(), 'n'],
+                    [$this->getMetadata()->getClassName(), 'p'],
+                ]
+            )
+            ->whereRaw('n.parent_id = p.id')
+            ->whereRaw('n.parent_id = :parent_id')
+            ->tapIf(
+                $this->isMultiTree(),
+                fn(Query $query) => $query->whereRaw('n.root_id = p.root_id')
+            )
+            ->order('n.parent_id')
+            ->order('n.lft');
+
+        return $query->bind('parent_id', $parentId);
     }
 
     private function sourceToPk(mixed $source): mixed
@@ -1071,10 +1154,10 @@ class NestedSetMapper extends EntityMapper
     }
 
     protected function getTreeRepositionData(
-        NestedEntityInterface $reference,
+        NestedEntityInterface|MultiTreeNestedEntityInterface $reference,
         int $width,
         NestedPosition $position
-    ): ?array {
+    ): array {
         if ($width < 2) {
             throw new NestedHandleException('Node width less than 2.');
         }
@@ -1104,6 +1187,12 @@ class NestedSetMapper extends EntityMapper
                 break;
 
             case Position::BEFORE:
+                if ($reference->isRoot()) {
+                    throw new InvalidArgumentException(
+                        'Can not set before a root node.'
+                    );
+                }
+
                 $leftWhere = ['lft', '>=', $reference->getLft()];
                 $rightWhere = ['rgt', '>=', $reference->getLft()];
 
@@ -1115,6 +1204,12 @@ class NestedSetMapper extends EntityMapper
 
             case Position::AFTER:
             default:
+                if ($reference->isRoot()) {
+                    throw new InvalidArgumentException(
+                        'Can not set after a root node.'
+                    );
+                }
+
                 $leftWhere = ['lft', '>', $reference->getRgt()];
                 $rightWhere = ['rgt', '>', $reference->getRgt()];
 
@@ -1125,11 +1220,28 @@ class NestedSetMapper extends EntityMapper
                 break;
         }
 
-        return [$result, $leftWhere, $rightWhere];
+        $baseWhere = [];
+
+        if ($this->isMultiTree()) {
+            $result['root_id'] = $rootId = $reference->isRoot()
+                ? $reference->getPrimaryKeyValue()
+                : $reference->getRootId();
+
+            $baseWhere = [
+                ['root_id', $rootId]
+            ];
+        }
+
+        return [$result, $leftWhere, $rightWhere, $baseWhere];
     }
 
     public function emitEvent(string|EventInterface $event, array $args = []): EventInterface
     {
         return parent::emitEvent($event, $args);
+    }
+
+    public function isMultiTree(): bool
+    {
+        return is_a($this->getMetadata()->getClassName(), MultiTreeNestedEntityInterface::class, true);
     }
 }
