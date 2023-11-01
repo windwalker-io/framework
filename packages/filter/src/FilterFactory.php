@@ -15,6 +15,7 @@ use OutOfRangeException;
 use Windwalker\Filter\Rule\Absolute;
 use Windwalker\Filter\Rule\Alnum;
 use Windwalker\Filter\Rule\CastTo;
+use Windwalker\Filter\Rule\Clamp;
 use Windwalker\Filter\Rule\Cmd;
 use Windwalker\Filter\Rule\DefaultValue;
 use Windwalker\Filter\Rule\EmailAddress;
@@ -230,6 +231,13 @@ class FilterFactory
         $this->addFactory(
             'range',
             fn(array $options) => new Range(
+                TypeCast::tryNumeric($options['min'] ?? null, true),
+                TypeCast::tryNumeric($options['max'] ?? null, true)
+            )
+        );
+        $this->addFactory(
+            'clamp',
+            fn(array $options) => new Clamp(
                 TypeCast::tryNumeric($options['min'] ?? null, true),
                 TypeCast::tryNumeric($options['max'] ?? null, true)
             )

@@ -97,7 +97,7 @@ OUT;
         );
     }
 
-    public function clampProvider(): array
+    public static function clampProvider(): array
     {
         return [
             [
