@@ -31,7 +31,7 @@ class Regex extends AbstractRegexFilter
      * @param  string|null  $regex
      * @param  string       $type
      */
-    public function __construct(?string $regex = null, string $type = self::TYPE_REPLACE)
+    public function __construct(?string $regex = null, string $type = self::TYPE_MATCH)
     {
         $this->regex = $regex;
         $this->type = $type;

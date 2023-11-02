@@ -29,7 +29,7 @@ abstract class AbstractRegexFilter extends AbstractFilter
     {
         $type = $this->type;
 
-        return $this->$type($value);
+        return $this->$type((string) $value);
     }
 
     /**
@@ -41,7 +41,9 @@ abstract class AbstractRegexFilter extends AbstractFilter
 
     public function match(string $value): string
     {
-        return preg_match($this->getRegex(), $value)[0] ?? '';
+        preg_match($this->getRegex(), $value, $matches);
+
+        return $matches[0] ?? '';
     }
 
     /**
