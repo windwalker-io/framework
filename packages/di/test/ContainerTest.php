@@ -32,9 +32,11 @@ use Windwalker\DI\Test\Injection\StubService;
 use Windwalker\DI\Test\Mock\Bar;
 use Windwalker\DI\Test\Mock\Bar2;
 use Windwalker\DI\Test\Mock\Foo;
+use Windwalker\DI\Test\Mock\FooEnum;
 use Windwalker\DI\Test\Mock\IntersectionTypeStub;
 use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Mock\UnionTypeStub;
+use Windwalker\DI\Test\Mock\WithEnum;
 use Windwalker\DI\Test\Mock\WithVariadic;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 use Windwalker\Scalars\ArrayObject;
@@ -467,7 +469,7 @@ class ContainerTest extends TestCase
         self::assertEquals(4, $obj->yoo->getCounter());
     }
 
-    public function testNewInstanceWithVariadic()
+    public function testNewInstanceWithVariadic(): void
     {
         $container = new Container();
         $v = $container->newInstance(
@@ -482,6 +484,16 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(StringObject::class, $v->args[0]);
         self::assertEquals('bar', $v->args['foo']);
         self::assertInstanceOf(Collection::class, $v->args[Collection::class]);
+    }
+
+    public function testNewInstanceWithEnum(): void
+    {
+        $container = new Container();
+        $container->share(FooEnum::class, FooEnum::B);
+
+        $v = $container->newInstance(WithEnum::class);
+
+        self::assertEquals(FooEnum::B, $v->foo);
     }
 
     /**
