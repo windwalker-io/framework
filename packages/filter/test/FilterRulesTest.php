@@ -100,6 +100,12 @@ class FilterRulesTest extends TestCase
                 'Test email',
             ],
             [
+                EmailAddress::class,
+                'name@local',
+                'name@local',
+                'Test mail without dot',
+            ],
+            [
                 IPV4::class,
                 'd140. 12/3. b567. 890',
                 '140.123.567.890',
@@ -231,6 +237,12 @@ class FilterRulesTest extends TestCase
             'Email T' => [
                 EmailAddress::class,
                 'qwe.qwe@gmail.com',
+                true,
+                'Test email',
+            ],
+            'Email without dot' => [
+                EmailAddress::class,
+                'name@local',
                 true,
                 'Test email',
             ],
