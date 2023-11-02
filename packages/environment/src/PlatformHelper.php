@@ -15,15 +15,12 @@ namespace Windwalker\Environment;
  * The ServerHelper class.
  *
  * @since  2.0
+ *
+ * @deprecated Use Environment instead.
  */
 class PlatformHelper
 {
-    /**
-     * Property server.
-     *
-     * @var Platform|null
-     */
-    protected static ?Platform $platform = null;
+    protected static Environment $environment;
 
     /**
      * isWindows
@@ -32,7 +29,7 @@ class PlatformHelper
      */
     public static function isWindows(): bool
     {
-        return static::getPlatform()->isWindows();
+        return static::getEnvironment()->isWindows();
     }
 
     /**
@@ -42,7 +39,7 @@ class PlatformHelper
      */
     public static function isLinux(): bool
     {
-        return static::getPlatform()->isLinux();
+        return static::getEnvironment()->isLinux();
     }
 
     /**
@@ -52,32 +49,14 @@ class PlatformHelper
      */
     public static function isUnix(): bool
     {
-        return static::getPlatform()->isUnix();
+        return static::getEnvironment()->isUnix();
     }
 
     /**
-     * getServer
-     *
-     * @return  Platform
+     * @return  Environment
      */
-    public static function getPlatform(): Platform
+    public static function getEnvironment(): Environment
     {
-        if (!static::$platform) {
-            static::$platform = new Platform();
-        }
-
-        return static::$platform;
-    }
-
-    /**
-     * Method to set property server
-     *
-     * @param  Platform  $platform
-     *
-     * @return  void
-     */
-    public static function setPlatform(Platform $platform): void
-    {
-        static::$platform = $platform;
+        return static::$environment ??= new Environment();
     }
 }

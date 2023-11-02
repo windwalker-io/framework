@@ -21,16 +21,16 @@ class Environment
     /**
      * Property os.
      *
-     * @var string|null
+     * @var string
      */
-    protected ?string $os = null;
+    protected static string $os;
 
     /**
      * Property uname.
      *
      * @var  string
      */
-    protected string $uname = PHP_OS;
+    protected static string $uname = PHP_OS;
 
     /**
      * Property globals.
@@ -53,7 +53,7 @@ class Environment
     /**
      * @return  bool
      */
-    public function isWebServer(): bool
+    public static function isWebServer(): bool
     {
         return PhpHelper::isWebServer();
     }
@@ -63,7 +63,7 @@ class Environment
      *
      * @return  bool
      */
-    public function isCli(): bool
+    public static function isCli(): bool
     {
         return PhpHelper::isCli();
     }
@@ -75,14 +75,9 @@ class Environment
      *
      * @return  string
      */
-    public function getOS(): string
+    public static function getOS(): string
     {
-        if (!$this->os) {
-            // Detect the native operating system type.
-            $this->os = strtoupper(substr($this->uname, 0, 3));
-        }
-
-        return $this->os;
+        return static::$os ??= strtoupper(substr(static::$uname, 0, 3));
     }
 
     /**
@@ -90,9 +85,9 @@ class Environment
      *
      * @return  bool
      */
-    public function isWindows(): bool
+    public static function isWindows(): bool
     {
-        return $this->getOS() === 'WIN';
+        return static::getOS() === 'WIN';
     }
 
     /**
@@ -102,7 +97,7 @@ class Environment
      *
      * @return  bool
      */
-    public function isUnix(): bool
+    public static function isUnix(): bool
     {
         $unames = [
             'CYG',
@@ -117,7 +112,7 @@ class Environment
             'UNI',
         ];
 
-        return in_array($this->getOS(), $unames);
+        return in_array(static::getOS(), $unames);
     }
 
     /**
@@ -127,21 +122,17 @@ class Environment
      */
     public function isLinux(): bool
     {
-        return $this->getOS() === 'LIN';
+        return static::getOS() === 'LIN';
     }
 
     /**
      * Method to set property os
      *
-     * @param  string|null  $os
-     *
-     * @return  static  Return self to support chaining.
+     * @param  string  $os
      */
-    public function setOS(?string $os): static
+    public static function setOS(string $os): void
     {
-        $this->os = $os;
-
-        return $this;
+        static::$os = $os;
     }
 
     /**
@@ -149,23 +140,19 @@ class Environment
      *
      * @return  string
      */
-    public function getUname(): string
+    public static function getUname(): string
     {
-        return $this->uname;
+        return static::$uname;
     }
 
     /**
-     * Method to set property uname
-     *
      * @param  string  $uname
      *
-     * @return  static  Return self to support chaining.
+     * @return  void
      */
-    public function setUname(string $uname): static
+    public static function setUname(string $uname): void
     {
-        $this->uname = $uname;
-
-        return $this;
+        static::$uname = $uname;
     }
 
     /**
@@ -228,7 +215,7 @@ class Environment
 
         $file = trim($file, '.' . DIRECTORY_SEPARATOR);
 
-        if ($full && $this->isCli()) {
+        if ($full && static::isCli()) {
             $file = $wdir . DIRECTORY_SEPARATOR . $file;
         }
 
