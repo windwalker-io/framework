@@ -19,6 +19,7 @@ use SplQueue;
 use SplStack;
 use Windwalker\Data\Collection;
 use Windwalker\DI\Attributes\AttributeType;
+use Windwalker\DI\Attributes\Autowire;
 use Windwalker\DI\Attributes\Inject;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
@@ -602,7 +603,35 @@ class ContainerTest extends TestCase
      */
     public function testCall(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->prepareSharedObject(StubStack::class);
+
+        /** @var StubStack $stack */
+        $stack = $this->instance->call(
+            function (StubStack $stack) {
+                $stack->add(0, 'A');
+                return $stack;
+            }
+        );
+
+        self::assertEquals(
+            'A',
+            $stack->shift()
+        );
+    }
+
+    /**
+     * @see  Container::call
+     */
+    public function testCallWithNullable(): void
+    {
+        /** @var StubStack $stack */
+        $stack = $this->instance->call(
+            function (StubStack $stack = null) {
+                return $stack;
+            }
+        );
+
+        self::assertNull($stack);
     }
 
     // public function testCallFirstClassCallable(): void
