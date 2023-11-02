@@ -43,7 +43,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.0.0"
+            "php": "8.2.0"
         }
     },
     "provide": {
