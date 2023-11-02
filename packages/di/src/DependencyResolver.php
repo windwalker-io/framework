@@ -23,6 +23,7 @@ use ReflectionType;
 use ReflectionUnionType;
 use TypeError;
 use UnexpectedValueException;
+use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\DI\Exception\DefinitionResolveException;
@@ -227,7 +228,7 @@ class DependencyResolver
                 continue;
             }
 
-            // Prior (4): Argument with numeric keys.
+            // Prior (4): Argument with class type hints.
             $value = &$this->resolveParameterValue(
                 $this->resolveParameterDependency($param, $args, $options),
                 $param
@@ -304,8 +305,11 @@ class DependencyResolver
             $depObject = null;
             $dependencyClassName = $type->getName();
 
-            // Todo: Support enum https://github.com/windwalker-io/framework/issues/1086
-            if (!class_exists($dependencyClassName) && !interface_exists($dependencyClassName)) {
+            if (
+                !class_exists($dependencyClassName)
+                && !interface_exists($dependencyClassName)
+                && !enum_exists($dependencyClassName)
+            ) {
                 // Next dependency
                 continue;
             }
@@ -319,11 +323,11 @@ class DependencyResolver
                 // If an arg provided, use it.
                 return $args[$dependencyClassName];
             } elseif (
-                $autowire
-                && !$dependency->isAbstract()
+                !$dependency->isAbstract()
                 && !$dependency->isInterface()
                 && !$dependency->isTrait()
                 && !$param->allowsNull()
+                && (($isService = static::isService($dependency)) || $autowire)
             ) {
                 // Otherwise we create this object recursive
 
@@ -334,7 +338,11 @@ class DependencyResolver
                     $childArgs = [];
                 }
 
-                $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
+                if ($isService) {
+                    $depObject = $this->container->createSharedObject($dependencyClassName, $childArgs, $options);
+                } else {
+                    $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
+                }
             }
 
             if ($depObject instanceof $dependencyClassName) {
@@ -362,7 +370,7 @@ class DependencyResolver
     }
 
     /**
-     * resolveArgumentValue
+     * Extract wrapper, resolve reference or create object by builder definitions.
      *
      * @param  mixed                $value
      * @param  ReflectionParameter  $param
@@ -370,7 +378,8 @@ class DependencyResolver
      *
      * @return mixed
      *
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @since  3.5.1
      */
     public function &resolveParameterValue(mixed &$value, ReflectionParameter $param, int $options = 0): mixed
@@ -442,5 +451,15 @@ class DependencyResolver
     public static function merge(array ...$args): array
     {
         return array_merge(...$args);
+    }
+
+    /**
+     * @param  ReflectionClass  $dependency
+     *
+     * @return  bool
+     */
+    protected static function isService(ReflectionClass $dependency): bool
+    {
+        return $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF) !== [];
     }
 }

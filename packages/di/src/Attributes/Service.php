@@ -20,7 +20,7 @@ use Windwalker\DI\Container;
 /**
  * The Service class.
  */
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::TARGET_CLASS)]
 class Service extends Inject
 {
     public ?string $name = null;
