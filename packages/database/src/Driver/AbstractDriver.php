@@ -115,12 +115,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
                 'pool' => [],
                 'strict' => true,
                 'modes' => [
-                    'ONLY_FULL_GROUP_BY',
-                    'STRICT_TRANS_TABLES',
-                    'ERROR_FOR_DIVISION_BY_ZERO',
-                    'NO_ENGINE_SUBSTITUTION',
-                    'NO_ZERO_IN_DATE',
-                    'NO_ZERO_DATE',
+                    //
                 ]
             ]
         )
