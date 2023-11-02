@@ -16,4 +16,22 @@ namespace Windwalker\Database\Exception;
  */
 class DatabaseQueryException extends DatabaseException
 {
+    public string $debugSql = '';
+
+    public function getDebugSql(): string
+    {
+        return $this->debugSql;
+    }
+
+    /**
+     * @param  string  $debugSql
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDebugSql(string $debugSql): static
+    {
+        $this->debugSql = $debugSql;
+
+        return $this;
+    }
 }

@@ -111,6 +111,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
                 'collation' => null,
                 'platform' => null,
                 'dsn' => null,
+                'debug' => false,
                 'driverOptions' => [],
                 'pool' => [],
                 'strict' => true,
@@ -273,12 +274,18 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
                 $debugSql = $this->replacePrefix(($query instanceof Query ? $query->render(true) : (string) $query));
 
+                $message = $e->getMessage();
+
+                // if ($this->isDebug()) {
+                //     $message .= ' - SQL: ' . $debugSql;
+                // }
+
                 $event->setException(
-                    new DatabaseQueryException(
-                        $e->getMessage() . ' - SQL: ' . $debugSql,
+                    (new DatabaseQueryException(
+                        $message,
                         (int) $e->getCode(),
                         $e
-                    )
+                    ))->setDebugSql($debugSql)
                 );
             }
         );
@@ -473,6 +480,11 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $this->hydrator = $hydrator;
 
         return $this;
+    }
+
+    public function isDebug(): bool
+    {
+        return (bool) $this->getOption('debug');
     }
 
     /**
