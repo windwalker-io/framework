@@ -323,11 +323,11 @@ class DependencyResolver
                 // If an arg provided, use it.
                 return $args[$dependencyClassName];
             } elseif (
-                !$dependency->isAbstract()
+                $autowire
+                && !$dependency->isAbstract()
                 && !$dependency->isInterface()
                 && !$dependency->isTrait()
                 && !$param->allowsNull()
-                && (($isService = static::isService($dependency)) || $autowire)
             ) {
                 // Otherwise we create this object recursive
 
@@ -338,11 +338,7 @@ class DependencyResolver
                     $childArgs = [];
                 }
 
-                if ($isService) {
-                    $depObject = $this->container->createSharedObject($dependencyClassName, $childArgs, $options);
-                } else {
-                    $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
-                }
+                $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
             }
 
             if ($depObject instanceof $dependencyClassName) {

@@ -19,10 +19,12 @@ use IteratorAggregate;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionClass;
 use ReflectionException;
 use Traversable;
 use UnexpectedValueException;
 use Windwalker\DI\Attributes\AttributesResolver;
+use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\StoreDefinition;
@@ -410,6 +412,19 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $id = $this->resolveAlias($id);
 
         if ($this->storage[$id] ?? null) {
+            return $this->storage[$id];
+        }
+
+        // Get instant service
+        if (class_exists($id) && static::isService(new ReflectionClass($id))) {
+            $this->setDefinition(
+                $id,
+                new StoreDefinition(
+                    $id,
+                    $this->newInstance($id),
+                )
+            );
+
             return $this->storage[$id];
         }
 
@@ -1125,5 +1140,15 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function getLevel(): int
     {
         return $this->level;
+    }
+
+    /**
+     * @param  ReflectionClass  $dependency
+     *
+     * @return  bool
+     */
+    protected static function isService(ReflectionClass $dependency): bool
+    {
+        return $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF) !== [];
     }
 }

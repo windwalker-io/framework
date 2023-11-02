@@ -39,6 +39,7 @@ use Windwalker\DI\Test\Mock\StubStack;
 use Windwalker\DI\Test\Mock\UnionTypeStub;
 use Windwalker\DI\Test\Mock\WithEnum;
 use Windwalker\DI\Test\Mock\WithVariadic;
+use Windwalker\DI\Test\Stub\StubInstantService;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 use Windwalker\Scalars\ArrayObject;
 use Windwalker\Scalars\StringObject;
@@ -249,6 +250,40 @@ class ContainerTest extends TestCase
         self::assertInstanceOf('ArrayObject', $container->get('flower'));
 
         self::assertNotSame($container->get('flower'), $container->get('flower', true));
+    }
+
+    public function testGetAutoService(): void
+    {
+        $container = new Container();
+
+        $service = $container->get(StubInstantService::class);
+
+        self::assertInstanceOf(
+            StubInstantService::class,
+            $service
+        );
+
+        // Must be singleton
+        self::assertSame(
+            $service,
+            $container->get(StubInstantService::class)
+        );
+    }
+
+    public function testDependByAutoService(): void
+    {
+        $container = new Container();
+
+        $service = $container->call(
+            function (StubInstantService $service) {
+                return $service;
+            }
+        );
+
+        self::assertInstanceOf(
+            StubInstantService::class,
+            $service
+        );
     }
 
     /**
