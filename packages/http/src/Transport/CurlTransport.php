@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
-use Composer\CaBundle\CaBundle;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -479,10 +478,12 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
 
         $caPathOrFile = $this->findCAPathOrFile();
 
-        if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
-            $curlOptions[CURLOPT_CAPATH] = $caPathOrFile;
-        } else {
-            $curlOptions[CURLOPT_CAINFO] = $caPathOrFile;
+        if ($caPathOrFile !== null) {
+            if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
+                $curlOptions[CURLOPT_CAPATH] = $caPathOrFile;
+            } else {
+                $curlOptions[CURLOPT_CAINFO] = $caPathOrFile;
+            }
         }
 
         return $curlOptions;
