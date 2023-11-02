@@ -109,12 +109,23 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @return  HttpClientResponse
      */
     public function download(
-        Stringable|string $url,
+        Stringable|RequestInterface|string $url,
         string $dest,
         mixed $body = null,
         array $options = []
     ): HttpClientResponse {
-        $request = $this->hydrateRequest(new Request(), 'GET', $url, $body, $options);
+
+        if ($url instanceof RequestInterface) {
+            $request = $this->hydrateRequest(
+                $url,
+                $url->getMethod(),
+                $url->getRequestTarget(),
+                $url->getBody() ?? $body,
+                $options
+            );
+        } else {
+            $request = $this->hydrateRequest(new Request(), 'GET', $url, $body, $options);
+        }
 
         $transport = $this->getTransport();
 

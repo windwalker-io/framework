@@ -294,14 +294,14 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Validate method name.
      *
-     * @param  string  $method  Method to validate.
+     * @param  string|null  $method  Method to validate.
      *
      * @return  string  Valid or not.
      */
-    protected function validateMethod(?string $method): ?string
+    protected function validateMethod(?string $method): string
     {
         if ($method === null) {
-            return null;
+            return '';
         }
 
         $method = strtoupper($method);
@@ -310,6 +310,6 @@ abstract class AbstractRequest implements RequestInterface
             throw new InvalidArgumentException('Invalid HTTP method: ' . $method);
         }
 
-        return $method;
+        return (string) $method;
     }
 }

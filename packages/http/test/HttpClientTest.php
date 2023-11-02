@@ -106,6 +106,27 @@ class HttpClientTest extends TestCase
         self::assertEquals('http://example.com', $this->transport->request->getRequestTarget());
         self::assertEquals('/path/to/file', $this->transport->getOption('target_file'));
     }
+    /**
+     * testDownload
+     *
+     * @return  void
+     */
+    public function testDownloadPost()
+    {
+        $url = 'http://example.com';
+        $dest = '/path/to/file';
+
+        $request = $this->instance::createRequest(
+            'POST',
+            $url
+        );
+
+        $this->instance->download($request, $dest);
+
+        self::assertEquals('POST', $this->transport->request->getMethod());
+        self::assertEquals('http://example.com', $this->transport->request->getRequestTarget());
+        self::assertEquals('/path/to/file', $this->transport->getOption('target_file'));
+    }
 
     /**
      * Method to test request().

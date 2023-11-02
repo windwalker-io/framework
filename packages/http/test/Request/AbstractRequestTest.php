@@ -62,7 +62,7 @@ class AbstractRequestTest extends TestCase
 
         self::assertInstanceOf(Uri::class, $request->getUri());
         self::assertEquals('', (string) $request->getUri());
-        self::assertNull($request->getMethod());
+        self::assertEquals('', $request->getMethod());
         self::assertInstanceOf(Stream::class, $request->getBody());
         self::assertEquals('php://memory', $request->getBody()->getMetadata('uri'));
         self::assertEquals([], $request->getHeaders());
@@ -127,7 +127,7 @@ class AbstractRequestTest extends TestCase
      */
     public function testWithAndGetMethod()
     {
-        self::assertNull($this->instance->getMethod());
+        self::assertEquals('', $this->instance->getMethod());
 
         $request = $this->instance->withMethod('patch');
 
