@@ -18,8 +18,6 @@ namespace Windwalker\Form\Attributes;
 class FormDefine
 {
     public function __construct(
-        public ?string $fieldset = null,
-        public ?string $ns = null,
         public ?int $ordering = null
     ) {
     }

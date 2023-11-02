@@ -41,9 +41,9 @@ abstract class AbstractRegexFilter extends AbstractFilter
 
     public function match(string $value): string
     {
-        preg_match($this->getRegex(), $value, $matches);
+        preg_match_all($this->getRegex(), $value, $matches);
 
-        return $matches[0] ?? '';
+        return implode('', $matches[0] ?? []) ?? '';
     }
 
     /**

@@ -449,9 +449,13 @@ HTML;
     public function testGetAndSetFilter()
     {
         // Set filter type
+        $this->instance->resetFilters()->addFilter(new Regex('/[0-9]+/'));
+
+        self::assertEquals('123', $this->instance->filter('123'));
+
         $this->instance->resetFilters()->addFilter(new Regex('/[^0-9]+/'));
 
-        self::assertEquals('123', $this->instance->filter('abc123cba'));
+        self::assertEquals('abccba', $this->instance->filter('abc123cba'));
 
         // Set filter handler
         $closure = static fn($value) => filter_var($value, FILTER_SANITIZE_NUMBER_INT);

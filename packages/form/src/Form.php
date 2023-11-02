@@ -94,16 +94,20 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     /**
      * defineFormFields
      *
-     * @param  string|FieldDefinitionInterface  $define
+     * @param  string|object  $define
      *
      * @return  $this
      *
      * @throws ReflectionException
      */
-    public function defineFormFields(FieldDefinitionInterface|string $define): static
+    public function defineFormFields(object|string $define): static
     {
         if (is_string($define)) {
             $define = $this->getObjectBuilder()->createObject($define);
+        }
+
+        if (!$define instanceof FieldDefinitionInterface) {
+            $define = new FormDefinitionWrapper($define);
         }
 
         $define->define($this);

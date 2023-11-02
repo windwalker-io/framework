@@ -38,9 +38,8 @@ class FormDefinitionWrapper implements FieldDefinitionInterface
         $methods = $ref->getMethods();
 
         $defines = new PriorityQueue();
-        $i = count($methods);
 
-        foreach ($methods as $method) {
+        foreach ($methods as $i => $method) {
             $attr = AttributesAccessor::getFirstAttributeInstance($method, FormDefine::class);
 
             if ($attr) {
@@ -53,29 +52,14 @@ class FormDefinitionWrapper implements FieldDefinitionInterface
 
                 $this->definition->$methodName($form);
             }
-
-            $i--;
         }
 
-        $register = function (Form $form, string $methodName) {
-            $this->definition->$methodName($form);
-        };
+        $defines = iterator_to_array($defines);
+        $defines = array_reverse($defines);
 
         /** @var FormDefine $attr */
         foreach ($defines as [$methodName, $attr]) {
-            if ($attr->fieldset && $attr->ns) {
-                $form->wrap($attr->fieldset, $attr->ns, $register);
-                continue;
-            }
-
-            if ($attr->fieldset) {
-                $form->fieldset($attr->fieldset, $register);
-                continue;
-            }
-
-            if ($attr->ns) {
-                $form->ns($attr->ns, $register);
-            }
+            $form->register($this->definition->$methodName(...));
         }
     }
 }

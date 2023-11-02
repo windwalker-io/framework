@@ -15,8 +15,10 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Form\Form;
 use Windwalker\Form\Test\Mock\MockFormRenderer;
+use Windwalker\Form\Test\Stub\StubAttrDefinition;
 use Windwalker\Form\Test\Stub\StubFieldDefinition;
 use Windwalker\Test\Traits\BaseAssertionTrait;
+use Windwalker\Form\Field\PasswordField;
 
 /**
  * Test class of Form
@@ -212,7 +214,6 @@ class FormTest extends TestCase
      *
      * @return void
      *
-     * @covers \Windwalker\Form\Form::getGroups
      * @TODO   Implement testGetGroups().
      */
     public function testGetGroups()
@@ -228,7 +229,6 @@ class FormTest extends TestCase
      *
      * @return void
      *
-     * @covers \Windwalker\Form\Form::setAttribute
      * @TODO   Implement testSetAttribute().
      */
     public function testSetAttribute()
@@ -244,7 +244,6 @@ class FormTest extends TestCase
      *
      * @return void
      *
-     * @covers \Windwalker\Form\Form::getAttribute
      * @TODO   Implement testGetAttribute().
      */
     public function testGetAttribute()
@@ -419,7 +418,7 @@ class FormTest extends TestCase
     {
         $form = $this->getByDefine('windwalker');
 
-        $html = '<div id="input-windwalker-id-wrapper" class="control-input" data-field-wrapper><label id="input-windwalker-id-label" data-field-label for="input-windwalker-id">ID</label><div><input id="input-windwalker-id" name="windwalker[id]" data-field-input type="text"></div></div>';
+        $html = '<div id="input-windwalker-id-wrapper" class="control-input" data-field-wrapper><label id="input-windwalker-id-label" data-field-label for="input-windwalker-id">ID</label><div><input id="input-windwalker-id" name="windwalker[id]" data-field-input type="text" value></div></div>';
 
         self::assertEquals($html, $form->renderField('id'));
 
@@ -531,6 +530,43 @@ class FormTest extends TestCase
         self::assertEquals(
             '<mock id="input-test-wrapper" data-field-wrapper>Hello World: test</mock>',
             trim($form->renderFields())
+        );
+    }
+
+    public function testAttrDefinition()
+    {
+        $define = new StubAttrDefinition();
+
+        $form = new Form();
+
+        $form->defineFormFields($define);
+
+        $fieldsets = $form->getFieldsets();
+
+        self::assertEquals(
+            [
+                'basic',
+                'meta',
+                'user'
+            ],
+            array_keys($fieldsets)
+        );
+
+        $fields = [];
+
+        foreach ($form->getFields() as $field) {
+            $fields[$field->getName()] = $field::class;
+        }
+
+        self::assertEquals(
+            [
+                'id' => TextField::class,
+                'u/username' => TextField::class,
+                'email' => TextField::class,
+                'password' => PasswordField::class,
+                'address' => TextField::class,
+            ],
+            $fields
         );
     }
 }
