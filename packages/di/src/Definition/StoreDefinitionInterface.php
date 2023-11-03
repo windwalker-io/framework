@@ -28,9 +28,13 @@ interface StoreDefinitionInterface extends DefinitionInterface
 
     public function extend(Closure $closure): static;
 
+    public function alias(string $alias, string $id): static;
+
     public function reset(): void;
 
     public function getOptions(): int;
 
     public function getCache(): mixed;
+
+    public function providedIn(int|array|null|Closure $levels): static;
 }

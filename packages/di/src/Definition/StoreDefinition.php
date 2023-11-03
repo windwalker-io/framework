@@ -13,6 +13,7 @@ namespace Windwalker\DI\Definition;
 
 use Closure;
 use Windwalker\DI\Container;
+use Windwalker\DI\Exception\DefinitionException;
 
 /**
  * The NewStoreDefinition class.
@@ -23,6 +24,10 @@ class StoreDefinition implements StoreDefinitionInterface
 
     protected array $extends = [];
 
+    protected ?Container $container = null;
+
+    protected Closure|array|int|null $providedIn = null;
+
     public function __construct(protected string $id, protected mixed $value, protected int $options = 0)
     {
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
@@ -30,10 +35,22 @@ class StoreDefinition implements StoreDefinitionInterface
         }
     }
 
-    public function resolve(Container $container, array $args = []): mixed
+    /**
+     * @throws \ReflectionException
+     * @throws DefinitionException
+     */
+    public function resolve(?Container $container = null, array $args = []): mixed
     {
+        $container ??= $this->container ?? throw new DefinitionException('This definition has no container.');
+
         if ($this->cache !== null) {
             return $this->cache;
+        }
+
+        if (!$this->validateProvidedIn($container)) {
+            throw new DefinitionException(
+                "Container ID: {$this->id} cannot provide to level: {$container->getLevel()}"
+            );
         }
 
         $value = $this->value;
@@ -86,6 +103,13 @@ class StoreDefinition implements StoreDefinitionInterface
     public function extend(Closure $closure): static
     {
         $this->extends[] = $closure;
+
+        return $this;
+    }
+
+    public function alias(string $alias, string $id): static
+    {
+        $this->container->alias($alias, $id);
 
         return $this;
     }
@@ -145,5 +169,55 @@ class StoreDefinition implements StoreDefinitionInterface
         if (is_object($this->value)) {
             $this->value = clone $this->value;
         }
+    }
+
+    public function getContainer(): ?Container
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param  Container|null  $container
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setContainer(?Container $container): static
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    public function providedIn(int|array|Closure|null $levels): static
+    {
+        $this->providedIn = $levels;
+
+        return $this;
+    }
+
+    public function getProvidedIn(): int|array|Closure|null
+    {
+        return $this->providedIn;
+    }
+
+    public function validateProvidedIn(Container $container): bool
+    {
+        if ($this->providedIn === null) {
+            return true;
+        }
+
+        $level = $container->getLevel();
+
+        $provided = $this->providedIn;
+
+        if (is_int($provided)) {
+            return $provided === $level;
+        }
+
+        if (is_array($provided)) {
+            return in_array($level, $provided, true);
+        }
+
+        return (bool) $provided($level);
     }
 }

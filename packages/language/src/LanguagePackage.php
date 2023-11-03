@@ -33,13 +33,13 @@ class LanguagePackage extends AbstractPackage implements ServiceProviderInterfac
      */
     public function register(Container $container): void
     {
-        $container->prepareSharedObject(LangService::class)
-            ->extend(
-                LangService::class,
-                function (LangService $langService) {
-                    return $langService->loadAllFromPath(CorePackage::dir() . '/../../resources/languages', 'php');
-                }
-            );
+        $container->prepareSharedObject(
+            LangService::class,
+            fn(LangService $langService) => $langService->loadAllFromPath(
+                CorePackage::dir() . '/../../resources/languages',
+                'php'
+            )
+        );
     }
 
     /**
