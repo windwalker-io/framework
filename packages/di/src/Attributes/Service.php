@@ -25,8 +25,11 @@ class Service extends Inject
 {
     public ?string $name = null;
 
-    public function __construct(?string $id = null, bool|string $forceNewOrService = false)
-    {
+    public function __construct(
+        ?string $id = null,
+        bool|string $forceNewOrService = false,
+        public int|array|null|\Closure $providedIn = null
+    ) {
         if (is_string($forceNewOrService)) {
             $this->name = $forceNewOrService;
 

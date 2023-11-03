@@ -417,8 +417,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         // Get instant service
-        if (class_exists($id) && static::isService(new ReflectionClass($id))) {
+        if (class_exists($id) && $service = static::getServiceAttribute(new ReflectionClass($id))) {
             $definition = new StoreDefinition($id, $this->newInstance($id));
+            $definition->providedIn($service->providedIn);
 
             $this->setDefinition($id, $definition);
 
@@ -1142,10 +1143,16 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * @param  ReflectionClass  $dependency
      *
-     * @return  bool
+     * @return  ?Service
      */
-    protected static function isService(ReflectionClass $dependency): bool
+    protected static function getServiceAttribute(ReflectionClass $dependency): ?Service
     {
-        return $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF) !== [];
+        $attrs = $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+        if ($attrs === []) {
+            return null;
+        }
+
+        return $attrs[0]->newInstance();
     }
 }
