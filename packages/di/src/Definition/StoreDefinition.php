@@ -12,8 +12,12 @@ declare(strict_types=1);
 namespace Windwalker\DI\Definition;
 
 use Closure;
+use Windwalker\Attributes\AttributesAccessor;
+use Windwalker\DI\Attributes\Isolation;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
+
+use function Windwalker\has_attributes;
 
 /**
  * The NewStoreDefinition class.
@@ -32,6 +36,13 @@ class StoreDefinition implements StoreDefinitionInterface
     {
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
             $this->cache = $this->value;
+        }
+
+        if (
+            class_exists($id)
+            && has_attributes(new \ReflectionClass($id), Isolation::class, true)
+        ) {
+            $this->options |= Container::ISOLATION;
         }
     }
 

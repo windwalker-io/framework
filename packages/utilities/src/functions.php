@@ -101,6 +101,7 @@ namespace Windwalker {
     use MyCLabs\Enum\Enum;
     use Traversable;
     use WeakReference;
+    use Windwalker\Attributes\AttributesAccessor;
     use Windwalker\Utilities\Compare\CompareHelper;
     use Windwalker\Utilities\Compare\WhereWrapper;
     use Windwalker\Utilities\Proxy\CachedCallable;
@@ -449,6 +450,19 @@ namespace Windwalker {
             }
 
             return $num;
+        }
+    }
+
+    if (!function_exists('\Windwalker\has_attributes')) {
+        function has_attributes(mixed $ref, string $attr, bool $instanceof = false): bool
+        {
+            $flags = $instanceof ? \ReflectionAttribute::IS_INSTANCEOF : 0;
+
+            if ($ref instanceof \Reflector) {
+                return $ref->getAttributes($attr, $flags) !== [];
+            }
+
+            return AttributesAccessor::getAttributesFromAny($ref, $attr, $flags) !== [];
         }
     }
 }

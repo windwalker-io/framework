@@ -115,7 +115,7 @@ class AttributesAccessor
         string $attributeClass,
         int $flags = 0
     ): ?object {
-        $attr = AttributesAccessor::getFirstAttribute($value, $attributeClass, $flags);
+        $attr = static::getFirstAttribute($value, $attributeClass, $flags);
 
         return $attr?->newInstance();
     }
@@ -134,10 +134,14 @@ class AttributesAccessor
         string|null $name = null,
         int $flags = 0
     ): ?array {
-        $ref = ReflectAccessor::reflect($value);
+        if (!$value instanceof \Reflector) {
+            $ref = ReflectAccessor::reflect($value);
 
-        if (!$ref) {
-            return null;
+            if (!$ref) {
+                return null;
+            }
+        } else {
+            $ref = $value;
         }
 
         $attrs[] = $ref->getAttributes($name, $flags);

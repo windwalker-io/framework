@@ -24,7 +24,13 @@ use ReflectionException;
 use Traversable;
 use UnexpectedValueException;
 use Windwalker\DI\Attributes\AttributesResolver;
+use Windwalker\DI\Attributes\AttributeType;
+use Windwalker\DI\Attributes\Autowire;
+use Windwalker\DI\Attributes\Decorator;
+use Windwalker\DI\Attributes\Inject;
+use Windwalker\DI\Attributes\Isolation;
 use Windwalker\DI\Attributes\Service;
+use Windwalker\DI\Attributes\Setup;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
@@ -159,6 +165,26 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         // Always set Container as self
         $this->share(static::class, $this);
+    }
+
+    public function registerDefaultAttributes(): void
+    {
+        $resolver = $this->getAttributesResolver();
+
+        foreach (static::getDefaultAttributes() as $attr => $target) {
+            $resolver->registerAttribute($attr, $target);
+        }
+    }
+
+    public static function getDefaultAttributes(): array
+    {
+        return [
+            Decorator::class => AttributeType::CLASSES,
+            Autowire::class => AttributeType::CLASSES | AttributeType::CALLABLE | AttributeType::PARAMETERS,
+            Inject::class => AttributeType::PROPERTIES | AttributeType::PARAMETERS,
+            Setup::class => AttributeType::METHODS,
+            Service::class => AttributeType::PROPERTIES | AttributeType::PARAMETERS,
+        ];
     }
 
     /**
