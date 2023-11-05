@@ -21,9 +21,9 @@ interface PolicyProviderInterface
     /**
      * register
      *
-     * @param  AuthorizationInterface  $authorization
+     * @param  AuthorizationInterface  $auth
      *
      * @return  void
      */
-    public function register(AuthorizationInterface $authorization): void;
+    public function register(AuthorizationInterface $auth): void;
 }
