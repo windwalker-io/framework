@@ -196,6 +196,17 @@ class RequestBaseUri extends Uri implements \JsonSerializable
         return (new Uri($uri))->toString();
     }
 
+    public function base(bool $full = false): string
+    {
+        $base = static::normalize(
+            $full
+                ? $this->path
+                : $this->root
+        );
+
+        return $base ?: '/';
+    }
+
     /**
      * addUriBase
      *
