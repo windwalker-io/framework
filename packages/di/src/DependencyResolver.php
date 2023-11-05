@@ -338,7 +338,9 @@ class DependencyResolver
                     $childArgs = [];
                 }
 
-                $depObject = $this->newInstance($dependencyClassName, $childArgs, $options);
+                $dependencyClassAlias = $this->container->resolveAlias($dependencyClassName);
+
+                $depObject = $this->newInstance($dependencyClassAlias, $childArgs, $options);
             }
 
             if ($depObject instanceof $dependencyClassName) {

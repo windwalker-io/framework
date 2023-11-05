@@ -120,7 +120,7 @@ class Environment
      *
      * @return  bool
      */
-    public function isLinux(): bool
+    public static function isLinux(): bool
     {
         return static::getOS() === 'LIN';
     }
@@ -183,7 +183,7 @@ class Environment
 
     public function getUserName(): ?string
     {
-        return $this->getServerParam('USERNAME');
+        return $this->getServerParam('USER') ?: $this->getServerParam('USERNAME');
     }
 
     public function getDeviceName(): ?string

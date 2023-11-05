@@ -1155,4 +1155,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         return $attrs[0]->newInstance();
     }
+
+    public function getAliases(): array
+    {
+        return $this->aliases;
+    }
 }

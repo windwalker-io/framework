@@ -67,6 +67,11 @@ class StoreDefinition implements StoreDefinitionInterface
             $value = ($this->value)($container);
         }
 
+        // Cache
+        if ($this->options & Container::SHARED) {
+            $this->cache = $value;
+        }
+
         // Extends
         foreach ($this->extends as $extend) {
             $value = $extend($value, $container) ?? $value;
@@ -74,11 +79,6 @@ class StoreDefinition implements StoreDefinitionInterface
 
         foreach ($container->findExtends($this->id) as $extend) {
             $value = $extend($value, $container) ?? $value;
-        }
-
-        // Cache
-        if ($this->options & Container::SHARED) {
-            $this->cache = $value;
         }
 
         return $value;
