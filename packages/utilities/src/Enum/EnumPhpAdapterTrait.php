@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Enum;
 
+use MyCLabs\Enum\Enum;
+
 use function Windwalker\arr;
 
 /**
@@ -183,6 +185,15 @@ trait EnumPhpAdapterTrait
     public function jsonSerialize()
     {
         return $this->getValue();
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        if ($this instanceof Enum && $name === 'value') {
+            return $this->getValue();
+        }
+
+        return $this->$name;
     }
 
     public static function __callStatic($name, $args)
