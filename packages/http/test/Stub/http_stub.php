@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Part of Windwalker project.
- *
- * @copyright  Copyright (C) 2023 LYRASOFT.
- * @license    MIT
- */
-
 declare(strict_types=1);
 
 // Travis-CI use Ubuntu 12.04 so the default php version is 5.3, we can not use short array syntax

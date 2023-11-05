@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Part of Windwalker project.
- *
- * @copyright  Copyright (C) 2023 LYRASOFT. All rights reserved.
- * @license    GNU General Public License version 2 or later.
- */
-
 declare(strict_types=1);
 
 namespace Windwalker\Utilities\Classes;

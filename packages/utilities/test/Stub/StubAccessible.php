@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Part of Windwalker project.
- *
- * @copyright  Copyright (C) 2023 LYRASOFT.
- * @license    MIT
- */
-
 namespace Windwalker\Utilities\Test\Stub;
 
 use Windwalker\Utilities\Accessible\AccessibleTrait;
