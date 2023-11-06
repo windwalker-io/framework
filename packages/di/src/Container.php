@@ -378,6 +378,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this->getDefinition($id) !== null;
     }
 
+    public function hasCached(string $id): bool
+    {
+        return $this->getDefinition($id)?->getCache() !== null;
+    }
+
     /**
      * Remove an item from container.
      *
@@ -606,6 +611,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     {
         $this->extends[$id] ??= [];
         $this->extends[$id][] = $closure;
+
+        if ($this->hasCached($id)) {
+            $this->modify($id, $closure);
+        }
 
         return $this;
     }
