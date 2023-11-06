@@ -84,7 +84,13 @@ trait ConfigRegisterTrait
         $providers ??= [];
 
         foreach ($config as $provider) {
-            $providers[] = $provider = $this->resolve($provider);
+            $provider = $this->resolve($provider);
+
+            if (array_key_exists($provider::class, $providers)) {
+                continue;
+            }
+
+            $providers[$provider::class] = $provider;
 
             if ($provider instanceof ServiceProviderInterface) {
                 $this->registerServiceProvider($provider);
