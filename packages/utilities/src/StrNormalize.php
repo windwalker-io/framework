@@ -211,6 +211,8 @@ class StrNormalize
 
         $class = (string) str_replace(['\\', '/'], ' ', $class);
 
+        $class = Str::collapseWhitespaces($class);
+
         $class = ucwords($class);
 
         return str_replace(' ', '\\', $class);
