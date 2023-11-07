@@ -11,8 +11,6 @@ use Windwalker\Core\Html\HtmlFrame;
 use Windwalker\Core\Pagination\PaginationFactory;
 use Windwalker\Core\Renderer\LayoutPathResolver;
 use Windwalker\Core\Renderer\RendererService;
-use Windwalker\Core\Router\Router;
-use Windwalker\DI\BootableDeferredProviderInterface;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Renderer\CompositeRenderer;

@@ -67,6 +67,9 @@ return [
             'components' => [
                 'component' => XComponent::class,
                 'template' => XComponent::class,
+            ],
+            'component_scans' => [
+                'App\\Component'
             ]
         ],
 

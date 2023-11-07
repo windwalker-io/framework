@@ -14,9 +14,9 @@ class PhpFileStorage extends FileStorage
      *
      * @param  string  $key
      *
-     * @return  string
+     * @return  mixed
      */
-    protected function read(string $key): string
+    protected function read(string $key): mixed
     {
         return include $this->fetchStreamUri($key);
     }
