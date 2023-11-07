@@ -355,6 +355,10 @@ class ComponentTagCompiler
             function ($matches) {
                 $name = $this->stripQuotes($matches['name']);
 
+                if ($name === 'default') {
+                    $name = 'slot';
+                }
+
                 if ($matches[1] !== ':') {
                     $name = "'{$name}'";
                 }
