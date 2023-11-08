@@ -88,11 +88,11 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
      *
      * @param  array  $data
      *
-     * @return  StatementInterface[]
+     * @return  void
      */
-    public function deleteAllRelatives(array $data): array
+    public function deleteAllRelatives(array $data): void
     {
-        return $this->getORM()
+        $this->getORM()
             ->mapper($this->getTargetTable())
             ->deleteWhere($this->createLoadConditions($data));
     }
