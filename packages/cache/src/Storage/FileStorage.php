@@ -11,6 +11,8 @@ use RuntimeException;
 use Throwable;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
+use function Windwalker\str;
+
 /**
  * The FilesystemStorage class.
  */
@@ -53,10 +55,14 @@ class FileStorage implements StorageInterface
     {
         $data = $this->read($key);
 
+        if (!is_string($data)) {
+            return $data;
+        }
+
         return preg_replace(
-            '#' . static::escapeRegex($this->getOption('expiration_format')) . '#',
+            '#' . static::escapeRegex($this->getExpirationFormat()) . '#',
             '',
-            $data
+            (string) $data
         );
     }
 
@@ -69,23 +75,27 @@ class FileStorage implements StorageInterface
             return false;
         }
 
-        $data = $this->read($key);
+        if ($this->getExpirationFormat()) {
+            $data = $this->read($key);
 
-        preg_match(
-            '#' . static::escapeRegex($this->getOption('expiration_format')) . '#',
-            $data,
-            $matches
-        );
+            preg_match(
+                '#' . static::escapeRegex($this->getExpirationFormat()) . '#',
+                $data,
+                $matches
+            );
 
-        $expiration = $matches[1] ?? null;
+            $expiration = $matches[1] ?? null;
 
-        if (!static::isExpired((int) $expiration)) {
-            return true;
+            if (!static::isExpired((int) $expiration)) {
+                return true;
+            }
+
+            $this->remove($key);
+
+            return false;
         }
 
-        $this->remove($key);
-
-        return false;
+        return true;
     }
 
     /**
@@ -138,7 +148,7 @@ class FileStorage implements StorageInterface
             $value = $this->getOption('deny_code') . $value;
         }
 
-        $expirationFormat = $this->getOption('expiration_format');
+        $expirationFormat = $this->getExpirationFormat();
 
         $value = sprintf($expirationFormat, $expiration) . $value;
 
@@ -200,7 +210,7 @@ class FileStorage implements StorageInterface
      *
      * @return  string
      */
-    protected function read(string $key): string
+    protected function read(string $key): mixed
     {
         $filename = $this->fetchStreamUri($key);
 
@@ -322,5 +332,13 @@ class FileStorage implements StorageInterface
     {
         $regex = preg_quote($regex, '#');
         return str_replace('%d', '(\d+)', $regex);
+    }
+
+    /**
+     * @return  mixed
+     */
+    protected function getExpirationFormat(): string
+    {
+        return (string) $this->getOption('expiration_format');
     }
 }

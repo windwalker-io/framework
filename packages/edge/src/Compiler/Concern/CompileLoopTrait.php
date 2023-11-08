@@ -72,6 +72,20 @@ trait CompileLoopTrait
     }
 
     /**
+     * Compile the forelse statements into valid PHP.
+     *
+     * @param  string  $expression
+     *
+     * @return string
+     */
+    protected function compileEmpty(string $expression): string
+    {
+        $empty = '$__empty_' . $this->forelseCounter--;
+
+        return "<?php endforeach; if ({$empty}): ?>";
+    }
+
+    /**
      * Compile the while statements into valid PHP.
      *
      * @param  string  $expression

@@ -154,20 +154,16 @@ class ManyToMany extends AbstractRelation
     }
 
     /**
-     * deleteAllRelatives
-     *
      * @param  array  $data
      *
-     * @return  StatementInterface[]
+     * @throws \ReflectionException
      */
-    public function deleteAllRelatives(array $data): array
+    public function deleteAllRelatives(array $data): void
     {
         $mapMetadata = $this->getMapMetadata();
 
-        $results = [];
-
         foreach ($this->createCollectionQuery($data) as $foreignEntity) {
-            $results[] = $this->getORM()->mapper($this->getTargetTable())->deleteWhere($foreignEntity);
+            $this->getORM()->mapper($this->getTargetTable())->deleteWhere($foreignEntity);
 
             $foreignData = $this->getORM()->extractEntity($foreignEntity);
 
@@ -175,8 +171,6 @@ class ManyToMany extends AbstractRelation
 
             $mapMetadata->getEntityMapper()->deleteWhere($mapData);
         }
-
-        return $results;
     }
 
     protected function createCollectionQuery(array $data): SelectorQuery

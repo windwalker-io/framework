@@ -6,6 +6,7 @@ namespace Windwalker\Edge\Provider;
 
 use Windwalker\Core\Application\ApplicationInterface;
 use Windwalker\Core\Application\AppType;
+use Windwalker\Core\Edge\ComponentFinder;
 use Windwalker\Core\Edge\CoreFileLoader;
 use Windwalker\Core\Renderer\Edge\WindwalkerExtension;
 use Windwalker\DI\Container;
@@ -102,8 +103,13 @@ class EdgeProvider implements ServiceProviderInterface
         array $options
     ): Edge {
         $extension = $container->createSharedObject(ComponentExtension::class, ['edge' => $edge]);
+        $finder = $container->createSharedObject(ComponentFinder::class);
 
         foreach ((array) $container->getParam('renderer.edge.components') as $name => $class) {
+            $extension->registerComponent($name, $class);
+        }
+
+        foreach ($finder->find() as $name => $class) {
             $extension->registerComponent($name, $class);
         }
 

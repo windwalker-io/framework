@@ -833,6 +833,18 @@ abstract class Arr
     }
 
     /**
+     * A simple merge proxy to avoid resources greedy construction.
+     *
+     * @param ...$args
+     *
+     * @return  array
+     */
+    public static function merge(...$args): array
+    {
+        return array_merge(...$args);
+    }
+
+    /**
      * Merge array recursively.
      *
      * @param  array  ...$args

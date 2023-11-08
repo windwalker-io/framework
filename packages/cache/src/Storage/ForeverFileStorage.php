@@ -10,8 +10,6 @@ namespace Windwalker\Cache\Storage;
 class ForeverFileStorage extends FileStorage
 {
     /**
-     * isExpired
-     *
      * @param  int       $expiration
      * @param  int|null  $time
      *
@@ -20,5 +18,10 @@ class ForeverFileStorage extends FileStorage
     public static function isExpired(int $expiration, ?int $time = null): bool
     {
         return false;
+    }
+
+    protected function getExpirationFormat(): string
+    {
+        return '';
     }
 }

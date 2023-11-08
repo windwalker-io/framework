@@ -746,14 +746,12 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * deleteWhere
-     *
      * @param  Conditions  $conditions
      * @param  int         $options
      *
-     * @return  array<StatementInterface>
+     * @return  void
      */
-    public function deleteWhere(mixed $conditions, int $options = 0): array
+    public function deleteWhere(mixed $conditions, int $options = 0): void
     {
         // Event
 
@@ -788,17 +786,15 @@ class EntityMapper implements EventAwareInterface
             // If Entity has keys, use this keys to delete once per item.
             $delItems = (function () use ($metadata, $conditions) {
                 while (
-                $item = $this->getORM()
-                    ->from($metadata->getClassName())
-                    ->where($this->conditionsToWheres($conditions))
-                    ->get($metadata->getClassName())
+                    $item = $this->getORM()
+                        ->from($metadata->getClassName())
+                        ->where($this->conditionsToWheres($conditions))
+                        ->get($metadata->getClassName())
                 ) {
                     yield $item;
                 }
             })();
         }
-
-        $results = [];
 
         foreach ($delItems as $item) {
             $handleRelations = true;
@@ -837,7 +833,7 @@ class EntityMapper implements EventAwareInterface
                 compact('data', 'conditions', 'metadata', 'statement', 'entity', 'options')
             );
 
-            $results[] = $event->getStatement();
+            $event->getStatement();
 
             if ($handleRelations) {
                 $metadata->getRelationManager()->delete($event->getData(), $entity);
@@ -845,8 +841,6 @@ class EntityMapper implements EventAwareInterface
         }
 
         // Event
-
-        return $results;
     }
 
     /**
