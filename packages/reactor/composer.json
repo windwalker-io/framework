@@ -36,6 +36,11 @@
         }
     },
     "extra": {
+        "windwalker": {
+            "packages": [
+                "Windwalker\\Reactor\\ReactorPackage"
+            ]
+        },
         "branch-alias": {
             "dev-master": "4.x-dev"
         }
