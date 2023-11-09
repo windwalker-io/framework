@@ -8,6 +8,7 @@ use App\Web\WsApplication;
 use Windwalker\Core\CliServer\CliServerRuntime;
 use Windwalker\Core\CliServer\Swoole\Subscriber\ServerStartedListener;
 use Windwalker\Core\CliServer\Swoole\Subscriber\SwooleProcessSubscriber;
+use Windwalker\Core\CorePackage;
 use Windwalker\DI\Container;
 use Windwalker\Reactor\Swoole\Event\CloseEvent;
 use Windwalker\Reactor\Swoole\Event\MessageEvent;
@@ -22,6 +23,9 @@ use Windwalker\WebSocket\Swoole\RequestRegistry;
 
 use function Swoole\Coroutine\run;
 
+include __DIR__ . '/../vendor/autoload.php';
+include __DIR__ . '/../etc/define.php';
+
 /*
  * --------------------------------------------------------------------------
  * Bootstrap Windwalker Runtime
@@ -30,7 +34,7 @@ use function Swoole\Coroutine\run;
  */
 
 /** @var Container $container */
-$container = (include __DIR__ . '/bootstrap.php')('swoole', $argv);
+$container = (include CorePackage::path('bin/server-boot.php'))('swoole', $argv);
 
 /*
  * --------------------------------------------------------------------------
