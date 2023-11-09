@@ -21,6 +21,15 @@ return [
             '@languages'
         ],
 
+        'vendors' => [
+            'ini' => [
+                //
+            ],
+            'php' => [
+                //
+            ]
+        ],
+
         'providers' => [
             LanguagePackage::class
         ],
