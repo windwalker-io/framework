@@ -161,7 +161,7 @@ $server->onOpen(
         $request = $event->getRequest();
 
         // Keep request in memory, so we can use this request cross processes.
-        $app->storeRequest($request);
+        $app->rememberRequest($request);
 
         // Run custom open() code.
         $app->openConnection($request);
@@ -236,7 +236,7 @@ $server->onClose(
             ->withFrame($event->createWocketFrame());
 
         // Release request object from memory
-        $app->removeRequest($event->getFd());
+        $app->forgetRequest($event->getFd());
 
         // Run custom close handler.
         $app->closeConnection($request);
