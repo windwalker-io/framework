@@ -85,8 +85,8 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 class ORM implements EventAwareInterface
 {
     use EventAwareTrait;
-
     use AttributesAwareTrait;
+    use EntityMapperConstantsTrait;
 
     protected ?FieldHydratorInterface $hydrator = null;
 

@@ -431,7 +431,7 @@ class Path
             return false;
         }
 
-        if (str_contains($path, '://')) {
+        if (static::isURL($path)) {
             return true;
         }
 
@@ -453,6 +453,15 @@ class Path
         }
 
         return false;
+    }
+
+    public static function isURL(string $path): bool
+    {
+        if ('' === $path) {
+            return false;
+        }
+
+        return str_contains($path, '://');
     }
 
     /**
