@@ -72,9 +72,10 @@ class ReactorPackage extends AbstractPackage
     protected function addMainFileToServers(string $engine, string $name, string $file, IOInterface $io): void
     {
         $filePath = Str::removeLeft(
-            Path::normalize(WINDWALKER_SERVERS . '/' . $file),
-            WINDWALKER_ROOT . '/'
+            Path::normalize(WINDWALKER_SERVERS . '/' . $file, '/'),
+            Path::normalize(WINDWALKER_ROOT, '/')
         );
+        $filePath = ltrim($filePath, '/');
         $registryFile = WINDWALKER_RESOURCES . '/registry/servers.php';
 
         if (is_file($registryFile)) {
