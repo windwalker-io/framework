@@ -6,14 +6,11 @@ namespace Windwalker\Reactor\Swoole\Room;
 
 class RoomMapping
 {
-    protected DoubleMapping $mapping;
-
     public function __construct(
+        protected DuoMapping $mapping,
         protected UserFdMapping $userMapping,
-        protected int $size = 1024,
-        protected int $mapSize = 32768
     ) {
-        $this->mapping = new DoubleMapping($this->size, $this->mapSize);
+        //
     }
 
     /**

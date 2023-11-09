@@ -34,7 +34,7 @@ include __DIR__ . '/../etc/define.php';
  */
 
 /** @var Container $container */
-$container = (include CorePackage::path('bin/server-boot.php'))('swoole', $argv);
+$container = (include CorePackage::path('../bin/server-boot.php'))('swoole', $argv);
 
 /*
  * --------------------------------------------------------------------------
@@ -98,18 +98,6 @@ $container->share(SwooleServer::class, $server);
 $container->share(SwooleHttpServer::class, $server);
 $container->share(SwooleWebsocketServer::class, $server);
 
-// UserFdMapping, RoomMapping and RequestRegistry are swoole specific services.
-// They keep a Swoole Table into it to sync fs mappings cross processes.
-// We create and cache them here that every worker will get same table.
-$userFdMapping = $container->createSharedObject(UserFdMapping::class);
-$roomMapping = $container->createSharedObject(RoomMapping::class);
-$requestRegistry = $container->createSharedObject(
-    RequestRegistry::class,
-    [
-        'size' => $startupOptions['max_requests'] ?? null,
-    ]
-);
-
 // Register custom services
 // --------------------------------------------------------------------------
 
@@ -169,11 +157,11 @@ $app->initialize();
  */
 
 $server->onOpen(
-    function (OpenEvent $event) use ($requestRegistry, $app) {
+    function (OpenEvent $event) use ($app) {
         $request = $event->getRequest();
 
-        // Keep request in memory, so we can use this request cross process.
-        $requestRegistry->store($request->getFd(), $request);
+        // Keep request in memory, so we can use this request cross processes.
+        $app->storeRequest($request);
 
         // Run custom open() code.
         $app->openConnection($request);
@@ -193,9 +181,9 @@ $server->onOpen(
  */
 
 $server->onMessage(
-    function (MessageEvent $event) use ($requestRegistry, $app) {
+    function (MessageEvent $event) use ($app) {
         // Get request object from memory
-        $request = $requestRegistry->get($event->getFd())
+        $request = $app->getRequest($event->getFd())
             ->withFrame($event->getFrame());
 
         try {
@@ -242,20 +230,16 @@ $server->onStart(
  */
 
 $server->onClose(
-    function (CloseEvent $event) use ($userFdMapping, $roomMapping, $app, $requestRegistry) {
+    function (CloseEvent $event) use ($app) {
         // Get request from memory
-        $request = $requestRegistry->get($event->getFd())
+        $request = $app->getRequest($event->getFd())
             ->withFrame($event->createWocketFrame());
 
         // Release request object from memory
-        $requestRegistry->remove($event->getFd());
+        $app->removeRequest($event->getFd());
 
         // Run custom close handler.
         $app->closeConnection($request);
-
-        // Leave rooms
-        $roomMapping->leaveAllRooms($request->getFd());
-        $userFdMapping->removeFd($request->getFd());
     }
 );
 

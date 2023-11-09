@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Room;
 
-use Swoole\Table;
+use Windwalker\Reactor\Memory\MemoryTableInterface;
 
-class DoubleMapping
+/**
+ * The DoubleMapping class.
+ */
+class DuoMapping
 {
-    protected Table $aToBMap;
-
-    protected Table $bToAMap;
-
-    public function __construct(protected int $size = 1024, protected int $mapSize = 32768)
-    {
-        $this->aToBMap = $this->createMap($size);
-        $this->bToAMap = $this->createMap($size);
+    public function __construct(
+        protected MemoryTableInterface $aToBMap,
+        protected MemoryTableInterface $bToAMap,
+        protected int $mapSize = 32768,
+    ) {
+        $this->aToBMap = $this->configureMap($this->aToBMap);
+        $this->bToAMap = $this->configureMap($this->bToAMap);
     }
 
     public function getBListOfA(string $a): array
@@ -83,7 +85,7 @@ class DoubleMapping
         }
 
         $list = (array) json_decode($listString);
-        $list = array_filter($list, static fn ($item) => $item !== $b);
+        $list = array_filter($list, static fn($item) => $item !== $b);
 
         $this->aToBMap->set($a, ['map' => json_encode($list)]);
     }
@@ -97,7 +99,7 @@ class DoubleMapping
         }
 
         $list = (array) json_decode($listString);
-        $list = array_filter($list, static fn ($item) => $item !== $a);
+        $list = array_filter($list, static fn($item) => $item !== $a);
 
         $this->bToAMap->set($b, ['map' => json_encode($list)]);
     }
@@ -128,10 +130,9 @@ class DoubleMapping
         return $aList;
     }
 
-    protected function createMap(int $size): Table
+    protected function configureMap(MemoryTableInterface $table): MemoryTableInterface
     {
-        $table = new Table($size);
-        $table->column('map', Table::TYPE_STRING, $this->mapSize);
+        $table->column('map', MemoryTableInterface::TYPE_STRING, $this->mapSize);
 
         $table->create();
 

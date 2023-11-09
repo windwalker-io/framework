@@ -6,11 +6,9 @@ namespace Windwalker\Reactor\Swoole\Room;
 
 class UserFdMapping
 {
-    protected DoubleMapping $mapping;
-
-    public function __construct(protected int $size = 1024, protected int $mapSize = 32768)
+    public function __construct(protected DuoMapping $mapping)
     {
-        $this->mapping = new DoubleMapping($this->size, $this->mapSize);
+        //
     }
 
     public function addUserFd(string|int $userId, int $fd): void
