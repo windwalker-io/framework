@@ -196,7 +196,7 @@ class UriTest extends TestCase
      *
      * @return  array
      */
-    public function authorityProvider(): array
+    public static function authorityProvider(): array
     {
         return [
             'host-only' => ['http://foo.com/bar', 'foo.com'],
@@ -284,7 +284,7 @@ class UriTest extends TestCase
      *
      * @return  array
      */
-    public function seedInvalidArguments(): array
+    public static function seedInvalidArguments(): array
     {
         $methods = [
             'withScheme',

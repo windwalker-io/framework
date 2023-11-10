@@ -14,7 +14,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The AbstractDriverTest class.
  */
-abstract class AbstractDriverTest extends AbstractDatabaseDriverTestCase
+abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
 {
     protected static string $platform = '';
 

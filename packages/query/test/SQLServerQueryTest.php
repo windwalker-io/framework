@@ -147,7 +147,7 @@ class SQLServerQueryTest extends QueryTest implements QueryJsonTestInterface
             <<<SQL
             SELECT * FROM [articles] AS [a]
                 LEFT JOIN [ww_categories] AS [c] ON [a].[category_id] = [c].[id]
-            WHERE ISNULL(SELECT COUNT(*) FROM OPENJSON([a].[params], '$.foo.bar'), 0) > 3
+            WHERE ISNULL((SELECT COUNT(*) FROM OPENJSON([a].[params], '$.foo.bar')), 0) > 3
             SQL,
             $q->render(true)
         );

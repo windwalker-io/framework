@@ -11,7 +11,7 @@ use Windwalker\Session\Handler\HandlerInterface;
 /**
  * The ArrayHandlerTest class.
  */
-class ArrayHandlerTest extends AbstractHandlerTest
+class ArrayHandlerTest extends AbstractHandlerTestCase
 {
     /**
      * @var ArrayHandler

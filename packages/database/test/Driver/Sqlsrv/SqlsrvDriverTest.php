@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Sqlsrv;
 
-use Windwalker\Database\Test\Driver\AbstractDriverTest;
+use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
  * The SqlsrvDriverTest class.
  */
-class SqlsrvDriverTest extends AbstractDriverTest
+class SqlsrvDriverTest extends AbstractDriverTestCase
 {
     protected static string $platform = 'SQLServer';
 

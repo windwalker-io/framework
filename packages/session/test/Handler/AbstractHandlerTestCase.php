@@ -18,7 +18,7 @@ use Windwalker\Session\Test\SessionVfsTestTrait;
 /**
  * The AbstractHandlerTest class.
  */
-abstract class AbstractHandlerTest extends TestCase
+abstract class AbstractHandlerTestCase extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use SessionVfsTestTrait;

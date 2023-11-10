@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Driver\Pdo;
 
 use Windwalker\Database\Platform\AbstractPlatform;
-use Windwalker\Database\Test\Driver\AbstractDriverTest;
+use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
  * The PdoSqliteDriverTest class.
  */
-class PdoSqliteDriverTest extends AbstractDriverTest
+class PdoSqliteDriverTest extends AbstractDriverTestCase
 {
     protected static string $platform = AbstractPlatform::SQLITE;
 

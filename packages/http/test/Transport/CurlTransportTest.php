@@ -14,7 +14,7 @@ use Windwalker\Uri\UriHelper;
  *
  * @since 2.1
  */
-class CurlTransportTest extends AbstractTransportTest
+class CurlTransportTest extends AbstractTransportTestCase
 {
     /**
      * Property options.

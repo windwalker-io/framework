@@ -16,7 +16,7 @@ class Environment
      *
      * @var string
      */
-    protected static string $os;
+    protected static string $os = '';
 
     /**
      * Property uname.
@@ -70,7 +70,7 @@ class Environment
      */
     public static function getOS(): string
     {
-        return static::$os ??= strtoupper(substr(static::$uname, 0, 3));
+        return static::$os = static::$os ?: strtoupper(substr(static::$uname, 0, 3));
     }
 
     /**
@@ -125,7 +125,7 @@ class Environment
      */
     public static function setOS(string $os): void
     {
-        static::$os = $os;
+        static::$os = strtoupper($os);
     }
 
     /**

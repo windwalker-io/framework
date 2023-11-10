@@ -22,7 +22,7 @@ use Windwalker\Uri\UriHelper;
  *
  * @since 2.1
  */
-abstract class AbstractTransportTest extends TestCase
+abstract class AbstractTransportTestCase extends TestCase
 {
     use BaseAssertionTrait;
 

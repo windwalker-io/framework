@@ -10,7 +10,7 @@ use Windwalker\Database\Driver\Pdo\PdoSqliteConnection;
 /**
  * The PdoSqliteConnection class.
  */
-class PdoSqliteConnectionTest extends AbstractPdoConnectionTest
+class PdoSqliteConnectionTest extends AbstractPdoConnectionTestCase
 {
     protected static string $platform = 'SQLite';
 

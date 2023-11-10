@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pgsql;
 
-use Windwalker\Database\Test\Driver\AbstractDriverTest;
+use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
  * The PgsqlDriverTest class.
  */
-class PgsqlDriverTest extends AbstractDriverTest
+class PgsqlDriverTest extends AbstractDriverTestCase
 {
     protected static string $platform = 'PostgreSQL';
 

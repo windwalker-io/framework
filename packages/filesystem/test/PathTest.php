@@ -23,7 +23,7 @@ class PathTest extends AbstractVfsTestCase
      *
      * @since   2.0
      */
-    public function cleanProvider(): array
+    public static function cleanProvider(): array
     {
         return [
             // Input Path, Directory Separator, Expected Output
@@ -119,7 +119,7 @@ class PathTest extends AbstractVfsTestCase
      *
      * @return  array
      */
-    public function existsProvider(): array
+    public static function existsProvider(): array
     {
         return [
             [
@@ -209,7 +209,7 @@ class PathTest extends AbstractVfsTestCase
      *
      * @since   2.0
      */
-    public function makeSafeProvider(): array
+    public static function makeSafeProvider(): array
     {
         return [
             [
@@ -314,7 +314,7 @@ class PathTest extends AbstractVfsTestCase
         );
     }
 
-    public function isChildProvider(): array
+    public static function isChildProvider(): array
     {
         return [
             'Windows' => [

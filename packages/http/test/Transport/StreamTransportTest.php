@@ -12,7 +12,7 @@ use Windwalker\Http\Transport\StreamTransport;
  *
  * @since 2.1
  */
-class StreamTransportTest extends AbstractTransportTest
+class StreamTransportTest extends AbstractTransportTestCase
 {
     /**
      * Property options.

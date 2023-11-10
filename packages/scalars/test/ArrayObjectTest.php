@@ -159,7 +159,7 @@ class ArrayObjectTest extends TestCase
         self::assertEquals($except, arr($src)->column($column)->dump(), $message);
     }
 
-    public function providerTestColumn(): array
+    public static function providerTestColumn(): array
     {
         return [
             'generic array' => [
@@ -389,7 +389,7 @@ class ArrayObjectTest extends TestCase
         self::assertEquals($exp, $a->search($search, $strict));
     }
 
-    public function providerTestSearch(): array
+    public static function providerTestSearch(): array
     {
         return [
             [1, 2, false],

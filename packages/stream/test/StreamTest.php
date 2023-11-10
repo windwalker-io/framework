@@ -256,13 +256,13 @@ class StreamTest extends TestCase
         $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
         $stream = new Stream($resource);
 
-        $this->assertTrue($stream->seek(2));
+        $stream->seek(2);
         $this->assertEquals(2, $stream->tell());
 
-        $this->assertTrue($stream->seek(2, SEEK_CUR));
+        $stream->seek(2, SEEK_CUR);
         $this->assertEquals(4, $stream->tell());
 
-        $this->assertTrue($stream->seek(-1, SEEK_END));
+        $stream->seek(-1, SEEK_END);
         $this->assertEquals(6, $stream->tell());
     }
 
@@ -281,7 +281,7 @@ class StreamTest extends TestCase
 
         $stream = new Stream($resource);
 
-        $this->assertTrue($stream->seek(2));
+        $stream->seek(2);
 
         $stream->rewind();
 

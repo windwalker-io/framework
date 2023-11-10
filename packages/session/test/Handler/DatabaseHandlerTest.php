@@ -13,7 +13,7 @@ use Windwalker\Test\Traits\DatabaseTestTrait;
 /**
  * The ArrayHandlerTest class.
  */
-class DatabaseHandlerTest extends AbstractHandlerTest
+class DatabaseHandlerTest extends AbstractHandlerTestCase
 {
     use DatabaseTestTrait;
 

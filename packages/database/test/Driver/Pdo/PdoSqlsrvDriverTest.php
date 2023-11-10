@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pdo;
 
-use Windwalker\Database\Test\Driver\AbstractDriverTest;
+use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
  * The PdoSqlsrvDriverTest class.
  */
-class PdoSqlsrvDriverTest extends AbstractDriverTest
+class PdoSqlsrvDriverTest extends AbstractDriverTestCase
 {
     protected static string $platform = 'SQLServer';
 

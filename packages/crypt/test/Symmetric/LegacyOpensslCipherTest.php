@@ -79,7 +79,7 @@ class LegacyOpensslCipherTest extends TestCase
         $this->assertEquals('windwalker', $data->get());
     }
 
-    public function methodsLegacyProvider(): array
+    public static function methodsLegacyProvider(): array
     {
         // phpcs:disable
         return [

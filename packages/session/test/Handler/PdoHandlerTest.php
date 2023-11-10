@@ -14,7 +14,7 @@ use Windwalker\Test\Traits\DatabaseTestTrait;
 /**
  * The ArrayHandlerTest class.
  */
-class PdoHandlerTest extends AbstractHandlerTest
+class PdoHandlerTest extends AbstractHandlerTestCase
 {
     use DatabaseTestTrait;
 

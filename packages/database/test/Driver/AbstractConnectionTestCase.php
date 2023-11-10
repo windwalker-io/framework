@@ -12,7 +12,7 @@ use Windwalker\Utilities\Arr;
 /**
  * The AbstractConnectionTest class.
  */
-abstract class AbstractConnectionTest extends AbstractDatabaseDriverTestCase
+abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
 {
     protected static string $platform = '';
 

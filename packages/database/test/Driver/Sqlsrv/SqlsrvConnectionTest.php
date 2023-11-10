@@ -6,12 +6,12 @@ namespace Windwalker\Database\Test\Driver\Sqlsrv;
 
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Sqlsrv\SqlsrvConnection;
-use Windwalker\Database\Test\Driver\AbstractConnectionTest;
+use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 
 /**
  * The SqlsrvConnectionTest class.
  */
-class SqlsrvConnectionTest extends AbstractConnectionTest
+class SqlsrvConnectionTest extends AbstractConnectionTestCase
 {
     protected static string $platform = 'SQLServer';
 

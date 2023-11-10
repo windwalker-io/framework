@@ -7,12 +7,12 @@ namespace Windwalker\Database\Test\Driver\Pdo;
 use PDO;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Pdo\AbstractPdoConnection;
-use Windwalker\Database\Test\Driver\AbstractConnectionTest;
+use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 
 /**
  * The AbstractPdoConnectionTest class.
  */
-abstract class AbstractPdoConnectionTest extends AbstractConnectionTest
+abstract class AbstractPdoConnectionTestCase extends AbstractConnectionTestCase
 {
     /**
      * assertConnected

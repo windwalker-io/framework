@@ -94,7 +94,7 @@ class DOMElementTest extends TestCase
         self::assertEquals($result, (string) $ele);
     }
 
-    public function cssCreatorProvider(): array
+    public static function cssCreatorProvider(): array
     {
         return [
             [

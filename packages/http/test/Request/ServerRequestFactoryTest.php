@@ -198,7 +198,7 @@ class ServerRequestFactoryTest extends TestCase
      *
      * @return  array
      */
-    public function prepareUriProvider(): array
+    public static function prepareUriProvider(): array
     {
         return [
             '#apache-normal' => [

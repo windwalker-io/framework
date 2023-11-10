@@ -19,7 +19,7 @@ class LanguageNormalizeTest extends TestCase
      *
      * @return  array
      */
-    public function getToTagCases(): array
+    public static function getToTagCases(): array
     {
         return [
             [

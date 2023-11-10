@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Environment\Test;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\Environment\Environment;
 use Windwalker\Environment\Platform;
 
 /**
@@ -12,14 +13,14 @@ use Windwalker\Environment\Platform;
  *
  * @since 2.0
  */
-class PlatformTest extends TestCase
+class EnvironmentTest extends TestCase
 {
     /**
      * Test instance.
      *
-     * @var Platform
+     * @var Environment
      */
-    protected $instance;
+    protected Environment $instance;
 
     /**
      * Property os.
@@ -64,7 +65,7 @@ class PlatformTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->instance = new Platform();
+        $this->instance = new Environment();
 
         // Detect the native operating system type.
         $this->os = strtoupper(substr(PHP_OS, 0, 3));
@@ -93,7 +94,7 @@ class PlatformTest extends TestCase
      *
      * @return  array
      */
-    public function getIsWinTestData(): array
+    public static function getIsWinTestData(): array
     {
         return [
             ['CYGWIN_NT-5.1', false],
@@ -117,7 +118,7 @@ class PlatformTest extends TestCase
      *
      * @return  array
      */
-    public function getIsUnixTestData(): array
+    public static function getIsUnixTestData(): array
     {
         return [
             ['CYGWIN_NT-5.1', true],
@@ -141,7 +142,7 @@ class PlatformTest extends TestCase
      *
      * @return  array
      */
-    public function getIsLinuxTestData(): array
+    public static function getIsLinuxTestData(): array
     {
         return [
             ['CYGWIN_NT-5.1', false],
@@ -164,8 +165,6 @@ class PlatformTest extends TestCase
      * Method to test getOS().
      *
      * @return void
-     *
-     * @covers \Windwalker\Environment\Platform::getOS
      */
     public function testGetOS()
     {
@@ -183,12 +182,10 @@ class PlatformTest extends TestCase
      * @return void
      *
      * @dataProvider getIsWinTestData
-     *
-     * @covers       Windwalker\Environment\Platform::isWin
      */
     public function testIsWin($os, $value)
     {
-        $this->instance->setOS(null);
+        $this->instance->setOS('');
         $this->instance->setUname($os);
 
         $this->assertEquals($value, $this->instance->isWindows());
@@ -203,12 +200,10 @@ class PlatformTest extends TestCase
      * @return void
      *
      * @dataProvider getIsUnixTestData
-     *
-     * @covers       \Windwalker\Environment\Platform::isUnix
      */
     public function testIsUnix($os, $value)
     {
-        $this->instance->setOS(null);
+        $this->instance->setOS('');
         $this->instance->setUname($os);
 
         $this->assertEquals($value, $this->instance->isUnix());
@@ -223,12 +218,10 @@ class PlatformTest extends TestCase
      * @return void
      *
      * @dataProvider getIsLinuxTestData
-     *
-     * @covers       \Windwalker\Environment\Platform::isLinux
      */
     public function testIsLinux($os, $value)
     {
-        $this->instance->setOS(null);
+        $this->instance->setOS('');
         $this->instance->setUname($os);
 
         $this->assertEquals($value, $this->instance->isLinux());

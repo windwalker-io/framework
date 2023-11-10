@@ -103,6 +103,9 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 
         $result2 = static::$db->prepare('SELECT title FROM #__flower WHERE title = \'E\'')->result();
         $this->assertNotEquals('E', $result2);
+
+        static::dropAllTables();
+        static::setupDatabase();
     }
 
     public function testGetCurrentDatabase(): void
@@ -155,5 +158,12 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
     protected static function setupDatabase(): void
     {
         self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+    }
+
+    protected static function dropAllTables(): void
+    {
+        foreach (static::$db->getSchema()->getTables() as $table) {
+            static::$db->getSchema()->getTable($table->tableName)->drop();
+        }
     }
 }

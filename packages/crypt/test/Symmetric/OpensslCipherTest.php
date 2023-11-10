@@ -89,7 +89,7 @@ class OpensslCipherTest extends TestCase
         $this->assertEquals('windwalker', $data->get());
     }
 
-    public function methodsProvider(): array
+    public static function methodsProvider(): array
     {
         return [
             ['AES-256-CBC'],
