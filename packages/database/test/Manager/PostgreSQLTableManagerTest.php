@@ -75,7 +75,7 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             ORDER BY "table_name" ASC;
             CREATE TABLE IF NOT EXISTS "enterprise" (
             "id" serial NOT NULL,
-            "type" char(25) NOT NULL DEFAULT '',
+            "type" varchar(25) NOT NULL DEFAULT '',
             "catid" integer DEFAULT NULL,
             "alias" varchar(255) NOT NULL DEFAULT '',
             "title" varchar(255) NOT NULL DEFAULT 'H',
@@ -179,7 +179,7 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             ALTER TABLE "enterprise"
                 ADD COLUMN "first_officer" varchar(512) NOT NULL DEFAULT '';
             ALTER TABLE "enterprise"
-                ALTER COLUMN "alias" TYPE char(25),
+                ALTER COLUMN "alias" TYPE varchar(25),
                 ALTER COLUMN "alias" SET NOT NULL,
                 ALTER COLUMN "alias" SET DEFAULT '';
             SELECT "ix".*, tc.constraint_type = 'PRIMARY KEY' AS "is_primary"

@@ -85,6 +85,15 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     {
         $views = $this->instance->listViews(static::$schema);
 
+        foreach ($views as &$view) {
+            // Remove prefix since it may different between PostgreSQL versions.
+            $view['VIEW_DEFINITION'] = str_replace(
+                'ww_articles.',
+                '',
+                $view['VIEW_DEFINITION']
+            );
+        }
+
         self::assertEquals(
             [
                 'ww_articles_view' => [
@@ -92,8 +101,12 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
                     'TABLE_CATALOG' => 'windwalker_test',
                     'TABLE_SCHEMA' => 'public',
                     'TABLE_TYPE' => 'VIEW',
-                    'VIEW_DEFINITION' => Str::replaceCRLF(
-                        ' SELECT ww_articles.id,
+                    // Remove prefix since it may different between PostgreSQL versions.
+                    'VIEW_DEFINITION' => str_replace(
+                        'ww_articles.',
+                        '',
+                        Str::replaceCRLF(
+                            ' SELECT ww_articles.id,
     ww_articles.category_id,
     ww_articles.page_id,
     ww_articles.type,
@@ -108,6 +121,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     ww_articles.language,
     ww_articles.params
    FROM ww_articles;'
+                    )
                     ),
                     'CHECK_OPTION' => 'NONE',
                     'IS_UPDATABLE' => 'YES',
