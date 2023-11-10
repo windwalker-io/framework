@@ -106,19 +106,6 @@ $container->share(SwooleWebsocketServer::class, $server);
 
 /*
  * --------------------------------------------------------------------------
- * Boot Application
- * --------------------------------------------------------------------------
- * Boot application for current server instance.
- */
-
-run(fn() => $app->bootForServer($server));
-
-// Override display_errors before ini move to runtime
-// Todo: Move ini settings to runtime
-ini_set('display_errors', 'stderr');
-
-/*
- * --------------------------------------------------------------------------
  * Server Events
  * --------------------------------------------------------------------------
  * Register some server lifecycle events, for example, the terminal output,
@@ -133,16 +120,6 @@ $server->on(StartEvent::class, new ServerStartedListener());
 
 // --------------------------------------------------------------------------
 // End subscribe custom events
-
-/*
- * --------------------------------------------------------------------------
- * App initialize
- * --------------------------------------------------------------------------
- * Initialize Application.
- * This will run user init code, put your code into `WsApplication::init()`
- */
-
-$app->initialize();
 
 /*
  * --------------------------------------------------------------------------
@@ -245,11 +222,47 @@ $server->onClose(
 
 /*
  * --------------------------------------------------------------------------
- * Run Server
+ * Boot Application
  * --------------------------------------------------------------------------
- * After events configured, let's start running server.
- * This will hang process util a new request.
- * To stop server, use `$server->shutdown()` in request or press CTRL + C.
+ * Boot application for current server instance.
  */
 
-$server->listen('0.0.0.0', $serverState->getPort() ?: 9501);
+run(
+    function () use ($app, $server) {
+        try {
+            $app->bootForServer($server);
+        } catch (\Throwable $e) {
+            CliServerRuntime::handleThrowable($e);
+            die;
+        }
+    }
+);
+
+// Override display_errors before ini move to runtime
+// Todo: Move ini settings to runtime
+ini_set('display_errors', 'stderr');
+
+try {
+    /*
+     * --------------------------------------------------------------------------
+     * App initialize
+     * --------------------------------------------------------------------------
+     * Initialize Application.
+     * This will run user init code, put your code into `WsApplication::init()`
+     */
+
+    $app->initialize();
+
+    /*
+     * --------------------------------------------------------------------------
+     * Run Server
+     * --------------------------------------------------------------------------
+     * After events configured, let's start running server.
+     * This will hang process util a new request.
+     * To stop server, use `$server->shutdown()` in request or press CTRL + C.
+     */
+
+    $server->listen('0.0.0.0', $serverState->getPort() ?: 9501);
+} catch (\Throwable $e) {
+    CliServerRuntime::handleThrowable($e);
+}
