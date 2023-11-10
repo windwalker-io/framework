@@ -13,6 +13,8 @@ use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\PostgreSQLGrammar;
 use Windwalker\Query\Query;
 
+use function Windwalker\uid;
+
 /**
  * The PgsqlStatement class.
  */
@@ -49,7 +51,7 @@ class PgsqlStatement extends AbstractStatement
             function (ConnectionInterface $conn) use ($params, $query) {
                 $this->conn = $resource = $conn->get();
 
-                pg_prepare($resource, $stname = uniqid('pg-'), $query);
+                pg_prepare($resource, $stname = uid('pg-'), $query);
 
                 $args = [];
 
@@ -60,6 +62,10 @@ class PgsqlStatement extends AbstractStatement
                 $this->cursor = pg_execute($resource, $stname, $args);
             }
         );
+
+        if (!$this->cursor) {
+            throw new StatementException(pg_last_error());
+        }
 
         return true;
     }
