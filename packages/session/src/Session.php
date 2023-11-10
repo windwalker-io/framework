@@ -62,6 +62,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             ->expires('+30days')
             ->secure(false)
             ->sameSite(CookiesInterface::SAMESITE_LAX);
+
+        if ($this->getOption('name')) {
+            $this->setName($this->getOption('name'));
+        }
     }
 
     public function registerINI(): void
@@ -456,7 +460,9 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
     protected function getOptionAndINI(string $name): mixed
     {
-        return $this->getOption('ini')[$name] ?? ini_get('session.' . $name);
+        return $this->getOption('use_cookies')
+            ?? $this->getOption('ini')[$name]
+            ?? ini_get('session.' . $name);
     }
 
     /**

@@ -38,6 +38,16 @@ $container = (include CorePackage::path('../bin/server-boot.php'))('swoole', $ar
 
 /*
  * --------------------------------------------------------------------------
+ * Configure Error Reporting
+ * --------------------------------------------------------------------------
+ * This will set display_errors output to STDERR and use built-in
+ * error-reporting levels.
+ */
+
+CliServerRuntime::registerErrorReporting(include WINDWALKER_ETC . '/conf/error-reporting.php');
+
+/*
+ * --------------------------------------------------------------------------
  * Server State
  * --------------------------------------------------------------------------
  * Get server state of current runtime.
@@ -240,10 +250,6 @@ run(
         }
     }
 );
-
-// Override display_errors before ini move to runtime
-// Todo: Move ini settings to runtime
-ini_set('display_errors', 'stderr');
 
 try {
     /*
