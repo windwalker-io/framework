@@ -5,10 +5,8 @@ declare(strict_types=1);
 use Windwalker\Core\Manager\SessionManager;
 use Windwalker\Core\Session\CookiesAutoSecureSubscriber;
 use Windwalker\Core\Session\SessionRobotSubscriber;
-use Windwalker\DI\Container;
 use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Bridge\PhpBridge;
-use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
 use Windwalker\Session\Handler\ArrayHandler;
 use Windwalker\Session\Handler\DatabaseHandler;
@@ -20,7 +18,6 @@ use Windwalker\Session\SessionInterface;
 use Windwalker\Session\SessionPackage;
 
 use function Windwalker\DI\create;
-use function Windwalker\ref;
 
 return [
     'session' => [
@@ -55,11 +52,13 @@ return [
         ],
 
         'listeners' => [
-            SessionRobotSubscriber::class,
-            create(
-                CookiesAutoSecureSubscriber::class,
-                enabled: (bool) env('COOKIES_AUTO_SECURE', '1')
-            )
+            \Windwalker\Core\Application\AppContext::class => [
+                SessionRobotSubscriber::class,
+                create(
+                    CookiesAutoSecureSubscriber::class,
+                    enabled: (bool) env('COOKIES_AUTO_SECURE', '1')
+                ),
+            ],
         ],
 
         'bindings' => [
@@ -69,11 +68,11 @@ return [
         'factories' => [
             'instances' => [
                 'native' => SessionManager::createSession(
+                    'php',
                     'native',
-                    'native',
-                    'native',
+                    'request',
                     [
-                        SessionInterface::OPTION_AUTO_COMMIT => true
+                        SessionInterface::OPTION_AUTO_COMMIT => true,
                     ]
                 ),
                 'filesystem' => SessionManager::createSession(
@@ -81,7 +80,7 @@ return [
                     'filesystem',
                     'request',
                     [
-                        SessionInterface::OPTION_AUTO_COMMIT => true
+                        SessionInterface::OPTION_AUTO_COMMIT => true,
                     ]
                 ),
                 'database' => SessionManager::createSession(
@@ -89,7 +88,7 @@ return [
                     'database',
                     'request',
                     [
-                        SessionInterface::OPTION_AUTO_COMMIT => true
+                        SessionInterface::OPTION_AUTO_COMMIT => true,
                     ]
                 ),
                 'null' => SessionManager::createSession(
@@ -106,15 +105,15 @@ return [
                 'array' => ArrayHandler::class,
                 'null' => NullHandler::class,
                 'native' => NativeHandler::class,
-                'database' => create(
+                'database' => static fn() => create(
                     DatabaseHandler::class,
                     options: [
-                        'table' => 'sessions'
+                        'table' => 'sessions',
                     ]
                 ),
-                'filesystem' => create(
+                'filesystem' => static fn() => create(
                     FilesystemHandler::class,
-                    path: fn () => sys_get_temp_dir() . '/sess',
+                    path: fn() => sys_get_temp_dir() . '/sess',
                     options: []
                 ),
                 'redis' => RedisHandler::class,
