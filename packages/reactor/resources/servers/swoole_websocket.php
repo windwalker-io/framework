@@ -140,8 +140,12 @@ $server->onOpen(
         // Keep request in memory, so we can use this request cross processes.
         $app->rememberRequest($request);
 
-        // Run custom open() code.
-        $app->openConnection($request);
+        try {
+            // Run custom open() code.
+            $app->openConnection($request);
+        } catch (\Throwable $e) {
+            CliServerRuntime::handleThrowable($e);
+        }
     }
 );
 
@@ -160,11 +164,33 @@ $server->onOpen(
 $server->onMessage(
     function (MessageEvent $event) use ($app) {
         // Get request object from memory
-        $request = $app->getRequest($event->getFd())
-            ->withFrame($event->getFrame());
+        $request = $event->getRequestFromMemory($app);
 
         try {
             $app->runContextByRequest($request);
+        } catch (\Throwable $e) {
+            CliServerRuntime::handleThrowable($e);
+        }
+    }
+);
+
+/*
+ * --------------------------------------------------------------------------
+ * Connection Close
+ * --------------------------------------------------------------------------
+ * The event of connection closing.
+ * This event will release the objects which keeping in memory.
+ * To add custom close handler, put your code into WsApplication::started()
+ */
+
+$server->onClose(
+    function (CloseEvent $event) use ($app) {
+        // Get request from memory and release it
+        $request = $event->getAndForgetRequest($app);
+
+        try {
+            // Run custom close handler.
+            $app->closeConnection($request);
         } catch (\Throwable $e) {
             CliServerRuntime::handleThrowable($e);
         }
@@ -194,29 +220,6 @@ $server->onStart(
             CliServerRuntime::handleThrowable($e);
             $server->shutdown();
         }
-    }
-);
-
-/*
- * --------------------------------------------------------------------------
- * Connection Close
- * --------------------------------------------------------------------------
- * The event of connection closing.
- * This event will release the objects which keeping in memory.
- * To add custom close handler, put your code into WsApplication::started()
- */
-
-$server->onClose(
-    function (CloseEvent $event) use ($app) {
-        // Get request from memory
-        $request = $app->getRequest($event->getFd())
-            ->withFrame($event->createWocketFrame());
-
-        // Release request object from memory
-        $app->forgetRequest($event->getFd());
-
-        // Run custom close handler.
-        $app->closeConnection($request);
     }
 );
 

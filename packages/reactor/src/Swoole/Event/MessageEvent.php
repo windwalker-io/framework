@@ -6,6 +6,8 @@ namespace Windwalker\Reactor\Swoole\Event;
 
 use Windwalker\Event\AbstractEvent;
 use Windwalker\Reactor\WebSocket\WebSocketFrameInterface;
+use Windwalker\Reactor\WebSocket\WebSocketRequestInterface;
+use Windwalker\WebSocket\Application\WsApplicationInterface;
 
 /**
  * The MessageEvent class.
@@ -41,5 +43,12 @@ class MessageEvent extends AbstractEvent
     public function getData(): string
     {
         return $this->frame->getData();
+    }
+
+    public function getRequestFromMemory(WsApplicationInterface $app): WebSocketRequestInterface
+    {
+        return $app->getRememberedRequest($this->getFd())
+            ->withFrame($this->getFrame())
+            ->withMethod('MESSAGE');
     }
 }

@@ -15,6 +15,13 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
 
     protected mixed $parsedData = null;
 
+    protected array $allowMethods = [
+        'GET',
+        'OPEN',
+        'MESSAGE',
+        'CLOSE'
+    ];
+
     public static function createFromFrame(WebSocketFrameInterface $frame): static
     {
         return (new static())->withFrame($frame);

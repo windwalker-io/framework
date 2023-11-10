@@ -805,7 +805,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             $port,
             'Open',
             function (SwooleBaseServer $swooleServer, Request $swooleRequest) use ($server) {
-                $request = SwooleRequestFactory::createPsrSwooleRequest($swooleRequest);
+                $request = SwooleRequestFactory::createPsrSwooleRequest($swooleRequest)
+                    ->withMethod('OPEN');
+
                 $this->emit(
                     OpenEvent::class,
                     compact(
