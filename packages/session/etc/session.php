@@ -37,10 +37,17 @@ return [
             'samesite' => CookiesInterface::SAMESITE_LAX,
         ],
 
-        'ini' => [
+        'session_options' => [
             'name' => 'WINDWALKER_SESSID',
-            // 'save_path' => '@temp/sess',
             'use_cookies' => '0',
+            'gc_divisor' => '1000',
+            'gc_probability' => env('SESSION_GC_PROBABILITY', '1'),
+        ],
+
+        'ini' => [
+            'use_cookies' => '0',
+            'gc_divisor' => '1000',
+            'gc_probability' => env('SESSION_GC_PROBABILITY', '1'),
         ],
 
         'providers' => [
