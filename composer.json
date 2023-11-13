@@ -27,7 +27,6 @@
         "paragonie/constant_time_encoding": "^2.3",
         "composer/ca-bundle": "^1.2",
         "symfony/options-resolver": "^5.0||^6.0||^7.0",
-        "symfony/polyfill-php81": "^1.27",
         "symfony/polyfill-php83": "^1.27"
     },
     "require-dev": {
