@@ -18,6 +18,11 @@ class TruncateValueSubscriber
     public function beforeStore(BeforeStoreEvent $event): void
     {
         $orm = $event->getORM();
+
+        if ($orm->getDb()->getDriver()->isDebug()) {
+            return;
+        }
+
         $metadata = $event->getMetadata();
         $data = &$event->getData();
         $columns = $orm->getDb()->getTable($metadata->getTableName())->getColumns();
