@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
+use function Windwalker\unwrap_enum;
+
 /**
  * Uri Class
  *
@@ -508,7 +510,7 @@ class Uri implements ExtendedUriInterface
         $new = clone $this;
 
         $query = $new->vars;
-        $query[$name] = $value;
+        $query[$name] = unwrap_enum($value);
 
         $query = UriHelper::filterQuery(UriHelper::buildQuery($query));
 
