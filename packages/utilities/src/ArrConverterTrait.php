@@ -194,7 +194,7 @@ trait ArrConverterTrait
                 continue;
             }
 
-            $resultKey = (string) $result;
+            $resultKey = TypeCast::toString($result);
             $resultValue = $value;
 
             // First set value if not exists.
