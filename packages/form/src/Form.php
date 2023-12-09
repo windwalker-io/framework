@@ -24,6 +24,7 @@ use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\Symbol;
 use Windwalker\Utilities\TypeCast;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The Form class.
@@ -202,6 +203,10 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
             $data = Arr::mapRecursive(
                 $data,
                 static function ($value) {
+                    if ($value instanceof RawWrapper) {
+                        return $value();
+                    }
+
                     if (is_string($value) && is_json($value)) {
                         try {
                             return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
