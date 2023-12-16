@@ -44,8 +44,16 @@ class CreatedTime extends CastForSave
         return function (mixed $value, ORM $orm, object $entity) {
             $isNull = $value === null || $orm->getDb()->isNullDate($value);
 
-            if ($isNull && $orm->mapper($entity::class)->isNew($entity)) {
-                $value = $this->getCurrent();
+            $mapper = $orm->mapper($entity::class);
+
+            if ($isNull) {
+                if ($mapper->getMainKey()) {
+                    if ($mapper->isNew($entity)) {
+                        $value = $this->getCurrent();
+                    }
+                } else {
+                    $value = $this->getCurrent();
+                }
             }
 
             return $value;

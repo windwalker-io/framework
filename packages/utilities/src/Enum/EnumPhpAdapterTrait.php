@@ -37,6 +37,10 @@ trait EnumPhpAdapterTrait
             return $value;
         }
 
+        if ($value === null) {
+            return null;
+        }
+
         return static::tryFrom($value);
     }
 

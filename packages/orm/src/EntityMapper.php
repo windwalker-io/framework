@@ -590,17 +590,9 @@ class EntityMapper implements EventAwareInterface
 
     public function isNew(array|object $item): bool
     {
-        $keys = $this->getKeys();
-        $pk = null;
+        $pk = $this->getMainKey();
 
-        if (\Windwalker\count($keys) > 1) {
-            $aiColumnName = $this->getAutoIncrementColumn(true);
-            $pk = $aiColumnName;
-        } elseif (\Windwalker\count($keys) === 1) {
-            $pk = $keys[0];
-        }
-
-        if ($pk === null) {
+        if (!$pk) {
             throw new LogicException(
                 sprintf(
                     '%s must has at least 1 primary key or an auto-increment column in Entity to check isNew.',
@@ -612,8 +604,7 @@ class EntityMapper implements EventAwareInterface
         $metadata = $this->getMetadata();
 
         if (
-            $pk
-            && is_object($item)
+            is_object($item)
             && $metadata::isEntity($item)
             && $aiColumn = $metadata->getColumn($pk)
         ) {
@@ -1119,6 +1110,12 @@ class EntityMapper implements EventAwareInterface
 
     public function getMainKey(): ?string
     {
+        $pk = $this->getAutoIncrementColumn();
+
+        if ($pk) {
+            return $pk;
+        }
+
         return $this->getMetadata()->getMainKey();
     }
 
