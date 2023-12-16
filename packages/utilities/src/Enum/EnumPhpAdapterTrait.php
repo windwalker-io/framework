@@ -72,6 +72,11 @@ trait EnumPhpAdapterTrait
         return array_values(static::values());
     }
 
+    public static function rawValues(): array
+    {
+        return array_map(fn (self $case) => $case->value, self::values());
+    }
+
     public function getValue(): mixed
     {
         if ($this instanceof \UnitEnum) {
