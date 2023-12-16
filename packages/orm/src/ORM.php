@@ -294,7 +294,10 @@ class ORM implements EventAwareInterface
      */
     public function toEntity(string $entityClass, array|object $data): object
     {
-        return $this->mapper($entityClass)->toEntity($data);
+        /** @var E $entity */
+        $entity = $this->mapper($entityClass)->toEntity($data);
+
+        return $entity;
     }
 
     /**
@@ -309,7 +312,10 @@ class ORM implements EventAwareInterface
      */
     public function toEntityOrNull(string $entityClass, array|object|null $data): ?object
     {
-        return $this->mapper($entityClass)->tryEntity($data);
+        /** @var E $entity */
+        $entity = $this->mapper($entityClass)->tryEntity($data);
+
+        return $entity;
     }
 
     /**
@@ -324,7 +330,10 @@ class ORM implements EventAwareInterface
      */
     public function tryEntity(string $entityClass, array|object|null $data): ?object
     {
-        return $this->mapper($entityClass)->tryEntity($data);
+        /** @var E $entity */
+        $entity = $this->mapper($entityClass)->tryEntity($data);
+
+        return $entity;
     }
 
     public function extractEntity(array|object|null $entity): array
