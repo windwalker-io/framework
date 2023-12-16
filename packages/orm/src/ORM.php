@@ -309,7 +309,22 @@ class ORM implements EventAwareInterface
      */
     public function toEntityOrNull(string $entityClass, array|object|null $data): ?object
     {
-        return $this->mapper($entityClass)->toEntityOrNull($data);
+        return $this->mapper($entityClass)->tryEntity($data);
+    }
+
+    /**
+     * @template E
+     *
+     * @param  class-string<E>    $entityClass
+     * @param  array|object|null  $data
+     *
+     * @return  E|null
+     *
+     * @throws ReflectionException
+     */
+    public function tryEntity(string $entityClass, array|object|null $data): ?object
+    {
+        return $this->mapper($entityClass)->tryEntity($data);
     }
 
     public function extractEntity(array|object|null $entity): array

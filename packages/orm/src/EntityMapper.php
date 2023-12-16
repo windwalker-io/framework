@@ -1183,6 +1183,18 @@ class EntityMapper implements EventAwareInterface
      */
     public function toEntityOrNull(object|array|null $data): ?object
     {
+        return $this->tryEntity($data);
+    }
+
+    /**
+     * @param  array|object|null  $data
+     *
+     * @return  object|T|null
+     *
+     * @throws \ReflectionException
+     */
+    public function tryEntity(object|array|null $data): ?object
+    {
         if ($data === null) {
             return null;
         }
