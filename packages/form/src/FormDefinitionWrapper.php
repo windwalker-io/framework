@@ -40,10 +40,6 @@ class FormDefinitionWrapper implements FieldDefinitionInterface
                     [$method->getName(), $attr],
                     $attr->ordering ?? $i
                 );
-
-                $methodName = $method->getName();
-
-                $this->definition->$methodName($form);
             }
         }
 
