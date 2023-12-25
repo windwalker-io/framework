@@ -142,7 +142,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         $field->setName($name);
 
         $namespace = implode('/', $this->namespaceStack) . '/' . $namespace;
-        $namespace = trim($namespace, '/') ?: null;
+        $namespace = trim($namespace, '/') ?: '';
 
         return $this->addField($field, $fieldset, $namespace);
     }
