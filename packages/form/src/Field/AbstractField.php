@@ -14,6 +14,7 @@ use Windwalker\Form\Field\Concern\{ManageFilterTrait,
     ManageLabelTrait,
     ManageRenderTrait,
     ManageWrapperTrait};
+use Windwalker\Form\Attributes\Fieldset;
 use Windwalker\Form\Form;
 use Windwalker\Form\FormNormalizer;
 use Windwalker\Form\FormRegistry;
@@ -342,12 +343,16 @@ abstract class AbstractField
     /**
      * Method to set property fieldset
      *
-     * @param   ?string  $fieldset
+     * @param  Fieldset|string|null  $fieldset
      *
      * @return  static  Return self to support chaining.
      */
-    public function setFieldset(?string $fieldset): static
+    public function setFieldset(Fieldset|string|null $fieldset): static
     {
+        if ($fieldset instanceof Fieldset) {
+            $fieldset = $fieldset->getName();
+        }
+
         $this->fieldset = $fieldset;
 
         return $this;
