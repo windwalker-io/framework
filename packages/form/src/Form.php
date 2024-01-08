@@ -152,14 +152,12 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         Fieldset|string|null $fieldset = null,
         string $namespace = ''
     ): AbstractField {
-        if ($fieldset) {
-            $fieldset = $this->fieldset($fieldset);
-        } else {
+        if ($fieldset === null) {
             $fieldset = $this->fieldset;
         }
 
-        if ($fieldset) {
-            $field->setFieldset($fieldset->getName());
+        if ($fieldset !== null) {
+            $field->setFieldset($fieldset);
         }
 
         if (!$namespace) {
