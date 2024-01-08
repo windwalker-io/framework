@@ -230,6 +230,15 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this;
     }
 
+    public function fillTo(string $path, mixed $data, bool $decodeJson = true): static
+    {
+        $data = TypeCast::toArray($data);
+
+        $data = Arr::set([], $path, $data, '/');
+
+        return $this->fill($data, $decodeJson);
+    }
+
     /**
      * bind
      *
