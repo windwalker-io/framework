@@ -7,6 +7,7 @@ namespace Windwalker\Database\Platform;
 use Throwable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
 use Windwalker\Database\Platform\Type\DataType;
@@ -505,21 +506,22 @@ abstract class AbstractPlatform
     }
 
     /**
-     * commit
-     *
+     * @param  bool  $releaseConnection  *
      * @return  static
      */
-    public function transactionCommit(): static
+    public function transactionCommit(bool $releaseConnection = true): static
     {
         $driver = $this->db->getDriver();
 
         if ($driver instanceof TransactionDriverInterface) {
-            $driver->transactionCommit();
+            $driver->transactionCommit($releaseConnection);
         } else {
             $this->db->execute('COMMIT;');
-        }
 
-        $driver->releaseKeptConnection();
+            if ($releaseConnection) {
+                $this->releaseKeptConnection();
+            }
+        }
 
         $this->depth--;
 
@@ -529,19 +531,23 @@ abstract class AbstractPlatform
     /**
      * rollback
      *
+     * @param  bool  $releaseConnection  *
      * @return  static
      */
-    public function transactionRollback(): static
+    public function transactionRollback(bool $releaseConnection = true): static
     {
         $driver = $this->db->getDriver();
 
         if ($driver instanceof TransactionDriverInterface) {
-            $driver->transactionRollback();
+            $driver->transactionRollback($releaseConnection);
         } else {
             $this->db->execute('ROLLBACK;');
+
+            if ($releaseConnection) {
+                $driver->releaseKeptConnection();
+            }
         }
 
-        $driver->releaseKeptConnection();
 
         $this->depth--;
 
@@ -579,11 +585,12 @@ abstract class AbstractPlatform
             $this->transactionRollback();
 
             throw $e;
-        } finally {
-            if ($autoCommit) {
-                $this->db->getDriver()->releaseKeptConnection();
-            }
         }
+    }
+
+    public function releaseKeptConnection(): ?ConnectionInterface
+    {
+        return $this->db->getDriver()->releaseKeptConnection();
     }
 
     public function getDataType(): DataType

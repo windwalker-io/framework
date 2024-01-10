@@ -88,31 +88,37 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
     }
 
     /**
+     * @param  bool  $releaseConnection  *
      * @inheritDoc
      */
-    public function transactionCommit(): bool
+    public function transactionCommit(bool $releaseConnection = true): bool
     {
         /** @var PDO $pdo */
         $pdo = $this->getConnection()->get();
 
         $r = $pdo->commit();
 
-        $this->releaseKeptConnection();
+        if ($releaseConnection) {
+            $this->releaseKeptConnection();
+        }
 
         return $r;
     }
 
     /**
+     * @param  bool  $releaseConnection  *
      * @inheritDoc
      */
-    public function transactionRollback(): bool
+    public function transactionRollback(bool $releaseConnection = true): bool
     {
         /** @var PDO $pdo */
         $pdo = $this->getConnection()->get();
 
         $r = $pdo->rollBack();
 
-        $this->releaseKeptConnection();
+        if ($releaseConnection) {
+            $this->releaseKeptConnection();
+        }
 
         return $r;
     }

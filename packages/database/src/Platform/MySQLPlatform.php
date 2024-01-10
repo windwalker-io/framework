@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Platform;
 
 use Windwalker\Data\Collection;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Index;
@@ -667,12 +668,13 @@ class MySQLPlatform extends AbstractPlatform
     /**
      * commit
      *
+     * @param  bool  $releaseConnection  *
      * @return  static
      */
-    public function transactionCommit(): static
+    public function transactionCommit(bool $releaseConnection = true): static
     {
         if ($this->depth <= 1) {
-            parent::transactionCommit();
+            parent::transactionCommit($releaseConnection);
         } else {
             $this->depth--;
         }
@@ -680,15 +682,25 @@ class MySQLPlatform extends AbstractPlatform
         return $this;
     }
 
+    public function releaseKeptConnection(): ?ConnectionInterface
+    {
+        if ($this->depth < 1) {
+            return parent::releaseKeptConnection();
+        }
+
+        return null;
+    }
+
     /**
      * rollback
      *
+     * @param  bool  $releaseConnection  *
      * @return  static
      */
-    public function transactionRollback(): static
+    public function transactionRollback(bool $releaseConnection = true): static
     {
         if ($this->depth <= 1) {
-            parent::transactionRollback();
+            parent::transactionRollback($releaseConnection);
         } else {
             $savepoint = 'SP_' . ($this->depth - 1);
             $this->db->execute('ROLLBACK TO SAVEPOINT ' . $this->db->quoteName($savepoint));

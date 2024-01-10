@@ -84,31 +84,39 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     }
 
     /**
+     * @param  bool  $releaseConnection  *
+     *
      * @inheritDoc
      */
-    public function transactionCommit(): bool
+    public function transactionCommit(bool $releaseConnection = true): bool
     {
         /** @var mysqli $mysqli */
         $mysqli = $this->getConnection()->get();
 
         $r = $mysqli->commit();
 
-        $this->releaseKeptConnection();
+        if ($releaseConnection) {
+            $this->releaseKeptConnection();
+        }
 
         return $r;
     }
 
     /**
+     * @param  bool  $releaseConnection  *
+     *
      * @inheritDoc
      */
-    public function transactionRollback(): bool
+    public function transactionRollback(bool $releaseConnection = true): bool
     {
         /** @var mysqli $mysqli */
         $mysqli = $this->getConnection()->get();
 
         $r = $mysqli->rollback();
 
-        $this->releaseKeptConnection();
+        if ($releaseConnection) {
+            $this->releaseKeptConnection();
+        }
 
         return $r;
     }

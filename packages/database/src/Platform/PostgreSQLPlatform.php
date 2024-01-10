@@ -458,12 +458,14 @@ class PostgreSQLPlatform extends AbstractPlatform
     /**
      * rollback
      *
+     * @param  bool  $releaseConnection  *
+     *
      * @return  static
      */
-    public function transactionRollback(): static
+    public function transactionRollback(bool $releaseConnection = true): static
     {
         if ($this->depth <= 1) {
-            parent::transactionRollback();
+            parent::transactionRollback($releaseConnection);
         } else {
             $savepoint = 'SP_' . ($this->depth - 1);
             $this->db->execute('ROLLBACK TO SAVEPOINT ' . $this->db->quoteName($savepoint));

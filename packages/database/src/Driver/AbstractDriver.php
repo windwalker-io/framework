@@ -174,6 +174,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
     {
         if ($this->connection) {
             $conn = $this->connection;
+
             $conn->release();
 
             $this->connection = null;

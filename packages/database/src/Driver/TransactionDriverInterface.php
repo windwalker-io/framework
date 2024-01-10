@@ -17,16 +17,18 @@ interface TransactionDriverInterface
     public function transactionStart(): bool;
 
     /**
-     * commit
+     * @param  bool  $releaseConnection
      *
      * @return  bool
      */
-    public function transactionCommit(): bool;
+    public function transactionCommit(bool $releaseConnection = true): bool;
 
     /**
      * rollback
      *
+     * @param  bool  $releaseConnection
+     *
      * @return  bool
      */
-    public function transactionRollback(): bool;
+    public function transactionRollback(bool $releaseConnection = true): bool;
 }
