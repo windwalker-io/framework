@@ -48,6 +48,10 @@ trait InstanceCacheTrait
             unset($this->cacheStorage[$id]);
         }
 
-        return $this->cacheStorage[$id] ??= $closure();
+        if (!array_key_exists($id, $this->cacheStorage)) {
+            $this->cacheStorage[$id] = $closure();
+        }
+
+        return $this->cacheStorage[$id];
     }
 }

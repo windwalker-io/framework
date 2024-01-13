@@ -89,7 +89,7 @@ class Stream implements StreamInterface
             return $stream;
         }
 
-        return new Stream($stream, $mode);
+        return new static($stream, $mode);
     }
 
     /**
