@@ -399,7 +399,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected function handleAsValue(mixed $value, mixed $alias): array
     {
         if ($value instanceof Closure) {
-            $value($value = $this->createSubQuery());
+            $q = $value($q = $this->createSubQuery()) ?? $q;
+            $value = $q;
         }
 
         if ($value instanceof self) {
