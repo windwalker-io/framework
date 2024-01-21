@@ -310,6 +310,12 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
         return $this->fields[$namespace] ?? null;
     }
 
+    public function mustGetField(string $namespace): AbstractField
+    {
+        return $this->getField($namespace)
+            ?? throw new \OutOfBoundsException("Field \"$namespace\" not exists.");
+    }
+
     public function hasField(string $namespace): bool
     {
         return isset($this->fields[$namespace]);
