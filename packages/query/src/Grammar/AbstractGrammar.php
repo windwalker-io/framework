@@ -124,6 +124,19 @@ abstract class AbstractGrammar
     {
         $sql['select'] = (string) $query->getSelect();
 
+        if ($union = $query->getUnion()) {
+            // Is full union
+            if (!$query->getSelect()) {
+                $union->setName('()');
+
+                unset($sql['group']);
+            }
+
+            $sql['union'] = (string) $union;
+        } else {
+            $sql['select'] = $sql['select'] ?: 'SELECT *';
+        }
+
         if ($form = $query->getFrom()) {
             $sql['from'] = $form;
         }
@@ -142,19 +155,6 @@ abstract class AbstractGrammar
 
         if ($group = $query->getGroup()) {
             $sql['group'] = $group;
-        }
-
-        if ($union = $query->getUnion()) {
-            // Is full union
-            if (!$query->getSelect()) {
-                $union->setName('()');
-
-                unset($sql['group']);
-            }
-
-            $sql['union'] = (string) $union;
-        } else {
-            $sql['select'] = $sql['select'] ?: 'SELECT *';
         }
 
         // Only order and limit can after union
