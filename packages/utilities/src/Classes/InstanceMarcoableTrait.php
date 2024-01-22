@@ -9,8 +9,6 @@ use Closure;
 
 /**
  * The InstanceMarcoableTrait class.
- *
- * @since  __DEPLOY_VERSION__
  */
 trait InstanceMarcoableTrait
 {

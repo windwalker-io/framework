@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Test;
 
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
+use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\ORM;
+use Windwalker\ORM\SelectorQuery;
 use Windwalker\ORM\Test\Entity\StubArticle;
+use Windwalker\Query\Query;
 
 /**
  * The ORMTest class.
@@ -27,6 +30,14 @@ class ORMTest extends AbstractDatabaseTestCase
         self::assertEquals('Corrupti illum.', $article->getTitle());
         self::assertEquals('2009-05-14 17:45:24', $article->getCreated()->format(self::$db->getDateFormat()));
         self::assertTrue($article->getParams()['show_title']);
+    }
+
+    public function chainReturn()
+    {
+        /** @var EntityMapper<StubArticle> $mapper */
+        $mapper = $this->instance->mapper(StubArticle::class);
+
+        $item = $mapper->tryEntity();
     }
 
     /**

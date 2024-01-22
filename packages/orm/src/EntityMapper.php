@@ -1165,10 +1165,13 @@ class EntityMapper implements EventAwareInterface
             $data = TypeCast::toArray($data);
         }
 
-        return $this->getORM()->hydrateEntity(
+        /** @var T $entity */
+        $entity = $this->getORM()->hydrateEntity(
             $data,
             $this->createEntity()
         );
+
+        return $entity;
     }
 
     /**
@@ -1196,7 +1199,10 @@ class EntityMapper implements EventAwareInterface
             return null;
         }
 
-        return $this->toEntity($data);
+        /** @var ?T $entity */
+        $entity = $this->toEntity($data);
+
+        return $entity;
     }
 
     public function toCollection(array|object $data): Collection
@@ -1232,7 +1238,10 @@ class EntityMapper implements EventAwareInterface
      */
     public function hydrate(array $data, object $entity): object
     {
-        return $this->getORM()->hydrateEntity($data, $entity);
+        /** @var T $entity */
+        $entity = $this->getORM()->hydrateEntity($data, $entity);
+
+        return $entity;
     }
 
     public function extract(object|array $entity): array

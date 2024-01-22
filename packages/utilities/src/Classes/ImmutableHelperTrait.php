@@ -6,8 +6,6 @@ namespace Windwalker\Utilities\Classes;
 
 /**
  * The ImmutableHelperTrait class.
- *
- * @since  __DEPLOY_VERSION__
  */
 trait ImmutableHelperTrait
 {

@@ -237,8 +237,6 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * createEntity
-     *
      * @template T
      *
      * @param  class-string<T>  $entityClass
@@ -249,6 +247,7 @@ class ORM implements EventAwareInterface
      */
     public function createEntity(string $entityClass, array $data = []): object
     {
+        /** @var T $entity */
         $entity = $this->mapper($entityClass)->createEntity();
 
         if ($data !== []) {
@@ -279,7 +278,10 @@ class ORM implements EventAwareInterface
             compact('class', 'item')
         );
 
-        return $this->getEntityHydrator()->hydrate($event->getItem(), $entity);
+        /** @var T $entity */
+        $entity = $this->getEntityHydrator()->hydrate($event->getItem(), $entity);
+
+        return $entity;
     }
 
     /**
