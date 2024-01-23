@@ -220,7 +220,7 @@ class UriTest extends TestCase
         self::assertEquals($expected, $uri->getAuthority());
     }
 
-    public function queryStringsForEncoding(): array
+    public static function queryStringsForEncoding(): array
     {
         return [
             'key-only' => ['k^ey', 'k%5Eey'],

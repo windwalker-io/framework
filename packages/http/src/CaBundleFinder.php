@@ -25,7 +25,7 @@ class CaBundleFinder
 
         $finder = static::getFinder();
 
-        $file =$finder();
+        $file = $finder();
 
         if (file_exists($file)) {
             return $file;
