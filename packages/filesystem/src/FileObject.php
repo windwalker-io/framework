@@ -652,8 +652,6 @@ class FileObject extends SplFileInfo
     }
 
     /**
-     * getParent
-     *
      * @param  int  $levels
      *
      * @return  static
@@ -661,6 +659,11 @@ class FileObject extends SplFileInfo
     public function getParent(int $levels = 1): static
     {
         return static::wrap(dirname($this->getPathname(), $levels));
+    }
+
+    public function getPathObject(): static
+    {
+        return static::wrap($this->getPath());
     }
 
     /**
