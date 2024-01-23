@@ -6,6 +6,7 @@ namespace Windwalker\ORM\Test\Entity;
 
 use DateTimeImmutable;
 use Windwalker\Data\Collection;
+use Windwalker\DI\Attributes\Autowire;
 use Windwalker\ORM\Attributes\AutoIncrement;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
@@ -15,6 +16,8 @@ use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Cast\JsonCast;
 use Windwalker\ORM\Event\AfterSaveEvent;
 use Windwalker\ORM\Event\BeforeStoreEvent;
+use Windwalker\ORM\Event\EnergizeEvent;
+use Windwalker\Scalars\StringObject;
 
 /**
  * The Article class.
@@ -79,6 +82,16 @@ class StubArticle
         BeforeStoreEvent $event
     ): void {
         static::$diff = $event->getData();
+    }
+
+    #[EnergizeEvent]
+    public static function energize(
+        EnergizeEvent $event
+    ): void {
+        $event->storeCallback(
+            'str',
+            fn() => \Windwalker\str('HAHA')
+        );
     }
 
     /**

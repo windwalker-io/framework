@@ -15,6 +15,17 @@ class EntityEventTest extends AbstractORMTestCase
 {
     protected EntityMapper $instance;
 
+    public function testEnergize(): void
+    {
+        $article = new StubArticle();
+
+        self::$orm->energize($article);
+
+        $str = self::$orm::getObjectMetadata()->get($article, 'str')();
+
+        self::assertEquals('HAHA', (string) $str);
+    }
+
     public function testSaveAndStoreEvent()
     {
         StubArticle::$counter = 0;
@@ -28,12 +39,14 @@ class EntityEventTest extends AbstractORMTestCase
 
         /** @var StubArticle $article */
         $article = self::$orm->mapper(StubArticle::class)->createOne($article);
+        $str = self::$orm::getObjectMetadata()->get($article, 'str')();
 
         self::assertEquals(
             1,
             StubArticle::$counter,
         );
         self::assertEquals(2, $article->getCategoryId());
+        self::assertEquals('HAHA', (string) $str);
 
         StubArticle::$counter = 0;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
+use Asika\ObjectMetadata\ObjectMetadata;
 use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -29,7 +30,8 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeDeleteEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
-    BeforeUpdateWhereEvent};
+    BeforeUpdateWhereEvent,
+    EnergizeEvent};
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -1143,7 +1145,55 @@ class EntityMapper implements EventAwareInterface
             $metadata->setCachedEntity($entity);
         }
 
-        return clone $entity;
+        return $this->energize(clone $entity);
+    }
+
+    public function isEnergized(object $entity): bool
+    {
+        return (bool) static::getObjectMetadata()->get($entity, 'entity.energized');
+    }
+
+    /**
+     * @param  T    $entity
+     * @param  bool $force
+     *
+     * @return  T
+     */
+    public function energize(object $entity, bool $force = false): object
+    {
+        $meta = static::getObjectMetadata();
+
+        if ($force) {
+            $meta->set($entity, 'entity.energized', false);
+        }
+
+        if ($this->isEnergized($entity)) {
+            return $entity;
+        }
+
+        $meta->set($entity, 'entity.metadata', $this->getMetadata());
+
+        $event = $this->emitEvent(
+            EnergizeEvent::class,
+            [
+                'metadata' => $this->getMetadata(),
+                'entity' => $entity
+            ]
+        );
+
+        /** @var T $entity */
+        $entity = $event->getEntity();
+
+        $meta->set($entity, 'entity.energized', true);
+
+        return $entity;
+    }
+
+    public function unenergize(object $entity): static
+    {
+        self::getObjectMetadata()->set($entity, 'entity.energized', false);
+
+        return $this;
     }
 
     /**
@@ -1157,14 +1207,15 @@ class EntityMapper implements EventAwareInterface
     {
         $class = $this->getMetadata()->getClassName();
 
-        if ($data instanceof $class) {
-            return $data;
+        if (is_a($data, $class, true)) {
+            return $this->energize($data);
         }
 
         if (is_object($data)) {
             $data = TypeCast::toArray($data);
         }
 
+        // Only ORM has Hydrator, we must call ORM to do this.
         /** @var T $entity */
         $entity = $this->getORM()->hydrateEntity(
             $data,
@@ -1238,6 +1289,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function hydrate(array $data, object $entity): object
     {
+        // Only ORM has Hydrator, we must call ORM to do this.
         /** @var T $entity */
         $entity = $this->getORM()->hydrateEntity($data, $entity);
 
@@ -1498,5 +1550,10 @@ class EntityMapper implements EventAwareInterface
         }
 
         return false;
+    }
+
+    public static function getObjectMetadata(): ObjectMetadata
+    {
+        return ObjectMetadata::getInstance('windwalker.orm');
     }
 }
