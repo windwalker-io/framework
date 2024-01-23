@@ -368,6 +368,10 @@ class EntityMapper implements EventAwareInterface
         array|string $condFields = null,
         int $options = 0,
     ): ?StatementInterface {
+        if ($source === []) {
+            return null;
+        }
+
         $metadata = $this->getMetadata();
         $updateNulls = (bool) ($options & static::UPDATE_NULLS);
 
