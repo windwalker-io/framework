@@ -509,7 +509,7 @@ class QueryTest extends TestCase
             ->order('id', 'DESC');
 
         self::assertSqlEquals(
-            '(SELECT * FROM "foo" WHERE "id" > 12) UNION (SELECT * FROM "bar" WHERE "id" < 50) ORDER BY "id" DESC',
+            '(SELECT * FROM "foo" WHERE "id" > 12) UNION (SELECT * FROM "bar" WHERE "id" < 50) GROUP BY "id" ORDER BY "id" DESC',
             $q
         );
     }
