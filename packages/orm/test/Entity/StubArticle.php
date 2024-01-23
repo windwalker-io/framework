@@ -65,6 +65,8 @@ class StubArticle
 
     public static array $diff = [];
 
+    public static array $extra = [];
+
     #[AfterSaveEvent]
     public static function afterSave(
         AfterSaveEvent $event
@@ -75,6 +77,8 @@ class StubArticle
         $data['category_id'] = 2;
 
         $event->setData($data);
+
+        static::$extra = $event->getExtra();
     }
 
     #[BeforeStoreEvent]
@@ -82,6 +86,8 @@ class StubArticle
         BeforeStoreEvent $event
     ): void {
         static::$diff = $event->getData();
+
+        $event->setExtra(['content' => $event->getData()['content']]);
     }
 
     #[EnergizeEvent]

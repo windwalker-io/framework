@@ -45,6 +45,10 @@ class EntityEventTest extends AbstractORMTestCase
             1,
             StubArticle::$counter,
         );
+        self::assertEquals(
+            'World',
+            StubArticle::$extra['content'],
+        );
         self::assertEquals(2, $article->getCategoryId());
         self::assertEquals('HAHA', (string) $str);
 
