@@ -117,4 +117,9 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
     {
         return $this->getMetadata()->getEntityMapper()->toEntity($this->getData());
     }
+
+    public function getOldEntity(): ?object
+    {
+        return $this->getMetadata()->getEntityMapper()->tryEntity($this->getOldData());
+    }
 }
