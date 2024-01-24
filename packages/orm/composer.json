@@ -17,6 +17,7 @@
     "license": "MIT",
     "require": {
         "php": ">=8.2.0",
+        "asika/object-metadata": "^1.0",
         "windwalker/attributes": "^4.0",
         "windwalker/database": "^4.0",
         "windwalker/utilities": "^4.0",

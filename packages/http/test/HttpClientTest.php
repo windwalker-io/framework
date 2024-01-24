@@ -15,11 +15,9 @@ use Windwalker\Http\Response\JsonResponse;
 use Windwalker\Http\Test\Mock\MockTransport;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Promise\Promise;
-use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
-
 use Windwalker\Utilities\Str;
 
 use function Windwalker\Uri\uri_prepare;

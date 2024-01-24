@@ -475,6 +475,8 @@ class EntityMetadata implements EventAwareInterface
                                     'event' => $watchEvent,
                                 ]
                             );
+
+                        $event->setExtra($watchEvent->getExtra());
                     }
                 }
             );
@@ -529,6 +531,8 @@ class EntityMetadata implements EventAwareInterface
                                     'event' => $watchEvent,
                                 ]
                             );
+
+                        $event->setExtra($watchEvent->getExtra());
                     }
                 }
             );

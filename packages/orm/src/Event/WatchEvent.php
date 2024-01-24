@@ -17,6 +17,8 @@ class WatchEvent extends AbstractSaveEvent
 
     protected mixed $oldValue;
 
+    protected ?\Closure $afterCallback = null;
+
     /**
      * @return mixed
      */
@@ -100,6 +102,18 @@ class WatchEvent extends AbstractSaveEvent
     public function setDataRef(array &$data): static
     {
         $this->data = &$data;
+
+        return $this;
+    }
+
+    public function getAfterCallback(): ?\Closure
+    {
+        return $this->afterCallback;
+    }
+
+    public function setAfterCallback(?\Closure $afterCallback): static
+    {
+        $this->afterCallback = $afterCallback;
 
         return $this;
     }

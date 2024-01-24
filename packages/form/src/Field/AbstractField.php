@@ -7,7 +7,6 @@ namespace Windwalker\Form\Field;
 use BadMethodCallException;
 use Closure;
 use InvalidArgumentException;
-use Windwalker\Data\Collection;
 use Windwalker\DOM\DOMElement;
 use Windwalker\Form\Field\Concern\{ManageFilterTrait,
     ManageInputTrait,
@@ -23,9 +22,6 @@ use Windwalker\Utilities\Classes\FlowControlTrait;
 use Windwalker\Utilities\Options\StateAccessTrait;
 use Windwalker\Utilities\Str;
 
-use Windwalker\Utilities\TypeCast;
-
-use function Windwalker\collect;
 use function Windwalker\DOM\h;
 
 /**

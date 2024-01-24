@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Reactor\Memory;
 
 use Windwalker\Reactor\Swoole\Room\DuoMapping;
-
 use Windwalker\Reactor\Swoole\Room\RoomMapping;
 use Windwalker\Reactor\Swoole\Room\UserFdMapping;
 

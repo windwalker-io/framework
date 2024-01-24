@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
+use Asika\ObjectMetadata\ObjectMetadata;
 use Attribute;
 use BadMethodCallException;
 use ReflectionException;
@@ -40,6 +41,7 @@ use Windwalker\ORM\Event\BeforeDeleteEvent;
 use Windwalker\ORM\Event\BeforeSaveEvent;
 use Windwalker\ORM\Event\BeforeStoreEvent;
 use Windwalker\ORM\Event\BeforeUpdateWhereEvent;
+use Windwalker\ORM\Event\EnergizeEvent;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -153,6 +155,7 @@ class ORM implements EventAwareInterface
         $ar->registerAttribute(BeforeCopyEvent::class, Attribute::TARGET_METHOD);
         $ar->registerAttribute(AfterCopyEvent::class, Attribute::TARGET_METHOD);
         $ar->registerAttribute(BeforeStoreEvent::class, Attribute::TARGET_METHOD);
+        $ar->registerAttribute(EnergizeEvent::class, Attribute::TARGET_METHOD);
         $ar->registerAttribute(Watch::class, Attribute::TARGET_METHOD);
         $ar->registerAttribute(WatchBefore::class, Attribute::TARGET_METHOD);
     }
@@ -237,8 +240,6 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * createEntity
-     *
      * @template T
      *
      * @param  class-string<T>  $entityClass
@@ -249,6 +250,7 @@ class ORM implements EventAwareInterface
      */
     public function createEntity(string $entityClass, array $data = []): object
     {
+        /** @var T $entity */
         $entity = $this->mapper($entityClass)->createEntity();
 
         if ($data !== []) {
@@ -259,8 +261,6 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * hydrateEntity
-     *
      * @template T
      *
      * @param  array     $data
@@ -279,7 +279,37 @@ class ORM implements EventAwareInterface
             compact('class', 'item')
         );
 
-        return $this->getEntityHydrator()->hydrate($event->getItem(), $entity);
+        /** @var T $entity */
+        $entity = $this->getEntityHydrator()->hydrate($event->getItem(), $entity);
+
+        if (static::isEntity($entity)) {
+            $entity = $this->energize($entity);
+        }
+
+        return $entity;
+    }
+
+    public function isEnergized(object $entity): bool
+    {
+        return $this->mapper($entity::class)->isEnergized($entity);
+    }
+
+    /**
+     * @template T
+     *
+     * @param  T     $entity
+     * @param  bool  $force
+     *
+     * @return  T
+     *
+     * @throws ReflectionException
+     */
+    public function energize(object $entity, bool $force = false): object
+    {
+        /** @var T $entity */
+        $entity = $this->mapper($entity::class)->energize($entity, $force);
+
+        return $entity;
     }
 
     /**
@@ -529,5 +559,10 @@ class ORM implements EventAwareInterface
         $this->caster = $caster;
 
         return $this;
+    }
+
+    public static function getObjectMetadata(): ObjectMetadata
+    {
+        return EntityMapper::getObjectMetadata();
     }
 }

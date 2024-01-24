@@ -23,6 +23,8 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
 
     protected array|object $source = [];
 
+    protected array $extra = [];
+
     /**
      * @return string
      */
@@ -116,5 +118,22 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
     public function getTempEntity(): object
     {
         return $this->getMetadata()->getEntityMapper()->toEntity($this->getData());
+    }
+
+    public function getOldEntity(): ?object
+    {
+        return $this->getMetadata()->getEntityMapper()->tryEntity($this->getOldData());
+    }
+
+    public function &getExtra(): array
+    {
+        return $this->extra;
+    }
+
+    public function setExtra(array $extra): static
+    {
+        $this->extra = $extra;
+
+        return $this;
     }
 }

@@ -7,7 +7,6 @@ namespace Windwalker\Form\Field;
 use Windwalker\DOM\DOMElement;
 use Windwalker\Filter\Rule\Length;
 use Windwalker\Form\Field\Concern\ListOptionsTrait;
-
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\DOM\h;

@@ -27,7 +27,8 @@
         "paragonie/constant_time_encoding": "^2.3",
         "composer/ca-bundle": "^1.2",
         "symfony/options-resolver": "^5.0||^6.0||^7.0",
-        "symfony/polyfill-php83": "^1.27"
+        "symfony/polyfill-php83": "^1.27",
+        "asika/object-metadata": "^1.0"
     },
     "require-dev": {
         "asika/sql-splitter": "^1.0",

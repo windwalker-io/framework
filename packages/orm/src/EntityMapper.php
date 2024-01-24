@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
+use Asika\ObjectMetadata\ObjectMetadata;
 use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -29,7 +30,9 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeDeleteEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
-    BeforeUpdateWhereEvent};
+    BeforeUpdateWhereEvent,
+    EnergizeEvent
+};
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -296,6 +299,7 @@ class EntityMapper implements EventAwareInterface
 
         // Hydrate data into entity after event, to make sure all fields has default value.
         $fullData = $event->getData();
+        $extra = $event->getExtra();
         $entity = $this->hydrate($fullData, $this->toEntity($source));
 
         $data = $this->castForSave($this->extract($entity), true, $entity);
@@ -303,10 +307,11 @@ class EntityMapper implements EventAwareInterface
         $type = BeforeStoreEvent::TYPE_CREATE;
         $event = $this->emitEvent(
             BeforeStoreEvent::class,
-            compact('data', 'type', 'metadata', 'source', 'options')
+            compact('data', 'type', 'metadata', 'source', 'options', 'extra')
         );
 
         $data = $event->getData();
+        $extra = $event->getExtra();
 
         if ($aiColumn && array_key_exists($aiColumn, $data) && !$data[$aiColumn]) {
             unset($data[$aiColumn]);
@@ -332,7 +337,16 @@ class EntityMapper implements EventAwareInterface
 
         $event = $this->emitEvent(
             AfterSaveEvent::class,
-            compact('data', 'type', 'metadata', 'entity', 'source', 'fullData', 'options')
+            compact(
+                'data',
+                'type',
+                'metadata',
+                'entity',
+                'source',
+                'fullData',
+                'options',
+                'extra'
+            )
         );
 
         $entity = $this->hydrate(
@@ -366,6 +380,10 @@ class EntityMapper implements EventAwareInterface
         array|string $condFields = null,
         int $options = 0,
     ): ?StatementInterface {
+        if ($source === []) {
+            return null;
+        }
+
         $metadata = $this->getMetadata();
         $updateNulls = (bool) ($options & static::UPDATE_NULLS);
 
@@ -408,6 +426,7 @@ class EntityMapper implements EventAwareInterface
 
         // Hydrate data into entity after event, to make sure all fields has default value.
         $fullData = $event->getData();
+        $extra = $event->getExtra();
         $entity = $this->hydrate($fullData, $this->toEntity($source));
 
         $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
@@ -437,8 +456,10 @@ class EntityMapper implements EventAwareInterface
                     'metadata' => $metadata,
                     'source' => $source,
                     'options' => $options,
+                    'extra' => $extra,
                 ]
             );
+            $extra = $event->getExtra();
 
             $result = $this->getDb()->getWriter()->updateOne(
                 $metadata->getTableName(),
@@ -452,7 +473,17 @@ class EntityMapper implements EventAwareInterface
 
         $event = $this->emitEvent(
             AfterSaveEvent::class,
-            compact('data', 'type', 'metadata', 'entity', 'oldData', 'source', 'options', 'fullData')
+            compact(
+                'data',
+                'type',
+                'metadata',
+                'entity',
+                'oldData',
+                'source',
+                'options',
+                'fullData',
+                'extra'
+            )
         );
 
         $metadata->getRelationManager()->save($event->getData(), $entity, $oldData);
@@ -769,12 +800,11 @@ class EntityMapper implements EventAwareInterface
         } else {
             // If Entity has keys, use this keys to delete once per item.
             $delItems = (function () use ($metadata, $conditions) {
-                while (
-                    $item = $this->getORM()
-                        ->from($metadata->getClassName())
-                        ->where($this->conditionsToWheres($conditions))
-                        ->get($metadata->getClassName())
-                ) {
+                $query = $this->getORM()
+                    ->from($metadata->getClassName())
+                    ->where($this->conditionsToWheres($conditions));
+
+                while ($item = $query->get($metadata->getClassName())) {
                     yield $item;
                 }
             })();
@@ -823,7 +853,6 @@ class EntityMapper implements EventAwareInterface
                 $metadata->getRelationManager()->delete($event->getData(), $entity);
             }
         }
-
         // Event
     }
 
@@ -892,9 +921,17 @@ class EntityMapper implements EventAwareInterface
             $type = BeforeCopyEvent::TYPE_COPY;
             $event = $this->emitEvent(
                 BeforeCopyEvent::class,
-                compact('data', 'type', 'metadata', 'oldData', 'source', 'options')
+                compact(
+                    'data',
+                    'type',
+                    'metadata',
+                    'oldData',
+                    'source',
+                    'options'
+                )
             );
 
+            $extra = $event->getExtra();
             $entity = $this->createOne($data = $event->getData(), $option = $event->getOptions());
 
             $newData = $this->extract($entity);
@@ -903,7 +940,16 @@ class EntityMapper implements EventAwareInterface
 
             $event = $this->emitEvent(
                 AfterCopyEvent::class,
-                compact('data', 'type', 'metadata', 'entity', 'oldData', 'source', 'options')
+                compact(
+                    'data',
+                    'type',
+                    'metadata',
+                    'entity',
+                    'oldData',
+                    'source',
+                    'options',
+                    'extra'
+                )
             );
 
             $creates[] = $event->getEntity();
@@ -1143,7 +1189,55 @@ class EntityMapper implements EventAwareInterface
             $metadata->setCachedEntity($entity);
         }
 
-        return clone $entity;
+        return $this->energize(clone $entity);
+    }
+
+    public function isEnergized(object $entity): bool
+    {
+        return (bool) static::getObjectMetadata()->get($entity, 'entity.energized');
+    }
+
+    /**
+     * @param  T     $entity
+     * @param  bool  $force
+     *
+     * @return  T
+     */
+    public function energize(object $entity, bool $force = false): object
+    {
+        $meta = static::getObjectMetadata();
+
+        if ($force) {
+            $meta->set($entity, 'entity.energized', false);
+        }
+
+        if ($this->isEnergized($entity)) {
+            return $entity;
+        }
+
+        $meta->set($entity, 'entity.metadata', $this->getMetadata());
+
+        $event = $this->emitEvent(
+            EnergizeEvent::class,
+            [
+                'metadata' => $this->getMetadata(),
+                'entity' => $entity,
+            ]
+        );
+
+        /** @var T $entity */
+        $entity = $event->getEntity();
+
+        $meta->set($entity, 'entity.energized', true);
+
+        return $entity;
+    }
+
+    public function unenergize(object $entity): static
+    {
+        self::getObjectMetadata()->set($entity, 'entity.energized', false);
+
+        return $this;
     }
 
     /**
@@ -1157,18 +1251,22 @@ class EntityMapper implements EventAwareInterface
     {
         $class = $this->getMetadata()->getClassName();
 
-        if ($data instanceof $class) {
-            return $data;
+        if (is_a($data, $class, true)) {
+            return $this->energize($data);
         }
 
         if (is_object($data)) {
             $data = TypeCast::toArray($data);
         }
 
-        return $this->getORM()->hydrateEntity(
+        // Only ORM has Hydrator, we must call ORM to do this.
+        /** @var T $entity */
+        $entity = $this->getORM()->hydrateEntity(
             $data,
             $this->createEntity()
         );
+
+        return $entity;
     }
 
     /**
@@ -1196,7 +1294,10 @@ class EntityMapper implements EventAwareInterface
             return null;
         }
 
-        return $this->toEntity($data);
+        /** @var ?T $entity */
+        $entity = $this->toEntity($data);
+
+        return $entity;
     }
 
     public function toCollection(array|object $data): Collection
@@ -1232,7 +1333,11 @@ class EntityMapper implements EventAwareInterface
      */
     public function hydrate(array $data, object $entity): object
     {
-        return $this->getORM()->hydrateEntity($data, $entity);
+        // Only ORM has Hydrator, we must call ORM to do this.
+        /** @var T $entity */
+        $entity = $this->getORM()->hydrateEntity($data, $entity);
+
+        return $entity;
     }
 
     public function extract(object|array $entity): array
@@ -1489,5 +1594,10 @@ class EntityMapper implements EventAwareInterface
         }
 
         return false;
+    }
+
+    public static function getObjectMetadata(): ObjectMetadata
+    {
+        return ObjectMetadata::getInstance('windwalker.orm');
     }
 }

@@ -121,7 +121,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     ww_articles.language,
     ww_articles.params
    FROM ww_articles;'
-                    )
+                        )
                     ),
                     'CHECK_OPTION' => 'NONE',
                     'IS_UPDATABLE' => 'YES',

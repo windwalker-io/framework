@@ -23,6 +23,11 @@ class ResultIterator extends IteratorIterator implements ArrayAccess
         return collect($this->result ??= iterator_to_array($this));
     }
 
+    public function dump(): array
+    {
+        return $this->all()->dump();
+    }
+
     /**
      * Whether a offset exists
      * @link https://php.net/manual/en/arrayaccess.offsetexists.php

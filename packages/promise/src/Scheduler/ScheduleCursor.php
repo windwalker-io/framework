@@ -12,7 +12,7 @@ class ScheduleCursor
     /**
      * @var mixed
      */
-    readonly protected mixed $cursor;
+    protected readonly mixed $cursor;
 
     protected bool $scheduled = false;
 

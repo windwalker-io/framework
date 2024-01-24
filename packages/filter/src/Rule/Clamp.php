@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Filter\Rule;
 
 use Windwalker\Filter\AbstractFilter;
-
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\clamp;
