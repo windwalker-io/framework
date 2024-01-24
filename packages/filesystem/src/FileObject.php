@@ -8,6 +8,7 @@ use BadMethodCallException;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use SplFileInfo;
+use Symfony\Component\Mime\MimeTypesInterface;
 use Throwable;
 use UnexpectedValueException;
 use Windwalker\Data\Collection;
@@ -452,8 +453,6 @@ class FileObject extends SplFileInfo
     }
 
     /**
-     * readStream
-     *
      * @param  string  $mode
      *
      * @return  StreamInterface
@@ -461,6 +460,23 @@ class FileObject extends SplFileInfo
     public function readStream(string $mode = READ_ONLY_FROM_BEGIN): StreamInterface
     {
         return $this->getStream($mode);
+    }
+
+    /**
+     * @param  string|MimeTypesInterface  $mime  Must provide mime type string or a Symfony MimeTypesInterface
+     *                                           to detect it automatically.
+     *
+     * @return  string
+     */
+    public function readBase64DataUri(string|MimeTypesInterface $mime): string
+    {
+        if ($mime instanceof MimeTypesInterface) {
+            $types = $mime->getMimeTypes($this->getExtension());
+
+            $mime = $types[0] ?? throw new FilesystemException('Unable to detect file mime type');
+        }
+
+        return 'data:' . $mime . ';base64,' . base64_encode((string) $this->read());
     }
 
     public function readAndParse(?string $format = null, array $options = []): Collection
