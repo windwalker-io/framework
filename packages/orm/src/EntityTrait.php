@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
+use Asika\ObjectMetadata\ObjectMetadata;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
@@ -39,6 +40,11 @@ trait EntityTrait
         }
 
         return $instance;
+    }
+
+    protected function retrieveMeta(string $key): mixed
+    {
+        return EntityMapper::getObjectMetadata()->get($this, $key);
     }
 
     protected function loadRelation(string $propName): mixed
