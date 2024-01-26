@@ -106,11 +106,9 @@ class RequestBodyStream implements StreamInterface
      *
      * @return  mixed
      */
-    public function seek($offset, $whence = SEEK_SET): mixed
+    public function seek($offset, $whence = SEEK_SET): void
     {
         $this->cursor = $offset;
-
-        return true;
     }
 
     /**
@@ -118,11 +116,9 @@ class RequestBodyStream implements StreamInterface
      *
      * @return  mixed
      */
-    public function rewind(): mixed
+    public function rewind(): void
     {
         $this->cursor = 0;
-
-        return true;
     }
 
     /**
@@ -142,7 +138,7 @@ class RequestBodyStream implements StreamInterface
      *
      * @return  int
      */
-    public function write($string): ?int
+    public function write($string): int
     {
         if (is_string($string)) {
             $this->data = UriHelper::parseQuery($string);
@@ -150,7 +146,7 @@ class RequestBodyStream implements StreamInterface
             $this->data = (array) $string;
         }
 
-        return $this->getSize();
+        return (int) $this->getSize();
     }
 
     /**
