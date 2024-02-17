@@ -426,7 +426,7 @@ namespace Windwalker {
     }
 
     if (!function_exists('\Windwalker\clamp')) {
-        function clamp(int|float $num, int|float|null $min, int|float|null $max): int|bool
+        function clamp(int|float $num, int|float|null $min, int|float|null $max): int|float
         {
             if ($min !== null && $max !== null && $max < $min) {
                 throw new \InvalidArgumentException(
