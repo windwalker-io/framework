@@ -18,6 +18,8 @@ class PostgreSQLDataType extends DataType
     public const SERIAL = 'serial';
 
     public const REAL = 'real';
+    
+    public const BYTEA = 'bytea';
 
     /**
      * Property typeMapping.
@@ -37,6 +39,7 @@ class PostgreSQLDataType extends DataType
         MySQLDataType::SET => self::TEXT,
         MySQLDataType::FLOAT => self::REAL,
         MySQLDataType::CHAR => self::VARCHAR,
+        MySQLDataType::BINARY => self::BYTEA,
     ];
 
     /**

@@ -18,6 +18,8 @@ class MySQLDataType extends DataType
     public const ENUM = 'enum';
 
     public const SET = 'set';
+    
+    public const BINARY = 'binary';
 
     /**
      * Property types.
@@ -45,6 +47,7 @@ class MySQLDataType extends DataType
         self::TIMESTAMP => [null, '1970-01-01 12:00:01', 'int'],
         self::TEXT => [null, false, 'string'],
         self::LONGTEXT => [null, false, 'string'],
+        self::BINARY => [16, '', 'string'],
     ];
 
     /**

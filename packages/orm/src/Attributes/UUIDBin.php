@@ -16,6 +16,8 @@ use Windwalker\Query\Wrapper\UuidWrapper;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class UUIDBin extends CastForSave implements CastInterface
 {
+    public const NULLABLE = 1 << 0;
+
     /**
      * CastForSave constructor.
      */
@@ -36,22 +38,31 @@ class UUIDBin extends CastForSave implements CastInterface
 
             $method = $this->version;
 
+            if (!$value && ($this->options & static::NULLABLE)) {
+                return null;
+            }
+
             return new UuidBinWrapper($value ?: \Ramsey\Uuid\Uuid::$method());
         };
     }
 
     public function hydrate(mixed $value): mixed
     {
-        return UuidBinWrapper::wrap($value);
+        return UuidBinWrapper::tryWrap($value);
     }
 
     public function extract(mixed $value): mixed
     {
-        return UuidBinWrapper::wrap($value);
+        return UuidBinWrapper::tryWrap($value);
     }
 
     public static function wrap(mixed $value): UuidInterface
     {
         return UuidBinWrapper::wrap($value);
+    }
+
+    public static function tryWrap(mixed $value): ?UuidInterface
+    {
+        return UuidBinWrapper::tryWrap($value);
     }
 }
