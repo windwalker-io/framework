@@ -18,6 +18,15 @@ class Key extends HiddenString
         return $value;
     }
 
+    public static function strip(#[\SensitiveParameter] HiddenString|string $value): string
+    {
+        if ($value instanceof self) {
+            $value = $value->get();
+        }
+
+        return SecretToolkit::decodeIfHasPrefix($value);
+    }
+
     /**
      * Index is disallow to print as string.
      *

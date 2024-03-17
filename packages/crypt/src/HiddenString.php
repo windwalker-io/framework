@@ -54,7 +54,7 @@ class HiddenString
             $value = $value->get();
         }
 
-        return SecretToolkit::decodeIfHasPrefix($value);
+        return $value;
     }
 
     /**
