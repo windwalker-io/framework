@@ -9,10 +9,10 @@ namespace Windwalker\Crypt;
  */
 class Key extends HiddenString
 {
-    public static function wrap(#[\SensitiveParameter] mixed $value): Key
+    public static function wrap(#[\SensitiveParameter] mixed $value, bool $copy = true): Key
     {
         if (!$value instanceof static) {
-            $value = new static((string) $value);
+            $value = new static((string) $value, $copy);
         }
 
         return $value;

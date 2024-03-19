@@ -15,18 +15,15 @@ use function str_repeat;
 class HiddenString
 {
     /**
-     * @var string
-     */
-    protected string $value;
-
-    /**
      * HiddenString constructor.
      *
      * @param  string  $value
      */
-    public function __construct(#[\SensitiveParameter] string $value)
-    {
-        $this->value = CryptHelper::strcpy($value);
+    public function __construct(
+        #[\SensitiveParameter] protected string $value,
+        protected bool $copy = true
+    ) {
+        //
     }
 
     /**
@@ -34,15 +31,23 @@ class HiddenString
      *
      * @return  string
      */
-    public function get(): string
+    public function get(?bool $copy = null): string
     {
-        return CryptHelper::strcpy($this->value);
+        if ($copy === null) {
+            $copy = $this->copy;
+        }
+        
+        if ($copy) {
+            return CryptHelper::strcpy($this->value);
+        }
+
+        return $this->value;
     }
 
-    public static function wrap(#[\SensitiveParameter] mixed $value): HiddenString
+    public static function wrap(#[\SensitiveParameter] mixed $value, bool $copy = true): HiddenString
     {
         if (!$value instanceof self) {
-            $value = new static((string) $value);
+            $value = new static((string) $value, $copy);
         }
 
         return $value;
