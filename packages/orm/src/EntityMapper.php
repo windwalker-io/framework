@@ -1379,7 +1379,7 @@ class EntityMapper implements EventAwareInterface
         $key = $metadata->getMainKey();
 
         if ($key) {
-            return [$key => $this->handleConditionColumn($k, $conditions)];
+            return [$key => $this->handleConditionColumn($key, $conditions)];
         }
 
         throw new LogicException(
