@@ -17,10 +17,10 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\Iterator\FilesIterator;
 use Windwalker\Promise\Promise;
 use Windwalker\Scalars\StringObject;
-use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Iterator\UniqueIterator;
 use Windwalker\Utilities\Str;
 
+use function Windwalker\fs;
 use function Windwalker\uid;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
@@ -68,7 +68,7 @@ class Filesystem
     /**
      * Get a path as FileObject.
      *
-     * @param  string  $path
+     * @param  string       $path
      * @param  string|null  $root
      *
      * @return  FileObject
@@ -261,7 +261,7 @@ class Filesystem
      */
     public static function symlink(string $target, string $link): bool
     {
-        $windows = defined('PHP_WINDOWS_VERSION_BUILD');
+        $windows = static::isWindows();
 
         $target = Path::normalize($target);
         $link = Path::normalize($link);
@@ -279,6 +279,31 @@ class Filesystem
         }
 
         return symlink($target, $link);
+    }
+
+    /**
+     * @return  bool
+     */
+    protected static function isWindows(): bool
+    {
+        return defined('PHP_WINDOWS_VERSION_BUILD');
+    }
+
+    public function isJunction(string $junction): bool
+    {
+        return fs($junction)->isJunction();
+    }
+
+    /**
+     * Removes a Windows NTFS junction.
+     *
+     * @param  string  $junction
+     *
+     * @return bool
+     */
+    public function removeJunction(string $junction): bool
+    {
+        return fs($junction)->removeJunction();
     }
 
     /**

@@ -591,6 +591,10 @@ class FileObject extends SplFileInfo
         // In case of restricted permissions we zap it one way or the other
         // as long as the owner is either the webserver or the ftp
         try {
+            if ($this->isJunction()) {
+                return $this->removeJunction();
+            }
+
             if ($this->isDir()) {
                 return rmdir($path);
             }
@@ -792,6 +796,49 @@ class FileObject extends SplFileInfo
         }
 
         return $isLink;
+    }
+
+    /**
+     * @see https://github.com/composer/composer/blob/4e5be9ee7d924d8efc58d676439b0c7bd18a9ce4/src/Composer/Util/Filesystem.php#L828
+     *
+     * @return  bool
+     */
+    public function isJunction(): bool
+    {
+        if (!static::isWindows()) {
+            return false;
+        }
+
+        $junction = $this->getPathname();
+
+        // Important to clear all caches first
+        clearstatcache(true, $junction);
+
+        if (!is_dir($junction) || is_link($junction)) {
+            return false;
+        }
+
+        $stat = lstat($junction);
+
+        // S_ISDIR test (S_IFDIR is 0x4000, S_IFMT is 0xF000 bitmask)
+        return is_array($stat) && 0x4000 !== ($stat['mode'] & 0xF000);
+    }
+
+    public function removeJunction(): bool
+    {
+        if (!static::isWindows()) {
+            return false;
+        }
+
+        return rmdir($this->getPathname());
+    }
+
+    /**
+     * @return  bool
+     */
+    protected static function isWindows(): bool
+    {
+        return defined('PHP_WINDOWS_VERSION_BUILD');
     }
 
     /**
