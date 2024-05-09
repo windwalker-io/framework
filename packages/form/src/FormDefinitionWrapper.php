@@ -27,6 +27,11 @@ class FormDefinitionWrapper implements FieldDefinitionInterface
             return;
         }
 
+        if ($this->definition instanceof \Closure) {
+            $form->register($this->definition);
+            return;
+        }
+
         $ref = new \ReflectionObject($this->definition);
         $methods = $ref->getMethods();
 
