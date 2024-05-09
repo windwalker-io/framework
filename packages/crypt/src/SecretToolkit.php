@@ -19,11 +19,12 @@ class SecretToolkit
      */
     public static function genSecretString(
         int $length = SECRET_128BIT,
-        string $encoder = ENCODER_BASE64URLSAFE
+        string $encoder = ENCODER_BASE64URLSAFE,
+        bool $withPrefix = true
     ): string {
         $secret = random_bytes($length);
 
-        return static::encode($secret, $encoder);
+        return static::encode($secret, $encoder, $withPrefix);
     }
 
     /**
@@ -31,33 +32,39 @@ class SecretToolkit
      */
     public static function genSecret(
         int $length = SECRET_128BIT,
-        string $encoder = ENCODER_BASE64URLSAFE
+        string $encoder = ENCODER_BASE64URLSAFE,
+        bool $withPrefix = true
     ): string {
-        return $encoder . ':' . static::genSecretString($length, $encoder);
+        return static::genSecretString($length, $encoder, $withPrefix);
     }
 
-    public static function encode(string $binaryString, string $encoder = ENCODER_BASE64URLSAFE): string
-    {
+    public static function encode(
+        string $binaryString,
+        string $encoder = ENCODER_BASE64URLSAFE,
+        bool $withPrefix = true
+    ): string {
         if ($encoder === ENCODER_RAW) {
             return $binaryString;
         }
 
         /** @var class-string<EncoderInterface> $encoder */
-        $encoder = SafeEncoder::chooseEncoder($encoder);
+        $encoderClass = SafeEncoder::chooseEncoder($encoder);
 
-        if (is_a($encoder, Base64::class, true)) {
-            return $encoder::encodeUnpadded($binaryString);
+        if (is_a($encoderClass, Base64::class, true)) {
+            $encoded = $encoderClass::encodeUnpadded($binaryString);
+        } elseif (is_a($encoderClass, Base32::class, true)) {
+            $encoded = $encoderClass::encodeUpperUnpadded($binaryString);
+        } elseif (is_a($encoderClass, Hex::class, true)) {
+            $encoded = $encoderClass::encode($binaryString);
+        } else {
+            $encoded = $encoderClass::encode($binaryString);
         }
 
-        if (is_a($encoder, Base32::class, true)) {
-            return $encoder::encodeUpperUnpadded($binaryString);
+        if ($withPrefix) {
+            $encoded = $encoder . ':' . $encoded;
         }
 
-        if (is_a($encoder, Hex::class, true)) {
-            return $encoder::encodeUpper($binaryString);
-        }
-
-        return $encoder::encode($binaryString);
+        return $encoded;
     }
 
     /**
@@ -72,6 +79,17 @@ class SecretToolkit
         if (count($extracted) === 1) {
             throw new \InvalidArgumentException('Invalid secret string.');
         }
+
+        return $extracted;
+    }
+
+    public static function stripPrefix(string $string): string
+    {
+        if (!static::canDecode($string)) {
+            return $string;
+        }
+
+        [, $extracted] = static::extract($string);
 
         return $extracted;
     }

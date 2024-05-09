@@ -38,7 +38,12 @@ class UuidWrapper implements WrapperInterface, \Stringable
         return $this->uuid;
     }
 
-    public static function wrap(string|UuidInterface|null $uuid): ?UuidInterface
+    public static function wrap(string|UuidInterface $uuid): UuidInterface
+    {
+        return static::tryWrap($uuid);
+    }
+
+    public static function tryWrap(string|UuidInterface|null $uuid): ?UuidInterface
     {
         if ($uuid === null || $uuid === '') {
             return null;

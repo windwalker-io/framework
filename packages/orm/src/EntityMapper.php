@@ -33,12 +33,14 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeUpdateWhereEvent,
     EnergizeEvent
 };
+use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Query;
+use Windwalker\Query\Wrapper\UuidBinWrapper;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
@@ -821,12 +823,12 @@ class EntityMapper implements EventAwareInterface
             } elseif ($entityObject !== null) {
                 $entity = $entityObject;
                 $data = $this->extract($entityObject);
-                $conditions = Arr::only($data, $keys);
+                $conditions = $this->conditionsToWheres(Arr::only($data, $keys));
             } else {
                 /** @var object $item */
                 $entity = $item;
                 $data = $this->extract($entity);
-                $conditions = Arr::only($data, $keys);
+                $conditions = $this->conditionsToWheres(Arr::only($data, $keys));
             }
 
             // Event
@@ -1365,6 +1367,10 @@ class EntityMapper implements EventAwareInterface
         }
 
         if (is_array($conditions)) {
+            foreach ($conditions as $k => $v) {
+                $conditions[$k] = $this->handleConditionColumn($k, $v);
+            }
+
             return $conditions;
         }
 
@@ -1373,7 +1379,7 @@ class EntityMapper implements EventAwareInterface
         $key = $metadata->getMainKey();
 
         if ($key) {
-            return [$key => $conditions];
+            return [$key => $this->handleConditionColumn($key, $conditions)];
         }
 
         throw new LogicException(
@@ -1382,6 +1388,27 @@ class EntityMapper implements EventAwareInterface
                 $metadata->getClassName()
             )
         );
+    }
+
+    protected function handleConditionColumn(string $key, mixed $value): mixed
+    {
+        $metadata = $this->getMetadata();
+
+        $col = $metadata->getColumn($key);
+        $prop = $col->getProperty();
+
+        // UUID Binary
+        $uuidAttr = $prop->getAttributes(UUIDBin::class, ReflectionAttribute::IS_INSTANCEOF);
+
+        if ($uuidAttr) {
+            if (is_array($value)) {
+                return array_map(fn ($v) => new UuidBinWrapper($v), $value);
+            }
+
+            return new UuidBinWrapper($value);
+        }
+
+        return $value;
     }
 
     protected function extractForSave(object|array $data, bool $updateNulls = true): array
