@@ -320,29 +320,28 @@ class Path
     }
 
     /**
-     * getExtension
-     *
      * @param  string  $file  The file path to get extension.
      *
      * @return  string  The ext of file path.
      *
      * @since   2.0
      */
-    public static function getExtension(string $file): string
+    public static function getExtension(string $file, bool $stripQuerySuffix = true): string
     {
-        return pathinfo($file, PATHINFO_EXTENSION);
+        return pathinfo(static::getFilename($file, $stripQuerySuffix), PATHINFO_EXTENSION);
     }
 
     /**
      * Get UTF-8 file name from a path.
      *
-     * @param  string  $path  The file path to get basename.
+     * @param  string  $path              The file path to get basename.
+     * @param  bool    $stripQuerySuffix  Strip the query suffix after `?` sign.
      *
      * @return  string  The file name.
      *
      * @since   2.0
      */
-    public static function getFilename(string $path): string
+    public static function getFilename(string $path, bool $stripQuerySuffix = true): string
     {
         $paths = explode(DIRECTORY_SEPARATOR, static::clean($path));
 
@@ -350,7 +349,22 @@ class Path
             return '';
         }
 
-        return array_pop($paths);
+        $filename = array_pop($paths);
+
+        if ($stripQuerySuffix) {
+            $filename = static::stripQuerySuffix($filename);
+        }
+
+        return $filename;
+    }
+
+    public static function stripQuerySuffix(string $path): string
+    {
+        if (str_contains($path, '?')) {
+            [$path] = explode('?', $path);
+        }
+
+        return $path;
     }
 
     /**
@@ -359,12 +373,13 @@ class Path
      * @see    https://www.php.net/manual/en/function.basename.php#121405
      *
      * @param  string  $path
+     * @param  bool    $noExtension
      *
      * @return  string
      *
      * @since  3.5.17
      */
-    public static function basename(string $path, bool $noExtension = false): string
+    public static function basename(string $path, bool $noExtension = false, bool $stripQuerySuffix = true): string
     {
         $name = '';
 
@@ -372,6 +387,10 @@ class Path
             $name = $matches[1];
         } elseif (preg_match('@^([^\\\\/]+)$@s', $path, $matches)) {
             $name = $matches[1];
+        }
+
+        if ($stripQuerySuffix) {
+            $name = static::stripQuerySuffix($name);
         }
 
         if ($noExtension) {

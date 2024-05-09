@@ -24,8 +24,8 @@ use Windwalker\Utilities\Str;
 
 use function Windwalker\Promise\async;
 
-use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 use const Windwalker\Stream\WRITE_ONLY_RESET;
 
 /**
@@ -124,6 +124,16 @@ class FileObject extends SplFileInfo
         parent::__construct($filename);
 
         $this->root = $root;
+    }
+
+    public function getFilename(): string
+    {
+        return Path::getFilename($this->getPathname(), true);
+    }
+
+    public function getExtension(): string
+    {
+        return Path::getExtension($this->getPathname(), true);
     }
 
     /**
