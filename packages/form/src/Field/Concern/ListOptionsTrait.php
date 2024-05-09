@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Form\Field\Concern;
 
 use MyCLabs\Enum\Enum;
+use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\Classic;
 use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTMLFactory;
 use Windwalker\Utilities\Assert\TypeAssert;
@@ -149,7 +150,7 @@ trait ListOptionsTrait
     /**
      * registerOptions
      *
-     * @param  iterable|string  $options
+     * @param  iterable|class-string<\BackedEnum|Enum>  $options
      * @param  callable|null    $handler
      *
      * @return  static
@@ -163,6 +164,12 @@ trait ListOptionsTrait
         if (is_string($options)) {
             if ($isEnum = is_subclass_of($options, Enum::class)) {
                 $options = array_flip($options::toArray());
+            } elseif ($isEnum = is_subclass_of($options, \BackedEnum::class)) {
+                $opt = [];
+                foreach ($options::cases() as $case) {
+                    $opt[$case->name] = $case->value;
+                }
+                $options = $opt;
             } else {
                 TypeAssert::assert(
                     false,
