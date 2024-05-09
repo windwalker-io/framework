@@ -248,6 +248,10 @@ trait ArrConverterTrait
         foreach ($array as $k => $v) {
             $r = $handler($v, $k);
 
+            if ($r instanceof \Generator) {
+                $r = [$r->key() => $r->current()];
+            }
+
             TypeAssert::assert(
                 is_array($r),
                 'Return value of {caller} should be array, got %s',
