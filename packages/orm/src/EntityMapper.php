@@ -638,12 +638,25 @@ class EntityMapper implements EventAwareInterface
 
         if (
             is_object($item)
-            && $metadata::isEntity($item)
             && $aiColumn = $metadata->getColumn($pk)
         ) {
-            // If is Entity
-            $aiPropName = $aiColumn->getName();
-            $keyValue = ReflectAccessor::getValue($item, $aiPropName);
+            // camel
+            $aiPropName = $aiColumn->getProperty()->getName();
+
+            if (!ReflectAccessor::hasProperty($item, $aiPropName)) {
+                // snake
+                $aiPropName = $aiColumn->getName();
+            }
+
+            if (!ReflectAccessor::hasProperty($item, $aiPropName)) {
+                if (isset($item->$aiPropName)) {
+                    $keyValue = $item->$aiPropName;
+                } else {
+                    return true;
+                }
+            } else {
+                $keyValue = ReflectAccessor::getValue($item, $aiPropName);
+            }
         } else {
             // Is array, object or Collection
             $keyValue = Arr::get($item, $pk);
