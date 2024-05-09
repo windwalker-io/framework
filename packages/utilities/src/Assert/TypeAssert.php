@@ -8,29 +8,25 @@ use TypeError;
 
 /**
  * The Assert class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class TypeAssert
 {
     /**
-     * assert
+     * @template T
      *
-     * @param  bool|callable  $assertion
+     * @param  T              $assertion
      * @param  string         $message
      * @param  mixed          $value
      * @param  callable|null  $exception
      *
-     * @return  void
-     *
-     * @since  __DEPLOY_VERSION__
+     * @return  T
      */
     public static function assert(
         mixed $assertion,
         string $message,
         mixed $value = null,
         ?callable $exception = null
-    ): void {
+    ): mixed {
         if (is_callable($assertion)) {
             $result = $assertion();
         } else {
@@ -40,6 +36,8 @@ class TypeAssert
         if (!$result) {
             static::createAssert($exception, Assert::getCaller(2))->throwException($message, $value);
         }
+
+        return $assertion;
     }
 
     public static function createAssert(?callable $exception = null, ?string $caller = null): Assert
