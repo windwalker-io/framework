@@ -217,7 +217,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         return $this->platform;
     }
 
-    public function getDatabase(string $name = null, $new = false): DatabaseManager
+    public function getDatabase(?string $name = null, $new = false): DatabaseManager
     {
         $name = $name ?? $this->getDriver()->getOption('dbname');
 

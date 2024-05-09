@@ -36,7 +36,7 @@ class HiddenString
         if ($copy === null) {
             $copy = $this->copy;
         }
-        
+
         if ($copy) {
             return CryptHelper::strcpy($this->value);
         }

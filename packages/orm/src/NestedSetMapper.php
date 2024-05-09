@@ -842,7 +842,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  int  Return the right value of this node + 1
      */
-    public function rebuild(mixed $source = null, int $lft = null, int $level = 0, ?string $path = null): int
+    public function rebuild(mixed $source = null, ?int $lft = null, int $level = 0, ?string $path = null): int
     {
         $buildPath = $this->isPathable();
 

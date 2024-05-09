@@ -11,19 +11,19 @@ trait InstanceCacheTrait
 {
     protected array $cacheStorage = [];
 
-    protected function cacheGet(string $id = null)
+    protected function cacheGet(?string $id = null)
     {
         return $this->cacheStorage[$id] ?? null;
     }
 
-    protected function cacheSet(string $id = null, $value = null)
+    protected function cacheSet(?string $id = null, $value = null)
     {
         $this->cacheStorage[$id] = $value;
 
         return $value;
     }
 
-    protected function cacheHas(string $id = null): bool
+    protected function cacheHas(?string $id = null): bool
     {
         return isset($this->cacheStorage[$id]);
     }
