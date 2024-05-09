@@ -18,7 +18,7 @@ class MySQLDataType extends DataType
     public const ENUM = 'enum';
 
     public const SET = 'set';
-    
+
     public const BINARY = 'binary';
 
     /**
@@ -39,7 +39,7 @@ class MySQLDataType extends DataType
     public static array $typeDefinitions = [
         self::BOOLEAN => [null, 0, 'bool'],
         self::INTEGER => [11, 0, 'int'],
-        self::BIGINT => [20, 0, 'int'],
+        self::BIGINT => [20, 0, 'string'],
         self::TINYINT => [4, 0, 'int'],
         self::ENUM => [null, '', 'string'],
         self::SET => [null, '', 'string'],
