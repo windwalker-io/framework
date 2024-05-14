@@ -85,6 +85,11 @@ class StoreDefinition implements StoreDefinitionInterface
             $value = $extend($value, $container) ?? $value;
         }
 
+        // Cache again
+        if ($this->options & Container::SHARED) {
+            $this->cache = $value;
+        }
+
         return $value;
     }
 
