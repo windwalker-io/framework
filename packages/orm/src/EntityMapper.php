@@ -1381,7 +1381,11 @@ class EntityMapper implements EventAwareInterface
 
         if (is_array($conditions)) {
             foreach ($conditions as $k => $v) {
-                $conditions[$k] = $this->handleConditionColumn($k, $v);
+                if (!is_numeric($k)) {
+                    $conditions[$k] = $this->handleConditionColumn($k, $v);
+                } else {
+                    $conditions[$k] = $v;
+                }
             }
 
             return $conditions;
