@@ -528,8 +528,9 @@ class ORM implements EventAwareInterface
                 is_object($entity)
                 && in_array(strtolower($name), $maps, true)
             ) {
-                $args[0] = $entity;
-                $entity = $entity::class;
+                $entityClass = $entity::class;
+
+                return $this->mapper($entityClass)->$name($entity, ...$args);
             }
 
             return $this->mapper($entity)->$name(...$args);
