@@ -169,6 +169,46 @@ abstract class AbstractStatement implements StatementInterface
      */
     abstract protected function doExecute(?array $params = null): bool;
 
+    protected function tryExecute(\Closure $handler)
+    {
+        return $this->driver->useConnection(
+            function (ConnectionInterface $conn) use ($handler) {
+                try {
+                    return $handler($conn);
+                } catch (\Exception $e) {
+                    if (!$this->shouldReconnect($e)) {
+                        throw $e;
+                    }
+
+                    $conn->reconnect();
+
+                    return $handler($conn);
+                }
+            }
+        );
+    }
+
+    protected function shouldReconnect(\Throwable $e): bool
+    {
+        $keywords = [
+            'has gone away',
+            'lost connection',
+            'went away',
+            'connection timed out',
+            'operation timed out'
+        ];
+
+        $message = strtolower($e->getMessage());
+
+        foreach ($keywords as $keyword) {
+            if (str_contains($message, strtolower($keyword))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @inheritDoc
      */

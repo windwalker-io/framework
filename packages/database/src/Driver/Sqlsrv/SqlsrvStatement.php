@@ -52,7 +52,7 @@ class SqlsrvStatement extends AbstractStatement
             $args[] = &$param['value'];
         }
 
-        return $this->driver->useConnection(
+        return $this->tryExecute(
             function (ConnectionInterface $conn) use ($args, $query) {
                 $this->conn = $resource = $conn->get();
 

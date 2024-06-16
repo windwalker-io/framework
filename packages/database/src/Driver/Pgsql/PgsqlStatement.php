@@ -47,7 +47,7 @@ class PgsqlStatement extends AbstractStatement
 
         [$query, $params] = BoundedHelper::replaceParams($this->query, '$%d', $params);
 
-        $this->driver->useConnection(
+        $this->tryExecute(
             function (ConnectionInterface $conn) use ($params, $query) {
                 $this->conn = $resource = $conn->get();
 
@@ -60,12 +60,12 @@ class PgsqlStatement extends AbstractStatement
                 }
 
                 $this->cursor = pg_execute($resource, $stname, $args);
+
+                if (!$this->cursor) {
+                    throw new StatementException(pg_last_error());
+                }
             }
         );
-
-        if (!$this->cursor) {
-            throw new StatementException(pg_last_error());
-        }
 
         return true;
     }

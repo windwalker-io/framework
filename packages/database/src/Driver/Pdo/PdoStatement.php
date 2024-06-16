@@ -32,7 +32,7 @@ class PdoStatement extends AbstractStatement
      */
     protected function doExecute(?array $params = null): bool
     {
-        return $this->driver->useConnection(
+        return $this->tryExecute(
             function (ConnectionInterface $conn) use ($params) {
                 /** @var PDO $pdo */
                 $this->conn = $pdo = $conn->get();

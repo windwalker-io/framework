@@ -170,6 +170,21 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return $conn;
     }
 
+    public function dropConnection(?ConnectionInterface $conn = null): static
+    {
+        if ($conn) {
+            $conn->release();
+
+            $this->getPool()->dropConnection($conn);
+        } elseif ($this->connection) {
+            $this->getPool()->dropConnection(
+                $this->releaseKeptConnection()
+            );
+        }
+
+        return $this;
+    }
+
     public function releaseKeptConnection(): ?ConnectionInterface
     {
         if ($this->connection) {
@@ -209,14 +224,16 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return $result;
     }
 
-    /**
-     * disconnect
-     *
-     * @return  int
-     */
     public function disconnectAll(): int
     {
         return $this->getPool()->close();
+    }
+
+    public function disconnect(): static
+    {
+        $this->dropConnection();
+
+        return $this;
     }
 
     /**

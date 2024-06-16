@@ -9,6 +9,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
+use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventListenableInterface;
 use Windwalker\Queue\Event\AfterJobRunEvent;
@@ -25,7 +26,7 @@ use Windwalker\Queue\Exception\MaxAttemptsExceededException;
  *
  * @since  3.2
  */
-class Worker implements EventListenableInterface
+class Worker implements EventAwareInterface
 {
     use EventAwareTrait;
 
