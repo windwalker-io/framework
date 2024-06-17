@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Scalars\ArrayObject;
 use Windwalker\Utilities\Iterator\PriorityQueue;
 
+use function PHPUnit\Framework\assertEquals;
 use function Windwalker\arr;
 
 /**
@@ -335,6 +336,33 @@ class ArrayObjectTest extends TestCase
                 [3, 4],
             ],
             $a->dump()
+        );
+    }
+
+    public function testCollapse(): void
+    {
+        $items = new ArrayObject([
+            new ArrayObject([1, 2, 3]),
+            new ArrayObject([4, 5, 6]),
+        ]);
+
+        $collapsed = $items->collapse(false);
+
+        assertEquals(
+            [1, 2, 3, 4, 5, 6],
+            $collapsed->dump()
+        );
+
+        $items = new ArrayObject([
+            new ArrayObject([1, 2, 3]),
+            new ArrayObject([4, 5, 6]),
+        ]);
+
+        $collapsed = $items->collapse(true);
+
+        assertEquals(
+            [4, 5, 6],
+            $collapsed->dump()
         );
     }
 
