@@ -344,7 +344,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         }
 
         // Set any custom transport options
-        $opt += $options['curl'] ?? $options['options'] ?? [];
+        $opt = array_replace($opt, $options['curl'] ?? [],  $options['options'] ?? []);
 
         return $opt;
     }
