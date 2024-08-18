@@ -76,8 +76,6 @@ trait ArrayAccessTrait
     }
 
     /**
-     * collapse
-     *
      * @param  bool  $keepKey
      *
      * @return  static
@@ -86,7 +84,19 @@ trait ArrayAccessTrait
      */
     public function collapse(bool $keepKey = true): static
     {
-        return $this->newInstance(Arr::collapse($this->dump(), $keepKey));
+        $result = [];
+
+        $this->walkRecursive(
+            static function ($v, $k) use ($keepKey, &$result) {
+                if ($keepKey) {
+                    $result[$k] = $v;
+                } else {
+                    $result[] = $v;
+                }
+            }
+        );
+
+        return $this->newInstance($result);
     }
 
     /**

@@ -60,8 +60,6 @@ trait ArrayLoopTrait
     }
 
     /**
-     * walkRecursive
-     *
      * @param  callable  $callable
      * @param  mixed     $userdata
      *
@@ -69,11 +67,23 @@ trait ArrayLoopTrait
      *
      * @since  3.5
      */
-    public function walkRecursive(callable $callable, $userdata = null): ArrayLoopTrait|static
+    public function walkRecursive(callable $callable, mixed $userdata = null): static
     {
         $new = clone $this;
 
-        array_walk_recursive($new->storage, $callable, $userdata);
+        $walk = static function (iterable &$items) use ($callable, $userdata, &$walk) {
+            foreach ($items as $k => &$v) {
+                if (is_array($v) || $v instanceof self) {
+                    $walk($v, $k, $userdata);
+                } else {
+                    $callable($v, $k, $userdata);
+                }
+
+                unset($v);
+            }
+        };
+
+        $walk($new->storage);
 
         return $new;
     }

@@ -39,6 +39,7 @@ return [
             'use_cookies' => '0',
             'gc_divisor' => '1000',
             'gc_probability' => env('SESSION_GC_PROBABILITY', '1'),
+            // 'gc_maxlifetime' => env('SESSION_GC_MAXLIFETIME', 86400),
         ],
 
         'ini' => [
