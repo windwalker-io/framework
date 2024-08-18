@@ -30,6 +30,7 @@ return [
                     'password' => env('DATABASE_PASSWORD'),
                     'port' => env('DATABASE_PORT'),
                     'prefix' => env('DATABASE_TABLE_PREFIX'),
+                    'dsn' => env('DATABASE_DSN'),
                 ],
                 'pool' => [
                     PoolInterface::MAX_SIZE => 4,

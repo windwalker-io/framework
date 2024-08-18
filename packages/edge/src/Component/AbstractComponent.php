@@ -239,7 +239,9 @@ abstract class AbstractComponent
      *
      * @param  array  $attributes
      *
-     * @return $this
+     * @return static
+     *
+     * @deprecated  5.0 Use new method to merge attributes.
      */
     public function withAttributes(array $attributes, array|ComponentAttributes $binding = []): static
     {
@@ -249,7 +251,12 @@ abstract class AbstractComponent
 
         $this->attributes = $this->attributes ?: $this->newAttributeBag();
 
-        $this->attributes->setAttributes($attributes);
+        $this->attributes->setAttributes(
+            [
+                ...$this->attributes->getAttributes(),
+                ...$attributes
+            ]
+        );
 
         return $this;
     }
