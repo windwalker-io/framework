@@ -575,7 +575,7 @@ class EntityMetadata implements EventAwareInterface
 
     public function watchAfter(string $column, callable $method, int $options = 0): Closure
     {
-        return $this->watch($column, $method, $options ^ Watch::BEFORE_SAVE);
+        return $this->watch($column, $method, $options & ~Watch::BEFORE_SAVE);
     }
 
     /**
