@@ -177,16 +177,6 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
-    /**
-     * bind
-     *
-     * @param  mixed  $data
-     * @param  array  $options
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function fill(mixed $data, array $options = []): static
     {
         $items = TypeCast::toArray($data);
@@ -196,10 +186,15 @@ class ArrayObject implements AccessibleInterface
                 continue;
             }
 
-            $this->storage[$key] = $value;
+            $this->storage[$key] = $this->handleFillItem($value);
         }
 
         return $this;
+    }
+
+    protected function handleFillItem(mixed $value): mixed
+    {
+        return $value;
     }
 
     public function bind(array &$data): static
