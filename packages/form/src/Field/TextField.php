@@ -56,6 +56,21 @@ class TextField extends AbstractInputField
         return $html;
     }
 
+    public function option(
+        \DOMNode|string|null $text = null,
+        ?string $value = null,
+        array $attrs = [],
+        ?string $group = null
+    ): static {
+        if ($value === null && is_string($text)) {
+            $value = $text;
+        }
+
+        $this->addOption(static::createOption($text, $value, $attrs), $group);
+
+        return $this;
+    }
+
     protected function appendOption(DOMElement $select, DOMElement|array $option, ?string $group = null): void
     {
         if (is_array($option)) {
