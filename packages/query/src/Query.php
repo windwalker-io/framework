@@ -857,6 +857,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         } elseif ($value instanceof RawWrapper) {
             // Process Raw
             $value = $this->val($value);
+        } elseif (is_bool($value)) {
+            $value = $this->val(raw($value ? 'true' : 'false'));
         } else {
             // ArgumentsAssert::assert(
             //     !is_array($value) && !is_object($value),
@@ -1307,6 +1309,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $replace = function ($sign, $replacement) use ($expression) {
             return match ($sign) {
                 'a' => TypeCast::mustNumeric($replacement),
+                'b' => TypeCast::mustBoolean($replacement) ? 'true' : 'false',
                 'e' => $this->escape($replacement),
                 'n' => $this->resolveColumn($replacement, QN_JSON_INSTANT),
                 'q' => $this->quote($replacement),
@@ -1381,7 +1384,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
          * 5: Type specifier
          * 6: '%' if full token is '%%'
          */
-        return preg_replace_callback('#%(((([\d]+)\$)?([aeEnqQryYmMdDhHiIsStzZ]))|(%))#', $func, $format);
+        return preg_replace_callback('#%(((([\d]+)\$)?([abeEnqQryYmMdDhHiIsStzZ]))|(%))#', $func, $format);
     }
 
     /**

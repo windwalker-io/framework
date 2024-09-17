@@ -164,6 +164,8 @@ trait WhereConcernTrait
                 // Append every value as ValueObject so that we can make placeholders as `IN(?, ?, ?...)`
                 $value->append($this->handleValueAndBind($val));
             }
+        } elseif (is_bool($value)) {
+            $value = $this->val(raw($value ? 'true' : 'false'));
         } else {
             $value = $this->handleValueAndBind($value);
         }
