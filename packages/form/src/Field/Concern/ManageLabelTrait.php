@@ -55,10 +55,6 @@ trait ManageLabelTrait
         $label->setAttribute('for', $this->getId());
         $label->setAttribute('data-field-label', true);
 
-        if ($this->getDescription()) {
-            $label->setAttribute('title', $this->getDescription());
-        }
-
         FormNormalizer::sortAttributes($label);
 
         return $label;

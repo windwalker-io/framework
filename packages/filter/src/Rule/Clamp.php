@@ -35,7 +35,7 @@ class Clamp extends AbstractFilter
      */
     public function filter(mixed $value): mixed
     {
-        $value = TypeCast::mustNumeric($value);
+        $value = TypeCast::safeNumeric($value) ?? 0;
 
         return clamp($value, $this->min, $this->max);
     }
