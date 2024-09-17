@@ -56,4 +56,9 @@ class RedirectResponse extends Response
 
         return $this->stream;
     }
+
+    public function getLocation(): string
+    {
+        return $this->getHeaderLine('location');
+    }
 }
