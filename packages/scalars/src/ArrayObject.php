@@ -58,13 +58,9 @@ class ArrayObject implements AccessibleInterface
     }
 
     /**
-     * create
-     *
      * @param  array  $data
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function create(mixed $data = []): static
     {
@@ -462,15 +458,11 @@ class ArrayObject implements AccessibleInterface
     }
 
     /**
-     * wrap
-     *
      * @param  mixed  $value
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
-    public static function wrap(mixed $value): static
+    public static function wrap(mixed $value = []): static
     {
         if (!$value instanceof static) {
             $value = new static($value);
