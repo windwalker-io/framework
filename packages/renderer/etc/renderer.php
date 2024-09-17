@@ -17,11 +17,16 @@ return [
         'enabled' => true,
 
         'paths' => [
-            __DIR__ . '/../../views'
+            '@root/views'
         ],
 
         'namespaces' => [
-            //
+            '@front' => [
+                '@source/Module/Front'
+            ],
+            '@admin' => [
+                '@source/Module/Admin'
+            ],
         ],
 
         'renderers' => [
