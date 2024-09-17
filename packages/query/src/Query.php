@@ -805,20 +805,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    /**
-     * set
-     *
-     * @param  string|iterable  $column
-     * @param  mixed            $value
-     *
-     * @return  static
-     */
     public function set(iterable|string $column, mixed $value = null): static
     {
-        if (!$this->set) {
-            $this->set = $this->clause('SET', [], ', ');
-        }
-
         if (is_iterable($column)) {
             foreach ($column as $col => $val) {
                 $this->set($col, $val);
@@ -827,12 +815,31 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             return $this;
         }
 
-        $this->set->append(
+        if ($value instanceof Closure) {
+            $value($value = $this->createSubQuery());
+        }
+
+        $this->setRaw(
             $this->clause(
                 '',
                 [$this->quoteName($column), '=', $this->castWriteValue($value)]
             )
         );
+
+        return $this;
+    }
+
+    public function setRaw(Clause|string $value, ...$args): static
+    {
+        if (!$this->set) {
+            $this->set = $this->clause('SET', [], ', ');
+        }
+
+        if (is_string($value) && $args !== []) {
+            $value = $this->format($value, ...$args);
+        }
+
+        $this->set->append($value);
 
         return $this;
     }
