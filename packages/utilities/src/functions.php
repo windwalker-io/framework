@@ -190,7 +190,15 @@ namespace Windwalker {
         function uid(string $prefix = '', bool $timebase = false): string
         {
             if ($timebase) {
-                [$b, $a] = explode(' ', $c = microtime(), 2);
+                static $last = null;
+
+                do {
+                    $microtime = \microtime();
+                } while ($microtime === $last);
+
+                $last = $microtime;
+
+                [$b, $a] = explode(' ', $microtime, 2);
 
                 $c = $a . substr($b, 2);
 
