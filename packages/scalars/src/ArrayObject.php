@@ -66,7 +66,7 @@ class ArrayObject implements AccessibleInterface
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function create($data = []): static
+    public static function create(mixed $data = []): static
     {
         return new static($data);
     }
@@ -94,7 +94,7 @@ class ArrayObject implements AccessibleInterface
      *
      * @return  static
      */
-    protected function newInstance($data = []): static
+    protected function newInstance(mixed $data = []): static
     {
         $new = clone $this;
 
@@ -117,7 +117,7 @@ class ArrayObject implements AccessibleInterface
     {
         $new = clone $this;
 
-        $new->storage[$key] = $value;
+        $new->set($key, $value);
 
         return $new;
     }
@@ -136,7 +136,7 @@ class ArrayObject implements AccessibleInterface
     {
         $new = clone $this;
 
-        $new->storage[$key] = $new->storage[$key] ?? $default;
+        $new->set($key, $new->storage[$key] ?? $default);
 
         return $new;
     }
@@ -186,13 +186,28 @@ class ArrayObject implements AccessibleInterface
                 continue;
             }
 
-            $this->storage[$key] = $this->handleFillItem($value);
+            $this->set($key, $value);
         }
 
         return $this;
     }
 
-    protected function handleFillItem(mixed $value): mixed
+    /**
+     * Set value to this object.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     *
+     * @return  static
+     */
+    public function set(mixed $key, mixed $value): static
+    {
+        $this->getStorage()[$key] = $this->preprocessItem($value);
+
+        return $this;
+    }
+
+    protected function preprocessItem(mixed $value): mixed
     {
         return $value;
     }
