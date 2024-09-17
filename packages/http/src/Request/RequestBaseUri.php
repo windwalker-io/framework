@@ -20,12 +20,15 @@ use Windwalker\Utilities\Str;
  * @property-read string $host
  * @property-read string $path
  * @property-read string $route
+ * @property-read string $routeWithQuery
+ * @property-read string[] $routeAndQuery
  *
  * @method string full()
  * @method string current()
  * @method string script($uri = null)
  * @method string root($uri = null)
  * @method string route()
+ * @method string[] routeAndQuery()
  * @method string host($uri = null)
  * @method string path($uri = null)
  * @method string scheme()
@@ -118,7 +121,24 @@ class RequestBaseUri extends Uri implements \JsonSerializable
      */
     public function suffix(string $name, string $url): string
     {
-        return rtrim($this->$name, '/') . '/' . ltrim($url, '/');
+        return rtrim((string) $this->$name, '/') . '/' . ltrim($url, '/');
+    }
+
+    public function routeWithQuery(bool $endSlash = true): string
+    {
+        [$route, $query] = $this->routeAndQuery();
+
+        if ($endSlash) {
+            $route = Str::ensureRight($route, '/');
+        } else {
+            $route = Str::removeRight($route, '/');
+        }
+
+        if ($query) {
+            $route .= '?' . $query;
+        }
+
+        return $route;
     }
 
     public function absolute(string $url, bool $full = false): string
@@ -161,6 +181,8 @@ class RequestBaseUri extends Uri implements \JsonSerializable
             'host',
             'path',
             'route',
+            'routeWithQuery',
+            'routeAndQuery',
         ];
     }
 
@@ -304,6 +326,19 @@ class RequestBaseUri extends Uri implements \JsonSerializable
 
                     return UriNormalizer::ensureDir(rtrim($route, '/'));
                 })();
+            case 'routeWithQuery':
+                return $this->cacheStorage['routeWithQuery'] ??= (function () {
+                    $route = $this->route();
+                    $query = $this->getQuery();
+
+                    if ($query) {
+                        $route .= '?' . $query;
+                    }
+
+                    return $route;
+                })();
+            case 'routeAndQuery':
+                return $this->cacheStorage['routeAndQuery'] ??= [$this->route(), $this->getQuery()];
         }
 
         return $this->$name;
