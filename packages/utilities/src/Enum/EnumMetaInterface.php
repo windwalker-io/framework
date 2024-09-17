@@ -15,6 +15,10 @@ interface EnumMetaInterface extends EnumAdapterInterface
 
     public static function getTitles(): array;
 
+    public static function fromTitle(string $title): self;
+
+    public static function tryFromTitle(string $title): ?self;
+
     public function getIcon(): string;
 
     public static function getIcons(): array;
@@ -28,4 +32,6 @@ interface EnumMetaInterface extends EnumAdapterInterface
     public static function getMetas(): array;
 
     public static function maxLength(): int;
+
+    public function isHidden(): bool;
 }

@@ -10,6 +10,7 @@ use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTMLFactory;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Contract\LanguageInterface;
+use Windwalker\Utilities\Enum\EnumMetaInterface;
 use Windwalker\Utilities\Enum\EnumTranslatableInterface;
 
 /**
@@ -135,6 +136,10 @@ trait ListOptionsTrait
         $options = [];
 
         foreach ($enums as $enum) {
+            if (($enum instanceof EnumMetaInterface) && $enum->isHidden()) {
+                continue;
+            }
+
             if ($enum instanceof EnumTranslatableInterface) {
                 $options[$enum->getValue()] = $enum->getTitle($lang) ?: $enum->getKey();
             } elseif ($enum instanceof Enum) {

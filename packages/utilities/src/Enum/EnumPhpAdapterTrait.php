@@ -45,7 +45,7 @@ trait EnumPhpAdapterTrait
     }
 
     /**
-     * @return  array<static>
+     * @return  array<string, static>
      *
      * @throws \ReflectionException
      */

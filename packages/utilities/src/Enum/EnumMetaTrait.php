@@ -6,6 +6,7 @@ namespace Windwalker\Utilities\Enum;
 
 use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Attributes\Enum\Color;
+use Windwalker\Utilities\Attributes\Enum\Hidden;
 use Windwalker\Utilities\Attributes\Enum\Icon;
 use Windwalker\Utilities\Attributes\Enum\Meta;
 use Windwalker\Utilities\Attributes\Enum\Title;
@@ -42,6 +43,28 @@ trait EnumMetaTrait
         }
 
         return $values;
+    }
+
+    public static function fromTitle(string $title): self
+    {
+        $titles = self::getTitles();
+
+        $value = array_search($title, $titles);
+
+        return self::wrap($value);
+    }
+
+    public static function tryFromTitle(string $title): ?self
+    {
+        $titles = self::getTitles();
+
+        $value = array_search($title, $titles);
+
+        if ($value === false) {
+            return null;
+        }
+
+        return self::wrap($value);
     }
 
     public function getIcon(): string
@@ -90,6 +113,13 @@ trait EnumMetaTrait
         }
 
         return $values;
+    }
+
+    public function isHidden(): bool
+    {
+        $hidden = $this->getAttr(Hidden::class);
+
+        return $hidden instanceof Hidden;
     }
 
     /**
