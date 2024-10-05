@@ -389,6 +389,10 @@ class EntityMapper implements EventAwareInterface
         $metadata = $this->getMetadata();
         $updateNulls = (bool) ($options & static::UPDATE_NULLS);
 
+        if ($this->metadata::isEntity($source)) {
+            $updateNulls = true;
+        }
+
         if (!$condFields) {
             $condFields = $this->getKeys();
         }
