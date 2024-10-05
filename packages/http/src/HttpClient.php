@@ -496,10 +496,43 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return (string) $this->getOption('base_uri');
     }
 
-    public function withOptions(array $options = []): static
+    public function withOptions(array $options = [], bool $merge = false): static
     {
         $new = clone $this;
-        $new->options = $options;
+
+        if ($merge) {
+            $new->options = Arr::mergeRecursive(
+                $this->options,
+                $options
+            );
+        } else {
+            $new->options = $options;
+        }
+
+        return $new;
+    }
+
+    public function withDefaultHeader(string $name, string|array $value): static
+    {
+        $new = clone $this;
+
+        $new->options['headers'][$name] = $value;
+
+        return $new;
+    }
+
+    public function withDefaultHeaders(array $headers, bool $merge = false): static
+    {
+        $new = clone $this;
+
+        if ($merge) {
+            $new->options['headers'] = array_merge(
+                $new->options['headers'] ?? [],
+                $headers
+            );
+        } else {
+            $new->options['headers'] = $headers;
+        }
 
         return $new;
     }
