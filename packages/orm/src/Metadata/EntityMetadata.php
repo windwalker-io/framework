@@ -103,8 +103,12 @@ class EntityMetadata implements EventAwareInterface
         $this->addEventDealer($orm);
     }
 
-    public static function isEntity(string|object $object): bool
+    public static function isEntity(string|object|array $object): bool
     {
+        if (is_array($object)) {
+            return false;
+        }
+
         $class = new ReflectionClass($object);
 
         return $class->getAttributes(Table::class, ReflectionAttribute::IS_INSTANCEOF) !== [];

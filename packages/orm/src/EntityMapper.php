@@ -21,6 +21,7 @@ use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventInterface;
 use Windwalker\ORM\Attributes\CastForSave;
+use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Event\{AbstractSaveEvent,
     AfterCopyEvent,
     AfterDeleteEvent,
@@ -31,9 +32,7 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
     BeforeUpdateWhereEvent,
-    EnergizeEvent
-};
-use Windwalker\ORM\Attributes\UUIDBin;
+    EnergizeEvent};
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -50,6 +49,7 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 use function is_object;
 use function Windwalker\collect;
 use function Windwalker\raw;
+use function Windwalker\try_wrap_uuid;
 
 /**
  * EntityMapper is an entity & database mapping object.
@@ -417,7 +417,7 @@ class EntityMapper implements EventAwareInterface
         if (!($options & static::IGNORE_OLD_DATA) && $this->getKeys() && !empty($data[$this->getMainKey()])) {
             $oldData = $this->getDb()->select('*')
                 ->from($metadata->getTableName())
-                ->where(Arr::only($data, $this->getKeys()))
+                ->where($this->conditionsToWheres(Arr::only($data, $this->getKeys())))
                 ->get()
                 ?->dump();
 
@@ -554,7 +554,7 @@ class EntityMapper implements EventAwareInterface
         $statement = $this->getDb()->getWriter()->updateWhere(
             $metadata->getTableName(),
             $data = $event->getData(),
-            $conditions = $event->getConditions()
+            $this->conditionsToWheres($conditions = $event->getConditions())
         );
 
         // Event
@@ -1015,7 +1015,10 @@ class EntityMapper implements EventAwareInterface
 
         // Delete
         foreach ($delItems as $k => $delItem) {
-            $this->deleteWhere(Arr::only($delItem, $compareKeys), $options);
+            $this->deleteWhere(
+                $this->conditionsToWheres(Arr::only($delItem, $compareKeys)),
+                $options
+            );
 
             $delItems[$k] = $this->toEntity($delItem);
         }
@@ -1423,10 +1426,10 @@ class EntityMapper implements EventAwareInterface
 
         if ($uuidAttr) {
             if (is_array($value)) {
-                return array_map(fn ($v) => new UuidBinWrapper($v), $value);
+                return array_map(fn($v) => try_wrap_uuid($v), $value);
             }
 
-            return new UuidBinWrapper($value);
+            return try_wrap_uuid($value);
         }
 
         return $value;
