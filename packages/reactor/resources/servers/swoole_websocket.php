@@ -156,6 +156,8 @@ $server->onOpen(
         } catch (\Throwable $e) {
             CliServerRuntime::handleThrowable($e);
         }
+
+        CliServerRuntime::gc();
     }
 );
 
@@ -181,6 +183,8 @@ $server->onMessage(
         } catch (\Throwable $e) {
             CliServerRuntime::handleThrowable($e);
         }
+
+        CliServerRuntime::gc();
     }
 );
 
@@ -204,6 +208,8 @@ $server->onClose(
         } catch (\Throwable $e) {
             CliServerRuntime::handleThrowable($e);
         }
+
+        CliServerRuntime::gc();
     }
 );
 
@@ -230,6 +236,8 @@ $server->onStart(
             CliServerRuntime::handleThrowable($e);
             $server->shutdown();
         }
+
+        CliServerRuntime::gc();
     }
 );
 

@@ -127,6 +127,8 @@ $server->on(StartEvent::class, new ServerStartedListener());
 
 $server->onRequest(function (RequestEvent $event) use ($app) {
     $app->runCliServerRequest($event);
+
+    CliServerRuntime::gc();
 });
 
 /*
@@ -143,6 +145,8 @@ $server->onStart(function (StartEvent $event) {
     CliServerRuntime::logLine('Start listening: http://localhost:' . $serv->port);
     CliServerRuntime::logLine('<fg=yellow>Press Ctrl+C to stop the server</>');
     CliServerRuntime::logNewLine(1);
+
+    CliServerRuntime::gc();
 });
 
 /*
