@@ -68,8 +68,8 @@ class OpensslCipherTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider methodsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('methodsProvider')]
     public function testEncrypt(string $method): void
     {
         $methods = openssl_get_cipher_methods(true);

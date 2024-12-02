@@ -116,8 +116,8 @@ class CompareHelperTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider getCompareData
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getCompareData')]
     public function testCompare($a, $operator, $b, $strict, $result): void
     {
         self::assertEquals($result, CompareHelper::compare($a, $b, $operator, $strict));

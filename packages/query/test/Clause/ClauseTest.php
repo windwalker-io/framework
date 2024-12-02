@@ -27,8 +27,8 @@ class ClauseTest extends TestCase
      *
      * @see          Clause::__toString
      *
-     * @dataProvider basicUsageProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basicUsageProvider')]
     public function testBasicUsage(string $name, array $elements, string $glue, string $expected): void
     {
         self::assertEquals(

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Uri\Test;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
@@ -209,11 +210,10 @@ class UriTest extends TestCase
     /**
      * testAuthority
      *
-     * @dataProvider authorityProvider
-     *
      * @param  string  $url
      * @param  string  $expected
      */
+    #[DataProvider('authorityProvider')]
     public function testAuthority($url, $expected)
     {
         $uri = new Uri($url);
@@ -232,11 +232,10 @@ class UriTest extends TestCase
     }
 
     /**
-     * @dataProvider queryStringsForEncoding
-     *
      * @param  string  $query
      * @param  string  $expected
      */
+    #[DataProvider('queryStringsForEncoding')]
     public function testQueryEncoded($query, $expected)
     {
         $uri = new Uri();
@@ -328,8 +327,8 @@ class UriTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider seedInvalidArguments
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedInvalidArguments')]
     public function testInvalidArguments($method, $value)
     {
         self::assertExpectedException(

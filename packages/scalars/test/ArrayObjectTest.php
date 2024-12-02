@@ -153,8 +153,8 @@ class ArrayObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestColumn
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestColumn')]
     public function testColumn(array $src, $column, array $except, string $message): void
     {
         self::assertEquals($except, arr($src)->column($column)->dump(), $message);
@@ -408,8 +408,8 @@ class ArrayObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestSearch
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestSearch')]
     public function testSearch($exp, $search, bool $strict): void
     {
         $a = arr([1, 2, 3, true, false, '', 0, null]);

@@ -32,14 +32,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $string    @todo
-     * @param  boolean  $expected  @todo
+     * @param string  $string   @todo
+     * @param boolean $expected @todo
      *
      * @return  void
      *
-     * @dataProvider  isAsciiProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isAsciiProvider')]
     public function testIsAscii($string, $expected)
     {
         $this->assertEquals(
@@ -51,16 +50,15 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $expect    @todo
-     * @param  string   $haystack  @todo
-     * @param  string   $needle    @todo
-     * @param  integer  $offset    @todo
+     * @param string  $expect   @todo
+     * @param string  $haystack @todo
+     * @param string  $needle   @todo
+     * @param integer $offset   @todo
      *
      * @return  void
      *
-     * @dataProvider  strposProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strposProvider')]
     public function testStrpos($expect, $haystack, $needle, $offset = 0)
     {
         $actual = Utf8String::strpos($haystack, $needle, $offset);
@@ -70,16 +68,15 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $expect    @todo
-     * @param  string   $haystack  @todo
-     * @param  string   $needle    @todo
-     * @param  integer  $offset    @todo
+     * @param string  $expect   @todo
+     * @param string  $haystack @todo
+     * @param string  $needle   @todo
+     * @param integer $offset   @todo
      *
      * @return  void
      *
-     * @dataProvider  strrposProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strrposProvider')]
     public function testStrrpos($expect, $haystack, $needle, $offset = 0)
     {
         $actual = Utf8String::strrpos($haystack, $needle, $offset);
@@ -89,16 +86,15 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string    $expect  @todo
-     * @param  string    $string  @todo
-     * @param  string    $start   @todo
-     * @param  bool|int  $length  @todo
+     * @param string   $expect @todo
+     * @param string   $string @todo
+     * @param string   $start  @todo
+     * @param bool|int $length @todo
      *
      * @return  void
      *
-     * @dataProvider  substrProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('substrProvider')]
     public function testSubstr($expect, $string, $start, $length = null)
     {
         $actual = Utf8String::substr($string, $start, $length);
@@ -108,14 +104,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  void
      *
-     * @dataProvider  strtolowerProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strtolowerProvider')]
     public function testStrtolower($string, $expect): void
     {
         $actual = Utf8String::strtolower($string);
@@ -125,14 +120,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  void
      *
-     * @dataProvider  strtoupperProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strtoupperProvider')]
     public function testStrtoupper($string, $expect): void
     {
         $actual = Utf8String::strtoupper($string);
@@ -142,14 +136,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  void
      *
-     * @dataProvider  strlenProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strlenProvider')]
     public function testStrlen($string, $expect): void
     {
         $actual = Utf8String::strlen($string);
@@ -159,17 +152,16 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $search   @todo
-     * @param  string   $replace  @todo
-     * @param  string   $subject  @todo
-     * @param  integer  $count    @todo
-     * @param  string   $expect   @todo
+     * @param string  $search  @todo
+     * @param string  $replace @todo
+     * @param string  $subject @todo
+     * @param integer $count   @todo
+     * @param string  $expect  @todo
      *
      * @return  void
      *
-     * @dataProvider  strIreplaceProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strIreplaceProvider')]
     public function testStrIreplace($search, $replace, $subject, $count, $expect): void
     {
         $actual = Utf8String::strIreplace($search, $replace, $subject, $count);
@@ -179,15 +171,14 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string        @todo
-     * @param  int     $split_length  @todo
-     * @param  string  $expect        @todo
+     * @param string $string       @todo
+     * @param int    $split_length @todo
+     * @param string $expect       @todo
      *
      * @return  void
      *
-     * @dataProvider  strSplitProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strSplitProvider')]
     public function testStrSplit($string, $split_length, $expect): void
     {
         $actual = Utf8String::strSplit($string, $split_length);
@@ -197,15 +188,14 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string1  @todo
-     * @param  string  $string2  @todo
-     * @param  string  $expect   @todo
+     * @param string $string1 @todo
+     * @param string $string2 @todo
+     * @param string $expect  @todo
      *
      * @return void
      *
-     * @dataProvider  strcasecmpProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strcasecmpProvider')]
     public function testStrcasecmp($string1, $string2, $expect)
     {
         $actual = Utf8String::strcasecmp($string1, $string2);
@@ -220,16 +210,15 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string1  @todo
-     * @param  string  $string2  @todo
-     * @param  string  $locale   @todo
-     * @param  string  $expect   @todo
+     * @param string $string1 @todo
+     * @param string $string2 @todo
+     * @param string $locale  @todo
+     * @param string $expect  @todo
      *
      * @return  void
      *
-     * @dataProvider  strcmpProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strcmpProvider')]
     public function testStrcmp($string1, $string2, $expect): void
     {
         $actual = Utf8String::strcmp($string1, $string2);
@@ -244,17 +233,16 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $haystack  @todo
-     * @param  string   $needles   @todo
-     * @param  integer  $start     @todo
-     * @param  integer  $len       @todo
-     * @param  string   $expect    @todo
+     * @param string  $haystack @todo
+     * @param string  $needles  @todo
+     * @param integer $start    @todo
+     * @param integer $len      @todo
+     * @param string  $expect   @todo
      *
      * @return  void
      *
-     * @dataProvider  strcspnProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strcspnProvider')]
     public function testStrcspn($haystack, $needles, $start, $len, $expect): void
     {
         $actual = Utf8String::strcspn($haystack, $needles, $start, $len);
@@ -264,15 +252,14 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $haystack  @todo
-     * @param  string  $needle    @todo
-     * @param  string  $expect    @todo
+     * @param string $haystack @todo
+     * @param string $needle   @todo
+     * @param string $expect   @todo
      *
      * @return  void
      *
-     * @dataProvider  stristrProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('stristrProvider')]
     public function testStristr($haystack, $needle, $expect): void
     {
         $actual = Utf8String::stristr($haystack, $needle);
@@ -282,14 +269,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  void
      *
-     * @dataProvider  strrevProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strrevProvider')]
     public function testStrrev($string, $expect): void
     {
         $actual = Utf8String::strrev($string);
@@ -299,17 +285,16 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $subject  @todo
-     * @param  string   $mask     @todo
-     * @param  integer  $start    @todo
-     * @param  integer  $length   @todo
-     * @param  string   $expect   @todo
+     * @param string  $subject @todo
+     * @param string  $mask    @todo
+     * @param integer $start   @todo
+     * @param integer $length  @todo
+     * @param string  $expect  @todo
      *
      * @return  void
      *
-     * @dataProvider  strspnProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strspnProvider')]
     public function testStrspn($subject, $mask, $start, $length, $expect): void
     {
         $actual = Utf8String::strspn($subject, $mask, $start, $length);
@@ -319,17 +304,16 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string   $expect       @todo
-     * @param  string   $string       @todo
-     * @param  string   $replacement  @todo
-     * @param  integer  $start        @todo
-     * @param  integer  $length       @todo
+     * @param string  $expect      @todo
+     * @param string  $string      @todo
+     * @param string  $replacement @todo
+     * @param integer $start       @todo
+     * @param integer $length      @todo
      *
      * @return  array
      *
-     * @dataProvider  substrReplaceProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('substrReplaceProvider')]
     public function testSubstrReplace($expect, $string, $replacement, $start, $length): void
     {
         $actual = Utf8String::substrReplace($string, $replacement, $start, $length);
@@ -339,15 +323,14 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string    @todo
-     * @param  string  $charlist  @todo
-     * @param  string  $expect    @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
      * @return  array
      *
-     * @dataProvider  ltrimProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ltrimProvider')]
     public function testLtrim($string, $charlist, $expect): void
     {
         if ($charlist === null) {
@@ -362,15 +345,14 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string    @todo
-     * @param  string  $charlist  @todo
-     * @param  string  $expect    @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
      * @return  array
      *
-     * @dataProvider  rtrimProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rtrimProvider')]
     public function testRtrim($string, $charlist, $expect): void
     {
         if ($charlist === null) {
@@ -385,15 +367,14 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string    @todo
-     * @param  string  $charlist  @todo
-     * @param  string  $expect    @todo
+     * @param string $string   @todo
+     * @param string $charlist @todo
+     * @param string $expect   @todo
      *
      * @return  array
      *
-     * @dataProvider  trimProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('trimProvider')]
     public function testTrim($string, $charlist, $expect): void
     {
         if ($charlist === null) {
@@ -408,14 +389,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  array
      *
-     * @dataProvider  ucfirstProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ucfirstProvider')]
     public function testUcfirst($string, $expect): void
     {
         $actual = Utf8String::ucfirst($string);
@@ -425,13 +405,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * testLcfirst
      *
-     * @param  string  $string
-     * @param  string  $expect
+     * @param string $string
+     * @param string $expect
      *
      * @return  void
      *
-     * @dataProvider  lcfirstProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('lcfirstProvider')]
     public function testLcfirst($string, $expect)
     {
         $actual = Utf8String::lcfirst($string);
@@ -441,14 +421,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  array
      *
-     * @dataProvider  ucwordsProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ucwordsProvider')]
     public function testUcwords($string, $expect): void
     {
         $actual = Utf8String::ucwords($string);
@@ -463,8 +442,8 @@ class MbUtf8StringTest extends TestCase
      * @param $expected
      * @param $caseSensitive
      *
-     * @dataProvider substrCountProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('substrCountProvider')]
     public function testSubstrCount($string, $search, $expected, $caseSensitive)
     {
         self::assertEquals($expected, Utf8String::substrCount($string, $search, $caseSensitive));
@@ -473,16 +452,15 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $source         @todo
-     * @param  string  $from_encoding  @todo
-     * @param  string  $to_encoding    @todo
-     * @param  string  $expect         @todo
+     * @param string $source        @todo
+     * @param string $from_encoding @todo
+     * @param string $to_encoding   @todo
+     * @param string $expect        @todo
      *
      * @return  array
      *
-     * @dataProvider  convertEncodingProvider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('convertEncodingProvider')]
     public function testConvertEncoding($source, $from_encoding, $to_encoding, $expect): void
     {
         $actual = Utf8String::convertEncoding($source, $from_encoding, $to_encoding);
@@ -492,14 +470,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  array
      *
-     * @dataProvider  isUtf8Provider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isUtf8Provider')]
     public function testValid($string, $expect): void
     {
         $actual = Utf8String::isUtf8($string);
@@ -509,14 +486,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  array
      *
-     * @dataProvider  unicodeToUtf8Provider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('unicodeToUtf8Provider')]
     public function testUnicodeToUtf8($string, $expect): void
     {
         $actual = Utf8String::unicodeToUtf8($string);
@@ -526,14 +502,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  array
      *
-     * @dataProvider  unicodeToUtf16Provider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('unicodeToUtf16Provider')]
     public function testUnicodeToUtf16($string, $expect): void
     {
         $actual = Utf8String::unicodeToUtf16($string);
@@ -543,14 +518,13 @@ class MbUtf8StringTest extends TestCase
     /**
      * Test...
      *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
+     * @param string $string @todo
+     * @param string $expect @todo
      *
      * @return  array
      *
-     * @dataProvider  isUtf8Provider
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isUtf8Provider')]
     public function testCompliant($string, $expect): void
     {
         $actual = Utf8String::compliant($string);
@@ -562,8 +536,8 @@ class MbUtf8StringTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestShuffle
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestShuffle')]
     public function testShuffle($string)
     {
         $result = Utf8String::shuffle($string);
@@ -574,9 +548,9 @@ class MbUtf8StringTest extends TestCase
         $len = mb_strlen($string);
 
         for ($i = 0; $i < $len; $i++) {
-            $char = mb_substr($string, $i, 1);
+            $char        = mb_substr($string, $i, 1);
             $countBefore = mb_substr_count($string, $char);
-            $countAfter = mb_substr_count($result, $char);
+            $countAfter  = mb_substr_count($result, $char);
 
             self::assertEquals($countBefore, $countAfter);
         }

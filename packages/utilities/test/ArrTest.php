@@ -34,8 +34,8 @@ class ArrTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestDef
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestDef')]
     public function testDef($array, $key, $value, $expected): void
     {
         self::assertEquals($expected, $return = Arr::def($array, $key, $value));
@@ -333,8 +333,8 @@ class ArrTest extends TestCase
      * @param  int|string    $offset
      * @param  string        $separator
      *
-     * @dataProvider providerTestRemove
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestRemove')]
     public function testRemove($array, $expected, $offset, $separator)
     {
         $actual = Arr::remove($array, (string) $offset, $separator);
@@ -712,8 +712,8 @@ class ArrTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestSort
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestSort')]
     public static function testSort($data, $expected, $condition, $descending)
     {
         $return = Arr::sort($data, $condition, $descending);
@@ -800,8 +800,8 @@ class ArrTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestInvert
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestInvert')]
     public function testInvert($data, $expected)
     {
         self::assertEquals($expected, Arr::invert($data));
