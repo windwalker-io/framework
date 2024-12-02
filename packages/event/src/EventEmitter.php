@@ -39,9 +39,9 @@ class EventEmitter extends EventDispatcher implements
     /**
      * EventEmitter constructor.
      *
-     * @param  ListenerProviderInterface  $provider
+     * @param ListenerProviderInterface|null $provider
      */
-    public function __construct(ListenerProviderInterface $provider = null)
+    public function __construct(?ListenerProviderInterface $provider = null)
     {
         parent::__construct(CompositeListenerProvider::create($provider));
 

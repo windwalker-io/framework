@@ -577,9 +577,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  string        $class
-     * @param  Closure|null  $extend
-     * @param  int           $options
+     * @param  string      $class
+     * @param Closure|null $extend
+     * @param  int         $options
      *
      * @return StoreDefinitionInterface
      *
@@ -588,7 +588,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function prepareSharedObject(
         string $class,
-        Closure $extend = null,
+        ?Closure $extend = null,
         int $options = 0
     ): StoreDefinitionInterface {
         return $this->prepareObject($class, $extend, $options | static::SHARED);

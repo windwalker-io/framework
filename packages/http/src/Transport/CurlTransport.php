@@ -206,10 +206,10 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * createHandle
      *
-     * @param  RequestInterface      $request
-     * @param  array                 $options
-     * @param  array|null            $headers
-     * @param  StreamInterface|null  $content
+     * @param  RequestInterface    $request
+     * @param  array               $options
+     * @param array|null           $headers
+     * @param StreamInterface|null $content
      *
      * @return  \CurlHandle|false
      *
@@ -218,8 +218,8 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     public function createHandle(
         RequestInterface $request,
         array $options,
-        array &$headers = null,
-        StreamInterface &$content = null
+        ?array &$headers = null,
+        ?StreamInterface &$content = null
     ): \CurlHandle|false {
         // Setup the cURL handle.
         $ch = curl_init();
@@ -350,12 +350,12 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     }
 
     /**
-     * @param  RequestInterface  $request
-     * @param  bool              $forceMultipart
+     * @param  RequestInterface $request
+     * @param bool|null         $forceMultipart
      *
      * @return  RequestInterface
      */
-    public static function prepareBody(RequestInterface $request, bool &$forceMultipart = null): RequestInterface
+    public static function prepareBody(RequestInterface $request, ?bool &$forceMultipart = null): RequestInterface
     {
         $body = $request->getBody();
 

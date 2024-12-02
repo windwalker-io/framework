@@ -182,7 +182,7 @@ EOT,
             #[StrUpper]
             string $str = 'hello',
             #[StrUpper]
-            StringObject $str2 = null
+            ?StringObject $str2 = null
         ) {
             return [$str, (string) $str2];
         };

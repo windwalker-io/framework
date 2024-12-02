@@ -346,15 +346,15 @@ class StringObjectTest extends TestCase
     /**
      * testLength
      *
-     * @param  string       $string
-     * @param  int          $expected
-     * @param  string|null  $encoding
+     * @param  string     $string
+     * @param  int        $expected
+     * @param string|null $encoding
      *
      * @return  void
      *
      * @dataProvider lengthProvider
      */
-    public function testLength(string $string, int $expected, string $encoding = null)
+    public function testLength(string $string, int $expected, ?string $encoding = null)
     {
         $s = new StringObject($string, $encoding);
         $length = $s->length();

@@ -94,7 +94,7 @@ class SelectorQuery extends Query implements EventAwareInterface
         );
     }
 
-    public function autoSelections(string $divider = '.', array &$columns = null): static
+    public function autoSelections(string $divider = '.', ?array &$columns = null): static
     {
         $columns ??= [];
 

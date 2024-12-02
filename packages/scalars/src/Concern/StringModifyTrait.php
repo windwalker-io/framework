@@ -35,13 +35,13 @@ trait StringModifyTrait
     /**
      * replace
      *
-     * @param  array|string  $search
-     * @param  array|string  $replacement
-     * @param  int|null      $count
+     * @param  array|string $search
+     * @param  array|string $replacement
+     * @param int|null      $count
      *
      * @return  static
      */
-    public function replace(array|string $search, array|string $replacement, int &$count = null): static
+    public function replace(array|string $search, array|string $replacement, ?int &$count = null): static
     {
         return $this->cloneInstance(
             function (StringObject $new) use ($search, $replacement, &$count) {
@@ -109,11 +109,11 @@ trait StringModifyTrait
      *
      * @param  string  $replace
      * @param  int     $start
-     * @param  int     $offset
+     * @param int|null $offset
      *
      * @return  static
      */
-    public function substrReplace(string $replace, int $start, int $offset = null): static
+    public function substrReplace(string $replace, int $start, ?int $offset = null): static
     {
         return $this->cloneInstance(
             function (StringObject $new) use ($replace, $start, $offset) {
@@ -125,11 +125,11 @@ trait StringModifyTrait
     /**
      * ltrim
      *
-     * @param  string|null  $charlist
+     * @param string|null $charlist
      *
      * @return  static
      */
-    public function trimLeft(string $charlist = null): static
+    public function trimLeft(?string $charlist = null): static
     {
         return $this->cloneInstance(
             function (StringObject $new) use ($charlist) {
@@ -141,11 +141,11 @@ trait StringModifyTrait
     /**
      * rtrim
      *
-     * @param  string|null  $charlist
+     * @param string|null $charlist
      *
      * @return  static
      */
-    public function trimRight(string $charlist = null): static
+    public function trimRight(?string $charlist = null): static
     {
         return $this->cloneInstance(
             function (StringObject $new) use ($charlist) {
@@ -157,11 +157,11 @@ trait StringModifyTrait
     /**
      * trim
      *
-     * @param  string|null  $charlist
+     * @param string|null $charlist
      *
      * @return  static
      */
-    public function trim(string $charlist = null): static
+    public function trim(?string $charlist = null): static
     {
         return $this->cloneInstance(
             function (StringObject $new) use ($charlist) {

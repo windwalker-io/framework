@@ -35,10 +35,10 @@ class Environment
     /**
      * Class init.
      *
-     * @param  array|null  $serverParams
+     * @param array|null $serverParams
      */
     public function __construct(
-        array $serverParams = null,
+        ?array $serverParams = null,
     ) {
         $this->serverParams = $serverParams ?? $_SERVER;
     }

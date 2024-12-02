@@ -21,11 +21,11 @@ trait MultiMessagesExceptionTrait
     /**
      * Class init.
      *
-     * @param  string|array|null  $messages
-     * @param  int                $code
-     * @param  Throwable|null    $previous
+     * @param string|array|null $messages
+     * @param  int              $code
+     * @param  Throwable|null   $previous
      */
-    public function __construct(string|array $messages = null, int $code = 0, ?Throwable $previous = null)
+    public function __construct(string|array|null $messages = null, int $code = 0, ?Throwable $previous = null)
     {
         $this->messages = (array) $messages;
 

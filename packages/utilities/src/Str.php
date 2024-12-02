@@ -409,14 +409,14 @@ class Str
     /**
      * removeChar
      *
-     * @param  string       $string
-     * @param  int          $offset
-     * @param  int|null     $length
-     * @param  string|null  $encoding
+     * @param  string      $string
+     * @param  int         $offset
+     * @param int|null     $length
+     * @param  string|null $encoding
      *
      * @return  string
      */
-    public static function removeChar(string $string, int $offset, int $length = null, ?string $encoding = null): string
+    public static function removeChar(string $string, int $offset, ?int $length = null, ?string $encoding = null): string
     {
         $encoding ??= mb_internal_encoding();
 
@@ -504,14 +504,14 @@ class Str
     /**
      * slice
      *
-     * @param  string       $string
-     * @param  int          $start
-     * @param  int|null     $end
-     * @param  string|null  $encoding
+     * @param  string      $string
+     * @param  int         $start
+     * @param int|null     $end
+     * @param  string|null $encoding
      *
      * @return  string
      */
-    public static function slice(string $string, int $start, int $end = null, ?string $encoding = null): string
+    public static function slice(string $string, int $start, ?int $end = null, ?string $encoding = null): string
     {
         $encoding ??= mb_internal_encoding();
 
@@ -531,14 +531,14 @@ class Str
     /**
      * substring
      *
-     * @param  string       $string
-     * @param  int          $start
-     * @param  int|null     $end
-     * @param  string|null  $encoding
+     * @param  string      $string
+     * @param  int         $start
+     * @param int|null     $end
+     * @param  string|null $encoding
      *
      * @return  string
      */
-    public static function substring(string $string, int $start, int $end = null, ?string $encoding = null): string
+    public static function substring(string $string, int $start, ?int $end = null, ?string $encoding = null): string
     {
         $encoding ??= mb_internal_encoding();
 

@@ -90,12 +90,12 @@ class KeyValueGrid extends Grid
     /**
      * addItems
      *
-     * @param  array  $items
-     * @param  array  $attrs
+     * @param array|null $items
+     * @param  array     $attrs
      *
      * @return  static
      */
-    public function addItems(array $items = null, array $attrs = []): static
+    public function addItems(?array $items = null, array $attrs = []): static
     {
         $this->configure(
             $items,

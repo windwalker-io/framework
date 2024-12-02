@@ -654,7 +654,7 @@ class ContainerTest extends TestCase
     {
         /** @var StubStack $stack */
         $stack = $this->instance->call(
-            function (StubStack $stack = null) {
+            function (?StubStack $stack = null) {
                 return $stack;
             }
         );

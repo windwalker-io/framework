@@ -14,13 +14,13 @@ class NoHeaderOutput extends Output
     /**
      * header
      *
-     * @param  string    $string
-     * @param  bool      $replace
-     * @param  int|null  $code
+     * @param  string  $string
+     * @param  bool    $replace
+     * @param int|null $code
      *
      * @return  $this
      */
-    public function header(string $string, bool $replace = true, int $code = null): static
+    public function header(string $string, bool $replace = true, ?int $code = null): static
     {
         return $this;
     }

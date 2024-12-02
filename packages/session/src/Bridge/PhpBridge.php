@@ -47,13 +47,13 @@ class PhpBridge implements BridgeInterface
      *
      * @see https://gist.github.com/franksacco/d6e943c41189f8ee306c182bf8f07654
      *
-     * @param  array                  $options
-     * @param  HandlerInterface|null  $handler
-     * @param  FormatInterface|null   $serializer
+     * @param  array                $options
+     * @param HandlerInterface|null $handler
+     * @param  FormatInterface|null $serializer
      */
     public function __construct(
         array $options = [],
-        HandlerInterface $handler = null,
+        ?HandlerInterface $handler = null,
         ?FormatInterface $serializer = null
     ) {
         $this->handler = $handler ?? new NativeHandler();

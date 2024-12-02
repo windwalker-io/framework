@@ -126,13 +126,13 @@ class PathCollection
     /**
      * Append all paths' iterator into an OuterIterator.
      *
-     * @param  Closure  $getter  Contains the logic that how to get iterator from file object.
+     * @param Closure|null $getter Contains the logic that how to get iterator from file object.
      *
      * @return  FilesIterator  Appended iterators.
      *
      * @since  2.0
      */
-    private function createIterator(Closure $getter = null): FilesIterator
+    private function createIterator(?Closure $getter = null): FilesIterator
     {
         $iter = new AppendIterator();
 

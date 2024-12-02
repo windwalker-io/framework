@@ -63,12 +63,12 @@ class QueueMessage implements JsonSerializable
     /**
      * QueueMessage constructor.
      *
-     * @param  callable|SerializableClosure  $job
-     * @param  array                         $data
-     * @param  int                           $delay
-     * @param  array                         $options
+     * @param callable|null $job
+     * @param  array        $data
+     * @param  int          $delay
+     * @param  array        $options
      */
-    public function __construct(callable $job = null, array $data = [], int $delay = 0, array $options = [])
+    public function __construct(?callable $job = null, array $data = [], int $delay = 0, array $options = [])
     {
         if ($job !== null) {
             $this->setSerializedJob(serialize($job));

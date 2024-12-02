@@ -193,12 +193,12 @@ abstract class Utf8String
      * UTF-8 aware alternative to strcspn
      * Find length of initial segment not matching mask
      *
-     * @param  string       $str     The string to process
-     * @param  string       $mask    The mask
-     * @param  int          $start   Optional starting character position (in characters)
-     * @param  int          $length  Optional length
+     * @param  string      $str    The string to process
+     * @param  string      $mask   The mask
+     * @param  int         $start  Optional starting character position (in characters)
+     * @param int|null     $length Optional length
      *
-     * @param  string|null  $encoding
+     * @param  string|null $encoding
      *
      * @return  int  The length of the initial segment of str1 which does not contain any of the characters in str2
      *
@@ -209,7 +209,7 @@ abstract class Utf8String
         string $str,
         string $mask,
         int $start = 0,
-        int $length = null,
+        ?int $length = null,
         ?string $encoding = null
     ): int {
         $encoding = $encoding ?? mb_internal_encoding();
@@ -255,12 +255,12 @@ abstract class Utf8String
      * UTF-8 aware alternative to strspn
      * Find length of initial segment matching mask
      *
-     * @param  string       $str     The haystack
-     * @param  string       $mask    The mask
-     * @param  int          $start   Start optional
-     * @param  int          $length  Length optional
+     * @param  string      $str    The haystack
+     * @param  string      $mask   The mask
+     * @param  int         $start  Start optional
+     * @param int|null     $length Length optional
      *
-     * @param  string|null  $encoding
+     * @param  string|null $encoding
      *
      * @return  int
      *
@@ -271,7 +271,7 @@ abstract class Utf8String
         string $str,
         string $mask,
         int $start = 0,
-        int $length = null,
+        ?int $length = null,
         ?string $encoding = null
     ): int {
         $encoding = $encoding ?? mb_internal_encoding();

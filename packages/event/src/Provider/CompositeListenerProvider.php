@@ -56,10 +56,10 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
     /**
      * CompositeListenerProvider constructor.
      *
-     * @param  SubscribableListenerProvider  $mainProvider
-     * @param  ListenerProviderInterface[]   $providers
+     * @param SubscribableListenerProvider|null $mainProvider
+     * @param  ListenerProviderInterface[]      $providers
      */
-    public function __construct(SubscribableListenerProvider $mainProvider = null, array $providers = [])
+    public function __construct(?SubscribableListenerProvider $mainProvider = null, array $providers = [])
     {
         $this->mainProvider = $mainProvider ?: new SubscribableListenerProvider();
 
