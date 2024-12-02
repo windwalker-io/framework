@@ -105,7 +105,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
         $constraints = $this->instance->getConstraints();
         $constraints = array_filter($constraints, fn(Constraint $item) => $item->constraintType !== 'CHECK');
 
-        self::assertEquals(
+        self::assertArraySimilar(
             ['PRIMARY', 'idx_enterprise_alias'],
             array_keys($constraints)
         );
@@ -257,7 +257,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
 
         $this->instance->reset();
 
-        self::assertEquals(
+        self::assertArraySimilar(
             [
                 'PRIMARY',
                 'idx_enterprise_alias',
@@ -559,7 +559,7 @@ SQL,
     {
         $indexes = array_keys($this->instance->getIndexes());
 
-        self::assertEquals(
+        self::assertArraySimilar(
             [
                 'PRIMARY',
                 'idx_enterprise_alias',

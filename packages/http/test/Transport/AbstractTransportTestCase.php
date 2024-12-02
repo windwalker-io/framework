@@ -313,24 +313,24 @@ abstract class AbstractTransportTestCase extends TestCase
     /**
      * @inheritDoc
      */
-    protected function runTest(): mixed
-    {
-        try {
-            return parent::runTest();
-        } catch (HttpRequestException $e) {
-            if (str_contains($e->getMessage(), 'Connection refused')) {
-                throw new HttpRequestException(
-                    $e->getMessage() . ' - Try run: ' . sprintf(
-                        'php -S %s:%s bin/test-server.php',
-                        $this->getTestUrl()->getHost(),
-                        $this->getTestUrl()->getPort()
-                    )
-                );
-            }
-
-            throw $e;
-        }
-    }
+//    protected function runTest(): mixed
+//    {
+//        try {
+//            return parent::runTest();
+//        } catch (HttpRequestException $e) {
+//            if (str_contains($e->getMessage(), 'Connection refused')) {
+//                throw new HttpRequestException(
+//                    $e->getMessage() . ' - Try run: ' . sprintf(
+//                        'php -S %s:%s bin/test-server.php',
+//                        $this->getTestUrl()->getHost(),
+//                        $this->getTestUrl()->getPort()
+//                    )
+//                );
+//            }
+//
+//            throw $e;
+//        }
+//    }
 
     /**
      * @return  mixed
