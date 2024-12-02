@@ -229,13 +229,13 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  string             $column
-     * @param  Conditions         $conditions
-     * @param  array|string|null  $groups
+     * @param  string           $column
+     * @param  Conditions       $conditions
+     * @param array|string|null $groups
      *
      * @return  int
      */
-    public function countColumn(string $column, mixed $conditions = [], array|string $groups = null): int
+    public function countColumn(string $column, mixed $conditions = [], array|string|null $groups = null): int
     {
         return (int) $this->select()
             ->selectRaw('IFNULL(COUNT(%n), 0)', $column)
@@ -248,13 +248,13 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  string             $column
-     * @param  Conditions         $conditions
-     * @param  array|string|null  $groups
+     * @param  string           $column
+     * @param  Conditions       $conditions
+     * @param array|string|null $groups
      *
      * @return  float
      */
-    public function sumColumn(string $column, mixed $conditions = [], array|string $groups = null): float
+    public function sumColumn(string $column, mixed $conditions = [], array|string|null $groups = null): float
     {
         return (float) $this->select()
             ->selectRaw('IFNULL(SUM(%n), 0)', $column)
@@ -379,7 +379,7 @@ class EntityMapper implements EventAwareInterface
 
     public function updateOne(
         array|object $source = [],
-        array|string $condFields = null,
+        array|string|null $condFields = null,
         int $options = 0,
     ): ?StatementInterface {
         if ($source === []) {
@@ -502,13 +502,13 @@ class EntityMapper implements EventAwareInterface
     /**
      * updateMultiple
      *
-     * @param  iterable           $items
-     * @param  array|string|null  $condFields
-     * @param  int                $options
+     * @param  iterable         $items
+     * @param array|string|null $condFields
+     * @param  int              $options
      *
      * @return  StatementInterface[]
      */
-    public function updateMultiple(iterable $items, array|string $condFields = null, int $options = 0): array
+    public function updateMultiple(iterable $items, array|string|null $condFields = null, int $options = 0): array
     {
         $results = [];
 
@@ -591,15 +591,15 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable           $items
-     * @param  string|array|null  $condFields
-     * @param  int                $options
+     * @param  iterable         $items
+     * @param string|array|null $condFields
+     * @param  int              $options
      *
      * @return  iterable<T>
      *
      * @throws \ReflectionException
      */
-    public function saveMultiple(iterable $items, string|array $condFields = null, int $options = 0): iterable
+    public function saveMultiple(iterable $items, string|array|null $condFields = null, int $options = 0): iterable
     {
         // Event
         foreach ($items as $k => $item) {
@@ -670,15 +670,15 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  array|object       $item
-     * @param  array|string|null  $condFields
-     * @param  int                $options
+     * @param  array|object     $item
+     * @param array|string|null $condFields
+     * @param  int              $options
      *
      * @return  object|T
      *
      * @throws \ReflectionException
      */
-    public function saveOne(array|object $item, array|string $condFields = null, int $options = 0): object
+    public function saveOne(array|object $item, array|string|null $condFields = null, int $options = 0): object
     {
         return $this->saveMultiple([$item], $condFields, $options)[0];
     }
@@ -899,15 +899,15 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  Conditions              $conditions
-     * @param  callable|iterable|null  $newValue
-     * @param  int                     $options
+     * @param  Conditions            $conditions
+     * @param callable|iterable|null $newValue
+     * @param  int                   $options
      *
      * @return  array<T>
      * @throws JsonException
      * @throws \ReflectionException
      */
-    public function copy(mixed $conditions = [], callable|iterable $newValue = null, int $options = 0): array
+    public function copy(mixed $conditions = [], callable|iterable|null $newValue = null, int $options = 0): array
     {
         $items = $this->findList($conditions, Collection::class);
         $key = $this->getMainKey();

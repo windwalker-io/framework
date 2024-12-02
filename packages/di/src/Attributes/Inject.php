@@ -138,7 +138,7 @@ class Inject implements ContainerAttributeInterface
     protected function reportInjectingError(
         ReflectionParameter|ReflectionProperty $reflector,
         mixed $id,
-        \Throwable $e = null
+        ?\Throwable $e = null
     ): void {
         if (!$reflector->getType()->allowsNull()) {
             $class = $reflector->getDeclaringClass();

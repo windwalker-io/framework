@@ -802,12 +802,12 @@ class StrTest extends TestCase
      *
      * @param  string  $string
      * @param  int     $start
-     * @param  int     $end
+     * @param int|null $end
      * @param  string  $expected
      *
      * @dataProvider sliceProvider
      */
-    public function testSlice(string $string, int $start, int $end = null, string $expected = '')
+    public function testSlice(string $string, int $start, ?int $end = null, string $expected = '')
     {
         self::assertEquals($expected, Str::slice($string, $start, $end));
     }
@@ -841,14 +841,14 @@ class StrTest extends TestCase
      *
      * @param  string  $string
      * @param  int     $start
-     * @param  int     $end
+     * @param int|null $end
      * @param  string  $expected
      *
      * @return  void
      *
      * @dataProvider substringProvider
      */
-    public function testSubstring(string $string, int $start, int $end = null, string $expected = '')
+    public function testSubstring(string $string, int $start, ?int $end = null, string $expected = '')
     {
         self::assertEquals($expected, Str::substring($string, $start, $end));
     }

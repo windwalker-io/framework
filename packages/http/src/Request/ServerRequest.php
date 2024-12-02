@@ -83,27 +83,27 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
     /**
      * Class init
      *
-     * @param  array                                     $serverParams   Server parameters, typically from $_SERVER
-     * @param  UploadedFileInterface[]                   $uploadedFiles  Upload file information, a tree of UploadedFiles.
-     * @param  StreamInterface|UriInterface|string|null  $uri            URI for the request, if any.
-     * @param  string|null                               $method         HTTP method for the request, if any.
-     * @param  string|resource|StreamInterface           $body           Message body, if any.
-     * @param  array                                     $headers        Headers for the message, if any.
-     * @param  array                                     $cookies        Cookie values, typically is $_COOKIE.
-     * @param  array                                     $queryParams    Http query, typically is $_GET.
-     * @param  SafeJson|array|null                       $parsedBody     Parsed body, typically is $_POST.
-     * @param  string                                    $protocol       The protocol version, default is 1.1.
+     * @param  array                                   $serverParams  Server parameters, typically from $_SERVER
+     * @param  UploadedFileInterface[]                 $uploadedFiles Upload file information, a tree of UploadedFiles.
+     * @param string|StreamInterface|UriInterface|null $uri           URI for the request, if any.
+     * @param  string|null                             $method        HTTP method for the request, if any.
+     * @param  string|resource|StreamInterface         $body          Message body, if any.
+     * @param  array                                   $headers       Headers for the message, if any.
+     * @param  array                                   $cookies       Cookie values, typically is $_COOKIE.
+     * @param  array                                   $queryParams   Http query, typically is $_GET.
+     * @param array|SafeJson|null                      $parsedBody    Parsed body, typically is $_POST.
+     * @param  string                                  $protocol      The protocol version, default is 1.1.
      */
     public function __construct(
         array $serverParams = [],
         array $uploadedFiles = [],
-        StreamInterface|UriInterface|string $uri = null,
+        StreamInterface|UriInterface|string|null $uri = null,
         ?string $method = null,
         mixed $body = 'php://input',
         array $headers = [],
         array $cookies = [],
         array $queryParams = [],
-        SafeJson|array $parsedBody = null,
+        SafeJson|array|null $parsedBody = null,
         string $protocol = '1.1'
     ) {
         if (!ServerHelper::validateUploadedFiles($uploadedFiles)) {

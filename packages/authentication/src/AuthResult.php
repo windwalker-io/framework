@@ -43,11 +43,11 @@ class AuthResult
     /**
      * AuthResult constructor.
      *
-     * @param  string           $status
-     * @param  array            $credential
-     * @param  Throwable|null  $e
+     * @param  string        $status
+     * @param  array         $credential
+     * @param Throwable|null $e
      */
-    public function __construct(string $status, array $credential, Throwable $e = null)
+    public function __construct(string $status, array $credential, ?Throwable $e = null)
     {
         $this->status = $status;
         $this->credential = $credential;

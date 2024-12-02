@@ -42,10 +42,10 @@ class MultiCurlTransport implements AsyncTransportInterface
     /**
      * Class init.
      *
-     * @param  array                        $options    The options of this client object.
-     * @param  CurlTransportInterface|null  $transport  The Transport handler, default is CurlTransport.
+     * @param  array                      $options   The options of this client object.
+     * @param CurlTransportInterface|null $transport The Transport handler, default is CurlTransport.
      */
-    public function __construct(array $options = [], CurlTransportInterface $transport = null)
+    public function __construct(array $options = [], ?CurlTransportInterface $transport = null)
     {
         $this->prepareOptions([], $options);
 

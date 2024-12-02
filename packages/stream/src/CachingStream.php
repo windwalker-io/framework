@@ -30,12 +30,12 @@ class CachingStream extends DecoratorStream
     /**
      * We will treat the buffer object as the body of the stream
      *
-     * @param StreamInterface|string|resource  $targetStream  Stream to cache
-     * @param StreamInterface                  $cacheStream   Optionally specify where data is cached
+     * @param StreamInterface|string|resource $targetStream Stream to cache
+     * @param StreamInterface|null            $cacheStream  Optionally specify where data is cached
      */
     public function __construct(
         mixed $targetStream,
-        StreamInterface $cacheStream = null
+        ?StreamInterface $cacheStream = null
     ) {
         $this->remoteStream = Stream::wrap($targetStream);
 

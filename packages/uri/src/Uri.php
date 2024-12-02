@@ -675,14 +675,14 @@ class Uri implements ExtendedUriInterface
     /**
      * Returns a query variable by name.
      *
-     * @param  string       $name     Name of the query variable to get.
-     * @param  string|null  $default  Default value to return if the variable is not set.
+     * @param  string     $name    Name of the query variable to get.
+     * @param string|null $default Default value to return if the variable is not set.
      *
      * @return  mixed   Query variables.
      *
      * @since   2.0
      */
-    public function getVar(string $name, string $default = null): mixed
+    public function getVar(string $name, ?string $default = null): mixed
     {
         return $this->vars[$name] ?? $default;
     }
