@@ -80,8 +80,6 @@ class FileObjectTest extends AbstractVfsTestCase
         self::assertDirectoryDoesNotExist(static::$baseDir . '');
         self::assertFileDoesNotExist(static::$baseDir . '/folder1/level2/file3');
 
-        restore_error_handler();
-
         // Delete non-exists folders
         try {
             (new FileObject(static::$baseDir . '/hello/no/exists'))->delete();
@@ -193,7 +191,6 @@ class FileObjectTest extends AbstractVfsTestCase
         $this->assertInstanceOf(SplFileInfo::class, $items->current());
 
         // list non-exists folder
-        restore_error_handler();
 
         $this->expectException(FileNotFoundException::class);
 

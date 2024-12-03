@@ -160,7 +160,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
     {
         // static::$baseConn->exec('DROP DATABASE ' . static::qn(static::$dbname));
 
-        static::$baseConn = null;
+//        static::$baseConn = null;
     }
 
     /**

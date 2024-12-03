@@ -147,7 +147,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => true,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'category_id' => [
@@ -167,7 +166,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'page_id' => [
@@ -187,7 +185,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'type' => [
@@ -330,7 +327,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'created' => [
@@ -369,7 +365,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'language' => [

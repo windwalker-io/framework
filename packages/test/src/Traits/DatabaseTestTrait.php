@@ -136,7 +136,7 @@ trait DatabaseTestTrait
      */
     public function __destruct()
     {
-        static::$db = null;
+        //
     }
 
     public static function setUpBeforeClass(): void

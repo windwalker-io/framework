@@ -6,6 +6,8 @@ namespace Windwalker\Session\Test;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\BridgeInterface;
 use Windwalker\Session\Bridge\NativeBridge;
@@ -31,10 +33,9 @@ class SessionTest extends TestCase
      * @handler             native
      * @cookie              native
      * @autoCommit          true
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testNativeBridgeNativeCookieWithoutId(): void
     {
         error_reporting(-1);
@@ -65,10 +66,9 @@ class SessionTest extends TestCase
      * @handler             native
      * @cookie              native
      * @autoCommit          true
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testNativeBridgeNativeCookieWithId(): void
     {
         $sess = $this->createInstance(
@@ -99,10 +99,9 @@ class SessionTest extends TestCase
      * @handler             native
      * @cookie              native
      * @autoCommit          true
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testNativeBridgeArrayCookieWithId(): void
     {
         $sess = $this->createInstance(
@@ -142,10 +141,9 @@ class SessionTest extends TestCase
      * @handler             php
      * @cookie              array
      * @autoCommit          true
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testPhpBridgeNativeCookieWithId(): void
     {
         $sess = $this->createInstance(
@@ -194,10 +192,9 @@ class SessionTest extends TestCase
      * @handler             php
      * @cookie              native
      * @autoCommit          true
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testPhpBridgeNativeCookieWithoutId(): void
     {
         $sess = $this->createInstance(
@@ -236,10 +233,9 @@ class SessionTest extends TestCase
      * @handler             php
      * @cookie              array
      * @autoCommit          true
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testPhpBridgeArrayCookieWithId(): void
     {
         $sess = $this->createInstance(

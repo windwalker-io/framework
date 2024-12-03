@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test\Bridge;
 
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Session\Bridge\NativeBridge;
@@ -267,10 +269,10 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::regenerate
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::regenerate
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testRegenerateDeleteOld(): void
     {
         self::resetSessions();
