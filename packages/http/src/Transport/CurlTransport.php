@@ -134,7 +134,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         }
 
         // Get the response code from the first offset of the response headers.
-        preg_match('/[0-9]{3}/', array_shift($headers), $matches);
+        preg_match('/[0-9]{3}/', (string) array_shift($headers), $matches);
 
         $code = count($matches) ? $matches[0] : null;
 
