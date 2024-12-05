@@ -117,7 +117,11 @@ class DocblockHelper
             function (ReflectionType $type) {
                 $name = $type->getName();
 
-                if (class_exists($name) || interface_exists($name)) {
+                if (
+                    class_exists($name)
+                    || interface_exists($name)
+                    || enum_exists($name)
+                ) {
                     $name = '\\' . trim($name, '\\');
                 }
 
