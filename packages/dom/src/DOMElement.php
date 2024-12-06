@@ -165,6 +165,10 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
     {
         $type = $type ?? $this->type;
 
+        if (!$this->ownerDocument) {
+            throw new LogicException('Please attach Element to a Document before render it.');
+        }
+
         $this->ownerDocument->formatOutput = $format;
 
         if ($type === static::XML) {
