@@ -66,8 +66,8 @@ class LegacyOpensslCipherTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider methodsLegacyProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('methodsLegacyProvider')]
     public function testLegacy(string $method, string $str): void
     {
         $key = new Key('foo');

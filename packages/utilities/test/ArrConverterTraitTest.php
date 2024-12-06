@@ -55,8 +55,8 @@ class ArrConverterTraitTest extends TestCase
      * @param $expected
      * @param $type
      *
-     * @dataProvider  providerTestGroup
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestGroup')]
     public function testGroup($source, $key, $expected, int $type, ?string $delimiter = '')
     {
         self::assertEquals($expected, Arr::groupByPath($source, $key, $type, (string) $delimiter));

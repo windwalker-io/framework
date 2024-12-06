@@ -184,8 +184,8 @@ class ServerRequestFactoryTest extends TestCase
      * @param  array   $headers
      * @param  string  $expected
      *
-     * @dataProvider prepareUriProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('prepareUriProvider')]
     public function testPrepareUri($servers, $headers, $expected)
     {
         $uri = ServerRequestFactory::prepareUri($servers, $headers);

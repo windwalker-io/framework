@@ -74,8 +74,8 @@ class LanguageNormalizeTest extends TestCase
      *
      * @covers       \Windwalker\Language\LanguageNormalizer::normalize
      *
-     * @dataProvider getToTagCases
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getToTagCases')]
     public function testToLanguageKey($origin, $expected)
     {
         self::assertEquals($expected, LanguageNormalizer::normalize($origin));

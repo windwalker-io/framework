@@ -48,8 +48,8 @@ class TypeAssertTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerThrowException
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerThrowException')]
     public function testThrowException(string $class, string $message, $value, ?string $caller, string $expected): void
     {
         try {

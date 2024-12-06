@@ -44,8 +44,8 @@ class QueryTest extends TestCase
      *
      * @see          Query::select
      *
-     * @dataProvider selectProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('selectProvider')]
     public function testSelect(
         array $args,
         ?array $asArgs,
@@ -169,8 +169,8 @@ class QueryTest extends TestCase
      *
      * @see          Query::from
      *
-     * @dataProvider fromProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fromProvider')]
     public function testFrom($tables, ?string $alias, string $expected): void
     {
         $q = $this->instance
@@ -272,8 +272,8 @@ class QueryTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider  joinProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('joinProvider')]
     public function testJoin(string $expt, ...$joins)
     {
         $q = self::createQuery()
@@ -665,8 +665,8 @@ SQL
      *
      * @return  void
      *
-     * @dataProvider asProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('asProvider')]
     public function testAs(string $expt, $value, $alias, bool $isColumn = true): void
     {
         self::assertEquals(static::replaceQn($expt), (string) $this->instance->as($value, $alias, $isColumn));
@@ -747,8 +747,8 @@ SQL
      *
      * @return  void
      *
-     * @dataProvider whereProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('whereProvider')]
     public function testWhere(string $expt, ...$wheres)
     {
         $this->instance->select('*')
@@ -1181,8 +1181,8 @@ SQL
      *
      * @return  void
      *
-     * @dataProvider havingProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('havingProvider')]
     public function testHaving(string $expt, ...$wheres): void
     {
         $this->instance->select('*')

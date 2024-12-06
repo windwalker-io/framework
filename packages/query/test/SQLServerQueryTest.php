@@ -37,8 +37,8 @@ class SQLServerQueryTest extends QueryTest implements QueryJsonTestInterface
      *
      * @return  void
      *
-     * @dataProvider parseJsonSelectorProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parseJsonSelectorProvider')]
     public function testParseJsonSelector(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);

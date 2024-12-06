@@ -85,8 +85,8 @@ class DOMElementTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider cssCreatorProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cssCreatorProvider')]
     public function testCreateWithCSSExpr(string $selector, array $attributes, string $result): void
     {
         $ele = DOMElement::create($selector, $attributes);

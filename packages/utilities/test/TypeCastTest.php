@@ -30,8 +30,8 @@ class TypeCastTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider  providerTestToArray
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestToArray')]
     public function testToArray($input, $recursive, $expect)
     {
         $this->assertEquals($expect, TypeCast::toArray($input, $recursive));
@@ -90,8 +90,8 @@ class TypeCastTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider providerTestToObject
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestToObject')]
     public function testToObject($input, $expect, bool $recursive, string $message)
     {
         self::assertEquals($expect, TypeCast::toObject($input, $recursive), $message);

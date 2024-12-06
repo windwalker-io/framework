@@ -181,8 +181,8 @@ class EnvironmentTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider getIsWinTestData
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getIsWinTestData')]
     public function testIsWin($os, $value)
     {
         $this->instance->setOS('');
@@ -199,8 +199,8 @@ class EnvironmentTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider getIsUnixTestData
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getIsUnixTestData')]
     public function testIsUnix($os, $value)
     {
         $this->instance->setOS('');
@@ -217,8 +217,8 @@ class EnvironmentTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider getIsLinuxTestData
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getIsLinuxTestData')]
     public function testIsLinux($os, $value)
     {
         $this->instance->setOS('');

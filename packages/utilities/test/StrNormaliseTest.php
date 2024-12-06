@@ -161,13 +161,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::fromCamelCase(string, true).
      *
-     * @param  string  $input     The input value for the method.
-     * @param  string  $expected  The expected value from the method.
+     * @param string $input    The input value for the method.
+     * @param string $expected The expected value from the method.
      *
      * @return  void
      *
-     * @dataProvider  providerSplitCamelCase
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerSplitCamelCase')]
     public function testSplitCamelCase($input, $expected)
     {
         $this->assertEquals($expected, StrNormalize::splitCamelCase($input));
@@ -176,14 +176,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::PascalCase().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToPascalCase
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToPascalCase')]
     public function testToPascalCase($expected, $input)
     {
         $this->assertEquals($expected, StrNormalize::toPascalCase($input));
@@ -192,13 +191,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::PascalCase().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToPascalCase
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToPascalCase')]
     public function testToCamelCase($expected, $input)
     {
         $this->assertEquals(lcfirst($expected), StrNormalize::toCamelCase($input));
@@ -207,14 +206,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::testToKebabCase().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToKebabCase
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToKebabCase')]
     public function testToKebabCase($expected, $input)
     {
         $this->assertEquals($expected, StrNormalize::toKebabCase($input));
@@ -223,14 +221,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::toSpaceSeparated().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToSpaceSeparated
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToSpaceSeparated')]
     public function testToSpaceSeparated($expected, $input)
     {
         $this->assertEquals($expected, StrNormalize::toSpaceSeparated($input));
@@ -239,14 +236,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::toUnderscoreSeparated().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToUnderscoreSeparated
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToUnderscoreSeparated')]
     public function testToUnderscoreSeparated($expected, $input)
     {
         $this->assertEquals($expected, StrNormalize::toUnderscoreSeparated($input));
@@ -255,14 +251,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::toVariable().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToVariable
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToVariable')]
     public function testToVariable($expected, $input)
     {
         $this->assertEquals($expected, StrNormalize::toVariable($input));
@@ -271,14 +266,13 @@ class StrNormaliseTest extends TestCase
     /**
      * Method to test StrNormalise::toKey().
      *
-     * @param  string  $expected  The expected value from the method.
-     * @param  string  $input     The input value for the method.
+     * @param string $expected The expected value from the method.
+     * @param string $input    The input value for the method.
      *
      * @return  void
      *
-     * @dataProvider  seedTestToKey
-     * @since         2.0
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToKey')]
     public function testToKey($expected, $input)
     {
         $this->assertEquals($expected, StrNormalize::toKey($input));

@@ -28,8 +28,8 @@ class BoundedHelperTest extends TestCase
      *
      * @see          BoundedHelper::replaceParams
      *
-     * @dataProvider replaceParamsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('replaceParamsProvider')]
     public function testReplaceParams(
         string $sql,
         string $symbol,

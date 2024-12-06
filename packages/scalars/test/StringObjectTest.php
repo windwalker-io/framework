@@ -130,8 +130,8 @@ class StringObjectTest extends TestCase
      * @param  string  $expected
      * @param  int     $offset
      *
-     * @dataProvider offsetGetProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('offsetGetProvider')]
     public function testOffsetGet(int $offset, string $expected)
     {
         $s = new StringObject('白日依山盡');
@@ -166,8 +166,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider offsetSetProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('offsetSetProvider')]
     public function testOffsetSet(string $string, string $replace, int $offset, string $expected)
     {
         $s = new StringObject($string);
@@ -200,8 +200,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider offsetUnsetProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('offsetUnsetProvider')]
     public function testOffsetUnset(string $string, int $offset, string $expected)
     {
         $s = new StringObject($string);
@@ -283,8 +283,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider toLowerCaseProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('toLowerCaseProvider')]
     public function testToLowerCase(string $string, string $expected)
     {
         $s = new StringObject($string);
@@ -317,8 +317,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider toUpperCaseProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('toUpperCaseProvider')]
     public function testToUpperCase(string $string, string $expected)
     {
         $s = new StringObject($string);
@@ -352,8 +352,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider lengthProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('lengthProvider')]
     public function testLength(string $string, int $expected, ?string $encoding = null)
     {
         $s = new StringObject($string, $encoding);
@@ -393,8 +393,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider replaceProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('replaceProvider')]
     public function testReplace(string $string, $search, $replacement, $expected, int $count)
     {
         $s = new StringObject($string);
@@ -442,8 +442,8 @@ class StringObjectTest extends TestCase
      * @param  int     $length
      * @param  array   $expected
      *
-     * @dataProvider strSplitProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strSplitProvider')]
     public function testChop(string $string, int $length, $expected)
     {
         $s = new StringObject($string);
@@ -462,8 +462,8 @@ class StringObjectTest extends TestCase
      * @param  string  $str2
      * @param  int     $expected
      *
-     * @dataProvider strcmpProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strcmpProvider')]
     public function testCompare(string $str1, string $str2, int $expected)
     {
         $s = new StringObject($str1);
@@ -484,8 +484,8 @@ class StringObjectTest extends TestCase
      * @param  string  $str2
      * @param  int     $expected
      *
-     * @dataProvider strcasecmpProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strcasecmpProvider')]
     public function testCompareInsensitive(string $str1, string $str2, int $expected)
     {
         $s = new StringObject($str1);
@@ -505,8 +505,8 @@ class StringObjectTest extends TestCase
      * @param  string  $string
      * @param  string  $expected
      *
-     * @dataProvider strrevProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strrevProvider')]
     public function testReverse(string $string, string $expected)
     {
         $s = new StringObject($string);
@@ -526,8 +526,8 @@ class StringObjectTest extends TestCase
      * @param  int     $start
      * @param  int     $offset
      *
-     * @dataProvider substrReplaceProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('substrReplaceProvider')]
     public function testSubstrReplace(
         string $expected,
         $string,
@@ -556,8 +556,8 @@ class StringObjectTest extends TestCase
      * @param  null|string  $charlist
      * @param  string       $expected
      *
-     * @dataProvider ltrimProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ltrimProvider')]
     public function testTrimLeft(string $string, ?string $charlist, string $expected)
     {
         $s = new StringObject($string);
@@ -577,8 +577,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider rtrimProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rtrimProvider')]
     public function testTrimRight(string $string, ?string $charlist, string $expected)
     {
         $s = new StringObject($string);
@@ -598,8 +598,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider trimProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('trimProvider')]
     public function testTrim(string $string, ?string $charlist, string $expected)
     {
         $s = new StringObject($string);
@@ -616,8 +616,8 @@ class StringObjectTest extends TestCase
      * @param  string  $string
      * @param  string  $expected
      *
-     * @dataProvider ucfirstProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ucfirstProvider')]
     public function testUpperCaseFirst(string $string, string $expected)
     {
         $s = new StringObject($string);
@@ -634,8 +634,8 @@ class StringObjectTest extends TestCase
      * @param  string  $string
      * @param  string  $expected
      *
-     * @dataProvider lcfirstProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('lcfirstProvider')]
     public function testLowerCaseFirst(string $string, string $expected)
     {
         $s = new StringObject($string);
@@ -654,8 +654,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider ucwordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ucwordsProvider')]
     public function testUpperCaseWords(string $string, string $expected)
     {
         $s = new StringObject($string);
@@ -674,8 +674,8 @@ class StringObjectTest extends TestCase
      * @param  int     $expected
      * @param  bool    $caseSensitive
      *
-     * @dataProvider substrCountProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('substrCountProvider')]
     public function testSubstrCount(string $string, string $search, int $expected, bool $caseSensitive)
     {
         $s = new StringObject($string);
@@ -692,8 +692,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider indexOfProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('indexOfProvider')]
     public function testIndexOf(string $string, string $search, $expected)
     {
         $s = new StringObject($string);
@@ -727,8 +727,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider indexOfLastProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('indexOfLastProvider')]
     public function testIndexOfLast(string $string, string $search, $expected)
     {
         $s = new StringObject($string);
@@ -762,8 +762,8 @@ class StringObjectTest extends TestCase
      *
      * @return  void
      *
-     * @dataProvider explodeProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('explodeProvider')]
     public function testExplode(string $string, string $delimiter, array $expected)
     {
         $s = new StringObject($string);
