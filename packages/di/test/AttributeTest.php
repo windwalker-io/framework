@@ -29,7 +29,8 @@ class AttributeTest extends TestCase
 
     public function testObjectDecorate()
     {
-        $this->instance->getAttributesResolver()
+        $this->instance
+            ->getAttributesResolver()
             ->registerAttribute(Decorator::class, Attribute::TARGET_CLASS);
 
         $result = $this->instance->newInstance(InnerStub::class);
@@ -40,13 +41,14 @@ class AttributeTest extends TestCase
 
     public function testObjectDecorateCallable()
     {
-        $this->instance->getAttributesResolver()
+        $this->instance
+            ->getAttributesResolver()
             ->registerAttribute(Decorator::class, Attribute::TARGET_CLASS);
 
         $result = $this->instance->newInstance(
             function () {
                 return new InnerStub();
-            }
+            },
         );
 
         self::assertInstanceOf(Wrapped::class, $result);
@@ -55,7 +57,8 @@ class AttributeTest extends TestCase
 
     public function testObjectWrapCreator()
     {
-        $this->instance->getAttributesResolver()
+        $this->instance
+            ->getAttributesResolver()
             ->registerAttribute(Autowire::class, Attribute::TARGET_CLASS);
 
         $result = $this->instance->newInstance(WiredClass::class);
@@ -68,7 +71,8 @@ class AttributeTest extends TestCase
     {
         $this->instance->set('stub', fn() => new StubService());
 
-        $this->instance->getAttributesResolver()
+        $this->instance
+            ->getAttributesResolver()
             ->registerAttribute(ToUpper::class, AttributeType::CALLABLE);
 
         $obj = new class {
@@ -83,7 +87,7 @@ class AttributeTest extends TestCase
 
         self::assertEquals(
             'FOO',
-            $result
+            $result,
         );
     }
 
@@ -91,13 +95,14 @@ class AttributeTest extends TestCase
     {
         $this->instance->set('stub', fn() => new StubService());
 
-        $this->instance->getAttributesResolver()
+        $this->instance
+            ->getAttributesResolver()
             ->registerAttribute(ParamLower::class, Attribute::TARGET_PARAMETER);
 
         $obj = new class {
             public function foo(
                 #[ParamLower]
-                StringObject $foo
+                StringObject $foo,
             ): string {
                 return (string) $foo;
             }
@@ -107,19 +112,20 @@ class AttributeTest extends TestCase
 
         self::assertEquals(
             'foo',
-            $result
+            $result,
         );
     }
 
     public function testCallClosure()
     {
-        $this->instance->getAttributesResolver()
+        $this->instance
+            ->getAttributesResolver()
             ->registerAttribute(Autowire::class, Attribute::TARGET_PARAMETER);
 
         $closure = function (
             #[Autowire]
             StubService $stub,
-            array &$options = []
+            array &$options = [],
         ): StubService {
             $options['foo'] = 'bar';
 
@@ -132,7 +138,7 @@ class AttributeTest extends TestCase
 
         self::assertEquals(
             ['foo' => 'bar'],
-            $options
+            $options,
         );
     }
 
@@ -143,5 +149,6 @@ class AttributeTest extends TestCase
 
     protected function tearDown(): void
     {
+        //
     }
 }

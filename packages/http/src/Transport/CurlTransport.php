@@ -48,7 +48,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
                 'curl' => [],
             ],
             $this->getOptions(),
-            $options
+            $options,
         );
     }
 
@@ -89,7 +89,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         return $this->injectHeadersToResponse(
             (new HttpClientResponse($content))->withInfo($info),
             (array) $headers,
-            (bool) $options['allow_empty_status_code']
+            (bool) $options['allow_empty_status_code'],
         );
     }
 
@@ -127,7 +127,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     public function injectHeadersToResponse(
         ResponseInterface $response,
         array|string $headers,
-        bool $allowEmptyStatusCode = false
+        bool $allowEmptyStatusCode = false,
     ): ResponseInterface {
         if (is_string($headers)) {
             $headers = explode("\r\n", $headers);
@@ -159,7 +159,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         string $content,
         array $info = [],
         ?ResponseInterface $response = null,
-        bool $allowEmptyStatusCode = false
+        bool $allowEmptyStatusCode = false,
     ): ResponseInterface {
         $response ??= $this->createResponse();
 
@@ -185,7 +185,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         return $this->injectHeadersToResponse(
             $response,
             $headers,
-            $allowEmptyStatusCode
+            $allowEmptyStatusCode,
         );
     }
 
@@ -206,10 +206,10 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * createHandle
      *
-     * @param  RequestInterface    $request
-     * @param  array               $options
-     * @param array|null           $headers
-     * @param StreamInterface|null $content
+     * @param  RequestInterface      $request
+     * @param  array                 $options
+     * @param  array|null            $headers
+     * @param  StreamInterface|null  $content
      *
      * @return  \CurlHandle|false
      *
@@ -219,7 +219,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         RequestInterface $request,
         array $options,
         ?array &$headers = null,
-        ?StreamInterface &$content = null
+        ?StreamInterface &$content = null,
     ): \CurlHandle|false {
         // Setup the cURL handle.
         $ch = curl_init();
@@ -231,10 +231,10 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
 
         $opt[CURLOPT_HEADERFUNCTION] ??= static function (
             \CurlHandle $ch,
-            string $header
+            string $header,
         ) use (
             &$headers,
-            &$headerItems
+            &$headerItems,
         ) {
             if ($header === "\r\n") {
                 $headers = $headerItems;
@@ -344,14 +344,14 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         }
 
         // Set any custom transport options
-        $opt = array_replace($opt, $options['curl'] ?? [],  $options['options'] ?? []);
+        $opt = array_replace($opt, $options['curl'] ?? [], $options['options'] ?? []);
 
         return $opt;
     }
 
     /**
-     * @param  RequestInterface $request
-     * @param bool|null         $forceMultipart
+     * @param  RequestInterface  $request
+     * @param  bool|null         $forceMultipart
      *
      * @return  RequestInterface
      */
@@ -405,7 +405,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
             } elseif (!$request->hasHeader('Content-Type')) {
                 $request = $request->withHeader(
                     'Content-Type',
-                    'application/x-www-form-urlencoded; charset=utf-8'
+                    'application/x-www-form-urlencoded; charset=utf-8',
                 );
             }
         }
@@ -427,7 +427,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array $options = []
+        array $options = [],
     ): HttpClientResponse {
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is empty.');
@@ -437,7 +437,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
 
         return $this->request(
             $request,
-            $options
+            $options,
         );
     }
 
