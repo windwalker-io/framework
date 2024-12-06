@@ -23,7 +23,7 @@ jobs:
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql version: 5.7
+          mysql version: 8.1
           mysql database: windwalker_test
           mysql root password: ut1234
       # PHP
