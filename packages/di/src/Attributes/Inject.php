@@ -84,7 +84,11 @@ class Inject implements ContainerAttributeInterface
             $varClass = null;
 
             foreach ($types as $type) {
-                if (class_exists($type->getName()) || interface_exists($type->getName())) {
+                if (
+                    class_exists($type->getName())
+                    || interface_exists($type->getName())
+                    || enum_exists($type->getName())
+                ) {
                     $varClass = $type->getName();
                     break;
                 }

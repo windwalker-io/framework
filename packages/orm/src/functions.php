@@ -75,6 +75,10 @@ if (!function_exists('\Windwalker\to_uuid')) {
 if (!function_exists('\Windwalker\try_uuid')) {
     function try_uuid(mixed $uuid): ?UuidInterface
     {
+        if (!interface_exists(UuidInterface::class)) {
+            throw new \DomainException('Please install `ramsey/uuid` first.');
+        }
+
         if ($uuid === null) {
             return null;
         }

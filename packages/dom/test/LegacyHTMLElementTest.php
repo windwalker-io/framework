@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Windwalker\DOM\Test;
 
-use Dom\HTMLDocument;
 use DOMDocument;
 use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\DOMFactory;
-use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
  * The DomElementTest class.
  */
-class HTMLElementTest extends DOMElementTest
+class LegacyHTMLElementTest extends DOMElementTest
 {
     use DOMTestTrait;
 
@@ -29,7 +27,7 @@ class HTMLElementTest extends DOMElementTest
      */
     public function testCreate(): void
     {
-        $ele = HTMLElement::new(
+        $ele = HTMLElement::create(
             'field',
             [
                 'name' => 'foo',
@@ -50,7 +48,7 @@ class HTMLElementTest extends DOMElementTest
             $ele
         );
 
-        $ele = HTMLElement::new(
+        $ele = HTMLElement::create(
             'field',
             [
                 'name' => 'foo',
@@ -63,7 +61,7 @@ class HTMLElementTest extends DOMElementTest
                     'enabled' => true,
                 ],
             ],
-            HTMLElement::new('span', [], 'Hello')
+            HTMLElement::create('span', [], 'Hello')
         );
 
         self::assertDomStringEqualsDomString(
@@ -76,13 +74,13 @@ class HTMLElementTest extends DOMElementTest
 
     public function testSelfClosed(): void
     {
-        $img = HTMLElement::new('img', ['src' => 'hello.jpg', 'width' => 300], '');
+        $img = HTMLElement::create('img', ['src' => 'hello.jpg', 'width' => 300], '');
 
-        self::assertEquals('<img src="hello.jpg" width="300">', $img->render());
+        self::assertEquals('<img src="hello.jpg" width="300">', $img->render(null));
 
-        $div = HTMLElement::new('div', ['class' => 'hello']);
+        $div = HTMLElement::create('div', ['class' => 'hello']);
 
-        self::assertEquals('<div class="hello"></div>', $div->render());
+        self::assertEquals('<div class="hello"></div>', $div->render(null));
     }
 
     /**
@@ -91,16 +89,16 @@ class HTMLElementTest extends DOMElementTest
      */
     public function testOffsetAccess(): void
     {
-        $ele = HTMLElement::new('hello');
+        $ele = HTMLElement::create('hello');
         $ele['data-foo'] = 'bar';
 
         self::assertTrue(isset($ele['data-foo']));
         self::assertEquals('bar', $ele['data-foo']);
-        self::assertEquals('<hello data-foo="bar"></hello>', $ele->render());
+        self::assertEquals('<hello data-foo="bar"></hello>', $ele->render(null));
 
         unset($ele['data-foo']);
 
-        self::assertEquals('<hello></hello>', $ele->render());
+        self::assertEquals('<hello></hello>', $ele->render(null));
         self::assertFalse(isset($ele['data-foo']));
     }
 
@@ -120,8 +118,8 @@ class HTMLElementTest extends DOMElementTest
      */
     public function testQuerySelectorAll(): void
     {
-        /** @var HTMLDocument $dom */
-        $dom = HTMLDocument::createFromString(
+        $dom = DOMFactory::create();
+        $dom->loadXML(
             <<<XML
 <div class="row">
     <div class="col-lg-6 first-col">
@@ -137,7 +135,7 @@ class HTMLElementTest extends DOMElementTest
 XML
         );
 
-        $ele = HTMLElement::new(
+        $ele = HTMLElement::create(
             'div',
             ['class' => 'root-node'],
             $dom->documentElement
@@ -164,8 +162,8 @@ XML
      */
     public function testQuerySelector(): void
     {
-        /** @var HTMLDocument $dom */
-        $dom = HTMLDocument::createFromString(
+        $dom = DOMFactory::create();
+        $dom->loadXML(
             <<<XML
 <div class="row">
     <div class="col-lg-6 first-col">
@@ -181,7 +179,7 @@ XML
 XML
         );
 
-        $ele = HTMLElement::new(
+        $ele = HTMLElement::create(
             'div',
             ['class' => 'root-node'],
             $dom->documentElement
@@ -189,9 +187,11 @@ XML
 
         $img = $ele->querySelector('img');
 
+        self::assertEquals(1, $img->count());
+
         self::assertEquals(
             'hello.jpg',
-            $img->getAttribute('src')
+            $img->attr('src')
         );
     }
 
@@ -200,9 +200,9 @@ XML
      */
     public function testGetName(): void
     {
-        $ele = HTMLElement::new('hello');
+        $ele = HTMLElement::create('hello');
 
-        self::assertEquals('HELLO', $ele->getName());
+        self::assertEquals('hello', $ele->getName());
     }
 
     /**
@@ -210,7 +210,7 @@ XML
      */
     public function testGetAttributes(): void
     {
-        $ele = HTMLElement::new(
+        $ele = HTMLElement::create(
             'hello',
             [
                 'foo' => 'bar',

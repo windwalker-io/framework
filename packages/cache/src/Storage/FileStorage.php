@@ -16,14 +16,20 @@ use function Windwalker\str;
 /**
  * The FilesystemStorage class.
  */
-class FileStorage implements StorageInterface
+class FileStorage implements StorageInterface, LockableStorageInterface
 {
     use OptionAccessTrait;
+    use LockableStorageTrait;
 
     /**
      * @var string
      */
     protected string $root;
+
+    /**
+     * @var resource[]
+     */
+    protected array $lockedResources = [];
 
     /**
      * AbstractFormatterStorage constructor.
@@ -199,7 +205,7 @@ class FileStorage implements StorageInterface
         return (bool) file_put_contents(
             $filename,
             $value,
-            $this->getOption('lock', false) ? LOCK_EX : 0
+            $this->shouldLock() ? LOCK_EX : 0
         );
     }
 
@@ -212,6 +218,14 @@ class FileStorage implements StorageInterface
      */
     protected function read(string $key): mixed
     {
+        if ($this->isLocked($key)) {
+            $filename = $this->fetchStreamUri($key);
+
+            $fp = $this->lockedResources[$filename];
+
+            return stream_get_contents($fp);
+        }
+
         $filename = $this->fetchStreamUri($key);
 
         $resource = @fopen($filename, 'rb');
@@ -226,7 +240,7 @@ class FileStorage implements StorageInterface
         }
 
         // If locking is enabled get a shared lock for reading on the resource.
-        if ($this->getOption('lock', false) && !flock($resource, LOCK_SH)) {
+        if ($this->shouldLock() && !flock($resource, LOCK_SH)) {
             throw new RuntimeException(
                 sprintf(
                     'Unable to fetch cache entry for %s. Cannot obtain a lock.',
@@ -238,7 +252,7 @@ class FileStorage implements StorageInterface
         $data = stream_get_contents($resource);
 
         // If locking is enabled release the lock on the resource.
-        if ($this->getOption('lock', false) && !flock($resource, LOCK_UN)) {
+        if ($this->shouldLock() && !flock($resource, LOCK_UN)) {
             throw new RuntimeException(
                 sprintf(
                     'Unable to fetch cache entry for %s. Cannot release the lock.',
@@ -340,5 +354,57 @@ class FileStorage implements StorageInterface
     protected function getExpirationFormat(): string
     {
         return (string) $this->getOption('expiration_format');
+    }
+
+    public function lock(string $key): bool
+    {
+        if (!$this->shouldLock()) {
+            return true;
+        }
+
+        if ($this->isLocked($key)) {
+            return true;
+        }
+
+        $filePath = $this->fetchStreamUri($key);
+
+        $this->lockedResources[$filePath] = fopen($filePath, 'rb');
+
+        return flock($this->lockedResources[$filePath], LOCK_EX);
+    }
+
+    public function release(string $key): bool
+    {
+        if (!$this->shouldLock()) {
+            return true;
+        }
+
+        if (!$this->isLocked($key)) {
+            return true;
+        }
+
+        $filePath = $this->fetchStreamUri($key);
+
+        $fp = $this->lockedResources[$filePath];
+
+        unset($this->lockedResources[$filePath]);
+
+        $result = flock($fp, LOCK_UN);
+
+        fclose($fp);
+
+        return $result;
+    }
+
+    public function isLocked(string $key): bool
+    {
+        $filePath = $this->fetchStreamUri($key);
+
+        return isset($this->lockedResources[$filePath]);
+    }
+
+    public function shouldLock(): bool
+    {
+        return (bool) $this->getOption('lock', false);
     }
 }

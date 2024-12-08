@@ -46,7 +46,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @return  DOMElement
      */
-    public static function create(string $name, array $attributes = [], $content = null): DOMElement
+    public static function create(string $name, array $attributes = [], mixed $content = null): DOMElement
     {
         [$name, $id, $class] = array_values(static::splitCSSSelector($name));
 
@@ -164,6 +164,10 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
     public function render(?string $type = self::HTML, bool $format = false): string
     {
         $type = $type ?? $this->type;
+
+        if (!$this->ownerDocument) {
+            throw new LogicException('Please attach Element to a Document before render it.');
+        }
 
         $this->ownerDocument->formatOutput = $format;
 

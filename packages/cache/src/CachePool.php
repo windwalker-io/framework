@@ -20,6 +20,7 @@ use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
+use Windwalker\Cache\Storage\LockableStorageInterface;
 use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
@@ -325,6 +326,12 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     public function call(string $key, callable $handler, DateInterval|int|null $ttl = null): mixed
     {
+        $storage = $this->storage;
+
+        if ($storage instanceof LockableStorageInterface) {
+            $storage->lock($key);
+        }
+
         $item = $this->getItem($key);
 
         if ($item->isHit()) {
@@ -335,6 +342,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         $item->expiresAfter($ttl);
 
         $this->save($item);
+
+        if ($storage instanceof LockableStorageInterface) {
+            $storage->release($key);
+        }
 
         return $data;
     }

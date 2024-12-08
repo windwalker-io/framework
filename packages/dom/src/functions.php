@@ -4,25 +4,19 @@ declare(strict_types=1);
 
 namespace Windwalker\DOM;
 
-use DOMNode;
+use Dom\Node;
 
 use function Windwalker\value;
 
 if (!function_exists('\Windwalker\DOM\parse_html')) {
-    function parse_html(string $html, int $options = HTMLFactory::TEXT_SPAN): DOMNode
+    function parse_html(string $html, int $options = HTMLFactory::TEXT_SPAN): ?Node
     {
-        return HTMLFactory::parse($html, $options);
+        return HTML5Factory::parse($html, $options);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\html')) {
-    /**
-     * html
-     *
-     * @param  DOMElement  $element
-     *
-     * @return  DOMElement
-     */
+    #[\Deprecated('No replace.')]
     function html(DOMElement $element): DOMElement
     {
         return $element->asHTML();
@@ -30,13 +24,7 @@ if (!function_exists('\Windwalker\DOM\html')) {
 }
 
 if (!function_exists('\Windwalker\DOM\xml')) {
-    /**
-     * xml
-     *
-     * @param  DOMElement  $element
-     *
-     * @return  DOMElement
-     */
+    #[\Deprecated('No replace.')]
     function xml(DOMElement $element): DOMElement
     {
         return $element->asXML();
@@ -44,61 +32,28 @@ if (!function_exists('\Windwalker\DOM\xml')) {
 }
 
 if (!function_exists('\Windwalker\DOM\h')) {
-    /**
-     * h
-     *
-     * @param  string  $name
-     * @param  array   $attributes
-     * @param  mixed   $content
-     *
-     * @return  DOMElement
-     */
-    function h(string $name, array $attributes = [], $content = null): DOMElement
+    function h(string $name, array $attributes = [], mixed $content = null): HTMLElement
     {
-        return HTMLElement::create($name, $attributes, $content);
+        return HTML5Factory::element($name, $attributes, $content);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\div')) {
-    /**
-     * div
-     *
-     * @param  array  $attributes
-     * @param  mixed  $content
-     *
-     * @return  DOMElement
-     */
-    function div(array $attributes = [], $content = null): DOMElement
+    function div(array $attributes = [], $content = null): HTMLElement
     {
         return h('div', $attributes, $content);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\span')) {
-    /**
-     * span
-     *
-     * @param  array  $attributes
-     * @param  mixed  $content
-     *
-     * @return  DOMElement
-     */
-    function span(array $attributes = [], $content = null): DOMElement
+    function span(array $attributes = [], $content = null): HTMLElement
     {
         return h('span', $attributes, $content);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\img')) {
-    /**
-     * span
-     *
-     * @param  mixed  $src
-     * @param  array  $attributes
-     *
-     * @return  DOMElement
-     */
-    function img(mixed $src, array $attributes = []): DOMElement
+    function img(mixed $src, array $attributes = []): HTMLElement
     {
         $attributes['src'] = value($src);
 

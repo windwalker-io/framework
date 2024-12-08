@@ -16,6 +16,7 @@ use DOMNode;
  * @method static DOMElement input(array $attrs = [], $content = null)
  * @method static DOMElement button(array $attrs = [], $content = null)
  */
+#[\Deprecated(message: 'Use HTML5Factory instead.', since: '4.2')]
 class HTMLFactory extends DOMFactory
 {
     public const TEXT_SPAN = 1 << 0;
@@ -25,8 +26,6 @@ class HTMLFactory extends DOMFactory
     public const HTML_NODES = 1 << 3;
 
     /**
-     * element
-     *
      * @param  string  $name
      * @param  mixed   $value
      *
@@ -38,11 +37,10 @@ class HTMLFactory extends DOMFactory
     }
 
     /**
-     * create
-     *
      * @param  array  $options
      *
      * @return  DOMDocument
+     * @throws \DOMException
      */
     public static function create(array $options = []): DOMDocument
     {
