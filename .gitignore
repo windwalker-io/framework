@@ -10,6 +10,7 @@ Thumbs.db
 
 # System #
 /tmp/*
+/stubs/*
 
 # Composer #
 vendor/*

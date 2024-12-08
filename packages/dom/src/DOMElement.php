@@ -46,7 +46,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @return  DOMElement
      */
-    public static function create(string $name, array $attributes = [], $content = null): DOMElement
+    public static function create(string $name, array $attributes = [], mixed $content = null): DOMElement
     {
         [$name, $id, $class] = array_values(static::splitCSSSelector($name));
 
