@@ -32,9 +32,7 @@ class LegacyHTMLElementTest extends DOMElementTest
             [
                 'name' => 'foo',
                 'label' => 'FOO',
-                'class' => function () {
-                    return 'col-12 form-control';
-                },
+                'class' => fn() => 'col-12 form-control',
                 'data-options' => [
                     'handle' => '.handle',
                     'enabled' => true,

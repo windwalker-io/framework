@@ -14,6 +14,9 @@ use Dom\Node;
 use Dom\NodeList;
 use Dom\Text;
 use JetBrains\PhpStorm\ArrayShape;
+use Masterminds\HTML5;
+use Windwalker\DOM\HTML5\OutputRules;
+use Windwalker\DOM\HTML5\Traverser;
 use Windwalker\Utilities\Str;
 
 use function Windwalker\value;
@@ -28,7 +31,15 @@ use function Windwalker\value;
  */
 class HTML5Factory
 {
+    public const TEXT_SPAN = 1 << 0;
+
+    public const TEXT_PARAGRAPH = 1 << 2;
+
+    public const HTML_NODES = 1 << 3;
+
     protected static ?HTMLDocument $dom = null;
+
+    protected static HTML5 $html5;
 
     public static function document(?HTMLDocument $dom = null): HTMLDocument
     {
@@ -134,15 +145,51 @@ class HTML5Factory
         static::$dom = null;
     }
 
+    public static function html5(?HTML5 $html5 = null): HTML5
+    {
+        if ($html5) {
+            static::$html5 = $html5;
+        }
+
+        if (!isset(static::$html5)) {
+            static::$html5 = new HTML5(
+                [
+                    'disable_html_ns' => true,
+                    'target_document' => static::document(),
+                ],
+            );
+        }
+
+        return static::$html5;
+    }
+
+    public static function saveHtml(Node $node): string
+    {
+        if (class_exists(HTML5::class)) {
+            /*
+             * Native PHP DOMDocument will wrap `foo " bar` with single quote like: `attr='foo " bar'`
+             * Some scanning software will consider it is a XSS vulnerabilities.
+             * Use HTML5 package that can render it to correct `attr="foo &quote; bar"`
+             */
+            return static::saveHTML5($node);
+        }
+
+        if ($node instanceof HTMLDocument) {
+            return $node->saveHtml($node);
+        }
+
+        return static::document()->saveHtml($node);
+    }
+
     #[ArrayShape(['name' => "mixed|string", 'id' => "null|string", 'class' => "null|string"])]
     public static function splitCSSSelector(
-        string $name
+        string $name,
     ): array {
         $tokens = preg_split(
             '/([\.#]?[^\s#.]+)/',
             $name,
             -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY,
         );
 
         if ($tokens === []) {
@@ -221,7 +268,7 @@ class HTML5Factory
         if ($attributes instanceof Element) {
             $attributes = array_map(
                 static fn(Attr $attr) => $attr->value,
-                iterator_to_array($attributes->attributes)
+                iterator_to_array($attributes->attributes),
             );
         }
 
@@ -233,5 +280,64 @@ class HTML5Factory
     public static function __callStatic($name, $args): HTMLElement
     {
         return static::element($name, ...$args);
+    }
+
+    /**
+     * @return  false[]
+     *
+     * @deprecated  Remove after HTML5 lib supports PHP8.4
+     */
+    protected static function getHTML5DefaultOptions(): array
+    {
+        return array(
+            // Whether the serializer should aggressively encode all characters as entities.
+            'encode_entities' => false,
+
+            // Prevents the parser from automatically assigning the HTML5 namespace to the DOM document.
+            'disable_html_ns' => false,
+        );
+    }
+
+    /**
+     * @deprecated  Remove after HTML5 lib supports PHP8.4
+     */
+    protected static function toHTML5(Node $dom, mixed $file, array $options = [])
+    {
+        $close = true;
+        if (is_resource($file)) {
+            $stream = $file;
+            $close = false;
+        } else {
+            $stream = fopen($file, 'wb');
+        }
+        $options = array_merge(static::getHTML5DefaultOptions(), $options);
+        $rules = new OutputRules($stream, $options);
+        $trav = new Traverser($dom, $stream, $rules, $options);
+
+        $trav->walk();
+        /*
+         * release the traverser to avoid cyclic references and allow PHP to free memory without waiting
+         * for gc_collect_cycles
+         */
+        $rules->unsetTraverser();
+
+        if ($close) {
+            fclose($stream);
+        }
+    }
+
+    /**
+     * @deprecated  Remove after HTML5 lib supports PHP8.4
+     */
+    protected static function saveHTML5(Node $dom, array $options = []): string
+    {
+        $stream = fopen('php://temp', 'wb');
+        static::toHTML5($dom, $stream, array_merge(static::getHTML5DefaultOptions(), $options));
+
+        $html = stream_get_contents($stream, -1, 0);
+
+        fclose($stream);
+
+        return $html;
     }
 }

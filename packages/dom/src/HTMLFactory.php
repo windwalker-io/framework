@@ -15,8 +15,9 @@ use DOMNode;
  * @method static DOMElement form(array $attrs = [], $content = null)
  * @method static DOMElement input(array $attrs = [], $content = null)
  * @method static DOMElement button(array $attrs = [], $content = null)
+ *
+ * @deprecated Use HTML5Factory instead.
  */
-#[\Deprecated(message: 'Use HTML5Factory instead.', since: '4.2')]
 class HTMLFactory extends DOMFactory
 {
     public const TEXT_SPAN = 1 << 0;

@@ -6,8 +6,8 @@ namespace Windwalker\DOM\Test;
 
 use Dom\HTMLDocument;
 use DOMDocument;
+use Masterminds\HTML5;
 use Windwalker\DOM\DOMElement;
-use Windwalker\DOM\DOMFactory;
 use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
 use Windwalker\Test\Traits\DOMTestTrait;

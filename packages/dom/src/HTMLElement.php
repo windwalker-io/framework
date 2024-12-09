@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Windwalker\DOM;
 
 use Dom\Attr;
+use Dom\Document;
 use Dom\HTMLElement as NativeHTMLElement;
 use Dom\Node;
 use Dom\NodeList;
 use DOMException;
 use JetBrains\PhpStorm\ArrayShape;
+use Masterminds\HTML5;
 use Symfony\Component\DomCrawler\Crawler;
 use Windwalker\Utilities\Str;
 
@@ -112,12 +114,13 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
             throw new \LogicException('Please attach Element to a Document before render it.');
         }
 
+        $formatOutputBak = $this->ownerDocument->formatOutput;
+
         $this->ownerDocument->formatOutput = $formatOutput;
 
-        $dom = HTML5Factory::document();
-        $result = $dom->saveHTML($this);
+        $result = HTML5Factory::saveHtml($this);
 
-        $this->ownerDocument->formatOutput = false;
+        $this->ownerDocument->formatOutput = $formatOutputBak;
 
         return $result;
     }
@@ -285,14 +288,14 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
     /**
      * Use another root document.
      *
-     * @param  DOMNode  $node
+     * @param  Node  $node
      * @param  bool     $deep
      *
-     * @return  static|NativeDOMElement
+     * @return  static|NativeHTMLElement
      */
-    public function with(DOMNode $node, bool $deep = true): NativeDOMElement|static
+    public function with(Node $node, bool $deep = true): NativeHTMLElement|static
     {
-        if ($node instanceof DOMDocument) {
+        if ($node instanceof Document) {
             $dom = $node;
         } else {
             $dom = $node->ownerDocument;
@@ -308,16 +311,23 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
         return $this->appendChild($ele);
     }
 
-    public static function buildAttributes(array|NativeHTMLElement $attributes, ?string $type = null): string
+    public static function buildAttributes(array|\DOMElement|NativeHTMLElement $attributes): string
     {
         if ($attributes instanceof NativeHTMLElement) {
             $attributes = array_map(
-                fn(Attr $attr) => $attr->value,
+                static fn(Attr $attr) => $attr->value,
                 iterator_to_array($attributes->attributes)
             );
         }
 
-        $ele = static::create('root', $attributes, '')->render($type);
+        if ($attributes instanceof \DOMElement) {
+            $attributes = array_map(
+                static fn(\DOMAttr $attr) => $attr->value,
+                iterator_to_array($attributes->attributes)
+            );
+        }
+
+        $ele = static::new('root', $attributes, '')->render(false);
 
         return trim(Str::removeLeft(Str::removeRight($ele, '></root>', 'ascii'), '<root', 'ascii'));
     }
@@ -330,7 +340,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
     /**
      * addClass
      *
-     * @param  string|callable  $class
+     * @param  string  $class
      *
      * @return  static
      *
