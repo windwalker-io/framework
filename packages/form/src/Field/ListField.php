@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use DOMNode;
 use Windwalker\Data\Collection;
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\Field\Concern\ListOptionsTrait;
 use Windwalker\Utilities\TypeCast;
 
@@ -30,12 +29,12 @@ class ListField extends AbstractField
     /**
      * @inheritDoc
      */
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         return $input;
     }
 
-    protected function createInputElement(array $attrs = []): DOMElement
+    protected function createInputElement(array $attrs = []): HTMLElement
     {
         return h('select', $attrs, null);
     }
@@ -43,12 +42,12 @@ class ListField extends AbstractField
     /**
      * buildInput
      *
-     * @param  DOMElement  $input
-     * @param  array       $options
+     * @param  HTMLElement  $input
+     * @param  array        $options
      *
-     * @return DOMElement
+     * @return HTMLElement
      */
-    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
+    public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
         $input = $this->prepareListElement($input);
 
@@ -59,8 +58,11 @@ class ListField extends AbstractField
         return $input;
     }
 
-    protected function appendOption(DOMElement $select, DOMElement|array $option, ?string $group = null): void
-    {
+    protected function appendOption(
+        HTMLElement|\DOMElement $select,
+        HTMLElement|\DOMElement|array $option,
+        ?string $group = null,
+    ): void {
         if (is_array($option)) {
             $select->appendChild($optGroup = h('optgroup', ['label' => $group]));
 

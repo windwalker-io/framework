@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Renderer;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\Field\AbstractField;
 
 /**
@@ -18,32 +18,32 @@ interface FormRendererInterface
      * renderField
      *
      * @param  AbstractField  $field
-     * @param  array          $wrapper
+     * @param  HTMLElement    $wrapper
      * @param  array          $options
      *
      * @return string
      */
-    public function renderField(AbstractField $field, DOMElement $wrapper, array $options = []): string;
+    public function renderField(AbstractField $field, HTMLElement $wrapper, array $options = []): string;
 
     /**
      * renderLabel
      *
      * @param  AbstractField  $field
-     * @param  DOMElement     $label
+     * @param  HTMLElement    $label
      * @param  array          $options
      *
      * @return string
      */
-    public function renderLabel(AbstractField $field, DOMElement $label, array $options = []): string;
+    public function renderLabel(AbstractField $field, HTMLElement $label, array $options = []): string;
 
     /**
      * renderInput
      *
      * @param  AbstractField  $field
-     * @param  DOMElement     $input
+     * @param  HTMLElement    $input
      * @param  array          $options
      *
      * @return string
      */
-    public function renderInput(AbstractField $field, DOMElement $input, array $options = []): string;
+    public function renderInput(AbstractField $field, HTMLElement $input, array $options = []): string;
 }

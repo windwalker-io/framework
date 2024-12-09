@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Filter\Rule\Length;
 use Windwalker\Form\Field\Concern\ListOptionsTrait;
 use Windwalker\Utilities\TypeCast;
@@ -33,7 +33,7 @@ class TextField extends AbstractInputField
 
     protected string $inputType = 'text';
 
-    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
+    public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
         $html = parent::buildFieldElement($input, $options);
 
@@ -71,7 +71,7 @@ class TextField extends AbstractInputField
         return $this;
     }
 
-    protected function appendOption(DOMElement $select, DOMElement|array $option, ?string $group = null): void
+    protected function appendOption(HTMLElement $select, HTMLElement|array $option, ?string $group = null): void
     {
         if (is_array($option)) {
             $select->appendChild($optGroup = h('optgroup', ['label' => $group]));
@@ -91,7 +91,7 @@ class TextField extends AbstractInputField
     /**
      * @inheritDoc
      */
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         $input['type'] = $this->getInputType();
         $input['value'] = $this->getValue();

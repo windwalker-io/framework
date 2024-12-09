@@ -44,7 +44,8 @@ class VarDumper
 
             $dumper = new PrintRDumper();
 
-            self::$handler = static function ($var) use ($cloner, $dumper, $depth) {
+            self::$handler = static function ($var, $depth) use ($cloner, $dumper) {
+                print_r('Dep-inner-' . $depth . ' ');
                 $dumper->setIndentPad('    ');
 
                 $result = $dumper->dump(
@@ -56,7 +57,7 @@ class VarDumper
             };
         }
 
-        return (string) (self::$handler)($var);
+        return (string) (self::$handler)($var, $depth);
     }
 
     /**

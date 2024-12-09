@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field\Concern;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\FormNormalizer;
 
 /**
@@ -12,7 +12,7 @@ use Windwalker\Form\FormNormalizer;
  */
 trait ManageInputTrait
 {
-    public DOMElement $input;
+    public HTMLElement $input;
 
     /**
      * Use the form renderer to render input.
@@ -34,12 +34,12 @@ trait ManageInputTrait
      * This method is often called in template or before printed.
      * If you got your own renderer or layout for this field, just override this method and return your custom layout.
      *
-     * @param  DOMElement  $input
-     * @param  array       $options
+     * @param  HTMLElement  $input
+     * @param  array        $options
      *
-     * @return  string|DOMElement
+     * @return  string|HTMLElement
      */
-    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
+    public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
         $surrounds = $this->getSurrounds();
 
@@ -53,11 +53,11 @@ trait ManageInputTrait
     /**
      * Prepare the input element attributes.
      *
-     * @return  DOMElement
+     * @return  HTMLElement
      *
      * @throws \DOMException
      */
-    public function getPreparedInput(): DOMElement
+    public function getPreparedInput(): HTMLElement
     {
         $input = clone $this->getInput();
 
@@ -75,26 +75,26 @@ trait ManageInputTrait
     /**
      * Prepare the input element attributes, this method is for field customize.
      *
-     * @param  DOMElement  $input
+     * @param  HTMLElement  $input
      *
-     * @return  DOMElement
+     * @return  HTMLElement
      */
-    abstract public function prepareInput(DOMElement $input): DOMElement;
+    abstract public function prepareInput(HTMLElement $input): HTMLElement;
 
     /**
-     * @return DOMElement
+     * @return HTMLElement
      */
-    public function getInput(): DOMElement
+    public function getInput(): HTMLElement
     {
         return $this->input;
     }
 
     /**
-     * @param  DOMElement  $element
+     * @param  HTMLElement  $element
      *
      * @return  static  Return self to support chaining.
      */
-    public function setInput(DOMElement $element): static
+    public function setInput(HTMLElement $element): static
     {
         $this->input = $element;
 
@@ -187,14 +187,14 @@ trait ManageInputTrait
 
     public function addClass(...$args): static
     {
-        $this->getInput()->classList->add(...$args);
+        $this->getInput()->addClass(implode(' ', $args));
 
         return $this;
     }
 
     public function removeClass(...$args): static
     {
-        $this->getInput()->classList->remove(...$args);
+        $this->getInput()->removeClass(implode(' ', $args));
 
         return $this;
     }

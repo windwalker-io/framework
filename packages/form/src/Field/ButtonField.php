@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\DOM\DOMElement;
-use Windwalker\DOM\HTMLFactory;
+use Windwalker\DOM\HTML5Factory;
+use Windwalker\DOM\HTMLElement;
 
 use function Windwalker\DOM\h;
 
@@ -40,14 +40,14 @@ class ButtonField extends AbstractField
     /**
      * @inheritDoc
      */
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         $text = $this->getText() ?? $this->getValue();
 
         $input = h(
             $this->getElement() ?? static::ELEMENT_BUTTON,
             $input->getAttributes(true),
-            $text ? HTMLFactory::parse((string) $text, HTMLFactory::TEXT_SPAN) : ''
+            $text ? HTML5Factory::parse((string) $text, HTML5Factory::TEXT_SPAN) : ''
         );
 
         $input['type'] = $this->getButtonType() ?? static::ELEMENT_BUTTON;

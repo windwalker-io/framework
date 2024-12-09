@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 
 /**
  * The ButtonField class.
@@ -18,12 +18,12 @@ class CustomHtmlField extends AbstractField
     /**
      * buildInput
      *
-     * @param  DOMElement  $input
+     * @param  HTMLElement  $input
      * @param  array       $options
      *
-     * @return  string|DOMElement
+     * @return  string|HTMLElement
      */
-    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
+    public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
         $content = $this->getContent();
 
@@ -37,7 +37,7 @@ class CustomHtmlField extends AbstractField
     /**
      * @inheritDoc
      */
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         return $input;
     }
@@ -51,7 +51,7 @@ class CustomHtmlField extends AbstractField
     }
 
     /**
-     * @param  string|DOMElement|callable  $content
+     * @param  string|HTMLElement|callable  $content
      *
      * @return  static  Return self to support chaining.
      */

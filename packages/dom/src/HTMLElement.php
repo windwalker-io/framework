@@ -28,6 +28,8 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      * @param  mixed|null  $content
      *
      * @return  DOMElement
+     *
+     * @deprecated Use new() instead.
      */
     #[\Deprecated(message: 'Use HTMLDomFactory::element() instead.')]
     public static function create(string $name, array $attributes = [], mixed $content = null): DOMElement
@@ -85,6 +87,10 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
 
     public function appendChild(mixed $newnode): Node
     {
+        if ($newnode instanceof \DOMElement) {
+            $newnode = $this->ownerDocument->importLegacyNode($newnode, true);
+        }
+
         if (!$newnode instanceof Node) {
             return self::insertContentTo($newnode, $this);
         }
@@ -376,6 +382,24 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
         $this->classList->contains($class);
 
         return $this;
+    }
+
+    public static function fromLegacyElement(\DOMElement $ele): HTMLElement
+    {
+        // $ele = HTML5Factory::createFromString($eleText)->documentElement;
+        $ele = HTML5Factory::document()->importLegacyNode($ele, true);
+
+        $attrs = [];
+
+        foreach ($ele->getAttributeNames() as $attributeName) {
+            $attrs[$attributeName] = $ele->getAttribute($attributeName);
+        }
+
+        return static::new(
+            $ele->nodeName,
+            $attrs,
+            $ele->childNodes
+        );
     }
 
     #[ArrayShape(['name' => "mixed|string", 'id' => "null|string", 'class' => "null|string"])]

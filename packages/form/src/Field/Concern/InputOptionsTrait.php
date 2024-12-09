@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field\Concern;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 
 /**
  * Trait InputOptionsTrait
@@ -26,7 +26,7 @@ trait InputOptionsTrait
      */
     protected $optionHandler = null;
 
-    public function configureOptionWrapper(DOMElement $wrapper): DOMElement
+    public function configureOptionWrapper(HTMLElement $wrapper): HTMLElement
     {
         if ($handler = $this->getOptionWrapperHandler()) {
             $wrapper = $handler($wrapper, $this) ?? $wrapper;
@@ -35,7 +35,7 @@ trait InputOptionsTrait
         return $wrapper;
     }
 
-    public function configureOptionLabel(DOMElement $wrapper): DOMElement
+    public function configureOptionLabel(HTMLElement $wrapper): HTMLElement
     {
         if ($handler = $this->getOptionLabelHandler()) {
             $wrapper = $handler($wrapper, $this) ?? $wrapper;
@@ -44,7 +44,7 @@ trait InputOptionsTrait
         return $wrapper;
     }
 
-    public function configureOption(DOMElement $wrapper): DOMElement
+    public function configureOption(HTMLElement $wrapper): HTMLElement
     {
         if ($handler = $this->getOptionHandler()) {
             $wrapper = $handler($wrapper, $this) ?? $wrapper;

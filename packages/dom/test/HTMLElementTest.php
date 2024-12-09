@@ -8,9 +8,12 @@ use Dom\HTMLDocument;
 use DOMDocument;
 use Masterminds\HTML5;
 use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\DOMFactory;
 use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
 use Windwalker\Test\Traits\DOMTestTrait;
+
+use const Dom\HTML_NO_DEFAULT_NS;
 
 /**
  * The DomElementTest class.
@@ -23,6 +26,39 @@ class HTMLElementTest extends DOMElementTest
      * @var DOMElement
      */
     protected $instance;
+
+    // public function testAttr()
+    // {
+    //     // $dom = new DOMDocument();
+    //     // $input = $dom->createElement('input');
+    //     // $input->setAttribute('type', 'text');
+    //     // $input->setAttribute('required', '');
+    //     // $input->setAttribute('data-hello', '');
+    //     //
+    //     // $oldDoc = DOMFactory::document();
+    //     // show($oldDoc->firstElementChild->namespaceURI);
+    //     //
+    //     //
+    //     // $doc = HTMLDocument::createFromString(
+    //     //     '<div><input type="text" required hello data-foo></div>',
+    //     //     LIBXML_HTML_NOIMPLIED | HTML_NO_DEFAULT_NS,
+    //     //     'UTF-8'
+    //     // );
+    //     //
+    //     // show($doc->firstElementChild->namespaceURI);
+    //     // show(HTML5Factory::saveHtml($doc->firstElementChild), 'F');
+    //
+    //     $html = HTMLDocument::createEmpty();
+    //     $div = HTML5Factory::element('div');
+    //     $div->setAttribute('data-hello', '');
+    //     $div->setAttribute('required', '');
+    //
+    //     show($div->namespaceURI);
+    //
+    //     show(
+    //         $div->render(true)
+    //     );
+    // }
 
     /**
      * @see  HTMLElement::create
@@ -280,6 +316,27 @@ XML
         );
 
         self::assertEquals('class="foo bar" data-foo="yoo" required selected normal-attr', $attrs);
+    }
+
+    public function testFromDOMElement()
+    {
+        $doc = DOMFactory::create();
+        $doc->loadHTML(
+            <<<HTML
+            <div class="foo">
+                <div>Hello</div>
+                <div>World</div>
+            </div>
+            HTML,
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+
+        $ele = HTMLElement::fromLegacyElement($doc->firstElementChild);
+
+        self::assertEquals('DIV', $ele->nodeName);
+        self::assertEquals('foo', $ele->getAttribute('class'));
+        self::assertEquals('Hello', $ele->firstElementChild->textContent);
+        self::assertEquals('World', $ele->lastElementChild->textContent);
     }
 
     protected function setUp(): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 
 use function Windwalker\DOM\h;
 
@@ -23,7 +23,7 @@ class TextareaField extends TextField
     /**
      * @inheritDoc
      */
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         $input = h('textarea', $input->getAttributes(true), $this->getValue());
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Form;
 
 use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 
 /**
  * The FormNormalizer class.
@@ -24,7 +25,7 @@ class FormNormalizer
         return preg_replace('/[\[\]\s\"\'=\.:\/\\\\]+/', '-', $string);
     }
 
-    public static function sortAttributes(DOMElement $ele, array $firstElements = ['id', 'name']): void
+    public static function sortAttributes(DOMElement|HTMLElement $ele, array $firstElements = ['id', 'name']): void
     {
         $attrs = $ele->getAttributes();
 

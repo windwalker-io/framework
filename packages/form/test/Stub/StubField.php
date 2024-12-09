@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Stub;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\Field\AbstractField;
 
 /**
@@ -21,7 +21,7 @@ class StubField extends AbstractField
      */
     protected string $inputType = 'stub';
 
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         $input['type'] = 'text';
         $input['id'] = $this->getId();

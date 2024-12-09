@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Form\Field\Concern;
 
 use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\FormNormalizer;
 
 /**
@@ -12,7 +13,7 @@ use Windwalker\Form\FormNormalizer;
  */
 trait ManageLabelTrait
 {
-    public DOMElement $label;
+    public HTMLElement $label;
 
     /**
      * label
@@ -42,12 +43,12 @@ trait ManageLabelTrait
         return $this->getForm()->getRenderer()->renderLabel($this, $label, $options);
     }
 
-    public function buildLabel(DOMElement $label, array $options = []): string|DOMElement
+    public function buildLabel(HTMLElement $label, array $options = []): string|HTMLElement
     {
         return $label;
     }
 
-    public function getPreparedLabel(): DOMElement
+    public function getPreparedLabel(): HTMLElement
     {
         $label = clone $this->getLabel();
 
@@ -70,9 +71,9 @@ trait ManageLabelTrait
     /**
      * getLabel
      *
-     * @return  DOMElement
+     * @return  HTMLElement
      */
-    public function getLabel(): DOMElement
+    public function getLabel(): HTMLElement
     {
         return $this->label;
     }
@@ -83,11 +84,11 @@ trait ManageLabelTrait
     }
 
     /**
-     * @param  DOMElement  $label
+     * @param  HTMLElement  $label
      *
      * @return  static  Return self to support chaining.
      */
-    public function setLabel(DOMElement $label): static
+    public function setLabel(HTMLElement $label): static
     {
         $this->label = $label;
 

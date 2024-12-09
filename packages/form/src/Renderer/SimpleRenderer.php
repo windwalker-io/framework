@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Renderer;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\Field\AbstractField;
 
 /**
@@ -15,7 +15,7 @@ class SimpleRenderer implements FormRendererInterface
     /**
      * @inheritDoc
      */
-    public function renderField(AbstractField $field, DOMElement $wrapper, array $options = []): string
+    public function renderField(AbstractField $field, HTMLElement $wrapper, array $options = []): string
     {
         return (string) $field->buildWrapper($wrapper, $options);
     }
@@ -23,7 +23,7 @@ class SimpleRenderer implements FormRendererInterface
     /**
      * @inheritDoc
      */
-    public function renderLabel(AbstractField $field, DOMElement $label, array $options = []): string
+    public function renderLabel(AbstractField $field, HTMLElement $label, array $options = []): string
     {
         return (string) $field->buildLabel($label, $options);
     }
@@ -31,7 +31,7 @@ class SimpleRenderer implements FormRendererInterface
     /**
      * @inheritDoc
      */
-    public function renderInput(AbstractField $field, DOMElement $input, array $options = []): string
+    public function renderInput(AbstractField $field, HTMLElement $input, array $options = []): string
     {
         return (string) $field->buildFieldElement($input, $options);
     }

@@ -154,10 +154,10 @@ class OutputRules implements RulesInterface
                 'bgcolor',
             ],
         ],
-        [
-            'nodeNamespace' => 'http://www.w3.org/1999/xhtml',
-            'xpath' => 'starts-with(local-name(), \'data-\')',
-        ],
+        // [
+        //     'nodeNamespace' => 'http://www.w3.org/1999/xhtml',
+        //     'xpath' => 'starts-with(local-name(), \'data-\')',
+        // ],
     ];
 
     public const DOCTYPE = '<!DOCTYPE html>';
@@ -327,7 +327,7 @@ class OutputRules implements RulesInterface
      * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
      * qualified name (8.3).
      *
-     * @param  \DOMNode  $ele  The element being written.
+     * @param  Node  $ele  The element being written.
      */
     protected function openTag($ele)
     {
@@ -389,6 +389,7 @@ class OutputRules implements RulesInterface
     protected function nonBooleanAttribute(Attr $attr)
     {
         $ele = $attr->ownerElement;
+
         foreach ($this->nonBooleanAttributes as $rule) {
             if (isset($rule['nodeNamespace']) && $rule['nodeNamespace'] !== $ele->namespaceURI) {
                 continue;

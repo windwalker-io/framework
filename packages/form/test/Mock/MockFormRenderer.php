@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Mock;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Renderer\FormRendererInterface;
 
@@ -20,7 +20,7 @@ class MockFormRenderer implements FormRendererInterface
     /**
      * @inheritDoc
      */
-    public function renderField(AbstractField $field, DOMElement $wrapper, array $options = []): string
+    public function renderField(AbstractField $field, HTMLElement $wrapper, array $options = []): string
     {
         $wrapper = h(
             'mock',
@@ -36,7 +36,7 @@ class MockFormRenderer implements FormRendererInterface
     /**
      * @inheritDoc
      */
-    public function renderLabel(AbstractField $field, DOMElement $label, array $options = []): string
+    public function renderLabel(AbstractField $field, HTMLElement $label, array $options = []): string
     {
         return 'Hello ';
     }
@@ -44,7 +44,7 @@ class MockFormRenderer implements FormRendererInterface
     /**
      * @inheritDoc
      */
-    public function renderInput(AbstractField $field, DOMElement $input, array $options = []): string
+    public function renderInput(AbstractField $field, HTMLElement $input, array $options = []): string
     {
         return 'World: ' . $field->getInputName();
     }

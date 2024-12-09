@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field\Concern;
 
-use Windwalker\DOM\DOMElement;
-use Windwalker\DOM\HTMLFactory;
+use Windwalker\DOM\HTML5Factory;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\FormNormalizer;
 
 use function Windwalker\DOM\h;
@@ -15,9 +15,9 @@ use function Windwalker\DOM\h;
  */
 trait ManageWrapperTrait
 {
-    public DOMElement $wrapper;
+    public HTMLElement $wrapper;
 
-    protected function prepareWrapper(DOMElement $wrapper): DOMElement
+    protected function prepareWrapper(HTMLElement $wrapper): HTMLElement
     {
         $wrapper->setAttribute('id', $this->getId('-wrapper'));
         $wrapper->setAttribute('data-field-wrapper', true);
@@ -27,11 +27,11 @@ trait ManageWrapperTrait
         return $wrapper;
     }
 
-    public function buildWrapper(DOMElement $wrapper, array $options = []): string
+    public function buildWrapper(HTMLElement $wrapper, array $options = []): string
     {
         if (!$options['no_label']) {
             $wrapper->appendChild(
-                HTMLFactory::parse($this->renderLabel($options))
+                HTML5Factory::parse($this->renderLabel($options))
             );
         }
 
@@ -39,7 +39,7 @@ trait ManageWrapperTrait
             h(
                 'div',
                 [],
-                HTMLFactory::parse($this->renderInput($options))
+                HTML5Factory::parse($this->renderInput($options))
             )
         );
 
@@ -54,19 +54,19 @@ trait ManageWrapperTrait
     }
 
     /**
-     * @return DOMElement
+     * @return HTMLElement
      */
-    public function getWrapper(): DOMElement
+    public function getWrapper(): HTMLElement
     {
         return $this->wrapper;
     }
 
     /**
-     * @param  DOMElement  $wrapper
+     * @param  HTMLElement  $wrapper
      *
      * @return  static  Return self to support chaining.
      */
-    public function setWrapper(DOMElement $wrapper): static
+    public function setWrapper(HTMLElement $wrapper): static
     {
         $this->wrapper = $wrapper;
 

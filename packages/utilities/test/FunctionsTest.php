@@ -76,7 +76,8 @@ OUT;
         show(...$data);
         rewind(Arr::$output);
 
-        self::assertStringSafeEquals($expected, stream_get_contents(Arr::$output));
+        $c = stream_get_contents(Arr::$output);
+        self::assertStringSafeEquals($expected, $c);
 
         fclose(Arr::$output);
     }

@@ -153,6 +153,11 @@ class DOMFactory
         return $doc->documentElement->firstChild;
     }
 
+    public static function saveXML(DOMNode $node): string
+    {
+        return $node->ownerDocument->saveXML($node);
+    }
+
     public static function reset(): void
     {
         static::$dom = null;

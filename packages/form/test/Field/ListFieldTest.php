@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Form\Test\Field;
 
 use PHPUnit\Framework\TestCase;
+use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLFactory;
 use Windwalker\Form\Field\ListField;
 use Windwalker\Test\Traits\DOMTestTrait;
@@ -70,7 +71,7 @@ class ListFieldTest extends TestCase
         // phpcs:disable
         $html = <<<HTML
 <select id="input-flower" name="flower" class="stub-flower" data-field-input disabled onchange="return false;" size="10">
-    <option value selected="selected"></option>
+    <option value="" selected="selected"></option>
     <option value="1">Yes</option>
     <option value="0">No</option>
 </select>
@@ -82,7 +83,7 @@ HTML;
 
         $html = <<<HTML
 <select id="input-flower" name="flower" class="stub-flower" data-field-input disabled onchange="return false;" size="10">
-    <option value></option>
+    <option value=""></option>
     <option value="1" selected="selected">Yes</option>
     <option value="0">No</option>
 </select>
@@ -94,7 +95,7 @@ HTML;
 
         $html = <<<HTML
 <select id="input-flower" name="flower[]" class="stub-flower" data-field-input disabled multiple onchange="return false;" size="10">
-    <option value></option>
+    <option value=""></option>
     <option value="1" selected="selected">Yes</option>
     <option value="0">No</option>
 </select>
@@ -108,8 +109,6 @@ HTML;
      * Method to test prepareAttributes().
      *
      * @return void
-     *
-     * @covers \Windwalker\Form\Field\TextField::prepareAttributes
      */
     public function testRenderGroup()
     {
@@ -122,7 +121,7 @@ HTML;
             [
                 'Asia' => [
                     HTMLFactory::option(['value' => 'Asia/Tokyo', 'class' => 'opt'], 'Tokyo'),
-                    HTMLFactory::option(['value' => 'Asia/Taipei'], 'Taipei'),
+                    HTML5Factory::option(['value' => 'Asia/Taipei'], 'Taipei'),
                 ],
             ]
         );

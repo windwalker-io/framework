@@ -7,6 +7,7 @@ namespace Windwalker\DOM;
 use DOMDocument;
 use DOMImplementation;
 use DOMNode;
+use Masterminds\HTML5;
 
 /**
  * The HtmlFactory class.
@@ -69,6 +70,20 @@ class HTMLFactory extends DOMFactory
         $doc->loadHTML($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         return $doc->documentElement->firstChild;
+    }
+
+    public static function saveHTML(DOMNode $node): string
+    {
+        if (class_exists(HTML5::class)) {
+            /*
+             * Native PHP DOMDocument will wrap `foo " bar` with single quote like: `attr='foo " bar'`
+             * Some scanning software will consider it is a XSS vulnerabilities.
+             * Use HTML5 package that can render it to correct `attr="foo &quote; bar"`
+             */
+            return DOMFactory::html5()->saveHTML($node);
+        }
+
+        return static::document()->saveHTML($node);
     }
 
     public static function __callStatic($name, $args): DOMElement

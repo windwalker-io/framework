@@ -6,10 +6,12 @@ namespace Windwalker\DOM;
 
 use Dom\Attr;
 use Dom\Comment;
+use Dom\Document;
 use Dom\DocumentFragment;
 use Dom\Element;
 use Dom\HTMLDocument;
 use Dom\HTMLElement as NativeHTMLElement;
+use Dom\Implementation;
 use Dom\Node;
 use Dom\NodeList;
 use Dom\Text;
@@ -19,7 +21,11 @@ use Windwalker\DOM\HTML5\OutputRules;
 use Windwalker\DOM\HTML5\Traverser;
 use Windwalker\Utilities\Str;
 
+use Windwalker\Utilities\TypeCast;
+
 use function Windwalker\value;
+
+use const Dom\HTML_NO_DEFAULT_NS;
 
 /**
  * The HtmlFactory class.
@@ -73,6 +79,7 @@ class HTML5Factory
     {
         [$name, $id, $class] = array_values(static::splitCSSSelector($name));
 
+        /** @var HTMLElement $ele */
         $ele = static::document()->createElement($name);
 
         if ($id !== null) {
@@ -114,28 +121,50 @@ class HTML5Factory
         return static::document()->createTextNode($content);
     }
 
-    /**
-     * create
-     *
-     * @param  array  $options
-     *
-     * @return  HTMLDocument
-     */
-    public static function create(array $options = []): HTMLDocument
+    public static function create(): HTMLDocument
     {
-        $encoding = $options['encoding'] ?? 'UTF-8';
+        $impl = new Implementation();
 
-        /** @var HTMLDocument $dom */
-        $dom = HTMLDocument::createEmpty();
-        $dom->registerNodeClass(NativeHTMLElement::class, HTMLElement::class);
+        $dom = $impl->createHTMLDocument();
+        static::registerElementClass($dom);
 
         return $dom;
     }
 
-    public static function parse(string $text, int $options = 0, ?string $overrideEncoding = null): ?Node
+    public static function registerElementClass(HTMLDocument $doc): HTMLDocument
     {
+        $doc->registerNodeClass(NativeHTMLElement::class, HTMLElement::class);
+
+        return $doc;
+    }
+
+    public static function createFromString(
+        string $text,
+        int $options = LIBXML_HTML_NOIMPLIED | HTML_NO_DEFAULT_NS,
+        ?string $overrideEncoding = null,
+    ): HTMLDocument {
+        return static::registerElementClass(
+            HTMLDocument::createFromString(
+                $text,
+                $options,
+                $overrideEncoding
+            )
+        );
+    }
+
+    public static function parse(
+        string $text,
+        int $options = 0,
+        ?string $overrideEncoding = null,
+    ): ?Node {
+        if ($options & static::TEXT_SPAN) {
+            $text = "<span>$text</span>";
+        } else {
+            $text = "<html>$text</html>";
+        }
+
         /** @var HTMLDocument $doc */
-        $doc = HTMLDocument::createFromString($text, $options, $overrideEncoding);
+        $doc = static::createFromString($text, overrideEncoding: $overrideEncoding);
 
         return $doc->documentElement->firstChild;
     }
@@ -240,6 +269,8 @@ class HTML5Factory
         $content = value($content);
 
         if (is_array($content) || $content instanceof NodeList) {
+            $content = TypeCast::toArray($content);
+
             /** @var DocumentFragment $fragment */
             $fragment = $node->ownerDocument->createDocumentFragment();
 
@@ -289,13 +320,13 @@ class HTML5Factory
      */
     protected static function getHTML5DefaultOptions(): array
     {
-        return array(
+        return [
             // Whether the serializer should aggressively encode all characters as entities.
             'encode_entities' => false,
 
             // Prevents the parser from automatically assigning the HTML5 namespace to the DOM document.
             'disable_html_ns' => false,
-        );
+        ];
     }
 
     /**

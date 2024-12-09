@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\Data\Collection;
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\Contract\InputOptionsInterface;
 use Windwalker\Form\Field\Concern\InputOptionsTrait;
 use Windwalker\Form\FormNormalizer;
@@ -21,7 +20,7 @@ class CheckboxesField extends ListField implements InputOptionsInterface
 {
     use InputOptionsTrait;
 
-    public function buildFieldElement(DOMElement $input, array $options = []): string|DOMElement
+    public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
         $attrs = $input->getAttributes(true);
         unset($attrs['name']);

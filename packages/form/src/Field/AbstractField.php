@@ -6,14 +6,15 @@ namespace Windwalker\Form\Field;
 
 use BadMethodCallException;
 use Closure;
+use Dom\Element;
 use InvalidArgumentException;
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
+use Windwalker\Form\Attributes\Fieldset;
 use Windwalker\Form\Field\Concern\{ManageFilterTrait,
     ManageInputTrait,
     ManageLabelTrait,
     ManageRenderTrait,
     ManageWrapperTrait};
-use Windwalker\Form\Attributes\Fieldset;
 use Windwalker\Form\Form;
 use Windwalker\Form\FormNormalizer;
 use Windwalker\Form\FormRegistry;
@@ -138,7 +139,7 @@ abstract class AbstractField
         $this->prepareState(
             [
                 'no_label' => false,
-            ]
+            ],
         );
 
         $this->configure();
@@ -149,7 +150,7 @@ abstract class AbstractField
         //
     }
 
-    protected function createInputElement(array $attrs = []): DOMElement
+    protected function createInputElement(array $attrs = []): HTMLElement
     {
         return h('input', $attrs, null);
     }
@@ -180,7 +181,7 @@ abstract class AbstractField
         return $this->getForm()->getRenderer()->renderField($this, $wrapper, $options);
     }
 
-    public function getPreparedWrapper(): DOMElement
+    public function getPreparedWrapper(): HTMLElement
     {
         return $this->prepareWrapper(clone $this->getWrapper());
     }
@@ -281,7 +282,7 @@ abstract class AbstractField
 
         if ($matches) {
             array_shift($matches);
-            $names = array_values(array_map(fn ($n) => trim($n, '[]'), $matches));
+            $names = array_values(array_map(fn($n) => trim($n, '[]'), $matches));
         } else {
             $names = [$name];
         }
@@ -320,7 +321,7 @@ abstract class AbstractField
             static function ($value) {
                 return '[' . $value . ']';
             },
-            $names
+            $names,
         );
 
         return $first . implode('', $names);
@@ -374,7 +375,7 @@ abstract class AbstractField
     public function getComputedValue(): mixed
     {
         return $this->castToValidValue(
-            ($this->value !== null && $this->value !== '') ? $this->value : $this->get('default')
+            ($this->value !== null && $this->value !== '') ? $this->value : $this->get('default'),
         );
     }
 
@@ -635,15 +636,15 @@ abstract class AbstractField
         return $this->render();
     }
 
-    public function surround(string|Closure|\DOMElement $surround, array $attributes = []): static
+    public function surround(string|Closure|\DOMElement|Element $surround, array $attributes = []): static
     {
         if (is_string($surround)) {
-            $surround = DOMElement::create($surround, $attributes);
+            $surround = HTMLElement::new($surround, $attributes);
         }
 
-        if ($surround instanceof \DOMElement) {
+        if ($surround instanceof \DOMElement || $surround instanceof Element) {
             $surround = function ($input) use ($surround) {
-                if ($input instanceof \DOMElement) {
+                if ($input instanceof \DOMElement || $input instanceof Element) {
                     $surround->appendChild($input);
 
                     return $surround;
@@ -669,7 +670,7 @@ abstract class AbstractField
     }
 
     /**
-     * @param  callable[]|DOMElement[]  $surrounds
+     * @param  array<callable|\DOMElement|Element>  $surrounds
      *
      * @return  static  Return self to support chaining.
      */

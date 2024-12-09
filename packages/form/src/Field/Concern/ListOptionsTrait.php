@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field\Concern;
 
+use Dom\Element;
+use Dom\Node;
 use MyCLabs\Enum\Enum;
 use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\Classic;
 use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTML5Factory;
+use Windwalker\DOM\HTMLElement;
 use Windwalker\DOM\HTMLFactory;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Contract\LanguageInterface;
@@ -32,7 +36,7 @@ trait ListOptionsTrait
      */
     protected ?string $currentGroup = null;
 
-    protected function prepareListElement(DOMElement $input): DOMElement
+    protected function prepareListElement(HTMLElement $input): HTMLElement
     {
         foreach ($this->getOptions() as $key => $option) {
             $this->appendOption($input, $option, (string) $key);
@@ -41,12 +45,16 @@ trait ListOptionsTrait
         return $input;
     }
 
-    abstract protected function appendOption(DOMElement $select, DOMElement|array $option, ?string $group = null): void;
+    abstract protected function appendOption(
+        HTMLElement $select,
+        HTMLElement|array $option,
+        ?string $group = null,
+    ): void;
 
     /**
      * getOptions
      *
-     * @return  array|DOMElement[]
+     * @return  array|HTMLElement[]
      */
     public function getOptions(): array
     {
@@ -56,7 +64,7 @@ trait ListOptionsTrait
     /**
      * setOptions
      *
-     * @param  array|DOMElement[]  $options
+     * @param  array|HTMLElement[]  $options
      * @param  null|string         $group
      *
      * @return  static
@@ -72,7 +80,7 @@ trait ListOptionsTrait
     /**
      * addOptions
      *
-     * @param  array|DOMElement[]  $options
+     * @param  array<HTMLElement|\DOMElement>  $options
      * @param  null|string         $group
      *
      * @return  $this
@@ -156,7 +164,7 @@ trait ListOptionsTrait
      * registerOptions
      *
      * @param  iterable|class-string<\BackedEnum|Enum>  $options
-     * @param  callable|null    $handler
+     * @param  callable|null                            $handler
      *
      * @return  static
      *
@@ -179,7 +187,7 @@ trait ListOptionsTrait
                 TypeAssert::assert(
                     false,
                     'Options class must be Enum, {value} given.',
-                    $options
+                    $options,
                 );
             }
         }
@@ -192,7 +200,7 @@ trait ListOptionsTrait
                 // Option
                 if ($handler) {
                     $handler($this, $option, null);
-                } elseif ($option instanceof DOMElement) {
+                } elseif ($option instanceof DOMElement || $option instanceof HTMLElement) {
                     $this->addOption($option);
                 } else {
                     $this->option((string) $option, (string) $option);
@@ -202,7 +210,7 @@ trait ListOptionsTrait
                     // Group
                     if ($handler) {
                         $handler($this, $opt, null, $name);
-                    } elseif ($option instanceof DOMElement) {
+                    } elseif ($option instanceof DOMElement || $option instanceof HTMLElement) {
                         $this->addOption($option, (string) $name);
                     } else {
                         $this->option((string) $opt, (string) $opt, [], (string) $name);
@@ -212,7 +220,7 @@ trait ListOptionsTrait
                 // Option
                 if ($handler) {
                     $handler($this, $option, $name);
-                } elseif ($option instanceof DOMElement) {
+                } elseif ($option instanceof DOMElement || $option instanceof HTMLElement) {
                     $this->addOption($option, (string) $name);
                 } else {
                     $this->option((string) $option, (string) $name);
@@ -226,12 +234,12 @@ trait ListOptionsTrait
     /**
      * addOption
      *
-     * @param  DOMElement   $option
-     * @param  string|null  $group
+     * @param  Element|\DOMElement  $option
+     * @param  string|null          $group
      *
      * @return  static
      */
-    public function addOption(DOMElement $option, ?string $group = null): static
+    public function addOption(Element|\DOMElement $option, ?string $group = null): static
     {
         $options = [$option];
 
@@ -255,10 +263,10 @@ trait ListOptionsTrait
      * @return static
      */
     public function option(
-        \DOMNode|string|null $text = null,
+        \DOMNode|Node|string|null $text = null,
         ?string $value = null,
         array $attrs = [],
-        ?string $group = null
+        ?string $group = null,
     ): static {
         $attrs['value'] = $value;
 
@@ -268,13 +276,13 @@ trait ListOptionsTrait
     }
 
     public static function createOption(
-        \DOMNode|string|null $text = null,
+        \DOMNode|Node|string|null $text = null,
         mixed $value = null,
-        array $attrs = []
-    ): DOMElement {
+        array $attrs = [],
+    ): HTMLElement {
         $attrs['value'] = (string) $value;
 
-        return HTMLFactory::option($attrs, $text);
+        return HTML5Factory::option($attrs, $text);
     }
 
     /**

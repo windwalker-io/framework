@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\DOM\DOMElement;
+use Windwalker\DOM\HTMLElement;
 
 /**
  * The CheckboxField class.
@@ -21,7 +21,7 @@ class CheckboxField extends AbstractInputField
     /**
      * @inheritDoc
      */
-    public function prepareInput(DOMElement $input): DOMElement
+    public function prepareInput(HTMLElement $input): HTMLElement
     {
         $input['type'] = $this->getInputType();
         $input['checked'] = $this->getValue() ? 'checked' : null;
