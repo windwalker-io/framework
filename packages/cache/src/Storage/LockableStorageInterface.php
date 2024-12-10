@@ -6,7 +6,7 @@ namespace Windwalker\Cache\Storage;
 
 interface LockableStorageInterface
 {
-    public function lock(string $key): bool;
+    public function lock(string $key, ?bool &$isNew = null): bool;
 
     public function release(string $key): bool;
 

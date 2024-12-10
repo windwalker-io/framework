@@ -215,7 +215,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @since   2.1
      */
-    public function post(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
+    public function post(Stringable|string $url, mixed $body = null, array $options = []): HttpClientResponse
     {
         return $this->request('POST', $url, $body, $options);
     }
