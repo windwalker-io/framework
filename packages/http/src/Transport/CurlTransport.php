@@ -39,6 +39,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
             [
                 'ignore_curl_error' => false,
                 'allow_empty_status_code' => false,
+                'auto_calc_content_length' => true,
                 'write_stream' => 'php://memory',
                 'timeout' => null,
                 'user_agent' => null,
@@ -305,7 +306,9 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $request = static::prepareHeaders($request, $forceMultipart);
 
         // Add the relevant headers.
-        if (isset($opt[CURLOPT_POSTFIELDS]) && $opt[CURLOPT_POSTFIELDS] !== '') {
+        $calcLength = (bool) ($options['auto_calc_content_length'] ?? true);
+
+        if ($calcLength && isset($opt[CURLOPT_POSTFIELDS]) && $opt[CURLOPT_POSTFIELDS] !== '') {
             $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
         }
 
@@ -333,7 +336,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $opt[CURLOPT_RETURNTRANSFER] = true;
 
         // Override the Expect header to prevent cURL from confusing itself in its own stupidity.
-        // Link: http://the-stickman.com/web-development/php-and-curl-disabling-100-continue-header/
+        // @see https://stackoverflow.com/questions/14158675/how-can-i-stop-curl-from-using-100-continue
         $opt[CURLOPT_HTTPHEADER][] = 'Expect:';
 
         /*
