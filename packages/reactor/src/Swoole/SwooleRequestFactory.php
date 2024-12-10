@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\WebSocket\Frame;
 use Windwalker\Http\Factory\ServerRequestFactory;
-use Windwalker\Http\Helper\MultipartHelper;
+use Windwalker\Http\Helper\MultipartParser;
 use Windwalker\Http\HttpParameters;
 use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\SafeJson;
@@ -56,7 +56,7 @@ class SwooleRequestFactory
             if (str_contains($type, 'application/x-www-form-urlencoded')) {
                 parse_str($body, $decodedBody);
             } elseif (str_contains($type, 'multipart/form-data')) {
-                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body));
+                [$decodedBody, $decodedFiles] = array_values(MultipartParser::parseFormData($body));
             } elseif (str_contains($type, 'application/json')) {
                 $decodedBody = new SafeJson($body, true, 512, JSON_THROW_ON_ERROR);
             }

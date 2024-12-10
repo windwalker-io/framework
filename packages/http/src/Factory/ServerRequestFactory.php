@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use UnexpectedValueException;
-use Windwalker\Http\Helper\MultipartHelper;
+use Windwalker\Http\Helper\MultipartParser;
 use Windwalker\Http\HttpParameters;
 use Windwalker\Http\Request\RequestBaseUri;
 use Windwalker\Http\Request\ServerRequest;
@@ -74,7 +74,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         $server = static::prepareServers($server);
         $headers = static::prepareHeaders($server);
 
-        $body = new PhpInputStream();
+        $body = PhpInputStream::getInstance();
 
         $method = $server['REQUEST_METHOD'] ?? 'GET';
 
@@ -91,7 +91,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             if (str_contains($type, 'application/x-www-form-urlencoded')) {
                 parse_str($body->__toString(), $decodedBody);
             } elseif (str_contains($type, 'multipart/form-data')) {
-                [$decodedBody, $decodedFiles] = array_values(MultipartHelper::parseFormData($body->__toString()));
+                [$decodedBody, $decodedFiles] = array_values(MultipartParser::parseFormData($body->__toString()));
             } elseif (str_contains($type, 'application/json')) {
                 $decodedBody = new SafeJson($body->__toString(), true, 512, JSON_THROW_ON_ERROR);
             }

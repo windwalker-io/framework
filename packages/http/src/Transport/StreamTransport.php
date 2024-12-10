@@ -12,7 +12,7 @@ use UnexpectedValueException;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\File\HttpUploadFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
-use Windwalker\Http\Helper\MultipartHelper;
+use Windwalker\Http\Helper\MultipartParser;
 use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Stream\RequestBodyStream;
@@ -129,9 +129,9 @@ class StreamTransport extends AbstractTransport
 
         if ($forceMultipart || str_starts_with($contentType, HttpClientInterface::MULTIPART_FORMDATA)) {
             if (is_array($data)) {
-                $boundary = MultipartHelper::createBoundary();
+                $boundary = MultipartParser::createBoundary();
 
-                $data = MultipartHelper::toFormData($boundary, $data);
+                $data = MultipartParser::toFormData($boundary, $data);
 
                 $request = $request->withHeader('Content-Type', 'multipart/form-data; boundary=' . $boundary);
             }

@@ -12,8 +12,10 @@ use function Windwalker\uid;
 
 /**
  * The MultipartHelper class.
+ *
+ * @internal
  */
-class MultipartHelper
+class MultipartParser
 {
     /**
      * @param  string  $boundary
@@ -94,8 +96,6 @@ class MultipartHelper
     }
 
     /**
-     * parseFormData
-     *
      * @param  string  $input
      *
      * @return array

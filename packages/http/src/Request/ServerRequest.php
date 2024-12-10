@@ -111,7 +111,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
         }
 
         if ($body === 'php://input') {
-            $body = new PhpInputStream();
+            $body = PhpInputStream::getInstance();
         }
 
         $this->serverParams = $serverParams;
