@@ -13,6 +13,7 @@ use Windwalker\Http\Request\Request;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\JsonResponse;
 use Windwalker\Http\Test\Mock\MockTransport;
+use Windwalker\Http\Test\Transport\TestServerExistsTrait;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Promise\Promise;
 use Windwalker\Test\Traits\BaseAssertionTrait;
@@ -30,6 +31,7 @@ use function Windwalker\Uri\uri_prepare;
 class HttpClientTest extends TestCase
 {
     use BaseAssertionTrait;
+    use TestServerExistsTrait;
 
     /**
      * Test instance.
@@ -376,9 +378,7 @@ class HttpClientTest extends TestCase
 
     public function testGetAsync(): void
     {
-        if (!defined('WINDWALKER_TEST_HTTP_URL')) {
-            static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
-        }
+        self::checkTestServerRunningOrSkip();
 
         $http = new HttpClient(['base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/')]);
 
@@ -525,35 +525,53 @@ class HttpClientTest extends TestCase
         );
     }
 
-    /**
-     * Method to test getTransport().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\HttpClient::getTransport
-     * @TODO   Implement testGetTransport().
-     */
-    public function testGetTransport()
+    public function testOptionsMerged(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $http = new HttpClient(
+            [
+                'transport' => [
+                    'root' => true
+                ]
+            ],
+            $transport = new MockTransport()
         );
-    }
 
-    /**
-     * Method to test setTransport().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\HttpClient::setTransport
-     * @TODO   Implement testSetTransport().
-     */
-    public function testSetTransport()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $http->get('.', ['transport' => ['foo' => 'bar']]);
+
+        self::assertEquals(
+            [
+                'root' => true,
+                'files' => null,
+                'foo' => 'bar',
+                'option_merged' => true,
+            ],
+            $transport->receivedOptions
+        );
+
+        $http->request('GET', '.', null, ['transport' => ['foo' => 'bar']]);
+
+        self::assertEquals(
+            [
+                'root' => true,
+                'files' => null,
+                'foo' => 'bar',
+                'option_merged' => true,
+            ],
+            $transport->receivedOptions
+        );
+
+        $http->sendRequest(
+            new Request(),
+            ['foo' => 'bar']
+        );
+
+        self::assertEquals(
+            [
+                'root' => true,
+                'files' => null,
+                'foo' => 'bar',
+            ],
+            $transport->receivedOptions
         );
     }
 }

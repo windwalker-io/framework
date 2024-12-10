@@ -18,12 +18,9 @@ use Windwalker\Http\Transport\AbstractTransport;
  */
 class MockTransport extends AbstractTransport
 {
-    /**
-     * Property request.
-     *
-     * @var  RequestInterface
-     */
-    public $request;
+    public RequestInterface $request;
+
+    public array $receivedOptions = [];
 
     /**
      * Send a request to the server and return a Response object with the response.
@@ -39,6 +36,8 @@ class MockTransport extends AbstractTransport
     public function request(RequestInterface $request, array $options = []): HttpClientResponse
     {
         $this->request = $request;
+
+        $this->receivedOptions = $options;
 
         return $this->doRequest($request, $options);
     }

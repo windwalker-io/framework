@@ -8,7 +8,6 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Transport\AbstractTransport;
 use Windwalker\Stream\Stream;
@@ -25,6 +24,7 @@ use Windwalker\Uri\UriHelper;
 abstract class AbstractTransportTestCase extends TestCase
 {
     use BaseAssertionTrait;
+    use TestServerExistsTrait;
 
     /**
      * Property options.
@@ -49,9 +49,7 @@ abstract class AbstractTransportTestCase extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        if (!defined('WINDWALKER_TEST_HTTP_URL')) {
-            static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
-        }
+        self::checkTestServerRunningOrSkip();
     }
 
     /**
@@ -300,36 +298,14 @@ abstract class AbstractTransportTestCase extends TestCase
         );
     }
 
-    protected function getTestUrl(): Uri
+    protected static function getTestUrl(): Uri
     {
         return new Uri(static::getTestUrlFromConstant());
     }
 
     protected function getHost(): string
     {
-        return $this->getTestUrl()->toString(Uri::HOST | Uri::PORT);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function runTest(): mixed
-    {
-        try {
-            return parent::runTest();
-        } catch (HttpRequestException $e) {
-            if (str_contains($e->getMessage(), 'Connection refused')) {
-                throw new HttpRequestException(
-                    $e->getMessage() . ' - Try run: ' . sprintf(
-                        'php -S %s:%s bin/test-server.php',
-                        $this->getTestUrl()->getHost(),
-                        $this->getTestUrl()->getPort()
-                    )
-                );
-            }
-
-            throw $e;
-        }
+        return static::getTestUrl()->toString(Uri::HOST | Uri::PORT);
     }
 
     /**
