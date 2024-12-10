@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Windwalker\ORM;
 
 use InvalidArgumentException;
+use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
+use Windwalker\ORM\Attributes\UseRealColumns;
 use Windwalker\ORM\Attributes\Mapping;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
@@ -112,12 +114,16 @@ class SelectorQuery extends Query implements EventAwareInterface
 
             $tableName = static::convertClassToTable($className, $alias);
 
-            if (class_exists($className)) {
-                $cols = array_keys($this->orm->getEntityMetadata($className)->getPureColumns());
-            } else {
-                $tbm = $db->getTable($tableName);
+            $loadColsFromDb = !class_exists($className)
+                || (
+                    class_exists($className)
+                    && AttributesAccessor::getFirstAttribute($className, UseRealColumns::class)
+                );
 
-                $cols = $tbm->getColumnNames();
+            if ($loadColsFromDb) {
+                $cols = $db->getTable($tableName)->getColumnNames();
+            } else {
+                $cols = array_keys($this->orm->getEntityMetadata($className)->getPureColumns());
             }
 
             foreach ($cols as $col) {
