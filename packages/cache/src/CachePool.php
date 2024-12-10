@@ -324,17 +324,21 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function call(string $key, callable $handler, DateInterval|int|null $ttl = null): mixed
+    public function call(string $key, callable $handler, DateInterval|int|null $ttl = null, bool $lock = false): mixed
     {
         $storage = $this->storage;
+        $isHit = null;
 
-        if ($storage instanceof LockableStorageInterface) {
-            $storage->lock($key);
+        if ($lock && $storage instanceof LockableStorageInterface) {
+            $storage->lock($key, $isNew);
+            $isHit = !$isNew;
         }
 
         $item = $this->getItem($key);
 
-        if ($item->isHit()) {
+        $isHit ??= $item->isHit();
+
+        if ($isHit) {
             return $this->serializer->unserialize($item->get());
         }
 
@@ -343,7 +347,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
         $this->save($item);
 
-        if ($storage instanceof LockableStorageInterface) {
+        if ($lock && $storage instanceof LockableStorageInterface) {
             $storage->release($key);
         }
 

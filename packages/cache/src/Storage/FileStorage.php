@@ -202,6 +202,12 @@ class FileStorage implements StorageInterface, LockableStorageInterface
     {
         $filename = $this->fetchStreamUri($key);
 
+        if ($this->isLocked($key)) {
+            $fp = $this->lockedResources[$filename];
+
+            return (bool) fwrite($fp, $value);
+        }
+
         return (bool) file_put_contents(
             $filename,
             $value,
@@ -356,19 +362,25 @@ class FileStorage implements StorageInterface, LockableStorageInterface
         return (string) $this->getOption('expiration_format');
     }
 
-    public function lock(string $key): bool
+    public function lock(string $key, ?bool &$isNew = null): bool
     {
         if (!$this->shouldLock()) {
+            $isNew = false;
+
             return true;
         }
 
         if ($this->isLocked($key)) {
+            $isNew = false;
+
             return true;
         }
 
         $filePath = $this->fetchStreamUri($key);
 
-        $this->lockedResources[$filePath] = fopen($filePath, 'rb');
+        $isNew = !file_exists($filePath);
+
+        $this->lockedResources[$filePath] = fopen($filePath, 'cb+');
 
         return flock($this->lockedResources[$filePath], LOCK_EX);
     }

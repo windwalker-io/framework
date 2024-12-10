@@ -29,9 +29,9 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      *
      * @return  DOMElement
      *
-     * @deprecated Use new() instead.
+     * @deprecated  Use HTMLElement::new() instead.
      */
-    #[\Deprecated(message: 'Use HTMLDomFactory::element() instead.')]
+    #[\Deprecated(message: 'Use HTMLElement::new() instead.')]
     public static function create(string $name, array $attributes = [], mixed $content = null): DOMElement
     {
         return DOMElement::create($name, $attributes, $content)->asHTML();

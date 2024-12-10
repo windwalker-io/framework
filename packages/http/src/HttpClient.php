@@ -107,6 +107,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         mixed $body = null,
         array $options = []
     ): HttpClientResponse {
+        $options = Arr::mergeRecursive($this->getOptions(), $options);
 
         if ($url instanceof RequestInterface) {
             $request = $this->hydrateRequest(
@@ -143,6 +144,16 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         if (!$transport::isSupported()) {
             throw new RangeException(get_class($transport) . ' driver not supported.');
+        }
+
+        if (!($options['option_merged'] ?? false)) {
+            $options = Arr::mergeRecursive(
+                $this->getOptions()['transport'] ?? [],
+                [
+                    'files' => $this->getOptions()['files'] ?? null,
+                ],
+                $options,
+            );
         }
 
         return $transport->request($request, $options);
@@ -204,7 +215,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @since   2.1
      */
-    public function post(Stringable|string $url, mixed $body, array $options = []): HttpClientResponse
+    public function post(Stringable|string $url, mixed $body = null, array $options = []): HttpClientResponse
     {
         return $this->request('POST', $url, $body, $options);
     }
@@ -415,10 +426,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         mixed $body = null,
         array $options = []
     ): HttpClientResponse {
+        $options = Arr::mergeRecursive($this->getOptions(), $options);
+
         $request = $this->hydrateRequest(new Request(), $method, $url, $body, $options);
 
         $transportOptions = $options['transport'] ?? [];
         $transportOptions['files'] = $options['files'] ?? null;
+
+        $transportOptions['option_merged'] = true;
 
         $response = $this->sendRequest($request, $transportOptions);
 
