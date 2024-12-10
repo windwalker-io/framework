@@ -12,7 +12,7 @@
     "homepage": "https://github.com/windwalker-io/cache",
     "license": "MIT",
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.1",
         "psr/cache": "^1.0||^2.0||^3.0",
         "psr/simple-cache": "^1.0||^2.0||^3.0",
         "psr/log": "^1.0||^2.0||^3.0",
@@ -53,7 +53,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         }
     },
     "provide": {

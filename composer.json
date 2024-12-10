@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4.1",
         "ext-json": "*",
         "ext-dom": "*",
         "psr/log": "^1.0||^2.0||^3.0",
@@ -27,7 +27,6 @@
         "paragonie/constant_time_encoding": "^2.3",
         "composer/ca-bundle": "^1.2",
         "symfony/options-resolver": "^5.0||^6.0||^7.0",
-        "symfony/polyfill-php83": "^1.27",
         "asika/object-metadata": "^1.0"
     },
     "require-dev": {
@@ -198,7 +197,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2"
+            "php": "8.4.1"
         }
     },
     "extra": {

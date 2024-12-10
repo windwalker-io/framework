@@ -12,7 +12,7 @@
     "homepage": "https://github.com/windwalker-io/authentication",
     "license": "MIT",
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.1",
         "windwalker/utilities": "^4.0"
     },
     "require-dev": {
@@ -42,7 +42,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         }
     }
 }

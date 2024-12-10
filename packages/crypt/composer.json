@@ -14,7 +14,7 @@
     "homepage": "https://github.com/windwalker-io/crypt",
     "license": "MIT",
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.1",
         "paragonie/constant_time_encoding": "^2.3"
     },
     "require-dev": {
@@ -48,7 +48,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         }
     }
 }

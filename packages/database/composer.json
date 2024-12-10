@@ -15,7 +15,7 @@
     "homepage": "https://github.com/windwalker-io/database",
     "license": "MIT",
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.1",
         "windwalker/query": "^4.0",
         "windwalker/event": "^4.0",
         "windwalker/data": "^4.0",
@@ -57,7 +57,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         }
     }
 }

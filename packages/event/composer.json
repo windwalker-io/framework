@@ -14,7 +14,7 @@
     "homepage": "https://github.com/windwalker-io/event",
     "license": "MIT",
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.1",
         "psr/event-dispatcher": "^1.0",
         "windwalker/utilities": "^4.0"
     },
@@ -50,7 +50,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         }
     },
     "provide": {
