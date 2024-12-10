@@ -13,7 +13,7 @@
     "homepage": "https://github.com/windwalker-io/uri",
     "license": "MIT",
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.1",
         "psr/http-message": "^1.0||^2.0",
         "psr/http-factory": "^1.0",
         "windwalker/utilities": "^4.0"
@@ -49,7 +49,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         }
     },
     "provide": {
