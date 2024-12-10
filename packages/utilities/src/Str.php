@@ -8,20 +8,18 @@ use Closure;
 
 /**
  * The StringHelper class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class Str
 {
-    public const CASE_SENSITIVE = true;
+    public const true CASE_SENSITIVE = true;
 
-    public const CASE_INSENSITIVE = false;
+    public const false CASE_INSENSITIVE = false;
 
-    public const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+    public const string ENCODING_DEFAULT_ISO = 'ISO-8859-1';
 
-    public const ENCODING_UTF8 = 'UTF-8';
+    public const string ENCODING_UTF8 = 'UTF-8';
 
-    public const ENCODING_US_ASCII = 'US-ASCII';
+    public const string ENCODING_US_ASCII = 'US-ASCII';
 
     public static function getChar(string $string, int $pos, ?string $encoding = null): string
     {

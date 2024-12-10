@@ -31,18 +31,23 @@ use BadMethodCallException;
  * @method  static mixed  detectOrder($encodingList = null)
  * @method  static string eregReplace(string $pattern, string $replacement, string $string, string $option = 'msr')
  * @method  static string eregiReplace(string $pattern, string $replacement, string $string, string $option = 'msr')
+ * @method  static string trim(string $string, ?string $characters = null, ?string $encoding = null)
+ * @method  static string ltrim(string $string, ?string $characters = null, ?string $encoding = null)
+ * @method  static string rtrim(string $string, ?string $characters = null, ?string $encoding = null)
+ * @method  static string ucfirst(string $string, ?string $encoding = null)
+ * @method  static string lcfirst(string $string, ?string $encoding = null)
  *
  * @since  2.0
  */
 abstract class Utf8String
 {
-    public const CASE_SENSITIVE = true;
+    public const true CASE_SENSITIVE = true;
 
-    public const CASE_INSENSITIVE = false;
+    public const false CASE_INSENSITIVE = false;
 
-    public const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+    public const string ENCODING_DEFAULT_ISO = 'ISO-8859-1';
 
-    public const ENCODING_UTF8 = 'UTF-8';
+    public const string ENCODING_UTF8 = 'UTF-8';
 
     public const ENCODING_US_ASCII = 'US-ASCII';
 
@@ -330,157 +335,6 @@ abstract class Utf8String
         array_splice($ar[0], $start, $length, $rar[0]);
 
         return implode('', $ar[0]);
-    }
-
-    /**
-     * UTF-8 aware replacement for ltrim()
-     *
-     * Strip whitespace (or other characters) from the beginning of a string
-     * You only need to use this if you are supplying the charlist
-     * optional arg and it contains UTF-8 characters. Otherwise ltrim will
-     * work normally on a UTF-8 string
-     *
-     * @param  string  $str       The string to be trimmed
-     * @param  string  $charlist  The optional charlist of additional characters to trim
-     *
-     * @return  string  The trimmed string
-     *
-     * @see     http://www.php.net/ltrim
-     * @since   2.0
-     */
-    public static function ltrim(string $str, ?string $charlist = null): string
-    {
-        if ($charlist === null) {
-            return ltrim($str);
-        }
-
-        if ($charlist === '') {
-            return $str;
-        }
-
-        // quote charlist for use in a characterclass
-        $charlist = preg_replace('!([\\\\\\-\\]\\[/^])!', '\\\${1}', $charlist);
-
-        return preg_replace('/^[' . $charlist . ']+/u', '', $str);
-    }
-
-    /**
-     * UTF-8 aware replacement for rtrim()
-     * Strip whitespace (or other characters) from the end of a string
-     * You only need to use this if you are supplying the charlist
-     * optional arg and it contains UTF-8 characters. Otherwise rtrim will
-     * work normally on a UTF-8 string
-     *
-     * @param  string  $str       The string to be trimmed
-     * @param  string  $charlist  The optional charlist of additional characters to trim
-     *
-     * @return  string  The trimmed string
-     *
-     * @see     http://www.php.net/rtrim
-     * @since   2.0
-     */
-    public static function rtrim(string $str, ?string $charlist = null): string
-    {
-        if ($charlist === null) {
-            return rtrim($str);
-        }
-
-        if ($charlist === '') {
-            return $str;
-        }
-
-        // quote charlist for use in a characterclass
-        $charlist = preg_replace('!([\\\\\\-\\]\\[/^])!', '\\\${1}', $charlist);
-
-        return preg_replace('/[' . $charlist . ']+$/u', '', $str);
-    }
-
-    /**
-     * UTF-8 aware replacement for trim()
-     * Strip whitespace (or other characters) from the beginning and end of a string
-     * Note: you only need to use this if you are supplying the charlist
-     * optional arg and it contains UTF-8 characters. Otherwise trim will
-     * work normally on a UTF-8 string
-     *
-     * @param  string  $str       The string to be trimmed
-     * @param  string  $charlist  The optional charlist of additional characters to trim
-     *
-     * @return  string  The trimmed string
-     *
-     * @see     http://www.php.net/trim
-     * @since   2.0
-     */
-    public static function trim(string $str, ?string $charlist = null): string
-    {
-        if ($charlist === null) {
-            return trim($str);
-        }
-
-        if ($charlist === '') {
-            return $str;
-        }
-
-        return static::ltrim(static::rtrim($str, $charlist), $charlist);
-    }
-
-    /**
-     * UTF-8 aware alternative to ucfirst
-     * Make a string's first character uppercase or all words' first character uppercase
-     *
-     * @param  string       $str  String to be processed
-     * @param  string|null  $encoding
-     *
-     * @return  string  If $delimiter is null, return the string with first character as upper case (if applicable)
-     *                  else consider the string of words separated by the delimiter, apply the ucfirst to each words
-     *                  and return the string with the new delimiter
-     *
-     * @see     http://www.php.net/ucfirst
-     * @since   2.0
-     */
-    public static function ucfirst(string $str, ?string $encoding = null): string
-    {
-        $encoding = $encoding ?? mb_internal_encoding();
-
-        switch (static::strlen($str, $encoding)) {
-            case 0:
-                return '';
-                break;
-            case 1:
-                return static::strtoupper($str, $encoding);
-                break;
-            default:
-                preg_match('/^(.{1})(.*)$/us', $str, $matches);
-
-                return static::strtoupper($matches[1], $encoding) . $matches[2];
-                break;
-        }
-    }
-
-    /**
-     * lcfirst
-     *
-     * @param  string       $str
-     * @param  string|null  $encoding
-     *
-     * @return  string
-     */
-    public static function lcfirst(string $str, ?string $encoding = null): string
-    {
-        $encoding = $encoding ?? mb_internal_encoding();
-
-        switch (static::strlen($str, $encoding)) {
-            case 0:
-                return '';
-                break;
-            case 1:
-                return static::strtolower($str, $encoding);
-                break;
-            default:
-                preg_match('/^(.{1})(.*)$/us', $str, $matches);
-
-                return static::strtolower($matches[1], $encoding) . $matches[2];
-                break;
-        }
     }
 
     /**
