@@ -120,13 +120,13 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
             throw new \LogicException('Please attach Element to a Document before render it.');
         }
 
-        $formatOutputBak = $this->ownerDocument->formatOutput;
-
-        $this->ownerDocument->formatOutput = $formatOutput;
+        // $formatOutputBak = $this->ownerDocument->formatOutput;
+        //
+        // $this->ownerDocument->formatOutput = $formatOutput;
 
         $result = HTML5Factory::saveHtml($this);
 
-        $this->ownerDocument->formatOutput = $formatOutputBak;
+        // $this->ownerDocument->formatOutput = $formatOutputBak;
 
         return $result;
     }

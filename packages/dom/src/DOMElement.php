@@ -407,8 +407,13 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @return  string
      */
+    #[\Deprecated(message: 'Use HTMLElement::buildAttributes() instead.')]
     public static function buildAttributes(array|NativeDOMElement $attributes, ?string $type = null): string
     {
+        if ($type === null || $type === static::HTML) {
+            return HTMLElement::buildAttributes($attributes);
+        }
+
         if ($attributes instanceof NativeDOMElement) {
             $attributes = array_map(
                 fn(DOMAttr $attr) => $attr->value,
