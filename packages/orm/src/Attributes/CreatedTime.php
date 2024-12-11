@@ -41,14 +41,14 @@ class CreatedTime extends CastForSave
 
     protected function getDefaultCaster(): callable
     {
-        return function (mixed $value, ORM $orm, object $entity) {
+        return function (mixed $value, ORM $orm, object $entity, bool $isNew = false) {
             $isNull = $value === null || $orm->getDb()->isNullDate($value);
 
             $mapper = $orm->mapper($entity::class);
 
             if ($isNull) {
                 if ($mapper->getMainKey()) {
-                    if ($mapper->isNew($entity)) {
+                    if ($isNew) {
                         $value = $this->getCurrent();
                     }
                 } else {

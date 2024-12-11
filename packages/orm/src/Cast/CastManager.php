@@ -236,7 +236,7 @@ class CastManager
 
     public function wrapCastCallback(callable $caster, int $options): \Closure
     {
-        return function (mixed $value, ORM $orm, ?object $entity = null) use ($options, $caster) {
+        return function (mixed $value, ORM $orm, ?object $entity = null, bool $isNew = false) use ($options, $caster) {
             if ($value === '' && ($options & Cast::EMPTY_STRING_TO_NULL)) {
                 $value = null;
             }
@@ -252,7 +252,8 @@ class CastManager
                         $value,
                         'value' => $value,
                         'orm' => $orm,
-                        'entity' => $entity
+                        'entity' => $entity,
+                        'isNew' => $isNew
                     ]
                 );
         };

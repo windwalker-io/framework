@@ -32,7 +32,8 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
     BeforeUpdateWhereEvent,
-    EnergizeEvent};
+    EnergizeEvent
+};
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -229,9 +230,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  string           $column
-     * @param  Conditions       $conditions
-     * @param array|string|null $groups
+     * @param  string             $column
+     * @param  Conditions         $conditions
+     * @param  array|string|null  $groups
      *
      * @return  int
      */
@@ -248,9 +249,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  string           $column
-     * @param  Conditions       $conditions
-     * @param array|string|null $groups
+     * @param  string             $column
+     * @param  Conditions         $conditions
+     * @param  array|string|null  $groups
      *
      * @return  float
      */
@@ -304,7 +305,7 @@ class EntityMapper implements EventAwareInterface
         $extra = $event->getExtra();
         $entity = $this->hydrate($fullData, $this->toEntity($source));
 
-        $data = $this->castForSave($this->extract($entity), true, $entity);
+        $data = $this->castForSave($this->extract($entity), true, $entity, true);
 
         $type = BeforeStoreEvent::TYPE_CREATE;
         $event = $this->emitEvent(
@@ -502,9 +503,9 @@ class EntityMapper implements EventAwareInterface
     /**
      * updateMultiple
      *
-     * @param  iterable         $items
-     * @param array|string|null $condFields
-     * @param  int              $options
+     * @param  iterable           $items
+     * @param  array|string|null  $condFields
+     * @param  int                $options
      *
      * @return  StatementInterface[]
      */
@@ -591,9 +592,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable         $items
-     * @param string|array|null $condFields
-     * @param  int              $options
+     * @param  iterable           $items
+     * @param  string|array|null  $condFields
+     * @param  int                $options
      *
      * @return  iterable<T>
      *
@@ -670,9 +671,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  array|object     $item
-     * @param array|string|null $condFields
-     * @param  int              $options
+     * @param  array|object       $item
+     * @param  array|string|null  $condFields
+     * @param  int                $options
      *
      * @return  object|T
      *
@@ -899,9 +900,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  Conditions            $conditions
-     * @param callable|iterable|null $newValue
-     * @param  int                   $options
+     * @param  Conditions              $conditions
+     * @param  callable|iterable|null  $newValue
+     * @param  int                     $options
      *
      * @return  array<T>
      * @throws JsonException
@@ -1435,16 +1436,20 @@ class EntityMapper implements EventAwareInterface
         return $value;
     }
 
-    protected function extractForSave(object|array $data, bool $updateNulls = true): array
+    protected function extractForSave(object|array $data, bool $updateNulls = true, bool $isNew = false): array
     {
         $data = $this->extract($data);
         $entity = $this->toEntity($data);
 
-        return $this->castForSave($data, $updateNulls, $entity);
+        return $this->castForSave($data, $updateNulls, $entity, $isNew);
     }
 
-    protected function castForSave(array $data, bool $updateNulls = true, ?object $entity = null): array
-    {
+    protected function castForSave(
+        array $data,
+        bool $updateNulls = true,
+        ?object $entity = null,
+        bool $isNew = false
+    ): array {
         $entity ??= $this->toEntity($data);
 
         $metadata = $this->getMetadata();
@@ -1459,7 +1464,7 @@ class EntityMapper implements EventAwareInterface
 
             // Handler property attributes
             if ($prop = $metadata->getColumn($field)?->getProperty()) {
-                $value = $this->castProperty($prop, $value, $entity);
+                $value = $this->castProperty($prop, $value, $entity, $isNew);
             }
 
             if (!$updateNulls && $value === null) {
@@ -1514,20 +1519,20 @@ class EntityMapper implements EventAwareInterface
         return $item;
     }
 
-    protected function castProperty(ReflectionProperty $prop, mixed $value, object $entity): mixed
+    protected function castProperty(ReflectionProperty $prop, mixed $value, object $entity, bool $isNew = false): mixed
     {
         $castManager = $this->getMetadata()->getCastManager();
 
         AttributesAccessor::runAttributeIfExists(
             $prop,
             CastForSave::class,
-            function (CastForSave $attr) use ($entity, $castManager, &$value) {
+            function (CastForSave $attr) use ($isNew, $entity, $castManager, &$value) {
                 $caster = $castManager->wrapCastCallback(
                     $castManager->castToCallback($attr->getCaster() ?? $attr, $attr->options ?? 0),
                     $attr->options
                 );
 
-                $value = $caster($value, $this->getORM(), $entity);
+                $value = $caster($value, $this->getORM(), $entity, $isNew);
             },
             ReflectionAttribute::IS_INSTANCEOF
         );
