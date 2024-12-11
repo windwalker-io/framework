@@ -190,7 +190,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function set(string $id, mixed $value, int $options = 0): StoreDefinitionInterface
     {
-        $definition = $this->getDefinition($id);
+        $definition = $this->findDefinition($id, false);
 
         if ($definition && $definition->isProtected()) {
             throw new DefinitionException(
@@ -380,7 +380,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
     public function hasCached(string $id): bool
     {
-        return $this->getDefinition($id)?->getCache() !== null;
+        return $this->findDefinition($id, false)?->getCache() !== null;
     }
 
     /**
@@ -416,7 +416,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function fork(string $id, string $newId, bool $forceNew = false): mixed
     {
-        $raw = clone $this->getDefinition($id);
+        $raw = clone $this->findDefinition($id, true);
 
         $this->storage[$newId] = $raw;
 
@@ -434,6 +434,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function getDefinition(string $id): ?StoreDefinitionInterface
     {
+        return $this->findDefinition($id, true);
+    }
+
+    protected function findDefinition(string $id, bool $serviceAutowire = false): ?StoreDefinitionInterface
+    {
         $id = $this->resolveAlias($id);
 
         if ($this->storage[$id] ?? null) {
@@ -441,7 +446,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         // Get instant service
-        if (class_exists($id) && $service = static::getServiceAttribute(new ReflectionClass($id))) {
+        if ($serviceAutowire && class_exists($id) && $service = static::getServiceAttribute(new ReflectionClass($id))) {
             $definition = new StoreDefinition($id, $this->newInstance($id));
             $definition->providedIn($service->providedIn);
 
@@ -451,7 +456,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         if ($this->parent instanceof static) {
-            $parentDefinition = $this->parent->getDefinition($id);
+            $parentDefinition = $this->parent->findDefinition($id, $serviceAutowire);
 
             // Store parent definition as self
             if ($parentDefinition) {
@@ -481,7 +486,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function clearCache(?string $id = null): void
     {
         if ($id !== null) {
-            $this->getDefinition($id)?->reset();
+            $this->findDefinition($id, false)?->reset();
 
             return;
         }
