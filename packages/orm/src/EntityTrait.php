@@ -11,6 +11,7 @@ use ReflectionProperty;
 use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
 use Windwalker\ORM\Attributes\JsonSerializer;
+use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
@@ -112,7 +113,7 @@ trait EntityTrait
             $prop = new ReflectionProperty($this, $key);
             $attrs = AttributesAccessor::getAttributesFromAny(
                 $prop,
-                JsonSerializer::class,
+                JsonSerializerInterface::class,
                 ReflectionAttribute::IS_INSTANCEOF
             );
 

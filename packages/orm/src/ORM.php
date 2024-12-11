@@ -22,6 +22,8 @@ use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\EntitySetup;
+use Windwalker\ORM\Attributes\JsonArray;
+use Windwalker\ORM\Attributes\JsonObject;
 use Windwalker\ORM\Attributes\ManyToMany;
 use Windwalker\ORM\Attributes\ManyToOne;
 use Windwalker\ORM\Attributes\Mapping;
@@ -133,6 +135,8 @@ class ORM implements EventAwareInterface
         $ar->registerAttribute(AutoIncrement::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(Cast::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(CastNullable::class, Attribute::TARGET_PROPERTY);
+        $ar->registerAttribute(JsonObject::class, Attribute::TARGET_PROPERTY);
+        $ar->registerAttribute(JsonArray::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(Column::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(Mapping::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(PK::class, Attribute::TARGET_PROPERTY);

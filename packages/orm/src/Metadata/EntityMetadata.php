@@ -11,9 +11,10 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionProperty;
+use Windwalker\Attributes\AttributeHandler;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\ORM\Attributes\{Column, Mapping, PK, Table, Watch};
+use Windwalker\ORM\Attributes\{CastAttributeInterface, Column, Mapping, PK, Table, Watch};
 use Windwalker\ORM\Cast\CastManager;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Event\AfterSaveEvent;
@@ -218,6 +219,23 @@ class EntityMetadata implements EventAwareInterface
         );
 
         return $this;
+    }
+
+    public function castByAttribute(AttributeHandler $handler, CastAttributeInterface $castAttribute)
+    {
+        /** @var ReflectionProperty $prop */
+        $prop = $handler->getReflector();
+
+        $column = $this->getColumnByPropertyName($prop->getName());
+
+        $colName = $column ? $column->getName() : $prop->getName();
+
+        $this->cast(
+            $colName,
+            $castAttribute->getHydrate(),
+            $castAttribute->getExtract(),
+            $castAttribute->getOptions()
+        );
     }
 
     public function getMainKey(): ?string

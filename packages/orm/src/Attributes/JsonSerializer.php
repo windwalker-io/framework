@@ -10,7 +10,7 @@ use Windwalker\ORM\Cast\CastInterface;
  * The JsonSerializer class.
  */
 #[\Attribute]
-class JsonSerializer
+class JsonSerializer implements JsonSerializerInterface
 {
     public function __construct(public mixed $handler)
     {
@@ -20,7 +20,7 @@ class JsonSerializer
     {
         $handler = $this->handler;
 
-        if (is_a($handler, CastInterface::class)) {
+        if (is_a($handler, CastInterface::class, true)) {
             $handler = new ($this->handler)();
         }
 
