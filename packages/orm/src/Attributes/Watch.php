@@ -23,7 +23,12 @@ class Watch implements AttributeInterface
 
     public const BEFORE_SAVE = 1 << 0;
 
+    /**
+     * @deprecated Use INCLUDE_CREATE instead.
+     */
     public const ON_CREATE = 1 << 1;
+
+    public const INCLUDE_CREATE = 1 << 1;
 
     public const INCLUDE_UPDATE_WHERE = 1 << 2;
 
