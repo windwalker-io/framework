@@ -35,6 +35,10 @@ return [
             Queue::class => fn (QueueManager $manager) => $manager->get()
         ],
 
+        'loop_end_scripts' => [
+            //
+        ],
+
         'factories' => [
             'instances' => [
                 'sync' => fn (QueueManager $manager) => $manager->createQueue(
