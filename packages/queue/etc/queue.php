@@ -39,6 +39,10 @@ return [
             //
         ],
 
+        'job_end_scripts' => [
+            //
+        ],
+
         'factories' => [
             'instances' => [
                 'sync' => fn (QueueManager $manager) => $manager->createQueue(
