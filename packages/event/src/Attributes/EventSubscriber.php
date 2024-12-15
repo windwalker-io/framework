@@ -14,5 +14,16 @@ use Windwalker\Attributes\AttributeInterface;
 #[Attribute(Attribute::TARGET_CLASS)]
 class EventSubscriber
 {
-    //
+    public static function isSubscriber(object|string $objectOrClass): bool
+    {
+        if ($objectOrClass instanceof \ReflectionClass) {
+            $ref = $objectOrClass;
+        } else {
+            $ref = new \ReflectionClass($objectOrClass);
+        }
+
+        $subscriberAttributes = $ref->getAttributes(self::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+        return count($subscriberAttributes) > 0;
+    }
 }
