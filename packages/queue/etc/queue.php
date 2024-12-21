@@ -12,6 +12,7 @@ use Windwalker\Queue\Driver\ResqueQueueDriver;
 use Windwalker\Queue\Driver\SqsQueueDriver;
 use Windwalker\Queue\Driver\SyncQueueDriver;
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
+use Windwalker\Queue\Failer\NullQueueFailer;
 use Windwalker\Queue\Queue;
 use Windwalker\Queue\QueuePackage;
 
@@ -93,7 +94,8 @@ return [
                 'database' => fn (DatabaseManager $dbManager) => new DatabaseQueueFailer(
                     db: $dbManager->get(),
                     table: 'queue_failed_jobs'
-                )
+                ),
+                'null' => NullQueueFailer::class
             ]
         ],
     ]
