@@ -102,7 +102,14 @@ class IniFormat implements FormatInterface
         return match (gettype($value)) {
             'integer', 'double' => $value,
             'boolean' => $value ? 'true' : 'false',
-            'string' => '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"',
+            'string' => '"' . static::escapeString($value) . '"',
         };
+    }
+
+    protected static function escapeString(string $value): string
+    {
+        $value = str_replace(["\r\n", "\n"], '\\n', $value);
+
+        return str_replace('"', '\\"', $value);
     }
 }

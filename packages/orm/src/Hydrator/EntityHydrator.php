@@ -219,6 +219,10 @@ class EntityHydrator implements FieldHydratorInterface
             try {
                 $value = $hydrator($value, $metadata->getORM(), $entity);
             } catch (Throwable $e) {
+                if ($hydrator instanceof \Closure) {
+                    $hydrator = static::extractCastNameFromClosure($hydrator);
+                }
+
                 $castName = is_object($hydrator) ? $hydrator::class : json_encode($hydrator);
 
                 throw new CastingException(
@@ -259,5 +263,27 @@ class EntityHydrator implements FieldHydratorInterface
         }
 
         return $data;
+    }
+
+    /**
+     * @param  \Closure  $hydrator
+     *
+     * @return  mixed
+     *
+     * @throws \ReflectionException
+     */
+    protected static function extractCastNameFromClosure(\Closure $hydrator): mixed
+    {
+        $ref = new \ReflectionFunction($hydrator);
+
+        if ($caster = $ref->getClosureUsedVariables()['caster'] ?? null) {
+            $ref = new \ReflectionFunction($caster);
+
+            if ($cast = $ref->getClosureUsedVariables()['cast'] ?? null) {
+                $hydrator = $cast;
+            }
+        }
+
+        return $hydrator;
     }
 }

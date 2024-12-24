@@ -13,7 +13,7 @@ use Windwalker\Database\Platform\AbstractPlatform;
 abstract class AbstractMetaManager
 {
     /**
-     * @var string
+     * @var ?string
      */
     protected ?string $name = null;
 
@@ -43,7 +43,7 @@ abstract class AbstractMetaManager
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getName(): ?string
     {

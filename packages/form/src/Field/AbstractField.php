@@ -20,6 +20,7 @@ use Windwalker\Form\FormNormalizer;
 use Windwalker\Form\FormRegistry;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\MarcoableTrait;
 use Windwalker\Utilities\Options\StateAccessTrait;
 use Windwalker\Utilities\Str;
 
@@ -59,6 +60,10 @@ abstract class AbstractField
     use ManageLabelTrait;
     use ManageWrapperTrait;
     use ManageRenderTrait;
+    use MarcoableTrait {
+        __call as callMarco;
+        __callStatic as callMarcoStatic;
+    }
 
     /**
      * Property name.
@@ -618,6 +623,10 @@ abstract class AbstractField
             $v = $this->getAttribute($option);
 
             return $is ? $v !== null && $v !== false : $v;
+        }
+
+        if (static::hasMacro($method)) {
+            return $this->callMarco($method, $args);
         }
 
         return $this->setAttribute($method, $args[0]);

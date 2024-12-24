@@ -73,9 +73,8 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
     public function subscribe(object $subscriber, ?int $priority = null): void
     {
         $ref = new ReflectionObject($subscriber);
-        $subscriberAttributes = $ref->getAttributes(EventSubscriber::class, ReflectionAttribute::IS_INSTANCEOF);
 
-        if (count($subscriberAttributes) > 0) {
+        if (EventSubscriber::isSubscriber($ref)) {
             foreach ($ref->getMethods() as $method) {
                 // Handle ListenTo attributes
                 foreach ($method->getAttributes(ListenTo::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {

@@ -170,7 +170,7 @@ class CastManager
             if (class_exists($cast)) {
                 // Cast interface
                 if (is_subclass_of($cast, CastInterface::class)) {
-                    return static function (mixed $value, ORM $orm) use ($options, $direction, $cast) {
+                    return static function (mixed $value, ORM $orm) use ($cast, $options, $direction) {
                         return $orm->getAttributesResolver()
                             ->createObject($cast)
                             ->$direction($value);
@@ -178,7 +178,7 @@ class CastManager
                 }
 
                 // Pure class
-                return static function (mixed $value, ORM $orm) use ($options, $cast) {
+                return static function (mixed $value, ORM $orm) use ($cast, $options) {
                     if (is_subclass_of($cast, \BackedEnum::class)) {
                         return $cast::wrap($value);
                     }

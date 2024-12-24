@@ -10,14 +10,17 @@ namespace Windwalker\Database\Driver\Pdo;
 class DsnHelper
 {
     /**
-     * extractDsn
-     *
-     * @param  string  $dsn
+     * @param  string       $dsn
+     * @param  string|null  $type
      *
      * @return  array
      */
-    public static function extract(string $dsn): array
+    public static function extract(string $dsn, ?string &$type = null): array
     {
+        if (str_contains($dsn, ':')) {
+            [$type, $dsn] = explode(':', $dsn);
+        }
+
         // Parse DSN to array
         $dsn = str_replace(';', "\n", $dsn);
 

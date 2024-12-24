@@ -17,7 +17,7 @@ use Masterminds\HTML5;
  * @method static DOMElement input(array $attrs = [], $content = null)
  * @method static DOMElement button(array $attrs = [], $content = null)
  *
- * @deprecated Use HTML5Factory instead.
+ * @deprecated  Use HTML5Factory instead.
  */
 class HTMLFactory extends DOMFactory
 {

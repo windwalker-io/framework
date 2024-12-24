@@ -315,10 +315,10 @@ class ComponentTagCompiler
         foreach ($properties as $property) {
             $attrs = $property->getAttributes(Prop::class, \ReflectionAttribute::IS_INSTANCEOF);
 
-            foreach ($attrs as $attr) {
+            if ($attrs) {
                 $propName = StrNormalize::toKebabCase($property->getName());
 
-                if ($attributes[$propName] ?? null) {
+                if (array_key_exists($propName, $attributes)) {
                     $props[$property->getName()] = $attributes[$propName];
 
                     unset($attributes[$propName]);
