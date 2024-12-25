@@ -76,21 +76,23 @@ class Index
 
         foreach ($columns as $key => $column) {
             if (!$column instanceof Column) {
+                $colName = $column;
+
                 if (is_array($column)) {
-                    $column = $key;
+                    $colName = $key;
                 }
 
-                [$colName, $subParts] = DataType::extract($column);
+                [$colName, $subParts] = DataType::extract($colName);
+
+                $erratas = $column['erratas'] ?? [];
 
                 $column = new Column($colName);
 
                 if ($subParts) {
-                    $column->erratas(
-                        [
-                            'sub_parts' => $subParts,
-                        ]
-                    );
+                    $erratas['sub_parts'] = $subParts;
                 }
+
+                $column->erratas($erratas);
             }
 
             $cols[$column->getColumnName()] = $column;
