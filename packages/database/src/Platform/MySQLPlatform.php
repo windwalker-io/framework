@@ -383,7 +383,7 @@ class MySQLPlatform extends AbstractPlatform
     {
         $indexGroup = $this->loadIndexesStatement($table, $schema)
             ->all()
-            ->group('INDEX_NAME');
+            ->groupBy('INDEX_NAME');
 
         $indexes = [];
 
@@ -407,7 +407,9 @@ class MySQLPlatform extends AbstractPlatform
             foreach ($keys as $key) {
                 $index['columns'][$key['COLUMN_NAME']] = [
                     'column_name' => $key['COLUMN_NAME'],
-                    'sub_part' => $key['SUB_PART'],
+                    'erratas' => [
+                        'sub_parts' => $key['SUB_PART'],
+                    ]
                 ];
             }
 
