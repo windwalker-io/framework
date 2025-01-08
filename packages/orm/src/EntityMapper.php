@@ -1420,6 +1420,11 @@ class EntityMapper implements EventAwareInterface
         $metadata = $this->getMetadata();
 
         $col = $metadata->getColumn($key);
+
+        if (!$col) {
+            return $value;
+        }
+
         $prop = $col->getProperty();
 
         // UUID Binary
