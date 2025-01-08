@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Iterator;
 
 use InvalidArgumentException;
-use Serializable;
 use SplPriorityQueue;
 
 /**
@@ -37,29 +36,27 @@ class PriorityQueue extends SplPriorityQueue
     /**
      * Class init.
      *
-     * @param  array|SplPriorityQueue  $array
+     * @param  array|SplPriorityQueue  $items
      * @param  int                     $priority
      */
-    public function __construct($array = [], $priority = self::NORMAL)
+    public function __construct(array|SplPriorityQueue $items = [], mixed $priority = self::NORMAL)
     {
-        if ($array instanceof SplPriorityQueue) {
-            $this->merge($array);
+        if ($items instanceof SplPriorityQueue) {
+            $this->merge($items);
         } else {
-            $this->join($array, $priority);
+            $this->join($items, $priority);
         }
     }
 
     /**
-     * bind
-     *
-     * @param  array  $array
+     * @param  array  $items
      * @param  int    $priority
      *
      * @return  static
      */
-    public function join(array $array = [], $priority = self::NORMAL): PriorityQueue
+    public function join(iterable $items = [], mixed $priority = self::NORMAL): PriorityQueue
     {
-        foreach ($array as $item) {
+        foreach ($items as $item) {
             $this->insert($item, $priority);
         }
 
@@ -67,8 +64,6 @@ class PriorityQueue extends SplPriorityQueue
     }
 
     /**
-     * register
-     *
      * @param  array  $items
      *
      * @return  static
@@ -83,17 +78,9 @@ class PriorityQueue extends SplPriorityQueue
     }
 
     /**
-     * Insert a value with a given priority
-     *
-     * Utilizes {@var $serial} to ensure that values of equal priority are
-     * emitted in the same order in which they are inserted.
-     *
-     * @param  mixed  $datum
-     * @param  mixed  $priority
-     *
-     * @return void
+     * @inheritDoc
      */
-    public function insert($datum, $priority): void
+    public function insert(mixed $value, mixed $priority): true
     {
         if (!is_array($priority)) {
             $priority = [$priority, $this->serial--];
@@ -101,7 +88,7 @@ class PriorityQueue extends SplPriorityQueue
             $priority[] = $this->serial--;
         }
 
-        parent::insert($datum, $priority);
+        return parent::insert($value, $priority);
     }
 
     /**
@@ -157,14 +144,10 @@ class PriorityQueue extends SplPriorityQueue
     }
 
     /**
-     * merge
-     *
      * @return static;
      */
-    public function merge(): PriorityQueue
+    public function merge(mixed ...$args): static
     {
-        $args = func_get_args();
-
         foreach ($args as $arg) {
             if (!($arg instanceof SplPriorityQueue)) {
                 throw new InvalidArgumentException('Only \SplPriorityQueue can merge.');
@@ -183,14 +166,9 @@ class PriorityQueue extends SplPriorityQueue
     }
 
     /**
-     * compare
-     *
-     * @param  mixed  $priority1
-     * @param  mixed  $priority2
-     *
-     * @return  int
+     * @inheritDoc
      */
-    public function compare($priority1, $priority2): int
+    public function compare(mixed $priority1, mixed $priority2): int
     {
         $p1Count = count($priority1);
         $p2Count = count($priority2);
