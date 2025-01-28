@@ -181,7 +181,9 @@ class MySQLPlatform extends AbstractPlatform
     {
         $columns = [];
 
-        $checks = $this->isMariaDB() ? $this->listCheckConstraints($schema, $table) : collect();
+        $isMariaDB = $this->isMariaDB();
+
+        $checks = $isMariaDB ? $this->listCheckConstraints($schema, $table) : collect();
 
         foreach ($this->loadColumnsStatement($table, $schema) as $row) {
             $erratas = [];
@@ -218,28 +220,39 @@ class MySQLPlatform extends AbstractPlatform
                 $erratas['on_update'] = 'current_timestamp()';
             }
 
+            // Nullable
+            $isNullable = 'YES' === $row['IS_NULLABLE'];
+
             // Is JSON
-            if ($this->isMariaDB()) {
+            if ($isMariaDB) {
                 $erratas['is_json'] = str_contains($checks[$row['COLUMN_NAME']] ?? '', 'json_valid');
+
+                if (
+                    is_string($row['COLUMN_DEFAULT'])
+                ) {
+                    // After MariaDB 10.2.7, the COLUMN_DEFAULT will surround with quotes if is string type.
+                    // @see https://mariadb.com/kb/en/information-schema-columns-table/
+                    if (
+                        Str::startsWith($row['COLUMN_DEFAULT'], "'")
+                        && Str::endsWith($row['COLUMN_DEFAULT'], "'")
+                    ) {
+                        $row['COLUMN_DEFAULT'] = Escaper::stripQuote($row['COLUMN_DEFAULT']);
+                    }
+
+                    // MariaDB may return NULL value as `NULL` string. We convert it to real NULL
+                    if ($row['COLUMN_DEFAULT'] === 'NULL' && $isNullable) {
+                        $row['COLUMN_DEFAULT'] = null;
+                    }
+                }
             } else {
                 $erratas['is_json'] = strtolower($row['DATA_TYPE']) === 'json';
-            }
-
-            // After MariaDB 10.2.7, the COLUMN_DEFAULT will surround with quotes if is string type.
-            // @see https://mariadb.com/kb/en/information-schema-columns-table/
-            if (
-                is_string($row['COLUMN_DEFAULT'])
-                && Str::startsWith($row['COLUMN_DEFAULT'], "'")
-                && Str::endsWith($row['COLUMN_DEFAULT'], "'")
-            ) {
-                $row['COLUMN_DEFAULT'] = Escaper::stripQuote($row['COLUMN_DEFAULT']);
             }
 
             $columns[$row['COLUMN_NAME']] = [
                 'column_name' => $row['COLUMN_NAME'],
                 'ordinal_position' => $row['ORDINAL_POSITION'],
                 'column_default' => $row['COLUMN_DEFAULT'],
-                'is_nullable' => ('YES' === $row['IS_NULLABLE']),
+                'is_nullable' => $isNullable,
                 'data_type' => $row['DATA_TYPE'],
                 'character_maximum_length' => $row['CHARACTER_MAXIMUM_LENGTH'],
                 'character_octet_length' => $row['CHARACTER_OCTET_LENGTH'],
@@ -519,6 +532,11 @@ class MySQLPlatform extends AbstractPlatform
         // }
 
         foreach ($schema->getConstraints() as $constraint) {
+            // Should not set constraint name as `PRIMARY`
+            if ($constraint->constraintName === 'PRIMARY') {
+                throw new \RuntimeException('Should not set constraint name as `PRIMARY`.');
+            }
+
             $this->addConstraint($table->getName(), $constraint, $table->schemaName);
         }
 
