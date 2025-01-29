@@ -209,12 +209,13 @@ class StrNormalize
     {
         $class = trim($class, '\\');
 
-        $class = (string) str_replace(['\\', '/'], ' ', $class);
+        $segments = preg_split('#/|\\\\#', $class);
+        $segments = array_filter($segments);
+        $segments = array_map(
+            StrNormalize::toPascalCase(...),
+            $segments
+        );
 
-        $class = Str::collapseWhitespaces($class);
-
-        $class = ucwords($class);
-
-        return str_replace(' ', '\\', $class);
+        return implode('\\', $segments);
     }
 }
