@@ -23,7 +23,7 @@ class NoResultException extends \UnexpectedValueException
     public function __construct(
         protected string $table,
         protected mixed $conditions,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         parent::__construct(
             "Destination {$this->getTarget()} not found.",

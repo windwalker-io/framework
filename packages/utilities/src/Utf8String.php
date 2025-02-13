@@ -203,7 +203,7 @@ abstract class Utf8String
      * @param  string       $str     The string to process
      * @param  string       $mask    The mask
      * @param  int          $start   Optional starting character position (in characters)
-     * @param  int          $length  Optional length
+     * @param  int|null     $length  Optional length
      *
      * @param  string|null  $encoding
      *
@@ -216,7 +216,7 @@ abstract class Utf8String
         string $str,
         string $mask,
         int $start = 0,
-        int $length = null,
+        ?int $length = null,
         ?string $encoding = null
     ): int {
         $encoding = $encoding ?? mb_internal_encoding();
@@ -265,7 +265,7 @@ abstract class Utf8String
      * @param  string       $str     The haystack
      * @param  string       $mask    The mask
      * @param  int          $start   Start optional
-     * @param  int          $length  Length optional
+     * @param  int|null     $length  Length optional
      *
      * @param  string|null  $encoding
      *
@@ -278,7 +278,7 @@ abstract class Utf8String
         string $str,
         string $mask,
         int $start = 0,
-        int $length = null,
+        ?int $length = null,
         ?string $encoding = null
     ): int {
         $encoding = $encoding ?? mb_internal_encoding();

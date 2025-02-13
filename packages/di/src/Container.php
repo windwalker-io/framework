@@ -550,7 +550,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @throws DefinitionException
      * @since   3.0
      */
-    public function prepareSharedObject(string $class, Closure $extend = null, int $options = 0): static
+    public function prepareSharedObject(string $class, ?Closure $extend = null, int $options = 0): static
     {
         return $this->prepareObject($class, $extend, $options | static::SHARED);
     }

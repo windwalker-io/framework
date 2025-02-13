@@ -160,11 +160,11 @@ trait ArrayLoopTrait
     /**
      * findFirst
      *
-     * @param  callable  $callback
+     * @param  callable|null  $callback
      *
      * @return  mixed
      */
-    public function findFirst(callable $callback = null): mixed
+    public function findFirst(?callable $callback = null): mixed
     {
         return Arr::findFirst($this->storage, $callback);
     }

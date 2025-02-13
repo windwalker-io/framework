@@ -70,13 +70,13 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Class init.
      *
-     * @param  string|StreamInterface|UriInterface  $uri      The uri target of this request.
-     * @param  string                               $method   The request method.
-     * @param  string|StreamInterface               $body     The request body.
-     * @param  array                                $headers  The request headers.
+     * @param  string|StreamInterface|UriInterface|null  $uri      The uri target of this request.
+     * @param  string                                    $method   The request method.
+     * @param  string|StreamInterface                    $body     The request body.
+     * @param  array                                     $headers  The request headers.
      */
     public function __construct(
-        StreamInterface|UriInterface|string $uri = null,
+        StreamInterface|UriInterface|string|null $uri = null,
         ?string $method = null,
         $body = 'php://memory',
         array $headers = []

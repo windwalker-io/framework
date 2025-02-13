@@ -685,7 +685,7 @@ class Uri implements UriInterface
      *
      * @since   2.0
      */
-    public function getVar(string $name, string $default = null): mixed
+    public function getVar(string $name, ?string $default = null): mixed
     {
         return $this->vars[$name] ?? $default;
     }

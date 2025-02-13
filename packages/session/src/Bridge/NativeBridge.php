@@ -30,7 +30,7 @@ class NativeBridge implements BridgeInterface
      * @param  array                  $options
      * @param  HandlerInterface|null  $handler
      */
-    public function __construct(array $options = [], HandlerInterface $handler = null)
+    public function __construct(array $options = [], ?HandlerInterface $handler = null)
     {
         $this->handler = $handler ?? new NativeHandler();
 

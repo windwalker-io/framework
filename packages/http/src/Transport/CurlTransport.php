@@ -263,12 +263,12 @@ class CurlTransport extends AbstractTransport
     }
 
     /**
-     * @param RequestInterface $request
-     * @param bool             $forceMultipart
+     * @param RequestInterface  $request
+     * @param  bool|null        $forceMultipart
      *
      * @return  RequestInterface
      */
-    public static function prepareBody(RequestInterface $request, bool &$forceMultipart = null): RequestInterface
+    public static function prepareBody(RequestInterface $request, ?bool &$forceMultipart = null): RequestInterface
     {
         $body = $request->getBody();
 

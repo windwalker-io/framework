@@ -102,7 +102,7 @@ class Output implements OutputInterface
      *
      * @see     header()
      */
-    public function header(string $string, bool $replace = true, int $code = null): static
+    public function header(string $string, bool $replace = true, ?int $code = null): static
     {
         header($string, $replace, (int) $code);
 

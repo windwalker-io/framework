@@ -108,7 +108,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
         array $headers = [],
         array $cookies = [],
         array $queryParams = [],
-        array $parsedBody = null,
+        ?array $parsedBody = null,
         string $protocol = '1.1'
     ) {
         if (!ServerHelper::validateUploadedFiles($uploadedFiles)) {

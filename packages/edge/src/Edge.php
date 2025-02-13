@@ -106,9 +106,9 @@ class Edge
      * @param  EdgeCompilerInterface|null  $compiler
      */
     public function __construct(
-        EdgeLoaderInterface $loader = null,
-        EdgeCacheInterface $cache = null,
-        EdgeCompilerInterface $compiler = null
+        ?EdgeLoaderInterface $loader = null,
+        ?EdgeCacheInterface $cache = null,
+        ?EdgeCompilerInterface $compiler = null
     ) {
         $this->loader = $loader ?: new EdgeStringLoader();
         $this->compiler = $compiler ?: new EdgeCompiler();

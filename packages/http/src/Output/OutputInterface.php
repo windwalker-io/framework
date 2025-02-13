@@ -45,7 +45,7 @@ interface OutputInterface
      *
      * @see     header()
      */
-    public function header(string $string, bool $replace = true, int $code = null): static;
+    public function header(string $string, bool $replace = true, ?int $code = null): static;
 
     /**
      * Is output stream still available.

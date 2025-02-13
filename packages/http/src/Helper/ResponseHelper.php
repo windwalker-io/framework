@@ -215,7 +215,7 @@ abstract class ResponseHelper
      *
      * @return  void
      */
-    public static function sendAttachment(mixed $source, ResponseInterface $response = null, array $options = []): void
+    public static function sendAttachment(mixed $source, ?ResponseInterface $response = null, array $options = []): void
     {
         $stream = $source;
 

@@ -23,11 +23,11 @@ trait ArrayAccessTrait
     /**
      * first
      *
-     * @param  callable  $conditions
+     * @param  callable|null  $conditions
      *
      * @return  mixed
      */
-    public function first(callable $conditions = null): mixed
+    public function first(?callable $conditions = null): mixed
     {
         if ($conditions) {
             foreach ($this->storage as $key => $value) {
@@ -45,11 +45,11 @@ trait ArrayAccessTrait
     /**
      * last
      *
-     * @param  callable  $conditions
+     * @param  callable|null  $conditions
      *
      * @return  mixed
      */
-    public function last(callable $conditions = null): mixed
+    public function last(?callable $conditions = null): mixed
     {
         if ($conditions) {
             $prev = null;

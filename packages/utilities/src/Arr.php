@@ -507,12 +507,12 @@ abstract class Arr
     /**
      * findFirst
      *
-     * @param  array     $data
-     * @param  callable  $callback
+     * @param  array          $data
+     * @param  callable|null  $callback
      *
      * @return  mixed
      */
-    public static function findFirst(array $data, callable $callback = null): mixed
+    public static function findFirst(array $data, ?callable $callback = null): mixed
     {
         $results = static::find($data, $callback, false, 0, 1);
 

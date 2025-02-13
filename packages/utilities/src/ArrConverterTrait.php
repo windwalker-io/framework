@@ -95,16 +95,16 @@ trait ArrConverterTrait
     /**
      * Pivot $origin['prefix']['xxx'] to $target['prefix_xxx'].
      *
-     * @param  array|object  $origin  Origin array to pivot.
-     * @param  string        $prefix  A prefix text.
-     * @param  array|object  $target  A target array to store pivoted value.
+     * @param  array|object       $origin  Origin array to pivot.
+     * @param  string             $prefix  A prefix text.
+     * @param  array|object|null  $target  A target array to store pivoted value.
      *
      * @return  array  Pivoted array.
      */
     public static function extractPrefix(
         array|object $origin,
         string $prefix,
-        array|object $target = null
+        array|object|null $target = null
     ): object|array {
         $target = is_object($target) ? $target : (array) $target;
 

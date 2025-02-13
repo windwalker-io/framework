@@ -20,7 +20,7 @@ class DecoratorStream implements StreamInterface
 {
     protected StreamInterface $stream;
 
-    public function __construct(StreamInterface $target = null)
+    public function __construct(?StreamInterface $target = null)
     {
         if ($target) {
             $this->stream = $target;

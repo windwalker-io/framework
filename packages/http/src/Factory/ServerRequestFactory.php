@@ -74,7 +74,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     public static function createFromGlobals(
         array|HttpParameters $server = [],
         array $query = [],
-        array $parsedBody = null,
+        ?array $parsedBody = null,
         array $cookies = [],
         array $files = []
     ): ServerRequestInterface {

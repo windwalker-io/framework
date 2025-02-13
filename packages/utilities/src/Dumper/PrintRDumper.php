@@ -28,7 +28,7 @@ class PrintRDumper extends AbstractDumper
      * @param  int                            $flags    A bit field of static::DUMP_* constants to fine tune dumps
      *                                                  representation
      */
-    public function __construct($output = null, string $charset = null, int $flags = 0)
+    public function __construct($output = null, ?string $charset = null, int $flags = 0)
     {
         parent::__construct($output, $charset, $flags);
     }

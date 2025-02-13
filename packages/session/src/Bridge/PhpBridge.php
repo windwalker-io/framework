@@ -60,7 +60,7 @@ class PhpBridge implements BridgeInterface
      */
     public function __construct(
         array $options = [],
-        HandlerInterface $handler = null,
+        ?HandlerInterface $handler = null,
         ?FormatInterface $serializer = null
     ) {
         $this->handler = $handler ?? new NativeHandler();
