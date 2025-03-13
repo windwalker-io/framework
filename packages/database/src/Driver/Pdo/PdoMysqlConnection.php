@@ -27,6 +27,8 @@ class PdoMysqlConnection extends AbstractPdoConnection
             $options['driverOptions'][\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
         }
 
+        $options['driverOptions'][\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = false;
+
         return $options;
     }
 }
