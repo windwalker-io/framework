@@ -219,11 +219,49 @@ class Constraint
         return $this->columns;
     }
 
+    public function getFirstColumn(): Column
+    {
+        return array_values($this->columns)[0];
+    }
+
+    /**
+     * @return  string[]
+     */
+    public function getColumnNames(): array
+    {
+        return array_column($this->columns, 'columnName');
+    }
+
+    public function columnsCount(): int
+    {
+        return count($this->columns);
+    }
+
     /**
      * @return Column[]
      */
     public function getReferencedColumns(): array
     {
         return $this->referencedColumns;
+    }
+
+    public function isPrimary(): bool
+    {
+        return $this->constraintType === static::TYPE_PRIMARY_KEY;
+    }
+
+    public function isUnique(): bool
+    {
+        return $this->constraintType === static::TYPE_UNIQUE;
+    }
+
+    public function isForeignKey(): bool
+    {
+        return $this->constraintType === static::TYPE_FOREIGN_KEY;
+    }
+
+    public function isCheck(): bool
+    {
+        return $this->constraintType === static::TYPE_CHECK;
     }
 }

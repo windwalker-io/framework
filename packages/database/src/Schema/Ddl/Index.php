@@ -110,4 +110,22 @@ class Index
     {
         return $this->columns;
     }
+
+    public function getFirstColumn(): Column
+    {
+        return array_values($this->columns)[0];
+    }
+
+    /**
+     * @return  string[]
+     */
+    public function getColumnNames(): array
+    {
+        return array_column($this->columns, 'columnName');
+    }
+
+    public function columnsCount(): int
+    {
+        return count($this->columns);
+    }
 }
