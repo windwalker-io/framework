@@ -883,8 +883,19 @@ abstract class Arr
      */
     public static function arrayEquals(array $a, array $b): bool
     {
-        return count($a) === count($b)
-            && array_diff($a, $b) === array_diff($b, $a);
+        $a = array_map(static::serializeForCompare(...), $a);
+        $b = array_map(static::serializeForCompare(...), $b);
+
+        return array_count_values($a) === array_count_values($b);
+    }
+
+    private static function serializeForCompare(mixed $value): string
+    {
+        if (is_object($value)) {
+            return spl_object_hash($value);
+        }
+
+        return serialize($value);
     }
 
     /**

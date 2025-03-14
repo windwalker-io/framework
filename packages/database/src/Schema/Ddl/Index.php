@@ -28,7 +28,7 @@ class Index
     /**
      * @var Column[]
      */
-    protected array $columns = [];
+    public array $columns = [];
 
     /**
      * Index constructor.
