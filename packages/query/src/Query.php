@@ -1835,8 +1835,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $query = clone $this;
             $query->offset($offset)->limit($perPage);
 
-            $query->debug();
-
             foreach ($query->getIterator($class, $args) as $item) {
                 yield $item;
 
