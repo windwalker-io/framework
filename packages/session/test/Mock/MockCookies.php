@@ -15,19 +15,14 @@ class MockCookies extends Cookies
 
     public array $cookieData = [];
 
-    /**
-     * set
-     *
-     * @param  string  $name
-     * @param  string  $value
-     *
-     * @return  bool
-     */
-    public function set(string $name, string $value): bool
+    public function set(string $name, string $value, ?array $options = null): bool
     {
         $this->cookies[$name] = $value;
 
-        $opt = $this->getOptions();
+        $opt = [
+            ...$this->getOptions(),
+            ...($options ?? [])
+        ];
         $opt['value'] = $value;
         $this->cookieData[$name] = $opt;
 
