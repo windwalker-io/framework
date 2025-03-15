@@ -14,6 +14,7 @@ use Windwalker\Database\Schema\Ddl\Index;
  * The Schema class.
  *
  * @method  Column  bigint(string $name)
+ * @method  Column  binary(string $name)
  * @method  Column  bit(string $name)
  * @method  Column  bool(string $name)
  * @method  Column  char(string $name)
