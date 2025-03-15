@@ -13,7 +13,6 @@ use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\ORM\Attributes\UseRealColumns;
-use Windwalker\ORM\Attributes\Mapping;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
 use Windwalker\Query\Clause\AsClause;
@@ -39,6 +38,8 @@ class SelectorQuery extends Query implements EventAwareInterface
     protected ?string $groupDivider = null;
 
     public static bool $emptyCollectionAsNull = true;
+
+    protected bool $loadColumnsFromDb = false;
 
     /**
      * @inheritDoc
@@ -96,8 +97,11 @@ class SelectorQuery extends Query implements EventAwareInterface
         );
     }
 
-    public function autoSelections(string $divider = '.', ?array &$columns = null): static
-    {
+    public function autoSelections(
+        string $divider = '.',
+        ?array &$columns = null,
+        ?bool $loadColumnsFromDb = null
+    ): static {
         $columns ??= [];
 
         /** @var array<int, AsClause> $tables */
@@ -114,13 +118,9 @@ class SelectorQuery extends Query implements EventAwareInterface
 
             $tableName = static::convertClassToTable($className, $alias);
 
-            $loadColsFromDb = !class_exists($className)
-                || (
-                    class_exists($className)
-                    && AttributesAccessor::getFirstAttribute($className, UseRealColumns::class)
-                );
+            $loadColumnsFromDb ??= $this->shouldLoadColumnsFromDb($className);
 
-            if ($loadColsFromDb) {
+            if ($loadColumnsFromDb) {
                 $cols = $db->getTableManager($tableName)->getColumnNames();
             } else {
                 $cols = array_keys($this->orm->getEntityMetadata($className)->getPureColumns());
@@ -155,9 +155,9 @@ class SelectorQuery extends Query implements EventAwareInterface
         return $this;
     }
 
-    public function groupByJoins(string $divider = '.'): static
+    public function groupByJoins(string $divider = '.', ?bool $loadColumnsFromDb = null): static
     {
-        return $this->autoSelections($divider)
+        return $this->autoSelections($divider, loadColumnsFromDb: $loadColumnsFromDb)
             ->groupByDivider($divider);
     }
 
@@ -186,7 +186,7 @@ class SelectorQuery extends Query implements EventAwareInterface
 
         if (static::$emptyCollectionAsNull) {
             foreach ($subItems as $prefix => $subItem) {
-                $subItem = $subItem->filter(fn ($v) => $v !== null);
+                $subItem = $subItem->filter(fn($v) => $v !== null);
 
                 if ($subItem->isEmpty()) {
                     $item[$prefix] = null;
@@ -353,5 +353,30 @@ class SelectorQuery extends Query implements EventAwareInterface
     public function createSubQuery(): static
     {
         return new static($this->orm, $this->grammar);
+    }
+
+    public function shouldLoadColumnsFromDb(string $className): bool
+    {
+        if ($this->loadColumnsFromDb) {
+            return true;
+        }
+
+        return !class_exists($className)
+            || (
+                class_exists($className)
+                && AttributesAccessor::getFirstAttribute($className, UseRealColumns::class)
+            );
+    }
+
+    public function isLoadColumnsFromDb(): bool
+    {
+        return $this->loadColumnsFromDb;
+    }
+
+    public function loadColumnsFromDb(bool $fetchColumnsFromDb = true): static
+    {
+        $this->loadColumnsFromDb = $fetchColumnsFromDb;
+
+        return $this;
     }
 }
