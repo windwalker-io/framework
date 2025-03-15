@@ -159,8 +159,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
     public function __destruct()
     {
         // static::$baseConn->exec('DROP DATABASE ' . static::qn(static::$dbname));
-
-        static::$baseConn = null;
+        // static::$baseConn = null;
     }
 
     /**

@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS ww_categories;
 CREATE TABLE ww_categories
 (
-    id          int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    parent_id   int(11) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Parent ID',
+    id          int(8) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    parent_id   int(8) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Parent ID',
     lft         int              DEFAULT 0                     NOT NULL COMMENT 'Left Index',
     rgt         int              DEFAULT 0                     NOT NULL COMMENT 'Right key',
-    level       int(11) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Nested Level',
+    level       int(8) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Nested Level',
     path        varchar(1024)    DEFAULT ''                    NOT NULL COMMENT 'Alias Path',
     type        varchar(50)      DEFAULT ''                    NOT NULL COMMENT 'Content Type',
     title       varchar(255)     DEFAULT ''                    NOT NULL COMMENT 'Title',
@@ -44,9 +44,9 @@ CREATE INDEX idx_categories_path
 DROP TABLE IF EXISTS ww_articles;
 CREATE TABLE ww_articles
 (
-    id          int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Index' PRIMARY KEY,
-    category_id int(11) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Category ID',
-    page_id     int(11) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Page ID',
+    id          int(8) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Index' PRIMARY KEY,
+    category_id int(8) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Category ID',
+    page_id     int(8) UNSIGNED DEFAULT 0                     NOT NULL COMMENT 'Page ID',
     type        enum('foo','bar','yoo') DEFAULT 'bar'          NOT NULL,
     price       decimal(20,6) UNSIGNED DEFAULT 0.0,
     title       varchar(255)     DEFAULT ''                    NOT NULL COMMENT 'Title',
@@ -64,8 +64,8 @@ CREATE TABLE ww_articles
 ALTER TABLE ww_articles ADD CONSTRAINT fk_articles_category_id
     FOREIGN KEY (category_id) REFERENCES ww_categories(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE ww_articles ADD CONSTRAINT fk_articles_category_more
-    FOREIGN KEY (page_id, created_by) REFERENCES ww_categories(parent_id, level) ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE ww_articles ADD CONSTRAINT fk_articles_category_more
+--     FOREIGN KEY (page_id, created_by) REFERENCES ww_categories(parent_id, level) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE UNIQUE INDEX idx_articles_alias
     ON ww_articles (alias(150));

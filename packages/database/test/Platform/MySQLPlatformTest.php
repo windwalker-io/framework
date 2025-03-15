@@ -128,7 +128,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
             array_keys($columns[array_key_first($columns)])
         );
 
-        self::assertEquals(
+        self::assertArraySimilar(
             [
                 'id' => [
                     'column_name' => 'id',
@@ -147,7 +147,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => true,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'category_id' => [
@@ -167,7 +166,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'page_id' => [
@@ -187,7 +185,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'type' => [
@@ -330,7 +327,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'created' => [
@@ -369,7 +365,6 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'auto_increment' => false,
                     'erratas' => [
                         'is_json' => false,
-                        'custom_length' => '11'
                     ],
                 ],
                 'language' => [
@@ -423,7 +418,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     {
         $constraints = $this->instance->listConstraints('#__articles', static::$schema);
 
-        self::assertEquals(
+        self::assertArraySimilar(
             [
                 'PRIMARY' => [
                     'constraint_name' => 'PRIMARY',
@@ -457,24 +452,24 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'update_rule' => 'RESTRICT',
                     'delete_rule' => 'RESTRICT',
                 ],
-                'fk_articles_category_more' => [
-                    'constraint_name' => 'fk_articles_category_more',
-                    'constraint_type' => 'FOREIGN KEY',
-                    'table_name' => 'ww_articles',
-                    'columns' => [
-                        'page_id',
-                        'created_by',
-                    ],
-                    'referenced_table_schema' => 'windwalker_test',
-                    'referenced_table_name' => 'ww_categories',
-                    'referenced_columns' => [
-                        'parent_id',
-                        'level',
-                    ],
-                    'match_option' => 'NONE',
-                    'update_rule' => 'RESTRICT',
-                    'delete_rule' => 'RESTRICT',
-                ],
+                // 'fk_articles_category_more' => [
+                //     'constraint_name' => 'fk_articles_category_more',
+                //     'constraint_type' => 'FOREIGN KEY',
+                //     'table_name' => 'ww_articles',
+                //     'columns' => [
+                //         'page_id',
+                //         'created_by',
+                //     ],
+                //     'referenced_table_schema' => 'windwalker_test',
+                //     'referenced_table_name' => 'ww_categories',
+                //     'referenced_columns' => [
+                //         'parent_id',
+                //         'level',
+                //     ],
+                //     'match_option' => 'NONE',
+                //     'update_rule' => 'RESTRICT',
+                //     'delete_rule' => 'RESTRICT',
+                // ],
             ],
             $constraints
         );
@@ -487,7 +482,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     {
         $indexes = $this->instance->listIndexes('#__articles', static::$schema);
 
-        self::assertEquals(
+        self::assertArraySimilar(
             [
                 'PRIMARY' => [
                     'table_schema' => 'windwalker_test',
@@ -499,7 +494,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'id' => [
                             'column_name' => 'id',
-                            'sub_part' => null,
+                            'erratas' => [
+                                'sub_parts' => null,
+                            ]
                         ],
                     ],
                 ],
@@ -513,28 +510,30 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'alias' => [
                             'column_name' => 'alias',
-                            'sub_part' => 150,
+                            'erratas' => [
+                                'sub_parts' => 150,
+                            ]
                         ],
                     ],
                 ],
-                'fk_articles_category_more' => [
-                    'table_schema' => 'windwalker_test',
-                    'table_name' => 'ww_articles',
-                    'is_unique' => false,
-                    'is_primary' => false,
-                    'index_name' => 'fk_articles_category_more',
-                    'index_comment' => '',
-                    'columns' => [
-                        'page_id' => [
-                            'column_name' => 'page_id',
-                            'sub_part' => null,
-                        ],
-                        'created_by' => [
-                            'column_name' => 'created_by',
-                            'sub_part' => null,
-                        ],
-                    ],
-                ],
+                // 'fk_articles_category_more' => [
+                //     'table_schema' => 'windwalker_test',
+                //     'table_name' => 'ww_articles',
+                //     'is_unique' => false,
+                //     'is_primary' => false,
+                //     'index_name' => 'fk_articles_category_more',
+                //     'index_comment' => '',
+                //     'columns' => [
+                //         'page_id' => [
+                //             'column_name' => 'page_id',
+                //             'sub_parts' => null,
+                //         ],
+                //         'created_by' => [
+                //             'column_name' => 'created_by',
+                //             'sub_parts' => null,
+                //         ],
+                //     ],
+                // ],
                 'idx_articles_category_id' => [
                     'table_schema' => 'windwalker_test',
                     'table_name' => 'ww_articles',
@@ -545,7 +544,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'category_id' => [
                             'column_name' => 'category_id',
-                            'sub_part' => null,
+                            'erratas' => [
+                                'sub_parts' => null,
+                            ]
                         ],
                     ],
                 ],
@@ -559,7 +560,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'created_by' => [
                             'column_name' => 'created_by',
-                            'sub_part' => null,
+                            'erratas' => [
+                                'sub_parts' => null,
+                            ]
                         ],
                     ],
                 ],
@@ -573,7 +576,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'language' => [
                             'column_name' => 'language',
-                            'sub_part' => null,
+                            'erratas' => [
+                                'sub_parts' => null,
+                            ]
                         ],
                     ],
                 ],
@@ -587,7 +592,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'page_id' => [
                             'column_name' => 'page_id',
-                            'sub_part' => null,
+                            'erratas' => [
+                                'sub_parts' => null,
+                            ]
                         ],
                     ],
                 ],

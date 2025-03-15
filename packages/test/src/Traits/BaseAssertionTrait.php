@@ -108,15 +108,42 @@ trait BaseAssertionTrait
      * @param  array  $expected
      * @param  array  $array
      */
-    public static function assertArraySimilar(array $expected, array $array): void
+    public static function assertArraySimilar(array $expected, array $array, bool $useSort = false): void
     {
-        static::assertEquals([], array_diff_key($array, $expected));
+        if (array_is_list($expected)) {
+            static::recursiveSort($expected);
+            static::recursiveSort($array);
+        } else {
+            static::recursiveSortKeys($expected);
+            static::recursiveSortKeys($array);
+        }
 
-        foreach ($expected as $key => $value) {
+        self::assertEquals($expected, $array);
+    }
+
+    public static function assertArraySortedSimilar(array $expected, array $array): void
+    {
+        self::assertArraySimilar($expected, $array, true);
+    }
+
+    public static function recursiveSortKeys(array &$array): void
+    {
+        ksort($array);
+
+        foreach ($array as &$value) {
             if (is_array($value)) {
-                static::assertArraySimilar($value, $array[$key]);
-            } else {
-                static::assertContains($value, $array);
+                static::recursiveSortKeys($value);
+            }
+        }
+    }
+
+    public static function recursiveSort(array &$array): void
+    {
+        sort($array);
+
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                static::recursiveSort($value);
             }
         }
     }

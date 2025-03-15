@@ -209,9 +209,13 @@ class MySQLPlatform extends AbstractPlatform
                 $erratas['permitted_values'] = $permittedValues;
             }
 
-            [, $scale, $precision] = $this->getDataType()::extract($row['COLUMN_TYPE']);
+            [$type, $scale, $precision] = $this->getDataType()::extract($row['COLUMN_TYPE']);
 
-            if ($scale !== '') {
+            if (
+                $scale !== ''
+                // MSQL 8.0 remove length expr from int type
+                && $type !== 'int'
+            ) {
                 $erratas['custom_length'] = rtrim($scale . ',' . $precision, ',');
             }
 
