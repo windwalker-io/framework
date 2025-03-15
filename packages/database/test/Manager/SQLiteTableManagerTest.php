@@ -25,7 +25,7 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
      */
     public function testCreate(): void
     {
-        $table = self::$db->getTable('enterprise');
+        $table = self::$db->getTableManager('enterprise');
 
         $logs = $this->logQueries(
             fn() => $table->create(
@@ -389,7 +389,7 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     public function testExists(): void
     {
         self::assertTrue($this->instance->exists());
-        self::assertFalse(self::$db->getTable('enterprise_j')->exists());
+        self::assertFalse(self::$db->getTableManager('enterprise_j')->exists());
     }
 
     /**
@@ -502,6 +502,6 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
 
     protected function setUp(): void
     {
-        $this->instance = self::$db->getTable('enterprise');
+        $this->instance = self::$db->getTableManager('enterprise');
     }
 }

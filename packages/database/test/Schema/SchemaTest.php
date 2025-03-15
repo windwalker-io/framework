@@ -149,7 +149,7 @@ class SchemaTest extends AbstractDatabaseTestCase
 
     protected function setUp(): void
     {
-        $this->instance = static::$db->getTable('ww_flower')->createSchemaObject();
+        $this->instance = static::$db->getTableManager('ww_flower')->createSchemaObject();
     }
 
     protected function tearDown(): void

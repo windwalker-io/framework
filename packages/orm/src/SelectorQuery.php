@@ -121,7 +121,7 @@ class SelectorQuery extends Query implements EventAwareInterface
                 );
 
             if ($loadColsFromDb) {
-                $cols = $db->getTable($tableName)->getColumnNames();
+                $cols = $db->getTableManager($tableName)->getColumnNames();
             } else {
                 $cols = array_keys($this->orm->getEntityMetadata($className)->getPureColumns());
             }

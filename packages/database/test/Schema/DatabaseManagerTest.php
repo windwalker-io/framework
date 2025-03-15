@@ -30,7 +30,7 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
 
         $newDbname = $dbname . '_new';
 
-        $dbManager = static::$db->getDatabase($newDbname);
+        $dbManager = static::$db->getDatabaseManager($newDbname);
 
         self::assertFalse($dbManager->exists());
 
@@ -48,7 +48,7 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
 
         $newDbname = $dbname . '_new';
 
-        $dbManager = static::$db->getDatabase($newDbname);
+        $dbManager = static::$db->getDatabaseManager($newDbname);
 
         $dbManager->drop();
 
