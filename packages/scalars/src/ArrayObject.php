@@ -370,15 +370,19 @@ class ArrayObject implements AccessibleInterface
     }
 
     /**
-     * avg
+     * If array is empty, will return NULL.
      *
-     * @return  float|int
-     *
-     * @since  __DEPLOY_VERSION__
+     * @return float|int|null
      */
-    public function avg(): float|int
+    public function avg(): float|int|null
     {
-        return $this->sum() / $this->count();
+        $sum = $this->sum();
+
+        if ($sum === 0 || $sum === 0.0) {
+            return null;
+        }
+
+        return $sum / $this->count();
     }
 
     /**
