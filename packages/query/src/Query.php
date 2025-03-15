@@ -181,6 +181,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     protected ?string $defaultItemClass = null;
 
+    protected ?int $paginate = null;
+
     /**
      * Query constructor.
      *
@@ -1706,6 +1708,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'alias' => [],
             'subQueries' => [],
             'bounded' => [],
+            'defaultItemClass' => null,
+            'paginate' => null,
         ];
 
         if ($clauses === []) {
@@ -1798,16 +1802,53 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * getIterator
-     *
      * @param  string|null  $class
      * @param  array        $args
+     * @param  int|null     $paginate
      *
      * @return  Generator
      */
-    public function getIterator(?string $class = null, array $args = []): Generator
+    public function getIterator(?string $class = null, array $args = [], ?int $paginate = null): Generator
     {
+        $paginate ??= $this->getPaginate();
+
+        if ($paginate !== null) {
+            return $this->getPaginatedIterator($class, $paginate, $args);
+        }
+
         return $this->prepareStatement()->getIterator($class, $args);
+    }
+
+    public function getPaginatedIterator(?string $class = null, int $perPage = 500, array $args = []): Generator
+    {
+        $offset = $this->getOffset() ?? 0;
+        $leave = $this->getLimit();
+
+        do {
+            $i = 0;
+
+            if ($leave !== null) {
+                $perPage = min($leave, $perPage);
+                $leave -= $perPage;
+            }
+
+            $query = clone $this;
+            $query->offset($offset)->limit($perPage);
+
+            $query->debug();
+
+            foreach ($query->getIterator($class, $args) as $item) {
+                yield $item;
+
+                $i++;
+            }
+
+            $offset += $perPage;
+
+            if ($leave === 0) {
+                break;
+            }
+        } while ($i > 0);
     }
 
     public function prepareStatement(): StatementInterface
@@ -1858,6 +1899,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function setDefaultItemClass(?string $defaultItemClass): static
     {
         $this->defaultItemClass = $defaultItemClass;
+
+        return $this;
+    }
+
+    public function getPaginate(): ?int
+    {
+        return $this->paginate;
+    }
+
+    public function paginate(?int $paginate): static
+    {
+        $this->paginate = $paginate;
 
         return $this;
     }
