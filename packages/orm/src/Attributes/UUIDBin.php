@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Attributes;
 
+use Ramsey\Uuid\Uuid as RamseyUuid;
 use Ramsey\Uuid\UuidInterface;
 use Windwalker\Cache\Exception\LogicException;
 use Windwalker\ORM\Cast\CastInterface;
+use Windwalker\ORM\Traits\UUIDTrait;
 use Windwalker\Query\Wrapper\UuidBinWrapper;
-use Windwalker\Query\Wrapper\UuidWrapper;
 
 /**
  * The UUID class.
@@ -16,13 +17,15 @@ use Windwalker\Query\Wrapper\UuidWrapper;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class UUIDBin extends CastForSave implements CastInterface
 {
+    use UUIDTrait;
+
     public const NULLABLE = 1 << 0;
 
     /**
      * CastForSave constructor.
      */
     public function __construct(
-        public string $version = 'uuid7',
+        public string|int $version = self::UUID7,
         public mixed $caster = null,
         public int $options = 0
     ) {
@@ -32,17 +35,13 @@ class UUIDBin extends CastForSave implements CastInterface
     public function getUUIDCaster(): \Closure
     {
         return function ($value) {
-            if (!class_exists(\Ramsey\Uuid\Uuid::class)) {
-                throw new LogicException('Please install ramsey/uuid ^4.0 first.');
-            }
-
-            $method = $this->version;
+            static::checkLibrary();
 
             if (!$value && ($this->options & static::NULLABLE)) {
                 return null;
             }
 
-            return new UuidBinWrapper($value ?: \Ramsey\Uuid\Uuid::$method());
+            return new UuidBinWrapper($value ?: static::getDefault($this->version));
         };
     }
 
