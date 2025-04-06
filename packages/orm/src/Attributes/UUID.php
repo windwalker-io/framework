@@ -52,4 +52,9 @@ class UUID extends CastForSave implements CastInterface
     {
         return UuidWrapper::wrap($value);
     }
+
+    public static function tryWrap(mixed $value): ?UuidInterface
+    {
+        return UuidWrapper::tryWrap($value);
+    }
 }
