@@ -53,6 +53,16 @@ class Column
 
     protected array $erratas = [];
 
+    /**
+     * @var array<Constraint>
+     */
+    public array $constraints = [];
+
+    /**
+     * @var array<Index>
+     */
+    public array $indexes = [];
+
     public function __construct(
         string $name = '',
         ?string $dataType = null,

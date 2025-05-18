@@ -426,7 +426,7 @@ class WriterManager
      */
     public function filterFields(string $table, array $item): array
     {
-        $schema = $this->db->getTable($table)->getSchema();
+        $schema = $this->db->getTableManager($table)->getSchema();
         $tableManager = $schema->getTable($table);
 
         if (!$tableManager) {

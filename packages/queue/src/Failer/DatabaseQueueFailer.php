@@ -51,7 +51,7 @@ class DatabaseQueueFailer implements QueueFailerInterface
      */
     public function isSupported(): bool
     {
-        return $this->db->getTable($this->table)->exists();
+        return $this->db->getTableManager($this->table)->exists();
     }
 
     /**
@@ -140,7 +140,7 @@ class DatabaseQueueFailer implements QueueFailerInterface
      */
     public function clear(): bool
     {
-        $this->db->getTable($this->table)->truncate();
+        $this->db->getTableManager($this->table)->truncate();
 
         return true;
     }

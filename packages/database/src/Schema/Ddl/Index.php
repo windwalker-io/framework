@@ -28,7 +28,7 @@ class Index
     /**
      * @var Column[]
      */
-    protected array $columns = [];
+    public array $columns = [];
 
     /**
      * Index constructor.
@@ -109,5 +109,23 @@ class Index
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    public function getFirstColumn(): Column
+    {
+        return array_values($this->columns)[0];
+    }
+
+    /**
+     * @return  string[]
+     */
+    public function getColumnNames(): array
+    {
+        return array_column($this->columns, 'columnName');
+    }
+
+    public function columnsCount(): int
+    {
+        return count($this->columns);
     }
 }

@@ -1128,7 +1128,7 @@ class NestedSetMapper extends EntityMapper
     protected function getEmptyParentId(): mixed
     {
         $column = $this->getDb()
-            ->getTable($this->getMetadata()->getTableName())
+            ->getTableManager($this->getMetadata()->getTableName())
             ->getColumn('parent_id');
 
         if (!$column) {

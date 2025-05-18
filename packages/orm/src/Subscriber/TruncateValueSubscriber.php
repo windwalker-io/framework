@@ -25,7 +25,7 @@ class TruncateValueSubscriber
 
         $metadata = $event->getMetadata();
         $data = &$event->getData();
-        $columns = $orm->getDb()->getTable($metadata->getTableName())->getColumns();
+        $columns = $orm->getDb()->getTableManager($metadata->getTableName())->getColumns();
 
         foreach ($data as $key => $datum) {
             if (!is_string($datum)) {

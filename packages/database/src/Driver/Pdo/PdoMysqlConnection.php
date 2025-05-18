@@ -29,4 +29,13 @@ class PdoMysqlConnection extends AbstractPdoConnection
 
         return $options;
     }
+
+    public function disableBufferedQuery(bool $buffered = true): static
+    {
+        $pdo = $this->get();
+
+        $pdo?->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, !$buffered);
+
+        return $this;
+    }
 }

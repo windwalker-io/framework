@@ -162,8 +162,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 
     protected static function dropAllTables(): void
     {
-        foreach (static::$db->getSchema()->getTables() as $table) {
-            static::$db->getSchema()->getTable($table->tableName)->drop();
+        foreach (static::$db->getSchemaManager()->getTables() as $table) {
+            static::$db->getSchemaManager()->getTable($table->tableName)->drop();
         }
     }
 }

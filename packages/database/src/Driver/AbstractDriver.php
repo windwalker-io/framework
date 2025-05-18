@@ -110,6 +110,9 @@ abstract class AbstractDriver implements HydratorAwareInterface
                 'strict' => true,
                 'modes' => [
                     //
+                ],
+                'after_connect' => [
+                    //
                 ]
             ]
         )
@@ -162,12 +165,34 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
         try {
             $conn->connect();
+
+            $this->runAfterConnects($conn);
         } catch (\Throwable $e) {
             $this->releaseConnection($conn);
             throw $e;
         }
 
         return $conn;
+    }
+
+    protected function runAfterConnects(ConnectionInterface $connection)
+    {
+        $driver = clone $this;
+        $driver->connection = $connection;
+
+        $aferConnectCallbacks = $this->options['after_connect'] ?? [];
+
+        if (!is_array($aferConnectCallbacks)) {
+            $aferConnectCallbacks = [$aferConnectCallbacks];
+        }
+
+        foreach ($aferConnectCallbacks as $callback) {
+            if (is_string($callback)) {
+                $driver->execute($callback);
+            } else {
+                $callback($driver);
+            }
+        }
     }
 
     public function dropConnection(?ConnectionInterface $conn = null): static

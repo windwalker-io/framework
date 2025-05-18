@@ -21,6 +21,7 @@ use Windwalker\Database\Manager\SchemaManager;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Manager\WriterManager;
 use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Schema\Ddl\Table;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventListenableInterface;
@@ -188,7 +189,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      */
     public function listTables(?string $schema = null, bool $includeViews = false): array
     {
-        return $this->getSchema($schema)->getTables($includeViews);
+        return $this->getSchemaManager($schema)->getTables($includeViews);
     }
 
     public function getOptions(): array
@@ -217,23 +218,74 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         return $this->platform;
     }
 
-    public function getDatabase(?string $name = null, $new = false): DatabaseManager
+    public function getDatabaseManager(?string $name = null, bool $new = false): DatabaseManager
     {
         $name = $name ?? $this->getDriver()->getOption('dbname');
 
         return $this->once('database.' . $name, fn() => new DatabaseManager($name, $this), $new);
     }
 
-    public function getSchema(?string $name = null, $new = false): SchemaManager
+    /**
+     * @param  string|null  $name
+     * @param  bool         $new
+     *
+     * @return  DatabaseManager
+     *
+     * @deprecated  Use getDatabaseManager() instead.)
+     */
+    public function getDatabase(?string $name = null, bool $new = false): DatabaseManager
+    {
+        return $this->getDatabaseManager($name, $new);
+    }
+
+    public function getSchemaManager(?string $name = null, bool $new = false): SchemaManager
     {
         $name = $name ?? $this->getPlatform()::getDefaultSchema();
 
         return $this->once('schema.' . $name, fn() => new SchemaManager($name, $this), $new);
     }
 
-    public function getTable(string $name, $new = false): TableManager
+    /**
+     * @param  string|null  $name
+     * @param  bool         $new
+     *
+     * @return  SchemaManager
+     *
+     * @deprecated  Use getSchemaManager() instead.
+     */
+    public function getSchema(?string $name = null, bool $new = false): SchemaManager
     {
-        return $this->getSchema()->getTable($name, $new);
+        return $this->getSchemaManager($name, $new);
+    }
+
+    /**
+     * @param  string|null  $schema
+     * @param  bool         $includeViews
+     * @param  bool         $refresh
+     *
+     * @return  array<Table>
+     */
+    public function getTables(?string $schema = null, bool $includeViews = false, bool $refresh = false): array
+    {
+        return $this->getSchemaManager($schema)->getTables($includeViews, $refresh);
+    }
+
+    /**
+     * @param  string  $name
+     * @param  bool    $new
+     *
+     * @return  TableManager
+     *
+     * @deprecated Use getTableManager() instead.
+     */
+    public function getTable(string $name, bool $new = false): TableManager
+    {
+        return $this->getTableManager($name, $new);
+    }
+
+    public function getTableManager(string $name, bool $new = false): TableManager
+    {
+        return $this->getSchemaManager()->getTable($name, $new);
     }
 
     public function getWriter($new = false): WriterManager

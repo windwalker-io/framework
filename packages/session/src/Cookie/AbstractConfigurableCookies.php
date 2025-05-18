@@ -36,13 +36,18 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
 
     public function getOptions(): array
     {
-        $options = array_change_key_case(get_object_vars($this), CASE_LOWER);
+        $options = $this->propertiesToOptions();
 
         if (isset($options['expires']) && $options['expires'] instanceof DateTimeInterface) {
             $options['expires'] = time() - $options['expires']->getTimestamp();
         }
 
         return $options;
+    }
+
+    protected function propertiesToOptions(): array
+    {
+        return array_change_key_case(get_object_vars($this), CASE_LOWER);
     }
 
     public function setOptions(array $options): static
@@ -74,22 +79,27 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function expires(int|string|DateTimeInterface|null $expires): static
     {
+        $this->expires = static::expiresToDatetime($expires);
+
+        return $this;
+    }
+
+    public static function expiresToDatetime(mixed $expires): ?DateTimeInterface
+    {
         if ($expires === null) {
-            $this->expires = null;
-            return $this;
+            return null;
         }
 
         if (is_int($expires)) {
             $expires += time();
+            $expires = DateTimeImmutable::createFromFormat('U', (string) $expires);
         }
 
         if (!$expires instanceof DateTimeInterface) {
             $expires = new DateTimeImmutable($expires);
         }
 
-        $this->expires = $expires;
-
-        return $this;
+        return $expires;
     }
 
     /**

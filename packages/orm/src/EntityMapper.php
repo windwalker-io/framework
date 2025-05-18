@@ -1553,7 +1553,7 @@ class EntityMapper implements EventAwareInterface
     protected function getTableColumns(): array
     {
         return $this->getDb()
-            ->getTable(
+            ->getTableManager(
                 $this->getMetadata()->getTableName()
             )
             ->getColumns();

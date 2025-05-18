@@ -7,6 +7,7 @@ namespace Windwalker\ORM\Attributes;
 use Ramsey\Uuid\UuidInterface;
 use Windwalker\Cache\Exception\LogicException;
 use Windwalker\ORM\Cast\CastInterface;
+use Windwalker\ORM\Traits\UUIDTrait;
 use Windwalker\Query\Wrapper\UuidWrapper;
 
 /**
@@ -15,11 +16,13 @@ use Windwalker\Query\Wrapper\UuidWrapper;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class UUID extends CastForSave implements CastInterface
 {
+    use UUIDTrait;
+
     /**
      * CastForSave constructor.
      */
     public function __construct(
-        public string $version = 'uuid7',
+        public string|int $version = self::UUID7,
         public mixed $caster = null,
         public int $options = 0
     ) {
@@ -29,13 +32,9 @@ class UUID extends CastForSave implements CastInterface
     public function getUUIDCaster(): \Closure
     {
         return function ($value) {
-            if (!class_exists(\Ramsey\Uuid\Uuid::class)) {
-                throw new LogicException('Please install ramsey/uuid ^4.0 first.');
-            }
+            static::checkLibrary();
 
-            $method = $this->version;
-
-            return new UuidWrapper($value ?: \Ramsey\Uuid\Uuid::$method());
+            return new UuidWrapper($value ?: static::getDefault($this->version));
         };
     }
 
@@ -52,5 +51,10 @@ class UUID extends CastForSave implements CastInterface
     public static function wrap(mixed $value): UuidInterface
     {
         return UuidWrapper::wrap($value);
+    }
+
+    public static function tryWrap(mixed $value): ?UuidInterface
+    {
+        return UuidWrapper::tryWrap($value);
     }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Wrapper;
 
+use Ramsey\Uuid\Exception\InvalidArgumentException;
+use Ramsey\Uuid\Exception\InvalidBytesException;
+use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Windwalker\Utilities\Wrapper\WrapperInterface;
@@ -53,14 +56,20 @@ class UuidWrapper implements WrapperInterface, \Stringable
             return $uuid;
         }
 
-        if (strlen($uuid) === 36) {
-            return Uuid::fromString($uuid);
-        }
+        try {
+            if (strlen($uuid) === 36) {
+                return Uuid::fromString($uuid);
+            }
 
-        return Uuid::fromBytes($uuid);
+            return Uuid::fromBytes($uuid);
+        } catch (InvalidArgumentException | InvalidBytesException | InvalidUuidStringException) {
+            throw new \InvalidArgumentException(
+                'Invalid UUID string or UUID bytes.',
+            );
+        }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->uuid->toString();
     }

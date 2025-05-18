@@ -147,7 +147,7 @@ class TableManager extends AbstractMetaManager
         $this->getPlatform()->renameTable($this->getName(), $newName);
 
         if ($returnNew) {
-            return $this->db->getTable($newName, true);
+            return $this->db->getTableManager($newName, true);
         }
 
         $this->name = $newName;
@@ -193,15 +193,14 @@ class TableManager extends AbstractMetaManager
     }
 
     /**
-     * getColumnDetails
-     *
      * @param  bool  $refresh
+     * @param  bool  $syncKeys
      *
      * @return Column[]
      */
-    public function getColumns(bool $refresh = false): array
+    public function getColumns(bool $refresh = false, bool $syncKeys = false): array
     {
-        return $this->once(
+        $columns = $this->once(
             'columns',
             fn() => Column::wrapList(
                 $this->getPlatform()
@@ -212,18 +211,75 @@ class TableManager extends AbstractMetaManager
             ),
             $refresh
         );
+
+        $columns = static::cloneList($columns);
+
+        if ($syncKeys) {
+            $constraints = $this->getConstraints($refresh, false);
+
+            static::syncKeyColumns($constraints, $columns);
+
+            $indexes = $this->getIndexes($refresh, false);
+
+            static::syncKeyColumns($indexes, $columns);
+        }
+
+        return $columns;
+    }
+
+    protected static function cloneList(array $items): array
+    {
+        foreach ($items as $i => $item) {
+            $items[$i] = clone $item;
+        }
+
+        return $items;
     }
 
     /**
-     * getColumn
+     * @param  array<Index|Constraint>  $keys
+     * @param  array<Column>            $realColumns
      *
+     * @return  array<Index|Constraint>
+     */
+    protected static function syncKeyColumns(array $keys, array $realColumns): array
+    {
+        $returnItems = [];
+
+        foreach ($keys as $i => $key) {
+            $returnItems[$i] = $key = clone $key;
+
+            foreach ($key->columns as $column) {
+                $key->columns[$column->columnName] = $realColumn = $realColumns[$column->columnName];
+
+                if ($key instanceof Constraint && $key->isPrimary()) {
+                    $realColumn->primary(true);
+                }
+            }
+
+            foreach ($key->columns as $column) {
+                if ($key instanceof Constraint) {
+                    $column->constraints[$key->constraintName] = $key;
+                }
+
+                if ($key instanceof Index) {
+                    $column->indexes[$key->indexName] = $key;
+                }
+            }
+        }
+
+        return $returnItems;
+    }
+
+    /**
      * @param  string  $name
+     * @param  bool    $syncKeys
      *
      * @return Column|null
      */
-    public function getColumn(string $name): ?Column
+    public function getColumn(string $name, bool $syncKeys = false): ?Column
     {
-        return $this->getColumns()[$name] ?? null;
+        return $this->getColumns(syncKeys: $syncKeys)[$name] ?? null;
     }
 
     /**
@@ -374,24 +430,32 @@ class TableManager extends AbstractMetaManager
     }
 
     /**
-     * getIndexes
-     *
      * @return  Index[]
      */
-    public function getIndexes(): array
+    public function getIndexes(bool $refresh = false, bool $syncColumns = false): array
     {
-        return $this->once(
+        $indexes = $this->once(
             'indexes',
             fn() => Index::wrapList(
                 $this->getPlatform()->listIndexes($this->getName(), $this->schemaName),
                 'index_name'
             )
         );
+
+        $indexes = static::cloneList($indexes);
+
+        if ($syncColumns) {
+            $columns = $this->getColumns($refresh, false);
+
+            $indexes = static::syncKeyColumns($indexes, $columns);
+        }
+
+        return $indexes;
     }
 
-    public function getIndex(string $name): ?Index
+    public function getIndex(string $name, bool $syncColumns = false): ?Index
     {
-        return $this->getIndexes()[$name] ?? null;
+        return $this->getIndexes(syncColumns: $syncColumns)[$name] ?? null;
     }
 
     public function hasIndex($name): bool
@@ -447,20 +511,31 @@ class TableManager extends AbstractMetaManager
      *
      * @return  Constraint[]
      */
-    public function getConstraints(): array
+    public function getConstraints(bool $refresh = false, bool $syncColumns = false): array
     {
-        return $this->once(
+        $constraints = $this->once(
             'constraints',
             fn() => Constraint::wrapList(
                 $this->getPlatform()->listConstraints($this->getName(), $this->schemaName),
                 'constraint_name'
-            )
+            ),
+            $refresh
         );
+
+        $constraints = static::cloneList($constraints);
+
+        if ($syncColumns) {
+            $columns = $this->getColumns($refresh, false);
+
+            $constraints = static::syncKeyColumns($constraints, $columns);
+        }
+
+        return $constraints;
     }
 
-    public function getConstraint(string $name): ?Constraint
+    public function getConstraint(string $name, bool $syncColumns = false): ?Constraint
     {
-        return $this->getConstraints()[$name] ?? null;
+        return $this->getConstraints(syncColumns: $syncColumns)[$name] ?? null;
     }
 
     public function dropConstraint(string|array $names): static
@@ -507,7 +582,7 @@ class TableManager extends AbstractMetaManager
      */
     public function getSchema(bool $new = false): SchemaManager
     {
-        return $this->db->getSchema($this->schemaName, $new);
+        return $this->db->getSchemaManager($this->schemaName, $new);
     }
 
     public function createSchemaObject(): Schema
@@ -532,7 +607,7 @@ class TableManager extends AbstractMetaManager
 
     public function getDatabase(bool $new = false): DatabaseManager
     {
-        return $this->db->getDatabase($this->databaseName, $new);
+        return $this->db->getDatabaseManager($this->databaseName, $new);
     }
 
     /**

@@ -16,7 +16,7 @@ use Windwalker\Query\Wrapper\UuidWrapper;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class UUIDBinNullable extends UUIDBin
 {
-    public function __construct(string $version = 'uuid7', mixed $caster = null, int $options = self::NULLABLE)
+    public function __construct(string|int $version = self::UUID7, mixed $caster = null, int $options = self::NULLABLE)
     {
         parent::__construct($version, $caster, $options);
     }

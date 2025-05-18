@@ -15,7 +15,21 @@ interface CookiesInterface
 
     public const SAMESITE_STRICT = 'Strict';
 
-    public function set(string $name, string $value): bool;
+    /**
+     * @param  string      $name
+     * @param  string      $value
+     * @param  ?array{
+     *      expires?: int,
+     *      path?: string,
+     *      domain?: string,
+     *      secure?: bool,
+     *      httponly?: bool,
+     *      samesite?: "Lax"|"Strict"|"None"
+     *  }  $options
+     *
+     * @return  bool
+     */
+    public function set(string $name, string $value, ?array $options = null): bool;
 
     public function get(string $name): ?string;
 

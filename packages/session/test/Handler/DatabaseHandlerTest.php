@@ -50,7 +50,7 @@ class DatabaseHandlerTest extends AbstractHandlerTestCase
     {
         $this->instance = new DatabaseHandler(static::$db);
 
-        self::$db->getTable('windwalker_sessions')->truncate();
+        self::$db->getTableManager('windwalker_sessions')->truncate();
 
         foreach ($this->prepareDefaultData() as $id => $item) {
             self::$db->getWriter()->insertOne(
@@ -75,7 +75,7 @@ class DatabaseHandlerTest extends AbstractHandlerTestCase
     {
         self::createDatabase('pdo_mysql');
 
-        self::$db->getTable('windwalker_sessions')->drop();
+        self::$db->getTableManager('windwalker_sessions')->drop();
         self::importFromFile(__DIR__ . '/../../resources/sql/mysql.sql');
     }
 }

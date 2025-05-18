@@ -13,6 +13,8 @@ use Windwalker\Utilities\StrNormalize;
  */
 class NoResultException extends \UnexpectedValueException
 {
+    protected static ?\Closure $messageHandler = null;
+
     public function __construct(
         protected string $table,
         protected mixed $conditions = null,
@@ -23,6 +25,8 @@ class NoResultException extends \UnexpectedValueException
             404,
             $previous
         );
+
+        $this->message = static::renderMessage($this);
     }
 
     public function getTarget(): string
@@ -60,5 +64,22 @@ class NoResultException extends \UnexpectedValueException
     public function getTable(): string
     {
         return $this->table;
+    }
+
+    protected static function renderMessage(self $e): string
+    {
+        return static::getMessageHandler()($e);
+    }
+
+    public static function getMessageHandler(): \Closure
+    {
+        return static::$messageHandler ?? static function (self $e) {
+            return "Destination {$e->getTarget()} not found.";
+        };
+    }
+
+    public static function setMessageHandler(?\Closure $messageHandler): void
+    {
+        static::$messageHandler = $messageHandler;
     }
 }

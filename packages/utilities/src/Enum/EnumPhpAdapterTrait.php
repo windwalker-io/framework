@@ -81,6 +81,11 @@ trait EnumPhpAdapterTrait
         return array_map(fn (self $case) => $case->value, self::values());
     }
 
+    /**
+     * @return  mixed
+     *
+     * @deprecated  Use 8.2 `->value`
+     */
     public function getValue(): mixed
     {
         if ($this instanceof \UnitEnum) {
@@ -91,6 +96,11 @@ trait EnumPhpAdapterTrait
         return parent::getValue();
     }
 
+    /**
+     * @return  mixed
+     *
+     * @deprecated  Use 8.2 `->name`
+     */
     public function getKey(): mixed
     {
         if ($this instanceof \UnitEnum) {
@@ -102,6 +112,11 @@ trait EnumPhpAdapterTrait
         return parent::getKey();
     }
 
+    /**
+     * @return  mixed
+     *
+     * @deprecated  Use 8.2 `===`
+     */
     public function sameAs($variable = null): bool
     {
         if ($this instanceof \UnitEnum) {

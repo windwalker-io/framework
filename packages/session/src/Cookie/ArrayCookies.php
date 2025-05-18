@@ -13,6 +13,8 @@ class ArrayCookies extends AbstractConfigurableCookies
 
     protected array $modifiedFields = [];
 
+    protected array $valueOptions = [];
+
     protected array $removeFields = [];
 
     public static function create(array $storage = [], array $options = []): static
@@ -33,21 +35,14 @@ class ArrayCookies extends AbstractConfigurableCookies
         parent::__construct($options);
     }
 
-    /**
-     * set
-     *
-     * @param  string  $name
-     * @param  string  $value
-     *
-     * @return  bool
-     */
-    public function set(string $name, string $value): bool
+    public function set(string $name, string $value, ?array $options = null): bool
     {
         if (!in_array($name, $this->modifiedFields, true)) {
             $this->modifiedFields[] = $name;
         }
 
         $this->storage[$name] = $value;
+        $this->valueOptions[$name] = $options;
 
         return true;
     }
@@ -74,7 +69,7 @@ class ArrayCookies extends AbstractConfigurableCookies
             $this->removeFields[] = $name;
         }
 
-        unset($this->storage[$name]);
+        unset($this->storage[$name], $this->valueOptions[$name]);
 
         return true;
     }
@@ -108,11 +103,13 @@ class ArrayCookies extends AbstractConfigurableCookies
                 continue;
             }
 
+            $options = $this->valueOptions[$k] ?? null;
+
             $isRemove = in_array($k, $this->removeFields, true);
 
             $header = $k . '=' . $item;
 
-            if ($settings = $this->buildHeaderSettings($isRemove)) {
+            if ($settings = $this->buildHeaderSettings($isRemove, $options)) {
                 $header .= '; ' . $settings;
             }
 
@@ -122,33 +119,40 @@ class ArrayCookies extends AbstractConfigurableCookies
         return $headers;
     }
 
-    protected function buildHeaderSettings(bool $makeExpired = false): string
+    protected function buildHeaderSettings(bool $makeExpired = false, ?array $customOptions = null): string
     {
         $settings = [];
 
-        if ($this->domain) {
-            $settings[] = 'domain=' . $this->domain;
+        $options = [
+            ...$this->propertiesToOptions(),
+            ...($customOptions ?? []),
+        ];
+
+        $options['expires'] = static::expiresToDatetime($options['expires'] ?? null);
+
+        if ($options['domain']) {
+            $settings[] = 'domain=' . $options['domain'];
         }
 
-        if ($this->path) {
-            $settings[] = 'path=' . $this->path;
+        if ($options['path']) {
+            $settings[] = 'path=' . $options['path'];
         }
 
         if ($makeExpired) {
             $settings[] = 'Max-Age=0';
-        } elseif ($this->expires) {
-            $settings[] = 'Expires=' . $this->expires->format(\DateTimeInterface::COOKIE);
+        } elseif ($options['expires']) {
+            $settings[] = 'Expires=' . $options['expires']->format(\DateTimeInterface::COOKIE);
         }
 
-        if ($this->secure) {
+        if ($options['secure']) {
             $settings[] = 'secure';
         }
 
-        if ($this->sameSite) {
-            $settings[] = 'SameSite=' . $this->sameSite;
+        if ($options['samesite']) {
+            $settings[] = 'SameSite=' . $options['samesite'];
         }
 
-        if ($this->httpOnly) {
+        if ($options['httponly']) {
             $settings[] = 'HttpOnly';
         }
 
