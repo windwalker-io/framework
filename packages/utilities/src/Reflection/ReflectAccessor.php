@@ -73,7 +73,7 @@ class ReflectAccessor
             $property = $refl->getProperty($propertyName);
             $property->setAccessible(true);
 
-            if ($safe) {
+            if ($safe && !$property->hasHook(\PropertyHookType::Set)) {
                 $value = static::safeTypeCast($property, $value);
             }
 
@@ -92,7 +92,7 @@ class ReflectAccessor
                 $property = new ReflectionProperty($parent, $propertyName);
                 $property->setAccessible(true);
 
-                if ($safe) {
+                if ($safe && !$property->hasHook(\PropertyHookType::Set)) {
                     $value = static::safeTypeCast($property, $value);
                 }
 
