@@ -342,7 +342,7 @@ class Worker implements EventAwareInterface
      *
      * @return void
      */
-    protected function handleJobException(callable $job, QueueMessage $message, array $options, Throwable $e): void
+    protected function handleJobException(mixed $job, QueueMessage $message, array $options, Throwable $e): void
     {
         $this->logger->error(
             sprintf(
