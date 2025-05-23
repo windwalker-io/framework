@@ -883,16 +883,27 @@ abstract class Arr
      */
     public static function arrayEquals(array $a, array $b): bool
     {
+        ksort($a);
+        ksort($b);
+
         $a = array_map(static::serializeForCompare(...), $a);
         $b = array_map(static::serializeForCompare(...), $b);
 
-        return array_count_values($a) === array_count_values($b);
+        return $a === $b;
     }
 
     private static function serializeForCompare(mixed $value): string
     {
         if (is_object($value)) {
             return spl_object_hash($value);
+        }
+
+        if (is_resource($value)) {
+            $value = '@resource#' . get_resource_id($value);
+        }
+
+        if (is_int($value) || is_float($value)) {
+            $value = (string) $value;
         }
 
         return serialize($value);
