@@ -9,11 +9,11 @@ namespace Windwalker\ORM\Cast;
  */
 interface CastInterface
 {
-    public const TYPE_CAST = 1;
+    public const int TYPE_CAST = 1;
 
-    public const CONSTRUCTOR = 2;
+    public const int CONSTRUCTOR = 2;
 
-    public const HYDRATE = 3;
+    public const int HYDRATE = 3;
 
     /**
      * Cast to php type or object.

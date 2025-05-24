@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Config;
 
+use Windwalker\Attributes\AttributeType;
+use Windwalker\Core\DateTime\ServerTimeCast;
 use Windwalker\Core\Manager\DatabaseManager;
 use Windwalker\Database\DatabasePackage;
 use Windwalker\ORM\ORM;
@@ -59,6 +61,10 @@ return [
         ],
 
         'bindings' => [
+            //
+        ],
+
+        'attributes' => [
             //
         ],
 
