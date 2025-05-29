@@ -10,7 +10,7 @@ namespace Windwalker\ORM\Event;
 abstract class AbstractUpdateWhereEvent extends AbstractEntityEvent
 {
     public function __construct(
-        public mixed $conditions,
+        public mixed $conditions = null,
         public int $options = 0,
         public array|object $source = [],
         public array $data = []

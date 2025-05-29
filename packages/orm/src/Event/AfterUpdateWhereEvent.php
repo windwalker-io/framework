@@ -13,17 +13,23 @@ use Windwalker\Database\Driver\StatementInterface;
 #[Attribute]
 class AfterUpdateWhereEvent extends AbstractUpdateWhereEvent
 {
+    public StatementInterface $statement;
+
     public function __construct(
-        public StatementInterface $statement,
+        ?StatementInterface $statement = null,
         mixed $conditions = null,
         int $options = 0,
-        ?object $entity = null,
+        array|object $source = [],
         array $data = []
     ) {
+        if ($statement) {
+            $this->statement = $statement;
+        }
+
         parent::__construct(
             conditions: $conditions,
             options: $options,
-            entity: $entity,
+            source: $source,
             data: $data
         );
     }

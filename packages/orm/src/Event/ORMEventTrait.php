@@ -24,4 +24,12 @@ trait ORMEventTrait
     public DatabaseAdapter $db {
         get => $this->metadata->getORM()->getDb();
     }
+
+    /**
+     * @deprecated  Use property hook instead.
+     */
+    public function getORM(): ORM
+    {
+        return $this->orm;
+    }
 }

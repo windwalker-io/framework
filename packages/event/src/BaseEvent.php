@@ -37,7 +37,7 @@ class BaseEvent implements EventInterface
         if (is_string($event)) {
             $class = class_exists($event) ? $event : static::class;
 
-            $event = new $class($event);
+            $event = new $class()->setName($event);
         }
 
         $event->merge($args);

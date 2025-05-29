@@ -10,7 +10,7 @@ namespace Windwalker\ORM\Event;
 abstract class AbstractDeleteEvent extends AbstractEntityEvent
 {
     public function __construct(
-        public mixed $conditions,
+        public mixed $conditions = null,
         public int $options = 0,
         public ?object $entity = null,
         public array $data = []

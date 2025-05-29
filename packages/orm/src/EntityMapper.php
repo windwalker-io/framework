@@ -294,27 +294,33 @@ class EntityMapper implements EventAwareInterface
         $data = $this->extract($source);
 
         // Keep data field same as source, that developers can know what data has sent.
-        $type = AbstractSaveEvent::TYPE_CREATE;
-        $event = $this->emitEvent(
-            BeforeSaveEvent::class,
-            compact('data', 'type', 'metadata', 'source', 'options')
+        $event = $this->emits(
+            new BeforeSaveEvent(
+                type: AbstractSaveEvent::TYPE_CREATE,
+                options: $options,
+                source: $source,
+                data: $data,
+            )
         );
 
         // Hydrate data into entity after event, to make sure all fields has default value.
-        $fullData = $event->getData();
-        $extra = $event->getExtra();
+        $fullData = $event->data;
         $entity = $this->hydrate($fullData, $this->toEntity($source));
 
         $data = $this->castForSave($this->extract($entity), true, $entity, true);
 
-        $type = BeforeStoreEvent::TYPE_CREATE;
         $event = $this->emitEvent(
-            BeforeStoreEvent::class,
-            compact('data', 'type', 'metadata', 'source', 'options', 'extra')
+            new BeforeStoreEvent(
+                type: BeforeStoreEvent::TYPE_CREATE,
+                options: $options,
+                source: $source,
+                extra: $event->extra,
+                data: $data
+            )
         );
 
-        $data = $event->getData();
-        $extra = $event->getExtra();
+        $data = $event->data;
+        $extra = $event->extra;
 
         if ($aiColumn && array_key_exists($aiColumn, $data) && !$data[$aiColumn]) {
             unset($data[$aiColumn]);
@@ -338,26 +344,24 @@ class EntityMapper implements EventAwareInterface
             );
         }
 
-        $event = $this->emitEvent(
-            AfterSaveEvent::class,
-            compact(
-                'data',
-                'type',
-                'metadata',
-                'entity',
-                'source',
-                'fullData',
-                'options',
-                'extra'
+        $event = $this->emits(
+            new AfterSaveEvent(
+                type: AfterSaveEvent::TYPE_CREATE,
+                entity: $entity,
+                fullData: $fullData,
+                options: $options,
+                source: $source,
+                extra: $extra,
+                data: $data
             )
         );
 
         $entity = $this->hydrate(
-            $event->getData(),
-            $event->getEntity()
+            $event->data,
+            $event->entity
         );
 
-        $metadata->getRelationManager()->save($event->getData(), $entity);
+        $metadata->getRelationManager()->save($event->data, $entity);
 
         return $entity;
     }
@@ -962,12 +966,12 @@ class EntityMapper implements EventAwareInterface
                     oldData: $oldData,
                     options: $options,
                     source: $source,
-                    extra: $event->getExtra(),
+                    extra: $event->extra,
                     data: $data
                 )
             );
 
-            $creates[] = $event->getEntity();
+            $creates[] = $event->entity;
         }
 
         return $creates;
