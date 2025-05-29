@@ -15,12 +15,12 @@ class AfterSaveEvent extends AbstractSaveEvent
     public function __construct(
         string $type = '',
         public object $entity = new \stdClass(),
-        public array $fullData = [],
-        ?array $oldData = null,
-        int $options = 0,
         array|object $source = [],
-        array $extra = [],
         array $data = [],
+        ?array $oldData = null,
+        public array $fullData = [],
+        int $options = 0,
+        array $extra = [],
     ) {
         parent::__construct(
             type: $type,

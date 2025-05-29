@@ -13,22 +13,22 @@ use Attribute;
 class AfterCopyEvent extends AbstractSaveEvent
 {
     public function __construct(
-        public object $entity,
-        public array $fullData,
-        string $type,
-        ?array $oldData = null,
-        int $options = 0,
+        string $type = '',
+        public object $entity = new \stdClass(),
         object|array $source = [],
-        array $extra = [],
         array $data = [],
+        ?array $oldData = null,
+        public array $fullData = [],
+        int $options = 0,
+        array $extra = [],
     ) {
         parent::__construct(
             type: $type,
+            source: $source,
+            data: $data,
             oldData: $oldData,
             options: $options,
-            source: $source,
-            extra: $extra,
-            data: $data
+            extra: $extra
         );
     }
 }

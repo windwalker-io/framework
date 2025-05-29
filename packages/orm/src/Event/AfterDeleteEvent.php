@@ -18,9 +18,9 @@ class AfterDeleteEvent extends AbstractDeleteEvent
     public function __construct(
         ?StatementInterface $statement = null,
         mixed $conditions = null,
-        int $options = 0,
         ?object $entity = null,
-        array $data = []
+        array $data = [],
+        int $options = 0,
     ) {
         if ($statement) {
             $this->statement = $statement;

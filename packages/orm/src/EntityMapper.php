@@ -297,9 +297,9 @@ class EntityMapper implements EventAwareInterface
         $event = $this->emits(
             new BeforeSaveEvent(
                 type: AbstractSaveEvent::TYPE_CREATE,
-                options: $options,
                 source: $source,
                 data: $data,
+                options: $options,
             )
         );
 
@@ -309,13 +309,13 @@ class EntityMapper implements EventAwareInterface
 
         $data = $this->castForSave($this->extract($entity), true, $entity, true);
 
-        $event = $this->emitEvent(
+        $event = $this->emits(
             new BeforeStoreEvent(
                 type: BeforeStoreEvent::TYPE_CREATE,
-                options: $options,
                 source: $source,
-                extra: $event->extra,
-                data: $data
+                data: $data,
+                options: $options,
+                extra: $event->extra
             )
         );
 
@@ -348,11 +348,11 @@ class EntityMapper implements EventAwareInterface
             new AfterSaveEvent(
                 type: AfterSaveEvent::TYPE_CREATE,
                 entity: $entity,
+                source: $source,
+                data: $data,
                 fullData: $fullData,
                 options: $options,
-                source: $source,
-                extra: $extra,
-                data: $data
+                extra: $extra
             )
         );
 
@@ -429,20 +429,21 @@ class EntityMapper implements EventAwareInterface
             $data = array_merge($oldData ?? [], $data);
         }
 
-        $type = AbstractSaveEvent::TYPE_UPDATE;
-        $event = $this->emitEvent(
-            BeforeSaveEvent::class,
-            compact('data', 'type', 'metadata', 'oldData', 'source', 'options')
+        $event = $this->emits(
+            new BeforeSaveEvent(
+                type: AbstractSaveEvent::TYPE_UPDATE,
+                source: $source,
+                data: $data,
+                oldData: $oldData,
+                options: $options
+            )
         );
 
         // Hydrate data into entity after event, to make sure all fields has default value.
-        $fullData = $event->getData();
-        $extra = $event->getExtra();
+        $fullData = $event->data;
         $entity = $this->hydrate($fullData, $this->toEntity($source));
 
         $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
-
-        $metadata = $event->getMetadata();
 
         $writeData = $data;
 
@@ -458,23 +459,19 @@ class EntityMapper implements EventAwareInterface
 
             $metadata->getRelationManager()->beforeUpdate($writeData, $entity, $oldData);
 
-            $type = BeforeStoreEvent::TYPE_UPDATE;
-            $event = $this->emitEvent(
-                BeforeStoreEvent::class,
-                [
-                    'data' => $writeData,
-                    'type' => $type,
-                    'metadata' => $metadata,
-                    'source' => $source,
-                    'options' => $options,
-                    'extra' => $extra,
-                ]
+            $event = $this->emits(
+                new BeforeStoreEvent(
+                    type: BeforeStoreEvent::TYPE_UPDATE,
+                    source: $source,
+                    data: $writeData,
+                    options: $options,
+                    extra: $event->extra,
+                )
             );
-            $extra = $event->getExtra();
 
             $result = $this->getDb()->getWriter()->updateOne(
                 $metadata->getTableName(),
-                $event->getData(),
+                $event->data,
                 $condFields,
                 [
                     'updateNulls' => $updateNulls,
@@ -482,22 +479,20 @@ class EntityMapper implements EventAwareInterface
             );
         }
 
-        $event = $this->emitEvent(
-            AfterSaveEvent::class,
-            compact(
-                'data',
-                'type',
-                'metadata',
-                'entity',
-                'oldData',
-                'source',
-                'options',
-                'fullData',
-                'extra'
+        $event = $this->emits(
+            new AfterSaveEvent(
+                type: AfterSaveEvent::TYPE_UPDATE,
+                entity: $entity,
+                source: $source,
+                data: $data,
+                oldData: $oldData,
+                fullData: $fullData,
+                options: $options,
+                extra: $event->extra
             )
         );
 
-        $metadata->getRelationManager()->save($event->getData(), $entity, $oldData);
+        $metadata->getRelationManager()->save($event->data, $entity, $oldData);
 
         // Event
 
@@ -549,26 +544,32 @@ class EntityMapper implements EventAwareInterface
         $data = Arr::only($data, $fields);
 
         // Event
-        $event = $this->emitEvent(
-            BeforeUpdateWhereEvent::class,
-            compact('data', 'metadata', 'conditions', 'source', 'options')
+        $event = $this->emits(
+            new BeforeUpdateWhereEvent(
+                conditions: $conditions,
+                source: $source,
+                data: $data,
+                options: $options
+            )
         );
-
-        $metadata = $event->getMetadata();
 
         $statement = $this->getDb()->getWriter()->updateWhere(
             $metadata->getTableName(),
-            $data = $event->getData(),
-            $this->conditionsToWheres($conditions = $event->getConditions())
+            $data = $event->data,
+            $this->conditionsToWheres($conditions = $event->conditions)
         );
 
         // Event
-        $event = $this->emitEvent(
-            AfterUpdateWhereEvent::class,
-            compact('data', 'metadata', 'conditions', 'statement', 'options')
+        $event = $this->emits(
+            new AfterUpdateWhereEvent(
+                statement: $statement,
+                conditions: $conditions,
+                data: $data,
+                options: $options
+            )
         );
 
-        return $event->getStatement();
+        return $event->statement;
     }
 
     /**
@@ -854,27 +855,34 @@ class EntityMapper implements EventAwareInterface
             }
 
             // Event
-            $event = $this->emitEvent(
-                BeforeDeleteEvent::class,
-                compact('data', 'conditions', 'metadata', 'entity', 'options')
+            $event = $this->emits(
+                new BeforeDeleteEvent(
+                    conditions: $conditions,
+                    entity: $entity,
+                    data: $data,
+                    options: $options
+                )
             );
 
             if ($handleRelations) {
-                $metadata->getRelationManager()->beforeDelete($event->getData(), $entity);
+                $metadata->getRelationManager()->beforeDelete($event->data, $entity);
             }
 
-            $statement = $writer->delete($metadata->getTableName(), $conditions = $event->getConditions());
+            $statement = $writer->delete($metadata->getTableName(), $conditions = $event->conditions);
 
             // Event
-            $event = $this->emitEvent(
-                AfterDeleteEvent::class,
-                compact('data', 'conditions', 'metadata', 'statement', 'entity', 'options')
+            $event = $this->emits(
+                new AfterDeleteEvent(
+                    statement: $statement,
+                    conditions: $conditions,
+                    entity: $entity,
+                    data: $event->data,
+                    options: $options
+                )
             );
 
-            $event->getStatement();
-
             if ($handleRelations) {
-                $metadata->getRelationManager()->delete($event->getData(), $entity);
+                $metadata->getRelationManager()->delete($event->data, $entity);
             }
         }
         // Event
@@ -945,10 +953,10 @@ class EntityMapper implements EventAwareInterface
             $event = $this->emits(
                 new BeforeCopyEvent(
                     type: BeforeCopyEvent::TYPE_COPY,
-                    oldData: $oldData,
-                    options: $options,
                     source: $source,
-                    data: $data
+                    data: $data,
+                    oldData: $oldData,
+                    options: $options
                 )
             );
 
@@ -960,14 +968,14 @@ class EntityMapper implements EventAwareInterface
 
             $event = $this->emits(
                 new AfterCopyEvent(
-                    entity: $entity,
-                    fullData: $data,
                     type: AfterCopyEvent::TYPE_COPY,
-                    oldData: $oldData,
-                    options: $options,
+                    entity: $entity,
                     source: $source,
-                    extra: $event->extra,
-                    data: $data
+                    data: $data,
+                    oldData: $oldData,
+                    fullData: $data,
+                    options: $options,
+                    extra: $event->extra
                 )
             );
 
@@ -1239,16 +1247,14 @@ class EntityMapper implements EventAwareInterface
 
         $meta->set($entity, 'entity.metadata', $this->getMetadata());
 
-        $event = $this->emitEvent(
-            EnergizeEvent::class,
-            [
-                'metadata' => $this->getMetadata(),
-                'entity' => $entity,
-            ]
+        $event = $this->emits(
+            new EnergizeEvent(
+                entity: $entity,
+            )
         );
 
         /** @var T $entity */
-        $entity = $event->getEntity();
+        $entity = $event->entity;
 
         $meta->set($entity, 'entity.energized', true);
 
@@ -1643,19 +1649,20 @@ class EntityMapper implements EventAwareInterface
      * @template  Event of EventInterface
      *
      * @param  Event  $event
-     * @param  int    $options
      *
      * @return  Event
      *
      * @throws \ReflectionException
      */
-    public function emits(EventInterface $event, int $options = 0): EventInterface
+    public function emits(EventInterface $event): EventInterface
     {
         if ($event instanceof AbstractEntityEvent) {
             $event->metadata = $this->metadata;
         }
 
-        if ($options & static::IGNORE_EVENTS) {
+        $options = $event->options ?? 0;
+
+        if (is_int($options) && $options & static::IGNORE_EVENTS) {
             return $event;
         }
 

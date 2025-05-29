@@ -12,84 +12,24 @@ class WatchEvent extends AbstractSaveEvent
     public function __construct(
         string $type,
         public ?AbstractEntityEvent $originEvent = null,
-        public bool $isUpdateWhere = false,
+        array|object $source = [],
+        array $data = [],
         public mixed $value = null,
         public mixed $oldValue = null,
         public ?\Closure $afterCallback = null,
+        public bool $isUpdateWhere = false,
         ?array $oldData = null,
         int $options = 0,
-        array|object $source = [],
         array $extra = [],
-        $data = [],
     ) {
         parent::__construct(
             type: $type,
+            source: $source,
+            data: $data,
             oldData: $oldData,
             options: $options,
-            source: $source,
             extra: $extra,
-            data: $data,
         );
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue(): mixed
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param  mixed  $value
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setValue(mixed $value): static
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOldValue(): mixed
-    {
-        return $this->oldValue;
-    }
-
-    /**
-     * @param  mixed  $oldValue
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setOldValue(mixed $oldValue): static
-    {
-        $this->oldValue = $oldValue;
-
-        return $this;
-    }
-
-    /**
-     * @return AbstractEntityEvent|null
-     */
-    public function getOriginEvent(): ?AbstractEntityEvent
-    {
-        return $this->originEvent;
-    }
-
-    /**
-     * @param  AbstractEntityEvent|null  $originEvent
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setOriginEvent(?AbstractEntityEvent $originEvent): static
-    {
-        $this->originEvent = $originEvent;
-
-        return $this;
     }
 
     /**
@@ -100,33 +40,9 @@ class WatchEvent extends AbstractSaveEvent
         return $this->isUpdateWhere;
     }
 
-    /**
-     * @param  bool  $isUpdateWhere
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setIsUpdateWhere(bool $isUpdateWhere): static
-    {
-        $this->isUpdateWhere = $isUpdateWhere;
-
-        return $this;
-    }
-
     public function setDataRef(array &$data): static
     {
         $this->data = &$data;
-
-        return $this;
-    }
-
-    public function getAfterCallback(): ?\Closure
-    {
-        return $this->afterCallback;
-    }
-
-    public function setAfterCallback(?\Closure $afterCallback): static
-    {
-        $this->afterCallback = $afterCallback;
 
         return $this;
     }

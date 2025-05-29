@@ -17,11 +17,11 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
 
     public function __construct(
         public string $type = '',
+        public array|object $source = [],
+        array $data = [],
         public ?array $oldData = null,
         public int $options = 0,
-        public array|object $source = [],
         public array $extra = [],
-        array $data = [],
     ) {
         parent::__construct($data);
     }

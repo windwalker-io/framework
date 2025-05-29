@@ -11,9 +11,9 @@ abstract class AbstractDeleteEvent extends AbstractEntityEvent
 {
     public function __construct(
         public mixed $conditions = null,
-        public int $options = 0,
         public ?object $entity = null,
-        public array $data = []
+        public array $data = [],
+        public int $options = 0,
     ) {
         parent::__construct(data: $data);
     }

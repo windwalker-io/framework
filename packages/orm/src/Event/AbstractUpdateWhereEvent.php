@@ -11,9 +11,9 @@ abstract class AbstractUpdateWhereEvent extends AbstractEntityEvent
 {
     public function __construct(
         public mixed $conditions = null,
-        public int $options = 0,
         public array|object $source = [],
-        public array $data = []
+        public array $data = [],
+        public int $options = 0,
     ) {
         parent::__construct($data);
     }
