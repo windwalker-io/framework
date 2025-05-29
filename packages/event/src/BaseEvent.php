@@ -18,19 +18,17 @@ class BaseEvent implements EventInterface
     /**
      * A flag to see if the event propagation is stopped.
      *
-     * @var    boolean
+     * @var    bool
      *
      * @since  2.0
      */
     protected bool $stopped = false;
 
     /**
-     * wrap
-     *
      * @param  string|EventInterface  $event
      * @param  array                  $args
      *
-     * @return  static|EventInterface|AbstractEvent
+     * @return  static
      */
     public static function wrap(
         string|EventInterface $event,

@@ -22,7 +22,8 @@ use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventInterface;
 use Windwalker\ORM\Attributes\CastForSave;
 use Windwalker\ORM\Attributes\UUIDBin;
-use Windwalker\ORM\Event\{AbstractSaveEvent,
+use Windwalker\ORM\Event\{AbstractEntityEvent,
+    AbstractSaveEvent,
     AfterCopyEvent,
     AfterDeleteEvent,
     AfterSaveEvent,
@@ -32,8 +33,7 @@ use Windwalker\ORM\Event\{AbstractSaveEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
     BeforeUpdateWhereEvent,
-    EnergizeEvent
-};
+    EnergizeEvent};
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -938,37 +938,32 @@ class EntityMapper implements EventAwareInterface
                 }
             }
 
-            $type = BeforeCopyEvent::TYPE_COPY;
-            $event = $this->emitEvent(
-                BeforeCopyEvent::class,
-                compact(
-                    'data',
-                    'type',
-                    'metadata',
-                    'oldData',
-                    'source',
-                    'options'
+            $event = $this->emits(
+                new BeforeCopyEvent(
+                    type: BeforeCopyEvent::TYPE_COPY,
+                    oldData: $oldData,
+                    options: $options,
+                    source: $source,
+                    data: $data
                 )
             );
 
-            $extra = $event->getExtra();
-            $entity = $this->createOne($data = $event->getData(), $option = $event->getOptions());
+            $entity = $this->createOne($data = $event->data, $options = $event->options);
 
             $newData = $this->extract($entity);
 
             $data[$key] = $newData[$key];
 
-            $event = $this->emitEvent(
-                AfterCopyEvent::class,
-                compact(
-                    'data',
-                    'type',
-                    'metadata',
-                    'entity',
-                    'oldData',
-                    'source',
-                    'options',
-                    'extra'
+            $event = $this->emits(
+                new AfterCopyEvent(
+                    entity: $entity,
+                    fullData: $data,
+                    type: AfterCopyEvent::TYPE_COPY,
+                    oldData: $oldData,
+                    options: $options,
+                    source: $source,
+                    extra: $event->getExtra(),
+                    data: $data
                 )
             );
 
@@ -1610,6 +1605,57 @@ class EntityMapper implements EventAwareInterface
         }
 
         $event = $this->emit($event, $args);
+
+        $methods = $this->getMetadata()->getMethodsOfAttribute($event::class);
+
+        foreach ($methods as $method) {
+            if (!$method->isStatic()) {
+                throw new LogicException(
+                    sprintf(
+                        "Entity event hook: %s::%s must be static method.",
+                        $this->metadata->getClassName(),
+                        $method->getName()
+                    )
+                );
+            }
+
+            $result = $this->getORM()->getAttributesResolver()->call(
+                $method->getClosure(),
+                [
+                    $event::class => $event,
+                    'event' => $event,
+                ]
+            );
+
+            if ($result instanceof EventInterface) {
+                $event = $result;
+            }
+        }
+
+        return $event;
+    }
+
+    /**
+     * @template  Event of EventInterface
+     *
+     * @param  Event  $event
+     * @param  int    $options
+     *
+     * @return  Event
+     *
+     * @throws \ReflectionException
+     */
+    public function emits(EventInterface $event, int $options = 0): EventInterface
+    {
+        if ($event instanceof AbstractEntityEvent) {
+            $event->metadata = $this->metadata;
+        }
+
+        if ($options & static::IGNORE_EVENTS) {
+            return $event;
+        }
+
+        $event = $this->emit($event);
 
         $methods = $this->getMetadata()->getMethodsOfAttribute($event::class);
 

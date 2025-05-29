@@ -13,7 +13,7 @@ use Windwalker\Utilities\Contract\AccessibleInterface;
  *
  * @since 2.0
  */
-class Event extends BaseEvent implements AccessibleInterface
+class Event extends AbstractEvent implements AccessibleInterface
 {
     use AccessibleTrait;
 

@@ -13,25 +13,18 @@ use Windwalker\Database\Driver\StatementInterface;
 #[Attribute]
 class AfterDeleteEvent extends AbstractDeleteEvent
 {
-    protected StatementInterface $statement;
-
-    /**
-     * @return StatementInterface
-     */
-    public function getStatement(): StatementInterface
-    {
-        return $this->statement;
-    }
-
-    /**
-     * @param  StatementInterface  $statement
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setStatement(StatementInterface $statement): static
-    {
-        $this->statement = $statement;
-
-        return $this;
+    public function __construct(
+        public StatementInterface $statement,
+        mixed $conditions = null,
+        int $options = 0,
+        ?object $entity = null,
+        array $data = []
+    ) {
+        parent::__construct(
+            conditions: $conditions,
+            options: $options,
+            entity: $entity,
+            data: $data
+        );
     }
 }

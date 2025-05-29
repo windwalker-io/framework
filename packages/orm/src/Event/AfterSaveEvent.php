@@ -12,53 +12,23 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD)]
 class AfterSaveEvent extends AbstractSaveEvent
 {
-    protected object $entity;
-
-    protected array $fullData = [];
-
-    /**
-     * @return object
-     */
-    public function getEntity(): object
-    {
-        return $this->entity;
-    }
-
-    /**
-     * @param  object  $entity
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setEntity(object $entity): static
-    {
-        $this->entity = $entity;
-
-        return $this;
-    }
-
-    /**
-     * Get full data which set from BeforeSaveEvent.
-     *
-     * @return array
-     *
-     * @deprecated This is for B/C use.
-     */
-    public function getFullData(): array
-    {
-        return $this->fullData;
-    }
-
-    /**
-     * @param  array  $fullData
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @deprecated This is for B/C use.
-     */
-    public function setFullData(array $fullData): static
-    {
-        $this->fullData = $fullData;
-
-        return $this;
+    public function __construct(
+        string $type = '',
+        public object $entity = new \stdClass(),
+        public array $fullData = [],
+        ?array $oldData = null,
+        int $options = 0,
+        array|object $source = [],
+        array $extra = [],
+        array $data = [],
+    ) {
+        parent::__construct(
+            type: $type,
+            oldData: $oldData,
+            options: $options,
+            source: $source,
+            extra: $extra,
+            data: $data
+        );
     }
 }

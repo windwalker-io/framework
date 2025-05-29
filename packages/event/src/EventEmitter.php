@@ -72,7 +72,7 @@ class EventEmitter extends EventDispatcher implements
             if (is_string($event)) {
                 $class = class_exists($event) ? $event : Event::class;
 
-                $event = new $class($event);
+                $event = new $class()->setName($event);
             }
 
             $event->merge($args);

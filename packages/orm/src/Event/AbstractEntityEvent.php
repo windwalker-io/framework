@@ -6,41 +6,26 @@ namespace Windwalker\ORM\Event;
 
 use Windwalker\Attributes\AttributeHandler;
 use Windwalker\Attributes\AttributeInterface;
-use Windwalker\Database\DatabaseAdapter;
-use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 use Windwalker\ORM\Attributes\ORMAttributeTrait;
-use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Metadata\EntityMetadata;
-use Windwalker\ORM\ORM;
+use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**
  * The AbstractEntityEvent class.
  */
-class AbstractEntityEvent extends AbstractEvent implements AttributeInterface
+class AbstractEntityEvent extends BaseEvent implements AttributeInterface
 {
     use ORMAttributeTrait;
     use ORMEventTrait;
-
-    protected array $data;
-
-    /**
-     * @return array
-     */
-    public function &getData(): array
-    {
-        return $this->data;
-    }
+    use AccessorBCTrait;
 
     /**
      * @param  array  $data
-     *
-     * @return  static  Return self to support chaining.
      */
-    public function setData(array $data): static
+    public function __construct(public array $data = [])
     {
-        $this->data = $data;
-
-        return $this;
+        //
     }
 
     /**

@@ -9,15 +9,28 @@ namespace Windwalker\ORM\Event;
  */
 class WatchEvent extends AbstractSaveEvent
 {
-    protected AbstractEntityEvent|null $originEvent = null;
-
-    protected bool $isUpdateWhere = false;
-
-    protected mixed $value;
-
-    protected mixed $oldValue;
-
-    protected ?\Closure $afterCallback = null;
+    public function __construct(
+        string $type,
+        public ?AbstractEntityEvent $originEvent = null,
+        public bool $isUpdateWhere = false,
+        public mixed $value = null,
+        public mixed $oldValue = null,
+        public ?\Closure $afterCallback = null,
+        ?array $oldData = null,
+        int $options = 0,
+        array|object $source = [],
+        array $extra = [],
+        $data = [],
+    ) {
+        parent::__construct(
+            type: $type,
+            oldData: $oldData,
+            options: $options,
+            source: $source,
+            extra: $extra,
+            data: $data,
+        );
+    }
 
     /**
      * @return mixed

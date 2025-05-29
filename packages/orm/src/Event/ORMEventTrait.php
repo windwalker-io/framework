@@ -11,40 +11,17 @@ use Windwalker\ORM\ORM;
 
 trait ORMEventTrait
 {
-    protected EntityMetadata $metadata;
+    public EntityMetadata $metadata;
 
-    /**
-     * @return EntityMetadata
-     */
-    public function getMetadata(): EntityMetadata
-    {
-        return $this->metadata;
+    public ORM $orm {
+        get => $this->metadata->getORM();
     }
 
-    /**
-     * @param  EntityMetadata  $metadata
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setMetadata(EntityMetadata $metadata): static
-    {
-        $this->metadata = $metadata;
-
-        return $this;
+    public EntityMapper $entityMapper {
+        get => $this->metadata->getEntityMapper();
     }
 
-    public function getORM(): ORM
-    {
-        return $this->getMetadata()->getORM();
-    }
-
-    public function getEntityMapper(): EntityMapper
-    {
-        return $this->getMetadata()->getEntityMapper();
-    }
-
-    public function getDb(): DatabaseAdapter
-    {
-        return $this->getORM()->getDb();
+    public DatabaseAdapter $db {
+        get => $this->metadata->getORM()->getDb();
     }
 }

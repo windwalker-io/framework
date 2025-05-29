@@ -160,6 +160,24 @@ class CastManager
             return static fn(mixed $value) => $value;
         }
 
+        if (is_object($cast)) {
+            // Cast interface
+            if ($cast instanceof CastInterface) {
+                return $cast->$direction(...);
+            }
+
+            // If object has __invoke method, we can use it directly
+            if (is_callable($cast)) {
+                return $cast;
+            }
+
+            // Pure object
+            return static fn(mixed $value, ORM $orm) => $orm->getDb()
+                ->getHydrator()
+                ->hydrate($value, $cast);
+        }
+
+        // For string and array callable.
         if (is_callable($cast)) {
             return $cast;
         }
@@ -212,18 +230,6 @@ class CastManager
             return static function (mixed $value) use ($options, $cast) {
                 return TypeCast::try($value, $cast);
             };
-        }
-
-        if (is_object($cast)) {
-            // Cast interface
-            if ($cast instanceof CastInterface) {
-                return [$cast, $direction];
-            }
-
-            // Pure object
-            return static fn(mixed $value, ORM $orm) => $orm->getDb()
-                ->getHydrator()
-                ->hydrate($value, $cast);
         }
 
         throw new InvalidArgumentException(

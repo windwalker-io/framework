@@ -1228,10 +1228,10 @@ class NestedSetMapper extends EntityMapper
         return [$result, $leftWhere, $rightWhere, $baseWhere];
     }
 
-    public function emitEvent(string|EventInterface $event, array $args = []): EventInterface
-    {
-        return parent::emitEvent($event, $args);
-    }
+    // public function emitEvent(string|EventInterface $event, array $args = []): EventInterface
+    // {
+    //     return parent::emitEvent($event, $args);
+    // }
 
     public function isMultiTree(): bool
     {

@@ -276,7 +276,7 @@ class EntityHydrator implements FieldHydratorInterface
     {
         $ref = new \ReflectionFunction($hydrator);
 
-        if ($caster = $ref->getClosureUsedVariables()['caster'] ?? null) {
+        if (($caster = $ref->getClosureUsedVariables()['caster'] ?? null) && $caster instanceof \Closure) {
             $ref = new \ReflectionFunction($caster);
 
             if ($cast = $ref->getClosureUsedVariables()['cast'] ?? null) {

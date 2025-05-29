@@ -9,131 +9,40 @@ namespace Windwalker\ORM\Event;
  */
 abstract class AbstractSaveEvent extends AbstractEntityEvent
 {
-    public const TYPE_CREATE = 'create';
+    public const string TYPE_CREATE = 'create';
 
-    public const TYPE_UPDATE = 'update';
+    public const string TYPE_UPDATE = 'update';
 
-    public const TYPE_COPY = 'copy';
+    public const string TYPE_COPY = 'copy';
 
-    protected string $type;
-
-    protected ?array $oldData = null;
-
-    protected int $options = 0;
-
-    protected array|object $source = [];
-
-    protected array $extra = [];
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param  string  $type
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setType(string $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getOldData(): ?array
-    {
-        return $this->oldData;
-    }
-
-    /**
-     * @param  array|null  $oldData
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setOldData(?array $oldData): static
-    {
-        $this->oldData = $oldData;
-
-        return $this;
-    }
-
-    /**
-     * @return array|object
-     */
-    public function getSource(): object|array
-    {
-        return $this->source;
-    }
-
-    /**
-     * @param  array|object  $source
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setSource(object|array $source): static
-    {
-        $this->source = $source;
-
-        return $this;
+    public function __construct(
+        public string $type = '',
+        public ?array $oldData = null,
+        public int $options = 0,
+        public array|object $source = [],
+        public array $extra = [],
+        array $data = [],
+    ) {
+        parent::__construct($data);
     }
 
     public function isCreate(): bool
     {
-        return $this->getType() === static::TYPE_CREATE;
+        return $this->type === static::TYPE_CREATE;
     }
 
     public function isUpdate(): bool
     {
-        return $this->getType() === static::TYPE_UPDATE;
-    }
-
-    /**
-     * @return int
-     */
-    public function &getOptions(): int
-    {
-        return $this->options;
-    }
-
-    /**
-     * @param  int  $options
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setOptions(int $options): static
-    {
-        $this->options = $options;
-
-        return $this;
+        return $this->type === static::TYPE_UPDATE;
     }
 
     public function getTempEntity(): object
     {
-        return $this->getMetadata()->getEntityMapper()->toEntity($this->getData());
+        return $this->entityMapper->toEntity($this->data);
     }
 
     public function getOldEntity(): ?object
     {
-        return $this->getMetadata()->getEntityMapper()->tryEntity($this->getOldData());
-    }
-
-    public function &getExtra(): array
-    {
-        return $this->extra;
-    }
-
-    public function setExtra(array $extra): static
-    {
-        $this->extra = $extra;
-
-        return $this;
+        return $this->entityMapper->tryEntity($this->oldData);
     }
 }
