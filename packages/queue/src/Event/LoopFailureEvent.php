@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Event;
 
 use Throwable;
-use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\BaseEvent;
 use Windwalker\Queue\Worker;
 use Windwalker\Utilities\Accessible\AccessorBCTrait;

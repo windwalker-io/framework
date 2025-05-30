@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Database\Event;
 
 use Windwalker\Database\Driver\StatementInterface;
-use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\BaseEvent;
 
 /**

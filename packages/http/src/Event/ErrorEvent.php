@@ -6,7 +6,6 @@ namespace Windwalker\Http\Event;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\Events\ErrorEventTrait;
 use Windwalker\Http\Output\OutputInterface;
 

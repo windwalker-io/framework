@@ -6,9 +6,7 @@ namespace Windwalker\Database\Event;
 
 use Throwable;
 use Windwalker\Database\Driver\StatementInterface;
-use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\BaseEvent;
-use Windwalker\Query\Query;
 
 /**
  * The QueryFailedEvent class.

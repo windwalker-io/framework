@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Event;
 
-use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\BaseEvent;
 use Windwalker\Queue\Queue;
 use Windwalker\Queue\QueueMessage;

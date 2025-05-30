@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\EventInterface;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
@@ -14,7 +13,6 @@ use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\OutputInterface;
-use Windwalker\Http\Output\StreamOutput;
 
 use function Windwalker\DI\create;
 
