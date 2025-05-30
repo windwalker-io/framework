@@ -6,53 +6,16 @@ namespace Windwalker\Queue\Event;
 
 use Windwalker\Queue\Queue;
 use Windwalker\Queue\Worker;
+use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**
  * Trait QueueEventTrait
  */
 trait QueueEventTrait
 {
-    protected Worker $worker;
+    use AccessorBCTrait;
 
-    protected Queue $queue;
+    public Worker $worker;
 
-    /**
-     * @return Worker
-     */
-    public function getWorker(): Worker
-    {
-        return $this->worker;
-    }
-
-    /**
-     * @param  Worker  $worker
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setWorker(Worker $worker): static
-    {
-        $this->worker = $worker;
-
-        return $this;
-    }
-
-    /**
-     * @return Queue
-     */
-    public function getQueue(): Queue
-    {
-        return $this->queue;
-    }
-
-    /**
-     * @param  Queue  $queue
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setQueue(Queue $queue): static
-    {
-        $this->queue = $queue;
-
-        return $this;
-    }
+    public Queue $queue;
 }

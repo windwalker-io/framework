@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Event;
 
 use Windwalker\Queue\QueueMessage;
+use Windwalker\Utilities\Assert\TypeAssert;
 
 /**
  * The JobEventTrait class.
@@ -13,50 +14,16 @@ trait JobEventTrait
 {
     use QueueEventTrait;
 
-    protected QueueMessage $message;
+    public QueueMessage $message;
 
     /**
      * @var callable
      */
-    protected $job;
+    public mixed $job {
+        set {
+            TypeAssert::assert(is_callable($value), 'Property {caller} must be a callable, {value} given.', $value);
 
-    /**
-     * @return QueueMessage
-     */
-    public function getMessage(): QueueMessage
-    {
-        return $this->message;
-    }
-
-    /**
-     * @param  QueueMessage  $message
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setMessage(QueueMessage $message): static
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * @return callable
-     */
-    public function getJob(): callable
-    {
-        return $this->job;
-    }
-
-    /**
-     * @param  callable  $job
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setJob(callable $job): static
-    {
-        $this->job = $job;
-
-        return $this;
+            $this->job = $value;
+        }
     }
 }

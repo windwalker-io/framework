@@ -11,7 +11,6 @@ use Psr\Log\NullLogger;
 use Throwable;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\Event\EventListenableInterface;
 use Windwalker\Queue\Event\AfterJobRunEvent;
 use Windwalker\Queue\Event\BeforeJobRunEvent;
 use Windwalker\Queue\Event\JobFailureEvent;
@@ -30,50 +29,50 @@ class Worker implements EventAwareInterface
 {
     use EventAwareTrait;
 
-    public const STATE_INACTIVE = 'inactive';
+    public const string STATE_INACTIVE = 'inactive';
 
-    public const STATE_ACTIVE = 'active';
+    public const string STATE_ACTIVE = 'active';
 
-    public const STATE_EXITING = 'exiting';
+    public const string STATE_EXITING = 'exiting';
 
-    public const STATE_PAUSE = 'pause';
+    public const string STATE_PAUSE = 'pause';
 
-    public const STATE_STOP = 'stop';
+    public const string STATE_STOP = 'stop';
 
     /**
      * Property queue.
      *
      * @var  Queue
      */
-    protected Queue $queue;
+    public Queue $queue;
 
     /**
      * Property logger.
      *
      * @var LoggerInterface
      */
-    protected LoggerInterface $logger;
+    public LoggerInterface $logger;
 
     /**
      * Property state.
      *
      * @var  string
      */
-    protected string $state = self::STATE_INACTIVE;
+    public string $state = self::STATE_INACTIVE;
 
     /**
      * Property lastRestart.
      *
-     * @var  int
+     * @var  ?int
      */
-    protected ?int $lastRestart = null;
+    public ?int $lastRestart = null;
 
     /**
      * Property pid.
      *
-     * @var  int
+     * @var  ?int
      */
-    protected ?int $pid = null;
+    public ?int $pid = null;
 
     /**
      * @var ?callable
@@ -101,7 +100,7 @@ class Worker implements EventAwareInterface
      * @return  void
      * @throws Exception
      */
-    public function loop(string|array $channel, array $options = [])
+    public function loop(string|array $channel, array $options = []): void
     {
         gc_enable();
 
@@ -122,7 +121,7 @@ class Worker implements EventAwareInterface
             $queue = $this->queue;
 
             // @loop start
-            $this->emit(LoopStartEvent::class, compact('worker', 'queue'));
+            $this->emit(new LoopStartEvent(worker: $worker, queue: $queue));
 
             // Timeout handler
             $this->registerSignals($options);
@@ -135,14 +134,14 @@ class Worker implements EventAwareInterface
 
                     $this->logger->error($message);
 
-                    $this->emit(LoopFailureEvent::class, compact('worker', 'exception', 'message'));
+                    $this->emit(new LoopFailureEvent(worker: $worker, message: $message, exception: $exception));
                 }
             }
 
             $this->stopIfNecessary($options);
 
             // @loop end
-            $this->emit(LoopEndEvent::class, compact('worker', 'queue'));
+            $this->emit(new LoopEndEvent(worker: $worker, queue: $queue));
 
             $this->sleep((float) ($options['sleep'] ?? 1));
         }
@@ -186,13 +185,12 @@ class Worker implements EventAwareInterface
         try {
             // @before event
             $this->emit(
-                BeforeJobRunEvent::class,
-                [
-                    'worker' => $this,
-                    'message' => $message,
-                    'job' => $job,
-                    'queue' => $this->queue,
-                ]
+                new BeforeJobRunEvent(
+                    message: $message,
+                    job: $job,
+                    worker: $this,
+                    queue: $this->queue,
+                ),
             );
 
             // Fail if max attempts
@@ -207,13 +205,12 @@ class Worker implements EventAwareInterface
 
             // @after event
             $this->emit(
-                AfterJobRunEvent::class,
-                [
-                    'worker' => $this,
-                    'message' => $message,
-                    'job' => $job,
-                    'queue' => $this->queue,
-                ]
+                new AfterJobRunEvent(
+                    message: $message,
+                    job: $job,
+                    worker: $this,
+                    queue: $this->queue,
+                ),
             );
 
             $this->queue->delete($message);
@@ -270,7 +267,7 @@ class Worker implements EventAwareInterface
                 SIGALRM,
                 function () use ($timeout) {
                     $this->stop('A job process over the max timeout: ' . $timeout . ' PID: ' . $this->pid);
-                }
+                },
             );
 
             pcntl_alarm((int) ($timeout + $options['sleep']));
@@ -305,12 +302,11 @@ class Worker implements EventAwareInterface
         $this->logger->info('Worker stop: ' . $reason);
 
         $this->emit(
-            StopEvent::class,
-            [
-                'worker' => $this,
-                'queue' => $this->queue,
-                'reason' => $reason,
-            ]
+            new StopEvent(
+                reason: $reason,
+                worker: $this,
+                queue: $this->queue,
+            ),
         );
 
         $this->setState(static::STATE_STOP);
@@ -328,17 +324,17 @@ class Worker implements EventAwareInterface
                 static::STATE_EXITING,
                 static::STATE_STOP,
             ],
-            true
+            true,
         );
     }
 
     /**
      * handleException
      *
-     * @param  callable  $job
+     * @param  callable      $job
      * @param  QueueMessage  $message
      * @param  array         $options
-     * @param  Throwable    $e
+     * @param  Throwable     $e
      *
      * @return void
      */
@@ -350,8 +346,8 @@ class Worker implements EventAwareInterface
                 get_debug_type($job),
                 $message->getId(),
                 $e->getMessage(),
-                get_debug_type($job)
-            )
+                get_debug_type($job),
+            ),
         );
 
         if (method_exists($job, 'failed')) {
@@ -368,20 +364,19 @@ class Worker implements EventAwareInterface
                     'Max attempts exceeded. Job: %s (%s) - Class: %s',
                     get_debug_type($job),
                     $message->getId(),
-                    get_debug_type($job)
-                )
+                    get_debug_type($job),
+                ),
             );
         }
 
-        $this->dispatcher->emit(
-            JobFailureEvent::class,
-            [
-                'worker' => $this,
-                'queue' => $this->queue,
-                'exception' => $e,
-                'job' => $job,
-                'message' => $message,
-            ]
+        $this->emit(
+            new JobFailureEvent(
+                exception: $e,
+                message: $message,
+                job: $job,
+                worker: $this,
+                queue: $this->queue,
+            ),
         );
     }
 
@@ -497,7 +492,7 @@ class Worker implements EventAwareInterface
      */
     public function getJobRunner(): callable
     {
-        return $this->jobRunner ??= fn ($job) => $job();
+        return $this->jobRunner ??= fn($job) => $job();
     }
 
     /**

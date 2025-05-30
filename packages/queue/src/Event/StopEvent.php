@@ -5,33 +5,23 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Event;
 
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Queue\Queue;
+use Windwalker\Queue\Worker;
 
 /**
  * The StopEvent class.
  */
-class StopEvent extends AbstractEvent
+class StopEvent extends BaseEvent
 {
     use QueueEventTrait;
 
-    protected string $reason;
-
-    /**
-     * @return string
-     */
-    public function getReason(): string
-    {
-        return $this->reason;
-    }
-
-    /**
-     * @param  string  $reason
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setReason(string $reason): static
-    {
-        $this->reason = $reason;
-
-        return $this;
+    public function __construct(
+        public string $reason,
+        Worker $worker,
+        Queue $queue,
+    ) {
+        $this->worker = $worker;
+        $this->queue = $queue;
     }
 }

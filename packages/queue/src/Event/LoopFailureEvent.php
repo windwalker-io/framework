@@ -6,76 +6,22 @@ namespace Windwalker\Queue\Event;
 
 use Throwable;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 use Windwalker\Queue\Worker;
+use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**
  * The WorkerLoopCycleFailure class.
  */
-class LoopFailureEvent extends AbstractEvent
+class LoopFailureEvent extends BaseEvent
 {
-    protected Worker $worker;
+    use AccessorBCTrait;
 
-    protected string $message;
-
-    protected Throwable $exception;
-
-    /**
-     * @return Worker
-     */
-    public function getWorker(): Worker
-    {
-        return $this->worker;
-    }
-
-    /**
-     * @param  Worker  $worker
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setWorker(Worker $worker): static
-    {
-        $this->worker = $worker;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessage(): string
-    {
-        return $this->message;
-    }
-
-    /**
-     * @param  string  $message
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setMessage(string $message): static
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * @return Throwable
-     */
-    public function getException(): Throwable
-    {
-        return $this->exception;
-    }
-
-    /**
-     * @param  Throwable  $exception
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setException(Throwable $exception): static
-    {
-        $this->exception = $exception;
-
-        return $this;
+    public function __construct(
+        public Worker $worker,
+        public string $message,
+        public Throwable $exception
+    ) {
+        //
     }
 }
