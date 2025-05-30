@@ -20,25 +20,43 @@ trait AccessorBCTrait
             str_starts_with($name, 'get')
             || str_starts_with($name, 'set')
         ) {
-            $property = lcfirst(substr($name, 3));
+            $property = substr($name, 3);
 
-            if (property_exists($this, $property)) {
-                if (str_starts_with($name, 'get')) {
-                    return $this->{$property};
-                }
+            $ref = new \ReflectionClass($this);
+            $props = $ref->getProperties(
+                \ReflectionProperty::IS_PUBLIC
+                | \ReflectionProperty::IS_PROTECTED
+                | \ReflectionProperty::IS_PRIVATE
+            );
 
-                if (str_starts_with($name, 'set')) {
-                    $this->{$property} = $args[0] ?? null;
-                    return $this;
+            foreach ($props as $propRef) {
+                if (strcasecmp($propRef->getName(), $property) === 0) {
+                    if (str_starts_with($name, 'get')) {
+                        return $propRef->getValue($this);
+                    }
+
+                    if (str_starts_with($name, 'set')) {
+                        $propRef->setValue($this, $args[0] ?? null);
+                        return $this;
+                    }
                 }
             }
         }
 
         if (str_starts_with($name, 'is')) {
-            $property = lcfirst(substr($name, 2));
+            $property = substr($name, 2);
 
-            if (property_exists($this, $property)) {
-                return $this->{$property};
+            $ref = new \ReflectionClass($this);
+            $props = $ref->getProperties(
+                \ReflectionProperty::IS_PUBLIC
+                | \ReflectionProperty::IS_PROTECTED
+                | \ReflectionProperty::IS_PRIVATE
+            );
+
+            foreach ($props as $propRef) {
+                if (strcasecmp($propRef->getName(), $property) === 0) {
+                    return $propRef->getValue($this);
+                }
             }
         }
 
