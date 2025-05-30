@@ -462,10 +462,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Start',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 return $this->emit(
-                    StartEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new StartEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -476,10 +475,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'BeforeShutdown',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
-                    BeforeShutdownEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new BeforeShutdownEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -490,10 +488,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Shutdown',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
-                    BeforeShutdownEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new ShutdownEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -504,11 +501,10 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'WorkerStart',
             function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
-                    WorkerStartEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'workerId'
+                    new WorkerStartEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        workerId: $workerId,
                     )
                 );
             }
@@ -519,11 +515,10 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'WorkerStop',
             function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
-                    WorkerStopEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'workerId'
+                    new WorkerStopEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        workerId: $workerId,
                     )
                 );
             }
@@ -534,11 +529,10 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'WorkerExit',
             function (SwooleBaseServer $swooleServer, int $workerId) use ($server) {
                 $this->emit(
-                    WorkerExitEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'workerId'
+                    new WorkerExitEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        workerId: $workerId,
                     )
                 );
             }
@@ -549,11 +543,10 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Connect',
             function (SwooleBaseServer $swooleServer, int $reactorId) use ($server) {
                 $this->emit(
-                    ConnectEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'reactorId'
+                    new ConnectEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        reactorId: $reactorId,
                     )
                 );
             }
@@ -564,12 +557,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Receive',
             function (SwooleBaseServer $swooleServer, int $reactorId, string $data) use ($server) {
                 $this->emit(
-                    ReceiveEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'reactorId',
-                        'data'
+                    new ReceiveEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        data: $data,
+                        reactorId: $reactorId,
                     )
                 );
             }
@@ -580,12 +572,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Packet',
             function (SwooleBaseServer $swooleServer, string $data, array $clientInfo) use ($server) {
                 $this->emit(
-                    PacketEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'data',
-                        'clientInfo'
+                    new PacketEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        data: $data,
+                        clientInfo: $clientInfo,
                     )
                 );
             }
@@ -596,12 +587,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Close',
             function (SwooleBaseServer $swooleServer, int $fd, int $reactorId) use ($server) {
                 $this->emit(
-                    CloseEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'fd',
-                        'reactorId'
+                    new CloseEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        fd: $fd,
+                        reactorId: $reactorId,
                     )
                 );
             }
@@ -612,13 +602,12 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Task',
             function (SwooleBaseServer $swooleServer, int $taskId, int $srcWorkerId, mixed $data) use ($server) {
                 $this->emit(
-                    TaskEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'taskId',
-                        'srcWorkerId',
-                        'data'
+                    new TaskEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        taskId: $taskId,
+                        srcWorkerId: $srcWorkerId,
+                        data: $data,
                     )
                 );
             }
@@ -629,12 +618,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Finish',
             function (SwooleBaseServer $swooleServer, int $taskId, mixed $data) use ($server) {
                 $this->emit(
-                    FinishEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'taskId',
-                        'data'
+                    new FinishEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        data: $data,
+                        taskId: $taskId,
                     )
                 );
             }
@@ -645,12 +633,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'PipeMessage',
             function (SwooleBaseServer $swooleServer, int $srcWorkerId, mixed $message) use ($server) {
                 $this->emit(
-                    PipeMessageEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'srcWorkerId',
-                        'message'
+                    new PipeMessageEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        srcWorkerId: $srcWorkerId,
+                        message: $message,
                     )
                 );
             }
@@ -669,14 +656,13 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
                 $server
             ) {
                 $this->emit(
-                    PipeMessageEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'workerId',
-                        'workerPid',
-                        'exitCode',
-                        'signal'
+                    new WorkerErrorEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        workerId: $workerId,
+                        workerPid: $workerPid,
+                        exitCode: $exitCode,
+                        signal: $signal
                     )
                 );
             }
@@ -687,10 +673,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'ManagerStart',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
-                    ManagerStartEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new ManagerStartEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -701,10 +686,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'ManagerStop',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
-                    ManagerStopEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new ManagerStopEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -715,10 +699,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'BeforeReload',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
-                    BeforeReloadEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new BeforeReloadEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -729,10 +712,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'AfterReload',
             function (SwooleBaseServer $swooleServer) use ($server) {
                 $this->emit(
-                    AfterReloadEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server'
+                    new AfterReloadEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -776,12 +758,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'BeforeHandshakeResponse',
             function (SwooleBaseServer $swooleServer, Request $request, Response $response) use ($server) {
                 $this->emit(
-                    BeforeHandshakeResponseEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'request',
-                        'response'
+                    new BeforeHandshakeResponseEvent(
+                        request: $request,
+                        response: $response,
+                        swooleServer: $swooleServer,
+                        server: $server
                     )
                 );
             }
@@ -792,10 +773,9 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Handshake',
             function (Request $request, Response $response) {
                 $this->emit(
-                    HandshakeEvent::class,
-                    compact(
-                        'request',
-                        'response'
+                    new HandshakeEvent(
+                        request: $request,
+                        response: $response
                     )
                 );
             }
@@ -809,12 +789,11 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
                     ->withMethod('OPEN');
 
                 $this->emit(
-                    OpenEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'request',
-                        'swooleRequest',
+                    new OpenEvent(
+                        request: $request,
+                        swooleRequest: $swooleRequest,
+                        swooleServer: $swooleServer,
+                        server: $server,
                     )
                 );
             }
@@ -827,11 +806,10 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
                 $frame = new WebSocketFrameWrapper($swooleFrame);
 
                 $this->emit(
-                    MessageEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'frame'
+                    new MessageEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        frame: $frame
                     )
                 );
             }
@@ -842,11 +820,10 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
             'Disconnect',
             function (SwooleBaseServer $swooleServer, int $fd) use ($server) {
                 $this->emit(
-                    DisconnectEvent::class,
-                    compact(
-                        'swooleServer',
-                        'server',
-                        'fd'
+                    new DisconnectEvent(
+                        swooleServer: $swooleServer,
+                        server: $server,
+                        fd: $fd
                     )
                 );
             }

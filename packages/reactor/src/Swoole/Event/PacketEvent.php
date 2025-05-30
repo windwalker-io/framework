@@ -4,40 +4,24 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Event;
 
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 
 /**
  * The PacketEvent class.
  */
-class PacketEvent extends AbstractEvent
+class PacketEvent extends BaseEvent
 {
     use ServerEventTrait;
 
-    public string $data;
-
-    public array $clientInfo;
-
-    public function getData(): string
-    {
-        return $this->data;
-    }
-
-    public function setData(string $data): static
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-
-    public function getClientInfo(): array
-    {
-        return $this->clientInfo;
-    }
-
-    public function setClientInfo(array $clientInfo): static
-    {
-        $this->clientInfo = $clientInfo;
-
-        return $this;
+    public function __construct(
+        Server $swooleServer,
+        ServerInterface $server,
+        public string $data,
+        public array $clientInfo,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
     }
 }

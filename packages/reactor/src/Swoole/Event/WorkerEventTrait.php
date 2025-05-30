@@ -10,21 +10,4 @@ namespace Windwalker\Reactor\Swoole\Event;
 trait WorkerEventTrait
 {
     public int $workerId;
-
-    public function getWorkerId(): int
-    {
-        return $this->workerId;
-    }
-
-    /**
-     * @param  int  $workerId
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setWorkerId(int $workerId): static
-    {
-        $this->workerId = $workerId;
-
-        return $this;
-    }
 }

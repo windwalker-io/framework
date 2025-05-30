@@ -4,40 +4,30 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Event;
 
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 
 /**
  * The FinishEvent class.
  */
-class FinishEvent extends AbstractEvent
+class FinishEvent extends BaseEvent
 {
     use ServerEventTrait;
 
-    public int $taskId;
-
-    public mixed $data;
-
-    public function getTaskId(): int
-    {
-        return $this->taskId;
-    }
-
-    public function setTaskId(int $taskId): static
-    {
-        $this->taskId = $taskId;
-
-        return $this;
-    }
-
-    public function getData(): mixed
-    {
-        return $this->data;
-    }
-
-    public function setData(mixed $data): static
-    {
-        $this->data = $data;
-
-        return $this;
+    /**
+     * @param  Server           $swooleServer
+     * @param  ServerInterface  $server
+     * @param  int              $taskId
+     * @param  mixed|null       $data
+     */
+    public function __construct(
+        Server $swooleServer,
+        ServerInterface $server,
+        public mixed $data,
+        public int $taskId = 0,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
     }
 }

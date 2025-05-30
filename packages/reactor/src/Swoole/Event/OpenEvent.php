@@ -5,51 +5,25 @@ declare(strict_types=1);
 namespace Windwalker\Reactor\Swoole\Event;
 
 use Swoole\Http\Request;
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 use Windwalker\Reactor\WebSocket\WebSocketRequest;
 
 /**
  * The OpenEvent class.
  */
-class OpenEvent extends AbstractEvent
+class OpenEvent extends BaseEvent
 {
     use ServerEventTrait;
 
-    public WebSocketRequest $request;
-
-    public Request $swooleRequest;
-
-    public function getRequest(): WebSocketRequest
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param  WebSocketRequest  $request
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setRequest(WebSocketRequest $request): static
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    public function getSwooleRequest(): Request
-    {
-        return $this->swooleRequest;
-    }
-
-    /**
-     * @param  Request  $swooleRequest
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setSwooleRequest(Request $swooleRequest): static
-    {
-        $this->swooleRequest = $swooleRequest;
-
-        return $this;
+    public function __construct(
+        public WebSocketRequest $request,
+        public Request $swooleRequest,
+        Server $swooleServer,
+        ServerInterface $server,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
     }
 }

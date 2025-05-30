@@ -6,40 +6,24 @@ namespace Windwalker\Reactor\Swoole\Event;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 
 /**
  * The BeforeHandshakeResponseEvent class.
  */
-class BeforeHandshakeResponseEvent extends AbstractEvent
+class BeforeHandshakeResponseEvent extends BaseEvent
 {
     use ServerEventTrait;
 
-    public Request $request;
-
-    public Response $response;
-
-    public function getRequest(): Request
-    {
-        return $this->request;
-    }
-
-    public function setRequest(Request $request): static
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    public function getResponse(): Response
-    {
-        return $this->response;
-    }
-
-    public function setResponse(Response $response): static
-    {
-        $this->response = $response;
-
-        return $this;
+    public function __construct(
+        public Request $request,
+        public Response $response,
+        Server $swooleServer,
+        ServerInterface $server,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
     }
 }

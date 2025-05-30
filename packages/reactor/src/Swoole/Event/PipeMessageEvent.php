@@ -4,40 +4,24 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Event;
 
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 
 /**
  * The PipeMessageEvent.php class.
  */
-class PipeMessageEvent extends AbstractEvent
+class PipeMessageEvent extends BaseEvent
 {
     use ServerEventTrait;
 
-    public int $srcWorkerId;
-
-    public mixed $data;
-
-    public function getSrcWorkerId(): int
-    {
-        return $this->srcWorkerId;
-    }
-
-    public function setSrcWorkerId(int $srcWorkerId): static
-    {
-        $this->srcWorkerId = $srcWorkerId;
-
-        return $this;
-    }
-
-    public function getData(): mixed
-    {
-        return $this->data;
-    }
-
-    public function setData(mixed $data): static
-    {
-        $this->data = $data;
-
-        return $this;
+    public function __construct(
+        Server $swooleServer,
+        ServerInterface $server,
+        public int $srcWorkerId,
+        public mixed $message,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
     }
 }

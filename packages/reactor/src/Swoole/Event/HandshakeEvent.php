@@ -6,38 +6,17 @@ namespace Windwalker\Reactor\Swoole\Event;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**
  * The HandshakeEvent class.
  */
-class HandshakeEvent extends AbstractEvent
+class HandshakeEvent extends BaseEvent
 {
-    public Request $request;
+    use AccessorBCTrait;
 
-    public Response $response;
-
-    public function getRequest(): Request
+    public function __construct(public Request $request, public Response $response)
     {
-        return $this->request;
-    }
-
-    public function setRequest(Request $request): static
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    public function getResponse(): Response
-    {
-        return $this->response;
-    }
-
-    public function setResponse(Response $response): static
-    {
-        $this->response = $response;
-
-        return $this;
     }
 }

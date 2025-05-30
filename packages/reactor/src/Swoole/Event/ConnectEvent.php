@@ -4,13 +4,27 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Event;
 
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 
 /**
  * The ConnectEvent class.
  */
-class ConnectEvent extends AbstractEvent
+class ConnectEvent extends BaseEvent
 {
     use ServerEventTrait;
     use TcpEventTrait;
+
+    public function __construct(
+        Server $swooleServer,
+        ServerInterface $server,
+        int $reactorId,
+        int $fd = 0,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
+        $this->fd = $fd;
+        $this->reactorId = $reactorId;
+    }
 }

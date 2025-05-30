@@ -4,31 +4,23 @@ declare(strict_types=1);
 
 namespace Windwalker\Reactor\Swoole\Event;
 
-use Windwalker\Event\AbstractEvent;
+use Swoole\Server;
+use Windwalker\Event\BaseEvent;
+use Windwalker\Http\Server\ServerInterface;
 
 /**
  * The DisconnectEvent class.
  */
-class DisconnectEvent extends AbstractEvent
+class DisconnectEvent extends BaseEvent
 {
     use ServerEventTrait;
 
-    public int $fd;
-
-    public function getFd(): int
-    {
-        return $this->fd;
-    }
-
-    /**
-     * @param  int  $fd
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setFd(int $fd): static
-    {
-        $this->fd = $fd;
-
-        return $this;
+    public function __construct(
+        Server $swooleServer,
+        ServerInterface $server,
+        public int $fd,
+    ) {
+        $this->swooleServer = $swooleServer;
+        $this->server = $server;
     }
 }
