@@ -13,9 +13,9 @@ use Windwalker\Event\AbstractEvent;
  */
 class HandshakeEvent extends AbstractEvent
 {
-    protected Request $request;
+    public Request $request;
 
-    protected Response $response;
+    public Response $response;
 
     public function getRequest(): Request
     {

@@ -22,7 +22,7 @@ class MysqliStatement extends AbstractStatement
     /**
      * @var mysqli_stmt
      */
-    protected mixed $cursor = null;
+    public protected(set) mixed $cursor = null;
 
     /**
      * @var mysqli
@@ -32,7 +32,7 @@ class MysqliStatement extends AbstractStatement
     /**
      * @var mysqli_result|bool|null
      */
-    protected mysqli_result|bool|null $result = null;
+    public protected(set) mysqli_result | bool | null $result = null;
 
     /**
      * @inheritDoc
@@ -48,7 +48,7 @@ class MysqliStatement extends AbstractStatement
                         'dataType' => ParamType::guessType($param),
                     ];
                 },
-                $params
+                $params,
             );
         } else {
             $params = $this->bounded;
@@ -74,14 +74,14 @@ class MysqliStatement extends AbstractStatement
 
                     $stmt->bind_param(
                         $types,
-                        ...$args
+                        ...$args,
                     );
                 }
 
                 $stmt->execute();
 
                 $this->result = $stmt->get_result();
-            }
+            },
         );
 
         return true;

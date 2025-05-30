@@ -20,7 +20,7 @@ class PdoStatement extends AbstractStatement
     /**
      * @var \PDOStatement
      */
-    protected mixed $cursor = null;
+    public protected(set) mixed $cursor = null;
 
     /**
      * @var PDO

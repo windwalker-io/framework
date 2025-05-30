@@ -13,9 +13,9 @@ class PipeMessageEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected int $srcWorkerId;
+    public int $srcWorkerId;
 
-    protected mixed $data;
+    public mixed $data;
 
     public function getSrcWorkerId(): int
     {

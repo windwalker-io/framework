@@ -73,6 +73,7 @@ class StubArticle
     ): void {
         static::$counter++;
 
+        // Keeping use getter to test the B/C works
         $data = $event->getData();
         $data['category_id'] = 2;
 

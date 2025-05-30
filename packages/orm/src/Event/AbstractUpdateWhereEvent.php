@@ -17,4 +17,20 @@ abstract class AbstractUpdateWhereEvent extends AbstractEntityEvent
     ) {
         parent::__construct($data);
     }
+
+    /**
+     * @deprecated  Use property instead.
+     */
+    public function &getConditions(): mixed
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * @deprecated  Use property instead.
+     */
+    public function &getOptions(): int
+    {
+        return $this->options;
+    }
 }

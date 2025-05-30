@@ -16,7 +16,7 @@ class MessageEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected WebSocketFrameInterface $frame;
+    public WebSocketFrameInterface $frame;
 
     public function getFrame(): WebSocketFrameInterface
     {

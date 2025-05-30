@@ -279,12 +279,14 @@ class ORM implements EventAwareInterface
         $item = $data;
 
         $event = $this->emit(
-            HydrateEvent::class,
-            compact('class', 'item')
+            new HydrateEvent(
+                item: $item,
+                class: $class,
+            )
         );
 
         /** @var T $entity */
-        $entity = $this->getEntityHydrator()->hydrate($event->getItem(), $entity);
+        $entity = $this->getEntityHydrator()->hydrate($event->item, $entity);
 
         if (static::isEntity($entity)) {
             $entity = $this->energize($entity);
@@ -299,7 +301,7 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param  T     $entity
      * @param  bool  $force
@@ -343,6 +345,8 @@ class ORM implements EventAwareInterface
      * @return  E|null
      *
      * @throws ReflectionException
+     *
+     * @deprecated  Use tryEntity() instead.
      */
     public function toEntityOrNull(string $entityClass, array|object|null $data): ?object
     {

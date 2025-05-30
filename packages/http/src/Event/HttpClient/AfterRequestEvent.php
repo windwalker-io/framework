@@ -6,22 +6,26 @@ namespace Windwalker\Http\Event\HttpClient;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 use Windwalker\Http\HttpClient;
 
 /**
  * The AfterRequestEvent class.
  */
-class AfterRequestEvent extends AbstractEvent
+class AfterRequestEvent extends BaseEvent
 {
-    protected HttpClient $httpClient;
-
-    protected RequestInterface $request;
-
-    protected ResponseInterface $response;
+    public function __construct(
+        public HttpClient $httpClient,
+        public RequestInterface $request,
+        public ResponseInterface $response,
+    ) {
+        //
+    }
 
     /**
      * @return RequestInterface
+     *
+     * @deprecated  Use property instead.
      */
     public function getRequest(): RequestInterface
     {
@@ -32,6 +36,8 @@ class AfterRequestEvent extends AbstractEvent
      * @param  RequestInterface  $request
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setRequest(RequestInterface $request): static
     {
@@ -42,6 +48,8 @@ class AfterRequestEvent extends AbstractEvent
 
     /**
      * @return HttpClient
+     *
+     * @deprecated  Use property instead.
      */
     public function getHttpClient(): HttpClient
     {
@@ -52,6 +60,8 @@ class AfterRequestEvent extends AbstractEvent
      * @param  HttpClient  $httpClient
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setHttpClient(HttpClient $httpClient): static
     {
@@ -62,6 +72,8 @@ class AfterRequestEvent extends AbstractEvent
 
     /**
      * @return ResponseInterface
+     *
+     * @deprecated  Use property instead.
      */
     public function getResponse(): ResponseInterface
     {
@@ -72,6 +84,8 @@ class AfterRequestEvent extends AbstractEvent
      * @param  ResponseInterface  $response
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setResponse(ResponseInterface $response): static
     {

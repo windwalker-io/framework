@@ -21,16 +21,16 @@ class Watch implements AttributeInterface
 {
     use ORMAttributeTrait;
 
-    public const BEFORE_SAVE = 1 << 0;
+    public const int BEFORE_SAVE = 1 << 0;
 
     /**
      * @deprecated Use INCLUDE_CREATE instead.
      */
-    public const ON_CREATE = 1 << 1;
+    public const int ON_CREATE = 1 << 1;
 
-    public const INCLUDE_CREATE = 1 << 1;
+    public const int INCLUDE_CREATE = 1 << 1;
 
-    public const INCLUDE_UPDATE_WHERE = 1 << 2;
+    public const int INCLUDE_UPDATE_WHERE = 1 << 2;
 
     /**
      * @var callable|string
@@ -76,24 +76,26 @@ class Watch implements AttributeInterface
     ): WatchEvent {
         $type = $event instanceof AbstractUpdateWhereEvent
             ? AbstractSaveEvent::TYPE_UPDATE
-            : $event->getType();
+            : $event->type;
 
-        $watchEvent = (new WatchEvent())
-            ->setOriginEvent($event)
-            ->setValue($value)
-            ->setType($type)
-            ->setMetadata($event->getMetadata())
-            ->setDataRef($event->getData())
-            ->setSource($event->getData());
+        $watchEvent = new WatchEvent(
+            type: $type,
+            originEvent: $event,
+            source: $event->data,
+            value: $value,
+        );
+
+        $watchEvent->setDataRef($event->data);
+        $watchEvent->metadata = $event->metadata;
 
         if ($event instanceof AbstractSaveEvent) {
-            $watchEvent->setOldData($event->getOldData());
-            $watchEvent->setOldValue($oldValue);
-            $watchEvent->setIsUpdateWhere(false);
+            $watchEvent->oldData = $event->oldData;
+            $watchEvent->oldValue = $oldValue;
+            $watchEvent->isUpdateWhere = false;
         } else {
-            $watchEvent->setOldData($event->getData());
-            $watchEvent->setOldValue(null);
-            $watchEvent->setIsUpdateWhere(true);
+            $watchEvent->oldData = $event->data;
+            $watchEvent->oldValue = null;
+            $watchEvent->isUpdateWhere = true;
         }
 
         return $watchEvent;

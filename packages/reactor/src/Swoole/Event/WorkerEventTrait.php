@@ -9,7 +9,7 @@ namespace Windwalker\Reactor\Swoole\Event;
  */
 trait WorkerEventTrait
 {
-    protected int $workerId;
+    public int $workerId;
 
     public function getWorkerId(): int
     {

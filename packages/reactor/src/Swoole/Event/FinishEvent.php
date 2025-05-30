@@ -13,9 +13,9 @@ class FinishEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected int $taskId;
+    public int $taskId;
 
-    protected mixed $data;
+    public mixed $data;
 
     public function getTaskId(): int
     {

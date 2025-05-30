@@ -14,13 +14,25 @@ trait ErrorEventTrait
     /**
      * @var Throwable
      */
-    protected Throwable $exception;
+    public Throwable $exception;
 
+    /**
+     * @return  Throwable
+     *
+     * @deprecated  Use property instead.
+     */
     public function getException(): Throwable
     {
         return $this->exception;
     }
 
+    /**
+     * @param  Throwable  $exception
+     *
+     * @return  $this
+     *
+     * @deprecated  Use property instead.
+     */
     public function setException(Throwable $exception): static
     {
         $this->exception = $exception;

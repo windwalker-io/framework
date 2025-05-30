@@ -6,111 +6,32 @@ namespace Windwalker\Database\Event;
 
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**
  * Trait QueryEventTrait
  */
 trait QueryEventTrait
 {
-    protected string $sql = '';
+    use AccessorBCTrait;
 
-    protected array $bounded = [];
+    public string $sql = '';
 
-    protected ?StatementInterface $statement = null;
+    public array $bounded = [];
 
-    /**
-     * @var mixed
-     */
-    protected mixed $query = null;
+    public ?StatementInterface $statement = null;
 
-    /**
-     * @return mixed
-     */
-    public function getQuery(): mixed
-    {
-        return $this->query;
-    }
+    public mixed $query = null;
 
-    /**
-     * @param  mixed  $query
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setQuery(mixed $query): static
-    {
-        $this->query = $query;
+    public string $debugQueryString {
+        get {
+            $query = $this->query;
 
-        return $this;
-    }
+            if ($query instanceof Query) {
+                $query = $query->render(true);
+            }
 
-    public function getDebugQueryString(): string
-    {
-        $query = $this->getQuery();
-
-        if ($query instanceof Query) {
-            $query = $query->render(true);
+            return (string) $query;
         }
-
-        return (string) $query;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSql(): string
-    {
-        return $this->sql;
-    }
-
-    /**
-     * @param  string  $sql
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setSql(string $sql): static
-    {
-        $this->sql = $sql;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBounded(): array
-    {
-        return $this->bounded;
-    }
-
-    /**
-     * @param  array  $bounded
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setBounded(array $bounded): static
-    {
-        $this->bounded = $bounded;
-
-        return $this;
-    }
-
-    /**
-     * @return ?StatementInterface
-     */
-    public function getStatement(): ?StatementInterface
-    {
-        return $this->statement;
-    }
-
-    /**
-     * @param  ?StatementInterface  $statement
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setStatement(?StatementInterface $statement): static
-    {
-        $this->statement = $statement;
-
-        return $this;
     }
 }

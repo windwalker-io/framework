@@ -54,12 +54,12 @@ class NestedSetMapper extends EntityMapper
         $this->on(
             BeforeSaveEvent::class,
             function (BeforeSaveEvent $event) {
-                $source = $event->getSource();
+                $source = $event->source;
 
                 $isRoot = is_array($source) && ($source['is_root'] ?? null);
 
                 if (!$isRoot) {
-                    $this->preprocessSave($event, $event->getType() === BeforeSaveEvent::TYPE_CREATE);
+                    $this->preprocessSave($event, $event->isCreate);
                 }
 
                 $this->validateSave($event);
@@ -83,7 +83,7 @@ class NestedSetMapper extends EntityMapper
 
     protected function postProcessFindHydration(HydrateEvent $event): void
     {
-        $item = $event->getItem();
+        $item = $event->item;
 
         if ($item === null) {
             return;
@@ -333,9 +333,9 @@ class NestedSetMapper extends EntityMapper
 
     protected function preprocessSave(BeforeSaveEvent $event, bool $new = false): void
     {
-        $data = $event->getData();
+        $data = $event->data;
         /** @var NestedEntityInterface $entity */
-        $entity = $this->toEntity($event->getSource());
+        $entity = $this->toEntity($event->source);
         $position = $entity->getPosition();
         $className = $this->getMetadata()->getClassName();
 
@@ -402,7 +402,7 @@ class NestedSetMapper extends EntityMapper
                 $data['path'] = $this->calculatePath($data);
             }
 
-            $event->setData($data);
+            $event->data = $data;
         } elseif ($position->getReferenceId()) {
             /*
              * If we have a given primary key then we assume we are simply updating this
@@ -423,15 +423,15 @@ class NestedSetMapper extends EntityMapper
             $data['rgt'] = $entity->getRgt();
             $data['level'] = $entity->getLevel();
 
-            $event->setData($data);
+            $event->data = $data;
         }
     }
 
     protected function validateSave(BeforeSaveEvent $event): void
     {
         $k = $this->getMainKey();
-        $data = $event->getData();
-        $oldData = $event->getOldData();
+        $data = $event->data;
+        $oldData = $event->oldData;
 
         if ($oldData) {
             $data = array_filter($data);
@@ -443,7 +443,7 @@ class NestedSetMapper extends EntityMapper
 
         $pk = $data[$k] ?? null;
         $parentId = $data['parent_id'] ?? null;
-        $source = $event->getSource();
+        $source = $event->source;
 
         if (is_array($source) && ($source['is_root'] ?? null)) {
             $this->checkRootExists();
@@ -761,7 +761,7 @@ class NestedSetMapper extends EntityMapper
         $this->depth++;
 
         /** @var NestedEntityInterface|MultiTreeNestedEntityInterface|null $entity */
-        $entity = $event->getEntity();
+        $entity = $event->entity;
 
         if ($entity === null) {
             // No entity, unable to delete children.

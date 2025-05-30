@@ -29,6 +29,14 @@ class AbstractEntityEvent extends BaseEvent implements AttributeInterface
     }
 
     /**
+     * @deprecated  Use property instead.
+     */
+    public function &getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
      * @inheritDoc
      */
     protected function handle(EntityMetadata $metadata, AttributeHandler $handler): callable

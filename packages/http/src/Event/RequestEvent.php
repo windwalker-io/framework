@@ -6,28 +6,29 @@ namespace Windwalker\Http\Event;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 use Windwalker\Http\Output\OutputInterface;
 
 /**
  * The WebRequestEvent class.
  */
-class RequestEvent extends AbstractEvent
+class RequestEvent extends BaseEvent
 {
-    public ServerRequestInterface $request;
-
-    public ?ResponseInterface $response = null;
-
-    public OutputInterface $output;
-
-    public ?\Closure $endHandler = null;
-
-    public array $attributes = [];
-
-    public int $fd = 0;
+    public function __construct(
+        public ServerRequestInterface $request,
+        public OutputInterface $output,
+        public ?ResponseInterface $response = null,
+        public ?\Closure $endHandler = null,
+        public array $attributes = [],
+        public int $fd = 0,
+    ) {
+        //
+    }
 
     /**
      * @return ServerRequestInterface
+     *
+     * @deprecated  Use property instead.
      */
     public function getRequest(): ServerRequestInterface
     {
@@ -36,6 +37,8 @@ class RequestEvent extends AbstractEvent
 
     /**
      * @return ?ResponseInterface
+     *
+     * @deprecated  Use property instead.
      */
     public function getResponse(): ?ResponseInterface
     {
@@ -46,6 +49,8 @@ class RequestEvent extends AbstractEvent
      * @param  ResponseInterface  $response
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setResponse(ResponseInterface $response): static
     {
@@ -58,6 +63,8 @@ class RequestEvent extends AbstractEvent
      * @param  ServerRequestInterface  $request
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setRequest(ServerRequestInterface $request): static
     {
@@ -68,6 +75,8 @@ class RequestEvent extends AbstractEvent
 
     /**
      * @return int
+     *
+     * @deprecated  Use property instead.
      */
     public function getFd(): int
     {
@@ -78,6 +87,8 @@ class RequestEvent extends AbstractEvent
      * @param  int  $fd
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setFd(int $fd): static
     {
@@ -88,6 +99,8 @@ class RequestEvent extends AbstractEvent
 
     /**
      * @return OutputInterface
+     *
+     * @deprecated  Use property instead.
      */
     public function getOutput(): OutputInterface
     {
@@ -98,6 +111,8 @@ class RequestEvent extends AbstractEvent
      * @param  OutputInterface  $output
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setOutput(OutputInterface $output): static
     {
@@ -108,6 +123,8 @@ class RequestEvent extends AbstractEvent
 
     /**
      * @return array
+     *
+     * @deprecated  Use property instead.
      */
     public function getAttributes(): array
     {
@@ -118,6 +135,8 @@ class RequestEvent extends AbstractEvent
      * @param  array  $attributes
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setAttributes(array $attributes): static
     {
@@ -126,6 +145,14 @@ class RequestEvent extends AbstractEvent
         return $this;
     }
 
+    /**
+     * @param  string  $name
+     * @param  mixed   $value
+     *
+     * @return  $this
+     *
+     * @deprecated  Use property instead.
+     */
     public function setAttribute(string $name, mixed $value): static
     {
         $this->attributes[$name] = $value;
@@ -133,6 +160,13 @@ class RequestEvent extends AbstractEvent
         return $this;
     }
 
+    /**
+     * @param  string  $name
+     *
+     * @return  mixed
+     *
+     * @deprecated  Use property instead.
+     */
     public function getAttribute(string $name): mixed
     {
         return $this->attributes[$name] ?? null;
@@ -140,6 +174,8 @@ class RequestEvent extends AbstractEvent
 
     /**
      * @return \Closure|null
+     *
+     * @deprecated  Use property instead.
      */
     public function getEndHandler(): ?\Closure
     {
@@ -150,6 +186,8 @@ class RequestEvent extends AbstractEvent
      * @param  \Closure|null  $endHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setEndHandler(?\Closure $endHandler): static
     {

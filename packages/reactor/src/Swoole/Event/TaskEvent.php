@@ -13,11 +13,11 @@ class TaskEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected int $taskId;
+    public int $taskId;
 
-    protected int $srcWorkerId;
+    public int $srcWorkerId;
 
-    protected mixed $data;
+    public mixed $data;
 
     public function getTaskId(): int
     {

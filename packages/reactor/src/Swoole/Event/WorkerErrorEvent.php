@@ -13,13 +13,13 @@ class WorkerErrorEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected int $workerId;
+    public int $workerId;
 
-    protected int $workerPid;
+    public int $workerPid;
 
-    protected int $exitCode;
+    public int $exitCode;
 
-    protected int $signal;
+    public int $signal;
 
     public function getWorkerId(): int
     {

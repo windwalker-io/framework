@@ -9,9 +9,9 @@ namespace Windwalker\Reactor\Swoole\Event;
  */
 trait TcpEventTrait
 {
-    protected int $fd;
+    public int $fd;
 
-    protected int $reactorId;
+    public int $reactorId;
 
     public function getFd(): int
     {

@@ -13,9 +13,9 @@ class PacketEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected string $data;
+    public string $data;
 
-    protected array $clientInfo;
+    public array $clientInfo;
 
     public function getData(): string
     {

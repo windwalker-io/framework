@@ -6,7 +6,6 @@ namespace Windwalker\Queue\Event;
 
 use Windwalker\Event\AbstractEvent;
 use Windwalker\Event\Events\ErrorEventTrait;
-use Windwalker\Event\Events\MessageEventTrait;
 
 /**
  * The JobFailure class.

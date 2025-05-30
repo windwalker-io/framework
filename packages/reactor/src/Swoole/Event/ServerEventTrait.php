@@ -14,9 +14,9 @@ use Windwalker\Reactor\Swoole\SwooleServer;
  */
 trait ServerEventTrait
 {
-    protected Server $swooleServer;
+    public Server $swooleServer;
 
-    protected ServerInterface $server;
+    public ServerInterface $server;
 
     public function getSwooleServer(): Server
     {

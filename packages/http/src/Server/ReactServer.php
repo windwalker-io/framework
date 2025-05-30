@@ -15,9 +15,10 @@ use Throwable;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
-use Windwalker\Http\Event\ResponseEvent;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
+use Windwalker\Http\Output\Output;
+use Windwalker\Http\Request\ServerRequest;
 
 /**
  * The ReactServerAdapter class.
@@ -26,16 +27,16 @@ class ReactServer implements ServerInterface
 {
     use EventAwareTrait;
 
-    protected ?LoopInterface $loop = null;
+    public ?LoopInterface $loop = null;
 
     /**
      * @var ReactServerInterface|null
      */
-    protected ?ReactServerInterface $socket = null;
+    public ?ReactServerInterface $socket = null;
 
-    protected ?Server $server = null;
+    public ?Server $server = null;
 
-    protected bool $listening;
+    public bool $listening;
 
     /**
      * ReactServerAdapter constructor.
@@ -131,40 +132,49 @@ class ReactServer implements ServerInterface
 
     protected function createServer(): Server
     {
+        $output = new Output();
+
         $server = new Server(
             $this->getLoop(),
-            function (ServerRequestInterface $req) {
+            function (ServerRequestInterface $req) use ($output) {
                 try {
                     $event = $this->emit(
-                        RequestEvent::wrap('request')
-                            ->setRequest($req)
+                        new RequestEvent(
+                            request: $req,
+                            output: $output,
+                        )->setName('request')
                     );
                 } catch (Throwable $e) {
                     $code = $e->getCode();
                     $code = ResponseHelper::isClientError($code) ? $code : 500;
 
-                    $res = (new HttpFactory())->createResponse($code);
+                    $res = new HttpFactory()->createResponse($code);
                     $res->getBody()->write((string) $e);
 
                     return $res;
                 }
 
                 $event = $this->emit(
-                    ResponseEvent::wrap('response')
-                        ->setRequest($req)
-                        ->setResponse($event->getResponse())
+                    new RequestEvent(
+                        request: $req,
+                        output: $output,
+                        response: $event->response,
+                    )->setName('response'),
                 );
 
-                return $event->getResponse();
+                return $event->response;
             }
         );
 
         $server->on(
             'error',
-            function (Throwable $e) {
-                $event = $this->emit(
-                    ErrorEvent::wrap('error')
-                        ->setException($e)
+            function (Throwable $e) use ($output) {
+                $this->emit(
+                    new ErrorEvent(
+                        exception: $e,
+                        request: new ServerRequest(), // Currently we send empty request
+                        output: $output,
+                    )->setName('error')
                 );
             }
         );

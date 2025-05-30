@@ -48,7 +48,7 @@ trait DatabaseTestTrait
         $db->on(
             QueryEndEvent::class,
             function (QueryEndEvent $event) {
-                static::$lastQueries[] = $event->getSql();
+                static::$lastQueries[] = $event->sql;
 
                 // $fp = fopen($logFile, 'ab+');
                 //

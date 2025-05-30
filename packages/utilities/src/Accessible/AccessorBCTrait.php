@@ -6,7 +6,15 @@ namespace Windwalker\Utilities\Accessible;
 
 trait AccessorBCTrait
 {
-    public function &__call(string $name, array $args)
+    /**
+     * @param  string  $name
+     * @param  array   $args
+     *
+     * @return  $this
+     *
+     * @deprecated  Use property instead.
+     */
+    public function __call(string $name, array $args)
     {
         if (
             str_starts_with($name, 'get')

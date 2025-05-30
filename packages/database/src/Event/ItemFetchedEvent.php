@@ -6,33 +6,33 @@ namespace Windwalker\Database\Event;
 
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 
 /**
  * The ItemFetchedEvent class.
  */
-class ItemFetchedEvent extends AbstractEvent
+class ItemFetchedEvent extends BaseEvent
 {
     use QueryEventTrait;
 
-    protected ?array $item;
+    public function __construct(
+        public array|null $item = null,
+        mixed $query = null,
+        string $sql = '',
+        array $bounded = [],
+        ?StatementInterface $statement = null,
+    ) {
+        $this->query = $query;
+        $this->sql = $sql;
+        $this->bounded = $bounded;
+        $this->statement = $statement;
+    }
 
     /**
-     * @return object|null
+     * @deprecated  Use property instead.
      */
     public function &getItem(): ?array
     {
         return $this->item;
-    }
-
-    /**
-     * @param  array|null  $item
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setItem(?array $item): static
-    {
-        $this->item = $item;
-
-        return $this;
     }
 }

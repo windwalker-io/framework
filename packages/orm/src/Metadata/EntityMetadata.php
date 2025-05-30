@@ -473,12 +473,12 @@ class EntityMetadata implements EventAwareInterface
                     $options,
                     $method
                 ) {
-                    if (!($options & Watch::ON_CREATE) && $event->getType() === BeforeSaveEvent::TYPE_CREATE) {
+                    if (!($options & Watch::INCLUDE_CREATE) && $event->type === BeforeSaveEvent::TYPE_CREATE) {
                         return;
                     }
 
-                    $val = $event->getData()[$column] ?? null;
-                    $oldVal = $event->getOldData()[$column] ?? null;
+                    $val = $event->data[$column] ?? null;
+                    $oldVal = $event->oldData[$column] ?? null;
 
                     if (is_scalar($val) && is_scalar($oldVal)) {
                         $isSame = (string) $val === (string) $oldVal;
@@ -498,7 +498,7 @@ class EntityMetadata implements EventAwareInterface
                                 ]
                             );
 
-                        $event->setExtra($watchEvent->getExtra());
+                        $event->extra = $watchEvent->extra;
                     }
                 }
             );
@@ -510,7 +510,7 @@ class EntityMetadata implements EventAwareInterface
                         $column,
                         $method
                     ) {
-                        $val = $event->getData()[$column] ?? null;
+                        $val = $event->data[$column] ?? null;
 
                         $watchEvent = Watch::createWatchEvent($event, $val);
 
@@ -529,12 +529,12 @@ class EntityMetadata implements EventAwareInterface
             $this->on(
                 AfterSaveEvent::class,
                 $unwatches[AfterSaveEvent::class] = function (AfterSaveEvent $event) use ($column, $options, $method) {
-                    if (!($options & Watch::ON_CREATE) && $event->getType() === AfterSaveEvent::TYPE_CREATE) {
+                    if (!($options & Watch::INCLUDE_CREATE) && $event->type === AfterSaveEvent::TYPE_CREATE) {
                         return;
                     }
 
-                    $val = $event->getData()[$column] ?? null;
-                    $oldVal = $event->getOldData()[$column] ?? null;
+                    $val = $event->data[$column] ?? null;
+                    $oldVal = $event->oldData[$column] ?? null;
 
                     if (is_scalar($val) && is_scalar($oldVal)) {
                         $isSame = (string) $val === (string) $oldVal;
@@ -554,7 +554,7 @@ class EntityMetadata implements EventAwareInterface
                                 ]
                             );
 
-                        $event->setExtra($watchEvent->getExtra());
+                        $event->extra = $watchEvent->extra;
                     }
                 }
             );
@@ -566,7 +566,7 @@ class EntityMetadata implements EventAwareInterface
                         $column,
                         $method
                     ) {
-                        $val = $event->getData()[$column] ?? null;
+                        $val = $event->data[$column] ?? null;
 
                         $watchEvent = Watch::createWatchEvent($event, $val);
 

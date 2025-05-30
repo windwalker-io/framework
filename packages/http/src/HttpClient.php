@@ -440,11 +440,14 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $httpClient = $this;
 
         $event = $this->emit(
-            AfterRequestEvent::class,
-            compact('request', 'response', 'httpClient')
+            new AfterRequestEvent(
+                httpClient: $httpClient,
+                request: $request,
+                response: $response
+            ),
         );
 
-        return HttpClientResponse::from($event->getResponse());
+        return HttpClientResponse::from($event->response);
     }
 
     public function hydrateRequest(
@@ -459,21 +462,20 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $url = (string) $url;
 
         $event = $this->emit(
-            BeforeRequestEvent::class,
-            compact(
-                'method',
-                'url',
-                'body',
-                'options',
-                'httpClient'
-            )
+            new BeforeRequestEvent(
+                httpClient: $httpClient,
+                method: $method,
+                url: $url,
+                body: $body,
+                options: $options
+            ),
         );
 
-        $options = Arr::mergeRecursive($this->getOptions(), $event->getOptions());
-        $url = $this->prepareRequestUri($event->getUrl());
+        $options = Arr::mergeRecursive($this->getOptions(), $event->options);
+        $url = $this->prepareRequestUri($event->url);
 
-        $method = $event->getMethod();
-        $body = $event->getBody();
+        $method = $event->method;
+        $body = $event->body;
 
         return static::prepareRequest($request, $method, $url, $body, $options);
     }

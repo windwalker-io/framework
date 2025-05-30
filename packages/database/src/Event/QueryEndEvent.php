@@ -6,34 +6,26 @@ namespace Windwalker\Database\Event;
 
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 use Windwalker\Query\Query;
 
 /**
  * The QueryEndEvent class.
  */
-class QueryEndEvent extends AbstractEvent
+class QueryEndEvent extends BaseEvent
 {
     use QueryEventTrait;
 
-    protected bool $result;
-
-    /**
-     * @return bool
-     */
-    public function getResult(): bool
-    {
-        return $this->result;
-    }
-
-    /**
-     * @param  bool  $result
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setResult(bool $result): static
-    {
-        $this->result = $result;
-
-        return $this;
+    public function __construct(
+        public bool $result,
+        mixed $query = null,
+        string $sql = '',
+        array $bounded = [],
+        ?StatementInterface $statement = null,
+    ) {
+        $this->query = $query;
+        $this->sql = $sql;
+        $this->bounded = $bounded;
+        $this->statement = $statement;
     }
 }

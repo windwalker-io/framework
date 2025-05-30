@@ -296,17 +296,21 @@ abstract class AbstractDriver implements HydratorAwareInterface
         // Register monitor events
         $stmt->on(
             QueryStartEvent::class,
-            fn(QueryStartEvent $event) => $event->setQuery($query)
-                ->setBounded($bounded)
+            fn(QueryStartEvent $event) => $event->fill(
+                query: $query,
+                bounded: $bounded,
+            )
         );
 
         $stmt->on(
             QueryFailedEvent::class,
             function (QueryFailedEvent $event) use ($query, $bounded) {
-                $event->setQuery($query)
-                    ->setBounded($bounded);
+                $event->fill(
+                    query: $query,
+                    bounded: $bounded,
+                );
 
-                $e = $event->getException();
+                $e = $event->exception;
 
                 $debugSql = $this->replacePrefix(($query instanceof Query ? $query->render(true) : (string) $query));
 
@@ -314,32 +318,36 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
                 $message .= ' - SQL: ' . $debugSql;
 
-                $event->setException(
-                    (new DatabaseQueryException(
-                        $message,
-                        (int) $e->getCode(),
-                        $e
-                    ))->setDebugSql($debugSql)
-                );
+                $event->exception = new DatabaseQueryException(
+                    $message,
+                    (int) $e->getCode(),
+                    $e
+                )->setDebugSql($debugSql);
             }
         );
 
         $stmt->on(
             QueryEndEvent::class,
-            fn(QueryEndEvent $event) => $event->setQuery($query)
-                ->setBounded($bounded)
+            fn(QueryEndEvent $event) => $event->fill(
+                query: $query,
+                bounded: $bounded,
+            )
         );
 
         $stmt->on(
             HydrateEvent::class,
-            fn(HydrateEvent $event) => $event->setQuery($query)
-                ->setBounded($bounded)
+            fn(HydrateEvent $event) => $event->fill(
+                query: $query,
+                bounded: $bounded,
+            )
         );
 
         $stmt->on(
             ItemFetchedEvent::class,
-            fn(ItemFetchedEvent $event) => $event->setQuery($query)
-                ->setBounded($bounded)
+            fn(ItemFetchedEvent $event) => $event->fill(
+                query: $query,
+                bounded: $bounded,
+            )
         );
 
         return $stmt;

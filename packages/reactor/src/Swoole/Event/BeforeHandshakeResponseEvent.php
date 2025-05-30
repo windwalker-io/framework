@@ -15,9 +15,9 @@ class BeforeHandshakeResponseEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected Request $request;
+    public Request $request;
 
-    protected Response $response;
+    public Response $response;
 
     public function getRequest(): Request
     {

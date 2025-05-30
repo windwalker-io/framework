@@ -57,8 +57,7 @@ class SelectorQuery extends Query implements EventAwareInterface
             ItemFetchedEvent::class,
             function (ItemFetchedEvent $event) {
                 if ($this->groupDivider !== null) {
-                    $item = $this->groupItem($event->getItem());
-                    $event->setItem($item);
+                    $event->item = $this->groupItem($event->item);
                 }
             }
         );
@@ -67,13 +66,13 @@ class SelectorQuery extends Query implements EventAwareInterface
             HydrateEvent::class,
             function (HydrateEvent $event) {
                 $orm = $this->getORM();
-                $item = $event->getItem();
+                $item = $event->item;
 
                 if ($item === null) {
                     return;
                 }
 
-                $object = $event->getClass();
+                $object = $event->class;
 
                 if (is_string($object)) {
                     if (EntityMetadata::isEntity($object)) {
@@ -92,7 +91,7 @@ class SelectorQuery extends Query implements EventAwareInterface
                         ->load($item, $object);
                 }
 
-                $event->setItem($object);
+                $event->item = $object;
             }
         );
     }

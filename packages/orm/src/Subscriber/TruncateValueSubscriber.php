@@ -17,14 +17,14 @@ class TruncateValueSubscriber
     #[BeforeStoreEvent]
     public function beforeStore(BeforeStoreEvent $event): void
     {
-        $orm = $event->getORM();
+        $orm = $event->orm;
 
         if ($orm->getDb()->getDriver()->isDebug()) {
             return;
         }
 
-        $metadata = $event->getMetadata();
-        $data = &$event->getData();
+        $metadata = $event->metadata;
+        $data = &$event->data;
         $columns = $orm->getDb()->getTableManager($metadata->getTableName())->getColumns();
 
         foreach ($data as $key => $datum) {

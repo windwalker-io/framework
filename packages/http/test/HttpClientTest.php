@@ -416,7 +416,7 @@ class HttpClientTest extends TestCase
         $this->instance->on(
             AfterRequestEvent::class,
             function (AfterRequestEvent $event) {
-                $event->setResponse(new JsonResponse([123])); // Will be converted to HttpClientResponse
+                $event->response = new JsonResponse([123]); // Will be converted to HttpClientResponse
             }
         );
 

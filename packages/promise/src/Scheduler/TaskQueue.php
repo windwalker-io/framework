@@ -92,8 +92,6 @@ class TaskQueue
     }
 
     /**
-     * run
-     *
      * @return  void
      */
     public function run(): void

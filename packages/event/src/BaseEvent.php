@@ -125,6 +125,11 @@ class BaseEvent implements EventInterface
         return $this;
     }
 
+    public function fill(...$args): static
+    {
+        return $this->merge($args);
+    }
+
     /**
      * Method to set property arguments
      *
@@ -151,7 +156,7 @@ class BaseEvent implements EventInterface
      */
     public function clear(): static
     {
-        $props = (new ReflectionClass($this))->getDefaultProperties();
+        $props = new ReflectionClass($this)->getDefaultProperties();
 
         unset($props['name'], $props['stopped']);
 

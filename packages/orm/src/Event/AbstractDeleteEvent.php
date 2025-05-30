@@ -17,4 +17,21 @@ abstract class AbstractDeleteEvent extends AbstractEntityEvent
     ) {
         parent::__construct(data: $data);
     }
+
+    /**
+     * @deprecated  Use property instead.
+     */
+    public function &getConditions(): mixed
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * @deprecated  Use property instead.
+     */
+    public function &getOptions(): int
+    {
+        return $this->options;
+    }
+
 }

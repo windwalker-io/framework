@@ -31,14 +31,14 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @var mixed|resource
      */
-    protected mixed $cursor = null;
+    public protected(set) mixed $cursor = null;
 
     protected mixed $conn = null;
 
     /**
      * @var bool
      */
-    protected bool $executed = false;
+    public protected(set) bool $executed = false;
 
     /**
      * @var AbstractDriver
@@ -48,11 +48,11 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @var string
      */
-    protected string $query;
+    public protected(set) string $query;
 
     protected array $options = [];
 
-    protected string $defaultItemClass = Collection::class;
+    public protected(set) string $defaultItemClass = Collection::class;
 
     /**
      * AbstractStatement constructor.
@@ -92,8 +92,6 @@ abstract class AbstractStatement implements StatementInterface
         $hydrator = $this->driver->getHydrator();
 
         $item = $this->doFetch();
-        $sql = $this->query;
-        $statement = $this;
 
         if (is_object($class)) {
             $class = $class::class;
@@ -104,9 +102,13 @@ abstract class AbstractStatement implements StatementInterface
         $item = $this->fetchedEvent($item);
 
         $item = $this->emit(
-            HydrateEvent::class,
-            compact('item', 'class', 'sql', 'statement')
-        )->getItem();
+            new HydrateEvent(
+                item: $item,
+                class: $class,
+                sql: $this->query,
+                statement: $this
+            ),
+        )->item;
 
         if (!is_array($item)) {
             return $item;
@@ -121,8 +123,6 @@ abstract class AbstractStatement implements StatementInterface
     abstract protected function doFetch(array $args = []): ?array;
 
     /**
-     * execute
-     *
      * @param  array|null  $params
      *
      * @return  static
@@ -134,10 +134,7 @@ abstract class AbstractStatement implements StatementInterface
             return $this;
         }
 
-        $statement = $this;
-        $sql = $this->query;
-
-        $this->emit(QueryStartEvent::class, compact('params', 'statement', 'sql'));
+        $this->emit(new QueryStartEvent(sql: $this->query, statement: $this, params: $params));
 
         try {
             $result = $this->doExecute($params);
@@ -146,14 +143,12 @@ abstract class AbstractStatement implements StatementInterface
                 throw new StatementException('Execute query statement failed.');
             }
         } catch (RuntimeException $exception) {
-            $statement->close();
-            $event = $this->emit(QueryFailedEvent::class, compact('exception'));
+            $this->close();
 
-            throw $event->getException();
+            throw $this->emit(new QueryFailedEvent(exception: $exception))->exception;
         }
 
-        $statement = $this;
-        $this->emit(QueryEndEvent::class, compact('result', 'statement', 'sql'));
+        $this->emit(new QueryEndEvent(result: $result, sql: $this->query, statement: $this));
 
         $this->executed = true;
 
@@ -200,13 +195,7 @@ abstract class AbstractStatement implements StatementInterface
 
         $message = strtolower($e->getMessage());
 
-        foreach ($keywords as $keyword) {
-            if (str_contains($message, strtolower($keyword))) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($keywords, static fn($keyword) => str_contains($message, strtolower($keyword)));
     }
 
     /**
@@ -251,13 +240,11 @@ abstract class AbstractStatement implements StatementInterface
      */
     protected function fetchedEvent(?array $item): ?array
     {
-        $statement = $this;
-        $sql = $this->query;
+        $event = $this->emit(
+            new ItemFetchedEvent(item: $item, sql: $this->query, statement: $this)
+        );
 
-        return $this->emit(
-            ItemFetchedEvent::class,
-            compact('item', 'statement', 'sql')
-        )->getItem();
+        return $event->item;
     }
 
     /**

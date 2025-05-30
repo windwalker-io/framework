@@ -4,26 +4,28 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Event\HttpClient;
 
-use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\BaseEvent;
 use Windwalker\Http\HttpClient;
 
 /**
  * The BeforeRequestEvent class.
  */
-class BeforeRequestEvent extends AbstractEvent
+class BeforeRequestEvent extends BaseEvent
 {
-    protected string $method;
-
-    protected string $url;
-
-    protected mixed $body;
-
-    protected array $options;
-
-    protected HttpClient $httpClient;
+    public function __construct(
+        public HttpClient $httpClient,
+        public string $method,
+        public string $url,
+        public mixed $body,
+        public array $options,
+    ) {
+        //
+    }
 
     /**
      * @return string
+     *
+     * @deprecated  Use property instead.
      */
     public function &getMethod(): string
     {
@@ -34,6 +36,8 @@ class BeforeRequestEvent extends AbstractEvent
      * @param  string  $method
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setMethod(string $method): static
     {
@@ -44,6 +48,8 @@ class BeforeRequestEvent extends AbstractEvent
 
     /**
      * @return string
+     *
+     * @deprecated  Use property instead.
      */
     public function &getUrl(): string
     {
@@ -54,6 +60,8 @@ class BeforeRequestEvent extends AbstractEvent
      * @param  string  $url
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setUrl(string $url): static
     {
@@ -64,6 +72,8 @@ class BeforeRequestEvent extends AbstractEvent
 
     /**
      * @return mixed
+     *
+     * @deprecated  Use property instead.
      */
     public function &getBody(): mixed
     {
@@ -74,6 +84,8 @@ class BeforeRequestEvent extends AbstractEvent
      * @param  mixed  $body
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setBody(mixed $body): static
     {
@@ -84,6 +96,8 @@ class BeforeRequestEvent extends AbstractEvent
 
     /**
      * @return array
+     *
+     * @deprecated  Use property instead.
      */
     public function &getOptions(): array
     {
@@ -94,6 +108,8 @@ class BeforeRequestEvent extends AbstractEvent
      * @param  array  $options
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setOptions(array $options): static
     {
@@ -104,6 +120,8 @@ class BeforeRequestEvent extends AbstractEvent
 
     /**
      * @return HttpClient
+     *
+     * @deprecated  Use property instead.
      */
     public function getHttpClient(): HttpClient
     {
@@ -114,6 +132,8 @@ class BeforeRequestEvent extends AbstractEvent
      * @param  HttpClient  $httpClient
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setHttpClient(HttpClient $httpClient): static
     {

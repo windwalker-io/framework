@@ -13,7 +13,7 @@ class DisconnectEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected int $fd;
+    public int $fd;
 
     public function getFd(): int
     {

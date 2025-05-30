@@ -6,6 +6,7 @@ namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Event\AbstractEvent;
+use Windwalker\Event\EventInterface;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
@@ -42,12 +43,13 @@ trait HttpServerTrait
             $middlewares[] = function (ServerRequestInterface $req) use ($output, &$event) {
                 /** @var RequestEvent $event */
                 $event = $this->emit(
-                    (new RequestEvent())
-                        ->setRequest($req)
-                        ->setOutput($output)
+                    new RequestEvent(
+                        request: $req,
+                        output: $output,
+                    )
                 );
 
-                return $event->getResponse() ?? $this->getHttpFactory()->createResponse();
+                return $event->response ?? $this->getHttpFactory()->createResponse();
             };
 
             $runner = new RequestRunner($middlewares, $this->getMiddlewareResolver());
@@ -56,22 +58,23 @@ trait HttpServerTrait
 
             /** @var ResponseEvent $event */
             $event = $this->emit(
-                (new ResponseEvent())
-                    ->setRequest($request)
-                    ->setResponse($res)
-                    ->setOutput($output)
-                    ->setEndHandler($event?->getEndHandler())
-                    ->setAttributes($event?->getAttributes() ?? [])
+                new ResponseEvent(
+                    request: $request,
+                    output: $output,
+                    response: $res,
+                    endHandler: $event?->endHandler,
+                    attributes: $event?->attributes ?? [],
+                )
             );
 
-            $endHandler = $event->getEndHandler();
+            $endHandler = $event->endHandler;
 
-            if ($event->getResponse()) {
-                $output->respond($event->getResponse());
+            if ($event->response) {
+                $output->respond($event->response);
             }
 
             if ($endHandler) {
-                $endHandler($output, $event->getResponse());
+                $endHandler($output, $event->response);
             }
 
             if ($output->isWritable()) {
@@ -79,19 +82,18 @@ trait HttpServerTrait
             }
         } catch (\Throwable $e) {
             $event = $this->emit(
-                (new ErrorEvent())
-                    ->setException($e)
-                    ->setRequest($request)
-                    ->setResponse(
-                        $this->getHttpFactory()->createResponse(
-                            ResponseHelper::isClientError($e->getCode()) ? $e->getCode() : 500
-                        )
+                new ErrorEvent(
+                    exception: $e,
+                    request: $request,
+                    output: $output,
+                    response: $this->getHttpFactory()->createResponse(
+                        ResponseHelper::isClientError($e->getCode()) ? $e->getCode() : 500
                     )
-                    ->setOutput($output)
+                )
             );
 
             if (!$event->isPropagationStopped()) {
-                throw $event->getException();
+                throw $event->exception;
             }
         }
     }
@@ -141,7 +143,7 @@ trait HttpServerTrait
         );
     }
 
-    protected function eventPassthrough(string $eventName, AbstractEvent $event): AbstractEvent
+    protected function eventPassthrough(string $eventName, EventInterface $event): EventInterface
     {
         $this->emit($newEvent = $event->mirror($eventName));
         $event->merge($newEvent->getArguments());

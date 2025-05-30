@@ -329,7 +329,10 @@ XML
             ]
         );
 
-        self::assertEquals('class="foo bar" data-foo="yoo" required="" selected="true" empty-text=""', $attrs);
+        self::assertEquals(
+            'class="foo bar" data-foo="yoo" required selected="true" empty-text',
+            $attrs
+        );
     }
 
     protected function setUp(): void

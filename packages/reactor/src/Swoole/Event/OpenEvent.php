@@ -15,9 +15,9 @@ class OpenEvent extends AbstractEvent
 {
     use ServerEventTrait;
 
-    protected WebSocketRequest $request;
+    public WebSocketRequest $request;
 
-    protected Request $swooleRequest;
+    public Request $swooleRequest;
 
     public function getRequest(): WebSocketRequest
     {
