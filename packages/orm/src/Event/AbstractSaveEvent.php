@@ -58,11 +58,17 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
         return $this->extra;
     }
 
+    /**
+     * @deprecated  Use property instead.
+     */
     public function isCreate(): bool
     {
         return $this->type === static::TYPE_CREATE;
     }
 
+    /**
+     * @deprecated  Use property instead.
+     */
     public function isUpdate(): bool
     {
         return $this->type === static::TYPE_UPDATE;

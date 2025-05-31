@@ -72,7 +72,7 @@ class BaseEvent implements EventInterface
      */
     public function mirror(string $name, array $args = []): EventInterface
     {
-        if (class_exists($name)) {
+        if (class_exists($name) && is_a($name, EventInterface::class, true)) {
             $new = new $name();
             $new->name = $name;
         } else {

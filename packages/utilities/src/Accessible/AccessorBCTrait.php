@@ -54,7 +54,10 @@ trait AccessorBCTrait
             );
 
             foreach ($props as $propRef) {
-                if (strcasecmp($propRef->getName(), $property) === 0) {
+                if (
+                    strcasecmp($propRef->getName(), $property) === 0
+                    || strcasecmp($propRef->getName(), $name) === 0
+                ) {
                     return $propRef->getValue($this);
                 }
             }

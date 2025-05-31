@@ -37,11 +37,9 @@ class PhpServerTest extends TestCase
         $this->instance->on(
             'request',
             function (RequestEvent $event) {
-                $res = $event->getRequest();
+                $res = $event->request;
 
-                $event->setResponse(
-                    Response::fromString('Hello: ' . $res->getUri())
-                );
+                $event->response = Response::fromString('Hello: ' . $res->getUri());
             }
         );
 
