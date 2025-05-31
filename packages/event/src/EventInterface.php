@@ -33,12 +33,14 @@ interface EventInterface extends StoppableEventInterface
      * $event2 = $dispatcher->emit($event->mirror('after.run'));
      * ```
      *
-     * @param  string  $name
+     * @template  T of EventInterface
+     *
+     * @param  string|class-string<T>  $name
      * @param  array   $args
      *
-     * @return  static
+     * @return  T
      */
-    public function mirror(string $name, array $args): static;
+    public function mirror(string $name, array $args): EventInterface;
 
     /**
      * Stop the event propagation.

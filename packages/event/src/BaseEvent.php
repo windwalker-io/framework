@@ -63,15 +63,22 @@ class BaseEvent implements EventInterface
     }
 
     /**
-     * @inheritDoc
+     * @template  T of EventInterface
      *
-     * @return EventInterface|AbstractEvent
+     * @param  string|class-string<T>  $name
+     * @param  array   $args
+     *
+     * @return  T
      */
-    public function mirror(string $name, array $args = []): static
+    public function mirror(string $name, array $args = []): EventInterface
     {
-        $new = clone $this;
+        if (class_exists($name)) {
+            $new = new $name();
+            $new->name = $name;
+        } else {
+            $new = new Event($name);
+        }
 
-        $new->name = $name;
         $new->stopped = false;
         $new->merge($args);
 
