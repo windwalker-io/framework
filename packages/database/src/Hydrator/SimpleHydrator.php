@@ -22,7 +22,7 @@ class SimpleHydrator implements HydratorInterface, FieldHydratorInterface
     public function extract(object $object): array
     {
         if ($object instanceof DumpableInterface) {
-            return (new AccessibleHydrator())->extract($object);
+            return new AccessibleHydrator()->extract($object);
         }
 
         if ($object instanceof Traversable) {

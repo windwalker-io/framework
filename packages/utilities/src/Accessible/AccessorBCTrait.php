@@ -10,9 +10,7 @@ trait AccessorBCTrait
      * @param  string  $name
      * @param  array   $args
      *
-     * @return  $this
-     *
-     * @deprecated  Use property instead.
+     * @return  mixed
      */
     public function __call(string $name, array $args)
     {

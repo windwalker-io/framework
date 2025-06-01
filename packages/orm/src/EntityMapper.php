@@ -1201,13 +1201,13 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * createEntity
+     * @param  mixed  ...$args
      *
-     * @return  object|T
+     * @return object
      *
      * @throws \ReflectionException
      */
-    public function createEntity(): object
+    public function createEntity(...$args): object
     {
         $metadata = $this->getMetadata();
 
@@ -1215,6 +1215,10 @@ class EntityMapper implements EventAwareInterface
             $class = $metadata->getClassName();
 
             $entity = $this->getORM()->getAttributesResolver()->createObject($class);
+
+            foreach ($args as $k => $value) {
+                $entity->$k = $value;
+            }
 
             $metadata->setCachedEntity($entity);
         }

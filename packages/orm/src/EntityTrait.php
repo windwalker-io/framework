@@ -16,6 +16,7 @@ use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
 use Windwalker\ORM\Relation\Strategy\RelationStrategyInterface;
+use Windwalker\Utilities\Accessible\AccessorBCTrait;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
@@ -24,6 +25,10 @@ use Windwalker\Utilities\TypeCast;
  */
 trait EntityTrait
 {
+    use AccessorBCTrait {
+        AccessorBCTrait::__call as accessorCall;
+    }
+
     public static function table(): ?string
     {
         return (new ReflectionClass(static::class))
@@ -41,6 +46,11 @@ trait EntityTrait
         }
 
         return $instance;
+    }
+
+    public static function create(...$args): static
+    {
+        return static::newInstance($args);
     }
 
     protected function retrieveMeta(string $key): mixed
@@ -128,6 +138,11 @@ trait EntityTrait
         }
 
         return $item;
+    }
+
+    public function __call(string $name, array $args)
+    {
+        return $this->accessorCall($name, $args);
     }
 
     public function &__get(string $name): mixed
