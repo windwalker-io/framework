@@ -20,7 +20,7 @@ class JsonSerializer implements JsonSerializerInterface
     {
         $handler = $this->handler;
 
-        if (is_a($handler, CastInterface::class, true)) {
+        if (is_string($handler) && is_a($handler, CastInterface::class, true)) {
             $handler = new ($this->handler)();
         }
 

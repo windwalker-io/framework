@@ -127,7 +127,7 @@ trait EntityTrait
                 ReflectionAttribute::IS_INSTANCEOF
             );
 
-            /** @var ReflectionAttribute<JsonSerializer> $attr */
+            /** @var ReflectionAttribute<JsonSerializerInterface> $attr */
             foreach ($attrs as $attr) {
                 $attrInstance = $attr->newInstance();
 

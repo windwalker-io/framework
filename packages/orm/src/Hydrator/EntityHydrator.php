@@ -107,7 +107,7 @@ class EntityHydrator implements FieldHydratorInterface
 
             $value = static::castFieldForExtract($metadata, $colName, $value, $object);
 
-            if (is_object($value) || is_array($value)) {
+            if ($value !== null && !is_string($value)) {
                 $value = TypeCast::tryString($value);
             }
 
