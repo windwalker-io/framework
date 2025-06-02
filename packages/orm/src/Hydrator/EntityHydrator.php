@@ -11,6 +11,7 @@ use Windwalker\ORM\Attributes\Mapping;
 use Windwalker\ORM\Exception\CastingException;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The EntityHydrator class.
@@ -105,6 +106,10 @@ class EntityHydrator implements FieldHydratorInterface
             $value = $data[$propName];
 
             $value = static::castFieldForExtract($metadata, $colName, $value, $object);
+
+            if (is_object($value) || is_array($value)) {
+                $value = TypeCast::tryString($value);
+            }
 
             $item[$colName] = $value;
         }
