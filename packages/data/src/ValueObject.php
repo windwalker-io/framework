@@ -39,6 +39,15 @@ class ValueObject implements
         return new static($data);
     }
 
+    public static function tryWrap(mixed $data): ?static
+    {
+        if ($data === null) {
+            return null;
+        }
+
+        return static::wrap($data);
+    }
+
     public function fill(mixed $data): static
     {
         if (is_string($data) && is_json($data)) {

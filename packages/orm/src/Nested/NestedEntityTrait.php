@@ -16,19 +16,16 @@ trait NestedEntityTrait
     use EntityTrait;
 
     #[Column('parent_id')]
-    protected mixed $parentId = null;
+    public mixed $parentId = null;
 
     #[Column('lft')]
-    protected int $lft = 0;
+    public int $lft = 0;
 
     #[Column('rgt')]
-    protected int $rgt = 0;
+    public int $rgt = 0;
 
     #[Column('level')]
-    protected int $level = 0;
-
-    // #[Column('path')]
-    // protected string $path = '';
+    public int $level = 0;
 
     protected ?Position $position = null;
 
@@ -61,6 +58,8 @@ trait NestedEntityTrait
 
     /**
      * @return int
+     *
+     * @deprecated  Use property instead.
      */
     public function getLft(): int
     {
@@ -71,6 +70,8 @@ trait NestedEntityTrait
      * @param  int  $lft
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setLft(int $lft): static
     {
@@ -81,6 +82,8 @@ trait NestedEntityTrait
 
     /**
      * @return int
+     *
+     * @deprecated  Use property instead.
      */
     public function getRgt(): int
     {
@@ -91,6 +94,8 @@ trait NestedEntityTrait
      * @param  int  $rgt
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setRgt(int $rgt): static
     {
@@ -101,6 +106,8 @@ trait NestedEntityTrait
 
     /**
      * @return int
+     *
+     * @deprecated  Use property instead.
      */
     public function getLevel(): int
     {
@@ -111,6 +118,8 @@ trait NestedEntityTrait
      * @param  int  $level
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setLevel(int $level): static
     {
@@ -121,6 +130,8 @@ trait NestedEntityTrait
 
     /**
      * @return mixed|null
+     *
+     * @deprecated  Use property instead.
      */
     public function getParentId(): mixed
     {
@@ -131,6 +142,8 @@ trait NestedEntityTrait
      * @param  mixed|null  $parentId
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setParentId(mixed $parentId): static
     {
@@ -146,7 +159,7 @@ trait NestedEntityTrait
 
     public function isRoot(): bool
     {
-        return $this->getLevel() === 0;
+        return $this->level === 0;
     }
 
     public function getChildren(): RelationCollection

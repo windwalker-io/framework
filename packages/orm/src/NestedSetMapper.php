@@ -157,13 +157,11 @@ class NestedSetMapper extends EntityMapper
     }
 
     /**
-     * getAncestors
-     *
-     * @param  string|int|object  $pkOrEntity
+     * @param  mixed  $pkOrEntity
      *
      * @return  Collection|T[]
      */
-    public function getPath(string|int|NestedEntityInterface $pkOrEntity): Collection
+    public function getPath(mixed $pkOrEntity): Collection
     {
         ArgumentsAssert::assert(
             is_object($pkOrEntity) || is_scalar($pkOrEntity),
@@ -197,11 +195,11 @@ class NestedSetMapper extends EntityMapper
     /**
      * getAncestors
      *
-     * @param  string|int|NestedEntityInterface  $pkOrEntity
+     * @param  mixed  $pkOrEntity
      *
      * @return  Collection|T[]
      */
-    public function getAncestors(string|int|NestedEntityInterface $pkOrEntity): Collection
+    public function getAncestors(mixed $pkOrEntity): Collection
     {
         ArgumentsAssert::assert(
             is_object($pkOrEntity) || is_scalar($pkOrEntity),
@@ -234,13 +232,11 @@ class NestedSetMapper extends EntityMapper
     }
 
     /**
-     * getTree
-     *
-     * @param  string|int|NestedEntityInterface  $pkOrEntity
+     * @param  mixed  $pkOrEntity
      *
      * @return  Collection|T[]
      */
-    public function getTree(string|int|NestedEntityInterface $pkOrEntity): Collection
+    public function getTree(mixed $pkOrEntity): Collection
     {
         ArgumentsAssert::assert(
             is_object($pkOrEntity) || is_scalar($pkOrEntity),
@@ -271,7 +267,7 @@ class NestedSetMapper extends EntityMapper
             ->all($metadata->getClassName());
     }
 
-    public function isLeaf(string|int|NestedEntityInterface $pkOrEntity): bool
+    public function isLeaf(mixed $pkOrEntity): bool
     {
         $metadata = $this->getMetadata();
 
@@ -288,7 +284,7 @@ class NestedSetMapper extends EntityMapper
         return ($node->getRgt() - $node->getLft()) === 1;
     }
 
-    private function entityToPk(string|int|NestedEntityInterface $entity): mixed
+    private function entityToPk(mixed $entity): mixed
     {
         if (is_object($entity) && EntityMetadata::isEntity($entity)) {
             return $this->extract($entity)[$this->getMainKey()];
@@ -1090,11 +1086,11 @@ class NestedSetMapper extends EntityMapper
     }
 
     /**
-     * @param  int|null  $parentId
+     * @param  mixed  $parentId
      *
      * @return  SelectorQuery
      */
-    protected function getRebuildQuery(?int $parentId): SelectorQuery
+    protected function getRebuildQuery(mixed $parentId): SelectorQuery
     {
         $query = $this->cacheStorage['rebuild.sql'] ??= $this->createSelectorQuery()
             ->select('n.*')

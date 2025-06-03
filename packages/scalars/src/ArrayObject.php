@@ -475,6 +475,15 @@ class ArrayObject implements AccessibleInterface
         return $value;
     }
 
+    public static function tryWrap(mixed $value = null): ?static
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return static::wrap($value);
+    }
+
     /**
      * unwrap
      *

@@ -9,6 +9,7 @@ use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
+use Windwalker\Utilities\Contract\DumpableInterface;
 use Windwalker\Utilities\Enum\EnumSingleton;
 use Windwalker\Utilities\TypeCast;
 
@@ -318,7 +319,7 @@ class CastManager
      */
     public function getDefaultExtractHandler(mixed $cast, int $options): mixed
     {
-        if (is_subclass_of($cast, \DateTimeInterface::class)) {
+        if (is_subclass_of($cast, \DateTimeInterface::class, true)) {
             return static function (mixed $value, ORM $orm) {
                 if ($value instanceof \DateTimeInterface) {
                     return $value->format($orm->getDb()->getDateFormat());
@@ -326,6 +327,10 @@ class CastManager
 
                 return (string) $value;
             };
+        }
+
+        if (is_subclass_of($cast, DumpableInterface::class, true)) {
+            return static fn(mixed $value) => $value;
         }
 
         return [TypeCast::class, 'tryString'];

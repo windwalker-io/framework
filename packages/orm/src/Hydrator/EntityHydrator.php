@@ -107,9 +107,9 @@ class EntityHydrator implements FieldHydratorInterface
 
             $value = static::castFieldForExtract($metadata, $colName, $value, $object);
 
-            if ($value !== null && !is_string($value)) {
-                $value = TypeCast::tryString($value);
-            }
+            // if ($value !== null && !is_string($value)) {
+            //     $value = TypeCast::tryString($value);
+            // }
 
             $item[$colName] = $value;
         }
@@ -250,8 +250,6 @@ class EntityHydrator implements FieldHydratorInterface
     }
 
     /**
-     * castArray
-     *
      * @param  EntityMetadata  $metadata
      * @param  array           $data
      *

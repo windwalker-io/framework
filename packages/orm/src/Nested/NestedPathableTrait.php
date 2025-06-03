@@ -16,13 +16,15 @@ trait NestedPathableTrait
 
     #[Column('alias')]
     #[Slugify]
-    protected string $alias = '';
+    public string $alias = '';
 
     #[Column('path')]
-    protected string $path = '';
+    public string $path = '';
 
     /**
      * @return string
+     *
+     * @deprecated  Use property instead.
      */
     public function getAlias(): string
     {
@@ -33,6 +35,8 @@ trait NestedPathableTrait
      * @param  string  $alias
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setAlias(string $alias): static
     {
@@ -43,6 +47,8 @@ trait NestedPathableTrait
 
     /**
      * @return string
+     *
+     * @deprecated  Use property instead.
      */
     public function getPath(): string
     {
@@ -53,6 +59,8 @@ trait NestedPathableTrait
      * @param  string  $path
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated  Use property instead.
      */
     public function setPath(string $path): static
     {
