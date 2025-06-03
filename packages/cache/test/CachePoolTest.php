@@ -11,6 +11,7 @@ use Psr\Cache\InvalidArgumentException;
 use Windwalker\Cache\CacheItem;
 use Windwalker\Cache\CachePool;
 use Windwalker\Cache\Exception\RuntimeException;
+use Windwalker\Cache\Serializer\JsonAssocSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\StorageInterface;
@@ -24,10 +25,7 @@ class CachePoolTest extends TestCase
     use MockeryPHPUnitIntegration;
     use TestAccessorTrait;
 
-    /**
-     * @var CachePool
-     */
-    protected $instance;
+    protected CachePool $instance;
 
     /**
      * testBasicUsage
@@ -118,6 +116,20 @@ class CachePoolTest extends TestCase
         self::assertTrue($item->isHit());
     }
 
+    public function testGetItemWithSerializer(): void
+    {
+        $this->instance->setSerializer(new JsonAssocSerializer());
+
+        $item = $this->instance->getItem('flower');
+        $item->set(['foo' => 'bar']);
+        $this->instance->save($item);
+
+        $item = $this->instance->getItem('flower');
+
+        self::assertSame(['foo' => 'bar'], $item->get());
+        self::assertTrue($item->isHit());
+    }
+
     /**
      * @see  CachePool::deleteItem
      */
@@ -187,7 +199,7 @@ class CachePoolTest extends TestCase
         self::assertEmpty($storage->getData());
 
         // Auto commit when destructing
-        $this->instance = null;
+        unset($this->instance);
 
         self::assertEquals('FOO', $storage->get('foo'));
         self::assertEquals('YOO', $storage->get('yoo'));
@@ -256,6 +268,17 @@ class CachePoolTest extends TestCase
             time() + 10,
             $this->getValue($this->instance->getStorage(), 'data')['hello3'][0]
         );
+    }
+
+    public function testGetWithSerializer(): void
+    {
+        $this->instance->setSerializer(new JsonAssocSerializer());
+
+        $this->instance->set('flower', ['foo' => 'bar']);
+
+        $flower = $this->instance->get('flower');
+
+        self::assertSame(['foo' => 'bar'], $flower);
     }
 
     /**

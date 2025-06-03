@@ -68,9 +68,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $item;
         }
 
-        $item->set($this->storage->get($key));
-
-        return $item;
+        return $item->set($this->serializer->unserialize($this->storage->get($key)));
     }
 
     /**
@@ -229,7 +227,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $default;
         }
 
-        return $this->serializer->unserialize($item->get());
+        return $item->get();
     }
 
     /**
