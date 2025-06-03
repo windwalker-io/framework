@@ -23,21 +23,18 @@ trait ManageInputTrait
      */
     public function renderInput(array $options = []): string
     {
-        $input = $this->getPreparedInput();
+        $input = $this->compileInput();
 
         return $this->getForm()->getRenderer()->renderInput($this, $input, $options);
     }
 
     /**
-     * Convert input element as the format that we want exacttly printed.
-     *
-     * This method is often called in template or before printed.
-     * If you got your own renderer or layout for this field, just override this method and return your custom layout.
-     *
      * @param  HTMLElement  $input
      * @param  array        $options
      *
      * @return  string|HTMLElement
+     *
+     * @deprecated  Use compileFieldElement() instead.
      */
     public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
@@ -51,15 +48,32 @@ trait ManageInputTrait
     }
 
     /**
+     * Convert input element as the format that we want exactly printed.
+     *
+     * This method is often called in template or before printed.
+     * If you got your own renderer or layout for this field, just override this method and return your custom layout.
+     *
+     * @param  HTMLElement  $input
+     * @param  array        $options
+     *
+     * @return  string|HTMLElement
+     */
+    public function compileFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
+    {
+        return $this->buildFieldElement($input, $options);
+    }
+
+    /**
      * Prepare the input element attributes.
      *
      * @return  HTMLElement
      *
-     * @throws \DOMException
+     * @deprecated  Use compileInput() instead.
      */
     public function getPreparedInput(): HTMLElement
     {
-        $input = clone $this->getInput();
+        /** @var HTMLElement $input */
+        $input = $this->getInput()->cloneNode(true);
 
         $input->setAttribute('id', $this->getId());
         $input->setAttribute('name', $this->getInputName());
@@ -70,6 +84,11 @@ trait ManageInputTrait
         FormNormalizer::sortAttributes($input);
 
         return $input;
+    }
+
+    public function compileInput(): HTMLElement
+    {
+        return $this->getPreparedInput();
     }
 
     /**

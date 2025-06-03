@@ -11,42 +11,11 @@ namespace Windwalker\Authorization;
  */
 interface AuthorizationInterface
 {
-    /**
-     * authorise
-     *
-     * @param  string  $policy
-     * @param  mixed   $user
-     * @param  mixed   ...$args
-     *
-     * @return  bool
-     */
-    public function authorize(string $policy, mixed $user, mixed ...$args): bool;
+    public function authorize(string|\UnitEnum $policy, mixed $user, mixed ...$args): bool;
 
-    /**
-     * addPolicy
-     *
-     * @param  string    $name
-     * @param  callable  $handler
-     *
-     * @return  static
-     */
-    public function addPolicy(string $name, callable $handler): static;
+    public function addPolicy(string|\UnitEnum $name, callable|PolicyInterface $handler): static;
 
-    /**
-     * hasPolicy
-     *
-     * @param  string  $name
-     *
-     * @return  bool
-     */
-    public function hasPolicy(string $name): bool;
+    public function hasPolicy(string|\UnitEnum $name): bool;
 
-    /**
-     * registerPolicy
-     *
-     * @param  PolicyProviderInterface  $policy
-     *
-     * @return  static
-     */
     public function registerPolicyProvider(PolicyProviderInterface $policy): static;
 }

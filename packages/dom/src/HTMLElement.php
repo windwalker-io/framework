@@ -142,8 +142,6 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
     }
 
     /**
-     * getAttributes
-     *
      * @param  bool  $toString
      *
      * @return  array<string|Attr>

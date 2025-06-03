@@ -7,6 +7,8 @@ namespace Windwalker\Authorization;
 use InvalidArgumentException;
 use OutOfBoundsException;
 
+use function Windwalker\unwrap_enum;
+
 /**
  * The Authorization class.
  *
@@ -21,33 +23,18 @@ class Authorization implements AuthorizationInterface
      */
     protected array $policies = [];
 
-    /**
-     * authorise
-     *
-     * @param  string  $policy
-     * @param  mixed   $user
-     * @param  mixed   ...$args
-     *
-     * @return  boolean
-     */
-    public function authorize(string $policy, mixed $user, mixed ...$args): bool
+    public function authorize(string|\UnitEnum $policy, mixed $user, mixed ...$args): bool
     {
+        $policy = unwrap_enum($policy);
+
         if (!$this->hasPolicy($policy)) {
             throw new OutOfBoundsException(sprintf('Policy "%s" not exists', $policy));
         }
 
-        return $this->getPolicy($policy)->authorize($user, ...$args);
+        return $this->getPolicy($policy)?->authorize($user, ...$args) ?? false;
     }
 
-    /**
-     * addPolicy
-     *
-     * @param  string                    $name
-     * @param  callable|PolicyInterface  $handler
-     *
-     * @return  static
-     */
-    public function addPolicy(string $name, callable|PolicyInterface $handler): static
+    public function addPolicy(string|\UnitEnum $name, callable|PolicyInterface $handler): static
     {
         if (is_callable($handler)) {
             $handler = new CallbackPolicy($handler);
@@ -57,30 +44,20 @@ class Authorization implements AuthorizationInterface
             throw new InvalidArgumentException('Not a valid policy, please give a callable or PolicyInterface');
         }
 
+        $name = unwrap_enum($name);
+
         $this->policies[$name] = $handler;
 
         return $this;
     }
 
-    /**
-     * getPolicy
-     *
-     * @param  string  $name
-     *
-     * @return  ?PolicyInterface
-     */
-    public function getPolicy(string $name): ?PolicyInterface
+    public function getPolicy(string|\UnitEnum $name): ?PolicyInterface
     {
+        $name = unwrap_enum($name);
+
         return $this->policies[$name] ?? null;
     }
 
-    /**
-     * registerPolicy
-     *
-     * @param  PolicyProviderInterface  $policy
-     *
-     * @return  static
-     */
     public function registerPolicyProvider(PolicyProviderInterface $policy): static
     {
         $policy->register($this);
@@ -88,15 +65,10 @@ class Authorization implements AuthorizationInterface
         return $this;
     }
 
-    /**
-     * hasPolicy
-     *
-     * @param  string  $name
-     *
-     * @return  boolean
-     */
-    public function hasPolicy(string $name): bool
+    public function hasPolicy(string|\UnitEnum $name): bool
     {
+        $name = unwrap_enum($name);
+
         return isset($this->policies[$name]);
     }
 

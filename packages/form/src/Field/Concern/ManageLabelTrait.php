@@ -38,19 +38,39 @@ trait ManageLabelTrait
      */
     public function renderLabel(array $options = []): string
     {
-        $label = $this->getPreparedLabel();
+        $label = $this->compileLabel();
 
         return $this->getForm()->getRenderer()->renderLabel($this, $label, $options);
     }
 
+    /**
+     * @param  HTMLElement  $label
+     * @param  array        $options
+     *
+     * @return  string|HTMLElement
+     *
+     * @deprecated  Use compileLabelElement() instead.
+     */
     public function buildLabel(HTMLElement $label, array $options = []): string|HTMLElement
     {
         return $label;
     }
 
+    public function compileLabelElement(HTMLElement $label, array $options = []): string|HTMLElement
+    {
+        return $this->buildLabel($label, $options);
+    }
+
+    /**
+     * @return  HTMLElement
+     *
+     * @throws \DOMException
+     * @deprecated  Use compileLabel() instead.
+     */
     public function getPreparedLabel(): HTMLElement
     {
-        $label = clone $this->getLabel();
+        /** @var HTMLElement $label */
+        $label = $this->getLabel()->cloneNode(true);
 
         $label->setAttribute('id', $this->getId('-label'));
         $label->setAttribute('for', $this->getId());
@@ -59,6 +79,11 @@ trait ManageLabelTrait
         FormNormalizer::sortAttributes($label);
 
         return $label;
+    }
+
+    public function compileLabel(): HTMLElement
+    {
+        return $this->getPreparedLabel();
     }
 
     public function modifyLabel(callable $handler): static

@@ -27,6 +27,14 @@ trait ManageWrapperTrait
         return $wrapper;
     }
 
+    /**
+     * @param  HTMLElement  $wrapper
+     * @param  array        $options
+     *
+     * @return  string
+     *
+     * @deprecated  Use compileWrapperElement() instead.
+     */
     public function buildWrapper(HTMLElement $wrapper, array $options = []): string
     {
         if (!$options['no_label']) {
@@ -44,6 +52,16 @@ trait ManageWrapperTrait
         );
 
         return $wrapper->render();
+    }
+
+    public function compileWrapperElement(HTMLElement $wrapper, array $options = []): string
+    {
+        return $this->buildWrapper($wrapper, $options);
+    }
+
+    public function compileWrapper(): HTMLElement
+    {
+        return $this->getWrapper();
     }
 
     public function modifyWrapper(callable $handler): static

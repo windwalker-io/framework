@@ -33,9 +33,9 @@ class TextField extends AbstractInputField
 
     protected string $inputType = 'text';
 
-    public function buildFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
+    public function compileFieldElement(HTMLElement $input, array $options = []): string|HTMLElement
     {
-        $html = parent::buildFieldElement($input, $options);
+        $html = parent::compileFieldElement($input, $options);
 
         if (count($this->options)) {
             $html = h(

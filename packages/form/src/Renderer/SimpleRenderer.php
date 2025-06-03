@@ -25,7 +25,7 @@ class SimpleRenderer implements FormRendererInterface
      */
     public function renderLabel(AbstractField $field, HTMLElement $label, array $options = []): string
     {
-        return (string) $field->buildLabel($label, $options);
+        return (string) $field->compileLabelElement($label, $options);
     }
 
     /**
@@ -33,6 +33,6 @@ class SimpleRenderer implements FormRendererInterface
      */
     public function renderInput(AbstractField $field, HTMLElement $input, array $options = []): string
     {
-        return (string) $field->buildFieldElement($input, $options);
+        return (string) $field->compileFieldElement($input, $options);
     }
 }
