@@ -71,12 +71,12 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         $container->prepareSharedObject(DatabaseFactory::class);
         $container->bindShared(
             DatabaseAdapter::class,
-            fn(DatabaseManager $manager) => $manager->get(),
+            fn(DatabaseManager $manager, ?string $tag = null) => $manager->get($tag),
             Container::ISOLATION
         );
         $container->bindShared(
             ORM::class,
-            fn(DatabaseManager $manager) => $manager->get()->orm(),
+            fn(DatabaseManager $manager, ?string $tag = null) => $manager->get($tag)->orm(),
             Container::ISOLATION
         );
 

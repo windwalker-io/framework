@@ -298,7 +298,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         // Detect cache outside of definition to save some performance.
-        $cache = $definition->getCache();
+        $cache = $definition->getCache($tag);
 
         if ($cache !== null) {
             return $cache;
@@ -559,7 +559,8 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function bind(string $id, mixed $value, int $options = 0, ?string $tag = null): StoreDefinitionInterface
     {
-        $value = static fn(Container $container) => $container->newInstance($value, [], $options);
+        $value = static fn(Container $container, ?string $tag = null)
+            => $container->newInstance($value, compact('tag'), $options);
 
         return $this->set($id, $value, $options, $tag);
     }

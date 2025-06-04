@@ -16,7 +16,7 @@ use function Windwalker\has_attributes;
  */
 class StoreDefinition implements StoreDefinitionInterface
 {
-    public protected(set) mixed $cache = null;
+    protected array $cache = [];
 
     protected array $extends = [];
 
@@ -31,7 +31,7 @@ class StoreDefinition implements StoreDefinitionInterface
         public ?string $tag = null
     ) {
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
-            $this->cache = $this->value;
+            $this->setCache($this->value, $this->tag);
         }
 
         if (
@@ -49,9 +49,10 @@ class StoreDefinition implements StoreDefinitionInterface
     public function resolve(?Container $container = null, array $args = [], ?string $tag = null): mixed
     {
         $container ??= $this->container ?? throw new DefinitionException('This definition has no container.');
+        $tag ??= $this->tag;
 
-        if ($this->cache !== null) {
-            return $this->cache;
+        if ($this->hasCache($tag)) {
+            return $this->getCache($tag);
         }
 
         if (!$this->validateProvidedIn($container)) {
@@ -61,7 +62,6 @@ class StoreDefinition implements StoreDefinitionInterface
         }
 
         $value = $this->value;
-        $tag ??= $this->tag;
 
         // Build object if is builder
         if ($this->value instanceof ObjectBuilderDefinition) {
@@ -79,7 +79,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
         // Cache
         if ($this->options & Container::SHARED) {
-            $this->cache = $value;
+            $this->setCache($value, $tag);
         }
 
         // Extends
@@ -93,7 +93,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
         // Cache again
         if ($this->options & Container::SHARED) {
-            $this->cache = $value;
+            $this->setCache($value, $tag);
         }
 
         return $value;
@@ -101,7 +101,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function set(mixed $value): void
     {
-        $this->cache = null;
+        $this->cache = [];
         $this->value = $value;
     }
 
@@ -131,7 +131,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function reset(): void
     {
-        $this->cache = null;
+        $this->cache = [];
     }
 
     /**
@@ -174,9 +174,27 @@ class StoreDefinition implements StoreDefinitionInterface
         return $this;
     }
 
-    public function getCache(): mixed
+    public function getCache(?string $tag = null): mixed
     {
-        return $this->cache;
+        $key = $this->buildCacheKey($tag);
+
+        return $this->cache[$key] ?? null;
+    }
+
+    protected function hasCache(?string $tag = null): bool
+    {
+        $key = $this->buildCacheKey($tag);
+
+        return isset($this->cache[$key]);
+    }
+
+    protected function setCache(mixed $value, ?string $tag = null): static
+    {
+        $key = $this->buildCacheKey($tag);
+
+        $this->cache[$key] = $value;
+
+        return $this;
     }
 
     public function __clone(): void
@@ -239,5 +257,10 @@ class StoreDefinition implements StoreDefinitionInterface
         }
 
         return (bool) $provided($level);
+    }
+
+    protected function buildCacheKey(?string $tag = null): string
+    {
+        return $tag ?? $this->tag ?? '__default__';
     }
 }

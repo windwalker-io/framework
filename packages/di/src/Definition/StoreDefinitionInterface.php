@@ -28,7 +28,7 @@ interface StoreDefinitionInterface extends DefinitionInterface
 
     public function getOptions(): int;
 
-    public function getCache(): mixed;
+    public function getCache(?string $tag = null): mixed;
 
     public function getTag(): ?string;
 

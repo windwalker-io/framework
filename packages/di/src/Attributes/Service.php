@@ -36,6 +36,7 @@ class Service extends Inject
     public function resolveInjectable(Container $container, ReflectionParameter|ReflectionProperty $reflector): mixed
     {
         // For Windwaker Core Service Manager
+        // This flow is deprecated, but we keep it for backward compatibility.
         if ($this->name !== null && $this->id !== null && class_exists(AbstractManager::class)) {
             $managerClass = $this->id;
 
@@ -52,6 +53,6 @@ class Service extends Inject
 
     protected function createObject(Container $container, string $id): object
     {
-        return $container->createSharedObject($id);
+        return $container->createSharedObject($id, tag: $this->tag);
     }
 }
