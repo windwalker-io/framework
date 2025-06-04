@@ -29,6 +29,32 @@ use Windwalker\Utilities\TypeCast;
 
 /**
  * The FilterFactory class.
+ *
+ * Default filter syntaxes:
+ * - abs
+ * - alnum
+ * - cmd
+ * - email
+ * - url
+ * - words
+ * - ip
+ * - ipv4
+ * - ipv6
+ * - neg
+ * - raw
+ * - range(min=int, max=int)
+ * - clamp(min=int, max=int)
+ * - length(max=int, [utf8])
+ * - regex(regex=string, type='match'|'replace')
+ * - required
+ * - default(value=mixed)
+ * - func(callback)
+ * - string([strict])
+ * - int([strict])
+ * - float([strict])
+ * - array([strict])
+ * - bool([strict])
+ * - object([strict])
  */
 class FilterFactory
 {
