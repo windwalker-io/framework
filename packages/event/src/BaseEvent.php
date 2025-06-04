@@ -70,7 +70,7 @@ class BaseEvent implements EventInterface
      *
      * @return  T
      */
-    public function mirror(string $name, array $args = []): EventInterface
+    public function mirror(string $name, array $args = []): object
     {
         if (class_exists($name) && is_a($name, EventInterface::class, true)) {
             $new = new $name();
@@ -80,6 +80,7 @@ class BaseEvent implements EventInterface
         }
 
         $new->stopped = false;
+        $new->merge($this->getArguments());
         $new->merge($args);
 
         return $new;

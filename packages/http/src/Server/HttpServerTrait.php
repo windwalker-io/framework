@@ -143,7 +143,10 @@ trait HttpServerTrait
 
     protected function eventPassthrough(string $eventName, EventInterface $event): EventInterface
     {
-        $this->emit($newEvent = $event->mirror($eventName));
+        $newEvent = clone $event;
+        $newEvent->setName($eventName);
+
+        $this->emit($newEvent);
         $event->merge($newEvent->getArguments());
 
         return $newEvent;

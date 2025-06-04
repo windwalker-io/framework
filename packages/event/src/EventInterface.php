@@ -40,7 +40,7 @@ interface EventInterface extends StoppableEventInterface
      *
      * @return  T
      */
-    public function mirror(string $name, array $args): EventInterface;
+    public function mirror(string $name, array $args): object;
 
     /**
      * Stop the event propagation.
