@@ -1203,7 +1203,7 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  mixed  ...$args
      *
-     * @return object
+     * @return T
      *
      * @throws \ReflectionException
      */
