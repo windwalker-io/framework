@@ -47,6 +47,8 @@ class ObjectBuilderDefinition implements DefinitionInterface
 
     protected ?object $instance = null;
 
+    public ?string $tag = null;
+
     public function fork(?array $args = null): static
     {
         $new = clone $this;
@@ -300,5 +302,17 @@ class ObjectBuilderDefinition implements DefinitionInterface
     public function getClass(): callable|string
     {
         return $this->class;
+    }
+
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    public function tag(?string $tag): static
+    {
+        $this->tag = $tag;
+
+        return $this;
     }
 }

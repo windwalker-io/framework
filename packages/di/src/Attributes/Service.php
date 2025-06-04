@@ -21,7 +21,8 @@ class Service extends Inject
     public function __construct(
         ?string $id = null,
         bool|string $forceNewOrService = false,
-        public int|array|null|\Closure $providedIn = null
+        public int|array|null|\Closure $providedIn = null,
+        ?string $tag = null,
     ) {
         if (is_string($forceNewOrService)) {
             $this->name = $forceNewOrService;
@@ -29,7 +30,7 @@ class Service extends Inject
             $forceNewOrService = false;
         }
 
-        parent::__construct($id, $forceNewOrService);
+        parent::__construct($id, $forceNewOrService, $tag);
     }
 
     public function resolveInjectable(Container $container, ReflectionParameter|ReflectionProperty $reflector): mixed

@@ -12,6 +12,7 @@ use ReflectionProperty;
 use ReflectionUnionType;
 use RuntimeException;
 use Windwalker\DI\Container;
+use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
 /**
@@ -27,14 +28,13 @@ class Inject implements ContainerAttributeInterface
      *
      * @param  string|null  $id
      * @param  bool         $forceNew
+     * @param  string|null  $tag
      */
-    public function __construct(public ?string $id = null, public bool $forceNew = false)
+    public function __construct(public ?string $id = null, public bool $forceNew = false, public ?string $tag = null)
     {
     }
 
     /**
-     * __invoke
-     *
      * @param  AttributeHandler  $handler
      *
      * @return mixed
@@ -63,11 +63,18 @@ class Inject implements ContainerAttributeInterface
         };
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws DependencyResolutionException
+     */
     protected function handleParameter(AttributeHandler $handler): mixed
     {
         return $this->resolveInjectable($handler->getContainer(), $handler->getReflector());
     }
 
+    /**
+     * @throws DependencyResolutionException
+     */
     protected function getTypeName(ReflectionProperty|ReflectionParameter $reflector): mixed
     {
         $type = $reflector->getType();
@@ -104,13 +111,18 @@ class Inject implements ContainerAttributeInterface
         return $varClass;
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws DependencyResolutionException
+     */
     public function resolveInjectable(Container $container, ReflectionProperty|ReflectionParameter $reflector): mixed
     {
         $id = $this->getTypeName($reflector);
+        $tag = $this->tag;
 
         try {
-            if ($container->has($id)) {
-                return $container->get($id, $this->forceNew);
+            if ($container->has($id, $tag)) {
+                return $container->get($id, $this->forceNew, $tag);
             }
 
             if (class_exists($id) || interface_exists($id)) {
@@ -126,6 +138,10 @@ class Inject implements ContainerAttributeInterface
         return null;
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws DefinitionResolveException
+     */
     protected function createObject(Container $container, string $id): object
     {
         return $container->newInstance($id);
@@ -134,6 +150,7 @@ class Inject implements ContainerAttributeInterface
     /**
      * @param  ReflectionParameter|ReflectionProperty  $reflector
      * @param  mixed                                   $id
+     * @param  \Throwable|null                         $e
      *
      * @return  void
      *

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\DI\Definition;
 
 use Closure;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\DI\Attributes\Isolation;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
@@ -17,16 +16,20 @@ use function Windwalker\has_attributes;
  */
 class StoreDefinition implements StoreDefinitionInterface
 {
-    protected mixed $cache = null;
+    public protected(set) mixed $cache = null;
 
     protected array $extends = [];
 
-    protected ?Container $container = null;
+    public protected(set) ?Container $container = null;
 
-    protected Closure|array|int|null $providedIn = null;
+    public Closure|array|int|null $providedIn = null;
 
-    public function __construct(protected string $id, protected mixed $value, protected int $options = 0)
-    {
+    public function __construct(
+        public string $id,
+        public protected(set) mixed $value,
+        public int $options = 0,
+        public ?string $tag = null
+    ) {
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
             $this->cache = $this->value;
         }
@@ -43,7 +46,7 @@ class StoreDefinition implements StoreDefinitionInterface
      * @throws \ReflectionException
      * @throws DefinitionException
      */
-    public function resolve(?Container $container = null, array $args = []): mixed
+    public function resolve(?Container $container = null, array $args = [], ?string $tag = null): mixed
     {
         $container ??= $this->container ?? throw new DefinitionException('This definition has no container.');
 
@@ -58,17 +61,20 @@ class StoreDefinition implements StoreDefinitionInterface
         }
 
         $value = $this->value;
+        $tag ??= $this->tag;
 
         // Build object if is builder
         if ($this->value instanceof ObjectBuilderDefinition) {
-            $this->value->addArguments($args);
+            $define = clone $this->value;
+            $define->addArguments($args);
+            $define->tag($tag);
 
-            $value = $this->value->resolve($container);
+            $value = $define->resolve($container);
         }
 
         // Invoke
         if ($this->value instanceof Closure) {
-            $value = ($this->value)($container);
+            $value = ($this->value)($container, $tag);
         }
 
         // Cache
@@ -78,11 +84,11 @@ class StoreDefinition implements StoreDefinitionInterface
 
         // Extends
         foreach ($this->extends as $extend) {
-            $value = $extend($value, $container) ?? $value;
+            $value = $extend($value, $container, $tag) ?? $value;
         }
 
         foreach ($container->findExtends($this->id) as $extend) {
-            $value = $extend($value, $container) ?? $value;
+            $value = $extend($value, $container, $tag) ?? $value;
         }
 
         // Cache again
@@ -195,6 +201,11 @@ class StoreDefinition implements StoreDefinitionInterface
         $this->container = $container;
 
         return $this;
+    }
+
+    public function getTag(): ?string
+    {
+        return $this->tag;
     }
 
     public function providedIn(int|array|Closure|null $levels): static
