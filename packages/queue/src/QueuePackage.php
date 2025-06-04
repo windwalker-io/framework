@@ -29,14 +29,14 @@ class QueuePackage extends AbstractPackage implements ServiceProviderInterface
         $container->prepareSharedObject(QueueFailerManager::class);
         $container->bindShared(
             Queue::class,
-            function (Container $container) {
-                return $container->get(QueueManager::class)->get();
+            function (Container $container, ?string $tag = null) {
+                return $container->get(QueueManager::class)->get($tag);
             }
         );
         $container->bindShared(
             QueueFailerInterface::class,
-            function (Container $container) {
-                return $container->get(QueueFailerManager::class)->get();
+            function (Container $container, ?string $tag = null) {
+                return $container->get(QueueFailerManager::class)->get($tag);
             }
         );
     }

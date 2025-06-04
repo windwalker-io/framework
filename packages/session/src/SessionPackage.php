@@ -68,15 +68,15 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
 
         $container->bindShared(
             Session::class,
-            fn(SessionManager $manager) => $manager->get(),
+            fn(SessionManager $manager, ?string $tag = null) => $manager->get($tag),
             Container::ISOLATION
         )
             ->alias(SessionInterface::class, Session::class);
 
         $container->bindShared(
             CookiesInterface::class,
-            function (SessionManager $manager) {
-                return $manager->get()->getCookies();
+            function (SessionManager $manager, ?string $tag = null) {
+                return $manager->get($tag)->getCookies();
             },
             Container::ISOLATION
         );

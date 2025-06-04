@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use Windwalker\Cache\CachePackage;
 use Windwalker\Cache\CachePool;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Storage\FileStorage;
 use Windwalker\Cache\Storage\NullStorage;
 use Windwalker\Core\Manager\CacheManager;
-use Windwalker\Core\Manager\LoggerManager;
 use Windwalker\DI\Container;
 
 return [
@@ -21,11 +21,11 @@ return [
         'default' => 'global',
 
         'providers' => [
-
+            CachePackage::class
         ],
 
         'bindings' => [
-            CacheManager::class,
+            //
         ],
 
         'factories' => [
