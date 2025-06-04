@@ -48,17 +48,17 @@ abstract class TypeCast
 {
     use PreventInitialTrait;
 
-    public const TYPE_INT = 'int';
+    public const string TYPE_INT = 'int';
 
-    public const TYPE_FLOAT = 'float';
+    public const string TYPE_FLOAT = 'float';
 
-    public const TYPE_STRING = 'string';
+    public const string TYPE_STRING = 'string';
 
-    public const TYPE_BOOL = 'bool';
+    public const string TYPE_BOOL = 'bool';
 
-    public const TYPE_ARRAY = 'array';
+    public const string TYPE_ARRAY = 'array';
 
-    public const TYPE_OBJECT = 'object';
+    public const string TYPE_OBJECT = 'object';
 
     public static function extractEnum(\UnitEnum $data): string|int
     {
