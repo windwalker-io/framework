@@ -476,8 +476,7 @@ class ContainerTest extends TestCase
      */
     public function testNewInstanceWithPropertyAttributes(): void
     {
-        // To count object create times, we must set container as eagerly mode.
-        $container = new Container(options: Container::EAGERLY);
+        $container = new Container();
         $container->getAttributesResolver()
             ->registerAttribute(Inject::class, Attribute::TARGET_PROPERTY);
         StubService::$counter = 0;

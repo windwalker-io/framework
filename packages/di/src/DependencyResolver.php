@@ -133,14 +133,9 @@ class DependencyResolver
         $reflection = new ReflectionClass($class);
 
         $constructor = $reflection->getConstructor();
-        $eagerly = $options & Container::EAGERLY;
 
         // If there are no parameters, just return a new object.
         if (null === $constructor) {
-            if ($eagerly) {
-                $reflection->newLazyGhost(fn (object $instance) => $instance->__construct());
-            }
-
             return new $class();
         }
 
@@ -164,15 +159,7 @@ class DependencyResolver
 
         try {
             // Create a callable for the dataStore
-            if ($eagerly) {
-                return $reflection->newInstanceArgs($args);
-            }
-
-            return $reflection->newLazyGhost(
-                function (object $instance) use ($args) {
-                    $instance->__construct(...$args);
-                }
-            );
+            return $reflection->newInstanceArgs($args);
         } catch (TypeError $e) {
             throw new DependencyResolutionException($e->getMessage(), $e->getCode(), $e);
         }
