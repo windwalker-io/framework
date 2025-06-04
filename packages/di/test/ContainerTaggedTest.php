@@ -162,6 +162,46 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
+    public function testBind()
+    {
+        $this->instance->bind(
+            StubLangCode::class,
+            function (Container $container, ?string $tag = null) {
+                return new StubLangCode($tag ?? 'USA');
+            }
+        );
+        $lang = $this->instance->get(StubLangCode::class);
+
+        self::assertEquals('en-US', $lang());
+
+        $lang = $this->instance->get(StubLangCode::class, tag: 'Germany');
+
+        self::assertEquals('de-DE', $lang());
+    }
+
+    public function testBindPresetTags()
+    {
+        $this->instance->bind(
+            StubLangCode::class,
+            function (Container $container, ?string $tag = null) {
+                return new StubLangCode($tag);
+            },
+            tag: 'USA'
+        );
+
+        $lang = $this->instance->get(StubLangCode::class, tag: 'USA');
+
+        self::assertEquals('en-US', $lang());
+
+        try {
+            $this->instance->get(StubLangCode::class);
+
+            self::fail('Should throw DefinitionNotFoundException');
+        } catch (DefinitionNotFoundException) {
+            self::assertTrue(true);
+        }
+    }
+
     public function testExtends(): void
     {
         $this->instance->prepareSharedObject(StubLangCode::class);
