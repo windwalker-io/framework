@@ -71,6 +71,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public const int IGNORE_ATTRIBUTES = 1 << 4;
 
+    /**
+     * Do not use php 8.4 lazy object to create instance.
+     */
+    public const int EAGERLY = 1 << 5;
+
     public const int MERGE_OVERRIDE = 1 << 0;
 
     public const int MERGE_RECURSIVE = 1 << 1;
