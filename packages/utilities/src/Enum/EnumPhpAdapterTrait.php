@@ -210,6 +210,10 @@ trait EnumPhpAdapterTrait
             return $this->getValue();
         }
 
+        if ($this instanceof Enum && $name === 'name') {
+            return parent::getKey();
+        }
+
         // Since static::FOO in object scope will seems as a parent instance call in PHP,
         // so here may catch static method call. We must check contstants exists here.
         if (defined(static::class . '::' . $name)) {
