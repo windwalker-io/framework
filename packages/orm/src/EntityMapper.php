@@ -40,7 +40,6 @@ use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Query;
-use Windwalker\Query\Wrapper\UuidBinWrapper;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
@@ -155,31 +154,35 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * findOne
-     *
      * @param  Conditions        $conditions
      * @param  ?class-string<T>  $className
+     * @param  int               $options
      *
      * @return  object|null|T
      */
-    public function findOne(mixed $conditions = [], ?string $className = null): ?object
+    public function findOne(mixed $conditions = [], ?string $className = null, int $options = 0): ?object
     {
         $metadata = $this->getMetadata();
 
         return $this->from($metadata->getClassName())
             ->where($this->conditionsToWheres($conditions))
+            ->tapIf(
+                (bool) ($options & static::FOR_UPDATE),
+                fn (Query $query) => $query->forUpdate()
+            )
             ->get($className ?? $metadata->getClassName());
     }
 
     /**
      * @param  Conditions        $conditions
      * @param  ?class-string<T>  $className
+     * @param  int               $options
      *
      * @return  object|T
      */
-    public function mustFindOne(mixed $conditions = [], ?string $className = null): object
+    public function mustFindOne(mixed $conditions = [], ?string $className = null, int $options = 0): object
     {
-        if (!$item = $this->findOne($conditions, $className)) {
+        if (!$item = $this->findOne($conditions, $className, $options)) {
             throw new NoResultException($this->getTableName(), $conditions);
         }
 
@@ -189,16 +192,21 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  Conditions            $conditions
      * @param  class-string<T>|null  $className
+     * @param  int                   $options
      *
      * @return  ResultIterator<T>
      */
-    public function findList(mixed $conditions = [], ?string $className = null): ResultIterator
+    public function findList(mixed $conditions = [], ?string $className = null, int $options = 0): ResultIterator
     {
         $metadata = $this->getMetadata();
 
         return new ResultIterator(
             $this->select()
                 ->where($this->conditionsToWheres($conditions))
+                ->tapIf(
+                    (bool) ($options & static::FOR_UPDATE),
+                    fn (Query $query) => $query->forUpdate()
+                )
                 ->getIterator($className ?? $metadata->getClassName())
         );
     }
@@ -206,13 +214,18 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  string|RawWrapper  $column
      * @param  Conditions         $conditions
+     * @param  int                $options
      *
      * @return  string|null
      */
-    public function findResult(string|RawWrapper $column, mixed $conditions = []): ?string
+    public function findResult(string|RawWrapper $column, mixed $conditions = [], int $options = 0): ?string
     {
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
+            ->tapIf(
+                (bool) ($options & static::FOR_UPDATE),
+                fn (Query $query) => $query->forUpdate()
+            )
             ->result();
     }
 
@@ -222,10 +235,14 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  Collection
      */
-    public function findColumn(string $column, mixed $conditions = []): Collection
+    public function findColumn(string $column, mixed $conditions = [], int $options = 0): Collection
     {
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
+            ->tapIf(
+                (bool) ($options & static::FOR_UPDATE),
+                fn (Query $query) => $query->forUpdate()
+            )
             ->loadColumn();
     }
 
