@@ -97,6 +97,10 @@ if (!function_exists(__NAMESPACE__ . '\uuid2bin')) {
      */
     function uuid2bin(mixed $value): UuidBinWrapper
     {
+        if (is_array($value)) {
+            return array_map(fn($v) => uuid2bin($v), $value);
+        }
+
         return new UuidBinWrapper($value);
     }
 }

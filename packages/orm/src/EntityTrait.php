@@ -58,14 +58,38 @@ trait EntityTrait
         return EntityMapper::getObjectMetadata()->get($this, $key);
     }
 
+    /**
+     * @param  string  $propName
+     *
+     * @return  mixed
+     *               
+     * @deprecated  Use `$this->props ??= fetchRelation(...)` instead.
+     */
     protected function loadRelation(string $propName): mixed
     {
-        return $this->$propName ??= RelationProxies::call($this, $propName);
+        return $this->$propName ??= $this->fetchRelation($propName);
     }
 
+    protected function fetchRelation(string $propName): mixed
+    {
+        return RelationProxies::call($this, $propName);
+    }
+
+    /**
+     * @param  string  $propName
+     *
+     * @return  mixed|RelationCollection
+     *                                  
+     * @deprecated  Use `$this->props ??= fetchCollection(...)` instead.
+     */
     protected function loadCollection(string $propName)
     {
-        return $this->$propName ??= RelationProxies::call($this, $propName)
+        return $this->$propName ??= $this->fetchCollection($propName);
+    }
+
+    protected function fetchCollection(string $propName)
+    {
+        return RelationProxies::call($this, $propName)
             ?? new RelationCollection(
                 static::class,
                 null

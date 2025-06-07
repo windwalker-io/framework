@@ -80,8 +80,8 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  * @method  iterable|object[]     flush(string $entityClass, iterable $items, mixed $conditions = [])
  * @method  StatementInterface[]  sync(string $entityClass, iterable $items, mixed $conditions = [], ?array $compareKeys = null)
  * @method  object[]  copy(string $entityClass, mixed $conditions = [], callable|iterable $newValue = null, int $options = 0)
- * @method  void  increment(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
- * @method  void  decrement(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
+ * @method  void  increment(string $entityClass, string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
+ * @method  void  decrement(string $entityClass, string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
  *
  * @formatter:on
  * phpcs:enable
@@ -255,13 +255,23 @@ class ORM implements EventAwareInterface
     public function createEntity(string $entityClass, array $data = []): object
     {
         /** @var T $entity */
-        $entity = $this->mapper($entityClass)->createEntity();
-
-        if ($data !== []) {
-            $entity = $this->hydrateEntity($data, $entity);
-        }
+        $entity = $this->mapper($entityClass)->createEntity(...$data);
 
         return $entity;
+    }
+
+    /**
+     * @template T
+     *
+     * @param  class-string<T>  $entityClass
+     *
+     * @return  T
+     *
+     * @throws ReflectionException
+     */
+    public function createEntityArgs(string $entityClass, mixed ...$args): object
+    {
+        return $this->createEntity($entityClass, $args);
     }
 
     /**
