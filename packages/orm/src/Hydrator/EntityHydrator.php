@@ -18,6 +18,8 @@ use Windwalker\Utilities\TypeCast;
  */
 class EntityHydrator implements FieldHydratorInterface
 {
+    public bool $extractForceStringify = true;
+
     /**
      * EntityHydrator constructor.
      *
@@ -107,9 +109,9 @@ class EntityHydrator implements FieldHydratorInterface
 
             $value = static::castFieldForExtract($metadata, $colName, $value, $object);
 
-            // if ($value !== null && !is_string($value)) {
-            //     $value = TypeCast::tryString($value);
-            // }
+            if ($this->extractForceStringify && $value !== null && !is_string($value)) {
+                $value = TypeCast::tryString($value);
+            }
 
             $item[$colName] = $value;
         }

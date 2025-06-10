@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Attributes;
 
 use Attribute;
-use ReflectionProperty;
-use Windwalker\Attributes\AttributeHandler;
-use Windwalker\Attributes\AttributeInterface;
-use Windwalker\ORM\Metadata\EntityMetadata;
 
 /**
  * The Cast class.
@@ -21,12 +17,15 @@ class Cast implements CastAttributeInterface
     /**
      * Cast constructor.
      *
-     * @param  string      $hydrate
+     * @param  string  $hydrate
      * @param  mixed|null  $extract
-     * @param  int         $options
+     * @param  int  $options
      */
-    public function __construct(protected mixed $hydrate, protected mixed $extract = null, protected int $options = 0)
-    {
+    public function __construct(
+        protected mixed $hydrate = null,
+        protected mixed $extract = null,
+        protected int $options = 0
+    ) {
         //
     }
 

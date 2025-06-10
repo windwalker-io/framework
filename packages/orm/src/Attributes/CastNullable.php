@@ -18,7 +18,7 @@ class CastNullable extends Cast
     /**
      * @inheritDoc
      */
-    public function __construct(mixed $hydrate, mixed $extract = null, int $options = 0)
+    public function __construct(mixed $hydrate = null, mixed $extract = null, int $options = 0)
     {
         $options |= static::NULLABLE | static::EMPTY_STRING_TO_NULL;
 
