@@ -80,7 +80,7 @@ if (!function_exists('\Windwalker\try_uuid')) {
             throw new \DomainException('Please install `ramsey/uuid` first.');
         }
 
-        if ($uuid === null) {
+        if ($uuid === null || $uuid === '0x') {
             return null;
         }
 
