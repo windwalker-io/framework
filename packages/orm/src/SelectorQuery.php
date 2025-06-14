@@ -355,12 +355,7 @@ class SelectorQuery extends Query implements EventAwareInterface
                 );
 
                 if ($uuidBinAttr) {
-                    if (is_iterable($value)) {
-                        $value = iterator_to_array($value);
-                        $value = array_map(try_uuid2bin(...), $value);
-                    } else {
-                        $value = try_uuid2bin($value);
-                    }
+                    $value = try_uuid2bin($value);
                 }
             }
         }

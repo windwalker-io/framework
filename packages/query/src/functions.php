@@ -91,9 +91,9 @@ if (!function_exists(__NAMESPACE__ . '\uuid2bin')) {
     /**
      * @param  string  $value
      *
-     * @return UuidBinWrapper
+     * @return UuidBinWrapper|array
      */
-    function uuid2bin(mixed $value): UuidBinWrapper
+    function uuid2bin(mixed $value): UuidBinWrapper|array
     {
         if (is_array($value)) {
             return array_map(fn($v) => uuid2bin($v), $value);
@@ -107,10 +107,14 @@ if (!function_exists(__NAMESPACE__ . '\try_uuid2bin')) {
     /**
      * @param  string  $value
      *
-     * @return ?UuidBinWrapper
+     * @return UuidBinWrapper|array|null
      */
-    function try_uuid2bin(mixed $value): ?UuidBinWrapper
+    function try_uuid2bin(mixed $value): UuidBinWrapper|array|null
     {
+        if (is_iterable($value)) {
+            return array_map(fn($v) => try_uuid2bin($v), iterator_to_array($value));
+        }
+
         if ($value === null || $value === '' || $value === '0x') {
             return null;
         }
