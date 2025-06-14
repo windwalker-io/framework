@@ -9,6 +9,8 @@ use Ramsey\Uuid\Uuid;
 use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
+use Windwalker\Query\Wrapper\UuidBinWrapper;
+use Windwalker\Query\Wrapper\UuidWrapper;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -93,15 +95,24 @@ class BoundedHelper
             }
 
             if ($param['dataType'] === ParamType::STRING) {
+                $isUuidBinary = $v instanceof UuidBinWrapper;
+
                 $v = TypeCast::toString($v);
 
                 if (
-                    strlen($v) === 16
-                    && !mb_check_encoding((string) $v, 'UTF-8')
+                    $isUuidBinary
+                    || (
+                        strlen($v) === 16
+                        && !mb_check_encoding((string) $v, 'UTF-8')
+                    )
                 ) {
                     $v = Escaper::tryQuote($escaper, static::binToUUID($v));
 
-                    $v = "UNHEX(REPLACE({$v}, '-', ''))";
+                    if (Escaper::isMySQL($escaper)) {
+                        $v = "UUID_TO_BIN({$v})";
+                    } else {
+                        $v = "UNHEX(REPLACE({$v}, '-', ''))";
+                    }
                 } else {
                     $v = Escaper::tryQuote($escaper, $v);
                 }
@@ -117,6 +128,14 @@ class BoundedHelper
         $sql = str_replace(['%', '?'], ['%%', '%s'], $sql);
 
         return sprintf($sql, ...$values);
+    }
+
+    public static function isMySQL(mixed $escaper)
+    {
+        if ($escaper instanceof PDO) {
+            // Is mysql not mariadb
+            return $escaper->getAttribute(PDO::ATTR_SERVER_VERSION) === 'mysql';
+        }
     }
 
     public static function forPDO($sql, array $bounded): array

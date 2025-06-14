@@ -9,6 +9,7 @@ use UnexpectedValueException;
 use WeakReference;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\Database\Platform\MySQLPlatform;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Str;
 
@@ -106,6 +107,34 @@ class Escaper
         }
 
         return "'" . static::tryEscape($escaper, $value) . "'";
+    }
+
+    public static function isMySQL(mixed $escaper): bool
+    {
+        if ($escaper instanceof self) {
+            $escaper = $escaper->getConnection();
+        }
+
+        // PDO has quote method, directly use it.
+        if ($escaper instanceof PDO) {
+            return str_contains($escaper->getAttribute(PDO::ATTR_SERVER_VERSION), 'mysql');
+        }
+
+        if ($escaper instanceof ORM) {
+            $escaper = $escaper->getDb();
+        }
+
+        if ($escaper instanceof DatabaseAdapter) {
+            $platform = $escaper->getPlatform();
+
+            if ($platform instanceof MySQLPlatform) {
+                return !$platform->isMariaDB();
+            }
+
+            return false;
+        }
+
+        return false;
     }
 
     /**

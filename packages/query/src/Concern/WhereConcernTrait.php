@@ -7,6 +7,7 @@ namespace Windwalker\Query\Concern;
 use Closure;
 use InvalidArgumentException;
 use MyCLabs\Enum\Enum;
+use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\QuoteNameClause;
@@ -29,7 +30,7 @@ trait WhereConcernTrait
     /**
      * where
      *
-     * @param  string|array|Closure|ClauseInterface  $column   Column name, array where list or callback
+     * @param  string|array|Closure|ClauseInterface  $column  Column name, array where list or callback
      *                                                         function as sub query.
      * @param  mixed                                 ...$args
      *
@@ -55,15 +56,24 @@ trait WhereConcernTrait
         if ($args === [] && ($column instanceof Clause || $column instanceof self)) {
             $this->as($column, false);
             $this->whereRaw($column);
+
             return $this;
         }
 
         $column = $this->as($column, false);
 
+        $operator = $args[0] ?? null;
+        $value = $args[1] ?? null;
+
+        // Shortcut
+        if (count($args) === 1) {
+            [$operator, $value] = ['=', $operator];
+        }
+
         [$operator, $value] = $this->handleOperatorAndValue(
-            $args[0] ?? null,
-            $args[1] ?? null,
-            count($args) === 1
+            $column->getValue(),
+            $operator,
+            $value,
         );
 
         $this->whereRaw(
@@ -87,18 +97,17 @@ trait WhereConcernTrait
      * a named param like: `:wqp__{ordering}` and re-calc the order when every time rendering Query object,
      * so we can make sure the variables won't be conflict.
      *
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @param  bool   $shortcut
+     * @param  string  $column
+     * @param  mixed   $operator
+     * @param  mixed   $value
      *
      * @return  array
      */
-    private function handleOperatorAndValue(mixed $operator, mixed $value, bool $shortcut = false): array
-    {
-        if ($shortcut) {
-            [$operator, $value] = ['=', $operator];
-        }
-
+    protected function handleOperatorAndValue(
+        string $column,
+        mixed $operator,
+        mixed $value,
+    ): array {
         if ($operator === null) {
             throw new InvalidArgumentException('Where operator should not be NULL');
         }
@@ -321,15 +330,24 @@ trait WhereConcernTrait
         if ($args === [] && ($column instanceof Clause || $column instanceof self)) {
             $this->as($column, false);
             $this->havingRaw($column);
+
             return $this;
         }
 
         $column = $this->as($column, false);
 
+        $operator = $args[0] ?? null;
+        $value = $args[1] ?? null;
+
+        // Shortcut
+        if (count($args) === 1) {
+            [$operator, $value] = ['=', $operator];
+        }
+
         [$operator, $value] = $this->handleOperatorAndValue(
-            $args[0] ?? null,
-            $args[1] ?? null,
-            count($args) === 1
+            $column->getValue(),
+            $operator,
+            $value,
         );
 
         $this->havingRaw(

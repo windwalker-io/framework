@@ -13,12 +13,15 @@ use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\ORM\Attributes\UseRealColumns;
+use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
 use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 
+use function Windwalker\Query\try_uuid2bin;
+use function Windwalker\Query\uuid2bin;
 use function Windwalker\Query\val;
 
 use const Windwalker\Query\QN_IGNORE_DOTS;
@@ -290,6 +293,79 @@ class SelectorQuery extends Query implements EventAwareInterface
         }
 
         return $on;
+    }
+
+    /**
+     * Get Column Attribute and EntityMetadata from column string like: `article.id` or `id`.
+     *
+     * @param  string  $column
+     *
+     * @return  array{ 0: Attributes\Column|null, 1: EntityMetadata }
+     */
+    protected function getColumnInfoFromColumnString(string $column): array
+    {
+        $orm = $this->getORM();
+
+        $colExtracted = explode('.', $column, 2);
+
+        if (count($colExtracted) === 1) {
+            /** @var AsClause|null $clause */
+            $clause = $this->getFrom()?->getElements()[0] ?? null;
+            $tableClass = $clause?->getValue() ?? '';
+            $colName = $colExtracted[0];
+        } else {
+            $colName = $colExtracted[1];
+            $clauses = [
+                ...($this->getFrom()?->getElements() ?? []),
+                ...($this->getJoin()?->getElements() ?? []),
+            ];
+
+            /** @var AsClause|null $clause */
+            $clause = array_find(
+                $clauses,
+                function (AsClause $clause) use ($colExtracted) {
+                    self::convertClassToTable($clause->getValue(), $alias);
+
+                    $alias = $clause->getAlias() ?? $alias;
+
+                    return $alias === $colExtracted[0];
+                }
+            );
+
+            $tableClass = $clause?->getValue() ?? '';
+        }
+
+        $metadata = $orm->getEntityMetadata($tableClass);
+
+        $colAttr = $metadata->getColumn($colName);
+
+        return [$colAttr, $metadata];
+    }
+
+    protected function handleOperatorAndValue(string $column, mixed $operator, mixed $value): array
+    {
+        if ($value !== null) {
+            [$colAttr] = $this->getColumnInfoFromColumnString($column);
+
+            if ($colAttr && $prop = $colAttr->getProperty()) {
+                $uuidBinAttr = AttributesAccessor::getFirstAttribute(
+                    $prop,
+                    UUIDBin::class,
+                    \ReflectionAttribute::IS_INSTANCEOF
+                );
+
+                if ($uuidBinAttr) {
+                    if (is_iterable($value)) {
+                        $value = iterator_to_array($value);
+                        $value = array_map(try_uuid2bin(...), $value);
+                    } else {
+                        $value = try_uuid2bin($value);
+                    }
+                }
+            }
+        }
+
+        return parent::handleOperatorAndValue($column, $operator, $value);
     }
 
     public function getDb(): DatabaseAdapter

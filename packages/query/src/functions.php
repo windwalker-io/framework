@@ -89,8 +89,6 @@ if (!function_exists(__NAMESPACE__ . '\expr')) {
 
 if (!function_exists(__NAMESPACE__ . '\uuid2bin')) {
     /**
-     * uuid2bin
-     *
      * @param  string  $value
      *
      * @return UuidBinWrapper
@@ -99,6 +97,22 @@ if (!function_exists(__NAMESPACE__ . '\uuid2bin')) {
     {
         if (is_array($value)) {
             return array_map(fn($v) => uuid2bin($v), $value);
+        }
+
+        return new UuidBinWrapper($value);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\try_uuid2bin')) {
+    /**
+     * @param  string  $value
+     *
+     * @return ?UuidBinWrapper
+     */
+    function try_uuid2bin(mixed $value): ?UuidBinWrapper
+    {
+        if ($value === null || $value === '' || $value === '0x') {
+            return null;
         }
 
         return new UuidBinWrapper($value);

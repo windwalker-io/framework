@@ -48,7 +48,7 @@ class UuidWrapper implements WrapperInterface, \Stringable
 
     public static function tryWrap(string|UuidInterface|null $uuid): ?UuidInterface
     {
-        if ($uuid === null || $uuid === '') {
+        if ($uuid === null || $uuid === '' || $uuid === '0x') {
             return null;
         }
 

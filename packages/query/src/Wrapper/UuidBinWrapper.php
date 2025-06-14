@@ -18,7 +18,7 @@ class UuidBinWrapper extends UuidWrapper
         return $this->uuid->getBytes();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->uuid->getBytes();
     }
