@@ -116,18 +116,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     use JsonConcernTrait;
     use WhereConcernTrait;
 
-    public const TYPE_SELECT = 'select';
+    public const string TYPE_SELECT = 'select';
 
-    public const TYPE_INSERT = 'insert';
+    public const string TYPE_INSERT = 'insert';
 
-    public const TYPE_UPDATE = 'update';
+    public const string TYPE_UPDATE = 'update';
 
-    public const TYPE_DELETE = 'delete';
+    public const string TYPE_DELETE = 'delete';
 
-    public const TYPE_CUSTOM = 'custom';
+    public const string TYPE_CUSTOM = 'custom';
 
-    public const PREPEND = ClausePosition::PREPEND;
-    public const APPEND = ClausePosition::APPEND;
+    public const ClausePosition PREPEND = ClausePosition::PREPEND;
+    public const ClausePosition APPEND = ClausePosition::APPEND;
 
     protected ?string $type = self::TYPE_SELECT;
 
