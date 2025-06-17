@@ -335,6 +335,10 @@ class SelectorQuery extends Query implements EventAwareInterface
             $tableClass = $clause?->getValue() ?? '';
         }
 
+        if ($tableClass === '' || !class_exists($tableClass)) {
+            return [null, null];
+        }
+
         $metadata = $orm->getEntityMetadata($tableClass);
 
         $colAttr = $metadata->getColumn($colName);

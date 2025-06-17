@@ -36,7 +36,7 @@ class EntityMetadataCollection
 
         $class = strtolower(trim($class, '\\'));
 
-        return $this->metadataList[$class] ??= (new EntityMetadata($entity, $this->getORM()))->setup();
+        return $this->metadataList[$class] ??= new EntityMetadata($entity, $this->getORM())->setup();
     }
 
     public function set(EntityMetadata $metadata): static
