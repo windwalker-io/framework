@@ -6,7 +6,6 @@ namespace Windwalker\Data;
 
 use IteratorAggregate;
 use Windwalker\Attributes\AttributesAccessor;
-use Windwalker\Database\Hydrator\SimpleHydrator;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;

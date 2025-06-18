@@ -15,7 +15,25 @@ trait ValueObjectTrait
             return $data;
         }
 
-        return new static(...$data);
+        $data = TypeCast::toArray($data);
+        $args = [];
+
+        $ref = new \ReflectionClass(static::class);
+        $constructor = $ref->getConstructor();
+
+        if ($constructor) {
+            foreach ($constructor->getParameters() as $parameter) {
+                $name = $parameter->getName();
+
+                if (array_key_exists($name, $data)) {
+                    $args[] = $data[$name];
+
+                    unset($data[$name]);
+                }
+            }
+        }
+
+        return new static(...$args)->fill($data);
     }
 
     public static function tryWrap(mixed $data): ?static

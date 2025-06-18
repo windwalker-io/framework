@@ -59,11 +59,11 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  *
  * @see EntityMapper
  *
- * @method  object|null   findOne(string $entityClass, mixed $conditions = [], ?string $className = null)
- * @method  object   mustFindOne(string $entityClass, mixed $conditions = [], ?string $className = null)
- * @method  ResultIterator findList(string $entityClass, mixed $conditions = [], ?string $className = null)
- * @method  string|null   findResult(string $entityClass, string|RawWrapper $column, mixed $conditions = [])
- * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [])
+ * @method  object|null   findOne(string $entityClass, mixed $conditions = [], ?string $className = null, int $options = 0)
+ * @method  object   mustFindOne(string $entityClass, mixed $conditions = [], ?string $className = null, int $options = 0)
+ * @method  ResultIterator findList(string $entityClass, mixed $conditions = [], ?string $className = null, int $options = 0)
+ * @method  string|null   findResult(string $entityClass, string|RawWrapper $column, mixed $conditions = [], int $options = 0)
+ * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [], int $options = 0)
  * @method  int   countColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
  * @method  float   sumColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
  * @method  object  createOne(string|object $entityClass, array|object $item = [])
