@@ -130,7 +130,7 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Test Error');
 
-        $p = Promise::resolved('123')
+        $p = Promise::resolve('123')
             ->then(
                 fn () => throw new \Exception('Test Error')
             );

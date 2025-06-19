@@ -75,7 +75,7 @@ class Promise implements ExtendedPromiseInterface
                 $done = 0;
 
                 foreach ($values as $i => $value) {
-                    static::resolved($value)
+                    static::resolve($value)
                         ->then(
                             static function ($v) use (&$done, &$count, $resolve, $i, &$values) {
                                 $values[$i] = $v;
@@ -101,7 +101,7 @@ class Promise implements ExtendedPromiseInterface
     {
         return static::all(
             array_map(
-                static fn($value) => Promise::resolved($value)
+                static fn($value) => Promise::resolve($value)
                     ->then(
                         fn($value) => SettledResult::fulfilled($value),
                         fn($value) => SettledResult::rejected($value)
@@ -121,7 +121,7 @@ class Promise implements ExtendedPromiseInterface
     public static function any(array $values): ExtendedPromiseInterface
     {
         if ($values === []) {
-            return static::rejected(new AggregateException('All promises were rejected'));
+            return static::reject(new AggregateException('All promises were rejected'));
         }
 
         $errors = [];
@@ -131,7 +131,7 @@ class Promise implements ExtendedPromiseInterface
         return new static(
             function ($resolve, $reject) use (&$counter, $values, &$done, &$errors) {
                 foreach (array_values($values) as $i => $value) {
-                    Promise::resolved($value)
+                    Promise::resolve($value)
                         ->then(
                             function ($v) use (&$done, $resolve) {
                                 if (!$done) {
@@ -173,7 +173,7 @@ class Promise implements ExtendedPromiseInterface
                 }
 
                 foreach ($values as $i => $value) {
-                    static::resolved($value)
+                    static::resolve($value)
                         ->then(
                             $resolve,
                             $reject
@@ -188,7 +188,7 @@ class Promise implements ExtendedPromiseInterface
      */
     public static function try(callable $callback): static
     {
-        return static::resolved()->then(fn () => $callback());
+        return static::resolve()->then(fn () => $callback());
     }
 
     /**
@@ -427,14 +427,19 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @inheritDoc
-     * @throws Throwable
+     * @param  mixed|null  $value
      *
-     * @deprecated  Use `Promise::withResolvers()` instead.
+     * @return  object|static
+     *
+     * @throws Throwable
      */
-    public function resolve(mixed $value = null): void
+    public static function resolve(mixed $value = null): object
     {
-        static::resolvePromise($this, $value);
+        return new static(
+            function ($resolve) use ($value) {
+                $resolve($value);
+            }
+        );
     }
 
     /**
@@ -470,8 +475,12 @@ class Promise implements ExtendedPromiseInterface
         // @async
         if ($value instanceof self || is_thenable($value)) {
             $value->then(
-                $promise->resolve(...),
-                $promise->reject(...)
+                function ($value) use ($promise) {
+                    static::resolvePromise($promise, $value);
+                },
+                function ($value) use ($promise) {
+                    static::rejectPromise($promise, $value);
+                }
             );
 
             return;
@@ -484,12 +493,14 @@ class Promise implements ExtendedPromiseInterface
 
     /**
      * @inheritDoc
-     *
-     * @deprecated  Use `Promise::withResolvers()` instead.
      */
-    public function reject(mixed $reason = null): void
+    public static function reject(mixed $reason = null): object
     {
-        static::rejectPromise($this, $reason);
+        return new static(
+            function ($resolve, $reject) use ($reason) {
+                $reject($reason);
+            }
+        );
     }
 
     private static function rejectPromise(PromiseInterface $promise, mixed $reason): void
@@ -647,5 +658,41 @@ class Promise implements ExtendedPromiseInterface
         } catch (Throwable $e) {
             static::resolvePromise($this, $e);
         }
+    }
+
+    public function __call(string $name, array $args)
+    {
+        // To keep B/C
+        if ($name === 'resolve') {
+            static::resolvePromise($this, $args[1] ?? null);
+
+            return;
+        }
+
+        if ($name === 'reject') {
+            static::resolvePromise($this, $args[1] ?? null);
+
+            return;
+        }
+
+        throw new \BadMethodCallException(
+            sprintf('Method %s::%s() does not exist.', static::class, $name)
+        );
+    }
+
+    public static function __callStatic(string $name, array $args)
+    {
+        // To keep B/C
+        if ($name === 'resolved') {
+            return static::resolve($args[0] ?? null);
+        }
+
+        if ($name === 'rejected') {
+            return static::reject($args[0] ?? null);
+        }
+
+        throw new \BadMethodCallException(
+            sprintf('Static method %s::%s() does not exist.', static::class, $name)
+        );
     }
 }

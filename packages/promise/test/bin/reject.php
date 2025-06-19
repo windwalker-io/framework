@@ -10,8 +10,8 @@ include __DIR__ . '/../../../../vendor/autoload.php';
 ScheduleRunner::getInstance()->setSchedulers([new ImmediateScheduler()]);
 
 show(
-    \Windwalker\Promise\Promise::resolved(
-        \Windwalker\Promise\Promise::rejected('BBB')
+    \Windwalker\Promise\Promise::resolve(
+        \Windwalker\Promise\Promise::reject('BBB')
     )
         ->then(
             function ($e) {
@@ -22,8 +22,8 @@ show(
 
 exit(' @Checkpoint');
 
-$promise = \Windwalker\Promise\Promise::resolved(
-    \Windwalker\Promise\Promise::rejected('BBB')
+$promise = \Windwalker\Promise\Promise::resolve(
+    \Windwalker\Promise\Promise::reject('BBB')
 )
     ->then(
         function ($e) {

@@ -8,7 +8,7 @@ include __DIR__ . '/../../../../vendor/autoload.php';
 
 \Windwalker\run(
     function () {
-        $promise = Promise::resolved('YYYY');
+        $promise = Promise::resolve('YYYY');
 
         // Schedule 1
         $p = $promise->then(

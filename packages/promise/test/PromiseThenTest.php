@@ -57,7 +57,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testResolvedThenWithFulfilledHandler(): void
     {
-        $p = Promise::resolved(1)
+        $p = Promise::resolve(1)
             ->then(
                 function ($v) {
                     return $v + 1;
@@ -72,7 +72,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testResolvedThenWithRejectedHandler(): void
     {
-        $p = Promise::resolved(1)
+        $p = Promise::resolve(1)
             ->then(
                 null,
                 function ($v) {
@@ -179,7 +179,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
         $this->expectException(UncaughtException::class);
         $this->expectExceptionMessage('1');
 
-        $p = Promise::resolved(Promise::rejected('1'));
+        $p = Promise::resolve(Promise::reject('1'));
 
         try {
             $p->wait();
@@ -197,7 +197,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
      */
     public function testThenAlreadyFulfilled(): void
     {
-        $p = Promise::resolved(1);
+        $p = Promise::resolve(1);
 
         $p2 = $p
             ->then(
@@ -361,8 +361,11 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testThenAndRejectDeferred()
     {
+        $reject = null;
+
         $p = new Promise(
-            function () {
+            function ($resolve, $rej) use (&$reject) {
+                $reject = $rej;
                 $this->values['v0'] = 'Init';
             }
         );
@@ -393,7 +396,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
             }
         );
 
-        $p->reject($e = new Exception('Hello'));
+        $reject($e = new Exception('Hello'));
         $v3 = $p3->wait();
 
         self::assertSame($e, $this->values['r1']);

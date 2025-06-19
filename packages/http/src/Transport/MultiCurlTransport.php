@@ -98,13 +98,15 @@ class MultiCurlTransport implements AsyncTransportInterface
 
         $this->tasks[] = [
             'handle' => $handle = $transport->createHandle($request, $options, $headers, $content),
-            'promise' => $promise = Promise::withResolvers(),
+            'promise' => $resolvers = Promise::withResolvers(),
             'options' => $options,
             'headers' => &$headers,
             'content' => $content
         ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
+
+        [$promise] = $resolvers;
 
         return $this->prepareResolvePromise()->then(fn() => $promise);
     }
@@ -189,7 +191,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 
                     $this->reset();
 
-                    $resolve(Promise::allSettled($promises));
+                    $resolve(Promise::all($promises));
                 }
             )
         );

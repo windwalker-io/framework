@@ -158,7 +158,7 @@ class PromiseTest extends AbstractPromiseTestCase
     {
         [$promise, $resolve] = Promise::withResolvers();
 
-        $p = Promise::resolved($promise)
+        $p = Promise::resolve($promise)
             ->then(
                 function ($v) {
                     return $v . ' World';
@@ -176,9 +176,9 @@ class PromiseTest extends AbstractPromiseTestCase
     {
         $p = Promise::all(
             [
-                Promise::resolved('A'),
-                Promise::resolved('B'),
-                Promise::resolved('C'),
+                Promise::resolve('A'),
+                Promise::resolve('B'),
+                Promise::resolve('C'),
             ]
         )
             ->then(
@@ -197,9 +197,9 @@ class PromiseTest extends AbstractPromiseTestCase
     {
         $p = Promise::all(
             [
-                Promise::resolved('A'),
-                Promise::rejected('B'),
-                Promise::resolved('C'),
+                Promise::resolve('A'),
+                Promise::reject('B'),
+                Promise::resolve('C'),
             ]
         )
             ->catch(
@@ -221,9 +221,9 @@ class PromiseTest extends AbstractPromiseTestCase
 
         $promise = Promise::allSettled(
             [
-                Promise::resolved('A'),
-                Promise::rejected('B'),
-                Promise::resolved('C'),
+                Promise::resolve('A'),
+                Promise::reject('B'),
+                Promise::resolve('C'),
             ]
         )
             ->then(
@@ -243,9 +243,9 @@ class PromiseTest extends AbstractPromiseTestCase
 
         Promise::allSettled(
             [
-                Promise::resolved('A'),
-                Promise::rejected('B'),
-                Promise::resolved('C'),
+                Promise::resolve('A'),
+                Promise::reject('B'),
+                Promise::resolve('C'),
             ]
         )
             ->then(
@@ -264,8 +264,8 @@ class PromiseTest extends AbstractPromiseTestCase
     {
         $p = Promise::any(
             [
-                Promise::resolved('A'),
-                Promise::rejected('B'),
+                Promise::resolve('A'),
+                Promise::reject('B'),
             ]
         )
             ->then(
