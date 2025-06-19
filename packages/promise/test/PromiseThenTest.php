@@ -252,8 +252,11 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testThenAndResolveDeferred(): void
     {
+        $resolve = null;
+
         $p = new Promise(
-            function () {
+            function ($r) use (&$resolve) {
+                $resolve = $r;
                 $this->values['v0'] = 'Init';
             }
         );
@@ -284,7 +287,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
                 }
             );
 
-        $p->resolve('Hello');
+        $resolve('Hello');
 
         $p->wait();
 
@@ -406,7 +409,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testThenWithNope(): void
     {
-        $p1 = Promise::create();
+        [$p1, $resolve] = Promise::withResolvers();
         // Give no functions to then(), will just return same state Promise and same values.
         $p2 = $p1->then()
             ->then(
@@ -432,7 +435,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
                 }
             );
 
-        $p1->resolve('Rose');
+        $resolve('Rose');
 
         $p2->wait();
 

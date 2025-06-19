@@ -51,8 +51,6 @@ class Promise implements ExtendedPromiseInterface
     protected int $i = 0;
 
     /**
-     * create
-     *
      * @param  callable|null  $resolver
      *
      * @return static
@@ -297,17 +295,17 @@ class Promise implements ExtendedPromiseInterface
 
         try {
             if ($this->getState() === PromiseState::FULFILLED) {
-                $child->resolve($onFulfilled($this->value));
+                static::resolvePromise($child, $onFulfilled($this->value));
             } elseif ($onRejected) {
-                $child->resolve($onRejected($this->value));
+                static::resolvePromise($child, $onRejected($this->value));
             } else {
-                $child->reject($this->value);
+                static::rejectPromise($child, $this->value);
             }
         } catch (UncaughtException $e) {
-            $child->reject($e->getReason());
+            static::rejectPromise($child, $e->getReason());
             throw $e;
         } catch (\Throwable $e) {
-            $child->reject($e);
+            static::rejectPromise($child, $e);
         }
     }
 
@@ -375,14 +373,13 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * resolved
-     *
      * @param  mixed  $value
      *
      * @return  static
      *
      * @throws Throwable
-     * @since  __DEPLOY_VERSION__
+     *
+     * @deprecated  Use `Promise::resolve()` instead.
      */
     public static function resolved(mixed $value = null): static
     {
@@ -394,13 +391,13 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * rejected
-     *
      * @param  mixed  $value
      *
      * @return  static
      *
      * @throws Throwable
+     *
+     * @deprecated  Use `Promise::reject()` instead.
      */
     public static function rejected(mixed $value = null): static
     {
@@ -412,8 +409,28 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
+     * @return  array{ 0: static, 1: callable, 2: callable }
+     */
+    public static function withResolvers(): array
+    {
+        $promise = new static();
+
+        $resolve = static function ($value = null) use ($promise) {
+            static::resolvePromise($promise, $value);
+        };
+
+        $reject = static function ($reason = null) use ($promise) {
+            static::rejectPromise($promise, $reason);
+        };
+
+        return [$promise, $resolve, $reject];
+    }
+
+    /**
      * @inheritDoc
      * @throws Throwable
+     *
+     * @deprecated  Use `Promise::withResolvers()` instead.
      */
     public function resolve(mixed $value = null): void
     {
@@ -453,8 +470,8 @@ class Promise implements ExtendedPromiseInterface
         // @async
         if ($value instanceof self || is_thenable($value)) {
             $value->then(
-                [$promise, 'resolve'],
-                [$promise, 'reject']
+                $promise->resolve(...),
+                $promise->reject(...)
             );
 
             return;
@@ -467,20 +484,27 @@ class Promise implements ExtendedPromiseInterface
 
     /**
      * @inheritDoc
+     *
+     * @deprecated  Use `Promise::withResolvers()` instead.
      */
     public function reject(mixed $reason = null): void
     {
-        if ($reason === $this) {
-            $this->reject(new TypeError('Unable to resolve self.'));
+        static::rejectPromise($this, $reason);
+    }
+
+    private static function rejectPromise(PromiseInterface $promise, mixed $reason): void
+    {
+        if ($reason === $promise) {
+            $promise->reject(new TypeError('Unable to resolve self.'));
 
             return;
         }
 
-        if ($this->getState() !== PromiseState::PENDING) {
+        if ($promise->getState() !== PromiseState::PENDING) {
             return;
         }
 
-        $this->settle(PromiseState::REJECTED, $reason);
+        $promise->settle(PromiseState::REJECTED, $reason);
     }
 
     /**
@@ -598,7 +622,7 @@ class Promise implements ExtendedPromiseInterface
      */
     private function constructing(#[\SensitiveParameter] callable $cb): void
     {
-        $callback = Closure::fromCallable($cb);
+        $callback = $cb(...);
         $ref = new ReflectionFunction($callback);
 
         $args = $ref->getNumberOfParameters();
@@ -611,17 +635,17 @@ class Promise implements ExtendedPromiseInterface
                     // This is resolve() function in promise constructor.
                     // May be call instantly or deferred.
                     function ($value = null) {
-                        $this->resolve($value);
+                        static::resolvePromise($this, $value);
                     },
                     // This is reject() function in promise constructor.
                     // May be call instantly or deferred.
                     function ($reason = null) {
-                        $this->reject($reason);
+                        static::rejectPromise($this, $reason);
                     }
                 );
             }
         } catch (Throwable $e) {
-            $this->resolve($e);
+            static::resolvePromise($this, $e);
         }
     }
 }

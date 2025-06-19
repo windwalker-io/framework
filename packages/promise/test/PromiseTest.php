@@ -52,10 +52,10 @@ class PromiseTest extends AbstractPromiseTestCase
 
     public function testEmptyConstructorThen(): void
     {
-        $p1 = new Promise();
+        [$p1, $resolve] = Promise::withResolvers();
         $p2 = $p1->then(fn ($v) => $v);
 
-        $p1->resolve('Flower');
+        $resolve('Flower');
 
         $v = $p2->wait();
 
@@ -127,19 +127,19 @@ class PromiseTest extends AbstractPromiseTestCase
 
     public function testResolve(): void
     {
-        $p = Promise::create();
+        [$p, $resolve] = Promise::withResolvers();
 
-        $p->resolve('Flower');
+        $resolve('Flower');
 
         self::assertEquals(PromiseState::FULFILLED, $p->getState());
     }
 
     public function testReject(): void
     {
-        $p = Promise::create();
+        [$p,, $reject] = Promise::withResolvers();
 
         try {
-            $p->reject('Flower');
+            $reject('Flower');
         } catch (UncaughtException $e) {
             self::assertEquals(PromiseState::REJECTED, $p->getState());
         }
@@ -156,7 +156,7 @@ class PromiseTest extends AbstractPromiseTestCase
 
     public function testResolvePendingPromise(): void
     {
-        $promise = new Promise();
+        [$promise, $resolve] = Promise::withResolvers();
 
         $p = Promise::resolved($promise)
             ->then(
@@ -165,7 +165,7 @@ class PromiseTest extends AbstractPromiseTestCase
                 }
             );
 
-        $promise->resolve('Hello');
+        $resolve('Hello');
 
         $r = $p->wait();
 
