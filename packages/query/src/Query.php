@@ -44,7 +44,7 @@ use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Wrapper\FormatRawWrapper;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
-use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\ChainingTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -109,7 +109,7 @@ use function Windwalker\value;
 class Query implements QueryInterface, BindableInterface, IteratorAggregate
 {
     use MarcoableTrait;
-    use FlowControlTrait;
+    use ChainingTrait;
     use BindableTrait;
     use QueryConcernTrait;
     use ReflectConcernTrait;

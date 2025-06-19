@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Clause;
 
 use Countable;
-use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\ChainingTrait;
 
 /**
  * Query Clause Class.
@@ -14,7 +14,7 @@ use Windwalker\Utilities\Classes\FlowControlTrait;
  */
 class Clause implements Countable, ClauseInterface
 {
-    use FlowControlTrait;
+    use ChainingTrait;
 
     /**
      * @var    string  The name of the element.

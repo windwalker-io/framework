@@ -19,7 +19,7 @@ use Windwalker\Form\Form;
 use Windwalker\Form\FormNormalizer;
 use Windwalker\Form\FormRegistry;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\ChainingTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
 use Windwalker\Utilities\Options\StateAccessTrait;
 use Windwalker\Utilities\Str;
@@ -53,7 +53,7 @@ use function Windwalker\DOM\h;
  */
 abstract class AbstractField
 {
-    use FlowControlTrait;
+    use ChainingTrait;
     use StateAccessTrait;
     use ManageFilterTrait;
     use ManageInputTrait;

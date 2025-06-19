@@ -6,14 +6,14 @@ namespace Windwalker\Query\Clause;
 
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\ChainingTrait;
 
 /**
  * The Alter class.
  */
 class AlterClause implements ClauseInterface
 {
-    use FlowControlTrait;
+    use ChainingTrait;
 
     protected Clause $clause;
 

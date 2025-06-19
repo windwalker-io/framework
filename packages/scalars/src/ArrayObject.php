@@ -11,7 +11,7 @@ use Windwalker\Scalars\Concern\ArrayModifyTrait;
 use Windwalker\Scalars\Concern\ArraySortTrait;
 use Windwalker\Utilities\Accessible\AccessibleTrait;
 use Windwalker\Utilities\Arr;
-use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\ChainingTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
 use Windwalker\Utilities\Contract\AccessibleInterface;
 use Windwalker\Utilities\TypeCast;
@@ -25,8 +25,6 @@ use function Windwalker\str;
  * @template T
  *
  * @template-extends \IteratorAggregate<TKey, T>
- *
- * @since  __DEPLOY_VERSION__
  */
 class ArrayObject implements AccessibleInterface
 {
@@ -37,7 +35,7 @@ class ArrayObject implements AccessibleInterface
     use ArrayModifyTrait;
     use ArrayLoopTrait;
     use ArrayAccessTrait;
-    use FlowControlTrait;
+    use ChainingTrait;
 
     public const GROUP_TYPE_ARRAY = Arr::GROUP_TYPE_ARRAY;
 

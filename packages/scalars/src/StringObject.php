@@ -15,11 +15,10 @@ use ReflectionObject;
 use ReflectionParameter;
 use Stringable;
 use Traversable;
-use Windwalker\Data\Collection;
 use Windwalker\Scalars\Concern\StringInflectorTrait;
 use Windwalker\Scalars\Concern\StringModifyTrait;
 use Windwalker\Scalars\Concern\StringStructureTrait;
-use Windwalker\Utilities\Classes\FlowControlTrait;
+use Windwalker\Utilities\Classes\ChainingTrait;
 use Windwalker\Utilities\Classes\ImmutableHelperTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
 use Windwalker\Utilities\Contract\NullableInterface;
@@ -79,7 +78,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
     use StringModifyTrait;
     use StringInflectorTrait;
     use StringStructureTrait;
-    use FlowControlTrait;
+    use ChainingTrait;
 
     /**
      * We only provides 3 default encoding constants of PHP.
