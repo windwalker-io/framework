@@ -34,5 +34,12 @@ trait SwooleTestTrait
         if (!Env::get('SWOOLE_ENABLED')) {
             self::markTestSkipped('Swoole havn\'t installed');
         }
+
+        if (
+            function_exists('swoole_version')
+            && version_compare(swoole_version(), '6.0.0', '<')
+        ) {
+            self::markTestSkipped('Swoole version must be 6.0.0 or higher');
+        }
     }
 }

@@ -16,6 +16,16 @@ trait TestServerExistsTrait
             static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
         }
 
+        if (
+            function_exists('swoole_version')
+            && version_compare(swoole_version(), '6.0.0', '<')
+        ) {
+            throw new \RuntimeException(
+                'Swoole version must be 6.0.0 or higher to run Windwalker HTTP with Swoole.' .
+                ' Please update your Swoole extension.'
+            );
+        }
+
         $url = new Uri(WINDWALKER_TEST_HTTP_URL);
 
         try {
