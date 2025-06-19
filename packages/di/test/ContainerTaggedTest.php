@@ -9,6 +9,7 @@ use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionNotFoundException;
 use Windwalker\DI\Test\Stub\StubInstantTaggedService;
 use Windwalker\DI\Test\Stub\StubLangCode;
+use Windwalker\DI\Test\Stub\StubLangEnum;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 class ContainerTaggedTest extends TestCase
@@ -24,12 +25,29 @@ class ContainerTaggedTest extends TestCase
         $storages = $this->instance->dump();
 
         self::assertArrayHasKey(StubLangCode::class, $storages);
-        self::assertArrayHasKey(StubLangCode::class . ':USA', $storages);
-        self::assertArrayHasKey(StubLangCode::class . ':UK', $storages);
+        self::assertArrayHasKey(StubLangCode::class . '@USA', $storages);
+        self::assertArrayHasKey(StubLangCode::class . '@UK', $storages);
 
         self::assertEquals('en', $this->instance->get(StubLangCode::class));
         self::assertEquals('en-US', $this->instance->get(StubLangCode::class, tag: 'USA'));
         self::assertEquals('en-GB', $this->instance->get(StubLangCode::class, tag: 'UK'));
+    }
+
+    public function testSetAndGetEnum(): void
+    {
+        $this->instance->set(StubLangCode::class, 'en');
+        $this->instance->set(StubLangCode::class, 'en-US', tag: StubLangEnum::USA);
+        $this->instance->set(StubLangCode::class, 'en-GB', tag: StubLangEnum::UK);
+
+        $storages = $this->instance->dump();
+
+        self::assertArrayHasKey(StubLangCode::class, $storages);
+        self::assertArrayHasKey(StubLangCode::class . '@' . StubLangEnum::class . '::USA', $storages);
+        self::assertArrayHasKey(StubLangCode::class . '@' . StubLangEnum::class . '::UK', $storages);
+
+        self::assertEquals('en', $this->instance->get(StubLangCode::class));
+        self::assertEquals('en-US', $this->instance->get(StubLangCode::class, tag: StubLangEnum::USA));
+        self::assertEquals('en-GB', $this->instance->get(StubLangCode::class, tag: StubLangEnum::UK));
     }
 
     public function testSetFactory(): void
@@ -175,6 +193,23 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('en-US', $lang());
 
         $lang = $this->instance->get(StubLangCode::class, tag: 'Germany');
+
+        self::assertEquals('de-DE', $lang());
+    }
+
+    public function testBindWithEnum()
+    {
+        $this->instance->bind(
+            StubLangCode::class,
+            function (Container $container, ?\BackedEnum $tag = null) {
+                return new StubLangCode($tag ?? StubLangEnum::USA);
+            }
+        );
+        $lang = $this->instance->get(StubLangCode::class);
+
+        self::assertEquals('en-US', $lang());
+
+        $lang = $this->instance->get(StubLangCode::class, tag: StubLangEnum::Germany);
 
         self::assertEquals('de-DE', $lang());
     }

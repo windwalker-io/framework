@@ -180,23 +180,28 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  string  $id
-     * @param  mixed   $value
-     * @param  int     $options
+     * @param  string                 $id
+     * @param  mixed                  $value
+     * @param  int                    $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      * @throws DefinitionException
      */
-    public function set(string $id, mixed $value, int $options = 0, ?string $tag = null): StoreDefinitionInterface
-    {
+    public function set(
+        string $id,
+        mixed $value,
+        int $options = 0,
+        \UnitEnum|string|null $tag = null,
+    ): StoreDefinitionInterface {
         $definition = $this->findDefinition($id, false, $tag);
 
         if ($definition && $definition->isProtected()) {
             throw new DefinitionException(
                 sprintf(
                     'Container id: %s is protected.',
-                    $id
-                )
+                    $id,
+                ),
             );
         }
 
@@ -256,7 +261,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function setDefinition(
         string $id,
         StoreDefinitionInterface $value,
-        ?string $tag = null
+        \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $value->setContainer($this);
 
@@ -270,21 +275,21 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * Finds an entry of the container by its identifier and returns it.
      *
-     * @param  string   $id        Identifier of the entry to look for.
-     * @param  bool     $forceNew  True to force creation and return of a new instance.
-     * @param  ?string  $tag       The tag of service.
+     * @param  string                 $id        Identifier of the entry to look for.
+     * @param  bool                   $forceNew  True to force creation and return of a new instance.
+     * @param  \UnitEnum|string|null  $tag       The tag of service.
      *
      * @return mixed Entry.
-     * @throws ContainerExceptionInterface Error while retrieving the entry.
-     * @throws NotFoundExceptionInterface No entry was found for **this** identifier.
+     * @throws DefinitionNotFoundException
+     * @throws DependencyResolutionException
      */
-    public function get(string $id, bool $forceNew = false, ?string $tag = null): mixed
+    public function get(string $id, bool $forceNew = false, \UnitEnum|string|null $tag = null): mixed
     {
         $definition = $this->getDefinition($id, $tag);
 
         if ($definition === null) {
             throw new DefinitionNotFoundException(
-                sprintf('Key %s has not been registered with the container.', $id)
+                sprintf('Key %s has not been registered with the container.', $id),
             );
         }
 
@@ -305,7 +310,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             throw new DependencyResolutionException(
                 "Error when resolving $id: {$e->getMessage()}",
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }
@@ -314,22 +319,22 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string|callable|DefinitionInterface|ValueReference  $source
      * @param  array                                               $args
      * @param  int                                                 $options
-     * @param  string|null                                         $tag
+     * @param  \UnitEnum|string|null                               $tag
      *
      * @return  mixed|object|string
-     * @throws ContainerExceptionInterface
+     * @throws DefinitionNotFoundException
      * @throws DefinitionResolveException
-     * @throws NotFoundExceptionInterface
+     * @throws DependencyResolutionException
      * @throws ReflectionException
      */
-    public function resolve(mixed $source, array $args = [], int $options = 0, ?string $tag = null): mixed
+    public function resolve(mixed $source, array $args = [], int $options = 0, \UnitEnum|string|null $tag = null): mixed
     {
         if ($source === null) {
             throw new InvalidArgumentException(
                 sprintf(
                     '%s() Argument #1 (source) can not be NULL',
-                    __METHOD__
-                )
+                    __METHOD__,
+                ),
             );
         }
 
@@ -379,17 +384,17 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
      * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
-     * @param  string       $id   Identifier of the entry to look for.
-     * @param  string|null  $tag  The tag of service.
+     * @param  string                 $id   Identifier of the entry to look for.
+     * @param  \UnitEnum|string|null  $tag  The tag of service.
      *
      * @return bool
      */
-    public function has(string $id, ?string $tag = null): bool
+    public function has(string $id, \UnitEnum|string|null $tag = null): bool
     {
         return $this->getDefinition($id, $tag) !== null;
     }
 
-    public function hasCached(string $id, ?string $tag = null): bool
+    public function hasCached(string $id, \UnitEnum|string|null $tag = null): bool
     {
         return $this->findDefinition($id, false, $tag)?->getCache() !== null;
     }
@@ -403,7 +408,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @since   2.1
      */
-    public function remove(string $id, ?string $tag = null): static
+    public function remove(string $id, \UnitEnum|string|null $tag = null): static
     {
         $id = $this->resolveAlias($id);
 
@@ -414,10 +419,14 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this;
     }
 
-    protected static function toTaggedId(string $id, ?string $tag = null): string
+    protected static function toTaggedId(string $id, \UnitEnum|string|null $tag = null): string
     {
+        if ($tag instanceof \UnitEnum) {
+            $tag = $tag::class . '::' . $tag->name;
+        }
+
         if ($tag) {
-            return $id . ':' . $tag;
+            return $id . '@' . $tag;
         }
 
         return $id;
@@ -436,7 +445,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @throws NotFoundExceptionInterface
      * @since  2.0.7
      */
-    public function fork(string $id, string $newId, bool $forceNew = false, ?string $tag = null): mixed
+    public function fork(string $id, string $newId, bool $forceNew = false, \UnitEnum|string|null $tag = null): mixed
     {
         $raw = clone $this->findDefinition($id, true, $tag);
 
@@ -450,14 +459,14 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * Get the raw data assigned to a key.
      *
-     * @param  string       $id   The key for which to get the stored item.
-     * @param  string|null  $tag  The tag of service.
+     * @param  string                 $id   The key for which to get the stored item.
+     * @param  \UnitEnum|string|null  $tag  The tag of service.
      *
      * @return  ?StoreDefinitionInterface
      *
      * @since   2.0
      */
-    public function getDefinition(string $id, ?string $tag = null): ?StoreDefinitionInterface
+    public function getDefinition(string $id, \UnitEnum|string|null $tag = null): ?StoreDefinitionInterface
     {
         return $this->findDefinition($id, true, $tag);
     }
@@ -465,12 +474,12 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     protected function findDefinition(
         string $id,
         bool $serviceAutowire = false,
-        ?string $tag = null
+        \UnitEnum|string|null $tag = null,
     ): ?StoreDefinitionInterface {
         $id = $this->resolveAlias($id);
 
         if ($tag) {
-            $taggedId = $id . ':' . $tag;
+            $taggedId = static::toTaggedId($id, $tag);
 
             if ($this->storage[$taggedId] ?? null) {
                 return $this->storage[$taggedId];
@@ -525,7 +534,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $this->parameters->reset();
     }
 
-    public function clearCache(?string $id = null, ?string $tag = null): void
+    public function clearCache(?string $id = null, \UnitEnum|string|null $tag = null): void
     {
         if ($id !== null) {
             $this->findDefinition($id, false, $tag)?->reset();
@@ -542,29 +551,33 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * Bind a class or key to another instance, container will return instance if it has been set
      * or created, otherwise it will create new one.
      *
-     * @param  string       $id
-     * @param  mixed        $value
-     * @param  int          $options
-     * @param  string|null  $tag
+     * @param  string                 $id
+     * @param  mixed                  $value
+     * @param  int                    $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
      * @throws DefinitionException
      * @since   3.0
      */
-    public function bind(string $id, mixed $value, int $options = 0, ?string $tag = null): StoreDefinitionInterface
-    {
-        $value = static fn(Container $container, ?string $tag = null)
+    public function bind(
+        string $id,
+        mixed $value,
+        int $options = 0,
+        \UnitEnum|string|null $tag = null,
+    ): StoreDefinitionInterface {
+        $value = static fn(Container $container, \UnitEnum|string|null $tag = null)
             => $container->newInstance($value, compact('tag'), $options);
 
         return $this->set($id, $value, $options, $tag);
     }
 
     /**
-     * @param  string       $id
-     * @param  mixed        $value
-     * @param  int          $options
-     * @param  string|null  $tag
+     * @param  string                 $id
+     * @param  mixed                  $value
+     * @param  int                    $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -575,16 +588,16 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $id,
         mixed $value,
         int $options = 0,
-        ?string $tag = null
+        \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         return $this->bind($id, $value, $options | static::SHARED, $tag);
     }
 
     /**
-     * @param  string        $class
-     * @param  Closure|null  $extend
-     * @param  int           $options
-     * @param  string|null   $tag
+     * @param  string                 $class
+     * @param  Closure|null           $extend
+     * @param  int                    $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -595,7 +608,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $class,
         ?Closure $extend = null,
         int $options = 0,
-        ?string $tag = null
+        \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $handler = static fn(Container $container) => $container->newInstance($class, [], $options);
 
@@ -609,10 +622,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  string        $class
-     * @param  Closure|null  $extend
-     * @param  int           $options
-     * @param  string|null   $tag
+     * @param  string                 $class
+     * @param  Closure|null           $extend
+     * @param  int                    $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -623,7 +636,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $class,
         ?Closure $extend = null,
         int $options = 0,
-        ?string $tag = null
+        \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         return $this->prepareObject($class, $extend, $options | static::SHARED, $tag);
     }
@@ -633,15 +646,15 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * works very similar to a decorator pattern.  Note that this only works on service Closures
      * that have been defined in the current Provider, not parent providers.
      *
-     * @param  string   $id       The unique identifier for the Closure or property.
-     * @param  Closure  $closure  A Closure to wrap the original service Closure.
+     * @param  string                 $id       The unique identifier for the Closure or property.
+     * @param  Closure                $closure  A Closure to wrap the original service Closure.
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return  static
      *
-     * @throws  InvalidArgumentException
      * @since   2.0
      */
-    public function extend(string $id, Closure $closure, ?string $tag = null): static
+    public function extend(string $id, Closure $closure, \UnitEnum|string|null $tag = null): static
     {
         $this->extends[$id] ??= [];
         $this->extends[$id][] = $closure;
@@ -683,13 +696,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return array_merge(...$extends);
     }
 
-    public function modify(string $id, Closure $closure, ?string $tag = null): StoreDefinitionInterface
+    public function modify(string $id, Closure $closure, \UnitEnum|string|null $tag = null): StoreDefinitionInterface
     {
         $definition = $this->getDefinition($id, $tag);
 
         if ($definition === null) {
             throw new UnexpectedValueException(
-                sprintf('The requested id "%s" does not exist to modify.', static::toTaggedId($id, $tag))
+                sprintf('The requested id "%s" does not exist to modify.', static::toTaggedId($id, $tag)),
             );
         }
 
@@ -701,7 +714,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             $id,
             $target,
             $definition->getOptions(),
-            tag: $tag
+            tag: $tag,
         );
 
         return $this->setDefinition($id, $definition, $tag);
@@ -721,8 +734,12 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @throws NotFoundExceptionInterface
      * @since   3.0
      */
-    public function createObject(string $class, array $args = [], int $options = 0, ?string $tag = null): mixed
-    {
+    public function createObject(
+        string $class,
+        array $args = [],
+        int $options = 0,
+        \UnitEnum|string|null $tag = null,
+    ): mixed {
         $callback = fn(Container $container) => $container->newInstance($class, $args, $options);
 
         $this->set($class, $callback, $options, $tag);
@@ -732,18 +749,24 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  string       $class
-     * @param  array        $args
-     * @param  int          $options
-     * @param  string|null  $tag
+     * @param  string                 $class
+     * @param  array                  $args
+     * @param  int                    $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return mixed
      *
      * @throws ContainerExceptionInterface
+     * @throws DefinitionException
+     * @throws NotFoundExceptionInterface
      * @since   3.0
      */
-    public function createSharedObject(string $class, array $args = [], int $options = 0, ?string $tag = null): mixed
-    {
+    public function createSharedObject(
+        string $class,
+        array $args = [],
+        int $options = 0,
+        \UnitEnum|string|null $tag = null,
+    ): mixed {
         return $this->createObject($class, $args, $options | static::SHARED, $tag);
     }
 
@@ -1052,7 +1075,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
                 }
 
                 return $merge($data, $storage);
-            }
+            },
         );
     }
 

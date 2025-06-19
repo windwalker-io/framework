@@ -47,7 +47,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
 
     protected ?object $instance = null;
 
-    public ?string $tag = null;
+    public \UnitEnum|string|null $tag = null;
 
     public function fork(?array $args = null): static
     {
@@ -309,7 +309,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
         return $this->tag;
     }
 
-    public function tag(?string $tag): static
+    public function tag(\UnitEnum|string|null $tag): static
     {
         $this->tag = $tag;
 

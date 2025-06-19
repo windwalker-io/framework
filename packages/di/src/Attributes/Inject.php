@@ -26,12 +26,16 @@ class Inject implements ContainerAttributeInterface
     /**
      * Inject constructor.
      *
-     * @param  string|null  $id
-     * @param  bool         $forceNew
-     * @param  string|null  $tag
+     * @param  string|null            $id
+     * @param  bool                   $forceNew
+     * @param  \UnitEnum|string|null  $tag
      */
-    public function __construct(public ?string $id = null, public bool $forceNew = false, public ?string $tag = null)
-    {
+    public function __construct(
+        public ?string $id = null,
+        public bool $forceNew = false,
+        public \UnitEnum|string|null $tag = null,
+    ) {
+        //
     }
 
     /**
@@ -41,7 +45,7 @@ class Inject implements ContainerAttributeInterface
      */
     #[Pure]
     public function __invoke(
-        AttributeHandler $handler
+        AttributeHandler $handler,
     ): callable {
         /** @var ReflectionProperty|ReflectionParameter $reflector */
         $reflector = $handler->getReflector();
@@ -104,7 +108,7 @@ class Inject implements ContainerAttributeInterface
 
         if (!$varClass) {
             throw new DependencyResolutionException(
-                sprintf('Unable to resolve injection of property: "%s".', $reflector->getName())
+                sprintf('Unable to resolve injection of property: "%s".', $reflector->getName()),
             );
         }
 
@@ -130,6 +134,7 @@ class Inject implements ContainerAttributeInterface
             }
         } catch (ContainerExceptionInterface $e) {
             $this->reportInjectingError($reflector, $id, $e);
+
             return null;
         }
 
@@ -159,7 +164,7 @@ class Inject implements ContainerAttributeInterface
     protected function reportInjectingError(
         ReflectionParameter|ReflectionProperty $reflector,
         mixed $id,
-        ?\Throwable $e = null
+        ?\Throwable $e = null,
     ): void {
         if (!$reflector->getType()->allowsNull()) {
             $class = $reflector->getDeclaringClass();
@@ -169,7 +174,7 @@ class Inject implements ContainerAttributeInterface
                 "Unable to inject object $id for class $class::$member" .
                 ($e ? ' - ' . $e->getMessage() : ''),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }

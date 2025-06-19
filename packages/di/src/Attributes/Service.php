@@ -22,7 +22,7 @@ class Service extends Inject
         ?string $id = null,
         bool|string $forceNewOrService = false,
         public int|array|null|\Closure $providedIn = null,
-        ?string $tag = null,
+        \UnitEnum|string|null $tag = null,
     ) {
         if (is_string($forceNewOrService)) {
             $this->name = $forceNewOrService;

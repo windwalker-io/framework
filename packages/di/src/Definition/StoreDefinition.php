@@ -10,6 +10,7 @@ use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
 
 use function Windwalker\has_attributes;
+use function Windwalker\unwrap_enum;
 
 /**
  * The NewStoreDefinition class.
@@ -28,7 +29,7 @@ class StoreDefinition implements StoreDefinitionInterface
         public string $id,
         public protected(set) mixed $value,
         public int $options = 0,
-        public ?string $tag = null
+        public \UnitEnum|string|null $tag = null
     ) {
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
             $this->setCache($this->value, $this->tag);
@@ -46,7 +47,7 @@ class StoreDefinition implements StoreDefinitionInterface
      * @throws \ReflectionException
      * @throws DefinitionException
      */
-    public function resolve(?Container $container = null, array $args = [], ?string $tag = null): mixed
+    public function resolve(?Container $container = null, array $args = [], \UnitEnum|string|null $tag = null): mixed
     {
         $container ??= $this->container ?? throw new DefinitionException('This definition has no container.');
         $tag ??= $this->tag;
@@ -174,21 +175,21 @@ class StoreDefinition implements StoreDefinitionInterface
         return $this;
     }
 
-    public function getCache(?string $tag = null): mixed
+    public function getCache(\UnitEnum|string|null $tag = null): mixed
     {
         $key = $this->buildCacheKey($tag);
 
         return $this->cache[$key] ?? null;
     }
 
-    protected function hasCache(?string $tag = null): bool
+    protected function hasCache(\UnitEnum|string|null $tag = null): bool
     {
         $key = $this->buildCacheKey($tag);
 
         return isset($this->cache[$key]);
     }
 
-    protected function setCache(mixed $value, ?string $tag = null): static
+    protected function setCache(mixed $value, \UnitEnum|string|null $tag = null): static
     {
         $key = $this->buildCacheKey($tag);
 
@@ -259,8 +260,8 @@ class StoreDefinition implements StoreDefinitionInterface
         return (bool) $provided($level);
     }
 
-    protected function buildCacheKey(?string $tag = null): string
+    protected function buildCacheKey(\UnitEnum|string|null $tag = null): string
     {
-        return $tag ?? $this->tag ?? '__default__';
+        return unwrap_enum($tag ?? $this->tag ?? '__default__');
     }
 }
