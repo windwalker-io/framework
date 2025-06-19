@@ -150,7 +150,7 @@ class PromiseTest extends AbstractPromiseTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Hello');
 
-        $promise = Promise::rejected('Hello');
+        $promise = Promise::reject('Hello');
         $promise->wait();
     }
 
@@ -285,8 +285,8 @@ class PromiseTest extends AbstractPromiseTestCase
     {
         $p = Promise::any(
             [
-                Promise::rejected('A'),
-                Promise::rejected('B'),
+                Promise::reject('A'),
+                Promise::reject('B'),
             ]
         )
             ->catch(

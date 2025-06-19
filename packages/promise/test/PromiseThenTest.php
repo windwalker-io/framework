@@ -90,7 +90,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
     {
         $this->expectException(UncaughtException::class);
 
-        $p = Promise::rejected(1)
+        $p = Promise::reject(1)
             ->then(
                 function ($v) {
                     return $v + 1;
@@ -105,7 +105,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testRejectedThenWithRejectedHandler(): void
     {
-        $p = Promise::rejected(1)
+        $p = Promise::reject(1)
             ->then(
                 null,
                 function ($v) {
@@ -121,7 +121,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
 
     public function testRejectedThenWithBoth(): void
     {
-        $p = Promise::rejected(1)
+        $p = Promise::reject(1)
             ->then(
                 function ($v) {
                     return $v + 10;
@@ -142,7 +142,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
         $this->expectException(UncaughtException::class);
         $this->expectExceptionMessage('1');
 
-        $p = Promise::rejected('1');
+        $p = Promise::reject('1');
 
         $p->wait();
     }
@@ -152,7 +152,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
         $this->expectException(UncaughtException::class);
         $this->expectExceptionMessage('2');
 
-        $p = Promise::rejected('1')
+        $p = Promise::reject('1')
             ->catch(
                 function ($reason) {
                     self::assertEquals('1', $reason);
@@ -174,7 +174,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
         }
     }
 
-    public function testResolveRejected(): void
+    public function testResolvereject(): void
     {
         $this->expectException(UncaughtException::class);
         $this->expectExceptionMessage('1');
@@ -302,9 +302,9 @@ class PromiseThenTest extends AbstractPromiseTestCase
      * @throws ReflectionException
      * @see  Promise::then
      */
-    public function testThenAlreadyRejected(): void
+    public function testThenAlreadyreject(): void
     {
-        $p = Promise::rejected($this->values['e1'] = new Exception('Sakura'));
+        $p = Promise::reject($this->values['e1'] = new Exception('Sakura'));
 
         $p2 = $p
             ->then(

@@ -186,9 +186,17 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @throws Throwable
      */
-    public static function try(callable $callback): static
+    public static function try(callable $callback, mixed ...$args): static
     {
-        return static::resolve()->then(fn () => $callback());
+        return new static(
+            function ($resolve, $reject) use ($callback, $args) {
+                try {
+                    $resolve($callback(...$args));
+                } catch (Throwable $e) {
+                    $reject($e);
+                }
+            }
+        );
     }
 
     /**
@@ -245,7 +253,7 @@ class Promise implements ExtendedPromiseInterface
             function () use ($onFulfilledOrRejected) {
                 $onFulfilledOrRejected();
 
-                return static::rejected($this->value);
+                return static::reject($this->value);
             }
         );
     }
@@ -373,42 +381,6 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @param  mixed  $value
-     *
-     * @return  static
-     *
-     * @throws Throwable
-     *
-     * @deprecated  Use `Promise::resolve()` instead.
-     */
-    public static function resolved(mixed $value = null): static
-    {
-        return new static(
-            function ($resolve) use ($value) {
-                $resolve($value);
-            }
-        );
-    }
-
-    /**
-     * @param  mixed  $value
-     *
-     * @return  static
-     *
-     * @throws Throwable
-     *
-     * @deprecated  Use `Promise::reject()` instead.
-     */
-    public static function rejected(mixed $value = null): static
-    {
-        return new static(
-            function ($resolve, $reject) use ($value) {
-                $reject($value);
-            }
-        );
-    }
-
-    /**
      * @return  array{ 0: static, 1: callable, 2: callable }
      */
     public static function withResolvers(): array
@@ -433,7 +405,7 @@ class Promise implements ExtendedPromiseInterface
      *
      * @throws Throwable
      */
-    public static function resolve(mixed $value = null): object
+    public static function resolve(mixed $value = null): static
     {
         return new static(
             function ($resolve) use ($value) {
@@ -494,7 +466,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      */
-    public static function reject(mixed $reason = null): object
+    public static function reject(mixed $reason = null): static
     {
         return new static(
             function ($resolve, $reject) use ($reason) {

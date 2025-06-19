@@ -9,25 +9,23 @@ use Windwalker\Promise\Enum\PromiseState;
 
 /**
  * Interface PromiseInterface
- *
- * @since  __DEPLOY_VERSION__
  */
 interface PromiseInterface
 {
     /**
      * @deprecated  Use PromiseState enum instead.
      */
-    public const PENDING = PromiseState::PENDING;
+    public const PromiseState PENDING = PromiseState::PENDING;
 
     /**
      * @deprecated  Use PromiseState enum instead.
      */
-    public const FULFILLED = PromiseState::FULFILLED;
+    public const PromiseState FULFILLED = PromiseState::FULFILLED;
 
     /**
      * @deprecated  Use PromiseState enum instead.
      */
-    public const REJECTED = PromiseState::REJECTED;
+    public const PromiseState REJECTED = PromiseState::REJECTED;
 
     /**
      * Appends fulfillment and rejection handlers to the promise, and returns
@@ -54,20 +52,6 @@ interface PromiseInterface
      * @return PromiseState
      */
     public function getState(): PromiseState;
-
-    /**
-     * Resolve the promise with the given value.
-     *
-     * @param  mixed  $value
-     */
-    // public static function resolve(mixed $value = null): void;
-    //
-    // /**
-    //  * Reject the promise with the given reason.
-    //  *
-    //  * @param  mixed  $reason
-    //  */
-    // public static function reject(mixed $reason = null): void;
 
     /**
      * Waits until the promise completes if possible.

@@ -6,8 +6,6 @@ namespace Windwalker\Promise;
 
 /**
  * Interface ExtendedPromiseInterface
- *
- * @since  __DEPLOY_VERSION__
  */
 interface ExtendedPromiseInterface extends PromiseInterface
 {
@@ -19,14 +17,14 @@ interface ExtendedPromiseInterface extends PromiseInterface
     public function done(?callable $onFulfilled = null): static;
 
     /**
-     * @param  callable  $onRejected
+     * @param  callable|null  $onRejected
      *
      * @return static
      */
     public function catch(?callable $onRejected): static;
 
     /**
-     * @param  callable  $onFulfilledOrRejected
+     * @param  callable|null  $onFulfilledOrRejected
      *
      * @return static
      */

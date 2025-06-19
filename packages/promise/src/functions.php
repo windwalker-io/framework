@@ -22,9 +22,9 @@ if (!function_exists('\Windwalker\Promise\resolve')) {
      * @return  ExtendedPromiseInterface
      * @throws Throwable
      */
-    function resolve($promiseOrValue = null): ExtendedPromiseInterface
+    function resolve(mixed $promiseOrValue = null): ExtendedPromiseInterface
     {
-        return Promise::resolved($promiseOrValue);
+        return Promise::resolve($promiseOrValue);
     }
 }
 
@@ -37,9 +37,9 @@ if (!function_exists('\Windwalker\Promise\reject')) {
      * @return  ExtendedPromiseInterface
      * @throws Throwable
      */
-    function reject($promiseOrValue = null): ExtendedPromiseInterface
+    function reject(mixed $promiseOrValue = null): ExtendedPromiseInterface
     {
-        return Promise::rejected($promiseOrValue);
+        return Promise::reject($promiseOrValue);
     }
 }
 
@@ -90,7 +90,7 @@ if (!function_exists('\Windwalker\Promise\async')) {
      */
     function async(callable $callable): Promise
     {
-        return Promise::resolved()->then($callable);
+        return Promise::resolve()->then($callable);
     }
 }
 
@@ -145,7 +145,7 @@ if (!function_exists('\Windwalker\Promise\coroutine')) {
                         $value = $generator->current();
 
                         while ($generator->valid()) {
-                            $value = $generator->send(Promise::resolved($value)->wait());
+                            $value = $generator->send(Promise::resolve($value)->wait());
                         }
 
                         $resolve($generator->getReturn());
