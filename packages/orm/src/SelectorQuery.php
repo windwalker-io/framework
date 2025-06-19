@@ -21,7 +21,6 @@ use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 
 use function Windwalker\Query\try_uuid2bin;
-use function Windwalker\Query\uuid2bin;
 use function Windwalker\Query\val;
 
 use const Windwalker\Query\QN_IGNORE_DOTS;
@@ -100,7 +99,7 @@ class SelectorQuery extends Query implements EventAwareInterface
     }
 
     public function autoSelections(
-        string $divider = '.',
+        string $divider = ':',
         ?array &$columns = null,
         ?bool $loadColumnsFromDb = null
     ): static {
@@ -150,14 +149,14 @@ class SelectorQuery extends Query implements EventAwareInterface
         return $this;
     }
 
-    public function groupByDivider(?string $divider = '.'): static
+    public function groupByDivider(?string $divider = ':'): static
     {
         $this->groupDivider = $divider;
 
         return $this;
     }
 
-    public function groupByJoins(string $divider = '.', ?bool $loadColumnsFromDb = null): static
+    public function groupByJoins(string $divider = ':', ?bool $loadColumnsFromDb = null): static
     {
         return $this->autoSelections($divider, loadColumnsFromDb: $loadColumnsFromDb)
             ->groupByDivider($divider);

@@ -1233,11 +1233,11 @@ class EntityMapper implements EventAwareInterface
 
             $entity = $this->getORM()->getAttributesResolver()->createObject($class);
 
-            if ($args !== []) {
-                $entity = $this->hydrate($args, $entity);
-            }
-
             $metadata->setCachedEntity($entity);
+        }
+
+        if ($args !== []) {
+            $entity = $this->hydrate($args, $entity);
         }
 
         return $this->energize(clone $entity);
