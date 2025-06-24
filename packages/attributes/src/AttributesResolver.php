@@ -219,7 +219,7 @@ class AttributesResolver extends ObjectBuilder
                 }
 
                 $trailing = array_slice($trailing, $i);
-                $newArgs  = self::arrayMerge($newArgs, $trailing);
+                $newArgs  = [...$newArgs, ...$trailing];
             } elseif (array_key_exists($parameter->getName(), $args)) {
                 $newArgs[$key] = &$args[$parameter->getName()];
             } elseif (array_key_exists($i, $args)) {
@@ -519,16 +519,5 @@ class AttributesResolver extends ObjectBuilder
         $this->invokeHandler = $invokeHandler;
 
         return $this;
-    }
-
-    /**
-     * @param mixed $newArgs
-     * @param array $trailing
-     *
-     * @return  array
-     */
-    private function arrayMerge(mixed $newArgs, array $trailing): array
-    {
-        return array_merge($newArgs, $trailing);
     }
 }
