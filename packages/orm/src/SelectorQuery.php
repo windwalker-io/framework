@@ -334,7 +334,7 @@ class SelectorQuery extends Query implements EventAwareInterface
             $tableClass = $clause?->getValue() ?? '';
         }
 
-        if ($tableClass === '' || !class_exists($tableClass)) {
+        if (!is_string($tableClass) || $tableClass === '' || !class_exists($tableClass)) {
             return [null, null];
         }
 

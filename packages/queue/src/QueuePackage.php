@@ -24,7 +24,7 @@ class QueuePackage extends AbstractPackage implements ServiceProviderInterface
 
     public function register(Container $container): void
     {
-        $container->prepareSharedObject(Worker::class);
+        // $container->prepareSharedObject(Worker::class);
         $container->prepareSharedObject(QueueManager::class);
         $container->prepareSharedObject(QueueFailerManager::class);
         $container->bindShared(

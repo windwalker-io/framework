@@ -309,12 +309,12 @@ class DependencyResolver
 
             $dependency = new ReflectionClass($dependencyClassName);
 
-            // If the dependency class name is registered with this container or a parent, use it.
-            if ($this->container->has($dependencyClassName)) {
-                $depObject = $this->container->get($dependencyClassName);
-            } elseif (array_key_exists($dependencyClassName, $args)) {
+            if (array_key_exists($dependencyClassName, $args)) {
                 // If an arg provided, use it.
                 return $args[$dependencyClassName];
+            } elseif ($this->container->has($dependencyClassName)) {
+                // If the dependency class name is registered with this container or a parent, use it.
+                $depObject = $this->container->get($dependencyClassName);
             } elseif (
                 $autowire
                 && !$dependency->isAbstract()
