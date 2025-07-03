@@ -235,7 +235,7 @@ class FileObject extends SplFileInfo
         $origmask = @umask(0);
 
         try {
-            if (!mkdir($dir = $this->getPathname(), $mode) && !is_dir($dir)) {
+            if (@!mkdir($dir = $this->getPathname(), $mode) && !is_dir($dir)) {
                 throw new FilesystemException('Unable to create dir of: ' . $dir);
             }
         } finally {
