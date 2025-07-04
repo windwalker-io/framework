@@ -9,7 +9,8 @@ use JsonException;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\Queue\Driver\QueueDriverInterface;
-use Windwalker\Queue\Job\ClosureJob;
+use Windwalker\Queue\Job\JobWrapper;
+use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 
 /**
@@ -154,12 +155,12 @@ class Queue
     {
         $message = new QueueMessage();
 
-        $job = $this->createJobInstance($job);
+        $instance = $this->createJobInstance($job);
 
-        $data['class'] = get_class($job);
+        $data['class'] = $instance::class;
 
         $message->setName(get_debug_type($job));
-        $message->setSerializedJob(serialize($job));
+        $message->setRawJob($job)->serializeJob();
         $message->setData($data);
 
         return $message;
@@ -168,18 +169,20 @@ class Queue
     /**
      * createJobInstance
      *
-     * @param  callable|string  $job
+     * @param  JobWrapperInterface|callable|string  $job
      *
-     * @return  callable
+     * @return  JobWrapperInterface
      */
-    protected function createJobInstance(mixed $job): callable
+    protected function createJobInstance(mixed $job): JobWrapperInterface
     {
+        if ($job instanceof JobWrapperInterface) {
+            return $job;
+        }
+
         $instance = $job;
 
         // Create callable
-        if ($job instanceof \Closure) {
-            $instance = new ClosureJob($job);
-        } elseif (is_string($job)) {
+        if (is_string($job)) {
             // Create by class name.
             if (!class_exists($job) || method_exists($job, '__invoke')) {
                 throw new InvalidArgumentException(
@@ -192,7 +195,7 @@ class Queue
             $instance = $this->createJobByClassName($job);
         }
 
-        return $instance;
+        return new JobWrapper($instance);
     }
 
     /**

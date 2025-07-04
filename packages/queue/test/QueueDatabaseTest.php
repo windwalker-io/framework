@@ -64,7 +64,7 @@ class QueueDatabaseTest extends TestCase
         );
 
         /** @var TestJob $job */
-        $job = unserialize($message->getSerializedJob());
+        $job = $message->getRawJob();
         $job->__invoke();
 
         self::assertEquals(

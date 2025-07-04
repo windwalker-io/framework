@@ -19,6 +19,9 @@ use Windwalker\Queue\Event\LoopFailureEvent;
 use Windwalker\Queue\Event\LoopStartEvent;
 use Windwalker\Queue\Event\StopEvent;
 use Windwalker\Queue\Exception\MaxAttemptsExceededException;
+use Windwalker\Queue\Job\JobController;
+use Windwalker\Queue\Job\JobWrapperInterface;
+use Windwalker\Queue\Middleware\QueueMiddlewareHandler;
 
 /**
  * The Worker class.
@@ -105,7 +108,7 @@ class Worker implements EventAwareInterface
         gc_enable();
 
         // Last Restart
-        $this->lastRestart = (int) (new DateTimeImmutable('now'))->format('U');
+        $this->lastRestart = (int) new DateTimeImmutable('now')->format('U');
 
         // Log PID
         $this->pid = getmypid();
@@ -178,21 +181,21 @@ class Worker implements EventAwareInterface
     {
         $maxTries = (int) ($options['tries'] ?? 5);
 
-        $job = $message->getSerializedJob();
-        /** @var callable $job */
-        $job = unserialize($job);
+        $job = $message->getRawJob();
+
+        // @before event
+        $event = $this->emit(
+            new BeforeJobRunEvent(
+                message: $message,
+                worker: $this,
+                queue: $this->queue,
+            ),
+        );
+
+        $message = $event->message;
+        $controller = new JobController($message, $this->getJobRunner());
 
         try {
-            // @before event
-            $this->emit(
-                new BeforeJobRunEvent(
-                    message: $message,
-                    job: $job,
-                    worker: $this,
-                    queue: $this->queue,
-                ),
-            );
-
             // Fail if max attempts
             if ($maxTries !== 0 && $maxTries < $message->getAttempts()) {
                 $this->queue->delete($message);
@@ -200,40 +203,85 @@ class Worker implements EventAwareInterface
                 throw new MaxAttemptsExceededException('Max attempts exceed for Message: ' . $message->getId());
             }
 
-            // run
-            $this->runJob($job);
+            $handler = QueueMiddlewareHandler::createFromController(
+                $controller,
+                static fn () => $controller->run($job->process(...))
+            );
+
+            $controller = $handler->handle($controller);
+
+            if ($controller->failed) {
+                throw $controller->exception;
+            }
+
+            $this->settleJobController($controller);
+
+            // Todo: Move to middleware handler
+            if ($controller->shouldPassToNext) {
+                return;
+            }
+
+            $controller->delete();
 
             // @after event
-            $this->emit(
+            $event = $this->emit(
                 new AfterJobRunEvent(
-                    message: $message,
-                    job: $job,
+                    controller: $controller,
+                    message: $controller->message,
                     worker: $this,
                     queue: $this->queue,
                 ),
             );
 
-            $this->queue->delete($message);
+            $this->settleJobController($event->controller);
         } catch (Throwable $t) {
             $this->handleJobException($job, $message, $options, $t);
         } finally {
-            if (!$message->isDeleted()) {
-                $this->queue->release($message, (int) ($options['delay'] ?? 0));
-            }
+
         }
     }
 
-    /**
-     * runJob
-     *
-     * @param  callable  $job
-     *
-     * @return  mixed
-     */
-    protected function runJob(callable $job): mixed
+    protected function settleJobController(JobController $controller): void
     {
-        return $this->getJobRunner()($job);
+        if ($controller->failed) {
+            throw $controller->exception;
+        }
+
+        // Release job if it has a release delay.
+        if ($controller->releaseDelay !== null) {
+            $this->queue->delete($controller->message);
+
+            $controller->message->setDeleted(false);
+            $controller->message->setDelay($controller->releaseDelay);
+        }
+
+        $message = $controller->message;
+
+        if ($message->isDeleted()) {
+            $this->queue->delete($message);
+        } else {
+            $this->queue->release(
+                $message,
+                (int) ($controller->releaseDelay ?? $options['delay'] ?? 0)
+            );
+        }
     }
+
+    // /**
+    //  * runJob
+    //  *
+    //  * @param  callable  $job
+    //  *
+    //  * @return  mixed
+    //  */
+    // protected function runJob(JobWrapperInterface $job, QueueMessage $message): JobController
+    // {
+    //     $controller = new JobController($message);
+    //
+    //     $this->getJobRunner()($job, $controller);
+    //
+    //     return $controller;
+    // }
 
     /**
      * canLoop
@@ -328,18 +376,12 @@ class Worker implements EventAwareInterface
         );
     }
 
-    /**
-     * handleException
-     *
-     * @param  callable      $job
-     * @param  QueueMessage  $message
-     * @param  array         $options
-     * @param  Throwable     $e
-     *
-     * @return void
-     */
-    protected function handleJobException(callable $job, QueueMessage $message, array $options, Throwable $e): void
-    {
+    protected function handleJobException(
+        JobWrapperInterface $job,
+        QueueMessage $message,
+        array $options,
+        Throwable $e
+    ): void {
         $this->logger->error(
             sprintf(
                 'Job [%s] (%s) failed: %s - Class: %s',
@@ -350,9 +392,7 @@ class Worker implements EventAwareInterface
             ),
         );
 
-        if (method_exists($job, 'failed')) {
-            $job->failed($e);
-        }
+        $job->failed($e);
 
         $maxTries = (int) ($options['tries'] ?? 5);
 
@@ -373,7 +413,6 @@ class Worker implements EventAwareInterface
             new JobFailureEvent(
                 exception: $e,
                 message: $message,
-                job: $job,
                 worker: $this,
                 queue: $this->queue,
             ),

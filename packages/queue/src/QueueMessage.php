@@ -7,6 +7,7 @@ namespace Windwalker\Queue;
 use InvalidArgumentException;
 use JsonSerializable;
 use Laravel\SerializableClosure\SerializableClosure;
+use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
@@ -60,6 +61,8 @@ class QueueMessage implements JsonSerializable
      */
     protected bool $deleted = false;
 
+    public protected(set) bool $serialized = false;
+
     /**
      * QueueMessage constructor.
      *
@@ -71,7 +74,7 @@ class QueueMessage implements JsonSerializable
     public function __construct(?callable $job = null, array $data = [], int $delay = 0, array $options = [])
     {
         if ($job !== null) {
-            $this->setSerializedJob(serialize($job));
+            $this->setRawJob($job);
         }
 
         if ($data) {
@@ -161,22 +164,25 @@ class QueueMessage implements JsonSerializable
     /**
      * Method to get property Job
      *
-     * @return  string
+     * @return  JobWrapperInterface
      */
-    public function getSerializedJob(): string
+    public function getRawJob(): JobWrapperInterface
     {
-        return $this->body['job'] ?? '';
+        $this->unserializeJob();
+
+        return $this->body['job'];
     }
 
     /**
      * Method to set property job
      *
-     * @param  string  $job
+     * @param  JobWrapperInterface  $job
      *
      * @return  static  Return self to support chaining.
      */
-    public function setSerializedJob(string $job): static
+    public function setRawJob(JobWrapperInterface $job): static
     {
+        $this->serialized = false;
         $this->body['job'] = $job;
 
         return $this;
@@ -327,15 +333,16 @@ class QueueMessage implements JsonSerializable
     }
 
     /**
-     * jsonSerialize
-     *
      * @return  array
      *
      * @throws InvalidArgumentException
      */
     public function jsonSerialize(): array
     {
-        return $this->body;
+        $new = clone $this;
+        $new->serializeJob();
+
+        return $new->body;
     }
 
     /**
@@ -356,5 +363,27 @@ class QueueMessage implements JsonSerializable
         $this->deleted = $deleted;
 
         return $this;
+    }
+
+    public function serializeJob(): void
+    {
+        if ($this->serialized) {
+            return;
+        }
+
+        $this->body['job'] = serialize($this->body['job'] ?? null);
+
+        $this->serialized = true;
+    }
+
+    public function unserializeJob(): void
+    {
+        if (!$this->serialized) {
+            return;
+        }
+
+        $this->body['job'] = unserialize($this->body['job'] ?? '', ['allowed_classes' => true]);
+
+        $this->serialized = false;
     }
 }

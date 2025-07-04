@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Event;
 
 use Windwalker\Event\BaseEvent;
+use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Queue\Queue;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Queue\Worker;
@@ -18,12 +19,10 @@ class BeforeJobRunEvent extends BaseEvent
 
     public function __construct(
         QueueMessage $message,
-        callable $job,
         Worker $worker,
         Queue $queue,
     ) {
         $this->message = $message;
-        $this->job = $job;
         $this->worker = $worker;
         $this->queue = $queue;
     }
