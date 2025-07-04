@@ -207,10 +207,11 @@ class PdoQueueDriver implements QueueDriverInterface
             'channel' => $channel,
             'reserved' => null,
             'visibility' => $time->format('Y-m-d H:i:s'),
+            'attempts' => $message->getAttempts(),
         ];
 
         $sql = 'UPDATE ' . $this->table .
-            ' SET reserved = :reserved, visibility = :visibility' .
+            ' SET reserved = :reserved, visibility = :visibility, attempts = :attempts' .
             ' WHERE id = :id AND channel = :channel';
 
         $stat = $this->pdo->prepare($sql);

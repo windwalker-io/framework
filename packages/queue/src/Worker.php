@@ -21,10 +21,11 @@ use Windwalker\Queue\Event\StopEvent;
 use Windwalker\Queue\Exception\MaxAttemptsExceededException;
 use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\Job\JobWrapperInterface;
-use Windwalker\Queue\Middleware\QueueMiddlewareHandler;
 
 /**
  * The Worker class.
+ *
+ * @psalm-type Invoker = callable(JobController $job): void
  *
  * @since  3.2
  */
@@ -80,7 +81,7 @@ class Worker implements EventAwareInterface
     /**
      * @var ?callable
      */
-    protected $jobRunner = null;
+    protected $invoker = null;
 
     /**
      * Worker constructor.
@@ -193,7 +194,7 @@ class Worker implements EventAwareInterface
         );
 
         $message = $event->message;
-        $controller = new JobController($message, $this->getJobRunner());
+        $controller = $message->makeJobController($this->getInvoker());
 
         try {
             // Fail if max attempts
@@ -203,25 +204,11 @@ class Worker implements EventAwareInterface
                 throw new MaxAttemptsExceededException('Max attempts exceed for Message: ' . $message->getId());
             }
 
-            $handler = QueueMiddlewareHandler::createFromController(
-                $controller,
-                static fn () => $controller->run($job->process(...))
-            );
-
-            $controller = $handler->handle($controller);
+            $controller = $controller->run();
 
             if ($controller->failed) {
                 throw $controller->exception;
             }
-
-            $this->settleJobController($controller);
-
-            // Todo: Move to middleware handler
-            if ($controller->shouldPassToNext) {
-                return;
-            }
-
-            $controller->delete();
 
             // @after event
             $event = $this->emit(
@@ -233,38 +220,35 @@ class Worker implements EventAwareInterface
                 ),
             );
 
-            $this->settleJobController($event->controller);
+            $controller = $event->controller;
         } catch (Throwable $t) {
             $this->handleJobException($job, $message, $options, $t);
         } finally {
-
+            $this->settleJobController($controller);
         }
     }
 
     protected function settleJobController(JobController $controller): void
     {
-        if ($controller->failed) {
-            throw $controller->exception;
-        }
+        $message = $controller->message;
 
         // Release job if it has a release delay.
         if ($controller->releaseDelay !== null) {
-            $this->queue->delete($controller->message);
-
-            $controller->message->setDeleted(false);
-            $controller->message->setDelay($controller->releaseDelay);
-        }
-
-        $message = $controller->message;
-
-        if ($message->isDeleted()) {
             $this->queue->delete($message);
-        } else {
+
+            $message->setDeleted(false);
+            $message->setDelay($controller->releaseDelay);
+            $message->setAttempts($message->getAttempts() - 1);
+
             $this->queue->release(
                 $message,
-                (int) ($controller->releaseDelay ?? $options['delay'] ?? 0)
+                (int) $controller->releaseDelay
             );
+
+            return;
         }
+
+        $this->queue->delete($message);
     }
 
     // /**
@@ -448,7 +432,7 @@ class Worker implements EventAwareInterface
      */
     protected function sleep(float $seconds): void
     {
-        usleep((int) ($seconds * 1000000));
+        usleep((int) ($seconds * 1000_000));
     }
 
     /**
@@ -527,21 +511,21 @@ class Worker implements EventAwareInterface
     }
 
     /**
-     * @return callable
+     * @return Invoker
      */
-    public function getJobRunner(): callable
+    public function getInvoker(): callable
     {
-        return $this->jobRunner ??= fn($job) => $job();
+        return $this->invoker ??= fn(JobController $controller, callable $invokable) => $invokable($controller);
     }
 
     /**
-     * @param  ?callable  $jobRunner
+     * @param  ?Invoker  $invoker
      *
      * @return  static  Return self to support chaining.
      */
-    public function setJobRunner(?callable $jobRunner): static
+    public function setInvoker(?callable $invoker): static
     {
-        $this->jobRunner = $jobRunner;
+        $this->invoker = $invoker;
 
         return $this;
     }

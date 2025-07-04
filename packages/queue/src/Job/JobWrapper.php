@@ -81,28 +81,4 @@ class JobWrapper implements JobWrapperInterface
             fn($method) => $method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)
         );
     }
-
-    public function beforeProcess(JobController $controller): void
-    {
-        $job = $this->getJob();
-
-        if (
-            is_object($job)
-            && $method = static::findMethodWithAttribute($job, JobBeforeProcess::class)
-        ) {
-            $method->invoke($job, $controller);
-        }
-    }
-
-    public function afterProcess(JobController $controller): void
-    {
-        $job = $this->getJob();
-
-        if (
-            is_object($job)
-            && $method = static::findMethodWithAttribute($job, JobAfterProcess::class)
-        ) {
-            $method->invoke($job, $controller);
-        }
-    }
 }

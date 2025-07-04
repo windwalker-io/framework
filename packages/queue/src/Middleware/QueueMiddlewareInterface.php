@@ -8,5 +8,5 @@ use Windwalker\Queue\Job\JobController;
 
 interface QueueMiddlewareInterface
 {
-    public function process(JobController $controller, QueueMiddlewareHandler $handler): JobController;
+    public function process(JobController $controller): JobController;
 }

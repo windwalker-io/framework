@@ -57,6 +57,8 @@ class SqsQueueDriver implements QueueDriverInterface
     {
         $channel = $message->getChannel() ?: $this->channel;
 
+        $message->set('attempts', 0);
+
         $request = [
             'QueueUrl' => $this->getQueueUrl($channel),
             'MessageBody' => json_encode($message, JSON_THROW_ON_ERROR),
@@ -97,16 +99,16 @@ class SqsQueueDriver implements QueueDriverInterface
 
         $data = $result['Messages'][0];
 
-        $res = new QueueMessage();
+        $message = new QueueMessage();
 
-        $res->setId($data['MessageId']);
-        $res->setAttempts((int) $data['Attributes']['ApproximateReceiveCount']);
-        $res->setBody(json_decode($data['Body'], true));
-        $res->setRawBody($data['Body']);
-        $res->setChannel($channel ?: $this->channel);
-        $res->set('ReceiptHandle', $data['ReceiptHandle']);
+        $message->setId($data['MessageId']);
+        $message->setBody(json_decode($data['Body'], true));
+        $message->setRawBody($data['Body']);
+        $message->setAttempts($message->get('attempts') + 1);
+        $message->setChannel($channel ?: $this->channel);
+        $message->set('ReceiptHandle', $data['ReceiptHandle']);
 
-        return $res;
+        return $message;
     }
 
     /**
@@ -151,7 +153,7 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * getQueueUrl
      *
-     * @param  string  $channel
+     * @param  string|null  $channel
      *
      * @return string
      */

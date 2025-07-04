@@ -158,12 +158,10 @@ class DatabaseQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
-     *
-     * @param  QueueMessage|string  $message
+     * @param  QueueMessage  $message
      *
      * @return static
-     * @throws Exception
+     * @throws \DateMalformedStringException
      */
     public function release(QueueMessage $message): static
     {
@@ -183,6 +181,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
             [
                 'id' => $message->getId(),
                 'channel' => $channel,
+                'attempts' => $message->getAttempts(),
             ]
         );
 

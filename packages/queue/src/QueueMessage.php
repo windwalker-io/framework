@@ -7,6 +7,7 @@ namespace Windwalker\Queue;
 use InvalidArgumentException;
 use JsonSerializable;
 use Laravel\SerializableClosure\SerializableClosure;
+use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
@@ -385,5 +386,15 @@ class QueueMessage implements JsonSerializable
         $this->body['job'] = unserialize($this->body['job'] ?? '', ['allowed_classes' => true]);
 
         $this->serialized = false;
+    }
+
+    public function makeJobController(?\Closure $invoker = null): JobController
+    {
+        return new JobController($this, $invoker);
+    }
+
+    public function run(?\Closure $invoker = null): JobController
+    {
+        return $this->makeJobController($invoker);
     }
 }

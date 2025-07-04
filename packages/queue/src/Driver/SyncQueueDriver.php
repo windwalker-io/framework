@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
+use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
@@ -125,10 +126,8 @@ class SyncQueueDriver implements QueueDriverInterface
 
     public static function getDefaultHandler(): \Closure
     {
-        return function (QueueMessage $message) {
-            $job = unserialize($message->getJob());
-
-            $job->execute();
+        return static function (QueueMessage $message) {
+            return $message->run();
         };
     }
 }
