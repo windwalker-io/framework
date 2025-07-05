@@ -217,7 +217,8 @@ class Worker implements EventAwareInterface
         $maxAttemptsExceeds = ($backoff === false || ($maxTries !== 0 && $maxTries <= $message->getAttempts()));
         $controller->maxAttemptsExceeded = $maxAttemptsExceeds;
 
-        $controller->invokeMethodsWithAttribute(JobFailed::class)->getReturn();
+        // Run through JobFailed methods.
+        iterator_count($controller->invokeMethodsWithAttribute(JobFailed::class));
 
         if ($maxAttemptsExceeds || $controller->abandoned) {
             $this->queue->delete($message);
