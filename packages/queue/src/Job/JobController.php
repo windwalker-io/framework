@@ -283,7 +283,7 @@ class JobController
     protected function invokeMiddleware(mixed $middleware): mixed
     {
         if ($middleware instanceof \Closure) {
-            return $middleware($this);
+            return $this->invoke($middleware);
         }
 
         if ($middleware instanceof QueueMiddlewareInterface) {
