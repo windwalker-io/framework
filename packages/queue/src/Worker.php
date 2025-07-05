@@ -219,22 +219,23 @@ class Worker implements EventAwareInterface
 
         $controller->invokeMethodsWithAttribute(JobFailed::class)->getReturn();
 
-        if ($maxAttemptsExceeds) {
+        if ($maxAttemptsExceeds || $controller->abandoned) {
             $this->queue->delete($message);
             $this->logger->error(
                 sprintf(
-                    'Job: [%s] (%s) failed. Max attempts exceeded - Class: %s',
+                    'Job: [%s] (%s) failed. %s - Class: %s',
                     get_debug_type($job),
                     $message->getId(),
+                    $maxAttemptsExceeds ? 'Max attempts exceeded.' : 'Job abandoned.',
                     get_debug_type($job),
                 ),
             );
 
-            $retryDelay = false;
+            $backoff = false;
         } else {
             $this->queue->release(
                 $message,
-                $retryDelay = ($backoff ?? $this->options->backoff)
+                $backoff ??= $this->options->backoff
             );
             $this->logger->error(
                 sprintf(
@@ -253,7 +254,9 @@ class Worker implements EventAwareInterface
                 message: $message,
                 worker: $this,
                 queue: $this->queue,
-                retryDelay: $retryDelay,
+                backoff: $backoff,
+                maxAttemptsExceeds: $maxAttemptsExceeds,
+                abandoned: $controller->abandoned,
             ),
         );
     }

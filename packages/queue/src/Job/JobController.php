@@ -46,9 +46,13 @@ class JobController
         get => $this->exception !== null;
     }
 
-    public ?\Throwable $exception = null;
-
     public ?int $releaseDelay = null;
+
+    public bool $abandoned = false;
+
+    public array $extra = [];
+
+    public ?\Throwable $exception = null;
 
     public bool $maxAttemptsExceeded = false;
 
@@ -103,7 +107,19 @@ class JobController
         return $this;
     }
 
-    // }
+    public function abandoned(): static
+    {
+        $this->abandoned = true;
+
+        return $this;
+    }
+
+    public function keep(): static
+    {
+        $this->abandoned = false;
+
+        return $this;
+    }
 
     /**
      * @template T
@@ -213,7 +229,7 @@ class JobController
         }
 
         $middlewares = function () use ($last, $job) {
-            $middlewares = new PriorityQueue();
+            $queue = new PriorityQueue();
 
             // Get middlewares from JobMiddlewaresProvider attributes.
             foreach ($this->invokeMethodsWithAttribute(JobMiddlewaresProvider::class) as $methodName => $items) {
@@ -235,11 +251,11 @@ class JobController
                         \ReflectionAttribute::IS_INSTANCEOF
                     );
 
-                    $middlewares->insert($item, $attr?->order ?? $i);
+                    $queue->insert($item, $attr?->order ?? $i);
                 }
             }
 
-            $o = $middlewares->count() - 1;
+            $o = $queue->count() - 1;
 
             // Get middlewares from JobMiddleware attributes.
             foreach ($this->findMethodsAttributes(JobMiddleware::class) as [$method, $attr]) {
@@ -247,15 +263,15 @@ class JobController
                 $attrInstance = $attr->newInstance();
                 $o++;
 
-                $middlewares->insert($method->getClosure($job), $attrInstance->order ?? $o);
+                $queue->insert($method->getClosure($job), $attrInstance->order ?? $o);
             }
 
-            $middlewares = array_reverse($middlewares->toArray());
-
-            foreach ($middlewares as $middleware) {
+            // PriorityQueue is ordered by ascending order, we need to reverse it to process from small to large.
+            foreach (array_reverse($queue->toArray()) as $middleware) {
                 yield $middleware;
             }
 
+            // Finally, yield the last callable.
             yield $last;
         };
 

@@ -24,7 +24,9 @@ class JobFailureEvent extends BaseEvent
         QueueMessage $message,
         Worker $worker,
         Queue $queue,
-        public int|false $retryDelay = false,
+        public int|false $backoff = false,
+        public bool $maxAttemptsExceeds = false,
+        public bool $abandoned = false,
     ) {
         $this->message = $message;
         $this->worker = $worker;
