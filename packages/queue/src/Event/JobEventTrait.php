@@ -18,7 +18,7 @@ trait JobEventTrait
     public QueueMessage $message;
 
     // phpcs:disable
-    public JobWrapperInterface $job {
-        get => $this->message->getRawJob();
+    public object $job {
+        get => $this->message->getJob();
     }
 }

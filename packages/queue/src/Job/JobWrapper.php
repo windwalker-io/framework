@@ -46,6 +46,11 @@ class JobWrapper implements JobWrapperInterface
         return $this->job;
     }
 
+    public function __invoke(JobController $controller)
+    {
+        return $this->process($controller);
+    }
+
     public function process(JobController $controller): void
     {
         $callback = $this->job;
@@ -74,10 +79,8 @@ class JobWrapper implements JobWrapperInterface
 
     protected static function findMethodWithAttribute(object $obj, string $attribute): ?\ReflectionMethod
     {
-        $reflection = new \ReflectionObject($obj);
-
         return array_find(
-            $reflection->getMethods(),
+            new \ReflectionObject($obj)->getMethods(),
             fn($method) => $method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)
         );
     }

@@ -7,6 +7,7 @@ namespace Windwalker\Queue\Driver;
 use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Utilities\Options\OptionAccessTrait;
+use Windwalker\Utilities\TypeCast;
 
 /**
  * The SyncQueueDriver class.
@@ -60,7 +61,7 @@ class SyncQueueDriver implements QueueDriverInterface
             }
         }
 
-        return (string) $output;
+        return (string) TypeCast::tryString($output);
     }
 
     /**

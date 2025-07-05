@@ -16,7 +16,7 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
  *
  * @since  3.2
  */
-class QueueMessage implements JsonSerializable
+class QueueMessage implements JsonSerializable, \Serializable
 {
     use OptionAccessTrait;
 
@@ -62,7 +62,7 @@ class QueueMessage implements JsonSerializable
      */
     protected bool $deleted = false;
 
-    public protected(set) bool $serialized = false;
+    public protected(set) bool $serialized = true;
 
     /**
      * QueueMessage constructor.
@@ -75,7 +75,7 @@ class QueueMessage implements JsonSerializable
     public function __construct(?callable $job = null, array $data = [], int $delay = 0, array $options = [])
     {
         if ($job !== null) {
-            $this->setRawJob($job);
+            $this->setJob($job);
         }
 
         if ($data) {
@@ -165,9 +165,9 @@ class QueueMessage implements JsonSerializable
     /**
      * Method to get property Job
      *
-     * @return  JobWrapperInterface
+     * @return  object
      */
-    public function getRawJob(): JobWrapperInterface
+    public function getJob(): object
     {
         $this->unserializeJob();
 
@@ -177,11 +177,11 @@ class QueueMessage implements JsonSerializable
     /**
      * Method to set property job
      *
-     * @param  JobWrapperInterface  $job
+     * @param  object  $job
      *
      * @return  static  Return self to support chaining.
      */
-    public function setRawJob(JobWrapperInterface $job): static
+    public function setJob(object $job): static
     {
         $this->serialized = false;
         $this->body['job'] = $job;
@@ -395,6 +395,15 @@ class QueueMessage implements JsonSerializable
 
     public function run(?\Closure $invoker = null): JobController
     {
-        return $this->makeJobController($invoker);
+        return $this->makeJobController($invoker)->run();
+    }
+
+    public function serialize(): void
+    {
+        $this->serializeJob();
+    }
+
+    public function unserialize(string $data): void
+    {
     }
 }

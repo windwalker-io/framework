@@ -9,6 +9,7 @@ use JsonException;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\Queue\Driver\QueueDriverInterface;
+use Windwalker\Queue\Job\ClosureJob;
 use Windwalker\Queue\Job\JobWrapper;
 use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
@@ -155,34 +156,28 @@ class Queue
     {
         $message = new QueueMessage();
 
-        $instance = $this->createJobInstance($job);
+        $job = $this->createJobInstance($job);
 
-        $data['class'] = $instance::class;
+        $data['class'] = $job::class;
 
         $message->setName(get_debug_type($job));
-        $message->setRawJob($job)->serializeJob();
+        $message->setJob($job)->serializeJob();
         $message->setData($data);
 
         return $message;
     }
 
     /**
-     * createJobInstance
+     * @param  object|callable|string  $job
      *
-     * @param  JobWrapperInterface|callable|string  $job
-     *
-     * @return  JobWrapperInterface
+     * @return  object
      */
-    protected function createJobInstance(mixed $job): JobWrapperInterface
+    protected function createJobInstance(mixed $job): object
     {
-        if ($job instanceof JobWrapperInterface) {
-            return $job;
-        }
-
-        $instance = $job;
-
         // Create callable
-        if (is_string($job)) {
+        if ($job instanceof \Closure) {
+            $instance = new ClosureJob($job);
+        } elseif (is_string($job)) {
             // Create by class name.
             if (!class_exists($job) || method_exists($job, '__invoke')) {
                 throw new InvalidArgumentException(
@@ -193,9 +188,11 @@ class Queue
             $instance = $this->createJobByClassName($job);
         } elseif ($job instanceof DefinitionInterface) {
             $instance = $this->createJobByClassName($job);
+        } else {
+            $instance = $job;
         }
 
-        return new JobWrapper($instance);
+        return $instance;
     }
 
     /**

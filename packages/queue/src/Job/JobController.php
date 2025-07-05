@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Job;
 
-use Windwalker\Queue\Attributes\JobMiddlewareCallback;
-use Windwalker\Queue\Attributes\JobMiddlewares;
+use Windwalker\Queue\Attributes\JobEntry;
+use Windwalker\Queue\Attributes\JobMiddleware;
+use Windwalker\Queue\Attributes\JobMiddlewaresProvider;
 use Windwalker\Queue\Middleware\QueueMiddlewareInterface;
 use Windwalker\Queue\QueueMessage;
-
-use function Windwalker\Queue\Middleware\;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
+use Windwalker\Utilities\Iterator\PriorityQueue;
 
 /**
  * @psalm-type RunnerCallback = \Closure(JobController $controller): mixed
@@ -37,8 +38,8 @@ class JobController
         get => $this->message->getBody();
     }
 
-    public JobWrapperInterface $job {
-        get => $this->message->getRawJob();
+    public object $job {
+        get => $this->message->getJob();
     }
 
     public bool $failed {
@@ -57,7 +58,10 @@ class JobController
         readonly public QueueMessage $message,
         ?\Closure $invoker = null,
     ) {
-        $this->invoker = $invoker ?? fn(JobController $controller, callable $invokable, array $args = []) => $invokable($controller, ...$args);
+        $this->invoker = $invoker ?? fn(JobController $controller, callable $invokable, array $args = []) => $invokable(
+            $controller,
+            ...$args
+        );
     }
 
     public function release(int $delay = 0): void
@@ -83,30 +87,27 @@ class JobController
     /**
      * @template T
      *
-     * @param  mixed            $job
      * @param  class-string<T>  $attrName
      *
      * @return  \Generator<array{ \ReflectionMethod, \ReflectionAttribute<T> }>
      */
-    protected function findMethodsAttributes(mixed $job, string $attrName): \Generator
+    protected function findMethodsAttributes(string $attrName): \Generator
     {
-        if (!is_object($job)) {
+        if (!is_object($this->job)) {
             return;
         }
 
-        $ref = new \ReflectionObject($job);
-
-        foreach ($ref->getMethods() as $method) {
+        foreach (new \ReflectionObject($this->job)->getMethods() as $method) {
             if ($attrs = $method->getAttributes($attrName, \ReflectionAttribute::IS_INSTANCEOF)) {
                 yield $method->getName() => [$method, $attrs[0]];
             }
         }
     }
 
-    protected function invokeMethodsWithAttribute(mixed $job, string $attrName): \Generator
+    public function invokeMethodsWithAttribute(string $attrName, ...$args): \Generator
     {
-        foreach ($this->findMethodsAttributes($job, $attrName) as $name => [$method, $attr]) {
-            yield $name => $this->invoke($method->getClosure($job));
+        foreach ($this->findMethodsAttributes($attrName) as $name => [$method, $attr]) {
+            yield $name => $this->invoke($method->getClosure($this->job), $args);
         }
     }
 
@@ -131,10 +132,39 @@ class JobController
 
     public function run(): static
     {
+        if (is_callable($this->job)) {
+            // Job is invokable, we can call it directly.
+            $last = function () {
+                $this->invoke($this->job);
+
+                return $this;
+            };
+        } else {
+            // Find JobEntry Attribute
+            $entry = $this->findMethodsAttributes(JobEntry::class)->current();
+
+            if (!$entry) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Job %s must have a method with %s attribute or be invokable.',
+                        get_debug_type($this->job),
+                        JobEntry::class
+                    )
+                );
+            }
+
+            /** @var \ReflectionMethod $method */
+            $method = $entry[0];
+            $last = function () use ($method) {
+                $this->invoke($method->getClosure($this->job));
+
+                return $this;
+            };
+        }
+
         $this->compileMiddlewares(
             $this->job,
-            // Todo: Maybe back to invokable object
-            fn () => $this->invoke($this->job->process(...))
+            $last
         );
 
         return $this->next();
@@ -147,27 +177,44 @@ class JobController
         }
 
         $middlewares = function () use ($last, $job) {
-            $middlewares = [];
-            $o = 0;
+            $middlewares = new PriorityQueue();
 
-            foreach ($this->invokeMethodsWithAttribute($job, JobMiddlewares::class) as $items) {
+            // Get middlewares from JobMiddlewaresProvider attributes.
+            foreach ($this->invokeMethodsWithAttribute(JobMiddlewaresProvider::class) as $methodName => $items) {
+                if (!is_iterable($items)) {
+                    throw new \RuntimeException(
+                        sprintf(
+                            '%s::%s() must return an iterable of middleware list, %s given.',
+                            get_debug_type($this->job),
+                            $methodName,
+                            get_debug_type($items)
+                        )
+                    );
+                }
+
                 foreach ($items as $i => $item) {
-                    $o++;
-                    $middlewares[$i] = $item;
+                    $attr = AttributesAccessor::getFirstAttributeInstance(
+                        $item,
+                        JobMiddleware::class,
+                        \ReflectionAttribute::IS_INSTANCEOF
+                    );
+
+                    $middlewares->insert($item, $attr?->order ?? $i);
                 }
             }
 
-            foreach ($this->findMethodsAttributes($job, JobMiddlewareCallback::class) as $items) {
-                foreach ($items as [$method, $attr]) {
-                    /** @var JobMiddlewareCallback $attrInstance */
-                    $attrInstance = $attr->newInstance();
-                    $o++;
+            $o = $middlewares->count() - 1;
 
-                    $middlewares[$attrInstance->order ?? $o] = $method->getClosure($job);
-                }
+            // Get middlewares from JobMiddleware attributes.
+            foreach ($this->findMethodsAttributes(JobMiddleware::class) as [$method, $attr]) {
+                /** @var JobMiddleware $attrInstance */
+                $attrInstance = $attr->newInstance();
+                $o++;
+
+                $middlewares->insert($method->getClosure($job), $attrInstance->order ?? $o);
             }
 
-            ksort($middlewares);
+            $middlewares = array_reverse($middlewares->toArray());
 
             foreach ($middlewares as $middleware) {
                 yield $middleware;
@@ -187,10 +234,10 @@ class JobController
 
         $this->middlewares->next();
 
-        return $this->runMiddleware($current);
+        return $this->invokeMiddleware($current);
     }
 
-    protected function runMiddleware(mixed $middleware): mixed
+    protected function invokeMiddleware(mixed $middleware): mixed
     {
         if ($middleware instanceof \Closure) {
             return $middleware($this);

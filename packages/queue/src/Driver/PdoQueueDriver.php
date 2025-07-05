@@ -9,7 +9,6 @@ use Exception;
 use InvalidArgumentException;
 use PDO;
 use Throwable;
-use Windwalker\DateTime\Chronos;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -20,47 +19,19 @@ use Windwalker\Queue\QueueMessage;
 class PdoQueueDriver implements QueueDriverInterface
 {
     /**
-     * Property db.
-     *
-     * @var  PDO
-     */
-    protected PDO $pdo;
-
-    /**
-     * Property table.
-     *
-     * @var string
-     */
-    protected string $table;
-
-    /**
-     * Property channel.
-     *
-     * @var  string
-     */
-    protected string $channel;
-
-    /**
-     * Property timeout.
-     *
-     * @var  int
-     */
-    protected int $timeout;
-
-    /**
      * DatabaseQueueDriver constructor.
      *
-     * @param  PDO    $db
+     * @param  PDO     $pdo
      * @param  string  $channel
      * @param  string  $table
      * @param  int     $timeout
      */
-    public function __construct(PDO $db, string $channel = 'default', string $table = 'queue_jobs', int $timeout = 60)
-    {
-        $this->pdo = $db;
-        $this->table = $table;
-        $this->channel = $channel;
-        $this->timeout = $timeout;
+    public function __construct(
+        protected PDO $pdo,
+        protected string $channel = 'default',
+        protected string $table = 'queue_jobs',
+        protected int $timeout = 60
+    ) {
     }
 
     /**

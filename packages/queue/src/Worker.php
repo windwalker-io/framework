@@ -11,6 +11,8 @@ use Psr\Log\NullLogger;
 use Throwable;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
+use Windwalker\Queue\Attributes\JobBackoff;
+use Windwalker\Queue\Attributes\JobFailed;
 use Windwalker\Queue\Event\AfterJobRunEvent;
 use Windwalker\Queue\Event\BeforeJobRunEvent;
 use Windwalker\Queue\Event\JobFailureEvent;
@@ -20,7 +22,6 @@ use Windwalker\Queue\Event\LoopStartEvent;
 use Windwalker\Queue\Event\StopEvent;
 use Windwalker\Queue\Exception\MaxAttemptsExceededException;
 use Windwalker\Queue\Job\JobController;
-use Windwalker\Queue\Job\JobWrapperInterface;
 
 /**
  * The Worker class.
@@ -178,11 +179,9 @@ class Worker implements EventAwareInterface
      *
      * @return  void
      */
-    public function process(QueueMessage $message, array $options)
+    public function process(QueueMessage $message, array $options): void
     {
         $maxTries = (int) ($options['tries'] ?? 5);
-
-        $job = $message->getRawJob();
 
         // @before event
         $event = $this->emit(
@@ -221,23 +220,83 @@ class Worker implements EventAwareInterface
             );
 
             $controller = $event->controller;
+            $this->settleJob($controller);
         } catch (Throwable $t) {
-            $this->handleJobException($job, $message, $options, $t);
-        } finally {
-            $this->settleJobController($controller);
+            $this->handleJobException($controller, $options, $t);
         }
     }
 
-    protected function settleJobController(JobController $controller): void
+    protected function handleJobException(
+        JobController $controller,
+        array $options,
+        Throwable $e
+    ): void {
+        $controller->failed($e);
+
+        $job = $controller->job;
+        $message = $controller->message;
+
+        $controller->invokeMethodsWithAttribute(
+            JobFailed::class,
+            $e
+        );
+
+        $backoff = JobBackoff::fromController($controller);
+        $maxTries = (int) ($options['tries'] ?? 5);
+
+        // Delete and log error if reach max attempts.
+        if ($backoff === false || ($maxTries !== 0 && $maxTries <= $message->getAttempts())) {
+            $this->queue->delete($message);
+            $this->logger->error(
+                sprintf(
+                    'Job: [%s] (%s) failed. Max attempts exceeded - Class: %s',
+                    get_debug_type($job),
+                    $message->getId(),
+                    get_debug_type($job),
+                ),
+            );
+
+            $retryDelay = false;
+        } else {
+            $this->queue->release(
+                $message,
+                $retryDelay = ($backoff ?? (int) ($options['delay'] ?? 0))
+            );
+            $this->logger->error(
+                sprintf(
+                    'Job: [%s] (%s) failed, will retry after %d seconds - Class: %s',
+                    get_debug_type($job),
+                    $message->getId(),
+                    $backoff,
+                    get_debug_type($job)
+                ),
+            );
+        }
+
+        $this->emit(
+            new JobFailureEvent(
+                exception: $e,
+                message: $message,
+                worker: $this,
+                queue: $this->queue,
+                retryDelay: $retryDelay,
+            ),
+        );
+    }
+
+    protected function settleJob(JobController $controller): void
     {
+        if ($controller->failed) {
+            throw $controller->exception;
+        }
+
         $message = $controller->message;
 
         // Release job if it has a release delay.
         if ($controller->releaseDelay !== null) {
-            $this->queue->delete($message);
-
             $message->setDeleted(false);
             $message->setDelay($controller->releaseDelay);
+            // User manually released the job, so we decrease the attempts.
             $message->setAttempts($message->getAttempts() - 1);
 
             $this->queue->release(
@@ -250,22 +309,6 @@ class Worker implements EventAwareInterface
 
         $this->queue->delete($message);
     }
-
-    // /**
-    //  * runJob
-    //  *
-    //  * @param  callable  $job
-    //  *
-    //  * @return  mixed
-    //  */
-    // protected function runJob(JobWrapperInterface $job, QueueMessage $message): JobController
-    // {
-    //     $controller = new JobController($message);
-    //
-    //     $this->getJobRunner()($job, $controller);
-    //
-    //     return $controller;
-    // }
 
     /**
      * canLoop
@@ -357,49 +400,6 @@ class Worker implements EventAwareInterface
                 static::STATE_STOP,
             ],
             true,
-        );
-    }
-
-    protected function handleJobException(
-        JobWrapperInterface $job,
-        QueueMessage $message,
-        array $options,
-        Throwable $e
-    ): void {
-        $this->logger->error(
-            sprintf(
-                'Job [%s] (%s) failed: %s - Class: %s',
-                get_debug_type($job),
-                $message->getId(),
-                $e->getMessage(),
-                get_debug_type($job),
-            ),
-        );
-
-        $job->failed($e);
-
-        $maxTries = (int) ($options['tries'] ?? 5);
-
-        // Delete and log error if reach max attempts.
-        if ($maxTries !== 0 && $maxTries <= $message->getAttempts()) {
-            $this->queue->delete($message);
-            $this->logger->error(
-                sprintf(
-                    'Max attempts exceeded. Job: %s (%s) - Class: %s',
-                    get_debug_type($job),
-                    $message->getId(),
-                    get_debug_type($job),
-                ),
-            );
-        }
-
-        $this->emit(
-            new JobFailureEvent(
-                exception: $e,
-                message: $message,
-                worker: $this,
-                queue: $this->queue,
-            ),
         );
     }
 

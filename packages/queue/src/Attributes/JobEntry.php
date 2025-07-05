@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Attributes;
 
-class JobAfterProcess
+#[\Attribute(\Attribute::TARGET_METHOD)]
+class JobEntry
 {
 }

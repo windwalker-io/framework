@@ -64,7 +64,7 @@ class QueueDatabaseTest extends TestCase
         );
 
         /** @var TestJob $job */
-        $job = $message->getRawJob();
+        $job = $message->getJob();
         $job->__invoke();
 
         self::assertEquals(

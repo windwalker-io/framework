@@ -100,6 +100,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
             ->orWhere(
                 function (Query $query) use ($now) {
                     $query->where('reserved', null)
+                        // After a timeout if a job was not released or hanging.
                         ->where('reserved', '<', $now->modify('-' . $this->timeout . 'seconds'));
                 }
             )
@@ -173,6 +174,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $values = [
             'reserved' => null,
             'visibility' => $time,
+            'attempts' => $message->getAttempts(),
         ];
 
         $this->db->getWriter()->updateWhere(
@@ -181,7 +183,6 @@ class DatabaseQueueDriver implements QueueDriverInterface
             [
                 'id' => $message->getId(),
                 'channel' => $channel,
-                'attempts' => $message->getAttempts(),
             ]
         );
 
