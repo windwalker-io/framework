@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Windwalker\Queue;
+
+class WorkerOptions
+{
+    public function __construct(
+        public bool $once = false,
+        public int $backoff = 0,
+        public bool $force = false,
+        public int $memoryLimit = 128,
+        public int|float|string $sleep = 1.0,
+        public int $tries = 5,
+        public int $timeout = 60,
+        public ?string $restartSignal = null
+    ) {
+    }
+}

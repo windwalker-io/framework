@@ -45,20 +45,6 @@ class Worker implements EventAwareInterface
     public const string STATE_STOP = 'stop';
 
     /**
-     * Property queue.
-     *
-     * @var  Queue
-     */
-    public Queue $queue;
-
-    /**
-     * Property logger.
-     *
-     * @var LoggerInterface
-     */
-    public LoggerInterface $logger;
-
-    /**
      * Property state.
      *
      * @var  string
@@ -84,28 +70,22 @@ class Worker implements EventAwareInterface
      */
     protected $invoker = null;
 
-    /**
-     * Worker constructor.
-     *
-     * @param  Queue            $queue
-     * @param  LoggerInterface  $logger
-     */
-    public function __construct(Queue $queue, ?LoggerInterface $logger = null)
-    {
-        $this->queue = $queue;
-        $this->logger = $logger ?? new NullLogger();
+    public function __construct(
+        protected Queue $queue,
+        public WorkerOptions $options,
+        protected LoggerInterface $logger = new NullLogger()
+    ) {
     }
 
     /**
      * loop
      *
      * @param  string|array  $channel
-     * @param  array         $options
      *
      * @return  void
      * @throws Exception
      */
-    public function loop(string|array $channel, array $options = []): void
+    public function loop(string|array $channel): void
     {
         gc_enable();
 
@@ -129,11 +109,11 @@ class Worker implements EventAwareInterface
             $this->emit(new LoopStartEvent(worker: $worker, queue: $queue));
 
             // Timeout handler
-            $this->registerSignals($options);
+            $this->registerSignals();
 
-            if (($options['force'] ?? null) || $this->canLoop()) {
+            if (($this->options->force ?? null) || $this->canLoop()) {
                 try {
-                    $this->runNextJob($channel, $options);
+                    $this->runNextJob($channel);
                 } catch (Exception $exception) {
                     $message = sprintf('Worker failure in a loop cycle: %s', $exception->getMessage());
 
@@ -143,24 +123,21 @@ class Worker implements EventAwareInterface
                 }
             }
 
-            $this->stopIfNecessary($options);
+            $this->stopIfNecessary();
 
             // @loop end
             $this->emit(new LoopEndEvent(worker: $worker, queue: $queue));
 
-            $this->sleep((float) ($options['sleep'] ?? 1));
+            $this->sleep((float) $this->options->sleep);
         }
     }
 
     /**
-     * runNextJob
-     *
      * @param  string|array  $channel
-     * @param  array         $options
      *
      * @return  void
      */
-    public function runNextJob(string|array $channel, array $options): void
+    public function runNextJob(string|array $channel): void
     {
         $message = $this->getNextMessage($channel);
 
@@ -168,20 +145,17 @@ class Worker implements EventAwareInterface
             return;
         }
 
-        $this->process($message, $options);
+        $this->process($message);
     }
 
     /**
-     * process
-     *
      * @param  QueueMessage  $message
-     * @param  array         $options
      *
      * @return  void
      */
-    public function process(QueueMessage $message, array $options): void
+    public function process(QueueMessage $message): void
     {
-        $maxTries = (int) ($options['tries'] ?? 5);
+        $maxTries = $this->options->tries;
 
         // @before event
         $event = $this->emit(
@@ -222,13 +196,12 @@ class Worker implements EventAwareInterface
             $controller = $event->controller;
             $this->settleJob($controller);
         } catch (Throwable $t) {
-            $this->handleJobException($controller, $options, $t);
+            $this->handleJobException($controller, $t);
         }
     }
 
     protected function handleJobException(
         JobController $controller,
-        array $options,
         Throwable $e
     ): void {
         $controller->failed($e);
@@ -236,13 +209,10 @@ class Worker implements EventAwareInterface
         $job = $controller->job;
         $message = $controller->message;
 
-        $controller->invokeMethodsWithAttribute(
-            JobFailed::class,
-            $e
-        );
+        $controller->invokeMethodsWithAttribute(JobFailed::class)->getReturn();
 
         $backoff = JobBackoff::fromController($controller);
-        $maxTries = (int) ($options['tries'] ?? 5);
+        $maxTries = $this->options->tries;
 
         // Delete and log error if reach max attempts.
         if ($backoff === false || ($maxTries !== 0 && $maxTries <= $message->getAttempts())) {
@@ -260,7 +230,7 @@ class Worker implements EventAwareInterface
         } else {
             $this->queue->release(
                 $message,
-                $retryDelay = ($backoff ?? (int) ($options['delay'] ?? 0))
+                $retryDelay = ($backoff ?? $this->options->backoff)
             );
             $this->logger->error(
                 sprintf(
@@ -321,15 +291,11 @@ class Worker implements EventAwareInterface
     }
 
     /**
-     * registerTimeoutHandler
-     *
-     * @param  array  $options
-     *
      * @return  void
      */
-    protected function registerSignals(array $options): void
+    protected function registerSignals(): void
     {
-        $timeout = (int) ($options['timeout'] ?? 60);
+        $timeout = $this->options->timeout;
 
         if (!extension_loaded('pcntl')) {
             return;
@@ -345,7 +311,7 @@ class Worker implements EventAwareInterface
                 },
             );
 
-            pcntl_alarm((int) ($timeout + $options['sleep']));
+            pcntl_alarm((int) ($timeout + $this->options->sleep));
         }
 
         // Wait job complete then stop
@@ -483,15 +449,11 @@ class Worker implements EventAwareInterface
     }
 
     /**
-     * stopIfNecessary
-     *
-     * @param  array  $options
-     *
      * @return  void
      */
-    public function stopIfNecessary(array $options): void
+    public function stopIfNecessary(): void
     {
-        $restartSignal = $options['restart_signal'] ?? null;
+        $restartSignal = $this->options->restartSignal;
 
         if ($restartSignal && is_file($restartSignal)) {
             $signal = file_get_contents($restartSignal);
@@ -501,7 +463,7 @@ class Worker implements EventAwareInterface
             }
         }
 
-        if ((memory_get_usage() / 1024 / 1024) >= (int) ($options['memory_limit'] ?? 128)) {
+        if ((memory_get_usage() / 1024 / 1024) >= $this->options->memoryLimit) {
             $this->stop('Memory usage exceeded. PID: ' . $this->pid);
         }
 
