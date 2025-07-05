@@ -56,6 +56,11 @@ class JobController
 
     protected \Generator $middlewares;
 
+    /**
+     * @psalm-var 'pending'|'middleware'|'running'
+     */
+    protected string $context = 'pending';
+
     public function __construct(
         readonly public QueueMessage $message,
         ?\Closure $invoker = null,
@@ -66,24 +71,38 @@ class JobController
         );
     }
 
-    public function release(int $delay = 0): void
+    public function release(int $delay = 0): static
     {
         $this->releaseDelay = $delay;
+
+        return $this;
     }
 
-    public function unrelease(): void
+    public function unrelease(): static
     {
         $this->releaseDelay = null;
+
+        return $this;
     }
 
-    // public function delete(): void
-    // {
-    //     $this->message->setDeleted(true);
-    // }
-    //
-    // public function undelete(): void
-    // {
-    //     $this->message->setDeleted(false);
+    public function failed(\Throwable|string $e, ?int $code = null): static
+    {
+        if (is_string($e)) {
+            $e = new \RuntimeException($e, $code ?? 0);
+        }
+
+        $this->exception = $e;
+
+        return $this;
+    }
+
+    public function success(): static
+    {
+        $this->exception = null;
+
+        return $this;
+    }
+
     // }
 
     /**
@@ -118,22 +137,14 @@ class JobController
         return ($this->invoker)($this, $invokable, $args);
     }
 
-    public function failed(\Throwable|string $e, ?int $code = null): void
-    {
-        if (is_string($e)) {
-            $e = new \RuntimeException($e, $code ?? 0);
-        }
-
-        $this->exception = $e;
-    }
-
-    public function success(): void
-    {
-        $this->exception = null;
-    }
-
     public function run(): static
     {
+        if ($this->context !== 'pending') {
+            throw new \RuntimeException(
+                sprintf('JobController is already in %s context, cannot run again.', $this->context)
+            );
+        }
+
         if (is_callable($this->job)) {
             // Job is invokable, we can call it directly.
             $last = function () {
@@ -158,6 +169,8 @@ class JobController
             /** @var \ReflectionMethod $method */
             $method = $entry[0];
             $last = function () use ($method) {
+                $this->context = 'running';
+
                 $this->invoke($method->getClosure($this->job));
 
                 return $this;
@@ -169,7 +182,28 @@ class JobController
             $last
         );
 
-        return $this->next();
+        $this->context = 'middleware';
+
+        $controller = $this->next();
+
+        $this->context = 'pending';
+
+        return $controller;
+    }
+
+    public function next(): JobController
+    {
+        if ($this->context !== 'middleware') {
+            throw new \RuntimeException(
+                sprintf('JobController is already in %s context, cannot run next middleware.', $this->context)
+            );
+        }
+
+        $current = $this->middlewares->current();
+
+        $this->middlewares->next();
+
+        return $this->invokeMiddleware($current);
     }
 
     protected function compileMiddlewares(mixed $job, \Closure $last): static
@@ -228,15 +262,6 @@ class JobController
         $this->middlewares = $middlewares();
 
         return $this;
-    }
-
-    public function next(): JobController
-    {
-        $current = $this->middlewares->current();
-
-        $this->middlewares->next();
-
-        return $this->invokeMiddleware($current);
     }
 
     protected function invokeMiddleware(mixed $middleware): mixed
