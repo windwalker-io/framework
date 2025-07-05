@@ -168,10 +168,11 @@ class Worker implements EventAwareInterface
 
         $message = $event->message;
         $controller = $message->makeJobController($this->getInvoker());
+        $backoff = JobBackoff::fromController($controller);
 
         try {
             // Fail if max attempts
-            if ($maxTries !== 0 && $maxTries < $message->getAttempts()) {
+            if ($backoff === false || ($maxTries !== 0 && $maxTries < $message->getAttempts())) {
                 $this->queue->delete($message);
 
                 throw new MaxAttemptsExceededException('Max attempts exceed for Message: ' . $message->getId());
@@ -196,26 +197,29 @@ class Worker implements EventAwareInterface
             $controller = $event->controller;
             $this->settleJob($controller);
         } catch (Throwable $t) {
-            $this->handleJobException($controller, $t);
+            $this->handleJobException($controller, $t, $backoff);
         }
     }
 
     protected function handleJobException(
         JobController $controller,
-        Throwable $e
+        Throwable $e,
+        int|false|null $backoff = null,
     ): void {
         $controller->failed($e);
 
         $job = $controller->job;
         $message = $controller->message;
 
-        $controller->invokeMethodsWithAttribute(JobFailed::class)->getReturn();
-
-        $backoff = JobBackoff::fromController($controller);
         $maxTries = $this->options->tries;
 
         // Delete and log error if reach max attempts.
-        if ($backoff === false || ($maxTries !== 0 && $maxTries <= $message->getAttempts())) {
+        $maxAttemptsExceeds = ($backoff === false || ($maxTries !== 0 && $maxTries <= $message->getAttempts()));
+        $controller->maxAttemptsExceeded = $maxAttemptsExceeds;
+
+        $controller->invokeMethodsWithAttribute(JobFailed::class)->getReturn();
+
+        if ($maxAttemptsExceeds) {
             $this->queue->delete($message);
             $this->logger->error(
                 sprintf(
@@ -266,10 +270,8 @@ class Worker implements EventAwareInterface
         if ($controller->releaseDelay !== null) {
             $message->setDeleted(false);
             $message->setDelay($controller->releaseDelay);
-            // User manually released the job, so we decrease the attempts.
-            $message->setAttempts($message->getAttempts() - 1);
 
-            $this->queue->release(
+            $this->queue->defer(
                 $message,
                 (int) $controller->releaseDelay
             );

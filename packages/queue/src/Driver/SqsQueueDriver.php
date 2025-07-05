@@ -57,8 +57,6 @@ class SqsQueueDriver implements QueueDriverInterface
     {
         $channel = $message->getChannel() ?: $this->channel;
 
-        $message->set('attempts', 0);
-
         $request = [
             'QueueUrl' => $this->getQueueUrl($channel),
             'MessageBody' => json_encode($message, JSON_THROW_ON_ERROR),
@@ -102,9 +100,9 @@ class SqsQueueDriver implements QueueDriverInterface
         $message = new QueueMessage();
 
         $message->setId($data['MessageId']);
+        $message->setAttempts((int) $data['Attributes']['ApproximateReceiveCount']);
         $message->setBody(json_decode($data['Body'], true));
         $message->setRawBody($data['Body']);
-        $message->setAttempts($message->get('attempts') + 1);
         $message->setChannel($channel ?: $this->channel);
         $message->set('ReceiptHandle', $data['ReceiptHandle']);
 
@@ -131,8 +129,6 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
-     *
      * @param  QueueMessage  $message
      *
      * @return static
@@ -147,6 +143,13 @@ class SqsQueueDriver implements QueueDriverInterface
             ]
         );
 
+        return $this;
+    }
+
+    public function defer(QueueMessage $message): static
+    {
+        // Do nothing, as SQS does not support deferring messages.
+        // Let's make the job timeout, so it will be retried later without increasing attempts.
         return $this;
     }
 

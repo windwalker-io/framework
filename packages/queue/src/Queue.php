@@ -124,8 +124,6 @@ class Queue
     }
 
     /**
-     * release
-     *
      * @param  QueueMessage|mixed  $message
      * @param  int                 $delay
      *
@@ -141,6 +139,18 @@ class Queue
         $message->setDelay($delay);
 
         $this->driver->release($message);
+    }
+
+    public function defer(mixed $message, int $delay = 0): void
+    {
+        if (!$message instanceof QueueMessage) {
+            $msg = new QueueMessage();
+            $msg->setId($message);
+        }
+
+        $message->setDelay($delay);
+
+        $this->driver->defer($message);
     }
 
     /**

@@ -125,6 +125,11 @@ class SyncQueueDriver implements QueueDriverInterface
         return $this;
     }
 
+    public function defer(QueueMessage $message): static
+    {
+        return $this;
+    }
+
     public static function getDefaultHandler(): \Closure
     {
         return static function (QueueMessage $message) {

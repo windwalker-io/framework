@@ -60,4 +60,9 @@ class NullQueueDriver implements QueueDriverInterface
     {
         return $this;
     }
+
+    public function defer(QueueMessage $message): static
+    {
+        return $this;
+    }
 }

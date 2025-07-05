@@ -189,6 +189,14 @@ class DatabaseQueueDriver implements QueueDriverInterface
         return $this;
     }
 
+    public function defer(QueueMessage $message): static
+    {
+        $message->setDeleted(false);
+        $message->setAttempts($message->getAttempts() - 1);
+
+        return $this->release($message);
+    }
+
     /**
      * Method to get property Table
      *

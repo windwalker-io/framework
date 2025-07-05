@@ -14,8 +14,6 @@ use Windwalker\Queue\QueueMessage;
 interface QueueDriverInterface
 {
     /**
-     * push
-     *
      * @param  QueueMessage  $message
      *
      * @return string
@@ -23,8 +21,6 @@ interface QueueDriverInterface
     public function push(QueueMessage $message): string;
 
     /**
-     * pop
-     *
      * @param  string|null  $channel
      *
      * @return QueueMessage|null
@@ -32,8 +28,6 @@ interface QueueDriverInterface
     public function pop(?string $channel = null): ?QueueMessage;
 
     /**
-     * delete
-     *
      * @param  QueueMessage  $message
      *
      * @return static
@@ -41,11 +35,20 @@ interface QueueDriverInterface
     public function delete(QueueMessage $message): static;
 
     /**
-     * release
+     * Release the message back to the queue, will increase attempts count.
      *
      * @param  QueueMessage  $message
      *
      * @return static
      */
     public function release(QueueMessage $message): static;
+
+    /**
+     * Defer the message to the queue, will not increase attempts count.
+     *
+     * @param  QueueMessage  $message
+     *
+     * @return  static
+     */
+    public function defer(QueueMessage $message): static;
 }

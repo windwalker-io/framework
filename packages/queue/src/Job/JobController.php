@@ -50,6 +50,8 @@ class JobController
 
     public ?int $releaseDelay = null;
 
+    public bool $maxAttemptsExceeded = false;
+
     public \Closure $invoker;
 
     protected \Generator $middlewares;
