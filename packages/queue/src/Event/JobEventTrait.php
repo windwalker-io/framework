@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Event;
 
-use Windwalker\Queue\Job\JobWrapperInterface;
+use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\QueueMessage;
-use Windwalker\Utilities\Assert\TypeAssert;
 
 /**
  * The JobEventTrait class.
@@ -15,7 +14,11 @@ trait JobEventTrait
 {
     use QueueEventTrait;
 
-    public QueueMessage $message;
+    public JobController $controller;
+
+    public QueueMessage $message {
+        get => $this->controller->message;
+    }
 
     // phpcs:disable
     public object $job {

@@ -7,6 +7,8 @@ namespace Windwalker\Queue\Job;
 use Windwalker\Queue\Attributes\JobEntry;
 use Windwalker\Queue\Attributes\JobMiddleware;
 use Windwalker\Queue\Attributes\JobMiddlewaresProvider;
+use Windwalker\Queue\Exception\AbandonedException;
+use Windwalker\Queue\Exception\DeferredException;
 use Windwalker\Queue\Middleware\QueueMiddlewareInterface;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Utilities\Attributes\AttributesAccessor;
@@ -48,16 +50,16 @@ class JobController
 
     public array $extra = [];
 
-    public ?int $defer = null;
+    public protected(set) ?DeferredException $defer = null;
 
     public ?\Throwable $exception = null;
 
-    public bool $abandoned = false;
+    public protected(set) ?AbandonedException $abandoned = null;
 
-    public bool $maxAttemptsExceeded = false;
+    public bool $maxAttemptsExceeds = false;
 
     public bool $shouldDelete {
-        get => $this->maxAttemptsExceeded || $this->abandoned;
+        get => $this->maxAttemptsExceeds || $this->abandoned;
     }
 
     public \Closure $invoker;
@@ -79,11 +81,9 @@ class JobController
         );
     }
 
-    public function defer(int $delay = 0): static
+    public function defer(int $delay = 0, string $reason = ''): DeferredException
     {
-        $this->defer = $delay;
-
-        return $this;
+        return $this->defer = new DeferredException($delay, $reason);
     }
 
     public function resume(): static
@@ -93,15 +93,13 @@ class JobController
         return $this;
     }
 
-    public function failed(\Throwable|string $e, ?int $code = null): static
+    public function failed(\Throwable|string $e, ?int $code = null): \Throwable
     {
         if (is_string($e)) {
             $e = new \RuntimeException($e, $code ?? 0);
         }
 
-        $this->exception = $e;
-
-        return $this;
+        return $this->exception = $e;
     }
 
     public function success(): static
@@ -111,16 +109,20 @@ class JobController
         return $this;
     }
 
-    public function abandoned(): static
+    public function abandoned(string|\Throwable $reason = ''): AbandonedException
     {
-        $this->abandoned = true;
+        if (is_string($reason)) {
+            $e = new AbandonedException($reason);
+        } else {
+            $e = AbandonedException::from($reason);
+        }
 
-        return $this;
+        return $this->abandoned = $e;
     }
 
     public function keep(): static
     {
-        $this->abandoned = false;
+        $this->abandoned = null;
 
         return $this;
     }
@@ -286,25 +288,39 @@ class JobController
 
     protected function invokeMiddleware(mixed $middleware): mixed
     {
-        if ($middleware instanceof \Closure) {
-            return $this->invoke($middleware);
+        try {
+            if ($middleware instanceof \Closure) {
+                $result = $this->invoke($middleware);
+            } elseif ($middleware instanceof QueueMiddlewareInterface) {
+                $result = $middleware->process($this);
+            } elseif ($middleware instanceof self) {
+                $result = $middleware->next();
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid middleware queue entry: %s. Middleware must implement %s or be an instance of %s.',
+                        $middleware,
+                        QueueMiddlewareInterface::class,
+                        self::class
+                    )
+                );
+            }
+
+            if ($result instanceof \Throwable) {
+                throw $result;
+            }
+
+            if ($result->failed) {
+                throw $result->exception;
+            }
+
+            return $result;
+        } catch (DeferredException $e) {
+            $this->defer = $e;
+        } catch (AbandonedException $e) {
+            $this->abandoned = $e;
         }
 
-        if ($middleware instanceof QueueMiddlewareInterface) {
-            return $middleware->process($this);
-        }
-
-        if ($middleware instanceof self) {
-            return $middleware->next();
-        }
-
-        throw new \InvalidArgumentException(
-            sprintf(
-                'Invalid middleware queue entry: %s. Middleware must implement %s or be an instance of %s.',
-                $middleware,
-                QueueMiddlewareInterface::class,
-                self::class
-            )
-        );
+        return $this;
     }
 }

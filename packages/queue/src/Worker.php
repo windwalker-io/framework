@@ -157,18 +157,20 @@ class Worker implements EventAwareInterface
     {
         $maxTries = $this->options->tries;
 
+        $controller = $message->makeJobController($this->getInvoker());
+        $backoff = JobBackoff::fromController($controller);
+
         // @before event
         $event = $this->emit(
             new BeforeJobRunEvent(
-                message: $message,
+                controller: $controller,
                 worker: $this,
                 queue: $this->queue,
             ),
         );
 
         $message = $event->message;
-        $controller = $message->makeJobController($this->getInvoker());
-        $backoff = JobBackoff::fromController($controller);
+        $controller = $event->controller;
 
         try {
             // Fail if max attempts
@@ -188,7 +190,6 @@ class Worker implements EventAwareInterface
             $event = $this->emit(
                 new AfterJobRunEvent(
                     controller: $controller,
-                    message: $controller->message,
                     worker: $this,
                     queue: $this->queue,
                 ),
@@ -215,19 +216,21 @@ class Worker implements EventAwareInterface
 
         // Delete and log error if reach max attempts.
         $maxAttemptsExceeds = ($backoff === false || ($maxTries !== 0 && $maxTries <= $message->getAttempts()));
-        $controller->maxAttemptsExceeded = $maxAttemptsExceeds;
+        $controller->maxAttemptsExceeds = $maxAttemptsExceeds;
 
         // Run through JobFailed methods.
         iterator_count($controller->invokeMethodsWithAttribute(JobFailed::class));
 
-        if ($maxAttemptsExceeds || $controller->abandoned) {
+        if ($controller->shouldDelete) {
             $this->queue->delete($message);
             $this->logger->error(
                 sprintf(
                     'Job: [%s] (%s) failed. %s - Class: %s',
                     get_debug_type($job),
                     $message->getId(),
-                    $maxAttemptsExceeds ? 'Max attempts exceeded.' : 'Job abandoned.',
+                    $maxAttemptsExceeds
+                        ? 'Max attempts exceeded.'
+                        : $controller->abandoned->toReasonText(),
                     get_debug_type($job),
                 ),
             );
@@ -252,12 +255,10 @@ class Worker implements EventAwareInterface
         $this->emit(
             new JobFailureEvent(
                 exception: $e,
-                message: $message,
+                controller: $controller,
                 worker: $this,
                 queue: $this->queue,
                 backoff: $backoff,
-                maxAttemptsExceeds: $maxAttemptsExceeds,
-                abandoned: $controller->abandoned,
             ),
         );
     }
@@ -271,13 +272,13 @@ class Worker implements EventAwareInterface
         $message = $controller->message;
 
         // Release job if it has a release delay.
-        if ($controller->defer !== null) {
+        if ($controller->defer) {
             $message->setDeleted(false);
-            $message->setDelay($controller->defer);
+            $message->setDelay($controller->defer->delay);
 
             $this->queue->defer(
                 $message,
-                (int) $controller->defer
+                $controller->defer->delay
             );
 
             return;

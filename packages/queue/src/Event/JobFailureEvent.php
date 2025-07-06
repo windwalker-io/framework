@@ -6,9 +6,8 @@ namespace Windwalker\Queue\Event;
 
 use Windwalker\Event\BaseEvent;
 use Windwalker\Event\Events\ErrorEventTrait;
-use Windwalker\Queue\Job\JobWrapperInterface;
+use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\Queue;
-use Windwalker\Queue\QueueMessage;
 use Windwalker\Queue\Worker;
 
 /**
@@ -21,16 +20,15 @@ class JobFailureEvent extends BaseEvent
 
     public function __construct(
         \Throwable $exception,
-        QueueMessage $message,
+        JobController $controller,
         Worker $worker,
         Queue $queue,
         public int|false $backoff = false,
         public bool $maxAttemptsExceeds = false,
-        public bool $abandoned = false,
     ) {
-        $this->message = $message;
+        $this->exception = $exception;
+        $this->controller = $controller;
         $this->worker = $worker;
         $this->queue = $queue;
-        $this->exception = $exception;
     }
 }
