@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Enum;
 
-use Windwalker\Attributes\AttributesAccessor;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Attributes\Enum\Color;
 use Windwalker\Utilities\Attributes\Enum\Hidden;
 use Windwalker\Utilities\Attributes\Enum\Icon;
@@ -17,8 +17,6 @@ use Windwalker\Utilities\Contract\LanguageInterface;
  */
 trait EnumMetaTrait
 {
-    use EnumPhpAdapterTrait;
-
     public function getTitle(?LanguageInterface $lang = null, ...$args): string
     {
         $attr = $this->getAttr(Title::class);
@@ -38,8 +36,8 @@ trait EnumMetaTrait
     {
         $values = [];
 
-        foreach (static::values() as $item) {
-            $values[$item->getValue()] = $item->getTitle();
+        foreach (self::cases() as $item) {
+            $values[$item->value] = $item->getTitle();
         }
 
         return $values;
@@ -49,7 +47,7 @@ trait EnumMetaTrait
     {
         $titles = self::getTitles();
 
-        $value = array_search($title, $titles);
+        $value = array_search($title, $titles, true);
 
         return self::wrap($value);
     }
@@ -58,7 +56,7 @@ trait EnumMetaTrait
     {
         $titles = self::getTitles();
 
-        $value = array_search($title, $titles);
+        $value = array_search($title, $titles, true);
 
         if ($value === false) {
             return null;
@@ -76,8 +74,8 @@ trait EnumMetaTrait
     {
         $values = [];
 
-        foreach (static::values() as $item) {
-            $values[$item->getValue()] = $item->getIcon();
+        foreach (static::cases() as $case) {
+            $values[$case->value] = $case->getIcon();
         }
 
         return $values;
@@ -92,8 +90,8 @@ trait EnumMetaTrait
     {
         $values = [];
 
-        foreach (static::values() as $item) {
-            $values[$item->getValue()] = $item->getcolor();
+        foreach (static::cases() as $case) {
+            $values[$case->value] = $case->getColor();
         }
 
         return $values;
@@ -108,8 +106,8 @@ trait EnumMetaTrait
     {
         $values = [];
 
-        foreach (static::values() as $item) {
-            $values[$item->getValue()] = $item->getMeta();
+        foreach (static::cases() as $case) {
+            $values[$case->value] = $case->getMeta();
         }
 
         return $values;
@@ -128,6 +126,7 @@ trait EnumMetaTrait
      * @param  string|T  $attr
      *
      * @return  object|null|T
+     * @throws \ReflectionException
      */
     protected function getAttr(string $attr): ?object
     {

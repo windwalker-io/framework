@@ -46,15 +46,19 @@ class JobController
         get => $this->exception !== null;
     }
 
-    public ?int $releaseDelay = null;
-
-    public bool $abandoned = false;
-
     public array $extra = [];
+
+    public ?int $defer = null;
 
     public ?\Throwable $exception = null;
 
+    public bool $abandoned = false;
+
     public bool $maxAttemptsExceeded = false;
+
+    public bool $shouldDelete {
+        get => $this->maxAttemptsExceeded || $this->abandoned;
+    }
 
     public \Closure $invoker;
 
@@ -75,16 +79,16 @@ class JobController
         );
     }
 
-    public function release(int $delay = 0): static
+    public function defer(int $delay = 0): static
     {
-        $this->releaseDelay = $delay;
+        $this->defer = $delay;
 
         return $this;
     }
 
-    public function unrelease(): static
+    public function resume(): static
     {
-        $this->releaseDelay = null;
+        $this->defer = null;
 
         return $this;
     }

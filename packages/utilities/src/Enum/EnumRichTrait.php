@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Enum;
 
-use MyCLabs\Enum\Enum;
 use Windwalker\Utilities\Contract\LanguageInterface;
 
-/**
- * Trait EnumTranslatableTrait
- */
-trait EnumTranslatableTrait
+trait EnumRichTrait
 {
+    use EnumExtendedTrait;
     use EnumMetaTrait;
-    use EnumPhpAdapterTrait;
 
     public static function getTransItems(LanguageInterface $lang, ...$args): array
     {
         $items = [];
 
-        /** @var static|Enum|EnumTranslatableInterface $item */
-        foreach (static::cases() as $item) {
+        foreach (self::cases() as $item) {
             $items[$item->value] = $item->getTitle($lang, ...$args);
         }
 

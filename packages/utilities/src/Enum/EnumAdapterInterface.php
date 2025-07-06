@@ -6,6 +6,8 @@ namespace Windwalker\Utilities\Enum;
 
 /**
  * Interface EnumAdapterInterface
+ *
+ * @deprecated  Use 8.2 enums
  */
 interface EnumAdapterInterface extends \JsonSerializable
 {

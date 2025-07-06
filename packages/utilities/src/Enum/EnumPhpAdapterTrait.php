@@ -10,6 +10,8 @@ use function Windwalker\arr;
 
 /**
  * Trait EnumPhpAdapterTrait
+ *
+ * @deprecated  Use 8.2 enums
  */
 trait EnumPhpAdapterTrait
 {

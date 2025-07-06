@@ -6,6 +6,8 @@ namespace Windwalker\Utilities\Enum;
 
 /**
  * Trait EnumBCTrait
+ *
+ * @deprecated  Use 8.2 enums
  */
 trait EnumBCTrait
 {

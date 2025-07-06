@@ -8,6 +8,8 @@ use MyCLabs\Enum\Enum;
 
 /**
  * The EnumSingleton class.
+ *
+ * @deprecated  Use 8.2 enums
  */
 class EnumSingleton extends Enum
 {

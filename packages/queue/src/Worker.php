@@ -271,13 +271,13 @@ class Worker implements EventAwareInterface
         $message = $controller->message;
 
         // Release job if it has a release delay.
-        if ($controller->releaseDelay !== null) {
+        if ($controller->defer !== null) {
             $message->setDeleted(false);
-            $message->setDelay($controller->releaseDelay);
+            $message->setDelay($controller->defer);
 
             $this->queue->defer(
                 $message,
-                (int) $controller->releaseDelay
+                (int) $controller->defer
             );
 
             return;
