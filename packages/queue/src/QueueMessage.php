@@ -6,9 +6,9 @@ namespace Windwalker\Queue;
 
 use InvalidArgumentException;
 use JsonSerializable;
-use Laravel\SerializableClosure\SerializableClosure;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Windwalker\Queue\Job\JobController;
-use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
@@ -62,15 +62,22 @@ class QueueMessage implements JsonSerializable, \Serializable
      */
     protected bool $deleted = false;
 
-    public protected(set) bool $serialized = true;
+    protected object $unserializedJob;
+
+    // phpcs:disable
+    public ?string $serializedJob {
+        get => $this->body['job'] ?? null;
+    }
+
+    // phpcs:enable
 
     /**
      * QueueMessage constructor.
      *
-     * @param callable|null $job
-     * @param  array        $data
-     * @param  int          $delay
-     * @param  array        $options
+     * @param  callable|null  $job
+     * @param  array          $data
+     * @param  int            $delay
+     * @param  array          $options
      */
     public function __construct(?callable $job = null, array $data = [], int $delay = 0, array $options = [])
     {
@@ -171,7 +178,7 @@ class QueueMessage implements JsonSerializable, \Serializable
     {
         $this->unserializeJob();
 
-        return $this->body['job'];
+        return $this->unserializedJob;
     }
 
     /**
@@ -183,8 +190,9 @@ class QueueMessage implements JsonSerializable, \Serializable
      */
     public function setJob(object $job): static
     {
-        $this->serialized = false;
-        $this->body['job'] = $job;
+        $this->unserializedJob = $job;
+
+        unset($this->body['job']);
 
         return $this;
     }
@@ -368,39 +376,37 @@ class QueueMessage implements JsonSerializable, \Serializable
 
     public function serializeJob(): void
     {
-        if ($this->serialized) {
+        if ($this->serializedJob) {
             return;
         }
 
-        $this->body['job'] = serialize($this->body['job'] ?? null);
-
-        $this->serialized = true;
+        $this->body['job'] = serialize($this->unserializedJob);
     }
 
     public function unserializeJob(): void
     {
-        if (!$this->serialized) {
-            return;
-        }
-
-        $this->body['job'] = unserialize($this->body['job'] ?? '', ['allowed_classes' => true]);
-
-        $this->serialized = false;
+        $this->unserializedJob ??= unserialize($this->body['job'] ?? '', ['allowed_classes' => true]);
     }
 
-    public function makeJobController(?\Closure $invoker = null): JobController
-    {
-        return new JobController($this, $invoker);
+    public function makeJobController(
+        ?\Closure $invoker = null,
+        LoggerInterface $logger = new NullLogger(),
+    ): JobController {
+        return new JobController($this, $invoker, $logger);
     }
 
-    public function run(?\Closure $invoker = null): JobController
-    {
-        return $this->makeJobController($invoker)->run();
+    public function run(
+        ?\Closure $invoker = null,
+        LoggerInterface $logger = new NullLogger(),
+    ): JobController {
+        return $this->makeJobController($invoker, $logger)->run();
     }
 
     public function serialize(): void
     {
         $this->serializeJob();
+
+        unset($this->unserializedJob);
     }
 
     public function unserialize(string $data): void

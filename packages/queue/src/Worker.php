@@ -6,6 +6,7 @@ namespace Windwalker\Queue;
 
 use DateTimeImmutable;
 use Exception;
+use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
@@ -15,6 +16,7 @@ use Windwalker\Queue\Attributes\JobBackoff;
 use Windwalker\Queue\Attributes\JobFailed;
 use Windwalker\Queue\Event\AfterJobRunEvent;
 use Windwalker\Queue\Event\BeforeJobRunEvent;
+use Windwalker\Queue\Event\DebugOutputEvent;
 use Windwalker\Queue\Event\JobFailureEvent;
 use Windwalker\Queue\Event\LoopEndEvent;
 use Windwalker\Queue\Event\LoopFailureEvent;
@@ -157,7 +159,7 @@ class Worker implements EventAwareInterface
     {
         $maxTries = $this->options->tries;
 
-        $controller = $message->makeJobController($this->getInvoker());
+        $controller = $this->createJonController($message);
         $backoff = JobBackoff::fromController($controller);
 
         // @before event
@@ -497,5 +499,46 @@ class Worker implements EventAwareInterface
         $this->invoker = $invoker;
 
         return $this;
+    }
+
+    /**
+     * @param  QueueMessage  $message
+     *
+     * @return  JobController
+     */
+    public function createJonController(QueueMessage $message): JobController
+    {
+        if ($this->options->jobControllerFactory) {
+            return ($this->options->jobControllerFactory)(
+                $message,
+                $this->getInvoker(),
+                $this->createJobLogger(),
+            );
+        }
+
+        return $message->makeJobController(
+            $this->getInvoker(),
+            $this->createJobLogger()
+        );
+    }
+
+    protected function createJobLogger(): LoggerInterface
+    {
+        return new class ($this) extends AbstractLogger {
+            public function __construct(protected Worker $worker)
+            {
+            }
+
+            public function log($level, \Stringable|string $message, array $context = []): void
+            {
+                $this->worker->emit(
+                    new DebugOutputEvent(
+                        level: $level,
+                        message: (string) $message,
+                        context: $context,
+                    )
+                );
+            }
+        };
     }
 }

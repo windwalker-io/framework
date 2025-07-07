@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Job;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Psr\Log\NullLogger;
 use Windwalker\Queue\Attributes\JobEntry;
 use Windwalker\Queue\Attributes\JobMiddleware;
 use Windwalker\Queue\Attributes\JobMiddlewaresProvider;
@@ -74,11 +77,21 @@ class JobController
     public function __construct(
         readonly public QueueMessage $message,
         ?\Closure $invoker = null,
+        public LoggerInterface $logger = new NullLogger(),
     ) {
         $this->invoker = $invoker ?? fn(JobController $controller, callable $invokable, array $args = []) => $invokable(
             $controller,
             ...$args
         );
+    }
+
+    public function log(string|array $message, string $level = LogLevel::DEBUG, array $context = []): static
+    {
+        foreach ((array) $message as $msg) {
+            $this->logger->log($level, $msg, $context);
+        }
+
+        return $this;
     }
 
     public function defer(int $delay = 0, string $reason = ''): DeferredException

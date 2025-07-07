@@ -14,7 +14,8 @@ class WorkerOptions
         public int|float|string $sleep = 1.0,
         public int $tries = 5,
         public int $timeout = 60,
-        public ?string $restartSignal = null
+        public ?string $restartSignal = null,
+        public ?\Closure $jobControllerFactory = null,
     ) {
     }
 }
