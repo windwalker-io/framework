@@ -65,6 +65,10 @@ class JobController
         get => $this->maxAttemptsExceeds || $this->abandoned;
     }
 
+    public bool $willRetry {
+        get => !$this->shouldDelete;
+    }
+
     public \Closure $invoker;
 
     protected \Generator $middlewares;
@@ -330,8 +334,16 @@ class JobController
             return $result;
         } catch (DeferredException $e) {
             $this->defer = $e;
+
+            if ($e->getPrevious()) {
+                $this->failed($e->getPrevious());
+            }
         } catch (AbandonedException $e) {
             $this->abandoned = $e;
+
+            if ($e->getPrevious()) {
+                $this->failed($e->getPrevious());
+            }
         }
 
         return $this;

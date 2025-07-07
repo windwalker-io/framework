@@ -16,7 +16,7 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
  *
  * @since  3.2
  */
-class QueueMessage implements JsonSerializable, \Serializable
+class QueueMessage implements JsonSerializable
 {
     use OptionAccessTrait;
 
@@ -402,14 +402,21 @@ class QueueMessage implements JsonSerializable, \Serializable
         return $this->makeJobController($invoker, $logger)->run();
     }
 
-    public function serialize(): void
+    public function __serialize(): array
     {
         $this->serializeJob();
 
-        unset($this->unserializedJob);
+        return get_object_vars($this);
     }
 
-    public function unserialize(string $data): void
+    public function __unserialize(array $data): void
     {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
+        }
+
+        $this->unserializeJob();
     }
 }
