@@ -159,12 +159,10 @@ class PdoQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
-     *
-     * @param  QueueMessage|string  $message
+     * @param  QueueMessage  $message
      *
      * @return static
-     * @throws Exception
+     * @throws \DateMalformedStringException
      */
     public function release(QueueMessage $message): static
     {
@@ -194,11 +192,15 @@ class PdoQueueDriver implements QueueDriverInterface
 
     public function defer(QueueMessage $message): static
     {
+        $this->delete($message);
+
         $message->setDeleted(false);
         $message->setId('');
         $message->setAttempts($message->getAttempts() - 1);
 
-        return $this->release($message);
+        $this->push($message);
+
+        return $this;
     }
 
     /**

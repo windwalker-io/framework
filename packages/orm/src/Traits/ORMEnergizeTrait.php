@@ -8,7 +8,7 @@ use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Event\EnergizeEvent;
 use Windwalker\ORM\ORM;
 
-trait ORMEngerizeTrait
+trait ORMEnergizeTrait
 {
     protected ?ORM $orm {
         get => $this->retrieveMeta('orm');

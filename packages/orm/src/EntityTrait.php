@@ -62,7 +62,7 @@ trait EntityTrait
      * @param  string  $propName
      *
      * @return  mixed
-     *               
+     *
      * @deprecated  Use `$this->props ??= fetchRelation(...)` instead.
      */
     protected function loadRelation(string $propName): mixed
@@ -79,7 +79,7 @@ trait EntityTrait
      * @param  string  $propName
      *
      * @return  mixed|RelationCollection
-     *                                  
+     *
      * @deprecated  Use `$this->props ??= fetchCollection(...)` instead.
      */
     protected function loadCollection(string $propName)
@@ -133,7 +133,18 @@ trait EntityTrait
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        return TypeCast::toArray(get_object_vars($this), $recursive, $onlyDumpable);
+        $ref = new \ReflectionObject($this);
+        $data = [];
+
+        foreach (get_object_vars($this) as $k => $v) {
+            if ($ref->hasProperty($k) && $ref->getProperty($k)->isVirtual()) {
+                continue;
+            }
+
+            $data[$k] = $v;
+        }
+
+        return TypeCast::toArray($data, $recursive, $onlyDumpable);
     }
 
     /**

@@ -191,10 +191,14 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
     public function defer(QueueMessage $message): static
     {
+        $this->delete($message);
+
         $message->setDeleted(false);
         $message->setAttempts($message->getAttempts() - 1);
 
-        return $this->release($message);
+        $this->push($message);
+
+        return $this;
     }
 
     /**
