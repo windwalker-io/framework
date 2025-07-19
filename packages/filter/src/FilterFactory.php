@@ -111,7 +111,13 @@ class FilterFactory
 
         foreach ($clauses as $clause) {
             if (is_string($clause)) {
-                $filter = $this->createFromSyntax($clause, $options);
+                if ($this->hasFactory($clause)) {
+                    $filter = $this->createByFactory($clause, $options);
+                } elseif (class_exists($clause)) {
+                    $filter = $this->create($clause);
+                } else {
+                    $filter = $this->createFromSyntax($clause, $options);
+                }
             } else {
                 $filter = $this->create($clause);
             }
@@ -124,7 +130,7 @@ class FilterFactory
 
     public function createFromSyntax(string $syntax, array &$options = []): FilterInterface|ValidatorInterface
     {
-        preg_match('/(?P<type>\w+)(\((?P<params>.*)\))*/', $syntax, $matches);
+        preg_match('/(?P<type>[\w\\\\]+)(\((?P<params>.*)\))*/', $syntax, $matches);
 
         $type = $matches['type'] ?? '';
         $params = $matches['params'] ?? '';
@@ -181,6 +187,11 @@ class FilterFactory
         return $this->factories[$type];
     }
 
+    public function hasFactory(string $type): bool
+    {
+        return isset($this->factories[$type]);
+    }
+
     /**
      * addFactory
      *
@@ -198,6 +209,11 @@ class FilterFactory
         $this->factories[$type] = $factory;
 
         return $this;
+    }
+
+    public function addFilterCallback(string $type, \Closure $callback): static
+    {
+        return $this->addFactory($type, fn () => new CallbackFilter($callback));
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Attributes;
 
+use App\Enum\CreationType;
 use Attribute;
 use JetBrains\PhpStorm\Pure;
 use Psr\Container\ContainerExceptionInterface;
@@ -125,8 +126,8 @@ class Inject implements ContainerAttributeInterface
         $tag = $this->tag;
 
         try {
-            if ($container->has($id, $tag)) {
-                return $container->get($id, $this->forceNew, $tag);
+            if ($container->has($id, tag: $tag)) {
+                return $container->get($id, $this->forceNew, tag: $tag);
             }
 
             if (class_exists($id) || interface_exists($id)) {

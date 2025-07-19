@@ -32,8 +32,6 @@ class Autowire implements ContainerAttributeInterface
 
                 return $resolver->resolveParameterValue(
                     $resolver->resolveParameterDependency($reflector, [], Container::AUTO_WIRE),
-                    $reflector,
-                    Container::IGNORE_ATTRIBUTES
                 );
             };
         }

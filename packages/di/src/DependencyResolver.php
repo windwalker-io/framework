@@ -198,7 +198,9 @@ class DependencyResolver
 
                 foreach ($args as $key => $v) {
                     if (is_numeric($key)) {
-                        $trailing[] = &$this->resolveParameterValue($v, $param);
+                        $trailing[] = &$this->resolveParameterValue(
+                            $this->resolveParameterAttributes($v, $param),
+                        );
                     }
 
                     unset($v);
@@ -211,21 +213,29 @@ class DependencyResolver
 
             // Prior (2): Argument with numeric keys.
             if (array_key_exists($i, $args)) {
-                $methodArgs[$dependencyVarName] = &$this->resolveParameterValue($args[$i], $param);
+                $methodArgs[$dependencyVarName] = &$this->resolveParameterValue(
+                    $this->resolveParameterAttributes($args[$i], $param),
+                );
                 continue;
             }
 
             // Prior (3): Argument with named keys.
             if (array_key_exists($dependencyVarName, $args)) {
-                $methodArgs[$dependencyVarName] = &$this->resolveParameterValue($args[$dependencyVarName], $param);
+                $methodArgs[$dependencyVarName] = &$this->resolveParameterValue(
+                    $this->resolveParameterAttributes($args[$dependencyVarName], $param),
+                );
                 continue;
             }
 
             // Prior (4): Argument with class type hints.
-            $value = &$this->resolveParameterValue(
-                $this->resolveParameterDependency($param, $args, $options),
-                $param
-            );
+            $value = null;
+            $value = &$this->resolveParameterAttributes($value, $param);
+
+            if ($value === null) {
+                $value = &$this->resolveParameterDependency($param, $args, $options);
+            }
+
+            $value = &$this->resolveParameterValue($value);
 
             if ($value !== null) {
                 $methodArgs[$dependencyVarName] = &$value;
@@ -254,7 +264,6 @@ class DependencyResolver
                     $method->getShortName()
                 )
             );
-
             // $methodArgs[$i] = null;
         }
 
@@ -364,17 +373,13 @@ class DependencyResolver
     /**
      * Extract wrapper, resolve reference or create object by builder definitions.
      *
-     * @param  mixed                $value
-     * @param  ReflectionParameter  $param
-     * @param  int                  $options
+     * @param  mixed  $value
      *
      * @return mixed
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @since  3.5.1
      */
-    public function &resolveParameterValue(mixed &$value, ReflectionParameter $param, int $options = 0): mixed
+    public function &resolveParameterValue(mixed &$value): mixed
     {
         if ($value instanceof RawWrapper) {
             $value = $value();
@@ -394,6 +399,11 @@ class DependencyResolver
             }
         }
 
+        return $value;
+    }
+
+    public function &resolveParameterAttributes(mixed &$value, ReflectionParameter $param, int $options = 0): mixed
+    {
         $options |= $this->container->getOptions();
 
         if (!($options & Container::IGNORE_ATTRIBUTES) && $param->getAttributes()) {
