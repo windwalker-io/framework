@@ -6,6 +6,7 @@ namespace Windwalker\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use RangeException;
 use ReflectionMethod;
 use Stringable;
@@ -380,9 +381,11 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         // If not GET, convert data to query string.
         if (is_scalar($body) || $body === null) {
             $body = Stream::fromString((string) $body);
+        } elseif (is_resource($body)) {
+            $body = new Stream($body);
         } elseif ($body instanceof FormData) {
             $body = new RequestBodyStream($body->dump(true));
-        } else {
+        } elseif (!$body instanceof StreamInterface) {
             if (!$request->hasHeader('Content-Type')) {
                 $request = $request->withHeader('Content-Type', 'application/json; charset=utf-8');
             }
