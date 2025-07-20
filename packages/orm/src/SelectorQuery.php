@@ -17,6 +17,7 @@ use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
 use Windwalker\Query\Clause\AsClause;
+use Windwalker\Query\Clause\JoinClause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 
@@ -314,9 +315,13 @@ class SelectorQuery extends Query implements EventAwareInterface
             $colName = $colExtracted[0];
         } else {
             $colName = $colExtracted[1];
+            $joins = array_map(
+                static fn(JoinClause $clause) => $clause->getTable(),
+                $this->getJoin()?->getElements() ?? []
+            );
             $clauses = [
                 ...($this->getFrom()?->getElements() ?? []),
-                ...($this->getJoin()?->getElements() ?? []),
+                ...($joins),
             ];
 
             /** @var AsClause|null $clause */
