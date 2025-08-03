@@ -10,6 +10,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
+use Windwalker\ORM\Attributes\JsonNoSerialize;
 use Windwalker\ORM\Attributes\JsonSerializer;
 use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\ORM\Attributes\Table;
@@ -19,6 +20,9 @@ use Windwalker\ORM\Relation\Strategy\RelationStrategyInterface;
 use Windwalker\Utilities\Accessible\AccessorBCTrait;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
+
+use function Windwalker\filter;
+use function Windwalker\get_object_values;
 
 /**
  * The AbstractEntity class.
@@ -31,7 +35,7 @@ trait EntityTrait
 
     public static function table(): ?string
     {
-        return (new ReflectionClass(static::class))
+        return new ReflectionClass(static::class)
             ->getAttributes(Table::class, ReflectionAttribute::IS_INSTANCEOF)[0]
             ?->newInstance()
             ?->getName();
@@ -131,20 +135,9 @@ trait EntityTrait
      *
      * @inheritDoc
      */
-    public function dump(bool $recursive = false, bool $onlyDumpable = false): array
+    public function dump(bool $recursive = false, bool $onlyDumpable = false, ?int $filter = null): array
     {
-        $ref = new \ReflectionObject($this);
-        $data = [];
-
-        foreach (get_object_vars($this) as $k => $v) {
-            if ($ref->hasProperty($k) && $ref->getProperty($k)->isVirtual()) {
-                continue;
-            }
-
-            $data[$k] = $v;
-        }
-
-        return TypeCast::toArray($data, $recursive, $onlyDumpable);
+        return TypeCast::toArray(get_object_values($this, $filter), $recursive, $onlyDumpable, $filter);
     }
 
     /**
@@ -152,7 +145,9 @@ trait EntityTrait
      */
     public function jsonSerialize(): array
     {
-        $item = $this->dump();
+        $item = $this->dump(
+            filter: ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED
+        );
 
         foreach ($item as $key => $value) {
             $prop = new ReflectionProperty($this, $key);
@@ -164,6 +159,11 @@ trait EntityTrait
 
             /** @var ReflectionAttribute<JsonSerializerInterface> $attr */
             foreach ($attrs as $attr) {
+                if ($attr instanceof JsonNoSerialize) {
+                    unset($item[$key]);
+                    continue 2;
+                }
+
                 $attrInstance = $attr->newInstance();
 
                 $value = $attrInstance->serialize($value);
@@ -185,7 +185,7 @@ trait EntityTrait
         $getter = $this->getGetter($name);
 
         if ($getter) {
-            $v = $this->$getter();
+            $v = &$this->$getter();
 
             return $v;
         }

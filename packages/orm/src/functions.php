@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker;
 
-use Ramsey\Uuid\UuidInterface;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use ReflectionAttribute;
 use UnexpectedValueException;
 use Windwalker\ORM\Attributes\Table;

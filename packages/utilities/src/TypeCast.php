@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities;
 
-use BadMethodCallException;
 use Closure;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use stdClass;
 use Traversable;
-use Windwalker\Utilities\Assert\Assert;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Classes\PreventInitialTrait;
 use Windwalker\Utilities\Contract\DumpableInterface;
 use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Exception\ExceptionFactory;
+
+use function Windwalker\get_object_values;
 
 /**
  * The TypeCast class.
@@ -75,11 +75,16 @@ abstract class TypeCast
      * @param  mixed  $data          The data to convert.
      * @param  bool   $recursive     Recursive if data is nested.
      * @param  bool   $onlyDumpable  Objects only implements DumpableInterface will convert to array.
+     * @param  ?int   $filter        Thr ReflectionProperty filters to filter properties.
      *
      * @return  array  The converted array.
      */
-    public static function toArray(mixed $data, bool $recursive = false, bool $onlyDumpable = false): array
-    {
+    public static function toArray(
+        mixed $data,
+        bool $recursive = false,
+        bool $onlyDumpable = false,
+        ?int $filter = null
+    ): array {
         // Ensure the input data is an array.
         if ($data instanceof DumpableInterface) {
             $data = $data->dump($recursive);
@@ -90,7 +95,7 @@ abstract class TypeCast
         } elseif ($data instanceof Traversable) {
             $data = iterator_to_array($data);
         } elseif (is_object($data)) {
-            $data = get_object_vars($data);
+            $data = get_object_values($data, $filter);
         } else {
             $data = (array) $data;
         }
@@ -145,8 +150,15 @@ abstract class TypeCast
      *
      * @since   2.0
      */
-    public static function toObject(array $array, bool $recursive = false, string $class = stdClass::class): object
-    {
+    public static function toObject(
+        array|object $array,
+        bool $recursive = false,
+        string $class = stdClass::class
+    ): object {
+        if (is_object($array)) {
+            return $array;
+        }
+
         $obj = new $class();
 
         foreach ($array as $k => $v) {
@@ -446,8 +458,8 @@ abstract class TypeCast
 
                         // Use regular expressions to check is valid float expression.
                         // Based on http://php.net/manual/en/language.types.float.php
-                        $lnum    = "[0-9]+";
-                        $dnum    = "([0-9]*[\.]{$lnum})|({$lnum}[\.][0-9]*)";
+                        $lnum = "[0-9]+";
+                        $dnum = "([0-9]*[\.]{$lnum})|({$lnum}[\.][0-9]*)";
                         $expDnum = "/^[+-]?(({$lnum}|{$dnum})[eE][+-]?{$lnum})$/";
 
                         return

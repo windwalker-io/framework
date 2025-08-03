@@ -466,4 +466,59 @@ namespace Windwalker {
             return AttributesAccessor::getAttributesFromAny($ref, $attr, $flags) !== [];
         }
     }
+
+    if (!function_exists('\Windwalker\get_object_props')) {
+        /**
+         * @param  object    $object
+         * @param  int|null  $filter
+         *
+         * @return  array<\ReflectionProperty>
+         */
+        function get_object_props(
+            object $object,
+            ?int $filter = null
+        ): array {
+            $filter ??= \ReflectionProperty::IS_PUBLIC
+                | \ReflectionProperty::IS_PROTECTED
+                | \ReflectionProperty::IS_PRIVATE;
+
+            $values = [];
+
+            $ref = new \ReflectionObject($object);
+            $props = $ref->getProperties($filter);
+
+            foreach ($props as $prop) {
+                $name = $prop->getName();
+
+                if (!$prop->isInitialized($object)) {
+                    continue;
+                }
+
+                if (!str_starts_with($name, "\0")) {
+                    if (!($filter & \ReflectionProperty::IS_VIRTUAL) && $prop->isVirtual()) {
+                        continue;
+                    }
+
+                    $values[$name] = $prop;
+                }
+            }
+
+            return $values;
+        }
+    }
+
+    if (!function_exists('\Windwalker\get_object_values')) {
+        function get_object_values(
+            object $object,
+            ?int $filter = null
+        ): array {
+            return array_map(
+                static fn (\ReflectionProperty $prop) => $prop->getValue($object),
+                get_object_props(
+                    $object,
+                    $filter
+                )
+            );
+        }
+    }
 }
