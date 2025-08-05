@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
-use Asika\ObjectMetadata\ObjectMetadata;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
 use Windwalker\ORM\Attributes\JsonNoSerialize;
-use Windwalker\ORM\Attributes\JsonSerializer;
 use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Relation\RelationCollection;
 use Windwalker\ORM\Relation\RelationProxies;
 use Windwalker\ORM\Relation\Strategy\RelationStrategyInterface;
 use Windwalker\Utilities\Accessible\AccessorBCTrait;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
-
-use function Windwalker\filter;
-use function Windwalker\get_object_values;
 
 /**
  * The AbstractEntity class.
@@ -135,9 +130,9 @@ trait EntityTrait
      *
      * @inheritDoc
      */
-    public function dump(bool $recursive = false, bool $onlyDumpable = false, ?int $filter = null): array
+    public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        return TypeCast::toArray(get_object_values($this, $filter), $recursive, $onlyDumpable, $filter);
+        return TypeCast::toArray(get_object_vars($this), $recursive, $onlyDumpable);
     }
 
     /**
@@ -145,9 +140,7 @@ trait EntityTrait
      */
     public function jsonSerialize(): array
     {
-        $item = $this->dump(
-            filter: ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED
-        );
+        $item = $this->dump();
 
         foreach ($item as $key => $value) {
             $prop = new ReflectionProperty($this, $key);

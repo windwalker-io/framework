@@ -7,6 +7,8 @@ namespace Windwalker\Data;
 use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
+use Windwalker\ORM\Attributes\JsonNoSerialize;
+use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
@@ -69,15 +71,7 @@ trait ValueObjectTrait
         $values = TypeCast::toArray($data);
 
         foreach ($values as $key => $value) {
-            if (!property_exists($this, (string) $key)) {
-                if (str_contains((string) $key, '_')) {
-                    $key = StrNormalize::toCamelCase((string) $key);
-                } else {
-                    $key = StrNormalize::toSnakeCase((string) $key);
-                }
-            }
-
-            // Haydrating
+            // Hydrating
             $this->hydrateField($key, $value);
         }
 
@@ -133,7 +127,7 @@ trait ValueObjectTrait
 
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        return TypeCast::toArray(get_object_values($this), $recursive, $onlyDumpable);
+        return TypeCast::toArray(get_object_vars($this), $recursive, $onlyDumpable);
     }
 
     /**
@@ -197,7 +191,32 @@ trait ValueObjectTrait
      */
     public function jsonSerialize(): mixed
     {
-        return $this->dump();
+        $item = get_object_vars($this);
+
+        foreach ($item as $key => $value) {
+            $prop = new \ReflectionProperty($this, $key);
+            $attrs = AttributesAccessor::getAttributesFromAny(
+                $prop,
+                JsonSerializerInterface::class,
+                \ReflectionAttribute::IS_INSTANCEOF
+            );
+
+            /** @var \ReflectionAttribute<JsonSerializerInterface> $attr */
+            foreach ($attrs as $attr) {
+                if ($attr instanceof JsonNoSerialize) {
+                    unset($item[$key]);
+                    continue 2;
+                }
+
+                $attrInstance = $attr->newInstance();
+
+                $value = $attrInstance->serialize($value);
+            }
+
+            $item[$key] = $value;
+        }
+
+        return $item;
     }
 
     public function __toString(): string

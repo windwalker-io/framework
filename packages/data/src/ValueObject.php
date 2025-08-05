@@ -43,4 +43,28 @@ class ValueObject implements ValueObjectInterface
         // Back to legacy constructor.
         return new static($data);
     }
+
+    public function fill(mixed $data): static
+    {
+        if (is_string($data) && is_json($data)) {
+            $data = json_decode($data, true);
+        }
+
+        $values = TypeCast::toArray($data);
+
+        foreach ($values as $key => $value) {
+            if (!property_exists($this, (string) $key)) {
+                if (str_contains((string) $key, '_')) {
+                    $key = StrNormalize::toCamelCase((string) $key);
+                } else {
+                    $key = StrNormalize::toSnakeCase((string) $key);
+                }
+            }
+
+            // Haydrating
+            $this->hydrateField($key, $value);
+        }
+
+        return $this;
+    }
 }
