@@ -97,14 +97,14 @@ trait WhereConcernTrait
      * a named param like: `:wqp__{ordering}` and re-calc the order when every time rendering Query object,
      * so we can make sure the variables won't be conflict.
      *
-     * @param  string  $column
-     * @param  mixed   $operator
-     * @param  mixed   $value
+     * @param  string|ClauseInterface  $column
+     * @param  mixed                   $operator
+     * @param  mixed                   $value
      *
      * @return  array
      */
     protected function handleOperatorAndValue(
-        string $column,
+        string|ClauseInterface $column,
         mixed $operator,
         mixed $value,
     ): array {

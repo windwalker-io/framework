@@ -17,6 +17,7 @@ use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
 use Windwalker\Query\Clause\AsClause;
+use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\JoinClause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
@@ -350,9 +351,12 @@ class SelectorQuery extends Query implements EventAwareInterface
         return [$colAttr, $metadata];
     }
 
-    protected function handleOperatorAndValue(string $column, mixed $operator, mixed $value): array
-    {
-        if ($value !== null) {
+    protected function handleOperatorAndValue(
+        string|ClauseInterface $column,
+        mixed $operator,
+        mixed $value
+    ): array {
+        if ($value !== null && is_string($column)) {
             [$colAttr] = $this->getColumnInfoFromColumnString($column);
 
             if ($colAttr && $prop = $colAttr->getProperty()) {
