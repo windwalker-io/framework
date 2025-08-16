@@ -1210,14 +1210,16 @@ abstract class Arr
 
         $level = 5;
 
-        if (count($args) > 1) {
-            $last = array_pop($args);
+        if (array_is_list($args) && count($args) > 1) {
+            $last = $args[array_key_last($args)];
 
             if (is_int($last)) {
                 $level = $last;
-            } else {
-                $args[] = $last;
+                array_pop($args);
             }
+        } elseif (array_key_last($args) === 'deep' && is_int($args['deep'])) {
+            $level = $args['deep'];
+            unset($args['deep']);
         }
 
         fwrite($output, "\n\n");
@@ -1227,14 +1229,17 @@ abstract class Arr
         }
 
         // Dump Multiple values
-        if (count($args) > 1) {
+        if (count($args) > 1 || !array_is_list($args)) {
             $prints = [];
 
-            $i = 1;
+            foreach ($args as $i => $arg) {
+                if (is_int($i)) {
+                    $scope = sprintf("[Value %s]", $i + 1);
+                } else {
+                    $scope = "[$i]";
+                }
 
-            foreach ($args as $arg) {
-                $prints[] = '[Value ' . $i . "]\n" . $dumper($arg, $level);
-                $i++;
+                $prints[] = $scope . "\n" . $dumper($arg, $level);
             }
 
             fwrite($output, implode("\n\n", $prints));
