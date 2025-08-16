@@ -15,11 +15,13 @@ use Windwalker\Utilities\TypeCast;
 
 /**
  * The ValueObject class.
+ *
+ * @deprecated  Use Record instead.
  */
 #[\AllowDynamicProperties]
-class ValueObject implements ValueObjectInterface
+class ValueObject implements RecordInterface
 {
-    use ValueObjectTrait;
+    use RecordTrait;
 
     public function __construct(mixed $data = null)
     {

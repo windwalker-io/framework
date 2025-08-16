@@ -14,7 +14,7 @@ use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\get_object_values;
 
-trait ValueObjectTrait
+trait RecordTrait
 {
     public static function wrapWith(...$data): static
     {

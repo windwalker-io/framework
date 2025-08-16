@@ -7,7 +7,7 @@ namespace Windwalker\Data;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Contract\DumpableInterface;
 
-interface ValueObjectInterface extends
+interface RecordInterface extends
     ArrayAccessibleInterface,
     DumpableInterface,
     \IteratorAggregate,
