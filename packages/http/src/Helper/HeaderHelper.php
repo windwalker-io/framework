@@ -47,7 +47,7 @@ abstract class HeaderHelper
      *
      * @return string  Found header value.
      *
-     * @since  3.0
+     * @since      3.0
      *
      * @deprecated Use {@see HttpParameters} instead.
      */
@@ -289,10 +289,12 @@ abstract class HeaderHelper
     /**
      * Prepare attachment headers to response object.
      *
-     * @param  ResponseInterface  $response  The response object.
-     * @param  string|null        $filename  Download file name.
+     * @template T of ResponseInterface
      *
-     * @return  ResponseInterface
+     * @param  T            $response  The response object.
+     * @param  string|null  $filename  Download file name.
+     *
+     * @return  T
      */
     public static function prepareAttachmentHeaders(
         ResponseInterface $response,

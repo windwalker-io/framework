@@ -67,11 +67,17 @@ class Response implements ResponseInterface
             return $response;
         }
 
-        return new static(
-            $response->getBody(),
-            $response->getStatusCode(),
-            $response->getHeaders()
-        );
+        $res = new static()
+            ->withStatus($response->getStatusCode(), $response->getReasonPhrase())
+            ->withBody($response->getBody());
+
+        foreach ($response->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                $res = $res->withAddedHeader($name, $value);
+            }
+        }
+
+        return $res;
     }
 
     public static function readFrom(mixed $body, int $status = 200, array $headers = []): static

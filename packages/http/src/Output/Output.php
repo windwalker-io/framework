@@ -6,6 +6,7 @@ namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Response\CallbackResponse;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
@@ -54,7 +55,12 @@ class Output implements OutputInterface
             $this->sendHeaders($response);
         }
 
-        $this->sendBody($response);
+        if ($response instanceof CallbackResponse) {
+            $response->respond($this);
+            $this->close();
+        } else {
+            $this->sendBody($response);
+        }
     }
 
     /**
