@@ -168,4 +168,96 @@ class AttributesAccessor
 
         return array_merge(...$attrs);
     }
+
+    /**
+     * @template Member of \Reflector
+     * @template Attr of object
+     *
+     * @param  string|object                       $ref
+     * @param  class-string<Attr>                  $name
+     * @param  int                                 $flags
+     * @param  class-string<Member>|\Closure|null  $filter
+     *
+     * @return  \Generator<string, array{ Member, ReflectionAttribute<Attr> }>
+     */
+    public static function getMembersWithAttribute(
+        string|object $ref,
+        string $name,
+        int $flags = 0,
+        \Closure|string|null $filter = null
+    ): \Generator {
+        $ref = ReflectAccessor::reflect($ref);
+
+        foreach (static::findAttributeOfMembers($ref, $name, $flags) as $refName => [$memberRef, $attr]) {
+            if (is_string($filter) && !is_a($memberRef, $filter, true)) {
+                continue;
+            }
+
+            if ($filter instanceof \Closure && !$filter($memberRef, $attr)) {
+                continue;
+            }
+
+            yield $refName => [$memberRef, $attr];
+        }
+    }
+
+    /**
+     * @template Member of \Reflector
+     * @template Attr of object
+     *
+     * @param  string|object                       $ref
+     * @param  class-string<Attr>                  $name
+     * @param  int                                 $flags
+     * @param  class-string<Member>|\Closure|null  $filter
+     *
+     * @return  array{ Member, ReflectionAttribute<Attr> }|null
+     */
+    public static function getFirstMemberWithAttribute(
+        string|object $ref,
+        string $name,
+        int $flags = 0,
+        \Closure|string|null $filter = null
+    ): ?array {
+        return static::getMembersWithAttribute($ref, $name, $flags, $filter)->current();
+    }
+
+    /**
+     * @param  ReflectionClass  $ref
+     * @param  string           $name
+     * @param  int              $flags
+     *
+     * @return  \Generator<string, array{ \Reflector, ReflectionAttribute }>
+     */
+    private static function findAttributeOfMembers(
+        \ReflectionClass $ref,
+        string $name,
+        int $flags = 0
+    ): \Generator {
+        /** @var \ReflectionClassConstant $constant */
+        foreach ($ref->getConstants() as $constant) {
+            if ($attr = static::getFirstAttribute($constant, $name, $flags)) {
+                yield $constant->getName() => [$constant, $attr];
+            }
+        }
+
+        foreach ($ref->getProperties() as $property) {
+            if ($attr = static::getFirstAttribute($property, $name, $flags)) {
+                yield $property->getName() => [$property, $attr];
+            }
+        }
+
+        foreach ($ref->getMethods() as $method) {
+            if ($attr = static::getFirstAttribute($method, $name, $flags)) {
+                yield $method->getName() => [$method, $attr];
+            }
+        }
+
+        if ($ref instanceof \ReflectionEnum) {
+            foreach ($ref->getCases() as $case) {
+                if ($attr = static::getFirstAttribute($case, $name, $flags)) {
+                    yield $case->getName() => [$case, $attr];
+                }
+            }
+        }
+    }
 }
