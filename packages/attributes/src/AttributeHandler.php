@@ -27,10 +27,10 @@ class AttributeHandler
      */
     public function __construct(
         callable $handler,
-        protected Reflector $reflector,
-        protected ?object $object,
-        protected AttributesResolver $resolver,
-        protected array $options = [],
+        public protected(set) Reflector $reflector,
+        public protected(set) ?object $object,
+        public protected(set) AttributesResolver $resolver,
+        public protected(set) array $options = [],
     ) {
         $this->handler = $handler;
 
