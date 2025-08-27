@@ -6,6 +6,7 @@ namespace Windwalker\ORM\Cast;
 
 use InvalidArgumentException;
 use Windwalker\ORM\Attributes\Cast;
+use Windwalker\ORM\Attributes\CastAttributeInterface;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
@@ -244,7 +245,7 @@ class CastManager
     public function wrapCastCallback(callable $caster, int $options): \Closure
     {
         return function (mixed $value, ORM $orm, ?object $entity = null, bool $isNew = false) use ($options, $caster) {
-            if ($value === '' && ($options & Cast::EMPTY_STRING_TO_NULL)) {
+            if ($value === '' && ($options & CastAttributeInterface::EMPTY_STRING_TO_NULL)) {
                 $value = null;
             }
 

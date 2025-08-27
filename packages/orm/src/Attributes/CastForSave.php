@@ -11,7 +11,7 @@ use Attribute;
  * And will not execute when Entity hydrating and extracting in object level.
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
-class CastForSave
+class CastForSave implements CastForSaveInterface
 {
     /**
      * CastForSave constructor.

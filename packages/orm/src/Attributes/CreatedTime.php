@@ -13,20 +13,17 @@ use Windwalker\ORM\ORM;
  * The CurrentTime class.
  */
 #[Attribute]
-class CreatedTime extends CastForSave
+class CreatedTime implements CastForSaveInterface
 {
-    protected string $time = 'now';
-
     /**
      * CurrentTime constructor.
      *
      * @param  string  $time
+     * @param  bool    $onlyUpdate
      */
-    public function __construct(string $time = 'now', public bool $onlyUpdate = true)
+    public function __construct(protected string $time = 'now', public bool $onlyUpdate = true)
     {
-        $this->time = $time;
-
-        parent::__construct(null);
+        //
     }
 
     public function getCurrent(): DateTimeImmutable
@@ -39,7 +36,7 @@ class CreatedTime extends CastForSave
         return $this->getCurrent();
     }
 
-    protected function getDefaultCaster(): callable
+    public function getCaster(): \Closure
     {
         return function (mixed $value, ORM $orm, object $entity, bool $isNew = false) {
             $isNull = $value === null || $orm->getDb()->isNullDate($value);

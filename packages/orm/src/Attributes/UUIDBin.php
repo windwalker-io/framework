@@ -15,7 +15,7 @@ use Windwalker\Query\Wrapper\UuidBinWrapper;
  * The UUID class.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
-class UUIDBin extends CastForSave implements CastInterface
+class UUIDBin implements CastInterface, CastForSaveInterface
 {
     use UUIDTrait;
 
@@ -26,13 +26,11 @@ class UUIDBin extends CastForSave implements CastInterface
      */
     public function __construct(
         public string|int $version = self::UUID7,
-        public mixed $caster = null,
         public int $options = 0
     ) {
-        $this->caster ??= $this->getUUIDCaster();
     }
 
-    public function getUUIDCaster(): \Closure
+    public function getCaster(): \Closure
     {
         return function ($value) {
             static::checkLibrary();

@@ -11,7 +11,6 @@ use JsonException;
 use LogicException;
 use ReflectionAttribute;
 use ReflectionProperty;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
@@ -20,7 +19,7 @@ use Windwalker\Event\Event;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventInterface;
-use Windwalker\ORM\Attributes\CastForSave;
+use Windwalker\ORM\Attributes\CastForSaveInterface;
 use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Event\{AbstractEntityEvent,
     AbstractSaveEvent,
@@ -42,6 +41,7 @@ use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -1556,11 +1556,11 @@ class EntityMapper implements EventAwareInterface
 
         AttributesAccessor::runAttributeIfExists(
             $prop,
-            CastForSave::class,
-            function (CastForSave $attr) use ($isNew, $entity, $castManager, &$value) {
+            CastForSaveInterface::class,
+            function (CastForSaveInterface $attr) use ($isNew, $entity, $castManager, &$value) {
                 $caster = $castManager->wrapCastCallback(
                     $castManager->castToCallback($attr->getCaster() ?? $attr, $attr->options ?? 0),
-                    $attr->options
+                    $attr->options ?? 0
                 );
 
                 $value = $caster($value, $this->getORM(), $entity, $isNew);
