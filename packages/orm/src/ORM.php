@@ -53,44 +53,13 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The ORM class.
- *
- * phpcs:disable
- * @formatter:off
- *
- * @see EntityMapper
- *
- * @method  object|null   findOne(string $entityClass, mixed $conditions = [], ?string $className = null, int $options = 0)
- * @method  object   mustFindOne(string $entityClass, mixed $conditions = [], ?string $className = null, int $options = 0)
- * @method  ResultIterator findList(string $entityClass, mixed $conditions = [], ?string $className = null, int $options = 0)
- * @method  string|null   findResult(string $entityClass, string|RawWrapper $column, mixed $conditions = [], int $options = 0)
- * @method  Collection   findColumn(string $entityClass, string $column, mixed $conditions = [], int $options = 0)
- * @method  int   countColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
- * @method  float   sumColumn(string $entityClass, string $column, mixed $conditions = [], array|string $groups = null)
- * @method  object  createOne(string|object $entityClass, array|object $item = [])
- * @method  iterable      createMultiple(string|object $entityClass, iterable $items = [])
- * @method  StatementInterface|null  updateOne(string|object $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
- * @method  object[]      updateMultiple(string|object $entityClass, iterable $items = [], array|string $condFields = null, int $options = 0)
- * @method  StatementInterface  updateWhere(string $entityClass, array|object $data, mixed $conditions = null)
- * @method  StatementInterface[]  updateBatch(string $entityClass, array|object $data, mixed $conditions = null, int $options = 0)
- * @method  iterable|object[] saveMultiple(string|object $entityClass, iterable $items = [], string|array $condFields = null, int $options = 0)
- * @method  object        saveOne(string|object $entityClass, array|object $item = [], array|string $condFields = null, int $options = 0)
- * @method  object        findOneOrCreate(string $entityClass, mixed $conditions, mixed $initData = null, bool $mergeConditions = true)
- * @method  object        updateOneOrCreate(string $entityClass, array|object $item, mixed $initData = null, ?array $condFields = null, int $options = 0)
- * @method  StatementInterface[]  deleteWhere(string $entityClass, mixed $conditions)
- * @method  iterable|object[]     flush(string $entityClass, iterable $items, mixed $conditions = [])
- * @method  StatementInterface[]  sync(string $entityClass, iterable $items, mixed $conditions = [], ?array $compareKeys = null)
- * @method  object[]  copy(string $entityClass, mixed $conditions = [], callable|iterable $newValue = null, int $options = 0)
- * @method  void  increment(string $entityClass, string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
- * @method  void  decrement(string $entityClass, string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0)
- *
- * @formatter:on
- * phpcs:enable
  */
 class ORM implements EventAwareInterface
 {
     use EventAwareTrait;
     use AttributesAwareTrait;
     use EntityMapperConstantsTrait;
+    use ORMProxyTrait;
 
     protected ?FieldHydratorInterface $hydrator = null;
 

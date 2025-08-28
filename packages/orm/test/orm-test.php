@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Windwalker\Data\Collection;
 use Windwalker\ORM\DataMapper;
 use Windwalker\ORM\ORM;
+use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubUser;
 
 $orm = new ORM($db);

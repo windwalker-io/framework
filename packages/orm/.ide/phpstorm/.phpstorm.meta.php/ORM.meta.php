@@ -14,35 +14,35 @@ namespace PHPSTORM_META {
         type(0)
     );
 
-    override(
-        \Windwalker\ORM\ORM::findOne(0),
-        type(0)
-    );
-
-    override(
-        \Windwalker\ORM\ORM::findOne(2),
-        type(2)
-    );
-
-    override(
-        \Windwalker\ORM\ORM::mustFindOne(0),
-        type(0)
-    );
-
-    override(
-        \Windwalker\ORM\ORM::mustFindOne(2),
-        type(2)
-    );
-
-    override(
-        \Windwalker\ORM\ORM::createOne(0),
-        type(0)
-    );
-
-    override(
-        \Windwalker\ORM\ORM::findOneOrCreate(0),
-        type(0)
-    );
+    // override(
+    //     \Windwalker\ORM\ORM::findOne(0),
+    //     type(0)
+    // );
+    //
+    // override(
+    //     \Windwalker\ORM\ORM::findOne(2),
+    //     type(2)
+    // );
+    //
+    // override(
+    //     \Windwalker\ORM\ORM::mustFindOne(0),
+    //     type(0)
+    // );
+    //
+    // override(
+    //     \Windwalker\ORM\ORM::mustFindOne(2),
+    //     type(2)
+    // );
+    //
+    // override(
+    //     \Windwalker\ORM\ORM::createOne(0),
+    //     type(0)
+    // );
+    //
+    // override(
+    //     \Windwalker\ORM\ORM::findOneOrCreate(0),
+    //     type(0)
+    // );
 
     override(
         \Windwalker\ORM\SelectorQuery::get(0),

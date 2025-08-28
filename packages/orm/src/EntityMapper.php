@@ -235,13 +235,13 @@ class EntityMapper implements EventAwareInterface
      * @param  Conditions         $conditions
      * @param  ORMOptions|int     $options
      *
-     * @return  string|null
+     * @return  mixed
      */
     public function findResult(
         string|RawWrapper $column,
         mixed $conditions = [],
         ORMOptions|int $options = new ORMOptions()
-    ): ?string {
+    ): mixed {
         $options = ORMOptions::wrap($options);
 
         return $this->select($column)
@@ -1086,7 +1086,7 @@ class EntityMapper implements EventAwareInterface
      * @param  array|null      $compareKeys
      * @param  ORMOptions|int  $options
      *
-     * @return  array<array<T>>
+     * @return  array{ array<T>, array<T>, array<T> }
      *
      * @throws JsonException
      * @throws \ReflectionException
