@@ -482,11 +482,6 @@ abstract class AbstractPlatform
         return $column;
     }
 
-    /**
-     * start
-     *
-     * @return  static
-     */
     public function transactionStart(): static
     {
         $driver = $this->db->getDriver();
@@ -505,10 +500,6 @@ abstract class AbstractPlatform
         return $this;
     }
 
-    /**
-     * @param  bool  $releaseConnection  *
-     * @return  static
-     */
     public function transactionCommit(bool $releaseConnection = true): static
     {
         $driver = $this->db->getDriver();
@@ -528,12 +519,6 @@ abstract class AbstractPlatform
         return $this;
     }
 
-    /**
-     * rollback
-     *
-     * @param  bool  $releaseConnection  *
-     * @return  static
-     */
     public function transactionRollback(bool $releaseConnection = true): static
     {
         $driver = $this->db->getDriver();
@@ -554,9 +539,12 @@ abstract class AbstractPlatform
         return $this;
     }
 
+    public function isInTransaction(): bool
+    {
+        return $this->depth > 0 || $this->db->getDriver()->getKeptConnection() !== null;
+    }
+
     /**
-     * transaction
-     *
      * @param  callable  $callback
      * @param  bool      $autoCommit
      * @param  bool      $enabled

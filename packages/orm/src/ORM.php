@@ -445,6 +445,11 @@ class ORM implements EventAwareInterface
         return $this->db->transaction($callback, $autoCommit, $enabled);
     }
 
+    public function isInTransaction(): bool
+    {
+        return $this->db->isInTransaction();
+    }
+
     /**
      * @return EntityMetadataCollection
      */

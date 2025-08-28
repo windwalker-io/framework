@@ -175,18 +175,18 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return $conn;
     }
 
-    protected function runAfterConnects(ConnectionInterface $connection)
+    protected function runAfterConnects(ConnectionInterface $connection): void
     {
         $driver = clone $this;
         $driver->connection = $connection;
 
-        $aferConnectCallbacks = $this->options['after_connect'] ?? [];
+        $afterConnectCallbacks = $this->options['after_connect'] ?? [];
 
-        if (!is_array($aferConnectCallbacks)) {
-            $aferConnectCallbacks = [$aferConnectCallbacks];
+        if (!is_array($afterConnectCallbacks)) {
+            $afterConnectCallbacks = [$afterConnectCallbacks];
         }
 
-        foreach ($aferConnectCallbacks as $callback) {
+        foreach ($afterConnectCallbacks as $callback) {
             if (is_string($callback)) {
                 $driver->execute($callback);
             } else {
@@ -223,6 +223,11 @@ abstract class AbstractDriver implements HydratorAwareInterface
         }
 
         return null;
+    }
+
+    public function getKeptConnection(): ?ConnectionInterface
+    {
+        return $this->connection;
     }
 
     public function releaseConnection(ConnectionInterface $conn): void

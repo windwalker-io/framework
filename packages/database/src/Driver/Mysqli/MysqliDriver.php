@@ -105,6 +105,8 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @param  bool  $releaseConnection  *
      *
+     * @return bool
+     * @throws \Throwable
      * @inheritDoc
      */
     public function transactionRollback(bool $releaseConnection = true): bool

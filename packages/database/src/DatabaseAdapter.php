@@ -309,8 +309,6 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     }
 
     /**
-     * transaction
-     *
      * @param  callable  $callback
      * @param  bool      $autoCommit
      * @param  bool      $enabled
@@ -322,6 +320,11 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
     {
         return $this->getPlatform()->transaction($callback, $autoCommit, $enabled);
+    }
+
+    public function isInTransaction(): bool
+    {
+        return $this->getPlatform()->isInTransaction();
     }
 
     public function countWith(Query|string $query): int

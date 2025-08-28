@@ -50,7 +50,7 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
      *
      * @return void
      */
-    public function testTransactionCommit()
+    public function testTransactionCommit(): void
     {
         $reseter = AbstractReseter::create(static::$platform);
         $reseter->clearAllTables(static::$baseConn, static::$dbname);
@@ -63,9 +63,13 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 
         $tran = $this->instance->transactionStart();
 
+        self::assertTrue($this->instance->isInTransaction());
+
         static::$db->execute($sql);
 
         $this->instance->transactionCommit();
+
+        self::assertFalse($this->instance->isInTransaction());
 
         $result = static::$db->prepare('SELECT title FROM #__flower WHERE title = \'A\'')->result();
 
@@ -77,7 +81,7 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
      *
      * @return  void
      */
-    public function testTransactionNested()
+    public function testTransactionNested(): void
     {
         $table = '#__flower';
 
@@ -86,6 +90,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 
         $tran = $this->instance->transactionStart();
 
+        self::assertTrue($this->instance->isInTransaction());
+
         static::$db->execute($sql);
 
         // Level 2
@@ -93,10 +99,14 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 
         $tran = $this->instance->transactionStart();
 
+        self::assertTrue($this->instance->isInTransaction());
+
         static::$db->execute($sql);
 
         $this->instance->transactionRollback();
         $this->instance->transactionCommit();
+
+        self::assertFalse($this->instance->isInTransaction());
 
         $result = static::$db->prepare('SELECT title FROM #__flower WHERE title = \'D\'')->result();
         $this->assertEquals('D', $result);
