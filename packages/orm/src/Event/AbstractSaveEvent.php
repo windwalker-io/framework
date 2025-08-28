@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Event;
 
+use Windwalker\ORM\ORMOptions;
+
 /**
  * The AbstractSaveEvent class.
  */
@@ -36,7 +38,7 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
         public array|object $source = [],
         array $data = [],
         public ?array $oldData = null,
-        public int $options = 0,
+        public ORMOptions $options = new ORMOptions(),
         public array $extra = [],
     ) {
         parent::__construct($data);
@@ -45,7 +47,7 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
     /**
      * @deprecated  Use property instead.
      */
-    public function &getOptions(): int
+    public function getOptions(): ORMOptions
     {
         return $this->options;
     }

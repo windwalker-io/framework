@@ -156,19 +156,27 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  Conditions        $conditions
      * @param  ?class-string<T>  $className
-     * @param  int               $options
+     * @param  ORMOptions|int    $options
      *
      * @return  object|null|T
      */
-    public function findOne(mixed $conditions = [], ?string $className = null, int $options = 0): ?object
-    {
+    public function findOne(
+        mixed $conditions = [],
+        ?string $className = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): ?object {
+        $options = ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         return $this->from($metadata->getClassName())
             ->where($this->conditionsToWheres($conditions))
             ->tapIf(
-                (bool) ($options & static::FOR_UPDATE),
-                fn (Query $query) => $query->forUpdate()
+                (bool) $options->forUpdate,
+                fn(Query $query) => $query->forUpdate($options->forUpdateDo)
+            )
+            ->tapIf(
+                (bool) $options->forShare,
+                fn(Query $query) => $query->forShare($options->forShareDo)
             )
             ->get($className ?? $metadata->getClassName());
     }
@@ -176,12 +184,15 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  Conditions        $conditions
      * @param  ?class-string<T>  $className
-     * @param  int               $options
+     * @param  ORMOptions|int    $options
      *
      * @return  object|T
      */
-    public function mustFindOne(mixed $conditions = [], ?string $className = null, int $options = 0): object
-    {
+    public function mustFindOne(
+        mixed $conditions = [],
+        ?string $className = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): object {
         if (!$item = $this->findOne($conditions, $className, $options)) {
             throw new NoResultException($this->getTableName(), $conditions);
         }
@@ -192,20 +203,28 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  Conditions            $conditions
      * @param  class-string<T>|null  $className
-     * @param  int                   $options
+     * @param  ORMOptions|int        $options
      *
      * @return  ResultIterator<T>
      */
-    public function findList(mixed $conditions = [], ?string $className = null, int $options = 0): ResultIterator
-    {
+    public function findList(
+        mixed $conditions = [],
+        ?string $className = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): ResultIterator {
+        $options = ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         return new ResultIterator(
             $this->select()
                 ->where($this->conditionsToWheres($conditions))
                 ->tapIf(
-                    (bool) ($options & static::FOR_UPDATE),
-                    fn (Query $query) => $query->forUpdate()
+                    (bool) $options->forUpdate,
+                    fn(Query $query) => $query->forUpdate($options->forUpdateDo)
+                )
+                ->tapIf(
+                    (bool) $options->forShare,
+                    fn(Query $query) => $query->forShare($options->forShareDo)
                 )
                 ->getIterator($className ?? $metadata->getClassName())
         );
@@ -214,34 +233,53 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  string|RawWrapper  $column
      * @param  Conditions         $conditions
-     * @param  int                $options
+     * @param  ORMOptions|int     $options
      *
      * @return  string|null
      */
-    public function findResult(string|RawWrapper $column, mixed $conditions = [], int $options = 0): ?string
-    {
+    public function findResult(
+        string|RawWrapper $column,
+        mixed $conditions = [],
+        ORMOptions|int $options = new ORMOptions()
+    ): ?string {
+        $options = ORMOptions::wrap($options);
+
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
             ->tapIf(
-                (bool) ($options & static::FOR_UPDATE),
-                fn (Query $query) => $query->forUpdate()
+                (bool) $options->forUpdate,
+                fn(Query $query) => $query->forUpdate($options->forUpdateDo)
+            )
+            ->tapIf(
+                (bool) $options->forShare,
+                fn(Query $query) => $query->forShare($options->forShareDo)
             )
             ->result();
     }
 
     /**
-     * @param  string      $column
-     * @param  Conditions  $conditions
+     * @param  string          $column
+     * @param  Conditions      $conditions
+     * @param  ORMOptions|int  $options
      *
      * @return  Collection
      */
-    public function findColumn(string $column, mixed $conditions = [], int $options = 0): Collection
-    {
+    public function findColumn(
+        string $column,
+        mixed $conditions = [],
+        ORMOptions|int $options = new ORMOptions()
+    ): Collection {
+        $options = ORMOptions::wrap($options);
+
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
             ->tapIf(
-                (bool) ($options & static::FOR_UPDATE),
-                fn (Query $query) => $query->forUpdate()
+                (bool) $options->forUpdate,
+                fn(Query $query) => $query->forUpdate($options->forUpdateDo)
+            )
+            ->tapIf(
+                (bool) $options->forShare,
+                fn(Query $query) => $query->forShare($options->forShareDo)
             )
             ->loadColumn();
     }
@@ -287,16 +325,17 @@ class EntityMapper implements EventAwareInterface
     /**
      * createOne
      *
-     * @param  array|object  $source
-     * @param  int           $options
+     * @param  array|object    $source
+     * @param  ORMOptions|int  $options
      *
      * @return  object|T
      *
      * @throws JsonException
      * @throws \ReflectionException
      */
-    public function createOne(array|object $source = [], int $options = 0): object
+    public function createOne(array|object $source = [], ORMOptions|int $options = new ORMOptions()): object
     {
+        $options = ORMOptions::wrap($options);
         $pk = $this->getMainKey();
         $metadata = $this->getMetadata();
         $aiColumn = $this->getAutoIncrementColumn();
@@ -384,12 +423,14 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable  $items
-     * @param  int       $options
+     * @param  iterable        $items
+     * @param  ORMOptions|int  $options
      *
      * @return  iterable<T>
+     * @throws JsonException
+     * @throws \ReflectionException
      */
-    public function createMultiple(iterable $items, int $options = 0): iterable
+    public function createMultiple(iterable $items, ORMOptions|int $options = new ORMOptions()): iterable
     {
         /** @var array|object $item */
         foreach ($items as $k => $item) {
@@ -402,14 +443,15 @@ class EntityMapper implements EventAwareInterface
     public function updateOne(
         array|object $source = [],
         array|string|null $condFields = null,
-        int $options = 0,
+        ORMOptions|int $options = new ORMOptions(),
     ): ?StatementInterface {
         if ($source === []) {
             return null;
         }
 
+        $options = ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
-        $updateNulls = (bool) ($options & static::UPDATE_NULLS);
+        $updateNulls = $options->updateNulls;
 
         if ($this->metadata::isEntity($source)) {
             $updateNulls = true;
@@ -436,7 +478,7 @@ class EntityMapper implements EventAwareInterface
         // Get old data
         $oldData = null;
 
-        if (!($options & static::IGNORE_OLD_DATA) && $this->getKeys() && !empty($data[$this->getMainKey()])) {
+        if (!$options->ignoreOldData && $this->getKeys() && !empty($data[$this->getMainKey()])) {
             $oldData = $this->getDb()->select('*')
                 ->from($metadata->getTableName())
                 ->where($this->conditionsToWheres(Arr::only($data, $this->getKeys())))
@@ -517,16 +559,17 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * updateMultiple
-     *
      * @param  iterable           $items
      * @param  array|string|null  $condFields
-     * @param  int                $options
+     * @param  ORMOptions|int     $options
      *
      * @return  StatementInterface[]
      */
-    public function updateMultiple(iterable $items, array|string|null $condFields = null, int $options = 0): array
-    {
+    public function updateMultiple(
+        iterable $items,
+        array|string|null $condFields = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): array {
         $results = [];
 
         foreach ($items as $k => $item) {
@@ -544,15 +587,19 @@ class EntityMapper implements EventAwareInterface
      * `$mapper->updateWhere(new Data(array('published' => 0)), array('date' => '2014-03-02'))`
      * Means we make every records which date is 2014-03-02 unpublished.
      *
-     * @param  mixed       $source      The data we want to update to every rows.
-     * @param  Conditions  $conditions  Where conditions, you can use array or Compare object.
-     * @param  int         $options     The options.
+     * @param  mixed           $source      The data we want to update to every rows.
+     * @param  Conditions      $conditions  Where conditions, you can use array or Compare object.
+     * @param  ORMOptions|int  $options     The options.
      *
      * @return StatementInterface
      * @throws \ReflectionException
      */
-    public function updateWhere(array|object $source, mixed $conditions = null, int $options = 0): StatementInterface
-    {
+    public function updateWhere(
+        array|object $source,
+        mixed $conditions = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): StatementInterface {
+        $options = ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         $data = $this->extract($source);
@@ -590,17 +637,20 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * updateWhere
-     *
-     * @param  array|object  $data
-     * @param  Conditions    $conditions
-     * @param  int           $options
+     * @param  array|object    $data
+     * @param  Conditions      $conditions
+     * @param  ORMOptions|int  $options
      *
      * @return  StatementInterface[]
      * @throws \ReflectionException
      */
-    public function updateBatch(array|object $data, mixed $conditions = null, int $options = 0): array
-    {
+    public function updateBatch(
+        array|object $data,
+        mixed $conditions = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): array {
+        $options = ORMOptions::wrap($options);
+
         $dataToSave = $this->extract($data);
 
         $results = [];
@@ -622,8 +672,13 @@ class EntityMapper implements EventAwareInterface
      *
      * @throws \ReflectionException
      */
-    public function saveMultiple(iterable $items, string|array|null $condFields = null, int $options = 0): iterable
-    {
+    public function saveMultiple(
+        iterable $items,
+        string|array|null $condFields = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): iterable {
+        $options = ORMOptions::wrap($options);
+
         // Event
         foreach ($items as $k => $item) {
             // Do save
@@ -695,31 +750,37 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  array|object       $item
      * @param  array|string|null  $condFields
-     * @param  int                $options
+     * @param  ORMOptions|int     $options
      *
      * @return  object|T
      *
      * @throws \ReflectionException
      */
-    public function saveOne(array|object $item, array|string|null $condFields = null, int $options = 0): object
-    {
+    public function saveOne(
+        array|object $item,
+        array|string|null $condFields = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): object {
         return $this->saveMultiple([$item], $condFields, $options)[0];
     }
 
     /**
-     * @param  Conditions  $conditions
-     * @param  mixed|null  $initData
-     * @param  bool        $mergeConditions
-     * @param  int         $options
+     * @param  Conditions      $conditions
+     * @param  mixed|null      $initData
+     * @param  bool            $mergeConditions
+     * @param  ORMOptions|int  $options
      *
      * @return  object|T
+     * @throws JsonException
+     * @throws \ReflectionException
      */
     public function findOneOrCreate(
         mixed $conditions,
         mixed $initData = null,
         bool $mergeConditions = true,
-        int $options = 0
+        ORMOptions|int $options = new ORMOptions()
     ): object {
+        $options = ORMOptions::wrap($options);
         $item = $this->findOne($conditions);
 
         if ($item) {
@@ -756,21 +817,23 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  array|object  $item
-     * @param  mixed|null    $initData
-     * @param  array|null    $condFields
-     * @param  int           $options
+     * @param  array|object    $item
+     * @param  mixed|null      $initData
+     * @param  array|null      $condFields
+     * @param  ORMOptions|int  $options
      *
      * @return  object|T
      *
+     * @throws JsonException
      * @throws \ReflectionException
      */
     public function updateOneOrCreate(
         array|object $item,
         mixed $initData = null,
         ?array $condFields = null,
-        int $options = 0
+        ORMOptions|int $options = new ORMOptions()
     ): object {
+        $options = ORMOptions::wrap($options);
         $condFields = $condFields ?: $this->getKeys();
 
         $conditions = [];
@@ -803,15 +866,17 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  Conditions  $conditions
-     * @param  int         $options
+     * @param  Conditions      $conditions
+     * @param  ORMOptions|int  $options
      *
      * @return  void
+     * @throws \ReflectionException
      */
-    public function deleteWhere(mixed $conditions, int $options = 0): void
+    public function deleteWhere(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
-        // Event
+        $options = ORMOptions::wrap($options);
 
+        // Event
         $metadata = $this->getMetadata();
         $writer = $this->getDb()->getWriter();
         $entityObject = null;
@@ -906,20 +971,28 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable    $items
-     * @param  Conditions  $conditions
-     * @param  int         $options
+     * @param  iterable        $items
+     * @param  Conditions      $conditions
+     * @param  ORMOptions|int  $options
      *
      * @return  iterable<T>
+     * @throws JsonException
+     * @throws \ReflectionException
      */
-    public function flush(iterable $items, mixed $conditions = [], int $options = 0): iterable
-    {
+    public function flush(
+        iterable $items,
+        mixed $conditions = [],
+        ORMOptions|int $options = new ORMOptions()
+    ): iterable {
+        $options = ORMOptions::wrap($options);
+
         // Handling conditions
         $conditions = $this->conditionsToWheres($conditions);
 
         // Event
+        $options->ignoreEvents = true;
 
-        $this->deleteWhere($conditions, $options | static::IGNORE_EVENTS);
+        $this->deleteWhere($conditions, $options);
 
         $items = $this->createMultiple($items, $options);
 
@@ -931,14 +1004,19 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  Conditions              $conditions
      * @param  callable|iterable|null  $newValue
-     * @param  int                     $options
+     * @param  ORMOptions|int          $options
      *
      * @return  array<T>
      * @throws JsonException
      * @throws \ReflectionException
      */
-    public function copy(mixed $conditions = [], callable|iterable|null $newValue = null, int $options = 0): array
-    {
+    public function copy(
+        mixed $conditions = [],
+        callable|iterable|null $newValue = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): array {
+        $options = ORMOptions::wrap($options);
+
         $items = $this->findList($conditions, Collection::class);
         $key = $this->getMainKey();
         $metadata = $this->getMetadata();
@@ -1003,17 +1081,24 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  iterable    $items
-     * @param  Conditions  $conditions
-     * @param  array|null  $compareKeys
-     * @param  int         $options
+     * @param  iterable        $items
+     * @param  Conditions      $conditions
+     * @param  array|null      $compareKeys
+     * @param  ORMOptions|int  $options
      *
      * @return  array<array<T>>
      *
+     * @throws JsonException
      * @throws \ReflectionException
      */
-    public function sync(iterable $items, mixed $conditions = [], ?array $compareKeys = null, int $options = 0): array
-    {
+    public function sync(
+        iterable $items,
+        mixed $conditions = [],
+        ?array $compareKeys = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): array {
+        $options = ORMOptions::wrap($options);
+
         // Handling conditions
         $metadata = $this->getMetadata();
         $conditions = $this->conditionsToWheres($conditions);
@@ -1109,8 +1194,12 @@ class EntityMapper implements EventAwareInterface
         return [$creates, $keep];
     }
 
-    public function increment(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0): void
-    {
+    public function increment(
+        string|array $fields,
+        mixed $conditions,
+        int|float $num = 1,
+        ORMOptions|int $options = new ORMOptions(),
+    ): void {
         if ($num < 0) {
             throw new InvalidArgumentException('Increment value should be positive number.');
         }
@@ -1118,8 +1207,12 @@ class EntityMapper implements EventAwareInterface
         $this->fieldOffsets('+', $fields, $conditions, $num, $options);
     }
 
-    public function decrement(string|array $fields, mixed $conditions, int|float $num = 1, int $options = 0): void
-    {
+    public function decrement(
+        string|array $fields,
+        mixed $conditions,
+        int|float $num = 1,
+        ORMOptions|int $options = new ORMOptions()
+    ): void {
         if ($num < 0) {
             throw new InvalidArgumentException('Decrement value should be positive number.');
         }
@@ -1132,7 +1225,7 @@ class EntityMapper implements EventAwareInterface
         string|array $fields,
         mixed $conditions,
         int|float $num,
-        int $options = 0
+        ORMOptions|int $options = new ORMOptions(),
     ): void {
         if ($fields === '' || $fields === []) {
             throw new InvalidArgumentException('Fields is invalid or empty');
@@ -1140,13 +1233,9 @@ class EntityMapper implements EventAwareInterface
 
         $fields = (array) $fields;
 
-        $transaction = (bool) ($options & static::TRANSACTION);
-
         $this->getDb()->transaction(
-            function () use ($transaction, $operator, $num, $options, $fields, $conditions) {
-                $ignoreEvents = (bool) ($options & static::IGNORE_EVENTS);
-
-                if ($ignoreEvents) {
+            function () use ($operator, $num, $options, $fields, $conditions) {
+                if ($options->ignoreEvents) {
                     $query = $this->update()
                         ->where($this->conditionsToWheres($conditions));
 
@@ -1164,7 +1253,7 @@ class EntityMapper implements EventAwareInterface
                 $items = $this->select()
                     ->where($this->conditionsToWheres($conditions))
                     ->tapIf(
-                        $transaction,
+                        $options->transaction,
                         fn(Query $query) => $query->forUpdate()
                     )
                     ->getIterator();
@@ -1181,7 +1270,7 @@ class EntityMapper implements EventAwareInterface
                     $this->updateOne($item, options: $options);
                 }
             },
-            enabled: $transaction
+            enabled: $options->transaction
         );
     }
 
@@ -1627,7 +1716,9 @@ class EntityMapper implements EventAwareInterface
 
     public function emitEvent(EventInterface|string $event, array $args = []): EventInterface
     {
-        if (($args['options'] ?? null) && ($args['options'] & static::IGNORE_EVENTS)) {
+        $options = ORMOptions::wrap($args['options'] ?? null);
+
+        if ($options->ignoreEvents) {
             if (is_string($event) || $event instanceof EventInterface) {
                 $event = Event::wrap($event, $args);
             }
@@ -1681,9 +1772,9 @@ class EntityMapper implements EventAwareInterface
             $event->metadata = $this->metadata;
         }
 
-        $options = $event->options ?? 0;
+        $options = $event->options ?? new ORMOptions();
 
-        if (is_int($options) && $options & static::IGNORE_EVENTS) {
+        if ($options->ignoreEvents) {
             return $event;
         }
 

@@ -6,6 +6,7 @@ namespace Windwalker\ORM\Relation\Strategy;
 
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Exception\RelationRejectException;
+use Windwalker\ORM\ORMOptions;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Relation\RelationProxies;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
@@ -60,7 +61,7 @@ class OneToOne extends AbstractRelation
             ->saveOne(
                 $foreignData,
                 null,
-                EntityMapper::UPDATE_NULLS
+                new ORMOptions(updateNulls: true)
             );
     }
 
@@ -95,7 +96,7 @@ class OneToOne extends AbstractRelation
             ->updateOne(
                 $foreignData,
                 null,
-                EntityMapper::UPDATE_NULLS
+                new ORMOptions(updateNulls: true)
             );
     }
 

@@ -117,16 +117,16 @@ class SelectorTest extends AbstractORMTestCase
                    `sakura`.`rose_no`            AS `rose_no`,
                    `sakura`.`title`              AS `title`,
                    `sakura`.`state`              AS `state`,
-                   `sakura_rose_map`.`sakura_no` AS `sakura_rose_map.sakura_no`,
-                   `sakura_rose_map`.`rose_no`   AS `sakura_rose_map.rose_no`,
-                   `sakura_rose_map`.`type`      AS `sakura_rose_map.type`,
-                   `sakura_rose_map`.`created`   AS `sakura_rose_map.created`,
-                   `rose`.`id`                   AS `rose.id`,
-                   `rose`.`no`                   AS `rose.no`,
-                   `rose`.`location_no`          AS `rose.location_no`,
-                   `rose`.`sakura_no`            AS `rose.sakura_no`,
-                   `rose`.`title`                AS `rose.title`,
-                   `rose`.`state`                AS `rose.state`
+                   `sakura_rose_map`.`sakura_no` AS `sakura_rose_map:sakura_no`,
+                   `sakura_rose_map`.`rose_no`   AS `sakura_rose_map:rose_no`,
+                   `sakura_rose_map`.`type`      AS `sakura_rose_map:type`,
+                   `sakura_rose_map`.`created`   AS `sakura_rose_map:created`,
+                   `rose`.`id`                   AS `rose:id`,
+                   `rose`.`no`                   AS `rose:no`,
+                   `rose`.`location_no`          AS `rose:location_no`,
+                   `rose`.`sakura_no`            AS `rose:sakura_no`,
+                   `rose`.`title`                AS `rose:title`,
+                   `rose`.`state`                AS `rose:state`
             FROM `sakuras` AS `sakura`
                      LEFT JOIN `sakura_rose_maps` AS `sakura_rose_map` ON `sakura`.`no` = `sakura_rose_map`.`sakura_no`
                      LEFT JOIN `roses` AS `rose` ON `sakura_rose_map`.`rose_no` = `rose`.`no`
@@ -150,10 +150,10 @@ class SelectorTest extends AbstractORMTestCase
               `peony`.`location_id` AS `location_id`,
               `peony`.`title` AS `title`,
               `peony`.`state` AS `state`,
-              `location`.`id` AS `location.id`,
-              `location`.`no` AS `location.no`,
-              `location`.`title` AS `location.title`,
-              `location`.`state` AS `location.state`
+              `location`.`id` AS `location:id`,
+              `location`.`no` AS `location:no`,
+              `location`.`title` AS `location:title`,
+              `location`.`state` AS `location:state`
             FROM
               `peonies` AS `peony`
               LEFT JOIN `locations` AS `location` ON `peony`.`location_id` = `location`.`id`

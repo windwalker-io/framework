@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Event;
 
+use Windwalker\ORM\ORMOptions;
+
 /**
  * The AbstractUpdateBatchEvent class.
  */
@@ -13,7 +15,7 @@ abstract class AbstractUpdateWhereEvent extends AbstractEntityEvent
         public mixed $conditions = null,
         public array|object $source = [],
         public array $data = [],
-        public int $options = 0,
+        public ORMOptions $options = new ORMOptions(),
     ) {
         parent::__construct($data);
     }
@@ -29,7 +31,7 @@ abstract class AbstractUpdateWhereEvent extends AbstractEntityEvent
     /**
      * @deprecated  Use property instead.
      */
-    public function &getOptions(): int
+    public function getOptions(): ORMOptions
     {
         return $this->options;
     }

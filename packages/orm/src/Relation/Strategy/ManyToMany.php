@@ -10,6 +10,7 @@ use Windwalker\ORM\Attributes\MapMorphBy;
 use Windwalker\ORM\Attributes\MorphBy;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Exception\RelationRejectException;
+use Windwalker\ORM\ORMOptions;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Relation\ForeignTable;
@@ -500,7 +501,7 @@ class ManyToMany extends AbstractRelation
                         ->updateOne(
                             $mapData,
                             null,
-                            EntityMapper::UPDATE_NULLS
+                            new ORMOptions(updateNulls: true)
                         );
                 } else {
                     $mapMetadata->getEntityMapper()

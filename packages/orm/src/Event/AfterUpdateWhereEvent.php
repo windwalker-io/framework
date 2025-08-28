@@ -6,6 +6,7 @@ namespace Windwalker\ORM\Event;
 
 use Attribute;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\ORM\ORMOptions;
 
 /**
  * The AfterUpdateBatchEvent class.
@@ -20,7 +21,7 @@ class AfterUpdateWhereEvent extends AbstractUpdateWhereEvent
         mixed $conditions = null,
         array|object $source = [],
         array $data = [],
-        int $options = 0,
+        ORMOptions $options = new ORMOptions(),
     ) {
         if ($statement) {
             $this->statement = $statement;
@@ -28,9 +29,9 @@ class AfterUpdateWhereEvent extends AbstractUpdateWhereEvent
 
         parent::__construct(
             conditions: $conditions,
-            options: $options,
             source: $source,
-            data: $data
+            data: $data,
+            options: $options
         );
     }
 }

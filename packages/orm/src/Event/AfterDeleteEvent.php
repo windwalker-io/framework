@@ -6,6 +6,7 @@ namespace Windwalker\ORM\Event;
 
 use Attribute;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\ORM\ORMOptions;
 
 /**
  * The BeforeDeleteEvent class.
@@ -20,7 +21,7 @@ class AfterDeleteEvent extends AbstractDeleteEvent
         mixed $conditions = null,
         ?object $entity = null,
         array $data = [],
-        int $options = 0,
+        ORMOptions $options = new ORMOptions(),
     ) {
         if ($statement) {
             $this->statement = $statement;
@@ -28,9 +29,9 @@ class AfterDeleteEvent extends AbstractDeleteEvent
 
         parent::__construct(
             conditions: $conditions,
-            options: $options,
             entity: $entity,
-            data: $data
+            data: $data,
+            options: $options
         );
     }
 }

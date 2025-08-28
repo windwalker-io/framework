@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Event;
 
 use Attribute;
+use Windwalker\ORM\ORMOptions;
 
 /**
  * The BeforeSaveEvent class.
@@ -19,16 +20,16 @@ class AfterSaveEvent extends AbstractSaveEvent
         array $data = [],
         ?array $oldData = null,
         public array $fullData = [],
-        int $options = 0,
+        ORMOptions $options = new ORMOptions(),
         array $extra = [],
     ) {
         parent::__construct(
             type: $type,
+            source: $source,
+            data: $data,
             oldData: $oldData,
             options: $options,
-            source: $source,
-            extra: $extra,
-            data: $data
+            extra: $extra
         );
     }
 }

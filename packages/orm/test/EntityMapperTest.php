@@ -8,6 +8,7 @@ use Exception;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\ORM\EntityMapper;
+use Windwalker\ORM\ORMOptions;
 use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubComment;
 use Windwalker\ORM\Test\Entity\StubFlower;
@@ -597,7 +598,7 @@ class EntityMapperTest extends AbstractORMTestCase
 
         self::assertEquals(2, $hits);
 
-        $mapper->increment('hits', 2, 3, EntityMapper::IGNORE_EVENTS | EntityMapper::TRANSACTION);
+        $mapper->increment('hits', 2, 3, new ORMOptions(ignoreEvents: true, transaction: true));
 
         $hits = $mapper->findOne(2)->getHits();
 
@@ -614,7 +615,7 @@ class EntityMapperTest extends AbstractORMTestCase
 
         self::assertEquals(1, $hits);
 
-        $mapper->decrement('hits', 2, 3, EntityMapper::IGNORE_EVENTS | EntityMapper::TRANSACTION);
+        $mapper->decrement('hits', 2, 3, new ORMOptions(ignoreEvents: true, transaction: true));
 
         $hits = $mapper->findOne(2)->getHits();
 
