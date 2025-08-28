@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Event\HttpClient;
 
 use Windwalker\Event\BaseEvent;
-use Windwalker\Http\ClientOptions;
+use Windwalker\Http\HttpClientOptions;
 use Windwalker\Http\HttpClient;
 
 /**
@@ -18,7 +18,7 @@ class BeforeRequestEvent extends BaseEvent
         public string $method,
         public string $url,
         public mixed $body,
-        public ClientOptions $options,
+        public HttpClientOptions $options,
     ) {
         //
     }
@@ -96,23 +96,23 @@ class BeforeRequestEvent extends BaseEvent
     }
 
     /**
-     * @return ClientOptions
+     * @return HttpClientOptions
      *
      * @deprecated  Use property instead.
      */
-    public function getOptions(): ClientOptions
+    public function getOptions(): HttpClientOptions
     {
         return $this->options;
     }
 
     /**
-     * @param  ClientOptions  $options
+     * @param  HttpClientOptions  $options
      *
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
      */
-    public function setOptions(ClientOptions $options): static
+    public function setOptions(HttpClientOptions $options): static
     {
         $this->options = $options;
 

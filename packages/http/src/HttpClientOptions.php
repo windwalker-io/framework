@@ -7,7 +7,7 @@ namespace Windwalker\Http;
 use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Utilities\Options\RecordOptions;
 
-class ClientOptions extends RecordOptions
+class HttpClientOptions extends RecordOptions
 {
     public ?TransportOptions $transport = null;
 

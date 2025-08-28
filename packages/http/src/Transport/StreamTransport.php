@@ -40,11 +40,12 @@ class StreamTransport extends AbstractTransport
      *
      * @return  HttpClientResponse
      *
+     * @throws \Exception
      * @since   2.1
      */
     protected function doRequest(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
     {
-        $options = StreamOptions::wrap($options)->withDefaults($this->options, true);
+        $options = $this->mergeOptions($options);
 
         $stream = $this->createStream($request, $options);
 
@@ -87,7 +88,7 @@ class StreamTransport extends AbstractTransport
      */
     public function createConnection(RequestInterface $request, array|StreamOptions $options = []): mixed
     {
-        $options = StreamOptions::wrap($options)->withDefaults($this->options, true);
+        $options = $this->mergeOptions($options);
 
         // Create the stream context options array with the required method offset.
         $opt = ['method' => $request->getMethod()];
@@ -286,7 +287,7 @@ class StreamTransport extends AbstractTransport
             throw new InvalidArgumentException('Target file path is emptty.');
         }
 
-        $options = StreamOptions::wrap($options)->withDefaults($this->options, true);
+        $options = $this->mergeOptions($options);
 
         if (!$dest instanceof StreamInterface) {
             $dest = Stream::fromFilePath($dest);
@@ -326,5 +327,10 @@ class StreamTransport extends AbstractTransport
         }
 
         return $context;
+    }
+
+    public function mergeOptions(array|TransportOptions $options): StreamOptions
+    {
+        return StreamOptions::wrap($options)->withDefaults($this->options, true);
     }
 }

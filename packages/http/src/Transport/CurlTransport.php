@@ -37,9 +37,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      */
     public function prepareRequestOptions(array|TransportOptions $options): CurlOptions
     {
-        $options = CurlOptions::wrap($options);
-
-        return $options->withDefaults($this->options, true);
+        return CurlOptions::wrap($options)->withDefaults($this->options, true);
     }
 
     /**

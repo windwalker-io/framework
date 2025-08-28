@@ -19,7 +19,7 @@ $cmd = $http->toCurlCmd(
     'GET',
     '{a}{?b}',
     null,
-    new \Windwalker\Http\ClientOptions(
+    new \Windwalker\Http\HttpClientOptions(
         transport: new CurlOptions(
             verifyPeer: false
         ),
