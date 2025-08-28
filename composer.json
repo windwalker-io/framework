@@ -70,7 +70,7 @@
         "laravel/serializable-closure": "^1.0",
         "symfony/polyfill-php82": "^1.26",
         "asika/simple-benchmark": "^3.0",
-        "rize/uri-template": "^0.3.5",
+        "rize/uri-template": "^0.3.5||^0.4.0",
         "guzzlehttp/uri-template": "^1.0"
     },
     "suggest": {

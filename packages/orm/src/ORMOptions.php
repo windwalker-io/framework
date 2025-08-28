@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
-use Windwalker\Utilities\Accessible\RecordOptionsTrait;
+use Windwalker\Utilities\Options\RecordOptionsTrait;
 
 class ORMOptions
 {

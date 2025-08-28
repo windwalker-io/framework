@@ -16,6 +16,8 @@ use Windwalker\Http\Helper\MultipartParser;
 use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Stream\RequestBodyStream;
+use Windwalker\Http\Transport\Options\StreamOptions;
+use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Stream\Stream;
 use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Arr;
@@ -32,34 +34,21 @@ class StreamTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface  $request  The request object to store request params.
+     * @param  RequestInterface        $request  The request object to store request params.
      *
-     * @param  array             $options
+     * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse
+    protected function doRequest(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
     {
-        $options = Arr::mergeRecursive(
-            [
-                'allow_empty_status_code' => false,
-                'write_stream' => null,
-                'timeout' => null,
-                'user_agent' => null,
-                'follow_location' => true,
-                'certpath' => null,
-                'verify_peer' => true,
-                'context' => [],
-            ],
-            $this->getOptions(),
-            $options
-        );
+        $options = StreamOptions::wrap($options)->withDefaults($this->options, true);
 
         $stream = $this->createStream($request, $options);
 
-        $dest = ($options['write_stream'] ?? $options['target_file'] ?? null);
+        $dest = $options->writeStream ?? $options->targetFile;
 
         if ($dest) {
             $content = '';
@@ -83,21 +72,23 @@ class StreamTransport extends AbstractTransport
         return $this->toResponse(
             $headers,
             $content,
-            (new HttpClientResponse())->withInfo($metadata),
-            (bool) $options['allow_empty_status_code']
+            new HttpClientResponse()->withInfo($metadata),
+            $options->allowEmptyStatusCode
         );
     }
 
     /**
-     * @param  RequestInterface  $request
-     * @param  array             $options
+     * @param  RequestInterface     $request
+     * @param  array|StreamOptions  $options
      *
      * @return  resource|false
      *
      * @throws \Exception
      */
-    public function createConnection(RequestInterface $request, array $options = []): mixed
+    public function createConnection(RequestInterface $request, array|StreamOptions $options = []): mixed
     {
+        $options = StreamOptions::wrap($options)->withDefaults($this->options, true);
+
         // Create the stream context options array with the required method offset.
         $opt = ['method' => $request->getMethod()];
 
@@ -173,12 +164,12 @@ class StreamTransport extends AbstractTransport
         }
 
         // If an explicit timeout is given user it.
-        if ($timeout = $options['timeout']) {
+        if ($timeout = $options->timeout) {
             $opt['timeout'] = (int) $timeout;
         }
 
         // If an explicit user agent is given use it.
-        if ($userAgent = $options['user_agent']) {
+        if ($userAgent = $options->userAgent) {
             $opt['user_agent'] = $userAgent;
         }
 
@@ -186,9 +177,9 @@ class StreamTransport extends AbstractTransport
         $opt['ignore_errors'] = 1;
 
         // Follow redirects.
-        $opt['follow_location'] = (int) ($options['follow_location'] ?? true);
+        $opt['follow_location'] = (int) ($options->followLocation ?? true);
 
-        $opt['ssl']['verify_peer'] = (int) $options['verify_peer'];
+        $opt['ssl']['verify_peer'] = (int) $options->verifyPeer;
 
         $opt = $this->setCABundleToOptions($opt, $options);
 
@@ -198,7 +189,7 @@ class StreamTransport extends AbstractTransport
                 [
                     'http' => $opt
                 ],
-                $options['context'] ?? []
+                $options->context
             )
         );
 
@@ -210,11 +201,12 @@ class StreamTransport extends AbstractTransport
      * createStream
      *
      * @param  RequestInterface  $request
-     * @param  array             $options
+     * @param  StreamOptions     $options
      *
      * @return  Stream
+     * @throws \Exception
      */
-    protected function createStream(RequestInterface $request, array $options): Stream
+    protected function createStream(RequestInterface $request, StreamOptions $options): Stream
     {
         $connection = $this->createConnection($request, $options);
 
@@ -280,8 +272,7 @@ class StreamTransport extends AbstractTransport
      *
      * @param  RequestInterface        $request  The request object to store request params.
      * @param  string|StreamInterface  $dest     The dest path to store file.
-     *
-     * @param  array                   $options
+     * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      * @since   2.1
@@ -289,17 +280,19 @@ class StreamTransport extends AbstractTransport
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array $options = []
+        array|TransportOptions $options = []
     ): HttpClientResponse {
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is emptty.');
         }
 
+        $options = StreamOptions::wrap($options)->withDefaults($this->options, true);
+
         if (!$dest instanceof StreamInterface) {
             $dest = Stream::fromFilePath($dest);
         }
 
-        $options['write_stream'] = $dest;
+        $options->writeStream = $dest;
 
         return $this->request($request, $options);
     }
@@ -316,10 +309,10 @@ class StreamTransport extends AbstractTransport
         return function_exists('fopen') && is_callable('fopen') && ini_get('allow_url_fopen');
     }
 
-    protected function setCABundleToOptions(array $context, array $options): array
+    protected function setCABundleToOptions(array $context, StreamOptions $options): array
     {
-        if ($options['certpath']) {
-            $context['ssl']['capath'] = $options['certpath'];
+        if ($options->certpath) {
+            $context['ssl']['capath'] = $options->context;
 
             return $context;
         }

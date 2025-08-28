@@ -405,9 +405,9 @@ class HttpClientTest extends TestCase
         $this->instance->on(
             BeforeRequestEvent::class,
             function (BeforeRequestEvent $event) {
-                $options = &$event->getOptions();
+                $options = $event->options;
 
-                $event->getHttpClient()->setOption('base_uri', 'https://api.foo.com/');
+                $event->httpClient->setOption('base_uri', 'https://api.foo.com/');
 
                 $options['headers']['X-XSRF-Token'] = 'TokenValue';
             }
@@ -538,26 +538,32 @@ class HttpClientTest extends TestCase
 
         $http->get('.', ['transport' => ['foo' => 'bar']]);
 
+        self::assertTrue(
+            $transport->receivedOptions->root
+        );
+
         self::assertEquals(
-            [
-                'root' => true,
-                'files' => null,
-                'foo' => 'bar',
-                'option_merged' => true,
-            ],
-            $transport->receivedOptions
+            'bar',
+            $transport->receivedOptions->foo
+        );
+
+        self::assertTrue(
+            $transport->receivedOptions->optionMerged
         );
 
         $http->request('GET', '.', null, ['transport' => ['foo' => 'bar']]);
 
+        self::assertTrue(
+            $transport->receivedOptions->root
+        );
+
         self::assertEquals(
-            [
-                'root' => true,
-                'files' => null,
-                'foo' => 'bar',
-                'option_merged' => true,
-            ],
-            $transport->receivedOptions
+            'bar',
+            $transport->receivedOptions->foo
+        );
+
+        self::assertTrue(
+            $transport->receivedOptions->optionMerged
         );
 
         $http->sendRequest(
@@ -565,13 +571,13 @@ class HttpClientTest extends TestCase
             ['foo' => 'bar']
         );
 
+        self::assertTrue(
+            $transport->receivedOptions->root
+        );
+
         self::assertEquals(
-            [
-                'root' => true,
-                'files' => null,
-                'foo' => 'bar',
-            ],
-            $transport->receivedOptions
+            'bar',
+            $transport->receivedOptions->foo
         );
     }
 }

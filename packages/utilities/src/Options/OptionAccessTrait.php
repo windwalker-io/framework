@@ -16,18 +16,16 @@ use Windwalker\Utilities\TypeCast;
  */
 trait OptionAccessTrait
 {
-    protected array|ArrayAccess|AccessibleInterface $options = [];
+    protected array|ArrayAccess|AccessibleInterface|RecordOptions $options = [];
 
-    /**
-     * prepareDefaultOptions
-     *
-     * @param  array  $defaults
-     * @param  array  $options
-     *
-     * @return  void
-     */
-    protected function prepareOptions(array $defaults = [], array $options = []): void
+    protected function prepareOptions(array|object $defaults = [], array|RecordOptions $options = []): void
     {
+        if ($options instanceof RecordOptions) {
+            $this->options = $options->withDefaults($defaults, true);
+
+            return;
+        }
+
         $this->options = Arr::mergeRecursive(TypeCast::toArray($this->options), $defaults, $options);
     }
 
@@ -43,12 +41,12 @@ trait OptionAccessTrait
         return $this;
     }
 
-    public function getOptions(): array|ArrayAccess|AccessibleInterface
+    public function getOptions(): array|ArrayAccess|AccessibleInterface|RecordOptions
     {
         return $this->options;
     }
 
-    public function setOptions(array|ArrayAccess|AccessibleInterface $options): static
+    public function setOptions(array|ArrayAccess|AccessibleInterface|RecordOptions $options): static
     {
         $this->options = $options;
 

@@ -16,6 +16,8 @@ use Windwalker\Http\HttpClientInterface;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\RequestBodyStream;
+use Windwalker\Http\Transport\Options\CurlOptions;
+use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Arr;
 
@@ -29,43 +31,31 @@ use const Windwalker\Stream\READ_WRITE_RESET;
 class CurlTransport extends AbstractTransport implements CurlTransportInterface
 {
     /**
-     * @param  array  $options
+     * @param  array|TransportOptions  $options
      *
-     * @return  array
+     * @return CurlOptions
      */
-    public function prepareRequestOptions(array $options): array
+    public function prepareRequestOptions(array|TransportOptions $options): CurlOptions
     {
-        return Arr::mergeRecursive(
-            [
-                'ignore_curl_error' => false,
-                'allow_empty_status_code' => false,
-                'auto_calc_content_length' => true,
-                'write_stream' => 'php://memory',
-                'timeout' => null,
-                'user_agent' => null,
-                'follow_location' => true,
-                'certpath' => null,
-                'verify_peer' => true,
-                'curl' => [],
-            ],
-            $this->getOptions(),
-            $options,
-        );
+        $options = CurlOptions::wrap($options);
+
+        return $options->withDefaults($this->options, true);
     }
 
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface  $request  The request object to store request params.
+     * @param  RequestInterface        $request  The request object to store request params.
      *
-     * @param  array             $options
+     * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      *
      * @since    2.1
      */
-    protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse
+    protected function doRequest(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
     {
+        /** @var CurlOptions $options */
         $options = $this->prepareRequestOptions($options);
 
         $ch = $this->createHandle($request, $options, $headers, $content);
@@ -75,7 +65,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
 
         $error = curl_error($ch);
 
-        if ($error !== '' && !$options['ignore_curl_error']) {
+        if ($error !== '' && !$options->ignoreCurlError) {
             throw new HttpRequestException($error, curl_errno($ch));
         }
 
@@ -88,9 +78,9 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $content->rewind();
 
         return $this->injectHeadersToResponse(
-            (new HttpClientResponse($content))->withInfo($info),
+            new HttpClientResponse($content)->withInfo($info),
             (array) $headers,
-            (bool) $options['allow_empty_status_code'],
+            $options->allowEmptyStatusCode,
         );
     }
 
@@ -218,16 +208,18 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      */
     public function createHandle(
         RequestInterface $request,
-        array $options,
+        array|CurlOptions $options,
         ?array &$headers = null,
         ?StreamInterface &$content = null,
     ): \CurlHandle|false {
+        $options = CurlOptions::wrap($options);
+
         // Setup the cURL handle.
         $ch = curl_init();
 
         $opt = $this->prepareCurlOptions($request, $options);
 
-        $content = Stream::wrap($options['write_stream'], READ_WRITE_RESET);
+        $content = Stream::wrap($options->writeStream, READ_WRITE_RESET);
         $headerItems = [];
 
         $opt[CURLOPT_HEADERFUNCTION] ??= static function (
@@ -259,14 +251,12 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     }
 
     /**
-     * setTheRequestMethod
-     *
      * @param  RequestInterface  $request
-     * @param  array             $options
+     * @param  CurlOptions       $options
      *
      * @return  array
      */
-    protected function prepareCurlOptions(RequestInterface $request, array $options): array
+    protected function prepareCurlOptions(RequestInterface $request, CurlOptions $options): array
     {
         // Set the request method.
         $opt[CURLOPT_CUSTOMREQUEST] = $request->getMethod();
@@ -277,7 +267,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         // Initialize the certificate store
         $opt = $this->setCABundleToOptions($opt, $options);
 
-        $opt[CURLOPT_SSL_VERIFYPEER] = (bool) $options['verify_peer'];
+        $opt[CURLOPT_SSL_VERIFYPEER] = (bool) $options->verifyPeer;
 
         // Set HTTP Version
         switch ($request->getProtocolVersion()) {
@@ -306,7 +296,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $request = static::prepareHeaders($request, $forceMultipart);
 
         // Add the relevant headers.
-        $calcLength = (bool) ($options['auto_calc_content_length'] ?? true);
+        $calcLength = $options->autoCalcContentLength;
 
         if ($calcLength && isset($opt[CURLOPT_POSTFIELDS]) && $opt[CURLOPT_POSTFIELDS] !== '') {
             $request = $request->withHeader('Content-Length', (string) strlen($opt[CURLOPT_POSTFIELDS]));
@@ -319,13 +309,13 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         }
 
         // If an explicit timeout is given user it.
-        if ($timeout = $options['timeout']) {
-            $opt[CURLOPT_TIMEOUT] = (int) $timeout;
-            $opt[CURLOPT_CONNECTTIMEOUT] = (int) $timeout;
+        if ($timeout = $options->timeout) {
+            $opt[CURLOPT_TIMEOUT] = $timeout;
+            $opt[CURLOPT_CONNECTTIMEOUT] = $timeout;
         }
 
         // If an explicit user agent is given use it.
-        if ($userAgent = $options['user_agent']) {
+        if ($userAgent = $options->userAgent) {
             $opt[CURLOPT_USERAGENT] = (string) $userAgent;
         }
 
@@ -343,11 +333,11 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
          * Follow redirects if server config allows
          */
         if (!ini_get('open_basedir')) {
-            $opt[CURLOPT_FOLLOWLOCATION] = (bool) $options['follow_location'];
+            $opt[CURLOPT_FOLLOWLOCATION] = (bool) $options->followLocation;
         }
 
         // Set any custom transport options
-        $opt = array_replace($opt, $options['curl'] ?? [], $options['options'] ?? []);
+        $opt = array_replace($opt, $options->curl ?? [], $options->options ?? []);
 
         return $opt;
     }
@@ -422,7 +412,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      * @param  RequestInterface        $request  The request object to store request params.
      * @param  string|StreamInterface  $dest     The dest path to store file.
      *
-     * @param  array                   $options
+     * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      * @since   2.1
@@ -430,13 +420,15 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array $options = [],
+        array|TransportOptions $options = [],
     ): HttpClientResponse {
+        $options = CurlOptions::wrap($options);
+
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is empty.');
         }
 
-        $options['write_stream'] = $dest;
+        $options->writeStream = $dest;
 
         return $this->request(
             $request,
@@ -464,10 +456,10 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      *
      * @since  3.4.2
      */
-    protected function setCABundleToOptions(array $curlOptions, array $options): array
+    protected function setCABundleToOptions(array $curlOptions, CurlOptions $options): array
     {
-        if ($options['certpath']) {
-            $curlOptions[CURLOPT_CAINFO] = $options['certpath'];
+        if ($options->certpath) {
+            $curlOptions[CURLOPT_CAINFO] = $options->certpath;
 
             return $curlOptions;
         }

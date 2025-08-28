@@ -12,8 +12,6 @@ namespace Windwalker\Utilities\Classes;
 class TraitHelper
 {
     /**
-     * classUsesRecursive
-     *
      * @link  http://php.net/manual/en/function.class-uses.php#110752
      *
      * @param  string|object  $class
@@ -21,18 +19,19 @@ class TraitHelper
      *
      * @return  array
      */
-    public static function classUsesRecursive(string $class, bool $autoload = true): array
+    public static function classUsesRecursive(string|object $class, bool $autoload = true): array
     {
         $traits = [];
 
         do {
-            $traits[] = class_uses($class, $autoload);
+            $traits = [...$traits, ...(class_uses($class, $autoload) ?: [])];
         } while ($class = get_parent_class($class));
 
-        foreach ($traits as $trait => $same) {
-            $traits[] = class_uses($trait, $autoload);
-        }
+        return array_unique($traits);
+    }
 
-        return array_unique(array_merge(...$traits));
+    public static function uses(string|object $class, string $trait, bool $autoload = true): bool
+    {
+        return in_array($trait, static::classUsesRecursive($class, $autoload), true);
     }
 }

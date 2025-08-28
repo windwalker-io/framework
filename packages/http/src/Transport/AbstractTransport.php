@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
-use Composer\CaBundle\CaBundle;
 use Psr\Http\Message\RequestInterface;
 use Windwalker\Http\CaBundleFinder;
 use Windwalker\Http\Response\HttpClientResponse;
+use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
 /**
@@ -20,31 +20,16 @@ abstract class AbstractTransport implements TransportInterface
     use OptionAccessTrait;
 
     /**
-     * Constructor.
-     *
-     * @param  array  $options  Client options object.
-     *
-     * @since   2.1
-     */
-    public function __construct(array $options = [])
-    {
-        $this->prepareOptions(
-            [],
-            $options
-        );
-    }
-
-    /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface  $request  The request object to send.
-     * @param  array             $options
+     * @param  RequestInterface        $request  The request object to send.
+     * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    public function request(RequestInterface $request, array $options = []): HttpClientResponse
+    public function request(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
     {
         $uri = (string) $request->getUri()
             ?->withPath('')
@@ -61,14 +46,17 @@ abstract class AbstractTransport implements TransportInterface
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface  $request  The request object to store request params.
-     * @param  array             $options
+     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      *
      * @since   2.1
      */
-    abstract protected function doRequest(RequestInterface $request, array $options = []): HttpClientResponse;
+    abstract protected function doRequest(
+        RequestInterface $request,
+        array|TransportOptions $options = []
+    ): HttpClientResponse;
 
     /**
      * @return  ?string

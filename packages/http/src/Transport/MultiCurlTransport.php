@@ -10,7 +10,8 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Response\HttpClientResponse;
-use Windwalker\Http\Response\Response;
+use Windwalker\Http\Transport\Options\CurlOptions;
+use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
@@ -49,12 +50,12 @@ class MultiCurlTransport implements AsyncTransportInterface
     /**
      * Class init.
      *
-     * @param  array                      $options   The options of this client object.
-     * @param CurlTransportInterface|null $transport The Transport handler, default is CurlTransport.
+     * @param  array|CurlOptions            $options    The options of this client object.
+     * @param  CurlTransportInterface|null  $transport  The Transport handler, default is CurlTransport.
      */
-    public function __construct(array $options = [], ?CurlTransportInterface $transport = null)
+    public function __construct(array|CurlOptions $options = [], ?CurlTransportInterface $transport = null)
     {
-        $this->prepareOptions([], $options);
+        $this->prepareOptions([], CurlOptions::wrap($options));
 
         $this->transport = $transport ?? new CurlTransport();
     }
@@ -90,8 +91,10 @@ class MultiCurlTransport implements AsyncTransportInterface
      * @inheritDoc
      * @throws \Throwable
      */
-    public function sendRequest(RequestInterface $request, array $options = []): PromiseInterface
+    public function sendRequest(RequestInterface $request, array|TransportOptions $options = []): PromiseInterface
     {
+        $options = CurlOptions::wrap($options)->withDefaults($this->options, true);
+
         $transport = $this->getTransport();
 
         $options = $transport->prepareRequestOptions($options);
@@ -101,7 +104,7 @@ class MultiCurlTransport implements AsyncTransportInterface
             'promise' => $resolvers = Promise::withResolvers(),
             'options' => $options,
             'headers' => &$headers,
-            'content' => $content
+            'content' => $content,
         ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
@@ -130,7 +133,7 @@ class MultiCurlTransport implements AsyncTransportInterface
     protected function prepareResolvePromise(): PromiseInterface
     {
         return $this->promise ??= async(
-            fn () => new Promise(
+            fn() => new Promise(
                 function ($resolve, $reject) {
                     if ($this->tasks === []) {
                         $resolve();
@@ -167,6 +170,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 
                     foreach ($this->tasks as $task) {
                         $handle = $task['handle'];
+                        /** @var CurlOptions $options */
                         $options = $task['options'];
                         [$taskPromise, $taskResolve, $taskReject] = $task['promise'];
                         $content = $task['content'];
@@ -181,7 +185,7 @@ class MultiCurlTransport implements AsyncTransportInterface
                             $res = $transport->injectHeadersToResponse(
                                 new HttpClientResponse($content)->withInfo(curl_getinfo($handle)),
                                 (array) $task['headers'],
-                                (bool) $options['allow_empty_status_code']
+                                (bool) $options->allowEmptyStatusCode
                             );
                             $taskResolve($res);
                         } else {
@@ -202,12 +206,15 @@ class MultiCurlTransport implements AsyncTransportInterface
      *
      * @param  RequestInterface        $request
      * @param  StreamInterface|string  $dest
-     * @param  array                   $options
+     * @param  array|CurlOptions       $options
      *
      * @return  mixed
      */
-    public function download(RequestInterface $request, StreamInterface|string $dest, array $options = []): mixed
-    {
+    public function download(
+        RequestInterface $request,
+        StreamInterface|string $dest,
+        array|CurlOptions $options = []
+    ): mixed {
         return null;
     }
 

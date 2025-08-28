@@ -871,7 +871,11 @@ abstract class Arr
                 }
             }
 
-            $result = [...$result, ...$sub];
+            if (array_is_list($sub)) {
+                $result = [...$result, ...$sub];
+            } else {
+                $result += $sub;
+            }
         }
 
         return $result;

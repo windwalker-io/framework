@@ -43,7 +43,7 @@ trait RecordTrait
                 $name = $parameter->getName();
 
                 if (array_key_exists($name, $data)) {
-                    $args[] = $data[$name];
+                    $args[$name] = $data[$name];
 
                     unset($data[$name]);
                 }
