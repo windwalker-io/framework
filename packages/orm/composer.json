@@ -16,7 +16,7 @@
     "homepage": "https://github.com/windwalker-io/orm",
     "license": "MIT",
     "require": {
-        "php": ">=8.4.1",
+        "php": ">=8.4.6",
         "asika/object-metadata": "^1.0",
         "windwalker/attributes": "^4.0",
         "windwalker/database": "^4.0",
@@ -24,7 +24,7 @@
         "symfony/polyfill-php83": "^1.27"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0||^9.0||^10.0",
+        "phpunit/phpunit": "^10.0||^11.0||^12.0",
         "windwalker/test": "^4.0",
         "myclabs/php-enum": "^1.8"
     },

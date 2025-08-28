@@ -10,14 +10,14 @@
     "homepage": "https://github.com/windwalker-io/di",
     "license": "MIT",
     "require": {
-        "php": ">=8.4.1",
+        "php": ">=8.4.6",
         "psr/container": "^1.0||^2.0",
         "windwalker/attributes": "^4.0",
         "windwalker/data": "^4.0",
         "windwalker/utilities": "^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0||^9.0||^10.0",
+        "phpunit/phpunit": "^10.0||^11.0||^12.0",
         "windwalker/test": "^4.0"
     },
     "suggest": {

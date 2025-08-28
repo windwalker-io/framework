@@ -427,10 +427,10 @@ class TypeCastTest extends TestCase
                 'object',
             ],
             [
-                static function () {
+                $func = static function () {
+                    //
                 },
-                static function () {
-                },
+                $func,
                 'object',
             ],
             // Other

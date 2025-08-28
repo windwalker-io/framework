@@ -10,15 +10,15 @@
     "homepage": "https://github.com/windwalker-io/utilities",
     "license": "MIT",
     "require": {
-        "php": ">=8.4.1"
+        "php": ">=8.4.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0||^9.0||^10.0",
+        "phpunit/phpunit": "^10.0||^11.0||^12.0",
         "windwalker/attributes": "^4.0",
         "windwalker/test": "^4.0",
         "windwalker/scalars": "^4.0",
         "symfony/string": "^5.2||^6.0||^7.0",
-        "symfony/options-resolver": "^5.0||^6.0||^7.0",
+        "symfony/options-resolver": "^6.0||^7.0||^8.0",
         "myclabs/php-enum": "^1.8"
     },
     "suggest": {

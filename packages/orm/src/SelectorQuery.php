@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM;
 
 use InvalidArgumentException;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Event\HydrateEvent;
@@ -21,6 +20,8 @@ use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\JoinClause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
+
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 
 use function Windwalker\Query\try_uuid2bin;
 use function Windwalker\Query\val;
@@ -352,7 +353,7 @@ class SelectorQuery extends Query implements EventAwareInterface
     }
 
     protected function handleOperatorAndValue(
-        string|ClauseInterface $column,
+        mixed $column,
         mixed $operator,
         mixed $value
     ): array {

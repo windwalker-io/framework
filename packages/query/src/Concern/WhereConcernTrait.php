@@ -104,7 +104,7 @@ trait WhereConcernTrait
      * @return  array
      */
     protected function handleOperatorAndValue(
-        string|ClauseInterface $column,
+        mixed $column,
         mixed $operator,
         mixed $value,
     ): array {

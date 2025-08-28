@@ -10,16 +10,16 @@
     "homepage": "https://github.com/windwalker-io/data",
     "license": "MIT",
     "require": {
-        "php": ">=8.4.1",
+        "php": ">=8.4.6",
         "windwalker/scalars": "^4.0",
         "windwalker/utilities": "^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0||^9.0||^10.0",
+        "phpunit/phpunit": "^10.0||^11.0||^12.0",
         "windwalker/filesystem": "^4.0",
         "windwalker/stream": "^4.0",
         "windwalker/test": "^4.0",
-        "symfony/yaml": "^5.0||^6.0||^7.0",
+        "symfony/yaml": "^6.0||^7.0||^8.0",
         "laktak/hjson": "^2.1",
         "yosymfony/toml": "^1.0"
     },
