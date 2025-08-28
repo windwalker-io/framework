@@ -937,24 +937,23 @@ class ArrTest extends TestCase
         self::assertEquals($expected, Arr::unique($array));
     }
 
-    /**
-     * testMerge
-     *
-     * @return  void
-     */
-    public function testMergeRecursive()
+    public function testMergeRecursive(): void
     {
         $data1 = [
             'green' => 'Hulk',
             'red' => 'empty',
             'human' => [
-                'dark' => 'empty',
-                'black' => [
+                'boss' => 'empty',
+                'other' => [
                     'male' => 'empty',
                     'female' => 'empty',
                     'no-gender' => 'empty',
                 ],
             ],
+            'series' => [
+                'A',
+                'B',
+            ]
         ];
 
         $data2 = [
@@ -965,12 +964,16 @@ class ArrTest extends TestCase
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
-                'black' => [
+                'boss' => 'Nick Fury',
+                'other' => [
                     'female' => 'Black Widow',
                     'male' => 'Loki',
                 ],
             ],
+            'series' => [
+                'C',
+                'D'
+            ]
         ];
 
         $data3 = [
@@ -986,13 +989,19 @@ class ArrTest extends TestCase
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
-                'black' => [
+                'boss' => 'Nick Fury',
+                'other' => [
                     'male' => 'Loki',
                     'female' => 'Black Widow',
                     'no-gender' => 'empty',
                 ],
             ],
+            'series' => [
+                'A',
+                'B',
+                'C',
+                'D'
+            ]
         ];
 
         $this->assertEquals($expected, Arr::mergeRecursive($data1, $data2));

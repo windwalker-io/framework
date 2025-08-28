@@ -861,13 +861,17 @@ abstract class Arr
                 throw new InvalidArgumentException(sprintf('Argument #%d is not an array.', $i + 1));
             }
 
-            foreach ($array as $key => &$value) {
+            $sub = [];
+
+            foreach ($array as $key => $value) {
                 if (is_array($value) && isset($result[$key]) && is_array($result[$key])) {
-                    $result[$key] = static::mergeRecursive($result [$key], $value);
+                    $sub[$key] = static::mergeRecursive($result[$key], $value);
                 } else {
-                    $result[$key] = $value;
+                    $sub[$key] = $value;
                 }
             }
+
+            $result = [...$result, ...$sub];
         }
 
         return $result;
