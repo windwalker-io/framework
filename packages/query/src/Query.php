@@ -46,6 +46,7 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 use Windwalker\Utilities\Classes\ChainingTrait;
 use Windwalker\Utilities\Classes\MarcoableTrait;
+use Windwalker\Utilities\Iterator\PaginateIterator;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\WrapperInterface;
@@ -1802,13 +1803,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @param  string|null  $class
-     * @param  array        $args
-     * @param  int|null     $paginate
+     * @template  T of Collection
      *
-     * @return  Generator
+     * @param  class-string<T>|null  $class
+     * @param  array                 $args
+     * @param  int|null              $paginate
+     *
+     * @return  \Traversable<T>
      */
-    public function getIterator(?string $class = null, array $args = [], ?int $paginate = null): Generator
+    public function getIterator(?string $class = null, array $args = [], ?int $paginate = null): \Traversable
     {
         $paginate ??= $this->getPaginate();
 
@@ -1819,34 +1822,23 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this->prepareStatement()->getIterator($class, $args);
     }
 
-    public function getPaginatedIterator(?string $class = null, int $perPage = 500, array $args = []): Generator
+    public function getPaginatedIterator(?string $class = null, int $perPage = 500, array $args = []): PaginateIterator
     {
         $offset = $this->getOffset() ?? 0;
-        $leave = $this->getLimit();
+        // $leave = $this->getLimit();
 
-        do {
-            $i = 0;
+        return new PaginateIterator(
+            function (int $page, int $perPage) use ($args, $class, &$offset) {
+                $query = clone $this;
+                $query->offset($offset)->limit($perPage);
 
-            if ($leave !== null) {
-                $perPage = min($leave, $perPage);
-                $leave -= $perPage;
-            }
+                yield from $query->getIterator($class, $args);
 
-            $query = clone $this;
-            $query->offset($offset)->limit($perPage);
-
-            foreach ($query->getIterator($class, $args) as $item) {
-                yield $item;
-
-                $i++;
-            }
-
-            $offset += $perPage;
-
-            if ($leave === 0) {
-                break;
-            }
-        } while ($i > 0);
+                $offset += $perPage;
+            },
+            $perPage,
+            $this->getLimit()
+        );
     }
 
     public function prepareStatement(): StatementInterface

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Windwalker\Query\Bounded\BoundedHelper;
@@ -35,17 +36,7 @@ class QueryTest extends TestCase
 
     protected static mixed $escaper;
 
-    /**
-     * @param  array        $args
-     * @param  array        $asArgs
-     * @param  string       $expected
-     * @param  string|null  $subQueryAlias
-     * @param  string|null  $modifiedSql
-     *
-     * @see          Query::select
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('selectProvider')]
+    #[DataProvider('selectProvider')]
     public function testSelect(
         array $args,
         ?array $asArgs,
@@ -151,7 +142,7 @@ class QueryTest extends TestCase
         ];
     }
 
-    public function testSelectWithNoColumns()
+    public function testSelectWithNoColumns(): void
     {
         $this->instance->from('flowers')
             ->where('id', 123);
@@ -170,7 +161,7 @@ class QueryTest extends TestCase
      * @see          Query::from
      *
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('fromProvider')]
+    #[DataProvider('fromProvider')]
     public function testFrom($tables, ?string $alias, string $expected): void
     {
         $q = $this->instance
@@ -273,7 +264,7 @@ class QueryTest extends TestCase
      * @return  void
      *
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('joinProvider')]
+    #[DataProvider('joinProvider')]
     public function testJoin(string $expt, ...$joins)
     {
         $q = self::createQuery()
@@ -666,7 +657,7 @@ SQL
      * @return  void
      *
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('asProvider')]
+    #[DataProvider('asProvider')]
     public function testAs(string $expt, $value, $alias, bool $isColumn = true): void
     {
         self::assertEquals(static::replaceQn($expt), (string) $this->instance->as($value, $alias, $isColumn));
@@ -748,7 +739,7 @@ SQL
      * @return  void
      *
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('whereProvider')]
+    #[DataProvider('whereProvider')]
     public function testWhere(string $expt, ...$wheres)
     {
         $this->instance->select('*')
@@ -1182,7 +1173,7 @@ SQL
      * @return  void
      *
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('havingProvider')]
+    #[DataProvider('havingProvider')]
     public function testHaving(string $expt, ...$wheres): void
     {
         $this->instance->select('*')
