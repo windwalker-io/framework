@@ -334,6 +334,30 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
             $opt[CURLOPT_FOLLOWLOCATION] = (bool) $options->followLocation;
         }
 
+        if ($options->progress) {
+            $opt[CURLOPT_NOPROGRESS] = false;
+            $opt[CURLOPT_XFERINFOFUNCTION] = static function (
+                \CurlHandle $handle,
+                float $dlTotal,
+                float $dlNow,
+                float $ulTotal,
+                float $ulNow,
+            ) use ($options) {
+                $info = curl_getinfo($handle);
+
+                return ($options->progress)(
+                    new ProgressEvent(
+                        handle: $handle,
+                        downloadTotal: $dlTotal,
+                        downloaded: $dlNow,
+                        uploadTotal: $ulTotal,
+                        uploaded: $ulNow,
+                        info: $info,
+                    )
+                );
+            };
+        }
+
         // Set any custom transport options
         $opt = array_replace($opt, $options->curl ?? [], $options->options ?? []);
 

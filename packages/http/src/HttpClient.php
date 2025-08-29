@@ -135,7 +135,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
     public function downloadStream()
     {
-
     }
 
     /**
@@ -160,6 +159,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         if (!$transportOptions->optionMerged) {
             $transportOptions = $transportOptions->withDefaults($this->options->transport, true);
+            $transportOptions->files ??= $this->options->files;
             $transportOptions->files ??= $this->options->files;
         }
 
@@ -193,8 +193,10 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @since   2.1
      */
-    public function head(Stringable|string $url, array|HttpClientOptions $options = new HttpClientOptions()): HttpClientResponse
-    {
+    public function head(
+        Stringable|string $url,
+        array|HttpClientOptions $options = new HttpClientOptions()
+    ): HttpClientResponse {
         return $this->request('HEAD', $url, null, $options);
     }
 
@@ -208,8 +210,10 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @since   2.1
      */
-    public function get(Stringable|string $url, array|HttpClientOptions $options = new HttpClientOptions()): HttpClientResponse
-    {
+    public function get(
+        Stringable|string $url,
+        array|HttpClientOptions $options = new HttpClientOptions()
+    ): HttpClientResponse {
         return $this->request('GET', $url, null, $options);
     }
 
@@ -459,6 +463,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         $transportOptions = $options->transport ?? new TransportOptions();
         $transportOptions->files = $options->files;
+        $transportOptions->progress = $options->progress;
 
         $transportOptions->optionMerged = true;
 

@@ -48,7 +48,7 @@
     },
     "config": {
         "platlanguage": {
-            "php": "8.4.1"
+            "php": "8.4.6"
         }
     }
 }
