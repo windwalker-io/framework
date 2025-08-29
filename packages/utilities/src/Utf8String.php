@@ -49,7 +49,7 @@ abstract class Utf8String
 
     public const string ENCODING_UTF8 = 'UTF-8';
 
-    public const ENCODING_US_ASCII = 'US-ASCII';
+    public const string ENCODING_US_ASCII = 'US-ASCII';
 
     /**
      * Tests whether a string contains only 7bit ASCII bytes.
@@ -308,7 +308,7 @@ abstract class Utf8String
      * @param  string       $str     The haystack
      * @param  string       $repl    The replacement string
      * @param  int          $start   Start
-     * @param  int          $length  Length (optional)
+     * @param  int|null     $length  Length (optional)
      * @param  string|null  $encoding
      *
      * @return  string
@@ -528,6 +528,20 @@ abstract class Utf8String
     }
 
     /**
+     * Similar to isUtf8(), but uses PHP's mbstring extension.
+     *
+     * A workaround before this RFC implemented: https://wiki.php.net/rfc/is_valid_utf8
+     *
+     * @param  string  $str
+     *
+     * @return  bool
+     */
+    public static function isValidUtf8(string $str): bool
+    {
+        return mb_check_encoding($str, 'UTF-8');
+    }
+
+    /**
      * Tests whether a string complies as UTF-8. This will be much
      * faster than utf8_is_valid but will pass five and six octet
      * UTF-8 sequences, which are not supported by Unicode and
@@ -572,9 +586,7 @@ abstract class Utf8String
     {
         return preg_replace_callback(
             '/\\\\u([0-9a-fA-F]{4})/',
-            function ($match) {
-                return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
-            },
+            static fn($match) => mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE'),
             $str
         );
     }
@@ -592,9 +604,7 @@ abstract class Utf8String
     {
         return preg_replace_callback(
             '/\\\\u([0-9a-fA-F]{4})/',
-            function ($match) {
-                return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
-            },
+            static fn($match) => mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE'),
             $str
         );
     }
