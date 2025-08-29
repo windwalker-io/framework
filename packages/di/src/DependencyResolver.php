@@ -48,21 +48,22 @@ class DependencyResolver
      * @throws DefinitionResolveException
      * @throws ReflectionException
      */
-    public function newInstance(mixed $class, array $args = [], int $options = 0): object
+    public function newInstance(mixed $class, array $args = [], DIOptions|int $options = new DIOptions()): object
     {
         if ($class instanceof DefinitionInterface) {
             return $this->container->resolve($class);
         }
 
-        $options |= $this->container->getOptions();
+        $options = $this->mergeOptionsDefaults($options);
 
         if (is_string($class)) {
-            $builder = fn(array $args, int $options) => $this->resolveMembersAttributes(
+            /** @var DIOptions $options */
+            $builder = fn(array $args, DIOptions $options) => $this->resolveMembersAttributes(
                 $this->newInstanceByClassName($class, $args, $options),
                 $options
             );
 
-            if (!($options & Container::IGNORE_ATTRIBUTES)) {
+            if (!$options->ignoreAttributes) {
                 $builder = $this->container->getAttributesResolver()
                     ->resolveClassCreate($class, $builder);
             }
@@ -94,7 +95,7 @@ class DependencyResolver
 
             $instance = $this->resolveMembersAttributes($instance, $options);
 
-            if (!($options & Container::IGNORE_ATTRIBUTES)) {
+            if (!$options->ignoreAttributes) {
                 $instance = $this->container->getAttributesResolver()
                     ->decorateObject($instance);
             }
@@ -114,9 +115,9 @@ class DependencyResolver
         return $instance;
     }
 
-    protected function resolveMembersAttributes(object $instance, int $options): object
+    protected function resolveMembersAttributes(object $instance, DIOptions $options): object
     {
-        if (!($options & Container::IGNORE_ATTRIBUTES)) {
+        if (!$options->ignoreAttributes) {
             $instance = $this->container->getAttributesResolver()
                 ->resolveObjectMembers($instance);
         }
@@ -128,8 +129,13 @@ class DependencyResolver
      * @throws ReflectionException
      * @throws DependencyResolutionException
      */
-    public function newInstanceByClassName(string $class, array $args = [], int $options = 0): object
-    {
+    public function newInstanceByClassName(
+        string $class,
+        array $args = [],
+        DIOptions|int $options = new DIOptions()
+    ): object {
+        $options = $this->mergeOptionsDefaults($options);
+
         $reflection = new ReflectionClass($class);
 
         $constructor = $reflection->getConstructor();
@@ -181,8 +187,13 @@ class DependencyResolver
      * @throws ReflectionException
      * @since   2.0
      */
-    protected function getMethodArgs(ReflectionFunctionAbstract $method, array $args = [], int $options = 0): array
-    {
+    protected function getMethodArgs(
+        ReflectionFunctionAbstract $method,
+        array $args = [],
+        DIOptions|int $options = new DIOptions()
+    ): array {
+        $options = $this->mergeOptionsDefaults($options);
+
         $methodArgs = [];
 
         foreach ($method->getParameters() as $i => $param) {
@@ -276,12 +287,15 @@ class DependencyResolver
      * @throws ContainerExceptionInterface
      * @throws ReflectionException
      */
-    public function &resolveParameterDependency(ReflectionParameter $param, array $args = [], int $options = 0): mixed
-    {
-        $nope = null;
-        $options |= $this->container->getOptions();
+    public function &resolveParameterDependency(
+        ReflectionParameter $param,
+        array $args = [],
+        DIOptions|int $options = new DIOptions()
+    ): mixed {
+        $options = $this->mergeOptionsDefaults($options);
 
-        $autowire = $options & Container::AUTO_WIRE;
+        $autowire = $options->autowire;
+        $nope = null;
 
         $type = $param->getType();
         // $dependencyVarName = $param->getName();
@@ -402,11 +416,14 @@ class DependencyResolver
         return $value;
     }
 
-    public function &resolveParameterAttributes(mixed &$value, ReflectionParameter $param, int $options = 0): mixed
-    {
-        $options |= $this->container->getOptions();
+    public function &resolveParameterAttributes(
+        mixed &$value,
+        ReflectionParameter $param,
+        DIOptions|int $options = new DIOptions()
+    ): mixed {
+        $options = $this->mergeOptionsDefaults($options);
 
-        if (!($options & Container::IGNORE_ATTRIBUTES) && $param->getAttributes()) {
+        if (!$options->ignoreAttributes && $param->getAttributes()) {
             $value = &$this->container->getAttributesResolver()
                 ->resolveParameter($value, $param);
         }
@@ -417,10 +434,10 @@ class DependencyResolver
     /**
      * Execute a callable with dependencies.
      *
-     * @param  mixed        $callable  Do not use callable hint, will check callable after context bounded.
-     * @param  array        $args
+     * @param  mixed  $callable  Do not use callable hint, will check callable after context bounded.
+     * @param  array  $args
      * @param  object|null  $context
-     * @param  int          $options
+     * @param  int  $options
      *
      * @return mixed
      *
@@ -430,16 +447,20 @@ class DependencyResolver
      * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
-    public function call(mixed $callable, array $args = [], ?object $context = null, int $options = 0): mixed
-    {
+    public function call(
+        mixed $callable,
+        array $args = [],
+        ?object $context = null,
+        DIOptions|int $options = new DIOptions()
+    ): mixed {
         $ref = new ReflectionCallable($callable);
 
-        $options |= $this->container->getOptions();
+        $options = $this->mergeOptionsDefaults($options);
 
-        $closure = function (array $args, int $options) use ($context, $callable, $ref) {
+        $closure = function (array $args, DIOptions $options) use ($context, $callable, $ref) {
             $args = $this->getMethodArgs($ref->getReflector(), $args, $options);
 
-            if (!($options & Container::IGNORE_ATTRIBUTES)) {
+            if (!$options->ignoreAttributes) {
                 $callable = $this->container->getAttributesResolver()
                     ->resolveCallable($callable, $context);
             }
@@ -463,5 +484,10 @@ class DependencyResolver
     protected static function isService(ReflectionClass $dependency): bool
     {
         return $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF) !== [];
+    }
+
+    public function mergeOptionsDefaults(int|DIOptions $options): DIOptions
+    {
+        return DIOptions::wrap($options)->withDefaults($this->container->getOptions());
     }
 }

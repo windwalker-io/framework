@@ -6,6 +6,7 @@ namespace Windwalker\DI\Definition;
 
 use Closure;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 
 /**
  * Interface StoreDefinitionInterface
@@ -26,7 +27,7 @@ interface StoreDefinitionInterface extends DefinitionInterface
 
     public function reset(): void;
 
-    public function getOptions(): int;
+    public function getOptions(): DIOptions;
 
     public function getCache(\UnitEnum|string|null $tag = null): mixed;
 

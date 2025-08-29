@@ -35,8 +35,6 @@ class Assert
     }
 
     /**
-     * assert
-     *
      * @param  bool|callable  $assertion
      * @param  string         $message
      * @param  mixed          $value
@@ -44,10 +42,8 @@ class Assert
      * @return  void
      *
      * @throws Throwable
-     *
-     * @since  __DEPLOY_VERSION__
      */
-    public function assert(bool|callable $assertion, string $message, $value = null): void
+    public function assert(mixed $assertion, string $message, mixed $value = null): void
     {
         if (is_callable($assertion)) {
             $result = $assertion();

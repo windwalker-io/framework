@@ -7,6 +7,7 @@ namespace Windwalker\DI\Attributes;
 use Attribute;
 use ReflectionParameter;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 
 /**
  * The Autowire class.
@@ -31,13 +32,13 @@ class Autowire implements ContainerAttributeInterface
                 $resolver = $container->getDependencyResolver();
 
                 return $resolver->resolveParameterValue(
-                    $resolver->resolveParameterDependency($reflector, [], Container::AUTO_WIRE),
+                    $resolver->resolveParameterDependency($reflector, [], new DIOptions(autowire: true)),
                 );
             };
         }
 
-        return static function ($args, $options) use ($handler) {
-            $options |= Container::AUTO_WIRE;
+        return static function ($args, DIOptions $options) use ($handler) {
+            $options->autowire = true;
 
             return $handler($args, $options);
         };

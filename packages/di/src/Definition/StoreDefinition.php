@@ -7,6 +7,7 @@ namespace Windwalker\DI\Definition;
 use Closure;
 use Windwalker\DI\Attributes\Isolation;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 use Windwalker\DI\Exception\DefinitionException;
 
 use function Windwalker\has_attributes;
@@ -17,6 +18,8 @@ use function Windwalker\unwrap_enum;
  */
 class StoreDefinition implements StoreDefinitionInterface
 {
+    protected DIOptions $options;
+
     protected array $cache = [];
 
     protected array $extends = [];
@@ -28,9 +31,11 @@ class StoreDefinition implements StoreDefinitionInterface
     public function __construct(
         public string $id,
         public protected(set) mixed $value,
-        public int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         public \UnitEnum|string|null $tag = null
     ) {
+        $this->options = DIOptions::wrap($options);
+
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
             $this->setCache($this->value, $this->tag);
         }
@@ -79,7 +84,7 @@ class StoreDefinition implements StoreDefinitionInterface
         }
 
         // Cache
-        if ($this->options & Container::SHARED) {
+        if ($this->options->shared) {
             $this->setCache($value, $tag);
         }
 
@@ -93,7 +98,7 @@ class StoreDefinition implements StoreDefinitionInterface
         }
 
         // Cache again
-        if ($this->options & Container::SHARED) {
+        if ($this->options->shared) {
             $this->setCache($value, $tag);
         }
 
@@ -108,12 +113,12 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function isShared(): bool
     {
-        return (bool) ($this->options & Container::SHARED);
+        return (bool) $this->options->shared;
     }
 
     public function isProtected(): bool
     {
-        return (bool) ($this->options & Container::PROTECTED);
+        return (bool) $this->options->protected;
     }
 
     public function extend(Closure $closure): static
@@ -136,19 +141,19 @@ class StoreDefinition implements StoreDefinitionInterface
     }
 
     /**
-     * @return int
+     * @return DIOptions
      */
-    public function getOptions(): int
+    public function getOptions(): DIOptions
     {
         return $this->options;
     }
 
     /**
-     * @param  int  $options
+     * @param  DIOptions  $options
      *
      * @return  static  Return self to support chaining.
      */
-    public function setOptions(int $options): static
+    public function setOptions(DIOptions $options): static
     {
         $this->options = $options;
 

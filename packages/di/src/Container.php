@@ -46,36 +46,41 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     use ConfigRegisterTrait;
 
     /**
-     * Make a store definition singleton, always get same instance.
+     * @deprecated  Use {@see DIOptions} instead.
      */
     public const int SHARED = 1 << 0;
 
     /**
-     * Make a store definition protected and unable to replace.
+     * @deprecated  Use {@see DIOptions} instead.
      */
     public const int PROTECTED = 1 << 1;
 
     /**
-     * Make the store cache not share to children.
-     * Every children Container will create new one even if parent has cache.
+     * @deprecated  Use {@see DIOptions} instead.
      */
     public const int ISOLATION = 1 << 2;
 
     /**
-     * Auto create dependencies when creating an object.
+     * @deprecated  Use {@see DIOptions} instead.
      */
     public const int AUTO_WIRE = 1 << 3;
 
     /**
-     * Ignore all attributes when create object or call method.
+     * @deprecated  Use {@see DIOptions} instead.
      */
     public const int IGNORE_ATTRIBUTES = 1 << 4;
 
+    /**
+     * @deprecated  Use {@see MergeOptions} instead.
+     */
     public const int MERGE_OVERRIDE = 1 << 0;
 
+    /**
+     * @deprecated  Use {@see MergeOptions} instead.
+     */
     public const int MERGE_RECURSIVE = 1 << 1;
 
-    public protected(set) int $options = 0;
+    public protected(set) DIOptions $options;
 
     public protected(set) int $level = 1;
 
@@ -132,21 +137,21 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * Container constructor.
      *
      * @param  Container|null  $parent
-     * @param  int             $options
+     * @param  DIOptions|int   $options
      *
      * @throws DefinitionException
      */
-    public function __construct(?Container $parent = null, int $options = 0)
+    public function __construct(?Container $parent = null, DIOptions|int $options = new DIOptions())
     {
         $this->parent = $parent;
-        $this->options = $options;
+        $this->options = DIOptions::wrap($options);
         $this->parameters = new Parameters();
         $this->dependencyResolver = new DependencyResolver($this);
 
         if ($parent) {
             $this->level = $parent->level + 1;
             $this->aliases = $parent->aliases;
-            $this->options = $parent->options;
+            $this->options = clone $parent->options;
             $params = $parent->getParameters()->createChild();
             $this->setParameters($params->reset());
 
@@ -182,7 +187,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * @param  string                 $id
      * @param  mixed                  $value
-     * @param  int                    $options
+     * @param  DIOptions|int          $options
      * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
@@ -191,9 +196,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function set(
         string $id,
         mixed $value,
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
+        $options = DIOptions::wrap($options);
+
         $definition = $this->findDefinition($id, false, $tag);
 
         if ($definition && $definition->isProtected()) {
@@ -224,37 +231,46 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * share
      *
-     * @param  string  $id
-     * @param  mixed   $value
-     * @param  int     $options
+     * @param  string         $id
+     * @param  mixed          $value
+     * @param  DIOptions|int  $options
      *
      * @return StoreDefinitionInterface
      * @throws DefinitionException
      */
-    public function share(string $id, mixed $value, int $options = 0): StoreDefinitionInterface
+    public function share(string $id, mixed $value, DIOptions|int $options = new DIOptions()): StoreDefinitionInterface
     {
-        return $this->set($id, $value, $options | static::SHARED);
+        $options = DIOptions::wrap($options);
+        $options->shared = true;
+
+        return $this->set($id, $value, $options);
     }
 
     /**
      * protect
      *
-     * @param  string  $id
-     * @param  mixed   $value
-     * @param  int     $options
+     * @param  string         $id
+     * @param  mixed          $value
+     * @param  DIOptions|int  $options
      *
      * @return StoreDefinitionInterface
      * @throws DefinitionException
      */
-    public function protect(string $id, mixed $value, int $options = 0): StoreDefinitionInterface
-    {
-        return $this->set($id, $value, $options | static::PROTECTED);
+    public function protect(
+        string $id,
+        mixed $value,
+        DIOptions|int $options = new DIOptions()
+    ): StoreDefinitionInterface {
+        $options = DIOptions::wrap($options);
+        $options->protected = true;
+
+        return $this->set($id, $value, $options);
     }
 
     /**
      * @param  string                    $id
      * @param  StoreDefinitionInterface  $value
-     * @param  string|null               $tag
+     * @param  \UnitEnum|string|null     $tag
      *
      * @return  StoreDefinitionInterface
      */
@@ -318,7 +334,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * @param  string|callable|DefinitionInterface|ValueReference  $source
      * @param  array                                               $args
-     * @param  int                                                 $options
+     * @param  DIOptions|int                                       $options
      * @param  \UnitEnum|string|null                               $tag
      *
      * @return  mixed|object|string
@@ -327,8 +343,14 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @throws DependencyResolutionException
      * @throws ReflectionException
      */
-    public function resolve(mixed $source, array $args = [], int $options = 0, \UnitEnum|string|null $tag = null): mixed
-    {
+    public function resolve(
+        mixed $source,
+        array $args = [],
+        DIOptions|int $options = new DIOptions(),
+        \UnitEnum|string|null $tag = null
+    ): mixed {
+        $options = DIOptions::wrap($options);
+
         if ($source === null) {
             throw new InvalidArgumentException(
                 sprintf(
@@ -372,7 +394,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this->get($source, tag: $tag);
     }
 
-    public function resolveParam(string $param, array $args = [], int $options = 0): mixed
+    public function resolveParam(string $param, array $args = [], DIOptions|int $options = new DIOptions()): mixed
     {
         return $this->resolve($param, $args, $options);
     }
@@ -513,7 +535,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             if ($parentDefinition) {
                 $parentDefinition = clone $parentDefinition;
 
-                if ($parentDefinition->getOptions() & static::ISOLATION) {
+                if ($parentDefinition->getOptions()->isolation) {
                     $parentDefinition->reset();
                 }
 
@@ -553,7 +575,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @param  string                 $id
      * @param  mixed                  $value
-     * @param  int                    $options
+     * @param  DIOptions|int          $options
      * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
@@ -564,11 +586,16 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function bind(
         string $id,
         mixed $value,
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $value = static fn(Container $container, \UnitEnum|string|null $tag = null)
-            => $container->newInstance($value, compact('tag'), $options);
+        $options = DIOptions::wrap($options);
+
+        $value = static fn(Container $container, \UnitEnum|string|null $tag = null) => $container->newInstance(
+            $value,
+            compact('tag'),
+            $options
+        );
 
         return $this->set($id, $value, $options, $tag);
     }
@@ -576,7 +603,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * @param  string                 $id
      * @param  mixed                  $value
-     * @param  int                    $options
+     * @param  DIOptions|int          $options
      * @param  \UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
@@ -587,10 +614,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function bindShared(
         string $id,
         mixed $value,
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        return $this->bind($id, $value, $options | static::SHARED, $tag);
+        $options = DIOptions::wrap($options);
+        $options->shared = true;
+
+        return $this->bind($id, $value, $options, $tag);
     }
 
     /**
@@ -607,9 +637,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function prepareObject(
         string $class,
         ?Closure $extend = null,
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
+        $options = DIOptions::wrap($options);
+
         $handler = static fn(Container $container) => $container->newInstance($class, [], $options);
 
         $definition = $this->set($class, $handler, $options, $tag);
@@ -635,10 +667,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function prepareSharedObject(
         string $class,
         ?Closure $extend = null,
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        return $this->prepareObject($class, $extend, $options | static::SHARED, $tag);
+        $options = DIOptions::wrap($options);
+        $options->shared = true;
+
+        return $this->prepareObject($class, $extend, $options, $tag);
     }
 
     /**
@@ -723,23 +758,25 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * New instance and save it.
      *
-     * @param  string       $class
-     * @param  array        $args
-     * @param  int          $options
-     * @param  string|null  $tag
+     * @param  string                 $class
+     * @param  array                  $args
+     * @param  DIOptions|int          $options
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return mixed
-     * @throws ContainerExceptionInterface
      * @throws DefinitionException
-     * @throws NotFoundExceptionInterface
+     * @throws DefinitionNotFoundException
+     * @throws DependencyResolutionException
      * @since   3.0
      */
     public function createObject(
         string $class,
         array $args = [],
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): mixed {
+        $options = DIOptions::wrap($options);
+
         $callback = fn(Container $container) => $container->newInstance($class, $args, $options);
 
         $this->set($class, $callback, $options, $tag);
@@ -751,40 +788,52 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * @param  string                 $class
      * @param  array                  $args
-     * @param  int                    $options
+     * @param  DIOptions|int          $options
      * @param  \UnitEnum|string|null  $tag
      *
      * @return mixed
      *
-     * @throws ContainerExceptionInterface
      * @throws DefinitionException
-     * @throws NotFoundExceptionInterface
+     * @throws DefinitionNotFoundException
+     * @throws DependencyResolutionException
      * @since   3.0
      */
     public function createSharedObject(
         string $class,
         array $args = [],
-        int $options = 0,
+        DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): mixed {
-        return $this->createObject($class, $args, $options | static::SHARED, $tag);
+        $options = DIOptions::wrap($options);
+        $options->shared = true;
+
+        return $this->createObject($class, $args, $options, $tag);
     }
 
     /**
      * Execute a callable with dependencies.
      *
-     * @param  mixed        $callable  Do not use callable hint, will check callable after context bounded.
-     * @param  array        $args
-     * @param  object|null  $context
-     * @param  int          $options
+     * @param  mixed          $callable  Do not use callable hint, will check callable after context bounded.
+     * @param  array          $args
+     * @param  object|null    $context
+     * @param  DIOptions|int  $options
      *
      * @return mixed
      *
      * @throws ContainerExceptionInterface
+     * @throws DefinitionResolveException
+     * @throws DependencyResolutionException
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
-    public function call(mixed $callable, array $args = [], ?object $context = null, int $options = 0): mixed
-    {
+    public function call(
+        mixed $callable,
+        array $args = [],
+        ?object $context = null,
+        DIOptions|int $options = new DIOptions()
+    ): mixed {
+        $options = DIOptions::wrap($options);
+
         return $this->dependencyResolver->call($callable, $args, $context, $options);
     }
 
@@ -831,16 +880,18 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @param  mixed  $class
-     * @param  array  $args
-     * @param  int    $options
+     * @param  mixed          $class
+     * @param  array          $args
+     * @param  DIOptions|int  $options
      *
      * @return  mixed|object
      * @throws DefinitionResolveException
      * @throws ReflectionException
      */
-    public function newInstance(mixed $class, array $args = [], int $options = 0): mixed
+    public function newInstance(mixed $class, array $args = [], DIOptions|int $options = new DIOptions()): mixed
     {
+        $options = DIOptions::wrap($options);
+
         if (is_string($class)) {
             $class = $this->resolveAliasFromParent($class);
         }
@@ -1057,11 +1108,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this;
     }
 
-    public function mergeParameters(?string $path, array $data, int $options = 0): void
+    public function mergeParameters(?string $path, array $data, MergeOptions|int $options = new MergeOptions()): void
     {
+        $options = MergeOptions::wrap($options);
+
         $params = $path === null ? $this->getParameters() : $this->getParameters()->proxy($path);
-        $override = $options & static::MERGE_OVERRIDE;
-        $recursive = $options & static::MERGE_RECURSIVE;
+        $override = $options->override;
+        $recursive = $options->recursive;
         $merge = $recursive
             ? [Arr::class, 'mergeRecursive']
             : 'array_merge';
@@ -1090,21 +1143,21 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     }
 
     /**
-     * @return int
+     * @return DIOptions
      */
-    public function getOptions(): int
+    public function getOptions(): DIOptions
     {
         return $this->options;
     }
 
     /**
-     * @param  int  $options
+     * @param  int|DIOptions  $options
      *
      * @return  static  Return self to support chaining.
      */
-    public function setOptions(int $options): static
+    public function setOptions(int|DIOptions $options): static
     {
-        $this->options = $options;
+        $this->options = DIOptions::wrap($options);
 
         return $this;
     }
