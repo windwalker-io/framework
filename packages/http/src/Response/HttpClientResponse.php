@@ -9,7 +9,12 @@ namespace Windwalker\Http\Response;
  */
 class HttpClientResponse extends Response
 {
-    protected mixed $info;
+    /**
+     * Same details info from connection handler like CURL or socket.
+     *
+     * @var mixed
+     */
+    protected mixed $info = null;
 
     public function withInfo(mixed $info): static
     {

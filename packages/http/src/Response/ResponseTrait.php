@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Response;
 
 use Windwalker\Data\Collection;
+use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Helper\ResponseHelper;
 
 /**
@@ -15,6 +16,11 @@ trait ResponseTrait
     public function isSuccess(): bool
     {
         return ResponseHelper::isSuccess($this->getStatusCode());
+    }
+
+    public function isError(): bool
+    {
+        return $this->isServerError() || $this->isAuthError();
     }
 
     public function isServerError(): bool
@@ -53,5 +59,37 @@ trait ResponseTrait
     public function toArray(string $format = 'json', array $options = []): array
     {
         return $this->decode($format, $options)->dump();
+    }
+
+    /**
+     * @template T of class-string<\Exception>
+     *
+     * @param  string  $className
+     *
+     * @return  T
+     */
+    public function toException(string $className = HttpRequestException::class): \Exception
+    {
+        $e = new $className($this->getReasonPhrase(), $this->getStatusCode());
+
+        if ($e instanceof HttpRequestException) {
+            $e = $e->withResponse($this);
+        }
+
+        return $e;
+    }
+
+    /**
+     * @template T of class-string<\Exception>
+     *
+     * @param  string  $className
+     *
+     * @return  never
+     *
+     * @throws T
+     */
+    public function throw(string $className = HttpRequestException::class): never
+    {
+        throw $this->toException($className);
     }
 }
