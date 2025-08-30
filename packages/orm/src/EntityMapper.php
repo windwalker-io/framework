@@ -24,10 +24,12 @@ use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Event\{AbstractEntityEvent,
     AbstractSaveEvent,
     AfterCopyEvent,
+    AfterCreateBulkEvent,
     AfterDeleteEvent,
     AfterSaveEvent,
     AfterUpdateWhereEvent,
     BeforeCopyEvent,
+    BeforeCreateBulkEvent,
     BeforeDeleteEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
@@ -438,6 +440,61 @@ class EntityMapper implements EventAwareInterface
         }
 
         return $items;
+    }
+
+    /**
+     * @param  iterable        $items
+     * @param  ORMOptions|int  $options
+     *
+     * @return  array<T>
+     *
+     * @throws \ReflectionException
+     */
+    public function createBulk(iterable $items, ORMOptions|int $options = new ORMOptions()): array
+    {
+        $options = ORMOptions::wrap($options);
+        $metadata = $this->getMetadata();
+
+        $dataSet = [];
+        $entities = [];
+
+        foreach ($items as $item) {
+            TypeAssert::assert(
+                is_object($item) || is_array($item),
+                '{caller} item must be array or object, {value} given',
+                $item
+            );
+
+            $data = $this->extract($item);
+            $data = $this->castForSave($data, true, $entities[] = $this->toEntity($item));
+
+            $dataSet[] = $data;
+        }
+
+        // Event
+        $event = $this->emits(
+            new BeforeCreateBulkEvent(
+                items: $dataSet,
+                entities: $entities,
+                options: $options,
+            )
+        );
+
+        $items = $this->getDb()->getWriter()->insertBulk(
+            $metadata->getTableName(),
+            $event->items,
+        );
+
+        // Event
+        $event = $this->emits(
+            new AfterCreateBulkEvent(
+                items: $items,
+                entities: $event->entities,
+                options: $event->options,
+            )
+        );
+
+        return $event->entities;
     }
 
     public function updateOne(

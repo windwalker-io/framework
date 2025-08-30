@@ -653,6 +653,42 @@ class EntityMapperTest extends AbstractORMTestCase
     }
 
     /**
+     * Don't change ordering of this method to keep the inserted IDs correct.
+     *
+     * @return  void
+     *
+     * @throws \ReflectionException
+     */
+    public function testCreateBulk(): void
+    {
+        // Create from array
+        $items = [
+            ['title' => 'Daisy', 'meaning' => '', 'params' => ''],
+            ['title' => 'Tulip', 'meaning' => '', 'params' => ''],
+            // Mapper should remove non-necessary field
+            ['title' => 'Orchid', 'anim' => 'bird', 'meaning' => '', 'params' => ''],
+        ];
+
+        /** @var StubFlower[] $returns */
+        $returns = $this->instance->createBulk($items);
+
+        $sql = $this->instance->getDb()->getLastQuery()->render(true);
+
+        self::assertStringContainsString('Daisy', $sql);
+        self::assertStringContainsString('Tulip', $sql);
+        self::assertStringContainsString('Orchid', $sql);
+
+        $newItems = self::$db->prepare(
+            'SELECT * FROM ww_flower ORDER BY id DESC LIMIT 3'
+        )
+            ->all();
+
+        self::assertEquals(['Orchid', 'Tulip', 'Daisy'], $newItems->column('title')->dump());
+
+        self::assertInstanceOf(StubFlower::class, $returns[0]);
+    }
+
+    /**
      * Method to test getPrimaryKey().
      *
      * @return void
