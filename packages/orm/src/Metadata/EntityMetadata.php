@@ -26,6 +26,7 @@ use Windwalker\ORM\Relation\RelationManager;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
+use Windwalker\Utilities\StrNormalize;
 
 /**
  * The EntityMetadata class.
@@ -403,9 +404,16 @@ class EntityMetadata implements EventAwareInterface
         );
     }
 
-    public function getColumn(string $name): ?Column
+    public function getColumn(string $name, bool $fixCase = false): ?Column
     {
-        return $this->getColumns()[$name] ?? null;
+        $col = $this->getColumns()[$name] ?? null;
+
+        if ($fixCase && !$col && strpbrk($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') !== false) {
+            $key = $this->columnNameCamelCase($name);
+            $col = $this->getColumn($key);
+        }
+
+        return $col;
     }
 
     /**
@@ -676,5 +684,10 @@ class EntityMetadata implements EventAwareInterface
         $this->cacheStorage['entity'] = $cachedEntity;
 
         return $this;
+    }
+
+    protected function columnNameCamelCase(string $colName): string
+    {
+        return $this->cacheStorage['colName:' . $colName] ??= StrNormalize::toSnakeCase($colName);
     }
 }

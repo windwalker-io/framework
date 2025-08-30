@@ -18,6 +18,7 @@ use Windwalker\ORM\Test\Entity\StubComment;
 use Windwalker\ORM\Test\Entity\StubFlower;
 use Windwalker\Utilities\Arr;
 
+use function PHPUnit\Framework\assertEquals;
 use function Windwalker\raw;
 
 /**
@@ -135,6 +136,13 @@ class EntityMapperTest extends AbstractORMTestCase
         $data = $this->instance->findOne(['title' => 'Freesia', 'state' => 1]);
 
         self::assertNull($data);
+
+        // Test camel case conversion
+        $categoryId = 2;
+        $item = self::$orm->mustFindOne(StubArticle::class, compact('categoryId'));
+
+        assertEquals(1, $item->getId());
+        assertEquals(2, $item->getCategoryId());
     }
 
     /**

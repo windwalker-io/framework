@@ -46,6 +46,7 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
+use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
@@ -1675,15 +1676,17 @@ class EntityMapper implements EventAwareInterface
         }
 
         if (is_array($conditions)) {
+            $handledConditions = [];
+
             foreach ($conditions as $k => $v) {
                 if (!is_numeric($k)) {
-                    $conditions[$k] = $this->handleConditionColumn($k, $v);
-                } else {
-                    $conditions[$k] = $v;
+                    [$k, $v] = $this->handleConditionColumn($k, $v);
                 }
+
+                $handledConditions[$k] = $v;
             }
 
-            return $conditions;
+            return $handledConditions;
         }
 
         $metadata = $this->getMetadata();
@@ -1691,7 +1694,9 @@ class EntityMapper implements EventAwareInterface
         $key = $metadata->getMainKey();
 
         if ($key) {
-            return [$key => $this->handleConditionColumn($key, $conditions)];
+            [$key, $value] = $this->handleConditionColumn($key, $conditions);
+
+            return [$key => $value];
         }
 
         throw new LogicException(
@@ -1702,16 +1707,17 @@ class EntityMapper implements EventAwareInterface
         );
     }
 
-    protected function handleConditionColumn(string $key, mixed $value): mixed
+    protected function handleConditionColumn(string &$key, mixed $value): array
     {
         $metadata = $this->getMetadata();
 
-        $col = $metadata->getColumn($key);
+        $col = $metadata->getColumn($key, true);
 
         if (!$col) {
-            return $value;
+            return [$key, $value];
         }
 
+        $key = $col->getName();
         $prop = $col->getProperty();
 
         // UUID Binary
@@ -1719,13 +1725,13 @@ class EntityMapper implements EventAwareInterface
 
         if ($uuidAttr) {
             if (is_array($value)) {
-                return array_map(fn($v) => try_wrap_uuid($v), $value);
+                return [$key, array_map(fn($v) => try_wrap_uuid($v), $value)];
             }
 
-            return try_wrap_uuid($value);
+            return [$key, try_wrap_uuid($value)];
         }
 
-        return $value;
+        return [$key, $value];
     }
 
     protected function extractForSave(object|array $data, bool $updateNulls = true, bool $isNew = false): array
