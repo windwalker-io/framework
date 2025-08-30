@@ -14,15 +14,29 @@ use ParagonIE\ConstantTime\Hex;
  */
 class SecretToolkit
 {
+    public static int $defaultLength = SECRET_128BIT;
+
+    /**
+     * @throws \Exception
+     */
+    public static function genRawSecret(int $length = SECRET_LENGTH_DEFAULT): string
+    {
+        if ($length === SECRET_LENGTH_DEFAULT) {
+            $length = static::$defaultLength;
+        }
+
+        return random_bytes($length);
+    }
+
     /**
      * @throws \Exception
      */
     public static function genSecretString(
-        int $length = SECRET_128BIT,
+        int $length = SECRET_LENGTH_DEFAULT,
         string $encoder = ENCODER_BASE64URLSAFE,
         bool $withPrefix = true
     ): string {
-        $secret = random_bytes($length);
+        $secret = static::genRawSecret($length);
 
         return static::encode($secret, $encoder, $withPrefix);
     }
@@ -31,11 +45,21 @@ class SecretToolkit
      * @throws \Exception
      */
     public static function genSecret(
-        int $length = SECRET_128BIT,
+        int $length = SECRET_LENGTH_DEFAULT,
         string $encoder = ENCODER_BASE64URLSAFE,
         bool $withPrefix = true
     ): string {
         return static::genSecretString($length, $encoder, $withPrefix);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function genSecretWithoutPrefix(
+        int $length = SECRET_LENGTH_DEFAULT,
+        string $encoder = ENCODER_BASE64URLSAFE
+    ): string {
+        return static::genSecretString($length, $encoder, false);
     }
 
     public static function encode(
@@ -65,6 +89,17 @@ class SecretToolkit
         }
 
         return $encoded;
+    }
+
+    public static function encodeIfNoPrefix(
+        string $binaryString,
+        string $encoder = ENCODER_BASE64URLSAFE,
+    ): string {
+        if (static::canDecode($binaryString)) {
+            return $binaryString;
+        }
+
+        return static::encode($binaryString, $encoder, true);
     }
 
     /**
@@ -123,6 +158,15 @@ class SecretToolkit
         return static::decodeBy($string, $decoder);
     }
 
+    public static function decodeIfHasPrefix(string $string): string
+    {
+        if (static::canDecode($string)) {
+            return static::decode($string);
+        }
+
+        return $string;
+    }
+
     public static function decodeBy(string $string, string $decoder = ENCODER_BASE64URLSAFE): string
     {
         if ($decoder === ENCODER_RAW) {
@@ -141,14 +185,5 @@ class SecretToolkit
         }
 
         return $decoder::decode($string);
-    }
-
-    public static function decodeIfHasPrefix(string $string): string
-    {
-        if (static::canDecode($string)) {
-            return static::decode($string);
-        }
-
-        return $string;
     }
 }

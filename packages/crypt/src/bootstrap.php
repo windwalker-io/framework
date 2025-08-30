@@ -10,6 +10,7 @@ namespace Windwalker\Crypt {
     const SECRET_128BIT = 16;
     const SECRET_192BIT = 24;
     const SECRET_256BIT = 32;
+    const SECRET_LENGTH_DEFAULT = -1;
 
     const ENCODER_RAW = 'raw';
     const ENCODER_HEX = 'hex';
