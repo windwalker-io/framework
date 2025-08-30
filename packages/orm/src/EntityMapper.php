@@ -167,7 +167,7 @@ class EntityMapper implements EventAwareInterface
         ?string $className = null,
         ORMOptions|int $options = new ORMOptions()
     ): ?object {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         return $this->from($metadata->getClassName())
@@ -214,7 +214,7 @@ class EntityMapper implements EventAwareInterface
         ?string $className = null,
         ORMOptions|int $options = new ORMOptions()
     ): ResultIterator {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         return new ResultIterator(
@@ -244,7 +244,7 @@ class EntityMapper implements EventAwareInterface
         mixed $conditions = [],
         ORMOptions|int $options = new ORMOptions()
     ): mixed {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
@@ -271,7 +271,7 @@ class EntityMapper implements EventAwareInterface
         mixed $conditions = [],
         ORMOptions|int $options = new ORMOptions()
     ): Collection {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         return $this->select($column)
             ->where($this->conditionsToWheres($conditions))
@@ -337,7 +337,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function createOne(array|object $source = [], ORMOptions|int $options = new ORMOptions()): object
     {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $pk = $this->getMainKey();
         $metadata = $this->getMetadata();
         $aiColumn = $this->getAutoIncrementColumn();
@@ -364,6 +364,7 @@ class EntityMapper implements EventAwareInterface
         // Hydrate data into entity after event, to make sure all fields has default value.
         $fullData = $event->data;
         $entity = $this->hydrate($fullData, $this->toEntity($source));
+        $options = $event->options;
 
         $data = $this->castForSave($this->extract($entity), true, $entity, true);
 
@@ -377,6 +378,7 @@ class EntityMapper implements EventAwareInterface
             )
         );
 
+        $options = $event->options;
         $data = $event->data;
         $extra = $event->extra;
 
@@ -452,7 +454,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function createBulk(iterable $items, ORMOptions|int $options = new ORMOptions()): array
     {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         $dataSet = [];
@@ -506,7 +508,7 @@ class EntityMapper implements EventAwareInterface
             return null;
         }
 
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
         $updateNulls = $options->updateNulls;
 
@@ -558,6 +560,7 @@ class EntityMapper implements EventAwareInterface
         // Hydrate data into entity after event, to make sure all fields has default value.
         $fullData = $event->data;
         $entity = $this->hydrate($fullData, $this->toEntity($source));
+        $options = $event->options;
 
         $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
 
@@ -584,6 +587,7 @@ class EntityMapper implements EventAwareInterface
                     extra: $event->extra,
                 )
             );
+            $options = $event->options;
 
             $result = $this->getDb()->getWriter()->updateOne(
                 $metadata->getTableName(),
@@ -656,7 +660,7 @@ class EntityMapper implements EventAwareInterface
         mixed $conditions = null,
         ORMOptions|int $options = new ORMOptions()
     ): StatementInterface {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
         $data = $this->extract($source);
@@ -673,6 +677,7 @@ class EntityMapper implements EventAwareInterface
                 options: $options
             )
         );
+        $options = $event->options;
 
         $statement = $this->getDb()->getWriter()->updateWhere(
             $metadata->getTableName(),
@@ -706,7 +711,7 @@ class EntityMapper implements EventAwareInterface
         mixed $conditions = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         $dataToSave = $this->extract($data);
 
@@ -734,7 +739,7 @@ class EntityMapper implements EventAwareInterface
         string|array|null $condFields = null,
         ORMOptions|int $options = new ORMOptions()
     ): iterable {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         // Event
         foreach ($items as $k => $item) {
@@ -939,7 +944,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function deleteWhere(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         // Event
         $metadata = $this->getMetadata();
@@ -1010,6 +1015,7 @@ class EntityMapper implements EventAwareInterface
                     options: $options
                 )
             );
+            $options = $event->options;
 
             if ($handleRelations) {
                 $metadata->getRelationManager()->beforeDelete($event->data, $entity);
@@ -1049,7 +1055,7 @@ class EntityMapper implements EventAwareInterface
         mixed $conditions = [],
         ORMOptions|int $options = new ORMOptions()
     ): iterable {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         // Handling conditions
         $conditions = $this->conditionsToWheres($conditions);
@@ -1080,7 +1086,7 @@ class EntityMapper implements EventAwareInterface
         callable|iterable|null $newValue = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         $items = $this->findList($conditions, Collection::class);
         $key = $this->getMainKey();
@@ -1162,7 +1168,7 @@ class EntityMapper implements EventAwareInterface
         ?array $compareKeys = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
 
         // Handling conditions
         $metadata = $this->getMetadata();
@@ -1828,7 +1834,7 @@ class EntityMapper implements EventAwareInterface
 
     public function emitEvent(EventInterface|string $event, array $args = []): EventInterface
     {
-        $options = ORMOptions::wrap($args['options'] ?? null);
+        $options = clone ORMOptions::wrap($args['options'] ?? null);
 
         if ($options->ignoreEvents) {
             if (is_string($event) || $event instanceof EventInterface) {
