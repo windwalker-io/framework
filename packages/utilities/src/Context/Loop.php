@@ -14,32 +14,17 @@ class Loop
     /**
      * @var int
      */
-    protected int $index;
+    public protected(set) int $index;
 
     /**
      * @var mixed
      */
-    protected $key;
-
-    /**
-     * @var  int
-     */
-    protected int $length;
-
-    /**
-     * @var  Loop|null
-     */
-    protected ?Loop $parent;
+    public protected(set) mixed $key;
 
     /**
      * @var  bool
      */
-    protected bool $stop = false;
-
-    /**
-     * @var mixed
-     */
-    protected mixed $target;
+    public bool $stop = false;
 
     /**
      * LoopContext constructor.
@@ -48,11 +33,11 @@ class Loop
      * @param  mixed      $target
      * @param  Loop|null  $parent
      */
-    public function __construct(int $length, mixed &$target, ?Loop $parent = null)
-    {
-        $this->length = $length;
-        $this->parent = $parent;
-        $this->target = $target;
+    public function __construct(
+        public protected(set) int $length,
+        public protected(set) mixed &$target,
+        public protected(set) ?Loop $parent = null
+    ) {
     }
 
     /**

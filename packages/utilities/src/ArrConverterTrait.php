@@ -231,8 +231,6 @@ trait ArrConverterTrait
     }
 
     /**
-     * mapWithKeys
-     *
      * @param  iterable  $array
      * @param  callable  $handler
      * @param  int       $type
@@ -248,21 +246,19 @@ trait ArrConverterTrait
         foreach ($array as $k => $v) {
             $r = $handler($v, $k);
 
-            if ($r instanceof \Generator) {
-                $r = [$r->key() => $r->current()];
-            }
-
             TypeAssert::assert(
-                is_array($r),
-                'Return value of {caller} should be array, got %s',
+                is_array($r) || $r instanceof \Generator,
+                'Return value of {caller} should be array or Generator, got %s',
                 $r
             );
 
             foreach ($r as $resultKey => $resultValue) {
-                // First set value if not exists.
-                if (!isset($results[$resultKey])) {
-                    // Force first element in array.
+                if ($resultKey === null) {
+                    $results[] = $resultValue;
+                } elseif (!isset($results[$resultKey])) {
+                    // First set value if not exists.
                     if ($type === static::GROUP_TYPE_ARRAY) {
+                        // Force first element in array.
                         $results[$resultKey] = [$resultValue];
                         $hasArray[$resultKey] = true;
                     } else {
@@ -289,14 +285,32 @@ trait ArrConverterTrait
         return $results;
     }
 
+    public static function mapGenerator(\Generator|callable $generator): array
+    {
+        if (!$generator instanceof \Generator) {
+            $generator = $generator();
+        }
+
+        return iterator_to_array($generator);
+    }
+
     /**
-     * crossJoin
+     * Calculate the Cartesian product (cross join) of multiple arrays.
+     *
+     * Example:
+     * ```php
+     * $result = Arr::crossJoin([1, 2], ['a', 'b']);
+     * // Result: [
+     * //   [1, 'a'],
+     * //   [1, 'b'],
+     * //   [2, 'a'],
+     * //   [2, 'b'],
+     * // ]
+     * ```
      *
      * @param  mixed  ...$args
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function crossJoin(...$args): array
     {
