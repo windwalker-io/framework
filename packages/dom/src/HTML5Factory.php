@@ -37,11 +37,11 @@ use const Dom\HTML_NO_DEFAULT_NS;
  */
 class HTML5Factory
 {
-    public const TEXT_SPAN = 1 << 0;
+    public const int TEXT_SPAN = 1 << 0;
 
-    public const TEXT_PARAGRAPH = 1 << 2;
+    public const int TEXT_PARAGRAPH = 1 << 2;
 
-    public const HTML_NODES = 1 << 3;
+    public const int HTML_NODES = 1 << 3;
 
     protected static ?HTMLDocument $dom = null;
 

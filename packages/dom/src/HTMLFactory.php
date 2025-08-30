@@ -21,11 +21,11 @@ use Masterminds\HTML5;
  */
 class HTMLFactory extends DOMFactory
 {
-    public const TEXT_SPAN = 1 << 0;
+    public const int TEXT_SPAN = 1 << 0;
 
-    public const TEXT_PARAGRAPH = 1 << 2;
+    public const int TEXT_PARAGRAPH = 1 << 2;
 
-    public const HTML_NODES = 1 << 3;
+    public const int HTML_NODES = 1 << 3;
 
     /**
      * @param  string  $name
