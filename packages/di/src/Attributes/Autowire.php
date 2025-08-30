@@ -21,7 +21,7 @@ class Autowire implements ContainerAttributeInterface
         $reflector = $handler->getReflector();
 
         if ($reflector instanceof ReflectionParameter && $reflector->getType()) {
-            return function (...$args) use ($handler, $reflector, $container) {
+            return function &(...$args) use ($handler, $reflector, $container) {
                 $value = $handler(...$args);
 
                 // Only value is NULL needs autowire.
@@ -31,9 +31,10 @@ class Autowire implements ContainerAttributeInterface
 
                 $resolver = $container->getDependencyResolver();
 
-                return $resolver->resolveParameterValue(
-                    $resolver->resolveParameterDependency($reflector, [], new DIOptions(autowire: true)),
-                );
+                // resolveParameterValue() will be called in resolveParameterDependency()
+                $value = &$resolver->resolveParameterDependency($reflector, [], new DIOptions(autowire: true));
+
+                return $value;
             };
         }
 

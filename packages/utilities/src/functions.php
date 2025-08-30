@@ -106,6 +106,8 @@ namespace Windwalker {
     use Windwalker\Utilities\Wrapper\ValueReference;
     use Windwalker\Utilities\Wrapper\WrapperInterface;
 
+    include_once __DIR__ . '/functions_lazy.php';
+
     if (!function_exists('\Windwalker\nope')) {
         /**
          * nope

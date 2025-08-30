@@ -12,7 +12,6 @@ use SplQueue;
 use SplStack;
 use Windwalker\Data\Collection;
 use Windwalker\DI\Attributes\AttributeType;
-use Windwalker\DI\Attributes\Autowire;
 use Windwalker\DI\Attributes\Inject;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionException;
@@ -33,12 +32,12 @@ use Windwalker\DI\Test\Mock\UnionTypeStub;
 use Windwalker\DI\Test\Mock\WithEnum;
 use Windwalker\DI\Test\Mock\WithVariadic;
 use Windwalker\DI\Test\Stub\StubInstantService;
+use Windwalker\DI\Test\Stub\StubLazy;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 use Windwalker\Scalars\ArrayObject;
 use Windwalker\Scalars\StringObject;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
-use Windwalker\Utilities\Reflection\ReflectionCallable;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\DI\create;
@@ -348,11 +347,12 @@ class ContainerTest extends TestCase
         self::assertSame($foo, $foo2);
     }
 
-    public function testNewInstanceWithCallable()
+    public function testNewInstanceWithCallable(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
-        $foo = $container->newInstance(fn(Bar $bar) => new Foo($bar));
+        /** @var Foo $foo */
+        $foo = $container->newInstance(fn(Bar $bar, StubLazy $lazy) => new Foo($bar, $lazy));
 
         self::assertInstanceOf(Bar::class, $foo->bar);
     }
@@ -663,6 +663,7 @@ class ContainerTest extends TestCase
     }
 
     // public function testCallFirstClassCallable(): void
+
     // {
     //     if (PHP_VERSION_ID < 80100) {
     //         self::markTestSkipped('Only support PHP 8.1');
@@ -678,7 +679,6 @@ class ContainerTest extends TestCase
     //         $r
     //     );
     // }
-
     public function firstCallableProvider(StringObject $str): string
     {
         return (string) $str;

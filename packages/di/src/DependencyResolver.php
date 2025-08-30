@@ -16,6 +16,7 @@ use ReflectionType;
 use ReflectionUnionType;
 use TypeError;
 use UnexpectedValueException;
+use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
@@ -176,7 +177,7 @@ class DependencyResolver
      *
      * @param  ReflectionFunctionAbstract  $method  Method for which to build the argument array.
      * @param  array                       $args    The default args if class hint not provided.
-     * @param  int                         $options
+     * @param  DIOptions|int               $options
      *
      * @return array Array of arguments to pass to the method.
      *
@@ -242,11 +243,12 @@ class DependencyResolver
             $value = null;
             $value = &$this->resolveParameterAttributes($value, $param);
 
-            if ($value === null) {
+            if ($value !== null) {
+                $value = &$this->resolveParameterValue($value);
+            } else {
+                // resolveParameterValue() will be called in resolveParameterDependency()
                 $value = &$this->resolveParameterDependency($param, $args, $options);
             }
-
-            $value = &$this->resolveParameterValue($value);
 
             if ($value !== null) {
                 $methodArgs[$dependencyVarName] = &$value;
@@ -335,33 +337,66 @@ class DependencyResolver
             if (array_key_exists($dependencyClassName, $args)) {
                 // If an arg provided, use it.
                 return $args[$dependencyClassName];
-            } elseif ($this->container->has($dependencyClassName)) {
-                // If the dependency class name is registered with this container or a parent, use it.
-                $depObject = $this->container->get($dependencyClassName);
-            } elseif (
-                $autowire
-                && !$dependency->isAbstract()
-                && !$dependency->isInterface()
-                && !$dependency->isTrait()
-                && $dependency->isInstantiable()
-                && !$param->allowsNull()
-            ) {
-                // Otherwise we create this object recursive
-
-                // Find child args if set
-                if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName])) {
-                    $childArgs = $args[$dependencyClassName];
-                } else {
-                    $childArgs = [];
-                }
-
-                $dependencyClassAlias = $this->container->resolveAlias($dependencyClassName);
-
-                $depObject = $this->newInstance($dependencyClassAlias, $childArgs, $options);
             }
 
-            if ($depObject instanceof $dependencyClassName) {
+            $create = function &() use (
+                $options,
+                $param,
+                $dependency,
+                $autowire,
+                $dependencyClassName
+            ) {
+                $depObject = null;
+
+                if ($this->container->has($dependencyClassName)) {
+                    // If the dependency class name is registered with this container or a parent, use it.
+                    $depObject = $this->container->get($dependencyClassName);
+                } elseif (
+                    $autowire
+                    && !$dependency->isAbstract()
+                    && !$dependency->isInterface()
+                    && !$dependency->isTrait()
+                    && $dependency->isInstantiable()
+                    && !$param->allowsNull()
+                ) {
+                    // Otherwise we create this object recursive
+
+                    // Find child args if set
+                    if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName])) {
+                        $childArgs = $args[$dependencyClassName];
+                    } else {
+                        $childArgs = [];
+                    }
+
+                    $dependencyClassAlias = $this->container->resolveAlias($dependencyClassName);
+
+                    $depObject = $this->newInstance($dependencyClassAlias, $childArgs, $options);
+                }
+
                 return $depObject;
+            };
+
+            $ref = new ReflectionClass($dependencyClassName);
+
+            if (
+                ($this->canLazy($ref, $options) || $this->canLazy($param, $options))
+                && !static::isInternal($ref)
+            ) {
+                $depObject = $ref->newLazyProxy(
+                    function () use ($create) {
+                        $value = $create();
+
+                        return $this->resolveParameterValue($value);
+                    }
+                );
+
+                return $depObject;
+            }
+
+            $depObject = &$create();
+
+            if ($depObject instanceof $dependencyClassName) {
+                return $this->resolveParameterValue($depObject);
             }
         }
 
@@ -434,10 +469,10 @@ class DependencyResolver
     /**
      * Execute a callable with dependencies.
      *
-     * @param  mixed  $callable  Do not use callable hint, will check callable after context bounded.
-     * @param  array  $args
+     * @param  mixed        $callable  Do not use callable hint, will check callable after context bounded.
+     * @param  array        $args
      * @param  object|null  $context
-     * @param  int  $options
+     * @param  int          $options
      *
      * @return mixed
      *
@@ -489,5 +524,59 @@ class DependencyResolver
     public function mergeOptionsDefaults(int|DIOptions $options): DIOptions
     {
         return DIOptions::wrap($options)->withDefaults($this->container->getOptions());
+    }
+
+    public function canLazy(
+        string|ReflectionClass|ReflectionParameter|\ReflectionProperty $classOrRef,
+        DIOptions $options
+    ): bool {
+        $ref = is_string($classOrRef) ? new \ReflectionClass($classOrRef) : $classOrRef;
+        $lazy = $options->lazy ?? $this->container->options->lazy;
+
+        return ($lazy || static::getAttributeFromReflection($ref, Lazy::class));
+    }
+
+    public static function isInternal(string|\Reflector $class): bool
+    {
+        $ref = is_string($class) ? new \ReflectionClass($class) : $class;
+
+        if (!$ref instanceof ReflectionClass) {
+            return false;
+        }
+
+        while (!$ref->isInternal()) {
+            $ref = $ref->getParentClass();
+
+            if (!$ref) {
+                return false;
+            }
+
+            if ($ref->isInternal()) {
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @template T
+     *
+     * @param  ReflectionClass|ReflectionParameter|\ReflectionProperty  $ref
+     * @param  class-string<T>                                          $attr
+     *
+     * @return object|null
+     */
+    public static function getAttributeFromReflection(
+        ReflectionClass|ReflectionParameter|\ReflectionProperty $ref,
+        string $attr
+    ): ?object {
+        $attrs = $ref->getAttributes($attr, \ReflectionAttribute::IS_INSTANCEOF);
+
+        if ($attrs === []) {
+            return null;
+        }
+
+        return $attrs[0]->newInstance();
     }
 }

@@ -34,6 +34,10 @@ class DIOptions
          * Ignore all attributes when create object or call method.
          */
         public ?bool $ignoreAttributes = null,
+        /**
+         * Use PHP 8.4 Lazy Proxy to wrap resolved instance.
+         */
+        public ?bool $lazy = null,
     ) {
     }
 

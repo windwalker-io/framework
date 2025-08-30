@@ -21,6 +21,7 @@ use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Autowire;
 use Windwalker\DI\Attributes\Decorator;
 use Windwalker\DI\Attributes\Inject;
+use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Attributes\Setup;
 use Windwalker\DI\Concern\ConfigRegisterTrait;
@@ -181,6 +182,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             Inject::class => AttributeType::PROPERTIES | AttributeType::PARAMETERS,
             Setup::class => AttributeType::METHODS,
             Service::class => AttributeType::PROPERTIES | AttributeType::PARAMETERS,
+            Lazy::class => AttributeType::PROPERTIES,
         ];
     }
 
@@ -513,7 +515,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         // If has #[Service] attribute, we will register a new definition instantly.
-        if ($serviceAutowire && class_exists($id) && $service = static::getServiceAttribute(new ReflectionClass($id))) {
+        if (
+            $serviceAutowire
+            && class_exists($id)
+            && $service = DependencyResolver::getAttributeFromReflection(new ReflectionClass($id), Service::class)
+        ) {
             if (($service->tag || $tag) && $service->tag !== $tag) {
                 // If tag is not matched, we will not register this service.
                 return null;
@@ -775,8 +781,6 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): mixed {
-        $options = DIOptions::wrap($options);
-
         $callback = fn(Container $container) => $container->newInstance($class, $args, $options);
 
         $this->set($class, $callback, $options, $tag);
@@ -890,10 +894,19 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function newInstance(mixed $class, array $args = [], DIOptions|int $options = new DIOptions()): mixed
     {
-        $options = DIOptions::wrap($options);
-
         if (is_string($class)) {
-            $class = $this->resolveAliasFromParent($class);
+            $options = DIOptions::wrap($options);
+
+            $class = $this->resolveAliasDeep($class);
+
+            if (
+                $this->dependencyResolver->canLazy($ref = new \ReflectionClass($class), $options)
+                && !$this->dependencyResolver::isInternal($ref)
+            ) {
+                return $ref->newLazyProxy(
+                    fn() => $this->dependencyResolver->newInstance($class, $args, $options)
+                );
+            }
         }
 
         return $this->dependencyResolver->newInstance($class, $args, $options);
@@ -950,12 +963,12 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $id;
     }
 
-    protected function resolveAliasFromParent(string $id): string
+    protected function resolveAliasDeep(string $id): string
     {
         $id = $this->resolveAlias($id);
 
         if ($this->parent) {
-            $id = $this->parent->resolveAliasFromParent($id);
+            $id = $this->parent->resolveAliasDeep($id);
         }
 
         return $id;
@@ -1280,22 +1293,6 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function getLevel(): int
     {
         return $this->level;
-    }
-
-    /**
-     * @param  ReflectionClass  $dependency
-     *
-     * @return  ?Service
-     */
-    protected static function getServiceAttribute(ReflectionClass $dependency): ?Service
-    {
-        $attrs = $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF);
-
-        if ($attrs === []) {
-            return null;
-        }
-
-        return $attrs[0]->newInstance();
     }
 
     public function getAliases(): array

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Test\Mock;
 
+use Windwalker\DI\Test\Stub\StubLazy;
+
 /**
  * The Foo class.
  *
@@ -23,7 +25,7 @@ class Foo
      *
      * @param  Bar  $bar
      */
-    public function __construct(Bar $bar)
+    public function __construct(Bar $bar, public StubLazy $lazy)
     {
         $this->bar = $bar;
     }
