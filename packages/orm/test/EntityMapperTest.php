@@ -605,6 +605,21 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals(4, $hits);
     }
 
+    public function testIncrementOrCreate(): void
+    {
+        $mapper = static::$orm->mapper(StubArticle::class);
+
+        $exists = $mapper->findOne(['content' => 'YOO']);
+
+        self::assertNull($exists);
+
+        $mapper->incrementOrCreate('hits', ['content' => 'YOO'], initData: ['hits' => 10]);
+
+        $hits = $mapper->mustFindOne(['content' => 'YOO'])->getHits();
+
+        self::assertEquals(11, $hits);
+    }
+
     public function testDecrement(): void
     {
         $mapper = static::$orm->mapper(StubArticle::class);
@@ -620,6 +635,21 @@ class EntityMapperTest extends AbstractORMTestCase
         $hits = $mapper->findOne(2)->getHits();
 
         self::assertEquals(1, $hits);
+    }
+
+    public function testDecrementOrCreate(): void
+    {
+        $mapper = static::$orm->mapper(StubArticle::class);
+
+        $exists = $mapper->findOne(['content' => 'GOO']);
+
+        self::assertNull($exists);
+
+        $mapper->decrementOrCreate('hits', ['content' => 'GOO'], initData: ['hits' => 10]);
+
+        $hits = $mapper->mustFindOne(['content' => 'GOO'])->getHits();
+
+        self::assertEquals(9, $hits);
     }
 
     /**
