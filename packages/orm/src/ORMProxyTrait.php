@@ -434,4 +434,18 @@ trait ORMProxyTrait
     ): void {
         $this->mapper($entityClass)->decrementOrCreate($fields, $conditions, $num, $initData, $options);
     }
+
+    /**
+     * @template T of object
+     *
+     * @param  T  $entity
+     *
+     * @return  T
+     *
+     * @throws \ReflectionException
+     */
+    public function pushNextVersion(object $entity): object
+    {
+        return $this->mapper($entity::class)->pushNextVersion($entity);
+    }
 }

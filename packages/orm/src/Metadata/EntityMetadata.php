@@ -14,7 +14,7 @@ use ReflectionProperty;
 use Windwalker\Attributes\AttributeHandler;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\ORM\Attributes\{CastAttributeInterface, Column, Mapping, PK, Table, Watch};
+use Windwalker\ORM\Attributes\{CastAttributeInterface, Column, Mapping, OptimisticLockInterface, PK, Table, Watch};
 use Windwalker\ORM\Cast\CastManager;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Event\AfterSaveEvent;
@@ -52,26 +52,14 @@ class EntityMetadata implements EventAwareInterface
     protected array $keys = [];
 
     /**
-     * @var ReflectionProperty[]
+     * @var EntityMember[]
      */
-    protected ?array $properties = null;
-
-    protected array $propertyColumns = [];
+    public protected(set) array $propertyMembers;
 
     /**
-     * @var ReflectionMethod[]
+     * @var EntityMember[]
      */
-    protected ?array $methods = null;
-
-    /**
-     * @var Column[]
-     */
-    protected array $columns = [];
-
-    /**
-     * @var array
-     */
-    protected array $attributeMaps = [];
+    public protected(set) array $methodMembers;
 
     protected CastManager $castManager;
 
@@ -102,6 +90,22 @@ class EntityMetadata implements EventAwareInterface
         $this->relationManager = new RelationManager($this);
 
         $this->addEventDealer($orm);
+
+        $this->propertyMembers = array_map(
+            static fn(ReflectionProperty $prop) => new EntityMember($prop),
+            ReflectAccessor::getReflectProperties(
+                $this->className,
+                ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE
+            )
+        );
+
+        $this->methodMembers = array_map(
+            static fn(ReflectionMethod $method) => new EntityMember($method),
+            ReflectAccessor::getReflectMethods(
+                $this->className,
+                ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PROTECTED | ReflectionMethod::IS_PUBLIC
+            )
+        );
     }
 
     public static function isEntity(string|object|array $object): bool
@@ -143,40 +147,85 @@ class EntityMetadata implements EventAwareInterface
         return $this;
     }
 
-    public function addAttributeMap(string $attrName, ReflectionProperty|ReflectionMethod $ref): void
+    public function addMember(ReflectionProperty|ReflectionMethod $ref, ?Column $column = null): static
     {
-        $type = $ref instanceof ReflectionProperty ? 'props' : 'methods';
+        if ($ref instanceof ReflectionProperty) {
+            // Init
+            $this->getProperties();
 
-        $this->attributeMaps[$attrName][$type][$ref->getName()] = $ref;
+            $this->propertyMembers[$ref->getName()] = new EntityMember($ref, $column);
+        } else {
+            // Init
+            $this->getMethods();
+
+            $this->methodMembers[$ref->getName()] = new EntityMember($ref);
+        }
+
+        return $this;
     }
 
     /**
-     * getMethodsOfAttribute
+     * @param  string  $attr
+     * @param  ReflectionProperty|ReflectionMethod  $ref
      *
-     * @param  string  $attributeClass
-     *
-     * @return  ReflectionMethod[]
+     * @return  void
      */
-    public function getMethodsOfAttribute(string $attributeClass): array
+    public function addAttributeMap(string|object $attr, ReflectionProperty|ReflectionMethod $ref): void
     {
-        return $this->attributeMaps[$attributeClass]['methods'] ?? [];
+        if (is_string($attr)) {
+            $attr = new $attr();
+        }
+
+        if ($ref instanceof ReflectionProperty) {
+            $this->propertyMembers[$ref->getName()]->addAttribute($attr);
+        } else {
+            // Init
+            $this->methodMembers[$ref->getName()]->addAttribute($attr);
+        }
     }
 
     /**
-     * getPropertiesOfAttribute
-     *
      * @param  string  $attributeClass
      *
-     * @return  ReflectionProperty[]
+     * @return  array<EntityMember>
      */
-    public function getPropertiesOfAttribute(string $attributeClass): array
+    public function getMethodMembersOfAttribute(string $attributeClass): array
     {
-        return $this->attributeMaps[$attributeClass]['props'] ?? [];
+        return array_filter(
+            $this->methodMembers,
+            fn(EntityMember $member) => $member->hasAttribute($attributeClass)
+        );
+    }
+
+    /**
+     * @param  string  $attributeClass
+     *
+     * @return  array<EntityMember>
+     */
+    public function getPropertyMembersOfAttribute(string $attributeClass): array
+    {
+        return array_filter(
+            $this->propertyMembers,
+            fn(EntityMember $member) => $member->hasAttribute($attributeClass)
+        );
+    }
+
+    public function getOptimisticLock(): ?OptimisticLockInterface
+    {
+        foreach ($this->propertyMembers as $member) {
+            $attr = $member->getAttribute(OptimisticLockInterface::class);
+
+            if ($attr) {
+                return $attr;
+            }
+        }
+
+        return null;
     }
 
     public function getColumnByPropertyName(string $propName): ?Column
     {
-        return $this->propertyColumns[$propName] ?? null;
+        return $this->propertyMembers[$propName]?->column;
     }
 
     public function getClassName(): string
@@ -221,7 +270,7 @@ class EntityMetadata implements EventAwareInterface
         return $this;
     }
 
-    public function castByAttribute(AttributeHandler $handler, CastAttributeInterface $castAttribute)
+    public function castByAttribute(AttributeHandler $handler, CastAttributeInterface $castAttribute): void
     {
         /** @var ReflectionProperty $prop */
         $prop = $handler->getReflector();
@@ -279,17 +328,15 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * getMethods
-     *
      * @return  array<int, ReflectionMethod>
      *
      * @throws ReflectionException
      */
     public function getMethods(): array
     {
-        return $this->methods ??= ReflectAccessor::getReflectMethods(
-            $this->className,
-            ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PROTECTED | ReflectionMethod::IS_PUBLIC
+        return array_map(
+            static fn(EntityMember $member) => $member->memberRef,
+            $this->methodMembers
         );
     }
 
@@ -298,23 +345,31 @@ class EntityMetadata implements EventAwareInterface
         return $this->getMethods()[$name] ?? null;
     }
 
+    public function getMethodMember(string $name): ?ReflectionMethod
+    {
+        return $this->methodMembers[$name] ?? null;
+    }
+
     /**
-     * getProperties
-     *
      * @return  array<int, ReflectionProperty>
      * @throws ReflectionException
      */
     public function getProperties(): array
     {
-        return $this->properties ??= ReflectAccessor::getReflectProperties(
-            $this->className,
-            ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE
+        return array_map(
+            static fn(EntityMember $member) => $member->memberRef,
+            $this->propertyMembers
         );
     }
 
     public function getProperty(string $name): ?ReflectionProperty
     {
         return $this->getProperties()[$name] ?? null;
+    }
+
+    public function getPropertyMember(string $name): ?EntityMember
+    {
+        return $this->propertyMembers[$name] ?? null;
     }
 
     /**
@@ -324,7 +379,10 @@ class EntityMetadata implements EventAwareInterface
      */
     public function getColumns(): array
     {
-        return $this->columns;
+        return \Windwalker\collect($this->propertyMembers)
+            ->filter(fn(EntityMember $member) => $member->column !== null)
+            ->mapWithKeys(fn(EntityMember $member) => yield $member->columnName => $member->column)
+            ->dump();
     }
 
     public function getPureColumns(): array
@@ -334,7 +392,7 @@ class EntityMetadata implements EventAwareInterface
             function () {
                 $cols = [];
 
-                foreach ($this->columns as $name => $column) {
+                foreach ($this->getColumns() as $name => $column) {
                     if (!$column instanceof Mapping) {
                         $cols[$name] = $column;
                     }

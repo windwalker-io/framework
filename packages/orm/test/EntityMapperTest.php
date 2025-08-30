@@ -8,11 +8,17 @@ use Exception;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\ORM\EntityMapper;
+use Windwalker\ORM\Exception\OptimisticLockException;
 use Windwalker\ORM\ORMOptions;
+use Windwalker\ORM\Test\Entity\Lock\StubBookLockHash;
+use Windwalker\ORM\Test\Entity\Lock\StubBookLockUpdated;
+use Windwalker\ORM\Test\Entity\Lock\StubBookLockVersion;
 use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubComment;
 use Windwalker\ORM\Test\Entity\StubFlower;
 use Windwalker\Utilities\Arr;
+
+use function Windwalker\raw;
 
 /**
  * Test class of DataMapper
@@ -320,19 +326,136 @@ class EntityMapperTest extends AbstractORMTestCase
         /** @var StubComment $comment */
         /** @var StubComment $comment2 */
         $comment = $mapper->findOne(10);
+        $expected = clone $comment;
 
         $mapper->updateOne($comment);
 
         $comment2 = $mapper->findOne(10);
 
         self::assertNotEquals(
-            $comment->getCreated()?->getTimestamp(),
+            $expected->getCreated()?->getTimestamp(),
             $comment2->getCreated()?->getTimestamp()
         );
 
         self::assertNotEquals(
             self::$db->getNullDate(),
             $comment2->getCreated()->format(self::$db->getDateFormat())
+        );
+    }
+
+    public function testUpdateOptimisticLock(): void
+    {
+        $mapper = static::$orm->mapper(StubBookLockUpdated::class);
+
+        $item = $mapper->mustFindOne(1);
+
+        $item->title = 'Book 1 updated';
+
+        $mapper->updateOne($item);
+
+        self::assertNotEquals(
+            '2024-01-01 00:00:00',
+            $mapper->select('updated')->where('id', 1),
+        );
+
+        self::assertNotEquals(
+            '2024-01-01T00:00:00+00:00',
+            $item->updated->format(\DateTime::ATOM),
+        );
+
+        // Test version
+        $mapper = static::$orm->mapper(StubBookLockVersion::class);
+
+        $item = $mapper->mustFindOne(2);
+
+        $item->title = 'Book 2 updated';
+
+        $mapper->updateOne($item);
+
+        self::assertEquals(
+            2,
+            $item->version,
+        );
+
+        self::assertEquals(
+            (int) $mapper->select('version')->where('id', 2)->result(),
+            $item->version,
+        );
+
+        // Test hash
+        $mapper = static::$orm->mapper(StubBookLockHash::class);
+
+        $item = $mapper->mustFindOne(3);
+
+        $item->title = 'Book 3 updated';
+
+        $mapper->updateOne($item);
+
+        self::assertNotEquals(
+            'hash3',
+            $item->hash,
+        );
+
+        self::assertEquals(
+            $mapper->select('hash')->where('id', 3)->result(),
+            $item->hash,
+        );
+
+        // Should error
+        $this->expectException(OptimisticLockException::class);
+
+        $mapper = static::$orm->mapper(StubBookLockUpdated::class);
+
+        $item = $mapper->mustFindOne(4);
+
+        $item->title = 'Book 4 updated';
+
+        $mapper->update(StubBookLockUpdated::class)
+            ->set('updated', raw('CURRENT_TIMESTAMP()'))
+            ->where('id', 4)
+            ->execute();
+
+        $mapper->updateOne($item);
+
+        self::assertNotEquals(
+            '2024-01-04T00:00:00+00:00',
+            $item->updated->format(\DateTime::ATOM),
+        );
+    }
+
+    public function testPushNextVersion()
+    {
+        $mapper = static::$orm->mapper(StubBookLockUpdated::class);
+
+        $item = $mapper->mustFindOne(5);
+
+        $item = $mapper->pushNextVersion($item);
+
+        self::assertNotEquals(
+            '2024-01-05T00:00:00+00:00',
+            $item->updated->format(\DateTime::ATOM),
+        );
+
+        $mapper = static::$orm->mapper(StubBookLockHash::class);
+
+        $item = $mapper->mustFindOne(5);
+
+        $item = $mapper->pushNextVersion($item);
+
+        self::assertNotEquals(
+            'hash5',
+            $item->hash,
+        );
+
+        $mapper = static::$orm->mapper(StubBookLockVersion::class);
+
+        $item = $mapper->mustFindOne(6);
+
+        $item = $mapper->pushNextVersion($item);
+
+        self::assertEquals(
+            2,
+            $item->version
         );
     }
 
@@ -716,5 +839,6 @@ class EntityMapperTest extends AbstractORMTestCase
     protected static function setupDatabase(): void
     {
         self::importFromFile(__DIR__ . '/Stub/data.sql');
+        self::importFromFile(__DIR__ . '/Stub/locks.sql');
     }
 }

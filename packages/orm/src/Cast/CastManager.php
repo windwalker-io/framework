@@ -7,6 +7,7 @@ namespace Windwalker\ORM\Cast;
 use InvalidArgumentException;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastAttributeInterface;
+use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
@@ -190,10 +191,30 @@ class CastManager
             if (class_exists($cast)) {
                 // Cast interface
                 if (is_subclass_of($cast, CastInterface::class)) {
-                    return static function (mixed $value, ORM $orm) use ($cast, $options, $direction) {
-                        return $orm->getAttributesResolver()
-                            ->createObject($cast)
-                            ->$direction($value);
+                    return static function (
+                        mixed $value,
+                        ORM $orm,
+                        CasterInfo $info
+                    ) use (
+                        $cast,
+                        $options,
+                        $direction
+                    ) {
+                        $resolver = $orm->getAttributesResolver();
+
+                        return $resolver->call(
+                            $resolver->createObject($cast)->$direction(...),
+                            [
+                                $value,
+                                'value' => $value,
+                                'orm' => $orm,
+                                'column' => $info->column,
+                                'info' => $info,
+                                ORM::class => $orm,
+                                Column::class => $info->column,
+                                CasterInfo::class => $info,
+                            ]
+                        );
                     };
                 }
 
@@ -244,7 +265,16 @@ class CastManager
 
     public function wrapCastCallback(callable $caster, int $options): \Closure
     {
-        return function (mixed $value, ORM $orm, ?object $entity = null, bool $isNew = false) use ($options, $caster) {
+        return function (
+            mixed $value,
+            ORM $orm,
+            ?object $entity = null,
+            bool $isNew = false,
+            ?Column $column = null,
+        ) use (
+            $options,
+            $caster
+        ) {
             if ($value === '' && ($options & CastAttributeInterface::EMPTY_STRING_TO_NULL)) {
                 $value = null;
             }
@@ -252,6 +282,15 @@ class CastManager
             if ($this->shouldReturn($value, $options)) {
                 return $value;
             }
+
+            $info = new CasterInfo(
+                entity: $entity,
+                isNew: $isNew,
+                field: $column?->getName() ?? '',
+                value: $value,
+                column: $column,
+                orm: $orm,
+            );
 
             return $orm->getAttributesResolver()
                 ->call(
@@ -261,7 +300,13 @@ class CastManager
                         'value' => $value,
                         'orm' => $orm,
                         'entity' => $entity,
-                        'isNew' => $isNew
+                        'isNew' => $isNew,
+                        'column' => $column,
+                        'info' => $info,
+                        $entity::class => $entity,
+                        ORM::class => $orm,
+                        Column::class => $column,
+                        CasterInfo::class => $info,
                     ]
                 );
         };

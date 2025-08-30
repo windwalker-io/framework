@@ -22,7 +22,7 @@ class EntitySetup implements AttributeInterface
      */
     public function handle(EntityMetadata $metadata, AttributeHandler $handler): callable
     {
-        $metadata->addAttributeMap(static::class, $handler->getReflector());
+        $metadata->addAttributeMap($this, $handler->getReflector());
 
         return function () use ($handler, $metadata) {
             $handler->getResolver()

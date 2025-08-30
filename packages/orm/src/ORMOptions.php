@@ -28,6 +28,7 @@ class ORMOptions
         public bool $ignoreEvents = false,
         public bool $ignoreOldData = false,
         public bool $transaction = false,
+        public bool $optimisticLock = true,
         public bool|string $forUpdate = false,
         public bool|string $forShare = false,
     ) {

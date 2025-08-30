@@ -175,7 +175,7 @@ class EntityHydrator implements FieldHydratorInterface
 
         foreach ($casts as [, $extractor]) {
             try {
-                $value = $extractor($value, $metadata->getORM(), $entity);
+                $value = $extractor($value, $metadata->getORM(), $entity, column: $column);
             } catch (Throwable $e) {
                 $castName = is_object($extractor) ? $extractor::class : json_encode($extractor);
 
@@ -224,7 +224,7 @@ class EntityHydrator implements FieldHydratorInterface
 
         foreach ($casts as [$hydrator]) {
             try {
-                $value = $hydrator($value, $metadata->getORM(), $entity);
+                $value = $hydrator($value, $metadata->getORM(), $entity, column: $column);
             } catch (Throwable $e) {
                 if ($hydrator instanceof \Closure) {
                     $hydrator = static::extractCastNameFromClosure($hydrator);

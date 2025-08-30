@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use JsonException;
 use LogicException;
 use ReflectionAttribute;
-use ReflectionProperty;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
@@ -20,6 +19,7 @@ use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Event\EventInterface;
 use Windwalker\ORM\Attributes\CastForSaveInterface;
+use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Event\{AbstractEntityEvent,
     AbstractSaveEvent,
@@ -35,6 +35,7 @@ use Windwalker\ORM\Event\{AbstractEntityEvent,
     BeforeStoreEvent,
     BeforeUpdateWhereEvent,
     EnergizeEvent};
+use Windwalker\ORM\Exception\OptimisticLockException;
 use Windwalker\ORM\Hydrator\EntityHydrator;
 use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
@@ -562,6 +563,15 @@ class EntityMapper implements EventAwareInterface
         $entity = $this->hydrate($fullData, $this->toEntity($source));
         $options = $event->options;
 
+        // Check optimistic lock
+        $lockCallback = null;
+
+        if ($options->optimisticLock && $lock = $metadata->getOptimisticLock()) {
+            $lockCallback = function (Query $query) use ($fullData, $lock) {
+                $query->where($lock->member->columnName, $fullData[$lock->member->columnName] ?? '');
+            };
+        }
+
         $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
 
         $writeData = $data;
@@ -595,8 +605,17 @@ class EntityMapper implements EventAwareInterface
                 $condFields,
                 [
                     'updateNulls' => $updateNulls,
+                    'lockCallback' => $lockCallback,
                 ]
             );
+
+            if ($options->optimisticLock && $lockCallback && $result->countAffected() === 0) {
+                throw new OptimisticLockException(
+                    'The updating item is changed by other process.',
+                );
+            }
+
+            $entity = $this->hydrate($writeData, $entity);
         }
 
         $event = $this->emits(
@@ -617,6 +636,41 @@ class EntityMapper implements EventAwareInterface
         // Event
 
         return $result ?? null;
+    }
+
+    /**
+     * @param  T  $entity
+     *
+     * @return  T
+     *
+     * @throws \ReflectionException
+     */
+    public function pushNextVersion(object|array $entity): object|array
+    {
+        $lock = $this->getMetadata()->getOptimisticLock();
+
+        if (!$lock) {
+            return $entity;
+        }
+
+        $colName = $lock->member->columnName;
+        $propName = $lock->member->memberName;
+
+        if (is_array($entity)) {
+            $value = $entity[$colName] ?? null;
+        } else {
+            $value = $entity->$propName;
+        }
+
+        $value = $lock->pushValueToNextValue($lock->member->memberRef, $value);
+
+        if (is_array($entity)) {
+            $entity[$colName] = $value;
+        } else {
+            $entity->$propName = $value;
+        }
+
+        return $entity;
     }
 
     /**
@@ -1701,8 +1755,8 @@ class EntityMapper implements EventAwareInterface
             $value = $data[$field] ?? null;
 
             // Handler property attributes
-            if ($prop = $metadata->getColumn($field)?->getProperty()) {
-                $value = $this->castProperty($prop, $value, $entity, $isNew);
+            if ($colAttr = $metadata->getColumn($field)) {
+                $value = $this->castProperty($colAttr, $value, $entity, $isNew);
             }
 
             if (!$updateNulls && $value === null) {
@@ -1757,20 +1811,22 @@ class EntityMapper implements EventAwareInterface
         return $item;
     }
 
-    protected function castProperty(ReflectionProperty $prop, mixed $value, object $entity, bool $isNew = false): mixed
+    protected function castProperty(Column $column, mixed $value, object $entity, bool $isNew = false): mixed
     {
         $castManager = $this->getMetadata()->getCastManager();
+
+        $prop = $column->getProperty();
 
         AttributesAccessor::runAttributeIfExists(
             $prop,
             CastForSaveInterface::class,
-            function (CastForSaveInterface $attr) use ($isNew, $entity, $castManager, &$value) {
+            function (CastForSaveInterface $attr) use ($column, $isNew, $entity, $castManager, &$value) {
                 $caster = $castManager->wrapCastCallback(
                     $castManager->castToCallback($attr->getCaster() ?? $attr, $attr->options ?? 0),
                     $attr->options ?? 0
                 );
 
-                $value = $caster($value, $this->getORM(), $entity, $isNew);
+                $value = $caster($value, $this->getORM(), $entity, $isNew, $column);
             },
             ReflectionAttribute::IS_INSTANCEOF
         );
@@ -1846,9 +1902,12 @@ class EntityMapper implements EventAwareInterface
 
         $event = $this->emit($event, $args);
 
-        $methods = $this->getMetadata()->getMethodsOfAttribute($event::class);
+        $members = $this->getMetadata()->getMethodMembersOfAttribute($event::class);
 
-        foreach ($methods as $method) {
+        foreach ($members as $member) {
+            /** @var \ReflectionMethod $method */
+            $method = $member->memberRef;
+
             if (!$method->isStatic()) {
                 throw new LogicException(
                     sprintf(
@@ -1898,9 +1957,12 @@ class EntityMapper implements EventAwareInterface
 
         $event = $this->emit($event);
 
-        $methods = $this->getMetadata()->getMethodsOfAttribute($event::class);
+        $members = $this->getMetadata()->getMethodMembersOfAttribute($event::class);
 
-        foreach ($methods as $method) {
+        foreach ($members as $member) {
+            /** @var \ReflectionMethod $method */
+            $method = $member->memberRef;
+
             if (!$method->isStatic()) {
                 throw new LogicException(
                     sprintf(
@@ -1934,9 +1996,9 @@ class EntityMapper implements EventAwareInterface
                 return true;
             }
 
-            $methods = $this->getMetadata()->getMethodsOfAttribute($event);
+            $members = $this->getMetadata()->getMethodMembersOfAttribute($event);
 
-            if ($methods !== []) {
+            if ($members !== []) {
                 return true;
             }
         }

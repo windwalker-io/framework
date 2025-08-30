@@ -122,6 +122,7 @@ class WriterManager
             [
                 'updateNulls' => true,
                 'filterFields' => [],
+                'lockCallback' => null,
             ],
             $options
         );
@@ -176,6 +177,10 @@ class WriterManager
         foreach ($key as $k) {
             // Set the primary key to the WHERE clause instead of a field to update.
             $query->where($k, $data[$k] ?? null);
+        }
+
+        if ($options['lockCallback'] ?? null) {
+            $options['lockCallback']($query);
         }
 
         // Set the query and execute the update.

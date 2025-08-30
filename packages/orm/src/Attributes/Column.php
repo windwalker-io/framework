@@ -56,17 +56,11 @@ class Column implements AttributeInterface
         /** @var ReflectionProperty $prop */
         $prop = $handler->getReflector();
 
-        $metadata->addAttributeMap(static::class, $prop);
+        $metadata->addAttributeMap($this, $prop);
 
         $this->property = $prop;
-        $column = $this;
 
-        $setter = function () use ($column, $prop) {
-            $this->columns[$column->getName()] = $column;
-            $this->propertyColumns[$prop->getName()] = $column;
-        };
-
-        $setter->call($metadata);
+        $metadata->addMember($prop, $this);
 
         return $handler->get();
     }

@@ -30,6 +30,7 @@ use Windwalker\ORM\Attributes\Mapping;
 use Windwalker\ORM\Attributes\NestedSet;
 use Windwalker\ORM\Attributes\OneToMany;
 use Windwalker\ORM\Attributes\OneToOne;
+use Windwalker\ORM\Attributes\OptimisticLock;
 use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\Attributes\Watch;
@@ -111,6 +112,7 @@ class ORM implements EventAwareInterface
         $ar->registerAttribute(Column::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(Mapping::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(PK::class, Attribute::TARGET_PROPERTY);
+        $ar->registerAttribute(OptimisticLock::class, Attribute::TARGET_PROPERTY);
 
         $ar->registerAttribute(OneToOne::class, Attribute::TARGET_PROPERTY);
         $ar->registerAttribute(OneToMany::class, Attribute::TARGET_PROPERTY);

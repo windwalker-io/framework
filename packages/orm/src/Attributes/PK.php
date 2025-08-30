@@ -31,7 +31,7 @@ class PK implements AttributeInterface
         /** @var ReflectionProperty $prop */
         $prop = $handler->getReflector();
 
-        $metadata->addAttributeMap(static::class, $prop);
+        $metadata->addAttributeMap($this, $prop);
 
         $column = $metadata->getColumnByPropertyName($prop->getName());
 
