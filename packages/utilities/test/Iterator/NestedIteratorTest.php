@@ -135,7 +135,7 @@ class NestedIteratorTest extends TestCase
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->flatMap(
-            fn ($v) => [strtoupper($v), $v]
+            fn($v) => [strtoupper($v), $v]
         );
 
         self::assertEquals(
@@ -146,8 +146,8 @@ class NestedIteratorTest extends TestCase
 
     public function testMapWithKey(): void
     {
-        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
-        $iter = $iter->mapWithKey(fn($item) => [$item => strtoupper($item)]);
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
+            ->mapWithKey(fn($item) => [$item => strtoupper($item)]);
 
         self::assertEquals(
             [
@@ -157,6 +157,36 @@ class NestedIteratorTest extends TestCase
                 'd' => 'D',
                 'e' => 'E',
                 'f' => 'F',
+            ],
+            iterator_to_array($iter)
+        );
+
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
+            ->mapWithKey(fn($item) => yield $item => strtoupper($item));
+
+        self::assertEquals(
+            [
+                'a' => 'A',
+                'b' => 'B',
+                'c' => 'C',
+                'd' => 'D',
+                'e' => 'E',
+                'f' => 'F',
+            ],
+            iterator_to_array($iter)
+        );
+
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
+            ->mapWithKey(fn($item) => yield null => strtoupper($item));
+
+        self::assertEquals(
+            [
+                'A',
+                'B',
+                'C',
+                'D',
+                'E',
+                'F',
             ],
             iterator_to_array($iter)
         );
@@ -194,7 +224,7 @@ class NestedIteratorTest extends TestCase
                 'foo',
                 'bar',
                 'yoo',
-                'goz'
+                'goz',
             ],
             iterator_to_array($iter)
         );
@@ -239,8 +269,101 @@ class NestedIteratorTest extends TestCase
         );
 
         self::assertEquals(
-            [1, 2, 3, 4, 5, 6 ,7 ,8 ,9],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9],
             iterator_to_array($iter)
+        );
+    }
+
+    public function testLimit(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+
+        $limited = $iter->limit(0, 3);
+
+        self::assertEquals(['a', 'b', 'c'], iterator_to_array($limited));
+
+        $limited = $iter->limit(2, 2);
+
+        self::assertEquals([2 => 'c', 3 => 'd'], iterator_to_array($limited));
+    }
+
+    public function testRegex(): void
+    {
+        $iter = new NestedIterator(['foo', 'bar', 'baz', 'yoo', 'goz']);
+
+        $filtered = $iter->regex('/^ba/');
+
+        self::assertEquals([1 => 'bar', 2 => 'baz'], iterator_to_array($filtered));
+    }
+
+    public function testToCachingIterator(): void
+    {
+        // Test PHP CachingIterator
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
+            ->map(strtoupper(...))
+            ->toCachingIterator(\CachingIterator::FULL_CACHE);
+
+        self::assertEquals(
+            ['A', 'B', 'C', 'D', 'E', 'F'],
+            iterator_to_array($iter)
+        );
+        self::assertEquals(
+            ['A', 'B', 'C', 'D', 'E', 'F'],
+            $iter->getCache()
+        );
+    }
+
+    public function testParallel(): void
+    {
+        $iter1 = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+        $iter2 = new NestedIterator([1, 2, 3]);
+
+        $iter = $iter1->parallel([$iter2])
+            ->mapWithKey(
+                fn($v, $k) => yield null => implode('', $v)
+            );
+
+        self::assertEquals(
+            ['a1', 'b2', 'c3'],
+            iterator_to_array($iter)
+        );
+
+        $iter = $iter1->parallel(
+            function (\MultipleIterator $mi, \Iterator $it) use ($iter2) {
+                $mi->attachIterator($it);
+                $mi->attachIterator($iter2);
+            }
+        )
+            ->mapWithKey(
+                fn($v, $k) => yield null => implode('', $v)
+            );
+
+        self::assertEquals(
+            ['a1', 'b2', 'c3'],
+            iterator_to_array($iter)
+        );
+    }
+
+    public function testInfinite(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c'])
+            ->infinite();
+
+        $r = [];
+        $i = 0;
+
+        foreach ($iter as $item) {
+            $r[] = $item;
+            $i++;
+
+            if ($i > 10) {
+                break;
+            }
+        }
+
+        self::assertEquals(
+            ['a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a', 'b'],
+            $r
         );
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport\Options;
 
+use Windwalker\Http\Transport\ProgressEvent;
 use Windwalker\Utilities\Options\RecordOptions;
 
 #[\AllowDynamicProperties]
@@ -19,6 +20,10 @@ class TransportOptions extends RecordOptions
         public ?string $certpath = null,
         public bool $verifyPeer = true,
         public ?array $files = null,
+        /**
+         * @var \Closure(ProgressEvent $event): void|null
+         */
+        public ?\Closure $progress = null,
     ) {
     }
 }

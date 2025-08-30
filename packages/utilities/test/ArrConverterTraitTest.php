@@ -357,6 +357,7 @@ class ArrConverterTraitTest extends TestCase
             3 => 'Thor',
         ];
 
+        // Test return array
         self::assertEquals(
             $expected,
             Arr::mapWithKeys(
@@ -365,6 +366,75 @@ class ArrConverterTraitTest extends TestCase
                     return [$item['id'] => $item['name']];
                 }
             )
+        );
+
+        // Test yield
+        self::assertEquals(
+            $expected,
+            Arr::mapWithKeys(
+                $src,
+                static function (array $item) {
+                    yield $item['id'] => $item['name'];
+                }
+            )
+        );
+
+        // Test multiple yield
+        self::assertEquals(
+            [
+                'A' => 'Captain America',
+                'a' => 'Captain America',
+                'B' => 'Luke Cage',
+                'b' => 'Luke Cage',
+                'C' => 'Thor',
+                'c' => 'Thor',
+            ],
+            Arr::mapWithKeys(
+                $src,
+                static function (array $item, $k) {
+                    yield $k => $item['name'];
+                    yield strtolower($k) => $item['name'];
+                }
+            )
+        );
+
+        // Test yield without key
+        self::assertEquals(
+            expected: [
+                'Captain America',
+                'Captain America',
+                'Luke Cage',
+                'Luke Cage',
+                'Thor',
+                'Thor',
+            ],
+            actual: Arr::mapWithKeys(
+                $src,
+                static function (array $item, $k) {
+                    yield null => $item['name'];
+                    yield null => $item['name'];
+                }
+            )
+        );
+    }
+
+    public static function testMapGenerator(): void
+    {
+        $gen = static function () {
+            yield 1 => 'A';
+            yield 2 => 'B';
+            yield 3 => 'C';
+        };
+
+        $expected = [
+            1 => 'A',
+            2 => 'B',
+            3 => 'C',
+        ];
+
+        self::assertEquals(
+            $expected,
+            Arr::mapGenerator($gen)
         );
     }
 

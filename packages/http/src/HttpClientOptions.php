@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Http;
 
 use Windwalker\Http\Transport\Options\TransportOptions;
+use Windwalker\Http\Transport\ProgressEvent;
 use Windwalker\Utilities\Options\RecordOptions;
 
 class HttpClientOptions extends RecordOptions
@@ -18,6 +19,10 @@ class HttpClientOptions extends RecordOptions
         public ?array $headers = null,
         public ?array $params = null,
         public ?array $files = null,
+        /**
+         * @var \Closure(ProgressEvent $event): void|null
+         */
+        public ?\Closure $progress = null,
     ) {
         $this->transport = TransportOptions::tryWrap($transport);
     }

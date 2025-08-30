@@ -2,35 +2,26 @@
 
 declare(strict_types=1);
 
+use Asika\BetterUnits\FileSize;
+use Windwalker\Http\HttpClient;
+use Windwalker\Http\HttpClientOptions;
 use Windwalker\Http\Transport\Options\CurlOptions;
+use Windwalker\Http\Transport\ProgressEvent;
 
 include __DIR__ . '/../../../vendor/autoload.php';
 
-$http = new \Windwalker\Http\HttpClient()
-    ->withDefaultHeader('User-Agent', 'Windwalker Http Client')
-    ->withBaseUri('https://simular.co/');
+$fileUrl = 'https://getsamplefiles.com/download/zip/sample-3.zip';
 
-// $http->download(
-//     'https://getsamplefiles.com/download/zip/sample-3.zip',
-//     __DIR__ . '/../tmp/sample-3.zip'
-// );
+$http = new HttpClient();
+$http->get(
+    $fileUrl,
+    new HttpClientOptions(
+        progress: function (ProgressEvent $event) {
+            show($event);
+            $now = $event->downloadedFileSize->format(unit: FileSize::UNIT_KIBIBYTES);
+            $total = $event->downloadTotalFileSize->format(unit: FileSize::UNIT_KIBIBYTES);
 
-$cmd = $http->toCurlCmd(
-    'GET',
-    '{a}{?b}',
-    null,
-    new \Windwalker\Http\HttpClientOptions(
-        transport: new CurlOptions(
-            verifyPeer: false
-        ),
-        vars: [
-            'a' => 1,
-            'b' => 2,
-        ],
-        headers: [
-            'X-Test' => '123',
-        ]
+            echo "Progress: $now / $total\n";
+        },
     )
 );
-
-echo $cmd;

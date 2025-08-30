@@ -605,6 +605,21 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals(4, $hits);
     }
 
+    public function testIncrementOrCreate(): void
+    {
+        $mapper = static::$orm->mapper(StubArticle::class);
+
+        $exists = $mapper->findOne(['content' => 'YOO']);
+
+        self::assertNull($exists);
+
+        $mapper->incrementOrCreate('hits', ['content' => 'YOO'], initData: ['hits' => 10]);
+
+        $hits = $mapper->mustFindOne(['content' => 'YOO'])->getHits();
+
+        self::assertEquals(11, $hits);
+    }
+
     public function testDecrement(): void
     {
         $mapper = static::$orm->mapper(StubArticle::class);
@@ -620,6 +635,57 @@ class EntityMapperTest extends AbstractORMTestCase
         $hits = $mapper->findOne(2)->getHits();
 
         self::assertEquals(1, $hits);
+    }
+
+    public function testDecrementOrCreate(): void
+    {
+        $mapper = static::$orm->mapper(StubArticle::class);
+
+        $exists = $mapper->findOne(['content' => 'GOO']);
+
+        self::assertNull($exists);
+
+        $mapper->decrementOrCreate('hits', ['content' => 'GOO'], initData: ['hits' => 10]);
+
+        $hits = $mapper->mustFindOne(['content' => 'GOO'])->getHits();
+
+        self::assertEquals(9, $hits);
+    }
+
+    /**
+     * Don't change ordering of this method to keep the inserted IDs correct.
+     *
+     * @return  void
+     *
+     * @throws \ReflectionException
+     */
+    public function testCreateBulk(): void
+    {
+        // Create from array
+        $items = [
+            ['title' => 'Daisy', 'meaning' => '', 'params' => ''],
+            ['title' => 'Tulip', 'meaning' => '', 'params' => ''],
+            // Mapper should remove non-necessary field
+            ['title' => 'Orchid', 'anim' => 'bird', 'meaning' => '', 'params' => ''],
+        ];
+
+        /** @var StubFlower[] $returns */
+        $returns = $this->instance->createBulk($items);
+
+        $sql = $this->instance->getDb()->getLastQuery()->render(true);
+
+        self::assertStringContainsString('Daisy', $sql);
+        self::assertStringContainsString('Tulip', $sql);
+        self::assertStringContainsString('Orchid', $sql);
+
+        $newItems = self::$db->prepare(
+            'SELECT * FROM ww_flower ORDER BY id DESC LIMIT 3'
+        )
+            ->all();
+
+        self::assertEquals(['Orchid', 'Tulip', 'Daisy'], $newItems->column('title')->dump());
+
+        self::assertInstanceOf(StubFlower::class, $returns[0]);
     }
 
     /**

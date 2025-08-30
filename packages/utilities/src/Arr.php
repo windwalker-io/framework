@@ -543,7 +543,7 @@ abstract class Arr
     public static function takeout(
         object|array &$data,
         int|string $key,
-        $default = null,
+        mixed $default = null,
         string $delimiter = '.'
     ): mixed {
         if (!static::has($data, $key, $delimiter)) {
@@ -657,13 +657,7 @@ abstract class Arr
      */
     public static function isAssociative(array $array): bool
     {
-        foreach (array_keys($array) as $k => $v) {
-            if ($k !== $v) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(array_keys($array), fn($v, $k) => $k !== $v);
     }
 
     /**
@@ -871,10 +865,10 @@ abstract class Arr
                 }
             }
 
-            if (array_is_list($sub)) {
+            if (array_is_list($result) && array_is_list($sub)) {
                 $result = [...$result, ...$sub];
             } else {
-                $result += $sub;
+                $result = $sub + $result;
             }
         }
 
@@ -1073,7 +1067,7 @@ abstract class Arr
      */
     public static function query(
         object|array $array,
-        $queries = [],
+        mixed $queries = [],
         bool $strict = false,
         bool $keepKey = false
     ): object|array {
@@ -1157,17 +1151,7 @@ abstract class Arr
             } elseif ($strict) {
                 $results[] = static::get($array, $key) === $val;
             } else {
-                // Todo: Test this in php8 env.
-                // Workaround for PHP object compare bug, see: https://bugs.php.net/bug.php?id=62976
-                $compare1 = is_object(static::get($array, $key)) ? get_object_vars(
-                    static::get(
-                        $array,
-                        $key
-                    )
-                ) : static::get($array, $key);
-                $compare2 = is_object($val) ? get_object_vars($val) : $val;
-
-                $results[] = ($compare1 == $compare2);
+                $results[] = static::get($array, $key) == $val;
             }
         }
 

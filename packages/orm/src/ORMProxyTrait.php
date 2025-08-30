@@ -387,7 +387,7 @@ trait ORMProxyTrait
     public function copy(
         string $entityClass,
         mixed $conditions = [],
-        callable|iterable $newValue = null,
+        callable|iterable|null $newValue = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
         return $this->mapper($entityClass)->copy($conditions, $newValue, $options);
@@ -411,5 +411,27 @@ trait ORMProxyTrait
         ORMOptions|int $options = new ORMOptions()
     ): void {
         $this->mapper($entityClass)->decrement($fields, $conditions, $num, $options);
+    }
+
+    public function incrementOrCreate(
+        string $entityClass,
+        string|array $fields,
+        mixed $conditions,
+        int|float $num = 1,
+        mixed $initData = null,
+        ORMOptions|int $options = new ORMOptions(),
+    ): void {
+        $this->mapper($entityClass)->incrementOrCreate($fields, $conditions, $num, $initData, $options);
+    }
+
+    public function decrementOrCreate(
+        string $entityClass,
+        string|array $fields,
+        mixed $conditions,
+        int|float $num = 1,
+        mixed $initData = null,
+        ORMOptions|int $options = new ORMOptions(),
+    ): void {
+        $this->mapper($entityClass)->decrementOrCreate($fields, $conditions, $num, $initData, $options);
     }
 }

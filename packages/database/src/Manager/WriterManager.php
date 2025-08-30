@@ -230,6 +230,53 @@ class WriterManager
         return $result;
     }
 
+    public function insertBulk(
+        string $table,
+        iterable $items,
+        array $options = []
+    ): StatementInterface {
+        $options = array_merge(
+            [
+                'incrementField' => false,
+                'filterFields' => false,
+            ],
+            $options
+        );
+
+        $columnRegistered = false;
+        $query = $this->db->createQuery()
+            ->insert($table, $options['incrementField']);
+
+        foreach ($items as $i => $data) {
+            $fields = [];
+            $values = [];
+
+            $item = TypeCast::toArray($data);
+
+            if ($options['filterFields']) {
+                $item = $this->filterFields($table, $item);
+            }
+
+            // Iterate over the object variables to build the query fields and values.
+            foreach ($item as $k => $v) {
+                // Prepare and sanitize the fields and values for the database query.
+                $fields[] = $k;
+                $values[] = $v;
+            }
+
+            // Create the base insert statement.
+            if (!$columnRegistered) {
+                $query->columns(...$fields);
+                $columnRegistered = true;
+            }
+
+            $query->values($values);
+        }
+
+        // Set the query and execute the insert.
+        return $this->execute($query);
+    }
+
     /**
      * updateMultiple
      *

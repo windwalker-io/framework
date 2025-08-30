@@ -10,6 +10,7 @@ use Iterator;
 use OuterIterator;
 use Traversable;
 use Windwalker\Scalars\StringObject;
+use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Context\Loop;
 
 /**
@@ -111,7 +112,7 @@ class NestedIterator implements OuterIterator
 
             foreach ($this->callbacks as $callback) {
                 $iterator = (static function () use ($iterator, $callback) {
-                    return $callback($iterator);
+                    yield from $callback($iterator);
                 })();
             }
 
@@ -202,12 +203,21 @@ class NestedIterator implements OuterIterator
         return $this->with(
             function (iterable $items) use ($callback) {
                 foreach ($items as $key => $item) {
-                    $result = (array) $callback($item, $key);
+                    $result = $callback($item, $key);
 
-                    $k = array_key_first($result);
-                    $value = $result[$k];
+                    TypeAssert::assert(
+                        is_array($result) || $result instanceof \Generator,
+                        'Return value of {caller} should be array or Generator, got %s',
+                        $result
+                    );
 
-                    yield $k => $value;
+                    foreach ($result as $k => $value) {
+                        if ($k === null) {
+                            yield $value;
+                        } else {
+                            yield $k => $value;
+                        }
+                    }
                 }
             }
         );
@@ -391,6 +401,61 @@ class NestedIterator implements OuterIterator
         );
     }
 
+    public function limit(int $offset, int $limit): static
+    {
+        return $this->with(fn(\Iterator $items) => new \LimitIterator($items, $offset, $limit));
+    }
+
+    public function regex(
+        string $pattern,
+        int $mode = \RegexIterator::MATCH,
+        int $flags = 0,
+        int $pregFlags = 0
+    ): static {
+        return $this->with(fn(\Iterator $items) => new \RegexIterator($items, $pattern, $mode, $flags, $pregFlags));
+    }
+
+    public function parallel(
+        array|callable $iterators,
+        int $flags = \MultipleIterator::MIT_NEED_ALL | \MultipleIterator::MIT_KEYS_NUMERIC
+    ): static {
+        return $this->with(
+            function (\Iterator $items) use ($iterators, $flags) {
+                $mi = new \MultipleIterator($flags);
+
+                if (is_callable($iterators)) {
+                    $iterators($mi, $items);
+                } else {
+                    $mi->attachIterator($items);
+
+                    foreach ($iterators as $it) {
+                        if (is_callable($it)) {
+                            $it = $it();
+                        }
+
+                        if (!($it instanceof Traversable)) {
+                            throw new \InvalidArgumentException('Iterator must be callable or iterable');
+                        }
+
+                        $mi->attachIterator($it instanceof Iterator ? $it : new ArrayIterator($it));
+                    }
+                }
+
+                return $mi;
+            }
+        );
+    }
+
+    public function infinite(): static
+    {
+        return $this->with(fn (\Iterator $items) => new \InfiniteIterator($items));
+    }
+
+    public function toCachingIterator(int $flags = \CachingIterator::CALL_TOSTRING): \CachingIterator
+    {
+        return new \CachingIterator($this, $flags);
+    }
+
     /**
      * @inheritDoc
      */
@@ -410,7 +475,7 @@ class NestedIterator implements OuterIterator
     /**
      * @inheritDoc
      */
-    public function key(): float|bool|int|string|null
+    public function key(): mixed
     {
         return $this->compileIterator()->key();
     }

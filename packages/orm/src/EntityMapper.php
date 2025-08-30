@@ -24,10 +24,12 @@ use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Event\{AbstractEntityEvent,
     AbstractSaveEvent,
     AfterCopyEvent,
+    AfterCreateBulkEvent,
     AfterDeleteEvent,
     AfterSaveEvent,
     AfterUpdateWhereEvent,
     BeforeCopyEvent,
+    BeforeCreateBulkEvent,
     BeforeDeleteEvent,
     BeforeSaveEvent,
     BeforeStoreEvent,
@@ -440,6 +442,61 @@ class EntityMapper implements EventAwareInterface
         return $items;
     }
 
+    /**
+     * @param  iterable        $items
+     * @param  ORMOptions|int  $options
+     *
+     * @return  array<T>
+     *
+     * @throws \ReflectionException
+     */
+    public function createBulk(iterable $items, ORMOptions|int $options = new ORMOptions()): array
+    {
+        $options = ORMOptions::wrap($options);
+        $metadata = $this->getMetadata();
+
+        $dataSet = [];
+        $entities = [];
+
+        foreach ($items as $item) {
+            TypeAssert::assert(
+                is_object($item) || is_array($item),
+                '{caller} item must be array or object, {value} given',
+                $item
+            );
+
+            $data = $this->extract($item);
+            $data = $this->castForSave($data, true, $entities[] = $this->toEntity($item));
+
+            $dataSet[] = $data;
+        }
+
+        // Event
+        $event = $this->emits(
+            new BeforeCreateBulkEvent(
+                items: $dataSet,
+                entities: $entities,
+                options: $options,
+            )
+        );
+
+        $items = $this->getDb()->getWriter()->insertBulk(
+            $metadata->getTableName(),
+            $event->items,
+        );
+
+        // Event
+        $event = $this->emits(
+            new AfterCreateBulkEvent(
+                items: $items,
+                entities: $event->entities,
+                options: $event->options,
+            )
+        );
+
+        return $event->entities;
+    }
+
     public function updateOne(
         array|object $source = [],
         array|string|null $condFields = null,
@@ -780,40 +837,34 @@ class EntityMapper implements EventAwareInterface
         bool $mergeConditions = true,
         ORMOptions|int $options = new ORMOptions()
     ): object {
-        $options = ORMOptions::wrap($options);
-        $item = $this->findOne($conditions);
+        $options = clone ORMOptions::wrap($options);
 
-        if ($item) {
-            return $item;
-        }
+        return $this->orm->transaction(
+            function () use ($options, $initData, $mergeConditions, $conditions) {
+                $options->forUpdate = $options->transaction;
 
-        $item = [];
+                $item = $this->findOne($conditions, options: $options);
 
-        if ($mergeConditions && is_array($conditions)) {
-            foreach ($conditions as $k => $v) {
-                if (!is_numeric($k)) {
-                    $item[$k] = $v;
+                if ($item) {
+                    return $item;
                 }
-            }
-        }
 
-        if (is_callable($initData)) {
-            $result = $initData($item, $conditions);
+                $item = [];
 
-            if ($result) {
-                $item = $result;
-            }
-        } else {
-            $initData = TypeCast::toArray($initData);
-
-            foreach ($initData as $key => $value) {
-                if ($value !== null) {
-                    $item[$key] = $value;
+                if ($mergeConditions && is_array($conditions)) {
+                    foreach ($conditions as $k => $v) {
+                        if (!is_numeric($k)) {
+                            $item[$k] = $v;
+                        }
+                    }
                 }
-            }
-        }
 
-        return $this->createOne($item, $options);
+                $item = $this->prepareCreateInitData($initData, $item, $conditions);
+
+                return $this->createOne($item, $options);
+            },
+            enabled: $options->transaction
+        );
     }
 
     /**
@@ -833,7 +884,7 @@ class EntityMapper implements EventAwareInterface
         ?array $condFields = null,
         ORMOptions|int $options = new ORMOptions()
     ): object {
-        $options = ORMOptions::wrap($options);
+        $options = clone ORMOptions::wrap($options);
         $condFields = $condFields ?: $this->getKeys();
 
         $conditions = [];
@@ -844,25 +895,39 @@ class EntityMapper implements EventAwareInterface
             $conditions[$field] = $data[$field];
         }
 
-        if ($found = $this->findOne($conditions)) {
-            $this->updateOne($item, $condFields, $options);
+        return $this->orm->transaction(
+            function () use ($initData, $data, $item, $options, $condFields, $conditions) {
+                $options->forUpdate = $options->transaction;
 
-            return $this->hydrate(array_filter($data), $found);
-        }
+                if ($found = $this->findOne($conditions, options: $options)) {
+                    $this->updateOne($item, $condFields, $options);
 
+                    return $this->hydrate(array_filter($data), $found);
+                }
+
+                $data = $this->prepareCreateInitData($initData, $data, $conditions);
+
+                return $this->createOne($data, $options);
+            },
+            enabled: $options->transaction
+        );
+    }
+
+    protected function prepareCreateInitData(mixed $initData, array $item, mixed $conditions): array
+    {
         if (is_callable($initData)) {
-            $data = $initData($data, $conditions);
+            $item = $initData($item, $conditions) ?? $item;
         } else {
             $initData = TypeCast::toArray($initData);
 
             foreach ($initData as $key => $value) {
                 if ($value !== null) {
-                    $data[$key] = $value;
+                    $item[$key] = $value;
                 }
             }
         }
 
-        return $this->createOne($data, $options);
+        return $item;
     }
 
     /**
@@ -1204,7 +1269,31 @@ class EntityMapper implements EventAwareInterface
             throw new InvalidArgumentException('Increment value should be positive number.');
         }
 
-        $this->fieldOffsets('+', $fields, $conditions, $num, $options);
+        $this->fieldOffsets($fields, $conditions, abs($num), $options);
+    }
+
+    public function incrementOrCreate(
+        string|array $fields,
+        mixed $conditions,
+        int|float $num = 1,
+        mixed $initData = null,
+        ORMOptions|int $options = new ORMOptions(),
+    ): void {
+        if ($num < 0) {
+            throw new InvalidArgumentException('Increment value should be positive number.');
+        }
+
+        $this->orm->transaction(
+            function () use ($options, $num, $fields, $initData, $conditions) {
+                $this->findOneOrCreate(
+                    $conditions,
+                    initData: $initData,
+                    options: $options->with(transaction: true)
+                );
+
+                $this->increment($fields, $conditions, $num, $options->with(transaction: true));
+            }
+        );
     }
 
     public function decrement(
@@ -1217,11 +1306,34 @@ class EntityMapper implements EventAwareInterface
             throw new InvalidArgumentException('Decrement value should be positive number.');
         }
 
-        $this->fieldOffsets('-', $fields, $conditions, $num, $options);
+        $this->fieldOffsets($fields, $conditions, -abs($num), $options);
+    }
+
+    public function decrementOrCreate(
+        string|array $fields,
+        mixed $conditions,
+        int|float $num = 1,
+        mixed $initData = null,
+        ORMOptions|int $options = new ORMOptions(),
+    ): void {
+        if ($num < 0) {
+            throw new InvalidArgumentException('Increment value should be positive number.');
+        }
+
+        $this->orm->transaction(
+            function () use ($options, $num, $fields, $initData, $conditions) {
+                $this->findOneOrCreate(
+                    $conditions,
+                    initData: $initData,
+                    options: $options->with(transaction: true)
+                );
+
+                $this->decrement($fields, $conditions, $num, $options->with(transaction: true));
+            }
+        );
     }
 
     public function fieldOffsets(
-        string $operator,
         string|array $fields,
         mixed $conditions,
         int|float $num,
@@ -1231,16 +1343,20 @@ class EntityMapper implements EventAwareInterface
             throw new InvalidArgumentException('Fields is invalid or empty');
         }
 
+        if ($num === 0) {
+            return;
+        }
+
         $fields = (array) $fields;
 
         $this->getDb()->transaction(
-            function () use ($operator, $num, $options, $fields, $conditions) {
+            function () use ($num, $options, $fields, $conditions) {
                 if ($options->ignoreEvents) {
                     $query = $this->update()
                         ->where($this->conditionsToWheres($conditions));
 
                     foreach ($fields as $field) {
-                        $expr = $operator . abs($num);
+                        $expr = ($num > 0 ? '+' : '-') . abs($num);
 
                         $query->set($field, raw($query->qn($field) . ' ' . $expr));
                     }
@@ -1260,11 +1376,7 @@ class EntityMapper implements EventAwareInterface
 
                 foreach ($items as $item) {
                     foreach ($fields as $field) {
-                        if ($operator === '+') {
-                            $item->$field += $num;
-                        } else {
-                            $item->$field -= $num;
-                        }
+                        $item->$field += $num;
                     }
 
                     $this->updateOne($item, options: $options);
