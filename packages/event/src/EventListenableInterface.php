@@ -30,7 +30,7 @@ interface EventListenableInterface
      *
      * @param  string    $event
      * @param  callable  $callable
-     * @param  int       $priority
+     * @param  int|null  $priority
      *
      * @return  static
      *

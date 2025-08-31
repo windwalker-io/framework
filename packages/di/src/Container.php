@@ -34,6 +34,8 @@ use Windwalker\DI\Exception\DefinitionNotFoundException;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\DI\Wrapper\CallbackWrapper;
+use Windwalker\Event\EventListenableInterface;
+use Windwalker\Event\Provider\SubscribableListenerProviderInterface;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -705,6 +707,38 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         return $this;
+    }
+
+    public function subscribe(
+        string $id,
+        object|array $subscriber,
+        ?int $priority = null,
+        \UnitEnum|string|null $tag = null
+    ): static {
+        return $this->extend(
+            $id,
+            function (object $instance) use ($priority, $subscriber) {
+                if (
+                    $instance instanceof SubscribableListenerProviderInterface
+                    || $instance instanceof EventListenableInterface
+                ) {
+                    if (is_object($subscriber)) {
+                        $instance->subscribe($subscriber, $priority);
+                    } else {
+                        if (array_is_list($subscriber)) {
+                            $subscriber = [$subscriber[0] => $subscriber[1]];
+                        }
+
+                        foreach ($subscriber as $event => $handler) {
+                            $instance->on($event, $handler, $priority);
+                        }
+                    }
+                }
+
+                return $instance;
+            },
+            $tag
+        );
     }
 
     /**

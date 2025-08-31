@@ -17,7 +17,7 @@ interface SubscribableListenerProviderInterface extends ListenerProviderInterfac
      *
      * @param  string    $event
      * @param  callable  $listener
-     * @param  int       $priority
+     * @param  int|null  $priority
      *
      * @return  void
      */
