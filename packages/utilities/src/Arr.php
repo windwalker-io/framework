@@ -14,6 +14,8 @@ use Windwalker\Utilities\Classes\PreventInitialTrait;
 use Windwalker\Utilities\Compare\WhereWrapper;
 use Windwalker\Utilities\Dumper\VarDumper;
 
+use Windwalker\Utilities\Wrapper\DepthWrapper;
+
 use function Windwalker\count;
 use function Windwalker\value_compare;
 
@@ -1200,18 +1202,20 @@ abstract class Arr
             $dumper = [static::class, 'dump'];
         }
 
-        $level = 5;
+        $depth = 5;
 
-        if (array_is_list($args) && count($args) > 1) {
-            $last = $args[array_key_last($args)];
+        foreach ($args as $i => $arg) {
+            if ($arg instanceof DepthWrapper) {
+                $depth = $arg();
 
-            if (is_int($last)) {
-                $level = $last;
-                array_pop($args);
+                if (array_is_list($args)) {
+                    array_splice($args, $i, 1);
+                } else {
+                    unset($args[$i]);
+                }
+
+                break;
             }
-        } elseif (array_key_last($args) === 'deep' && is_int($args['deep'])) {
-            $level = $args['deep'];
-            unset($args['deep']);
         }
 
         fwrite($output, "\n\n");
@@ -1231,13 +1235,13 @@ abstract class Arr
                     $scope = "[$i]";
                 }
 
-                $prints[] = $scope . "\n" . $dumper($arg, $level);
+                $prints[] = $scope . "\n" . $dumper($arg, $depth);
             }
 
             fwrite($output, implode("\n\n", $prints));
         } else {
             // Dump one value.
-            fwrite($output, $dumper($args[0], $level));
+            fwrite($output, $dumper($args[0], $depth));
         }
 
         if (PHP_SAPI !== 'cli') {

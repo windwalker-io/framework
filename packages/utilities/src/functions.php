@@ -102,6 +102,7 @@ namespace Windwalker {
     use Windwalker\Utilities\Proxy\DisposableCallable;
     use Windwalker\Utilities\Serial;
     use Windwalker\Utilities\TypeCast;
+    use Windwalker\Utilities\Wrapper\DepthWrapper;
     use Windwalker\Utilities\Wrapper\RawWrapper;
     use Windwalker\Utilities\Wrapper\ValueReference;
     use Windwalker\Utilities\Wrapper\WrapperInterface;
@@ -368,6 +369,14 @@ namespace Windwalker {
             mixed $value
         ): RawWrapper {
             return new RawWrapper($value);
+        }
+    }
+
+    if (!function_exists('\Windwalker\depth')) {
+        #[Pure]
+        function depth(int $depth): DepthWrapper
+        {
+            return new DepthWrapper($depth);
         }
     }
 

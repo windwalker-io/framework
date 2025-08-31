@@ -11,6 +11,7 @@ use Windwalker\Utilities\Arr;
 
 use function show;
 use function Windwalker\clamp;
+use function Windwalker\depth;
 use function Windwalker\fread_all;
 
 /**
@@ -30,7 +31,7 @@ class FunctionsTest extends TestCase
             2,
             ['foo' => 'bar'],
             ['max' => ['level' => ['test' => ['this' => ['no' => 'show']]]]],
-            4,
+            depth(4),
         ];
 
         $expected = <<<OUT
@@ -74,6 +75,56 @@ OUT;
 
         Arr::$output = fopen('php://memory', 'wb+');
         show(...$data);
+        rewind(Arr::$output);
+
+        $c = stream_get_contents(Arr::$output);
+        self::assertStringSafeEquals($expected, $c);
+
+        fclose(Arr::$output);
+
+        $expected = <<<OUT
+[Value 1]
+Hello
+
+[foo]
+bar
+
+[yoo]
+Array
+(
+    [A] => Array
+        (
+            [B] => Array
+                (
+                    [C] => Array
+                        (
+                            *MAX LEVEL*
+                        )
+
+                )
+
+        )
+
+)
+OUT;
+
+        Arr::$output = fopen('php://memory', 'wb+');
+        show(
+            'Hello',
+            foo: 'bar',
+            yoo: [
+                'A' => [
+                    'B' => [
+                        'C' => [
+                            'D' => [
+                                'E' => 'F'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            depth: depth(3)
+        );
         rewind(Arr::$output);
 
         $c = stream_get_contents(Arr::$output);
