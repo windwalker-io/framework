@@ -9,9 +9,9 @@ use Windwalker\Queue\Event\JobEventTrait;
 
 class JobEventTraitTest extends TestCase
 {
-    public function testJobNonCallable(): void
+    public function testChangeReadonlyJob(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(\Error::class);
 
         $event = new class () {
             use JobEventTrait;

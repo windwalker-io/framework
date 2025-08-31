@@ -74,7 +74,7 @@ class Worker implements EventAwareInterface
 
     public function __construct(
         protected Queue $queue,
-        public WorkerOptions $options,
+        public WorkerOptions $options = new WorkerOptions(),
         protected LoggerInterface $logger = new NullLogger()
     ) {
     }
