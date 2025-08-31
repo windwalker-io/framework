@@ -27,7 +27,7 @@ namespace Windwalker\DI {
     }
 
     if (!function_exists('\Windwalker\DI\prepare')) {
-        function prepare(string $class, ?callable $extend, int $options = 0): StoreDefinition
+        function prepare(string $class, ?callable $extend, int|DIOptions $options = 0): StoreDefinition
         {
             $def = new StoreDefinition(
                 $class,
@@ -40,9 +40,9 @@ namespace Windwalker\DI {
     }
 
     if (!function_exists('\Windwalker\DI\prepare_shared')) {
-        function prepare_shared(string $class, ?callable $extend, int $options = 0): StoreDefinition
+        function prepare_shared(string $class, ?callable $extend, int|DIOptions $options = 0): StoreDefinition
         {
-            return prepare($class, $extend, $options | Container::SHARED);
+            return prepare($class, $extend, DIOptions::wrap($options)->with(shared: true));
         }
     }
 

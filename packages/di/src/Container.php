@@ -38,6 +38,7 @@ use Windwalker\Event\EventListenableInterface;
 use Windwalker\Event\Provider\SubscribableListenerProviderInterface;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
+use Windwalker\Utilities\Str;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
@@ -382,7 +383,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         if (is_callable($source) || (is_string($source) && !$this->has($source))) {
-            return $this->newInstance($source, [...$args, 'tag' => $tag], $options);
+            if ($tag !== null) {
+                $args['tag'] = $tag;
+            }
+
+            return $this->newInstance($source, $args, $options);
         }
 
         if (is_string($source) && $this->has($source, $tag)) {
@@ -601,7 +606,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         $value = static fn(Container $container, \UnitEnum|string|null $tag = null) => $container->newInstance(
             $value,
-            compact('tag'),
+            $tag !== null ? compact('tag') : [],
             $options
         );
 
@@ -625,8 +630,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options);
-        $options->shared = true;
+        $options = DIOptions::wrap($options)->with(shared: true);
 
         return $this->bind($id, $value, $options, $tag);
     }
@@ -699,12 +703,30 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function extend(string $id, Closure $closure, \UnitEnum|string|null $tag = null): static
     {
-        $this->extends[$id] ??= [];
-        $this->extends[$id][] = $closure;
+        $taggedId = static::toTaggedId($id, $tag);
+
+        $this->extends[$taggedId] ??= [];
+        $this->extends[$taggedId][] = $closure;
 
         if ($this->hasCached($id, $tag)) {
             $this->modify($id, $closure, $tag);
         }
+
+        return $this;
+    }
+
+    /**
+     * Similar to extend() but only for newInstance() and createObject() calls.
+     *
+     * @param  string                 $id
+     * @param  Closure                $closure
+     * @param  \UnitEnum|string|null  $tag
+     *
+     * @return  static
+     */
+    public function extendForCreate(string $id, Closure $closure, \UnitEnum|string|null $tag = null): static
+    {
+        $this->whenCreating($id, $tag)->extend($closure);
 
         return $this;
     }
@@ -746,17 +768,21 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @return  array<callable>
      */
-    public function findExtends(string $id): array
+    public function findExtends(string $id, string|\UnitEnum|null $tag = null): array
     {
-        $nid = $id;
+        $nid = static::toTaggedId($id, $tag);
 
         $extends = [];
 
         if ($this->parent) {
-            $extends[] = $this->parent->findExtends($id);
+            $extends[] = $this->parent->findExtends($id, $tag);
         }
 
-        if (isset($this->extends[$id])) {
+        if (isset($this->extends[$nid])) {
+            $extends[] = $this->extends[$nid];
+        }
+
+        if ($nid !== $id && isset($this->extends[$id])) {
             $extends[] = $this->extends[$id];
         }
 
@@ -906,15 +932,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @return  ObjectBuilderDefinition
      */
-    public function whenCreating(string $class): ObjectBuilderDefinition
+    public function whenCreating(string $class, string|\UnitEnum|null $tag = null): ObjectBuilderDefinition
     {
-        $builder = $this->builders[$class] ??= new ObjectBuilderDefinition($class);
+        $id = static::toTaggedId($class, $tag);
 
-        // if (!$this->has($class)) {
-        //     $this->setDefinition($class, new ObjectBuilderDefinition($builder));
-        // }
-
-        return $builder;
+        return $this->builders[$id] ??= new ObjectBuilderDefinition($class);
     }
 
     /**
@@ -928,10 +950,21 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function newInstance(mixed $class, array $args = [], DIOptions|int $options = new DIOptions()): mixed
     {
+        $extends = [];
+
+        if (is_string($class)) {
+            $class = $this->resolveAliasDeep($class);
+
+            $builder = $this->builders[$class] ?? null;
+
+            if ($builder) {
+                $args = $builder->resolveArguments($this, $args);
+                $extends = $builder->extends;
+            }
+        }
+
         if (is_string($class)) {
             $options = DIOptions::wrap($options);
-
-            $class = $this->resolveAliasDeep($class);
 
             if (
                 $this->dependencyResolver->canLazy($ref = new \ReflectionClass($class), $options)
@@ -943,7 +976,15 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             }
         }
 
-        return $this->dependencyResolver->newInstance($class, $args, $options);
+        $instance = $this->dependencyResolver->newInstance($class, $args, $options);
+
+        if ($extends !== []) {
+            foreach ($extends as $extend) {
+                $instance = $extend($instance, $this);
+            }
+        }
+
+        return $instance;
     }
 
     /**

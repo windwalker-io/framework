@@ -32,6 +32,7 @@ use Windwalker\DI\Test\Mock\UnionTypeStub;
 use Windwalker\DI\Test\Mock\WithEnum;
 use Windwalker\DI\Test\Mock\WithVariadic;
 use Windwalker\DI\Test\Stub\StubInstantService;
+use Windwalker\DI\Test\Stub\StubLangCode;
 use Windwalker\DI\Test\Stub\StubLangEnum;
 use Windwalker\DI\Test\Stub\StubLazy;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
@@ -572,6 +573,24 @@ class ContainerTest extends TestCase
         );
 
         self::assertEquals('World2~~~!!!', $this->instance->get('Hello2'));
+    }
+
+    public function testExtendForNewInstance(): void
+    {
+        $this->instance->extendForCreate(
+            StubLangCode::class,
+            function (StubLangCode $value, $container) {
+                $value->tag = StubLangEnum::Japan;
+                return $value;
+            }
+        );
+
+        $item = $this->instance->newInstance(StubLangCode::class);
+
+        self::assertSame(
+            'ja-JP',
+            $item()
+        );
     }
 
     /**

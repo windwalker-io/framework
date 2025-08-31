@@ -44,7 +44,7 @@ class StoreDefinition implements StoreDefinitionInterface
             class_exists($id)
             && has_attributes(new \ReflectionClass($id), Isolation::class, true)
         ) {
-            $this->options |= Container::ISOLATION;
+            $this->options = $this->options->with(isolation: true);
         }
     }
 
@@ -97,7 +97,7 @@ class StoreDefinition implements StoreDefinitionInterface
             $value = $extend($value, $container, $tag) ?? $value;
         }
 
-        foreach ($container->findExtends($this->id) as $extend) {
+        foreach ($container->findExtends($this->id, $tag) as $extend) {
             $value = $extend($value, $container, $tag) ?? $value;
         }
 

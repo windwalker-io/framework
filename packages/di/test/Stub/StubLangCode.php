@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Test\Stub;
 
-use function Windwalker\unwrap_enum;
-
 class StubLangCode
 {
     public function __construct(public string|\UnitEnum $tag = 'USA')

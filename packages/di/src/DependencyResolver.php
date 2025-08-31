@@ -103,7 +103,7 @@ class DependencyResolver
 
             // If is definition object, means this callable is a factory, let's resolve definition.
             if ($instance instanceof DefinitionInterface) {
-                $instance = $this->container->resolve($instance);
+                $instance = $this->container->resolve($instance, $args);
             }
 
             return $instance;

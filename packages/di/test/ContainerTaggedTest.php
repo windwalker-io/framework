@@ -237,7 +237,7 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testExtends(): void
+    public function testExtendsWithPresetTags(): void
     {
         $this->instance->prepareSharedObject(StubLangCode::class);
         $this->instance->extend(
@@ -252,6 +252,28 @@ class ContainerTaggedTest extends TestCase
         $lang = $this->instance->get(StubLangCode::class, tag: 'Germany');
 
         self::assertEquals('de-DE', $lang());
+    }
+
+    public function testExtendsWithDynamicTags(): void
+    {
+        $this->instance->prepareSharedObject(StubLangCode::class);
+        $this->instance->extend(
+            StubLangCode::class,
+            static function (StubLangCode $lang, Container $container, ?string $tag = null) {
+                if ($tag) {
+                    $lang->tag = $tag;
+                }
+
+                return $lang;
+            },
+        );
+        $lang = $this->instance->get(StubLangCode::class, tag: 'Germany');
+
+        self::assertEquals('de-DE', $lang());
+
+        $lang = $this->instance->get(StubLangCode::class);
+
+        self::assertEquals('en-US', $lang());
     }
 
     public function setUp(): void

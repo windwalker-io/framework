@@ -43,7 +43,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
     /**
      * @var callable[]
      */
-    protected array $extends = [];
+    public protected(set) array $extends = [];
 
     protected ?object $instance = null;
 
@@ -92,7 +92,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
         $object = $container->newInstance($this->getClass(), $args);
 
         foreach ($this->extends as $extend) {
-            $object = $extend($object, $container);
+            $object = $extend($object, $container, $tag);
         }
 
         return $object;
