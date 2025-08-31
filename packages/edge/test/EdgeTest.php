@@ -205,7 +205,5 @@ HTML,
             HTML,
             $result
         );
-
-        $path = __DIR__ . '/tmpl/conditional.blade.php';
     }
 }
