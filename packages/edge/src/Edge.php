@@ -73,6 +73,8 @@ class Edge
      */
     protected int $renderCount = 0;
 
+    public array $renderOnce = [];
+
     /**
      * Property loader.
      *

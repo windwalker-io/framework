@@ -165,4 +165,47 @@ HTML,
             )
         );
     }
+
+    public function testConditionalFile()
+    {
+        // $edge = new Edge(
+        //     new EdgeFileLoader(
+        //         [
+        //             __DIR__ . '/tmpl',
+        //         ]
+        //     ),
+        // );
+
+        $this->instance->setCache(
+            new EdgeFileCache(
+                __DIR__ . '/../tmp'
+            )->setDebug(true)
+        );
+
+        $result = $this->instance->renderWithContext(
+            'conditional',
+            [],
+            $this
+        );
+
+        self::assertHtmlFormatEquals(
+            <<<HTML
+            <html lang="en">
+                <head>
+                    <title></title>
+                    <script>console.log(123);</script>
+                    <script>console.log(789);</script>
+                    <link rel="stylesheet" href="foo.css" />
+                </head>
+                <body>
+                    <div class="container"></div>
+                    <link rel="stylesheet" href="yoo.css" />
+                </body>
+            </html>
+            HTML,
+            $result
+        );
+
+        $path = __DIR__ . '/tmpl/conditional.blade.php';
+    }
 }
