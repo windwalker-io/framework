@@ -382,7 +382,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         if (is_callable($source) || (is_string($source) && !$this->has($source))) {
-            return $this->newInstance($source, $args, $options);
+            return $this->newInstance($source, [...$args, 'tag' => $tag], $options);
         }
 
         if (is_string($source) && $this->has($source, $tag)) {

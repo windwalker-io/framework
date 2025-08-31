@@ -73,17 +73,23 @@ class ObjectBuilderDefinition implements DefinitionInterface
     /**
      * Resolve this definition.
      *
-     * @param  Container  $container  The Container object.
+     *
+     * @param  Container              $container
+     * @param  array                  $args
+     * @param  \UnitEnum|string|null  $tag
      *
      * @return object
      * @throws ReflectionException
      */
-    public function resolve(Container $container): object
+    public function resolve(Container $container, array $args = [], \UnitEnum|string|null $tag = null): object
     {
-        $object = $container->newInstance(
-            $this->getClass(),
-            $this->resolveArguments($container)
-        );
+        $args = $this->resolveArguments($container, $args);
+
+        if (($tag = $this->getTag() ?? $tag) !== null) {
+            $args['tag'] = $tag;
+        }
+
+        $object = $container->newInstance($this->getClass(), $args);
 
         foreach ($this->extends as $extend) {
             $object = $extend($object, $container);
@@ -185,12 +191,12 @@ class ObjectBuilderDefinition implements DefinitionInterface
         return $this->arguments;
     }
 
-    public function resolveArguments(Container $container): array
+    public function resolveArguments(Container $container, array $defaultArgs = []): array
     {
-        $args = [];
+        $args = $defaultArgs;
 
         foreach ($this->arguments as $name => $callable) {
-            $args[$name] = $this->resolveArgument($container, $name);
+            $args[$name] ??= $this->resolveArgument($container, $name);
         }
 
         return $args;

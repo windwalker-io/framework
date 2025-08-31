@@ -32,6 +32,7 @@ use Windwalker\DI\Test\Mock\UnionTypeStub;
 use Windwalker\DI\Test\Mock\WithEnum;
 use Windwalker\DI\Test\Mock\WithVariadic;
 use Windwalker\DI\Test\Stub\StubInstantService;
+use Windwalker\DI\Test\Stub\StubLangEnum;
 use Windwalker\DI\Test\Stub\StubLazy;
 use Windwalker\DI\Test\Stub\StubServiceProvider;
 use Windwalker\Scalars\ArrayObject;
@@ -41,6 +42,8 @@ use Windwalker\Utilities\Reflection\ReflectAccessor;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\DI\create;
+use function Windwalker\raw;
+use function Windwalker\ref;
 use function Windwalker\str;
 
 /**
@@ -864,7 +867,97 @@ class ContainerTest extends TestCase
      */
     public function testResolve(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        // Test wrapper
+        self::assertEquals(
+            'Hello',
+            $this->instance->resolve(raw('Hello'))
+        );
+
+        $this->instance->clear();
+
+        // Resolve params and create instance
+        $this->instance->parameters->setDeep('flower.asia.sakura', StubStack::class);
+
+        self::assertInstanceOf(
+            StubStack::class,
+            $this->instance->resolve(ref('flower.asia.sakura'))
+        );
+
+        self::assertInstanceOf(
+            StubStack::class,
+            $this->instance->resolve('flower.asia.sakura')
+        );
+
+        $this->instance->clear();
+
+        // Create instance
+        self::assertInstanceOf(
+            StubStack::class,
+            $this->instance->resolve(StubStack::class)
+        );
+
+        self::assertInstanceOf(
+            StubStack::class,
+            $this->instance->resolve(fn() => new StubStack())
+        );
+
+        self::assertSame(
+            StubLangEnum::Japan,
+            $this->instance->resolve(fn($lang) => StubLangEnum::wrap($lang), ['lang' => 'ja-JP'])
+        );
+
+        // Test resolve with definitions
+        self::assertInstanceOf(
+            Bar::class,
+            $this->instance->resolve(
+                create(
+                    Bar::class,
+                    queue: fn () => new SplPriorityQueue(),
+                    stack: fn () => new SplStack()
+                )
+            )
+        );
+        self::assertInstanceOf(
+            Bar::class,
+            $this->instance->resolve(
+                create(
+                    fn(...$args) => new Bar(...$args),
+                    queue: fn () => new SplPriorityQueue(),
+                    stack: fn () => new SplStack()
+                )
+            )
+        );
+        self::assertInstanceOf(
+            Bar::class,
+            $this->instance->resolve(
+                create(fn(...$args) => new Bar(...$args)),
+                [
+                    'queue' => new SplPriorityQueue(),
+                    'stack' => new SplStack()
+                ]
+            )
+        );
+        self::assertInstanceOf(
+            Bar::class,
+            $this->instance->resolve(
+                create(Bar::class),
+                [
+                    'queue' => new SplPriorityQueue(),
+                    'stack' => new SplStack()
+                ]
+            )
+        );
+        self::assertInstanceOf(
+            Bar::class,
+            $this->instance->resolve(
+                Bar::class,
+                [
+                    // Instant args from resolve() cannot use function.
+                    'queue' => new SplPriorityQueue(),
+                    'stack' => new SplStack()
+                ]
+            )
+        );
     }
 
     /**

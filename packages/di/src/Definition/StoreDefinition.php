@@ -72,8 +72,12 @@ class StoreDefinition implements StoreDefinitionInterface
         // Build object if is builder
         if ($this->value instanceof ObjectBuilderDefinition) {
             $define = clone $this->value;
+            // Set into definition to support function resolve
             $define->addArguments($args);
-            $define->tag($tag);
+
+            if ($tag !== null) {
+                $define->tag($tag);
+            }
 
             $value = $define->resolve($container);
         }

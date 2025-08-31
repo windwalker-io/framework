@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Test\Stub;
 
-use Windwalker\Utilities\Enum\EnumPhpAdapterTrait;
+use Windwalker\Utilities\Enum\EnumExtendedTrait;
 
 enum StubLangEnum: string
 {
-    use EnumPhpAdapterTrait;
+    use EnumExtendedTrait;
 
     case Default = 'en';
     case USA = 'en-US';

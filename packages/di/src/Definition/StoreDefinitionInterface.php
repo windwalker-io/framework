@@ -34,6 +34,4 @@ interface StoreDefinitionInterface extends DefinitionInterface
     public function getTag(): ?string;
 
     public function providedIn(int|array|null|Closure $levels): static;
-
-    public function resolve(?Container $container = null, array $args = [], \UnitEnum|string|null $tag = null): mixed;
 }
