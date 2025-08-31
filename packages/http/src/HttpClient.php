@@ -310,6 +310,13 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $this->request('PATCH', $url, $body, $options);
     }
 
+    public function connect(
+        Stringable|string $url,
+        array|HttpClientOptions $options = new HttpClientOptions()
+    ): HttpClientResponse {
+        return $this->request('CONNECT', $url, null, $options);
+    }
+
     /**
      * Method to get property Transport
      *
