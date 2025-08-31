@@ -6,6 +6,7 @@ namespace Windwalker\Database\Driver\Mysqli;
 
 use mysqli;
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The MysqliConnection class.
@@ -27,22 +28,22 @@ class MysqliConnection extends AbstractConnection
         return extension_loaded('mysqli');
     }
 
-    public static function getParameters(array $options): array
+    public static function prepareDbOptions(DriverOptions $options): DriverOptions
     {
         return $options;
     }
 
-    protected function doConnect(array $options): bool|mysqli
+    protected function doConnect(DriverOptions $options): bool|mysqli
     {
         mysqli_report(MYSQLI_REPORT_ALL | MYSQLI_REPORT_STRICT);
 
         return mysqli_connect(
-            $options['host'] ?? null,
-            $options['user'] ?? null,
-            $options['password'] ?? null,
-            $options['dbname'] ?? null,
-            $options['port'] ?? null,
-            $options['socket'] ?? null,
+            $options->host ?? null,
+            $options->user ?? null,
+            $options->password ?? null,
+            $options->dbname ?? null,
+            $options->port ?? null,
+            $options->unixSocket ?? null,
         );
     }
 

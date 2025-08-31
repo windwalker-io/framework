@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Pgsql;
 
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
 use Windwalker\Database\Exception\DatabaseConnectException;
 
@@ -23,31 +24,31 @@ class PgsqlConnection extends AbstractConnection
         return extension_loaded('pgsql');
     }
 
-    public static function getParameters(array $options): array
+    public static function prepareDbOptions(DriverOptions $options): DriverOptions
     {
         $params = [];
 
-        $params['host'] = $options['host'];
-        $params['port'] = $options['port'] ?? null;
-        $params['dbname'] = $options['dbname'] ?? null;
-        $params['user'] = $options['user'] ?? null;
-        $params['password'] = $options['password'] ?? null;
+        $params['host'] = $options->host;
+        $params['port'] = $options->port;
+        $params['dbname'] = $options->dbname;
+        $params['user'] = $options->user;
+        $params['password'] = $options->password;
 
-        if (isset($options['charset'])) {
+        if (isset($options->charset)) {
             $params['options'] = sprintf(
                 "'--client_encoding=%s'",
-                strtoupper($options['charset'])
+                strtoupper($options->charset)
             );
         }
 
-        $options['params'] = DsnHelper::build($params, null, ' ');
+        $options->dsn = DsnHelper::build($params, null, ' ');
 
         return $options;
     }
 
-    protected function doConnect(array $options)
+    protected function doConnect(DriverOptions $options)
     {
-        $res = @pg_connect($options['params']);
+        $res = @pg_connect($options->dsn);
 
         if (!$res) {
             throw new DatabaseConnectException('Unable to connect to pgsql.');

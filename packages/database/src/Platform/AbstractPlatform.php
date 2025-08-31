@@ -26,13 +26,13 @@ use function Windwalker\Query\clause;
  */
 abstract class AbstractPlatform
 {
-    public const MYSQL = 'MySQL';
+    public const string MYSQL = 'MySQL';
 
-    public const POSTGRESQL = 'PostgreSQL';
+    public const string POSTGRESQL = 'PostgreSQL';
 
-    public const SQLSERVER = 'SQLServer';
+    public const string SQLSERVER = 'SQLServer';
 
-    public const SQLITE = 'SQLite';
+    public const string SQLITE = 'SQLite';
 
     /**
      * @var string

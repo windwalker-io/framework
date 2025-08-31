@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Pdo;
 
 use PDO;
+use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The PdoSqlsrvConnection class.
@@ -21,19 +22,19 @@ class PdoSqlsrvConnection extends AbstractPdoConnection
         1005 => true,
     ];
 
-    public static function getParameters(array $options): array
+    public static function prepareDbOptions(DriverOptions $options): DriverOptions
     {
-        $params['Server'] = $options['host'];
+        $params['Server'] = $options->host;
 
-        if (isset($params['port'])) {
-            $params['Server'] .= ',' . $params['port'];
+        if ($options->port) {
+            $params['Server'] .= ',' . $options->port;
         }
 
-        $params['Database'] = $options['dbname'] ?? null;
-        $params['CharacterSet'] = $options['charset'] ?? null;
+        $params['Database'] = $options->dbname ;
+        $params['CharacterSet'] = $options->charset;
         $params['MultipleActiveResultSets'] = 'True';
 
-        $options['dsn'] ??= static::getDsn($params);
+        $options->dsn ??= static::getDsn($params);
 
         return $options;
     }

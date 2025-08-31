@@ -11,6 +11,8 @@ use PDOException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Pdo\AbstractPdoConnection;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
 use Windwalker\Database\Test\Reseter\AbstractReseter;
@@ -48,6 +50,8 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
             self::markTestSkipped('DSN of ' . static::$platform . ' not available for test case: ' . static::class);
         }
 
+        $options = DriverOptions::wrap($params);
+
         $platform = static::$platform;
 
         $platform = DatabaseFactory::getDriverShortName($platform);
@@ -67,33 +71,34 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
         $reseter = AbstractReseter::create(static::$platform);
 
-        static::$dbname = $params['dbname'];
-        unset($params['dbname']);
+        static::$dbname = $options->dbname;
+        $options->dbname = null;
 
-        $pdo = static::createBaseConnect($params, $connClass);
+        $pdo = static::createBaseConnect($options, $connClass);
 
         $reseter->createDatabase($pdo, static::$dbname);
 
         // Disconnect.
         $pdo = null;
 
-        $params['dbname'] = static::$dbname;
+        $options->dbname = static::$dbname;
 
-        static::$baseConn = static::createBaseConnect($params, $connClass);
+        static::$baseConn = static::createBaseConnect($options, $connClass);
 
         $reseter->clearAllTables(static::$baseConn, static::$dbname);
 
         static::setupDatabase();
     }
 
-    protected static function createBaseConnect(array $params, string $connClass): PDO
+    protected static function createBaseConnect(DriverOptions $options, string $connClass): PDO
     {
-        $dsn = $connClass::getParameters($params)['dsn'];
+        /** @var class-string<AbstractConnection> $connClass */
+        $options = $connClass::prepareDbOptions(clone $options);
 
         return new PDO(
-            $dsn,
-            $params['user'] ?? null,
-            $params['password'] ?? null,
+            $options->dsn,
+            $options->user ?? null,
+            $options->password ?? null,
             [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]

@@ -88,8 +88,8 @@ class FilterFactoryTest extends TestCase
     public function testValidateMap()
     {
         $this->expectExceptionMessage(
-            'Field "id" not match - Validator: Windwalker\Filter\Rule\Range min: 1, ' .
-            'max: 100 returns false, value is: string(3) "600"'
+            'Field "id" not match - Validator: Windwalker\Filter\Rule\Range(min=1, max=100)' .
+            ' test failure, value is: string(3) "600"'
         );
 
         $map = $this->instance->createNested(

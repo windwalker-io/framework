@@ -37,10 +37,12 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     /**
      * AbstractConnection constructor.
      *
-     * @param  array  $options
+     * @param  array|DriverOptions  $options
      */
-    public function __construct(array $options)
+    public function __construct(array|DriverOptions $options)
     {
+        $options = clone DriverOptions::wrap($options);
+
         $this->prepareOptions(
             $this->defaultOptions,
             $options
@@ -61,7 +63,7 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
         //
     }
 
-    abstract public static function getParameters(array $options): array;
+    abstract public static function prepareDbOptions(DriverOptions $options): DriverOptions;
 
     /**
      * connect
@@ -74,10 +76,10 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
             return $this->connection;
         }
 
-        return $this->connection = $this->doConnect(static::getParameters($this->options));
+        return $this->connection = $this->doConnect(static::prepareDbOptions(clone $this->options));
     }
 
-    abstract protected function doConnect(array $options);
+    abstract protected function doConnect(DriverOptions $options);
 
     /**
      * disconnect

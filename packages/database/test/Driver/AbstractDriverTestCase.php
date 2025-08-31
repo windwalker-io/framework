@@ -331,7 +331,7 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         $params = $params ?? self::getTestParams();
         $params['driver'] = static::$driverName;
 
-        return (new DatabaseFactory())->createDriver(static::$driverName, $params);
+        return new DatabaseFactory()->createDriver(static::$driverName, $params);
     }
 
     protected static function setupDatabase(): void

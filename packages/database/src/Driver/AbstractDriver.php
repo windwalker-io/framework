@@ -22,15 +22,16 @@ use Windwalker\Event\EventAwareInterface;
 use Windwalker\Pool\ConnectionPool;
 use Windwalker\Pool\PoolInterface;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Options\OptionsResolverTrait;
+use Windwalker\Utilities\Options\RecordOptions;
+use Windwalker\Utilities\StrNormalize;
 
 /**
  * The AbstractDriver class.
  */
 abstract class AbstractDriver implements HydratorAwareInterface
 {
-    use OptionsResolverTrait;
-
     /**
      * @var string
      */
@@ -60,23 +61,24 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
     protected ?HydratorInterface $hydrator = null;
 
+    public protected(set) DriverOptions $options;
+
     /**
      * AbstractPlatform constructor.
      *
-     * @param  array               $options
-     * @param  PoolInterface|null  $pool
+     * @param  array|DriverOptions  $options
+     * @param  PoolInterface|null   $pool
      */
-    public function __construct(array $options, ?PoolInterface $pool = null)
+    public function __construct(array|DriverOptions $options, ?PoolInterface $pool = null)
     {
-        $this->resolveOptions(
-            $options,
-            [$this, 'configureOptions']
-        );
+        $this->options = clone DriverOptions::wrap($options);
+
+        $this->configureOptions($this->options);
 
         $this->setPool($pool);
 
-        if ($this->options['platform']) {
-            $this->setPlatformName($this->options['platform']);
+        if ($this->options->platform) {
+            $this->setPlatformName($this->options->platform);
         }
     }
 
@@ -88,42 +90,13 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return $this->lastQuery;
     }
 
-    protected function configureOptions(OptionsResolver $resolver): void
+    protected function configureOptions(DriverOptions $options): void
     {
-        $resolver->setDefaults(
-            [
-                'driver' => null,
-                'host' => 'localhost',
-                'unix_socket' => null,
-                'dbname' => null,
-                'user' => null,
-                'password' => null,
-                'port' => null,
-                'prefix' => null,
-                'charset' => null,
-                'collation' => null,
-                'platform' => null,
-                'dsn' => null,
-                'debug' => false,
-                'driverOptions' => [],
-                'pool' => [],
-                'strict' => true,
-                'modes' => [
-                    //
-                ],
-                'after_connect' => [
-                    //
-                ]
-            ]
-        )
-            ->setRequired(
-                [
-                    'driver',
-                    'host',
-                    'user',
-                ]
-            );
-        // ->setAllowedTypes('driver', 'string');
+        // $options->host ??= 'localhost';
+
+        TypeAssert::assert($options->driver, 'Driver should not be empty.');
+        // TypeAssert::assert($options->host, 'Host should not be empty.');
+        // TypeAssert::assert($options->user, 'User should not be empty.');
     }
 
     protected function handleQuery($query, ?array &$bounded = [], $emulated = false): string
@@ -180,7 +153,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $driver = clone $this;
         $driver->connection = $connection;
 
-        $afterConnectCallbacks = $this->options['after_connect'] ?? [];
+        $afterConnectCallbacks = $this->options->afterConnect;
 
         if (!is_array($afterConnectCallbacks)) {
             $afterConnectCallbacks = [$afterConnectCallbacks];
@@ -551,4 +524,16 @@ abstract class AbstractDriver implements HydratorAwareInterface
      * @return  string
      */
     abstract public function escape(string $value): string;
+
+    public function getOptions(): RecordOptions
+    {
+        return $this->options;
+    }
+
+    public function getOption(string $name): mixed
+    {
+        $name = StrNormalize::toCamelCase($name);
+
+        return $this->options->$name ?? null;
+    }
 }

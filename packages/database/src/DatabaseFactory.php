@@ -7,6 +7,7 @@ namespace Windwalker\Database;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Mysqli\MysqliDriver;
 use Windwalker\Database\Driver\Pdo\PdoDriver;
 use Windwalker\Database\Driver\Pgsql\PgsqlDriver;
@@ -31,16 +32,18 @@ class DatabaseFactory implements DatabaseFactoryInterface
      */
     public function create(
         string|AbstractDriver $driver,
-        array $options,
+        array|DriverOptions $options,
         ?PoolInterface $pool = null,
         ?LoggerInterface $logger = null,
     ): DatabaseAdapter {
+        $options = clone DriverOptions::wrap($options);
+
         if ($driver instanceof AbstractDriver) {
             $platformShortName = $driver->getPlatformName();
         } else {
             [, $platformShortName] = static::extractDriverName($driver);
 
-            $options['driver'] = $driver;
+            $options->driver = (string) $driver;
 
             $driver = $this->createDriver(
                 $driver,
@@ -61,9 +64,11 @@ class DatabaseFactory implements DatabaseFactoryInterface
      */
     public function createDriver(
         string $driverName,
-        array $options,
+        array|DriverOptions $options,
         ?PoolInterface $pool = null
     ): AbstractDriver {
+        $options = clone DriverOptions::wrap($options);
+
         $driverFullName = $driverName;
 
         [$driverName, $platformName] = static::extractDriverName($driverName);
@@ -83,8 +88,8 @@ class DatabaseFactory implements DatabaseFactoryInterface
             )
         };
 
-        $options['driver'] = $driverFullName;
-        $options['platform'] = static::getPlatformName($platformName);
+        $options->driver = $driverFullName;
+        $options->platform = static::getPlatformName($platformName);
 
         return new $driverClass(
             $options,

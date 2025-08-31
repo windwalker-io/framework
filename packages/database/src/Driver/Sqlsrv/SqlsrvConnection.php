@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Sqlsrv;
 
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Exception\DatabaseConnectException;
 
 /**
@@ -22,26 +23,26 @@ class SqlsrvConnection extends AbstractConnection
         return extension_loaded('sqlsrv');
     }
 
-    public static function getParameters(array $options): array
+    public static function prepareDbOptions(DriverOptions $options): DriverOptions
     {
         $params = [];
 
-        $params['Database'] = $options['dbname'] ?? null;
-        $params['UID'] = $options['user'] ?? null;
-        $params['PWD'] = $options['password'] ?? null;
-        $params['CharacterSet'] = $options['charset'] ?? null;
+        $params['Database'] = $options->dbname ?? null;
+        $params['UID'] = $options->user ?? null;
+        $params['PWD'] = $options->password ?? null;
+        $params['CharacterSet'] = $options->charset ?? null;
 
         $params = array_filter($params);
-        $options['params'] = $params;
+        $options->extra['params'] = $params;
 
         return $options;
     }
 
-    protected function doConnect(array $options)
+    protected function doConnect(DriverOptions $options)
     {
         $conn = sqlsrv_connect(
-            $options['host'],
-            $options['params']
+            $options->host,
+            $options->extra['params'] ?? []
         );
 
         if (!$conn) {

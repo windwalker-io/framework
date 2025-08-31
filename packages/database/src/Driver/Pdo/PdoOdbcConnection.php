@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use Windwalker\Database\Driver\DriverOptions;
+
 /**
  * The OdbcConnection class.
  */
@@ -14,27 +16,27 @@ class PdoOdbcConnection extends AbstractPdoConnection
      */
     protected static string $dbtype = 'odbc';
 
-    public static function getParameters(array $options): array
+    public static function prepareDbOptions(DriverOptions $options): DriverOptions
     {
         $params = [];
 
-        if ($options['driver'] ?? null) {
+        if ($options->driver ?? null) {
             $params['Driver'] = $options['driver'];
         }
 
-        if ($options['host'] ?? null) {
+        if ($options->host ?? null) {
             $params['Server'] = $options['host'];
         }
 
-        if ($options['port'] ?? null) {
+        if ($options->port ?? null) {
             $params['Port'] = $options['port'];
         }
 
-        if ($options['dbname'] ?? null) {
+        if ($options->dbname ?? null) {
             $params['Database'] = $options['dbname'];
         }
 
-        $options['dsn'] ??= static::getDsn($params);
+        $options->dsn ??= static::getDsn($params);
 
         return $options;
     }

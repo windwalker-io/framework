@@ -6,6 +6,7 @@ namespace Windwalker\Database\Driver\Pdo;
 
 use PDO;
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The PdoConnection class.
@@ -60,21 +61,21 @@ abstract class AbstractPdoConnection extends AbstractConnection
     }
 
     /**
-     * @param  array  $options
+     * @param  DriverOptions  $options
      *
      * @return  PDO
      */
-    protected function doConnect(array $options): PDO
+    protected function doConnect(DriverOptions $options): PDO
     {
         $attrs = array_replace(
             static::getDefaultAttributes(),
-            $options['driverOptions'] ?? []
+            $options->driverOptions ?? []
         );
 
         return new PDO(
-            $options['dsn'],
-            $options['user'] ?? null,
-            $options['password'] ?? null,
+            $options->dsn,
+            $options->user ?? null,
+            $options->password ?? null,
             $attrs
         );
     }
