@@ -44,7 +44,7 @@ class OptimisticLock implements AttributeInterface, OptimisticLockInterface, Cas
 
     public function getCaster(): \Closure
     {
-        return function (CasterInfo $info, ORM $orm) {
+        return function (mixed $value, CasterInfo $info, ORM $orm) {
             $mapper = $orm->mapper($info->entity::class);
 
             if ($mapper->canCheckIsNew() && $mapper->isNew($info->entity)) {
