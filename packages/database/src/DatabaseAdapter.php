@@ -13,6 +13,7 @@ use Psr\Log\NullLogger;
 use Stringable;
 use Throwable;
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Hydrator\HydratorAwareInterface;
 use Windwalker\Database\Hydrator\HydratorInterface;
@@ -192,7 +193,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         return $this->getSchemaManager($schema)->getTables($includeViews);
     }
 
-    public function getOptions(): array
+    public function getOptions(): DriverOptions
     {
         return $this->getDriver()->getOptions();
     }
