@@ -525,7 +525,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
      */
     abstract public function escape(string $value): string;
 
-    public function getOptions(): RecordOptions
+    public function getOptions(): DriverOptions
     {
         return $this->options;
     }
@@ -535,5 +535,12 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $name = StrNormalize::toCamelCase($name);
 
         return $this->options->$name ?? null;
+    }
+
+    public function setOption(string $name, mixed $value): mixed
+    {
+        $name = StrNormalize::toCamelCase($name);
+
+        return $this->options->$name ?? $value;
     }
 }

@@ -26,7 +26,7 @@ class DriverOptions extends RecordOptions
         public array $driverOptions = [],
         public array $pool = [],
         public bool $strict = true,
-        public array $modes = [],
+        public ?array $modes = null,
         public array $afterConnect = [],
         public array $extra = [],
     ) {
