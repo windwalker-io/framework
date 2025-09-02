@@ -1,0 +1,95 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Config;
+
+use Windwalker\Core\Attributes\ConfigModule;
+use Windwalker\Core\Edge\Component\XComponent;
+use Windwalker\Core\Theme\BootstrapTheme;
+use Windwalker\Core\Theme\ThemeInterface;
+use Windwalker\Edge\Provider\EdgeProvider;
+use Windwalker\Renderer\EdgeRenderer;
+use Windwalker\Renderer\MustacheRenderer;
+use Windwalker\Renderer\PlatesRenderer;
+use Windwalker\Renderer\Provider\RendererProvider;
+use Windwalker\Renderer\RendererPackage;
+use Windwalker\Renderer\TwigRenderer;
+
+return #[ConfigModule(name: 'renderer', enabled: true, priority: 100, belongsTo: RendererPackage::class)]
+static fn() => [
+    'paths' => [
+        '@root/views',
+    ],
+
+    'namespaces' => [
+        '@front' => [
+            '@source/Module/Front',
+        ],
+        '@admin' => [
+            '@source/Module/Admin',
+        ],
+    ],
+
+    'renderers' => [
+        'edge' => [
+            EdgeRenderer::class,
+            ['edge.php', 'blade.php'],
+        ],
+        // We use edge to replace blade
+        // 'blade' => [
+        //     BladeRenderer::class,
+        //     ['blade.php']
+        // ],
+        'plates' => [
+            PlatesRenderer::class,
+            ['php'],
+        ],
+        'mustache' => [
+            MustacheRenderer::class,
+            ['mustache'],
+        ],
+        'twig' => [
+            TwigRenderer::class,
+            ['twig'],
+        ],
+    ],
+
+    'options' => [
+        'cache_path' => WINDWALKER_CACHE . '/renderer',
+    ],
+
+    'pagination' => [
+        'template' => '@pagination',
+        'neighbours' => 4,
+    ],
+
+    'aliases' => [
+        '@pagination' => 'layout.pagination.basic-pagination',
+        '@messages' => 'layout.messages.bs5-messages',
+        '@csrf' => 'layout.security.csrf',
+    ],
+
+    'edge' => [
+        'components' => [
+            'component' => XComponent::class,
+            'template' => XComponent::class,
+        ],
+        'component_scans' => [
+            'App\\Component',
+        ],
+    ],
+
+    'providers' => [
+        RendererProvider::class,
+        EdgeProvider::class,
+    ],
+
+    'bindings' => [
+        ThemeInterface::class => BootstrapTheme::class,
+    ],
+
+    'extends' => [
+        //
+    ],
+];
