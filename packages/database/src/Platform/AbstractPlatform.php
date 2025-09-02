@@ -10,6 +10,7 @@ use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Driver\TransactionDriverInterface;
+use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Platform\Type\DataType;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
@@ -263,6 +264,54 @@ abstract class AbstractPlatform
         bool $ifNotExists = false,
         array $options = []
     ): StatementInterface;
+
+    /**
+     * @param  TableManager                        $table
+     * @param  array<Index|Query|Clause>           $indexes
+     * @param  array<Constraint|Query|Clause>      $constraints
+     * @param  array<string, string|Query|Clause>  $comments
+     *
+     * @return  void
+     */
+    protected function postTableModify(
+        TableManager $table,
+        array $indexes = [],
+        array $constraints = [],
+        array $comments = [],
+    ): void {
+        foreach ($indexes as $index) {
+            if ($index instanceof Query || $index instanceof Clause) {
+                $this->db->execute($index);
+            } else {
+                $this->addIndex($table->getName(), $index, $table->schemaName);
+            }
+        }
+
+        foreach ($constraints as $constraint) {
+            if ($constraint instanceof Query || $constraint instanceof Clause) {
+                $this->db->execute($constraint);
+            } else {
+                $this->addConstraint($table->getName(), $constraint, $table->schemaName);
+            }
+        }
+
+        foreach ($comments as $column => $comment) {
+            if ($comment instanceof Query || $comment instanceof Clause) {
+                $this->db->execute($comment);
+            } else {
+                $this->setColumnComment($table->getName(), $column, $comment, $table->schemaName);
+            }
+        }
+    }
+
+    public function setColumnComment(
+        string $table,
+        string $column,
+        string $comment,
+        ?string $schema = null
+    ): ?StatementInterface {
+        return null;
+    }
 
     public function getColumnExpression(Column $column): Clause
     {
@@ -532,7 +581,6 @@ abstract class AbstractPlatform
                 $driver->releaseKeptConnection();
             }
         }
-
 
         $this->depth--;
 

@@ -81,6 +81,10 @@ class TableManager extends AbstractMetaManager
 
         $this->reset();
 
+        $this->dropColumn($schema->dropColumns);
+        $this->dropIndex($schema->dropIndexes);
+        $this->dropConstraint($schema->dropConstraints);
+
         foreach ($schema->getIndexes() as $index) {
             if ($this->hasIndex($index->indexName)) {
                 $this->dropIndex($index->indexName);

@@ -282,7 +282,7 @@ class MySQLPlatform extends AbstractPlatform
             ->where('CONSTRAINT_SCHEMA', $schema ?? raw('DATABASE()'))
             ->where('TABLE_NAME', $table)
             ->all()
-            ->mapWithKeys(fn (Collection $item) => [$item->CONSTRAINT_NAME => $item->CHECK_CLAUSE]);
+            ->mapWithKeys(fn(Collection $item) => [$item->CONSTRAINT_NAME => $item->CHECK_CLAUSE]);
     }
 
     /**
@@ -426,7 +426,7 @@ class MySQLPlatform extends AbstractPlatform
                     'column_name' => $key['COLUMN_NAME'],
                     'erratas' => [
                         'sub_parts' => $key['SUB_PART'],
-                    ]
+                    ],
                 ];
             }
 
@@ -540,9 +540,9 @@ class MySQLPlatform extends AbstractPlatform
             if ($constraint->constraintName === 'PRIMARY') {
                 throw new \RuntimeException('Should not set constraint name as `PRIMARY`.');
             }
-
-            $this->addConstraint($table->getName(), $constraint, $table->schemaName);
         }
+
+        $this->postTableModify($table, [], $schema->getConstraints(), []);
 
         return $statement;
     }
@@ -693,6 +693,7 @@ class MySQLPlatform extends AbstractPlatform
      * commit
      *
      * @param  bool  $releaseConnection  *
+     *
      * @return  static
      */
     public function transactionCommit(bool $releaseConnection = true): static
@@ -719,6 +720,7 @@ class MySQLPlatform extends AbstractPlatform
      * rollback
      *
      * @param  bool  $releaseConnection  *
+     *
      * @return  static
      */
     public function transactionRollback(bool $releaseConnection = true): static

@@ -44,17 +44,23 @@ class Schema
     /**
      * @var  Column[]
      */
-    protected array $columns = [];
+    public protected(set) array $columns = [];
 
     /**
      * @var Index[]
      */
-    protected array $indexes = [];
+    public protected(set) array $indexes = [];
 
     /**
      * @var Constraint[]
      */
-    protected array $constraints = [];
+    public protected(set) array $constraints = [];
+
+    public protected(set) array $dropColumns = [];
+
+    public protected(set) array $dropIndexes = [];
+
+    public protected(set) array $dropConstraints = [];
 
     protected TableManager $table;
 
@@ -296,5 +302,20 @@ class Schema
         $this->constraints = $constraints;
 
         return $this;
+    }
+
+    public function dropColumns(string ...$columns): void
+    {
+        $this->dropColumns = array_merge($this->dropColumns, $columns);
+    }
+
+    public function dropIndexes(string ...$indexes): void
+    {
+        $this->dropIndexes = array_merge($this->dropIndexes, $indexes);
+    }
+
+    public function dropConstraints(string ...$constraints): void
+    {
+        $this->dropConstraints = array_merge($this->dropConstraints, $constraints);
     }
 }

@@ -548,7 +548,7 @@ class PostgreSQLPlatform extends AbstractPlatform
      * @param  bool    $ifNotExists
      * @param  array   $options
      *
-     * @return  bool
+     * @return StatementInterface
      */
     public function createTable(Schema $schema, bool $ifNotExists = false, array $options = []): StatementInterface
     {
@@ -606,36 +606,44 @@ class PostgreSQLPlatform extends AbstractPlatform
 
         $statement = $this->db->execute($sql);
 
+        $constraints = $schema->getConstraints();
+
         if ($primaries) {
-            $this->addConstraint(
-                $table->getName(),
-                (new Constraint(Constraint::TYPE_PRIMARY_KEY, 'pk_' . $table->getName(), $table->getName()))
-                    ->columns($primaries),
-                $table->schemaName
-            );
-        }
-
-        foreach ($schema->getIndexes() as $index) {
-            $this->addIndex($table->getName(), $index, $table->schemaName);
-        }
-
-        foreach ($schema->getConstraints() as $constraint) {
-            $this->addConstraint($table->getName(), $constraint, $table->schemaName);
-        }
-
-        foreach ($comments as $column => $comment) {
-            $this->db->execute(
-                $this->getGrammar()::build(
-                    'COMMENT ON',
-                    'COLUMN',
-                    $this->db->quoteName($table->getName() . '.' . $column),
-                    'IS',
-                    $this->db->quote($comment)
+            array_unshift(
+                $constraints,
+                new Constraint(
+                    Constraint::TYPE_PRIMARY_KEY,
+                    'pk_' . $table->getName(),
+                    $table->getName()
                 )
+                    ->columns($primaries)
             );
         }
+
+        $this->postTableModify($table, $schema->getIndexes(), $constraints, $comments);
 
         return $statement;
+    }
+
+    public function setColumnComment(
+        string $table,
+        string $column,
+        string $comment,
+        ?string $schema = null
+    ): ?StatementInterface {
+        if ($schema) {
+            $table = $schema . '.' . $table;
+        }
+
+        return $this->db->execute(
+            $this->getGrammar()::build(
+                'COMMENT ON',
+                'COLUMN',
+                $this->db->quoteName($table . '.' . $column),
+                'IS',
+                $this->db->quote($comment)
+            )
+        );
     }
 
     public function modifyColumn(string $table, Column $column, ?string $schema = null): StatementInterface
