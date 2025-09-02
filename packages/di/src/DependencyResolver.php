@@ -250,7 +250,7 @@ class DependencyResolver
                 $value = &$this->resolveParameterDependency($param, $args, $options);
             }
 
-            if ($value !== null) {
+            if ($value !== null || $param->allowsNull()) {
                 $methodArgs[$dependencyVarName] = &$value;
 
                 unset($value);
