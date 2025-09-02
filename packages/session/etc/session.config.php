@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Config;
 
+use Windwalker\Core\Application\AppContext;
 use Windwalker\Core\Attributes\ConfigModule;
-use Windwalker\Core\Manager\SessionManager;
+use Windwalker\Core\Factory\SessionFactory;
 use Windwalker\Core\Session\CookiesAutoSecureSubscriber;
 use Windwalker\Core\Session\SessionRobotSubscriber;
 use Windwalker\Session\Bridge\NativeBridge;
@@ -53,7 +54,7 @@ static fn() => [
     ],
 
     'listeners' => [
-        \Windwalker\Core\Application\AppContext::class => [
+        AppContext::class => [
             SessionRobotSubscriber::class,
             create(
                 CookiesAutoSecureSubscriber::class,
@@ -68,7 +69,7 @@ static fn() => [
 
     'factories' => [
         'instances' => [
-            'native' => SessionManager::createSession(
+            'native' => static fn () => SessionFactory::createSession(
                 'php',
                 'native',
                 'request',
@@ -76,7 +77,7 @@ static fn() => [
                     SessionInterface::OPTION_AUTO_COMMIT => true,
                 ]
             ),
-            'filesystem' => SessionManager::createSession(
+            'filesystem' => static fn () => SessionFactory::createSession(
                 'php',
                 'filesystem',
                 'request',
@@ -84,7 +85,7 @@ static fn() => [
                     SessionInterface::OPTION_AUTO_COMMIT => true,
                 ]
             ),
-            'database' => SessionManager::createSession(
+            'database' => static fn () => SessionFactory::createSession(
                 'php',
                 'database',
                 'request',
@@ -92,7 +93,7 @@ static fn() => [
                     SessionInterface::OPTION_AUTO_COMMIT => true,
                 ]
             ),
-            'null' => SessionManager::createSession(
+            'null' => static fn () => SessionFactory::createSession(
                 'php',
                 'null',
                 'request',
@@ -120,8 +121,8 @@ static fn() => [
             'redis' => RedisHandler::class,
         ],
         'cookies' => [
-            'request' => SessionManager::psrCookies(),
-            'native' => SessionManager::nativeCookies(),
+            'request' => static fn () => SessionFactory::psrCookies(),
+            'native' => static fn () => SessionFactory::nativeCookies(),
         ],
     ],
 ];

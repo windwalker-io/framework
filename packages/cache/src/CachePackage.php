@@ -6,6 +6,7 @@ namespace Windwalker\Cache;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
+use Windwalker\Core\Factory\CacheFactory;
 use Windwalker\Core\Manager\CacheManager;
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
@@ -25,26 +26,21 @@ class CachePackage extends AbstractPackage implements ServiceProviderInterface
     public function register(Container $container): void
     {
         $container->prepareSharedObject(CacheManager::class);
+        $container->prepareSharedObject(CacheFactory::class);
 
         $container->bindShared(
             CacheInterface::class,
-            function (Container $container, ?string $tag = null) {
-                return $container->get(CacheManager::class)->get($tag);
-            }
+            fn(Container $container, ?string $tag = null) => $container->get(CacheFactory::class)->get($tag)
         );
 
         $container->bindShared(
             CacheItemPoolInterface::class,
-            function (Container $container, ?string $tag = null) {
-                return $container->get(CacheManager::class)->get($tag);
-            }
+            fn(Container $container, ?string $tag = null) => $container->get(CacheFactory::class)->get($tag)
         );
 
         $container->bindShared(
             CachePool::class,
-            function (Container $container, ?string $tag = null) {
-                return $container->get(CacheManager::class)->get($tag);
-            }
+            fn(Container $container, ?string $tag = null) => $container->get(CacheFactory::class)->get($tag)
         );
     }
 }

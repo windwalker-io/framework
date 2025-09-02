@@ -8,11 +8,9 @@ use Windwalker\Cache\CachePackage;
 use Windwalker\Cache\CachePool;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
-use Windwalker\Cache\Storage\FileStorage;
 use Windwalker\Cache\Storage\NullStorage;
 use Windwalker\Core\Attributes\ConfigModule;
-use Windwalker\Core\Manager\CacheManager;
-use Windwalker\DI\Container;
+use Windwalker\Core\Factory\CacheFactory;
 
 return #[ConfigModule(name: 'cache', enabled: true, priority: 100, belongsTo: CachePackage::class)]
 static fn() => [
@@ -22,24 +20,21 @@ static fn() => [
     'default' => 'global',
 
     'providers' => [
-
+        CachePackage::class
     ],
 
     'bindings' => [
-        CacheManager::class,
+        //
     ],
 
     'factories' => [
         'instances' => [
             'none' => static fn(): CachePool => new CachePool(new NullStorage()),
-            'global' => CacheManager::cachePoolFactory('file', PhpSerializer::class),
-            'html' => CacheManager::cachePoolFactory('file', RawSerializer::class),
+            'global' => static fn () => CacheFactory::cachePoolFactory('file', PhpSerializer::class),
+            'html' => static fn () => CacheFactory::cachePoolFactory('file', RawSerializer::class),
         ],
         'storages' => [
-            'file' => static fn(Container $container, string $instanceName): FileStorage => new FileStorage(
-                $container->getParam('@cache') . '/' . $instanceName,
-                []
-            ),
+            'file' => static fn () => CacheFactory::fileStorage()
         ],
     ],
 ];

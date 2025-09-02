@@ -7,6 +7,7 @@ namespace Windwalker\DI\Attributes;
 use Attribute;
 use ReflectionParameter;
 use ReflectionProperty;
+use Windwalker\Core\DI\ServiceFactoryInterface;
 use Windwalker\Core\Manager\AbstractManager;
 use Windwalker\DI\Container;
 
@@ -37,10 +38,14 @@ class Service extends Inject
     {
         // For Windwaker Core Service Manager
         // This flow is deprecated, but we keep it for backward compatibility.
-        if ($this->name !== null && $this->id !== null && class_exists(AbstractManager::class)) {
+        if (
+            $this->name !== null
+            && $this->id !== null
+            && interface_exists(ServiceFactoryInterface::class)
+        ) {
             $managerClass = $this->id;
 
-            if (is_subclass_of($managerClass, AbstractManager::class, true)) {
+            if (is_subclass_of($managerClass, ServiceFactoryInterface::class, true)) {
                 /** @var AbstractManager $manager */
                 $manager = $container->get($managerClass);
 

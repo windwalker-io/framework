@@ -5,17 +5,10 @@ declare(strict_types=1);
 namespace App\Config;
 
 use Windwalker\Core\Attributes\ConfigModule;
-use Windwalker\Core\Manager\DatabaseManager;
-use Windwalker\Core\Queue\QueueManager;
-use Windwalker\Queue\Driver\BeanstalkdQueueDriver;
-use Windwalker\Queue\Driver\DatabaseQueueDriver;
-use Windwalker\Queue\Driver\IronmqQueueDriver;
-use Windwalker\Queue\Driver\RabbitmqQueueDriver;
-use Windwalker\Queue\Driver\ResqueQueueDriver;
-use Windwalker\Queue\Driver\SqsQueueDriver;
-use Windwalker\Queue\Driver\SyncQueueDriver;
+use Windwalker\Core\Factory\DatabaseServiceFactory;
+use Windwalker\Core\Queue\QueueFactory;
+use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
-use Windwalker\Queue\Queue;
 use Windwalker\Queue\QueuePackage;
 
 return #[ConfigModule(name: 'queue', enabled: true, priority: 100, belongsTo: QueuePackage::class)]
@@ -34,17 +27,15 @@ static fn() => [
     ],
 
     'bindings' => [
-        Queue::class => fn(QueueManager $manager) => $manager->get(),
+        //
     ],
 
     'factories' => [
         'instances' => [
-            'sync' => fn(QueueManager $manager) => $manager->createQueue(
-                SyncQueueDriver::class,
-                handler: QueueManager::createSyncHandler()
+            'sync' => static fn() => QueueFactory::syncAdapter(
+                handler: QueueFactory::createSyncHandler()
             ),
-            'sqs' => fn(QueueManager $manager) => $manager->createQueue(
-                SqsQueueDriver::class,
+            'sqs' => static fn() => QueueFactory::sqsAdapter(
                 key: env('QUEUE_SQS_KEY'),
                 secret: env('QUEUE_SQS_SECRET'),
                 channel: 'default',
@@ -53,39 +44,16 @@ static fn() => [
                     'version' => env('QUEUE_SQS_VERSION') ?: 'latest',
                 ]
             ),
-            'database' => fn(QueueManager $manager, DatabaseManager $dbManager) => $manager->createQueue(
-                DatabaseQueueDriver::class,
-                db: $dbManager->get(),
+            'database' => static fn(DatabaseAdapter $db) => QueueFactory::databaseAdapter(
+                db: $db,
                 channel: 'default',
                 table: 'queue_jobs',
                 timeout: 60
             ),
-            'ironmq' => fn(QueueManager $manager) => $manager->createQueue(
-                IronmqQueueDriver::class,
-                projectId: env('QUEUE_IRONMQ_PROJECT_ID'),
-                token: env('QUEUE_IRONMQ_TOKEN'),
-                channel: 'default',
-            ),
-            'rabbitmq' => fn(QueueManager $manager) => $manager->createQueue(
-                RabbitmqQueueDriver::class,
-                channel: 'default',
-            ),
-            'beanstalkd' => fn(QueueManager $manager) => $manager->createQueue(
-                BeanstalkdQueueDriver::class,
-                host: env('QUEUE_BEANSTALKD') ?? '127.0.0.1',
-                channel: 'default',
-                timeout: 60
-            ),
-            'resque' => fn(QueueManager $manager) => $manager->createQueue(
-                ResqueQueueDriver::class,
-                host: env('QUEUE_RESQUE_HOST') ?? 'localhost',
-                channel: 'default',
-                port: 6379
-            ),
         ],
         'failers' => [
-            'database' => fn(DatabaseManager $dbManager) => new DatabaseQueueFailer(
-                db: $dbManager->get(),
+            'database' => static fn(DatabaseServiceFactory $factory) => new DatabaseQueueFailer(
+                db: $factory->get(),
                 table: 'queue_failed_jobs'
             ),
         ],

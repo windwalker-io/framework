@@ -17,6 +17,7 @@ use ReflectionUnionType;
 use TypeError;
 use UnexpectedValueException;
 use Windwalker\DI\Attributes\Lazy;
+use Windwalker\DI\Attributes\Factory;
 use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
@@ -27,6 +28,7 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
 use function Windwalker\collect;
+use function Windwalker\depth;
 
 /**
  * The ObjectFactory class.
@@ -85,6 +87,13 @@ class DependencyResolver
         } elseif (is_callable($class)) {
             $instance = $this->container->call($class, $args, null, $options);
 
+            if (
+                $instance instanceof \Closure
+                && new \ReflectionFunction($instance)->getAttributes(Factory::class) !== []
+            ) {
+                return $this->container->resolve($instance, $args, $options);
+            }
+
             if (!is_object($instance)) {
                 throw new UnexpectedValueException(
                     sprintf(
@@ -103,7 +112,7 @@ class DependencyResolver
 
             // If is definition object, means this callable is a factory, let's resolve definition.
             if ($instance instanceof DefinitionInterface) {
-                $instance = $this->container->resolve($instance, $args);
+                $instance = $this->container->resolve($instance, $args, $options);
             }
 
             return $instance;

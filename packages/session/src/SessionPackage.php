@@ -6,6 +6,7 @@ namespace Windwalker\Session;
 
 use Windwalker\Core\Application\ApplicationInterface;
 use Windwalker\Core\DI\RequestReleasableProviderInterface;
+use Windwalker\Core\Factory\SessionFactory;
 use Windwalker\Core\Manager\SessionManager;
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
@@ -13,6 +14,7 @@ use Windwalker\Core\Provider\IniSetterTrait;
 use Windwalker\Core\Security\CsrfService;
 use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Session\Cookie\ArrayCookies;
 use Windwalker\Session\Cookie\Cookies;
@@ -60,7 +62,8 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
      */
     public function register(Container $container): void
     {
-        $container->prepareSharedObject(SessionManager::class, null, Container::ISOLATION);
+        $container->prepareSharedObject(SessionManager::class, options: new DIOptions(isolation: true));
+        $container->prepareSharedObject(SessionFactory::class, options: new DIOptions(isolation: true));
 
         // Cookies
         // $container->prepareSharedObject(Cookies::class, null, Container::ISOLATION);
@@ -68,19 +71,19 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
 
         $container->bindShared(
             Session::class,
-            fn(SessionManager $manager, ?string $tag = null) => $manager->get($tag),
-            Container::ISOLATION
+            fn(SessionFactory $factory, ?string $tag = null) => $factory->get($tag),
+            new DIOptions(isolation: true)
         )
             ->alias(SessionInterface::class, Session::class);
 
         $container->bindShared(
             CookiesInterface::class,
-            function (SessionManager $manager, ?string $tag = null) {
+            function (SessionFactory $manager, ?string $tag = null) {
                 return $manager->get($tag)->getCookies();
             },
-            Container::ISOLATION
+            new DIOptions(isolation: true)
         );
 
-        $container->prepareSharedObject(CsrfService::class, null, Container::ISOLATION);
+        $container->prepareSharedObject(CsrfService::class, null, new DIOptions(isolation: true));
     }
 }

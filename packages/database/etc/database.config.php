@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Config;
 
 use Windwalker\Core\Attributes\ConfigModule;
-use Windwalker\Core\Manager\DatabaseManager;
+use Windwalker\Core\Factory\DatabaseServiceFactory;
 use Windwalker\Database\DatabasePackage;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Subscriber\TruncateValueSubscriber;
@@ -68,7 +68,7 @@ static fn() => [
 
     'factories' => [
         'instances' => [
-            'main' => static fn(string $instanceName) => create(DatabaseManager::createAdapter($instanceName)),
+            'main' => static fn(string $instanceName) => DatabaseServiceFactory::createAdapter($instanceName),
         ],
     ],
 ];

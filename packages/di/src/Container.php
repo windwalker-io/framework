@@ -310,7 +310,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         if ($definition === null) {
             throw new DefinitionNotFoundException(
-                sprintf('Key %s has not been registered with the container.', $id),
+                sprintf('Key %s has not been registered with the container.', static::toTaggedId($id, $tag)),
             );
         }
 
