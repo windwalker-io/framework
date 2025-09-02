@@ -63,7 +63,7 @@ class Schema
         $this->table = $table;
     }
 
-    public function addColumn(Column|string $column): Column
+    public function addColumn(Column|string $column, ?string $dataType = null): Column
     {
         if (is_string($column) && class_exists($column)) {
             $column = new $column();
@@ -71,6 +71,10 @@ class Schema
 
         if (!$column instanceof Column) {
             throw new InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
+        }
+
+        if ($dataType) {
+            $column->dataType($dataType);
         }
 
         $this->columns[$column->getColumnName()] = $column;
