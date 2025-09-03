@@ -354,7 +354,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null
     ): mixed {
-        $options = DIOptions::wrap($options);
+        $options = clone DIOptions::wrap($options);
 
         if ($source === null) {
             throw new InvalidArgumentException(
@@ -450,7 +450,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this;
     }
 
-    protected static function toTaggedId(string $id, \UnitEnum|string|null $tag = null): string
+    public static function toTaggedId(string $id, \UnitEnum|string|null $tag = null): string
     {
         if ($tag instanceof \UnitEnum) {
             $tag = $tag::class . '::' . $tag->name;
@@ -604,11 +604,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     ): StoreDefinitionInterface {
         $options = DIOptions::wrap($options);
 
-        $value = static fn(Container $container, \UnitEnum|string|null $tag = null) => $container->newInstance(
-            $value,
-            $tag !== null ? compact('tag') : [],
-            $options
-        );
+        if (!$value instanceof \Closure) {
+            $value = static fn(Container $container, \UnitEnum|string|null $tag = null) => $container->newInstance(
+                $value,
+                $tag !== null ? compact('tag') : [],
+                $options
+            );
+        }
 
         return $this->set($id, $value, $options, $tag);
     }

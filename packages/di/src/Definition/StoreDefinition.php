@@ -84,7 +84,11 @@ class StoreDefinition implements StoreDefinitionInterface
 
         // Invoke
         if ($this->value instanceof Closure) {
-            $value = ($this->value)($container, $tag);
+            if ($tag !== null) {
+                $args['tag'] = $tag;
+            }
+
+            $value = $container->call($this->value, $args);
         }
 
         // Cache
