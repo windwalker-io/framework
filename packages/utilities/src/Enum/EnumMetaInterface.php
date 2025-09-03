@@ -9,7 +9,7 @@ use Windwalker\Utilities\Contract\LanguageInterface;
 /**
  * Interface EnumMetaInterface
  */
-interface EnumMetaInterface extends EnumAdapterInterface
+interface EnumMetaInterface
 {
     public function getTitle(?LanguageInterface $lang = null, ...$args): string;
 

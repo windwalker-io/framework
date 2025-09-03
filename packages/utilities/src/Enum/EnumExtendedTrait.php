@@ -40,7 +40,9 @@ trait EnumExtendedTrait
     }
 
     /**
-     * @return  array<string, static>
+     * Return assoc array of cases with case name as key.
+     *
+     * @return  array<string|int, static>
      */
     public static function values(): array
     {
