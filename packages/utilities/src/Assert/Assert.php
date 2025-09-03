@@ -11,6 +11,8 @@ use Windwalker\Utilities\SimpleTemplate;
 use Windwalker\Utilities\Str;
 
 /**
+ * @psalm-type  MessageClosure = Closure(string $caller, mixed $value, string $type): string
+ *
  * The Assert class.
  */
 class Assert
@@ -34,16 +36,27 @@ class Assert
         $this->exceptionHandler = $exceptionHandler;
     }
 
+    public static function create(
+        string $exceptionClass = \RuntimeException::class,
+        int $code = 500,
+        ?string $caller = null,
+    ): static {
+        return new static(
+            fn($message) => new $exceptionClass($message, $code),
+            $caller
+        );
+    }
+
     /**
-     * @param  bool|callable  $assertion
-     * @param  string         $message
-     * @param  mixed          $value
+     * @template T of mixed
      *
-     * @return  void
+     * @param  T  $assertion
+     * @param  string|MessageClosure  $message
+     * @param  mixed  $value
      *
-     * @throws Throwable
+     * @return  T
      */
-    public function assert(mixed $assertion, string $message, mixed $value = null): void
+    public function assert(mixed $assertion, string|Closure $message, mixed $value = null): mixed
     {
         if (is_callable($assertion)) {
             $result = $assertion();
@@ -54,21 +67,45 @@ class Assert
         if (!$result) {
             $this->throwException($message, $value);
         }
+
+        return $assertion;
     }
 
-    public function throwException(string $message, $value = null): void
+    /**
+     * @template T of mixed
+     *
+     * @param  T  $assertion
+     * @param  string|MessageClosure  $message
+     * @param  mixed  $value
+     *
+     * @return  T
+     */
+    public function __invoke(mixed $assertion, string|Closure $message, mixed $value = null): mixed
+    {
+        return $this->assert($assertion, $message, $value);
+    }
+
+    public function throwException(string|Closure $message, $value = null): void
     {
         throw $this->exception($message, $value);
     }
 
-    public function exception(string $message, $value = null)
+    public function exception(string|Closure $message, $value = null)
     {
         return ($this->exceptionHandler)($this->createMessage($message, $value));
     }
 
-    protected function createMessage(string $message, $value): string
+    protected function createMessage(string|Closure $message, $value): string
     {
         $described = static::describeValue($value);
+
+        if ($message instanceof Closure) {
+            try {
+                $message = $message($this->caller, $value, $described);
+            } catch (Throwable $e) {
+                $message = 'Error when generating assert message: ' . $e->getMessage();
+            }
+        }
 
         if (str_contains($message, '%')) {
             $message = sprintf($message, $described);
@@ -80,6 +117,7 @@ class Assert
                 [
                     'caller' => $this->caller,
                     'value' => $value,
+                    'type' => $described,
                 ],
                 '.',
                 ['{', '}']

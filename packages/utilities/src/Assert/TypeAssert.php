@@ -12,18 +12,18 @@ use TypeError;
 class TypeAssert
 {
     /**
-     * @template T
+     * @template T of mixed
      *
-     * @param  T              $assertion
-     * @param  string         $message
-     * @param  mixed          $value
-     * @param  callable|null  $exception
+     * @param  T                $assertion
+     * @param  string|\Closure  $message
+     * @param  mixed            $value
+     * @param  callable|null    $exception
      *
-     * @return  T
+     * @return T
      */
     public static function assert(
         mixed $assertion,
-        string $message,
+        string|\Closure $message,
         mixed $value = null,
         ?callable $exception = null
     ): mixed {
