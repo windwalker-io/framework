@@ -4,14 +4,15 @@ on: [push, pull_request]
 
 jobs:
   build:
-    continue-on-error: ${{ matrix.experimental }}
+    continue-on-error: ${{ matrix.allow_failure }}
     strategy:
+      fail-fast: false
       matrix:
         php-versions: [ '8.4', '8.5' ]
         experimental: [false]
         include:
           - php-versions: '8.5'
-            experimental: true
+            allow_failure: true
     runs-on: ubuntu-latest
     services:
       memcached:
