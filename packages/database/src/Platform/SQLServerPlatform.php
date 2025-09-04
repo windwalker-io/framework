@@ -564,31 +564,21 @@ class SQLServerPlatform extends AbstractPlatform
 
         $statement = $this->db->execute($sql);
 
+        $constraints = $schema->getConstraints();
+
         if ($primaries) {
-            $this->addConstraint(
-                $table->getName(),
-                (new Constraint(Constraint::TYPE_PRIMARY_KEY, 'pk_' . $table->getName(), $table->getName()))
-                    ->columns($primaries),
-                $table->schemaName
+            array_unshift(
+                $constraints,
+                new Constraint(
+                    Constraint::TYPE_PRIMARY_KEY,
+                    'pk_' . $table->getName(),
+                    $table->getName()
+                )
+                    ->columns($primaries)
             );
         }
 
-        foreach ($schema->getIndexes() as $index) {
-            $this->addIndex($table->getName(), $index, $table->schemaName);
-        }
-
-        foreach ($schema->getConstraints() as $constraint) {
-            $this->addConstraint($table->getName(), $constraint, $table->schemaName);
-        }
-
-        foreach ($comments as $column => $comment) {
-            $this->addComment(
-                'COLUMN',
-                $table->getName(),
-                $column,
-                $comment
-            );
-        }
+        $this->postTableModify($table, $schema->getIndexes(), $constraints, $comments);
 
         return $statement;
     }
@@ -686,10 +676,18 @@ SQL;
         return $column;
     }
 
-    public function addComment(string $type, string $table, string $name, string $comment): StatementInterface
-    {
+    public function setColumnComment(
+        string $table,
+        string $column,
+        string $comment,
+        ?string $schema = null,
+        string $type = 'COLUMN',
+    ): ?StatementInterface {
         $query = $this->db->createQuery();
-        $table = $this->db->replacePrefix($table);
+
+        if ($schema) {
+            $table = $schema . '.' . $table;
+        }
 
         return $this->db->execute(
             $this->getGrammar()::build(
@@ -705,7 +703,7 @@ SQL;
                             'TABLE',
                             $table,
                             $type,
-                            $name,
+                            $column,
                         ]
                     )
                 )
@@ -774,11 +772,10 @@ SQL;
         $stmt = $this->db->execute(implode(';', $sql));
 
         if ($column->getComment()) {
-            $this->addComment(
-                'COLUMN',
-                $this->db->replacePrefix($table),
+            $this->setColumnComment(
+                $table,
                 $column->getColumnName(),
-                $column->getColumnName()
+                $column->getColumnName(),
             );
         }
 

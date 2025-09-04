@@ -12,6 +12,7 @@ use Windwalker\Core\Pagination\PaginationFactory;
 use Windwalker\Core\Renderer\LayoutPathResolver;
 use Windwalker\Core\Renderer\RendererService;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Renderer\CompositeRenderer;
 use Windwalker\Renderer\RendererInterface;
@@ -62,11 +63,11 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
 
                 return $renderer;
             },
-            Container::ISOLATION
+            new DIOptions(isolation: true)
         )
             ->alias(RendererInterface::class, CompositeRenderer::class);
 
-        $container->prepareSharedObject(LayoutPathResolver::class, null, Container::ISOLATION);
+        $container->prepareSharedObject(LayoutPathResolver::class, null, new DIOptions(isolation: true));
 
         $container->share(
             RendererService::class,
@@ -78,10 +79,10 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
                     ]
                 );
             },
-            Container::ISOLATION
+            new DIOptions(isolation: true)
         );
 
-        $container->prepareSharedObject(HtmlFrame::class, null, Container::ISOLATION);
+        $container->prepareSharedObject(HtmlFrame::class, null, new DIOptions(isolation: true));
 
         $this->registerPagination($container);
     }
@@ -109,7 +110,7 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
 
                 return $paginationFactory;
             },
-            Container::ISOLATION
+            new DIOptions(isolation: true)
         );
     }
 }

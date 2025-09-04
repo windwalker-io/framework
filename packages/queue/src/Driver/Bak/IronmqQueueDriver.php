@@ -152,4 +152,9 @@ class IronmqQueueDriver implements QueueDriverInterface
 
         return new IronMQ($options);
     }
+
+    public function defer(QueueMessage $message): static
+    {
+        return $this;
+    }
 }

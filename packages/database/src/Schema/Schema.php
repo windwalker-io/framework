@@ -44,17 +44,23 @@ class Schema
     /**
      * @var  Column[]
      */
-    protected array $columns = [];
+    public protected(set) array $columns = [];
 
     /**
      * @var Index[]
      */
-    protected array $indexes = [];
+    public protected(set) array $indexes = [];
 
     /**
      * @var Constraint[]
      */
-    protected array $constraints = [];
+    public protected(set) array $constraints = [];
+
+    public protected(set) array $dropColumns = [];
+
+    public protected(set) array $dropIndexes = [];
+
+    public protected(set) array $dropConstraints = [];
 
     protected TableManager $table;
 
@@ -63,7 +69,7 @@ class Schema
         $this->table = $table;
     }
 
-    public function addColumn(Column|string $column): Column
+    public function addColumn(Column|string $column, ?string $dataType = null): Column
     {
         if (is_string($column) && class_exists($column)) {
             $column = new $column();
@@ -71,6 +77,10 @@ class Schema
 
         if (!$column instanceof Column) {
             throw new InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
+        }
+
+        if ($dataType) {
+            $column->dataType($dataType);
         }
 
         $this->columns[$column->getColumnName()] = $column;
@@ -292,5 +302,20 @@ class Schema
         $this->constraints = $constraints;
 
         return $this;
+    }
+
+    public function dropColumns(string ...$columns): void
+    {
+        $this->dropColumns = array_merge($this->dropColumns, $columns);
+    }
+
+    public function dropIndexes(string ...$indexes): void
+    {
+        $this->dropIndexes = array_merge($this->dropIndexes, $indexes);
+    }
+
+    public function dropConstraints(string ...$constraints): void
+    {
+        $this->dropConstraints = array_merge($this->dropConstraints, $constraints);
     }
 }

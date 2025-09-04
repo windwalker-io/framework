@@ -198,4 +198,8 @@ class RabbitmqQueueDriver implements QueueDriverInterface
             $options['password']
         );
     }
+
+    public function defer(QueueMessage $message): static
+    {
+    }
 }

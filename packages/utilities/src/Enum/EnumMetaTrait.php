@@ -166,8 +166,8 @@ trait EnumMetaTrait
 
         $max = 0;
 
-        foreach (self::values() as $value) {
-            $max = max($max, strlen($value->value));
+        foreach (self::cases() as $case) {
+            $max = max($max, strlen($case->value));
         }
 
         return $max;

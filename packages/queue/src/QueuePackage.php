@@ -6,8 +6,8 @@ namespace Windwalker\Queue;
 
 use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
-use Windwalker\Core\Queue\QueueFailerManager;
-use Windwalker\Core\Queue\QueueManager;
+use Windwalker\Core\Queue\QueueFactory;
+use Windwalker\Core\Queue\QueueFailerFactory;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Queue\Failer\QueueFailerInterface;
@@ -25,18 +25,18 @@ class QueuePackage extends AbstractPackage implements ServiceProviderInterface
     public function register(Container $container): void
     {
         // $container->prepareSharedObject(Worker::class);
-        $container->prepareSharedObject(QueueManager::class);
-        $container->prepareSharedObject(QueueFailerManager::class);
+        $container->prepareSharedObject(QueueFactory::class);
+        $container->prepareSharedObject(QueueFailerFactory::class);
         $container->bindShared(
             Queue::class,
             function (Container $container, ?string $tag = null) {
-                return $container->get(QueueManager::class)->get($tag);
+                return $container->get(QueueFactory::class)->get($tag);
             }
         );
         $container->bindShared(
             QueueFailerInterface::class,
             function (Container $container, ?string $tag = null) {
-                return $container->get(QueueFailerManager::class)->get($tag);
+                return $container->get(QueueFailerFactory::class)->get($tag);
             }
         );
     }

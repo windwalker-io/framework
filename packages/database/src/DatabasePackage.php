@@ -14,6 +14,7 @@ use Windwalker\Core\Application\AppType;
 use Windwalker\Core\CliServer\CliServerClient;
 use Windwalker\Core\CliServer\CliServerRuntime;
 use Windwalker\Core\Database\DatabaseExportService;
+use Windwalker\Core\Factory\DatabaseServiceFactory;
 use Windwalker\Core\Manager\DatabaseManager;
 use Windwalker\Core\Migration\MigrationService;
 use Windwalker\Core\Package\AbstractPackage;
@@ -21,6 +22,7 @@ use Windwalker\Core\Package\PackageInstaller;
 use Windwalker\Core\Seed\FakerService;
 use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\ORM\ORM;
 use Windwalker\Pool\PoolInterface;
@@ -68,16 +70,18 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
     public function register(Container $container): void
     {
         $container->prepareSharedObject(DatabaseManager::class);
+        $container->prepareSharedObject(DatabaseServiceFactory::class);
         $container->prepareSharedObject(DatabaseFactory::class);
         $container->bindShared(
             DatabaseAdapter::class,
-            fn(DatabaseManager $manager, ?string $tag = null) => $manager->get($tag),
-            Container::ISOLATION
+            fn(DatabaseServiceFactory $factory, ?string $tag = null) => $factory->get($tag),
+            new DIOptions(isolation: true)
         );
         $container->bindShared(
             ORM::class,
-            fn(DatabaseManager $manager, ?string $tag = null) => $manager->get($tag)->orm(),
-            Container::ISOLATION
+            fn(Container $container, ?string $tag = null)
+                => $container->get(DatabaseAdapter::class, tag: $tag)->orm(),
+            new DIOptions(isolation: true)
         );
 
         // Faker

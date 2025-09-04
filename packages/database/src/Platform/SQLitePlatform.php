@@ -468,11 +468,11 @@ class SQLitePlatform extends AbstractPlatform
         $constraints = $schema->getConstraints();
 
         if ($primaries) {
-            $constraints[] = (new Constraint(
+            $constraints[] = new Constraint(
                 Constraint::TYPE_PRIMARY_KEY,
                 'pk_' . $table->getName(),
                 $table->getName()
-            ))
+            )
                 ->columns($primaries);
         }
 
@@ -495,9 +495,7 @@ class SQLitePlatform extends AbstractPlatform
 
         $statement = $this->db->execute($sql);
 
-        foreach ($schema->getIndexes() as $index) {
-            $this->addIndex($table->getName(), $index, $table->schemaName);
-        }
+        $this->postTableModify($table, $schema->getIndexes());
 
         return $statement;
     }
