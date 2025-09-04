@@ -7,11 +7,11 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        php-versions: [ '8.2', '8.3', '8.4' ]
+        php-versions: [ '8.2', '8.3', '8.4', '8.5' ]
         experimental: [false]
-#        include:
-#          - php-versions: '8.4'
-#            experimental: true
+        include:
+          - php-versions: '8.5'
+            experimental: true
     runs-on: ubuntu-latest
     services:
       memcached:
