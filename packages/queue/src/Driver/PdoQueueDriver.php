@@ -9,6 +9,7 @@ use Exception;
 use InvalidArgumentException;
 use PDO;
 use Throwable;
+use Windwalker\Queue\Enum\DatabaseIdType;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -18,6 +19,8 @@ use Windwalker\Queue\QueueMessage;
  */
 class PdoQueueDriver implements QueueDriverInterface
 {
+    use UuidDriverTrait;
+
     /**
      * DatabaseQueueDriver constructor.
      *
@@ -30,8 +33,10 @@ class PdoQueueDriver implements QueueDriverInterface
         protected PDO $pdo,
         protected string $channel = 'default',
         protected string $table = 'queue_jobs',
-        protected int $timeout = 60
+        protected int $timeout = 60,
+        DatabaseIdType $idType = DatabaseIdType::INT,
     ) {
+        $this->idType = $idType;
     }
 
     /**
@@ -55,9 +60,16 @@ class PdoQueueDriver implements QueueDriverInterface
             ':reserved' => null,
         ];
 
+        if ($this->idType->isUuid()) {
+            $id = $this->generateUuidString();
+            $idColumn = 'id, ';
+            $idValue = ':id, ';
+            $data[':id'] = $id;
+        }
+
         $sql = 'INSERT INTO ' . $this->table .
-            ' (channel, body, attempts, created, visibility, reserved)' .
-            ' VALUES (:channel, :body, :attempts, :created, :visibility, :reserved)';
+            " ({$idColumn}channel, body, attempts, created, visibility, reserved)" .
+            " VALUES ({$idValue}:channel, :body, :attempts, :created, :visibility, :reserved)";
 
         $this->pdo->prepare($sql)->execute($data);
 
@@ -107,6 +119,8 @@ class PdoQueueDriver implements QueueDriverInterface
                 return null;
             }
 
+            $rawId = $data['id'];
+            $data['id'] = $this->idType->toReadable($data['id']);
             $data['attempts']++;
 
             $sql = 'UPDATE ' . $this->table . ' SET reserved = :reserved, attempts = :attempts WHERE id = :id';
@@ -114,7 +128,7 @@ class PdoQueueDriver implements QueueDriverInterface
             $stat = $this->pdo->prepare($sql);
             $stat->bindValue(':reserved', $now->format('Y-m-d H:i:s'));
             $stat->bindValue(':attempts', $data['attempts'] + 1);
-            $stat->bindValue(':id', $data['id']);
+            $stat->bindValue(':id', $rawId);
 
             $stat->execute();
 
@@ -150,7 +164,7 @@ class PdoQueueDriver implements QueueDriverInterface
             ' WHERE id = :id AND channel = :channel';
 
         $stat = $this->pdo->prepare($sql);
-        $stat->bindValue(':id', $message->getId());
+        $stat->bindValue(':id', $this->idType->toWritable($message->getId()));
         $stat->bindValue(':channel', $channel);
 
         $stat->execute();
@@ -172,7 +186,7 @@ class PdoQueueDriver implements QueueDriverInterface
         $time = $time->modify('+' . $message->getDelay() . 'seconds');
 
         $values = [
-            'id' => $message->getId(),
+            'id' => $this->idType->toWritable($message->getId()),
             'channel' => $channel,
             'reserved' => null,
             'visibility' => $time->format('Y-m-d H:i:s'),

@@ -6,9 +6,12 @@ namespace Windwalker\Queue\Driver;
 
 use DateTimeImmutable;
 use Exception;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use Throwable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Query\Query;
+use Windwalker\Queue\Enum\DatabaseIdType;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -18,18 +21,7 @@ use Windwalker\Queue\QueueMessage;
  */
 class DatabaseQueueDriver implements QueueDriverInterface
 {
-    /**
-     * Property db.
-     *
-     * @var  DatabaseAdapter
-     */
-    protected DatabaseAdapter $db;
-
-    protected string $table;
-
-    protected string $channel;
-
-    protected int $timeout;
+    use UuidDriverTrait;
 
     /**
      * DatabaseQueueDriver constructor.
@@ -38,17 +30,16 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param  string           $channel
      * @param  string           $table
      * @param  int              $timeout
+     * @param  DatabaseIdType   $idType
      */
     public function __construct(
-        DatabaseAdapter $db,
-        string $channel = 'default',
-        string $table = 'queue_jobs',
-        int $timeout = 60
+        protected DatabaseAdapter $db,
+        protected string $channel = 'default',
+        protected string $table = 'queue_jobs',
+        protected int $timeout = 60,
+        DatabaseIdType $idType = DatabaseIdType::INT
     ) {
-        $this->db = $db;
-        $this->table = $table;
-        $this->channel = $channel;
-        $this->timeout = $timeout;
+        $this->idType = $idType;
     }
 
     /**
@@ -72,9 +63,13 @@ class DatabaseQueueDriver implements QueueDriverInterface
             'reserved' => null,
         ];
 
+        if ($this->idType->isUuid()) {
+            $data['id'] = $this->generateUuidString();
+        }
+
         $data = $this->db->getWriter()->insertOne($this->table, $data, 'id');
 
-        return (string) $data['id'];
+        return (string) $this->idType->toWritable($data['id']);
     }
 
     /**
@@ -114,11 +109,14 @@ class DatabaseQueueDriver implements QueueDriverInterface
                     return null;
                 }
 
+                $rawId = $data['id'];
+                $data['id'] = $this->idType->toReadable($data['id']);
+
                 $data['attempts']++;
 
                 $values = ['reserved' => $now, 'attempts' => $data['attempts']];
 
-                $this->db->getWriter()->updateWhere($this->table, $values, ['id' => $data['id']]);
+                $this->db->getWriter()->updateWhere($this->table, $values, ['id' => $rawId]);
 
                 return $data;
             }
@@ -151,7 +149,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $channel = $message->getChannel() ?: $this->channel;
 
         $this->db->delete($this->table)
-            ->where('id', $message->getId())
+            ->where('id', $this->idType->toWritable($message->getId()))
             ->where('channel', $channel)
             ->execute();
 
@@ -181,7 +179,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
             $this->table,
             $values,
             [
-                'id' => $message->getId(),
+                'id' => $this->idType->toWritable($message->getId()),
                 'channel' => $channel,
             ]
         );

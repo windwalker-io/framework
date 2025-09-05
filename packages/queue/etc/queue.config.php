@@ -8,9 +8,8 @@ use Windwalker\Core\Attributes\ConfigModule;
 use Windwalker\Core\Factory\DatabaseServiceFactory;
 use Windwalker\Core\Queue\QueueFactory;
 use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Queue\Enum\DatabaseIdType;
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
-use Windwalker\Queue\Failer\QueueFailerInterface;
-use Windwalker\Queue\Queue;
 use Windwalker\Queue\QueuePackage;
 
 return #[ConfigModule(name: 'queue', enabled: true, priority: 100, belongsTo: QueuePackage::class)]
@@ -33,7 +32,7 @@ static fn() => [
     ],
 
     'factories' => [
-        Queue::class => [
+        'instances' => [
             'sync' => static fn() => QueueFactory::syncAdapter(
                 handler: QueueFactory::createSyncHandler()
             ),
@@ -50,13 +49,15 @@ static fn() => [
                 db: $db,
                 channel: 'default',
                 table: 'queue_jobs',
-                timeout: 60
+                timeout: 60,
+                idType: DatabaseIdType::UUID_BIN
             ),
         ],
-        QueueFailerInterface::class => [
+        'failers' => [
             'database' => static fn(DatabaseServiceFactory $factory) => new DatabaseQueueFailer(
                 db: $factory->get(),
-                table: 'queue_failed_jobs'
+                table: 'queue_failed_jobs',
+                idType: DatabaseIdType::UUID_BIN
             ),
         ],
     ],

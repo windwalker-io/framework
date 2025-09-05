@@ -10,6 +10,8 @@ use JsonException;
 use RuntimeException;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Queue\Driver\UuidDriverTrait;
+use Windwalker\Queue\Enum\DatabaseIdType;
 
 /**
  * The DatabaseQueueFailer class.
@@ -18,19 +20,7 @@ use Windwalker\Database\DatabaseAdapter;
  */
 class DatabaseQueueFailer implements QueueFailerInterface
 {
-    /**
-     * Property db.
-     *
-     * @var  DatabaseAdapter
-     */
-    protected DatabaseAdapter $db;
-
-    /**
-     * Property table.
-     *
-     * @var  string
-     */
-    protected string $table;
+    use UuidDriverTrait;
 
     /**
      * DatabaseQueueFailer constructor.
@@ -38,10 +28,12 @@ class DatabaseQueueFailer implements QueueFailerInterface
      * @param  DatabaseAdapter  $db
      * @param  string           $table
      */
-    public function __construct(DatabaseAdapter $db, string $table = 'queue_failed_jobs')
-    {
-        $this->db = $db;
-        $this->table = $table;
+    public function __construct(
+        protected DatabaseAdapter $db,
+        protected string $table = 'queue_failed_jobs',
+        DatabaseIdType $idType = DatabaseIdType::INT
+    ) {
+        $this->idType = $idType;
     }
 
     /**
@@ -74,6 +66,10 @@ class DatabaseQueueFailer implements QueueFailerInterface
             'exception'
         );
 
+        if ($this->idType->isUuid()) {
+            $data['id'] = $this->generateUuidString();
+        }
+
         $data['created'] = new DateTime('now');
 
         $data = $this->db->getWriter()->insertOne($this->table, $data, 'id');
@@ -95,6 +91,8 @@ class DatabaseQueueFailer implements QueueFailerInterface
 
         /** @var Collection $item */
         foreach ($query as $item) {
+            $item->id = $this->idType->toReadable($item->id);
+
             yield $item;
         }
     }
@@ -108,12 +106,20 @@ class DatabaseQueueFailer implements QueueFailerInterface
      */
     public function get(mixed $conditions): ?array
     {
+        $conditions = $this->makeConditionsWritable($conditions);
+
         $item = $this->db->select('*')
             ->from($this->table)
             ->where('id', $conditions)
             ->get();
 
-        return $item?->dump();
+        if (!$item) {
+            return null;
+        }
+
+        $item->id = $this->idType->toReadable($item->id);
+
+        return $item->dump();
     }
 
     /**
@@ -125,6 +131,8 @@ class DatabaseQueueFailer implements QueueFailerInterface
      */
     public function remove(mixed $conditions): bool
     {
+        $conditions = $this->makeConditionsWritable($conditions);
+
         $this->db->delete($this->table)
             ->where('id', $conditions)
             ->execute()
@@ -167,5 +175,21 @@ class DatabaseQueueFailer implements QueueFailerInterface
         $this->table = $table;
 
         return $this;
+    }
+
+    /**
+     * @param  mixed  $conditions
+     *
+     * @return  int|mixed
+     */
+    public function makeConditionsWritable(mixed $conditions): mixed
+    {
+        if (!is_array($conditions)) {
+            $conditions = $this->idType->toWritable($conditions);
+        } elseif (isset($conditions['id'])) {
+            $conditions['id'] = $this->idType->toWritable($conditions['id']);
+        }
+
+        return $conditions;
     }
 }
