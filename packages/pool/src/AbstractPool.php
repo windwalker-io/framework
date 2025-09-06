@@ -56,7 +56,7 @@ abstract class AbstractPool implements PoolInterface
         ?StackInterface $stack = null,
         ?LoggerInterface $logger = null
     ) {
-        $this->configureOptions($options);
+        $this->options = PoolOptions::wrapWith($options);
 
         $this->stack = $stack ?? $this->createStack();
         $this->logger = $logger ?? new NullLogger();
@@ -77,22 +77,6 @@ abstract class AbstractPool implements PoolInterface
         $this->logger = $logger;
 
         return $this;
-    }
-
-    protected function configureOptions(PoolOptions $options): void
-    {
-        $this->options = $options->withDefaults(
-            new PoolOptions(
-                maxSize: 1,
-                minSize: 1,
-                maxWait: -1,
-                waitTimeout: -1,
-                idleTimeout: 60,
-                closeTimeout: 3,
-                maxLifetime: -1,
-                maxUses: -1,
-            ),
-        );
     }
 
     /**
@@ -333,6 +317,17 @@ abstract class AbstractPool implements PoolInterface
         return $this->totalCount;
     }
 
+    protected function isReachMaxUses(ConnectionInterface $connection): bool
+    {
+        $uses = $connection->getCurrentUses();
+
+        if ($uses === PHP_INT_MAX) {
+            return true;
+        }
+
+        return $this->options->maxUses > 0 && $uses >= $this->options->maxUses;
+    }
+
     public function __destruct()
     {
         if (class_exists(Coroutine::class) && Coroutine::getCid() === -1) {
@@ -340,10 +335,5 @@ abstract class AbstractPool implements PoolInterface
         }
 
         $this->close();
-    }
-
-    protected function isReachMaxUses(ConnectionInterface $connection): bool
-    {
-        return $this->options->maxUses > 0 && $connection->getCurrentUses() >= $this->options->maxUses;
     }
 }

@@ -91,4 +91,6 @@ interface ConnectionInterface
      * @return  bool
      */
     public function isActive(): bool;
+
+    public function ping(): bool;
 }
