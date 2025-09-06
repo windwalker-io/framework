@@ -17,6 +17,10 @@ abstract class AbstractConnection implements ConnectionInterface
 
     protected int $lastTime = 0;
 
+    protected int $createdTime = 0;
+
+    protected int $currentUses = 0;
+
     /**
      * The connection pool instance must store in WeakReference to prevent circular reference
      * and memory leak.
@@ -31,6 +35,11 @@ abstract class AbstractConnection implements ConnectionInterface
      * @var bool
      */
     public bool $leakProtect = true;
+
+    public function __construct()
+    {
+        $this->createdTime = time();
+    }
 
     /**
      * @inheritDoc
@@ -122,5 +131,20 @@ abstract class AbstractConnection implements ConnectionInterface
                 E_USER_WARNING
             );
         }
+    }
+
+    public function getCreatedTime(): int
+    {
+        return $this->createdTime;
+    }
+
+    public function getCurrentUses(): int
+    {
+        return $this->currentUses;
+    }
+
+    public function incrementUses(): int
+    {
+        return ++$this->currentUses;
     }
 }

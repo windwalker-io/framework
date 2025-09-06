@@ -72,6 +72,12 @@ interface ConnectionInterface
      */
     public function updateLastTime(): void;
 
+    public function getCreatedTime(): int;
+
+    public function getCurrentUses(): int;
+
+    public function incrementUses(): int;
+
     /**
      * Set whether to release
      *

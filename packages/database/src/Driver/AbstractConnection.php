@@ -41,7 +41,7 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
      */
     public function __construct(array|DriverOptions $options)
     {
-        $options = clone DriverOptions::wrap($options);
+        $options = DriverOptions::wrapWith($options);
 
         $this->prepareOptions(
             $this->defaultOptions,
@@ -49,6 +49,8 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
         );
 
         $this->prepare();
+
+        parent::__construct();
     }
 
     /**
