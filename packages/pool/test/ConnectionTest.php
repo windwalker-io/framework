@@ -9,6 +9,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Pool\AbstractConnection;
 use Windwalker\Pool\AbstractPool;
+use Windwalker\Pool\Enum\ConnectionState;
 use Windwalker\Pool\Stack\PhpStack;
 use Windwalker\Pool\Test\Stub\StubConnection;
 use Windwalker\Pool\Test\Stub\StubConnectionPool;
@@ -23,17 +24,17 @@ class ConnectionTest extends TestCase
     protected ?AbstractConnection $instance;
 
     /**
-     * @see  AbstractConnection::setActive
+     * @see  AbstractConnection::setState
      */
     public function testSetActive(): void
     {
-        $this->instance->setActive(true);
+        $this->instance->setState(ConnectionState::ACTIVE);
 
-        self::assertTrue($this->instance->isActive());
+        self::assertEquals(ConnectionState::ACTIVE, $this->instance->getState());
 
-        $this->instance->setActive(false);
+        $this->instance->setState(ConnectionState::INACTIVE);
 
-        self::assertFalse($this->instance->isActive());
+        self::assertEquals(ConnectionState::INACTIVE, $this->instance->getState());
     }
 
     /**

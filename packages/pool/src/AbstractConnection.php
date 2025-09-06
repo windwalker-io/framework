@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Pool;
 
+use Windwalker\Pool\Enum\ConnectionState;
 use Windwalker\Pool\Exception\ConnectionPoolException;
 
 /**
@@ -13,7 +14,7 @@ abstract class AbstractConnection implements ConnectionInterface
 {
     protected int $id = 0;
 
-    protected bool $active = false;
+    protected ConnectionState $state = ConnectionState::INACTIVE;
 
     protected int $lastTime = 0;
 
@@ -80,7 +81,7 @@ abstract class AbstractConnection implements ConnectionInterface
             throw new ConnectionPoolException('No assigned pool of this connection.');
         }
 
-        if ($this->active || $force) {
+        if ($this->state === ConnectionState::ACTIVE || $force) {
             $this->pool?->get()?->release($this);
         }
     }
@@ -104,24 +105,24 @@ abstract class AbstractConnection implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function setActive(bool $active): void
+    public function setState(ConnectionState $state): void
     {
-        $this->active = $active;
+        $this->state = $state;
     }
 
     /**
      * Is connection active.
      *
-     * @return  bool
+     * @return  ConnectionState
      */
-    public function isActive(): bool
+    public function getState(): ConnectionState
     {
-        return $this->active;
+        return $this->state;
     }
 
     public function __destruct()
     {
-        if ($this->active && $this->pool && $this->leakProtect) {
+        if ($this->state && $this->pool && $this->leakProtect) {
             trigger_error(
                 sprintf(
                     'Connection ID: %s in pool: %s was not released but destruct.',

@@ -20,14 +20,22 @@ class Serial
         if (is_string($name)) {
             static::$sequences[$name] ??= 0;
 
-            return static::$sequences[$name]++;
+            if (static::$sequences[$name] === PHP_INT_MAX) {
+                throw new \OverflowException('Sequence maxed out.');
+            }
+
+            return ++static::$sequences[$name];
         }
 
         $map = static::getMap();
 
         $map[$name] ??= 0;
 
-        return $map[$name]++;
+        if ($map[$name] === PHP_INT_MAX) {
+            throw new \OverflowException('Sequence maxed out.');
+        }
+
+        return ++$map[$name];
     }
 
     public static function set(string|object $name, int $value): void

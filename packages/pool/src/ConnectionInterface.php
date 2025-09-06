@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Pool;
 
+use Windwalker\Pool\Enum\ConnectionState;
+
 /**
  * Interface ConnectionInterface
  */
@@ -79,18 +81,18 @@ interface ConnectionInterface
     public function incrementUses(): int;
 
     /**
-     * Set whether to release
+     * Set connection state.
      *
-     * @param  bool  $active
+     * @param  ConnectionState  $state
      */
-    public function setActive(bool $active): void;
+    public function setState(ConnectionState $state): void;
 
     /**
-     * Is connection active.
+     * The connection state.
      *
-     * @return  bool
+     * @return  ConnectionState
      */
-    public function isActive(): bool;
+    public function getState(): ConnectionState;
 
     public function ping(): bool;
 }

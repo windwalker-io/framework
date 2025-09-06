@@ -8,9 +8,13 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Swoole\Coroutine;
 use Throwable;
+use Windwalker\Pool\Enum\ConnectionState;
+use Windwalker\Pool\Enum\Heartbeat;
 use Windwalker\Pool\Exception\ConnectionPoolException;
+use Windwalker\Pool\Stack\TimerSupportedInterface;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\StackInterface;
+use Windwalker\Utilities\Serial;
 
 /**
  * The AbstractPool class.
@@ -28,11 +32,6 @@ abstract class AbstractPool implements PoolInterface
     protected bool $init = false;
 
     /**
-     * @var int
-     */
-    protected int $serial = 0;
-
-    /**
      * @var LoggerInterface
      */
     protected LoggerInterface $logger;
@@ -43,6 +42,11 @@ abstract class AbstractPool implements PoolInterface
     protected int $totalCount = 0;
 
     public protected(set) PoolOptions $options;
+
+    /**
+     * @var \WeakMap<ConnectionInterface, int>
+     */
+    protected \WeakMap $leakMap;
 
     /**
      * AbstractPool constructor.
@@ -60,6 +64,7 @@ abstract class AbstractPool implements PoolInterface
 
         $this->stack = $stack ?? $this->createStack();
         $this->logger = $logger ?? new NullLogger();
+        $this->leakMap = new \WeakMap();
     }
 
     protected function createStack(): StackInterface
@@ -96,6 +101,47 @@ abstract class AbstractPool implements PoolInterface
             $this->createConnection();
         }
 
+        if (
+            $this->options->timerInterval > 0
+            && $this->stack instanceof TimerSupportedInterface
+        ) {
+            $this->stack->startTimer(
+                function () {
+                    /** @var ConnectionInterface $connection */
+                    foreach ($this->leakMap as $connection => $v) {
+                        // Check leak timeout
+                        if (
+                            $this->options->leakTimeout > 0
+                            && $connection->getState() === ConnectionState::ACTIVE
+                            && (time() - $connection->getLastTime()) > $this->options->leakTimeout
+                        ) {
+                            $this->logger->warning(
+                                sprintf(
+                                    'Connection leak detected: %s, last used at %s',
+                                    $connection->getId(),
+                                    date('Y-m-d H:i:s', $connection->getLastTime())
+                                )
+                            );
+                        }
+
+                        // If connection is idle, do heartbeat check.
+                        if (
+                            $this->options->heartbeat === Heartbeat::INTERVALS
+                            && $connection->getState() === ConnectionState::INACTIVE
+                            && !$connection->ping()
+                        ) {
+                            // Ping failed, drop it.
+                            // Currently this connection may be stored in stack.
+                            // So we just mark it as abandoned.
+                            // The next pop() action will drop it.
+                            $connection->setState(ConnectionState::ABANDONED);
+                        }
+                    }
+                },
+                $this->options->timerInterval
+            );
+        }
+
         $this->init = true;
     }
 
@@ -110,6 +156,8 @@ abstract class AbstractPool implements PoolInterface
         $connection->setPool($this);
         $connection->updateLastTime();
         $connection->release(true);
+
+        $this->leakMap[$connection] = 1;
 
         $this->logger->info("Connection created: {$connection->getId()}");
 
@@ -131,6 +179,9 @@ abstract class AbstractPool implements PoolInterface
         $this->totalCount--;
         $connection->disconnect();
         $connection->setPool(null);
+        $connection->setState(ConnectionState::ABANDONED);
+
+        unset($this->leakMap[$connection]);
     }
 
     /**
@@ -149,7 +200,7 @@ abstract class AbstractPool implements PoolInterface
     {
         $connection->updateLastTime();
         $connection->incrementUses();
-        $connection->setActive(true);
+        $connection->setState(ConnectionState::ACTIVE);
 
         return $connection;
     }
@@ -213,15 +264,19 @@ abstract class AbstractPool implements PoolInterface
             return;
         }
 
-        if ($this->stack->count() < $this->options->minSize) {
-            $connection->setActive(false);
-            $this->stack->push($connection);
+        if (
+            // If connection is abandoned by outside object, drop it.
+            $connection->getState() === ConnectionState::ABANDONED
+            || $this->stack->count() >= $this->options->maxSize
+        ) {
+            // Disconnect then drop it.
+            $this->dropConnection($connection);
 
             return;
         }
 
-        // Disconnect then drop it.
-        $this->dropConnection($connection);
+        $connection->setState(ConnectionState::INACTIVE);
+        $this->stack->push($connection);
     }
 
     /**
@@ -229,7 +284,7 @@ abstract class AbstractPool implements PoolInterface
      */
     public function getSerial(): int
     {
-        return ++$this->serial;
+        return Serial::get(static::class);
     }
 
     /**
@@ -272,6 +327,13 @@ abstract class AbstractPool implements PoolInterface
         while ($this->stack->count() !== 0) {
             $connection = $this->stack->pop();
 
+            if ($connection->getState() === ConnectionState::ABANDONED) {
+                $this->dropConnection($connection);
+
+                $this->logger->info("Connection is abandoned and disconnected: {$connection->getId()}");
+                continue;
+            }
+
             $lastTime = $connection->getLastTime();
 
             // If out of max idle time, drop this connection.
@@ -290,6 +352,14 @@ abstract class AbstractPool implements PoolInterface
                 $this->dropConnection($connection);
 
                 $this->logger->info("Connection reach max lifetime and disconnected: {$connection->getId()}");
+                continue;
+            }
+
+            // Heartbeat check.
+            if ($this->options->heartbeat === Heartbeat::LAZY && !$connection->ping()) {
+                $this->dropConnection($connection);
+
+                $this->logger->info("Connection lazy heartbeat ping failed and disconnected: {$connection->getId()}");
                 continue;
             }
 
@@ -330,6 +400,10 @@ abstract class AbstractPool implements PoolInterface
 
     public function __destruct()
     {
+        if ($this->stack instanceof TimerSupportedInterface) {
+            $this->stack->stopTimer();
+        }
+
         if (class_exists(Coroutine::class) && Coroutine::getCid() === -1) {
             return;
         }
