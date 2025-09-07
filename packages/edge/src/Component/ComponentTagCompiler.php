@@ -28,6 +28,8 @@ class ComponentTagCompiler
      */
     protected array $boundAttributes = [];
 
+    public static array $camelCaches = [];
+
     /**
      * ComponentTagCompiler constructor.
      *
@@ -205,7 +207,7 @@ class ComponentTagCompiler
 
         $data = $data->mapWithKeys(
             function ($value, $key) {
-                return [StrNormalize::toCamelCase($key) => $value];
+                return yield static::toCamelCase($key) => $value;
             }
         );
 
@@ -562,5 +564,10 @@ class ComponentTagCompiler
         return Str::startsWith($value, '"') || Str::startsWith($value, '\'')
             ? substr($value, 1, -1)
             : $value;
+    }
+
+    public static function toCamelCase(string $string): string
+    {
+        return static::$camelCaches[$string] ??= StrNormalize::toCamelCase($string);
     }
 }

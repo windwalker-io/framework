@@ -579,7 +579,7 @@ SQL,
 
     public function testGetSchema(): void
     {
-        $this->instance->schemaName = self::$db->getDriver()->getOption('dbname');
+        $this->instance->schemaName = self::$db->getDriver()->options->dbname;
 
         $logs = $this->logQueries(fn() => $this->instance->getColumns(true));
 

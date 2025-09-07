@@ -61,8 +61,8 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      * @param  LoggerInterface  $logger
      */
     public function __construct(
-        protected AbstractDriver $driver,
-        protected AbstractPlatform $platform,
+        public protected(set) AbstractDriver $driver,
+        public protected(set) AbstractPlatform $platform,
         protected LoggerInterface $logger = new NullLogger(),
     ) {
         $this->platform->setDbAdapter($this);
@@ -200,7 +200,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 
     public function getDriverName(): string
     {
-        return $this->getDriver()->getOption('driver');
+        return $this->getDriver()->options->driver;
     }
 
     /**
@@ -221,7 +221,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 
     public function getDatabaseManager(?string $name = null, bool $new = false): DatabaseManager
     {
-        $name = $name ?? $this->getDriver()->getOption('dbname');
+        $name = $name ?? $this->getDriver()->options->dbname;
 
         return $this->once('database.' . $name, fn() => new DatabaseManager($name, $this), $new);
     }

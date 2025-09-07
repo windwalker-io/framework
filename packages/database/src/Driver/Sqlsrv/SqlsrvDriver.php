@@ -16,7 +16,7 @@ class SqlsrvDriver extends AbstractDriver
 {
     protected static string $name = 'sqlsrv';
 
-    protected string $platformName = 'sqlsrv';
+    public protected(set) string $platformName = 'sqlsrv';
 
     /**
      * @inheritDoc

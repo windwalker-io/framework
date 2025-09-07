@@ -22,7 +22,9 @@ trait WrappableTrait
     public function fill(array $data): static
     {
         foreach ($data as $key => $datum) {
-            $prop = StrNormalize::toCamelCase(strtolower($key));
+            $prop = str_contains($key, '_')
+                ? StrNormalize::toCamelCase(strtolower($key))
+                : $key;
 
             if (method_exists($this, $prop)) {
                 $this->$prop($datum);

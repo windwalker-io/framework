@@ -20,7 +20,7 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @var string
      */
-    protected string $platformName = 'mysql';
+    public protected(set) string $platformName = 'mysql';
 
     /**
      * @var ?ConnectionInterface
