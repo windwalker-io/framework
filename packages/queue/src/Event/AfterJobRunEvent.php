@@ -18,10 +18,10 @@ class AfterJobRunEvent extends BaseEvent
 
     public function __construct(
         JobController $controller,
-        Worker $worker,
+        Worker $runner,
         Queue $queue,
     ) {
-        $this->worker = $worker;
+        $this->runner = $runner;
         $this->queue = $queue;
         $this->controller = $controller;
     }

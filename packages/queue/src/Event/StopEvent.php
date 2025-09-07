@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Queue\Event;
 
 use Windwalker\Event\BaseEvent;
+use Windwalker\Queue\AbstractRunner;
 use Windwalker\Queue\Queue;
 use Windwalker\Queue\Worker;
 
@@ -17,10 +18,10 @@ class StopEvent extends BaseEvent
 
     public function __construct(
         public string $reason,
-        Worker $worker,
+        AbstractRunner $runner,
         Queue $queue,
     ) {
-        $this->worker = $worker;
+        $this->runner = $runner;
         $this->queue = $queue;
     }
 }

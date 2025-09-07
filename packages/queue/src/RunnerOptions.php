@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue;
 
-class WorkerOptions
+class RunnerOptions
 {
     public function __construct(
         public bool $once = false,
@@ -15,7 +15,7 @@ class WorkerOptions
         public int $tries = 5,
         public int $timeout = 60,
         public ?string $restartSignal = null,
-        public ?\Closure $jobControllerFactory = null,
+        public ?\Closure $controllerFactory = null,
     ) {
     }
 }

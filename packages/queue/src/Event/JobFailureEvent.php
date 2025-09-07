@@ -21,14 +21,14 @@ class JobFailureEvent extends BaseEvent
     public function __construct(
         \Throwable $exception,
         JobController $controller,
-        Worker $worker,
+        Worker $runner,
         Queue $queue,
         public int|false $backoff = false,
         public bool $maxAttemptsExceeds = false,
     ) {
         $this->exception = $exception;
         $this->controller = $controller;
-        $this->worker = $worker;
+        $this->runner = $runner;
         $this->queue = $queue;
     }
 }

@@ -6,6 +6,7 @@ namespace Windwalker\Queue\Event;
 
 use Throwable;
 use Windwalker\Event\BaseEvent;
+use Windwalker\Queue\AbstractRunner;
 use Windwalker\Queue\Worker;
 use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
@@ -17,7 +18,7 @@ class LoopFailureEvent extends BaseEvent
     use AccessorBCTrait;
 
     public function __construct(
-        public Worker $worker,
+        public AbstractRunner $runner,
         public string $message,
         public Throwable $exception
     ) {

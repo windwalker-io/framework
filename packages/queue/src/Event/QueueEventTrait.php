@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Event;
 
+use Windwalker\Queue\AbstractRunner;
 use Windwalker\Queue\Queue;
-use Windwalker\Queue\Worker;
 use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**
@@ -15,7 +15,7 @@ trait QueueEventTrait
 {
     use AccessorBCTrait;
 
-    public Worker $worker;
+    public AbstractRunner $runner;
 
     public Queue $queue;
 }
