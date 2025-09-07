@@ -35,57 +35,62 @@ class Enqueuer extends AbstractRunner
         $empty = true;
 
         foreach ($channel as $chan) {
-            $handler = $this->channelHandlers[$chan] ?? $this->defaultHandler ?? null;
-
-            if (!$handler) {
-                continue;
-            }
-
-            if ($this->options->maxRuns > 0) {
-                $this->runTimes++;
-            }
-
-            $controller = $this->createEnqueuerController($chan);
-
-            $event = $this->emit(
-                new BeforeEnqueueEvent(
-                    controller: $controller,
-                    enqueuer: $this,
-                    queue: $this->queue,
-                )
-            );
-
-            $controller = $event->controller;
-
-            try {
-                $result = $controller->run($handler);
-
-                $event = $this->emit(
-                    new AfterEnqueueEvent(
-                        controller: $controller,
-                        enqueuer: $this,
-                        queue: $this->queue,
-                        result: $result,
-                    )
-                );
-
-                if ($event->result !== null) {
-                    $empty = false;
-                }
-            } catch (\Throwable $e) {
-                $this->emit(
-                    new EnqueueFailureEvent(
-                        exception: $e,
-                        controller: $controller,
-                        enqueuer: $this,
-                        queue: $this->queue,
-                    ),
-                );
-            }
+            $empty = $this->enqueue($chan) === null && $empty;
         }
 
         if ($this->options->stopWhenEmpty && $empty) {
             $this->stop('Nothing to enqueue or return from handlers, exit.');
+        }
+    }
+
+    public function enqueue(string $channel): mixed
+    {
+        $handler = $this->channelHandlers[$channel] ?? $this->defaultHandler ?? null;
+
+        if (!$handler) {
+            return null;
+        }
+
+        if ($this->options->maxRuns > 0) {
+            $this->runTimes++;
+        }
+
+        $controller = $this->createEnqueuerController($channel);
+
+        $event = $this->emit(
+            new BeforeEnqueueEvent(
+                controller: $controller,
+                enqueuer: $this,
+                queue: $this->queue,
+            )
+        );
+
+        $controller = $event->controller;
+
+        try {
+            $result = $controller->run($handler);
+
+            $event = $this->emit(
+                new AfterEnqueueEvent(
+                    controller: $controller,
+                    enqueuer: $this,
+                    queue: $this->queue,
+                    result: $result,
+                )
+            );
+
+            return $event->result;
+        } catch (\Throwable $e) {
+            $this->emit(
+                new EnqueueFailureEvent(
+                    exception: $e,
+                    controller: $controller,
+                    enqueuer: $this,
+                    queue: $this->queue,
+                ),
+            );
+
+            return null;
         }
     }
 
