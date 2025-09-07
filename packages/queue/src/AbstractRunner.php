@@ -16,6 +16,8 @@ use Windwalker\Queue\Event\LoopEndEvent;
 use Windwalker\Queue\Event\LoopFailureEvent;
 use Windwalker\Queue\Event\LoopStartEvent;
 use Windwalker\Queue\Event\StopEvent;
+use Windwalker\Queue\Exception\UnrecoverableException;
+use Windwalker\Utilities\Logger\CallbackLogger;
 
 abstract class AbstractRunner implements EventAwareInterface
 {
@@ -57,6 +59,8 @@ abstract class AbstractRunner implements EventAwareInterface
      */
     protected $invoker = null;
 
+    protected int $runTimes = 0;
+
     public function __construct(
         protected Queue $queue,
         public RunnerOptions $options = new RunnerOptions(),
@@ -86,10 +90,13 @@ abstract class AbstractRunner implements EventAwareInterface
         // Last Restart
         $this->lastRestart = (int) new DateTimeImmutable('now')->format('U');
 
+        // Run Times
+        $this->runTimes = 0;
+
         // Log PID
         $this->pid = getmypid();
 
-        $this->logger->info('A worker start running... PID: ' . $this->pid);
+        $this->logger->info("A {$this->getRunnerName()} start running... PID: {$this->pid}");
 
         $this->setState(static::STATE_ACTIVE);
 
@@ -108,8 +115,14 @@ abstract class AbstractRunner implements EventAwareInterface
             if (($this->options->force ?? null) || $this->canLoop()) {
                 try {
                     $this->next($channel);
+                } catch (UnrecoverableException $e) {
+                    $this->stop('[STOP] Unrecoverable error: ' . $e->getMessage(), 1, true);
                 } catch (Exception $exception) {
-                    $message = sprintf('Worker failure in a loop cycle: %s', $exception->getMessage());
+                    $message = sprintf(
+                        '%s failure in a loop cycle: %s',
+                        $this->getRunnerName(),
+                        $exception->getMessage()
+                    );
 
                     $this->logger->error($message);
 
@@ -161,8 +174,8 @@ abstract class AbstractRunner implements EventAwareInterface
         }
 
         // Wait job complete then stop
-        pcntl_signal(SIGINT, [$this, 'shutdown']);
-        pcntl_signal(SIGTERM, [$this, 'shutdown']);
+        pcntl_signal(SIGINT, $this->shutdown(...));
+        pcntl_signal(SIGTERM, $this->shutdown(...));
     }
 
     /**
@@ -186,7 +199,7 @@ abstract class AbstractRunner implements EventAwareInterface
      */
     public function stop(string $reason = 'Unknown reason', int $code = 0, bool $instant = false): void
     {
-        $this->logger->info('Worker stop: ' . $reason);
+        $this->logger->info($this->getRunnerName() . ' stop: ' . $reason);
 
         $this->emit(
             new StopEvent(
@@ -289,6 +302,18 @@ abstract class AbstractRunner implements EventAwareInterface
             }
         }
 
+        if ($this->options->maxRuns > 0 && ++$this->runTimes >= $this->options->maxRuns) {
+            $this->stop('Max run times reached. PID: ' . $this->pid);
+        }
+
+        if (
+            $this->options->lifetime > 0
+            && $this->lastRestart
+            && (time() - $this->lastRestart) >= $this->options->lifetime
+        ) {
+            $this->stop('Max lifetime reached. PID: ' . $this->pid);
+        }
+
         if ((memory_get_usage() / 1024 / 1024) >= $this->options->memoryLimit) {
             $this->stop('Memory usage exceeded. PID: ' . $this->pid);
         }
@@ -319,14 +344,11 @@ abstract class AbstractRunner implements EventAwareInterface
 
     protected function createControllerLogger(): LoggerInterface
     {
-        return new class ($this) extends AbstractLogger {
-            public function __construct(protected AbstractRunner $runner)
-            {
-            }
+        return new CallbackLogger(
+            function ($level, string|\Stringable $message, array $context = []) {
+                $this->logger->log($level, (string) $message, $context);
 
-            public function log($level, \Stringable|string $message, array $context = []): void
-            {
-                $this->runner->emit(
+                return $this->emit(
                     new DebugOutputEvent(
                         level: $level,
                         message: (string) $message,
@@ -334,6 +356,6 @@ abstract class AbstractRunner implements EventAwareInterface
                     )
                 );
             }
-        };
+        );
     }
 }

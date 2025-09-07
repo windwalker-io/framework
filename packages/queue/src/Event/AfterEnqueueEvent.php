@@ -16,6 +16,7 @@ class AfterEnqueueEvent extends BaseEvent
         public EnqueuerController $controller,
         public Enqueuer $enqueuer,
         public Queue $queue,
+        public mixed $result = null,
     ) {
         //
     }

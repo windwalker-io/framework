@@ -47,7 +47,7 @@ class PgsqlStatement extends AbstractStatement
 
         [$query, $params] = BoundedHelper::replaceParams($this->query, '$%d', $params);
 
-        $this->tryExecute(
+        $this->useConnection(
             function (ConnectionInterface $conn) use ($params, $query) {
                 $this->conn = $resource = $conn->get();
 

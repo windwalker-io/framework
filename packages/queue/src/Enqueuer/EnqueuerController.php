@@ -23,7 +23,7 @@ class EnqueuerController
         );
     }
 
-    public function run(callable $invokable, array $args = [])
+    public function run(callable $invokable, array $args = []): mixed
     {
         return ($this->invoker)($this, $invokable, $args);
     }

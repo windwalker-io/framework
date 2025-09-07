@@ -56,7 +56,7 @@ class MysqliStatement extends AbstractStatement
 
         [$query, $params] = BoundedHelper::replaceParams($this->query, '?', $params);
 
-        $this->tryExecute(
+        $this->useConnection(
             function (ConnectionInterface $conn) use ($params, $query) {
                 $this->conn = $conn->get();
                 $this->cursor = $stmt = $this->conn->prepare($query);

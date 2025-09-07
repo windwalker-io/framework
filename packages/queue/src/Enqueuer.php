@@ -32,11 +32,17 @@ class Enqueuer extends AbstractRunner
     {
         $channel = (array) $channel;
 
+        $empty = true;
+
         foreach ($channel as $chan) {
             $handler = $this->channelHandlers[$chan] ?? $this->defaultHandler ?? null;
 
             if (!$handler) {
                 continue;
+            }
+
+            if ($this->options->maxRuns > 0) {
+                $this->runTimes++;
             }
 
             $controller = $this->createEnqueuerController($chan);
@@ -52,15 +58,20 @@ class Enqueuer extends AbstractRunner
             $controller = $event->controller;
 
             try {
-                $controller->run($handler);
+                $result = $controller->run($handler);
 
                 $event = $this->emit(
                     new AfterEnqueueEvent(
                         controller: $controller,
                         enqueuer: $this,
                         queue: $this->queue,
+                        result: $result,
                     )
                 );
+
+                if ($event->result !== null) {
+                    $empty = false;
+                }
             } catch (\Throwable $e) {
                 $this->emit(
                     new EnqueueFailureEvent(
@@ -71,6 +82,10 @@ class Enqueuer extends AbstractRunner
                     ),
                 );
             }
+        }
+
+        if ($this->options->stopWhenEmpty && $empty) {
+            $this->stop('Nothing to enqueue or return from handlers, exit.');
         }
     }
 

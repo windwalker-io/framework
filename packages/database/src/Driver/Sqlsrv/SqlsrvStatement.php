@@ -52,7 +52,7 @@ class SqlsrvStatement extends AbstractStatement
             $args[] = &$param['value'];
         }
 
-        return $this->tryExecute(
+        return $this->useConnection(
             function (ConnectionInterface $conn) use ($args, $query) {
                 $this->conn = $resource = $conn->get();
 

@@ -12,6 +12,7 @@ use Throwable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Query\Query;
 use Windwalker\Queue\Enum\DatabaseIdType;
+use Windwalker\Queue\Exception\UnrecoverableException;
 use Windwalker\Queue\QueueMessage;
 
 /**
@@ -103,7 +104,16 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
         $data = $this->db->transaction(
             function () use ($now, $query) {
-                $data = $this->db->prepare($query)->get();
+                try {
+                    $data = $this->db->prepare($query)->get();
+                } catch (\Exception $e) {
+                    if ($this->db->driver::shouldAutoReconnect($e)) {
+                        // DB should already auto reconnect, if reconnect failed, we force queue restart.
+                        UnrecoverableException::throwFrom($e);
+                    }
+
+                    throw $e;
+                }
 
                 if (!$data) {
                     return null;

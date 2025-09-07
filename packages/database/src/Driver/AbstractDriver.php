@@ -217,14 +217,39 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $conn = $this->getConnection();
 
         try {
-            $result = $callback($conn);
+            return $callback($conn);
+        } catch (\Exception $e) {
+            if (!static::shouldAutoReconnect($e)) {
+                throw $e;
+            }
+
+            $conn->reconnect();
+
+            return $callback($conn);
         } finally {
             if (!$this->connection) {
                 $conn->release();
             }
         }
+    }
 
-        return $result;
+    public static function shouldAutoReconnect(\Throwable|string $message): bool
+    {
+        if ($message instanceof \Throwable) {
+            $message = $message->getMessage();
+        }
+
+        $message = strtolower($message);
+
+        $keywords = [
+            'gone away',
+            'lost connection',
+            'went away',
+            'connection timed out',
+            'operation timed out'
+        ];
+
+        return array_any($keywords, static fn($keyword) => str_contains($message, strtolower($keyword)));
     }
 
     public function disconnectAll(): int

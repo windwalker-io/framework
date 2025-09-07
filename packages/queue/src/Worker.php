@@ -49,7 +49,15 @@ class Worker extends AbstractRunner
         $message = $this->getNextMessage($channel);
 
         if (!$message) {
+            if ($this->options->stopWhenEmpty) {
+                $this->stop('No more messages in queue.');
+            }
+
             return;
+        }
+
+        if ($this->options->maxRuns > 0) {
+            $this->runTimes++;
         }
 
         $this->process($message);
