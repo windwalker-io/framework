@@ -19,6 +19,7 @@ use Windwalker\Database\Platform\SQLitePlatform;
 use Windwalker\Database\Platform\SQLServerPlatform;
 use Windwalker\Pool\ConnectionPool;
 use Windwalker\Pool\PoolInterface;
+use Windwalker\Pool\PoolOptions;
 use Windwalker\Pool\Stack\StackInterface;
 use Windwalker\Query\Grammar\AbstractGrammar;
 
@@ -169,7 +170,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
      * @inheritDoc
      */
     public function createConnectionPool(
-        array $options = [],
+        array|PoolOptions $options = [],
         ?StackInterface $stack = null,
         ?LoggerInterface $logger = null
     ): ConnectionPool {

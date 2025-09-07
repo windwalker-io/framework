@@ -70,4 +70,15 @@ class MysqliConnection extends AbstractConnection
     {
         return parent::get();
     }
+
+    public function ping(): bool
+    {
+        try {
+            $this->connect();
+
+            return $this->connection->query('SELECT 1') !== false;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
 }

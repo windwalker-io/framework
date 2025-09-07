@@ -228,6 +228,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         $definition = $this->setDefinition($id, $value, $tag);
 
+        if ($options->providedIn) {
+            $definition->providedIn($options->providedIn);
+        }
+
         $this->removeAlias($id);
 
         return $definition;

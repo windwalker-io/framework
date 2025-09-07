@@ -26,10 +26,12 @@ use Windwalker\DI\DIOptions;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\ORM\ORM;
 use Windwalker\Pool\PoolInterface;
+use Windwalker\Pool\PoolOptions;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\SwooleStack;
 
 use function Windwalker\swoole_in_coroutine;
+use function Windwalker\value;
 
 /**
  * The DatabasePackage class.
@@ -102,7 +104,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         foreach ($connections as $connection => $connConfig) {
             $this->app->log("[DB][$connection] Initializing connection pool");
 
-            $poolConfig = $connConfig['pool'] ?? [];
+            $poolConfig = PoolOptions::wrapWith(value($connConfig['pool'] ?? []));
             $poolConfig = $this->preparePoolConfig($poolConfig);
 
             $pool = $databaseFactory->createConnectionPool(
@@ -115,7 +117,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
 
             $driver = $databaseFactory->createDriver(
                 $connConfig['driver'],
-                $connConfig['options'],
+                value($connConfig['options']),
                 $pool
             );
 
@@ -130,26 +132,18 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         }
     }
 
-    protected function preparePoolConfig(array $poolConfig): array
+    protected function preparePoolConfig(PoolOptions $poolConfig): PoolOptions
     {
+        $poolConfig = clone $poolConfig;
+
         $state = CliServerRuntime::getServerState();
         $mainServState = $state->getServer();
 
-        $default = [
-            PoolInterface::MIN_SIZE => 1,
-            PoolInterface::MAX_WAIT => -1,
-            PoolInterface::WAIT_TIMEOUT => -1,
-            PoolInterface::IDLE_TIMEOUT => 60,
-            PoolInterface::CLOSE_TIMEOUT => 3,
-        ];
-
-        $poolConfig = array_merge($default, $poolConfig);
-
         // Set MAX_SIZE if not exists
-        if ($poolConfig[PoolInterface::MAX_SIZE] ?? null) {
+        if ($poolConfig->maxSize >= 0) {
             $poolMaxSize = $mainServState['worker_num'] ?? null;
 
-            $poolConfig[PoolInterface::MAX_SIZE] = $poolMaxSize ?? swoole_cpu_num();
+            $poolConfig->maxSize = $poolMaxSize ?? swoole_cpu_num();
         }
 
         return $poolConfig;

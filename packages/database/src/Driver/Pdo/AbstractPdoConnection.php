@@ -105,4 +105,17 @@ abstract class AbstractPdoConnection extends AbstractConnection
     {
         return self::$dbtype;
     }
+
+    public function ping(): bool
+    {
+        try {
+            $this->connect();
+
+            $this->connection->query('SELECT 1');
+
+            return true;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
 }

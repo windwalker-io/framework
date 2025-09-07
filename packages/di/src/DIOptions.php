@@ -38,6 +38,10 @@ class DIOptions
          * Use PHP 8.4 Lazy Proxy to wrap resolved instance.
          */
         public ?bool $lazy = null,
+        /**
+         * The service provided in these levels.
+         */
+        public int|array|null|\Closure $providedIn = null,
     ) {
     }
 

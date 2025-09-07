@@ -6,17 +6,20 @@ namespace Windwalker\Pool\Stack;
 
 use LogicException;
 use Swoole\Coroutine\Channel;
+use Swoole\Timer;
 use Windwalker\Pool\ConnectionInterface;
 use Windwalker\Pool\Exception\WaitTimeoutException;
 
 /**
  * The SwooleDriver class.
  */
-class SwooleStack implements StackInterface
+class SwooleStack implements StackInterface, TimerSupportedInterface
 {
     protected int $maxSize = 1;
 
-    protected ?Channel $pool = null;
+    protected ?Channel $channel = null;
+
+    protected ?int $timer = null;
 
     /**
      * SwooleDriver constructor.
@@ -27,7 +30,7 @@ class SwooleStack implements StackInterface
     {
         $this->maxSize = $maxSize;
 
-        $this->pool ??= new Channel($this->maxSize);
+        $this->channel ??= new Channel($this->maxSize);
     }
 
     /**
@@ -35,7 +38,7 @@ class SwooleStack implements StackInterface
      */
     public function push(ConnectionInterface $connection): void
     {
-        $this->pool->push($connection);
+        $this->channel->push($connection);
     }
 
     /**
@@ -43,11 +46,11 @@ class SwooleStack implements StackInterface
      */
     public function pop(?int $timeout = null): ConnectionInterface
     {
-        if (!$this->pool) {
+        if (!$this->channel) {
             throw new LogicException('Channel not exists in ' . static::class);
         }
 
-        $conn = $this->pool->pop($timeout ?? -1);
+        $conn = $this->channel->pop($timeout ?? -1);
 
         if ($conn === false) {
             throw new WaitTimeoutException('Wait connection timeout or channel closed.');
@@ -61,7 +64,7 @@ class SwooleStack implements StackInterface
      */
     public function count(): int
     {
-        return $this->pool->length();
+        return $this->channel->length();
     }
 
     /**
@@ -69,6 +72,25 @@ class SwooleStack implements StackInterface
      */
     public function waitingCount(): int
     {
-        return $this->pool->stats()['consumer_num'] ?? 0;
+        return $this->channel->stats()['consumer_num'] ?? 0;
+    }
+
+    public function startTimer(\Closure $handler, int $intervalSeconds): void
+    {
+        if ($this->timer) {
+            return;
+        }
+
+        $this->timer = Timer::tick(
+            $intervalSeconds * 1000,
+            $handler
+        );
+    }
+
+    public function stopTimer(): void
+    {
+        Timer::clear($this->timer);
+
+        $this->timer = null;
     }
 }

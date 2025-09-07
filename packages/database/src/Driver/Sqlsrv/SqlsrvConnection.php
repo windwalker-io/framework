@@ -76,4 +76,15 @@ class SqlsrvConnection extends AbstractConnection
 
         return $r;
     }
+
+    public function ping(): bool
+    {
+        try {
+            $this->connect();
+
+            return sqlsrv_query($this->connection, 'SELECT 1') !== false;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
 }
