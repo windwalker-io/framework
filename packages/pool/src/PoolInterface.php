@@ -5,23 +5,42 @@ declare(strict_types=1);
 namespace Windwalker\Pool;
 
 use Countable;
+use Swoole\Thread\Pool;
 
 /**
  * Interface PoolInterface
  */
 interface PoolInterface extends Countable
 {
-    public const MAX_SIZE = 'max_size';
+    /**
+     * @deprecated  Use {@see PoolOptions} instead.
+     */
+    public const string MAX_SIZE = 'max_size';
 
-    public const MIN_SIZE = 'min_size';
+    /**
+     * @deprecated  Use {@see PoolOptions} instead.
+     */
+    public const string MIN_SIZE = 'min_size';
 
-    public const MAX_WAIT = 'max_wait';
+    /**
+     * @deprecated  Use {@see PoolOptions} instead.
+     */
+    public const string MAX_WAIT = 'max_wait';
 
-    public const WAIT_TIMEOUT = 'wait_timeout';
+    /**
+     * @deprecated  Use {@see PoolOptions} instead.
+     */
+    public const string WAIT_TIMEOUT = 'wait_timeout';
 
-    public const IDLE_TIMEOUT = 'idle_timeout';
+    /**
+     * @deprecated  Use {@see PoolOptions} instead.
+     */
+    public const string IDLE_TIMEOUT = 'idle_timeout';
 
-    public const CLOSE_TIMEOUT = 'close_timeout';
+    /**
+     * @deprecated  Use {@see PoolOptions} instead.
+     */
+    public const string CLOSE_TIMEOUT = 'close_timeout';
 
     /**
      * Initialize pool
