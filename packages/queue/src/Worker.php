@@ -77,6 +77,10 @@ class Worker extends AbstractRunner
         foreach ($channel as $channelName) {
             $result = $this->enqueuer->enqueue($channelName);
 
+            if ($result && !$result instanceof QueueMessage) {
+                $result = $this->queue->getMessageByJob($result);
+            }
+
             if ($result instanceof QueueMessage) {
                 return $result;
             }
@@ -186,10 +190,17 @@ class Worker extends AbstractRunner
 
             $backoff = false;
         } else {
-            $this->queue->release(
-                $message,
-                $backoff ??= $this->options->backoff
-            );
+            if ($message->getId()) {
+                $this->queue->release(
+                    $message,
+                    $backoff ??= $this->options->backoff
+                );
+            } else {
+                $this->queue->push(
+                    $message,
+                    $backoff ??= $this->options->backoff
+                );
+            }
             $this->logger->error(
                 sprintf(
                     'Job: [%s] (%s) failed, will retry after %d seconds - Class: %s',

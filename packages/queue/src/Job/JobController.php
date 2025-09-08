@@ -89,7 +89,7 @@ class JobController
         );
     }
 
-    public function log(string|array $message, string $level = LogLevel::DEBUG, array $context = []): static
+    public function log(string|array $message, string $level = LogLevel::INFO, array $context = []): static
     {
         foreach ((array) $message as $msg) {
             $this->logger->log($level, $msg, $context);

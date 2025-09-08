@@ -31,6 +31,23 @@ static fn() => [
         //
     ],
 
+    'loop_end_scripts' => [
+        //
+    ],
+
+    'job_end_scripts' => [
+        //
+    ],
+
+    'enqueuer' => [
+        'handlers' => [
+            __DIR__ . '/../../resources/registry/enqueuers.php',
+        ],
+        'loop_end_scripts' => [
+            //
+        ],
+    ],
+
     'factories' => [
         'instances' => [
             'sync' => static fn() => QueueFactory::syncAdapter(

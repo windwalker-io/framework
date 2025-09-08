@@ -412,6 +412,10 @@ class QueueMessage implements JsonSerializable
     public function __unserialize(array $data): void
     {
         foreach ($data as $key => $value) {
+            if ($key === 'serializedJob') {
+                continue;
+            }
+
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }

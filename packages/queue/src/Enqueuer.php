@@ -56,6 +56,7 @@ class Enqueuer extends AbstractRunner
         }
 
         $controller = $this->createEnqueuerController($channel);
+        $controller->queue = $this->queue;
 
         $event = $this->emit(
             new BeforeEnqueueEvent(
@@ -94,14 +95,14 @@ class Enqueuer extends AbstractRunner
         }
     }
 
-    public function setDefaultHandler(callable $defaultHandler): static
+    public function default(callable $defaultHandler): static
     {
         $this->defaultHandler = $defaultHandler(...);
 
         return $this;
     }
 
-    public function addChannelHandler(string $channel, callable $handler): void
+    public function channel(string $channel, callable $handler): void
     {
         $this->channelHandlers[$channel] = $handler;
     }

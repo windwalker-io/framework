@@ -52,7 +52,12 @@ class Queue
      */
     public function push(mixed $job, int $delay = 0, ?string $channel = null, array $options = []): int|string
     {
-        $message = $this->getMessageByJob($job);
+        if (!$job instanceof QueueMessage) {
+            $message = $this->getMessageByJob($job);
+        } else {
+            $message = $job;
+        }
+
         $message->setDelay($delay);
         $message->setChannel($channel);
         $message->setOptions($options);
