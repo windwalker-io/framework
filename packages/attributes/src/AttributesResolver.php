@@ -376,12 +376,12 @@ class AttributesResolver extends ObjectBuilder
             $this->resolveConstants($instance, $options);
         }
 
-        if ($ref->getMethods() !== []) {
-            $this->resolveMethods($instance, $options);
-        }
-
         if ($ref->getProperties() !== []) {
             $this->resolveProperties($instance, $options);
+        }
+
+        if ($ref->getMethods() !== []) {
+            $this->resolveMethods($instance, $options);
         }
 
         return $instance;

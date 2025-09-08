@@ -21,6 +21,7 @@ use Windwalker\ORM\Event\AfterSaveEvent;
 use Windwalker\ORM\Event\AfterUpdateWhereEvent;
 use Windwalker\ORM\Event\BeforeSaveEvent;
 use Windwalker\ORM\Event\BeforeUpdateWhereEvent;
+use Windwalker\ORM\Event\EntitySetupEvent;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\Relation\RelationManager;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
@@ -142,6 +143,12 @@ class EntityMetadata implements EventAwareInterface
         }
 
         $resolver->resolveObjectMembers($ref, ['metadata' => $this]);
+
+        $this->emit(
+            new EntitySetupEvent(
+                metadata: $this
+            )
+        );
 
         $this->hasSetup = true;
 
