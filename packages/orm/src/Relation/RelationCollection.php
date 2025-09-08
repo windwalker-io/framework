@@ -176,6 +176,15 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
         return clone $this->query;
     }
 
+    public function withModifyQuery(\Closure $handler): static
+    {
+        $new = clone $this;
+
+        $new->query = $handler($new->query) ?? $new->query;
+
+        return $new;
+    }
+
     /**
      * @return object[]
      */
@@ -289,5 +298,11 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     public function count(): int
     {
         return $this->getQuery()?->count() ?? 0;
+    }
+
+    public function __clone(): void
+    {
+        $this->query = clone $this->query;
+        $this->cache = null;
     }
 }
