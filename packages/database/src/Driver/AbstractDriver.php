@@ -319,7 +319,9 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
                 $message = $e->getMessage();
 
-                $message .= ' - SQL: ' . $debugSql;
+                if ($this->isDebug()) {
+                    $message .= ' - SQL: ' . $debugSql;
+                }
 
                 $event->exception = new DatabaseQueryException(
                     $message,

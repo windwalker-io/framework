@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Exception;
 
+use Windwalker\Utilities\Exception\VerbosityExceptionInterface;
+use Windwalker\Utilities\Exception\VerbosityExceptionTrait;
+
 /**
  * The DatabaseQueryException class.
  */
-class DatabaseQueryException extends DatabaseException
+class DatabaseQueryException extends DatabaseException implements VerbosityExceptionInterface
 {
+    use VerbosityExceptionTrait;
+
     public string $debugSql = '';
 
     public function getDebugSql(): string
@@ -26,5 +31,10 @@ class DatabaseQueryException extends DatabaseException
         $this->debugSql = $debugSql;
 
         return $this;
+    }
+
+    public function getDebugMessage(): string
+    {
+        return $this->getMessage() . ($this->debugSql ? ' - SQL: ' . $this->debugSql : '');
     }
 }
