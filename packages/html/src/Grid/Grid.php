@@ -215,6 +215,16 @@ class Grid
         return $this;
     }
 
+    public function addHeaderRow(array $attrs = []): static
+    {
+        return $this->addRow($attrs, static::ROW_HEAD);
+    }
+
+    public function addFooterRow(array $attrs = []): static
+    {
+        return $this->addRow($attrs, static::ROW_FOOT);
+    }
+
     /**
      * Method to get the attributes of the currently active row
      *
@@ -286,14 +296,24 @@ class Grid
      */
     public function setRowCell(string $name, string $content, array $attrs = [], bool $replace = true): static
     {
-        if ($replace || !isset($this->rows[$this->activeRow][$name])) {
+        return $this->setDirectlyRowCell($this->activeRow, $name, $content, $attrs, $replace);
+    }
+
+    public function setDirectlyRowCell(
+        int $row,
+        string $name,
+        string $content,
+        array $attrs = [],
+        bool $replace = true
+    ): static {
+        if ($replace || !isset($this->rows[$row][$name])) {
             $cell = new stdClass();
             $cell->attribs = $attrs;
             $cell->content = $content;
-            $this->rows[$this->activeRow][$name] = $cell;
+            $this->rows[$row][$name] = $cell;
         } else {
-            $this->rows[$this->activeRow][$name]->content .= $content;
-            $this->rows[$this->activeRow][$name]->attribs = $attrs;
+            $this->rows[$row][$name]->content .= $content;
+            $this->rows[$row][$name]->attribs = $attrs;
         }
 
         return $this;
