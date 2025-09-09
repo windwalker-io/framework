@@ -11,7 +11,7 @@ use Windwalker\Utilities\TypeCast;
 
 trait RecordOptionsTrait
 {
-    public static function wrap(array|self|null $values, bool $clone = false): static
+    public static function wrap(mixed $values, bool $clone = false): static
     {
         if ($values instanceof static) {
             if ($clone) {
@@ -47,7 +47,7 @@ trait RecordOptionsTrait
         return new static(...$args)->merge($values);
     }
 
-    public static function wrapWith(array|self|null $values): static
+    public static function wrapWith(mixed $values): static
     {
         return static::wrap($values, true);
     }

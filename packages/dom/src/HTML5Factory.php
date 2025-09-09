@@ -289,6 +289,12 @@ class HTML5Factory
             return $node->appendChild($content);
         }
 
+        if ($node instanceof DocumentFragment) {
+            $node->appendXml($content);
+
+            return $node;
+        }
+
         $text = $node->ownerDocument->createTextNode((string) $content);
 
         return $node->appendChild($text);
