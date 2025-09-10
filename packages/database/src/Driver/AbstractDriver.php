@@ -8,6 +8,7 @@ use JetBrains\PhpStorm\Pure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Event\FullFetchedEvent;
 use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Database\Event\QueryEndEvent;
@@ -350,6 +351,14 @@ abstract class AbstractDriver implements HydratorAwareInterface
         $stmt->on(
             ItemFetchedEvent::class,
             fn(ItemFetchedEvent $event) => $event->fill(
+                query: $query,
+                bounded: $bounded,
+            )
+        );
+
+        $stmt->on(
+            FullFetchedEvent::class,
+            fn(FullFetchedEvent $event) => $event->fill(
                 query: $query,
                 bounded: $bounded,
             )

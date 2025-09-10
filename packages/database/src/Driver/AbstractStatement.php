@@ -9,6 +9,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 use Throwable;
 use Windwalker\Data\Collection;
+use Windwalker\Database\Event\FullFetchedEvent;
 use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Database\Event\QueryEndEvent;
@@ -74,13 +75,22 @@ abstract class AbstractStatement implements StatementInterface
      * @inheritDoc
      * @throws Throwable
      */
-    public function getIterator(string|object|null $class = null, array $args = []): Generator
+    public function getIterator(string|object|null $class = null, array $args = []): \Traversable
     {
         $this->execute();
 
+        return $this->iterate($class, $args);
+    }
+
+    protected function iterate(string|object|null $class = null, array $args = []): Generator
+    {
         while (($row = $this->fetch($class, $args)) !== null) {
             yield $row;
         }
+
+        $this->fullFetchedEvent();
+
+        $this->close();
     }
 
     /**
@@ -99,7 +109,7 @@ abstract class AbstractStatement implements StatementInterface
 
         $class ??= $this->getDefaultItemClass() ?: Collection::class;
 
-        $item = $this->fetchedEvent($item);
+        $item = $this->itemFetchedEvent($item);
 
         $item = $this->emit(
             new HydrateEvent(
@@ -176,6 +186,7 @@ abstract class AbstractStatement implements StatementInterface
     {
         $result = $this->fetch($class, $args);
 
+        $this->fullFetchedEvent();
         $this->close();
 
         return $result;
@@ -186,36 +197,34 @@ abstract class AbstractStatement implements StatementInterface
      */
     public function all(string|object|null $class = null, array $args = []): Collection
     {
-        $this->execute();
+        $items = collect($this->getIterator($class, $args));
 
-        $array = [];
-
-        // Get all of the rows from the result set.
-        while ($row = $this->fetch($class, $args)) {
-            $array[] = $row;
-        }
-
-        $items = collect($array);
-
-        $this->close();
+        // $this->close();
 
         return $items;
     }
 
     /**
-     * fetchedEvent
-     *
      * @param  array|null  $item
      *
      * @return array|null
      */
-    protected function fetchedEvent(?array $item): ?array
+    protected function itemFetchedEvent(?array $item): ?array
     {
         $event = $this->emit(
-            new ItemFetchedEvent(item: $item, sql: $this->query, statement: $this)
+            new ItemFetchedEvent(item: $item, sql: $this->query, bounded: $this->getBounded(), statement: $this)
         );
 
         return $event->item;
+    }
+
+    protected function fullFetchedEvent(): FullFetchedEvent
+    {
+        $event = $this->emit(
+            new FullFetchedEvent(sql: $this->query, bounded: $this->getBounded(), statement: $this)
+        );
+
+        return $event;
     }
 
     /**

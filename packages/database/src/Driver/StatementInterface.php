@@ -111,9 +111,9 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
      * @param  string|object|null  $class
      * @param  array               $args
      *
-     * @return  Generator
+     * @return  \Traversable
      */
-    public function getIterator(string|object|null $class = null, array $args = []): Generator;
+    public function getIterator(string|object|null $class = null, array $args = []): \Traversable;
 
     /**
      * addDispatcherDealer
