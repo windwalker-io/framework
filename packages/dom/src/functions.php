@@ -32,28 +32,28 @@ if (!function_exists('\Windwalker\DOM\xml')) {
 }
 
 if (!function_exists('\Windwalker\DOM\h')) {
-    function h(string $name, array $attributes = [], mixed $content = null): HTMLElement
+    function h(string $name, array|\Closure $attributes = [], mixed $content = null): HTMLElement
     {
         return HTML5Factory::element($name, $attributes, $content);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\div')) {
-    function div(array $attributes = [], $content = null): HTMLElement
+    function div(array|\Closure $attributes = [], $content = null): HTMLElement
     {
         return h('div', $attributes, $content);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\span')) {
-    function span(array $attributes = [], $content = null): HTMLElement
+    function span(array|\Closure $attributes = [], $content = null): HTMLElement
     {
         return h('span', $attributes, $content);
     }
 }
 
 if (!function_exists('\Windwalker\DOM\img')) {
-    function img(mixed $src, array $attributes = []): HTMLElement
+    function img(mixed $src, array|\Closure $attributes = []): HTMLElement
     {
         $attributes['src'] = value($src);
 

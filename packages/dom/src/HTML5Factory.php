@@ -75,7 +75,7 @@ class HTML5Factory
      *
      * @return  HTMLElement
      */
-    public static function element(string $name, array $attributes = [], mixed $value = null): HTMLElement
+    public static function element(string $name, array|\Closure $attributes = [], mixed $value = null): HTMLElement
     {
         [$name, $id, $class] = array_values(static::splitCSSSelector($name));
 
@@ -83,10 +83,14 @@ class HTML5Factory
         $ele = static::document()->createElement($name);
 
         if ($id !== null) {
-            $attributes['id'] = $id;
+            $ele->setAttribute('id', $id);
         }
 
-        $ele->setAttributes($attributes);
+        if ($attributes instanceof \Closure) {
+            $attributes($ele);
+        } else {
+            $ele->setAttributes($attributes);
+        }
 
         if ($class !== null) {
             $ele->addClass($class);

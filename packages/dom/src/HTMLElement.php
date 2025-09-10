@@ -22,6 +22,14 @@ use function Windwalker\value;
  */
 class HTMLElement extends NativeHTMLElement implements \ArrayAccess
 {
+    public protected(set) CSSStyleDeclaration $style {
+        get => $this->style ??= new CSSStyleDeclaration($this);
+    }
+
+    public protected(set) DOMStringMap $dataset {
+        get => $this->dataset ??= new DOMStringMap($this);
+    }
+
     /**
      * @param  string      $name
      * @param  array       $attributes

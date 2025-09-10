@@ -13,31 +13,18 @@ use Windwalker\Utilities\StrNormalize;
  */
 class DOMStringMap
 {
-    /**
-     * Property html.
-     *
-     * @var DOMElement
-     */
-    protected $element;
-
-    /**
-     * ClassList constructor.
-     *
-     * @param  DOMElement  $element
-     */
-    public function __construct(DOMElement $element)
+    public function __construct(protected DOMElement|HTMLElement $element)
     {
-        $this->element = $element;
     }
 
     /**
      * Method to get property Html
      *
-     * @return  DOMElement
+     * @return  DOMElement|HTMLElement
      *
      * @since  3.5.3
      */
-    public function getDOMElement(): DOMElement
+    public function getDOMElement(): DOMElement|HTMLElement
     {
         return $this->element;
     }
@@ -53,9 +40,7 @@ class DOMStringMap
     {
         $attrs = array_filter(
             $this->element->getAttributes(),
-            static function ($v, $k) {
-                return strpos($k, 'data-') === 0;
-            },
+            static fn($v, $k) => str_starts_with($k, 'data-'),
             ARRAY_FILTER_USE_BOTH
         );
 
@@ -71,8 +56,6 @@ class DOMStringMap
     }
 
     /**
-     * __get
-     *
      * @param  string  $name
      *
      * @return  string
@@ -85,8 +68,6 @@ class DOMStringMap
     }
 
     /**
-     * __set
-     *
      * @param  string  $name
      * @param  string  $value
      *
@@ -94,35 +75,31 @@ class DOMStringMap
      *
      * @since  3.5.3
      */
-    public function __set(mixed $name, mixed $value)
+    public function __set(string $name, mixed $value)
     {
-        $this->element->setAttribute($this->toDataKey($name), $value);
+        $this->element->setAttribute($this->toDataKey($name), (string) $value);
     }
 
     /**
-     * __isset
-     *
      * @param  string  $name
      *
      * @return  bool
      *
      * @since  3.5.3
      */
-    public function __isset(mixed $name): bool
+    public function __isset(string $name): bool
     {
         return $this->element->hasAttribute($this->toDataKey($name));
     }
 
     /**
-     * __unset
-     *
      * @param  string  $name
      *
      * @return  void
      *
      * @since  3.5.3
      */
-    public function __unset(mixed $name)
+    public function __unset(string $name)
     {
         $this->element->removeAttribute($this->toDataKey($name));
     }
