@@ -33,7 +33,7 @@ class NS implements AttributeInterface
     public function __invoke(AttributeHandler $handler): callable
     {
         return function () use ($handler) {
-            $resolver = $handler->getResolver();
+            $resolver = $handler->resolver;
 
             /** @var Form $form */
             $form = $resolver->getOption('form');

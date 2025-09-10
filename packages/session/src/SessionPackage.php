@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Session;
 
 use Windwalker\Core\Application\ApplicationInterface;
-use Windwalker\Core\DI\RequestReleasableProviderInterface;
 use Windwalker\Core\Factory\SessionFactory;
 use Windwalker\Core\Manager\SessionManager;
 use Windwalker\Core\Package\AbstractPackage;
@@ -16,8 +15,6 @@ use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Container;
 use Windwalker\DI\DIOptions;
 use Windwalker\DI\ServiceProviderInterface;
-use Windwalker\Session\Cookie\ArrayCookies;
-use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
 use Windwalker\Utilities\Str;
 

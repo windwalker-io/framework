@@ -15,8 +15,8 @@ class Setup implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable
     {
-        $ref = $handler->getReflector();
-        $instance = $handler->getObject();
+        $ref = $handler->reflector;
+        $instance = $handler->object;
 
         if ($ref instanceof ReflectionMethod && $instance) {
             $ref->invoke($instance);

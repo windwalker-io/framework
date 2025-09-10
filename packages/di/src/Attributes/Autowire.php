@@ -17,8 +17,8 @@ class Autowire implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable
     {
-        $container = $handler->getContainer();
-        $reflector = $handler->getReflector();
+        $container = $handler->container;
+        $reflector = $handler->reflector;
 
         if ($reflector instanceof ReflectionParameter && $reflector->getType()) {
             return function &(...$args) use ($handler, $reflector, $container) {

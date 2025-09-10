@@ -11,7 +11,7 @@ class Lazy implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable
     {
-        $container = $handler->getContainer();
+        $container = $handler->container;
 
         // Property
         return static function () use ($container, $handler) {

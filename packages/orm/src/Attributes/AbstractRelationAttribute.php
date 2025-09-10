@@ -40,7 +40,7 @@ abstract class AbstractRelationAttribute implements AttributeInterface
     protected function handle(EntityMetadata $metadata, AttributeHandler $handler): callable
     {
         /** @var ReflectionProperty $prop */
-        $prop = $handler->getReflector();
+        $prop = $handler->reflector;
         $rm = $metadata->getRelationManager();
         $rel = $this->createRelation($rm, $prop);
 

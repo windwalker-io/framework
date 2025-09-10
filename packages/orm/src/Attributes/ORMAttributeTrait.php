@@ -18,7 +18,7 @@ trait ORMAttributeTrait
     public function __invoke(AttributeHandler $handler): callable
     {
         /** @var ?EntityMetadata $metadata */
-        $metadata = $handler->getOptions()['metadata'] ?? null;
+        $metadata = $handler->options['metadata'] ?? null;
 
         // Not in setup process, return.
         if (!$metadata instanceof EntityMetadata) {

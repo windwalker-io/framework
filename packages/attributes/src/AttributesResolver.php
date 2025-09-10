@@ -466,9 +466,9 @@ class AttributesResolver extends ObjectBuilder
         // Attribute ran, create new handler for next.
         return $this->createHandler(
             $result,
-            $handler->getReflector(),
-            $handler->getObject(),
-            $handler->getOptions()
+            $handler->reflector,
+            $handler->object,
+            $handler->options
         );
     }
 

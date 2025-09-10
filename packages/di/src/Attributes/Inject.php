@@ -49,20 +49,20 @@ class Inject implements ContainerAttributeInterface
         AttributeHandler $handler,
     ): callable {
         /** @var ReflectionProperty|ReflectionParameter $reflector */
-        $reflector = $handler->getReflector();
+        $reflector = $handler->reflector;
 
         return function (...$args) use ($handler, $reflector) {
             if ($reflector instanceof ReflectionParameter) {
                 return $this->handleParameter($handler);
             }
 
-            if ($handler->getObject() === null) {
+            if ($handler->object === null) {
                 throw new RuntimeException('No target object to inject.');
             }
 
-            $value = $this->resolveInjectable($handler->getContainer(), $reflector);
+            $value = $this->resolveInjectable($handler->container, $reflector);
 
-            $reflector->setValue($handler->getObject(), $value);
+            $reflector->setValue($handler->object, $value);
 
             return $value;
         };
@@ -74,7 +74,7 @@ class Inject implements ContainerAttributeInterface
      */
     protected function handleParameter(AttributeHandler $handler): mixed
     {
-        return $this->resolveInjectable($handler->getContainer(), $handler->getReflector());
+        return $this->resolveInjectable($handler->container, $handler->reflector);
     }
 
     /**

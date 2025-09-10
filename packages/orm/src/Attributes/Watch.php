@@ -49,7 +49,7 @@ class Watch implements AttributeInterface
 
     protected function handle(EntityMetadata $metadata, AttributeHandler $handler): callable
     {
-        $metadata->addAttributeMap($this, $handler->getReflector());
+        $metadata->addAttributeMap($this, $handler->reflector);
 
         return function () use ($handler, $metadata) {
             $ref = $handler->getReflector();

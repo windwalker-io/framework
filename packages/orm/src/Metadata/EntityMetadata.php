@@ -281,7 +281,7 @@ class EntityMetadata implements EventAwareInterface
     public function castByAttribute(AttributeHandler $handler, CastAttributeInterface $castAttribute): void
     {
         /** @var ReflectionProperty $prop */
-        $prop = $handler->getReflector();
+        $prop = $handler->reflector;
 
         $column = $this->getColumnByPropertyName($prop->getName());
 

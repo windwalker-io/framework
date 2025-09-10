@@ -33,7 +33,7 @@ class OptimisticLock implements AttributeInterface, OptimisticLockInterface, Cas
     protected function handle(EntityMetadata $metadata, AttributeHandler $handler): callable
     {
         /** @var \ReflectionProperty $prop */
-        $prop = $handler->getReflector();
+        $prop = $handler->reflector;
 
         $metadata->addAttributeMap($this, $prop);
 
