@@ -213,7 +213,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
     public function __clone(): void
     {
-        if (is_object($this->value)) {
+        if ($this->value instanceof ObjectBuilderDefinition) {
             $this->value = clone $this->value;
         }
     }

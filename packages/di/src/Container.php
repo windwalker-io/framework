@@ -38,7 +38,6 @@ use Windwalker\Event\EventListenableInterface;
 use Windwalker\Event\Provider\SubscribableListenerProviderInterface;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
-use Windwalker\Utilities\Str;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
