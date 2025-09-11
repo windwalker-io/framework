@@ -469,7 +469,13 @@ class FileObject extends SplFileInfo
      */
     public function readStream(string $mode = READ_ONLY_FROM_BEGIN): StreamInterface
     {
-        return $this->getStream($mode);
+        if (!$this->exists()) {
+            throw new FileNotFoundException('Try to read from a non-exists file: ' . $this->getPathname());
+        }
+
+        $fp = fopen($this->getPathname(), $mode);
+
+        return new Stream($fp, $mode);
     }
 
     /**
@@ -496,7 +502,7 @@ class FileObject extends SplFileInfo
         }
 
         return Collection::from(
-            $this->getStream(),
+            $this->readStream(),
             $format ?? $this->getExtension(),
             $options
         );
@@ -712,7 +718,9 @@ class FileObject extends SplFileInfo
             $this->touch();
         }
 
-        return new $className($this->getPathname(), $mode);
+        $fp = fopen($this->getPathname(), $mode);
+
+        return new $className($fp);
     }
 
     /**
