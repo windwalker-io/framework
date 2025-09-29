@@ -259,7 +259,7 @@ class DependencyResolver
                 $value = &$this->resolveParameterDependency($param, $args, $options);
             }
 
-            if ($value !== null || $param->allowsNull()) {
+            if ($value !== null || $this->shouldSetNull($param)) {
                 $methodArgs[$dependencyVarName] = &$value;
 
                 unset($value);
@@ -290,6 +290,15 @@ class DependencyResolver
         }
 
         return $methodArgs;
+    }
+
+    protected function shouldSetNull(ReflectionParameter $param): bool
+    {
+        if (!$param->allowsNull()) {
+            return false;
+        }
+
+        return $param->getDefaultValue() === null;
     }
 
     /**
