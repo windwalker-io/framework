@@ -816,7 +816,7 @@ abstract class Arr
         foreach ($array as $key => $item) {
             if (is_array($item)) {
                 $item = static::mapRecursive($item, $callback, $useKeys, $loopIterable);
-            } elseif ($loopIterable && is_iterable($item)) {
+            } elseif ($loopIterable && $item instanceof \Traversable) {
                 $item = static::mapRecursive(iterator_to_array($item), $callback, $useKeys, $loopIterable);
             } else {
                 $item = $callback($item, ...($useKeys ? [$key] : []));
