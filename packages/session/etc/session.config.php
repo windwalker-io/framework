@@ -25,7 +25,7 @@ use function Windwalker\DI\create;
 
 return #[ConfigModule(name: 'session', enabled: true, priority: 100, belongsTo: SessionPackage::class)]
 static fn() => [
-    'default' => env('SESSION_DEFAULT') ?: 'database',
+    'default' => env('SESSION_DEFAULT') ?: 'filesystem',
 
     'cookie_params' => [
         'expires' => '+150minutes',
