@@ -17,6 +17,8 @@ class NativeBridge implements BridgeInterface
 
     protected HandlerInterface $handler;
 
+    public protected(set) ?array $storageBackup = null;
+
     /**
      * NativeBridge constructor.
      *
@@ -153,6 +155,8 @@ class NativeBridge implements BridgeInterface
      */
     public function writeClose(bool $unset = true): bool
     {
+        $this->storageBackup = $_SESSION;
+
         $result = session_write_close();
 
         if ($unset) {
@@ -169,6 +173,8 @@ class NativeBridge implements BridgeInterface
      */
     public function destroy(): void
     {
+        $this->storageBackup = $_SESSION;
+
         if ($this->getId()) {
             session_unset();
             session_destroy();
@@ -182,6 +188,10 @@ class NativeBridge implements BridgeInterface
      */
     public function &getStorage(): mixed
     {
+        if ($this->storageBackup !== null) {
+            return $this->storageBackup;
+        }
+
         return $_SESSION;
     }
 

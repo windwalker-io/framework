@@ -117,6 +117,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             return true;
         }
 
+        if ($this->bridge instanceof NativeBridge && headers_sent()) {
+            return $this->bridge->isStarted();
+        }
+
         $this->registerINI();
 
         if (
@@ -400,8 +404,6 @@ class Session implements SessionInterface, ArrayAccessibleInterface
 
     public function &all(): array
     {
-        $this->start();
-
         return $this->getStorage();
     }
 
