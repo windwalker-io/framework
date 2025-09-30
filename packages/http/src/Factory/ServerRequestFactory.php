@@ -504,13 +504,19 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             return static::getFlattenFileData($value);
         }
 
-        return new UploadedFile(
+        $file = new UploadedFile(
             $value['tmp_name'],
             $value['size'],
             $value['error'],
             $value['name'],
             $value['type']
         );
+
+        if (!empty($value['full_path']) && is_string($value['full_path'])) {
+            $file->setFullPath($value['full_path']);
+        }
+
+        return $file;
     }
 
     /**
@@ -534,6 +540,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
                 'error' => $files['error'][$key],
                 'name' => $files['name'][$key],
                 'type' => $files['type'][$key],
+                'full_path' => $files['full_path'][$key] ?? null,
             ];
 
             $return[$key] = self::createUploadedFile($file);

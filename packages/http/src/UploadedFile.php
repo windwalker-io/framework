@@ -18,63 +18,65 @@ use const Windwalker\Stream\READ_WRITE_RESET;
  *
  * @since  2.1
  */
-class UploadedFile implements UploadedFileInterface, \JsonSerializable
+class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \JsonSerializable
 {
     /**
      * Property clientFilename.
      *
-     * @var  string
+     * @var  ?string
      */
-    protected $clientFilename;
+    protected ?string $clientFilename = null;
 
     /**
      * Property clientMediaType.
      *
-     * @var  string
+     * @var  ?string
      */
-    protected $clientMediaType;
+    protected ?string $clientMediaType = null;
 
     /**
      * Property error.
      *
      * @var  int
      */
-    protected $error;
+    protected int $error = UPLOAD_ERR_OK;
 
     /**
      * Property file.
      *
      * @var  string
      */
-    protected $file;
+    protected string $file = '';
 
     /**
      * Property moved.
      *
      * @var  bool
      */
-    protected $moved = false;
+    protected bool $moved = false;
 
     /**
      * Property size.
      *
      * @var  int
      */
-    protected $size;
+    protected int $size;
 
     /**
      * Property stream.
      *
-     * @var  StreamInterface
+     * @var  ?StreamInterface
      */
-    protected $stream;
+    protected ?StreamInterface $stream = null;
 
     /**
      * PHP_SAPI store to support test mock.
      *
      * @var  string
      */
-    protected $sapi;
+    protected string $sapi;
+
+    protected ?string $fullPath = null;
 
     /**
      * Class init.
@@ -91,7 +93,7 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
         int $size = 0,
         int $error = UPLOAD_ERR_OK,
         ?string $clientFilename = null,
-        ?string $clientMediaType = null
+        ?string $clientMediaType = null,
     ) {
         if ($error === UPLOAD_ERR_OK) {
             if (is_string($file)) {
@@ -155,11 +157,7 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
             throw new RuntimeException('The file has already moved.');
         }
 
-        if ($this->stream instanceof StreamInterface) {
-            return $this->stream;
-        }
-
-        $this->stream = new Stream($this->file);
+        $this->stream ??= new Stream($this->file);
 
         return $this->stream;
     }
@@ -340,6 +338,18 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
         return $this;
     }
 
+    public function setFullPath(?string $fullPath): static
+    {
+        $this->fullPath = $fullPath;
+
+        return $this;
+    }
+
+    public function getFullPath(): ?string
+    {
+        return $this->fullPath;
+    }
+
     public function jsonSerialize(): mixed
     {
         return [
@@ -347,7 +357,8 @@ class UploadedFile implements UploadedFileInterface, \JsonSerializable
             'type' => $this->getClientMediaType(),
             'tmp_name' => $this->file,
             'error' => $this->getError(),
-            'size' => $this->getSize()
+            'size' => $this->getSize(),
+            'full_path' => $this->getFullPath(),
         ];
     }
 }
