@@ -168,11 +168,22 @@ class Inject implements ContainerAttributeInterface
         ?\Throwable $e = null,
     ): void {
         if (!$reflector->getType()->allowsNull()) {
-            $class = $reflector->getDeclaringClass();
-            $member = $reflector->getName();
+            if ($reflector instanceof ReflectionParameter) {
+                $class = $reflector->getDeclaringClass()->getNamespaceName();
+                $func = $reflector->getDeclaringFunction()->getName();
+                $params = $reflector->getName();
+                $pos = $reflector->getPosition();
+
+                $target = "Argument #$pos - $class::$func(\$$params)";
+            } else {
+                $class = $reflector->getDeclaringClass()->getNamespaceName();
+                $member = $reflector->getName();
+
+                $target = "$class::\$$member";
+            }
 
             throw new DependencyResolutionException(
-                "Unable to inject object $id for class $class::$member" .
+                "Unable to inject object $id for $target" .
                 ($e ? ' - ' . $e->getMessage() : ''),
                 $e->getCode(),
                 $e,
