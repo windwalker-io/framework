@@ -21,7 +21,7 @@ class PgsqlDriver extends AbstractDriver
     /**
      * @var string
      */
-    public protected(set) string $platformName = 'pgsql';
+    protected string $platformName = 'pgsql';
 
     /**
      * @inheritDoc

@@ -53,6 +53,13 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
         parent::__construct();
     }
 
+    /**
+     * isSupported
+     *
+     * @return  bool
+     */
+    abstract public static function isSupported(): bool;
+
     protected function prepare(): void
     {
         //

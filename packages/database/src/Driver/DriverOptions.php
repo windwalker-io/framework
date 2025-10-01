@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver;
 
-use Windwalker\Pool\PoolOptions;
 use Windwalker\Utilities\Options\RecordOptions;
 
 class DriverOptions extends RecordOptions
@@ -25,7 +24,7 @@ class DriverOptions extends RecordOptions
         public ?string $dsn = null,
         public bool $debug = false,
         public array $driverOptions = [],
-        public PoolOptions $pool = new PoolOptions(),
+        public array $pool = [],
         public bool $strict = true,
         public ?array $modes = null,
         public array $afterConnect = [],

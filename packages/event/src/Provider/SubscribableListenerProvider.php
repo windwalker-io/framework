@@ -80,7 +80,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
                 foreach ($method->getAttributes(ListenTo::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                     /** @var ListenTo $listenTo */
                     $listenTo = $attribute->newInstance();
-                    $listener = $method->getClosure($subscriber);
+                    $listener = [$subscriber, static::normalize($method->getName())];
 
                     if ($listenTo->once) {
                         $listener = disposable($listener);
@@ -102,22 +102,34 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
                 ) {
                     $this->on(
                         $attribute->getName(),
-                        $method->getClosure($subscriber),
+                        [$subscriber, static::normalize($method->getName())],
                         $priority
                     );
                 }
             }
         } else {
-            $methods = new \ReflectionClass($subscriber)->getMethods();
+            $methods = get_class_methods($subscriber);
 
             foreach ($methods as $method) {
                 $this->on(
-                    $method->getName(),
-                    $method->getClosure($subscriber),
+                    $method,
+                    [$subscriber, static::normalize($method)],
                     $priority
                 );
             }
         }
+    }
+
+    /**
+     * normalize
+     *
+     * @param  string  $methodName
+     *
+     * @return  string
+     */
+    private static function normalize(string $methodName): string
+    {
+        return lcfirst(StrNormalize::toCamelCase($methodName));
     }
 
     /**

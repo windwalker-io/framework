@@ -72,4 +72,13 @@ class PgsqlConnection extends AbstractConnection
 
         return $r;
     }
+
+    public function ping(): bool
+    {
+        if (!$this->isConnected()) {
+            return false;
+        }
+
+        return pg_ping($this->connection);
+    }
 }

@@ -40,4 +40,9 @@ class StubConnection extends AbstractConnection
     {
         return $this->connection === 'Hello';
     }
+
+    public function ping(): bool
+    {
+        return true;
+    }
 }

@@ -165,8 +165,8 @@ class AttributesResolverTest extends TestCase
         self::assertStringSafeEquals(
             <<<EOT
 ReflectionClassConstant = FLOWER
-ReflectionMethod = hello
 ReflectionProperty = foo
+ReflectionMethod = hello
 EOT,
             implode("\n", $foo->output)
         );

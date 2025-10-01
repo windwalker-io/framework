@@ -112,10 +112,8 @@ trait RecordOptionsTrait
 
     protected function normalizeKey(int|string $key): string|int
     {
-        static $camelCaches = [];
-
         if (!property_exists($this, $key) && str_contains($key, '_')) {
-            $key = $camelCaches[$key] ??= StrNormalize::toCamelCase($key);
+            $key = StrNormalize::toCamelCase($key);
         }
 
         return $key;
