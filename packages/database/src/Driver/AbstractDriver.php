@@ -41,12 +41,12 @@ abstract class AbstractDriver implements HydratorAwareInterface
     /**
      * @var string
      */
-    public protected(set) string $platformName = '';
+    protected string $platformName = '';
 
     /**
      * @var Query|string
      */
-    public protected(set) mixed $lastQuery = null;
+    protected mixed $lastQuery = null;
 
     /**
      * @var ?ConnectionInterface
@@ -72,7 +72,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
      */
     public function __construct(array|DriverOptions $options, ?PoolInterface $pool = null)
     {
-        $this->options = DriverOptions::wrapWith($options);
+        $this->options = clone DriverOptions::wrap($options);
 
         $this->configureOptions($this->options);
 
@@ -380,34 +380,34 @@ abstract class AbstractDriver implements HydratorAwareInterface
     /**
      * Replace the table prefix.
      *
+     * @see     https://stackoverflow.com/a/31745275
+     *
      * @param  string  $sql     The SQL statement to prepare.
-     * @param  string  $search  The common table prefix.
+     * @param  string  $prefix  The common table prefix.
      *
      * @return  string  The processed SQL statement.
      */
-    public function replacePrefix(string $sql, string $search = '#__'): string
+    public function replacePrefix(string $sql, string $prefix = '#__'): string
     {
-        if (!$this->options->prefix || $search === '' || !str_contains($sql, $search)) {
+        if ($prefix === '' || !str_contains($sql, $prefix)) {
             return $sql;
         }
 
-        $placeholders = [];
+        $array = [];
 
-        $sql = preg_replace_callback(
-            '#((?<![\\\])[\'"])((?:.(?!(?<![\\\])\1))*.?)\1#i',
-            static function (array $matches) use (&$placeholders) {
-                static $i = 0;
-                $placeholder = '<#encode:' . ++$i . ':code#>';
-                $placeholders[$placeholder] = trim($matches[0]);
-                return $placeholder;
-            },
-            $sql
-        );
+        if ($number = preg_match_all('#((?<![\\\])[\'"])((?:.(?!(?<![\\\])\1))*.?)\1#i', $sql, $matches)) {
+            for ($i = 0; $i < $number; $i++) {
+                if (!empty($matches[0][$i])) {
+                    $array[$i] = trim($matches[0][$i]);
+                    $sql = str_replace($matches[0][$i], '<#encode:' . $i . ':code#>', $sql);
+                }
+            }
+        }
 
-        $sql = str_replace($search, $this->options->prefix, $sql);
+        $sql = str_replace($prefix, $this->getOption('prefix'), $sql);
 
-        if ($placeholders) {
-            $sql = strtr($sql, $placeholders);
+        foreach ($array as $key => $js) {
+            $sql = str_replace('<#encode:' . $key . ':code#>', $js, $sql);
         }
 
         return $sql;
@@ -454,9 +454,6 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return new $class($this->getOptions());
     }
 
-    /**
-     * @return  class-string<ConnectionInterface>
-     */
     #[Pure]
     protected function getConnectionClass(): string
     {
@@ -508,8 +505,8 @@ abstract class AbstractDriver implements HydratorAwareInterface
     {
         $options = $this->getOptions();
 
-        $pool = new DatabaseFactory()
-            ->createConnectionPool($options->pool);
+        $pool = (new DatabaseFactory())
+            ->createConnectionPool($options['pool'] ?? []);
 
         $this->preparePoolConnectionBuilder($pool);
 
@@ -543,7 +540,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
     public function isDebug(): bool
     {
-        return $this->options->debug;
+        return (bool) $this->getOption('debug');
     }
 
     /**
@@ -569,7 +566,6 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return $this->options;
     }
 
-    #[\Deprecated('Use options prop directly.', '5.0')]
     public function getOption(string $name): mixed
     {
         $name = StrNormalize::toCamelCase($name);
@@ -577,7 +573,6 @@ abstract class AbstractDriver implements HydratorAwareInterface
         return $this->options->$name ?? null;
     }
 
-    #[\Deprecated('Use options prop directly.', '5.0')]
     public function setOption(string $name, mixed $value): mixed
     {
         $name = StrNormalize::toCamelCase($name);

@@ -40,7 +40,6 @@ use Windwalker\Reactor\Swoole\Event\WorkerStartEvent;
 use Windwalker\Reactor\Swoole\Event\WorkerStopEvent;
 use Windwalker\Reactor\WebSocket\MessageEmitterInterface;
 use Windwalker\Reactor\WebSocket\WebSocketServerInterface;
-use Windwalker\Utilities\Cache\RuntimeCacheTrait;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
@@ -111,7 +110,6 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
 {
     use EventAwareTrait;
     use HttpServerTrait;
-    use RuntimeCacheTrait;
 
     protected ?string $host = null;
 
@@ -195,7 +193,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
 
         foreach ($args as $name => $value) {
             if (str_contains($name, '_')) {
-                $name = static::$cacheStorage['camel.of:' . $name] ??= StrNormalize::toCamelCase($name);
+                $name = StrNormalize::toCamelCase($name);
             }
 
             $newArgs[$name] = $value;

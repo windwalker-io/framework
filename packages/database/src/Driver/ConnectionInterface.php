@@ -22,6 +22,4 @@ interface ConnectionInterface extends PoolConnectionInterface
      * @return string
      */
     public static function getName(): string;
-
-    public static function isSupported(): bool;
 }

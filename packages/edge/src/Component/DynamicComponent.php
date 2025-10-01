@@ -98,7 +98,9 @@ EOF;
             implode(
                 '\',\'',
                 collect($bindings)->map(
-                    fn($dataKey) => ComponentTagCompiler::toCamelCase($dataKey)
+                    function ($dataKey) {
+                        return StrNormalize::toCamelCase($dataKey);
+                    }
                 )
                     ->dump()
             ) . '\'])';
@@ -116,8 +118,7 @@ EOF;
         return (string) collect($bindings)
             ->map(
                 function ($key) {
-                    return ':' . $key . '="$'
-                        . ComponentTagCompiler::toCamelCase(str_replace([':', '.'], ' ', $key)) . '"';
+                    return ':' . $key . '="$' . StrNormalize::toCamelCase(str_replace([':', '.'], ' ', $key)) . '"';
                 }
             )
             ->implode(' ');
