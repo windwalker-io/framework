@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Asika\SimpleConsole\Console;
+use Composer\Semver\Comparator;
 use Windwalker\Data\Collection;
+use Windwalker\Filesystem\Filesystem;
 
 include __DIR__ . '/../vendor/autoload.php';
 include_once __DIR__ . '/Console.php';
@@ -10,7 +13,7 @@ include_once __DIR__ . '/Console.php';
 define('PROJECT_ROOT', realpath(dirname(__DIR__)));
 define('PACKAGES_PATH', PROJECT_ROOT . '/packages');
 
-class MergeComposer extends \Asika\SimpleConsole\Console
+class MergeComposer extends Console
 {
     /**
      * doExecute
@@ -19,7 +22,7 @@ class MergeComposer extends \Asika\SimpleConsole\Console
      */
     protected function doExecute(): int
     {
-        $packages = \Windwalker\Filesystem\Filesystem::folders(PACKAGES_PATH);
+        $packages = Filesystem::folders(PACKAGES_PATH);
 
         $rootJsonFile = PROJECT_ROOT . '/composer.json';
         $rootJson = Collection::from($rootJsonFile);
@@ -48,17 +51,17 @@ class MergeComposer extends \Asika\SimpleConsole\Console
             $this->mergeReplace($rootJson, $json);
         }
 
-        \Windwalker\Filesystem\Filesystem::write(
+        Filesystem::write(
             $rootJsonFile,
             $rootJson->toJson(['options' => JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES])
         );
 
-        $this->out('Sync to composer.json');
+        $this->writeln('Sync to composer.json');
 
         return 1;
     }
 
-    protected function mergeRequires(Collection $rootJson, Collection $json, string $path)
+    protected function mergeRequires(Collection $rootJson, Collection $json, string $path): void
     {
         $rootRequires = $rootJson->proxy($path);
 
@@ -79,10 +82,10 @@ class MergeComposer extends \Asika\SimpleConsole\Console
             $version = explode('|', (string) $pkgVersion);
             $version = $version[array_key_last($version)];
 
-            if (\Composer\Semver\Comparator::greaterThan($version, $rootVersion)) {
+            if (Comparator::greaterThan($version, $rootVersion)) {
                 $rootRequires[$package] = $pkgVersion;
-            } elseif (\Composer\Semver\Comparator::lessThan($version, $rootVersion) && str_starts_with($path, 'require')) {
-                $this->out(
+            } elseif (Comparator::lessThan($version, $rootVersion) && str_starts_with($path, 'require')) {
+                $this->writeln(
                     sprintf(
                         '[Warning] %s: %s in %s less than root %s.',
                         $package,
@@ -95,7 +98,7 @@ class MergeComposer extends \Asika\SimpleConsole\Console
         }
     }
 
-    protected function mergeAutoload(Collection $rootJson, Collection $json, string $path, string $dir)
+    protected function mergeAutoload(Collection $rootJson, Collection $json, string $path, string $dir): void
     {
         $target = $rootJson->proxy($path);
 
@@ -114,7 +117,7 @@ class MergeComposer extends \Asika\SimpleConsole\Console
         }
     }
 
-    protected function mergeReplace(Collection $rootJson, Collection $json)
+    protected function mergeReplace(Collection $rootJson, Collection $json): void
     {
         $target = $rootJson->proxy('replace');
         $target[$json->get('name')] = 'self.version';
@@ -122,4 +125,4 @@ class MergeComposer extends \Asika\SimpleConsole\Console
     }
 }
 
-(new MergeComposer())->execute();
+new MergeComposer()->execute($argv);
