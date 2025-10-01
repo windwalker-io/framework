@@ -20,8 +20,7 @@
         "asika/object-metadata": "^1.0",
         "windwalker/attributes": "^4.0",
         "windwalker/database": "^4.0",
-        "windwalker/utilities": "^4.0",
-        "symfony/polyfill-php83": "^1.27"
+        "windwalker/utilities": "^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0||^11.0||^12.0",
