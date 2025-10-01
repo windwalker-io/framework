@@ -127,7 +127,7 @@ abstract class AbstractConnection implements ConnectionInterface
                 sprintf(
                     'Connection ID: %s in pool: %s was not released but destruct.',
                     $this->getId(),
-                    $this->pool?->get()::class
+                    get_debug_type($this->pool?->get())
                 ),
                 E_USER_WARNING
             );

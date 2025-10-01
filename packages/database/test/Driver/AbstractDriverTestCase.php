@@ -206,6 +206,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         $this->expectException(DatabaseQueryException::class);
         $this->expectExceptionMessageMatches(sprintf('/(%s)/', preg_quote($sql)));
 
+        static::$driver->getOptions()->debug = true;
+
         static::$driver->prepare($sql)->get();
     }
 

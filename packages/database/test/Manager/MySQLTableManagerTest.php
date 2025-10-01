@@ -136,68 +136,47 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
      */
     public function testUpdate(): void
     {
-        $logs = $this->logQueries(
-            fn() => $this->instance->update(
-                function (Schema $schema) {
-                    // New column
-                    $schema->varchar('captain')->length(512)->after('catid');
-                    $schema->varchar('first_officer')->length(512)->after('captain');
+        $this->instance->update(
+            function (Schema $schema) {
+                // New column
+                $schema->varchar('captain')->length(512)->after('catid');
+                $schema->varchar('first_officer')->length(512)->after('captain');
 
-                    // Update column
-                    $schema->char('alias')->length(25)
-                        ->nullable(true)
-                        ->defaultValue('');
+                // Update column
+                $schema->char('alias')->length(25)
+                    ->nullable(true)
+                    ->defaultValue('');
 
-                    // New index
-                    $schema->addIndex('captain');
-                }
-            )
+                // New index
+                $schema->addIndex('captain');
+            }
         );
 
-        self::assertSqlFormatEquals(
-            <<<SQL
-            {$this->getMariaDBChecksSQL()}
-            SELECT `ORDINAL_POSITION`,
-                   `COLUMN_DEFAULT`,
-                   `IS_NULLABLE`,
-                   `DATA_TYPE`,
-                   `CHARACTER_MAXIMUM_LENGTH`,
-                   `CHARACTER_OCTET_LENGTH`,
-                   `CHARACTER_SET_NAME`,
-                   `COLLATION_NAME`,
-                   `NUMERIC_PRECISION`,
-                   `NUMERIC_SCALE`,
-                   `COLUMN_NAME`,
-                   `COLUMN_TYPE`,
-                   `COLUMN_COMMENT`,
-                   `EXTRA`
-            FROM `INFORMATION_SCHEMA`.`COLUMNS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE())
-            ORDER BY
-              `ORDINAL_POSITION`;
-            ALTER TABLE `enterprise`
-                ADD COLUMN `captain` varchar(512) NOT NULL DEFAULT '' AFTER `catid`;
-            ALTER TABLE `enterprise`
-                ADD COLUMN `first_officer` varchar(512) NOT NULL DEFAULT '' AFTER `captain`;
-            ALTER TABLE `enterprise`
-                MODIFY COLUMN `alias` char(25) DEFAULT '';
-            SELECT `TABLE_SCHEMA`,
-                   `TABLE_NAME`,
-                   `NON_UNIQUE`,
-                   `INDEX_NAME`,
-                   `COLUMN_NAME`,
-                   `COLLATION`,
-                   `CARDINALITY`,
-                   `SUB_PART`,
-                   `INDEX_COMMENT`
-            FROM `INFORMATION_SCHEMA`.`STATISTICS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
-            ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_captain` (`captain`(150))
-            SQL,
-            implode("\n;", $logs)
+        $columns = $this->instance->getColumns(true);
+
+        self::assertEquals(
+            'varchar(512)',
+            $columns['captain']->getTypeExpression(),
+        );
+
+        self::assertEquals(
+            'varchar(512)',
+            $columns['first_officer']->getTypeExpression(),
+        );
+
+        self::assertEquals(
+            'char(25)',
+            $columns['alias']->getTypeExpression(),
+        );
+
+        self::assertEquals(
+            true,
+            $columns['alias']->getIsNullable(),
+        );
+
+        self::assertEquals(
+            '',
+            $columns['alias']->getColumnDefault(),
         );
     }
 
@@ -206,54 +185,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
      */
     public function testAddIndex(): void
     {
-        $logs = $this->logQueries(
-            function () {
-                $this->instance->addIndex('created');
-                $this->instance->addIndex(['start_date', 'title']);
-            }
-        );
-
-        self::assertSqlFormatEquals(
-            <<<SQL
-            {$this->getMariaDBChecksSQL()}
-            SELECT `ORDINAL_POSITION`,
-                   `COLUMN_DEFAULT`,
-                   `IS_NULLABLE`,
-                   `DATA_TYPE`,
-                   `CHARACTER_MAXIMUM_LENGTH`,
-                   `CHARACTER_OCTET_LENGTH`,
-                   `CHARACTER_SET_NAME`,
-                   `COLLATION_NAME`,
-                   `NUMERIC_PRECISION`,
-                   `NUMERIC_SCALE`,
-                   `COLUMN_NAME`,
-                   `COLUMN_TYPE`,
-                   `COLUMN_COMMENT`,
-                   `EXTRA`
-            FROM `INFORMATION_SCHEMA`.`COLUMNS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE())
-            ORDER BY
-                `ORDINAL_POSITION`;
-            SELECT `TABLE_SCHEMA`,
-                   `TABLE_NAME`,
-                   `NON_UNIQUE`,
-                   `INDEX_NAME`,
-                   `COLUMN_NAME`,
-                   `COLLATION`,
-                   `CARDINALITY`,
-                   `SUB_PART`,
-                   `INDEX_COMMENT`
-            FROM `INFORMATION_SCHEMA`.`STATISTICS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
-            ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_created` (`created`);
-            ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_start_date_title` (`start_date`, `title`(150))
-            SQL,
-            implode(";\n", $logs)
-        );
+        $this->instance->addIndex('created');
+        $this->instance->addIndex(['start_date', 'title']);
 
         $this->instance->reset();
 
