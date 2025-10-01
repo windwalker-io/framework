@@ -122,7 +122,7 @@ abstract class AbstractConnection implements ConnectionInterface
 
     public function __destruct()
     {
-        if ($this->state && $this->pool && $this->leakProtect) {
+        if ($this->state === ConnectionState::ACTIVE && $this->pool && $this->leakProtect) {
             trigger_error(
                 sprintf(
                     'Connection ID: %s in pool: %s was not released but destruct.',

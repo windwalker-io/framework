@@ -570,6 +570,8 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $this->builders = [];
         $this->aliases = [];
         $this->parameters->reset();
+
+        $this->share(static::class, $this);
     }
 
     public function clearCache(?string $id = null, \UnitEnum|string|null $tag = null): void

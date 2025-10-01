@@ -15,6 +15,17 @@ class Serial
 
     protected static ?WeakMap $map = null;
 
+    public static function current(string|object $name)
+    {
+        if (is_string($name)) {
+            return static::$sequences[$name] ?? 0;
+        }
+
+        $map = static::getMap();
+
+        return $map[$name] ?? 0;
+    }
+
     public static function get(string|object $name): int
     {
         if (is_string($name)) {

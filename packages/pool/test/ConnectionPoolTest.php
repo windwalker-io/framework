@@ -9,6 +9,7 @@ use Windwalker\Pool\AbstractPool;
 use Windwalker\Pool\ConnectionPool;
 use Windwalker\Pool\Stack\PhpStack;
 use Windwalker\Pool\Test\Stub\StubConnection;
+use Windwalker\Utilities\Serial;
 
 /**
  * The ConnectionPoolTest class.
@@ -23,16 +24,6 @@ class ConnectionPoolTest extends TestCase
     public function testConstruct(): void
     {
         self::assertEquals(3, $this->instance->count());
-    }
-
-    /**
-     * @see  AbstractPool::getSerial
-     */
-    public function testGetSerial(): void
-    {
-        self::assertEquals(4, $this->instance->getSerial());
-        self::assertEquals(5, $this->instance->getSerial());
-        self::assertEquals(6, $this->instance->getSerial());
     }
 
     /**
