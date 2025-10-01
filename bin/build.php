@@ -16,7 +16,7 @@ class Build extends Console
 
     protected string $branch;
 
-    protected string $tag;
+    protected ?string $tag = null;
 
     /**
      * Property subtrees.
