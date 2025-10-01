@@ -8,6 +8,8 @@ env:
 jobs:
     phpcs:
         runs-on: ubuntu-latest
+        # Remove after PHPCS supports PHP 8.4
+        continue-on-error: true
         steps:
             - name: Checkout
               uses: actions/checkout@v2
