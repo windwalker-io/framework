@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Event;
 
 use Attribute;
+use Windwalker\ORM\ORMOptions;
 
 /**
  * The AfterCopyEvent class.
@@ -19,7 +20,7 @@ class AfterCopyEvent extends AbstractSaveEvent
         array $data = [],
         ?array $oldData = null,
         public array $fullData = [],
-        int $options = 0,
+        ORMOptions $options = new ORMOptions(),
         array $extra = [],
     ) {
         parent::__construct(
