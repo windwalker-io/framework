@@ -178,7 +178,13 @@ trait EntityTrait
         $getter = $this->getGetter($name);
 
         if ($getter) {
-            $v = &$this->$getter();
+            $ref = new \ReflectionMethod($this, $getter);
+
+            if ($ref->returnsReference()) {
+                $v = &$this->$getter();
+            } else {
+                $v = $this->$getter();
+            }
 
             return $v;
         }
