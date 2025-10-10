@@ -78,7 +78,16 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
             DatabaseAdapter::class,
             fn(DatabaseServiceFactory $factory, ?string $tag = null) => $factory->get($tag),
             new DIOptions(isolation: true)
-        );
+        )
+            ->extend(
+                function (DatabaseAdapter $db, Container $container, ?string $tag = null) {
+                    // Instant get ORM to init some extends and listeners.
+                    $container->get(ORM::class, tag: $tag);
+
+                    return $db;
+                }
+            );
+
         $container->bindShared(
             ORM::class,
             fn(Container $container, ?string $tag = null)
