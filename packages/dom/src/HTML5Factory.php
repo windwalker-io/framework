@@ -156,21 +156,16 @@ class HTML5Factory
         );
     }
 
-    public static function parse(
-        string $text,
-        int $options = 0,
-        ?string $overrideEncoding = null,
-    ): ?Node {
-        if ($options & static::TEXT_SPAN) {
-            $text = "<span>$text</span>";
-        } else {
-            $text = "<html>$text</html>";
-        }
+    public static function parse(string $text): DocumentFragment
+    {
+        $doc = static::document();
+        $root = $doc->createElement('root');
+        $root->innerHTML = $text;
 
-        /** @var HTMLDocument $doc */
-        $doc = static::createFromString($text, overrideEncoding: $overrideEncoding);
+        $fragment = $doc->createDocumentFragment();
+        $fragment->append(...$root->childNodes);
 
-        return $doc->documentElement->firstChild;
+        return $fragment;
     }
 
     public static function reset(): void
