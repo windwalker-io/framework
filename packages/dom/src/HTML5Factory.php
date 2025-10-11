@@ -156,7 +156,30 @@ class HTML5Factory
         );
     }
 
-    public static function parse(string $text): DocumentFragment
+    /**
+     * Parse HTML string to HTMLElement, only return first element.
+     *
+     * @param  string  $text
+     *
+     * @return  HTMLElement
+     */
+    public static function parse(string $text): HTMLElement
+    {
+        $doc = static::document();
+        $root = $doc->createElement('root');
+        $root->innerHTML = $text;
+
+        return $root->firstElementChild;
+    }
+
+    /**
+     * Parse HTML string to DocumentFragment, supports multiple roo nodes.
+     *
+     * @param  string  $text
+     *
+     * @return  DocumentFragment
+     */
+    public static function parseAsFragment(string $text): DocumentFragment
     {
         $doc = static::document();
         $root = $doc->createElement('root');
