@@ -156,21 +156,39 @@ class HTML5Factory
         );
     }
 
-    public static function parse(
-        string $text,
-        int $options = 0,
-        ?string $overrideEncoding = null,
-    ): ?Node {
-        if ($options & static::TEXT_SPAN) {
-            $text = "<span>$text</span>";
-        } else {
-            $text = "<html>$text</html>";
-        }
+    /**
+     * Parse HTML string to HTMLElement, only return first element.
+     *
+     * @param  string  $text
+     *
+     * @return  HTMLElement
+     */
+    public static function parse(string $text): HTMLElement
+    {
+        $doc = static::document();
+        $root = $doc->createElement('root');
+        $root->innerHTML = $text;
 
-        /** @var HTMLDocument $doc */
-        $doc = static::createFromString($text, overrideEncoding: $overrideEncoding);
+        return $root->firstElementChild;
+    }
 
-        return $doc->documentElement->firstChild;
+    /**
+     * Parse HTML string to DocumentFragment, supports multiple roo nodes.
+     *
+     * @param  string  $text
+     *
+     * @return  DocumentFragment
+     */
+    public static function parseAsFragment(string $text): DocumentFragment
+    {
+        $doc = static::document();
+        $root = $doc->createElement('root');
+        $root->innerHTML = $text;
+
+        $fragment = $doc->createDocumentFragment();
+        $fragment->append(...$root->childNodes);
+
+        return $fragment;
     }
 
     public static function reset(): void
