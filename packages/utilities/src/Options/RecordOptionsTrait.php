@@ -70,11 +70,11 @@ trait RecordOptionsTrait
 
             if (
                 $recursive
-                && is_object($this->$key)
+                && is_object($this->$key ?? null)
                 && TraitHelper::uses($this->$key, RecordOptionsTrait::class)
             ) {
                 $this->$key->merge($value, true, $ignoreNulls);
-            } elseif ($recursive && is_array($this->$key) && is_array($value)) {
+            } elseif ($recursive && is_array($this->$key ?? null) && is_array($value)) {
                 $this->$key = Arr::mergeRecursive($this->$key, $value);
             } elseif ($ignoreNulls && $value === null) {
                 continue;

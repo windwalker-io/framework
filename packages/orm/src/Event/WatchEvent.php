@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Event;
 
+use Windwalker\ORM\ORMOptions;
+
 /**
  * The WatchEvent class.
  */
@@ -19,7 +21,7 @@ class WatchEvent extends AbstractSaveEvent
         public ?\Closure $afterCallback = null,
         public bool $isUpdateWhere = false,
         ?array $oldData = null,
-        int $options = 0,
+        ORMOptions $options = new ORMOptions(),
         array $extra = [],
     ) {
         parent::__construct(

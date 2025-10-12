@@ -15,6 +15,7 @@ use Windwalker\DOM\HTMLFactory;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Enum\EnumMetaInterface;
+use Windwalker\Utilities\Enum\EnumRichInterface;
 use Windwalker\Utilities\Enum\EnumTranslatableInterface;
 
 /**
@@ -148,8 +149,8 @@ trait ListOptionsTrait
                 continue;
             }
 
-            if ($enum instanceof EnumTranslatableInterface) {
-                $options[$enum->getValue()] = $enum->getTitle($lang) ?: $enum->getKey();
+            if ($enum instanceof \UnitEnum && $enum instanceof EnumTranslatableInterface) {
+                $options[$enum->value] = $enum->getTitle($lang) ?: $enum->name;
             } elseif ($enum instanceof Enum) {
                 $options[$enum->getValue()] = $enum->getKey();
             } elseif ($enum instanceof \UnitEnum) {
