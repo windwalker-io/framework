@@ -489,9 +489,7 @@ namespace Windwalker {
             object $object,
             ?int $filter = null
         ): array {
-            $filter ??= \ReflectionProperty::IS_PUBLIC
-                | \ReflectionProperty::IS_PROTECTED
-                | \ReflectionProperty::IS_PRIVATE;
+            $filter ??= \ReflectionProperty::IS_PUBLIC;
 
             $values = [];
 
