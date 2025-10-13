@@ -337,7 +337,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         $isHit ??= $item->isHit();
 
         if ($isHit) {
-            return $this->serializer->unserialize($item->get());
+            return $item->get();
         }
 
         $item->set($data = $handler());
