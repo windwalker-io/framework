@@ -11,7 +11,7 @@ use Windwalker\Utilities\StrNormalize;
  *
  * @since  3.5.3
  */
-class DOMStringMap
+class DOMStringMap implements \JsonSerializable
 {
     public function __construct(protected DOMElement|HTMLElement $element)
     {
@@ -39,7 +39,7 @@ class DOMStringMap
     protected function getDataAttrs(): array
     {
         $attrs = array_filter(
-            $this->element->getAttributes(),
+            $this->element->getAttributes(true),
             static fn($v, $k) => str_starts_with($k, 'data-'),
             ARRAY_FILTER_USE_BOTH
         );
@@ -49,7 +49,7 @@ class DOMStringMap
         foreach ($attrs as $key => $value) {
             $key = substr($key, 5);
 
-            $dataAttrs[$key] = $value;
+            $dataAttrs[StrNormalize::toCamelCase($key)] = $value;
         }
 
         return $dataAttrs;
@@ -116,5 +116,18 @@ class DOMStringMap
     private function toDataKey(string $name): string
     {
         return 'data-' . StrNormalize::toDashSeparated($name);
+    }
+
+    public function toArray(): array
+    {
+        return $this->getDataAttrs();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize(): mixed
+    {
+        return $this->toArray() ?: new \stdClass();
     }
 }
