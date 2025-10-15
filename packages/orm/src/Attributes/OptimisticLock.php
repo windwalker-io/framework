@@ -10,6 +10,7 @@ use Windwalker\ORM\Cast\CasterInfo;
 use Windwalker\ORM\Metadata\EntityMember;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
+use Windwalker\Query\Query;
 
 use function Windwalker\uid;
 
@@ -70,7 +71,7 @@ class OptimisticLock implements AttributeInterface, OptimisticLockInterface, Cas
         $typeName = $type?->getName();
 
         if (is_a($typeName, \DateTimeInterface::class, true)) {
-            return new \DateTimeImmutable();
+            return new \DateTimeImmutable('now');
         }
 
         return match ($typeName) {
@@ -79,5 +80,12 @@ class OptimisticLock implements AttributeInterface, OptimisticLockInterface, Cas
             'string' => uid(),
             default => throw new \RuntimeException('Unsupported optimistic lock type: ' . ($typeName ?? 'mixed')),
         };
+    }
+
+    public function buildConditions(Query $query, array $fullData): void
+    {
+        if (!empty($fullData[$this->member->columnName])) {
+            $query->where($this->member->columnName, $fullData[$this->member->columnName]);
+        }
     }
 }

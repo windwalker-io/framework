@@ -569,7 +569,7 @@ class EntityMapper implements EventAwareInterface
 
         if ($options->optimisticLock && $lock = $metadata->getOptimisticLock()) {
             $lockCallback = function (Query $query) use ($fullData, $lock) {
-                $query->where($lock->member->columnName, $fullData[$lock->member->columnName] ?? '');
+                $lock->buildConditions($query, $fullData);
             };
         }
 
