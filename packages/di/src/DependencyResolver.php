@@ -298,7 +298,12 @@ class DependencyResolver
             return false;
         }
 
-        return $param->getDefaultValue() === null;
+        // If allow NULL but has default value, only set NULL when default is NULL.
+        if ($param->isDefaultValueAvailable()) {
+            return $param->getDefaultValue() === null;
+        }
+
+        return true;
     }
 
     /**
