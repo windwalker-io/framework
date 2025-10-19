@@ -57,7 +57,10 @@ class DependencyResolver
             return $this->container->resolve($class);
         }
 
-        $options = $this->mergeOptionsDefaults($options);
+        if (!$options->containerMerged) {
+            $options = $this->mergeOptionsDefaults($options);
+            $options->containerMerged = true;
+        }
 
         if (is_string($class)) {
             /** @var DIOptions $options */
@@ -144,7 +147,10 @@ class DependencyResolver
         array $args = [],
         DIOptions|int $options = new DIOptions()
     ): object {
-        $options = $this->mergeOptionsDefaults($options);
+        if (!$options->containerMerged) {
+            $options = $this->mergeOptionsDefaults($options);
+            $options->containerMerged = true;
+        }
 
         $reflection = new ReflectionClass($class);
 
@@ -202,7 +208,10 @@ class DependencyResolver
         array $args = [],
         DIOptions|int $options = new DIOptions()
     ): array {
-        $options = $this->mergeOptionsDefaults($options);
+        if (!$options->containerMerged) {
+            $options = $this->mergeOptionsDefaults($options);
+            $options->containerMerged = true;
+        }
 
         $methodArgs = [];
 
@@ -317,7 +326,10 @@ class DependencyResolver
         array $args = [],
         DIOptions|int $options = new DIOptions()
     ): mixed {
-        $options = $this->mergeOptionsDefaults($options);
+        if (!$options->containerMerged) {
+            $options = $this->mergeOptionsDefaults($options);
+            $options->containerMerged = true;
+        }
 
         $autowire = $options->autowire;
         $nope = null;
@@ -479,7 +491,10 @@ class DependencyResolver
         ReflectionParameter $param,
         DIOptions|int $options = new DIOptions()
     ): mixed {
-        $options = $this->mergeOptionsDefaults($options);
+        if (!$options->containerMerged) {
+            $options = $this->mergeOptionsDefaults($options);
+            $options->containerMerged = true;
+        }
 
         if (!$options->ignoreAttributes && $param->getAttributes()) {
             $value = &$this->container->getAttributesResolver()
@@ -513,7 +528,10 @@ class DependencyResolver
     ): mixed {
         $ref = new ReflectionCallable($callable);
 
-        $options = $this->mergeOptionsDefaults($options);
+        if (!$options->containerMerged) {
+            $options = $this->mergeOptionsDefaults($options);
+            $options->containerMerged = true;
+        }
 
         $closure = function (array $args, DIOptions $options) use ($context, $callable, $ref) {
             $args = $this->getMethodArgs($ref->getReflector(), $args, $options);
@@ -546,7 +564,7 @@ class DependencyResolver
 
     public function mergeOptionsDefaults(int|DIOptions $options): DIOptions
     {
-        return DIOptions::wrap($options)->withDefaults($this->container->getOptions());
+        return DIOptions::wrap($options)->withDefaults($this->container->options);
     }
 
     public function canLazy(

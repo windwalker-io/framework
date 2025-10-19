@@ -503,13 +503,11 @@ namespace Windwalker {
                     continue;
                 }
 
-                if (!str_starts_with($name, "\0")) {
-                    if (!($filter & \ReflectionProperty::IS_VIRTUAL) && $prop->isVirtual()) {
-                        continue;
-                    }
-
-                    $values[$name] = $prop;
+                if (!($filter & \ReflectionProperty::IS_VIRTUAL) && $prop->isVirtual()) {
+                    continue;
                 }
+
+                $values[$name] = $prop;
             }
 
             return $values;

@@ -22,6 +22,8 @@ use Windwalker\Renderer\RendererInterface;
  */
 class RendererProvider implements ServiceProviderInterface, RequestBootableProviderInterface
 {
+    protected static DIOptions $options;
+
     /**
      * @inheritDoc
      */
@@ -54,6 +56,8 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
      */
     public function register(Container $container): void
     {
+        $options = static::$options ??= new DIOptions(isolation: true);
+
         $container->prepareObject(
             CompositeRenderer::class,
             function (CompositeRenderer $renderer) use ($container) {
@@ -63,11 +67,11 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
 
                 return $renderer;
             },
-            new DIOptions(isolation: true)
+            $options
         )
             ->alias(RendererInterface::class, CompositeRenderer::class);
 
-        $container->prepareSharedObject(LayoutPathResolver::class, null, new DIOptions(isolation: true));
+        $container->prepareSharedObject(LayoutPathResolver::class, null, $options);
 
         $container->share(
             RendererService::class,
@@ -79,10 +83,10 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
                     ]
                 );
             },
-            new DIOptions(isolation: true)
+            $options
         );
 
-        $container->prepareSharedObject(HtmlFrame::class, null, new DIOptions(isolation: true));
+        $container->prepareSharedObject(HtmlFrame::class, null, $options);
 
         $this->registerPagination($container);
     }
@@ -98,6 +102,8 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
      */
     protected function registerPagination(Container $container): void
     {
+        $options = static::$options ??= new DIOptions(isolation: true);
+
         $container->prepareSharedObject(
             PaginationFactory::class,
             function (PaginationFactory $paginationFactory, Container $container) {
@@ -110,7 +116,7 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
 
                 return $paginationFactory;
             },
-            new DIOptions(isolation: true)
+            $options
         );
     }
 }
