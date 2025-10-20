@@ -39,13 +39,15 @@ class StoreDefinition implements StoreDefinitionInterface
         if (!$this->value instanceof DefinitionInterface && !$this->value instanceof Closure) {
             $this->setCache($this->value, $this->tag);
         }
+    }
 
-        if (
-            class_exists($id)
-            && has_attributes(new \ReflectionClass($id), Isolation::class, true)
-        ) {
-            $this->options = $this->options->with(isolation: true);
-        }
+    public function isIsolation(): bool
+    {
+        return $this->options->isolation
+            ?? (
+                class_exists($this->id)
+                && has_attributes(new \ReflectionClass($this->id), Isolation::class, true)
+            );
     }
 
     /**
@@ -275,6 +277,16 @@ class StoreDefinition implements StoreDefinitionInterface
 
     protected function buildCacheKey(\UnitEnum|string|null $tag = null): string
     {
-        return unwrap_enum($tag ?? $this->tag ?? '__default__');
+        $tag = $tag ?? $this->tag;
+
+        if ($tag instanceof \BackedEnum) {
+            return $tag->value;
+        }
+
+        if ($tag instanceof \UnitEnum) {
+            return $tag->name;
+        }
+
+        return $tag ?? '__default__';
     }
 }

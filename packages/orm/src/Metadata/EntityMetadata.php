@@ -387,7 +387,7 @@ class EntityMetadata implements EventAwareInterface
      */
     public function getColumns(): array
     {
-        return \Windwalker\collect($this->propertyMembers)
+        return $this->cacheStorage['columns'] ??= \Windwalker\collect($this->propertyMembers)
             ->filter(fn(EntityMember $member) => $member->column !== null)
             ->mapWithKeys(fn(EntityMember $member) => yield $member->columnName => $member->column)
             ->dump();

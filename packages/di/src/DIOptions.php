@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\DI;
 
 use Windwalker\Utilities\Options\RecordOptionsTrait;
+use Windwalker\Utilities\TypeCast;
 
 class DIOptions
 {
@@ -42,11 +43,17 @@ class DIOptions
          * The service provided in these levels.
          */
         public int|array|null|\Closure $providedIn = null,
+
+        public bool $containerMerged = false,
     ) {
     }
 
     public static function wrap(mixed $values): static
     {
+        if ($values instanceof static) {
+            return clone $values;
+        }
+
         if (is_int($values)) {
             return new static(
                 shared: ($values & Container::SHARED) ? true : null,
@@ -58,5 +65,27 @@ class DIOptions
         }
 
         return static::parentWrap($values);
+    }
+
+    public function merge(array|object $values, bool $recursive = false, bool $ignoreNulls = false): static
+    {
+        if (is_object($values)) {
+            $values = get_object_vars($values);
+        }
+
+        foreach ($values as $key => $value) {
+            if ($ignoreNulls && $value === null) {
+                continue;
+            }
+
+            $this->$key = $value;
+        }
+
+        return $this;
+    }
+
+    protected function normalizeKey(int|string $key): string|int
+    {
+        return $key;
     }
 }

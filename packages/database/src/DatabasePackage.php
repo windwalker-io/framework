@@ -71,13 +71,15 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
      */
     public function register(Container $container): void
     {
+        $options = new DIOptions(isolation: true);
+
         $container->prepareSharedObject(DatabaseManager::class);
         $container->prepareSharedObject(DatabaseServiceFactory::class);
         $container->prepareSharedObject(DatabaseFactory::class);
         $container->bindShared(
             DatabaseAdapter::class,
             fn(DatabaseServiceFactory $factory, ?string $tag = null) => $factory->get($tag),
-            new DIOptions(isolation: true)
+            $options
         )
             ->extend(
                 function (DatabaseAdapter $db, Container $container, ?string $tag = null) {
@@ -92,7 +94,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
             ORM::class,
             fn(Container $container, ?string $tag = null)
                 => $container->get(DatabaseAdapter::class, tag: $tag)->orm(),
-            new DIOptions(isolation: true)
+            $options
         );
 
         // Faker

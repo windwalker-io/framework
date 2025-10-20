@@ -21,6 +21,8 @@ interface StoreDefinitionInterface extends DefinitionInterface
 
     public function isProtected(): bool;
 
+    public function isIsolation(): bool;
+
     public function extend(Closure $closure): static;
 
     public function alias(string $alias, string $id): static;

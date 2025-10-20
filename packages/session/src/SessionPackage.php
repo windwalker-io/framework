@@ -59,8 +59,10 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
      */
     public function register(Container $container): void
     {
-        $container->prepareSharedObject(SessionManager::class, options: new DIOptions(isolation: true));
-        $container->prepareSharedObject(SessionFactory::class, options: new DIOptions(isolation: true));
+        $options = new DIOptions(isolation: true);
+
+        $container->prepareSharedObject(SessionManager::class, options: $options);
+        $container->prepareSharedObject(SessionFactory::class, options: $options);
 
         // Cookies
         // $container->prepareSharedObject(Cookies::class, null, Container::ISOLATION);
@@ -69,7 +71,7 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
         $container->bindShared(
             Session::class,
             fn(SessionFactory $factory, ?string $tag = null) => $factory->get($tag),
-            new DIOptions(isolation: true)
+            $options
         )
             ->alias(SessionInterface::class, Session::class);
 
@@ -78,9 +80,9 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
             function (SessionFactory $manager, ?string $tag = null) {
                 return $manager->get($tag)->getCookies();
             },
-            new DIOptions(isolation: true)
+            $options
         );
 
-        $container->prepareSharedObject(CsrfService::class, null, new DIOptions(isolation: true));
+        $container->prepareSharedObject(CsrfService::class, null, $options);
     }
 }

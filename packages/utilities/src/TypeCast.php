@@ -95,7 +95,11 @@ abstract class TypeCast
         } elseif ($data instanceof Traversable) {
             $data = iterator_to_array($data);
         } elseif (is_object($data)) {
-            $data = get_object_values($data, $filter);
+            if ($filter !== null) {
+                $data = get_object_values($data, $filter);
+            } else {
+                $data = get_object_vars($data);
+            }
         } else {
             $data = (array) $data;
         }

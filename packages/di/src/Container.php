@@ -147,7 +147,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function __construct(?Container $parent = null, DIOptions|int $options = new DIOptions())
     {
         $this->parent = $parent;
-        $this->options = DIOptions::wrap($options);
+        $this->options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $this->parameters = new Parameters();
         $this->dependencyResolver = new DependencyResolver($this);
 
@@ -203,7 +203,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
         $definition = $this->findDefinition($id, false, $tag);
 
@@ -248,7 +248,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function share(string $id, mixed $value, DIOptions|int $options = new DIOptions()): StoreDefinitionInterface
     {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->shared = true;
 
         return $this->set($id, $value, $options);
@@ -269,7 +269,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         mixed $value,
         DIOptions|int $options = new DIOptions()
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->protected = true;
 
         return $this->set($id, $value, $options);
@@ -357,7 +357,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null
     ): mixed {
-        $options = clone DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
         if ($source === null) {
             throw new InvalidArgumentException(
@@ -455,6 +455,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
     public static function toTaggedId(string $id, \UnitEnum|string|null $tag = null): string
     {
+        if ($tag === null) {
+            return $id;
+        }
+
         if ($tag instanceof \UnitEnum) {
             $tag = $tag::class . '::' . $tag->name;
         }
@@ -551,7 +555,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             if ($parentDefinition) {
                 $parentDefinition = clone $parentDefinition;
 
-                if ($parentDefinition->getOptions()->isolation) {
+                if ($parentDefinition->isIsolation()) {
                     $parentDefinition->reset();
                 }
 
@@ -607,7 +611,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
         if (!$value instanceof \Closure) {
             $value = static fn(Container $container, \UnitEnum|string|null $tag = null) => $container->newInstance(
@@ -637,7 +641,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options)->with(shared: true);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options->with(shared: true);
 
         return $this->bind($id, $value, $options, $tag);
     }
@@ -659,7 +663,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
         $handler = static fn(Container $container) => $container->newInstance($class, [], $options);
 
@@ -689,7 +693,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->shared = true;
 
         return $this->prepareObject($class, $extend, $options, $tag);
@@ -875,7 +879,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         DIOptions|int $options = new DIOptions(),
         \UnitEnum|string|null $tag = null,
     ): mixed {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->shared = true;
 
         return $this->createObject($class, $args, $options, $tag);
@@ -903,7 +907,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         ?object $context = null,
         DIOptions|int $options = new DIOptions()
     ): mixed {
-        $options = DIOptions::wrap($options);
+        $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
         return $this->dependencyResolver->call($callable, $args, $context, $options);
     }
@@ -971,7 +975,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         }
 
         if (is_string($class)) {
-            $options = DIOptions::wrap($options);
+            $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
             if (
                 $this->dependencyResolver->canLazy($ref = new \ReflectionClass($class), $options)
@@ -1252,7 +1256,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      */
     public function setOptions(int|DIOptions $options): static
     {
-        $this->options = DIOptions::wrap($options);
+        $this->options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
         return $this;
     }
