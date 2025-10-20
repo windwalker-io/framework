@@ -97,6 +97,7 @@ namespace Windwalker {
     use Windwalker\Attributes\AttributesAccessor;
     use Windwalker\Utilities\Compare\CompareHelper;
     use Windwalker\Utilities\Compare\WhereWrapper;
+    use Windwalker\Utilities\Piping;
     use Windwalker\Utilities\Proxy\CachedCallable;
     use Windwalker\Utilities\Proxy\CallableProxy;
     use Windwalker\Utilities\Proxy\DisposableCallable;
@@ -155,6 +156,13 @@ namespace Windwalker {
         function pipe(mixed $value, callable $callable): mixed
         {
             return $callable($value);
+        }
+    }
+
+    if (!function_exists('\Windwalker\piping')) {
+        function piping(mixed $value): Piping
+        {
+            return new Piping($value);
         }
     }
 
