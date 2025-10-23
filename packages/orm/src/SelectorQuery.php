@@ -300,6 +300,8 @@ class SelectorQuery extends Query implements EventAwareInterface
     /**
      * Get Column Attribute and EntityMetadata from column string like: `article.id` or `id`.
      *
+     * The method is to help handle UUIDBin conversion in where clauses.
+     *
      * @param  string  $column
      *
      * @return  array{ 0: Attributes\Column|null, 1: EntityMetadata }
@@ -317,6 +319,8 @@ class SelectorQuery extends Query implements EventAwareInterface
             $colName = $colExtracted[0];
         } else {
             $colName = $colExtracted[1];
+
+            // Let's find the table class from FROM and JOIN clauses
             $joins = array_map(
                 static fn(JoinClause $clause) => $clause->getTable(),
                 $this->getJoin()?->getElements() ?? []
@@ -340,6 +344,7 @@ class SelectorQuery extends Query implements EventAwareInterface
 
                     $alias = $clause->getAlias() ?? $alias;
 
+                    // If alias matches, it is what we looked for.
                     return $alias === $colExtracted[0];
                 }
             );
