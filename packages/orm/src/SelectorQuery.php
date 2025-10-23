@@ -330,7 +330,13 @@ class SelectorQuery extends Query implements EventAwareInterface
             $clause = array_find(
                 $clauses,
                 function (AsClause $clause) use ($colExtracted) {
-                    self::convertClassToTable($clause->getValue(), $alias);
+                    $joinTarget = $clause->getValue();
+
+                    if (!is_string($joinTarget)) {
+                        return false;
+                    }
+
+                    self::convertClassToTable($joinTarget, $alias);
 
                     $alias = $clause->getAlias() ?? $alias;
 
