@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Cast;
 
 use InvalidArgumentException;
+use Windwalker\Data\RecordInterface;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastAttributeInterface;
 use Windwalker\ORM\Attributes\Column;
@@ -225,6 +226,10 @@ class CastManager
                     }
 
                     if (is_subclass_of($cast, EnumSingleton::class)) {
+                        return $cast::wrap($value);
+                    }
+
+                    if (is_subclass_of($cast, RecordInterface::class)) {
                         return $cast::wrap($value);
                     }
 
