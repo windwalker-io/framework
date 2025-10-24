@@ -49,6 +49,12 @@ trait EntityTrait
 
     public static function create(...$args): static
     {
+        if (count($args) === 1 && isset($args[0]) && $args[0] instanceof \Closure) {
+            $instance = new static();
+
+            return $args[0]($instance) ?? $instance;
+        }
+
         return static::newInstance($args);
     }
 
