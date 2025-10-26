@@ -13,6 +13,8 @@ use function Windwalker\collect;
 
 /**
  * The AbstractComponent class.
+ *
+ * This is a modified version from Laravel's Blade component system.
  */
 abstract class AbstractComponent
 {
@@ -72,15 +74,18 @@ abstract class AbstractComponent
      * Get the data that should be supplied to the view.
      *
      * @return array
-     * @author Brent Roose
-     *
-     * @author Freek Van der Herten
      */
     public function data(): array
     {
-        $this->attributes ??= $this->newAttributeBag();
+        // Prepare attributes bag
+        $this->getComponentAttributes();
 
         return array_merge($this->extractPublicProperties(), $this->extractPublicMethods());
+    }
+
+    protected function getComponentAttributes(): ComponentAttributes
+    {
+        return $this->attributes ??= $this->newAttributeBag();
     }
 
     /**
@@ -96,21 +101,10 @@ abstract class AbstractComponent
             $reflection = new ReflectionClass($this);
 
             static::$propertyCache[$class] = collect($reflection->getProperties(ReflectionProperty::IS_PUBLIC))
-                ->reject(
-                    function (ReflectionProperty $property) {
-                        return $property->isStatic();
-                    }
-                )
-                ->reject(
-                    function (ReflectionProperty $property) {
-                        return $this->shouldIgnore($property->getName());
-                    }
-                )
-                ->map(
-                    function (ReflectionProperty $property) {
-                        return $property->getName();
-                    }
-                )->dump();
+                ->reject(fn(ReflectionProperty $property) => $property->isStatic())
+                ->reject(fn(ReflectionProperty $property) => $this->shouldIgnore($property->getName()))
+                ->map(fn(ReflectionProperty $property) => $property->getName())
+                ->dump();
         }
 
         $values = [];
