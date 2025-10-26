@@ -83,6 +83,11 @@ abstract class AbstractComponent
         return array_merge($this->extractPublicProperties(), $this->extractPublicMethods());
     }
 
+    protected function configureAttributes(\Closure $callback): ComponentAttributes
+    {
+        return $this->attributes = $callback($this->getComponentAttributes()) ?? $this->attributes;
+    }
+
     protected function getComponentAttributes(): ComponentAttributes
     {
         return $this->attributes ??= $this->newAttributeBag();
