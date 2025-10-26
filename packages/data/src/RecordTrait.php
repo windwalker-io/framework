@@ -4,35 +4,30 @@ declare(strict_types=1);
 
 namespace Windwalker\Data;
 
-use Windwalker\Attributes\AttributesAccessor;
-use Windwalker\ORM\Attributes\Cast;
-use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\ORM\Attributes\JsonNoSerialize;
 use Windwalker\ORM\Attributes\JsonSerializerInterface;
-use Windwalker\Utilities\StrNormalize;
+use Windwalker\Utilities\Arr;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
+use Windwalker\Utilities\Classes\TraitHelper;
 use Windwalker\Utilities\TypeCast;
-
-use function Windwalker\get_object_values;
 
 trait RecordTrait
 {
-    public static function wrapWith(...$data): static
+    public static function wrap(mixed $values, bool $clone = false): static
     {
-        return static::wrap($data);
-    }
+        if ($values instanceof static) {
+            if ($clone) {
+                $values = clone $values;
+            }
 
-    public static function tryWrapWith(...$data): ?static
-    {
-        return static::tryWrap($data);
-    }
-
-    public static function wrap(mixed $data): static
-    {
-        if ($data instanceof static) {
-            return $data;
+            return $values;
         }
 
-        $data = TypeCast::toArray($data);
+        if ($values === null) {
+            $values = [];
+        }
+
+        $values = TypeCast::toArray($values);
         $args = [];
 
         $ref = new \ReflectionClass(static::class);
@@ -42,87 +37,94 @@ trait RecordTrait
             foreach ($constructor->getParameters() as $parameter) {
                 $name = $parameter->getName();
 
-                if (array_key_exists($name, $data)) {
-                    $args[$name] = $data[$name];
+                if (array_key_exists($name, $values)) {
+                    $args[$name] = $values[$name];
 
-                    unset($data[$name]);
+                    unset($values[$name]);
                 }
             }
         }
 
-        return new static(...$args)->fill($data);
+        return new static(...$args)->merge($values);
     }
 
-    public static function tryWrap(mixed $data): ?static
+    public static function wrapWith(...$values): static
     {
-        if ($data === null) {
+        return static::wrap($values, true);
+    }
+
+    public static function tryWrap(mixed $values, bool $clone = false): ?static
+    {
+        if ($values === null) {
             return null;
         }
 
-        return static::wrap($data);
+        return static::wrap($values, $clone);
+    }
+
+    public static function tryWrapWith(...$data): ?static
+    {
+        return static::tryWrap($data, true);
     }
 
     public function fill(mixed $data): static
     {
-        if (is_string($data) && is_json($data)) {
-            $data = json_decode($data, true);
-        }
-
         $values = TypeCast::toArray($data);
 
         foreach ($values as $key => $value) {
-            // Hydrating
-            $this->hydrateField($key, $value);
+            $this->$key = $value;
         }
 
         return $this;
     }
 
-    private function hydrateField(string $key, mixed $value): void
+    public function merge(mixed $values, bool $recursive = false, bool $ignoreNulls = false): static
     {
-        $setter = 'set' . StrNormalize::toPascalCase($key);
+        $values = TypeCast::toArray($values);
 
-        if (method_exists($this, $setter)) {
-            $this->$setter($value);
-            return;
-        }
-
-        if (!property_exists($this, $key)) {
-            $this->$key = $value;
-            return;
-        }
-
-        $attrs = AttributesAccessor::getAttributesFromAny(
-            new \ReflectionProperty($this, $key),
-            Cast::class,
-            \ReflectionAttribute::IS_INSTANCEOF
-        );
-
-        foreach ($attrs as $attr) {
-            /**
-             * @var Cast $attrInstance
-             */
-            $attrInstance = $attr->newInstance();
-
-            if ($attrInstance instanceof CastNullable && $value === null) {
+        foreach ($values as $key => $value) {
+            if (
+                $recursive
+                && is_object($this->$key ?? null)
+                && TraitHelper::uses($this->$key, RecordTrait::class)
+            ) {
+                $this->$key = $this->$key->withMerge($value, true, $ignoreNulls);
+            } elseif ($recursive && is_array($this->$key ?? null) && is_array($value)) {
+                $this->$key = Arr::mergeRecursive($this->$key, $value);
+            } elseif ($ignoreNulls && $value === null) {
                 continue;
-            }
-
-            $hydrateTarget = $attrInstance->getHydrate();
-
-            if (class_exists($hydrateTarget)) {
-                $value = new $hydrateTarget($value);
-            } elseif (is_callable($hydrateTarget)) {
-                $value = $hydrateTarget($value);
+            } else {
+                $this->$key = $value;
             }
         }
 
-        $this->$key = $value;
+        return $this;
     }
 
-    public function fillWith(...$data): static
+    public function withMerge(mixed $values, bool $recursive = false, bool $ignoreNulls = false): static
     {
-        return $this->fill($data);
+        return (clone $this)->merge($values, $recursive, $ignoreNulls);
+    }
+
+    public function defaults(mixed $values, bool $recursive = false): static
+    {
+        $new = clone $this;
+
+        return $this->merge($values, $recursive)->merge($new, $recursive, true);
+    }
+
+    public function withDefaults(mixed $values, bool $recursive = false): static
+    {
+        $new = clone $this;
+
+        return (clone $this)->merge($values, $recursive)->merge($new, $recursive, true);
+    }
+
+    public function with(...$data): static
+    {
+        $new = clone $this;
+
+        return $new->fill($data);
     }
 
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
@@ -144,46 +146,6 @@ trait RecordTrait
         }
 
         return $className::wrap($this);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function offsetExists(mixed $key): bool
-    {
-        return property_exists($this, $key);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function &offsetGet(mixed $key): mixed
-    {
-        return $this->$key;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function offsetSet(mixed $key, mixed $value): void
-    {
-        $this->$key = $value;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function offsetUnset(mixed $key): void
-    {
-        unset($this->$key);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->dump());
     }
 
     /**
@@ -217,10 +179,5 @@ trait RecordTrait
         }
 
         return $item;
-    }
-
-    public function __toString(): string
-    {
-        return json_encode($this);
     }
 }

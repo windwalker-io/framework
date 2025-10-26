@@ -19,19 +19,19 @@ use Windwalker\Utilities\TypeCast;
  * @deprecated  Use Record instead.
  */
 #[\AllowDynamicProperties]
-class ValueObject implements RecordInterface
+class ValueObject implements ValueObjectInterface
 {
-    use RecordTrait;
+    use ValueObjectTrait;
 
     public function __construct(mixed $data = null)
     {
         $this->fill($data);
     }
 
-    public static function wrap(mixed $data): static
+    public static function wrap(mixed $values): static
     {
-        if ($data instanceof static) {
-            return $data;
+        if ($values instanceof static) {
+            return $values;
         }
 
         $ref = new \ReflectionClass(static::class);
@@ -39,11 +39,11 @@ class ValueObject implements RecordInterface
 
         if ($method?->getDeclaringClass()->getName() !== static::class) {
             // The final class declares a constructor, so we will use it.
-            return new static()->fill($data);
+            return new static()->fill($values);
         }
 
         // Back to legacy constructor.
-        return new static($data);
+        return new static($values);
     }
 
     public function fill(mixed $data): static
