@@ -6,13 +6,18 @@ namespace Windwalker\ORM\Cast;
 
 use InvalidArgumentException;
 use Windwalker\Data\RecordInterface;
+use Windwalker\Data\RecordTrait;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastAttributeInterface;
 use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
+use Windwalker\Utilities\Classes\TraitHelper;
 use Windwalker\Utilities\Contract\DumpableInterface;
+use Windwalker\Utilities\Enum\EnumExtendedInterface;
+use Windwalker\Utilities\Enum\EnumExtendedTrait;
+use Windwalker\Utilities\Enum\EnumPhpAdapterTrait;
 use Windwalker\Utilities\Enum\EnumSingleton;
 use Windwalker\Utilities\TypeCast;
 
@@ -222,14 +227,25 @@ class CastManager
                 // Pure class
                 return static function (mixed $value, ORM $orm) use ($cast, $options) {
                     if (is_subclass_of($cast, \BackedEnum::class)) {
-                        return $cast::wrap($value);
+                        if (
+                            is_a($cast, EnumExtendedInterface::class, true)
+                            || TraitHelper::uses($cast, EnumExtendedTrait::class)
+                            || TraitHelper::uses($cast, EnumPhpAdapterTrait::class)
+                        ) {
+                            return $cast::wrap($value);
+                        }
+
+                        return $cast::from($value);
                     }
 
                     if (is_subclass_of($cast, EnumSingleton::class)) {
                         return $cast::wrap($value);
                     }
 
-                    if (is_subclass_of($cast, RecordInterface::class)) {
+                    if (
+                        is_subclass_of($cast, RecordInterface::class)
+                        || TraitHelper::uses($cast, RecordTrait::class)
+                    ) {
                         return $cast::wrap($value);
                     }
 
