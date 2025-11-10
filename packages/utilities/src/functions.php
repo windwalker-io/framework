@@ -95,6 +95,7 @@ namespace Windwalker {
     use Traversable;
     use WeakReference;
     use Windwalker\Attributes\AttributesAccessor;
+    use Windwalker\Utilities\Classes\TraitHelper;
     use Windwalker\Utilities\Compare\CompareHelper;
     use Windwalker\Utilities\Compare\WhereWrapper;
     use Windwalker\Utilities\Piping;
@@ -483,6 +484,20 @@ namespace Windwalker {
             }
 
             return AttributesAccessor::getAttributesFromAny($ref, $attr, $flags) !== [];
+        }
+    }
+
+    if (!function_exists('\Windwalker\trait_uses')) {
+        function trait_uses(string|object $object, bool $autoload = true): array
+        {
+            return TraitHelper::classUsesRecursive($object, $autoload);
+        }
+    }
+
+    if (!function_exists('\Windwalker\has_used_trait')) {
+        function has_used_trait(string|object $object, string $trait, bool $autoload = true): bool
+        {
+            return TraitHelper::uses($object, $trait, $autoload);
         }
     }
 

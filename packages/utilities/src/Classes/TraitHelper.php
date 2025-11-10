@@ -11,9 +11,9 @@ namespace Windwalker\Utilities\Classes;
  */
 class TraitHelper
 {
+    public static array $cache = [];
+
     /**
-     * @link  http://php.net/manual/en/function.class-uses.php#110752
-     *
      * @param  string|object  $class
      * @param  bool           $autoload
      *
@@ -21,13 +21,40 @@ class TraitHelper
      */
     public static function classUsesRecursive(string|object $class, bool $autoload = true): array
     {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
+        if (isset(static::$cache[$class])) {
+            return static::$cache[$class];
+        }
+
         $traits = [];
 
-        do {
-            $traits = [...$traits, ...(class_uses($class, $autoload) ?: [])];
-        } while ($class = get_parent_class($class));
+        $current = $class;
 
-        return array_unique($traits);
+        while ($current) {
+            $traits = [...$traits, ...(class_uses($current, $autoload) ?: [])];
+            $current = get_parent_class($current);
+        }
+
+        $searchQueue = $traits;
+
+        while ($searchQueue) {
+            $trait = array_pop($searchQueue);
+            $usedByTrait = class_uses($trait, $autoload);
+
+            if ($usedByTrait) {
+                foreach ($usedByTrait as $t) {
+                    if (!in_array($t, $traits, true)) {
+                        $traits[] = $t;
+                        $searchQueue[] = $t;
+                    }
+                }
+            }
+        }
+
+        return static::$cache[$class] = array_values(array_unique($traits));
     }
 
     public static function uses(string|object $class, string $trait, bool $autoload = true): bool
