@@ -38,7 +38,7 @@ class SimpleHydrator implements HydratorInterface, FieldHydratorInterface
     public function hydrate(array $data, object $object): object
     {
         if ($object instanceof AccessorAccessibleInterface) {
-            return (new AccessibleHydrator())->hydrate($data, $object);
+            return new AccessibleHydrator()->hydrate($data, $object);
         }
 
         if ($object instanceof ArrayAccess) {
@@ -51,6 +51,14 @@ class SimpleHydrator implements HydratorInterface, FieldHydratorInterface
             }
         } else {
             foreach ($data as $key => $datum) {
+                if (property_exists($object, $key)) {
+                    $ref = new \ReflectionProperty($object, $key);
+
+                    if ($ref->isVirtual()) {
+                        continue;
+                    }
+                }
+
                 ReflectAccessor::setValue($object, $key, $datum, true);
             }
         }
