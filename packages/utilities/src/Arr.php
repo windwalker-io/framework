@@ -722,13 +722,11 @@ abstract class Arr
                 }
 
                 $prop = $ref->getProperty($column);
-                $prop->setAccessible(true);
                 $value = $prop->getValue($item);
 
                 if ($keyName !== null) {
                     if ($ref->hasProperty($keyName)) {
                         $prop = $ref->getProperty($keyName);
-                        $prop->setAccessible(true);
                         $keyName = $prop->getValue($item);
                     } else {
                         $keyName = null;
@@ -954,8 +952,6 @@ abstract class Arr
                 }
 
                 foreach ($properties as $property) {
-                    $property->setAccessible(true);
-
                     $pType = $property->getName();
 
                     if ($property->isProtected()) {

@@ -35,8 +35,6 @@ class ReflectAccessor
         $values = [];
 
         foreach ($properties as $property) {
-            $property->setAccessible(true);
-
             $inited = is_object($object)
                 ? $property->isInitialized($object)
                 : $property->isInitialized();
@@ -71,7 +69,6 @@ class ReflectAccessor
         // First check if the property is easily accessible.
         if ($refl->hasProperty($propertyName)) {
             $property = $refl->getProperty($propertyName);
-            $property->setAccessible(true);
 
             if ($safe && !$property->hasHook(\PropertyHookType::Set)) {
                 $value = static::safeTypeCast($property, $value);
@@ -90,7 +87,6 @@ class ReflectAccessor
             if ($refl->hasProperty($propertyName)) {
                 // Hrm, maybe dealing with a private property in the parent class.
                 $property = new ReflectionProperty($parent, $propertyName);
-                $property->setAccessible(true);
 
                 if ($safe && !$property->hasHook(\PropertyHookType::Set)) {
                     $value = static::safeTypeCast($property, $value);
@@ -196,7 +192,6 @@ class ReflectAccessor
         // First check if the property is easily accessible.
         if ($ref->hasProperty($propertyName)) {
             $property = $ref->getProperty($propertyName);
-            $property->setAccessible(true);
 
             return $property->getValue($object);
         }
@@ -204,7 +199,6 @@ class ReflectAccessor
         // Hrm, maybe dealing with a private property in the parent class.
         if (get_parent_class($object)) {
             $property = new ReflectionProperty(get_parent_class($object), $propertyName);
-            $property->setAccessible(true);
 
             return $property->getValue($object);
         }
