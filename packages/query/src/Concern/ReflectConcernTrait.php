@@ -32,7 +32,7 @@ trait ReflectConcernTrait
         $tables = [];
 
         foreach ($froms as $from) {
-            $tables['FROM'][$from->getAlias()] = $from;
+            $tables['FROM'][$from->getAlias() ?? ''] = $from;
         }
 
         foreach ($joins as $join) {
