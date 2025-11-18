@@ -77,6 +77,11 @@ class SelectorQuery extends Query implements EventAwareInterface
                     return;
                 }
 
+                if (is_object($item)) {
+                    // Already an object
+                    return;
+                }
+
                 $object = $event->class;
 
                 if (is_string($object)) {
@@ -87,11 +92,7 @@ class SelectorQuery extends Query implements EventAwareInterface
                     }
                 }
 
-                if (is_array($item)) {
-                    $object = $orm->hydrateEntity($item, $object);
-                } else {
-                    $object = $item;
-                }
+                $object = $orm->hydrateEntity($item, $object);
 
                 if (EntityMetadata::isEntity($object)) {
                     // Prepare relations
