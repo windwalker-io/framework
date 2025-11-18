@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use Pdo\Mysql;
 use Windwalker\Database\Driver\DriverOptions;
 
 /**
@@ -23,10 +24,18 @@ class PdoMysqlConnection extends AbstractPdoConnection
 
         $options->dsn ??= static::getDsn($params);
 
-        if (strtolower($params['charset']) === 'utf8mb4') {
-            $options->driverOptions[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
-        } elseif (strtolower($params['charset']) === 'utf8') {
-            $options->driverOptions[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+        if (version_compare(PHP_VERSION, '8.4', '>=')) {
+            if (strtolower($params['charset']) === 'utf8mb4') {
+                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
+            } elseif (strtolower($params['charset']) === 'utf8') {
+                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+            }
+        } else {
+            if (strtolower($params['charset']) === 'utf8mb4') {
+                $options->driverOptions[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
+            } elseif (strtolower($params['charset']) === 'utf8') {
+                $options->driverOptions[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+            }
         }
 
         return $options;

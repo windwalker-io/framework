@@ -273,7 +273,7 @@ class AttributesResolver extends ObjectBuilder
             $shouldCall = false;
             $getter     = static fn() => $object && $property->isInitialized($object)
                 ? $property->getValue($object)
-                : $property->getDefaultValue();
+                : ($property->hasDefaultValue() ? $property->getDefaultValue() : null);
 
             $handler = $this->createHandler($getter, $property, $object, $options);
 
