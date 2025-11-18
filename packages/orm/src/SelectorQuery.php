@@ -87,7 +87,11 @@ class SelectorQuery extends Query implements EventAwareInterface
                     }
                 }
 
-                $object = $orm->hydrateEntity($item, $object);
+                if (is_array($item)) {
+                    $object = $orm->hydrateEntity($item, $object);
+                } else {
+                    $object = $item;
+                }
 
                 if (EntityMetadata::isEntity($object)) {
                     // Prepare relations

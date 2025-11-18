@@ -175,11 +175,13 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      */
     public function off(string|EventInterface $event, callable|object|null $listenerOrSubscriber = null): static
     {
-        $event = Event::wrap($event);
+        if (is_object($event)) {
+            $eventName = $event->getName();
+        } else {
+            $eventName = $event;
+        }
 
         $listeners = &$this->getQueues();
-
-        $eventName = strtolower($event->getName());
 
         if (!isset($listeners[$eventName])) {
             return $this;

@@ -39,7 +39,7 @@ class Stream implements StreamInterface
      *
      * @var resource
      */
-    protected mixed $resource;
+    protected mixed $resource = null;
 
     /**
      * Stream resource.
