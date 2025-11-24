@@ -18,16 +18,6 @@ class UUID implements CastInterface, CastForSaveInterface
 {
     use UUIDTrait;
 
-    /**
-     * CastForSave constructor.
-     */
-    public function __construct(
-        public string|int $version = self::UUID7,
-        public int $options = 0
-    ) {
-        //
-    }
-
     public function getCaster(): \Closure
     {
         return function ($value) {

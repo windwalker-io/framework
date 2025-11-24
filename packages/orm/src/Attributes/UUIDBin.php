@@ -21,15 +21,6 @@ class UUIDBin implements CastInterface, CastForSaveInterface
 
     public const NULLABLE = 1 << 0;
 
-    /**
-     * CastForSave constructor.
-     */
-    public function __construct(
-        public string|int $version = self::UUID7,
-        public int $options = 0
-    ) {
-    }
-
     public function getCaster(): \Closure
     {
         return function ($value) {

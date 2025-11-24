@@ -32,8 +32,19 @@ trait UUIDTrait
 
     public const UUID8 = 'uuid8';
 
-    public static function getDefault(string|int $version): UuidInterface
+    public function __construct(
+        public string|int|\Closure $version = self::UUID7,
+        public int $options = 0
+    ) {
+        //
+    }
+
+    public static function getDefault(string|int|\Closure $version): UuidInterface
     {
+        if ($version instanceof \Closure) {
+            return $version();
+        }
+
         if (is_numeric($version)) {
             $method = 'uuid' . $version;
 
