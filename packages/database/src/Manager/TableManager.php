@@ -340,6 +340,9 @@ class TableManager extends AbstractMetaManager
 
             foreach ($constraints as $key => $constraint) {
                 if (array_key_exists($name, $constraint->getColumns())) {
+                    // Refresh cache for every loop
+                    $this->getConstraints(true);
+
                     $this->dropConstraint($constraint->constraintName);
 
                     unset($constraints[$key]);
