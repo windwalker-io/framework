@@ -84,6 +84,8 @@ use function Windwalker\value;
  * @method $this rightJoin($table, ?string $alias = null, ...$on)
  * @method $this outerJoin($table, ?string $alias = null, ...$on)
  * @method $this innerJoin($table, ?string $alias = null, ...$on)
+ * @method $this leftJoinLateral($table, ?string $alias = null, ...$on)
+ * @method $this innerJoinLateral($table, ?string $alias = null, ...$on)
  * @method $this whereIn($column, iterable $values)
  * @method $this whereNotIn($column, iterable $values)
  * @method $this whereBetween($column, $start, $end)
@@ -310,8 +312,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * join
-     *
      * @param  string                        $type
      * @param  string|Query|ClauseInterface  $table
      * @param  string|null                   $alias
@@ -321,14 +321,39 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function join(string $type, mixed $table, ?string $alias = null, ...$on): static
     {
+        return $this->doJoin(strtoupper($type) . ' JOIN', $table, $alias, ...$on);
+    }
+
+    /**
+     * @param  string                        $type
+     * @param  string|Query|ClauseInterface  $table
+     * @param  string|null                   $alias
+     * @param  array                         $on
+     *
+     * @return  static
+     */
+    public function joinLateral(string $type, mixed $table, ?string $alias = null, ...$on): static
+    {
+        return $this->doJoin(strtoupper($type) . ' JOIN LATERAL', $table, $alias, ...$on);
+    }
+
+    /**
+     * @param  string                        $action
+     * @param  string|Query|ClauseInterface  $table
+     * @param  string|null                   $alias
+     * @param  array                         $on
+     *
+     * @return  static
+     */
+    protected function doJoin(string $action, mixed $table, ?string $alias = null, ...$on): static
+    {
         if (!$this->join) {
             $this->join = $this->clause('', [], ' ');
         }
 
         $tbl = $this->as($table, $alias);
-        $joinType = strtoupper($type) . ' JOIN';
 
-        $join = new JoinClause($this, $joinType, $tbl);
+        $join = new JoinClause($this, $action, $tbl);
 
         if (count($on) === 1 && $on[0] instanceof Closure) {
             // ArgumentsAssert::assert(
@@ -1778,6 +1803,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
         if (isset($aliases[$name])) {
             return $this->join($aliases[$name], ...$args);
+        }
+
+        $aliases = [
+            'leftJoinLateral' => 'LEFT',
+            'innerJoinLateral' => 'RIGHT',
+        ];
+
+        if (isset($aliases[$name])) {
+            return $this->joinLateral($aliases[$name], ...$args);
         }
 
         // Load
