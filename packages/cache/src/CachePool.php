@@ -332,24 +332,28 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             $isHit = !$isNew;
         }
 
-        $item = $this->getItem($key);
+        try {
+            $item = $this->getItem($key);
 
-        $isHit ??= $item->isHit();
+            $isHit ??= $item->isHit();
 
-        if ($isHit) {
-            return $item->get();
+            if ($isHit) {
+                return $item->get();
+            }
+
+            $item->set($data = $handler());
+            $item->expiresAfter($ttl);
+
+            $this->save($item);
+
+            return $data;
+        } finally {
+            if ($lock && $storage instanceof LockableStorageInterface) {
+                $storage->release($key);
+            }
         }
 
-        $item->set($data = $handler());
-        $item->expiresAfter($ttl);
-
-        $this->save($item);
-
-        if ($lock && $storage instanceof LockableStorageInterface) {
-            $storage->release($key);
-        }
-
-        return $data;
+        return $data ?? null;
     }
 
     /**

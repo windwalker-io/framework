@@ -185,7 +185,7 @@ class Inject implements ContainerAttributeInterface
             throw new DependencyResolutionException(
                 "Unable to inject object $id for $target" .
                 ($e ? ' - ' . $e->getMessage() : ''),
-                $e->getCode(),
+                $e?->getCode() ?? 500,
                 $e,
             );
         }

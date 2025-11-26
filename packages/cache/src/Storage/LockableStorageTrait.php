@@ -12,10 +12,12 @@ trait LockableStorageTrait
             $this->lock();
         }
 
-        $result = $handler();
-
-        if ($enabled) {
-            $this->release();
+        try {
+            $result = $handler();
+        } finally {
+            if ($enabled) {
+                $this->release();
+            }
         }
 
         return $result;
