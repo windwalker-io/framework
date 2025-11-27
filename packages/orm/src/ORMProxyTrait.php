@@ -179,6 +179,22 @@ trait ORMProxyTrait
     }
 
     /**
+     * @template T
+     *
+     * @param  string          $entityClass
+     * @param  iterable        $items
+     * @param  ORMOptions|int  $options
+     *
+     * @return  array<T>
+     *
+     * @throws \ReflectionException
+     */
+    public function createBulk(string $entityClass, iterable $items, ORMOptions|int $options = new ORMOptions()): array
+    {
+        return $this->mapper($entityClass)->createBulk($items, $options);
+    }
+
+    /**
      * @template L of iterable
      * @template T
      *

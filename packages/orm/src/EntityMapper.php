@@ -475,6 +475,10 @@ class EntityMapper implements EventAwareInterface
             $dataSet[] = $data;
         }
 
+        if ($dataSet === []) {
+            return [];
+        }
+
         // Event
         $event = $this->emits(
             new BeforeCreateBulkEvent(
