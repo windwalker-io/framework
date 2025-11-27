@@ -150,6 +150,7 @@ class Uri implements ExtendedUriInterface
 
         if ($this->path !== null) {
             $this->path = UriNormalizer::normalizePath($this->path);
+            $this->path = UriHelper::filterPath($this->path);
         }
 
         // Parse the query

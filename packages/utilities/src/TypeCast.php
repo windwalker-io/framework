@@ -15,7 +15,7 @@ use Windwalker\Utilities\Contract\DumpableInterface;
 use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Exception\ExceptionFactory;
 
-use function Windwalker\get_object_values;
+use function Windwalker\get_object_dump_values;
 
 /**
  * The TypeCast class.
@@ -96,7 +96,7 @@ abstract class TypeCast
             $data = iterator_to_array($data);
         } elseif (is_object($data)) {
             if ($filter !== null) {
-                $data = get_object_values($data, $filter);
+                $data = get_object_dump_values($data, $filter);
             } else {
                 $data = get_object_vars($data);
             }

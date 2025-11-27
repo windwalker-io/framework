@@ -95,6 +95,8 @@ namespace Windwalker {
     use Traversable;
     use WeakReference;
     use Windwalker\Attributes\AttributesAccessor;
+    use Windwalker\Utilities\Attributes\Expose;
+    use Windwalker\Utilities\Attributes\Transient;
     use Windwalker\Utilities\Classes\TraitHelper;
     use Windwalker\Utilities\Compare\CompareHelper;
     use Windwalker\Utilities\Compare\WhereWrapper;
@@ -501,19 +503,17 @@ namespace Windwalker {
         }
     }
 
-    if (!function_exists('\Windwalker\get_object_props')) {
+    if (!function_exists('\Windwalker\get_object_dump_props')) {
         /**
          * @param  object    $object
          * @param  int|null  $filter
          *
          * @return  array<\ReflectionProperty>
          */
-        function get_object_props(
+        function get_object_dump_props(
             object $object,
             ?int $filter = null
         ): array {
-            $filter ??= \ReflectionProperty::IS_PUBLIC;
-
             $values = [];
 
             $ref = new \ReflectionObject($object);
@@ -526,7 +526,16 @@ namespace Windwalker {
                     continue;
                 }
 
-                if (!($filter & \ReflectionProperty::IS_VIRTUAL) && $prop->isVirtual()) {
+                if ($prop->isProtected() || $prop->isPrivate() || $prop->isVirtual()) {
+                    if (
+                        !($filter & \ReflectionProperty::IS_VIRTUAL)
+                        && $prop->getAttributes(Expose::class, \ReflectionAttribute::IS_INSTANCEOF) === []
+                    ) {
+                        continue;
+                    }
+                }
+
+                if ($prop->getAttributes(Transient::class, \ReflectionAttribute::IS_INSTANCEOF) !== []) {
                     continue;
                 }
 
@@ -537,14 +546,14 @@ namespace Windwalker {
         }
     }
 
-    if (!function_exists('\Windwalker\get_object_values')) {
-        function get_object_values(
+    if (!function_exists('\Windwalker\get_object_dump_values')) {
+        function get_object_dump_values(
             object $object,
             ?int $filter = null
         ): array {
             return array_map(
-                static fn (\ReflectionProperty $prop) => $prop->getValue($object),
-                get_object_props(
+                static fn(\ReflectionProperty $prop) => $prop->getValue($object),
+                get_object_dump_props(
                     $object,
                     $filter
                 )

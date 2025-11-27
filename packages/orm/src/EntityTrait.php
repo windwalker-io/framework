@@ -19,6 +19,8 @@ use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
+use function Windwalker\get_object_dump_values;
+
 /**
  * The AbstractEntity class.
  */
@@ -138,7 +140,11 @@ trait EntityTrait
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        return TypeCast::toArray(get_object_vars($this), $recursive, $onlyDumpable);
+        return TypeCast::toArray(
+            get_object_dump_values($this),
+            $recursive,
+            $onlyDumpable
+        );
     }
 
     /**
@@ -158,7 +164,7 @@ trait EntityTrait
 
             /** @var ReflectionAttribute<JsonSerializerInterface> $attr */
             foreach ($attrs as $attr) {
-                if ($attr instanceof JsonNoSerialize) {
+                if (is_a($attr->getName(), JsonNoSerialize::class, true)) {
                     unset($item[$key]);
                     continue 2;
                 }

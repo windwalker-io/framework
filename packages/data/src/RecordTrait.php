@@ -11,6 +11,8 @@ use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Classes\TraitHelper;
 use Windwalker\Utilities\TypeCast;
 
+use function Windwalker\get_object_dump_values;
+
 trait RecordTrait
 {
     public static function wrap(mixed $values, bool $clone = false): static
@@ -129,7 +131,7 @@ trait RecordTrait
 
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        return TypeCast::toArray(get_object_vars($this), $recursive, $onlyDumpable);
+        return TypeCast::toArray(get_object_dump_values($this), $recursive, $onlyDumpable);
     }
 
     /**
@@ -153,7 +155,7 @@ trait RecordTrait
      */
     public function jsonSerialize(): mixed
     {
-        $item = get_object_vars($this);
+        $item = $this->dump();
 
         foreach ($item as $key => $value) {
             $prop = new \ReflectionProperty($this, $key);
@@ -165,7 +167,7 @@ trait RecordTrait
 
             /** @var \ReflectionAttribute<JsonSerializerInterface> $attr */
             foreach ($attrs as $attr) {
-                if ($attr instanceof JsonNoSerialize) {
+                if (is_a($attr->getName(), JsonNoSerialize::class, true)) {
                     unset($item[$key]);
                     continue 2;
                 }
