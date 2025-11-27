@@ -876,6 +876,38 @@ abstract class Arr
     }
 
     /**
+     * Union array recursively.
+     *
+     * @param  array  ...$args
+     *
+     * @return  array Unioned array.
+     */
+    public static function unionRecursive(...$args): array
+    {
+        $result = [];
+
+        foreach ($args as $i => $array) {
+            if (!is_array($array)) {
+                throw new InvalidArgumentException(sprintf('Argument #%d is not an array.', $i + 1));
+            }
+
+            $sub = [];
+
+            foreach ($array as $key => $value) {
+                if (is_array($value) && isset($result[$key]) && is_array($result[$key])) {
+                    $sub[$key] = static::unionRecursive($result[$key], $value);
+                } else {
+                    $sub[$key] = $value;
+                }
+            }
+
+            $result = $sub + $result;
+        }
+
+        return $result;
+    }
+
+    /**
      * arrayEquals
      *
      * @param  array  $a
