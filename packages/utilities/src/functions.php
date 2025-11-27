@@ -505,24 +505,33 @@ namespace Windwalker {
 
     if (!function_exists('\Windwalker\get_object_dump_props')) {
         /**
-         * @param  object    $object
-         * @param  int|null  $filter
+         * @param  object|string  $object
+         * @param  int|null       $filter
          *
          * @return  array<\ReflectionProperty>
+         * @throws \ReflectionException
          */
         function get_object_dump_props(
-            object $object,
+            object|string $object,
             ?int $filter = null
         ): array {
+            static $cache = [];
+            $isObject = is_object($object);
+            $key = ($isObject ? get_class($object) : $object) . '|' . $filter;
+
+            if (isset($cache[$key])) {
+                return $cache[$key];
+            }
+
             $values = [];
 
-            $ref = new \ReflectionObject($object);
+            $ref = new \ReflectionClass($object);
             $props = $ref->getProperties($filter);
 
             foreach ($props as $prop) {
                 $name = $prop->getName();
 
-                if (!$prop->isInitialized($object)) {
+                if ($isObject && !$prop->isInitialized($object)) {
                     continue;
                 }
 
@@ -542,7 +551,7 @@ namespace Windwalker {
                 $values[$name] = $prop;
             }
 
-            return $values;
+            return $cache[$key] = $values;
         }
     }
 
