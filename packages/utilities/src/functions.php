@@ -563,14 +563,15 @@ namespace Windwalker {
             $props = get_object_dump_props($object, $filter);
             $vars = get_object_vars($object);
 
-            $values = array_intersect_key($vars, $props);
-            $diffProps = array_diff_key($props, $vars);
+            foreach ($props as $name => $prop) {
+                if (array_key_exists($name, $vars)) {
+                    continue;
+                }
 
-            foreach ($diffProps as $name => $prop) {
-                $values[$name] = $prop->getValue($object);
+                $vars[$name] = $prop->getValue($object);
             }
 
-            return $values;
+            return $vars;
         }
     }
 }
