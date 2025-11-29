@@ -560,13 +560,17 @@ namespace Windwalker {
             object $object,
             ?int $filter = null
         ): array {
-            return array_map(
-                static fn(\ReflectionProperty $prop) => $prop->getValue($object),
-                get_object_dump_props(
-                    $object,
-                    $filter
-                )
-            );
+            $props = get_object_dump_props($object, $filter);
+            $vars = get_object_vars($object);
+
+            $values = array_intersect_key($vars, $props);
+            $diffProps = array_diff_key($props, $vars);
+
+            foreach ($diffProps as $name => $prop) {
+                $values[$name] = $prop->getValue($object);
+            }
+
+            return $values;
         }
     }
 }
