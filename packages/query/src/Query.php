@@ -1870,6 +1870,27 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
     }
 
+    public function iterateWhile(int $length, ?string $class = null, array $args = []): \Generator
+    {
+        $query = clone $this;
+        $query->offset(0)->limit($length);
+
+        while (true) {
+            $items = $query->getIterator($class, $args);
+
+            $count = 0;
+
+            foreach ($items as $item) {
+                $count++;
+                yield $item;
+            }
+
+            if ($count === 0 || $count < $length) {
+                break;
+            }
+        }
+    }
+
     /**
      * @template  T of Collection
      *
