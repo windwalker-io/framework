@@ -1870,6 +1870,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
     }
 
+    /**
+     * @template T of Collection
+     *
+     * @param  int                   $length
+     * @param  class-string<T>|null  $class
+     * @param  array                 $args
+     *
+     * @return  Generator<Collection<T>>
+     */
     public function iterateWhile(int $length, ?string $class = null, array $args = []): \Generator
     {
         $query = clone $this;
