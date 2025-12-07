@@ -71,7 +71,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $info = (array) curl_getinfo($ch);
 
         // Close the connection.
-        curl_close($ch);
+        unset($ch);
 
         $content->rewind();
 
