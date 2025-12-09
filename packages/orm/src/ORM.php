@@ -303,6 +303,13 @@ class ORM implements EventAwareInterface
         return $entity;
     }
 
+    public function unenergize(object $entity): static
+    {
+        $entity = $this->mapper($entity::class)->unenergize($entity);
+
+        return $this;
+    }
+
     /**
      * @template E
      *

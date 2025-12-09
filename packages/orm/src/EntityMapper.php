@@ -1550,7 +1550,7 @@ class EntityMapper implements EventAwareInterface
 
     public function unenergize(object $entity): static
     {
-        self::getObjectMetadata()->set($entity, 'entity.energized', false);
+        self::getObjectMetadata()->removeMetadata($entity);
 
         return $this;
     }
