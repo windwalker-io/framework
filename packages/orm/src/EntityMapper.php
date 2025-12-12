@@ -1778,6 +1778,10 @@ class EntityMapper implements EventAwareInterface
                 $value = $this->orm->getCaster()->castDateTime($value);
             }
 
+            if ($value instanceof \UnitEnum) {
+                $value = $this->orm->getCaster()->castEnum($value);
+            }
+
             if ($value instanceof \JsonSerializable) {
                 $value = $this->orm->getCaster()->castJsonSerializable($value);
             }

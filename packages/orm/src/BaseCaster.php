@@ -6,6 +6,8 @@ namespace Windwalker\ORM;
 
 use Windwalker\Database\DatabaseAdapter;
 
+use function Windwalker\unwrap_enum;
+
 /**
  * The BaseCaster class.
  */
@@ -70,5 +72,10 @@ class BaseCaster
         $this->dbTimezone = $dbTimezone;
 
         return $this;
+    }
+
+    public function castEnum(\UnitEnum $value): string|int
+    {
+        return unwrap_enum($value);
     }
 }

@@ -116,6 +116,10 @@ class EntityMetadata implements EventAwareInterface
             return false;
         }
 
+        if (is_string($object) && !class_exists($object)) {
+            return false;
+        }
+
         $class = new ReflectionClass($object);
 
         return $class->getAttributes(Table::class, ReflectionAttribute::IS_INSTANCEOF) !== [];
