@@ -130,6 +130,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public const string TYPE_CUSTOM = 'custom';
 
     public const ClausePosition PREPEND = ClausePosition::PREPEND;
+
     public const ClausePosition APPEND = ClausePosition::APPEND;
 
     protected ?string $type = self::TYPE_SELECT;
@@ -1649,8 +1650,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @param  string|null  $class
-     * @param  array        $args
+     * @param  string|null          $class
+     * @param  array                $args
      *
      * @return  object|Collection
      *
@@ -1837,6 +1838,148 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
+     * @template T of Collection
+     *
+     * Iterate and call DB every N times, every time get full items but yield item one by one, stop when no more items.
+     * This method can ensure no long connection to DB. You only need one level foreach to get every item.
+     *
+     * @param  int                   $length
+     * @param  class-string<T>|null  $class
+     * @param  array                 $args
+     *
+     * @return  Generator<Collection<T>>
+     */
+    public function iterateBatched(int $length, ?string $class = null, array $args = []): \Generator
+    {
+        $offset = 0;
+
+        while (true) {
+            $query = clone $this;
+            $query->offset($offset)->limit($length);
+
+            $items = $query->all($class, $args);
+
+            $count = 0;
+
+            foreach ($items as $item) {
+                $count++;
+                yield $item;
+            }
+
+            if ($count === 0 || $count < $length) {
+                break;
+            }
+
+            $offset += $length;
+        }
+    }
+
+    /**
+     * @template T of Collection
+     *
+     * Iterate and return chunks of items, every chunk will one time return full items.
+     * You need 2 level foreach to get every item.
+     *
+     * @param  int                   $length
+     * @param  class-string<T>|null  $class
+     * @param  array                 $args
+     *
+     * @return  Generator<Collection<T>>
+     */
+    public function iterateChunks(int $length, ?string $class = null, array $args = []): \Generator
+    {
+        $offset = 0;
+
+        while (true) {
+            $query = clone $this;
+            $query->offset($offset)->limit($length);
+
+            $items = $query->all($class, $args);
+
+            if (count($items) === 0) {
+                break;
+            }
+
+            yield $items;
+
+            if (count($items) < $length) {
+                break;
+            }
+
+            $offset += $length;
+        }
+    }
+
+    /**
+     * @template T of Collection
+     *
+     * Iterate and call DB N times, every time get innter iterator and yield items one by one, stop when no more items.
+     * This method will not offset or paginated, it will always start from 0.
+     * You must change the item state in the loop to avoid infinite loop.
+     *
+     * @param  int                   $length
+     * @param  class-string<T>|null  $class
+     * @param  array                 $args
+     *
+     * @return  Generator<T>
+     */
+    public function iterateWhile(int $length, ?string $class = null, array $args = []): \Generator
+    {
+        $query = clone $this;
+        $query->offset(0)->limit($length);
+
+        while (true) {
+            $items = $query->getIterator($class, $args);
+
+            $count = 0;
+
+            foreach ($items as $item) {
+                $count++;
+                yield $item;
+            }
+
+            if ($count === 0 || $count < $length) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @template T of Collection
+     *
+     * Iterate and call DB N times, every time get full items and yield items one by one to prevent long connections,
+     * stop when no more items.
+     * This method will not offset or paginated, it will always start from 0.
+     * You must change the item state in the loop to avoid infinite loop.
+     *
+     * @param  int                   $length
+     * @param  class-string<T>|null  $class
+     * @param  array                 $args
+     *
+     * @return  Generator<T>
+     */
+    public function iterateBatchWhile(int $length, ?string $class = null, array $args = []): \Generator
+    {
+        $query = clone $this;
+        $query->offset(0)->limit($length);
+
+        while (true) {
+            $items = $query->all($class, $args);
+
+            $count = 0;
+
+            foreach ($items as $item) {
+                $count++;
+                yield $item;
+            }
+
+            if ($count === 0 || $count < $length) {
+                break;
+            }
+        }
+    }
+
+    /**
      * @template  T of Collection
      *
      * @param  class-string<T>|null  $class
@@ -1859,6 +2002,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function getPaginatedIterator(?string $class = null, int $perPage = 500, array $args = []): PaginateIterator
     {
         $offset = $this->getOffset() ?? 0;
+
         // $leave = $this->getLimit();
 
         return new PaginateIterator(

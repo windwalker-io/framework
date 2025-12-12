@@ -92,4 +92,20 @@ trait ResponseTrait
     {
         throw $this->toException($className);
     }
+
+    /**
+     * @template T of class-string<\Exception>
+     *
+     * @param  string  $className
+     *
+     * @return  void
+     *
+     * @throws T
+     */
+    public function throwIfError(string $className = HttpRequestException::class): void
+    {
+        if ($this->isError()) {
+            throw $this->toException($className);
+        }
+    }
 }
