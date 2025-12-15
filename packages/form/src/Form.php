@@ -500,7 +500,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
                 $value = Arr::get($data, $field->getNamespaceName(true), '/');
             }
 
-            $results->addResult($name, $field->validate($value));
+            $results->addResult((string) $name, $field->validate($value));
         }
 
         return $results;
