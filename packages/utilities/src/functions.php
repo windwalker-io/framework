@@ -513,25 +513,30 @@ namespace Windwalker {
          */
         function get_object_dump_props(
             object|string $object,
-            ?int $filter = null
+            ?int $filter = null,
+            ?array &$ignores = []
         ): array {
             static $cache = [];
             $isObject = is_object($object);
             $key = ($isObject ? get_class($object) : $object) . '|' . $filter;
 
             if (isset($cache[$key])) {
-                return $cache[$key];
+                [$props, $ignores] = $cache[$key];
+
+                return $props;
             }
 
             $values = [];
 
             $ref = new \ReflectionClass($object);
             $props = $ref->getProperties($filter);
+            $ignores = [];
 
             foreach ($props as $prop) {
                 $name = $prop->getName();
 
                 if ($isObject && !$prop->isInitialized($object)) {
+                    $ignores[$prop->getName()] = $prop;
                     continue;
                 }
 
@@ -540,18 +545,22 @@ namespace Windwalker {
                         !($filter & \ReflectionProperty::IS_VIRTUAL)
                         && $prop->getAttributes(Expose::class, \ReflectionAttribute::IS_INSTANCEOF) === []
                     ) {
+                        $ignores[$prop->getName()] = $prop;
                         continue;
                     }
                 }
 
                 if ($prop->getAttributes(Transient::class, \ReflectionAttribute::IS_INSTANCEOF) !== []) {
+                    $ignores[$prop->getName()] = $prop;
                     continue;
                 }
 
                 $values[$name] = $prop;
             }
 
-            return $cache[$key] = $values;
+            $cache[$key] = [$values, $ignores];
+
+            return $values;
         }
     }
 
@@ -560,8 +569,23 @@ namespace Windwalker {
             object $object,
             ?int $filter = null
         ): array {
-            $props = get_object_dump_props($object, $filter);
+            static $cache = [];
+            $cacheKey = $object::class . '|' . ($filter ?? 'all');
+
+            if (isset($cache[$cacheKey])) {
+                [$props, $ignores] = $cache[$cacheKey];
+            } else {
+                $props = get_object_dump_props($object, $filter, $ignores);
+
+                $cache[$cacheKey] = [$props, $ignores];
+            }
+
             $vars = get_object_vars($object);
+
+            // Loop may a little faster than array_diff_key()
+            foreach ($ignores as $k => $v) {
+                unset($vars[$k]);
+            }
 
             foreach ($props as $name => $prop) {
                 if (array_key_exists($name, $vars)) {
