@@ -166,7 +166,7 @@ class EventEmitter extends EventDispatcher implements
      * @return  static
      * @throws ReflectionException
      */
-    public function off(string|EventInterface $event, $listenerOrSubscriber = null): static
+    public function off(string|EventInterface $event, callable|object|null $listenerOrSubscriber = null): static
     {
         $this->provider->off($event, $listenerOrSubscriber);
 
