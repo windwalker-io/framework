@@ -268,7 +268,7 @@ trait ORMProxyTrait
         mixed $conditions = null,
         ORMOptions|int $options = new ORMOptions()
     ): StatementInterface {
-        return $this->mapper($entityClass)->updateWhere($data, $conditions, $options);
+        return $this->mapper($entityClass)->updateBulk($data, $conditions, $options);
     }
 
     /**
