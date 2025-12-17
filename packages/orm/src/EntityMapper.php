@@ -720,9 +720,9 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * Using one data to update multiple rows, filter by where conditions.
+     * Update multiple rows in single SQL, without triggering events for each row.
      * Example:
-     * `$mapper->updateWhere(new Data(array('published' => 0)), array('date' => '2014-03-02'))`
+     * `$mapper->updateBulk(['published' => 0]), array('date' => '2014-03-02'))`
      * Means we make every records which date is 2014-03-02 unpublished.
      *
      * @param  mixed           $source      The data we want to update to every rows.
@@ -776,6 +776,8 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
+     * Find items and update them one by one to trigger events.
+     *
      * @param  array|object    $data
      * @param  Conditions      $conditions
      * @param  ORMOptions|int  $options
@@ -1012,6 +1014,14 @@ class EntityMapper implements EventAwareInterface
         return $item;
     }
 
+    /**
+     * Delete items in single SQL and not trigger events, be careful when using this.
+     *
+     * @param  mixed       $conditions
+     * @param  ORMOptions  $options
+     *
+     * @return  StatementInterface
+     */
     public function deleteBulk(mixed $conditions, ORMOptions $options = new ORMOptions()): StatementInterface
     {
         if (is_object($conditions) && EntityMetadata::isEntity($conditions)) {
@@ -1046,6 +1056,8 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
+     * Find items and delete them one by one to trigger events.
+     *
      * @param  Conditions      $conditions
      * @param  ORMOptions|int  $options
      *

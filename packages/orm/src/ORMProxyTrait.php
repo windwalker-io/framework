@@ -250,6 +250,18 @@ trait ORMProxyTrait
         return $this->updateBulk($entityClass, $data, $conditions, $options);
     }
 
+    /**
+     * Update items in single SQL and not trigger events, be careful when using this.
+     *
+     * @param  string          $entityClass
+     * @param  array|object    $data
+     * @param  mixed|null      $conditions
+     * @param  ORMOptions|int  $options
+     *
+     * @return  StatementInterface
+     *
+     * @throws \ReflectionException
+     */
     public function updateBulk(
         string $entityClass,
         array|object $data,
@@ -259,6 +271,18 @@ trait ORMProxyTrait
         return $this->mapper($entityClass)->updateWhere($data, $conditions, $options);
     }
 
+    /**
+     * Find items and update them one by one to trigger events.
+     *
+     * @param  string          $entityClass
+     * @param  array|object    $data
+     * @param  mixed|null      $conditions
+     * @param  ORMOptions|int  $options
+     *
+     * @return  array
+     *
+     * @throws \ReflectionException
+     */
     public function updateBatch(
         string $entityClass,
         array|object $data,
@@ -353,6 +377,17 @@ trait ORMProxyTrait
         return $this->mapper($entityClass)->updateOneOrCreate($item, $initData, $condFields, $options);
     }
 
+    /**
+     * Delete items in single SQL and not trigger events, be careful when using this.
+     *
+     * @param  string          $entityClass
+     * @param  mixed           $conditions
+     * @param  ORMOptions|int  $options
+     *
+     * @return  StatementInterface
+     *
+     * @throws \ReflectionException
+     */
     public function deleteBulk(
         string $entityClass,
         mixed $conditions,
@@ -372,6 +407,17 @@ trait ORMProxyTrait
         $this->deleteBatch($entityClass, $conditions, $options);
     }
 
+    /**
+     * Find items and delete them one by one to trigger events.
+     *
+     * @param  string          $entityClass
+     * @param  mixed           $conditions
+     * @param  ORMOptions|int  $options
+     *
+     * @return  void
+     *
+     * @throws \ReflectionException
+     */
     public function deleteBatch(
         string $entityClass,
         mixed $conditions,
