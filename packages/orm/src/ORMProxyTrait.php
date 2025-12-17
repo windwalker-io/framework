@@ -238,7 +238,19 @@ trait ORMProxyTrait
         return $this->mapper($entityClass)->updateMultiple($items, $condFields, $options);
     }
 
+    /**
+     * @deprecated  Use updateBulk() instead.
+     */
     public function updateWhere(
+        string $entityClass,
+        array|object $data,
+        mixed $conditions = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): StatementInterface {
+        return $this->updateBulk($entityClass, $data, $conditions, $options);
+    }
+
+    public function updateBulk(
         string $entityClass,
         array|object $data,
         mixed $conditions = null,
@@ -341,12 +353,31 @@ trait ORMProxyTrait
         return $this->mapper($entityClass)->updateOneOrCreate($item, $initData, $condFields, $options);
     }
 
+    public function deleteBulk(
+        string $entityClass,
+        mixed $conditions,
+        ORMOptions|int $options = new ORMOptions()
+    ): StatementInterface {
+        return $this->mapper($entityClass)->deleteBulk($conditions, $options);
+    }
+
+    /**
+     * @deprecated  Use deleteBatch() instead.
+     */
     public function deleteWhere(
         string $entityClass,
         mixed $conditions,
         ORMOptions|int $options = new ORMOptions()
     ): void {
-        $this->mapper($entityClass)->deleteWhere($conditions, $options);
+        $this->deleteBatch($entityClass, $conditions, $options);
+    }
+
+    public function deleteBatch(
+        string $entityClass,
+        mixed $conditions,
+        ORMOptions|int $options = new ORMOptions()
+    ): void {
+        $this->mapper($entityClass)->deleteBatch($conditions, $options);
     }
 
     /**

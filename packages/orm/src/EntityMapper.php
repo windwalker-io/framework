@@ -702,6 +702,24 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
+     * @param  mixed           $source      The data we want to update to every rows.
+     * @param  Conditions      $conditions  Where conditions, you can use array or Compare object.
+     * @param  ORMOptions|int  $options     The options.
+     *
+     * @return StatementInterface
+     * @throws \ReflectionException
+     *
+     * @deprecated  Use updateBulk() instead
+     */
+    public function updateWhere(
+        array|object $source,
+        mixed $conditions = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): StatementInterface {
+        return $this->updateBulk($source, $conditions, $options);
+    }
+
+    /**
      * Using one data to update multiple rows, filter by where conditions.
      * Example:
      * `$mapper->updateWhere(new Data(array('published' => 0)), array('date' => '2014-03-02'))`
@@ -714,7 +732,7 @@ class EntityMapper implements EventAwareInterface
      * @return StatementInterface
      * @throws \ReflectionException
      */
-    public function updateWhere(
+    public function updateBulk(
         array|object $source,
         mixed $conditions = null,
         ORMOptions|int $options = new ORMOptions()
@@ -994,6 +1012,39 @@ class EntityMapper implements EventAwareInterface
         return $item;
     }
 
+    public function deleteBulk(mixed $conditions, ORMOptions $options = new ORMOptions()): StatementInterface
+    {
+        if (is_object($conditions) && EntityMetadata::isEntity($conditions)) {
+            $conditions = Arr::only($this->extract($conditions), $this->getKeys());
+        }
+
+        $conditions = $this->conditionsToWheres($conditions);
+
+        // Event
+
+        $statement = $this->delete()
+            ->where($conditions)
+            ->execute();
+
+        // Event
+
+        return $statement;
+    }
+
+    /**
+     * @param  Conditions      $conditions
+     * @param  ORMOptions|int  $options
+     *
+     * @return  void
+     * @throws \ReflectionException
+     *
+     * @deprecated  Use deleteBatch() instead.
+     */
+    public function deleteWhere(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
+    {
+        $this->deleteBatch($conditions, $options);
+    }
+
     /**
      * @param  Conditions      $conditions
      * @param  ORMOptions|int  $options
@@ -1001,7 +1052,7 @@ class EntityMapper implements EventAwareInterface
      * @return  void
      * @throws \ReflectionException
      */
-    public function deleteWhere(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
+    public function deleteBatch(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
         $options = clone ORMOptions::wrap($options);
 
