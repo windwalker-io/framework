@@ -1847,7 +1847,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
-     * @return  Generator<Collection<T>>
+     * @return  Generator<T>
      */
     public function iterateBatched(int $length, ?string $class = null, array $args = []): \Generator
     {
