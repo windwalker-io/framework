@@ -407,6 +407,11 @@ trait ORMProxyTrait
         $this->deleteBatch($entityClass, $conditions, $options);
     }
 
+    public function deleteOne(string $entityClass, mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
+    {
+        $this->mapper($entityClass)->deleteOne($conditions, $options);
+    }
+
     /**
      * Find items and delete them one by one to trigger events.
      *

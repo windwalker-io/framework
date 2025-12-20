@@ -46,7 +46,6 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
-use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
@@ -1055,6 +1054,12 @@ class EntityMapper implements EventAwareInterface
         $this->deleteBatch($conditions, $options);
     }
 
+
+    public function deleteOne(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
+    {
+        $this->deleteItems($conditions, true, $options);
+    }
+
     /**
      * Find items and delete them one by one to trigger events.
      *
@@ -1062,10 +1067,17 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int  $options
      *
      * @return  void
-     * @throws \ReflectionException
      */
     public function deleteBatch(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
+        $this->deleteItems($conditions, false, $options);
+    }
+
+    protected function deleteItems(
+        mixed $conditions,
+        bool $once = false,
+        ORMOptions|int $options = new ORMOptions()
+    ): void {
         $options = clone ORMOptions::wrap($options);
 
         // Event
@@ -1158,6 +1170,10 @@ class EntityMapper implements EventAwareInterface
 
             if ($handleRelations) {
                 $metadata->getRelationManager()->delete($event->data, $entity);
+            }
+
+            if ($once) {
+                break;
             }
         }
         // Event
