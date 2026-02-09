@@ -19,13 +19,15 @@ class RedirectResponse extends Response
     /**
      * Constructor.
      *
-     * @param  string|Stringable  $uri      The redirect uri.
-     * @param  int                $status   The status code.
-     * @param  array              $headers  The custom headers.
+     * @param  string|Stringable|null  $uri      The redirect uri.
+     * @param  int                     $status   The status code.
+     * @param  array                   $headers  The custom headers.
      */
-    public function __construct(string|Stringable $uri, int $status = 303, array $headers = [])
+    public function __construct(string|Stringable|null $uri = null, int $status = 303, array $headers = [])
     {
-        $headers['location'] = [(string) $uri];
+        if ($uri !== null) {
+            $headers['location'] = [(string) $uri];
+        }
 
         parent::__construct(new NullStream(), $status, $headers);
     }
