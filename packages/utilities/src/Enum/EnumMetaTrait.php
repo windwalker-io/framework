@@ -19,14 +19,24 @@ trait EnumMetaTrait
 {
     public function getTitle(?LanguageInterface $lang = null, ...$args): string
     {
+        if ($lang) {
+            if (!method_exists($this, 'translateKey')) {
+                return $this->trans($lang, ...$args);
+            }
+
+            $langKey = $this->translateKey($this->name);
+
+            if ($lang->has($langKey)) {
+                return $this->trans($lang, ...$args);
+            }
+
+            // Pass to Title attribute if translation not exists.
+        }
+
         $attr = $this->getAttr(Title::class);
 
         if ($attr) {
             return $attr->toReadableString($lang, ...$args);
-        }
-
-        if ($lang) {
-            return $this->trans($lang, ...$args);
         }
 
         return '';
