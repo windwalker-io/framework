@@ -41,6 +41,7 @@ use Windwalker\Query\Concern\WhereConcernTrait;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
 use Windwalker\Query\Grammar\AbstractGrammar;
+use Windwalker\Query\Grammar\MySQLGrammar;
 use Windwalker\Query\Wrapper\FormatRawWrapper;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
@@ -1210,6 +1211,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public function onDuplicateKeyUpdate(array|callable $values): static
     {
+        if (!$this->getGrammar() instanceof MySQLGrammar) {
+            throw new \LogicException('ON DUPLICATE KEY UPDATE is only supported in MySQL Query.');
+        }
+
         $clauses = $this->clause('', glue: ', ');
 
         if (is_callable($values)) {
