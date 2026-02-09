@@ -125,6 +125,28 @@ class EntityMetadata implements EventAwareInterface
         return $class->getAttributes(Table::class, ReflectionAttribute::IS_INSTANCEOF) !== [];
     }
 
+    public function isSameEntity(string|object|array $object): bool
+    {
+        if (!static::isEntity($object)) {
+            return false;
+        }
+
+        return $object::class === $this->getClassName();
+    }
+
+    public function validateSameEntity(string|object|array $object): void
+    {
+        if (static::isEntity($object) && !$this->isSameEntity($object)) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'Expect entity of type %s, got %s.',
+                    $this->getClassName(),
+                    get_debug_type($object)
+                )
+            );
+        }
+    }
+
     public function setup(): static
     {
         if ($this->hasSetup) {

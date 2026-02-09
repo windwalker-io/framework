@@ -1220,15 +1220,24 @@ class EntityMapper implements EventAwareInterface
      * @throws \ReflectionException
      */
     public function copy(
-        mixed $conditions = [],
+        mixed $conditions,
         callable|iterable|null $newValue = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
         $options = clone ORMOptions::wrap($options);
 
-        $items = $this->findList($conditions, Collection::class);
-        $key = $this->getMainKey();
         $metadata = $this->getMetadata();
+
+        if (is_object($conditions)) {
+            $metadata->validateSameEntity($conditions);
+            $items = [$conditions];
+        } else {
+            $conditions = $this->conditionsToWheres($conditions);
+
+            $items = $this->findList($conditions, Collection::class);
+        }
+
+        $key = $this->getMainKey();
         $source = $conditions;
 
         $creates = [];
@@ -1246,7 +1255,7 @@ class EntityMapper implements EventAwareInterface
                 if ($result) {
                     $data = $result;
                 }
-            } else {
+            } elseif (is_iterable($newValue)) {
                 foreach ($newValue as $field => $value) {
                     if ($value !== null) {
                         $data[$field] = $value;
@@ -1287,6 +1296,32 @@ class EntityMapper implements EventAwareInterface
         }
 
         return $creates;
+    }
+
+    /**
+     * @param  mixed                   $conditions
+     * @param  callable|iterable|null  $newValue
+     * @param  ORMOptions|int          $options
+     *
+     * @return  T
+     *
+     * @throws JsonException
+     * @throws \ReflectionException
+     */
+    public function copyOne(
+        mixed $conditions,
+        callable|iterable|null $newValue = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): ?object {
+        $metadata = $this->getMetadata();
+
+        if (is_object($conditions)) {
+            $metadata->validateSameEntity($conditions);
+        }
+
+        $copied = $this->copy($conditions, $newValue, $options);
+
+        return $copied[0] ?? null;
     }
 
     /**
