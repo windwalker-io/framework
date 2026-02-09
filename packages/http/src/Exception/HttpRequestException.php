@@ -23,7 +23,7 @@ class HttpRequestException extends UnexpectedValueException
 
     public function withResponse(ResponseInterface $response): static
     {
-        $new = clone $this;
+        $new = new static($this->getMessage(), $this->getCode(), $this);
         $new->response = $response;
 
         return $new;
