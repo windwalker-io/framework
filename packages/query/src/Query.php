@@ -1678,11 +1678,22 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function mustGet(?string $class = null, array $args = []): object
     {
-        return $this->get($class, $args)
-            ?? throw new NoResultException(
-                TypeCast::tryString($this->getFrom()),
+        $item = $this->get($class, $args);
+
+        if ($item === null) {
+            $from = $this->getFrom();
+
+            if ($from && $from->elements[0] instanceof AsClause) {
+                $from = static::convertClassToTable($from->elements[0]->getValue());
+            }
+
+            throw new NoResultException(
+                TypeCast::tryString($from),
                 $this
             );
+        }
+
+        return $item;
     }
 
     public function mustGetResult(): mixed
