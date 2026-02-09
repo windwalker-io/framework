@@ -1111,17 +1111,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    /**
-     * @param  string|array  $prefix
-     * @param  mixed         ...$args
-     *
-     * @return  static
-     */
-    public function prefix(array|string $prefix, ...$args): static
+    public function prefix(array|string|ClauseInterface $prefix, ...$args): static
     {
         if (is_array($prefix)) {
             foreach ($prefix as $values) {
-                if (is_string($values)) {
+                if (!is_array($values)) {
                     $this->prefix($values);
                 } else {
                     $this->prefix(...$values);
@@ -1144,19 +1138,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    /**
-     * suffix
-     *
-     * @param  string|array  $suffix
-     * @param  mixed         ...$args
-     *
-     * @return  static
-     */
-    public function suffix(array|string $suffix, ...$args): static
+    public function suffix(array|string|ClauseInterface $suffix, ...$args): static
     {
         if (is_array($suffix)) {
             foreach ($suffix as $values) {
-                if (is_string($values)) {
+                if (!is_array($values)) {
                     $this->suffix($values);
                 } else {
                     $this->suffix(...$values);
@@ -1220,6 +1206,32 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function forShare(?string $do = null): static
     {
         return $this->rowLock('SHARE', $do);
+    }
+
+    public function onDuplicateKeyUpdate(array|callable $values): static
+    {
+        $clauses = $this->clause('', glue: ', ');
+
+        if (is_callable($values)) {
+            $subQuery = $values($subQuery = $this->createSubQuery()) ?? $subQuery;
+
+            $clauses->append($subQuery->set->elements);
+            $this->injectSubQuery($subQuery);
+        } else {
+            foreach ($values as $k => $value) {
+                $this->bind(null, $value = $this->val($value));
+                $clauses->append($this->clause($k, ['=', $value]));
+            }
+        }
+
+        $this->suffix(
+            [
+                'ON DUPLICATE KEY UPDATE',
+                $clauses
+            ]
+        );
+
+        return $this;
     }
 
     /**

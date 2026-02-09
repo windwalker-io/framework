@@ -173,15 +173,25 @@ class ORM implements EventAwareInterface
             return $this->mapper($tables)->from($tables, $alias);
         }
 
-        return $this->createSelectorQuery()->from($tables, $alias);
+        return $this->createQuery()->from($tables, $alias);
     }
 
     public function select(...$columns): SelectorQuery
     {
-        return $this->createSelectorQuery()->select(...$columns);
+        return $this->createQuery()->select(...$columns);
     }
 
-    protected function createSelectorQuery(): SelectorQuery
+    public function selectRaw(mixed $column, ...$args): SelectorQuery
+    {
+        return $this->createQuery()->selectRaw($column, ...$args);
+    }
+
+    public function createBaseQuery(): Query
+    {
+        return $this->getDb()->createQuery();
+    }
+
+    public function createQuery(): SelectorQuery
     {
         return new SelectorQuery($this);
     }
@@ -192,7 +202,7 @@ class ORM implements EventAwareInterface
             return $this->mapper($table)->insert($incrementField);
         }
 
-        return $this->createSelectorQuery()->insert($table, $incrementField);
+        return $this->createQuery()->insert($table, $incrementField);
     }
 
     public function update(string $table, ?string $alias = null): Query
@@ -201,7 +211,7 @@ class ORM implements EventAwareInterface
             return $this->mapper($table)->update($alias);
         }
 
-        return $this->createSelectorQuery()->update($table, $alias);
+        return $this->createQuery()->update($table, $alias);
     }
 
     public function delete(string $table, ?string $alias = null): Query
@@ -210,7 +220,7 @@ class ORM implements EventAwareInterface
             return $this->mapper($table)->delete($alias);
         }
 
-        return $this->createSelectorQuery()->delete($table, $alias);
+        return $this->createQuery()->delete($table, $alias);
     }
 
     public function prepareRelations(object $entity): object

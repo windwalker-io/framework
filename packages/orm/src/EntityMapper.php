@@ -1054,7 +1054,6 @@ class EntityMapper implements EventAwareInterface
         $this->deleteBatch($conditions, $options);
     }
 
-
     public function deleteOne(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
         $this->deleteItems($conditions, true, $options);
