@@ -444,7 +444,7 @@ trait ORMProxyTrait
     public function flush(
         string $entityClass,
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ORMOptions|int $options = new ORMOptions()
     ): iterable {
         return $this->mapper($entityClass)->flush($items, $conditions, $options);
@@ -464,7 +464,7 @@ trait ORMProxyTrait
     public function sync(
         string $entityClass,
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ?array $compareKeys = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {

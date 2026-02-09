@@ -1190,7 +1190,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function flush(
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ORMOptions|int $options = new ORMOptions()
     ): iterable {
         $options = clone ORMOptions::wrap($options);
@@ -1302,7 +1302,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function sync(
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ?array $compareKeys = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
@@ -1334,7 +1334,7 @@ class EntityMapper implements EventAwareInterface
 
         // Delete
         foreach ($delItems as $k => $delItem) {
-            $this->deleteWhere(
+            $this->deleteBatch(
                 $this->conditionsToWheres(Arr::only($delItem, $compareKeys)),
                 $options
             );
