@@ -151,7 +151,9 @@ trait EnumMetaTrait
 
             $case = $ref->getCase($this->name);
 
-            return $attrs[$this->value][$attr]
+            $key = $this instanceof \BackedEnum ? $this->value : $this->name;
+
+            return $attrs[$key][$attr]
                 ??= AttributesAccessor::getFirstAttributeInstance($case, $attr);
         }
 
