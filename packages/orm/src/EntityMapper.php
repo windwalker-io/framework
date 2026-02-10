@@ -735,7 +735,7 @@ class EntityMapper implements EventAwareInterface
         array|object $source,
         mixed $conditions = null,
         ORMOptions|int $options = new ORMOptions()
-    ): StatementInterface {
+    ): ?StatementInterface {
         $options = clone ORMOptions::wrap($options);
         $metadata = $this->getMetadata();
 
@@ -771,7 +771,7 @@ class EntityMapper implements EventAwareInterface
             )
         );
 
-        return $event->statement;
+        return $event->statement ?? null;
     }
 
     /**
