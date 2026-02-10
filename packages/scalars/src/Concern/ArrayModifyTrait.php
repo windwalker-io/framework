@@ -26,7 +26,7 @@ trait ArrayModifyTrait
      */
     public function pad(int $size, mixed $value): static
     {
-        return $this->newInstance(array_pad($this->storage, $size, $value));
+        return $this->newInstance(array_pad($this->storage, $size, $this->preprocessItem($value)));
     }
 
     /**
@@ -94,6 +94,8 @@ trait ArrayModifyTrait
      */
     public function push(mixed ...$value): int
     {
+        $value = array_map($this->preprocessItem(...), $value);
+
         return array_push($this->storage, ...$value);
     }
 
@@ -108,39 +110,39 @@ trait ArrayModifyTrait
      */
     public function unshift(mixed ...$value): int
     {
+        $value = array_map($this->preprocessItem(...), $value);
+
         return array_unshift($this->storage, ...$value);
     }
 
     /**
-     * concat
-     *
-     * @param  mixed  ...$args
+     * @param  mixed  ...$value
      *
      * @return  static
      *
      * @since  3.5.13
      */
-    public function append(mixed ...$args): static
+    public function append(mixed ...$value): static
     {
         $new = $this->storage;
-        array_push($new, ...$args);
+        $value = array_map($this->preprocessItem(...), $value);
+        array_push($new, ...$value);
 
         return $this->newInstance($new);
     }
 
     /**
-     * concatStart
-     *
-     * @param  mixed  ...$args
+     * @param  mixed  ...$value
      *
      * @return  static
      *
      * @since  3.5.13
      */
-    public function prepend(mixed ...$args): static
+    public function prepend(mixed ...$value): static
     {
         $new = $this->storage;
-        array_unshift($new, ...$args);
+        $value = array_map($this->preprocessItem(...), $value);
+        array_unshift($new, ...$value);
 
         return $this->newInstance($new);
     }
@@ -174,8 +176,6 @@ trait ArrayModifyTrait
     }
 
     /**
-     * replace
-     *
      * @param  array[]|static[]  ...$args
      *
      * @return  static
@@ -242,9 +242,15 @@ trait ArrayModifyTrait
      *
      * @since  3.5
      */
-    public function splice(int $offset, ?int $length = null, $replacement = null): static
+    public function splice(int $offset, ?int $length = null, mixed $replacement = null): static
     {
-        return $this->newInstance(array_splice($this->storage, ...func_get_args()));
+        $args = func_get_args();
+
+        if (count($args) === 3) {
+            $args[2] = $this->preprocessItem($args[2]);
+        }
+
+        return $this->newInstance(array_splice($this->storage, ...$args));
     }
 
     /**
@@ -257,7 +263,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5
      */
-    public function insertAfter(int $key, ...$args): static|ArrayModifyTrait
+    public function insertAfter(int $key, ...$args): static
     {
         $new = clone $this;
 
@@ -403,7 +409,7 @@ trait ArrayModifyTrait
         $new = clone $this;
 
         foreach ($args as $arg) {
-            $new->storage += TypeCast::toArray($arg);
+            $new->storage += array_map($this->preprocessItem(...), TypeCast::toArray($arg));
         }
 
         return $new;

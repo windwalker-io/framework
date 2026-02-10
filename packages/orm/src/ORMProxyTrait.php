@@ -444,7 +444,7 @@ trait ORMProxyTrait
     public function flush(
         string $entityClass,
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ORMOptions|int $options = new ORMOptions()
     ): iterable {
         return $this->mapper($entityClass)->flush($items, $conditions, $options);
@@ -464,7 +464,7 @@ trait ORMProxyTrait
     public function sync(
         string $entityClass,
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ?array $compareKeys = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
@@ -483,12 +483,46 @@ trait ORMProxyTrait
      * @throws \ReflectionException
      */
     public function copy(
-        string $entityClass,
-        mixed $conditions = [],
+        string|object $entityClass,
+        mixed $conditions = null,
         callable|iterable|null $newValue = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
+        if (is_object($entityClass)) {
+            $conditions = $entityClass;
+            $entityClass = $entityClass::class;
+        } elseif ($conditions === null) {
+            throw new \InvalidArgumentException('Conditions cannot be empty for copy item.');
+        }
+
         return $this->mapper($entityClass)->copy($conditions, $newValue, $options);
+    }
+
+    /**
+     * @template T
+     *
+     * @param  class-string<T>  $entityClass
+     * @param  Conditions       $conditions
+     *
+     * @return  T|null
+     *
+     * @throws \JsonException
+     * @throws \ReflectionException
+     */
+    public function copyOne(
+        string|object $entityClass,
+        mixed $conditions = null,
+        callable|iterable|null $newValue = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): ?object {
+        if (is_object($entityClass)) {
+            $conditions = $entityClass;
+            $entityClass = $entityClass::class;
+        } elseif ($conditions === null) {
+            throw new \InvalidArgumentException('Conditions cannot be empty for copy item.');
+        }
+
+        return $this->mapper($entityClass)->copyOne($conditions, $newValue, $options);
     }
 
     public function increment(

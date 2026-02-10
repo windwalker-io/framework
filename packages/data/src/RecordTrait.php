@@ -124,6 +124,16 @@ trait RecordTrait
 
     public function with(...$data): static
     {
+        if (PHP_VERSION_ID >= 80500) {
+            include_once __DIR__ . '/clone_with.php';
+
+            return cloneWithPolyfill($this, $data);
+        }
+
+        if (method_exists($this, 'cloneWith')) {
+            return $this->cloneWith($data);
+        }
+
         $new = clone $this;
 
         return $new->fill($data);

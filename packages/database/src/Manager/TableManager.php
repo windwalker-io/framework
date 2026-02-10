@@ -90,12 +90,20 @@ class TableManager extends AbstractMetaManager
                 $this->dropIndex($index->indexName);
             }
 
+            if ($this->hasConstraint($index->indexName)) {
+                $this->dropConstraint($index->indexName);
+            }
+
             $this->addIndex($index);
         }
 
         foreach ($schema->getConstraints() as $constraint) {
             if ($this->hasConstraint($constraint->constraintName)) {
                 $this->dropConstraint($constraint->constraintName);
+            }
+
+            if ($this->hasIndex($constraint->constraintName)) {
+                $this->dropIndex($constraint->constraintName);
             }
 
             $this->addConstraint($constraint);
@@ -428,7 +436,7 @@ class TableManager extends AbstractMetaManager
         $platform = $this->getPlatform();
 
         foreach ((array) $names as $name) {
-            if (!$this->hasIndex($name)) {
+            if ($this->hasIndex($name)) {
                 $platform->dropIndex($this->getName(), $name, $this->schemaName);
             }
         }

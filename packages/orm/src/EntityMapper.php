@@ -1054,7 +1054,6 @@ class EntityMapper implements EventAwareInterface
         $this->deleteBatch($conditions, $options);
     }
 
-
     public function deleteOne(mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
         $this->deleteItems($conditions, true, $options);
@@ -1190,7 +1189,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function flush(
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ORMOptions|int $options = new ORMOptions()
     ): iterable {
         $options = clone ORMOptions::wrap($options);
@@ -1220,15 +1219,24 @@ class EntityMapper implements EventAwareInterface
      * @throws \ReflectionException
      */
     public function copy(
-        mixed $conditions = [],
+        mixed $conditions,
         callable|iterable|null $newValue = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
         $options = clone ORMOptions::wrap($options);
 
-        $items = $this->findList($conditions, Collection::class);
-        $key = $this->getMainKey();
         $metadata = $this->getMetadata();
+
+        if (is_object($conditions)) {
+            $metadata->validateSameEntity($conditions);
+            $items = [$conditions];
+        } else {
+            $conditions = $this->conditionsToWheres($conditions);
+
+            $items = $this->findList($conditions, Collection::class);
+        }
+
+        $key = $this->getMainKey();
         $source = $conditions;
 
         $creates = [];
@@ -1246,7 +1254,7 @@ class EntityMapper implements EventAwareInterface
                 if ($result) {
                     $data = $result;
                 }
-            } else {
+            } elseif (is_iterable($newValue)) {
                 foreach ($newValue as $field => $value) {
                     if ($value !== null) {
                         $data[$field] = $value;
@@ -1290,6 +1298,32 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
+     * @param  mixed                   $conditions
+     * @param  callable|iterable|null  $newValue
+     * @param  ORMOptions|int          $options
+     *
+     * @return  T
+     *
+     * @throws JsonException
+     * @throws \ReflectionException
+     */
+    public function copyOne(
+        mixed $conditions,
+        callable|iterable|null $newValue = null,
+        ORMOptions|int $options = new ORMOptions()
+    ): ?object {
+        $metadata = $this->getMetadata();
+
+        if (is_object($conditions)) {
+            $metadata->validateSameEntity($conditions);
+        }
+
+        $copied = $this->copy($conditions, $newValue, $options);
+
+        return $copied[0] ?? null;
+    }
+
+    /**
      * @param  iterable        $items
      * @param  Conditions      $conditions
      * @param  array|null      $compareKeys
@@ -1302,7 +1336,7 @@ class EntityMapper implements EventAwareInterface
      */
     public function sync(
         iterable $items,
-        mixed $conditions = [],
+        mixed $conditions,
         ?array $compareKeys = null,
         ORMOptions|int $options = new ORMOptions()
     ): array {
@@ -1334,7 +1368,7 @@ class EntityMapper implements EventAwareInterface
 
         // Delete
         foreach ($delItems as $k => $delItem) {
-            $this->deleteWhere(
+            $this->deleteBatch(
                 $this->conditionsToWheres(Arr::only($delItem, $compareKeys)),
                 $options
             );

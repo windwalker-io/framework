@@ -29,8 +29,14 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
         get => $this->entityMapper->toEntity($this->data);
     }
 
-    public object $oldEntity {
-        get => $this->entityMapper->tryEntity($this->oldData);
+    public ?object $oldEntity {
+        get {
+            if ($this->isCreate) {
+                return null;
+            }
+
+            return $this->entityMapper->tryEntity($this->oldData);
+        }
     }
 
     public function __construct(

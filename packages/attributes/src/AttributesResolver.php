@@ -167,7 +167,7 @@ class AttributesResolver extends ObjectBuilder
 
         $closure = $ref->getClosure();
 
-        if ($context) {
+        if ($context && !$funcRef->isStatic()) {
             $closure = $closure->bindTo($context, $context);
         }
 

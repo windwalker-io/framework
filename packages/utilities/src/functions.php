@@ -516,6 +516,7 @@ namespace Windwalker {
             ?int $filter = null,
             ?array &$ignores = []
         ): array {
+            /** @var array[] $cache */
             static $cache = [];
             $isObject = is_object($object);
             $key = ($isObject ? get_class($object) : $object) . '|' . $filter;
@@ -534,11 +535,6 @@ namespace Windwalker {
 
             foreach ($props as $prop) {
                 $name = $prop->getName();
-
-                if ($isObject && !$prop->isInitialized($object)) {
-                    $ignores[$prop->getName()] = $prop;
-                    continue;
-                }
 
                 if ($prop->isProtected() || $prop->isPrivate() || $prop->isVirtual()) {
                     if (
@@ -569,6 +565,7 @@ namespace Windwalker {
             object $object,
             ?int $filter = null
         ): array {
+            /** @var array[] $cache */
             static $cache = [];
             $cacheKey = $object::class . '|' . ($filter ?? 'all');
 
@@ -589,6 +586,10 @@ namespace Windwalker {
 
             foreach ($props as $name => $prop) {
                 if (array_key_exists($name, $vars)) {
+                    continue;
+                }
+
+                if (!$prop->isInitialized($object)) {
                     continue;
                 }
 

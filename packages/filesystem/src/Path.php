@@ -406,7 +406,7 @@ class Path
      * @param  string  $file        The name of the file [not full path]
      * @param  array   $stripChars  Array of regex (by default will remove any leading periods)
      *
-     * @return  string  The sanitised string
+     * @return  string  The sanitized string
      *
      * @since   2.0
      */
@@ -536,6 +536,21 @@ class Path
         }
 
         return static::normalize($base . '/' . $path);
+    }
+
+    public static function makeSafeAbsolute(string $path, string $base, bool $allowDots = false): string
+    {
+        if (!$allowDots && str_contains($path, '..')) {
+            throw new FilesystemException('Invalid path.');
+        }
+
+        $fullPath = static::makeAbsolute($path, $base);
+
+        if (!static::isChild($fullPath, $base)) {
+            throw new FilesystemException('Invalid path.');
+        }
+
+        return $fullPath;
     }
 
     /**
