@@ -147,14 +147,14 @@ class RequestBaseUri extends Uri implements \JsonSerializable
         if (!preg_match('#^[a-z]+\://#i', $url)) {
             // We just need the prefix since we have a path relative to the root.
             if (str_starts_with($url, '/')) {
-                $url = $this->addPrefix(
+                $url = static::addPrefix(
                     $url,
                     $full
                         ? $this->toString(Uri::FULL_HOST)
                         : ''
                 );
             } else {
-                $url = $this->addPrefix(
+                $url = static::addPrefix(
                     $url,
                     $full
                         ? $this->toString(Uri::FULL_HOST | Uri::PATH)
@@ -166,7 +166,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
         return $url;
     }
 
-    public function addPrefix(string $url, string $prefix = '/'): string
+    public static function addPrefix(string $url, string $prefix = '/'): string
     {
         return rtrim($prefix, '/') . Str::ensureLeft($url, '/');
     }
