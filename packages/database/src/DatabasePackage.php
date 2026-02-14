@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Windwalker\Database;
 
 use Monolog\Handler\AbstractHandler;
-use Monolog\Handler\Handler;
-use Monolog\Handler\HandlerWrapper;
 use Monolog\Logger;
 use Monolog\LogRecord;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Windwalker\Core\Application\ApplicationInterface;
 use Windwalker\Core\Application\AppType;
-use Windwalker\Core\CliServer\CliServerClient;
 use Windwalker\Core\CliServer\CliServerRuntime;
+use Windwalker\Core\Console\ConsoleApplication;
 use Windwalker\Core\Database\DatabaseExportService;
 use Windwalker\Core\Factory\DatabaseServiceFactory;
 use Windwalker\Core\Manager\DatabaseManager;
@@ -25,7 +24,6 @@ use Windwalker\DI\Container;
 use Windwalker\DI\DIOptions;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\ORM\ORM;
-use Windwalker\Pool\PoolInterface;
 use Windwalker\Pool\PoolOptions;
 use Windwalker\Pool\Stack\SingleStack;
 use Windwalker\Pool\Stack\SwooleStack;
@@ -86,14 +84,22 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
                     // Instant get ORM to init some extends and listeners.
                     $container->get(ORM::class, tag: $tag);
 
+                    if ($this->app instanceof ConsoleApplication) {
+                        $this->app->on(
+                            ConsoleCommandEvent::class,
+                            function (ConsoleCommandEvent $event) use ($db) {
+                                $db->getDriver()->options->debug = $event->getOutput()->isVerbose();
+                            }
+                        );
+                    }
+
                     return $db;
                 }
             );
 
         $container->bindShared(
             ORM::class,
-            fn(Container $container, ?string $tag = null)
-                => $container->get(DatabaseAdapter::class, tag: $tag)->orm(),
+            fn(Container $container, ?string $tag = null) => $container->get(DatabaseAdapter::class, tag: $tag)->orm(),
             $options
         );
 
@@ -132,7 +138,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
                 $pool
             );
 
-            $pool->setConnectionBuilder(fn () => $driver->createConnection());
+            $pool->setConnectionBuilder(fn() => $driver->createConnection());
             $pool->init();
 
             $this->app->log("  Connections created, count: " . $pool->count());
@@ -179,6 +185,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
                     [],
                     $record->level->toPsrLogLevel()
                 );
+
                 return true;
             }
         };

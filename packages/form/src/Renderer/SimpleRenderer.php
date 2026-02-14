@@ -17,7 +17,7 @@ class SimpleRenderer implements FormRendererInterface
      */
     public function renderField(AbstractField $field, HTMLElement $wrapper, array $options = []): string
     {
-        return (string) $field->buildWrapper($wrapper, $options);
+        return (string) $field->compileWrapperElement($wrapper, $options);
     }
 
     /**
