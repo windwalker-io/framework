@@ -267,7 +267,7 @@ trait ORMProxyTrait
         array|object $data,
         mixed $conditions = null,
         ORMOptions|int $options = new ORMOptions()
-    ): StatementInterface {
+    ): ?StatementInterface {
         return $this->mapper($entityClass)->updateBulk($data, $conditions, $options);
     }
 
