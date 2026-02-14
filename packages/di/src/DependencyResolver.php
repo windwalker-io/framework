@@ -18,6 +18,7 @@ use TypeError;
 use UnexpectedValueException;
 use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Attributes\Factory;
+use Windwalker\DI\Attributes\NoAutowire;
 use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
@@ -334,6 +335,8 @@ class DependencyResolver
         $autowire = $options->autowire;
         $nope = null;
 
+        $noAutowire = $param->getAttributes(NoAutowire::class) !== [];
+
         $type = $param->getType();
         // $dependencyVarName = $param->getName();
 
@@ -372,6 +375,10 @@ class DependencyResolver
             if (array_key_exists($dependencyClassName, $args)) {
                 // If an arg provided, use it.
                 return $args[$dependencyClassName];
+            }
+
+            if ($noAutowire) {
+                continue;
             }
 
             $create = function &() use (
