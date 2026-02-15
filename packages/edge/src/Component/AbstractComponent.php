@@ -250,7 +250,7 @@ abstract class AbstractComponent
 
         $this->getComponentAttributes();
 
-        $this->attributes->merge($attributes);
+        $this->attributes->merge($attributes, false);
 
         return $this;
     }
