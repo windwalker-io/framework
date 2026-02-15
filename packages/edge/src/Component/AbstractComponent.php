@@ -240,7 +240,7 @@ abstract class AbstractComponent
      *
      * @return static
      *
-     * @deprecated  5.0 Use new method to merge attributes.
+     * @deprecated  5.0 This method is not immutable, use new method to merge attributes.
      */
     public function withAttributes(array $attributes, array|ComponentAttributes $binding = []): static
     {
@@ -248,14 +248,18 @@ abstract class AbstractComponent
         //     $binding = $binding->getAttributes();
         // }
 
-        $this->attributes = $this->attributes ?: $this->newAttributeBag();
+        $this->getComponentAttributes();
 
-        $this->attributes->setAttributes(
-            [
-                ...$this->attributes->getAttributes(),
-                ...$attributes
-            ]
-        );
+        $this->attributes->merge($attributes);
+
+        return $this;
+    }
+
+    public function mergeAttributes(array $attributes): static
+    {
+        $this->getComponentAttributes();
+
+        $this->attributes = $this->attributes->withMerge($attributes);
 
         return $this;
     }

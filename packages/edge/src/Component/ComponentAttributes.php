@@ -253,7 +253,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
             }
         }
 
-        return $this->merge(['class' => implode(' ', $classes)]);
+        return $this->withMerge(['class' => implode(' ', $classes)]);
     }
 
     /**
@@ -264,7 +264,12 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return static
      */
-    public function merge(array $attributeDefaults = [], bool $escape = true)
+    public function withMerge(array $attributeDefaults = [], bool $escape = true): static
+    {
+        return (clone $this)->merge($attributeDefaults, $escape);
+    }
+
+    public function merge(array $attributeDefaults = [], bool $escape = true): static
     {
         $attributeDefaults = array_map(
             function ($value) use ($escape) {
@@ -296,7 +301,9 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
             }
         )->merge($nonAppendableAttributes)->dump();
 
-        return new static(array_merge($attributeDefaults, $attributes));
+        $this->attributes = array_merge($attributeDefaults, $attributes);
+
+        return $this;
     }
 
     /**
@@ -377,7 +384,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
 
             unset($attributes['attributes']);
 
-            $attributes = $parentBag->merge($attributes, $escape = false)->getAttributes();
+            $attributes = $parentBag->withMerge($attributes, $escape = false)->getAttributes();
         }
 
         $this->attributes = $attributes;
@@ -402,7 +409,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      */
     public function __invoke(array $attributeDefaults = []): string
     {
-        return (string) $this->merge($attributeDefaults);
+        return (string) $this->withMerge($attributeDefaults);
     }
 
     /**

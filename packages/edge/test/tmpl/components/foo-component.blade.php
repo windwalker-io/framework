@@ -9,7 +9,7 @@ use Windwalker\Edge\Component\ComponentAttributes;
 ?>
 @props(['type' => 'info', 'message' => 'unknown message'])
 
-<div id="foo" {!! $attributes->merge(['class' => 'alert alert-' . $type]) !!}>
+<div id="foo" {!! $attributes->withMerge(['class' => 'alert alert-' . $type]) !!}>
     Foo Component: {{ $type }} - Message: {{ $message }}
 
     {!! $slot() !!}
