@@ -10,10 +10,14 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 use function Windwalker\unwrap_enum;
 
 /**
- * The ValueCaluse class.
+ * The ValueClause class.
+ *
+ * @internal
  */
 class ValueClause implements ClauseInterface
 {
+    public static int $serial = 0;
+
     /**
      * @var string|mixed|Query
      */
@@ -22,9 +26,13 @@ class ValueClause implements ClauseInterface
     /**
      * @var string|null
      */
-    protected ?string $placeholder = null;
+    public protected(set) ?string $prefix = 'wqp__';
 
     protected bool $linked = false;
+
+    public int $id {
+        get => spl_object_id($this);
+    }
 
     /**
      * AsClause constructor.
@@ -33,6 +41,7 @@ class ValueClause implements ClauseInterface
      */
     public function __construct(mixed $value)
     {
+        // $this->id = ++static::$serial;
         $this->value = unwrap_enum($value);
     }
 
@@ -55,7 +64,7 @@ class ValueClause implements ClauseInterface
 
     public function getPlaceholder(): string
     {
-        return $this->placeholder ? ':' . ltrim($this->placeholder, ':') : '?';
+        return $this->prefix ? ':' . $this->prefix . $this->id : '?';
     }
 
     /**
@@ -87,20 +96,6 @@ class ValueClause implements ClauseInterface
     }
 
     /**
-     * Method to set property placeholder
-     *
-     * @param  string|null  $placeholder
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setPlaceholder(?string $placeholder): static
-    {
-        $this->placeholder = $placeholder;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isLinked(): bool
@@ -116,6 +111,13 @@ class ValueClause implements ClauseInterface
     public function setLinked(bool $linked): static
     {
         $this->linked = $linked;
+
+        return $this;
+    }
+
+    public function setPrefix(?string $prefix): static
+    {
+        $this->prefix = $prefix;
 
         return $this;
     }

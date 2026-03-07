@@ -24,7 +24,6 @@ use Windwalker\ORM\ORM;
 use Windwalker\Query\Bounded\BindableInterface;
 use Windwalker\Query\Bounded\BindableTrait;
 use Windwalker\Query\Bounded\BoundedHelper;
-use Windwalker\Query\Bounded\BoundedSequence;
 use Windwalker\Query\Clause\AlterClause;
 use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
@@ -179,8 +178,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected ?string $alias = null;
 
     protected ?string $sql = null;
-
-    protected ?BoundedSequence $sequence = null;
 
     protected ?Escaper $escaper = null;
 
@@ -1454,11 +1451,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this->render();
     }
 
-    public function render(bool $emulatePrepared = false, ?array &$bounded = []): string
+    public function render(bool $emulatePrepared = false, ?array &$bounded = null): string
     {
-        $bounded = $bounded ?? [];
-
-        $topLevel = !$this->sequence;
+        $topLevel = $bounded === null;
 
         // Only top level query rendering should create sequence and get merged bounded
         if ($topLevel) {
@@ -1493,9 +1488,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $sql = BoundedHelper::emulatePrepared($this->getEscaper(), $sql, $bounded);
         }
 
-        // Clear sequence so that next time rendering should re-create new one
-        $this->sequence = null;
-
         return $sql;
     }
 
@@ -1529,12 +1521,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public function forPDO(?array &$bounded = []): string
+    public function forPDO(?array &$bounded = null): string
     {
-        $bounded = $bounded ?: [];
-
         // Only top level query rendering should create sequence and get merged bounded
-        if (!$this->sequence) {
+        if ($bounded === null) {
             $bounded = $this->mergeBounded();
         }
 
@@ -1547,17 +1537,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public function getMergedBounded(): array
     {
-        $bounded = $this->mergeBounded();
-
-        $this->sequence = null;
-
-        return $bounded;
+        return $this->mergeBounded();
     }
 
-    private function mergeBounded(?BoundedSequence $sequence = null): array
+    private function mergeBounded(): array
     {
-        $this->sequence = $sequence = $sequence ?: new BoundedSequence('wqp__');
-
         $all = [];
         $bounded = [];
 
@@ -1565,7 +1549,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
         foreach ($params as $key => $param) {
             if ($param['value'] instanceof ValueClause) {
-                $param['value']->setPlaceholder($sequence->get());
                 $key = $param['value']->getPlaceholder();
 
                 // Pre-set every ValueClause to unlinked.
@@ -1580,7 +1563,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $all[] = $bounded;
 
         foreach ($this->getSubQueries() as $subQuery) {
-            $all[] = $subQuery->mergeBounded($sequence);
+            $all[] = $subQuery->mergeBounded();
         }
 
         return array_merge(...$all);

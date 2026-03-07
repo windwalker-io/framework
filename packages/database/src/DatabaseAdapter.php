@@ -340,7 +340,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
             $query = clone $query;
 
             $query->clear('select', 'order', 'limit')->selectRaw('COUNT(*)');
-
+show((string) $query);
             return (int) $this->prepare($query)->result();
         }
 
