@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Filter;
 
 use OutOfRangeException;
+use Windwalker\Data\RecordInterface;
 use Windwalker\Filter\Rule\Absolute;
 use Windwalker\Filter\Rule\Alnum;
 use Windwalker\Filter\Rule\CastTo;
@@ -25,6 +26,7 @@ use Windwalker\Filter\Rule\UrlAddress;
 use Windwalker\Filter\Rule\Words;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
+use Windwalker\Utilities\Enum\EnumRichInterface;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -113,8 +115,22 @@ class FilterFactory
             if (is_string($clause)) {
                 if ($this->hasFactory($clause)) {
                     $filter = $this->createByFactory($clause, $options);
+                } elseif (enum_exists($clause)) {
+                    $filter = new CallbackFilter(
+                        function ($value) use ($clause) {
+                            if (is_a($value, EnumRichInterface::class, true)) {
+                                return $clause::wrap($value);
+                            }
+
+                            return $clause::from($value);
+                        }
+                    );
                 } elseif (class_exists($clause)) {
-                    $filter = $this->create($clause);
+                    if (is_a($clause, RecordInterface::class, true)) {
+                        $filter = new CallbackFilter(fn ($v) => $clause::wrap($v));
+                    } else {
+                        $filter = $this->create($clause);
+                    }
                 } else {
                     $filter = $this->createFromSyntax($clause, $options);
                 }
