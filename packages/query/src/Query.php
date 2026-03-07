@@ -268,7 +268,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         if (is_string($column) && $args !== []) {
-            $column = $this->format($column, ...$args);
+            $column = $this->handleRawFormat($column, ...$args);
         }
 
         $this->findAndInjectSubQueries($column);
@@ -630,7 +630,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $method = static::getClausePosition($args);
 
         if (is_string($order)) {
-            $order = $this->format($order, ...$args);
+            $order = $this->handleRawFormat($order, ...$args);
         }
 
         $this->findAndInjectSubQueries($order);
@@ -866,7 +866,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         if (is_string($value) && $args !== []) {
-            $value = $this->format($value, ...$args);
+            $value = $this->handleRawFormat($value, ...$args);
         }
 
         $this->set->append($value);
@@ -1431,6 +1431,19 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
          * 6: '%' if full token is '%%'
          */
         return preg_replace_callback('#%(((([\d]+)\$)?([abeEnqQryYmMdDhHiIsStzZ]))|(%))#', $func, $format);
+    }
+
+    protected function handleRawFormat(string $string, ...$args): string
+    {
+        if (array_is_list($args)) {
+            $string = $this->format($string, ...$args);
+        } else {
+            foreach ($args as $name => $value) {
+                $this->bind($name, $value);
+            }
+        }
+
+        return $string;
     }
 
     /**

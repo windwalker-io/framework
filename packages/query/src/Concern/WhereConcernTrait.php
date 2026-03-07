@@ -244,7 +244,7 @@ trait WhereConcernTrait
         }
 
         if (is_string($string) && $args !== []) {
-            $string = $this->format($string, ...$args);
+            $string = $this->handleRawFormat($string, ...$args);
         }
 
         $this->findAndInjectSubQueries($string);
