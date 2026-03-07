@@ -11,6 +11,7 @@ use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Classes\TraitHelper;
 use Windwalker\Utilities\TypeCast;
 
+use function Windwalker\get_object_dump_props;
 use function Windwalker\get_object_dump_values;
 
 trait RecordTrait
@@ -84,7 +85,23 @@ trait RecordTrait
     {
         $values = TypeCast::toArray($values);
 
+        $props = get_object_dump_props($this, ignores: $ignores);
+
         foreach ($values as $key => $value) {
+            $propRef = $props[$key] ?? $ignores[$key] ?? null;
+
+            if (
+                $propRef
+                && (
+                    $propRef->isPrivate()
+                    || $propRef->isProtected()
+                    || $propRef->isVirtual()
+                    || $propRef->isReadOnly()
+                )
+            ) {
+                continue;
+            }
+
             if (
                 $recursive
                 && is_object($this->$key ?? null)
@@ -103,6 +120,7 @@ trait RecordTrait
         return $this;
     }
 
+    #[\NoDiscard]
     public function withMerge(mixed $values, bool $recursive = false, bool $ignoreNulls = false): static
     {
         return (clone $this)->merge($values, $recursive, $ignoreNulls);
@@ -115,6 +133,7 @@ trait RecordTrait
         return $this->merge($values, $recursive)->merge($new, $recursive, true);
     }
 
+    #[\NoDiscard]
     public function withDefaults(mixed $values, bool $recursive = false): static
     {
         $new = clone $this;
@@ -122,6 +141,7 @@ trait RecordTrait
         return (clone $this)->merge($values, $recursive)->merge($new, $recursive, true);
     }
 
+    #[\NoDiscard]
     public function with(...$data): static
     {
         if (PHP_VERSION_ID >= 80500) {

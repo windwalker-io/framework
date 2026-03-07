@@ -8,6 +8,6 @@ namespace Windwalker\Utilities\Attributes;
  * When an object is being serialized or dumped, properties with this attribute will be skipped.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-class Transient extends Invisible
+class Invisible
 {
 }

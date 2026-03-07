@@ -96,7 +96,7 @@ namespace Windwalker {
     use WeakReference;
     use Windwalker\Attributes\AttributesAccessor;
     use Windwalker\Utilities\Attributes\Expose;
-    use Windwalker\Utilities\Attributes\Transient;
+    use Windwalker\Utilities\Attributes\Invisible;
     use Windwalker\Utilities\Classes\TraitHelper;
     use Windwalker\Utilities\Compare\CompareHelper;
     use Windwalker\Utilities\Compare\WhereWrapper;
@@ -546,7 +546,7 @@ namespace Windwalker {
                     }
                 }
 
-                if ($prop->getAttributes(Transient::class, \ReflectionAttribute::IS_INSTANCEOF) !== []) {
+                if ($prop->getAttributes(Invisible::class, \ReflectionAttribute::IS_INSTANCEOF) !== []) {
                     $ignores[$prop->getName()] = $prop;
                     continue;
                 }
