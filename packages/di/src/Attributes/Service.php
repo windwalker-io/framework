@@ -23,7 +23,7 @@ class Service extends Inject
         ?string $id = null,
         bool|string $forceNewOrService = false,
         public int|array|null|\Closure $providedIn = null,
-        \UnitEnum|string|null $tag = null,
+        \UnitEnum|\Closure|string|null $tag = null,
     ) {
         if (is_string($forceNewOrService)) {
             $this->name = $forceNewOrService;
@@ -58,6 +58,12 @@ class Service extends Inject
 
     protected function createObject(Container $container, string $id): object
     {
-        return $container->createSharedObject($id, tag: $this->tag);
+        $tag = $this->tag;
+
+        if ($tag instanceof \Closure) {
+            $tag = $tag($container, $id);
+        }
+
+        return $container->createSharedObject($id, tag: $tag);
     }
 }

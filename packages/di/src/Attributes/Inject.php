@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Attributes;
 
-use App\Enum\CreationType;
 use Attribute;
 use JetBrains\PhpStorm\Pure;
 use Psr\Container\ContainerExceptionInterface;
@@ -34,7 +33,7 @@ class Inject implements ContainerAttributeInterface
     public function __construct(
         public ?string $id = null,
         public bool $forceNew = false,
-        public \UnitEnum|string|null $tag = null,
+        public \UnitEnum|\Closure|string|null $tag = null,
     ) {
         //
     }
@@ -124,6 +123,10 @@ class Inject implements ContainerAttributeInterface
     {
         $id = $this->getTypeName($reflector);
         $tag = $this->tag;
+
+        if ($tag instanceof \Closure) {
+            $tag = $tag($container, $id);
+        }
 
         try {
             if ($container->has($id, tag: $tag)) {
