@@ -6,6 +6,7 @@ namespace Windwalker\Cache;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
+use Windwalker\Cache\Command\CacheTableCommand;
 use Windwalker\Core\Factory\CacheFactory;
 use Windwalker\Core\Manager\CacheManager;
 use Windwalker\Core\Package\AbstractPackage;
@@ -41,6 +42,13 @@ class CachePackage extends AbstractPackage implements ServiceProviderInterface
         $container->bindShared(
             CachePool::class,
             fn(Container $container, ?string $tag = null) => $container->get(CacheFactory::class)->get($tag)
+        );
+
+        $container->mergeParameters(
+            'commands',
+            [
+                'cache:table' => CacheTableCommand::class,
+            ]
         );
     }
 }
