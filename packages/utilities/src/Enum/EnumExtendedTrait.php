@@ -43,6 +43,9 @@ trait EnumExtendedTrait
      * Return assoc array of cases with case name as key.
      *
      * @return  array<string|int, static>
+     *
+     * @deprecated  Do not use this method since PHP 8.6 may override this method. Use `assocCases()` instead.
+     * @see https://wiki.php.net/rfc/add_values_method_to_backed_enum
      */
     public static function values(): array
     {
@@ -58,6 +61,20 @@ trait EnumExtendedTrait
     public static function rawValues(): array
     {
         return array_map(static fn (self $case) => $case->value, self::values());
+    }
+
+    /**
+     * @return  array<string|int, static>
+     */
+    public static function assocCases(): array
+    {
+        $cases = [];
+
+        foreach (self::cases() as $case) {
+            $cases[$case->name] = $case;
+        }
+
+        return $cases;
     }
 
     /**

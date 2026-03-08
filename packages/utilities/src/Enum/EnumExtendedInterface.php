@@ -15,7 +15,14 @@ interface EnumExtendedInterface extends \JsonSerializable
      *
      * @return  array<string|int, static>
      */
-    public static function values(): array;
+    // public static function values(): array;
+
+    /**
+     * Return assoc array of cases with case name as key.
+     *
+     * @return  array<string|int, static>
+     */
+    public static function assocCases(): array;
 
     public static function rawValues(): array;
 
