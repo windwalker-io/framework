@@ -1175,6 +1175,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         if ($value === null && $this->parent) {
             $value = $this->parent->getParam($path, $delimiter);
+        } elseif (is_array($value) && $this->parent) {
+            // Merge with parent parameters if it's array.
+            $parentValue = $this->parent->getParam($path, $delimiter);
+
+            if (is_array($parentValue)) {
+                $value = Arr::mergeRecursive($parentValue, $value);
+            }
         }
 
         return $value;
