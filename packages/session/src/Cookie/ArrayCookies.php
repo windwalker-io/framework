@@ -105,11 +105,21 @@ class ArrayCookies extends AbstractConfigurableCookies
 
             $options = $this->valueOptions[$k] ?? null;
 
-            $isRemove = in_array($k, $this->removeFields, true);
-
             $header = $k . '=' . $item;
 
-            if ($settings = $this->buildHeaderSettings($isRemove, $options)) {
+            if ($settings = $this->buildHeaderSettings(false, $options)) {
+                $header .= '; ' . $settings;
+            }
+
+            $headers[] = $header;
+        }
+
+        foreach ($this->removeFields as $k) {
+            $options = $this->valueOptions[$k] ?? null;
+
+            $header = $k . '=""';
+
+            if ($settings = $this->buildHeaderSettings(true, $options)) {
                 $header .= '; ' . $settings;
             }
 
