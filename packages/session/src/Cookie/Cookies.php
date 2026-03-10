@@ -15,8 +15,8 @@ class Cookies extends AbstractConfigurableCookies
     }
 
     /**
-     * @param  string      $name
-     * @param  string      $value
+     * @param  string  $name
+     * @param  string  $value
      * @param  ?array{
      *      expires?: int,
      *      path?: string,
@@ -24,7 +24,7 @@ class Cookies extends AbstractConfigurableCookies
      *      secure?: bool,
      *      httponly?: bool,
      *      samesite?: "Lax"|"Strict"|"None"
-     *  }  $options
+     *  }              $options
      *
      * @return  bool
      */
@@ -34,7 +34,14 @@ class Cookies extends AbstractConfigurableCookies
             return false;
         }
 
-        return setcookie($name, $value, $options ?? $this->getOptions());
+        return setcookie(
+            $name,
+            $value,
+            [
+                ...$this->getOptions(),
+                ...($options ?? []),
+            ]
+        );
     }
 
     public function get(string $name): ?string

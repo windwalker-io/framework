@@ -39,7 +39,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
         $options = $this->propertiesToOptions();
 
         if (isset($options['expires']) && $options['expires'] instanceof DateTimeInterface) {
-            $options['expires'] = time() - $options['expires']->getTimestamp();
+            $options['expires'] = time() + $options['expires']->getTimestamp();
         }
 
         return $options;
