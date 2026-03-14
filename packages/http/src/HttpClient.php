@@ -12,6 +12,7 @@ use Stringable;
 use Windwalker\Event\EventAwareTrait;
 use Windwalker\Http\Event\HttpClient\AfterRequestEvent;
 use Windwalker\Http\Event\HttpClient\BeforeRequestEvent;
+use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\File\HttpUploadFile;
 use Windwalker\Http\File\HttpUploadStream;
 use Windwalker\Http\File\HttpUploadStringFile;
@@ -131,10 +132,6 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         }
 
         return HttpClientResponse::from($transport->download($request, $dest));
-    }
-
-    public function downloadStream()
-    {
     }
 
     /**
@@ -474,19 +471,25 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         $transportOptions->optionMerged = true;
 
-        $response = $this->sendRequest($request, $transportOptions);
+        try {
+            $response = $this->sendRequest($request, $transportOptions);
 
-        $httpClient = $this;
+            $httpClient = $this;
 
-        $event = $this->emit(
-            new AfterRequestEvent(
-                httpClient: $httpClient,
-                request: $request,
-                response: $response
-            ),
-        );
+            $event = $this->emit(
+                new AfterRequestEvent(
+                    httpClient: $httpClient,
+                    request: $request,
+                    response: $response
+                ),
+            );
 
-        return HttpClientResponse::from($event->response);
+            return HttpClientResponse::fromHttpClient($request, $event->response, fn () => $this->toCurlCmd($request));
+        } catch (HttpRequestException $e) {
+            $e->setCurlCmdCallback(fn () => $this->toCurlCmd($request));
+
+            throw $e;
+        }
     }
 
     public function hydrateRequest(

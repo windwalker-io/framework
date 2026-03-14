@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Exception;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use UnexpectedValueException;
-use Windwalker\Database\Driver\StatementInterface;
 
 /**
  * The HttpRequestException class.
@@ -15,11 +15,13 @@ use Windwalker\Database\Driver\StatementInterface;
  */
 class HttpRequestException extends UnexpectedValueException
 {
-    public protected(set) ?ResponseInterface $response;
+    public protected(set) ?ResponseInterface $response = null;
 
-    public StatementInterface|null $body {
+    public StreamInterface|null $body {
         get => $this->response?->getBody();
     }
+
+    protected \Closure $curlCmdCallback;
 
     public function withResponse(ResponseInterface $response): static
     {
@@ -27,5 +29,32 @@ class HttpRequestException extends UnexpectedValueException
         $new->response = $response;
 
         return $new;
+    }
+
+    public function setCurlCmdCallback(\Closure $callback): static
+    {
+        $this->curlCmdCallback = $callback;
+
+        return $this;
+    }
+
+    public function getBodyString(): string
+    {
+        $body = $this->body;
+
+        if ($body === null) {
+            return '';
+        }
+
+        if ($body->isSeekable()) {
+            $body->rewind();
+        }
+
+        return $body->getContents();
+    }
+
+    public function toCurlCmd(): string
+    {
+        return ($this->curlCmdCallback)();
     }
 }
