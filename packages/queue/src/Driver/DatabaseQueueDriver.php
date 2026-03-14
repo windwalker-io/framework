@@ -107,7 +107,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
                 try {
                     $data = $this->db->prepare($query)->get();
                 } catch (\Exception $e) {
-                    if ($this->db->driver::shouldAutoReconnect($e)) {
+                    if ($this->db->getDriver()::shouldAutoReconnect($e)) {
                         // DB should already auto reconnect, if reconnect failed, we force queue restart.
                         UnrecoverableException::throwFrom($e);
                     }
