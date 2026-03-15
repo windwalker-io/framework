@@ -61,8 +61,8 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      * @param  LoggerInterface  $logger
      */
     public function __construct(
-        protected AbstractDriver $driver,
-        protected AbstractPlatform $platform,
+        public protected(set) AbstractDriver $driver,
+        public protected(set) AbstractPlatform $platform,
         protected LoggerInterface $logger = new NullLogger(),
     ) {
         $this->platform->setDbAdapter($this);
