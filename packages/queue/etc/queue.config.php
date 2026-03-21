@@ -67,14 +67,14 @@ static fn() => [
                 channel: 'default',
                 table: 'queue_jobs',
                 timeout: 60,
-                idType: DatabaseIdType::UUID_BIN
+                idType: DatabaseIdType::INT
             ),
         ],
         'failers' => [
             'database' => static fn(DatabaseServiceFactory $factory) => new DatabaseQueueFailer(
                 db: $factory->get(),
                 table: 'queue_failed_jobs',
-                idType: DatabaseIdType::UUID_BIN
+                idType: DatabaseIdType::INT
             ),
         ],
     ],
