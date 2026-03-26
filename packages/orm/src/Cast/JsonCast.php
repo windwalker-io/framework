@@ -97,8 +97,8 @@ class JsonCast implements CompositeCastInterface
             return array_values(TypeCast::toArray($data));
         }
 
-        if ($this->options & static::EMPTY_ARRAY_AS_OBJECT) {
-            return TypeCast::toObject($data, $this->deep);
+        if ($data === [] && $this->options & static::EMPTY_ARRAY_AS_OBJECT) {
+            return (object) $data;
         }
 
         return $data;
