@@ -7,11 +7,8 @@ namespace Windwalker\Queue;
 use InvalidArgumentException;
 use JsonException;
 use Windwalker\DI\Definition\DefinitionInterface;
-use Windwalker\DI\Definition\ObjectBuilderDefinition;
 use Windwalker\Queue\Driver\QueueDriverInterface;
 use Windwalker\Queue\Job\ClosureJob;
-use Windwalker\Queue\Job\JobWrapper;
-use Windwalker\Queue\Job\JobWrapperInterface;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
 
 /**
