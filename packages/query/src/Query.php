@@ -1494,18 +1494,24 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     /**
      * debug
      *
-     * @param  bool  $pre
+     * @param  bool|\Closure  $pre
      * @param  bool  $format
      * @param  bool  $asString
      *
      * @return mixed|static
      */
-    public function debug(bool $pre = false, bool $format = true, bool $asString = false): mixed
+    public function debug(bool|\Closure $pre = false, bool $format = true, bool $asString = false): mixed
     {
         $sql = $this->render(true);
 
         if ($format && class_exists(SqlFormatter::class)) {
             $sql = SqlFormatter::format($sql, false);
+        }
+
+        if ($pre instanceof \Closure) {
+            $pre($sql);
+
+            return $this;
         }
 
         if ($pre) {
