@@ -56,7 +56,13 @@ trait ArrayAccessTrait
             return $prev;
         }
 
-        return $this->storage[array_key_last($this->storage)] ?? null;
+        $k = array_key_last($this->storage);
+
+        if ($k === null) {
+            return null;
+        }
+
+        return $this->storage[$k] ?? null;
     }
 
     /**
