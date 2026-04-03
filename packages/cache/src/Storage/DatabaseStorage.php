@@ -6,9 +6,11 @@ namespace Windwalker\Cache\Storage;
 
 use Windwalker\Core\DateTime\Chronos;
 use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\ORM\ORM;
 
 use function Windwalker\collect;
+use function Windwalker\ds;
 use function Windwalker\try_chronos;
 
 class DatabaseStorage implements StorageInterface, LockableStorageInterface
@@ -33,7 +35,8 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
         protected DatabaseAdapter $db,
         protected string $group = '',
         protected string $table = 'cache_items',
-        array $columns = []
+        array $columns = [],
+        protected float $clearExpiredChanges = 0.01,
     ) {
         $this->columns = array_merge($this->columns, $columns);
     }
@@ -66,6 +69,7 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
     public function clear(): bool
     {
         $this->orm->delete($this->table)
+            ->where($this->columns['group'], $this->group)
             ->execute();
 
         return true;
@@ -83,7 +87,9 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
 
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
-        $this->clearExpired();
+        if ($this->shouldClear()) {
+            $this->clearGroupExpired();
+        }
 
         return $this->orm->transaction(
             function () use ($expiration, $value, $key) {
@@ -151,11 +157,28 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
         return array_key_exists($key, $this->locked);
     }
 
-    protected function clearExpired(): void
+    public function clearGroupExpired(): StatementInterface
     {
-        $this->orm->delete($this->table)
+        return $this->orm->delete($this->table)
             ->where($this->columns['group'], $this->group)
             ->where($this->columns['expired_at'], '<', new \DateTime('now'))
             ->execute();
+    }
+
+    public function clearAllExpired(): StatementInterface
+    {
+        return $this->orm->delete($this->table)
+            ->where($this->columns['expired_at'], '<', new \DateTime('now'))
+            ->execute();
+    }
+
+    /**
+     * @return  bool
+     *
+     * @throws \Random\RandomException
+     */
+    public function shouldClear(): bool
+    {
+        return random_int(0, 100_000) / 100_000 > $this->clearExpiredChanges;
     }
 }
