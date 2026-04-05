@@ -478,7 +478,7 @@ abstract class AbstractPlatform
         return $expr;
     }
 
-    public function dropConstraint(string $table, string $name, ?string $schema = null): StatementInterface
+    public function dropConstraint(string $table, string $name, ?string $schema = null): ?StatementInterface
     {
         return $this->db->execute(
             $this->getGrammar()::build(

@@ -645,14 +645,12 @@ class MySQLPlatform extends AbstractPlatform
         return $expr;
     }
 
-    public function dropConstraint(string $table, string $name, ?string $schema = null): StatementInterface
+    public function dropConstraint(string $table, string $name, ?string $schema = null): ?StatementInterface
     {
-        $constraint = array_values(
-            array_filter(
-                $this->listConstraints($table, $schema),
-                fn($constraint) => $constraint['constraint_name'] === $name
-            )
-        )[0];
+        $constraint = array_find(
+            $this->listConstraints($table, $schema),
+            fn($constraint) => $constraint['constraint_name'] === $name
+        );
 
         if ($constraint['constraint_type'] === 'UNIQUE') {
             $action = 'DROP INDEX';
