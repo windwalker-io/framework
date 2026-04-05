@@ -1881,7 +1881,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function iterateBatched(QueryPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
         $length = $paginate instanceof QueryPaginate ? $paginate->length : $paginate;
-        $nextHandler = $paginate instanceof QueryPaginate ? $paginate->nextHandler : null;
+        $cursorHandler = $paginate instanceof QueryPaginate ? $paginate->cursorHandler : null;
         $offset = $this->getOffset() ?? 0;
         $first = true;
         $lastItem = null;
@@ -1889,15 +1889,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         while (true) {
             $query = clone $this;
 
-            if (!$nextHandler || $first) {
+            if (!$cursorHandler || $first) {
                 $query->offset($offset);
                 $first = false;
             }
 
             $query->limit($length);
 
-            if ($nextHandler && !$first && $lastItem) {
-                $query = $nextHandler($query, $lastItem) ?? $query;
+            if ($cursorHandler && !$first && $lastItem) {
+                $query = $cursorHandler($query, $lastItem) ?? $query;
             }
 
             $items = $query->all($class, $args);
@@ -1934,7 +1934,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function iterateChunks(QueryPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
         $length = $paginate instanceof QueryPaginate ? $paginate->length : $paginate;
-        $nextHandler = $paginate instanceof QueryPaginate ? $paginate->nextHandler : null;
+        $cursorHandler = $paginate instanceof QueryPaginate ? $paginate->cursorHandler : null;
         $offset = $this->getOffset() ?? 0;
         $first = true;
         $lastItem = null;
@@ -1942,15 +1942,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         while (true) {
             $query = clone $this;
 
-            if (!$nextHandler || $first) {
+            if (!$cursorHandler || $first) {
                 $query->offset($offset);
                 $first = false;
             }
 
             $query->limit($length);
 
-            if ($nextHandler && !$first && $lastItem) {
-                $query = $nextHandler($query, $lastItem) ?? $query;
+            if ($cursorHandler && !$first && $lastItem) {
+                $query = $cursorHandler($query, $lastItem) ?? $query;
             }
 
             $items = $query->all($class, $args);
@@ -1959,7 +1959,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 break;
             }
 
-            if ($nextHandler) {
+            if ($cursorHandler) {
                 $runner = static function () use ($items, &$lastItem) {
                     foreach ($items as $item) {
                         yield $item;
@@ -2078,23 +2078,23 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     ): PaginateIterator {
         $offset = $this->getOffset() ?? 0;
         $length = $perPage instanceof QueryPaginate ? $perPage->length : $perPage;
-        $nextHandler = $perPage instanceof QueryPaginate ? $perPage->nextHandler : null;
+        $cursorHandler = $perPage instanceof QueryPaginate ? $perPage->cursorHandler : null;
         $first = true;
         $lastItem = null;
 
         return new PaginateIterator(
-            function (int $page, int $length) use ($args, $class, &$offset, &$first, &$lastItem, $nextHandler) {
+            function (int $page, int $length) use ($args, $class, &$offset, &$first, &$lastItem, $cursorHandler) {
                 $query = clone $this;
 
-                if (!$nextHandler || $first) {
+                if (!$cursorHandler || $first) {
                     $query->offset($offset);
                     $first = false;
                 }
 
                 $query->limit($length);
 
-                if ($nextHandler && !$first && $lastItem) {
-                    $query = $nextHandler($query, $lastItem) ?? $query;
+                if ($cursorHandler && !$first && $lastItem) {
+                    $query = $cursorHandler($query, $lastItem) ?? $query;
                 }
 
                 foreach ($query->getIterator($class, $args) as $item) {

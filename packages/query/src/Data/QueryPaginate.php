@@ -8,25 +8,25 @@ use Windwalker\Query\Query;
 
 class QueryPaginate
 {
-    public \Closure $nextHandler {
-        get => $this->getNextHandler();
+    public \Closure $cursorHandler {
+        get => $this->getCursorHandler();
     }
 
-    protected string|\Closure $cursorField;
+    protected string|\Closure $cursorBy;
 
     public function __construct(
         public int $length,
         /**
          * @var string|\Closure(Query $query): ?Query
          */
-        \Closure|string $cursorField
+        \Closure|string $cursorBy
     ) {
-        $this->cursorField = $cursorField;
+        $this->cursorBy = $cursorBy;
     }
 
-    protected function getNextHandler(): \Closure
+    protected function getCursorHandler(): \Closure
     {
-        $field = $this->cursorField;
+        $field = $this->cursorBy;
 
         if (is_string($field)) {
             $field = static function (Query $query, object|array $item) use ($field) {
