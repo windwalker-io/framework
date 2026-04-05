@@ -11,7 +11,7 @@ class PaginateIterator implements \IteratorAggregate
          * @var \Closure(int $page, int $perPage): iterable
          */
         public \Closure $callback,
-        public int $perPage,
+        public \Closure|int $perPage,
         public ?int $limit = null
     ) {
     }

@@ -37,6 +37,7 @@ use Windwalker\Query\Concern\JsonConcernTrait;
 use Windwalker\Query\Concern\QueryConcernTrait;
 use Windwalker\Query\Concern\ReflectConcernTrait;
 use Windwalker\Query\Concern\WhereConcernTrait;
+use Windwalker\Query\Data\QueryPaginate;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
 use Windwalker\Query\Grammar\AbstractGrammar;
@@ -182,8 +183,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected ?Escaper $escaper = null;
 
     protected ?string $defaultItemClass = null;
-
-    protected ?int $paginate = null;
 
     /**
      * Query constructor.
@@ -1229,7 +1228,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $this->suffix(
             [
                 'ON DUPLICATE KEY UPDATE',
-                $clauses
+                $clauses,
             ]
         );
 
@@ -1495,8 +1494,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * debug
      *
      * @param  bool|\Closure  $pre
-     * @param  bool  $format
-     * @param  bool  $asString
+     * @param  bool           $format
+     * @param  bool           $asString
      *
      * @return mixed|static
      */
@@ -1873,19 +1872,33 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * Iterate and call DB every N times, every time get full items but yield item one by one, stop when no more items.
      * This method can ensure no long connection to DB. You only need one level foreach to get every item.
      *
-     * @param  int                   $length
+     * @param  QueryPaginate|int     $paginate
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
      * @return  Generator<T>
      */
-    public function iterateBatched(int $length, ?string $class = null, array $args = []): \Generator
+    public function iterateBatched(QueryPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
-        $offset = 0;
+        $length = $paginate instanceof QueryPaginate ? $paginate->length : $paginate;
+        $nextHandler = $paginate instanceof QueryPaginate ? $paginate->nextHandler : null;
+        $offset = $this->getOffset() ?? 0;
+        $first = true;
+        $lastItem = null;
 
         while (true) {
             $query = clone $this;
-            $query->offset($offset)->limit($length);
+
+            if (!$nextHandler || $first) {
+                $query->offset($offset);
+                $first = false;
+            }
+
+            $query->limit($length);
+
+            if ($nextHandler && !$first && $lastItem) {
+                $query = $nextHandler($query, $lastItem) ?? $query;
+            }
 
             $items = $query->all($class, $args);
 
@@ -1894,6 +1907,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             foreach ($items as $item) {
                 $count++;
                 yield $item;
+
+                $lastItem = $item;
             }
 
             if ($count === 0 || $count < $length) {
@@ -1910,19 +1925,33 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * Iterate and return chunks of items, every chunk will one time return full items.
      * You need 2 level foreach to get every item.
      *
-     * @param  int                   $length
+     * @param  QueryPaginate|int     $paginate
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
      * @return  Generator<Collection<T>>
      */
-    public function iterateChunks(int $length, ?string $class = null, array $args = []): \Generator
+    public function iterateChunks(QueryPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
-        $offset = 0;
+        $length = $paginate instanceof QueryPaginate ? $paginate->length : $paginate;
+        $nextHandler = $paginate instanceof QueryPaginate ? $paginate->nextHandler : null;
+        $offset = $this->getOffset() ?? 0;
+        $first = true;
+        $lastItem = null;
 
         while (true) {
             $query = clone $this;
-            $query->offset($offset)->limit($length);
+
+            if (!$nextHandler || $first) {
+                $query->offset($offset);
+                $first = false;
+            }
+
+            $query->limit($length);
+
+            if ($nextHandler && !$first && $lastItem) {
+                $query = $nextHandler($query, $lastItem) ?? $query;
+            }
 
             $items = $query->all($class, $args);
 
@@ -1930,7 +1959,19 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 break;
             }
 
-            yield $items;
+            if ($nextHandler) {
+                $runner = static function () use ($items, &$lastItem) {
+                    foreach ($items as $item) {
+                        yield $item;
+
+                        $lastItem = $item;
+                    }
+                };
+
+                yield $runner();
+            } else {
+                yield $items;
+            }
 
             if (count($items) < $length) {
                 break;
@@ -2012,16 +2053,17 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     /**
      * @template  T of Collection
      *
-     * @param  class-string<T>|null  $class
-     * @param  array                 $args
-     * @param  int|null              $paginate
+     * @param  class-string<T>|null    $class
+     * @param  array                   $args
+     * @param  QueryPaginate|int|null  $paginate
      *
      * @return  \Traversable<T>
      */
-    public function getIterator(?string $class = null, array $args = [], ?int $paginate = null): \Traversable
-    {
-        $paginate ??= $this->getPaginate();
-
+    public function getIterator(
+        ?string $class = null,
+        array $args = [],
+        QueryPaginate|int|null $paginate = null
+    ): \Traversable {
         if ($paginate !== null) {
             return $this->getPaginatedIterator($class, $paginate, $args);
         }
@@ -2029,22 +2071,41 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this->prepareStatement()->getIterator($class, $args);
     }
 
-    public function getPaginatedIterator(?string $class = null, int $perPage = 500, array $args = []): PaginateIterator
-    {
+    public function getPaginatedIterator(
+        ?string $class = null,
+        QueryPaginate|int $perPage = 500,
+        array $args = []
+    ): PaginateIterator {
         $offset = $this->getOffset() ?? 0;
-
-        // $leave = $this->getLimit();
+        $length = $perPage instanceof QueryPaginate ? $perPage->length : $perPage;
+        $nextHandler = $perPage instanceof QueryPaginate ? $perPage->nextHandler : null;
+        $first = true;
+        $lastItem = null;
 
         return new PaginateIterator(
-            function (int $page, int $perPage) use ($args, $class, &$offset) {
+            function (int $page, int $length) use ($args, $class, &$offset, &$first, &$lastItem, $nextHandler) {
                 $query = clone $this;
-                $query->offset($offset)->limit($perPage);
 
-                yield from $query->getIterator($class, $args);
+                if (!$nextHandler || $first) {
+                    $query->offset($offset);
+                    $first = false;
+                }
 
-                $offset += $perPage;
+                $query->limit($length);
+
+                if ($nextHandler && !$first && $lastItem) {
+                    $query = $nextHandler($query, $lastItem) ?? $query;
+                }
+
+                foreach ($query->getIterator($class, $args) as $item) {
+                    yield $item;
+
+                    $lastItem = $item;
+                }
+
+                $offset += $length;
             },
-            $perPage,
+            $length,
             $this->getLimit()
         );
     }
@@ -2101,15 +2162,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public function getPaginate(): ?int
+    public static function paginate(int $length, \Closure|null $nextHandler = null): QueryPaginate
     {
-        return $this->paginate;
-    }
-
-    public function paginate(?int $paginate): static
-    {
-        $this->paginate = $paginate;
-
-        return $this;
+        return new QueryPaginate($length, $nextHandler);
     }
 }
