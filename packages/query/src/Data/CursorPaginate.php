@@ -6,7 +6,7 @@ namespace Windwalker\Query\Data;
 
 use Windwalker\Query\Query;
 
-class QueryPaginate
+class CursorPaginate
 {
     public \Closure $cursorHandler {
         get => $this->getCursorHandler();

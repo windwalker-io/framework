@@ -37,7 +37,7 @@ use Windwalker\Query\Concern\JsonConcernTrait;
 use Windwalker\Query\Concern\QueryConcernTrait;
 use Windwalker\Query\Concern\ReflectConcernTrait;
 use Windwalker\Query\Concern\WhereConcernTrait;
-use Windwalker\Query\Data\QueryPaginate;
+use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
 use Windwalker\Query\Grammar\AbstractGrammar;
@@ -1872,16 +1872,16 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * Iterate and call DB every N times, every time get full items but yield item one by one, stop when no more items.
      * This method can ensure no long connection to DB. You only need one level foreach to get every item.
      *
-     * @param  QueryPaginate|int     $paginate
+     * @param  CursorPaginate|int    $paginate
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
      * @return  Generator<T>
      */
-    public function iterateBatched(QueryPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
+    public function iterateBatched(CursorPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
-        $length = $paginate instanceof QueryPaginate ? $paginate->length : $paginate;
-        $cursorHandler = $paginate instanceof QueryPaginate ? $paginate->cursorHandler : null;
+        $length = $paginate instanceof CursorPaginate ? $paginate->length : $paginate;
+        $cursorHandler = $paginate instanceof CursorPaginate ? $paginate->cursorHandler : null;
         $offset = $this->getOffset() ?? 0;
         $first = true;
         $lastItem = null;
@@ -1925,16 +1925,16 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * Iterate and return chunks of items, every chunk will one time return full items.
      * You need 2 level foreach to get every item.
      *
-     * @param  QueryPaginate|int     $paginate
+     * @param  CursorPaginate|int    $paginate
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
      * @return  Generator<Collection<T>>
      */
-    public function iterateChunks(QueryPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
+    public function iterateChunks(CursorPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
-        $length = $paginate instanceof QueryPaginate ? $paginate->length : $paginate;
-        $cursorHandler = $paginate instanceof QueryPaginate ? $paginate->cursorHandler : null;
+        $length = $paginate instanceof CursorPaginate ? $paginate->length : $paginate;
+        $cursorHandler = $paginate instanceof CursorPaginate ? $paginate->cursorHandler : null;
         $offset = $this->getOffset() ?? 0;
         $first = true;
         $lastItem = null;
@@ -2053,16 +2053,16 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     /**
      * @template  T of Collection
      *
-     * @param  class-string<T>|null    $class
-     * @param  array                   $args
-     * @param  QueryPaginate|int|null  $paginate
+     * @param  class-string<T>|null     $class
+     * @param  array                    $args
+     * @param  CursorPaginate|int|null  $paginate
      *
      * @return  \Traversable<T>
      */
     public function getIterator(
         ?string $class = null,
         array $args = [],
-        QueryPaginate|int|null $paginate = null
+        CursorPaginate|int|null $paginate = null
     ): \Traversable {
         if ($paginate !== null) {
             return $this->getPaginatedIterator($class, $paginate, $args);
@@ -2073,12 +2073,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public function getPaginatedIterator(
         ?string $class = null,
-        QueryPaginate|int $perPage = 500,
+        CursorPaginate|int $perPage = 500,
         array $args = []
     ): PaginateIterator {
         $offset = $this->getOffset() ?? 0;
-        $length = $perPage instanceof QueryPaginate ? $perPage->length : $perPage;
-        $cursorHandler = $perPage instanceof QueryPaginate ? $perPage->cursorHandler : null;
+        $length = $perPage instanceof CursorPaginate ? $perPage->length : $perPage;
+        $cursorHandler = $perPage instanceof CursorPaginate ? $perPage->cursorHandler : null;
         $first = true;
         $lastItem = null;
 
@@ -2162,8 +2162,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public static function paginate(int $length, \Closure|null $nextHandler = null): QueryPaginate
+    public static function cursorPaginate(int $length, \Closure|string $cursorBy): CursorPaginate
     {
-        return new QueryPaginate($length, $nextHandler);
+        return new CursorPaginate($length, $cursorBy);
     }
 }
