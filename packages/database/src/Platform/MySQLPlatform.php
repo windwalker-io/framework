@@ -652,6 +652,10 @@ class MySQLPlatform extends AbstractPlatform
             fn($constraint) => $constraint['constraint_name'] === $name
         );
 
+        if (!$constraint) {
+            return null;
+        }
+
         if ($constraint['constraint_type'] === 'UNIQUE') {
             $action = 'DROP INDEX';
         } else {
