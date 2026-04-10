@@ -19,8 +19,8 @@ return new /** {% $version %}_{% $name %} */ class extends AbstractMigration {
                 $schema->primaryBigint('id');
                 $schema->varchar('key');
                 $schema->varchar('group');
-                $schema->json('payload');
-                $schema->datetime('expired_at');
+                $schema->longtext('payload');
+                $schema->integer('expired_at')->nullable(true);
 
                 $schema->addUniqueKey(['key', 'group']);
                 $schema->addIndex('expired_at');
