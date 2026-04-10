@@ -31,7 +31,7 @@ class ValueClause implements ClauseInterface
     protected bool $linked = false;
 
     public int $id {
-        get => $this->id ??= static::getIdHandler()();
+        get => $this->id ??= $this->getId();
     }
 
     /**
@@ -122,10 +122,12 @@ class ValueClause implements ClauseInterface
         return $this;
     }
 
-    protected static function getIdHandler(): \Closure
+    protected function getId(): int
     {
-        return static::$idHandler ??= static function (ValueClause $clause) {
-            return spl_object_id($clause);
-        };
+        if (static::$idHandler) {
+            return (static::$idHandler)();
+        }
+
+        return spl_object_id($this);
     }
 }

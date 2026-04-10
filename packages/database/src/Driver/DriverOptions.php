@@ -16,7 +16,15 @@ class DriverOptions extends RecordOptions
         public ?string $dbname = null,
         public ?string $user = null,
         public ?string $password = null,
-        public ?int $port = null,
+        public int|string|null $port = null {
+            get {
+                if ($this->port === null) {
+                    return null;
+                }
+
+                return (int) $this->port;
+            }
+        },
         public ?string $prefix = null,
         public ?string $charset = null,
         public ?string $collation = null,
