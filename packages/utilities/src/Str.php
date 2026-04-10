@@ -6,6 +6,8 @@ namespace Windwalker\Utilities;
 
 use Closure;
 
+use function Windwalker\uid;
+
 /**
  * The StringHelper class.
  */
@@ -68,6 +70,33 @@ class Str
     public static function replaceCRLF(string $string, string $replace = "\n"): string
     {
         return str_replace("\r\n", $replace, $string);
+    }
+
+    /**
+     * @template T of string|array
+     *
+     * @param  T $subject
+     *
+     * @return T
+     *
+     * @throws \Exception
+     */
+    public static function safeReplace(
+        string|array $search,
+        string|array $replace,
+        string|array $subject,
+        ?int &$count = null
+    ): string|array {
+        $search = (array) $search;
+        $replace = (array) $replace;
+
+        $searchEscape = array_map(static fn($item) => '\\' . $item, $search);
+        $placeholders = array_map(static fn() => '@@' . uid() . '@@', $search);
+
+        $subject = str_replace($searchEscape, $placeholders, $subject);
+        $subject = str_replace($search, $replace, $subject, $count);
+
+        return str_replace($placeholders, $searchEscape, $subject);
     }
 
     public static function contains(

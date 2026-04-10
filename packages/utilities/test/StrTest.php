@@ -1048,4 +1048,95 @@ class StrTest extends TestCase
         self::assertEquals(26 * 100000000, Str::alphaToNum('HJUNYVA'));
         self::assertEquals(123123123456, Str::alphaToNum('OHNRDMZI'));
     }
+
+    // -- safeReplace tests ------------------------------------------------
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('safeReplaceProvider')]
+    public function testSafeReplace(
+        string|array $search,
+        string|array $replace,
+        string|array $subject,
+        string|array $expected,
+        ?int $expectedCount = null,
+    ): void {
+        $count = 0;
+        $result = Str::safeReplace($search, $replace, $subject, $count);
+
+        self::assertSame($expected, $result);
+
+        if ($expectedCount !== null) {
+            self::assertSame($expectedCount, $count);
+        }
+    }
+
+    public static function safeReplaceProvider(): array
+    {
+        return [
+            'basic replacement' => [
+                '{name}',
+                'World',
+                'Hello {name}',
+                'Hello World',
+            ],
+            'preserves escaped token' => [
+                '{name}',
+                'World',
+                'Hello {name} and \{name}',
+                'Hello World and \{name}',
+            ],
+            'multiple occurrences with escaped' => [
+                '{x}',
+                '1',
+                '{x} + {x} = \{x}',
+                '1 + 1 = \{x}',
+                2,
+            ],
+            'array search and replace' => [
+                ['{first}', '{last}'],
+                ['John', 'Doe'],
+                'Name: {first} {last}, escaped: \{first} \{last}',
+                'Name: John Doe, escaped: \{first} \{last}',
+            ],
+            'count only unescaped' => [
+                '{v}',
+                'x',
+                '{v} {v} \{v} {v}',
+                'x x \{v} x',
+                3,
+            ],
+            'no match' => [
+                '{miss}',
+                'hit',
+                'nothing to replace',
+                'nothing to replace',
+                0,
+            ],
+            'subject array' => [
+                '{k}',
+                'v',
+                ['{k} here', '\{k} safe', 'no match'],
+                ['v here', '\{k} safe', 'no match'],
+            ],
+            'empty search' => [
+                '',
+                'x',
+                'hello',
+                'hello',
+                0,
+            ],
+            'only escaped tokens' => [
+                '{token}',
+                'replaced',
+                '\{token}',
+                '\{token}',
+                0,
+            ],
+            'multiple different tokens' => [
+                ['{{', '}}'],
+                ['[', ']'],
+                '{{ content }} and \{{ literal \}}',
+                '[ content ] and \{{ literal \}}',
+            ],
+        ];
+    }
 }
