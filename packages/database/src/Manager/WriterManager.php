@@ -7,12 +7,13 @@ namespace Windwalker\Database\Manager;
 use InvalidArgumentException;
 use JsonException;
 use RuntimeException;
-use Traversable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The WriterManager class.
@@ -198,12 +199,14 @@ class WriterManager
      * @return  mixed
      * @throws JsonException
      */
-    public function saveOne(string $table, array|object $data, array|string|null $key, array $options = []): mixed
+    public function saveOne(string $table, array|object $data, string|null $key, array $options = []): mixed
     {
-        if (is_array($data)) {
-            $id = $data[$key] ?? null;
-        } else {
-            $id = $data->$key ?? null;
+        if ($key !== null) {
+            if (is_array($data)) {
+                $id = $data[$key] ?? null;
+            } else {
+                $id = $data->$key ?? null;
+            }
         }
 
         if ($id) {
@@ -211,6 +214,129 @@ class WriterManager
         }
 
         return $this->insertOne($table, $data, $key, $options);
+    }
+
+    public function upsert(
+        string $table,
+        array|object $data,
+        array|string $keys,
+    ): StatementInterface {
+        $keys = (array) $keys;
+
+        $platformName = $this->db->getPlatform()->getName();
+
+        $query = $this->db->createQuery();
+
+        $table = (string) $query->quoteName($table);
+        $data = TypeCast::toArray($data);
+        $quotedFields = $query->qnMultiple(array_keys($data));
+        $quotedKeys = $query->qnMultiple($keys);
+
+        $columns = $query->clause('()', $quotedFields, ',');
+        $values = $query->clause('()', [], ',');
+
+        foreach ($data as $k => $v) {
+            if ($v instanceof RawWrapper) {
+                $values->append($v());
+            } else {
+                $query->bind($k, $v);
+                $values->append(":$k");
+            }
+        }
+
+        switch ($platformName) {
+            case AbstractPlatform::MYSQL:
+                $dupKeys = $query->clause('', [], ',');
+
+                foreach ($quotedKeys as $key) {
+                    $dupKeys->append("$key = VALUES($key)");
+                }
+
+                $query->sql(
+                    <<<SQL
+                    INSERT INTO $table $columns
+                    VALUES $values
+                    ON DUPLICATE KEY UPDATE
+                        $dupKeys
+                    SQL
+                );
+                break;
+
+            case AbstractPlatform::POSTGRESQL:
+                $dupKeys = $query->clause('()', [], ',');
+
+                foreach ($quotedKeys as $key) {
+                    $dupKeys->append("$key = VALUES($key)");
+                }
+
+                $excludeKeys = $query->clause('', [], ',');
+
+                foreach ($quotedKeys as $key) {
+                    $excludeKeys->append("$key = EXCLUDED.$key");
+                }
+
+                $query->sql(
+                    <<<SQL
+                    INSERT INTO $table $columns
+                    VALUES $values ON CONFLICT $dupKeys DO UPDATE SET
+                        $excludeKeys
+                    SQL
+                );
+                break;
+
+            case AbstractPlatform::SQLSERVER:
+                if (
+                    version_compare(
+                        $this->db->getDriver()->getVersion(),
+                        '10',
+                        '<'
+                    )
+                ) {
+                    throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
+                }
+
+                $srcOn = $query->clause('()', [], ' AND ');
+
+                foreach ($keys as $key) {
+                    $srcOn->append($query->quoteName($key) . " = :key_$key");
+                    $query->bind(
+                        "key_$key",
+                        $data[$key]
+                        ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
+                    );
+                }
+
+                $updateSet = $query->clause('', [], ',');
+
+                foreach ($data as $k => $v) {
+                    if ($v instanceof RawWrapper) {
+                        $updateSet->append($query->quoteName($k) . '=' . $v());
+                    } else {
+                        $query->bind('update_set_' . $k, $v);
+                        $updateSet->append($query->quoteName($k) . " = :update_set_$k");
+                    }
+                }
+
+                // phpcs:disable
+                // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
+                // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+                $query->sql(
+                    "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
+                    WHEN NOT MATCHED THEN INSERT $columns
+                    VALUES $values
+                    WHEN MATCHED THEN UPDATE SET $updateSet;"
+                );
+                break;
+
+            case AbstractPlatform::SQLITE:
+                $query->sql(
+                    "INSERT OR REPLACE INTO $table $columns
+                VALUES $values"
+                );
+                break;
+        }
+
+        return $query->execute();
     }
 
     /**
@@ -312,7 +438,7 @@ class WriterManager
      * @param  array|string|null  $key    The name of the primary key.
      * @param  array              $options
      *
-     * @return array|Traversable
+     * @return array
      * @throws JsonException
      */
     public function saveMultiple(
@@ -320,7 +446,7 @@ class WriterManager
         iterable $items,
         array|string|null $key,
         array $options = []
-    ): Traversable|array {
+    ): array {
         $result = [];
 
         foreach ($items as $k => $item) {
