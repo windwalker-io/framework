@@ -205,7 +205,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * select
+     * select('foo', 'bar AS b')
      *
      * @param  mixed  ...$columns
      *
@@ -221,8 +221,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * selectAs
-     *
      * @param  mixed        $column
      * @param  string|null  $alias
      * @param  bool         $isColumn
@@ -237,8 +235,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * selectRaw
-     *
      * @param  string|array  $column
      * @param  mixed         ...$args
      *
@@ -771,22 +767,26 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * values
+     * Every row must be a single array.
      *
-     * @param  mixed  ...$values
+     * ```php
+     * ->values([...row1], [...row2], [...row3], ...)
+     * ```
+     *
+     * @param  mixed  ...$valuesSet
      *
      * @return  static
      */
-    public function values(...$values): static
+    public function values(self|array ...$valuesSet): static
     {
-        if ($values === []) {
+        if ($valuesSet === []) {
             return $this;
         }
 
-        $method = static::getClausePosition($values);
+        $method = static::getClausePosition($valuesSet);
 
-        foreach ($values as $value) {
-            if ($value instanceof self) {
+        foreach ($valuesSet as $values) {
+            if ($values instanceof self) {
                 if (!$this->values) {
                     $this->values = $this->createSubQuery();
                     $this->injectSubQuery($this->values);
@@ -796,10 +796,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                     $this->values instanceof self,
                     'You must set sub query as values to {caller} since current mode is ' .
                     'INSERT ... SELECT ..., %s given',
-                    $value
+                    $values
                 );
 
-                $this->values->union($value);
+                $this->values->union($values);
             } else {
                 if (!$this->values) {
                     $this->values = $this->clause('VALUES ', [], ', ');
@@ -808,19 +808,19 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 ArgumentsAssert::assert(
                     $this->values instanceof Clause,
                     'You must set array as values to {caller} since current mode is VALUES (...), %s given',
-                    $value
+                    $values
                 );
 
                 ArgumentsAssert::assert(
-                    is_iterable($value),
+                    is_iterable($values),
                     'Please set every value as array or iterator, ' .
                     'example: value(array, array, array), {value} given.',
-                    $value
+                    $values
                 );
 
                 $clause = $this->clause('()', [], ', ');
 
-                foreach ($value as $val) {
+                foreach ($values as $val) {
                     $clause->append($this->castWriteValue($val));
                 }
 

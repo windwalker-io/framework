@@ -16,7 +16,7 @@ use function Windwalker\unwrap_enum;
  */
 class ValueClause implements ClauseInterface
 {
-    public static int $serial = 0;
+    public static ?\Closure $idHandler = null;
 
     /**
      * @var string|mixed|Query
@@ -31,7 +31,7 @@ class ValueClause implements ClauseInterface
     protected bool $linked = false;
 
     public int $id {
-        get => spl_object_id($this);
+        get => $this->id ??= static::getIdHandler()();
     }
 
     /**
@@ -120,5 +120,12 @@ class ValueClause implements ClauseInterface
         $this->prefix = $prefix;
 
         return $this;
+    }
+
+    protected static function getIdHandler(): \Closure
+    {
+        return static::$idHandler ??= static function (ValueClause $clause) {
+            return spl_object_id($clause);
+        };
     }
 }

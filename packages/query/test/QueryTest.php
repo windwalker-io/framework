@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Clause\JoinClause;
+use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\BaseGrammar;
 use Windwalker\Query\Query;
@@ -16,6 +17,8 @@ use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
 use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
+
+use Windwalker\Utilities\Serial;
 
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
@@ -1535,9 +1538,9 @@ SQL
             <<<SQL
 SELECT "a".* FROM "foo" AS "a"
     LEFT JOIN
-    (SELECT * FROM "bar" WHERE "id" IN (:wqp__1, :wqp__2, :wqp__3))
+    (SELECT * FROM "bar" WHERE "id" IN (:wqp__2, :wqp__3, :wqp__4))
     AS "b" ON "b"."foo_id" = "a"."id"
-    WHERE "a"."id" = :wqp__0
+    WHERE "a"."id" = :wqp__1
 SQL
             ,
             (string) $q
@@ -1937,6 +1940,10 @@ SQL
     protected function setUp(): void
     {
         $this->instance = self::createQuery();
+
+        Serial::reset('query.test');
+
+        ValueClause::$idHandler = fn () => Serial::get('query.test');
     }
 
     protected function tearDown(): void
