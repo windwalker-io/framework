@@ -489,24 +489,19 @@ class StrTest extends TestCase
         ];
     }
 
-    /**
-     * testIntersectLeft
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('intersectLeftProvider')]
-    public function testIntersectLeft(string $string1, string $string2, string $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('intersectStartProvider')]
+    public function testIntersectStart(string $string1, string $string2, string $expected)
+    {
+        self::assertEquals($expected, Str::intersectStart($string1, $string2));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('intersectStartProvider')]
+    public function testIntersectLeftProxy(string $string1, string $string2, string $expected)
     {
         self::assertEquals($expected, Str::intersectLeft($string1, $string2));
     }
 
-    /**
-     * intersectLeftProvider
-     *
-     * @return  array
-     */
-    public static function intersectLeftProvider(): array
+    public static function intersectStartProvider(): array
     {
         return [
             ['foobar', 'foo bar', 'foo'],
@@ -521,28 +516,19 @@ class StrTest extends TestCase
         ];
     }
 
-    /**
-     * testIntersectRight
-     *
-     * @param  string  $string1
-     * @param  string  $string2
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('intersectRightProvider')]
-    public function testIntersectRight(string $string1, string $string2, string $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('intersectEndProvider')]
+    public function testIntersectEnd(string $string1, string $string2, string $expected)
+    {
+        self::assertEquals($expected, Str::intersectEnd($string1, $string2));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('intersectEndProvider')]
+    public function testIntersectRightProxy(string $string1, string $string2, string $expected)
     {
         self::assertEquals($expected, Str::intersectRight($string1, $string2));
     }
 
-    /**
-     * intersectRightProvider
-     *
-     * @return  array
-     */
-    public static function intersectRightProvider(): array
+    public static function intersectEndProvider(): array
     {
         return [
             ['foobar', 'foo bar', 'bar'],
@@ -626,29 +612,19 @@ class StrTest extends TestCase
         ];
     }
 
-    /**
-     * testPadLeft
-     *
-     * @param  string  $string
-     * @param  string  $substring
-     * @param  int     $length
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('padLeftProvider')]
-    public function testPadLeft(string $string, string $substring, int $length, string $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('padStartProvider')]
+    public function testPadStart(string $string, string $substring, int $length, string $expected)
+    {
+        self::assertEquals($expected, Str::padStart($string, $length, $substring));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('padStartProvider')]
+    public function testPadLeftProxy(string $string, string $substring, int $length, string $expected)
     {
         self::assertEquals($expected, Str::padLeft($string, $length, $substring));
     }
 
-    /**
-     * padLeftProvider
-     *
-     * @return  array
-     */
-    public static function padLeftProvider(): array
+    public static function padStartProvider(): array
     {
         return [
             ['foobar', '_', -1, 'foobar'],
@@ -661,29 +637,19 @@ class StrTest extends TestCase
         ];
     }
 
-    /**
-     * testPadRight
-     *
-     * @param  string  $string
-     * @param  string  $substring
-     * @param  int     $length
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('padRightProvider')]
-    public function testPadRight(string $string, string $substring, int $length, string $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('padEndProvider')]
+    public function testPadEnd(string $string, string $substring, int $length, string $expected)
+    {
+        self::assertEquals($expected, Str::padEnd($string, $length, $substring));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('padEndProvider')]
+    public function testPadRightProxy(string $string, string $substring, int $length, string $expected)
     {
         self::assertEquals($expected, Str::padRight($string, $length, $substring));
     }
 
-    /**
-     * padRightProvider
-     *
-     * @return  array
-     */
-    public static function padRightProvider(): array
+    public static function padEndProvider(): array
     {
         return [
             ['foobar', '_', -1, 'foobar'],

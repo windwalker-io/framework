@@ -15,6 +15,7 @@ use ReflectionObject;
 use ReflectionParameter;
 use Stringable;
 use Traversable;
+use Windwalker\Scalars\Concern\StringDeprecatedTrait;
 use Windwalker\Scalars\Concern\StringInflectorTrait;
 use Windwalker\Scalars\Concern\StringModifyTrait;
 use Windwalker\Scalars\Concern\StringStructureTrait;
@@ -36,8 +37,8 @@ use Windwalker\Utilities\Utf8String;
  * @method bool         contains(string $search, bool $caseSensitive = true)
  * @method bool         endsWith(string $search, bool $caseSensitive = true)
  * @method bool         startsWith(string $target, bool $caseSensitive = true)
- * @method StringObject ensureLeft(string $search)
- * @method StringObject ensureRight(string $search)
+ * @method StringObject ensureStart(string $search)
+ * @method StringObject ensureEnd(string $search)
  * @method bool         hasLowerCase()
  * @method bool         hasUpperCase()
  * @method StringObject match(string $pattern, string $option = 'msr')
@@ -46,15 +47,15 @@ use Windwalker\Utilities\Utf8String;
  * @method bool         isUpperCase()
  * @method StringObject first(int $length = 1)
  * @method StringObject last(int $length = 1)
- * @method StringObject intersectLeft(string $string2)
- * @method StringObject intersectRight(string $string2)
+ * @method StringObject intersectStart(string $string2)
+ * @method StringObject intersectEnd(string $string2)
  * @method StringObject intersect(string $string2)
  * @method StringObject pad(int $length = 0, string $substring = ' ')
- * @method StringObject padLeft(int $length = 0, string $substring = ' ')
- * @method StringObject padRight(int $length = 0, string $substring = ' ')
+ * @method StringObject padStart(int $length = 0, string $substring = ' ')
+ * @method StringObject padEnd(int $length = 0, string $substring = ' ')
  * @method StringObject removeChar(int $offset, int $length = null)
- * @method StringObject removeLeft(string $search)
- * @method StringObject removeRight(string $search)
+ * @method StringObject removeStart(string $search)
+ * @method StringObject removeEnd(string $search)
  * @method StringObject slice(int $start, int $end = null)
  * @method StringObject substring(int $start, int $end = null)
  * @method StringObject surrounds($substring = ['"', '"'])
@@ -78,6 +79,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
     use StringModifyTrait;
     use StringInflectorTrait;
     use StringStructureTrait;
+    use StringDeprecatedTrait;
     use ChainingTrait;
 
     /**

@@ -126,7 +126,15 @@ class Str
         return Utf8String::strpos($string, $target, 0, $encoding) === 0;
     }
 
+    /**
+     * @deprecated Use ensureStart() instead.
+     */
     public static function ensureLeft(string $string, string $search, ?string $encoding = null): string
+    {
+        return static::ensureStart($string, $search, $encoding);
+    }
+
+    public static function ensureStart(string $string, string $search, ?string $encoding = null): string
     {
         if (static::startsWith($string, $search, true, $encoding)) {
             return $string;
@@ -135,7 +143,15 @@ class Str
         return $search . $string;
     }
 
+    /**
+     * @deprecated Use ensureEnd() instead.
+     */
     public static function ensureRight(string $string, string $search, ?string $encoding = null): string
+    {
+        return static::ensureEnd($string, $search, $encoding);
+    }
+
+    public static function ensureEnd(string $string, string $search, ?string $encoding = null): string
     {
         if (static::endsWith($string, $search, true, $encoding)) {
             return $string;
@@ -221,7 +237,15 @@ class Str
         return Utf8String::substr($string, -$length, null, $encoding);
     }
 
+    /**
+     * @deprecated Use intersectStart() instead.
+     */
     public static function intersectLeft(string $string1, string $string2, ?string $encoding = null): string
+    {
+        return static::intersectStart($string1, $string2, $encoding);
+    }
+
+    public static function intersectStart(string $string1, string $string2, ?string $encoding = null): string
     {
         $encoding ??= mb_internal_encoding();
         $maxLength = min(Utf8String::strlen($string1, $encoding), Utf8String::strlen($string2, $encoding));
@@ -240,7 +264,15 @@ class Str
         return $intersect;
     }
 
+    /**
+     * @deprecated Use intersectEnd() instead.
+     */
     public static function intersectRight(string $string1, string $string2, ?string $encoding = null): string
+    {
+        return static::intersectEnd($string1, $string2, $encoding);
+    }
+
+    public static function intersectEnd(string $string1, string $string2, ?string $encoding = null): string
     {
         $encoding ??= mb_internal_encoding();
         $maxLength = min(Utf8String::strlen($string1, $encoding), Utf8String::strlen($string2, $encoding));
@@ -331,7 +363,19 @@ class Str
     }
 
     /**
-     * padLeft
+     * @deprecated Use padStart() instead.
+     */
+    public static function padLeft(
+        string $string,
+        int $length = 0,
+        string $substring = ' ',
+        ?string $encoding = null
+    ): string {
+        return static::padStart($string, $length, $substring, $encoding);
+    }
+
+    /**
+     * padStart
      *
      * @param  string       $string
      * @param  int          $length
@@ -340,7 +384,7 @@ class Str
      *
      * @return  string
      */
-    public static function padLeft(
+    public static function padStart(
         string $string,
         int $length = 0,
         string $substring = ' ',
@@ -352,7 +396,19 @@ class Str
     }
 
     /**
-     * padRight
+     * @deprecated Use padEnd() instead.
+     */
+    public static function padRight(
+        string $string,
+        int $length = 0,
+        string $substring = ' ',
+        ?string $encoding = null
+    ): string {
+        return static::padEnd($string, $length, $substring, $encoding);
+    }
+
+    /**
+     * padEnd
      *
      * @param  string       $string
      * @param  int          $length
@@ -361,7 +417,7 @@ class Str
      *
      * @return  string
      */
-    public static function padRight(
+    public static function padEnd(
         string $string,
         int $length = 0,
         string $substring = ' ',
@@ -405,17 +461,19 @@ class Str
     }
 
     /**
-     * removeChar
-     *
-     * @param  string      $string
-     * @param  int         $offset
-     * @param int|null     $length
-     * @param  string|null $encoding
+     * @param  string       $string
+     * @param  int          $offset
+     * @param  int|null     $length
+     * @param  string|null  $encoding
      *
      * @return  string
      */
-    public static function removeChar(string $string, int $offset, ?int $length = null, ?string $encoding = null): string
-    {
+    public static function removeChar(
+        string $string,
+        int $offset,
+        ?int $length = null,
+        ?string $encoding = null
+    ): string {
         $encoding ??= mb_internal_encoding();
 
         if (Utf8String::strlen($string, $encoding) < abs($offset)) {
@@ -428,15 +486,14 @@ class Str
     }
 
     /**
-     * removeLeft
-     *
-     * @param  string       $string
-     * @param  string       $search
-     * @param  string|null  $encoding
-     *
-     * @return  string
+     * @deprecated  Use removeStart() instead.
      */
     public static function removeLeft(string $string, string $search, ?string $encoding = null): string
+    {
+        return static::removeStart($string, $search, $encoding);
+    }
+
+    public static function removeStart(string $string, string $search, ?string $encoding = null): string
     {
         if ($string === '') {
             return '';
@@ -464,15 +521,14 @@ class Str
     }
 
     /**
-     * removeRight
-     *
-     * @param  string       $string
-     * @param  string       $search
-     * @param  string|null  $encoding
-     *
-     * @return  string
+     * @deprecated  Use removeEnd() instead.
      */
     public static function removeRight(string $string, string $search, ?string $encoding = null): string
+    {
+        return static::removeEnd($string, $search, $encoding);
+    }
+
+    public static function removeEnd(string $string, string $search, ?string $encoding = null): string
     {
         if ($string === '') {
             return '';
@@ -500,12 +556,10 @@ class Str
     }
 
     /**
-     * slice
-     *
-     * @param  string      $string
-     * @param  int         $start
-     * @param int|null     $end
-     * @param  string|null $encoding
+     * @param  string       $string
+     * @param  int          $start
+     * @param  int|null     $end
+     * @param  string|null  $encoding
      *
      * @return  string
      */
@@ -527,12 +581,10 @@ class Str
     }
 
     /**
-     * substring
-     *
-     * @param  string      $string
-     * @param  int         $start
-     * @param int|null     $end
-     * @param  string|null $encoding
+     * @param  string       $string
+     * @param  int          $start
+     * @param  int|null     $end
+     * @param  string|null  $encoding
      *
      * @return  string
      */
@@ -555,8 +607,6 @@ class Str
     }
 
     /**
-     * surround
-     *
      * @param  string        $string
      * @param  string|array  $substring
      *
@@ -574,8 +624,6 @@ class Str
     }
 
     /**
-     * toggleCase
-     *
      * @param  string       $string
      * @param  string|null  $encoding
      *
@@ -599,8 +647,6 @@ class Str
     }
 
     /**
-     * truncate
-     *
      * @param  string       $string
      * @param  int          $length
      * @param  string       $suffix
@@ -633,8 +679,6 @@ class Str
     }
 
     /**
-     * map
-     *
      * @param  string       $string
      * @param  callable     $callback
      * @param  string|null  $encoding
@@ -657,8 +701,6 @@ class Str
     }
 
     /**
-     * filter
-     *
      * @param  string       $string
      * @param  callable     $callback
      * @param  string|null  $encoding
@@ -669,7 +711,7 @@ class Str
     {
         return static::map(
             $string,
-            function ($char, &$key) use ($callback) {
+            static function ($char, &$key) use ($callback) {
                 if ($callback instanceof Closure) {
                     $result = $callback($char, $key);
                 } else {
@@ -683,8 +725,6 @@ class Str
     }
 
     /**
-     * reject
-     *
      * @param  string       $string
      * @param  callable     $callback
      * @param  string|null  $encoding
@@ -695,7 +735,7 @@ class Str
     {
         return static::filter(
             $string,
-            function ($char, &$key) use ($callback) {
+            static function ($char, &$key) use ($callback) {
                 if ($callback instanceof Closure) {
                     $result = $callback($char, $key);
                 } else {
