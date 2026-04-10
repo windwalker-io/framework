@@ -32,12 +32,24 @@ trait ReflectConcernTrait
         $tables = [];
 
         foreach ($froms as $from) {
-            $tables['FROM'][$from->getAlias() ?? ''] = $from;
+            $alias = $from->getAlias();
+
+            if (!$alias) {
+                $tables['FROM'][] = $from;
+            } else {
+                $tables['FROM'][$alias] = $from;
+            }
         }
 
         foreach ($joins as $join) {
             $joinTable = $join->getTable();
-            $tables[$join->getPrefix()][$joinTable->getAlias()] = $joinTable;
+            $alias = $joinTable->getAlias();
+
+            if (!$alias) {
+                $tables[$join->getPrefix()][] = $joinTable;
+            } else {
+                $tables[$join->getPrefix()][$alias] = $joinTable;
+            }
         }
 
         return $tables;

@@ -38,6 +38,14 @@ trait EntityTrait
             ?->getName();
     }
 
+    public static function defaultAlias(): ?string
+    {
+        return new ReflectionClass(static::class)
+            ->getAttributes(Table::class, ReflectionAttribute::IS_INSTANCEOF)[0]
+            ?->newInstance()
+            ?->getAlias();
+    }
+
     public static function newInstance(array $data = []): static
     {
         $instance = new static();
