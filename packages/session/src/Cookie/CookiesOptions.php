@@ -4,17 +4,33 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Cookie;
 
-use Windwalker\Core\DateTime\Chronos;
 use Windwalker\Utilities\Options\RecordOptionsTrait;
-use Windwalker\Utilities\StrNormalize;
 
 class CookiesOptions
 {
     use RecordOptionsTrait;
 
-    public ?Chronos $expires = null {
-        set(\DateTimeInterface|string|int|null $value) => $this->expires = Chronos::tryWrap($value);
+    // phpcs:disable
+    public ?\DateTimeImmutable $expires = null {
+        set(\DateTimeImmutable|string|int|null $value) {
+            if ($value === null) {
+                $this->expires = null;
+
+                return;
+            }
+
+            if (is_int($value)) {
+                $value = \DateTimeImmutable::createFromTimestamp($value);
+            }
+
+            if (is_string($value)) {
+                $value = new \DateTimeImmutable($value);
+            }
+
+            $this->expires = \DateTimeImmutable::createFromInterface($value);
+        }
     }
+    // phpcs:enable
 
     public function __construct(
         \DateTimeInterface|string|int|null $expires = null,
@@ -42,13 +58,29 @@ class CookiesOptions
 
     public function toCookieParams(): array
     {
-        return [
-            'expires' => $this->expires->toUnix(),
+        $params = [
+            'expires' => $this->expires ? (int) $this->expires->format('U') : null,
             'path' => $this->path,
             'domain' => $this->domain,
             'secure' => $this->secure,
             'httponly' => $this->httpOnly,
             'samesite' => $this->sameSite,
         ];
+
+        return array_filter($params, fn ($v) => $v !== null);
+    }
+
+    public function toSessionCookieParams(): array
+    {
+        $params = [
+            'expires' => $this->expires ? ((int) $this->expires->format('U')) - time() : null,
+            'path' => $this->path,
+            'domain' => $this->domain,
+            'secure' => $this->secure,
+            'httponly' => $this->httpOnly,
+            'samesite' => $this->sameSite,
+        ];
+
+        return array_filter($params, fn ($v) => $v !== null);
     }
 }
