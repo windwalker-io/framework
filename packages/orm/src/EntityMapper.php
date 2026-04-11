@@ -326,8 +326,6 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * createOne
-     *
      * @param  array|object    $source
      * @param  ORMOptions|int  $options
      *
@@ -994,6 +992,62 @@ class EntityMapper implements EventAwareInterface
             },
             enabled: $options->transaction
         );
+    }
+
+    public function upsert(
+        array|object $item,
+        ?array $condFields = null,
+        ORMOptions $options = new ORMOptions()
+    ): ?StatementInterface {
+        if ($item === []) {
+            return null;
+        }
+
+        $metadata = $this->getMetadata();
+
+        // $updateNulls = $options->updateNulls;
+        // if ($this->metadata::isEntity($item)) {
+        //     $updateNulls = true;
+        // }
+
+        if (!$condFields) {
+            $condFields = $this->getKeys();
+        }
+
+        if (!$condFields) {
+            throw new InvalidArgumentException(
+                'Condition fields empty or Entity has no keys when updating data.'
+            );
+        }
+
+        TypeAssert::assert(
+            is_object($item) || is_array($item),
+            '{caller} item must be array or object, {value} given',
+            $item
+        );
+
+        $fullData = $this->extract($item);
+
+        // @event
+
+        // Hydrate data into entity after event, to make sure all fields has default value.
+        $entity = $this->hydrate($fullData, $this->toEntity($item));
+
+        $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
+
+        if ($data !== []) {
+            // @event
+
+            $result = $this->getDb()->getWriter()->upsert(
+                $metadata->getTableName(),
+                $data,
+                $condFields,
+            );
+        }
+
+        // @event
+
+        return $result ?? null;
     }
 
     protected function prepareCreateInitData(mixed $initData, array $item, mixed $conditions): array
