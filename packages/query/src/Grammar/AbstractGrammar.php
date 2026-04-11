@@ -149,12 +149,12 @@ abstract class AbstractGrammar
             $sql['where'] = $where;
         }
 
-        if ($having = $query->getHaving()) {
-            $sql['having'] = $having;
-        }
-
         if ($group = $query->getGroup()) {
             $sql['group'] = $group;
+        }
+
+        if ($having = $query->getHaving()) {
+            $sql['having'] = $having;
         }
 
         // Only order and limit can after union

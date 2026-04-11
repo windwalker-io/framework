@@ -1109,10 +1109,12 @@ SQL
             ->whereNotIn('created', [55, 66])
             ->whereNotLike('content', '%qwe%');
 
-        self::assertSqlEquals(
-            'SELECT * FROM "foo" WHERE "id" IN (1, 2, 3) AND "id" NOT IN (5, 6, 7) '
-            . 'AND "time" BETWEEN \'2012-03-30\' AND \'2020-02-24\' '
-            . 'AND "created" NOT IN (55, 66) AND "content" NOT LIKE \'%qwe%\'',
+        self::assertSqlFormatEquals(
+            <<<SQL
+            SELECT * FROM "foo" WHERE "id" IN (1, 2, 3) AND "id" NOT IN (5, 6, 7)
+                AND "time" BETWEEN '2012-03-30' AND '2020-02-24'
+                AND "created" NOT IN (55, 66) AND "content" NOT LIKE '%qwe%'
+            SQL,
             $q->render(true)
         );
 
@@ -1122,11 +1124,17 @@ SQL
             ->havingIn('id', [1, 2, 3])
             ->havingBetween('time', '2012-03-30', '2020-02-24')
             ->havingNotIn('created', [55, 66])
-            ->havingNotLike('content', '%qwe%');
+            ->havingNotLike('content', '%qwe%')
+            ->group('time')
+            ->order('id');
 
-        self::assertSqlEquals(
-            'SELECT * FROM "foo" HAVING "id" IN (1, 2, 3) AND "time" BETWEEN \'2012-03-30\' AND \'2020-02-24\' '
-            . 'AND "created" NOT IN (55, 66) AND "content" NOT LIKE \'%qwe%\'',
+        self::assertSqlFormatEquals(
+            <<<SQL
+            SELECT * FROM "foo" GROUP BY "time"
+                HAVING "id" IN (1, 2, 3) AND "time" BETWEEN '2012-03-30'
+                AND '2020-02-24' AND "created" NOT IN (55, 66) AND "content" NOT LIKE '%qwe%'
+                ORDER BY "id"
+            SQL,
             $q->render(true)
         );
     }
