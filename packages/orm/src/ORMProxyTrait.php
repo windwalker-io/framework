@@ -385,9 +385,10 @@ trait ORMProxyTrait
         string $entityClass,
         array|object $item,
         array|string|null $condFields = null,
+        array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): ?StatementInterface {
-        return $this->mapper($entityClass)->upsert($item, $condFields, $options);
+        return $this->mapper($entityClass)->upsert($item, $condFields, $updateFields, $options);
     }
 
     /**

@@ -997,6 +997,7 @@ class EntityMapper implements EventAwareInterface
     public function upsert(
         array|object $item,
         array|string|null $condFields = null,
+        array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): ?StatementInterface {
         if ($item === []) {
@@ -1043,6 +1044,7 @@ class EntityMapper implements EventAwareInterface
                 $metadata->getTableName(),
                 $data,
                 $condFields,
+                $updateFields,
                 [
                     'updateNulls' => $updateNulls,
                 ]

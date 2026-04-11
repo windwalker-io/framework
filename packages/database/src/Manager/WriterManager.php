@@ -220,6 +220,7 @@ class WriterManager
         string $table,
         array|object $data,
         array|string $keys,
+        array|null $updateFields = null,
         array $options = [],
     ): StatementInterface {
         $keys = (array) $keys;
@@ -236,10 +237,13 @@ class WriterManager
         $table = (string) $query->quoteName($table);
         $data = TypeCast::toArray($data);
         $allFields = array_keys($data);
-        $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
+        // $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
+        $updateFields ??= array_filter($allFields, fn($field) => !in_array($field, $keys, true));
+
+        $quotedUpdateFields = $query->qnMultiple($updateFields);
         $quotedFields = $query->qnMultiple($allFields);
-        $quotedValueFields = $query->qnMultiple($valueFields);
+        // $quotedValueFields = $query->qnMultiple($valueFields);
         $quotedKeys = $query->qnMultiple($keys);
 
         $columns = $query->clause('()', $quotedFields, ',');
@@ -256,10 +260,10 @@ class WriterManager
 
         switch ($platformName) {
             case AbstractPlatform::MYSQL:
-                $dupKeys = $query->clause('', [], ',');
+                $updateActions = $query->clause('', [], ',');
 
-                foreach ($quotedValueFields as $key) {
-                    $dupKeys->append("$key = VALUES($key)");
+                foreach ($quotedUpdateFields as $key) {
+                    $updateActions->append("$key = VALUES($key)");
                 }
 
                 $query->sql(
@@ -267,28 +271,28 @@ class WriterManager
                     INSERT INTO $table $columns
                     VALUES $values
                     ON DUPLICATE KEY UPDATE
-                        $dupKeys
+                        $updateActions
                     SQL
                 );
                 break;
 
             case AbstractPlatform::POSTGRESQL:
-                $dupKeys = $query->clause('()', [], ',');
+                $updateActions = $query->clause('()', [], ',');
 
                 foreach ($quotedKeys as $key) {
-                    $dupKeys->append($key);
+                    $updateActions->append($key);
                 }
 
                 $excludeKeys = $query->clause('', [], ',');
 
-                foreach ($quotedValueFields as $key) {
+                foreach ($quotedUpdateFields as $key) {
                     $excludeKeys->append("$key = EXCLUDED.$key");
                 }
 
                 $query->sql(
                     <<<SQL
                     INSERT INTO $table $columns
-                    VALUES $values ON CONFLICT $dupKeys DO UPDATE SET
+                    VALUES $values ON CONFLICT $updateActions DO UPDATE SET
                         $excludeKeys
                     SQL
                 );
@@ -318,7 +322,7 @@ class WriterManager
 
                 $updateSet = $query->clause('', [], ',');
 
-                foreach ($valueFields as $k) {
+                foreach ($updateFields as $k) {
                     $v = $data[$k];
 
                     if ($v instanceof RawWrapper) {
