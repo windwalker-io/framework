@@ -346,12 +346,13 @@ abstract class AbstractRunner implements EventAwareInterface
     {
         return new CallbackLogger(
             function ($level, string|\Stringable $message, array $context = []) {
-                $this->logger->log($level, (string) $message, $context);
+                $message = (string) $message;
+                $this->logger->log($level, strip_tags($message), $context);
 
                 return $this->emit(
                     new DebugOutputEvent(
                         level: $level,
-                        message: (string) $message,
+                        message: $message,
                         context: $context,
                     )
                 );
