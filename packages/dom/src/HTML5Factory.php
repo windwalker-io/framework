@@ -161,15 +161,20 @@ class HTML5Factory
      *
      * @param  string  $text
      *
-     * @return  HTMLElement
+     * @return  HTMLElement|Node
      */
-    public static function parse(string $text): HTMLElement
+    public static function parse(string $text): HTMLElement|Node
     {
         $doc = static::document();
         $root = $doc->createElement('root');
         $root->innerHTML = $text;
 
-        return $root->firstElementChild;
+        return $root->firstChild;
+    }
+
+    public static function parseAsElement(string $text): HTMLElement
+    {
+        return static::parse($text);
     }
 
     /**

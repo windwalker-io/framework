@@ -69,6 +69,24 @@ abstract class TypeCast
         return $data->name;
     }
 
+    public static function dumpAll(object $object): array
+    {
+        static $propsCache = [];
+
+        $ref = new \ReflectionObject($object);
+        $props = $propsCache[$object::class] ??= $ref->getProperties(
+            \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE
+        );
+
+        $values = [];
+
+        foreach ($props as $prop) {
+            $values[$prop->getName()] = $prop->getValue($object);
+        }
+
+        return $values;
+    }
+
     /**
      * Utility function to convert all types to an array.
      *

@@ -11,6 +11,7 @@ use Windwalker\ORM\Attributes\PK;
 use Windwalker\ORM\Attributes\Table;
 use Windwalker\ORM\EntityInterface;
 use Windwalker\ORM\EntityTrait;
+use Windwalker\Utilities\Attributes\Expose;
 
 /**
  * The LocationData class.
@@ -28,6 +29,7 @@ class StubLocationData implements EntityInterface
     protected string $locationNo = '';
 
     #[Column('data')]
+    #[Expose]
     protected string|stdClass $data = '';
 
     /**

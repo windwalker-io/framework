@@ -332,6 +332,15 @@ class NestedSetMapper extends EntityMapper
         $data = $event->data;
         /** @var NestedEntityInterface $entity */
         $entity = $this->toEntity($event->source);
+
+        if (is_array($event->source)) {
+            $position = $event->source['position'];
+        } else {
+            $position = $event->source->getPosition();
+        }
+
+        $this->hydrate(compact('position'), $entity);
+
         $position = $entity->getPosition();
         $className = $this->getMetadata()->getClassName();
 
@@ -353,11 +362,18 @@ class NestedSetMapper extends EntityMapper
 
             // We are inserting a node relative to the last root node.
             if (!$position->getReferenceId()) {
+                $parentId = $entity->getParentId() ?: $this->getEmptyParentId();
                 $reference = $this->select($k, 'parent_id', 'level', 'lft', 'rgt')
-                    ->where('id', $entity->getParentId() ?: $this->getEmptyParentId())
+                    ->where('id', $parentId)
                     ->order('lft', 'DESC')
                     ->limit(1)
                     ->get($className);
+
+                if (!$reference) {
+                    throw new NestedHandleException(
+                        sprintf('Reference of parent %s not found.', $parentId)
+                    );
+                }
             } else {
                 // We have a real node set as a location reference.
                 // Get the reference node by primary key.

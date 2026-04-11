@@ -1740,7 +1740,7 @@ class EntityMapper implements EventAwareInterface
         }
 
         if (is_object($data)) {
-            $data = TypeCast::toArray($data);
+            $data = ReflectAccessor::getPropertiesValues($data);
         }
 
         // Only ORM has Hydrator, we must call ORM to do this.
