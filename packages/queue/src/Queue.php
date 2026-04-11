@@ -58,6 +58,7 @@ class Queue
         $message->setDelay($delay);
         $message->setChannel($channel);
         $message->setOptions($options);
+        $message->setCreatedAt('now');
 
         return $this->driver->push($message);
     }
@@ -88,6 +89,7 @@ class Queue
         $message->setDelay($delay);
         $message->setChannel($channel);
         $message->setOptions($options);
+        $message->setCreatedAt('now');
 
         return $this->driver->push($message);
     }

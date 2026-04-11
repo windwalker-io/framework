@@ -25,46 +25,48 @@ class QueueMessage implements JsonSerializable
      *
      * @var  int|string
      */
-    protected int|string $id = '';
+    public protected(set) int|string $id = '';
 
     /**
      * Property attempts.
      *
      * @var  int
      */
-    protected int $attempts = 0;
+    public protected(set) int $attempts = 0;
 
     /**
      * Message body from remote server.
      *
      * @var  array
      */
-    protected array $body = [];
+    public protected(set) array $body = [];
 
     /**
      * Message body from remote server.
      *
      * @var  string
      */
-    protected string $rawBody = '';
+    public protected(set) string $rawBody = '';
 
     /**
      * Property delay.
      *
      * @var  int
      */
-    protected int $delay = 0;
+    public protected(set) int $delay = 0;
+
+    public protected(set) ?\DateTimeImmutable $createdAt = null;
 
     /**
      * Property deleted.
      *
      * @var  bool
      */
-    protected bool $deleted = false;
+    public protected(set) bool $deleted = false;
 
     protected object $unserializedJob;
-
     // phpcs:disable
+
     public ?string $serializedJob {
         get => $this->body['job'] ?? null;
     }
@@ -422,5 +424,16 @@ class QueueMessage implements JsonSerializable
         }
 
         $this->unserializeJob();
+    }
+
+    public function setCreatedAt(\DateTimeImmutable|string|null $createdAt): static
+    {
+        if (is_string($createdAt)) {
+            $createdAt = new \DateTimeImmutable($createdAt);
+        }
+
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }

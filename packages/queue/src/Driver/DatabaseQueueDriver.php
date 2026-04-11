@@ -143,6 +143,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $message->setBody(json_decode($data['body'], true, 512, JSON_THROW_ON_ERROR));
         $message->setRawBody($data['body']);
         $message->setChannel($channel);
+        $message->setCreatedAt($data['createdAt']);
 
         return $message;
     }
