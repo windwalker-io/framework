@@ -229,7 +229,11 @@ class WriterManager
 
         $table = (string) $query->quoteName($table);
         $data = TypeCast::toArray($data);
-        $quotedFields = $query->qnMultiple(array_keys($data));
+        $allFields = array_keys($data);
+        $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
+
+        $quotedFields = $query->qnMultiple($allFields);
+        $quotedValueFields = $query->qnMultiple($valueFields);
         $quotedKeys = $query->qnMultiple($keys);
 
         $columns = $query->clause('()', $quotedFields, ',');
@@ -248,7 +252,7 @@ class WriterManager
             case AbstractPlatform::MYSQL:
                 $dupKeys = $query->clause('', [], ',');
 
-                foreach ($quotedKeys as $key) {
+                foreach ($quotedValueFields as $key) {
                     $dupKeys->append("$key = VALUES($key)");
                 }
 
@@ -266,12 +270,12 @@ class WriterManager
                 $dupKeys = $query->clause('()', [], ',');
 
                 foreach ($quotedKeys as $key) {
-                    $dupKeys->append("$key = VALUES($key)");
+                    $dupKeys->append($key);
                 }
 
                 $excludeKeys = $query->clause('', [], ',');
 
-                foreach ($quotedKeys as $key) {
+                foreach ($quotedValueFields as $key) {
                     $excludeKeys->append("$key = EXCLUDED.$key");
                 }
 
@@ -308,7 +312,9 @@ class WriterManager
 
                 $updateSet = $query->clause('', [], ',');
 
-                foreach ($data as $k => $v) {
+                foreach ($valueFields as $k) {
+                    $v = $data[$k];
+
                     if ($v instanceof RawWrapper) {
                         $updateSet->append($query->quoteName($k) . '=' . $v());
                     } else {
