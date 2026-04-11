@@ -53,7 +53,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
-        $time = new DateTimeImmutable('now');
+        $time = $message->createdAt ?? new DateTimeImmutable('now');
 
         $data = [
             'channel' => $message->getChannel() ?: $this->channel,
@@ -143,7 +143,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $message->setBody(json_decode($data['body'], true, 512, JSON_THROW_ON_ERROR));
         $message->setRawBody($data['body']);
         $message->setChannel($channel);
-        $message->setCreatedAt($data['createdAt']);
+        $message->setCreatedAt($data['created']);
 
         return $message;
     }

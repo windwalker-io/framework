@@ -49,7 +49,7 @@ class PdoQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
-        $time = new DateTimeImmutable('now');
+        $time = $message->createdAt ?? new DateTimeImmutable('now');
 
         $data = [
             ':channel' => $message->getChannel() ?: $this->channel,
