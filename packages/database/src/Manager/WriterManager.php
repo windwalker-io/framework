@@ -220,10 +220,16 @@ class WriterManager
         string $table,
         array|object $data,
         array|string $keys,
+        array $options = [],
     ): StatementInterface {
         $keys = (array) $keys;
 
         $platformName = $this->db->getPlatform()->getName();
+        $updateNulls = $options['updateNulls'] ?? false;
+
+        if (!$updateNulls) {
+            $data = array_filter($data, fn($v) => $v !== null);
+        }
 
         $query = $this->db->createQuery();
 

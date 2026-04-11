@@ -32,9 +32,9 @@ class PdoMysqlConnection extends AbstractPdoConnection
             }
         } else {
             if (strtolower($params['charset']) === 'utf8mb4') {
-                $options->driverOptions[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
+                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
             } elseif (strtolower($params['charset']) === 'utf8') {
-                $options->driverOptions[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8';
             }
         }
 
@@ -45,7 +45,7 @@ class PdoMysqlConnection extends AbstractPdoConnection
     {
         $pdo = $this->get();
 
-        $pdo?->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, !$buffered);
+        $pdo?->setAttribute(Mysql::ATTR_USE_BUFFERED_QUERY, !$buffered);
 
         return $this;
     }

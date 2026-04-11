@@ -996,7 +996,7 @@ class EntityMapper implements EventAwareInterface
 
     public function upsert(
         array|object $item,
-        ?array $condFields = null,
+        array|string|null $condFields = null,
         ORMOptions $options = new ORMOptions()
     ): ?StatementInterface {
         if ($item === []) {
@@ -1005,12 +1005,11 @@ class EntityMapper implements EventAwareInterface
 
         $metadata = $this->getMetadata();
 
-        $updateNulls = true;
+        $updateNulls = $options->updateNulls;
 
-        // $updateNulls = $options->updateNulls;
-        // if ($this->metadata::isEntity($item)) {
-        //     $updateNulls = true;
-        // }
+        if ($this->metadata::isEntity($item)) {
+            $updateNulls = true;
+        }
 
         if (!$condFields) {
             $condFields = $this->getKeys();
@@ -1044,6 +1043,9 @@ class EntityMapper implements EventAwareInterface
                 $metadata->getTableName(),
                 $data,
                 $condFields,
+                [
+                    'updateNulls' => $updateNulls,
+                ]
             );
         }
 
@@ -1740,7 +1742,12 @@ class EntityMapper implements EventAwareInterface
         }
 
         if (is_object($data)) {
-            $data = ReflectAccessor::getPropertiesValues($data);
+            if (EntityMetadata::isEntity($data)) {
+                // Keep B/C that we must extract protected props from old entities.
+                $data = ReflectAccessor::getPropertiesValues($data);
+            } else {
+                $data = TypeCast::toArray($data);
+            }
         }
 
         // Only ORM has Hydrator, we must call ORM to do this.

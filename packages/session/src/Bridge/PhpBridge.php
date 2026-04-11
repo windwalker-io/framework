@@ -230,6 +230,13 @@ class PhpBridge implements BridgeInterface
         return $r;
     }
 
+    public function write(): bool
+    {
+        $data = $this->encodeData($this->storage);
+
+        return $this->handler->write($this->getId(), $data);
+    }
+
     /**
      * Close without write, only for Session::fork().
      *
