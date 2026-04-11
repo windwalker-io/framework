@@ -93,7 +93,7 @@ class IpHelper
                 sprintf('%032b', ip2long($requestIp)),
                 sprintf('%032b', ip2long($address)),
                 0,
-                $netmask
+                (int) $netmask
             );
     }
 
