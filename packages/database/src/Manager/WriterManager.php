@@ -225,7 +225,7 @@ class WriterManager
         $keys = (array) $keys;
 
         $platformName = $this->db->getPlatform()->getName();
-        $updateNulls = $options['updateNulls'] ?? false;
+        $updateNulls = $options['updateNulls'] ?? true;
 
         if (!$updateNulls) {
             $data = array_filter($data, fn($v) => $v !== null);
