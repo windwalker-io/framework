@@ -129,6 +129,8 @@ abstract class TypeCast
                 } elseif (is_object($value)) {
                     if ($onlyDumpable && $value instanceof DumpableInterface) {
                         $data[$k] = static::toArray($value, $recursive, $onlyDumpable);
+                    } elseif ($value instanceof \DateTimeInterface) {
+                        $data[$k] = $value->format(DATE_RFC3339_EXTENDED);
                     } elseif (!$onlyDumpable) {
                         $data[$k] = static::toArray($value, $recursive, $onlyDumpable);
                     }
