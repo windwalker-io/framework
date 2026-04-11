@@ -31,6 +31,10 @@ static fn() => [
         //
     ],
 
+    'init_scripts' => [
+        //
+    ],
+
     'loop_end_scripts' => [
         //
     ],
@@ -42,6 +46,9 @@ static fn() => [
     'enqueuer' => [
         'handlers' => [
             __DIR__ . '/../../resources/registry/enqueuers.php',
+        ],
+        'init_scripts' => [
+            //
         ],
         'loop_end_scripts' => [
             //
