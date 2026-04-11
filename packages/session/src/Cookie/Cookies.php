@@ -15,32 +15,24 @@ class Cookies extends AbstractConfigurableCookies
     }
 
     /**
-     * @param  string  $name
-     * @param  string  $value
-     * @param  ?array{
-     *      expires?: int,
-     *      path?: string,
-     *      domain?: string,
-     *      secure?: bool,
-     *      httponly?: bool,
-     *      samesite?: "Lax"|"Strict"|"None"
-     *  }              $options
+     * @param  string                     $name
+     * @param  string                     $value
+     * @param  CookiesOptions|array|null  $options
      *
      * @return  bool
      */
-    public function set(string $name, string $value, ?array $options = null): bool
+    public function set(string $name, string $value, CookiesOptions|array|null $options = null): bool
     {
         if (headers_sent()) {
             return false;
         }
 
+        $options = CookiesOptions::wrapWith($options)->defaults($this->getOptions());
+
         return setcookie(
             $name,
             $value,
-            [
-                ...$this->getOptions(),
-                ...($options ?? []),
-            ]
+            $options->toCookieParams()
         );
     }
 

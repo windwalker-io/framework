@@ -9,6 +9,11 @@ namespace Windwalker\Session\Cookie;
  */
 class ArrayCookies extends AbstractConfigurableCookies
 {
+    /**
+     * @var array<string, ArrayCookieItem>
+     */
+    protected array $newStorage = [];
+
     protected array $storage = [];
 
     protected array $modifiedFields = [];
@@ -17,7 +22,7 @@ class ArrayCookies extends AbstractConfigurableCookies
 
     protected array $removeFields = [];
 
-    public static function create(array $storage = [], array $options = []): static
+    public static function create(array $storage = [], CookiesOptions|array $options = []): static
     {
         return new static($storage, $options);
     }
@@ -26,23 +31,29 @@ class ArrayCookies extends AbstractConfigurableCookies
      * ArrayCookies constructor.
      *
      * @param  array  $storage
-     * @param  array  $options
+     * @param  CookiesOptions|array  $options
      */
-    public function __construct(array $storage = [], array $options = [])
+    public function __construct(array $storage = [], CookiesOptions|array $options = [])
     {
+        $options = CookiesOptions::wrapWith($options);
+
+        $this->newStorage = array_map(
+            fn($value) => new ArrayCookieItem($value),
+            $storage
+        );
+
         $this->storage = $storage;
 
         parent::__construct($options);
     }
 
-    public function set(string $name, string $value, ?array $options = null): bool
+    public function set(string $name, string $value, CookiesOptions|array|null $options = null): bool
     {
-        if (!in_array($name, $this->modifiedFields, true)) {
-            $this->modifiedFields[] = $name;
-        }
+        $item = $this->newStorage[$name] ??= new ArrayCookieItem($value);
 
-        $this->storage[$name] = $value;
-        $this->valueOptions[$name] = $options;
+        $item->value = $value;
+        $item->options = CookiesOptions::wrapWith($options)->defaults($this->getOptions());
+        $item->modified = true;
 
         return true;
     }
@@ -56,20 +67,23 @@ class ArrayCookies extends AbstractConfigurableCookies
      */
     public function get(string $name): ?string
     {
-        return $this->storage[$name] ?? null;
+        $item = $this->newStorage[$name] ?? null;
+
+        if ($item?->deleted) {
+            return null;
+        }
+
+        return $item?->value;
     }
 
     public function remove(string $name): bool
     {
-        if (!in_array($name, $this->modifiedFields, true)) {
-            $this->modifiedFields[] = $name;
-        }
+        $item = $this->newStorage[$name] ?? null;
 
-        if (!in_array($name, $this->removeFields, true)) {
-            $this->removeFields[] = $name;
+        if ($item) {
+            $item->modified = true;
+            $item->deleted = true;
         }
-
-        unset($this->storage[$name], $this->valueOptions[$name]);
 
         return true;
     }
@@ -79,7 +93,7 @@ class ArrayCookies extends AbstractConfigurableCookies
      */
     public function getStorage(): array
     {
-        return $this->storage;
+        return array_map(fn($item) => $item->value, $this->newStorage);
     }
 
     /**
@@ -89,7 +103,10 @@ class ArrayCookies extends AbstractConfigurableCookies
      */
     public function setStorage(array $storage): static
     {
-        $this->storage = $storage;
+        $this->newStorage = array_map(
+            fn($value) => new ArrayCookieItem($value),
+            $storage
+        );
 
         return $this;
     }
@@ -98,28 +115,28 @@ class ArrayCookies extends AbstractConfigurableCookies
     {
         $headers = [];
 
-        foreach ($this->getStorage() as $k => $item) {
-            if (!in_array($k, $this->modifiedFields, true)) {
+        foreach ($this->newStorage as $k => $item) {
+            $options = $item->options->defaults($this->getOptions());
+
+            if ($item->deleted) {
+                $header = $k . '=""';
+
+                if ($settings = $this->buildHeaderSettings(true, $options)) {
+                    $header .= '; ' . $settings;
+                }
+
+                $headers[] = $header;
+
                 continue;
             }
 
-            $options = $this->valueOptions[$k] ?? null;
-
-            $header = $k . '=' . $item;
-
-            if ($settings = $this->buildHeaderSettings(false, $options)) {
-                $header .= '; ' . $settings;
+            if (!$item->modified) {
+                continue;
             }
 
-            $headers[] = $header;
-        }
+            $header = $k . '=' . $item->value;
 
-        foreach ($this->removeFields as $k) {
-            $options = $this->valueOptions[$k] ?? null;
-
-            $header = $k . '=""';
-
-            if ($settings = $this->buildHeaderSettings(true, $options)) {
+            if ($settings = $this->buildHeaderSettings(false, $options)) {
                 $header .= '; ' . $settings;
             }
 
@@ -129,40 +146,39 @@ class ArrayCookies extends AbstractConfigurableCookies
         return $headers;
     }
 
-    protected function buildHeaderSettings(bool $makeExpired = false, ?array $customOptions = null): string
-    {
+    protected function buildHeaderSettings(
+        bool $makeExpired = false,
+        CookiesOptions $customOptions = new CookiesOptions()
+    ): string {
         $settings = [];
 
-        $options = [
-            ...$this->propertiesToOptions(),
-            ...($customOptions ?? []),
-        ];
+        $options = $customOptions->defaults($this->getOptions());
 
-        $options['expires'] = static::expiresToDatetime($options['expires'] ?? null);
+        // $expires = static::expiresToDatetime($options->expires);
 
-        if ($options['domain']) {
-            $settings[] = 'domain=' . $options['domain'];
+        if ($options->domain) {
+            $settings[] = 'domain=' . $options->domain;
         }
 
-        if ($options['path']) {
-            $settings[] = 'path=' . $options['path'];
+        if ($options->path) {
+            $settings[] = 'path=' . $options->path;
         }
 
         if ($makeExpired) {
             $settings[] = 'Max-Age=0';
-        } elseif ($options['expires']) {
-            $settings[] = 'Expires=' . $options['expires']->format(\DateTimeInterface::COOKIE);
+        } elseif ($options->expires) {
+            $settings[] = 'Expires=' . $options->expires->format(\DateTimeInterface::COOKIE);
         }
 
-        if ($options['secure']) {
+        if ($options->secure) {
             $settings[] = 'secure';
         }
 
-        if ($options['samesite']) {
-            $settings[] = 'SameSite=' . $options['samesite'];
+        if ($options->sameSite) {
+            $settings[] = 'SameSite=' . $options->sameSite;
         }
 
-        if ($options['httponly']) {
+        if ($options->httpOnly) {
             $settings[] = 'HttpOnly';
         }
 

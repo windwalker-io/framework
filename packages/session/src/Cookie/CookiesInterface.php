@@ -9,27 +9,20 @@ namespace Windwalker\Session\Cookie;
  */
 interface CookiesInterface
 {
-    public const SAMESITE_NONE = 'None';
+    public const string SAMESITE_NONE = 'None';
 
-    public const SAMESITE_LAX = 'Lax';
+    public const string SAMESITE_LAX = 'Lax';
 
-    public const SAMESITE_STRICT = 'Strict';
+    public const string SAMESITE_STRICT = 'Strict';
 
     /**
-     * @param  string      $name
-     * @param  string      $value
-     * @param  ?array{
-     *      expires?: int,
-     *      path?: string,
-     *      domain?: string,
-     *      secure?: bool,
-     *      httponly?: bool,
-     *      samesite?: "Lax"|"Strict"|"None"
-     *  }  $options
+     * @param  string                     $name
+     * @param  string                     $value
+     * @param  CookiesOptions|array|null  $options
      *
      * @return  bool
      */
-    public function set(string $name, string $value, ?array $options = null): bool;
+    public function set(string $name, string $value, CookiesOptions|array|null $options = null): bool;
 
     public function get(string $name): ?string;
 
