@@ -24,6 +24,8 @@ class DatabaseQueueDriver implements QueueDriverInterface
 {
     use UuidDriverTrait;
 
+    protected ?bool $canSkipLocked = null;
+
     /**
      * DatabaseQueueDriver constructor.
      *
@@ -89,6 +91,8 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
         $query = $this->db->getQuery(true);
 
+        $do = $this->checkCanSkipLocked() ? 'SKIP LOCKED' : '';
+
         $query->select('*')
             ->from($this->table)
             ->where('channel', $channel)
@@ -100,7 +104,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
                         ->where('reserved', '<', $now->modify('-' . $this->timeout . 'seconds'));
                 }
             )
-            ->forUpdate();
+            ->forUpdate($do);
 
         $data = $this->db->transaction(
             function () use ($now, $query) {
@@ -284,5 +288,21 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $this->db->disconnect();
 
         return $this;
+    }
+
+    protected function checkCanSkipLocked(): bool
+    {
+        if ($this->canSkipLocked !== null) {
+            return $this->canSkipLocked;
+        }
+
+        try {
+            $this->db->createQuery()->selectRaw('1')->from($this->table)->forUpdate('SKIP LOCKED')->get();
+            $this->canSkipLocked = true;
+        } catch (Throwable) {
+            $this->canSkipLocked = false;
+        }
+
+        return $this->canSkipLocked;
     }
 }
