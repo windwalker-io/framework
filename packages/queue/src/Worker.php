@@ -35,6 +35,9 @@ use Windwalker\Queue\Job\JobController;
 class Worker extends AbstractRunner
 {
     public ?Enqueuer $enqueuer = null;
+
+    public string|array|null $enqueuerChannels = null;
+
     public function getRunnerName(): string
     {
         return 'Worker';
@@ -66,11 +69,13 @@ class Worker extends AbstractRunner
         $this->process($message);
     }
 
-    protected function enqueueIfAvailable(array|string $channel): ?QueueMessage
+    protected function enqueueIfAvailable(array|string $defaultChannel): ?QueueMessage
     {
         if (!$this->enqueuer) {
             return null;
         }
+
+        $channel = $this->enqueuerChannels ?? $defaultChannel;
 
         $channel = (array) $channel;
 
