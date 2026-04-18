@@ -55,14 +55,15 @@ class DatabaseQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
-        $time = $message->createdAt ?? new DateTimeImmutable('now');
+        $now = new DateTimeImmutable('now');
+        $time = $message->createdAt ?? $now;
 
         $data = [
             'channel' => $message->getChannel() ?: $this->channel,
             'body' => json_encode($message, JSON_THROW_ON_ERROR),
             'attempts' => 0,
             'created' => $time->format('Y-m-d H:i:s'),
-            'visibility' => $time->modify(sprintf('+%dseconds', $message->getDelay())),
+            'visibility' => $now->modify(sprintf('+%dseconds', $message->getDelay())),
             'reserved' => null,
         ];
 
@@ -204,14 +205,9 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
     public function defer(QueueMessage $message): static
     {
-        $this->delete($message);
-
-        $message->setDeleted(false);
         $message->setAttempts($message->getAttempts() - 1);
 
-        $this->push($message);
-
-        return $this;
+        return $this->release($message);
     }
 
     /**
