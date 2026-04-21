@@ -132,8 +132,8 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             // If you use auto cookie, we set cookie params first.
             // Only Native session bridge with native cookies use this.
             $this->setCookieParams();
-        } else {
-            // Otherwise, set session ID from $_COOKIE.
+        } elseif (!$this->bridge->getId()) {
+            // If there has no manually set ID, then retrieve session ID from $_COOKIE.
             $id = $this->cookies->get($this->bridge->getSessionName());
 
             if ($id !== null) {
