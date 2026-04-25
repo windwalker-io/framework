@@ -25,12 +25,6 @@ trait OptionsResolverTrait
      */
     protected function resolveOptions(array $options = [], ?callable $handler = null): void
     {
-        if (OptionsResolverFactory::has(static::class)) {
-            $this->options = $this->getOptionsResolver()->resolve($options);
-
-            return;
-        }
-
         $resolver = $this->getOptionsResolver();
 
         if ($handler) {
@@ -42,7 +36,7 @@ trait OptionsResolverTrait
 
     protected function getOptionsResolver(): OptionsResolver
     {
-        return OptionsResolverFactory::getByClass(static::class);
+        return new OptionsResolver();
     }
 
     public function getOption(string $name, $default = null)
@@ -54,8 +48,7 @@ trait OptionsResolverTrait
     {
         $this->options[$name] = $value;
 
-        // Re-check values
-        return $this->setOptions($this->options);
+        return $this;
     }
 
     public function getOptions(): array
@@ -65,7 +58,7 @@ trait OptionsResolverTrait
 
     public function setOptions(array $options): static
     {
-        $this->options = OptionsResolverFactory::getByClass(static::class)->resolve($options);
+        $this->options = $options;
 
         return $this;
     }
