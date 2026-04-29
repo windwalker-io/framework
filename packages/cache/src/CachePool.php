@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Cache;
 
 use DateInterval;
-use Generator;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -20,7 +19,6 @@ use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
-use Windwalker\Cache\Storage\LockableStorageInterface;
 use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
@@ -317,27 +315,28 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      * @param  string                 $key
      * @param  callable               $handler
      * @param  null|int|DateInterval  $ttl
+     * @param  bool|float             $beta
      *
      * @return  mixed
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function call(string $key, callable $handler, DateInterval|int|null $ttl = null, bool $lock = false): mixed
-    {
-        $storage = $this->storage;
-        $isHit = null;
-
-        if ($lock && $storage instanceof LockableStorageInterface) {
-            $storage->lock($key, $isNew);
-            $isHit = !$isNew;
-        }
+    public function call(
+        string $key,
+        callable $handler,
+        DateInterval|int|null $ttl = null,
+        bool|float $beta = 1.0
+    ): mixed {
+        $locked = CacheLock::lock($key, $isNew);
+        $isHit = !$isNew;
 
         try {
+            // Re-fetch the item after acquiring the lock so we see any
+            // value that a competing process may have written while we waited
             $item = $this->getItem($key);
 
-            $isHit ??= $item->isHit();
-
-            if ($isHit) {
+            // If lock was not acquired or item already exists, serve from cache
+            if ($isHit || $item->isHit()) {
                 return $item->get();
             }
 
@@ -348,12 +347,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
             return $data;
         } finally {
-            if ($lock && $storage instanceof LockableStorageInterface) {
-                $storage->release($key);
+            if ($locked) {
+                CacheLock::release($key);
             }
         }
-
-        return $data ?? null;
     }
 
     /**

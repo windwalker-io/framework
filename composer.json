@@ -71,7 +71,8 @@
         "asika/simple-benchmark": "^3.0",
         "rize/uri-template": "^0.3.5||^0.4.0",
         "guzzlehttp/uri-template": "^1.0",
-        "asika/better-units": "^0.1.1"
+        "asika/better-units": "^0.1.1",
+        "symfony/cache": "^8.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~4.0 if you require YAML support.",
