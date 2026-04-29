@@ -242,11 +242,23 @@ class CachePoolTest extends TestCase
     }
 
     /**
-     * @see  CachePool::setStorage
+     * @see  CachePool::setStorage / getStorage
      */
     public function testSetStorage(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $storage = new ArrayStorage();
+
+        $this->instance->setStorage($storage);
+
+        self::assertSame($storage, $this->instance->getStorage());
+    }
+
+    /**
+     * @see  CachePool::getStorage
+     */
+    public function testGetStorage(): void
+    {
+        self::assertInstanceOf(StorageInterface::class, $this->instance->getStorage());
     }
 
     /**
@@ -395,7 +407,17 @@ class CachePoolTest extends TestCase
      */
     public function testGetMultiple(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->set('foo', 'FOO');
+        $this->instance->set('bar', 'BAR');
+
+        // 'missing' is not in cache — should fall back to $default
+        $values = iterator_to_array(
+            $this->instance->getMultiple(['foo', 'bar', 'missing'], 'DEFAULT')
+        );
+
+        self::assertEquals('FOO', $values['foo']);
+        self::assertEquals('BAR', $values['bar']);
+        self::assertEquals('DEFAULT', $values['missing'], 'Missing key must return $default');
     }
 
     /**
@@ -403,7 +425,16 @@ class CachePoolTest extends TestCase
      */
     public function testDeleteMultiple(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->set('foo', 'FOO');
+        $this->instance->set('bar', 'BAR');
+        $this->instance->set('yoo', 'YOO');
+
+        $result = $this->instance->deleteMultiple(['foo', 'bar']);
+
+        self::assertTrue($result);
+        self::assertFalse($this->instance->has('foo'));
+        self::assertFalse($this->instance->has('bar'));
+        self::assertTrue($this->instance->has('yoo'));
     }
 
     /**
@@ -411,7 +442,23 @@ class CachePoolTest extends TestCase
      */
     public function testSetMultiple(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $result = $this->instance->setMultiple(['foo' => 'FOO', 'bar' => 'BAR', 'yoo' => 'YOO']);
+
+        self::assertTrue($result);
+        self::assertEquals('FOO', $this->instance->get('foo'));
+        self::assertEquals('BAR', $this->instance->get('bar'));
+        self::assertEquals('YOO', $this->instance->get('yoo'));
+    }
+
+    /**
+     * @see  CachePool::setMultiple — invalid argument
+     */
+    public function testSetMultipleThrowsOnNonIterable(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @phpstan-ignore-next-line */
+        $this->instance->setMultiple('not-iterable');
     }
 
     /**
@@ -419,7 +466,13 @@ class CachePoolTest extends TestCase
      */
     public function testDelete(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->set('foo', 'FOO');
+
+        self::assertTrue($this->instance->has('foo'));
+
+        $this->instance->delete('foo');
+
+        self::assertFalse($this->instance->has('foo'));
     }
 
     /**
@@ -427,23 +480,50 @@ class CachePoolTest extends TestCase
      */
     public function testHas(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertFalse($this->instance->has('missing'));
+
+        $this->instance->set('foo', 'FOO');
+
+        self::assertTrue($this->instance->has('foo'));
+
+        $this->instance->delete('foo');
+
+        self::assertFalse($this->instance->has('foo'));
     }
 
     /**
-     * @see  CachePool::__destruct
+     * @see  CachePool::__destruct — autoCommit flushes deferred items
      */
     public function testDestruct(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $storage = new ArrayStorage();
+
+        $pool = new CachePool($storage);
+        $pool->saveDeferred($this->createItem('foo', 'FOO'));
+        $pool->saveDeferred($this->createItem('bar', 'BAR'));
+
+        self::assertEmpty($storage->getData(), 'Items must not be saved before destruct');
+
+        $pool->__destruct();
+
+        self::assertEquals('FOO', $storage->get('foo'));
+        self::assertEquals('BAR', $storage->get('bar'));
     }
 
     /**
-     * @see  CachePool::getStorage
+     * @see  CachePool::autoCommit — disable prevents destruct from committing
      */
-    public function testGetStorage(): void
+    public function testDestructWithAutoCommitDisabled(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $storage = new ArrayStorage();
+
+        $pool = new CachePool($storage);
+        $pool->autoCommit(false);
+        $pool->saveDeferred($this->createItem('foo', 'FOO'));
+
+        $pool->__destruct();
+
+        self::assertEmpty($storage->getData(), 'Items must NOT be saved when autoCommit is disabled');
     }
 
     /**
@@ -451,7 +531,70 @@ class CachePoolTest extends TestCase
      */
     public function testConstruct(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $storage    = new ArrayStorage();
+        $serializer = new RawSerializer();
+
+        $pool = new CachePool($storage, $serializer, defaultTtl: 120);
+
+        self::assertSame($storage, $pool->getStorage());
+        self::assertSame($serializer, $pool->getSerializer());
+        self::assertEquals(120, $pool->getDefaultTtl());
+    }
+
+    /**
+     * @see  CachePool::save — item with past expiry is removed rather than saved
+     */
+    public function testSaveExpiredItemRemovesIt(): void
+    {
+        $this->instance->set('foo', 'FOO');
+        self::assertTrue($this->instance->has('foo'));
+
+        $item = $this->instance->getItem('foo');
+        $item->expiresAt(new \DateTime('-1 second'));
+
+        $result = $this->instance->save($item);
+
+        self::assertFalse($result, 'save() must return false for an expired item');
+        self::assertFalse($this->instance->has('foo'), 'Expired item must be removed from storage');
+    }
+
+    /**
+     * @see  CachePool::get — returns $default for cache miss
+     */
+    public function testGetReturnsDefaultOnMiss(): void
+    {
+        self::assertNull($this->instance->get('missing'));
+        self::assertEquals('fallback', $this->instance->get('missing', 'fallback'));
+    }
+
+    /**
+     * @see  CachePool::setDefaultTtl — default TTL is applied to new items
+     */
+    public function testDefaultTtlIsAppliedToNewItems(): void
+    {
+        $this->instance->setDefaultTtl(3600);
+
+        $this->instance->set('foo', 'FOO'); // no explicit TTL — should use defaultTtl
+
+        $expiration = $this->getValue($this->instance->getStorage(), 'data')['foo'][0];
+
+        self::assertEqualsWithDelta(time() + 3600, $expiration, 2);
+    }
+
+    /**
+     * @see  CachePool::fetch — handler receives the CacheItem as first argument
+     */
+    public function testFetchHandlerReceivesCacheItem(): void
+    {
+        $receivedItem = null;
+
+        $this->instance->fetch('item_arg', function ($item) use (&$receivedItem) {
+            $receivedItem = $item;
+            return 'value';
+        }, 60);
+
+        self::assertInstanceOf(\Psr\Cache\CacheItemInterface::class, $receivedItem);
+        self::assertEquals('item_arg', $receivedItem->getKey());
     }
 
     public function createItem(string $key, mixed $value = null): CacheItem

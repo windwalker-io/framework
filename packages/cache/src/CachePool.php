@@ -255,8 +255,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     public function getMultiple($keys, $default = null): iterable
     {
-        foreach ($this->getItems($keys) as $item) {
-            yield $item->get();
+        foreach ($this->getItems($keys) as $key => $item) {
+            yield $key => $item->isHit() ? $item->get() : $default;
         }
     }
 
