@@ -47,9 +47,10 @@ class ArrayStorage implements StorageInterface
             return false;
         }
 
-        [$expiration, $value] = $this->data[$key];
+        [$expiration] = $this->data[$key];
 
-        return time() <= $expiration;
+        // expiration = 0 means "never expires" (consistent with get())
+        return $expiration === 0 || time() <= $expiration;
     }
 
     /**
