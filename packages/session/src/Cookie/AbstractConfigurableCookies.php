@@ -14,51 +14,41 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
 {
     protected ?DateTimeInterface $expires = null;
 
-    protected string $path = '';
-
-    protected string $domain = '';
-
-    protected bool $secure = false;
-
-    protected bool $httpOnly = false;
-
-    protected string $sameSite = self::SAMESITE_LAX;
+    protected CookiesOptions $options;
 
     /**
      * AbstractCookies constructor.
      *
-     * @param  array  $options
+     * @param  CookiesOptions|array|null  $options
      */
-    public function __construct(array $options = [])
+    public function __construct(CookiesOptions|array $options = new CookiesOptions())
     {
+        $options = CookiesOptions::wrapWith($options);
+        $options->sameSite ??= CookiesInterface::SAMESITE_LAX;
+
         $this->setOptions($options);
     }
 
-    public function getOptions(): array
+    public function getOptions(): CookiesOptions
     {
-        $options = $this->propertiesToOptions();
 
-        if (isset($options['expires']) && $options['expires'] instanceof DateTimeInterface) {
-            $options['expires'] = time() + $options['expires']->getTimestamp();
-        }
+        // if (isset($options['expires']) && $options['expires'] instanceof DateTimeInterface) {
+        //     $options['expires'] = time() + $options['expires']->getTimestamp();
+        // }
 
-        return $options;
+        return $this->options;
     }
 
-    protected function propertiesToOptions(): array
-    {
-        return array_change_key_case(get_object_vars($this), CASE_LOWER);
-    }
+    // protected function propertiesToOptions(): array
+    // {
+    //     return array_change_key_case(get_object_vars($this), CASE_LOWER);
+    // }
 
-    public function setOptions(array $options): static
+    public function setOptions(CookiesOptions|array $options): static
     {
-        $this->path = $options['path'] ?? $this->path;
-        $this->domain = $options['domain'] ?? $this->domain;
-        $this->secure = $options['secure'] ?? $this->secure;
-        $this->httpOnly = $options['httponly'] ?? $this->httpOnly;
-        $this->sameSite = $options['samesite'] ?? $this->sameSite;
+        $options = $options instanceof CookiesOptions ? $options : CookiesOptions::wrapWith($options);
 
-        $this->expires($options['expires'] ?? $this->expires);
+        $this->options = $options;
 
         return $this;
     }
@@ -107,7 +97,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function getPath(): string
     {
-        return $this->path;
+        return $this->options->path ?? '';
     }
 
     /**
@@ -117,7 +107,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function path(string $path): static
     {
-        $this->path = $path;
+        $this->options->path = $path;
 
         return $this;
     }
@@ -127,7 +117,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function getDomain(): string
     {
-        return $this->domain;
+        return $this->options->domain ?? '';
     }
 
     /**
@@ -137,7 +127,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function domain(string $domain): static
     {
-        $this->domain = $domain;
+        $this->options->domain = $domain;
 
         return $this;
     }
@@ -147,7 +137,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function isSecure(): bool
     {
-        return $this->secure;
+        return $this->options->secure ?? false;
     }
 
     /**
@@ -157,7 +147,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function secure(bool $secure): static
     {
-        $this->secure = $secure;
+        $this->options->secure = $secure;
 
         return $this;
     }
@@ -167,7 +157,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function isHttpOnly(): bool
     {
-        return $this->httpOnly;
+        return $this->options->httpOnly ?? false;
     }
 
     /**
@@ -177,7 +167,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function httpOnly(bool $httpOnly): static
     {
-        $this->httpOnly = $httpOnly;
+        $this->options->httpOnly = $httpOnly;
 
         return $this;
     }
@@ -187,7 +177,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function isSameSite(): string
     {
-        return $this->sameSite;
+        return $this->options->sameSite ?? '';
     }
 
     /**
@@ -197,7 +187,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      */
     public function sameSite(string $sameSite): static
     {
-        $this->sameSite = $sameSite;
+        $this->options->sameSite = $sameSite;
 
         return $this;
     }

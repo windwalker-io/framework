@@ -17,6 +17,7 @@ use Windwalker\ORM\EntityTrait;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Relation\RelationCollection;
+use Windwalker\Utilities\Attributes\Expose;
 
 /**
  * The Location class.
@@ -44,8 +45,10 @@ class StubLocation implements EntityInterface
         OnUpdate(Action::CASCADE),
         OnDelete(Action::CASCADE)
     ]
+    #[Expose]
     protected ?StubLocationData $data = null;
 
+    #[Expose]
     protected RelationCollection|null $sakuras = null;
 
     protected RelationCollection|null $roses = null;

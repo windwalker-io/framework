@@ -21,9 +21,12 @@ class SimpleHydrator implements HydratorInterface, FieldHydratorInterface
      */
     public function extract(object $object): array
     {
-        if ($object instanceof DumpableInterface) {
-            return new AccessibleHydrator()->extract($object);
-        }
+        // Since dump() use get_object_dump_values(), protected fields will not return
+        // We must use total dump by ReflectAccessor::getPropertiesValues($object);
+
+        // if ($object instanceof DumpableInterface) {
+        //     return new AccessibleHydrator()->extract($object);
+        // }
 
         if ($object instanceof Traversable) {
             return iterator_to_array($object);

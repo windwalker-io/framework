@@ -69,6 +69,24 @@ abstract class TypeCast
         return $data->name;
     }
 
+    public static function dumpAll(object $object): array
+    {
+        static $propsCache = [];
+
+        $ref = new \ReflectionObject($object);
+        $props = $propsCache[$object::class] ??= $ref->getProperties(
+            \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE
+        );
+
+        $values = [];
+
+        foreach ($props as $prop) {
+            $values[$prop->getName()] = $prop->getValue($object);
+        }
+
+        return $values;
+    }
+
     /**
      * Utility function to convert all types to an array.
      *
@@ -111,6 +129,8 @@ abstract class TypeCast
                 } elseif (is_object($value)) {
                     if ($onlyDumpable && $value instanceof DumpableInterface) {
                         $data[$k] = static::toArray($value, $recursive, $onlyDumpable);
+                    } elseif ($value instanceof \DateTimeInterface) {
+                        $data[$k] = $value->format(DATE_RFC3339_EXTENDED);
                     } elseif (!$onlyDumpable) {
                         $data[$k] = static::toArray($value, $recursive, $onlyDumpable);
                     }

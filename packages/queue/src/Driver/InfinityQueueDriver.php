@@ -26,7 +26,8 @@ class InfinityQueueDriver implements QueueDriverInterface
     public function pop(?string $channel = null): ?QueueMessage
     {
         return new QueueMessage($this->job)
-            ->setId(uid('mq__'));
+            ->setId(uid('mq__'))
+            ->setCreatedAt('now');
     }
 
     public function delete(QueueMessage $message): static

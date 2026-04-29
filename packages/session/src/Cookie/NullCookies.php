@@ -9,7 +9,7 @@ namespace Windwalker\Session\Cookie;
  */
 class NullCookies implements CookiesInterface
 {
-    public function set(string $name, string $value, ?array $options = null): bool
+    public function set(string $name, string $value, CookiesOptions|array|null $options = null): bool
     {
         return true;
     }

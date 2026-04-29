@@ -230,7 +230,7 @@ class JobController
         return $controller;
     }
 
-    public function next(): JobController
+    public function next(): static
     {
         if ($this->context !== 'middleware') {
             throw new \RuntimeException(
@@ -320,6 +320,12 @@ class JobController
                         QueueMiddlewareInterface::class,
                         self::class
                     )
+                );
+            }
+
+            if ($result === null) {
+                throw new \UnexpectedValueException(
+                    'Middleware returns null, you may forgot to return JobController::next() in middleware.'
                 );
             }
 

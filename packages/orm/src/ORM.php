@@ -75,7 +75,7 @@ class ORM implements EventAwareInterface
      *
      * @param  DatabaseAdapter  $db
      */
-    public function __construct(protected DatabaseAdapter $db)
+    public function __construct(public protected(set) DatabaseAdapter $db)
     {
         $this->entityMetadataCollection = new EntityMetadataCollection($this);
 

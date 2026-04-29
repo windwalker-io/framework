@@ -378,6 +378,20 @@ trait ORMProxyTrait
     }
 
     /**
+     * @throws \JsonException
+     * @throws \ReflectionException
+     */
+    public function upsert(
+        string $entityClass,
+        array|object $item,
+        array|string|null $condFields = null,
+        array|null $updateFields = null,
+        ORMOptions $options = new ORMOptions()
+    ): ?StatementInterface {
+        return $this->mapper($entityClass)->upsert($item, $condFields, $updateFields, $options);
+    }
+
+    /**
      * Delete items in single SQL and not trigger events, be careful when using this.
      *
      * @param  string          $entityClass

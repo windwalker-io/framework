@@ -271,6 +271,19 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
 
     public function merge(array $attributeDefaults = [], bool $escape = true): static
     {
+        // If parent ComponentAttributes use :attributes to bind self
+        // It means we merge it to children attributes.
+        $mergeAttributes = $attributeDefaults['attributes'] ?? null;
+
+        if ($mergeAttributes instanceof self) {
+            $attributeDefaults = [
+                ...$mergeAttributes->getAttributes(),
+                ...$attributeDefaults
+            ];
+
+            unset($attributeDefaults['attributes']);
+        }
+
         $attributeDefaults = array_map(
             function ($value) use ($escape) {
                 return $this->shouldEscapeAttributeValue($escape, $value)

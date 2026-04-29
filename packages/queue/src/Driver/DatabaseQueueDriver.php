@@ -24,6 +24,8 @@ class DatabaseQueueDriver implements QueueDriverInterface
 {
     use UuidDriverTrait;
 
+    protected ?bool $canSkipLocked = null;
+
     /**
      * DatabaseQueueDriver constructor.
      *
@@ -53,14 +55,15 @@ class DatabaseQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message): string
     {
-        $time = new DateTimeImmutable('now');
+        $now = new DateTimeImmutable('now');
+        $time = $message->createdAt ?? $now;
 
         $data = [
             'channel' => $message->getChannel() ?: $this->channel,
             'body' => json_encode($message, JSON_THROW_ON_ERROR),
             'attempts' => 0,
             'created' => $time->format('Y-m-d H:i:s'),
-            'visibility' => $time->modify(sprintf('+%dseconds', $message->getDelay())),
+            'visibility' => $now->modify(sprintf('+%dseconds', $message->getDelay())),
             'reserved' => null,
         ];
 
@@ -89,6 +92,8 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
         $query = $this->db->getQuery(true);
 
+        $do = $this->checkCanSkipLocked() ? 'SKIP LOCKED' : '';
+
         $query->select('*')
             ->from($this->table)
             ->where('channel', $channel)
@@ -100,7 +105,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
                         ->where('reserved', '<', $now->modify('-' . $this->timeout . 'seconds'));
                 }
             )
-            ->forUpdate();
+            ->forUpdate($do);
 
         $data = $this->db->transaction(
             function () use ($now, $query) {
@@ -143,6 +148,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $message->setBody(json_decode($data['body'], true, 512, JSON_THROW_ON_ERROR));
         $message->setRawBody($data['body']);
         $message->setChannel($channel);
+        $message->setCreatedAt($data['created']);
 
         return $message;
     }
@@ -199,14 +205,9 @@ class DatabaseQueueDriver implements QueueDriverInterface
 
     public function defer(QueueMessage $message): static
     {
-        $this->delete($message);
-
-        $message->setDeleted(false);
         $message->setAttempts($message->getAttempts() - 1);
 
-        $this->push($message);
-
-        return $this;
+        return $this->release($message);
     }
 
     /**
@@ -283,5 +284,21 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $this->db->disconnect();
 
         return $this;
+    }
+
+    protected function checkCanSkipLocked(): bool
+    {
+        if ($this->canSkipLocked !== null) {
+            return $this->canSkipLocked;
+        }
+
+        try {
+            $this->db->createQuery()->selectRaw('1')->from($this->table)->forUpdate('SKIP LOCKED')->get();
+            $this->canSkipLocked = true;
+        } catch (Throwable) {
+            $this->canSkipLocked = false;
+        }
+
+        return $this->canSkipLocked;
     }
 }

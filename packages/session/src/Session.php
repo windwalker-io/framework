@@ -9,6 +9,7 @@ use Windwalker\Session\Bridge\BridgeInterface;
 use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
+use Windwalker\Session\Cookie\CookiesOptions;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\TypeCast;
@@ -131,8 +132,8 @@ class Session implements SessionInterface, ArrayAccessibleInterface
             // If you use auto cookie, we set cookie params first.
             // Only Native session bridge with native cookies use this.
             $this->setCookieParams();
-        } else {
-            // Otherwise, set session ID from $_COOKIE.
+        } elseif (!$this->bridge->getId()) {
+            // If there has no manually set ID, then retrieve session ID from $_COOKIE.
             $id = $this->cookies->get($this->bridge->getSessionName());
 
             if ($id !== null) {
@@ -425,18 +426,13 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @since   2.0
      */
-    public function setCookieParams(?array $options = null): void
+    public function setCookieParams(CookiesOptions|array|null $options = null): void
     {
         if (!headers_sent() && $this->getCookies() instanceof Cookies) {
             $options ??= $this->cookies->getOptions();
+            $options = CookiesOptions::wrapWith($options);
 
-            if (isset($options['expires'])) {
-                $options['lifetime'] = max($options['expires'] - time(), 0);
-
-                unset($options['expires']);
-            }
-
-            session_set_cookie_params($options);
+            session_set_cookie_params($options->toSessionCookieParams());
         }
     }
 
