@@ -16,10 +16,9 @@ use function Windwalker\str;
 /**
  * The FilesystemStorage class.
  */
-class FileStorage implements StorageInterface, LockableStorageInterface
+class FileStorage implements StorageInterface
 {
     use OptionAccessTrait;
-    use LockableStorageTrait;
 
     /**
      * @var string

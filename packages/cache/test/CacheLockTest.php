@@ -87,7 +87,41 @@ class CacheLockTest extends TestCase
     }
 
     // -----------------------------------------------------------------------
-    // lock() — basic behaviour
+    // Default $files list integrity
+    // -----------------------------------------------------------------------
+
+    /**
+     * Every path listed in CacheLock::$files must exist on disk so that
+     * open() can actually open it and flock() can acquire a lock.
+     *
+     * @see CacheLock::getFiles
+     */
+    public function testAllDefaultFilesExist(): void
+    {
+        $missing = [];
+
+        foreach (self::$originalFiles as $path) {
+            if (!is_file($path)) {
+                $missing[] = $path;
+            }
+        }
+
+        self::assertEmpty(
+            $missing,
+            "The following CacheLock stripe files do not exist:\n" . implode("\n", $missing)
+        );
+    }
+
+    /**
+     * There must be exactly 20 default stripe files configured.
+     *
+     * @see CacheLock::getFiles
+     */
+    public function testDefaultFilesCountIs20(): void
+    {
+        self::assertCount(20, self::$originalFiles);
+    }
+
     // -----------------------------------------------------------------------
 
     /** @see CacheLock::lock */

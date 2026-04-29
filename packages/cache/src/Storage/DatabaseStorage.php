@@ -12,9 +12,8 @@ use Windwalker\Query\Query;
 
 use function Windwalker\raw;
 
-class DatabaseStorage implements StorageInterface, LockableStorageInterface
+class DatabaseStorage implements StorageInterface
 {
-    use LockableStorageTrait;
 
     protected ORM $orm {
         get => $this->db->orm();
