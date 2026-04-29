@@ -282,14 +282,14 @@ class CachePoolTest extends TestCase
     }
 
     /**
-     * @see  CachePool::call
+     * @see  CachePool::fetch
      */
     public function testCall(): void
     {
         $i = 0;
 
         $getter = function () use (&$i) {
-            return $this->instance->call(
+            return $this->instance->fetch(
                 'hello',
                 static function () use (&$i) {
                     $i++;
@@ -304,6 +304,90 @@ class CachePoolTest extends TestCase
         $r = $getter();
 
         self::assertEquals('HELLO-' . 1, $r);
+    }
+
+    /** @see CachePool::fetch — beta=INF always forces recomputation */
+    public function testCallWithBetaInfAlwaysRecomputes(): void
+    {
+        $i = 0;
+
+        $compute = static function () use (&$i) {
+            $i++;
+            return 'V' . $i;
+        };
+
+        $this->instance->fetch('betakey', $compute, 60);          // $i = 1, stored
+        $this->instance->fetch('betakey', $compute, 60, INF);     // $i = 2, forced recompute
+        $result = $this->instance->fetch('betakey', $compute, 60, INF); // $i = 3, forced recompute
+
+        self::assertEquals('V3', $result);
+        self::assertEquals(3, $i);
+    }
+
+    /** @see CachePool::fetch — beta=0 never recomputes early */
+    public function testCallWithBetaZeroNeverRecomputesEarly(): void
+    {
+        $i = 0;
+
+        $compute = static function () use (&$i) {
+            $i++;
+            return 'V' . $i;
+        };
+
+        // Store with a long TTL
+        $this->instance->fetch('betazero', $compute, 3600);        // $i = 1
+        $result = $this->instance->fetch('betazero', $compute, 3600, 0.0); // beta=0, must serve cache
+
+        self::assertEquals('V1', $result);
+        self::assertEquals(1, $i, 'Handler must not be called again when beta=0 and item is fresh');
+    }
+
+    /** @see CachePool::fetch — beta=false (B/C) maps to 0.0 */
+    public function testCallWithBetaFalseBcMapsToZero(): void
+    {
+        $i = 0;
+
+        $compute = static function () use (&$i) {
+            $i++;
+            return 'V' . $i;
+        };
+
+        $this->instance->fetch('bckey', $compute, 3600);          // first compute
+        $result = $this->instance->fetch('bckey', $compute, 3600, 0.0); // beta=0.0, serve cache
+
+        self::assertEquals('V1', $result);
+        self::assertEquals(1, $i);
+    }
+
+    /** @see CachePool::fetch — lock=false skips CacheLock entirely */
+    public function testFetchWithLockDisabled(): void
+    {
+        $i = 0;
+
+        $compute = static function () use (&$i) {
+            $i++;
+            return 'V' . $i;
+        };
+
+        // First call: cache miss, compute
+        $result = $this->instance->fetch('nolock', $compute, 3600, 1.0, false);
+        self::assertEquals('V1', $result);
+
+        // Second call: cache hit, no recompute
+        $result = $this->instance->fetch('nolock', $compute, 3600, 1.0, false);
+        self::assertEquals('V1', $result);
+        self::assertEquals(1, $i, 'Handler must not be called again on cache hit');
+    }
+
+    /** @see CachePool::call — deprecated alias passes $lock through */
+    public function testCallDeprecatedAliasWorks(): void
+    {
+        $result = $this->instance->call('alias_key', static fn () => 'legacy', 60);
+        self::assertEquals('legacy', $result);
+
+        // With lock=true (old explicit opt-in)
+        $result = $this->instance->call('alias_key2', static fn () => 'locked', 60, true);
+        self::assertEquals('locked', $result);
     }
 
     /**

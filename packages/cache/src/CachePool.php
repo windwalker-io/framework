@@ -310,38 +310,58 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     }
 
     /**
-     * call
+     * Fetch a value from cache, computing and storing it if missing or due for early recomputation.
      *
      * @param  string                 $key
-     * @param  callable               $handler
+     * @param  callable               $handler  Invoked to compute the value on cache miss.
      * @param  null|int|DateInterval  $ttl
-     * @param  bool|float             $beta
+     * @param  float                  $beta     XFetch beta factor.
+     *                                          0   = no early expiration.
+     *                                          1.0 = default (recommended).
+     *                                          INF = always recompute (bypass cache).
+     * @param  bool                   $lock     Whether to acquire a CacheLock (default true).
+     *                                          Disable for in-process caches (e.g. ArrayStorage)
+     *                                          or single-threaded environments to avoid flock overhead.
      *
      * @return  mixed
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function call(
+    public function fetch(
         string $key,
         callable $handler,
         DateInterval|int|null $ttl = null,
-        bool|float $beta = 1.0
+        float $beta = 1.0,
+        bool $lock = true,
     ): mixed {
-        $locked = CacheLock::lock($key, $isNew);
-        $isHit = !$isNew;
+        $locked = $lock && CacheLock::lock($key, $isNew);
 
         try {
-            // Re-fetch the item after acquiring the lock so we see any
-            // value that a competing process may have written while we waited
+            // Re-fetch after acquiring the lock so we see any value a competing
+            // process may have written while we were waiting.
             $item = $this->getItem($key);
 
-            // If lock was not acquired or item already exists, serve from cache
-            if ($isHit || $item->isHit()) {
+            // Re-entrant call: this process already holds the stripe lock higher
+            // in the call stack — return the current cached value as-is.
+            if ($locked && !$isNew) {
                 return $item->get();
             }
 
-            $item->set($data = $handler());
+            // Item is cached and does not need early recomputation: serve it.
+            if ($item->isHit() && !$this->shouldRecomputeEarly($item, $beta)) {
+                return $item->get();
+            }
+
+            // Cache miss, expired, or probabilistic early expiry: recompute.
             $item->expiresAfter($ttl);
+
+            $data = $handler($item);
+
+            if (!$data instanceof CacheItemInterface) {
+                $item->set($data);
+            } else {
+                $item = $data;
+            }
 
             $this->save($item);
 
@@ -351,6 +371,53 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 CacheLock::release($key);
             }
         }
+    }
+
+    /**
+     * @deprecated Use fetch() instead.
+     */
+    public function call(
+        string $key,
+        callable $handler,
+        DateInterval|int|null $ttl = null,
+        bool $lock = false,
+    ): mixed {
+        return $this->fetch($key, $handler, $ttl, 1.0, $lock);
+    }
+
+    /**
+     * XFetch probabilistic early-expiration check.
+     *
+     * Returns true when the cached item should be recomputed before it
+     * actually expires, to avoid a thundering-herd at expiry time.
+     *
+     * Formula: recompute when  remaining_ttl < beta * (-ln U)
+     *          where U ~ Uniform(0, 1].
+     *
+     * @see https://www.vldb.org/pvldb/vol8/p886-vattani.pdf
+     */
+    private function shouldRecomputeEarly(CacheItem $item, float $beta): bool
+    {
+        if ($beta <= 0.0) {
+            return false;
+        }
+
+        if (is_infinite($beta) && $beta > 0.0) {
+            return true; // INF → always recompute
+        }
+
+        $expiry        = (float) $item->getExpiration()->getTimestamp();
+        $remainingTtl  = $expiry - microtime(true);
+
+        if ($remainingTtl <= 0.0) {
+            return true; // already expired
+        }
+
+        // Draw U ~ Uniform(0, 1] using CSPRNG for unbiased randomness.
+        // -log(U) is Exponential(1), ranging from 0 (U=1) to +∞ (U→0).
+        $u = random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+
+        return $remainingTtl < $beta * (-log($u));
     }
 
     /**
