@@ -597,6 +597,302 @@ class CachePoolTest extends TestCase
         self::assertEquals('item_arg', $receivedItem->getKey());
     }
 
+    // -----------------------------------------------------------------------
+    // Tagged cache
+    // -----------------------------------------------------------------------
+
+    /** @see CachePool::fetch — tagged item is served from cache while tags are valid */
+    public function testTaggedFetchServesFromCacheWhenTagsAreValid(): void
+    {
+        $i = 0;
+
+        $compute = function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');
+            return 'V' . $i;
+        };
+
+        $this->instance->fetch('user1', $compute, 3600, 0.0, false);
+        $result = $this->instance->fetch('user1', $compute, 3600, 0.0, false);
+
+        self::assertEquals('V1', $result);
+        self::assertEquals(1, $i, 'Handler must not be called again when tag is still valid');
+    }
+
+    /** @see CachePool::invalidateTags — invalidated tag forces recomputation */
+    public function testInvalidateTagsForcesRecomputation(): void
+    {
+        $i = 0;
+
+        $compute = function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');
+            return 'V' . $i;
+        };
+
+        // Store with tags
+        $this->instance->fetch('user1', $compute, 3600, 0.0, false);
+        self::assertEquals(1, $i);
+
+        // Invalidate the tag
+        $this->instance->invalidateTags(['users']);
+
+        // Next fetch must recompute because the tag is stale
+        $result = $this->instance->fetch('user1', $compute, 3600, 0.0, false);
+
+        self::assertEquals('V2', $result);
+        self::assertEquals(2, $i, 'Handler must be called again after tag is invalidated');
+    }
+
+    /** @see CachePool::invalidateTags — only items sharing the invalidated tag are affected */
+    public function testInvalidateTagsOnlyAffectsMatchingItems(): void
+    {
+        $calls = ['user1' => 0, 'post1' => 0];
+
+        $this->instance->fetch(
+            'user1',
+            function ($item) use (&$calls) {
+                $calls['user1']++;
+                $item->tag('users');
+                return 'user';
+            },
+            3600, 0.0, false
+        );
+
+        $this->instance->fetch(
+            'post1',
+            function ($item) use (&$calls) {
+                $calls['post1']++;
+                $item->tag('posts');
+                return 'post';
+            },
+            3600, 0.0, false
+        );
+
+        // Invalidate only 'users' tag
+        $this->instance->invalidateTags(['users']);
+
+        $this->instance->fetch(
+            'user1',
+            function ($item) use (&$calls) {
+                $calls['user1']++;
+                $item->tag('users');
+                return 'user';
+            },
+            3600, 0.0, false
+        );
+
+        $this->instance->fetch(
+            'post1',
+            function ($item) use (&$calls) {
+                $calls['post1']++;
+                $item->tag('posts');
+                return 'post';
+            },
+            3600, 0.0, false
+        );
+
+        self::assertEquals(2, $calls['user1'], 'user1 must be recomputed after users tag invalidation');
+        self::assertEquals(1, $calls['post1'], 'post1 must NOT be recomputed (posts tag untouched)');
+    }
+
+    /** @see CachePool::invalidateTags — multiple tags, partial invalidation */
+    public function testMultipleTagsPartialInvalidation(): void
+    {
+        $i = 0;
+
+        $compute = function ($item) use (&$i) {
+            $i++;
+            $item->tag('tagA', 'tagB');
+            return 'V' . $i;
+        };
+
+        // Store with two tags
+        $this->instance->fetch('item', $compute, 3600, 0.0, false);
+
+        // Invalidate only tagA — item has both, so it becomes stale
+        $this->instance->invalidateTags(['tagA']);
+
+        $result = $this->instance->fetch('item', $compute, 3600, 0.0, false);
+
+        self::assertEquals('V2', $result);
+        self::assertEquals(2, $i, 'Item must be recomputed when ANY of its tags is invalidated');
+    }
+
+    /** @see CachePool::fetch — items fetched WITHOUT tags are not affected by invalidateTags */
+    public function testUntaggedItemsAreNotAffectedByTagInvalidation(): void
+    {
+        $i = 0;
+
+        $compute = static function () use (&$i) { $i++; return 'V' . $i; };
+
+        // Store WITHOUT tags
+        $this->instance->fetch('notagitem', $compute, 3600, 0.0, false);
+
+        $this->instance->invalidateTags(['users']);
+
+        // No tags in fetch — tag check is skipped, serve from cache
+        $result = $this->instance->fetch('notagitem', $compute, 3600, 0.0, false);
+
+        self::assertEquals('V1', $result);
+        self::assertEquals(1, $i, 'Untagged items must not be affected by tag invalidation');
+    }
+
+    /** @see CachePool::invalidateTags — invalidating a tag that has no items is a no-op */
+    public function testInvalidateTagsWithNoItemsIsNoOp(): void
+    {
+        $result = $this->instance->invalidateTags(['nonexistent_tag']);
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @see CachePool::fetch — to change tags on existing item, must delete it first
+     */
+    public function testChangingTagsRequiresDeleteFirst(): void
+    {
+        $i = 0;
+
+        // First fetch: stored WITHOUT tags
+        $this->instance->fetch('item', static function () use (&$i) {
+            $i++;
+            return 'V' . $i;
+        }, 3600, 0.0, false);
+
+        // Second fetch trying to add tags — cache hit prevents handler from running,
+        // so tags are not changed. This demonstrates you must delete() first to change tags.
+        $result = $this->instance->fetch('item', function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');  // <-- this line will never execute on cache hit
+            return 'V' . $i;
+        }, 3600, 0.0, false);
+
+        self::assertEquals('V1', $result, 'Cache hit prevents handler (and tag change) from executing');
+        self::assertEquals(1, $i, 'Handler must not be called on cache hit');
+
+        // Correct way to change tags: delete first
+        $this->instance->delete('item');
+
+        $result = $this->instance->fetch('item', function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');
+            return 'V' . $i;
+        }, 3600, 0.0, false);
+
+        self::assertEquals('V2', $result);
+        self::assertEquals(2, $i, 'After delete, handler is called and tags are set');
+    }
+
+    /** @see CacheItem::tag — variadic tag() method */
+    public function testCacheItemTagVariadic(): void
+    {
+        $item = CacheItem::create('test');
+
+        $item->tag('A', 'B', 'C');
+
+        self::assertEquals(['A', 'B', 'C'], $item->getTags());
+    }
+
+    /** @see CacheItem::tag — chaining and deduplication */
+    public function testCacheItemTagChaining(): void
+    {
+        $item = CacheItem::create('test');
+
+        $item->tag('A')->tag('B', 'A')->tag('C');
+
+        self::assertEquals(['A', 'B', 'C'], $item->getTags(), 'Duplicate tags must be deduplicated');
+    }
+
+    // -----------------------------------------------------------------------
+    // TagPool tests
+    // -----------------------------------------------------------------------
+
+    /** @see CachePool::setTagPool — tags are stored in separate pool */
+    public function testTagPoolIsolatesTagMetadata(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+
+        $pool = new CachePool($mainStorage);
+        $pool->setTagPool($tagStorage);
+
+        $i = 0;
+
+        $pool->fetch('item1', function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');
+            return 'V' . $i;
+        }, 3600, 0.0, false);
+
+        // Tag version and envelope should be in tagStorage, not mainStorage
+        $tagData = $tagStorage->getData();
+
+        self::assertNotEmpty($tagData, 'Tag metadata must be stored in tagStorage');
+
+        // Should have both envelope and tag version (might be merged in one save operation)
+        // Just ensure we have tag metadata in separate storage
+        self::assertGreaterThanOrEqual(1, count($tagData), 'Should have at least tag metadata');
+
+        // Main item should be in mainStorage
+        self::assertTrue($mainStorage->has('item1'));
+        self::assertEquals('V1', $pool->get('item1'));
+    }
+
+    /** @see CachePool::invalidateTags — with tagPool */
+    public function testInvalidateTagsWithTagPool(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+
+        $pool = new CachePool($mainStorage);
+        $pool->setTagPool($tagStorage);
+
+        $i = 0;
+
+        $compute = function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');
+            return 'V' . $i;
+        };
+
+        $pool->fetch('user1', $compute, 3600, 0.0, false);
+        self::assertEquals(1, $i);
+
+        // Invalidate via tagPool
+        $pool->invalidateTags(['users']);
+
+        // Should recompute
+        $result = $pool->fetch('user1', $compute, 3600, 0.0, false);
+
+        self::assertEquals('V2', $result);
+        self::assertEquals(2, $i);
+    }
+
+    /** @see CachePool::setTagPool — wraps StorageInterface in CachePool */
+    public function testSetTagPoolAcceptsStorage(): void
+    {
+        $pool = new CachePool();
+        $tagStorage = new ArrayStorage();
+
+        $pool->setTagPool($tagStorage);
+
+        $tagPool = $pool->getTagPool();
+
+        self::assertInstanceOf(CachePool::class, $tagPool, 'Storage is wrapped in CachePool');
+        self::assertSame($tagStorage, $tagPool->getStorage(), 'Wrapped storage matches original');
+    }
+
+    /** @see CachePool::setTagPool — null disables tagPool */
+    public function testSetTagPoolNull(): void
+    {
+        $pool = new CachePool();
+        $pool->setTagPool(new ArrayStorage());
+        $pool->setTagPool(null);
+
+        self::assertNull($pool->getTagPool());
+    }
+
+
     public function createItem(string $key, mixed $value = null): CacheItem
     {
         return $this->instance->getItem($key)->set($value);

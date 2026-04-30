@@ -34,6 +34,11 @@ class CacheItem implements CacheItemInterface
     protected DateTimeInterface $expiration;
 
     /**
+     * @var string[]
+     */
+    protected array $tags = [];
+
+    /**
      * Property defaultExpiration.
      *
      * @var  string
@@ -230,6 +235,33 @@ class CacheItem implements CacheItemInterface
         $this->hit = $hit;
 
         return $this;
+    }
+
+    /**
+     * Associate one or more tags with this cache item.
+     *
+     * Tags allow for bulk invalidation: calling CachePool::invalidateTags()
+     * with a tag name will mark all items bearing that tag as stale.
+     *
+     * @param  string  ...$tags  Tag names (variadic arguments).
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function tag(string ...$tags): static
+    {
+        $this->tags = array_unique(array_merge($this->tags, $tags));
+
+        return $this;
+    }
+
+    /**
+     * Get all tags associated with this cache item.
+     *
+     * @return  string[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
     }
 
     /**

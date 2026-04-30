@@ -30,6 +30,19 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     use LoggerAwareTrait;
 
     /**
+     * Key prefix for tag-version entries.
+     * Uses uncommon prefix to minimize collision with user-defined keys.
+     */
+    private const string TAG_VER_PREFIX = '__ww_tag_ver__';
+
+    /**
+     * Key prefix for per-item tag-envelope entries.
+     * Uses uncommon prefix to minimize collision with user-defined keys.
+     */
+    private const string TAG_ENV_PREFIX = '__ww_tag_env__';
+
+
+    /**
      * @var bool
      */
     protected bool $commiting = false;
@@ -44,13 +57,21 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     private bool $autoCommit = true;
 
+    /**
+     * @var CacheItemPoolInterface|null
+     */
+    protected CacheItemPoolInterface|null $tagPool = null;
+
+
     public function __construct(
         protected StorageInterface $storage = new ArrayStorage(),
         protected SerializerInterface $serializer = new RawSerializer(),
         LoggerInterface $logger = new NullLogger(),
-        protected DateInterval|int|null $defaultTtl = null
+        protected DateInterval|int|null $defaultTtl = null,
+        CacheItemPoolInterface|StorageInterface|null $tagPool = null,
     ) {
         $this->logger = $logger;
+        $this->setTagPool($tagPool);
     }
 
     /**
@@ -314,6 +335,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @param  string                 $key
      * @param  callable               $handler  Invoked to compute the value on cache miss.
+     *                                          Receives the CacheItem as first argument.
+     *                                          May call $item->tag('foo', 'bar') to associate tags.
      * @param  null|int|DateInterval  $ttl
      * @param  float                  $beta     XFetch beta factor.
      *                                          0   = no early expiration.
@@ -347,12 +370,25 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 return $item->get();
             }
 
-            // Item is cached and does not need early recomputation: serve it.
-            if ($item->isHit() && !$this->shouldRecomputeEarly($item, $beta)) {
+            // Determine whether the cached item is still usable:
+            // - basic hit check
+            // - tag validity (any invalidated tag makes the item stale)
+            $isHit = $item->isHit();
+
+            if ($isHit) {
+                $storedTags = $this->getItemTags($key);
+
+                if ($storedTags !== [] && !$this->isTagValid($key, $storedTags)) {
+                    $isHit = false;
+                }
+            }
+
+            // Item is valid and does not need early recomputation: serve it.
+            if ($isHit && !$this->shouldRecomputeEarly($item, $beta)) {
                 return $item->get();
             }
 
-            // Cache miss, expired, or probabilistic early expiry: recompute.
+            // Cache miss, tag-invalidated, or probabilistic early expiry: recompute.
             $item->expiresAfter($ttl);
 
             $data = $handler($item);
@@ -361,9 +397,17 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 $item->set($data);
             } else {
                 $item = $data;
+                $data = $item->get();
             }
 
+
             $this->save($item);
+
+            // Save the tag envelope so future reads can detect invalidation.
+            $tags = $item->getTags();
+            if ($tags !== []) {
+                $this->saveTagEnvelope($key, $tags, $item->getExpiration()->getTimestamp());
+            }
 
             return $data;
         } finally {
@@ -371,6 +415,199 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 CacheLock::release($key);
             }
         }
+    }
+
+    /**
+     * Invalidate all cache entries associated with any of the given tags.
+     *
+     * Works by bumping the version token for each tag.  Any cached item whose
+     * stored tag-version no longer matches the current version is considered
+     * stale and will be recomputed on the next fetch().
+     *
+     * @param  string[]  $tags
+     */
+    public function invalidateTags(array $tags): bool
+    {
+        foreach ($tags as $tag) {
+            $key = $this->tagVersionKey($tag);
+            $version = $this->generateTagVersion();
+
+            if ($this->tagPool !== null) {
+                // Use CacheItemPoolInterface::getItem/save
+                $item = $this->tagPool->getItem($key);
+                $item->set($version);
+                $item->expiresAfter(null); // null means forever
+                $this->tagPool->save($item);
+            } else {
+                // Use own storage - 0 means no expiration
+                $this->storage->save($key, $version, 0);
+            }
+        }
+
+        return true;
+    }
+
+    // -----------------------------------------------------------------------
+    // Tag helpers (private)
+    // -----------------------------------------------------------------------
+
+    /**
+     * Storage key for a tag's version token.
+     * Uses uncommon prefix to minimize collision with user-defined keys.
+     */
+    private function tagVersionKey(string $tag): string
+    {
+        return self::TAG_VER_PREFIX . hash('sha1', $tag);
+    }
+
+    /**
+     * Storage key for a cache-item's tag envelope.
+     * Uses uncommon prefix to minimize collision with user-defined keys.
+     */
+    private function tagEnvelopeKey(string $cacheKey): string
+    {
+        return self::TAG_ENV_PREFIX . hash('sha1', $cacheKey);
+    }
+
+    /** Generate a random, opaque tag-version token. */
+    private function generateTagVersion(): string
+    {
+        return bin2hex(random_bytes(8));
+    }
+
+    /**
+     * Return the current version token for each requested tag.
+     * Tags that have never been explicitly invalidated have an empty-string version.
+     *
+     * @param  string[]  $tags
+     * @return array<string, string>  tag => version
+     */
+    private function getCurrentTagVersions(array $tags): array
+    {
+        $versions = [];
+
+        foreach ($tags as $tag) {
+            $key = $this->tagVersionKey($tag);
+
+            if ($this->tagPool !== null) {
+                // Use CacheItemPoolInterface::getItem
+                $item = $this->tagPool->getItem($key);
+                $versions[$tag] = $item->isHit() ? (string) $item->get() : '';
+            } else {
+                // Use own storage
+                $versions[$tag] = $this->storage->has($key)
+                    ? (string) $this->storage->get($key)
+                    : '';
+            }
+        }
+
+        return $versions;
+    }
+
+    /**
+     * Persist the tag envelope for a newly-computed cache entry.
+     * The envelope records the current version of every tag so that future
+     * reads can detect whether any tag has been invalidated since.
+     *
+     * @param  string[]  $tags
+     */
+    private function saveTagEnvelope(string $key, array $tags, int $expiration): void
+    {
+        $envKey = $this->tagEnvelopeKey($key);
+        $envelope = serialize($this->getCurrentTagVersions($tags));
+
+        if ($this->tagPool !== null) {
+            // Use CacheItemPoolInterface::getItem/save with calculated TTL
+            $ttl = max(0, $expiration - time());
+            $item = $this->tagPool->getItem($envKey);
+            $item->set($envelope);
+            $item->expiresAfter($ttl > 0 ? $ttl : null);
+            $this->tagPool->save($item);
+        } else {
+            // Use own storage
+            $this->storage->save($envKey, $envelope, $expiration);
+        }
+    }
+
+    /**
+     * Check whether a cached item is still valid with respect to its tags.
+     *
+     * Returns false when:
+     *  - no tag envelope was stored (item pre-dates tag-awareness, treat as stale)
+     *  - any tag version in the envelope differs from the current storage version
+     *
+     * @param  string[]  $tags
+     */
+    private function isTagValid(string $key, array $tags): bool
+    {
+        $envKey = $this->tagEnvelopeKey($key);
+
+        if ($this->tagPool !== null) {
+            // Use CacheItemPoolInterface::getItem
+            $item = $this->tagPool->getItem($envKey);
+
+            if (!$item->isHit()) {
+                return false;
+            }
+
+            $storedVersions = unserialize((string) $item->get());
+        } else {
+            // Use own storage
+            if (!$this->storage->has($envKey)) {
+                return false;
+            }
+
+            $storedVersions = unserialize((string) $this->storage->get($envKey));
+        }
+
+        if (!is_array($storedVersions)) {
+            return false;
+        }
+
+        $currentVersions = $this->getCurrentTagVersions($tags);
+
+        foreach ($tags as $tag) {
+            if (($storedVersions[$tag] ?? null) !== ($currentVersions[$tag] ?? '')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Retrieve the tags that were previously stored with a cache item.
+     * Returns empty array if the item has no tag envelope.
+     *
+     * @return string[]
+     */
+    private function getItemTags(string $key): array
+    {
+        $envKey = $this->tagEnvelopeKey($key);
+
+        if ($this->tagPool !== null) {
+            // Use CacheItemPoolInterface::getItem
+            $item = $this->tagPool->getItem($envKey);
+
+            if (!$item->isHit()) {
+                return [];
+            }
+
+            $storedVersions = unserialize((string) $item->get());
+        } else {
+            // Use own storage
+            if (!$this->storage->has($envKey)) {
+                return [];
+            }
+
+            $storedVersions = unserialize((string) $this->storage->get($envKey));
+        }
+
+        if (!is_array($storedVersions)) {
+            return [];
+        }
+
+        return array_keys($storedVersions);
     }
 
     /**
@@ -547,6 +784,23 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     public function setDefaultTtl(DateInterval|int|null $defaultTtl): static
     {
         $this->defaultTtl = $defaultTtl;
+
+        return $this;
+    }
+
+    public function getTagPool(): CacheItemPoolInterface|null
+    {
+        return $this->tagPool;
+    }
+
+    public function setTagPool(StorageInterface|CacheItemPoolInterface|null $tagPool): static
+    {
+        if ($tagPool instanceof StorageInterface) {
+            $tagPool = new CachePool($tagPool);
+        }
+
+        $this->tagPool = $tagPool;
+
 
         return $this;
     }
