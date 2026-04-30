@@ -34,6 +34,16 @@ class CacheItem implements CacheItemInterface
     protected DateTimeInterface $expiration;
 
     /**
+     * The real expiry timestamp (seconds with microseconds).
+     */
+    protected float $realExpiry = 0.0;
+
+    /**
+     * The computation time in milliseconds.
+     */
+    protected int $ctime = 0;
+
+    /**
      * @var string[]
      */
     protected array $tags = [];
@@ -159,8 +169,10 @@ class CacheItem implements CacheItemInterface
         try {
             if ($expiration instanceof DateTimeInterface) {
                 $this->expiration = $expiration;
+                $this->syncRealExpiryFromExpiration();
             } elseif ($expiration === null) {
                 $this->expiration = new DateTime($this->defaultExpiration);
+                $this->syncRealExpiryFromExpiration();
             } else {
                 throw new \InvalidArgumentException('Invalid DateTime format.');
             }
@@ -193,11 +205,14 @@ class CacheItem implements CacheItemInterface
             if ($time instanceof DateInterval) {
                 $this->expiration = new DateTime();
                 $this->expiration->add($time);
+                $this->syncRealExpiryFromExpiration();
             } elseif (is_numeric($time)) {
                 $this->expiration = new DateTime();
                 $this->expiration->add(new DateInterval('PT' . $time . 'S'));
+                $this->syncRealExpiryFromExpiration();
             } elseif ($time === null) {
                 $this->expiration = new DateTime($this->defaultExpiration);
+                $this->syncRealExpiryFromExpiration();
             } else {
                 throw new InvalidArgumentException('Invalid DateTime format.');
             }
@@ -262,6 +277,63 @@ class CacheItem implements CacheItemInterface
     public function getTags(): array
     {
         return $this->tags;
+    }
+
+    public function getRealExpiry(): float
+    {
+        return $this->realExpiry;
+    }
+
+    public function getCtime(): int
+    {
+        return $this->ctime;
+    }
+
+    /**
+     * Set computation time metadata (milliseconds).
+     */
+    public function setCtime(int $ctime): static
+    {
+        $this->ctime = $this->normalizeCtime($ctime);
+
+        return $this;
+    }
+
+    /**
+     * Set metadata expiry timestamp directly.
+     *
+     * @param  float|int|string  $expiry  Unix timestamp with optional microseconds.
+     */
+    public function setRealExpiry(float|int|string $expiry): static
+    {
+        $this->realExpiry = $this->normalizeRealExpiry($expiry);
+
+        return $this;
+    }
+
+
+    /**
+     * Keep metadata expiry in sync with the DateTime expiration object.
+     */
+    protected function syncRealExpiryFromExpiration(): void
+    {
+        $this->realExpiry = (float) $this->expiration->format('U.u');
+    }
+
+    /**
+     * Type hook for metadata expiry normalization.
+     */
+    protected function normalizeRealExpiry(float|int|string $expiry): float
+    {
+        return max(0.0, (float) $expiry);
+    }
+
+    /**
+     * Type hook for metadata ctime normalization.
+     */
+    protected function normalizeCtime(int|float|string $ctime): int
+    {
+        return max(0, (int) $ctime);
     }
 
     /**

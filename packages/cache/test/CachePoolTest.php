@@ -75,6 +75,9 @@ class CachePoolTest extends TestCase
             ->shouldReceive('save')
             ->once()
             ->with('foo', 'Flower', time() + 30)
+            ->shouldReceive('remove')
+            ->once()
+            ->with(Mockery::on(static fn (string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->getMock();
 
         $this->instance->setStorage($storageMock);
@@ -108,6 +111,10 @@ class CachePoolTest extends TestCase
             ->with('flower')
             ->andReturn(true);
 
+        $storageMock->shouldReceive('has')
+            ->with(Mockery::on(static fn (string $k) => str_starts_with($k, '--ww_item_meta--')))
+            ->andReturn(false);
+
         $this->instance->setStorage($storageMock);
 
         $item = $this->instance->getItem('flower');
@@ -138,6 +145,10 @@ class CachePoolTest extends TestCase
         $storageMock = Mockery::mock(StorageInterface::class);
         $storageMock->shouldReceive('remove')
             ->with('hello')
+            ->andReturn(true);
+
+        $storageMock->shouldReceive('remove')
+            ->with(Mockery::on(static fn (string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->andReturn(true);
 
         $this->instance->setStorage($storageMock);
@@ -597,6 +608,26 @@ class CachePoolTest extends TestCase
         self::assertEquals('item_arg', $receivedItem->getKey());
     }
 
+    /**
+     * @see  CachePool::fetch — computed item stores Symfony-style metadata
+     */
+    public function testFetchStoresSymfonyMetadataOnCacheItem(): void
+    {
+        $receivedItem = null;
+
+        $this->instance->fetch('item_meta', function (CacheItem $item) use (&$receivedItem) {
+            $receivedItem = $item;
+            usleep(2000);
+
+            return 'value';
+        }, 60, 0.0, false);
+
+        self::assertInstanceOf(CacheItem::class, $receivedItem);
+
+        self::assertGreaterThan(microtime(true), $receivedItem->getRealExpiry());
+        self::assertGreaterThan(0, $receivedItem->getCtime());
+    }
+
     // -----------------------------------------------------------------------
     // Tagged cache
     // -----------------------------------------------------------------------
@@ -1034,6 +1065,28 @@ class CachePoolTest extends TestCase
             fn($k) => str_starts_with($k, '__ww_tag_')
         );
         self::assertEmpty($tagKeys, 'No tag metadata should be stored when tags are disabled');
+    }
+
+    /**
+     * @see  CachePool::save / CachePool::getItem — fetch metadata is persisted to storage
+     */
+    public function testFetchMetadataIsPersistedAcrossPoolInstances(): void
+    {
+        $storage = new ArrayStorage();
+        $poolA = new CachePool($storage);
+
+        $poolA->fetch('persist_meta', function (CacheItem $item) {
+            usleep(2000);
+
+            return 'value';
+        }, 60, 0.0, false);
+
+        $poolB = new CachePool($storage);
+        $item = $poolB->getItem('persist_meta');
+        self::assertTrue($item->isHit());
+        self::assertEquals('value', $item->get());
+        self::assertGreaterThan(microtime(true), $item->getRealExpiry());
+        self::assertGreaterThan(0, $item->getCtime());
     }
 
     public function createItem(string $key, mixed $value = null): CacheItem

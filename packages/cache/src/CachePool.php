@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Cache;
 
 use DateInterval;
+use DateTime;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -34,14 +35,16 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      * Key prefix for tag-version entries.
      * Uses uncommon prefix to minimize collision with user-defined keys.
      */
-    private const string TAG_VER_PREFIX = '__ww_tag_ver__';
+    private const string TAG_VER_PREFIX = '--ww_tag_ver--';
 
     /**
      * Key prefix for per-item tag-envelope entries.
      * Uses uncommon prefix to minimize collision with user-defined keys.
      */
-    private const string TAG_ENV_PREFIX = '__ww_tag_env__';
+    private const string TAG_ENV_PREFIX = '--ww_tag_env--';
 
+    /** Prefix for per-item metadata sidecar records. */
+    private const string ITEM_META_PREFIX = '--ww_item_meta--';
 
     /**
      * @var bool
@@ -103,7 +106,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $item;
         }
 
-        return $item->set($this->serializer->unserialize($this->storage->get($key)));
+        $item->set($this->serializer->unserialize($this->storage->get($key)));
+        $this->hydrateItemMetadata($item);
+
+        return $item;
     }
 
     /**
@@ -152,6 +158,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     {
         try {
             $this->storage->remove($key);
+            $this->storage->remove($this->itemMetadataKey($key));
 
             return true;
         } catch (RuntimeException $e) {
@@ -202,6 +209,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 $this->serializer->serialize($item->get()),
                 $expiration
             );
+
+            $this->persistItemMetadata($item, $expiration);
 
             return true;
         } catch (RuntimeException $e) {
@@ -408,7 +417,9 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             // Cache miss, tag-invalidated, or probabilistic early expiry: recompute.
             $item->expiresAfter($ttl);
 
+            $start = microtime(true);
             $data = $handler($item);
+            $ctime = max(1, (int) round(max(0.0, microtime(true) - $start) * 1000));
 
             if (!$data instanceof CacheItemInterface) {
                 $item->set($data);
@@ -417,6 +428,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 $data = $item->get();
             }
 
+            // Keep Symfony-style metadata on supported CacheItem instances.
+            if ($item instanceof CacheItem) {
+                $item->setCtime($ctime);
+            }
 
             $this->save($item);
 
@@ -471,10 +486,6 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
         return true;
     }
-
-    // -----------------------------------------------------------------------
-    // Tag helpers (private)
-    // -----------------------------------------------------------------------
 
     /**
      * Storage key for a tag's version token.
@@ -691,16 +702,28 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return true; // INF → always recompute
         }
 
-        $expiry        = (float) $item->getExpiration()->getTimestamp();
-        $remainingTtl  = $expiry - microtime(true);
+        $expiry = $item->getRealExpiry();
+        $ctime = $item->getCtime();
 
-        if ($remainingTtl <= 0.0) {
+        if ($expiry <= 0.0) {
+            $expiry = (float) $item->getExpiration()->format('U.u');
+        }
+
+        if ($expiry <= microtime(true)) {
             return true; // already expired
         }
 
         // Draw U ~ Uniform(0, 1] using CSPRNG for unbiased randomness.
         // -log(U) is Exponential(1), ranging from 0 (U=1) to +∞ (U→0).
         $u = random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+
+        // Symfony-style ctime-aware early expiration. If ctime is missing, keep
+        // the old remaining-TTL behavior as a backwards-compatible fallback.
+        if ($ctime > 0) {
+            return $expiry <= microtime(true) - ($ctime / 1000) * $beta * log($u);
+        }
+
+        $remainingTtl = $expiry - microtime(true);
 
         return $remainingTtl < $beta * (-log($u));
     }
@@ -901,5 +924,76 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         $this->knownTagVersions = [];
 
         return $this;
+    }
+
+    /** Build the sidecar metadata key for a cache item key. */
+    private function itemMetadataKey(string $key): string
+    {
+        return self::ITEM_META_PREFIX . hash('sha1', $key);
+    }
+
+    /** Persist fetch metadata in sidecar storage for later reads. */
+    private function persistItemMetadata(CacheItem $item, int $expiration): void
+    {
+        $ctime = $item->getCtime();
+        $properties = [
+            'realExpiry' => $item->getRealExpiry(),
+            'ctime' => $ctime,
+        ];
+        $metaKey = $this->itemMetadataKey($item->getKey());
+
+        // Keep storage format backward-compatible for normal set()/save() values.
+        if ($ctime <= 0) {
+            $this->storage->remove($metaKey);
+
+            return;
+        }
+
+        $this->storage->save($metaKey, serialize($properties), $expiration);
+    }
+
+    /** Hydrate fetch metadata sidecar back into CacheItem (if present). */
+    private function hydrateItemMetadata(CacheItem $item): void
+    {
+        $metaKey = $this->itemMetadataKey($item->getKey());
+
+        if (!$this->storage->has($metaKey)) {
+            return;
+        }
+
+        $serialized = $this->storage->get($metaKey);
+
+        if (!is_string($serialized) || $serialized === '') {
+            return;
+        }
+
+        $properties = unserialize($serialized, ['allowed_classes' => false]);
+
+        if (!is_array($properties)) {
+            return;
+        }
+
+        $expiry = $properties['realExpiry'] ?? null;
+        $ctime = $properties['ctime'] ?? 0;
+
+        if (is_numeric($expiry)) {
+            $item->setRealExpiry($expiry);
+        }
+
+        $item->setCtime((int) $ctime);
+
+        $expiry = $item->getRealExpiry();
+        $ctime = $item->getCtime();
+
+        if (is_numeric($expiry)) {
+            $expiryString = number_format((float) $expiry, 6, '.', '');
+            $expiryDate = DateTime::createFromFormat('U.u', $expiryString);
+
+            if ($expiryDate !== false) {
+                $item->expiresAt($expiryDate);
+            }
+        }
+
+        $item->setCtime((int) $ctime);
     }
 }
