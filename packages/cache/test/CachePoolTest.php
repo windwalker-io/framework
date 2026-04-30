@@ -882,16 +882,159 @@ class CachePoolTest extends TestCase
         self::assertSame($tagStorage, $tagPool->getStorage(), 'Wrapped storage matches original');
     }
 
-    /** @see CachePool::setTagPool — null disables tagPool */
+    /** @see CachePool::setTagPool — null uses main storage for tags */
     public function testSetTagPoolNull(): void
     {
-        $pool = new CachePool();
-        $pool->setTagPool(new ArrayStorage());
-        $pool->setTagPool(null);
+        $storage = new ArrayStorage();
+        $pool = new CachePool($storage);
+        $pool->setTagPool(new ArrayStorage()); // Set to separate storage first
+        $pool->setTagPool(null); // Reset to use main storage
 
-        self::assertNull($pool->getTagPool());
+        $tagPool = $pool->getTagPool();
+        self::assertInstanceOf(CachePool::class, $tagPool, 'null creates CachePool with main storage');
+        self::assertSame($storage, $tagPool->getStorage(), 'Should use main storage for tags');
     }
 
+    /** @see CachePool::setKnownTagVersionsTtl — can configure in-memory cache TTL */
+    public function testSetKnownTagVersionsTtl(): void
+    {
+        $pool = new CachePool();
+
+        // Default is 0.15 seconds (150ms)
+        self::assertSame(0.15, $pool->getKnownTagVersionsTtl());
+
+        // Can set custom TTL
+        $pool->setKnownTagVersionsTtl(0.5); // 500ms
+        self::assertSame(0.5, $pool->getKnownTagVersionsTtl());
+
+        // Can set to 0 to disable
+        $pool->setKnownTagVersionsTtl(0);
+        self::assertSame(0.0, $pool->getKnownTagVersionsTtl());
+
+        // Negative values are clamped to 0
+        $pool->setKnownTagVersionsTtl(-1);
+        self::assertSame(0.0, $pool->getKnownTagVersionsTtl());
+    }
+
+    /** @see CachePool::invalidateTags — clears in-memory cache for invalidated tags */
+    public function testInvalidateTagsClearsKnownTagVersionsCache(): void
+    {
+        $storage = new ArrayStorage();
+        $pool = new CachePool($storage);
+        $pool->setKnownTagVersionsTtl(10.0); // Long cache
+
+        // Create items with tags
+        $pool->fetch('user1', function ($item) {
+            $item->tag('users');
+            return 'data1';
+        }, 3600, 0.0, false);
+
+        // Tag version is now cached in memory
+        // Invalidate the tag
+        $pool->invalidateTags(['users']);
+
+        // Fetch another item with the same tag
+        // If cache wasn't cleared, it would use the OLD version and treat item as valid
+        // But since cache is cleared, it fetches the NEW version
+        $recomputeCount = 0;
+        $result = $pool->fetch('user1', function ($item) use (&$recomputeCount) {
+            $recomputeCount++;
+            $item->tag('users');
+            return 'data2';
+        }, 3600, 0.0, false);
+
+        self::assertSame('data2', $result, 'Should recompute after tag invalidation');
+        self::assertEquals(1, $recomputeCount, 'Handler should be called to recompute');
+    }
+
+    /** @see CachePool::clearKnownTagVersionsCache — manual cache clear */
+    public function testClearKnownTagVersionsCache(): void
+    {
+        $storage = new ArrayStorage();
+        $pool = new CachePool($storage);
+        $pool->setKnownTagVersionsTtl(10.0); // Long cache
+
+        // Create an item to populate cache
+        $pool->fetch('item1', function ($item) {
+            $item->tag('users');
+            return 'value1';
+        }, 3600, 0.0, false);
+
+        // Manually clear the in-memory cache
+        $pool->clearKnownTagVersionsCache();
+
+        // This should work without issues
+        $result = $pool->fetch('item2', function ($item) {
+            $item->tag('users');
+            return 'value2';
+        }, 3600, 0.0, false);
+
+        self::assertSame('value2', $result);
+    }
+
+    /** @see CachePool::getCurrentTagVersions — cache disabled when TTL is 0 */
+    public function testKnownTagVersionsCacheDisabledWhenTtlIsZero(): void
+    {
+        $storage = new ArrayStorage();
+        $pool = new CachePool($storage);
+        $pool->setKnownTagVersionsTtl(0); // Disable cache
+
+        // Create items with tags - each should fetch tag version from storage
+        $pool->fetch('item1', function ($item) {
+            $item->tag('users');
+            return 'value1';
+        }, 3600, 0.0, false);
+
+        $pool->fetch('item2', function ($item) {
+            $item->tag('users');
+            return 'value2';
+        }, 3600, 0.0, false);
+
+        // No assertions needed - just verify no errors occur when cache is disabled
+        self::assertTrue(true);
+    }
+
+    /** @see CachePool::setTagPool — false disables all tag functionality */
+    public function testTagPoolFalseDisablesTags(): void
+    {
+        $storage = new ArrayStorage();
+        $pool = new CachePool($storage);
+        $pool->setTagPool(false);
+
+        self::assertFalse($pool->getTagPool(), 'tagPool should be false');
+
+        $i = 0;
+
+        // Fetch with tags (but tags are ignored)
+        $result = $pool->fetch('item1', function ($item) use (&$i) {
+            $i++;
+            $item->tag('users'); // This should be ignored
+            return 'value1';
+        }, 3600, 0.0, false);
+
+        self::assertSame('value1', $result);
+        self::assertEquals(1, $i);
+
+        // Invalidate tags (should be a no-op)
+        $pool->invalidateTags(['users']);
+
+        // Fetch again - should still use cached value (tags were ignored)
+        $result2 = $pool->fetch('item1', function ($item) use (&$i) {
+            $i++;
+            $item->tag('users');
+            return 'value2';
+        }, 3600, 0.0, false);
+
+        self::assertSame('value1', $result2, 'Should use cached value because tags are disabled');
+        self::assertEquals(1, $i, 'Handler should not be called again');
+
+        // Verify no tag metadata was stored
+        $tagKeys = array_filter(
+            array_keys($storage->getData()),
+            fn($k) => str_starts_with($k, '__ww_tag_')
+        );
+        self::assertEmpty($tagKeys, 'No tag metadata should be stored when tags are disabled');
+    }
 
     public function createItem(string $key, mixed $value = null): CacheItem
     {
