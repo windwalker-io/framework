@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Windwalker\Cache\CacheItem;
 use Windwalker\Cache\CachePool;
@@ -24,7 +23,6 @@ use Windwalker\Test\Traits\TestAccessorTrait;
  */
 class CachePoolTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TestAccessorTrait;
 
     protected CachePool $instance;
@@ -73,14 +71,19 @@ class CachePoolTest extends TestCase
         $item->set('Flower');
         $item->expiresAfter(30);
 
-        $storageMock = Mockery::mock(StorageInterface::class)
-            ->shouldReceive('save')
-            ->once()
-            ->with('foo', 'Flower', time() + 30)
-            ->shouldReceive('remove')
-            ->once()
-            ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
-            ->getMock();
+        $storageMock = $this->createMock(StorageInterface::class);
+        $storageMock->expects(self::once())
+            ->method('save')
+            ->with(
+                'foo',
+                'Flower',
+                self::callback(static fn(int $expiration) => abs($expiration - (time() + 30)) <= 1)
+            )
+            ->willReturn(true);
+        $storageMock->expects(self::once())
+            ->method('remove')
+            ->with(self::callback(static fn(string $k) => self::isItemMetadataKey($k)))
+            ->willReturn(true);
 
         $this->instance = $this->instance->withStorage($storageMock);
         $this->instance->save($item);
@@ -104,18 +107,20 @@ class CachePoolTest extends TestCase
      */
     public function testGetItem(): void
     {
-        $storageMock = Mockery::mock(StorageInterface::class);
-        $storageMock->shouldReceive('get')
+        $storageMock = $this->createMock(StorageInterface::class);
+        $storageMock->expects(self::exactly(2))
+            ->method('has')
+            ->willReturnCallback(
+                static fn(string $key): bool => match (true) {
+                    $key === 'flower' => true,
+                    self::isItemMetadataKey($key) => false,
+                    default => false,
+                }
+            );
+        $storageMock->expects(self::once())
+            ->method('get')
             ->with('flower')
-            ->andReturn('Sakura');
-
-        $storageMock->shouldReceive('has')
-            ->with('flower')
-            ->andReturn(true);
-
-        $storageMock->shouldReceive('has')
-            ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
-            ->andReturn(false);
+            ->willReturn('Sakura');
 
         $this->instance = $this->instance->withStorage($storageMock);
 
@@ -123,6 +128,77 @@ class CachePoolTest extends TestCase
 
         self::assertEquals('Sakura', $item->get());
         self::assertTrue($item->isHit());
+    }
+
+    /** @see CachePool::getItem — race between has() and get() is treated as cache miss */
+    public function testGetItemTreatsHasGetRaceAsMiss(): void
+    {
+        $storageMock = $this->createMock(StorageInterface::class);
+        $hasCalls = 0;
+        $storageMock->expects(self::exactly(2))
+            ->method('has')
+            ->with('flip')
+            ->willReturnCallback(static function () use (&$hasCalls): bool {
+                $hasCalls++;
+
+                return $hasCalls === 1;
+            });
+        $storageMock->expects(self::once())
+            ->method('get')
+            ->with('flip')
+            ->willReturn(null);
+
+        $pool = (new CachePool())->withStorage($storageMock)->withTagPool(false);
+        $item = $pool->getItem('flip');
+
+        self::assertFalse($item->isHit());
+        self::assertNull($item->get());
+    }
+
+    /** @see CachePool::getItem — expired metadata causes stale entry cleanup */
+    public function testGetItemDeletesStaleEntryWhenMetadataIsExpired(): void
+    {
+        $meta = serialize(
+            [
+                'realExpiry' => microtime(true) - 10,
+                'ctime' => 1,
+            ]
+        );
+
+        $storageMock = $this->createMock(StorageInterface::class);
+        $storageMock->expects(self::exactly(2))
+            ->method('has')
+            ->willReturnCallback(
+                static fn(string $key): bool => match (true) {
+                    $key === 'stale' => true,
+                    self::isItemMetadataKey($key) => true,
+                    default => false,
+                }
+            );
+        $storageMock->expects(self::exactly(2))
+            ->method('get')
+            ->willReturnCallback(
+                static fn(string $key): string => match (true) {
+                    $key === 'stale' => 'VALUE',
+                    self::isItemMetadataKey($key) => $meta,
+                    default => '',
+                }
+            );
+        $removed = [];
+        $storageMock->expects(self::exactly(2))
+            ->method('remove')
+            ->willReturnCallback(static function (string $key) use (&$removed): bool {
+                $removed[] = $key;
+
+                return true;
+            });
+
+        $pool = (new CachePool())->withStorage($storageMock)->withTagPool(false);
+        $item = $pool->getItem('stale');
+
+        self::assertFalse($item->isHit());
+        self::assertContains('stale', $removed);
+        self::assertTrue((bool) array_filter($removed, static fn(string $k) => self::isItemMetadataKey($k)));
     }
 
     public function testGetItemWithSerializer(): void
@@ -144,27 +220,49 @@ class CachePoolTest extends TestCase
      */
     public function testDeleteItem(): void
     {
-        $storageMock = Mockery::mock(StorageInterface::class);
-        $storageMock->shouldReceive('remove')
-            ->with('hello')
-            ->andReturn(true);
+        $storageMock = $this->createMock(StorageInterface::class);
+        $removed = [];
+        $storageMock->expects(self::exactly(2))
+            ->method('remove')
+            ->willReturnCallback(static function (string $key) use (&$removed): bool {
+                $removed[] = $key;
 
-        $storageMock->shouldReceive('remove')
-            ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
-            ->andReturn(true);
+                return true;
+            });
 
         $this->instance->setStorage($storageMock);
 
         $this->instance->deleteItem('hello');
 
-        $storageMock = Mockery::mock(StorageInterface::class);
-        $storageMock->shouldReceive('remove')
+        self::assertContains('hello', $removed);
+        self::assertTrue((bool) array_filter($removed, static fn(string $k) => self::isItemMetadataKey($k)));
+
+        $storageMock = $this->createMock(StorageInterface::class);
+        $storageMock->expects(self::once())
+            ->method('remove')
             ->with('hello')
-            ->andThrow(RuntimeException::class);
+            ->willThrowException(new RuntimeException());
 
         $this->instance = $this->instance->withStorage($storageMock);
 
         self::assertFalse($this->instance->deleteItem('hello'));
+    }
+
+    /** @see CachePool::deleteItem — tag envelope sidecar is removed with the item */
+    public function testDeleteItemAlsoDeletesTagEnvelope(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        $pool->set('tagged_delete', 'VALUE', 3600, ['users']);
+
+        $envKey = '--ww_tag_env--' . hash('sha1', 'tagged_delete');
+        self::assertTrue($tagStorage->has($envKey));
+
+        self::assertTrue($pool->deleteItem('tagged_delete'));
+        self::assertFalse($mainStorage->has('tagged_delete'));
+        self::assertFalse($tagStorage->has($envKey), 'Deleting item should also delete its tag envelope');
     }
 
     /**
@@ -578,6 +676,24 @@ class CachePoolTest extends TestCase
         self::assertFalse($this->instance->has('foo'), 'Expired item must be removed from storage');
     }
 
+    /** @see CachePool::save — tagPool failures make save() fail for tagged items */
+    public function testSaveReturnsFalseWhenTagPoolFails(): void
+    {
+        $failingTagPool = $this->createMock(CacheItemPoolInterface::class);
+        $failingTagPool->expects($this->once())
+            ->method('getItem')
+            ->with(self::isString())
+            ->willThrowException(new RuntimeException());
+
+        $pool = new CachePool(new ArrayStorage())->withTagPool($failingTagPool);
+        $item = $pool->getItem('tag_fail');
+        $item->set('VALUE');
+        $item->expiresAfter(3600);
+        $item->tags('users');
+
+        self::assertFalse($pool->save($item));
+    }
+
     /**
      * @see  CachePool::get — returns $default for cache miss
      */
@@ -944,6 +1060,15 @@ class CachePoolTest extends TestCase
         self::assertSame($tagStorage, $tagPool->getStorage(), 'Wrapped storage matches original');
     }
 
+    /** @see CachePool::withTagPool — accepts a pre-built CacheItemPoolInterface unchanged */
+    public function testSetTagPoolAcceptsCacheItemPoolInterface(): void
+    {
+        $existingPool = new CachePool(new ArrayStorage(), tagPool: false);
+        $pool = (new CachePool())->withTagPool($existingPool);
+
+        self::assertSame($existingPool, $pool->getTagPool());
+    }
+
     /** @see CachePool::withTagPool — null uses main storage for tags */
     public function testSetTagPoolNull(): void
     {
@@ -1037,6 +1162,31 @@ class CachePoolTest extends TestCase
         self::assertSame('value2', $result);
     }
 
+    /** @see CachePool::saveDeferred + CachePool::commit — tagged deferred items keep invalidation semantics */
+    public function testCommitPersistsTagEnvelopeForDeferredTaggedItems(): void
+    {
+        $i = 0;
+        $item = $this->instance->getItem('deferred_tagged');
+        $item->set('INITIAL');
+        $item->expiresAfter(3600);
+        $item->tags('users');
+
+        self::assertTrue($this->instance->saveDeferred($item));
+        self::assertTrue($this->instance->commit());
+
+        $this->instance->invalidateTags(['users']);
+
+        $value = $this->instance->fetch('deferred_tagged', function (CacheItem $item) use (&$i) {
+            $i++;
+            $item->tags('users');
+
+            return 'REBUILT';
+        }, 3600, 0.0, false);
+
+        self::assertSame('REBUILT', $value);
+        self::assertSame(1, $i, 'Deferred tagged item should be invalidated after commit');
+    }
+
     /** @see CachePool::getCurrentTagVersions — cache disabled when TTL is 0 */
     public function testKnownTagVersionsCacheDisabledWhenTtlIsZero(): void
     {
@@ -1098,7 +1248,7 @@ class CachePoolTest extends TestCase
         // Verify no tag metadata was stored
         $tagKeys = array_filter(
             array_keys($storage->getData()),
-            fn($k) => str_starts_with($k, '__ww_tag_')
+            fn($k) => str_starts_with($k, '--ww_tag_ver--') || str_starts_with($k, '--ww_tag_env--')
         );
         self::assertEmpty($tagKeys, 'No tag metadata should be stored when tags are disabled');
     }
@@ -1139,6 +1289,11 @@ class CachePoolTest extends TestCase
     {
     }
 
+    private static function isItemMetadataKey(string $key): bool
+    {
+        return str_starts_with($key, '--ww_item_meta--');
+    }
+
     public function testWithGroupReturnsScopedClone(): void
     {
         $pool = new CachePool(new ArrayStorage(0.0));
@@ -1167,5 +1322,91 @@ class CachePoolTest extends TestCase
 
         $this->expectException(\LogicException::class);
         $pool->withGroup('flower');
+    }
+
+    /** @see CachePool::set + CachePool::invalidateTags — values written via set(tags) must be invalidated */
+    public function testSetWithTagsIsAffectedByInvalidateTags(): void
+    {
+        $this->instance->set('user_set', 'ORIGINAL', 3600, ['users']);
+        self::assertSame('ORIGINAL', $this->instance->get('user_set'));
+
+        $this->instance->invalidateTags(['users']);
+
+        $called = 0;
+        $value = $this->instance->fetch('user_set', function (CacheItem $item) use (&$called) {
+            $called++;
+            $item->tags('users');
+
+            return 'RECOMPUTED';
+        }, 3600, 0.0, false);
+
+        self::assertSame('RECOMPUTED', $value);
+        self::assertSame(1, $called, 'set(tags) entries must become stale after invalidateTags()');
+    }
+
+    /** @see CachePool::save + CachePool::invalidateTags — manually saved tagged items must also be invalidated */
+    public function testSaveTaggedItemIsAffectedByInvalidateTags(): void
+    {
+        $item = $this->instance->getItem('user_manual');
+        $item->set('ORIGINAL');
+        $item->expiresAfter(3600);
+        $item->tags('users');
+
+        self::assertTrue($this->instance->save($item));
+        self::assertSame('ORIGINAL', $this->instance->get('user_manual'));
+
+        $this->instance->invalidateTags(['users']);
+
+        $called = 0;
+        $value = $this->instance->fetch('user_manual', function (CacheItem $item) use (&$called) {
+            $called++;
+            $item->tags('users');
+
+            return 'RECOMPUTED';
+        }, 3600, 0.0, false);
+
+        self::assertSame('RECOMPUTED', $value);
+        self::assertSame(1, $called, 'save(tagged item) entries must become stale after invalidateTags()');
+    }
+
+    /** @see CachePool::save — saving the same key without tags must clear any stale old tag envelope */
+    public function testSavingWithoutTagsClearsOldTagEnvelope(): void
+    {
+        $this->instance->set('retagged', 'TAGGED', 3600, ['users']);
+        $this->instance->set('retagged', 'UNTAGGED', 3600);
+
+        $this->instance->invalidateTags(['users']);
+
+        $called = 0;
+        $value = $this->instance->fetch('retagged', function () use (&$called) {
+            $called++;
+
+            return 'RECOMPUTED';
+        }, 3600, 0.0, false);
+
+        self::assertSame('UNTAGGED', $value, 'Old tag envelope must be cleared when item is re-saved without tags');
+        self::assertSame(0, $called, 'Untagged item should not be recomputed by unrelated tag invalidation');
+    }
+
+    /** @see CachePool::invalidateTags — repeated invalidation on same tag remains effective */
+    public function testInvalidateSameTagMultipleTimesStillForcesRecompute(): void
+    {
+        $i = 0;
+        $compute = function (CacheItem $item) use (&$i) {
+            $i++;
+            $item->tags('users');
+
+            return 'V' . $i;
+        };
+
+        self::assertSame('V1', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
+
+        $this->instance->invalidateTags(['users']);
+        self::assertSame('V2', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
+
+        $this->instance->invalidateTags(['users']);
+        self::assertSame('V3', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
+
+        self::assertSame(3, $i);
     }
 }

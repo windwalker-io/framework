@@ -189,6 +189,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             $this->storage->remove($key);
             $this->storage->remove($this->itemMetadataKey($key));
 
+            if ($this->tagPool !== false) {
+                $this->tagPool->deleteItem($this->tagEnvelopeKey($key));
+            }
+
             return true;
         } catch (RuntimeException $e) {
             $this->logException(
@@ -240,6 +244,16 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             );
 
             $this->persistItemMetadata($item, $expiration);
+
+            if ($this->tagPool !== false) {
+                $tags = $item->getTags();
+
+                if ($tags !== []) {
+                    $this->saveTagEnvelope($item->getKey(), $tags, $expiration);
+                } else {
+                    $this->tagPool->deleteItem($this->tagEnvelopeKey($item->getKey()));
+                }
+            }
 
             return true;
         } catch (RuntimeException $e) {
@@ -468,15 +482,6 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
             $this->save($item);
 
-            // Save the tag envelope so future reads can detect invalidation.
-            // Skip if tagPool is disabled (false)
-            if ($this->tagPool !== false) {
-                $tags = $item->getTags();
-                if ($tags !== []) {
-                    $this->saveTagEnvelope($key, $tags, $item->getExpiration()->getTimestamp());
-                }
-            }
-
             return $data;
         } finally {
             if ($locked) {
@@ -666,7 +671,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             if ($this->knownTagVersionsTtl > 0 && isset($this->knownTagVersions[$tag])) {
                 [$exp, $v] = $this->knownTagVersions[$tag];
 
-                if ($now <= $exp) {
+                if ($now <= $exp && $v !== '') {
                     $versions[$tag] = $v;
                     continue;
                 }
@@ -678,8 +683,11 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             if ($tagItem->isHit()) {
                 $version = (string) $tagItem->get();
             } else {
-                // Tag has no version yet (first use, or just after invalidateTags deleted it).
-                // Create a new random version so this item always has a non-empty token.
+                $version = '';
+            }
+
+            // Empty means "no effective version"; create a fresh non-empty token.
+            if ($version === '') {
                 $version = $this->generateTagVersion();
                 $tagItem->set($version);
                 $tagItem->expiresAfter(null); // tag version keys never expire (Symfony policy)
