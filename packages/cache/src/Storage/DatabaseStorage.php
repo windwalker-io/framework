@@ -168,37 +168,6 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
         return true;
     }
 
-    public function lock(string $key, ?bool &$isNew = null): bool
-    {
-        $this->db->getPlatform()->transactionStart();
-
-        $item = $this->orm->from($this->table)
-            ->where($this->keyField, $key)
-            ->where($this->groupField, $this->group)
-            ->forUpdate()
-            ->get();
-
-        $isNew = !$item;
-
-        $this->locked[$key] = $isNew;
-
-        return true;
-    }
-
-    public function release(string $key): bool
-    {
-        $this->db->getPlatform()->transactionCommit();
-
-        unset($this->locked[$key]);
-
-        return true;
-    }
-
-    public function isLocked(string $key): bool
-    {
-        return array_key_exists($key, $this->locked);
-    }
-
     public function prune(): int
     {
         return $this->runPruneStatement($this->group)->countAffected();
