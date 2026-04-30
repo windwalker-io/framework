@@ -14,7 +14,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
 use Throwable;
-use Traversable;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\PhpSerializer;
@@ -25,7 +24,7 @@ use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
- * The Pool class.
+ * @psalm-type  CacheHandler = callable(CacheItemInterface): mixed
  */
 class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareInterface
 {
@@ -96,7 +95,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function getItem(string $key): CacheItemInterface
+    public function getItem(string $key): CacheItem
     {
         $item = CacheItem::create($key);
         $item->setLogger($this->logger);
@@ -115,7 +114,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      *
-     * @return Traversable|CacheItemInterface[]
+     * @return iterable<CacheItem>
      */
     public function getItems(iterable $keys = []): iterable
     {
@@ -277,12 +276,16 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function set($key, $value, $ttl = null): bool
+    public function set($key, $value, $ttl = null, array $tags = []): bool
     {
         $item = $this->getItem($key);
 
         $item->expiresAfter($ttl ?? $this->defaultTtl);
         $item->set($value);
+
+        if ($item instanceof CacheItem && $tags !== []) {
+            $item->tags(...$tags);
+        }
 
         return $this->save($item);
     }
@@ -359,7 +362,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      * Fetch a value from cache, computing and storing it if missing or due for early recomputation.
      *
      * @param  string                 $key
-     * @param  callable               $handler  Invoked to compute the value on cache miss.
+     * @param  CacheHandler           $handler  Invoked to compute the value on cache miss.
      *                                          Receives the CacheItem as first argument.
      *                                          May call $item->tag('foo', 'bar') to associate tags.
      * @param  null|int|DateInterval  $ttl
@@ -518,6 +521,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      * Uses in-memory cache (knownTagVersions) to reduce storage reads within a request.
      *
      * @param  string[]  $tags
+     *
      * @return array<string, string>  tag => version
      */
     private function getCurrentTagVersions(array $tags): array
@@ -702,8 +706,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return true; // INF → always recompute
         }
 
-        $expiry = $item->getRealExpiry();
-        $ctime = $item->getCtime();
+        $expiry = $item->realExpiry;
+        $ctime = $item->ctime;
 
         if ($expiry <= 0.0) {
             $expiry = (float) $item->getExpiration()->format('U.u');
@@ -866,15 +870,17 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
     public function setTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static
     {
-        if ($tagPool instanceof StorageInterface) {
-            // Wrap StorageInterface in CachePool with PhpSerializer (supports arrays)
-            $tagPool = new CachePool($tagPool, new PhpSerializer());
-        } elseif ($tagPool === null) {
-            // null means use own storage for tags (default behavior)
-            // Use PhpSerializer to support array serialization for tag envelopes
-            $tagPool = new CachePool($this->storage, new PhpSerializer(), $this->logger, null, false);
+        if ($tagPool !== false) {
+            $tagPool = new CachePool(
+                $tagPool instanceof StorageInterface
+                    ? $tagPool
+                    : $this->storage,
+                new PhpSerializer(),
+                $this->logger,
+                null,
+                false
+            );
         }
-        // else: keep false as-is (disables tags), or keep CacheItemPoolInterface as-is
 
         $this->tagPool = $tagPool;
 
@@ -935,9 +941,9 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /** Persist fetch metadata in sidecar storage for later reads. */
     private function persistItemMetadata(CacheItem $item, int $expiration): void
     {
-        $ctime = $item->getCtime();
+        $ctime = $item->ctime;
         $properties = [
-            'realExpiry' => $item->getRealExpiry(),
+            'realExpiry' => $item->realExpiry,
             'ctime' => $ctime,
         ];
         $metaKey = $this->itemMetadataKey($item->getKey());
@@ -952,7 +958,9 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         $this->storage->save($metaKey, serialize($properties), $expiration);
     }
 
-    /** Hydrate fetch metadata sidecar back into CacheItem (if present). */
+    /**
+     * Hydrate fetch metadata sidecar back into CacheItem (if present).
+     */
     private function hydrateItemMetadata(CacheItem $item): void
     {
         $metaKey = $this->itemMetadataKey($item->getKey());
@@ -982,8 +990,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
         $item->setCtime((int) $ctime);
 
-        $expiry = $item->getRealExpiry();
-        $ctime = $item->getCtime();
+        $expiry = $item->realExpiry;
+        $ctime = $item->ctime;
 
         if (is_numeric($expiry)) {
             $expiryString = number_format((float) $expiry, 6, '.', '');

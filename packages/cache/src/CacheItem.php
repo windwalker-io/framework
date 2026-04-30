@@ -36,12 +36,12 @@ class CacheItem implements CacheItemInterface
     /**
      * The real expiry timestamp (seconds with microseconds).
      */
-    protected float $realExpiry = 0.0;
+    public protected(set) float $realExpiry = 0.0;
 
     /**
      * The computation time in milliseconds.
      */
-    protected int $ctime = 0;
+    public protected(set) int $ctime = 0;
 
     /**
      * @var string[]
@@ -262,7 +262,7 @@ class CacheItem implements CacheItemInterface
      *
      * @return  static  Return self to support chaining.
      */
-    public function tag(string ...$tags): static
+    public function tags(string ...$tags): static
     {
         $this->tags = array_unique(array_merge($this->tags, $tags));
 
@@ -279,15 +279,6 @@ class CacheItem implements CacheItemInterface
         return $this->tags;
     }
 
-    public function getRealExpiry(): float
-    {
-        return $this->realExpiry;
-    }
-
-    public function getCtime(): int
-    {
-        return $this->ctime;
-    }
 
     /**
      * Set computation time metadata (milliseconds).

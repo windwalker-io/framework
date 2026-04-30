@@ -77,7 +77,7 @@ class CachePoolTest extends TestCase
             ->with('foo', 'Flower', time() + 30)
             ->shouldReceive('remove')
             ->once()
-            ->with(Mockery::on(static fn (string $k) => str_starts_with($k, '--ww_item_meta--')))
+            ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->getMock();
 
         $this->instance->setStorage($storageMock);
@@ -112,7 +112,7 @@ class CachePoolTest extends TestCase
             ->andReturn(true);
 
         $storageMock->shouldReceive('has')
-            ->with(Mockery::on(static fn (string $k) => str_starts_with($k, '--ww_item_meta--')))
+            ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->andReturn(false);
 
         $this->instance->setStorage($storageMock);
@@ -148,7 +148,7 @@ class CachePoolTest extends TestCase
             ->andReturn(true);
 
         $storageMock->shouldReceive('remove')
-            ->with(Mockery::on(static fn (string $k) => str_starts_with($k, '--ww_item_meta--')))
+            ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->andReturn(true);
 
         $this->instance->setStorage($storageMock);
@@ -336,6 +336,7 @@ class CachePoolTest extends TestCase
 
         $compute = static function () use (&$i) {
             $i++;
+
             return 'V' . $i;
         };
 
@@ -354,6 +355,7 @@ class CachePoolTest extends TestCase
 
         $compute = static function () use (&$i) {
             $i++;
+
             return 'V' . $i;
         };
 
@@ -372,6 +374,7 @@ class CachePoolTest extends TestCase
 
         $compute = static function () use (&$i) {
             $i++;
+
             return 'V' . $i;
         };
 
@@ -389,6 +392,7 @@ class CachePoolTest extends TestCase
 
         $compute = static function () use (&$i) {
             $i++;
+
             return 'V' . $i;
         };
 
@@ -405,11 +409,11 @@ class CachePoolTest extends TestCase
     /** @see CachePool::call — deprecated alias passes $lock through */
     public function testCallDeprecatedAliasWorks(): void
     {
-        $result = $this->instance->call('alias_key', static fn () => 'legacy', 60);
+        $result = $this->instance->call('alias_key', static fn() => 'legacy', 60);
         self::assertEquals('legacy', $result);
 
         // With lock=true (old explicit opt-in)
-        $result = $this->instance->call('alias_key2', static fn () => 'locked', 60, true);
+        $result = $this->instance->call('alias_key2', static fn() => 'locked', 60, true);
         self::assertEquals('locked', $result);
     }
 
@@ -542,7 +546,7 @@ class CachePoolTest extends TestCase
      */
     public function testConstruct(): void
     {
-        $storage    = new ArrayStorage();
+        $storage = new ArrayStorage();
         $serializer = new RawSerializer();
 
         $pool = new CachePool($storage, $serializer, defaultTtl: 120);
@@ -601,6 +605,7 @@ class CachePoolTest extends TestCase
 
         $this->instance->fetch('item_arg', function ($item) use (&$receivedItem) {
             $receivedItem = $item;
+
             return 'value';
         }, 60);
 
@@ -624,8 +629,8 @@ class CachePoolTest extends TestCase
 
         self::assertInstanceOf(CacheItem::class, $receivedItem);
 
-        self::assertGreaterThan(microtime(true), $receivedItem->getRealExpiry());
-        self::assertGreaterThan(0, $receivedItem->getCtime());
+        self::assertGreaterThan(microtime(true), $receivedItem->realExpiry);
+        self::assertGreaterThan(0, $receivedItem->ctime);
     }
 
     // -----------------------------------------------------------------------
@@ -637,9 +642,10 @@ class CachePoolTest extends TestCase
     {
         $i = 0;
 
-        $compute = function ($item) use (&$i) {
+        $compute = function (CacheItem $item) use (&$i) {
             $i++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'V' . $i;
         };
 
@@ -655,9 +661,10 @@ class CachePoolTest extends TestCase
     {
         $i = 0;
 
-        $compute = function ($item) use (&$i) {
+        $compute = function (CacheItem $item) use (&$i) {
             $i++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'V' . $i;
         };
 
@@ -682,22 +689,28 @@ class CachePoolTest extends TestCase
 
         $this->instance->fetch(
             'user1',
-            function ($item) use (&$calls) {
+            function (CacheItem $item) use (&$calls) {
                 $calls['user1']++;
-                $item->tag('users');
+                $item->tags('users');
+
                 return 'user';
             },
-            3600, 0.0, false
+            3600,
+            0.0,
+            false
         );
 
         $this->instance->fetch(
             'post1',
             function ($item) use (&$calls) {
                 $calls['post1']++;
-                $item->tag('posts');
+                $item->tags('posts');
+
                 return 'post';
             },
-            3600, 0.0, false
+            3600,
+            0.0,
+            false
         );
 
         // Invalidate only 'users' tag
@@ -707,20 +720,26 @@ class CachePoolTest extends TestCase
             'user1',
             function ($item) use (&$calls) {
                 $calls['user1']++;
-                $item->tag('users');
+                $item->tags('users');
+
                 return 'user';
             },
-            3600, 0.0, false
+            3600,
+            0.0,
+            false
         );
 
         $this->instance->fetch(
             'post1',
             function ($item) use (&$calls) {
                 $calls['post1']++;
-                $item->tag('posts');
+                $item->tags('posts');
+
                 return 'post';
             },
-            3600, 0.0, false
+            3600,
+            0.0,
+            false
         );
 
         self::assertEquals(2, $calls['user1'], 'user1 must be recomputed after users tag invalidation');
@@ -734,7 +753,8 @@ class CachePoolTest extends TestCase
 
         $compute = function ($item) use (&$i) {
             $i++;
-            $item->tag('tagA', 'tagB');
+            $item->tags('tagA', 'tagB');
+
             return 'V' . $i;
         };
 
@@ -755,7 +775,11 @@ class CachePoolTest extends TestCase
     {
         $i = 0;
 
-        $compute = static function () use (&$i) { $i++; return 'V' . $i; };
+        $compute = static function () use (&$i) {
+            $i++;
+
+            return 'V' . $i;
+        };
 
         // Store WITHOUT tags
         $this->instance->fetch('notagitem', $compute, 3600, 0.0, false);
@@ -787,6 +811,7 @@ class CachePoolTest extends TestCase
         // First fetch: stored WITHOUT tags
         $this->instance->fetch('item', static function () use (&$i) {
             $i++;
+
             return 'V' . $i;
         }, 3600, 0.0, false);
 
@@ -794,7 +819,8 @@ class CachePoolTest extends TestCase
         // so tags are not changed. This demonstrates you must delete() first to change tags.
         $result = $this->instance->fetch('item', function ($item) use (&$i) {
             $i++;
-            $item->tag('users');  // <-- this line will never execute on cache hit
+            $item->tags('users');  // <-- this line will never execute on cache hit
+
             return 'V' . $i;
         }, 3600, 0.0, false);
 
@@ -806,7 +832,8 @@ class CachePoolTest extends TestCase
 
         $result = $this->instance->fetch('item', function ($item) use (&$i) {
             $i++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'V' . $i;
         }, 3600, 0.0, false);
 
@@ -814,22 +841,22 @@ class CachePoolTest extends TestCase
         self::assertEquals(2, $i, 'After delete, handler is called and tags are set');
     }
 
-    /** @see CacheItem::tag — variadic tag() method */
+    /** @see CacheItem::tags — variadic tag() method */
     public function testCacheItemTagVariadic(): void
     {
         $item = CacheItem::create('test');
 
-        $item->tag('A', 'B', 'C');
+        $item->tags('A', 'B', 'C');
 
         self::assertEquals(['A', 'B', 'C'], $item->getTags());
     }
 
-    /** @see CacheItem::tag — chaining and deduplication */
+    /** @see CacheItem::tags — chaining and deduplication */
     public function testCacheItemTagChaining(): void
     {
         $item = CacheItem::create('test');
 
-        $item->tag('A')->tag('B', 'A')->tag('C');
+        $item->tags('A')->tags('B', 'A')->tags('C');
 
         self::assertEquals(['A', 'B', 'C'], $item->getTags(), 'Duplicate tags must be deduplicated');
     }
@@ -851,7 +878,8 @@ class CachePoolTest extends TestCase
 
         $pool->fetch('item1', function ($item) use (&$i) {
             $i++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'V' . $i;
         }, 3600, 0.0, false);
 
@@ -882,7 +910,8 @@ class CachePoolTest extends TestCase
 
         $compute = function ($item) use (&$i) {
             $i++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'V' . $i;
         };
 
@@ -956,7 +985,8 @@ class CachePoolTest extends TestCase
 
         // Create items with tags
         $pool->fetch('user1', function ($item) {
-            $item->tag('users');
+            $item->tags('users');
+
             return 'data1';
         }, 3600, 0.0, false);
 
@@ -970,7 +1000,8 @@ class CachePoolTest extends TestCase
         $recomputeCount = 0;
         $result = $pool->fetch('user1', function ($item) use (&$recomputeCount) {
             $recomputeCount++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'data2';
         }, 3600, 0.0, false);
 
@@ -987,7 +1018,8 @@ class CachePoolTest extends TestCase
 
         // Create an item to populate cache
         $pool->fetch('item1', function ($item) {
-            $item->tag('users');
+            $item->tags('users');
+
             return 'value1';
         }, 3600, 0.0, false);
 
@@ -996,7 +1028,8 @@ class CachePoolTest extends TestCase
 
         // This should work without issues
         $result = $pool->fetch('item2', function ($item) {
-            $item->tag('users');
+            $item->tags('users');
+
             return 'value2';
         }, 3600, 0.0, false);
 
@@ -1012,12 +1045,14 @@ class CachePoolTest extends TestCase
 
         // Create items with tags - each should fetch tag version from storage
         $pool->fetch('item1', function ($item) {
-            $item->tag('users');
+            $item->tags('users');
+
             return 'value1';
         }, 3600, 0.0, false);
 
         $pool->fetch('item2', function ($item) {
-            $item->tag('users');
+            $item->tags('users');
+
             return 'value2';
         }, 3600, 0.0, false);
 
@@ -1039,7 +1074,8 @@ class CachePoolTest extends TestCase
         // Fetch with tags (but tags are ignored)
         $result = $pool->fetch('item1', function ($item) use (&$i) {
             $i++;
-            $item->tag('users'); // This should be ignored
+            $item->tags('users'); // This should be ignored
+
             return 'value1';
         }, 3600, 0.0, false);
 
@@ -1052,7 +1088,8 @@ class CachePoolTest extends TestCase
         // Fetch again - should still use cached value (tags were ignored)
         $result2 = $pool->fetch('item1', function ($item) use (&$i) {
             $i++;
-            $item->tag('users');
+            $item->tags('users');
+
             return 'value2';
         }, 3600, 0.0, false);
 
@@ -1085,8 +1122,8 @@ class CachePoolTest extends TestCase
         $item = $poolB->getItem('persist_meta');
         self::assertTrue($item->isHit());
         self::assertEquals('value', $item->get());
-        self::assertGreaterThan(microtime(true), $item->getRealExpiry());
-        self::assertGreaterThan(0, $item->getCtime());
+        self::assertGreaterThan(microtime(true), $item->realExpiry);
+        self::assertGreaterThan(0, $item->ctime);
     }
 
     public function createItem(string $key, mixed $value = null): CacheItem
