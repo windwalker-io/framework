@@ -24,11 +24,15 @@ class FlysystemStorage extends FileStorage
      * @param  array       $options
      * @param  float       $pruneProbability
      */
-    public function __construct(Filesystem $driver, array $options = [], float $pruneProbability = 0.01)
-    {
+    public function __construct(
+        Filesystem $driver,
+        array $options = [],
+        float $pruneProbability = 0.01,
+        string $group = '',
+    ) {
         $this->driver = $driver;
 
-        parent::__construct('.', $options, $pruneProbability);
+        parent::__construct('.', $options, $pruneProbability, $group);
     }
 
     /**
@@ -63,11 +67,20 @@ class FlysystemStorage extends FileStorage
     public function clear(): bool
     {
         $results = true;
+        $prefix = $this->getGroupPrefixPath();
 
         foreach ($this->getDriver()->listContents('/', true) as $metadata) {
+            if ($this->getMetadataType($metadata) !== 'file') {
+                continue;
+            }
+
             $path = $this->getMetadataPath($metadata);
 
             if ($path === null) {
+                continue;
+            }
+
+            if ($prefix !== '' && !str_starts_with($path, $prefix . '/')) {
                 continue;
             }
 
@@ -84,6 +97,7 @@ class FlysystemStorage extends FileStorage
         }
 
         $pruned = 0;
+        $prefix = $this->getGroupPrefixPath();
 
         foreach ($this->getDriver()->listContents('/', true) as $metadata) {
             if ($this->getMetadataType($metadata) !== 'file') {
@@ -93,6 +107,10 @@ class FlysystemStorage extends FileStorage
             $path = $this->getMetadataPath($metadata);
 
             if ($path === null) {
+                continue;
+            }
+
+            if ($prefix !== '' && !str_starts_with($path, $prefix . '/')) {
                 continue;
             }
 
@@ -171,7 +189,7 @@ class FlysystemStorage extends FileStorage
      */
     public function fetchStreamUri(string $key): string
     {
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupPrefixPath();
 
         $this->checkFilePath($filePath);
 
@@ -181,7 +199,16 @@ class FlysystemStorage extends FileStorage
             $ext = '.php';
         }
 
-        return self::hashFilename($key) . $ext;
+        if ($filePath === '') {
+            return self::hashFilename($key) . $ext;
+        }
+
+        return $filePath . '/' . self::hashFilename($key) . $ext;
+    }
+
+    protected function getGroupPrefixPath(): string
+    {
+        return $this->group === '' ? '' : $this->getGroupDirectoryName();
     }
 
     /**

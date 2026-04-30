@@ -14,7 +14,7 @@ use Throwable;
 
 use function Windwalker\raw;
 
-class DatabaseStorage implements StorageInterface, PrunableStorageInterface
+class DatabaseStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
 {
 
     protected ORM $orm {
@@ -49,7 +49,7 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
 
     public function __construct(
         protected DatabaseAdapter $db,
-        protected string $group = '',
+        public protected(set) string $group = '',
         protected string $table = 'cache_items',
         array $columns = [],
         protected float $pruneProbability = 0.01,
@@ -229,6 +229,14 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
         $this->pruneProbability = max(0.0, min(1.0, $probability));
 
         return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
     }
 
     private function upsertSql(string $key, string $group, string $payload, string $expiredAt): ?Query

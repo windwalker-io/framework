@@ -14,7 +14,7 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
 /**
  * The FilesystemStorage class.
  */
-class FileStorage implements StorageInterface, PrunableStorageInterface
+class FileStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
 {
     use OptionAccessTrait;
 
@@ -35,7 +35,12 @@ class FileStorage implements StorageInterface, PrunableStorageInterface
      * @param  array   $options
      * @param  float   $pruneProbability
      */
-    public function __construct(string $root, array $options = [], protected float $pruneProbability = 0.01)
+    public function __construct(
+        string $root,
+        array $options = [],
+        protected float $pruneProbability = 0.01,
+        public protected(set) string $group = '',
+    )
     {
         $this->root = $root;
 
@@ -107,7 +112,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface
      */
     public function clear(): bool
     {
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupRootPath();
         $this->checkFilePath($filePath);
 
         $iterator = new RegexIterator(
@@ -173,7 +178,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface
             return 0;
         }
 
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupRootPath();
         $this->checkFilePath($filePath);
 
         $iterator = new RegexIterator(
@@ -347,7 +352,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface
      */
     public function fetchStreamUri(string $key): string
     {
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupRootPath();
 
         $this->checkFilePath($filePath);
 
@@ -360,6 +365,20 @@ class FileStorage implements StorageInterface, PrunableStorageInterface
             $filePath,
             self::hashFilename($key)
         );
+    }
+
+    protected function getGroupRootPath(): string
+    {
+        if ($this->group === '') {
+            return $this->getRoot();
+        }
+
+        return $this->getRoot() . '/' . $this->getGroupDirectoryName();
+    }
+
+    protected function getGroupDirectoryName(): string
+    {
+        return $this->group;
     }
 
     /**
@@ -507,6 +526,14 @@ class FileStorage implements StorageInterface, PrunableStorageInterface
         $this->pruneProbability = max(0.0, min(1.0, $probability));
 
         return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
     }
 
     public function shouldLock(): bool

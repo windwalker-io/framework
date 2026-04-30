@@ -7,6 +7,7 @@ namespace Windwalker\Cache\Test\Storage;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Cache\Storage\FileStorage;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
 
 /**
@@ -109,6 +110,29 @@ class FileStorageTest extends TestCase
     public function testImplementsPrunableStorageInterface(): void
     {
         self::assertInstanceOf(PrunableStorageInterface::class, $this->instance);
+    }
+
+    public function testImplementsGroupedStorageInterface(): void
+    {
+        self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testWithGroupCreatesScopedClone(): void
+    {
+        $flower = $this->instance->withGroup('flower');
+        $tree = $this->instance->withGroup('tree');
+
+        self::assertNotSame($flower, $tree);
+        self::assertSame('', $this->instance->group);
+        self::assertSame('flower', $flower->group);
+        self::assertSame('tree', $tree->group);
+
+        $flower->save('same-key', 'FLOWER', time() + 60);
+        $tree->save('same-key', 'TREE', time() + 60);
+
+        self::assertSame('FLOWER', $flower->get('same-key'));
+        self::assertSame('TREE', $tree->get('same-key'));
+        self::assertFalse($this->instance->has('same-key'));
     }
 
     public function testPrune(): void

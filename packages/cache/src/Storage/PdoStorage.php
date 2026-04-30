@@ -8,11 +8,11 @@ use PDO;
 use PDOException;
 use Throwable;
 
-class PdoStorage implements StorageInterface, PrunableStorageInterface
+class PdoStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
 {
     public function __construct(
         protected PDO $pdo,
-        protected string $group = '',
+        public protected(set) string $group = '',
         protected string $table = 'cache_items',
         protected array $columns = [
             'id' => 'id',
@@ -163,6 +163,14 @@ class PdoStorage implements StorageInterface, PrunableStorageInterface
         $this->pruneProbability = max(0.0, min(1.0, $probability));
 
         return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
     }
 
     public static function createTable(PDO $pdo, string $table = 'cache_items'): void

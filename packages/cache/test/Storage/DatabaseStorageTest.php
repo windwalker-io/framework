@@ -6,6 +6,7 @@ namespace Windwalker\Cache\Test\Storage;
 
 use PHPUnit\Framework\TestCase;
 use Windwalker\Cache\Storage\DatabaseStorage;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\DatabaseFactory;
@@ -72,6 +73,28 @@ class DatabaseStorageTest extends TestCase
     public function testImplementsPrunableStorageInterface(): void
     {
         self::assertInstanceOf(PrunableStorageInterface::class, $this->instance);
+    }
+
+    public function testImplementsGroupedStorageInterface(): void
+    {
+        self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testWithGroupCreatesScopedClone(): void
+    {
+        $flower = $this->instance->withGroup('flower');
+        $tree = $this->instance->withGroup('tree');
+
+        self::assertNotSame($flower, $tree);
+        self::assertSame('flower', $this->instance->group);
+        self::assertSame('flower', $flower->group);
+        self::assertSame('tree', $tree->group);
+
+        $flower->save('same-key', 'FLOWER', time() + 60);
+        $tree->save('same-key', 'TREE', time() + 60);
+
+        self::assertSame('FLOWER', $flower->get('same-key'));
+        self::assertSame('TREE', $tree->get('same-key'));
     }
 
     public function testPruneRemovesOnlyExpiredEntriesInCurrentGroup(): void

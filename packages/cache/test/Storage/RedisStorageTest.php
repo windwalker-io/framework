@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test\Storage;
 
+use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\RedisStorage;
 use Windwalker\Utilities\Env;
 
@@ -41,5 +42,28 @@ class RedisStorageTest extends AbstractStorageTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+    }
+
+    public function testImplementsGroupedStorageInterface(): void
+    {
+        self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testWithGroupCreatesScopedClone(): void
+    {
+        $flower = $this->instance->withGroup('flower');
+        $tree = $this->instance->withGroup('tree');
+
+        self::assertNotSame($flower, $tree);
+        self::assertSame('', $this->instance->group);
+        self::assertSame('flower', $flower->group);
+        self::assertSame('tree', $tree->group);
+
+        $flower->save('same-key', 'FLOWER', time() + 60);
+        $tree->save('same-key', 'TREE', time() + 60);
+
+        self::assertSame('FLOWER', $flower->get('same-key'));
+        self::assertSame('TREE', $tree->get('same-key'));
+        self::assertNull($this->instance->get('same-key'));
     }
 }

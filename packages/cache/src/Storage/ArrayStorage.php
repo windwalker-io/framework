@@ -9,7 +9,7 @@ namespace Windwalker\Cache\Storage;
  *
  * @since 2.0
  */
-class ArrayStorage implements StorageInterface, PrunableStorageInterface
+class ArrayStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
 {
     /**
      * Property storage.
@@ -18,7 +18,10 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     protected array $data = [];
 
-    public function __construct(protected float $pruneProbability = 0.01)
+    public function __construct(
+        protected float $pruneProbability = 0.01,
+        public protected(set) string $group = '',
+    )
     {
     }
 
@@ -27,7 +30,9 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     public function get(string $key): mixed
     {
-        $data = $this->data[$key] ?? null;
+        $data = $this->group === ''
+            ? ($this->data[$key] ?? null)
+            : ($this->data[$this->group][$key] ?? null);
 
         if ($data === null) {
             return null;
@@ -47,11 +52,17 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     public function has(string $key): bool
     {
-        if (!isset($this->data[$key])) {
+        $exists = $this->group === ''
+            ? isset($this->data[$key])
+            : isset($this->data[$this->group][$key]);
+
+        if (!$exists) {
             return false;
         }
 
-        [$expiration] = $this->data[$key];
+        [$expiration] = $this->group === ''
+            ? $this->data[$key]
+            : $this->data[$this->group][$key];
 
         // expiration = 0 means "never expires" (consistent with get())
         return $expiration === 0 || time() <= $expiration;
@@ -62,7 +73,11 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     public function clear(): bool
     {
-        $this->data = [];
+        if ($this->group === '') {
+            $this->data = [];
+        } else {
+            unset($this->data[$this->group]);
+        }
 
         return true;
     }
@@ -72,7 +87,11 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     public function remove(string $key): bool
     {
-        unset($this->data[$key]);
+        if ($this->group === '') {
+            unset($this->data[$key]);
+        } else {
+            unset($this->data[$this->group][$key]);
+        }
 
         return true;
     }
@@ -82,10 +101,11 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
-        $this->data[$key] = [
-            $expiration,
-            $value,
-        ];
+        if ($this->group === '') {
+            $this->data[$key] = [$expiration, $value];
+        } else {
+            $this->data[$this->group][$key] = [$expiration, $value];
+        }
 
         if ($this->shouldPrune()) {
             $this->prune();
@@ -99,9 +119,16 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
         $pruned = 0;
         $now = time();
 
-        foreach ($this->data as $key => [$expiration]) {
+        $groupData = $this->group === '' ? $this->data : ($this->data[$this->group] ?? []);
+
+        foreach ($groupData as $key => [$expiration]) {
             if ($expiration !== 0 && $expiration <= $now) {
-                unset($this->data[$key]);
+                if ($this->group === '') {
+                    unset($this->data[$key]);
+                } else {
+                    unset($this->data[$this->group][$key]);
+                }
+
                 $pruned++;
             }
         }
@@ -133,6 +160,14 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
         $this->pruneProbability = max(0.0, min(1.0, $probability));
 
         return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
     }
 
     /**

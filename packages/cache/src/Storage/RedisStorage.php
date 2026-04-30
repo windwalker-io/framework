@@ -9,7 +9,7 @@ use Redis;
 /**
  * The RedisStorage class.
  */
-class RedisStorage implements StorageInterface
+class RedisStorage implements StorageInterface, GroupedStorageInterface
 {
     /**
      * Property defaultHost.
@@ -26,18 +26,12 @@ class RedisStorage implements StorageInterface
     protected int $defaultPort = 6379;
 
     /**
-     * @var Redis
-     */
-    protected ?Redis $driver = null;
-
-    /**
      * RedisStorage constructor.
      *
-     * @param $driver
+     * @param  Redis|null  $driver
      */
-    public function __construct(?Redis $driver = null)
+    public function __construct(protected ?Redis $driver = null, public protected(set) string $group = '')
     {
-        $this->driver = $driver;
     }
 
     /**
@@ -47,7 +41,7 @@ class RedisStorage implements StorageInterface
     {
         $this->connect();
 
-        $value = $this->driver->get($key);
+        $value = $this->driver->get($this->normalizeKey($key));
 
         if ($value === false) {
             return null;
@@ -63,7 +57,7 @@ class RedisStorage implements StorageInterface
     {
         $this->connect();
 
-        return (bool) $this->driver->exists($key);
+        return (bool) $this->driver->exists($this->normalizeKey($key));
     }
 
     /**
@@ -72,6 +66,20 @@ class RedisStorage implements StorageInterface
     public function clear(): bool
     {
         $this->connect();
+
+        if ($this->group !== '') {
+            $keys = $this->driver->keys($this->group . ':*');
+
+            if (!is_array($keys) || $keys === []) {
+                return true;
+            }
+
+            foreach ($keys as $key) {
+                $this->driver->del($key);
+            }
+
+            return true;
+        }
 
         return $this->driver->flushall();
     }
@@ -83,7 +91,7 @@ class RedisStorage implements StorageInterface
     {
         $this->connect();
 
-        $this->driver->del($key);
+        $this->driver->del($this->normalizeKey($key));
 
         return true;
     }
@@ -95,14 +103,16 @@ class RedisStorage implements StorageInterface
     {
         $this->connect();
 
-        if (!$this->driver->set($key, $value)) {
+        $normalizedKey = $this->normalizeKey($key);
+
+        if (!$this->driver->set($normalizedKey, $value)) {
             return false;
         }
 
         if ($expiration !== 0) {
             $ttl = $expiration - time();
 
-            $this->driver->expire($key, $ttl);
+            $this->driver->expire($normalizedKey, $ttl);
         }
 
         return true;
@@ -129,5 +139,22 @@ class RedisStorage implements StorageInterface
         }
 
         return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
+    }
+
+    protected function normalizeKey(string $key): string
+    {
+        if ($this->group === '') {
+            return $key;
+        }
+
+        return $this->group . ':' . $key;
     }
 }
