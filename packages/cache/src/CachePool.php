@@ -21,6 +21,7 @@ use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\StorageInterface;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
@@ -89,7 +90,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         CacheItemPoolInterface|StorageInterface|null|false $tagPool = null,
     ) {
         $this->logger = $logger;
-        $this->setTagPool($tagPool);
+        $this->applyTagPool($tagPool);
     }
 
     /**
@@ -100,6 +101,14 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
+    }
+
+    public function withLogger(LoggerInterface $logger): static
+    {
+        $new = clone $this;
+        $new->logger = $logger;
+
+        return $new;
     }
 
     /**
@@ -781,7 +790,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @deprecated Use withStorage() instead.
      */
     public function setStorage(StorageInterface $storage): static
     {
@@ -790,12 +799,43 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         return $this;
     }
 
+    public function withStorage(StorageInterface $storage): static
+    {
+        $new = clone $this;
+        $new->storage = $storage;
+
+        return $new;
+    }
+
+    /**
+     * Return a new CachePool instance scoped to the given group.
+     * Works only when the underlying storage implements GroupedStorageInterface;
+     * throws LogicException otherwise.
+     *
+     * @throws \LogicException
+     */
+    public function withGroup(string $group): static
+    {
+        if (!$this->storage instanceof GroupedStorageInterface) {
+            throw new \LogicException(
+                sprintf(
+                    'Storage class %s does not implement %s.',
+                    get_class($this->storage),
+                    GroupedStorageInterface::class,
+                )
+            );
+        }
+
+        $new = clone $this;
+        $new->storage = $this->storage->withGroup($group);
+
+        return $new;
+    }
+
     /**
      * Method to get property Serializer
      *
      * @return  SerializerInterface
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function getSerializer(): SerializerInterface
     {
@@ -809,7 +849,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @deprecated Use withSerializer() instead.
      */
     public function setSerializer(SerializerInterface $serializer): static
     {
@@ -818,12 +858,18 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         return $this;
     }
 
+    public function withSerializer(SerializerInterface $serializer): static
+    {
+        $new = clone $this;
+        $new->serializer = $serializer;
+
+        return $new;
+    }
+
     /**
      * Method to get property DeferredItems
      *
-     * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
+     * @return  array<CacheItem>
      */
     public function getDeferredItems(): array
     {
@@ -837,13 +883,21 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @deprecated Use withAutoCommit() instead.
      */
     public function autoCommit(bool $autoCommit): static
     {
         $this->autoCommit = $autoCommit;
 
         return $this;
+    }
+
+    public function withAutoCommit(bool $autoCommit): static
+    {
+        $new = clone $this;
+        $new->autoCommit = $autoCommit;
+
+        return $new;
     }
 
     /**
@@ -862,9 +916,13 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     }
 
     /**
+     * Method to set property defaultTtl
+     *
      * @param  DateInterval|int|null  $defaultTtl
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated Use withDefaultTtl() instead.
      */
     public function setDefaultTtl(DateInterval|int|null $defaultTtl): static
     {
@@ -873,12 +931,28 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         return $this;
     }
 
+    public function withDefaultTtl(DateInterval|int|null $defaultTtl): static
+    {
+        $new = clone $this;
+        $new->defaultTtl = $defaultTtl;
+
+        return $new;
+    }
+
     public function getTagPool(): CacheItemPoolInterface|false
     {
         return $this->tagPool;
     }
 
-    public function setTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static
+    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static
+    {
+        $new = clone $this;
+        $new->applyTagPool($tagPool);
+
+        return $new;
+    }
+
+    private function applyTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): void
     {
         if ($tagPool !== false) {
             $tagPool = new CachePool(
@@ -893,8 +967,6 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         }
 
         $this->tagPool = $tagPool;
-
-        return $this;
     }
 
     /**
@@ -908,7 +980,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     }
 
     /**
-     * Set the TTL for in-memory tag version cache (in seconds).
+     * Return a new instance with the given TTL for in-memory tag version cache (in seconds).
      *
      * This cache reduces storage I/O when the same tags are checked multiple
      * times within a single request. Default is 0.15 seconds (150ms).
@@ -918,28 +990,29 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @param  float  $knownTagVersionsTtl  TTL in seconds (0 = disabled)
      *
-     * @return static Return self to support chaining.
+     * @return static
      */
-    public function setKnownTagVersionsTtl(float $knownTagVersionsTtl): static
+    public function withKnownTagVersionsTtl(float $knownTagVersionsTtl): static
     {
-        $this->knownTagVersionsTtl = max(0, $knownTagVersionsTtl);
+        $new = clone $this;
+        $new->knownTagVersionsTtl = max(0, $knownTagVersionsTtl);
 
-        return $this;
+        return $new;
     }
 
     /**
-     * Clear the in-memory tag versions cache.
+     * Return a new instance with the in-memory tag versions cache cleared.
      *
-     * This is automatically called on invalidateTags() for affected tags,
-     * but you can call it manually to force a fresh read from storage.
+     * This is useful to force a fresh read from storage on the next tag check.
      *
-     * @return static Return self to support chaining.
+     * @return static
      */
-    public function clearKnownTagVersionsCache(): static
+    public function withoutKnownTagVersionsCache(): static
     {
-        $this->knownTagVersions = [];
+        $new = clone $this;
+        $new->knownTagVersions = [];
 
-        return $this;
+        return $new;
     }
 
     /** Build the sidecar metadata key for a cache item key. */

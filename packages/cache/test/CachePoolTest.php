@@ -15,6 +15,8 @@ use Windwalker\Cache\Serializer\JsonAssocSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\StorageInterface;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
+use Windwalker\Cache\Storage\NullStorage;
 use Windwalker\Test\Traits\TestAccessorTrait;
 
 /**
@@ -52,11 +54,11 @@ class CachePoolTest extends TestCase
     }
 
     /**
-     * @see  CachePool::setSerializer
+     * @see  CachePool::withSerializer
      */
     public function testGetSetSerializer(): void
     {
-        $this->instance->setSerializer($ser = new RawSerializer());
+        $this->instance = $this->instance->withSerializer($ser = new RawSerializer());
 
         self::assertSame($ser, $this->instance->getSerializer());
     }
@@ -80,7 +82,7 @@ class CachePoolTest extends TestCase
             ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->getMock();
 
-        $this->instance->setStorage($storageMock);
+        $this->instance = $this->instance->withStorage($storageMock);
         $this->instance->save($item);
     }
 
@@ -115,7 +117,7 @@ class CachePoolTest extends TestCase
             ->with(Mockery::on(static fn(string $k) => str_starts_with($k, '--ww_item_meta--')))
             ->andReturn(false);
 
-        $this->instance->setStorage($storageMock);
+        $this->instance = $this->instance->withStorage($storageMock);
 
         $item = $this->instance->getItem('flower');
 
@@ -125,7 +127,7 @@ class CachePoolTest extends TestCase
 
     public function testGetItemWithSerializer(): void
     {
-        $this->instance->setSerializer(new JsonAssocSerializer());
+        $this->instance = $this->instance->withSerializer(new JsonAssocSerializer());
 
         $item = $this->instance->getItem('flower');
         $item->set(['foo' => 'bar']);
@@ -160,7 +162,7 @@ class CachePoolTest extends TestCase
             ->with('hello')
             ->andThrow(RuntimeException::class);
 
-        $this->instance->setStorage($storageMock);
+        $this->instance = $this->instance->withStorage($storageMock);
 
         self::assertFalse($this->instance->deleteItem('hello'));
     }
@@ -253,15 +255,15 @@ class CachePoolTest extends TestCase
     }
 
     /**
-     * @see  CachePool::setStorage / getStorage
+     * @see  CachePool::withStorage / getStorage
      */
     public function testSetStorage(): void
     {
         $storage = new ArrayStorage();
 
-        $this->instance->setStorage($storage);
+        $instance = $this->instance->withStorage($storage);
 
-        self::assertSame($storage, $this->instance->getStorage());
+        self::assertSame($storage, $instance->getStorage());
     }
 
     /**
@@ -293,9 +295,12 @@ class CachePoolTest extends TestCase
         );
     }
 
+    /**
+     * @see  CachePool::withSerializer
+     */
     public function testGetWithSerializer(): void
     {
-        $this->instance->setSerializer(new JsonAssocSerializer());
+        $this->instance = $this->instance->withSerializer(new JsonAssocSerializer());
 
         $this->instance->set('flower', ['foo' => 'bar']);
 
@@ -865,14 +870,13 @@ class CachePoolTest extends TestCase
     // TagPool tests
     // -----------------------------------------------------------------------
 
-    /** @see CachePool::setTagPool — tags are stored in separate pool */
+    /** @see CachePool::withTagPool — tags are stored in separate pool */
     public function testTagPoolIsolatesTagMetadata(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
 
-        $pool = new CachePool($mainStorage);
-        $pool->setTagPool($tagStorage);
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
 
         $i = 0;
 
@@ -903,8 +907,7 @@ class CachePoolTest extends TestCase
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
 
-        $pool = new CachePool($mainStorage);
-        $pool->setTagPool($tagStorage);
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
 
         $i = 0;
 
@@ -928,13 +931,12 @@ class CachePoolTest extends TestCase
         self::assertEquals(2, $i);
     }
 
-    /** @see CachePool::setTagPool — wraps StorageInterface in CachePool */
+    /** @see CachePool::withTagPool — wraps StorageInterface in CachePool */
     public function testSetTagPoolAcceptsStorage(): void
     {
-        $pool = new CachePool();
         $tagStorage = new ArrayStorage();
 
-        $pool->setTagPool($tagStorage);
+        $pool = (new CachePool())->withTagPool($tagStorage);
 
         $tagPool = $pool->getTagPool();
 
@@ -942,46 +944,46 @@ class CachePoolTest extends TestCase
         self::assertSame($tagStorage, $tagPool->getStorage(), 'Wrapped storage matches original');
     }
 
-    /** @see CachePool::setTagPool — null uses main storage for tags */
+    /** @see CachePool::withTagPool — null uses main storage for tags */
     public function testSetTagPoolNull(): void
     {
         $storage = new ArrayStorage();
-        $pool = new CachePool($storage);
-        $pool->setTagPool(new ArrayStorage()); // Set to separate storage first
-        $pool->setTagPool(null); // Reset to use main storage
+        $pool = (new CachePool($storage))
+            ->withTagPool(new ArrayStorage()) // Set to separate storage first
+            ->withTagPool(null); // Reset to use main storage
 
         $tagPool = $pool->getTagPool();
         self::assertInstanceOf(CachePool::class, $tagPool, 'null creates CachePool with main storage');
         self::assertSame($storage, $tagPool->getStorage(), 'Should use main storage for tags');
     }
 
-    /** @see CachePool::setKnownTagVersionsTtl — can configure in-memory cache TTL */
-    public function testSetKnownTagVersionsTtl(): void
+    /** @see CachePool::withKnownTagVersionsTtl — can configure in-memory cache TTL */
+    public function testWithKnownTagVersionsTtl(): void
     {
         $pool = new CachePool();
 
         // Default is 0.15 seconds (150ms)
         self::assertSame(0.15, $pool->getKnownTagVersionsTtl());
 
-        // Can set custom TTL
-        $pool->setKnownTagVersionsTtl(0.5); // 500ms
-        self::assertSame(0.5, $pool->getKnownTagVersionsTtl());
+        // Returns new instance with custom TTL
+        $pool2 = $pool->withKnownTagVersionsTtl(0.5); // 500ms
+        self::assertSame(0.5, $pool2->getKnownTagVersionsTtl());
+        self::assertSame(0.15, $pool->getKnownTagVersionsTtl(), 'Original pool should be unchanged');
 
         // Can set to 0 to disable
-        $pool->setKnownTagVersionsTtl(0);
-        self::assertSame(0.0, $pool->getKnownTagVersionsTtl());
+        $pool3 = $pool->withKnownTagVersionsTtl(0);
+        self::assertSame(0.0, $pool3->getKnownTagVersionsTtl());
 
         // Negative values are clamped to 0
-        $pool->setKnownTagVersionsTtl(-1);
-        self::assertSame(0.0, $pool->getKnownTagVersionsTtl());
+        $pool4 = $pool->withKnownTagVersionsTtl(-1);
+        self::assertSame(0.0, $pool4->getKnownTagVersionsTtl());
     }
 
     /** @see CachePool::invalidateTags — clears in-memory cache for invalidated tags */
     public function testInvalidateTagsClearsKnownTagVersionsCache(): void
     {
         $storage = new ArrayStorage();
-        $pool = new CachePool($storage);
-        $pool->setKnownTagVersionsTtl(10.0); // Long cache
+        $pool = (new CachePool($storage))->withKnownTagVersionsTtl(10.0); // Long cache
 
         // Create items with tags
         $pool->fetch('user1', function ($item) {
@@ -1009,12 +1011,11 @@ class CachePoolTest extends TestCase
         self::assertEquals(1, $recomputeCount, 'Handler should be called to recompute');
     }
 
-    /** @see CachePool::clearKnownTagVersionsCache — manual cache clear */
-    public function testClearKnownTagVersionsCache(): void
+    /** @see CachePool::withoutKnownTagVersionsCache — manual cache clear */
+    public function testWithoutKnownTagVersionsCache(): void
     {
         $storage = new ArrayStorage();
-        $pool = new CachePool($storage);
-        $pool->setKnownTagVersionsTtl(10.0); // Long cache
+        $pool = (new CachePool($storage))->withKnownTagVersionsTtl(10.0); // Long cache
 
         // Create an item to populate cache
         $pool->fetch('item1', function ($item) {
@@ -1023,11 +1024,11 @@ class CachePoolTest extends TestCase
             return 'value1';
         }, 3600, 0.0, false);
 
-        // Manually clear the in-memory cache
-        $pool->clearKnownTagVersionsCache();
+        // Return new instance with the in-memory cache cleared
+        $pool2 = $pool->withoutKnownTagVersionsCache();
 
         // This should work without issues
-        $result = $pool->fetch('item2', function ($item) {
+        $result = $pool2->fetch('item2', function ($item) {
             $item->tags('users');
 
             return 'value2';
@@ -1040,8 +1041,7 @@ class CachePoolTest extends TestCase
     public function testKnownTagVersionsCacheDisabledWhenTtlIsZero(): void
     {
         $storage = new ArrayStorage();
-        $pool = new CachePool($storage);
-        $pool->setKnownTagVersionsTtl(0); // Disable cache
+        $pool = (new CachePool($storage))->withKnownTagVersionsTtl(0); // Disable cache
 
         // Create items with tags - each should fetch tag version from storage
         $pool->fetch('item1', function ($item) {
@@ -1060,12 +1060,11 @@ class CachePoolTest extends TestCase
         self::assertTrue(true);
     }
 
-    /** @see CachePool::setTagPool — false disables all tag functionality */
+    /** @see CachePool::withTagPool — false disables all tag functionality */
     public function testTagPoolFalseDisablesTags(): void
     {
         $storage = new ArrayStorage();
-        $pool = new CachePool($storage);
-        $pool->setTagPool(false);
+        $pool = (new CachePool($storage))->withTagPool(false);
 
         self::assertFalse($pool->getTagPool(), 'tagPool should be false');
 
@@ -1138,5 +1137,35 @@ class CachePoolTest extends TestCase
 
     protected function tearDown(): void
     {
+    }
+
+    public function testWithGroupReturnsScopedClone(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $flower = $pool->withGroup('flower');
+        $tree   = $pool->withGroup('tree');
+
+        self::assertNotSame($pool, $flower);
+        self::assertNotSame($flower, $tree);
+
+        self::assertInstanceOf(GroupedStorageInterface::class, $flower->getStorage());
+        self::assertSame('flower', $flower->getStorage()->group);
+        self::assertSame('tree', $tree->getStorage()->group);
+
+        $flower->set('same-key', 'FLOWER');
+        $tree->set('same-key', 'TREE');
+
+        self::assertSame('FLOWER', $flower->get('same-key'));
+        self::assertSame('TREE',   $tree->get('same-key'));
+        self::assertNull($pool->get('same-key'));
+    }
+
+    public function testWithGroupThrowsWhenStorageUnsupported(): void
+    {
+        $pool = new CachePool(new NullStorage());
+
+        $this->expectException(\LogicException::class);
+        $pool->withGroup('flower');
     }
 }
