@@ -173,5 +173,58 @@ class ArrayStorageTest extends AbstractStorageTestCase
         self::assertTrue($this->instance->has('forever'));
         self::assertSame(0, $this->instance->prune());
     }
-}
 
+    public function testGetSetPruneProbability(): void
+    {
+        self::assertSame(0.01, $this->instance->getPruneProbability());
+
+        $this->instance->setPruneProbability(0.5);
+        self::assertSame(0.5, $this->instance->getPruneProbability());
+
+        $this->instance->setPruneProbability(0.0);
+        self::assertSame(0.0, $this->instance->getPruneProbability());
+
+        $this->instance->setPruneProbability(1.0);
+        self::assertSame(1.0, $this->instance->getPruneProbability());
+
+        // Clamp values outside [0.0, 1.0]
+        $this->instance->setPruneProbability(2.0);
+        self::assertSame(1.0, $this->instance->getPruneProbability());
+
+        $this->instance->setPruneProbability(-0.5);
+        self::assertSame(0.0, $this->instance->getPruneProbability());
+    }
+
+    public function testAutoPruneWithHighProbability(): void
+    {
+        $storage = new ArrayStorage(1.0); // Always prune
+
+        // Save an expired entry - it will be pruned immediately after save
+        $storage->save('expired', 'VALUE', time() - 10);
+        self::assertFalse(isset($storage->getData()['expired'])); // Already pruned
+
+        // Save a fresh entry - no prune needed since nothing expired
+        $storage->save('fresh', 'VALUE', time() + 60);
+
+        self::assertFalse(isset($storage->getData()['expired']));
+        self::assertTrue(isset($storage->getData()['fresh']));
+    }
+
+    public function testNoAutoPruneWithZeroProbability(): void
+    {
+        $storage = new ArrayStorage(0.0); // Never prune
+
+        $storage->save('expired', 'VALUE', time() - 10);
+        self::assertTrue(isset($storage->getData()['expired']));
+
+        $storage->save('fresh', 'VALUE', time() + 60);
+
+        // Expired entry still exists because prune never happens
+        self::assertTrue(isset($storage->getData()['expired']));
+        self::assertTrue(isset($storage->getData()['fresh']));
+
+        // Manual prune removes it
+        $storage->prune();
+        self::assertFalse(isset($storage->getData()['expired']));
+    }
+}

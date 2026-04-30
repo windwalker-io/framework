@@ -22,12 +22,13 @@ class FlysystemStorage extends FileStorage
      *
      * @param  Filesystem  $driver
      * @param  array       $options
+     * @param  float       $pruneProbability
      */
-    public function __construct(Filesystem $driver, array $options = [])
+    public function __construct(Filesystem $driver, array $options = [], float $pruneProbability = 0.01)
     {
         $this->driver = $driver;
 
-        parent::__construct('.', $options);
+        parent::__construct('.', $options, $pruneProbability);
     }
 
     /**

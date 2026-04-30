@@ -90,8 +90,9 @@ class DatabaseStorageTest extends TestCase
     {
         $storage = new DatabaseStorage($this->db, 'flower', 'cache_items', [], 1.0);
 
+        // Save an expired entry - it will be pruned after save
         $storage->save('expired', 'Sakura', time() - 10);
-        self::assertSame(1, $this->countRows('expired', 'flower'));
+        self::assertSame(0, $this->countRows('expired', 'flower')); // Already pruned
 
         $storage->save('fresh', 'Maple', time() + 60);
 

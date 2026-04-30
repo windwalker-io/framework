@@ -18,6 +18,10 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
      */
     protected array $data = [];
 
+    public function __construct(protected float $pruneProbability = 0.01)
+    {
+    }
+
     /**
      * @inheritDoc
      */
@@ -83,6 +87,10 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
             $value,
         ];
 
+        if ($this->shouldPrune()) {
+            $this->prune();
+        }
+
         return true;
     }
 
@@ -99,6 +107,32 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface
         }
 
         return $pruned;
+    }
+
+    public function shouldPrune(): bool
+    {
+        return random_int(0, 100_000) / 100_000 < $this->pruneProbability;
+    }
+
+    /**
+     * Get the prune probability (0.0 to 1.0)
+     */
+    public function getPruneProbability(): float
+    {
+        return $this->pruneProbability;
+    }
+
+    /**
+     * Set the prune probability (0.0 to 1.0)
+     *
+     * @param  float  $probability
+     * @return  static  Return self to support chaining.
+     */
+    public function setPruneProbability(float $probability): static
+    {
+        $this->pruneProbability = max(0.0, min(1.0, $probability));
+
+        return $this;
     }
 
     /**

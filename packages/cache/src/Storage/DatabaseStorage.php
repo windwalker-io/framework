@@ -29,8 +29,6 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
         'expired_at' => 'expired_at',
     ];
 
-    protected float $pruneProbability;
-
     public string $keyField {
         get => $this->columns['key'];
     }
@@ -52,18 +50,13 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
         protected string $group = '',
         protected string $table = 'cache_items',
         array $columns = [],
-        protected float $gcProbability = 0.01,
+        protected float $pruneProbability = 0.01,
     ) {
         $this->columns = array_merge($this->columns, $columns);
-        $this->pruneProbability = $gcProbability;
     }
 
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
-        if ($this->shouldPrune()) {
-            $this->prune();
-        }
-
         $expiredAt = 'NULL';
 
         if ($expiration) {
@@ -75,6 +68,10 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
 
         if ($query) {
             $query->execute();
+
+            if ($this->shouldPrune()) {
+                $this->prune();
+            }
 
             return true;
         }
@@ -117,6 +114,10 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
                 }
             }
         );
+
+        if ($this->shouldPrune()) {
+            $this->prune();
+        }
 
         return true;
     }
@@ -200,37 +201,38 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface
 
     public function prune(): int
     {
-        return $this->createPruneStatement($this->group)->countAffected();
+        return $this->runPruneStatement($this->group)->countAffected();
     }
 
     public function pruneAll(): int
     {
-        return $this->createPruneStatement()->countAffected();
-    }
-
-    public function clearGroupExpired(): StatementInterface
-    {
-        return $this->createPruneStatement($this->group);
-    }
-
-    public function clearAllExpired(): StatementInterface
-    {
-        return $this->createPruneStatement();
-    }
-
-    /**
-     * @return  bool
-     *
-     * @throws \Random\RandomException
-     */
-    public function shouldClear(): bool
-    {
-        return $this->shouldPrune();
+        return $this->runPruneStatement()->countAffected();
     }
 
     public function shouldPrune(): bool
     {
         return random_int(0, 100_000) / 100_000 < $this->pruneProbability;
+    }
+
+    /**
+     * Get the prune probability (0.0 to 1.0)
+     */
+    public function getPruneProbability(): float
+    {
+        return $this->pruneProbability;
+    }
+
+    /**
+     * Set the prune probability (0.0 to 1.0)
+     *
+     * @param  float  $probability
+     * @return  static  Return self to support chaining.
+     */
+    public function setPruneProbability(float $probability): static
+    {
+        $this->pruneProbability = max(0.0, min(1.0, $probability));
+
+        return $this;
     }
 
     private function upsertSql(string $key, string $group, string $payload, string $expiredAt): ?Query
@@ -314,7 +316,7 @@ $expiredAtField = EXCLUDED.$expiredAtField
         return null;
     }
 
-    private function createPruneStatement(?string $group = null): StatementInterface
+    private function runPruneStatement(?string $group = null): StatementInterface
     {
         $query = $this->orm->delete($this->table)
             ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()));
