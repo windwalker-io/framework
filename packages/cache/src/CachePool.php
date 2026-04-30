@@ -93,6 +93,16 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     }
 
     /**
+     * Set the logger instance.
+     *
+     * @param  LoggerInterface  $logger
+     */
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getItem(string $key): CacheItem
@@ -385,7 +395,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         float $beta = 1.0,
         bool $lock = true,
     ): mixed {
-        $locked = $lock && CacheLock::lock($key, $isNew);
+        $locked = $lock && CacheLock::lock($key, $isNew, $this->logger);
 
         try {
             // Re-fetch after acquiring the lock so we see any value a competing
@@ -450,7 +460,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $data;
         } finally {
             if ($locked) {
-                CacheLock::release($key);
+                CacheLock::release($key, $this->logger);
             }
         }
     }

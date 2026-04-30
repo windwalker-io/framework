@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache;
 
+use Psr\Log\LoggerInterface;
+
 class CacheLock
 {
     private static array $openedFiles = [];
@@ -44,11 +46,12 @@ class CacheLock
         __DIR__ . DIRECTORY_SEPARATOR . 'Exception' . DIRECTORY_SEPARATOR . 'InvalidArgumentException.php',
     ];
 
-    public static function lock(string $key, ?bool &$isNew = null): bool
+    public static function lock(string $key, ?bool &$isNew = null, ?LoggerInterface $logger = null): bool
     {
         // Already locked by this process — return without acquiring again
         if (isset(static::$lockedFiles[$key])) {
             $isNew = false;
+            $logger?->debug('Cache lock: Lock already held by this process', ['key' => $key]);
 
             return true;
         }
@@ -57,6 +60,7 @@ class CacheLock
 
         if (empty($files)) {
             $isNew = false;
+            $logger?->warning('Cache lock: No lock files configured', ['key' => $key]);
 
             return false;
         }
@@ -68,6 +72,7 @@ class CacheLock
 
         if ($fp === false) {
             $isNew = false;
+            $logger?->error('Cache lock: Failed to open lock file', ['key' => $key, 'index' => $index]);
 
             return false;
         }
@@ -82,11 +87,16 @@ class CacheLock
             if (static::$timeout <= 0) {
                 // No timeout configured — give up immediately
                 $isNew = false;
+                $logger?->info('Cache lock: Lock timeout disabled, giving up immediately', ['key' => $key]);
 
                 return false;
             }
 
             // Another process holds the lock — poll until timeout
+            $logger?->debug('Cache lock: Waiting for lock to be released', [
+                'key' => $key,
+                'timeout' => static::$timeout,
+            ]);
             $deadline = microtime(true) + static::$timeout;
             $acquired = false;
 
@@ -98,6 +108,10 @@ class CacheLock
             if (!$acquired && $wouldBlock) {
                 // Timeout expired and lock is still held by another process
                 $isNew = false;
+                $logger?->warning('Cache lock: Failed to acquire lock within timeout', [
+                    'key' => $key,
+                    'timeout' => static::$timeout,
+                ]);
 
                 return false;
             }
@@ -116,26 +130,37 @@ class CacheLock
         }
 
         static::$openedFiles[$index] = $fp;
-        static::$lockedFiles[$key]   = $index;
+        static::$lockedFiles[$key] = $index;
 
         $isNew = true;
+        $logger?->debug('Cache lock: Lock acquired successfully', ['key' => $key]);
 
         return true;
     }
 
-    public static function release(string $key): bool
+    public static function release(string $key, ?LoggerInterface $logger = null): bool
     {
         if (!isset(static::$lockedFiles[$key])) {
+            $logger?->debug('Cache lock: Key not locked, nothing to release', ['key' => $key]);
+
             return true;
         }
 
         $index = static::$lockedFiles[$key];
-        $fp    = static::$openedFiles[$index];
+        $fp = static::$openedFiles[$index];
 
         unset(static::$lockedFiles[$key]);
 
         // Keep the file handle open for reuse (like Symfony's approach)
-        return flock($fp, LOCK_UN);
+        $released = flock($fp, LOCK_UN);
+
+        if ($released) {
+            $logger?->debug('Cache lock: Lock released successfully', ['key' => $key]);
+        } else {
+            $logger?->warning('Cache lock: Failed to release lock', ['key' => $key]);
+        }
+
+        return $released;
     }
 
     public static function isLocked(string $key): bool
@@ -153,7 +178,7 @@ class CacheLock
             }
         }
 
-        static::$files       = array_values($files);
+        static::$files = array_values($files);
         static::$openedFiles = [];
         static::$lockedFiles = [];
     }
@@ -195,7 +220,7 @@ class CacheLock
             return static::$openedFiles[$index] = false;
         }
 
-        set_error_handler(static fn () => null);
+        set_error_handler(static fn() => null);
         try {
             // Try read-write first so LOCK_EX works on all platforms;
             // fall back to read-only (advisory LOCK_EX still works on POSIX).
