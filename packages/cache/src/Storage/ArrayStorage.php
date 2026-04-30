@@ -114,6 +114,24 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface, Groupe
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getMultiple(array $keys): array
+    {
+        $result = [];
+
+        foreach ($keys as $key) {
+            $value = $this->get($key);
+
+            if ($value !== null) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
     public function prune(): int
     {
         $pruned = 0;

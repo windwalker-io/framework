@@ -124,8 +124,19 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $item;
         }
 
-        $item->set($this->serializer->unserialize($this->storage->get($key)));
+        // Defensive re-check: some storages may flip from hit->miss between has() and get().
+        $stored = $this->storage->get($key);
+        if ($stored === null && !$this->storage->has($key)) {
+            return $item;
+        }
+
+        $item->set($this->serializer->unserialize($stored));
         $this->hydrateItemMetadata($item);
+
+        // If metadata says the item is already expired, do not serve stale data.
+        if (!$item->isHit()) {
+            $this->deleteItem($key);
+        }
 
         return $item;
     }
@@ -496,14 +507,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             // Clear in-memory cache for this tag
             unset($this->knownTagVersions[$tag]);
 
-            $key = $this->tagVersionKey($tag);
-            $version = $this->generateTagVersion();
-
-            // Use CacheItemPoolInterface::getItem/save
-            $item = $this->tagPool->getItem($key);
-            $item->set($version);
-            $item->expiresAfter(null); // null means forever
-            $this->tagPool->save($item);
+            // Delete the version key — no need to write a new value.
+            // Items whose envelopes stored the old (non-empty) version will be
+            // treated as stale because '' !== <old_version>.
+            $this->tagPool->deleteItem($this->tagVersionKey($tag));
         }
 
         return true;
@@ -611,20 +618,84 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      * The envelope records the current version of every tag so that future
      * reads can detect whether any tag has been invalidated since.
      *
+     * Uses getOrCreateTagVersions so that a version is always written (non-empty),
+     * which ensures delete-based invalidation works correctly even after multiple
+     * back-to-back invalidations of the same tag.
+     *
      * @param  string[]  $tags
      */
     private function saveTagEnvelope(string $key, array $tags, int $expiration): void
     {
         $envKey = $this->tagEnvelopeKey($key);
-        $envelope = $this->getCurrentTagVersions($tags);
 
-        // Use CacheItemPoolInterface::getItem/save with calculated TTL
-        // CachePool will automatically serialize the array using its serializer
+        // Use getOrCreateTagVersions: creates a new version for any tag that
+        // has no current version (first use or just after invalidation).
+        $envelope = $this->getOrCreateTagVersions($tags);
+
         $ttl = max(0, $expiration - time());
         $item = $this->tagPool->getItem($envKey);
         $item->set($envelope);
         $item->expiresAfter($ttl > 0 ? $ttl : null);
         $this->tagPool->save($item);
+    }
+
+    /**
+     * Return the current version token for each tag, creating a new one for
+     * any tag that currently has no version (first use or post-invalidation).
+     *
+     * Called only during save so that every freshly cached item always has a
+     * non-empty version in its envelope, which makes delete-based invalidation
+     * (invalidateTags) work correctly across repeated invalidations of the same tag.
+     *
+     * Tag version keys are stored with no expiry (null TTL) — matching Symfony's
+     * policy. A version that expires before the items referencing it would cause
+     * those items to see '' as the current version, potentially matching items
+     * whose envelopes also stored '' and making them look valid forever.
+     *
+     * @param  string[]  $tags
+     *
+     * @return array<string, string>  tag => version
+     */
+    private function getOrCreateTagVersions(array $tags): array
+    {
+        $versions = [];
+        $now = microtime(true);
+
+        foreach ($tags as $tag) {
+            // Check in-memory cache first.
+            if ($this->knownTagVersionsTtl > 0 && isset($this->knownTagVersions[$tag])) {
+                [$exp, $v] = $this->knownTagVersions[$tag];
+
+                if ($now <= $exp) {
+                    $versions[$tag] = $v;
+                    continue;
+                }
+            }
+
+            $tagKey = $this->tagVersionKey($tag);
+            $tagItem = $this->tagPool->getItem($tagKey);
+
+            if ($tagItem->isHit()) {
+                $version = (string) $tagItem->get();
+            } else {
+                // Tag has no version yet (first use, or just after invalidateTags deleted it).
+                // Create a new random version so this item always has a non-empty token.
+                $version = $this->generateTagVersion();
+                $tagItem->set($version);
+                $tagItem->expiresAfter(null); // tag version keys never expire (Symfony policy)
+                $this->tagPool->save($tagItem);
+            }
+
+            $versions[$tag] = $version;
+
+            // Update in-memory cache.
+            if ($this->knownTagVersionsTtl > 0) {
+                unset($this->knownTagVersions[$tag]); // FIFO: re-add at end
+                $this->knownTagVersions[$tag] = [$now + $this->knownTagVersionsTtl, $version];
+            }
+        }
+
+        return $versions;
     }
 
     /**
@@ -954,19 +1025,27 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
     private function applyTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): void
     {
-        if ($tagPool !== false) {
-            $tagPool = new CachePool(
-                $tagPool instanceof StorageInterface
-                    ? $tagPool
-                    : $this->storage,
+        if ($tagPool instanceof CacheItemPoolInterface) {
+            $pool = $tagPool;
+        } elseif ($tagPool !== false) {
+            if ($tagPool instanceof StorageInterface) {
+                $storage = $tagPool;
+            } else {
+                $storage = $this->storage;
+            }
+
+            $pool = new CachePool(
+                $storage,
                 new PhpSerializer(),
                 $this->logger,
                 null,
                 false
             );
+        } else {
+            $pool = false;
         }
 
-        $this->tagPool = $tagPool;
+        $this->tagPool = $pool;
     }
 
     /**

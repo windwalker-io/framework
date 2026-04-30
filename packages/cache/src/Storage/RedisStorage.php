@@ -9,7 +9,7 @@ use Redis;
 /**
  * The RedisStorage class.
  */
-class RedisStorage implements StorageInterface, GroupedStorageInterface
+class RedisStorage implements StorageInterface, MultiGetStorageInterface, GroupedStorageInterface
 {
     /**
      * Property defaultHost.
@@ -116,6 +116,38 @@ class RedisStorage implements StorageInterface, GroupedStorageInterface
         }
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Uses Redis MGET for a single round-trip. The Redis driver returns `false`
+     * for missing or expired keys; those are excluded from the result.
+     */
+    public function getMultiple(array $keys): array
+    {
+        if ($keys === []) {
+            return [];
+        }
+
+        $this->connect();
+
+        $normalizedKeys = array_map(fn($k) => $this->normalizeKey($k), $keys);
+        $values = $this->driver->mGet($normalizedKeys);
+
+        if (!is_array($values)) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($keys as $i => $key) {
+            if ($values[$i] !== false) {
+                $result[$key] = $values[$i];
+            }
+        }
+
+        return $result;
     }
 
     /**

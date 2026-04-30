@@ -10,7 +10,7 @@ use RuntimeException;
 /**
  * The MemcachedStorage class.
  */
-class MemcachedStorage implements StorageInterface
+class MemcachedStorage implements StorageInterface, MultiGetStorageInterface
 {
     /**
      * @var Memcached
@@ -94,6 +94,29 @@ class MemcachedStorage implements StorageInterface
         $this->driver->set($key, $value, $expiration);
 
         return $this->driver->getResultCode() === Memcached::RES_SUCCESS;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Uses Memcached::getMulti for a single round-trip.
+     */
+    public function getMultiple(array $keys): array
+    {
+        if ($keys === []) {
+            return [];
+        }
+
+        $this->connect();
+
+        $values = $this->driver->getMulti($keys);
+
+        if (!is_array($values)) {
+            return [];
+        }
+
+        // getMulti returns only found keys; absent keys are not in the array.
+        return $values;
     }
 
     /**
