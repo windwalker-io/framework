@@ -7,6 +7,7 @@ namespace Windwalker\Cache\Test\Storage;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Cache\Storage\FileStorage;
+use Windwalker\Cache\Storage\PrunableStorageInterface;
 
 /**
  * The FileStorageTest class.
@@ -103,6 +104,26 @@ class FileStorageTest extends TestCase
         $this->instance->save('flower2', 'Sakura2', time() - 10);
 
         self::assertFalse($this->instance->has('flower2'));
+    }
+
+    public function testImplementsPrunableStorageInterface(): void
+    {
+        self::assertInstanceOf(PrunableStorageInterface::class, $this->instance);
+    }
+
+    public function testPrune(): void
+    {
+        $this->instance->save('expired1', 'Sakura1', time() - 10);
+        $this->instance->save('expired2', 'Sakura2', time() - 1);
+        $this->instance->save('active', 'Sakura3', time() + 60);
+        $this->instance->save('forever', 'Sakura4', 0);
+
+        self::assertSame(2, $this->instance->prune());
+        self::assertFalse($this->instance->has('expired1'));
+        self::assertFalse($this->instance->has('expired2'));
+        self::assertTrue($this->instance->has('active'));
+        self::assertTrue($this->instance->has('forever'));
+        self::assertSame(0, $this->instance->prune());
     }
 
     /**

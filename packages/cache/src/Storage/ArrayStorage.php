@@ -9,7 +9,7 @@ namespace Windwalker\Cache\Storage;
  *
  * @since 2.0
  */
-class ArrayStorage implements StorageInterface
+class ArrayStorage implements StorageInterface, PrunableStorageInterface
 {
     /**
      * Property storage.
@@ -84,6 +84,21 @@ class ArrayStorage implements StorageInterface
         ];
 
         return true;
+    }
+
+    public function prune(): int
+    {
+        $pruned = 0;
+        $now = time();
+
+        foreach ($this->data as $key => [$expiration]) {
+            if ($expiration !== 0 && $expiration <= $now) {
+                unset($this->data[$key]);
+                $pruned++;
+            }
+        }
+
+        return $pruned;
     }
 
     /**

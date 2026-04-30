@@ -12,7 +12,7 @@ use Windwalker\Query\Query;
 
 use function Windwalker\raw;
 
-class DatabaseStorage implements StorageInterface
+class DatabaseStorage implements StorageInterface, PrunableStorageInterface
 {
 
     protected ORM $orm {
@@ -28,6 +28,8 @@ class DatabaseStorage implements StorageInterface
         'payload' => 'payload',
         'expired_at' => 'expired_at',
     ];
+
+    protected float $pruneProbability;
 
     public string $keyField {
         get => $this->columns['key'];
@@ -53,12 +55,13 @@ class DatabaseStorage implements StorageInterface
         protected float $gcProbability = 0.01,
     ) {
         $this->columns = array_merge($this->columns, $columns);
+        $this->pruneProbability = $gcProbability;
     }
 
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
-        if ($this->shouldClear()) {
-            $this->clearGroupExpired();
+        if ($this->shouldPrune()) {
+            $this->prune();
         }
 
         $expiredAt = 'NULL';
@@ -195,19 +198,24 @@ class DatabaseStorage implements StorageInterface
         return array_key_exists($key, $this->locked);
     }
 
+    public function prune(): int
+    {
+        return $this->createPruneStatement($this->group)->countAffected();
+    }
+
+    public function pruneAll(): int
+    {
+        return $this->createPruneStatement()->countAffected();
+    }
+
     public function clearGroupExpired(): StatementInterface
     {
-        return $this->orm->delete($this->table)
-            ->where($this->groupField, $this->group)
-            ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()))
-            ->execute();
+        return $this->createPruneStatement($this->group);
     }
 
     public function clearAllExpired(): StatementInterface
     {
-        return $this->orm->delete($this->table)
-            ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()))
-            ->execute();
+        return $this->createPruneStatement();
     }
 
     /**
@@ -217,7 +225,12 @@ class DatabaseStorage implements StorageInterface
      */
     public function shouldClear(): bool
     {
-        return random_int(0, 100_000) / 100_000 < $this->gcProbability;
+        return $this->shouldPrune();
+    }
+
+    public function shouldPrune(): bool
+    {
+        return random_int(0, 100_000) / 100_000 < $this->pruneProbability;
     }
 
     private function upsertSql(string $key, string $group, string $payload, string $expiredAt): ?Query
@@ -299,6 +312,18 @@ $expiredAtField = EXCLUDED.$expiredAtField
         }
 
         return null;
+    }
+
+    private function createPruneStatement(?string $group = null): StatementInterface
+    {
+        $query = $this->orm->delete($this->table)
+            ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()));
+
+        if ($group !== null) {
+            $query->where($this->groupField, $group);
+        }
+
+        return $query->execute();
     }
 
     private function getCurrentTimestampStatement(): string

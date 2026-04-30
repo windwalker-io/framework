@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Cache\Test\Storage;
 
 use Windwalker\Cache\Storage\ArrayStorage;
+use Windwalker\Cache\Storage\PrunableStorageInterface;
 
 /**
  * Tests for ArrayStorage (in-memory cache).
@@ -151,6 +152,26 @@ class ArrayStorageTest extends AbstractStorageTestCase
 
         self::assertEquals($array, $this->instance->get('array'));
         self::assertEquals($object, $this->instance->get('object'));
+    }
+
+    public function testImplementsPrunableStorageInterface(): void
+    {
+        self::assertInstanceOf(PrunableStorageInterface::class, $this->instance);
+    }
+
+    public function testPruneRemovesExpiredEntries(): void
+    {
+        $this->instance->save('expired-1', 'VALUE', time() - 10);
+        $this->instance->save('expired-2', 'VALUE', time() - 1);
+        $this->instance->save('active', 'VALUE', time() + 60);
+        $this->instance->save('forever', 'VALUE', 0);
+
+        self::assertSame(2, $this->instance->prune());
+        self::assertFalse($this->instance->has('expired-1'));
+        self::assertFalse($this->instance->has('expired-2'));
+        self::assertTrue($this->instance->has('active'));
+        self::assertTrue($this->instance->has('forever'));
+        self::assertSame(0, $this->instance->prune());
     }
 }
 

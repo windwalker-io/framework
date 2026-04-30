@@ -64,10 +64,52 @@ class FlysystemStorage extends FileStorage
         $results = true;
 
         foreach ($this->getDriver()->listContents('/', true) as $metadata) {
-            $results = $this->getDriver()->delete($metadata['path']) && $results;
+            $path = $this->getMetadataPath($metadata);
+
+            if ($path === null) {
+                continue;
+            }
+
+            $results = $this->getDriver()->delete($path) && $results;
         }
 
         return $results;
+    }
+
+    public function prune(): int
+    {
+        if ($this->getExpirationFormat() === '') {
+            return 0;
+        }
+
+        $pruned = 0;
+
+        foreach ($this->getDriver()->listContents('/', true) as $metadata) {
+            if ($this->getMetadataType($metadata) !== 'file') {
+                continue;
+            }
+
+            $path = $this->getMetadataPath($metadata);
+
+            if ($path === null) {
+                continue;
+            }
+
+            $contents = $this->getDriver()->read($path);
+
+            if (!is_string($contents)) {
+                continue;
+            }
+
+            $expiration = $this->extractExpirationFromString($contents);
+
+            if ($expiration !== null && static::isExpired($expiration)) {
+                $this->getDriver()->delete($path);
+                $pruned++;
+            }
+        }
+
+        return $pruned;
     }
 
     /**
@@ -151,5 +193,23 @@ class FlysystemStorage extends FileStorage
     public static function hashFilename(string $key): string
     {
         return '~' . hash('sha1', $key);
+    }
+
+    private function getMetadataPath(mixed $metadata): ?string
+    {
+        return match (true) {
+            is_array($metadata) => $metadata['path'] ?? null,
+            is_object($metadata) && method_exists($metadata, 'path') => $metadata->path(),
+            default => null,
+        };
+    }
+
+    private function getMetadataType(mixed $metadata): ?string
+    {
+        return match (true) {
+            is_array($metadata) => $metadata['type'] ?? 'file',
+            is_object($metadata) && method_exists($metadata, 'type') => $metadata->type(),
+            default => null,
+        };
     }
 }

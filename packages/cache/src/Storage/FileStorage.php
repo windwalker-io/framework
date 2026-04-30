@@ -11,12 +11,10 @@ use RuntimeException;
 use Throwable;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
-use function Windwalker\str;
-
 /**
  * The FilesystemStorage class.
  */
-class FileStorage implements StorageInterface
+class FileStorage implements StorageInterface, PrunableStorageInterface
 {
     use OptionAccessTrait;
 
@@ -158,6 +156,48 @@ class FileStorage implements StorageInterface
         $value = sprintf($expirationFormat, $expiration) . $value;
 
         return $this->write($key, $value);
+    }
+
+    public function prune(): int
+    {
+        $expirationFormat = $this->getExpirationFormat();
+
+        if ($expirationFormat === '') {
+            return 0;
+        }
+
+        $filePath = $this->getRoot();
+        $this->checkFilePath($filePath);
+
+        $iterator = new RegexIterator(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($filePath)
+            ),
+            '/' . preg_quote($this->getOption('extension')) . '$/i'
+        );
+
+        $pruned = 0;
+
+        /* @var  RecursiveDirectoryIterator $file */
+        foreach ($iterator as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
+            $contents = @file_get_contents($file->getRealPath());
+
+            if (!is_string($contents)) {
+                continue;
+            }
+
+            $expiration = $this->extractExpirationFromString($contents);
+
+            if ($expiration !== null && static::isExpired($expiration) && @unlink($file->getRealPath())) {
+                $pruned++;
+            }
+        }
+
+        return $pruned;
     }
 
     /**
@@ -350,7 +390,29 @@ class FileStorage implements StorageInterface
     public static function escapeRegex(string $regex): string
     {
         $regex = preg_quote($regex, '#');
+
         return str_replace('%d', '(\d+)', $regex);
+    }
+
+    protected function extractExpirationFromString(string $data): ?int
+    {
+        $expirationFormat = $this->getExpirationFormat();
+
+        if ($expirationFormat === '') {
+            return null;
+        }
+
+        preg_match(
+            '#' . static::escapeRegex($expirationFormat) . '#',
+            $data,
+            $matches
+        );
+
+        if (!isset($matches[1])) {
+            return null;
+        }
+
+        return (int) $matches[1];
     }
 
     /**
