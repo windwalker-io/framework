@@ -148,7 +148,7 @@ class FileStorageTest extends TestCase
     {
         $this->root = $path = dirname(__DIR__) . '/fixtures';
 
-        $this->instance = new FileStorage($path);
+        $this->instance = new FileStorage($path, [], 0.0);
 
         $this->instance->clear();
     }

@@ -45,7 +45,7 @@ class FlysystemStorageTest extends FileStorageTest
             )
         );
 
-        $this->instance = new FlysystemStorage($fly);
+        $this->instance = new FlysystemStorage($fly, [], 0.0);
 
         $this->instance->clear();
     }

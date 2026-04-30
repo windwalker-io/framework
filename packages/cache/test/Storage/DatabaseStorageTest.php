@@ -10,6 +10,7 @@ use Windwalker\Cache\Storage\PrunableStorageInterface;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\DriverOptions;
+use Windwalker\Database\Exception\DatabaseQueryException;
 
 class DatabaseStorageTest extends TestCase
 {
@@ -98,6 +99,125 @@ class DatabaseStorageTest extends TestCase
 
         self::assertSame(0, $this->countRows('expired', 'flower'));
         self::assertSame(1, $this->countRows('fresh', 'flower'));
+    }
+
+    public function testAutoCreateTable(): void
+    {
+        $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
+        $db = null;
+
+        try {
+            $db = new DatabaseFactory()->create(
+                'pdo_sqlite',
+                new DriverOptions(
+                    file: $dbFile
+                )
+            );
+
+            $storage = new DatabaseStorage($db, 'flower', 'auto_cache_items', [], 0.0);
+
+            self::assertTrue($storage->save('hello', 'world', time() + 60));
+            self::assertSame('world', $storage->get('hello'));
+        } finally {
+            $db?->disconnect();
+            @unlink($dbFile);
+        }
+    }
+
+    public function testTableIsCreatedLazilyOnFirstSaveFailure(): void
+    {
+        $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
+        $db = null;
+
+        try {
+            $db = new DatabaseFactory()->create(
+                'pdo_sqlite',
+                new DriverOptions(
+                    file: $dbFile
+                )
+            );
+
+            $storage = new DatabaseStorage($db, 'flower', 'lazy_cache_items', [], 0.0, true);
+
+            self::assertFalse($db->getTableManager('lazy_cache_items')->exists());
+
+            self::assertTrue($storage->save('hello', 'world', time() + 60));
+
+            self::assertTrue($db->getTableManager('lazy_cache_items')->exists());
+            self::assertSame('world', $storage->get('hello'));
+        } finally {
+            $db?->disconnect();
+            @unlink($dbFile);
+        }
+    }
+
+    public function testSaveThrowsWhenAutoCreateTableDisabled(): void
+    {
+        $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
+        $db = null;
+
+        try {
+            $db = new DatabaseFactory()->create(
+                'pdo_sqlite',
+                new DriverOptions(
+                    file: $dbFile
+                )
+            );
+
+            $storage = new DatabaseStorage($db, 'flower', 'no_auto_create_items', [], 0.0, false);
+
+            $this->expectException(DatabaseQueryException::class);
+            $storage->save('hello', 'world', time() + 60);
+        } finally {
+            $db?->disconnect();
+            @unlink($dbFile);
+        }
+    }
+
+    public function testGetThrowsWhenTableMissing(): void
+    {
+        $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
+        $db = null;
+
+        try {
+            $db = new DatabaseFactory()->create(
+                'pdo_sqlite',
+                new DriverOptions(
+                    file: $dbFile
+                )
+            );
+
+            $storage = new DatabaseStorage($db, 'flower', 'missing_items', [], 0.0);
+
+            $this->expectException(DatabaseQueryException::class);
+            $storage->get('hello');
+        } finally {
+            $db?->disconnect();
+            @unlink($dbFile);
+        }
+    }
+
+    public function testHasAndRemoveAreSilentWhenTableMissing(): void
+    {
+        $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
+        $db = null;
+
+        try {
+            $db = new DatabaseFactory()->create(
+                'pdo_sqlite',
+                new DriverOptions(
+                    file: $dbFile
+                )
+            );
+
+            $storage = new DatabaseStorage($db, 'flower', 'missing_items', [], 0.0);
+
+            self::assertFalse($storage->has('hello'));
+            self::assertFalse($storage->remove('hello'));
+        } finally {
+            $db?->disconnect();
+            @unlink($dbFile);
+        }
     }
 
     private function countRows(string $key, string $group): int

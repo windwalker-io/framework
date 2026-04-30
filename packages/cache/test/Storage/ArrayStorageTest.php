@@ -14,7 +14,7 @@ class ArrayStorageTest extends AbstractStorageTestCase
 {
     protected function setUp(): void
     {
-        $this->instance = new ArrayStorage();
+        $this->instance = new ArrayStorage(0.0);
     }
 
     /**
@@ -176,7 +176,10 @@ class ArrayStorageTest extends AbstractStorageTestCase
 
     public function testGetSetPruneProbability(): void
     {
-        self::assertSame(0.01, $this->instance->getPruneProbability());
+        $defaultStorage = new ArrayStorage();
+
+        self::assertSame(0.01, $defaultStorage->getPruneProbability());
+        self::assertSame(0.0, $this->instance->getPruneProbability());
 
         $this->instance->setPruneProbability(0.5);
         self::assertSame(0.5, $this->instance->getPruneProbability());

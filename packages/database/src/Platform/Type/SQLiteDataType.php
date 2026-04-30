@@ -32,6 +32,7 @@ class SQLiteDataType extends DataType
      * @var  array
      */
     protected static array $typeMapping = [
+        'bigint' => 'integer',
         'int' => 'integer',
         'bool' => 'smallint',
     ];
