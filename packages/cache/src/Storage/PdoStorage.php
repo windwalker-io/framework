@@ -30,8 +30,10 @@ class PdoStorage implements StorageInterface, PrunableStorageInterface, GroupedS
     {
         try {
             return $this->saveInternal($key, $value, $expiration);
-        } catch (Throwable $e) {
-            if (!$this->autoCreateTable || $this->tableExists()) {
+        } catch (PDOException $e) {
+            // Check if the error is due to a missing table using SQLSTATE codes
+            // Reference: Symfony PdoAdapter
+            if (!$this->autoCreateTable || !$this->isTableNotFoundException($e)) {
                 throw $e;
             }
 
@@ -334,6 +336,33 @@ class PdoStorage implements StorageInterface, PrunableStorageInterface, GroupedS
         } catch (Throwable) {
             return false;
         }
+    }
+
+    /**
+     * Check if the PDOException is due to a missing table.
+     *
+     * Reference: Symfony PdoAdapter
+     *
+     * Error codes for table/relation not found:
+     * - PostgreSQL: SQLSTATE 42P01
+     * - SQLite: error message contains "no such table:"
+     * - Oracle: error code 942
+     * - SQL Server: error code 208
+     * - MySQL: error code 1146
+     */
+    protected function isTableNotFoundException(PDOException $e): bool
+    {
+        $driver = (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        [$sqlState, $code] = $e->errorInfo ?? [null, $e->getCode()];
+
+        return match ($driver) {
+            'pgsql' => '42P01' === $sqlState,
+            'sqlite' => str_contains($e->getMessage(), 'no such table:'),
+            'oci' => 942 === $code,
+            'sqlsrv' => 208 === $code,
+            'mysql' => 1146 === $code,
+            default => false,
+        };
     }
 
     private function qn(string $identifier): string
