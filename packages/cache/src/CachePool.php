@@ -16,10 +16,12 @@ use Psr\SimpleCache\CacheInterface;
 use Throwable;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
+use Windwalker\Cache\Serializer\PhpFileSerializer;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
+use Windwalker\Cache\Storage\PhpFileStorage;
 use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
@@ -1125,7 +1127,13 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return;
         }
 
-        $this->storage->save($metaKey, serialize($properties), $expiration);
+        $value = serialize($properties);
+
+        if ($this->storage instanceof PhpFileStorage) {
+            $value = new PhpFileSerializer()->serialize($value);
+        }
+
+        $this->storage->save($metaKey, $value, $expiration);
     }
 
     /**
@@ -1143,6 +1151,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
         if (!is_string($serialized) || $serialized === '') {
             return;
+        }
+
+        if ($this->storage instanceof PhpFileStorage) {
+            $serialized = new PhpFileSerializer()->unserialize($serialized);
         }
 
         $properties = unserialize($serialized, ['allowed_classes' => false]);
