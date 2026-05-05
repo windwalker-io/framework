@@ -350,7 +350,7 @@ class PostgreSQLPlatform extends AbstractPlatform
 
         foreach ($this->loadIndexesStatement($table, $schema) as $row) {
             preg_match(
-                '/CREATE (UNIQUE )?INDEX [\w]+ ON [\w.]+ USING [\w]+ \(([\w, ]+)\)/',
+                '/CREATE (UNIQUE )?INDEX [\w]+ ON [\w.]+ USING [\w]+ \(\"?([\w, ]+)\"?\)/',
                 $row['indexdef'],
                 $matches
             );
@@ -625,6 +625,16 @@ class PostgreSQLPlatform extends AbstractPlatform
         return $statement;
     }
 
+    public function dropIndex(string $table, string $name, ?string $schema = null): StatementInterface
+    {
+        return $this->db->execute(
+            $this->getGrammar()::build(
+                'DROP INDEX',
+                $this->db->quoteName($schema . '.' . $name),
+            )
+        );
+    }
+
     public function setColumnComment(
         string $table,
         string $column,
@@ -664,7 +674,7 @@ class PostgreSQLPlatform extends AbstractPlatform
             ->append(
                 [
                     $this->db->quoteName($column->getColumnName()),
-                    $column->getIsNullable() ? 'SET' : 'DROP',
+                    $column->getIsNullable() ? 'DROP' : 'SET',
                     'NOT NULL',
                 ]
             );
