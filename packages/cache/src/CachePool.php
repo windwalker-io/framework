@@ -908,6 +908,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         $new = clone $this;
         $new->storage = $this->storage->withGroup($group);
 
+        if ($new->tagPool instanceof self && $new->tagPool->isGroupSupported()) {
+            $new->tagPool = $new->tagPool->withGroup($group);
+        }
+
         return $new;
     }
 
