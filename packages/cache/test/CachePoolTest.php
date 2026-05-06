@@ -794,7 +794,7 @@ class CachePoolTest extends TestCase
         self::assertEquals(1, $i);
 
         // Invalidate the tag
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         // Next fetch must recompute because the tag is stale
         $result = $this->instance->fetch('user1', $compute, 3600, 0.0, false);
@@ -835,7 +835,7 @@ class CachePoolTest extends TestCase
         );
 
         // Invalidate only 'users' tag
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         $this->instance->fetch(
             'user1',
@@ -883,7 +883,7 @@ class CachePoolTest extends TestCase
         $this->instance->fetch('item', $compute, 3600, 0.0, false);
 
         // Invalidate only tagA — item has both, so it becomes stale
-        $this->instance->invalidateTags(['tagA']);
+        $this->instance->invalidateTags('tagA');
 
         $result = $this->instance->fetch('item', $compute, 3600, 0.0, false);
 
@@ -905,7 +905,7 @@ class CachePoolTest extends TestCase
         // Store WITHOUT tags
         $this->instance->fetch('notagitem', $compute, 3600, 0.0, false);
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         // No tags in fetch — tag check is skipped, serve from cache
         $result = $this->instance->fetch('notagitem', $compute, 3600, 0.0, false);
@@ -917,7 +917,7 @@ class CachePoolTest extends TestCase
     /** @see CachePool::invalidateTags — invalidating a tag that has no items is a no-op */
     public function testInvalidateTagsWithNoItemsIsNoOp(): void
     {
-        $result = $this->instance->invalidateTags(['nonexistent_tag']);
+        $result = $this->instance->invalidateTags('nonexistent_tag');
 
         self::assertTrue($result);
     }
@@ -1038,7 +1038,7 @@ class CachePoolTest extends TestCase
         self::assertEquals(1, $i);
 
         // Invalidate via tagPool
-        $pool->invalidateTags(['users']);
+        $pool->invalidateTags('users');
 
         // Should recompute
         $result = $pool->fetch('user1', $compute, 3600, 0.0, false);
@@ -1119,7 +1119,7 @@ class CachePoolTest extends TestCase
 
         // Tag version is now cached in memory
         // Invalidate the tag
-        $pool->invalidateTags(['users']);
+        $pool->invalidateTags('users');
 
         // Fetch another item with the same tag
         // If cache wasn't cleared, it would use the OLD version and treat item as valid
@@ -1174,7 +1174,7 @@ class CachePoolTest extends TestCase
         self::assertTrue($this->instance->saveDeferred($item));
         self::assertTrue($this->instance->commit());
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         $value = $this->instance->fetch('deferred_tagged', function (CacheItem $item) use (&$i) {
             $i++;
@@ -1232,7 +1232,7 @@ class CachePoolTest extends TestCase
         self::assertEquals(1, $i);
 
         // Invalidate tags (should be a no-op)
-        $pool->invalidateTags(['users']);
+        $pool->invalidateTags('users');
 
         // Fetch again - should still use cached value (tags were ignored)
         $result2 = $pool->fetch('item1', function ($item) use (&$i) {
@@ -1330,7 +1330,7 @@ class CachePoolTest extends TestCase
         $this->instance->set('user_set', 'ORIGINAL', 3600, ['users']);
         self::assertSame('ORIGINAL', $this->instance->get('user_set'));
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         $called = 0;
         $value = $this->instance->fetch('user_set', function (CacheItem $item) use (&$called) {
@@ -1355,7 +1355,7 @@ class CachePoolTest extends TestCase
         self::assertTrue($this->instance->save($item));
         self::assertSame('ORIGINAL', $this->instance->get('user_manual'));
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         $called = 0;
         $value = $this->instance->fetch('user_manual', function (CacheItem $item) use (&$called) {
@@ -1375,7 +1375,7 @@ class CachePoolTest extends TestCase
         $this->instance->set('retagged', 'TAGGED', 3600, ['users']);
         $this->instance->set('retagged', 'UNTAGGED', 3600);
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
 
         $called = 0;
         $value = $this->instance->fetch('retagged', function () use (&$called) {
@@ -1401,10 +1401,10 @@ class CachePoolTest extends TestCase
 
         self::assertSame('V1', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
         self::assertSame('V2', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
 
-        $this->instance->invalidateTags(['users']);
+        $this->instance->invalidateTags('users');
         self::assertSame('V3', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
 
         self::assertSame(3, $i);

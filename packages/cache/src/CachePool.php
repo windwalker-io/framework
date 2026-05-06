@@ -498,10 +498,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      * stale and will be recomputed on the next fetch().
      *
      * Note: If tagPool is set to false (tags disabled), this method is a no-op.
-     *
-     * @param  string[]  $tags
      */
-    public function invalidateTags(array $tags): bool
+    public function invalidateTags(string ...$tags): bool
     {
         // If tags are disabled, do nothing
         if ($this->tagPool === false) {
