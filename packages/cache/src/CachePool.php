@@ -138,6 +138,13 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         // If metadata says the item is already expired, do not serve stale data.
         if (!$item->isHit()) {
             $this->deleteItem($key);
+            return $item;
+        }
+
+        // Check tags validity - invalidated tags make the item stale
+        if (!$this->isItemTagsValid($key)) {
+            $this->deleteItem($key);
+            $item->setIsHit(false);
         }
 
         return $item;
@@ -447,16 +454,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             // Determine whether the cached item is still usable:
             // - basic hit check
             // - tag validity (any invalidated tag makes the item stale)
-            $isHit = $item->isHit();
-
-            // Only check tags if tagPool is enabled (not false)
-            if ($isHit && $this->tagPool !== false) {
-                $storedTags = $this->getItemTags($key);
-
-                if ($storedTags !== [] && !$this->isTagValid($key, $storedTags)) {
-                    $isHit = false;
-                }
-            }
+            $isHit = $item->isHit() && $this->isItemTagsValid($key);
 
             // Item is valid and does not need early recomputation: serve it.
             if ($isHit && !$this->shouldRecomputeEarly($item, $beta)) {
@@ -769,6 +767,66 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         }
 
         return array_keys($storedVersions);
+    }
+
+    /**
+     * Check if a cache item's tags are still valid.
+     * Returns true if tagPool is disabled or if all tags are valid.
+     * Returns false if any tag has been invalidated.
+     *
+     * @param  string  $key  The cache item key to check
+     *
+     * @return bool
+     */
+    private function isItemTagsValid(string $key): bool
+    {
+        // If tags are disabled, always consider valid
+        if ($this->tagPool === false) {
+            return true;
+        }
+
+        $storedTags = $this->getItemTags($key);
+
+        // No tags means no need to validate
+        if ($storedTags === []) {
+            return true;
+        }
+
+        // Check if any tag has been invalidated
+        return $this->isTagValid($key, $storedTags);
+    }
+
+    /**
+     * Validate a CacheItem including expiration and tags.
+     *
+     * This method is useful when you want to re-validate a CacheItem after some time
+     * has passed since it was originally fetched, or when you need to explicitly verify
+     * that all associated tags are still valid.
+     *
+     * Note: This method checks the current state in storage, not just the item object's
+     * cached state. An item that was valid when fetched may become invalid if:
+     * - The item has been deleted from storage
+     * - Any of its tags have been invalidated
+     * - The item has expired
+     *
+     * @param  CacheItemInterface  $item  The cache item to validate
+     *
+     * @return bool  True if the item is still valid (exists, not expired, and tags valid), false otherwise
+     */
+    public function isItemValid(CacheItemInterface $item): bool
+    {
+        // First check if item reports itself as a hit
+        if (!$item->isHit()) {
+            return false;
+        }
+
+        // Check if item still exists in storage (may have been deleted)
+        if (!$this->storage->has($item->getKey())) {
+            return false;
+        }
+
+        // Finally check if tags are still valid
+        return $this->isItemTagsValid($item->getKey());
     }
 
     /**

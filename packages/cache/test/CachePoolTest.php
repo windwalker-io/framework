@@ -1318,9 +1318,13 @@ class CachePoolTest extends TestCase
 
     public function testWithGroupThrowsWhenStorageUnsupported(): void
     {
-        $pool = new CachePool(new NullStorage());
+        // Create a mock storage that does NOT implement GroupedStorageInterface
+        $storage = $this->createMock(StorageInterface::class);
+
+        $pool = new CachePool($storage);
 
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('does not implement');
         $pool->withGroup('flower');
     }
 
@@ -1408,5 +1412,270 @@ class CachePoolTest extends TestCase
         self::assertSame('V3', $this->instance->fetch('user_repeat', $compute, 3600, 0.0, false));
 
         self::assertSame(3, $i);
+    }
+
+    // -----------------------------------------------------------------------
+    // getItem tag validation
+    // -----------------------------------------------------------------------
+
+    /** @see CachePool::getItem — returns cache miss when tags have been invalidated */
+    public function testGetItemReturnsMissWhenTagsInvalidated(): void
+    {
+        // Save item with tags
+        $this->instance->set('tagged_item', 'VALUE', 3600, ['users', 'posts']);
+
+        // Initially should be a hit
+        $item = $this->instance->getItem('tagged_item');
+        self::assertTrue($item->isHit());
+        self::assertSame('VALUE', $item->get());
+
+        // Invalidate one of the tags
+        $this->instance->invalidateTags('users');
+
+        // Now getItem should return a miss
+        $item = $this->instance->getItem('tagged_item');
+        self::assertFalse($item->isHit(), 'getItem should return miss when any tag is invalidated');
+        self::assertNull($item->get());
+    }
+
+    /** @see CachePool::getItem — untagged items are unaffected by tag invalidation */
+    public function testGetItemUntaggedUnaffectedByInvalidation(): void
+    {
+        // Save item without tags
+        $this->instance->set('untagged_item', 'VALUE', 3600);
+
+        // Invalidate a tag
+        $this->instance->invalidateTags('users');
+
+        // Item should still be a hit
+        $item = $this->instance->getItem('untagged_item');
+        self::assertTrue($item->isHit(), 'getItem should return hit for untagged items after tag invalidation');
+        self::assertSame('VALUE', $item->get());
+    }
+
+    /** @see CachePool::getItem — validates all tags, only invalidated tags cause miss */
+    public function testGetItemValidatesAllTags(): void
+    {
+        // Save item with multiple tags
+        $this->instance->set('multi_tag_item', 'VALUE', 3600, ['tagA', 'tagB', 'tagC']);
+
+        // Initially should be a hit
+        $item = $this->instance->getItem('multi_tag_item');
+        self::assertTrue($item->isHit());
+
+        // Invalidate one tag - should cause miss
+        $this->instance->invalidateTags('tagB');
+
+        $item = $this->instance->getItem('multi_tag_item');
+        self::assertFalse($item->isHit(), 'getItem should miss when ANY tag is invalidated');
+
+        // Re-save with same tags
+        $this->instance->set('multi_tag_item', 'VALUE2', 3600, ['tagA', 'tagB', 'tagC']);
+
+        // Should be hit now
+        $item = $this->instance->getItem('multi_tag_item');
+        self::assertTrue($item->isHit());
+        self::assertSame('VALUE2', $item->get());
+    }
+
+    /** @see CachePool::getItem — cleans up stale item when tags are invalid */
+    public function testGetItemDeletesItemWhenTagsInvalid(): void
+    {
+        $storage = new ArrayStorage();
+        $pool = (new CachePool($storage))->withTagPool(new ArrayStorage());
+
+        $pool->set('cleanup_item', 'VALUE', 3600, ['users']);
+
+        // Item exists in storage
+        self::assertTrue($storage->has('cleanup_item'));
+
+        // Invalidate tag
+        $pool->invalidateTags('users');
+
+        // getItem should clean up the stale item
+        $item = $pool->getItem('cleanup_item');
+
+        self::assertFalse($item->isHit());
+        self::assertFalse($storage->has('cleanup_item'), 'getItem should delete stale item from storage');
+    }
+
+    /** @see CachePool::getItem — works correctly when tagPool is disabled */
+    public function testGetItemWithTagPoolDisabled(): void
+    {
+        $pool = (new CachePool())->withTagPool(false);
+
+        $pool->set('notag_item', 'VALUE', 3600);
+
+        $item = $pool->getItem('notag_item');
+        self::assertTrue($item->isHit());
+        self::assertSame('VALUE', $item->get());
+    }
+
+    /** @see CachePool::hasItem — respects tag invalidation via getItem */
+    public function testHasItemRespectsTagInvalidation(): void
+    {
+        $this->instance->set('has_tagged', 'VALUE', 3600, ['users']);
+
+        self::assertTrue($this->instance->hasItem('has_tagged'));
+
+        $this->instance->invalidateTags('users');
+
+        self::assertFalse($this->instance->hasItem('has_tagged'), 'hasItem should return false after tag invalidation');
+    }
+
+    // -----------------------------------------------------------------------
+    // isItemValid method
+    // -----------------------------------------------------------------------
+
+    /** @see CachePool::isItemValid — returns true for valid cached item */
+    public function testIsItemValidReturnsTrueForValidItem(): void
+    {
+        $this->instance->set('valid_item', 'VALUE', 3600, ['users']);
+
+        $item = $this->instance->getItem('valid_item');
+
+        self::assertTrue($this->instance->isItemValid($item), 'isItemValid should return true for valid cached item');
+    }
+
+    /** @see CachePool::isItemValid — returns false when item is not a hit */
+    public function testIsItemValidReturnsFalseForMissedItem(): void
+    {
+        $item = $this->instance->getItem('missing_key');
+
+        self::assertFalse($item->isHit());
+        self::assertFalse($this->instance->isItemValid($item), 'isItemValid should return false for cache miss');
+    }
+
+    /** @see CachePool::isItemValid — returns false when tags are invalidated */
+    public function testIsItemValidReturnsFalseAfterTagInvalidation(): void
+    {
+        $this->instance->set('validate_tagged', 'VALUE', 3600, ['users', 'posts']);
+
+        $item = $this->instance->getItem('validate_tagged');
+        self::assertTrue($this->instance->isItemValid($item));
+
+        // Invalidate one tag
+        $this->instance->invalidateTags('users');
+
+        // Same item object should now be invalid
+        self::assertFalse($this->instance->isItemValid($item), 'isItemValid should return false after tag invalidation');
+    }
+
+    /** @see CachePool::isItemValid — works with untagged items */
+    public function testIsItemValidWorksWithUntaggedItems(): void
+    {
+        $this->instance->set('untagged_validate', 'VALUE', 3600);
+
+        $item = $this->instance->getItem('untagged_validate');
+
+        self::assertTrue($this->instance->isItemValid($item), 'isItemValid should work with untagged items');
+
+        // Invalidate some unrelated tag
+        $this->instance->invalidateTags('users');
+
+        // Untagged item should still be valid
+        self::assertTrue($this->instance->isItemValid($item), 'Untagged items should remain valid after unrelated tag invalidation');
+    }
+
+    /** @see CachePool::isItemValid — can revalidate after time has passed */
+    public function testIsItemValidCanRevalidateAfterDelay(): void
+    {
+        $this->instance->set('delayed_check', 'VALUE', 3600, ['users']);
+
+        $item = $this->instance->getItem('delayed_check');
+        self::assertTrue($this->instance->isItemValid($item));
+
+        // Simulate some time passing and tag invalidation
+        usleep(1000);
+        $this->instance->invalidateTags('users');
+
+        // Re-validate the same item object
+        self::assertFalse($this->instance->isItemValid($item), 'isItemValid should detect invalidation even after delay');
+    }
+
+    /** @see CachePool::isItemValid — validates expired items correctly */
+    public function testIsItemValidReturnsFalseForExpiredItem(): void
+    {
+        // Create an item with a future expiration first to ensure it's saved
+        $item = $this->instance->getItem('will_expire');
+        $item->set('VALUE');
+        $item->expiresAfter(3600); // Temporarily set far future
+        $this->instance->save($item);
+
+        // Verify it's valid when not expired
+        $freshItem = $this->instance->getItem('will_expire');
+        self::assertTrue($freshItem->isHit());
+        self::assertTrue($this->instance->isItemValid($freshItem));
+
+        // Now forcefully set the expiration to the past and re-save
+        $expiredItem = $this->instance->getItem('will_expire');
+        $expiredItem->expiresAt(new \DateTime('-1 second')); // Already expired
+        $this->instance->save($expiredItem);
+
+        // Fetch again - should be expired now (no sleep needed!)
+        $item = $this->instance->getItem('will_expire');
+        self::assertFalse($item->isHit(), 'Item with past expiration should not be a hit');
+        self::assertFalse($this->instance->isItemValid($item), 'isItemValid should return false for expired item');
+    }
+
+    /** @see CachePool::isItemValid — works with tagPool disabled */
+    public function testIsItemValidWithTagPoolDisabled(): void
+    {
+        $pool = new CachePool()->withTagPool(false);
+
+        $pool->set('notag_valid', 'VALUE', 3600);
+
+        $item = $pool->getItem('notag_valid');
+
+        self::assertTrue($pool->isItemValid($item), 'isItemValid should work when tagPool is disabled');
+    }
+
+    /** @see CachePool::isItemValid — batch validation scenario */
+    public function testIsItemValidBatchValidation(): void
+    {
+        $this->instance->set('item1', 'V1', 3600, ['users']);
+        $this->instance->set('item2', 'V2', 3600, ['posts']);
+        $this->instance->set('item3', 'V3', 3600, ['users', 'posts']);
+
+        $items = [
+            'item1' => $this->instance->getItem('item1'),
+            'item2' => $this->instance->getItem('item2'),
+            'item3' => $this->instance->getItem('item3'),
+        ];
+
+        // All should be valid initially
+        foreach ($items as $key => $item) {
+            self::assertTrue($this->instance->isItemValid($item), "$key should be valid initially");
+        }
+
+        // Invalidate 'users' tag
+        $this->instance->invalidateTags('users');
+
+        // item1 and item3 should be invalid, item2 should still be valid
+        self::assertFalse($this->instance->isItemValid($items['item1']), 'item1 should be invalid after users tag invalidation');
+        self::assertTrue($this->instance->isItemValid($items['item2']), 'item2 should still be valid (only has posts tag)');
+        self::assertFalse($this->instance->isItemValid($items['item3']), 'item3 should be invalid (has users tag)');
+    }
+
+    /** @see CachePool::isItemValid + getItem — validation consistency */
+    public function testIsItemValidConsistentWithGetItem(): void
+    {
+        $this->instance->set('consistency_check', 'VALUE', 3600, ['users']);
+
+        $item1 = $this->instance->getItem('consistency_check');
+        self::assertTrue($item1->isHit());
+        self::assertTrue($this->instance->isItemValid($item1));
+
+        $this->instance->invalidateTags('users');
+
+        // Fresh getItem should return miss (and delete the stale item)
+        $item2 = $this->instance->getItem('consistency_check');
+        self::assertFalse($item2->isHit(), 'Fresh getItem should return miss after tag invalidation');
+        self::assertFalse($this->instance->isItemValid($item2), 'isItemValid should return false for missed item');
+
+        // Old item object still shows as hit (it's a snapshot from before invalidation)
+        // but isItemValid re-checks storage and should return false (item was deleted)
+        self::assertTrue($item1->isHit(), 'Old CacheItem object retains its original isHit state (snapshot)');
+        self::assertFalse($this->instance->isItemValid($item1), 'isItemValid should return false (item no longer in storage)');
     }
 }
