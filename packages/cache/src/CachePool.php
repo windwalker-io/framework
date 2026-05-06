@@ -1126,9 +1126,15 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 $storage = $this->storage;
             }
 
+            $serializer = new PhpSerializer();
+
+            if ($storage instanceof PhpFileStorage) {
+                $serializer = new PhpFileSerializer();
+            }
+
             $pool = new CachePool(
                 $storage,
-                new PhpSerializer(),
+                $serializer,
                 $this->logger,
                 null,
                 false
