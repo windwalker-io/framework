@@ -13,9 +13,8 @@ use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\JsonAssocSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
-use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
-use Windwalker\Cache\Storage\NullStorage;
+use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Test\Traits\TestAccessorTrait;
 
 /**
@@ -72,7 +71,7 @@ class CachePoolTest extends TestCase
         $item->expiresAfter(30);
 
         $storageMock = $this->createMock(StorageInterface::class);
-        $storageMock->expects(self::once())
+        $storageMock->expects($this->once())
             ->method('save')
             ->with(
                 'foo',
@@ -80,7 +79,7 @@ class CachePoolTest extends TestCase
                 self::callback(static fn(int $expiration) => abs($expiration - (time() + 30)) <= 1)
             )
             ->willReturn(true);
-        $storageMock->expects(self::once())
+        $storageMock->expects($this->once())
             ->method('remove')
             ->with(self::callback(static fn(string $k) => self::isItemMetadataKey($k)))
             ->willReturn(true);
@@ -108,7 +107,7 @@ class CachePoolTest extends TestCase
     public function testGetItem(): void
     {
         $storageMock = $this->createMock(StorageInterface::class);
-        $storageMock->expects(self::exactly(2))
+        $storageMock->expects($this->exactly(2))
             ->method('has')
             ->willReturnCallback(
                 static fn(string $key): bool => match (true) {
@@ -117,7 +116,7 @@ class CachePoolTest extends TestCase
                     default => false,
                 }
             );
-        $storageMock->expects(self::once())
+        $storageMock->expects($this->once())
             ->method('get')
             ->with('flower')
             ->willReturn('Sakura');
@@ -136,7 +135,7 @@ class CachePoolTest extends TestCase
     {
         $storageMock = $this->createMock(StorageInterface::class);
         $hasCalls = 0;
-        $storageMock->expects(self::exactly(2))
+        $storageMock->expects($this->exactly(2))
             ->method('has')
             ->with('flip')
             ->willReturnCallback(static function () use (&$hasCalls): bool {
@@ -144,7 +143,7 @@ class CachePoolTest extends TestCase
 
                 return $hasCalls === 1;
             });
-        $storageMock->expects(self::once())
+        $storageMock->expects($this->once())
             ->method('get')
             ->with('flip')
             ->willReturn(null);
@@ -156,7 +155,7 @@ class CachePoolTest extends TestCase
         self::assertNull($item->get());
     }
 
-    /** @see CachePool::getItem — expired metadata causes stale entry cleanup */
+    /** @see CachePool::getItem — expired metadata results in cache miss (lazy deletion) */
     public function testGetItemDeletesStaleEntryWhenMetadataIsExpired(): void
     {
         $meta = serialize(
@@ -167,7 +166,7 @@ class CachePoolTest extends TestCase
         );
 
         $storageMock = $this->createMock(StorageInterface::class);
-        $storageMock->expects(self::exactly(2))
+        $storageMock->expects($this->exactly(2))
             ->method('has')
             ->willReturnCallback(
                 static fn(string $key): bool => match (true) {
@@ -176,7 +175,7 @@ class CachePoolTest extends TestCase
                     default => false,
                 }
             );
-        $storageMock->expects(self::exactly(2))
+        $storageMock->expects($this->exactly(2))
             ->method('get')
             ->willReturnCallback(
                 static fn(string $key): string => match (true) {
@@ -185,21 +184,17 @@ class CachePoolTest extends TestCase
                     default => '',
                 }
             );
-        $removed = [];
-        $storageMock->expects(self::exactly(2))
-            ->method('remove')
-            ->willReturnCallback(static function (string $key) use (&$removed): bool {
-                $removed[] = $key;
 
-                return true;
-            });
+        // With lazy deletion, getItem should NOT call remove()
+        $storageMock->expects($this->never())
+            ->method('remove');
 
-        $pool = (new CachePool())->withStorage($storageMock)->withTagPool(false);
+        $pool = new CachePool()->withStorage($storageMock)->withTagPool(false);
         $item = $pool->getItem('stale');
 
-        self::assertFalse($item->isHit());
-        self::assertContains('stale', $removed);
-        self::assertTrue((bool) array_filter($removed, static fn(string $k) => self::isItemMetadataKey($k)));
+        // Item should be marked as miss due to expired metadata
+        self::assertFalse($item->isHit(), 'Expired item should be marked as miss');
+        // But the item remains in storage (lazy deletion - storage will clean it up later)
     }
 
     public function testGetItemWithSerializer(): void
@@ -223,7 +218,7 @@ class CachePoolTest extends TestCase
     {
         $storageMock = $this->createMock(StorageInterface::class);
         $removed = [];
-        $storageMock->expects(self::exactly(2))
+        $storageMock->expects($this->exactly(2))
             ->method('remove')
             ->willReturnCallback(static function (string $key) use (&$removed): bool {
                 $removed[] = $key;
@@ -239,7 +234,7 @@ class CachePoolTest extends TestCase
         self::assertTrue((bool) array_filter($removed, static fn(string $k) => self::isItemMetadataKey($k)));
 
         $storageMock = $this->createMock(StorageInterface::class);
-        $storageMock->expects(self::once())
+        $storageMock->expects($this->once())
             ->method('remove')
             ->with('hello')
             ->willThrowException(new RuntimeException());
@@ -1300,7 +1295,7 @@ class CachePoolTest extends TestCase
         $pool = new CachePool(new ArrayStorage(0.0));
 
         $flower = $pool->withGroup('flower');
-        $tree   = $pool->withGroup('tree');
+        $tree = $pool->withGroup('tree');
 
         self::assertNotSame($pool, $flower);
         self::assertNotSame($flower, $tree);
@@ -1313,7 +1308,7 @@ class CachePoolTest extends TestCase
         $tree->set('same-key', 'TREE');
 
         self::assertSame('FLOWER', $flower->get('same-key'));
-        self::assertSame('TREE',   $tree->get('same-key'));
+        self::assertSame('TREE', $tree->get('same-key'));
         self::assertNull($pool->get('same-key'));
     }
 
@@ -1479,7 +1474,7 @@ class CachePoolTest extends TestCase
         self::assertSame('VALUE2', $item->get());
     }
 
-    /** @see CachePool::getItem — cleans up stale item when tags are invalid */
+    /** @see CachePool::getItem — marks stale item as miss (lazy deletion) */
     public function testGetItemDeletesItemWhenTagsInvalid(): void
     {
         $storage = new ArrayStorage();
@@ -1493,11 +1488,14 @@ class CachePoolTest extends TestCase
         // Invalidate tag
         $pool->invalidateTags('users');
 
-        // getItem should clean up the stale item
+        // getItem should mark item as miss but NOT delete it (lazy deletion)
         $item = $pool->getItem('cleanup_item');
 
-        self::assertFalse($item->isHit());
-        self::assertFalse($storage->has('cleanup_item'), 'getItem should delete stale item from storage');
+        self::assertFalse($item->isHit(), 'Item with invalidated tags should be marked as miss');
+        self::assertTrue(
+            $storage->has('cleanup_item'),
+            'With lazy deletion, item remains in storage for later cleanup'
+        );
     }
 
     /** @see CachePool::getItem — works correctly when tagPool is disabled */
@@ -1559,7 +1557,10 @@ class CachePoolTest extends TestCase
         $this->instance->invalidateTags('users');
 
         // Same item object should now be invalid
-        self::assertFalse($this->instance->isItemValid($item), 'isItemValid should return false after tag invalidation');
+        self::assertFalse(
+            $this->instance->isItemValid($item),
+            'isItemValid should return false after tag invalidation'
+        );
     }
 
     /** @see CachePool::isItemValid — works with untagged items */
@@ -1575,7 +1576,10 @@ class CachePoolTest extends TestCase
         $this->instance->invalidateTags('users');
 
         // Untagged item should still be valid
-        self::assertTrue($this->instance->isItemValid($item), 'Untagged items should remain valid after unrelated tag invalidation');
+        self::assertTrue(
+            $this->instance->isItemValid($item),
+            'Untagged items should remain valid after unrelated tag invalidation'
+        );
     }
 
     /** @see CachePool::isItemValid — can revalidate after time has passed */
@@ -1591,7 +1595,10 @@ class CachePoolTest extends TestCase
         $this->instance->invalidateTags('users');
 
         // Re-validate the same item object
-        self::assertFalse($this->instance->isItemValid($item), 'isItemValid should detect invalidation even after delay');
+        self::assertFalse(
+            $this->instance->isItemValid($item),
+            'isItemValid should detect invalidation even after delay'
+        );
     }
 
     /** @see CachePool::isItemValid — validates expired items correctly */
@@ -1653,8 +1660,14 @@ class CachePoolTest extends TestCase
         $this->instance->invalidateTags('users');
 
         // item1 and item3 should be invalid, item2 should still be valid
-        self::assertFalse($this->instance->isItemValid($items['item1']), 'item1 should be invalid after users tag invalidation');
-        self::assertTrue($this->instance->isItemValid($items['item2']), 'item2 should still be valid (only has posts tag)');
+        self::assertFalse(
+            $this->instance->isItemValid($items['item1']),
+            'item1 should be invalid after users tag invalidation'
+        );
+        self::assertTrue(
+            $this->instance->isItemValid($items['item2']),
+            'item2 should still be valid (only has posts tag)'
+        );
         self::assertFalse($this->instance->isItemValid($items['item3']), 'item3 should be invalid (has users tag)');
     }
 
@@ -1677,7 +1690,10 @@ class CachePoolTest extends TestCase
         // Old item object still shows as hit (it's a snapshot from before invalidation)
         // but isItemValid re-checks storage and should return false (item was deleted)
         self::assertTrue($item1->isHit(), 'Old CacheItem object retains its original isHit state (snapshot)');
-        self::assertFalse($this->instance->isItemValid($item1), 'isItemValid should return false (item no longer in storage)');
+        self::assertFalse(
+            $this->instance->isItemValid($item1),
+            'isItemValid should return false (item no longer in storage)'
+        );
     }
 
     /** @see CachePool::getItem — missing tag envelope makes item invalid */
@@ -1737,6 +1753,7 @@ class CachePoolTest extends TestCase
         $result = $pool->fetch('compute_item', function ($item) use (&$computeCount) {
             $computeCount++;
             $item->tags('users');
+
             return 'VALUE_' . $computeCount;
         }, 3600, 0.0, false);
 
@@ -1747,6 +1764,7 @@ class CachePoolTest extends TestCase
         $result = $pool->fetch('compute_item', function ($item) use (&$computeCount) {
             $computeCount++;
             $item->tags('users');
+
             return 'VALUE_' . $computeCount;
         }, 3600, 0.0, false);
 
@@ -1761,6 +1779,7 @@ class CachePoolTest extends TestCase
         $result = $pool->fetch('compute_item', function ($item) use (&$computeCount) {
             $computeCount++;
             $item->tags('users');
+
             return 'VALUE_' . $computeCount;
         }, 3600, 0.0, false);
 
@@ -1845,6 +1864,7 @@ class CachePoolTest extends TestCase
         $pool->fetch('item', function ($item) use (&$computeCount) {
             $computeCount++;
             $item->tags('users');
+
             return 'V' . $computeCount;
         }, 3600, 0.0, false);
 
@@ -1858,6 +1878,7 @@ class CachePoolTest extends TestCase
         $result = $pool->fetch('item', function ($item) use (&$computeCount) {
             $computeCount++;
             $item->tags('users');
+
             return 'V' . $computeCount;
         }, 3600, 0.0, false);
 
@@ -1870,6 +1891,7 @@ class CachePoolTest extends TestCase
         $result = $pool->fetch('item', function ($item) use (&$computeCount) {
             $computeCount++;
             $item->tags('users');
+
             return 'V' . $computeCount;
         }, 3600, 0.0, false);
 

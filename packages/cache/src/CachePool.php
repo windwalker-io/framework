@@ -115,6 +115,15 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
     /**
      * @inheritDoc
+     *
+     * Note: This method does not actively delete expired or invalid items from storage.
+     * It only marks them as cache misses. Item cleanup relies on:
+     * - Storage-level expiration (TTL enforcement)
+     * - Periodic pruning (e.g., ArrayStorage::prune())
+     * - Explicit deleteItem() calls
+     *
+     * This approach keeps getItem() as a read-only operation, improving performance
+     * and avoiding race conditions in concurrent environments.
      */
     public function getItem(string $key): CacheItem
     {
@@ -136,14 +145,14 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         $this->hydrateItemMetadata($item);
 
         // If metadata says the item is already expired, do not serve stale data.
+        // Note: We don't delete the item here; storage-level TTL and pruning will handle cleanup.
         if (!$item->isHit()) {
-            $this->deleteItem($key);
             return $item;
         }
 
         // Check tags validity - invalidated tags make the item stale
+        // Note: We don't delete the item here; it will be cleaned up later.
         if (!$this->isItemTagsValid($key)) {
-            $this->deleteItem($key);
             $item->setIsHit(false);
         }
 
