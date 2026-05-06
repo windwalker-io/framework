@@ -36,7 +36,7 @@ class CacheItem implements CacheItemInterface
     /**
      * The real expiry timestamp (seconds with microseconds).
      */
-    public protected(set) float $realExpiry = 0.0;
+    public protected(set) ?float $realExpiry = null;
 
     /**
      * The computation time in milliseconds.

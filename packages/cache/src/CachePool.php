@@ -895,7 +895,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     public function withGroup(string $group): static
     {
-        if (!$this->storage instanceof GroupedStorageInterface) {
+        if (!$this->isGroupSupported()) {
             throw new \LogicException(
                 sprintf(
                     'Storage class %s does not implement %s.',
@@ -1183,5 +1183,13 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         }
 
         $item->setCtime((int) $ctime);
+    }
+
+    /**
+     * @return  bool
+     */
+    public function isGroupSupported(): bool
+    {
+        return $this->storage instanceof GroupedStorageInterface;
     }
 }
