@@ -256,12 +256,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
             if ($this->tagPool !== false) {
                 $tags = $item->getTags();
-
-                if ($tags !== []) {
-                    $this->saveTagEnvelope($item->getKey(), $tags, $expiration);
-                } else {
-                    $this->tagPool->deleteItem($this->tagEnvelopeKey($item->getKey()));
-                }
+                // Always save envelope (even empty) to distinguish 'no tags' from 'envelope missing'
+                $this->saveTagEnvelope($item->getKey(), $tags, $expiration);
             }
 
             return true;
@@ -772,7 +768,10 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * Check if a cache item's tags are still valid.
      * Returns true if tagPool is disabled or if all tags are valid.
-     * Returns false if any tag has been invalidated.
+     * Returns false if any tag has been invalidated or if envelope is missing.
+     *
+     * Since we always save tag envelopes (even empty ones), a missing envelope
+     * indicates the item is stale or from before envelope enforcement.
      *
      * @param  string  $key  The cache item key to check
      *
@@ -785,14 +784,28 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return true;
         }
 
-        $storedTags = $this->getItemTags($key);
+        $envKey = $this->tagEnvelopeKey($key);
+        $envelopeItem = $this->tagPool->getItem($envKey);
 
-        // No tags means no need to validate
-        if ($storedTags === []) {
+        // If envelope doesn't exist, item is stale or pre-dates envelope enforcement
+        if (!$envelopeItem->isHit()) {
+            return false;
+        }
+
+        $storedVersions = $envelopeItem->get();
+
+        // Envelope must be an array (corrupted data is invalid)
+        if (!is_array($storedVersions)) {
+            return false;
+        }
+
+        // Empty envelope (no tags) is valid
+        if ($storedVersions === []) {
             return true;
         }
 
-        // Check if any tag has been invalidated
+        // Has tags - validate them
+        $storedTags = array_keys($storedVersions);
         return $this->isTagValid($key, $storedTags);
     }
 

@@ -122,7 +122,8 @@ class CachePoolTest extends TestCase
             ->with('flower')
             ->willReturn('Sakura');
 
-        $this->instance = $this->instance->withStorage($storageMock);
+        // Disable tagPool for this test since we're only testing basic storage functionality
+        $this->instance = $this->instance->withStorage($storageMock)->withTagPool(false);
 
         $item = $this->instance->getItem('flower');
 
@@ -1677,5 +1678,283 @@ class CachePoolTest extends TestCase
         // but isItemValid re-checks storage and should return false (item was deleted)
         self::assertTrue($item1->isHit(), 'Old CacheItem object retains its original isHit state (snapshot)');
         self::assertFalse($this->instance->isItemValid($item1), 'isItemValid should return false (item no longer in storage)');
+    }
+
+    /** @see CachePool::getItem — missing tag envelope makes item invalid */
+    public function testGetItemWithMissingTagEnvelopeIsInvalid(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save item with tags
+        $pool->set('tagged_item', 'VALUE', 3600, ['users']);
+        self::assertTrue($pool->hasItem('tagged_item'), 'Item should be valid initially');
+
+        // Manually delete the tag envelope (simulating corruption or accidental deletion)
+        $envKey = '--ww_tag_env--' . hash('sha1', 'tagged_item');
+        $tagStorage->remove($envKey);
+
+        // Item should now be invalid because envelope is missing
+        self::assertFalse($pool->hasItem('tagged_item'), 'Item with missing tag envelope should be invalid');
+
+        $item = $pool->getItem('tagged_item');
+        self::assertFalse($item->isHit(), 'getItem should return miss when tag envelope is missing');
+    }
+
+    /** @see CachePool::save — items without tags get empty envelope */
+    public function testItemsWithoutTagsGetEmptyEnvelope(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save item without tags
+        $pool->set('no_tags', 'VALUE', 3600);
+
+        // Envelope should exist (even if empty)
+        $envKey = '--ww_tag_env--' . hash('sha1', 'no_tags');
+        self::assertTrue($tagStorage->has($envKey), 'Items without tags should have an empty envelope');
+
+        // Item should be valid
+        self::assertTrue($pool->hasItem('no_tags'));
+
+        // Invalidating unrelated tags should not affect it
+        $pool->invalidateTags('users');
+        self::assertTrue($pool->hasItem('no_tags'), 'Items without tags should be unaffected by tag invalidation');
+    }
+
+    /** @see CachePool::fetch — missing envelope forces recomputation */
+    public function testFetchWithMissingEnvelopeRecomputes(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        $computeCount = 0;
+
+        // First fetch - computes and saves with tags
+        $result = $pool->fetch('compute_item', function ($item) use (&$computeCount) {
+            $computeCount++;
+            $item->tags('users');
+            return 'VALUE_' . $computeCount;
+        }, 3600, 0.0, false);
+
+        self::assertSame('VALUE_1', $result);
+        self::assertEquals(1, $computeCount);
+
+        // Second fetch - should use cache
+        $result = $pool->fetch('compute_item', function ($item) use (&$computeCount) {
+            $computeCount++;
+            $item->tags('users');
+            return 'VALUE_' . $computeCount;
+        }, 3600, 0.0, false);
+
+        self::assertSame('VALUE_1', $result);
+        self::assertEquals(1, $computeCount, 'Should not recompute when envelope exists');
+
+        // Delete envelope
+        $envKey = '--ww_tag_env--' . hash('sha1', 'compute_item');
+        $tagStorage->remove($envKey);
+
+        // Third fetch - should recompute because envelope is missing
+        $result = $pool->fetch('compute_item', function ($item) use (&$computeCount) {
+            $computeCount++;
+            $item->tags('users');
+            return 'VALUE_' . $computeCount;
+        }, 3600, 0.0, false);
+
+        self::assertSame('VALUE_2', $result);
+        self::assertEquals(2, $computeCount, 'Should recompute when envelope is missing');
+    }
+
+    /** @see CachePool::save — switching from tags to no tags updates envelope */
+    public function testSwitchingFromTagsToNoTagsUpdatesEnvelope(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save with tags
+        $pool->set('changeable', 'VALUE1', 3600, ['users']);
+
+        $envKey = '--ww_tag_env--' . hash('sha1', 'changeable');
+        self::assertTrue($tagStorage->has($envKey), 'Item with tags should have envelope');
+
+        // Get envelope through tagPool to unserialize it properly
+        $tagPool = $pool->getTagPool();
+        $envelopeItem = $tagPool->getItem($envKey);
+        self::assertTrue($envelopeItem->isHit());
+        $envelope = $envelopeItem->get();
+        self::assertIsArray($envelope, 'Envelope should be an array');
+        self::assertNotEmpty($envelope, 'Envelope should contain tag versions');
+
+        // Invalidate tags - should make item invalid
+        $pool->invalidateTags('users');
+        self::assertFalse($pool->hasItem('changeable'), 'Item should be invalid after tag invalidation');
+
+        // Re-save without tags
+        $pool->set('changeable', 'VALUE2', 3600);
+
+        // Envelope should now be empty (no tags)
+        $envelopeItem = $tagPool->getItem($envKey);
+        self::assertTrue($envelopeItem->isHit());
+        $envelope = $envelopeItem->get();
+        self::assertIsArray($envelope, 'Item should still have envelope');
+        self::assertEmpty($envelope, 'Envelope should be empty (no tags)');
+
+        // Item should be valid and unaffected by tag invalidation
+        self::assertTrue($pool->hasItem('changeable'));
+        $pool->invalidateTags('users');
+        self::assertTrue($pool->hasItem('changeable'), 'Item without tags should be unaffected');
+    }
+
+    /** @see CachePool::getItem — corrupted envelope (non-array) makes item invalid */
+    public function testGetItemWithCorruptedEnvelopeIsInvalid(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save normal item
+        $pool->set('corrupted', 'VALUE', 3600, ['users']);
+        self::assertTrue($pool->hasItem('corrupted'));
+
+        // Corrupt the envelope by saving invalid data through tagPool
+        $tagPool = $pool->getTagPool();
+        $envKey = '--ww_tag_env--' . hash('sha1', 'corrupted');
+        $envItem = $tagPool->getItem($envKey);
+        $envItem->set('not_an_array'); // Invalid data
+        $envItem->expiresAfter(3600);
+        $tagPool->save($envItem);
+
+        // Item should be invalid because envelope is corrupted
+        self::assertFalse($pool->hasItem('corrupted'), 'Item with corrupted envelope should be invalid');
+    }
+
+    /** @see CachePool::invalidateTags — works correctly after envelope deletion and restoration */
+    public function testInvalidateTagsAfterEnvelopeRestoration(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        $computeCount = 0;
+
+        // Initial save with tags
+        $pool->fetch('item', function ($item) use (&$computeCount) {
+            $computeCount++;
+            $item->tags('users');
+            return 'V' . $computeCount;
+        }, 3600, 0.0, false);
+
+        self::assertEquals(1, $computeCount);
+
+        // Delete envelope - forces recomputation
+        $envKey = '--ww_tag_env--' . hash('sha1', 'item');
+        $tagStorage->remove($envKey);
+
+        // Fetch again - recomputes and creates new envelope
+        $result = $pool->fetch('item', function ($item) use (&$computeCount) {
+            $computeCount++;
+            $item->tags('users');
+            return 'V' . $computeCount;
+        }, 3600, 0.0, false);
+
+        self::assertSame('V2', $result);
+        self::assertEquals(2, $computeCount);
+
+        // Now invalidate tags - should work correctly with restored envelope
+        $pool->invalidateTags('users');
+
+        $result = $pool->fetch('item', function ($item) use (&$computeCount) {
+            $computeCount++;
+            $item->tags('users');
+            return 'V' . $computeCount;
+        }, 3600, 0.0, false);
+
+        self::assertSame('V3', $result);
+        self::assertEquals(3, $computeCount, 'Should recompute after tag invalidation');
+    }
+
+    /** @see CachePool::isItemValid — detects missing envelope */
+    public function testIsItemValidDetectsMissingEnvelope(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save item with tags
+        $pool->set('validate_me', 'VALUE', 3600, ['posts']);
+
+        $item = $pool->getItem('validate_me');
+        self::assertTrue($item->isHit());
+        self::assertTrue($pool->isItemValid($item), 'Item should be valid with envelope');
+
+        // Delete envelope
+        $envKey = '--ww_tag_env--' . hash('sha1', 'validate_me');
+        $tagStorage->remove($envKey);
+
+        // isItemValid should detect missing envelope
+        self::assertFalse($pool->isItemValid($item), 'isItemValid should detect missing envelope');
+
+        // Fresh getItem should also detect it
+        $freshItem = $pool->getItem('validate_me');
+        self::assertFalse($freshItem->isHit(), 'Fresh getItem should miss when envelope missing');
+    }
+
+    /** @see CachePool::deleteItem — also deletes envelope */
+    public function testDeleteItemAlsoRemovesEnvelope(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save items with and without tags
+        $pool->set('with_tags', 'V1', 3600, ['users']);
+        $pool->set('without_tags', 'V2', 3600);
+
+        $envKeyWithTags = '--ww_tag_env--' . hash('sha1', 'with_tags');
+        $envKeyWithoutTags = '--ww_tag_env--' . hash('sha1', 'without_tags');
+
+        // Both should have envelopes
+        self::assertTrue($tagStorage->has($envKeyWithTags));
+        self::assertTrue($tagStorage->has($envKeyWithoutTags));
+
+        // Delete items
+        $pool->deleteItem('with_tags');
+        $pool->deleteItem('without_tags');
+
+        // Envelopes should be deleted too
+        self::assertFalse($tagStorage->has($envKeyWithTags), 'Envelope should be deleted with item');
+        self::assertFalse($tagStorage->has($envKeyWithoutTags), 'Envelope should be deleted with item');
+    }
+
+    /** @see CachePool::getMultiple — respects missing envelopes */
+    public function testGetMultipleRespectsEnvelopeLogic(): void
+    {
+        $mainStorage = new ArrayStorage();
+        $tagStorage = new ArrayStorage();
+        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+
+        // Save multiple items
+        $pool->set('item1', 'V1', 3600, ['users']);
+        $pool->set('item2', 'V2', 3600);
+        $pool->set('item3', 'V3', 3600, ['posts']);
+
+        // All should be accessible
+        $values = iterator_to_array($pool->getMultiple(['item1', 'item2', 'item3']));
+        self::assertCount(3, $values);
+
+        // Delete envelope for item1
+        $envKey1 = '--ww_tag_env--' . hash('sha1', 'item1');
+        $tagStorage->remove($envKey1);
+
+        // item1 should not be returned (missing envelope), others should be fine
+        $values = iterator_to_array($pool->getMultiple(['item1', 'item2', 'item3'], 'DEFAULT'));
+
+        self::assertSame('DEFAULT', $values['item1'], 'Item with missing envelope should return default');
+        self::assertSame('V2', $values['item2'], 'Item without tags should work');
+        self::assertSame('V3', $values['item3'], 'Item with valid envelope should work');
     }
 }
