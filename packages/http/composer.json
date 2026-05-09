@@ -29,7 +29,8 @@
         "mikey179/vfsstream": "^1.6",
         "windwalker/test": "^4.0",
         "rize/uri-template": "^0.3.5||^0.4.0",
-        "asika/better-units": "^0.1.1"
+        "asika/better-units": "^0.1.1",
+        "symfony/process": "^6.0||^7.0||^8.0"
     },
     "minimum-stability": "beta",
     "autoload": {
