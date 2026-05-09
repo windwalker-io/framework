@@ -10,6 +10,7 @@ use Windwalker\Cache\CacheItem;
 use Windwalker\Cache\CachePool;
 use Windwalker\Cache\TaggedCachePool;
 use Windwalker\Cache\Exception\RuntimeException;
+use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
 
 class TaggedCachePoolTest extends TestCase
@@ -1078,6 +1079,136 @@ class TaggedCachePoolTest extends TestCase
         // Envelopes should be deleted too
         self::assertFalse($tagStorage->has($envKeyWithTags), 'Envelope should be deleted with item');
         self::assertFalse($tagStorage->has($envKeyWithoutTags), 'Envelope should be deleted with item');
+    }
+
+    // -----------------------------------------------------------------------
+    // withGroup propagation
+    // -----------------------------------------------------------------------
+
+    /**
+     * Regression: withGroup() must propagate the group to the tagPool even when the tagPool
+     * is a plain CachePool (not a TaggedCachePool).
+     *
+     * Before the fix the condition was `$new->tagPool instanceof self`, which was always false
+     * for a plain CachePool tagPool, so the group was never applied to it.
+     * As a result every group-scoped pool shared the *same* ungrouped tagPool, meaning that
+     * invalidating a tag in one group would silently bust items in all other groups.
+     *
+     * @see TaggedCachePool::withGroup
+     */
+    public function testWithGroupPropagatesGroupToPlainCachePoolTagPool(): void
+    {
+        // Passing an ArrayStorage lets TaggedCachePool wrap it in a CachePool with PhpSerializer
+        // (via applyTagPool). That internal tagPool is a plain CachePool – not a TaggedCachePool –
+        // which is the case that was broken before the fix.
+        $pool = new TaggedCachePool(new ArrayStorage(0.0), tagPool: new ArrayStorage(0.0));
+
+        $g1 = $pool->withGroup('g1');
+        $g2 = $pool->withGroup('g2');
+
+        $calls = ['g1' => 0, 'g2' => 0];
+
+        // Populate both groups with tagged items.
+        $g1->fetch('item', function ($item) use (&$calls) {
+            $calls['g1']++;
+            $item->tags('users');
+
+            return 'G1_V1';
+        }, 3600, 0.0, false);
+
+        $g2->fetch('item', function ($item) use (&$calls) {
+            $calls['g2']++;
+            $item->tags('users');
+
+            return 'G2_V1';
+        }, 3600, 0.0, false);
+
+        self::assertSame(1, $calls['g1']);
+        self::assertSame(1, $calls['g2']);
+
+        // Invalidate the 'users' tag *only* in group g1.
+        $g1->invalidateTags('users');
+
+        // g1 must recompute (its tag was invalidated).
+        $result = $g1->fetch('item', function ($item) use (&$calls) {
+            $calls['g1']++;
+            $item->tags('users');
+
+            return 'G1_V2';
+        }, 3600, 0.0, false);
+
+        self::assertSame('G1_V2', $result, 'g1 item must be recomputed after tag invalidation');
+        self::assertSame(2, $calls['g1']);
+
+        // g2 must NOT be affected — its tagPool is independently scoped.
+        $result = $g2->fetch('item', function ($item) use (&$calls) {
+            $calls['g2']++;
+            $item->tags('users');
+
+            return 'G2_V2';
+        }, 3600, 0.0, false);
+
+        self::assertSame(
+            'G2_V1',
+            $result,
+            'g2 item must NOT be busted when the tag is invalidated in g1 only'
+        );
+        self::assertSame(
+            1,
+            $calls['g2'],
+            'g2 handler must not be called: group isolation requires a separate tagPool per group'
+        );
+    }
+
+    /**
+     * When the tagPool itself is a TaggedCachePool the group must still be propagated
+     * (the existing `instanceof self` path that was always correct).
+     *
+     * @see TaggedCachePool::withGroup
+     */
+    public function testWithGroupPropagatesGroupWhenTagPoolIsTaggedCachePool(): void
+    {
+        // TaggedCachePool used as tagPool must use PhpSerializer so it can store
+        // the array tag-envelope produced by the outer TaggedCachePool.
+        $tagPool = new TaggedCachePool(new ArrayStorage(0.0), serializer: new PhpSerializer());
+        $pool = new TaggedCachePool(new ArrayStorage(0.0), tagPool: $tagPool);
+        $g1 = $pool->withGroup('g1');
+        $g2 = $pool->withGroup('g2');
+
+        $calls = ['g1' => 0, 'g2' => 0];
+
+        $g1->fetch('key', function ($item) use (&$calls) {
+            $calls['g1']++;
+            $item->tags('t');
+
+            return 'G1_V1';
+        }, 3600, 0.0, false);
+
+        $g2->fetch('key', function ($item) use (&$calls) {
+            $calls['g2']++;
+            $item->tags('t');
+
+            return 'G2_V1';
+        }, 3600, 0.0, false);
+
+        $g1->invalidateTags('t');
+
+        $g1->fetch('key', function ($item) use (&$calls) {
+            $calls['g1']++;
+            $item->tags('t');
+
+            return 'G1_V2';
+        }, 3600, 0.0, false);
+
+        $g2->fetch('key', function ($item) use (&$calls) {
+            $calls['g2']++;
+            $item->tags('t');
+
+            return 'G2_V2';
+        }, 3600, 0.0, false);
+
+        self::assertSame(2, $calls['g1'], 'g1 must recompute after tag invalidation');
+        self::assertSame(1, $calls['g2'], 'g2 must not be affected by g1 tag invalidation');
     }
 
     /** @see CachePool::getMultiple — respects missing envelopes */
