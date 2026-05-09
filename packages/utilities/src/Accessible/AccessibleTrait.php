@@ -20,15 +20,6 @@ trait AccessibleTrait
 {
     use SimpleAccessibleTrait;
 
-    /**
-     * reset
-     *
-     * @param  array  $storage
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function reset(array $storage = []): static
     {
         $this->storage = $storage;

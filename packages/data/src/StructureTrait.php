@@ -12,11 +12,6 @@ use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\str;
 
-/**
- * The Structure class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait StructureTrait
 {
     /**

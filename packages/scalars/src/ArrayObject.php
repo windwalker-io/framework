@@ -28,8 +28,8 @@ use function Windwalker\str;
  */
 class ArrayObject implements AccessibleInterface
 {
-    use MarcoableTrait;
     use AccessibleTrait;
+    use MarcoableTrait;
     use ArraySortTrait;
     use ArrayCreationTrait;
     use ArrayModifyTrait;

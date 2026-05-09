@@ -13,6 +13,7 @@ use Psr\Log\NullLogger;
 use Stringable;
 use Throwable;
 use Windwalker\Database\Driver\AbstractDriver;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Hydrator\HydratorAwareInterface;
@@ -326,6 +327,11 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     public function isInTransaction(): bool
     {
         return $this->getPlatform()->isInTransaction();
+    }
+
+    public function ping(): bool
+    {
+        return $this->getDriver()->ping();
     }
 
     public function countWith(Query|string $query): int
