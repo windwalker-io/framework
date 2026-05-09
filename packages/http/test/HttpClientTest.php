@@ -580,4 +580,73 @@ class HttpClientTest extends TestCase
             $transport->receivedOptions->foo
         );
     }
+
+    // ------------------------------------------------------------------
+    // Proxy-option integration tests (real CurlTransport + test server)
+    // ------------------------------------------------------------------
+
+    public function testTimeoutOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'timeout' => 10,
+            ]
+        );
+
+        $response = $http->get('json');
+
+        self::assertTrue($response->isSuccess());
+    }
+
+    public function testUserAgentOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'user_agent' => 'WindwalkerTest/4.0',
+            ]
+        );
+
+        $response = $http->get('server');
+        $server = json_decode($response->getContent(), true);
+
+        self::assertEquals('WindwalkerTest/4.0', $server['HTTP_USER_AGENT']);
+    }
+
+    public function testVerifyPeerOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'verify_peer' => false,
+            ]
+        );
+
+        $response = $http->get('json');
+
+        self::assertTrue($response->isSuccess());
+    }
+
+    public function testFollowLocationOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'follow_location' => false,
+            ]
+        );
+
+        $response = $http->get('json');
+
+        self::assertTrue($response->isSuccess());
+    }
 }

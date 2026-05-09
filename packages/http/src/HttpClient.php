@@ -465,11 +465,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         $request = $this->hydrateRequest(new Request(), $method, $url, $body, $options);
 
-        $transportOptions = $options->transport ?? new TransportOptions();
-        $transportOptions->files = $options->files;
-        $transportOptions->progress = $options->progress;
-
-        $transportOptions->optionMerged = true;
+        $transportOptions = TransportOptions::fromHttpClientOptions($options);
 
         try {
             $response = $this->sendRequest($request, $transportOptions);

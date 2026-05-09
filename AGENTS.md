@@ -29,6 +29,10 @@ arguments, first-class callables).
 - Use PHP 8.5 property hooks with asymmetric visibility (`public protected(set)`) for properties prior than legacy
   getter/setter methods. This allows read-only public access while still allowing internal mutation when necessary.
 
+All code style instructions see: `/.github/instructions/cs.instructions.md`.
+
+All test code style instructions see: `/.github/instructions/test.instructions.md`.
+
 ## Package Layout
 
 Every package follows this structure:

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport\Options;
 
+use Windwalker\Http\HttpClientOptions;
 use Windwalker\Http\Transport\ProgressEvent;
 use Windwalker\Utilities\Options\RecordOptions;
 
@@ -25,5 +26,28 @@ class TransportOptions extends RecordOptions
          */
         public ?\Closure $progress = null,
     ) {
+    }
+
+    public static function fromHttpClientOptions(HttpClientOptions $options): static
+    {
+        $transportOptions = $options->transport ?? new static();
+
+        return $transportOptions->withMergeHttpClientOptions($options);
+    }
+
+    public function withMergeHttpClientOptions(HttpClientOptions $options): static
+    {
+        $new = clone $this;
+        $new->files = $options->files;
+        $new->progress = $options->progress;
+        $new->timeout = $options->timeout;
+        $new->userAgent = $options->userAgent;
+        $new->followLocation = $options->followLocation;
+        $new->certpath = $options->certpath;
+        $new->verifyPeer = $options->verifyPeer;
+
+        $new->optionMerged = true;
+
+        return $new;
     }
 }

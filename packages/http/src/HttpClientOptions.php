@@ -19,6 +19,12 @@ class HttpClientOptions extends RecordOptions
         public ?array $headers = null,
         public ?array $params = null,
         public ?array $files = null,
+        public mixed $writeStream = null,
+        public ?int $timeout = null,
+        public ?string $userAgent = null,
+        public bool $followLocation = true,
+        public ?string $certpath = null,
+        public bool $verifyPeer = true,
         /**
          * @var \Closure(ProgressEvent $event): void|null
          */
