@@ -6,6 +6,7 @@ namespace Windwalker\Cache\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Windwalker\Cache\CacheLock;
 
 /**
@@ -65,6 +66,9 @@ class CacheLockTest extends TestCase
         // Restore timeout / interval defaults so tests are isolated.
         CacheLock::setTimeout(30.0);
         CacheLock::setWaitInterval(100_000);
+
+        // Clear logger so tests are isolated.
+        CacheLock::$logger = null;
     }
 
     public static function tearDownAfterClass(): void
@@ -317,11 +321,8 @@ class CacheLockTest extends TestCase
     {
         CacheLock::setWaitInterval(0);
 
-        // Access via lock – we just need to confirm it won't be 0
-        // Use reflection to inspect the private static property
         $ref = new \ReflectionClass(CacheLock::class);
         $prop = $ref->getProperty('waitInterval');
-        $prop->setAccessible(true);
 
         self::assertGreaterThanOrEqual(1, $prop->getValue());
     }
@@ -430,5 +431,134 @@ class CacheLockTest extends TestCase
             self::assertFalse($isNew);
         }
     }
-}
 
+    // -----------------------------------------------------------------------
+    // Logging ($logger static property)
+    // -----------------------------------------------------------------------
+
+    /** @see CacheLock::$logger */
+    public function testLoggerIsNullByDefault(): void
+    {
+        self::assertNull(CacheLock::$logger);
+    }
+
+    /** @see CacheLock::lock */
+    public function testLockLogsDebugWhenLockAcquired(): void
+    {
+        self::useTempFiles();
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->atLeastOnce())
+            ->method('debug')
+            ->with(self::stringContains('Lock acquired successfully'), self::arrayHasKey('key'));
+
+        CacheLock::$logger = $logger;
+        CacheLock::lock('mykey');
+    }
+
+    /** @see CacheLock::lock */
+    public function testLockLogsDebugWhenReentrant(): void
+    {
+        self::useTempFiles();
+
+        CacheLock::lock('mykey');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('debug')
+            ->with(self::stringContains('Lock already held by this process'), self::arrayHasKey('key'));
+
+        CacheLock::$logger = $logger;
+        CacheLock::lock('mykey');
+    }
+
+    /** @see CacheLock::lock */
+    public function testLockLogsWarningWhenNoFilesConfigured(): void
+    {
+        CacheLock::setFiles([]);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('warning')
+            ->with(self::stringContains('No lock files configured'), self::arrayHasKey('key'));
+
+        CacheLock::$logger = $logger;
+        CacheLock::lock('mykey');
+    }
+
+    /** @see CacheLock::lock */
+    public function testLockLogsErrorWhenFileDoesNotExist(): void
+    {
+        CacheLock::setFiles(['/this/file/does/not/exist.php']);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('error')
+            ->with(self::stringContains('Failed to open lock file'), self::arrayHasKey('key'));
+
+        CacheLock::$logger = $logger;
+        CacheLock::lock('mykey');
+    }
+
+    /** @see CacheLock::lock */
+    public function testLockLogsInfoWhenTimeoutIsZeroAndLockContended(): void
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            self::markTestSkipped('flock contention test is not reliable on Windows.');
+        }
+
+        $files = self::useTempFiles(1);
+
+        $external = fopen($files[0], 'r+b');
+        flock($external, LOCK_EX);
+
+        try {
+            CacheLock::setTimeout(0.0);
+
+            $logger = $this->createMock(LoggerInterface::class);
+            // May log info (timeout disabled) or warning (timeout expired) depending on
+            // whether the OS reports LOCK_NB $wouldBlock; both are acceptable.
+            $logger->expects($this->atLeastOnce())
+                ->method(self::logicalOr(
+                    self::equalTo('info'),
+                    self::equalTo('warning'),
+                ));
+
+            CacheLock::$logger = $logger;
+            CacheLock::lock('contested_key');
+        } finally {
+            flock($external, LOCK_UN);
+            fclose($external);
+        }
+    }
+
+    /** @see CacheLock::release */
+    public function testReleaseLogsDebugWhenKeyNotLocked(): void
+    {
+        self::useTempFiles();
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('debug')
+            ->with(self::stringContains('Key not locked'), self::arrayHasKey('key'));
+
+        CacheLock::$logger = $logger;
+        CacheLock::release('never_locked_key');
+    }
+
+    /** @see CacheLock::release */
+    public function testReleaseLogsDebugWhenLockReleased(): void
+    {
+        self::useTempFiles();
+
+        CacheLock::lock('mykey');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('debug')
+            ->with(self::stringContains('Lock released successfully'), self::arrayHasKey('key'));
+
+        CacheLock::$logger = $logger;
+        CacheLock::release('mykey');
+    }
+}

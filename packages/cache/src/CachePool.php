@@ -392,7 +392,7 @@ class CachePool implements CachePoolInterface
         float $beta = 1.0,
         bool $lock = true,
     ): mixed {
-        $locked = $lock && CacheLock::lock($key, $isNew, $this->logger);
+        $locked = $lock && CacheLock::lock($key, $isNew);
 
         try {
             // Re-fetch after acquiring the lock so we see any value a competing
@@ -437,7 +437,7 @@ class CachePool implements CachePoolInterface
             return $data;
         } finally {
             if ($locked) {
-                CacheLock::release($key, $this->logger);
+                CacheLock::release($key);
             }
         }
     }

@@ -23,6 +23,8 @@ class CacheLock
      */
     private static int $waitInterval = 100_000;
 
+    public static ?LoggerInterface $logger = null;
+
     private static array $files = [
         __DIR__ . DIRECTORY_SEPARATOR . 'Storage' . DIRECTORY_SEPARATOR . 'ArrayStorage.php',
         __DIR__ . DIRECTORY_SEPARATOR . 'Storage' . DIRECTORY_SEPARATOR . 'DatabaseStorage.php',
@@ -46,8 +48,11 @@ class CacheLock
         __DIR__ . DIRECTORY_SEPARATOR . 'Exception' . DIRECTORY_SEPARATOR . 'InvalidArgumentException.php',
     ];
 
-    public static function lock(string $key, ?bool &$isNew = null, ?LoggerInterface $logger = null): bool
+
+    public static function lock(string $key, ?bool &$isNew = null): bool
     {
+        $logger = static::$logger;
+
         // Already locked by this process — return without acquiring again
         if (isset(static::$lockedFiles[$key])) {
             $isNew = false;
@@ -138,8 +143,10 @@ class CacheLock
         return true;
     }
 
-    public static function release(string $key, ?LoggerInterface $logger = null): bool
+    public static function release(string $key): bool
     {
+        $logger = static::$logger;
+
         if (!isset(static::$lockedFiles[$key])) {
             $logger?->debug('Cache lock: Key not locked, nothing to release', ['key' => $key]);
 
