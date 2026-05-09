@@ -15,7 +15,6 @@ use Throwable;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\PhpFileSerializer;
-use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
@@ -30,18 +29,6 @@ use Windwalker\Utilities\Assert\ArgumentsAssert;
 class CachePool implements CachePoolInterface
 {
     use LoggerAwareTrait;
-
-    /**
-     * Key prefix for tag-version entries.
-     * Uses uncommon prefix to minimize collision with user-defined keys.
-     */
-    private const string TAG_VER_PREFIX = '--ww_tag_ver--';
-
-    /**
-     * Key prefix for per-item tag-envelope entries.
-     * Uses uncommon prefix to minimize collision with user-defined keys.
-     */
-    private const string TAG_ENV_PREFIX = '--ww_tag_env--';
 
     /** Prefix for per-item metadata sidecar records. */
     private const string ITEM_META_PREFIX = '--ww_item_meta--';
@@ -61,27 +48,6 @@ class CachePool implements CachePoolInterface
      */
     private bool $autoCommit = true;
 
-    protected CacheItemPoolInterface|false $tagPool;
-
-    /**
-     * In-memory cache of tag versions to reduce storage reads within a request.
-     * Format: [tag => [expiration_microtime, version_string]]
-     *
-     * This cache is cleared on invalidateTags() and expires after knownTagVersionsTtl.
-     *
-     * @var array<string, array{float, string}>
-     */
-    private array $knownTagVersions = [];
-
-    /**
-     * TTL for in-memory tag version cache (in seconds).
-     * Default 0.15 seconds (150ms) - enough to optimize multiple fetches within a single request.
-     * Set to 0 to disable the cache.
-     *
-     * @var float
-     */
-    private float $knownTagVersionsTtl = 0.15;
-
     public function __construct(
         protected StorageInterface $storage = new ArrayStorage(),
         protected SerializerInterface $serializer = new RawSerializer(),
@@ -90,7 +56,9 @@ class CachePool implements CachePoolInterface
         CacheItemPoolInterface|StorageInterface|null|false $tagPool = null,
     ) {
         $this->logger = $logger;
-        $this->applyTagPool($tagPool);
+
+        // Keep constructor signature backward-compatible; tagging now lives in TaggedCachePool.
+        unset($tagPool);
     }
 
     /**
@@ -143,15 +111,8 @@ class CachePool implements CachePoolInterface
         $this->hydrateItemMetadata($item);
 
         // If metadata says the item is already expired, do not serve stale data.
-        // Note: We don't delete the item here; storage-level TTL and pruning will handle cleanup.
         if (!$item->isHit()) {
             return $item;
-        }
-
-        // Check tags validity - invalidated tags make the item stale
-        // Note: We don't delete the item here; it will be cleaned up later.
-        if (!$this->isItemTagsValid($key)) {
-            $item->setIsHit(false);
         }
 
         return $item;
@@ -205,10 +166,6 @@ class CachePool implements CachePoolInterface
             $this->storage->remove($key);
             $this->storage->remove($this->itemMetadataKey($key));
 
-            if ($this->tagPool !== false) {
-                $this->tagPool->deleteItem($this->tagEnvelopeKey($key));
-            }
-
             return true;
         } catch (RuntimeException $e) {
             $this->logException(
@@ -260,12 +217,6 @@ class CachePool implements CachePoolInterface
             );
 
             $this->persistItemMetadata($item, $expiration);
-
-            if ($this->tagPool !== false) {
-                $tags = $item->getTags();
-                // Always save envelope (even empty) to distinguish 'no tags' from 'envelope missing'
-                $this->saveTagEnvelope($item->getKey(), $tags, $expiration);
-            }
 
             return true;
         } catch (RuntimeException $e) {
@@ -454,17 +405,15 @@ class CachePool implements CachePoolInterface
                 return $item->get();
             }
 
-            // Determine whether the cached item is still usable:
-            // - basic hit check
-            // - tag validity (any invalidated tag makes the item stale)
-            $isHit = $item->isHit() && $this->isItemTagsValid($key);
+            // Determine whether the cached item is still usable.
+            $isHit = $item->isHit();
 
             // Item is valid and does not need early recomputation: serve it.
             if ($isHit && !$this->shouldRecomputeEarly($item, $beta)) {
                 return $item->get();
             }
 
-            // Cache miss, tag-invalidated, or probabilistic early expiry: recompute.
+            // Cache miss or probabilistic early expiry: recompute.
             $item->expiresAfter($ttl);
 
             $start = microtime(true);
@@ -493,362 +442,6 @@ class CachePool implements CachePoolInterface
         }
     }
 
-    /**
-     * Invalidate all cache entries associated with any of the given tags.
-     *
-     * Works by bumping the version token for each tag.  Any cached item whose
-     * stored tag-version no longer matches the current version is considered
-     * stale and will be recomputed on the next fetch().
-     *
-     * Note: If tagPool is set to false (tags disabled), this method is a no-op.
-     */
-    public function invalidateTags(string ...$tags): bool
-    {
-        // If tags are disabled, do nothing
-        if ($this->tagPool === false) {
-            return true;
-        }
-
-        foreach ($tags as $tag) {
-            // Clear in-memory cache for this tag
-            unset($this->knownTagVersions[$tag]);
-
-            // Delete the version key — no need to write a new value.
-            // Items whose envelopes stored the old (non-empty) version will be
-            // treated as stale because '' !== <old_version>.
-            $this->tagPool->deleteItem($this->tagVersionKey($tag));
-        }
-
-        return true;
-    }
-
-    /**
-     * Storage key for a tag's version token.
-     * Uses uncommon prefix to minimize collision with user-defined keys.
-     */
-    private function tagVersionKey(string $tag): string
-    {
-        return self::TAG_VER_PREFIX . hash('sha1', $tag);
-    }
-
-    /**
-     * Storage key for a cache-item's tag envelope.
-     * Uses uncommon prefix to minimize collision with user-defined keys.
-     */
-    private function tagEnvelopeKey(string $cacheKey): string
-    {
-        return self::TAG_ENV_PREFIX . hash('sha1', $cacheKey);
-    }
-
-    /** Generate a random, opaque tag-version token. */
-    private function generateTagVersion(): string
-    {
-        return bin2hex(random_bytes(8));
-    }
-
-    /**
-     * Return the current version token for each requested tag.
-     * Tags that have never been explicitly invalidated have an empty-string version.
-     *
-     * Uses in-memory cache (knownTagVersions) to reduce storage reads within a request.
-     *
-     * @param  string[]  $tags
-     *
-     * @return array<string, string>  tag => version
-     */
-    private function getCurrentTagVersions(array $tags): array
-    {
-        if (!$tags) {
-            return [];
-        }
-
-        $versions = [];
-        $now = microtime(true);
-        $tagsToFetch = [];
-
-        // Check in-memory cache first
-        foreach ($tags as $tag) {
-            if ($this->knownTagVersionsTtl > 0 && isset($this->knownTagVersions[$tag])) {
-                [$expiration, $cachedVersion] = $this->knownTagVersions[$tag];
-
-                if ($now <= $expiration) {
-                    // Cache hit and not expired
-                    $versions[$tag] = $cachedVersion;
-                    continue;
-                }
-            }
-
-            // Cache miss or expired or disabled - need to fetch
-            $tagsToFetch[] = $tag;
-        }
-
-        // Fetch uncached tags from storage
-        if ($tagsToFetch) {
-            $expiration = $now + $this->knownTagVersionsTtl;
-
-            foreach ($tagsToFetch as $tag) {
-                $key = $this->tagVersionKey($tag);
-
-                // Use CacheItemPoolInterface::getItem
-                $item = $this->tagPool->getItem($key);
-                $version = $item->isHit() ? (string) $item->get() : '';
-
-                $versions[$tag] = $version;
-
-                // Update in-memory cache if enabled
-                if ($this->knownTagVersionsTtl > 0) {
-                    // FIFO: remove first to re-add at end
-                    unset($this->knownTagVersions[$tag]);
-                    $this->knownTagVersions[$tag] = [$expiration, $version];
-                }
-            }
-
-            // Clean expired entries from in-memory cache
-            if ($this->knownTagVersionsTtl > 0) {
-                foreach ($this->knownTagVersions as $tag => [$exp, $ver]) {
-                    if ($now > $exp) {
-                        unset($this->knownTagVersions[$tag]);
-                    } else {
-                        // Since we use FIFO, once we hit a non-expired entry, all following entries are also valid
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $versions;
-    }
-
-    /**
-     * Persist the tag envelope for a newly-computed cache entry.
-     * The envelope records the current version of every tag so that future
-     * reads can detect whether any tag has been invalidated since.
-     *
-     * Uses getOrCreateTagVersions so that a version is always written (non-empty),
-     * which ensures delete-based invalidation works correctly even after multiple
-     * back-to-back invalidations of the same tag.
-     *
-     * @param  string[]  $tags
-     */
-    private function saveTagEnvelope(string $key, array $tags, int $expiration): void
-    {
-        $envKey = $this->tagEnvelopeKey($key);
-
-        // Use getOrCreateTagVersions: creates a new version for any tag that
-        // has no current version (first use or just after invalidation).
-        $envelope = $this->getOrCreateTagVersions($tags);
-
-        $ttl = max(0, $expiration - time());
-        $item = $this->tagPool->getItem($envKey);
-        $item->set($envelope);
-        $item->expiresAfter($ttl > 0 ? $ttl : null);
-        $this->tagPool->save($item);
-    }
-
-    /**
-     * Return the current version token for each tag, creating a new one for
-     * any tag that currently has no version (first use or post-invalidation).
-     *
-     * Called only during save so that every freshly cached item always has a
-     * non-empty version in its envelope, which makes delete-based invalidation
-     * (invalidateTags) work correctly across repeated invalidations of the same tag.
-     *
-     * Tag version keys are stored with no expiry (null TTL) — matching Symfony's
-     * policy. A version that expires before the items referencing it would cause
-     * those items to see '' as the current version, potentially matching items
-     * whose envelopes also stored '' and making them look valid forever.
-     *
-     * @param  string[]  $tags
-     *
-     * @return array<string, string>  tag => version
-     */
-    private function getOrCreateTagVersions(array $tags): array
-    {
-        $versions = [];
-        $now = microtime(true);
-
-        foreach ($tags as $tag) {
-            // Check in-memory cache first.
-            if ($this->knownTagVersionsTtl > 0 && isset($this->knownTagVersions[$tag])) {
-                [$exp, $v] = $this->knownTagVersions[$tag];
-
-                if ($now <= $exp && $v !== '') {
-                    $versions[$tag] = $v;
-                    continue;
-                }
-            }
-
-            $tagKey = $this->tagVersionKey($tag);
-            $tagItem = $this->tagPool->getItem($tagKey);
-
-            if ($tagItem->isHit()) {
-                $version = (string) $tagItem->get();
-            } else {
-                $version = '';
-            }
-
-            // Empty means "no effective version"; create a fresh non-empty token.
-            if ($version === '') {
-                $version = $this->generateTagVersion();
-                $tagItem->set($version);
-                $tagItem->expiresAfter(null); // tag version keys never expire (Symfony policy)
-                $this->tagPool->save($tagItem);
-            }
-
-            $versions[$tag] = $version;
-
-            // Update in-memory cache.
-            if ($this->knownTagVersionsTtl > 0) {
-                unset($this->knownTagVersions[$tag]); // FIFO: re-add at end
-                $this->knownTagVersions[$tag] = [$now + $this->knownTagVersionsTtl, $version];
-            }
-        }
-
-        return $versions;
-    }
-
-    /**
-     * Check whether a cached item is still valid with respect to its tags.
-     *
-     * Returns false when:
-     *  - no tag envelope was stored (item pre-dates tag-awareness, treat as stale)
-     *  - any tag version in the envelope differs from the current storage version
-     *
-     * @param  string[]  $tags
-     */
-    private function isTagValid(string $key, array $tags): bool
-    {
-        $envKey = $this->tagEnvelopeKey($key);
-
-        // Use CacheItemPoolInterface::getItem
-        // CachePool will automatically unserialize the data using its serializer
-        $item = $this->tagPool->getItem($envKey);
-
-        if (!$item->isHit()) {
-            return false;
-        }
-
-        $storedVersions = $item->get();
-
-        if (!is_array($storedVersions)) {
-            return false;
-        }
-
-        $currentVersions = $this->getCurrentTagVersions($tags);
-
-        foreach ($tags as $tag) {
-            if (($storedVersions[$tag] ?? null) !== ($currentVersions[$tag] ?? '')) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Retrieve the tags that were previously stored with a cache item.
-     * Returns empty array if the item has no tag envelope.
-     *
-     * @return string[]
-     */
-    private function getItemTags(string $key): array
-    {
-        $envKey = $this->tagEnvelopeKey($key);
-
-        // Use CacheItemPoolInterface::getItem
-        // CachePool will automatically unserialize the data using its serializer
-        $item = $this->tagPool->getItem($envKey);
-
-        if (!$item->isHit()) {
-            return [];
-        }
-
-        $storedVersions = $item->get();
-
-        if (!is_array($storedVersions)) {
-            return [];
-        }
-
-        return array_keys($storedVersions);
-    }
-
-    /**
-     * Check if a cache item's tags are still valid.
-     * Returns true if tagPool is disabled or if all tags are valid.
-     * Returns false if any tag has been invalidated or if envelope is missing.
-     *
-     * Since we always save tag envelopes (even empty ones), a missing envelope
-     * indicates the item is stale or from before envelope enforcement.
-     *
-     * @param  string  $key  The cache item key to check
-     *
-     * @return bool
-     */
-    private function isItemTagsValid(string $key): bool
-    {
-        // If tags are disabled, always consider valid
-        if ($this->tagPool === false) {
-            return true;
-        }
-
-        $envKey = $this->tagEnvelopeKey($key);
-        $envelopeItem = $this->tagPool->getItem($envKey);
-
-        // If envelope doesn't exist, item is stale or pre-dates envelope enforcement
-        if (!$envelopeItem->isHit()) {
-            return false;
-        }
-
-        $storedVersions = $envelopeItem->get();
-
-        // Envelope must be an array (corrupted data is invalid)
-        if (!is_array($storedVersions)) {
-            return false;
-        }
-
-        // Empty envelope (no tags) is valid
-        if ($storedVersions === []) {
-            return true;
-        }
-
-        // Has tags - validate them
-        $storedTags = array_keys($storedVersions);
-
-        return $this->isTagValid($key, $storedTags);
-    }
-
-    /**
-     * Validate a CacheItem including expiration and tags.
-     *
-     * This method is useful when you want to re-validate a CacheItem after some time
-     * has passed since it was originally fetched, or when you need to explicitly verify
-     * that all associated tags are still valid.
-     *
-     * Note: This method checks the current state in storage, not just the item object's
-     * cached state. An item that was valid when fetched may become invalid if:
-     * - The item has been deleted from storage
-     * - Any of its tags have been invalidated
-     * - The item has expired
-     *
-     * @param  CacheItemInterface  $item  The cache item to validate
-     *
-     * @return bool  True if the item is still valid (exists, not expired, and tags valid), false otherwise
-     */
-    public function isItemValid(CacheItemInterface $item): bool
-    {
-        // First check if item reports itself as a hit
-        if (!$item->isHit()) {
-            return false;
-        }
-
-        // Check if item still exists in storage (may have been deleted)
-        if (!$this->storage->has($item->getKey())) {
-            return false;
-        }
-
-        // Finally check if tags are still valid
-        return $this->isItemTagsValid($item->getKey());
-    }
 
     /**
      * @deprecated Use fetch() instead.
@@ -873,7 +466,7 @@ class CachePool implements CachePoolInterface
      *
      * @see https://www.vldb.org/pvldb/vol8/p886-vattani.pdf
      */
-    private function shouldRecomputeEarly(CacheItem $item, float $beta): bool
+    protected function shouldRecomputeEarly(CacheItem $item, float $beta): bool
     {
         if ($beta <= 0.0) {
             return false;
@@ -987,10 +580,6 @@ class CachePool implements CachePoolInterface
         $new = clone $this;
         $new->storage = $this->storage->withGroup($group);
 
-        if ($new->tagPool instanceof self && $new->tagPool->isGroupSupported()) {
-            $new->tagPool = $new->tagPool->withGroup($group);
-        }
-
         return $new;
     }
 
@@ -1098,97 +687,41 @@ class CachePool implements CachePoolInterface
         $new = clone $this;
         $new->defaultTtl = $defaultTtl;
 
+
         return $new;
+    }
+
+    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): TaggedCachePool
+    {
+        $pool = new TaggedCachePool(
+            $this->storage,
+            $this->serializer,
+            $this->logger,
+            $this->defaultTtl,
+            $tagPool,
+        );
+
+        return $pool->withAutoCommit($this->autoCommit);
     }
 
     public function getTagPool(): CacheItemPoolInterface|false
     {
-        return $this->tagPool;
+        return false;
     }
 
-    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static
-    {
-        $new = clone $this;
-        $new->applyTagPool($tagPool);
-
-        return $new;
-    }
-
-    private function applyTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): void
-    {
-        if ($tagPool instanceof CacheItemPoolInterface) {
-            $pool = $tagPool;
-        } elseif ($tagPool !== false) {
-            if ($tagPool instanceof StorageInterface) {
-                $storage = $tagPool;
-            } else {
-                $storage = $this->storage;
-            }
-
-            $serializer = new PhpSerializer();
-
-            if ($storage instanceof PhpFileStorage) {
-                $serializer = new PhpFileSerializer();
-            }
-
-            $pool = new CachePool(
-                $storage,
-                $serializer,
-                $this->logger,
-                null,
-                false
-            );
-        } else {
-            $pool = false;
-        }
-
-        $this->tagPool = $pool;
-    }
-
-    /**
-     * Get the TTL for in-memory tag version cache (in seconds).
-     *
-     * @return float
-     */
     public function getKnownTagVersionsTtl(): float
     {
-        return $this->knownTagVersionsTtl;
+        return 0.0;
     }
 
-    /**
-     * Return a new instance with the given TTL for in-memory tag version cache (in seconds).
-     *
-     * This cache reduces storage I/O when the same tags are checked multiple
-     * times within a single request. Default is 0.15 seconds (150ms).
-     *
-     * Set to 0 to disable the cache entirely (useful for testing or when
-     * tag versions are expected to change very frequently).
-     *
-     * @param  float  $knownTagVersionsTtl  TTL in seconds (0 = disabled)
-     *
-     * @return static
-     */
-    public function withKnownTagVersionsTtl(float $knownTagVersionsTtl): static
+    public function withKnownTagVersionsTtl(float $knownTagVersionsTtl): TaggedCachePool
     {
-        $new = clone $this;
-        $new->knownTagVersionsTtl = max(0, $knownTagVersionsTtl);
-
-        return $new;
+        return $this->withTagPool(null)->withKnownTagVersionsTtl($knownTagVersionsTtl);
     }
 
-    /**
-     * Return a new instance with the in-memory tag versions cache cleared.
-     *
-     * This is useful to force a fresh read from storage on the next tag check.
-     *
-     * @return static
-     */
-    public function withoutKnownTagVersionsCache(): static
+    public function withoutKnownTagVersionsCache(): TaggedCachePool
     {
-        $new = clone $this;
-        $new->knownTagVersions = [];
-
-        return $new;
+        return $this->withTagPool(null)->withoutKnownTagVersionsCache();
     }
 
     /** Build the sidecar metadata key for a cache item key. */

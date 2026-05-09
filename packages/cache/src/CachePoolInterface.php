@@ -9,7 +9,6 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
-use Windwalker\Cache\Storage\StorageInterface;
 
 interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, LoggerAwareInterface
 {
@@ -22,8 +21,6 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
         bool $lock = true,
     ): mixed;
 
-    public function invalidateTags(array $tags): bool;
-
     public function withLogger(LoggerInterface $logger): static;
 
     public function withGroup(string $group): static;
@@ -33,14 +30,4 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
     public function getDefaultTtl(): DateInterval|int|null;
 
     public function withDefaultTtl(DateInterval|int|null $defaultTtl): static;
-
-    public function getTagPool(): CacheItemPoolInterface|false;
-
-    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static;
-
-    public function getKnownTagVersionsTtl(): float;
-
-    public function withKnownTagVersionsTtl(float $knownTagVersionsTtl): static;
-
-    public function withoutKnownTagVersionsCache(): static;
 }

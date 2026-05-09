@@ -23,11 +23,11 @@ class CipherSerializerTest extends TestCase
         $encoder = 'base64url';
 
         $cipher = $this->createMock(CipherInterface::class);
-        $cipher->expects(self::once())
+        $cipher->expects($this->once())
             ->method('encrypt')
             ->with(serialize(['foo' => 'bar']), $key, $encoder)
             ->willReturn('ENC_PAYLOAD');
-        $cipher->expects(self::once())
+        $cipher->expects($this->once())
             ->method('decrypt')
             ->with('ENC_PAYLOAD', $key, $encoder)
             ->willReturn(new HiddenString(serialize(['foo' => 'bar'])));
@@ -45,11 +45,11 @@ class CipherSerializerTest extends TestCase
         $key = Key::wrap('object-key');
 
         $cipher = $this->createMock(CipherInterface::class);
-        $cipher->expects(self::once())
+        $cipher->expects($this->once())
             ->method('encrypt')
             ->with('abc', $key, 'base64url')
             ->willReturn('enc');
-        $cipher->expects(self::once())
+        $cipher->expects($this->once())
             ->method('decrypt')
             ->with('enc', $key, 'base64url')
             ->willReturn(new HiddenString('abc'));
@@ -99,5 +99,3 @@ class CipherSerializerTest extends TestCase
         self::assertSame(['foo' => 'bar'], $pool->get('cipher_item'));
     }
 }
-
-
