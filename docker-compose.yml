@@ -1,0 +1,61 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: windwalker_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ut1234
+      MYSQL_DATABASE: windwalker_test
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/windwalker.cnf:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  postgresql:
+    image: postgres:17-alpine
+    container_name: windwalker_postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ut1234
+      POSTGRES_DB: windwalker_test
+    ports:
+      - "${PGSQL_PORT:-5432}:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  redis:
+    image: redis:7-alpine
+    container_name: windwalker_redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  memcached:
+    image: memcached:1-alpine
+    container_name: windwalker_memcached
+    ports:
+      - "${MEMCACHED_PORT:-11211}:11211"
+
+volumes:
+  mysql_data:
+  postgresql_data:
+  redis_data:
+

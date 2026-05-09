@@ -61,7 +61,13 @@ class TaskQueue
                         $err = error_get_last();
 
                         if (!$err || ($err['type'] ^ E_ERROR)) {
-                            $this->run();
+                            // Skip if the queue is already empty – tasks were
+                            // already drained by an explicit wait() call, so
+                            // there is nothing left to do and calling run()
+                            // would incorrectly throw a "Promise lock" error.
+                            if ($this->queue !== []) {
+                                $this->run();
+                            }
                         }
                     }
                 }
