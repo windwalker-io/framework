@@ -8,11 +8,9 @@ use DateInterval;
 use DateTime;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Psr\SimpleCache\CacheInterface;
 use Throwable;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
@@ -21,15 +19,15 @@ use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PhpFileStorage;
 use Windwalker\Cache\Storage\StorageInterface;
-use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
  * @psalm-type  CacheHandler = callable(CacheItemInterface): mixed
  */
-class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareInterface
+class CachePool implements CachePoolInterface
 {
     use LoggerAwareTrait;
 
@@ -815,6 +813,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
 
         // Has tags - validate them
         $storedTags = array_keys($storedVersions);
+
         return $this->isTagValid($key, $storedTags);
     }
 
