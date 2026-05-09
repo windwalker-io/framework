@@ -23,7 +23,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
     private const string TAG_VER_PREFIX = '--ww_tag_ver--';
     private const string TAG_ENV_PREFIX = '--ww_tag_env--';
 
-    protected CacheItemPoolInterface|false $tagPool;
+    protected CacheItemPoolInterface $tagPool;
 
     /** @var array<string, array{float, string}> */
     private array $knownTagVersions = [];
@@ -35,7 +35,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         SerializerInterface $serializer = new RawSerializer(),
         LoggerInterface $logger = new NullLogger(),
         DateInterval|int|null $defaultTtl = null,
-        CacheItemPoolInterface|StorageInterface|null|false $tagPool = null,
+        CacheItemPoolInterface|StorageInterface|null $tagPool = null,
     ) {
         parent::__construct($storage, $serializer, $logger, $defaultTtl);
         $this->applyTagPool($tagPool);
@@ -60,7 +60,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
     {
         $result = parent::deleteItem($key);
 
-        if (!$result || $this->tagPool === false) {
+        if (!$result) {
             return $result;
         }
 
@@ -73,7 +73,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
             return false;
         }
 
-        if ($this->tagPool === false || !$item instanceof CacheItem) {
+        if (!$item instanceof CacheItem) {
             return true;
         }
 
@@ -88,6 +88,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return true;
     }
 
+    /** @psalm-param callable(CacheItem): mixed $handler */
     public function fetch(
         string $key,
         callable $handler,
@@ -139,10 +140,6 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
 
     public function invalidateTags(string ...$tags): bool
     {
-        if ($this->tagPool === false) {
-            return true;
-        }
-
         foreach ($tags as $tag) {
             unset($this->knownTagVersions[$tag]);
             $this->tagPool->deleteItem($this->tagVersionKey($tag));
@@ -175,12 +172,12 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $new;
     }
 
-    public function getTagPool(): CacheItemPoolInterface|false
+    public function getTagPool(): CacheItemPoolInterface
     {
         return $this->tagPool;
     }
 
-    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static
+    public function withTagPool(StorageInterface|CacheItemPoolInterface|null $tagPool): static
     {
         $new = clone $this;
         $new->applyTagPool($tagPool);
@@ -209,11 +206,11 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $new;
     }
 
-    private function applyTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): void
+    private function applyTagPool(StorageInterface|CacheItemPoolInterface|null $tagPool): void
     {
         if ($tagPool instanceof CacheItemPoolInterface) {
             $pool = $tagPool;
-        } elseif ($tagPool !== false) {
+        } else {
             $storage = $tagPool instanceof StorageInterface ? $tagPool : $this->storage;
 
             $serializer = new PhpSerializer();
@@ -223,8 +220,6 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
             }
 
             $pool = new CachePool($storage, $serializer, $this->logger, null);
-        } else {
-            $pool = false;
         }
 
         $this->tagPool = $pool;
@@ -379,10 +374,6 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
 
     private function isItemTagsValid(string $key): bool
     {
-        if ($this->tagPool === false) {
-            return true;
-        }
-
         $envelopeItem = $this->tagPool->getItem($this->tagEnvelopeKey($key));
 
         if (!$envelopeItem->isHit()) {
@@ -402,4 +393,3 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $this->isTagValid($key, array_keys($storedVersions));
     }
 }
-

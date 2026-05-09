@@ -12,9 +12,9 @@ interface TaggedCachePoolInterface extends CachePoolInterface
 {
     public function invalidateTags(string ...$tags): bool;
 
-    public function getTagPool(): CacheItemPoolInterface|false;
+    public function getTagPool(): CacheItemPoolInterface;
 
-    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): static;
+    public function withTagPool(StorageInterface|CacheItemPoolInterface|null $tagPool): static;
 
     public function getKnownTagVersionsTtl(): float;
 

@@ -53,7 +53,7 @@ class CachePool implements CachePoolInterface
         protected SerializerInterface $serializer = new RawSerializer(),
         LoggerInterface $logger = new NullLogger(),
         protected DateInterval|int|null $defaultTtl = null,
-        CacheItemPoolInterface|StorageInterface|null|false $tagPool = null,
+        CacheItemPoolInterface|StorageInterface|null $tagPool = null,
     ) {
         $this->logger = $logger;
 
@@ -691,7 +691,7 @@ class CachePool implements CachePoolInterface
         return $new;
     }
 
-    public function withTagPool(StorageInterface|CacheItemPoolInterface|null|false $tagPool): TaggedCachePool
+    public function toTaggedPool(StorageInterface|CacheItemPoolInterface|null $tagPool): TaggedCachePool
     {
         $pool = new TaggedCachePool(
             $this->storage,
@@ -702,26 +702,6 @@ class CachePool implements CachePoolInterface
         );
 
         return $pool->withAutoCommit($this->autoCommit);
-    }
-
-    public function getTagPool(): CacheItemPoolInterface|false
-    {
-        return false;
-    }
-
-    public function getKnownTagVersionsTtl(): float
-    {
-        return 0.0;
-    }
-
-    public function withKnownTagVersionsTtl(float $knownTagVersionsTtl): TaggedCachePool
-    {
-        return $this->withTagPool(null)->withKnownTagVersionsTtl($knownTagVersionsTtl);
-    }
-
-    public function withoutKnownTagVersionsCache(): TaggedCachePool
-    {
-        return $this->withTagPool(null)->withoutKnownTagVersionsCache();
     }
 
     /** Build the sidecar metadata key for a cache item key. */

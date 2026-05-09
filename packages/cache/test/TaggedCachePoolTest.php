@@ -14,277 +14,11 @@ use Windwalker\Cache\Storage\ArrayStorage;
 
 class TaggedCachePoolTest extends TestCase
 {
-    protected CachePool $instance;
+    protected TaggedCachePool $instance;
 
-    public function testDeleteItemAlsoDeletesTagEnvelope(): void
-    {
-        $this->taggedTestDeleteItemAlsoDeletesTagEnvelope();
-    }
-
-    public function testTaggedFetchServesFromCacheWhenTagsAreValid(): void
-    {
-        $this->taggedTestTaggedFetchServesFromCacheWhenTagsAreValid();
-    }
-
-    public function testSaveReturnsFalseWhenTagPoolFails(): void
-    {
-        $this->taggedTestSaveReturnsFalseWhenTagPoolFails();
-    }
-
-    public function testInvalidateTagsForcesRecomputation(): void
-    {
-        $this->taggedTestInvalidateTagsForcesRecomputation();
-    }
-
-    public function testInvalidateTagsOnlyAffectsMatchingItems(): void
-    {
-        $this->taggedTestInvalidateTagsOnlyAffectsMatchingItems();
-    }
-
-    public function testMultipleTagsPartialInvalidation(): void
-    {
-        $this->taggedTestMultipleTagsPartialInvalidation();
-    }
-
-    public function testUntaggedItemsAreNotAffectedByTagInvalidation(): void
-    {
-        $this->taggedTestUntaggedItemsAreNotAffectedByTagInvalidation();
-    }
-
-    public function testInvalidateTagsWithNoItemsIsNoOp(): void
-    {
-        $this->taggedTestInvalidateTagsWithNoItemsIsNoOp();
-    }
-
-    public function testChangingTagsRequiresDeleteFirst(): void
-    {
-        $this->taggedTestChangingTagsRequiresDeleteFirst();
-    }
-
-    public function testCacheItemTagVariadic(): void
-    {
-        $this->taggedTestCacheItemTagVariadic();
-    }
-
-    public function testCacheItemTagChaining(): void
-    {
-        $this->taggedTestCacheItemTagChaining();
-    }
-
-    public function testTagPoolIsolatesTagMetadata(): void
-    {
-        $this->taggedTestTagPoolIsolatesTagMetadata();
-    }
-
-    public function testInvalidateTagsWithTagPool(): void
-    {
-        $this->taggedTestInvalidateTagsWithTagPool();
-    }
-
-    public function testSetTagPoolAcceptsStorage(): void
-    {
-        $this->taggedTestSetTagPoolAcceptsStorage();
-    }
-
-    public function testSetTagPoolAcceptsCacheItemPoolInterface(): void
-    {
-        $this->taggedTestSetTagPoolAcceptsCacheItemPoolInterface();
-    }
-
-    public function testSetTagPoolNull(): void
-    {
-        $this->taggedTestSetTagPoolNull();
-    }
-
-    public function testWithKnownTagVersionsTtl(): void
-    {
-        $this->taggedTestWithKnownTagVersionsTtl();
-    }
-
-    public function testInvalidateTagsClearsKnownTagVersionsCache(): void
-    {
-        $this->taggedTestInvalidateTagsClearsKnownTagVersionsCache();
-    }
-
-    public function testWithoutKnownTagVersionsCache(): void
-    {
-        $this->taggedTestWithoutKnownTagVersionsCache();
-    }
-
-    public function testKnownTagVersionsCacheDisabledWhenTtlIsZero(): void
-    {
-        $this->taggedTestKnownTagVersionsCacheDisabledWhenTtlIsZero();
-    }
-
-    public function testTagPoolFalseDisablesTags(): void
-    {
-        $this->taggedTestTagPoolFalseDisablesTags();
-    }
-
-    public function testCommitPersistsTagEnvelopeForDeferredTaggedItems(): void
-    {
-        $this->taggedTestCommitPersistsTagEnvelopeForDeferredTaggedItems();
-    }
-
-    public function testSetWithTagsIsAffectedByInvalidateTags(): void
-    {
-        $this->taggedTestSetWithTagsIsAffectedByInvalidateTags();
-    }
-
-    public function testSaveTaggedItemIsAffectedByInvalidateTags(): void
-    {
-        $this->taggedTestSaveTaggedItemIsAffectedByInvalidateTags();
-    }
-
-    public function testSavingWithoutTagsClearsOldTagEnvelope(): void
-    {
-        $this->taggedTestSavingWithoutTagsClearsOldTagEnvelope();
-    }
-
-    public function testInvalidateSameTagMultipleTimesStillForcesRecompute(): void
-    {
-        $this->taggedTestInvalidateSameTagMultipleTimesStillForcesRecompute();
-    }
-
-    public function testGetItemReturnsMissWhenTagsInvalidated(): void
-    {
-        $this->taggedTestGetItemReturnsMissWhenTagsInvalidated();
-    }
-
-    public function testGetItemUntaggedUnaffectedByInvalidation(): void
-    {
-        $this->taggedTestGetItemUntaggedUnaffectedByInvalidation();
-    }
-
-    public function testGetItemValidatesAllTags(): void
-    {
-        $this->taggedTestGetItemValidatesAllTags();
-    }
-
-    public function testGetItemDeletesItemWhenTagsInvalid(): void
-    {
-        $this->taggedTestGetItemDeletesItemWhenTagsInvalid();
-    }
-
-    public function testGetItemWithTagPoolDisabled(): void
-    {
-        $this->taggedTestGetItemWithTagPoolDisabled();
-    }
-
-    public function testHasItemRespectsTagInvalidation(): void
-    {
-        $this->taggedTestHasItemRespectsTagInvalidation();
-    }
-
-    public function testIsItemValidReturnsTrueForValidItem(): void
-    {
-        $this->taggedTestIsItemValidReturnsTrueForValidItem();
-    }
-
-    public function testIsItemValidReturnsFalseForMissedItem(): void
-    {
-        $this->taggedTestIsItemValidReturnsFalseForMissedItem();
-    }
-
-    public function testIsItemValidReturnsFalseAfterTagInvalidation(): void
-    {
-        $this->taggedTestIsItemValidReturnsFalseAfterTagInvalidation();
-    }
-
-    public function testIsItemValidWorksWithUntaggedItems(): void
-    {
-        $this->taggedTestIsItemValidWorksWithUntaggedItems();
-    }
-
-    public function testIsItemValidCanRevalidateAfterDelay(): void
-    {
-        $this->taggedTestIsItemValidCanRevalidateAfterDelay();
-    }
-
-    public function testIsItemValidReturnsFalseForExpiredItem(): void
-    {
-        $this->taggedTestIsItemValidReturnsFalseForExpiredItem();
-    }
-
-    public function testIsItemValidBatchValidation(): void
-    {
-        $this->taggedTestIsItemValidBatchValidation();
-    }
-
-    public function testIsItemValidConsistentWithGetItem(): void
-    {
-        $this->taggedTestIsItemValidConsistentWithGetItem();
-    }
-
-    public function testIsItemValidWithTagPoolDisabled(): void
-    {
-        $this->taggedTestIsItemValidWithTagPoolDisabled();
-    }
-
-    public function testGetItemWithMissingTagEnvelopeIsInvalid(): void
-    {
-        $this->taggedTestGetItemWithMissingTagEnvelopeIsInvalid();
-    }
-
-    public function testItemsWithoutTagsGetEmptyEnvelope(): void
-    {
-        $this->taggedTestItemsWithoutTagsGetEmptyEnvelope();
-    }
-
-    public function testFetchWithMissingEnvelopeRecomputes(): void
-    {
-        $this->taggedTestFetchWithMissingEnvelopeRecomputes();
-    }
-
-    public function testSwitchingFromTagsToNoTagsUpdatesEnvelope(): void
-    {
-        $this->taggedTestSwitchingFromTagsToNoTagsUpdatesEnvelope();
-    }
-
-    public function testGetItemWithCorruptedEnvelopeIsInvalid(): void
-    {
-        $this->taggedTestGetItemWithCorruptedEnvelopeIsInvalid();
-    }
-
-    public function testInvalidateTagsAfterEnvelopeRestoration(): void
-    {
-        $this->taggedTestInvalidateTagsAfterEnvelopeRestoration();
-    }
-
-    public function testIsItemValidDetectsMissingEnvelope(): void
-    {
-        $this->taggedTestIsItemValidDetectsMissingEnvelope();
-    }
-
-    public function testDeleteItemAlsoRemovesEnvelope(): void
-    {
-        $this->taggedTestDeleteItemAlsoRemovesEnvelope();
-    }
-
-    public function testGetMultipleRespectsEnvelopeLogic(): void
-    {
-        $this->taggedTestGetMultipleRespectsEnvelopeLogic();
-    }
-
-    /** @see CachePool::deleteItem — tag envelope sidecar is removed with the item */
-    public function taggedTestDeleteItemAlsoDeletesTagEnvelope(): void
-    {
-        $mainStorage = new ArrayStorage();
-        $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
-
-        $pool->set('tagged_delete', 'VALUE', 3600, ['users']);
-
-        $envKey = '--ww_tag_env--' . hash('sha1', 'tagged_delete');
-        self::assertTrue($tagStorage->has($envKey));
-
-        self::assertTrue($pool->deleteItem('tagged_delete'));
-        self::assertFalse($mainStorage->has('tagged_delete'));
-        self::assertFalse($tagStorage->has($envKey), 'Deleting item should also delete its tag envelope');
-    }
 
     /** @see CachePool::save — tagPool failures make save() fail for tagged items */
-    public function taggedTestSaveReturnsFalseWhenTagPoolFails(): void
+    public function testSaveReturnsFalseWhenTagPoolFails(): void
     {
         $failingTagPool = $this->createMock(CacheItemPoolInterface::class);
         $failingTagPool->expects($this->once())
@@ -292,7 +26,7 @@ class TaggedCachePoolTest extends TestCase
             ->with(self::isString())
             ->willThrowException(new RuntimeException());
 
-        $pool = new CachePool(new ArrayStorage())->withTagPool($failingTagPool);
+        $pool = new TaggedCachePool(new ArrayStorage(), tagPool: $failingTagPool);
         $item = $pool->getItem('tag_fail');
         $item->set('VALUE');
         $item->expiresAfter(3600);
@@ -306,7 +40,7 @@ class TaggedCachePoolTest extends TestCase
     // -----------------------------------------------------------------------
 
     /** @see CachePool::fetch — tagged item is served from cache while tags are valid */
-    public function taggedTestTaggedFetchServesFromCacheWhenTagsAreValid(): void
+    public function testTaggedFetchServesFromCacheWhenTagsAreValid(): void
     {
         $i = 0;
 
@@ -325,7 +59,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — invalidated tag forces recomputation */
-    public function taggedTestInvalidateTagsForcesRecomputation(): void
+    public function testInvalidateTagsForcesRecomputation(): void
     {
         $i = 0;
 
@@ -351,7 +85,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — only items sharing the invalidated tag are affected */
-    public function taggedTestInvalidateTagsOnlyAffectsMatchingItems(): void
+    public function testInvalidateTagsOnlyAffectsMatchingItems(): void
     {
         $calls = ['user1' => 0, 'post1' => 0];
 
@@ -415,7 +149,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — multiple tags, partial invalidation */
-    public function taggedTestMultipleTagsPartialInvalidation(): void
+    public function testMultipleTagsPartialInvalidation(): void
     {
         $i = 0;
 
@@ -439,7 +173,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::fetch — items fetched WITHOUT tags are not affected by invalidateTags */
-    public function taggedTestUntaggedItemsAreNotAffectedByTagInvalidation(): void
+    public function testUntaggedItemsAreNotAffectedByTagInvalidation(): void
     {
         $i = 0;
 
@@ -462,7 +196,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — invalidating a tag that has no items is a no-op */
-    public function taggedTestInvalidateTagsWithNoItemsIsNoOp(): void
+    public function testInvalidateTagsWithNoItemsIsNoOp(): void
     {
         $result = $this->instance->invalidateTags('nonexistent_tag');
 
@@ -472,7 +206,7 @@ class TaggedCachePoolTest extends TestCase
     /**
      * @see CachePool::fetch — to change tags on existing item, must delete it first
      */
-    public function taggedTestChangingTagsRequiresDeleteFirst(): void
+    public function testChangingTagsRequiresDeleteFirst(): void
     {
         $i = 0;
 
@@ -510,7 +244,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CacheItem::tags — variadic tag() method */
-    public function taggedTestCacheItemTagVariadic(): void
+    public function testCacheItemTagVariadic(): void
     {
         $item = CacheItem::create('test');
 
@@ -520,7 +254,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CacheItem::tags — chaining and deduplication */
-    public function taggedTestCacheItemTagChaining(): void
+    public function testCacheItemTagChaining(): void
     {
         $item = CacheItem::create('test');
 
@@ -534,12 +268,12 @@ class TaggedCachePoolTest extends TestCase
     // -----------------------------------------------------------------------
 
     /** @see CachePool::withTagPool — tags are stored in separate pool */
-    public function taggedTestTagPoolIsolatesTagMetadata(): void
+    public function testTagPoolIsolatesTagMetadata(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
 
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         $i = 0;
 
@@ -565,12 +299,12 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — with tagPool */
-    public function taggedTestInvalidateTagsWithTagPool(): void
+    public function testInvalidateTagsWithTagPool(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
 
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         $i = 0;
 
@@ -595,11 +329,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::withTagPool — wraps StorageInterface in CachePool */
-    public function taggedTestSetTagPoolAcceptsStorage(): void
+    public function testSetTagPoolAcceptsStorage(): void
     {
         $tagStorage = new ArrayStorage();
 
-        $pool = (new CachePool())->withTagPool($tagStorage);
+        $pool = new TaggedCachePool(tagPool: $tagStorage);
 
         $tagPool = $pool->getTagPool();
 
@@ -607,21 +341,21 @@ class TaggedCachePoolTest extends TestCase
         self::assertSame($tagStorage, $tagPool->getStorage(), 'Wrapped storage matches original');
     }
 
-    /** @see CachePool::withTagPool — accepts a pre-built CacheItemPoolInterface unchanged */
-    public function taggedTestSetTagPoolAcceptsCacheItemPoolInterface(): void
+    /** @see TaggedCachePool::__construct — accepts a pre-built CacheItemPoolInterface unchanged */
+    public function testSetTagPoolAcceptsCacheItemPoolInterface(): void
     {
-        $existingPool = new CachePool(new ArrayStorage(), tagPool: false);
-        $pool = (new CachePool())->withTagPool($existingPool);
+        $existingPool = new CachePool(new ArrayStorage());
+        $pool = new TaggedCachePool(tagPool: $existingPool);
 
         self::assertSame($existingPool, $pool->getTagPool());
     }
 
     /** @see CachePool::withTagPool — null uses main storage for tags */
-    public function taggedTestSetTagPoolNull(): void
+    public function testSetTagPoolNull(): void
     {
         $storage = new ArrayStorage();
-        $pool = (new CachePool($storage))
-            ->withTagPool(new ArrayStorage()) // Set to separate storage first
+        $pool = new TaggedCachePool($storage, tagPool: new ArrayStorage())
+             // Set to separate storage first
             ->withTagPool(null); // Reset to use main storage
 
         $tagPool = $pool->getTagPool();
@@ -630,7 +364,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::withKnownTagVersionsTtl — can configure in-memory cache TTL */
-    public function taggedTestWithKnownTagVersionsTtl(): void
+    public function testWithKnownTagVersionsTtl(): void
     {
         $pool = new TaggedCachePool();
 
@@ -652,10 +386,10 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — clears in-memory cache for invalidated tags */
-    public function taggedTestInvalidateTagsClearsKnownTagVersionsCache(): void
+    public function testInvalidateTagsClearsKnownTagVersionsCache(): void
     {
         $storage = new ArrayStorage();
-        $pool = (new CachePool($storage))->withKnownTagVersionsTtl(10.0); // Long cache
+        $pool = new TaggedCachePool($storage)->withKnownTagVersionsTtl(10.0); // Long cache
 
         // Create items with tags
         $pool->fetch('user1', function ($item) {
@@ -684,10 +418,10 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::withoutKnownTagVersionsCache — manual cache clear */
-    public function taggedTestWithoutKnownTagVersionsCache(): void
+    public function testWithoutKnownTagVersionsCache(): void
     {
         $storage = new ArrayStorage();
-        $pool = (new CachePool($storage))->withKnownTagVersionsTtl(10.0); // Long cache
+        $pool = new TaggedCachePool($storage)->withKnownTagVersionsTtl(10.0); // Long cache
 
         // Create an item to populate cache
         $pool->fetch('item1', function ($item) {
@@ -710,7 +444,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::saveDeferred + CachePool::commit — tagged deferred items keep invalidation semantics */
-    public function taggedTestCommitPersistsTagEnvelopeForDeferredTaggedItems(): void
+    public function testCommitPersistsTagEnvelopeForDeferredTaggedItems(): void
     {
         $i = 0;
         $item = $this->instance->getItem('deferred_tagged');
@@ -735,10 +469,10 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getCurrentTagVersions — cache disabled when TTL is 0 */
-    public function taggedTestKnownTagVersionsCacheDisabledWhenTtlIsZero(): void
+    public function testKnownTagVersionsCacheDisabledWhenTtlIsZero(): void
     {
         $storage = new ArrayStorage();
-        $pool = (new CachePool($storage))->withKnownTagVersionsTtl(0); // Disable cache
+        $pool = new TaggedCachePool($storage)->withKnownTagVersionsTtl(0); // Disable cache
 
         // Create items with tags - each should fetch tag version from storage
         $pool->fetch('item1', function ($item) {
@@ -757,51 +491,9 @@ class TaggedCachePoolTest extends TestCase
         self::assertTrue(true);
     }
 
-    /** @see CachePool::withTagPool — false disables all tag functionality */
-    public function taggedTestTagPoolFalseDisablesTags(): void
-    {
-        $storage = new ArrayStorage();
-        $pool = (new CachePool($storage))->withTagPool(false);
-
-        self::assertFalse($pool->getTagPool(), 'tagPool should be false');
-
-        $i = 0;
-
-        // Fetch with tags (but tags are ignored)
-        $result = $pool->fetch('item1', function ($item) use (&$i) {
-            $i++;
-            $item->tags('users'); // This should be ignored
-
-            return 'value1';
-        }, 3600, 0.0, false);
-
-        self::assertSame('value1', $result);
-        self::assertEquals(1, $i);
-
-        // Invalidate tags (should be a no-op)
-        $pool->invalidateTags('users');
-
-        // Fetch again - should still use cached value (tags were ignored)
-        $result2 = $pool->fetch('item1', function ($item) use (&$i) {
-            $i++;
-            $item->tags('users');
-
-            return 'value2';
-        }, 3600, 0.0, false);
-
-        self::assertSame('value1', $result2, 'Should use cached value because tags are disabled');
-        self::assertEquals(1, $i, 'Handler should not be called again');
-
-        // Verify no tag metadata was stored
-        $tagKeys = array_filter(
-            array_keys($storage->getData()),
-            fn($k) => str_starts_with($k, '--ww_tag_ver--') || str_starts_with($k, '--ww_tag_env--')
-        );
-        self::assertEmpty($tagKeys, 'No tag metadata should be stored when tags are disabled');
-    }
 
     /** @see CachePool::set + CachePool::invalidateTags — values written via set(tags) must be invalidated */
-    public function taggedTestSetWithTagsIsAffectedByInvalidateTags(): void
+    public function testSetWithTagsIsAffectedByInvalidateTags(): void
     {
         $this->instance->set('user_set', 'ORIGINAL', 3600, ['users']);
         self::assertSame('ORIGINAL', $this->instance->get('user_set'));
@@ -821,7 +513,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::save + CachePool::invalidateTags — manually saved tagged items must also be invalidated */
-    public function taggedTestSaveTaggedItemIsAffectedByInvalidateTags(): void
+    public function testSaveTaggedItemIsAffectedByInvalidateTags(): void
     {
         $item = $this->instance->getItem('user_manual');
         $item->set('ORIGINAL');
@@ -846,7 +538,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::save — saving the same key without tags must clear any stale old tag envelope */
-    public function taggedTestSavingWithoutTagsClearsOldTagEnvelope(): void
+    public function testSavingWithoutTagsClearsOldTagEnvelope(): void
     {
         $this->instance->set('retagged', 'TAGGED', 3600, ['users']);
         $this->instance->set('retagged', 'UNTAGGED', 3600);
@@ -865,7 +557,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — repeated invalidation on same tag remains effective */
-    public function taggedTestInvalidateSameTagMultipleTimesStillForcesRecompute(): void
+    public function testInvalidateSameTagMultipleTimesStillForcesRecompute(): void
     {
         $i = 0;
         $compute = function (CacheItem $item) use (&$i) {
@@ -891,7 +583,7 @@ class TaggedCachePoolTest extends TestCase
     // -----------------------------------------------------------------------
 
     /** @see CachePool::getItem — returns cache miss when tags have been invalidated */
-    public function taggedTestGetItemReturnsMissWhenTagsInvalidated(): void
+    public function testGetItemReturnsMissWhenTagsInvalidated(): void
     {
         // Save item with tags
         $this->instance->set('tagged_item', 'VALUE', 3600, ['users', 'posts']);
@@ -911,7 +603,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getItem — untagged items are unaffected by tag invalidation */
-    public function taggedTestGetItemUntaggedUnaffectedByInvalidation(): void
+    public function testGetItemUntaggedUnaffectedByInvalidation(): void
     {
         // Save item without tags
         $this->instance->set('untagged_item', 'VALUE', 3600);
@@ -926,7 +618,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getItem — validates all tags, only invalidated tags cause miss */
-    public function taggedTestGetItemValidatesAllTags(): void
+    public function testGetItemValidatesAllTags(): void
     {
         // Save item with multiple tags
         $this->instance->set('multi_tag_item', 'VALUE', 3600, ['tagA', 'tagB', 'tagC']);
@@ -951,10 +643,10 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getItem — marks stale item as miss (lazy deletion) */
-    public function taggedTestGetItemDeletesItemWhenTagsInvalid(): void
+    public function testGetItemDeletesItemWhenTagsInvalid(): void
     {
         $storage = new ArrayStorage();
-        $pool = (new CachePool($storage))->withTagPool(new ArrayStorage());
+        $pool = new TaggedCachePool($storage, tagPool: new ArrayStorage());
 
         $pool->set('cleanup_item', 'VALUE', 3600, ['users']);
 
@@ -974,20 +666,9 @@ class TaggedCachePoolTest extends TestCase
         );
     }
 
-    /** @see CachePool::getItem — works correctly when tagPool is disabled */
-    public function taggedTestGetItemWithTagPoolDisabled(): void
-    {
-        $pool = (new CachePool())->withTagPool(false);
-
-        $pool->set('notag_item', 'VALUE', 3600);
-
-        $item = $pool->getItem('notag_item');
-        self::assertTrue($item->isHit());
-        self::assertSame('VALUE', $item->get());
-    }
 
     /** @see CachePool::hasItem — respects tag invalidation via getItem */
-    public function taggedTestHasItemRespectsTagInvalidation(): void
+    public function testHasItemRespectsTagInvalidation(): void
     {
         $this->instance->set('has_tagged', 'VALUE', 3600, ['users']);
 
@@ -1003,7 +684,7 @@ class TaggedCachePoolTest extends TestCase
     // -----------------------------------------------------------------------
 
     /** @see CachePool::isItemValid — returns true for valid cached item */
-    public function taggedTestIsItemValidReturnsTrueForValidItem(): void
+    public function testIsItemValidReturnsTrueForValidItem(): void
     {
         $this->instance->set('valid_item', 'VALUE', 3600, ['users']);
 
@@ -1013,7 +694,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::isItemValid — returns false when item is not a hit */
-    public function taggedTestIsItemValidReturnsFalseForMissedItem(): void
+    public function testIsItemValidReturnsFalseForMissedItem(): void
     {
         $item = $this->instance->getItem('missing_key');
 
@@ -1022,7 +703,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::isItemValid — returns false when tags are invalidated */
-    public function taggedTestIsItemValidReturnsFalseAfterTagInvalidation(): void
+    public function testIsItemValidReturnsFalseAfterTagInvalidation(): void
     {
         $this->instance->set('validate_tagged', 'VALUE', 3600, ['users', 'posts']);
 
@@ -1040,7 +721,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::isItemValid — works with untagged items */
-    public function taggedTestIsItemValidWorksWithUntaggedItems(): void
+    public function testIsItemValidWorksWithUntaggedItems(): void
     {
         $this->instance->set('untagged_validate', 'VALUE', 3600);
 
@@ -1058,27 +739,9 @@ class TaggedCachePoolTest extends TestCase
         );
     }
 
-    /** @see CachePool::isItemValid — can revalidate after time has passed */
-    public function taggedTestIsItemValidCanRevalidateAfterDelay(): void
-    {
-        $this->instance->set('delayed_check', 'VALUE', 3600, ['users']);
-
-        $item = $this->instance->getItem('delayed_check');
-        self::assertTrue($this->instance->isItemValid($item));
-
-        // Simulate some time passing and tag invalidation
-        usleep(1000);
-        $this->instance->invalidateTags('users');
-
-        // Re-validate the same item object
-        self::assertFalse(
-            $this->instance->isItemValid($item),
-            'isItemValid should detect invalidation even after delay'
-        );
-    }
 
     /** @see CachePool::isItemValid — validates expired items correctly */
-    public function taggedTestIsItemValidReturnsFalseForExpiredItem(): void
+    public function testIsItemValidReturnsFalseForExpiredItem(): void
     {
         // Create an item with a future expiration first to ensure it's saved
         $item = $this->instance->getItem('will_expire');
@@ -1102,20 +765,9 @@ class TaggedCachePoolTest extends TestCase
         self::assertFalse($this->instance->isItemValid($item), 'isItemValid should return false for expired item');
     }
 
-    /** @see CachePool::isItemValid — works with tagPool disabled */
-    public function taggedTestIsItemValidWithTagPoolDisabled(): void
-    {
-        $pool = new CachePool()->withTagPool(false);
-
-        $pool->set('notag_valid', 'VALUE', 3600);
-
-        $item = $pool->getItem('notag_valid');
-
-        self::assertTrue($pool->isItemValid($item), 'isItemValid should work when tagPool is disabled');
-    }
 
     /** @see CachePool::isItemValid — batch validation scenario */
-    public function taggedTestIsItemValidBatchValidation(): void
+    public function testIsItemValidBatchValidation(): void
     {
         $this->instance->set('item1', 'V1', 3600, ['users']);
         $this->instance->set('item2', 'V2', 3600, ['posts']);
@@ -1148,7 +800,7 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::isItemValid + getItem — validation consistency */
-    public function taggedTestIsItemValidConsistentWithGetItem(): void
+    public function testIsItemValidConsistentWithGetItem(): void
     {
         $this->instance->set('consistency_check', 'VALUE', 3600, ['users']);
 
@@ -1173,11 +825,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getItem — missing tag envelope makes item invalid */
-    public function taggedTestGetItemWithMissingTagEnvelopeIsInvalid(): void
+    public function testGetItemWithMissingTagEnvelopeIsInvalid(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save item with tags
         $pool->set('tagged_item', 'VALUE', 3600, ['users']);
@@ -1195,11 +847,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::save — items without tags get empty envelope */
-    public function taggedTestItemsWithoutTagsGetEmptyEnvelope(): void
+    public function testItemsWithoutTagsGetEmptyEnvelope(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save item without tags
         $pool->set('no_tags', 'VALUE', 3600);
@@ -1217,11 +869,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::fetch — missing envelope forces recomputation */
-    public function taggedTestFetchWithMissingEnvelopeRecomputes(): void
+    public function testFetchWithMissingEnvelopeRecomputes(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         $computeCount = 0;
 
@@ -1264,11 +916,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::save — switching from tags to no tags updates envelope */
-    public function taggedTestSwitchingFromTagsToNoTagsUpdatesEnvelope(): void
+    public function testSwitchingFromTagsToNoTagsUpdatesEnvelope(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save with tags
         $pool->set('changeable', 'VALUE1', 3600, ['users']);
@@ -1305,11 +957,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getItem — corrupted envelope (non-array) makes item invalid */
-    public function taggedTestGetItemWithCorruptedEnvelopeIsInvalid(): void
+    public function testGetItemWithCorruptedEnvelopeIsInvalid(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save normal item
         $pool->set('corrupted', 'VALUE', 3600, ['users']);
@@ -1328,11 +980,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::invalidateTags — works correctly after envelope deletion and restoration */
-    public function taggedTestInvalidateTagsAfterEnvelopeRestoration(): void
+    public function testInvalidateTagsAfterEnvelopeRestoration(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         $computeCount = 0;
 
@@ -1376,11 +1028,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::isItemValid — detects missing envelope */
-    public function taggedTestIsItemValidDetectsMissingEnvelope(): void
+    public function testIsItemValidDetectsMissingEnvelope(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save item with tags
         $pool->set('validate_me', 'VALUE', 3600, ['posts']);
@@ -1402,11 +1054,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::deleteItem — also deletes envelope */
-    public function taggedTestDeleteItemAlsoRemovesEnvelope(): void
+    public function testDeleteItemAlsoRemovesEnvelope(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save items with and without tags
         $pool->set('with_tags', 'V1', 3600, ['users']);
@@ -1429,11 +1081,11 @@ class TaggedCachePoolTest extends TestCase
     }
 
     /** @see CachePool::getMultiple — respects missing envelopes */
-    public function taggedTestGetMultipleRespectsEnvelopeLogic(): void
+    public function testGetMultipleRespectsEnvelopeLogic(): void
     {
         $mainStorage = new ArrayStorage();
         $tagStorage = new ArrayStorage();
-        $pool = (new CachePool($mainStorage))->withTagPool($tagStorage);
+        $pool = new TaggedCachePool($mainStorage, tagPool: $tagStorage);
 
         // Save multiple items
         $pool->set('item1', 'V1', 3600, ['users']);

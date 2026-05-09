@@ -120,8 +120,7 @@ class CachePoolTest extends TestCase
             ->with('flower')
             ->willReturn('Sakura');
 
-        // Disable tagPool for this test since we're only testing basic storage functionality
-        $this->instance = $this->instance->withStorage($storageMock)->withTagPool(false);
+        $this->instance = $this->instance->withStorage($storageMock);
 
         $item = $this->instance->getItem('flower');
 
@@ -147,7 +146,7 @@ class CachePoolTest extends TestCase
             ->with('flip')
             ->willReturn(null);
 
-        $pool = (new CachePool())->withStorage($storageMock)->withTagPool(false);
+        $pool = (new CachePool())->withStorage($storageMock);
         $item = $pool->getItem('flip');
 
         self::assertFalse($item->isHit());
@@ -188,7 +187,7 @@ class CachePoolTest extends TestCase
         $storageMock->expects($this->never())
             ->method('remove');
 
-        $pool = new CachePool()->withStorage($storageMock)->withTagPool(false);
+        $pool = new CachePool()->withStorage($storageMock);
         $item = $pool->getItem('stale');
 
         // Item should be marked as miss due to expired metadata
