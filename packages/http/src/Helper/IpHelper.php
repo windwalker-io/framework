@@ -20,6 +20,21 @@ class IpHelper
     {
     }
 
+    public static function isIp(string $ip): bool
+    {
+        return static::isIpv4($ip) || static::isIpv6($ip);
+    }
+
+    public static function isIpv4(string $ip): bool
+    {
+        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
+    }
+
+    public static function isIpv6(string $ip): bool
+    {
+        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
+    }
+
     /**
      * Checks if an IPv4 or IPv6 address is contained in the list of given IPs or subnets.
      *
