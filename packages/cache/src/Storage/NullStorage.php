@@ -7,7 +7,7 @@ namespace Windwalker\Cache\Storage;
 /**
  * The NullStorage class.
  */
-class NullStorage implements StorageInterface
+class NullStorage implements StorageInterface, GroupedStorageInterface
 {
     /**
      * @inheritDoc
@@ -47,5 +47,10 @@ class NullStorage implements StorageInterface
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
         return true;
+    }
+
+    public function withGroup(string $group): static
+    {
+        return clone $this;
     }
 }

@@ -22,12 +22,17 @@ class FlysystemStorage extends FileStorage
      *
      * @param  Filesystem  $driver
      * @param  array       $options
+     * @param  float       $pruneProbability
      */
-    public function __construct(Filesystem $driver, array $options = [])
-    {
+    public function __construct(
+        Filesystem $driver,
+        array $options = [],
+        float $pruneProbability = 0.01,
+        string $group = '',
+    ) {
         $this->driver = $driver;
 
-        parent::__construct('.', $options);
+        parent::__construct('.', $options, $pruneProbability, $group);
     }
 
     /**
@@ -62,12 +67,68 @@ class FlysystemStorage extends FileStorage
     public function clear(): bool
     {
         $results = true;
+        $prefix = $this->getGroupPrefixPath();
 
         foreach ($this->getDriver()->listContents('/', true) as $metadata) {
-            $results = $this->getDriver()->delete($metadata['path']) && $results;
+            if ($this->getMetadataType($metadata) !== 'file') {
+                continue;
+            }
+
+            $path = $this->getMetadataPath($metadata);
+
+            if ($path === null) {
+                continue;
+            }
+
+            if ($prefix !== '' && !str_starts_with($path, $prefix . '/')) {
+                continue;
+            }
+
+            $results = $this->getDriver()->delete($path) && $results;
         }
 
         return $results;
+    }
+
+    public function prune(): int
+    {
+        if ($this->getExpirationFormat() === '') {
+            return 0;
+        }
+
+        $pruned = 0;
+        $prefix = $this->getGroupPrefixPath();
+
+        foreach ($this->getDriver()->listContents('/', true) as $metadata) {
+            if ($this->getMetadataType($metadata) !== 'file') {
+                continue;
+            }
+
+            $path = $this->getMetadataPath($metadata);
+
+            if ($path === null) {
+                continue;
+            }
+
+            if ($prefix !== '' && !str_starts_with($path, $prefix . '/')) {
+                continue;
+            }
+
+            $contents = $this->getDriver()->read($path);
+
+            if (!is_string($contents)) {
+                continue;
+            }
+
+            $expiration = $this->extractExpirationFromString($contents);
+
+            if ($expiration !== null && static::isExpired($expiration)) {
+                $this->getDriver()->delete($path);
+                $pruned++;
+            }
+        }
+
+        return $pruned;
     }
 
     /**
@@ -128,7 +189,7 @@ class FlysystemStorage extends FileStorage
      */
     public function fetchStreamUri(string $key): string
     {
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupPrefixPath();
 
         $this->checkFilePath($filePath);
 
@@ -138,7 +199,16 @@ class FlysystemStorage extends FileStorage
             $ext = '.php';
         }
 
-        return self::hashFilename($key) . $ext;
+        if ($filePath === '') {
+            return self::hashFilename($key) . $ext;
+        }
+
+        return $filePath . '/' . self::hashFilename($key) . $ext;
+    }
+
+    protected function getGroupPrefixPath(): string
+    {
+        return $this->group === '' ? '' : $this->getGroupDirectoryName();
     }
 
     /**
@@ -151,5 +221,23 @@ class FlysystemStorage extends FileStorage
     public static function hashFilename(string $key): string
     {
         return '~' . hash('sha1', $key);
+    }
+
+    private function getMetadataPath(mixed $metadata): ?string
+    {
+        return match (true) {
+            is_array($metadata) => $metadata['path'] ?? null,
+            is_object($metadata) && method_exists($metadata, 'path') => $metadata->path(),
+            default => null,
+        };
+    }
+
+    private function getMetadataType(mixed $metadata): ?string
+    {
+        return match (true) {
+            is_array($metadata) => $metadata['type'] ?? 'file',
+            is_object($metadata) && method_exists($metadata, 'type') => $metadata->type(),
+            default => null,
+        };
     }
 }

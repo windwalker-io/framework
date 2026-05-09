@@ -7,6 +7,8 @@ namespace Windwalker\Cache\Test\Storage;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Cache\Storage\FileStorage;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
+use Windwalker\Cache\Storage\PrunableStorageInterface;
 
 /**
  * The FileStorageTest class.
@@ -105,6 +107,49 @@ class FileStorageTest extends TestCase
         self::assertFalse($this->instance->has('flower2'));
     }
 
+    public function testImplementsPrunableStorageInterface(): void
+    {
+        self::assertInstanceOf(PrunableStorageInterface::class, $this->instance);
+    }
+
+    public function testImplementsGroupedStorageInterface(): void
+    {
+        self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testWithGroupCreatesScopedClone(): void
+    {
+        $flower = $this->instance->withGroup('flower');
+        $tree = $this->instance->withGroup('tree');
+
+        self::assertNotSame($flower, $tree);
+        self::assertSame('', $this->instance->group);
+        self::assertSame('flower', $flower->group);
+        self::assertSame('tree', $tree->group);
+
+        $flower->save('same-key', 'FLOWER', time() + 60);
+        $tree->save('same-key', 'TREE', time() + 60);
+
+        self::assertSame('FLOWER', $flower->get('same-key'));
+        self::assertSame('TREE', $tree->get('same-key'));
+        self::assertFalse($this->instance->has('same-key'));
+    }
+
+    public function testPrune(): void
+    {
+        $this->instance->save('expired1', 'Sakura1', time() - 10);
+        $this->instance->save('expired2', 'Sakura2', time() - 1);
+        $this->instance->save('active', 'Sakura3', time() + 60);
+        $this->instance->save('forever', 'Sakura4', 0);
+
+        self::assertSame(2, $this->instance->prune());
+        self::assertFalse($this->instance->has('expired1'));
+        self::assertFalse($this->instance->has('expired2'));
+        self::assertTrue($this->instance->has('active'));
+        self::assertTrue($this->instance->has('forever'));
+        self::assertSame(0, $this->instance->prune());
+    }
+
     /**
      * @see  FileStorage::remove
      */
@@ -127,7 +172,7 @@ class FileStorageTest extends TestCase
     {
         $this->root = $path = dirname(__DIR__) . '/fixtures';
 
-        $this->instance = new FileStorage($path);
+        $this->instance = new FileStorage($path, [], 0.0);
 
         $this->instance->clear();
     }

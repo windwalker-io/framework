@@ -88,10 +88,10 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             "deleted" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
             "params" json DEFAULT NULL
             );
-            ALTER TABLE "enterprise"
-             ADD CONSTRAINT "pk_enterprise" PRIMARY KEY ("id");
             CREATE INDEX "idx_enterprise_catid_type" ON "enterprise" ("catid","type");
             CREATE INDEX "idx_enterprise_title" ON "enterprise" ("title");
+            ALTER TABLE "enterprise"
+             ADD CONSTRAINT "pk_enterprise" PRIMARY KEY ("id");
             ALTER TABLE "enterprise"
              ADD CONSTRAINT "idx_enterprise_alias" UNIQUE ("alias")
             SQL,
@@ -141,60 +141,58 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
      */
     public function testUpdate(): void
     {
-        $logs = $this->logQueries(
-            fn() => $this->instance->update(
-                function (Schema $schema) {
-                    // New column
-                    $schema->varchar('captain')->length(512)->after('catid');
-                    $schema->varchar('first_officer')->length(512)->after('captain');
+        $this->instance->update(
+            function (Schema $schema) {
+                // New column
+                $schema->varchar('captain')->length(512)->after('catid');
+                $schema->varchar('first_officer')->length(512)->after('captain');
 
-                    // Update column
-                    $schema->char('alias')->length(25)
-                        ->nullable(true)
-                        ->defaultValue('');
+                // Update column
+                $schema->char('alias')->length(25)
+                    ->nullable(true)
+                    ->defaultValue('');
 
-                    // New index
-                    $schema->addIndex('captain');
-                }
-            )
+                // New index
+                $schema->addIndex('captain');
+            }
         );
 
-        // phpcs:disable
-        self::assertSqlFormatEquals(
-            <<<SQL
-            SELECT "ordinal_position",
-                   "column_default",
-                   "is_nullable",
-                   "data_type",
-                   "character_maximum_length",
-                   "character_octet_length",
-                   "numeric_precision",
-                   "numeric_scale",
-                   "column_name"
-            FROM "information_schema"."columns"
-            WHERE "table_name" = 'enterprise'
-              AND "table_schema" NOT IN ('pg_catalog', 'information_schema');
-            ALTER TABLE "enterprise"
-                ADD COLUMN "captain" varchar(512) NOT NULL DEFAULT '';
-            ALTER TABLE "enterprise"
-                ADD COLUMN "first_officer" varchar(512) NOT NULL DEFAULT '';
-            ALTER TABLE "enterprise"
-                ALTER COLUMN "alias" TYPE varchar(25),
-                ALTER COLUMN "alias" SET NOT NULL,
-                ALTER COLUMN "alias" SET DEFAULT '';
-            SELECT "ix".*, tc.constraint_type = 'PRIMARY KEY' AS "is_primary"
-            FROM "pg_indexes" AS "ix"
-            LEFT JOIN "information_schema"."table_constraints" AS "tc"
-                ON "tc"."table_schema" = "ix"."schemaname" AND "tc"."constraint_name" = "ix"."indexname" AND
-                    tc.constraint_type = 'PRIMARY KEY'
-            WHERE "ix"."tablename" = 'enterprise'
-              AND "ix"."schemaname" NOT IN ('pg_catalog', 'information_schema')
-            ORDER BY CASE tc.constraint_type WHEN 'PRIMARY KEY' THEN 1 ELSE 2 END;
-            CREATE INDEX "idx_enterprise_captain" ON "enterprise" ("captain")
-            SQL,
-            implode("\n;", $logs)
+        $columns = $this->instance->getColumns(true);
+
+        self::assertEquals(
+            'varchar',
+            $columns['captain']->getDataType(),
         );
-        // phpcs:enable
+
+        self::assertEquals(
+            512,
+            $columns['captain']->getCharacterMaximumLength(),
+        );
+
+        self::assertEquals(
+            'varchar',
+            $columns['first_officer']->getDataType(),
+        );
+
+        self::assertEquals(
+            'varchar',
+            $columns['alias']->getDataType(),
+        );
+
+        self::assertEquals(
+            25,
+            $columns['alias']->getCharacterMaximumLength(),
+        );
+
+        self::assertEquals(
+            true,
+            $columns['alias']->getIsNullable(),
+        );
+
+        self::assertEquals(
+            '',
+            $columns['alias']->getColumnDefault(),
+        );
     }
 
     /**
@@ -202,42 +200,8 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
      */
     public function testAddIndex(): void
     {
-        $logs = $this->logQueries(
-            function () {
-                $this->instance->addIndex('created');
-                $this->instance->addIndex(['start_date', 'first_officer']);
-            }
-        );
-
-        // phpcs:disable
-        self::assertSqlFormatEquals(
-            <<<SQL
-            SELECT "ordinal_position",
-                   "column_default",
-                   "is_nullable",
-                   "data_type",
-                   "character_maximum_length",
-                   "character_octet_length",
-                   "numeric_precision",
-                   "numeric_scale",
-                   "column_name"
-            FROM "information_schema"."columns"
-            WHERE "table_name" = 'enterprise'
-              AND "table_schema" NOT IN ('pg_catalog', 'information_schema');
-            SELECT "ix".*, tc.constraint_type = 'PRIMARY KEY' AS "is_primary"
-            FROM "pg_indexes" AS "ix"
-            LEFT JOIN "information_schema"."table_constraints" AS "tc"
-                ON "tc"."table_schema" = "ix"."schemaname" AND "tc"."constraint_name" = "ix"."indexname" AND
-                    tc.constraint_type = 'PRIMARY KEY'
-            WHERE "ix"."tablename" = 'enterprise'
-                AND "ix"."schemaname" NOT IN ('pg_catalog', 'information_schema')
-            ORDER BY CASE tc.constraint_type WHEN 'PRIMARY KEY' THEN 1 ELSE 2 END;
-            CREATE INDEX "idx_enterprise_created" ON "enterprise" ("created");
-            CREATE INDEX "idx_enterprise_start_date_first_officer" ON "enterprise" ("start_date", "first_officer")
-            SQL,
-            implode(";\n", $logs)
-        );
-        // phpcs:enable
+        $this->instance->addIndex('created');
+        $this->instance->addIndex(['start_date', 'first_officer']);
 
         $this->instance->reset();
 
@@ -292,70 +256,26 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
      */
     public function testAddConstraint(): void
     {
-        $logs = $this->logQueries(
-            fn() => $this->instance->addConstraint(
-                ['captain', 'first_officer'],
-                Constraint::TYPE_UNIQUE
-            )
+        $this->instance->addConstraint(
+            ['captain', 'first_officer'],
+            Constraint::TYPE_UNIQUE
         );
 
-        // phpcs:disable
-        self::assertSqlFormatEquals(
-            <<<SQL
-            SELECT "ordinal_position",
-                   "column_default",
-                   "is_nullable",
-                   "data_type",
-                   "character_maximum_length",
-                   "character_octet_length",
-                   "numeric_precision",
-                   "numeric_scale",
-                   "column_name"
-            FROM "information_schema"."columns"
-            WHERE "table_name" = 'enterprise'
-              AND "table_schema" NOT IN ('pg_catalog', 'information_schema');
-            SELECT "t"."table_name",
-                   "tc"."constraint_name",
-                   "tc"."constraint_type",
-                   "kcu"."column_name",
-                   "cc"."check_clause",
-                   "rc"."match_option",
-                   "rc"."update_rule",
-                   "rc"."delete_rule",
-                   "kcu2"."table_schema" AS "referenced_table_schema",
-                   "kcu2"."table_name"   AS "referenced_table_name",
-                   "kcu2"."column_name"  AS "referenced_column_name"
-            FROM "information_schema"."tables" AS "t"
-                     INNER JOIN "information_schema"."table_constraints" AS "tc"
-                                ON "t"."table_schema" = "tc"."table_schema" AND "t"."table_name" = "tc"."table_name"
-                     LEFT JOIN "information_schema"."key_column_usage" AS "kcu"
-                               ON "kcu"."table_schema" = "tc"."table_schema" AND "kcu"."table_name" = "tc"."table_name" AND
-                                  "kcu"."constraint_name" = "tc"."constraint_name"
-                     LEFT JOIN "information_schema"."check_constraints" AS "cc"
-                               ON "cc"."constraint_schema" = "tc"."constraint_schema" AND
-                                  "cc"."constraint_name" = "tc"."constraint_name"
-                     LEFT JOIN "information_schema"."referential_constraints" AS "rc"
-                               ON "rc"."constraint_schema" = "tc"."constraint_schema" AND
-                                  "rc"."constraint_name" = "tc"."constraint_name"
-                     LEFT JOIN "information_schema"."key_column_usage" AS "kcu2"
-                               ON "rc"."unique_constraint_schema" = "kcu2"."constraint_schema" AND
-                                  "rc"."unique_constraint_name" = "kcu2"."constraint_name" AND
-                                  "kcu"."position_in_unique_constraint" = "kcu2"."ordinal_position"
-            WHERE "t"."table_name" = 'enterprise'
-              AND "t"."table_type" IN ('BASE TABLE', 'VIEW')
-              AND "t"."table_schema" NOT IN ('pg_catalog', 'information_schema')
-            ORDER BY CASE "tc"."constraint_type"
-                         WHEN 'PRIMARY KEY' THEN 1
-                         WHEN 'UNIQUE' THEN 2
-                         WHEN 'FOREIGN KEY' THEN 3
-                         WHEN 'CHECK' THEN 4
-                         ELSE 5 END, "tc"."constraint_name", "kcu"."ordinal_position";
-            ALTER TABLE "enterprise"
-                ADD CONSTRAINT "ct_enterprise_captain_first_officer" UNIQUE ("captain", "first_officer")
-            SQL,
-            implode(";\n", $logs)
+        $this->instance->reset();
+        $constraints = array_filter(
+            $this->instance->getConstraints(),
+            fn(Constraint $item) => $item->constraintType !== 'CHECK'
         );
-        // phpcs:enable
+
+        self::assertArrayHasKey('ct_enterprise_captain_first_officer', $constraints);
+        self::assertEquals(
+            Constraint::TYPE_UNIQUE,
+            $constraints['ct_enterprise_captain_first_officer']->constraintType
+        );
+        self::assertEquals(
+            ['captain', 'first_officer'],
+            array_keys($constraints['ct_enterprise_captain_first_officer']->getColumns())
+        );
     }
 
     /**

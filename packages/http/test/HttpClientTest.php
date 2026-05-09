@@ -580,4 +580,139 @@ class HttpClientTest extends TestCase
             $transport->receivedOptions->foo
         );
     }
+
+    // ------------------------------------------------------------------
+    // mustXxx() tests
+    // ------------------------------------------------------------------
+
+    public function testMustGetSuccessReturnsResponse(): void
+    {
+        // MockTransport returns 200 by default – should not throw.
+        $response = $this->instance->mustGet('http://example.com/');
+
+        self::assertTrue($response->isSuccess());
+    }
+
+    public function testMustGetThrowsOnErrorResponse(): void
+    {
+        $this->instance->on(
+            AfterRequestEvent::class,
+            function (AfterRequestEvent $event) {
+                $event->response = $event->response->withStatus(404);
+            }
+        );
+
+        $this->expectException(\Windwalker\Http\Exception\HttpRequestException::class);
+        $this->expectExceptionCode(404);
+
+        $this->instance->mustGet('http://example.com/not-found');
+    }
+
+
+    public function testMustRequestSuccessReturnsResponse(): void
+    {
+        $response = $this->instance->mustRequest('GET', 'http://example.com/');
+
+        self::assertTrue($response->isSuccess());
+        self::assertEquals('GET', $this->transport->request->getMethod());
+    }
+
+    public function testMustRequestThrowsOnErrorResponse(): void
+    {
+        $this->instance->on(
+            AfterRequestEvent::class,
+            function (AfterRequestEvent $event) {
+                $event->response = $event->response->withStatus(503);
+            }
+        );
+
+        $this->expectException(\Windwalker\Http\Exception\HttpRequestException::class);
+        $this->expectExceptionCode(503);
+
+        $this->instance->mustRequest('POST', 'http://example.com/api', ['data' => 1], new \Windwalker\Http\HttpClientOptions());
+    }
+
+    public function testMustPostViaCallThrowsOnErrorResponse(): void
+    {
+        $this->instance->on(
+            AfterRequestEvent::class,
+            function (AfterRequestEvent $event) {
+                $event->response = $event->response->withStatus(422);
+            }
+        );
+
+        $this->expectException(\Windwalker\Http\Exception\HttpRequestException::class);
+        $this->expectExceptionCode(422);
+
+        $this->instance->mustPost('http://example.com/api', ['flower' => 'sakura']);
+    }
+
+    // ------------------------------------------------------------------
+    // Proxy-option integration tests (real CurlTransport + test server)
+    // ------------------------------------------------------------------
+
+    public function testTimeoutOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureEnd(WINDWALKER_TEST_HTTP_URL, '/'),
+                'timeout' => 10,
+            ]
+        );
+
+        $response = $http->get('json');
+
+        self::assertTrue($response->isSuccess());
+    }
+
+    public function testUserAgentOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'user_agent' => 'WindwalkerTest/4.0',
+            ]
+        );
+
+        $response = $http->get('server');
+        $server = json_decode($response->getContent(), true);
+
+        self::assertEquals('WindwalkerTest/4.0', $server['HTTP_USER_AGENT']);
+    }
+
+    public function testVerifyPeerOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'verify_peer' => false,
+            ]
+        );
+
+        $response = $http->get('json');
+
+        self::assertTrue($response->isSuccess());
+    }
+
+    public function testFollowLocationOptionPassedToCurlTransport(): void
+    {
+        self::checkTestServerRunningOrSkip();
+
+        $http = new HttpClient(
+            [
+                'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
+                'follow_location' => false,
+            ]
+        );
+
+        $response = $http->get('json');
+
+        self::assertTrue($response->isSuccess());
+    }
 }

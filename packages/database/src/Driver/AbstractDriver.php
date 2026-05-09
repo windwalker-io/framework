@@ -234,6 +234,15 @@ abstract class AbstractDriver implements HydratorAwareInterface
         }
     }
 
+    public function ping(): bool
+    {
+        return $this->useConnection(
+            function (ConnectionInterface $conn) {
+                return $conn->ping();
+            }
+        );
+    }
+
     public static function shouldAutoReconnect(\Throwable|string $message): bool
     {
         if ($message instanceof \Throwable) {

@@ -7,14 +7,15 @@ namespace Windwalker\Cache\Storage;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\ORM\ORM;
 use Windwalker\Query\Query;
+use Throwable;
 
 use function Windwalker\raw;
 
-class DatabaseStorage implements StorageInterface, LockableStorageInterface
+class DatabaseStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
 {
-    use LockableStorageTrait;
 
     protected ORM $orm {
         get => $this->db->orm();
@@ -48,20 +49,87 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
 
     public function __construct(
         protected DatabaseAdapter $db,
-        protected string $group = '',
+        public protected(set) string $group = '',
         protected string $table = 'cache_items',
         array $columns = [],
-        protected float $gcProbability = 0.01,
+        protected float $pruneProbability = 0.01,
+        protected bool $autoCreateTable = true,
     ) {
         $this->columns = array_merge($this->columns, $columns);
     }
 
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
-        if ($this->shouldClear()) {
-            $this->clearGroupExpired();
-        }
+        try {
+            return $this->saveInternal($key, $value, $expiration);
+        } catch (Throwable $e) {
+            // Lazy create table only when first save fails and table is missing.
+            if (!$this->autoCreateTable || $this->tableExists()) {
+                throw $e;
+            }
 
+            $this->ensureTableExists();
+
+            return $this->saveInternal($key, $value, $expiration);
+        }
+    }
+
+    public function get(string $key): mixed
+    {
+        $payload = $this->orm->select($this->payloadField)
+            ->from($this->table)
+            ->where($this->keyField, $key)
+            ->where($this->groupField, $this->group)
+            // AND (A OR B)
+            ->orWhere(
+                function (Query $query) {
+                    $query->where($this->expiredAtField, null);
+                    $query->where(
+                        $this->expiredAtField,
+                        '>',
+                        raw($this->getCurrentTimestampStatement())
+                    );
+                }
+            )
+            ->result();
+
+        return $payload;
+    }
+
+    public function has(string $key): bool
+    {
+        try {
+            return $this->get($key) !== null;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    public function clear(): bool
+    {
+        $this->orm->delete($this->table)
+            ->where($this->groupField, $this->group)
+            ->execute();
+
+        return true;
+    }
+
+    public function remove(string $key): bool
+    {
+        try {
+            $this->orm->delete($this->table)
+                ->where($this->keyField, $key)
+                ->where($this->groupField, $this->group)
+                ->execute();
+
+            return true;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    private function saveInternal(string $key, mixed $value, int $expiration = 0): bool
+    {
         $expiredAt = 'NULL';
 
         if ($expiration) {
@@ -73,6 +141,10 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
 
         if ($query) {
             $query->execute();
+
+            if ($this->shouldPrune()) {
+                $this->prune();
+            }
 
             return true;
         }
@@ -116,109 +188,55 @@ class DatabaseStorage implements StorageInterface, LockableStorageInterface
             }
         );
 
-        return true;
-    }
-
-    public function get(string $key): mixed
-    {
-        $payload = $this->orm->select($this->payloadField)
-            ->from($this->table)
-            ->where($this->keyField, $key)
-            ->where($this->groupField, $this->group)
-            // AND (A OR B)
-            ->orWhere(
-                function (Query $query) {
-                    $query->where($this->expiredAtField, null);
-                    $query->where(
-                        $this->expiredAtField,
-                        '>',
-                        raw($this->getCurrentTimestampStatement())
-                    );
-                }
-            )
-            ->result();
-
-        return $payload;
-    }
-
-    public function has(string $key): bool
-    {
-        return $this->get($key) !== null;
-    }
-
-    public function clear(): bool
-    {
-        $this->orm->delete($this->table)
-            ->where($this->groupField, $this->group)
-            ->execute();
+        if ($this->shouldPrune()) {
+            $this->prune();
+        }
 
         return true;
     }
 
-    public function remove(string $key): bool
+    public function prune(): int
     {
-        $this->orm->delete($this->table)
-            ->where($this->keyField, $key)
-            ->where($this->groupField, $this->group)
-            ->execute();
-
-        return true;
+        return $this->runPruneStatement($this->group)->countAffected();
     }
 
-    public function lock(string $key, ?bool &$isNew = null): bool
+    public function pruneAll(): int
     {
-        $this->db->getPlatform()->transactionStart();
-
-        $item = $this->orm->from($this->table)
-            ->where($this->keyField, $key)
-            ->where($this->groupField, $this->group)
-            ->forUpdate()
-            ->get();
-
-        $isNew = !$item;
-
-        $this->locked[$key] = $isNew;
-
-        return true;
+        return $this->runPruneStatement()->countAffected();
     }
 
-    public function release(string $key): bool
+    public function shouldPrune(): bool
     {
-        $this->db->getPlatform()->transactionCommit();
-
-        unset($this->locked[$key]);
-
-        return true;
-    }
-
-    public function isLocked(string $key): bool
-    {
-        return array_key_exists($key, $this->locked);
-    }
-
-    public function clearGroupExpired(): StatementInterface
-    {
-        return $this->orm->delete($this->table)
-            ->where($this->groupField, $this->group)
-            ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()))
-            ->execute();
-    }
-
-    public function clearAllExpired(): StatementInterface
-    {
-        return $this->orm->delete($this->table)
-            ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()))
-            ->execute();
+        return random_int(0, 100_000) / 100_000 < $this->pruneProbability;
     }
 
     /**
-     * @return  bool
-     *
-     * @throws \Random\RandomException
+     * Get the prune probability (0.0 to 1.0)
      */
-    public function shouldClear(): bool
+    public function getPruneProbability(): float
     {
-        return random_int(0, 100_000) / 100_000 < $this->gcProbability;
+        return $this->pruneProbability;
+    }
+
+    /**
+     * Set the prune probability (0.0 to 1.0)
+     *
+     * @param  float  $probability
+     * @return  static  Return self to support chaining.
+     */
+    public function setPruneProbability(float $probability): static
+    {
+        $this->pruneProbability = max(0.0, min(1.0, $probability));
+
+        return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
     }
 
     private function upsertSql(string $key, string $group, string $payload, string $expiredAt): ?Query
@@ -302,6 +320,18 @@ $expiredAtField = EXCLUDED.$expiredAtField
         return null;
     }
 
+    private function runPruneStatement(?string $group = null): StatementInterface
+    {
+        $query = $this->orm->delete($this->table)
+            ->where($this->expiredAtField, '<', raw($this->getCurrentTimestampStatement()));
+
+        if ($group !== null) {
+            $query->where($this->groupField, $group);
+        }
+
+        return $query->execute();
+    }
+
     private function getCurrentTimestampStatement(): string
     {
         return match ($this->db->getPlatform()->getName()) {
@@ -312,5 +342,36 @@ $expiredAtField = EXCLUDED.$expiredAtField
             AbstractPlatform::SQLSERVER => "CAST(DATEDIFF_BIG(ms, '1970-01-01', SYSUTCDATETIME()) AS FLOAT) / 1000.0",
             default => (new \DateTimeImmutable())->format('U.u'),
         };
+    }
+
+    public static function createTable(DatabaseAdapter $db, string $table = 'cache_items'): void
+    {
+        $db->getTableManager($table)->create(
+            function (Schema $schema) use ($db) {
+                if ($db->getPlatform()->getName() === AbstractPlatform::SQLITE) {
+                    $schema->primary('id');
+                } else {
+                    $schema->primaryBigint('id');
+                }
+
+                $schema->varchar('key');
+                $schema->varchar('group');
+                $schema->longtext('payload');
+                $schema->integer('expired_at')->nullable(true);
+
+                $schema->addUniqueKey(['key', 'group']);
+                $schema->addIndex('expired_at');
+            }
+        );
+    }
+
+    protected function ensureTableExists(): void
+    {
+        static::createTable($this->db, $this->table);
+    }
+
+    protected function tableExists(): bool
+    {
+        return $this->db->getTableManager($this->table)->exists();
     }
 }

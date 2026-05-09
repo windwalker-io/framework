@@ -24,8 +24,6 @@ use Windwalker\Utilities\TypeCast;
  * @method string toYaml(array $options = [])
  * @method string toHjson(array $options = [])
  * @method string toToml(array $options = [])
- *
- * @since  __DEPLOY_VERSION__
  */
 class Collection extends ArrayObject
 {

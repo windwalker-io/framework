@@ -68,6 +68,7 @@ class PostgreSQLDataType extends DataType
         self::SMALLINT,
         self::SERIAL,
         self::REAL,
+        self::BYTEA,
     ];
 
     public static function castForSave(mixed $value, Column $column): mixed

@@ -1,0 +1,37 @@
+# Docker Local Override Configuration
+#
+# If you already have some services installed locally (e.g. MySQL, Redis), you can
+# copy the relevant service block into this file and adjust the ports mapping,
+# or remove that service entirely to connect to your local installation instead.
+# Update the host in phpunit.xml to localhost / 127.0.0.1 accordingly.
+#
+# Usage:
+#   cp docker-compose.override.yml.dist docker-compose.override.yml
+#
+# Example: remap MySQL to port 3307 to avoid conflicts with a local installation
+
+services:
+  # Uncomment to override the MySQL port (or remove the service to skip Docker MySQL)
+  # mysql:
+  #   ports:
+  #     - "3307:3306"
+  #   profiles:
+  #     - disabled
+
+  # postgresql:
+  #   ports:
+  #     - "5433:5432"
+  #   profiles:
+  #     - disabled
+
+  # redis:
+  #   ports:
+  #     - "6380:6379"
+  #   profiles:
+  #     - disabled
+
+  # memcached:
+  #   ports:
+  #     - "11212:11211"
+  #   profiles:
+  #     - disabled

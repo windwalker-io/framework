@@ -27,5 +27,9 @@ phpunit.xml
 .phpunit.cache
 .scannerwork
 
+# Docker #
+docker-compose.override.yml
+.env
+
 # Extra #
 !.gitkeep

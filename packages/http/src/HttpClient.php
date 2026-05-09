@@ -45,6 +45,14 @@ use function Windwalker\Uri\uri_prepare;
  * @method PromiseInterface|mixed deleteAsync(Stringable|string $url, mixed $body, array $options = [])
  * @method PromiseInterface|mixed patchAsync(Stringable|string $url, mixed $body, array $options = [])
  * @method PromiseInterface|mixed traceAsync(Stringable|string $url, array $options = [])
+ * @method HttpClientResponse mustGet(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustOptions(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustHead(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustPost(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustPut(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustDelete(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustPatch(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new HttpClientOptions())
+ * @method HttpClientResponse mustTrace(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
  * @property HttpClientOptions $options
  *
  * @since  2.1
@@ -315,6 +323,31 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     }
 
     /**
+     * Send a request and throw an HttpRequestException if the response status is not successful.
+     *
+     * @param  string                   $method   The HTTP method.
+     * @param  Stringable|string        $url      The URL to request.
+     * @param  mixed                    $body     The request body data.
+     * @param  array|HttpClientOptions  $options  The options array.
+     *
+     * @return  HttpClientResponse
+     *
+     * @throws HttpRequestException
+     */
+    public function mustRequest(
+        string $method,
+        Stringable|string $url,
+        mixed $body = null,
+        HttpClientOptions $options = new HttpClientOptions()
+    ): HttpClientResponse {
+        $response = $this->request($method, $url, $body, $options);
+        $response->throwIfError();
+
+        return $response;
+    }
+
+
+    /**
      * Method to get property Transport
      *
      * @return  TransportInterface
@@ -465,11 +498,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
 
         $request = $this->hydrateRequest(new Request(), $method, $url, $body, $options);
 
-        $transportOptions = $options->transport ?? new TransportOptions();
-        $transportOptions->files = $options->files;
-        $transportOptions->progress = $options->progress;
-
-        $transportOptions->optionMerged = true;
+        $transportOptions = TransportOptions::fromHttpClientOptions($options);
 
         try {
             $response = $this->sendRequest($request, $transportOptions);
@@ -628,6 +657,22 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
                 }
 
                 return $promise;
+            }
+        }
+
+        if (str_starts_with($name, 'must')) {
+            $method = lcfirst(substr($name, 4));
+
+            if (method_exists($this, $method)) {
+                $ref = new ReflectionMethod($this, $method);
+
+                if (count($ref->getParameters()) >= 3) {
+                    // Methods with body: post, put, delete, patch …
+                    return $this->mustRequest(strtoupper($method), $args[0] ?? '', $args[1] ?? null, HttpClientOptions::wrap($args[2] ?? []));
+                } else {
+                    // Methods without body: get, head, options, trace …
+                    return $this->mustRequest(strtoupper($method), $args[0] ?? '', null, HttpClientOptions::wrap($args[1] ?? []));
+                }
             }
         }
 

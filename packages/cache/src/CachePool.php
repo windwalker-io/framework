@@ -5,31 +5,33 @@ declare(strict_types=1);
 namespace Windwalker\Cache;
 
 use DateInterval;
-use Generator;
+use DateTime;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Psr\SimpleCache\CacheInterface;
 use Throwable;
-use Traversable;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
+use Windwalker\Cache\Serializer\PhpFileSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
-use Windwalker\Cache\Storage\LockableStorageInterface;
+use Windwalker\Cache\Storage\GroupedStorageInterface;
+use Windwalker\Cache\Storage\PhpFileStorage;
 use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
- * The Pool class.
+ * @psalm-type  CacheHandler = callable(CacheItemInterface): mixed
  */
-class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareInterface
+class CachePool implements CachePoolInterface
 {
     use LoggerAwareTrait;
+
+    /** Prefix for per-item metadata sidecar records. */
+    private const string ITEM_META_PREFIX = '--ww_item_meta--';
 
     /**
      * @var bool
@@ -50,15 +52,42 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         protected StorageInterface $storage = new ArrayStorage(),
         protected SerializerInterface $serializer = new RawSerializer(),
         LoggerInterface $logger = new NullLogger(),
-        protected DateInterval|int|null $defaultTtl = null
+        protected DateInterval|int|null $defaultTtl = null,
     ) {
         $this->logger = $logger;
     }
 
     /**
-     * @inheritDoc
+     * Set the logger instance.
+     *
+     * @param  LoggerInterface  $logger
      */
-    public function getItem(string $key): CacheItemInterface
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    public function withLogger(LoggerInterface $logger): static
+    {
+        $new = clone $this;
+        $new->logger = $logger;
+
+        return $new;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Note: This method does not actively delete expired or invalid items from storage.
+     * It only marks them as cache misses. Item cleanup relies on:
+     * - Storage-level expiration (TTL enforcement)
+     * - Periodic pruning (e.g., ArrayStorage::prune())
+     * - Explicit deleteItem() calls
+     *
+     * This approach keeps getItem() as a read-only operation, improving performance
+     * and avoiding race conditions in concurrent environments.
+     */
+    public function getItem(string $key): CacheItem
     {
         $item = CacheItem::create($key);
         $item->setLogger($this->logger);
@@ -68,13 +97,27 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
             return $item;
         }
 
-        return $item->set($this->serializer->unserialize($this->storage->get($key)));
+        // Defensive re-check: some storages may flip from hit->miss between has() and get().
+        $stored = $this->storage->get($key);
+        if ($stored === null && !$this->storage->has($key)) {
+            return $item;
+        }
+
+        $item->set($this->serializer->unserialize($stored));
+        $this->hydrateItemMetadata($item);
+
+        // If metadata says the item is already expired, do not serve stale data.
+        if (!$item->isHit()) {
+            return $item;
+        }
+
+        return $item;
     }
 
     /**
      * @inheritDoc
      *
-     * @return Traversable|CacheItemInterface[]
+     * @return iterable<CacheItem>
      */
     public function getItems(iterable $keys = []): iterable
     {
@@ -117,6 +160,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     {
         try {
             $this->storage->remove($key);
+            $this->storage->remove($this->itemMetadataKey($key));
 
             return true;
         } catch (RuntimeException $e) {
@@ -167,6 +211,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
                 $this->serializer->serialize($item->get()),
                 $expiration
             );
+
+            $this->persistItemMetadata($item, $expiration);
 
             return true;
         } catch (RuntimeException $e) {
@@ -233,12 +279,16 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     /**
      * @inheritDoc
      */
-    public function set($key, $value, $ttl = null): bool
+    public function set($key, $value, $ttl = null, array $tags = []): bool
     {
         $item = $this->getItem($key);
 
         $item->expiresAfter($ttl ?? $this->defaultTtl);
         $item->set($value);
+
+        if ($item instanceof CacheItem && $tags !== []) {
+            $item->tags(...$tags);
+        }
 
         return $this->save($item);
     }
@@ -257,8 +307,8 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      */
     public function getMultiple($keys, $default = null): iterable
     {
-        foreach ($this->getItems($keys) as $item) {
-            yield $item->get();
+        foreach ($this->getItems($keys) as $key => $item) {
+            yield $key => $item->isHit() ? $item->get() : $default;
         }
     }
 
@@ -312,48 +362,140 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     }
 
     /**
-     * call
+     * Fetch a value from cache, computing and storing it if missing or due for early recomputation.
      *
      * @param  string                 $key
-     * @param  callable               $handler
+     * @param  CacheHandler           $handler  Invoked to compute the value on cache miss.
+     *                                          Receives the CacheItem as first argument.
+     *                                          May call $item->tag('foo', 'bar') to associate tags.
      * @param  null|int|DateInterval  $ttl
+     * @param  float                  $beta     XFetch beta factor.
+     *                                          0   = no early expiration.
+     *                                          1.0 = default (recommended).
+     *                                          INF = always recompute (bypass cache).
+     * @param  bool                   $lock     Whether to acquire a CacheLock (default true).
+     *                                          Disable for in-process caches (e.g. ArrayStorage)
+     *                                          or single-threaded environments to avoid flock overhead.
      *
      * @return  mixed
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function call(string $key, callable $handler, DateInterval|int|null $ttl = null, bool $lock = false): mixed
-    {
-        $storage = $this->storage;
-        $isHit = null;
-
-        if ($lock && $storage instanceof LockableStorageInterface) {
-            $storage->lock($key, $isNew);
-            $isHit = !$isNew;
-        }
+    public function fetch(
+        string $key,
+        callable $handler,
+        DateInterval|int|null $ttl = null,
+        float $beta = 1.0,
+        bool $lock = true,
+    ): mixed {
+        $locked = $lock && CacheLock::lock($key, $isNew);
 
         try {
+            // Re-fetch after acquiring the lock so we see any value a competing
+            // process may have written while we were waiting.
             $item = $this->getItem($key);
 
-            $isHit ??= $item->isHit();
-
-            if ($isHit) {
+            // Re-entrant call: this process already holds the stripe lock higher
+            // in the call stack — return the current cached value as-is.
+            if ($locked && !$isNew) {
                 return $item->get();
             }
 
-            $item->set($data = $handler());
+            // Determine whether the cached item is still usable.
+            $isHit = $item->isHit();
+
+            // Item is valid and does not need early recomputation: serve it.
+            if ($isHit && !$this->shouldRecomputeEarly($item, $beta)) {
+                return $item->get();
+            }
+
+            // Cache miss or probabilistic early expiry: recompute.
             $item->expiresAfter($ttl);
+
+            $start = microtime(true);
+            $data = $handler($item);
+            $ctime = max(1, (int) round(max(0.0, microtime(true) - $start) * 1000));
+
+            if (!$data instanceof CacheItemInterface) {
+                $item->set($data);
+            } else {
+                $item = $data;
+                $data = $item->get();
+            }
+
+            // Keep Symfony-style metadata on supported CacheItem instances.
+            if ($item instanceof CacheItem) {
+                $item->setCtime($ctime);
+            }
 
             $this->save($item);
 
             return $data;
         } finally {
-            if ($lock && $storage instanceof LockableStorageInterface) {
-                $storage->release($key);
+            if ($locked) {
+                CacheLock::release($key);
             }
         }
+    }
 
-        return $data ?? null;
+
+    /**
+     * @deprecated Use fetch() instead.
+     */
+    public function call(
+        string $key,
+        callable $handler,
+        DateInterval|int|null $ttl = null,
+        bool $lock = false,
+    ): mixed {
+        return $this->fetch($key, $handler, $ttl, 1.0, $lock);
+    }
+
+    /**
+     * XFetch probabilistic early-expiration check.
+     *
+     * Returns true when the cached item should be recomputed before it
+     * actually expires, to avoid a thundering-herd at expiry time.
+     *
+     * Formula: recompute when  remaining_ttl < beta * (-ln U)
+     *          where U ~ Uniform(0, 1].
+     *
+     * @see https://www.vldb.org/pvldb/vol8/p886-vattani.pdf
+     */
+    protected function shouldRecomputeEarly(CacheItem $item, float $beta): bool
+    {
+        if ($beta <= 0.0) {
+            return false;
+        }
+
+        if (is_infinite($beta) && $beta > 0.0) {
+            return true; // INF → always recompute
+        }
+
+        $expiry = $item->realExpiry;
+        $ctime = $item->ctime;
+
+        if ($expiry <= 0.0) {
+            $expiry = (float) $item->getExpiration()->format('U.u');
+        }
+
+        if ($expiry <= microtime(true)) {
+            return true; // already expired
+        }
+
+        // Draw U ~ Uniform(0, 1] using CSPRNG for unbiased randomness.
+        // -log(U) is Exponential(1), ranging from 0 (U=1) to +∞ (U→0).
+        $u = random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+
+        // Symfony-style ctime-aware early expiration. If ctime is missing, keep
+        // the old remaining-TTL behavior as a backwards-compatible fallback.
+        if ($ctime > 0) {
+            return $expiry <= microtime(true) - ($ctime / 1000) * $beta * log($u);
+        }
+
+        $remainingTtl = $expiry - microtime(true);
+
+        return $remainingTtl < $beta * (-log($u));
     }
 
     /**
@@ -395,7 +537,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @deprecated Use withStorage() instead.
      */
     public function setStorage(StorageInterface $storage): static
     {
@@ -404,12 +546,43 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         return $this;
     }
 
+    public function withStorage(StorageInterface $storage): static
+    {
+        $new = clone $this;
+        $new->storage = $storage;
+
+        return $new;
+    }
+
+    /**
+     * Return a new CachePool instance scoped to the given group.
+     * Works only when the underlying storage implements GroupedStorageInterface;
+     * throws LogicException otherwise.
+     *
+     * @throws \LogicException
+     */
+    public function withGroup(string $group): static
+    {
+        if (!$this->isGroupSupported()) {
+            throw new \LogicException(
+                sprintf(
+                    'Storage class %s does not implement %s.',
+                    get_class($this->storage),
+                    GroupedStorageInterface::class,
+                )
+            );
+        }
+
+        $new = clone $this;
+        $new->storage = $this->storage->withGroup($group);
+
+        return $new;
+    }
+
     /**
      * Method to get property Serializer
      *
      * @return  SerializerInterface
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function getSerializer(): SerializerInterface
     {
@@ -423,7 +596,7 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @deprecated Use withSerializer() instead.
      */
     public function setSerializer(SerializerInterface $serializer): static
     {
@@ -432,12 +605,18 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
         return $this;
     }
 
+    public function withSerializer(SerializerInterface $serializer): static
+    {
+        $new = clone $this;
+        $new->serializer = $serializer;
+
+        return $new;
+    }
+
     /**
      * Method to get property DeferredItems
      *
-     * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
+     * @return  array<CacheItem>
      */
     public function getDeferredItems(): array
     {
@@ -451,13 +630,21 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @deprecated Use withAutoCommit() instead.
      */
     public function autoCommit(bool $autoCommit): static
     {
         $this->autoCommit = $autoCommit;
 
         return $this;
+    }
+
+    public function withAutoCommit(bool $autoCommit): static
+    {
+        $new = clone $this;
+        $new->autoCommit = $autoCommit;
+
+        return $new;
     }
 
     /**
@@ -476,14 +663,131 @@ class CachePool implements CacheItemPoolInterface, CacheInterface, LoggerAwareIn
     }
 
     /**
+     * Method to set property defaultTtl
+     *
      * @param  DateInterval|int|null  $defaultTtl
      *
      * @return  static  Return self to support chaining.
+     *
+     * @deprecated Use withDefaultTtl() instead.
      */
     public function setDefaultTtl(DateInterval|int|null $defaultTtl): static
     {
         $this->defaultTtl = $defaultTtl;
 
         return $this;
+    }
+
+    public function withDefaultTtl(DateInterval|int|null $defaultTtl): static
+    {
+        $new = clone $this;
+        $new->defaultTtl = $defaultTtl;
+
+
+        return $new;
+    }
+
+    public function toTaggedPool(StorageInterface|CacheItemPoolInterface|null $tagPool): TaggedCachePool
+    {
+        $pool = new TaggedCachePool(
+            $this->storage,
+            $this->serializer,
+            $this->logger,
+            $this->defaultTtl,
+            $tagPool,
+        );
+
+        return $pool->withAutoCommit($this->autoCommit);
+    }
+
+    /** Build the sidecar metadata key for a cache item key. */
+    private function itemMetadataKey(string $key): string
+    {
+        return self::ITEM_META_PREFIX . hash('sha1', $key);
+    }
+
+    /** Persist fetch metadata in sidecar storage for later reads. */
+    private function persistItemMetadata(CacheItem $item, int $expiration): void
+    {
+        $ctime = $item->ctime;
+        $properties = [
+            'realExpiry' => $item->realExpiry,
+            'ctime' => $ctime,
+        ];
+        $metaKey = $this->itemMetadataKey($item->getKey());
+
+        // Keep storage format backward-compatible for normal set()/save() values.
+        if ($ctime <= 0) {
+            $this->storage->remove($metaKey);
+
+            return;
+        }
+
+        $value = serialize($properties);
+
+        if ($this->storage instanceof PhpFileStorage) {
+            $value = new PhpFileSerializer()->serialize($value);
+        }
+
+        $this->storage->save($metaKey, $value, $expiration);
+    }
+
+    /**
+     * Hydrate fetch metadata sidecar back into CacheItem (if present).
+     */
+    private function hydrateItemMetadata(CacheItem $item): void
+    {
+        $metaKey = $this->itemMetadataKey($item->getKey());
+
+        if (!$this->storage->has($metaKey)) {
+            return;
+        }
+
+        $serialized = $this->storage->get($metaKey);
+
+        if (!is_string($serialized) || $serialized === '') {
+            return;
+        }
+
+        if ($this->storage instanceof PhpFileStorage) {
+            $serialized = new PhpFileSerializer()->unserialize($serialized);
+        }
+
+        $properties = unserialize($serialized, ['allowed_classes' => false]);
+
+        if (!is_array($properties)) {
+            return;
+        }
+
+        $expiry = $properties['realExpiry'] ?? null;
+        $ctime = $properties['ctime'] ?? 0;
+
+        if (is_numeric($expiry)) {
+            $item->setRealExpiry($expiry);
+        }
+
+        $item->setCtime((int) $ctime);
+
+        $expiry = $item->realExpiry;
+        $ctime = $item->ctime;
+
+        if (is_numeric($expiry)) {
+            $expiryString = number_format((float) $expiry, 6, '.', '');
+            $expiryDate = DateTime::createFromFormat('U.u', $expiryString);
+
+            if ($expiryDate !== false) {
+                $item->expiresAt($expiryDate);
+            }
+        }
+
+        $item->setCtime((int) $ctime);
+    }
+
+    /**
+     * @return  bool
+     */
+    public function isGroupSupported(): bool
+    {
+        return $this->storage instanceof GroupedStorageInterface;
     }
 }

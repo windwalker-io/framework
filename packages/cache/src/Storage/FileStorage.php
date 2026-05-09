@@ -11,15 +11,12 @@ use RuntimeException;
 use Throwable;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
-use function Windwalker\str;
-
 /**
  * The FilesystemStorage class.
  */
-class FileStorage implements StorageInterface, LockableStorageInterface
+class FileStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
 {
     use OptionAccessTrait;
-    use LockableStorageTrait;
 
     /**
      * @var string
@@ -36,8 +33,14 @@ class FileStorage implements StorageInterface, LockableStorageInterface
      *
      * @param  string  $root
      * @param  array   $options
+     * @param  float   $pruneProbability
      */
-    public function __construct(string $root, array $options = [])
+    public function __construct(
+        string $root,
+        array $options = [],
+        protected float $pruneProbability = 0.01,
+        public protected(set) string $group = '',
+    )
     {
         $this->root = $root;
 
@@ -109,7 +112,7 @@ class FileStorage implements StorageInterface, LockableStorageInterface
      */
     public function clear(): bool
     {
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupRootPath();
         $this->checkFilePath($filePath);
 
         $iterator = new RegexIterator(
@@ -158,7 +161,60 @@ class FileStorage implements StorageInterface, LockableStorageInterface
 
         $value = sprintf($expirationFormat, $expiration) . $value;
 
-        return $this->write($key, $value);
+        $result = $this->write($key, $value);
+
+        if ($result && $this->shouldPrune()) {
+            $this->prune();
+        }
+
+        return $result;
+    }
+
+    public function prune(): int
+    {
+        $expirationFormat = $this->getExpirationFormat();
+
+        if ($expirationFormat === '') {
+            return 0;
+        }
+
+        $filePath = $this->getGroupRootPath();
+        $this->checkFilePath($filePath);
+
+        $iterator = new RegexIterator(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($filePath)
+            ),
+            '/' . preg_quote($this->getOption('extension')) . '$/i'
+        );
+
+        $pruned = 0;
+
+        /* @var  RecursiveDirectoryIterator $file */
+        foreach ($iterator as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
+            $contents = @file_get_contents($file->getRealPath());
+
+            if (!is_string($contents)) {
+                continue;
+            }
+
+            $expiration = $this->extractExpirationFromString($contents);
+
+            if ($expiration !== null && static::isExpired($expiration) && @unlink($file->getRealPath())) {
+                $pruned++;
+            }
+        }
+
+        return $pruned;
+    }
+
+    public function shouldPrune(): bool
+    {
+        return random_int(0, 100_000) / 100_000 < $this->pruneProbability;
     }
 
     /**
@@ -296,7 +352,7 @@ class FileStorage implements StorageInterface, LockableStorageInterface
      */
     public function fetchStreamUri(string $key): string
     {
-        $filePath = $this->getRoot();
+        $filePath = $this->getGroupRootPath();
 
         $this->checkFilePath($filePath);
 
@@ -309,6 +365,20 @@ class FileStorage implements StorageInterface, LockableStorageInterface
             $filePath,
             self::hashFilename($key)
         );
+    }
+
+    protected function getGroupRootPath(): string
+    {
+        if ($this->group === '') {
+            return $this->getRoot();
+        }
+
+        return $this->getRoot() . '/' . $this->getGroupDirectoryName();
+    }
+
+    protected function getGroupDirectoryName(): string
+    {
+        return $this->group;
     }
 
     /**
@@ -351,7 +421,29 @@ class FileStorage implements StorageInterface, LockableStorageInterface
     public static function escapeRegex(string $regex): string
     {
         $regex = preg_quote($regex, '#');
+
         return str_replace('%d', '(\d+)', $regex);
+    }
+
+    protected function extractExpirationFromString(string $data): ?int
+    {
+        $expirationFormat = $this->getExpirationFormat();
+
+        if ($expirationFormat === '') {
+            return null;
+        }
+
+        preg_match(
+            '#' . static::escapeRegex($expirationFormat) . '#',
+            $data,
+            $matches
+        );
+
+        if (!isset($matches[1])) {
+            return null;
+        }
+
+        return (int) $matches[1];
     }
 
     /**
@@ -413,6 +505,35 @@ class FileStorage implements StorageInterface, LockableStorageInterface
         $filePath = $this->fetchStreamUri($key);
 
         return isset($this->lockedResources[$filePath]);
+    }
+
+    /**
+     * Get the prune probability (0.0 to 1.0)
+     */
+    public function getPruneProbability(): float
+    {
+        return $this->pruneProbability;
+    }
+
+    /**
+     * Set the prune probability (0.0 to 1.0)
+     *
+     * @param  float  $probability
+     * @return  static  Return self to support chaining.
+     */
+    public function setPruneProbability(float $probability): static
+    {
+        $this->pruneProbability = max(0.0, min(1.0, $probability));
+
+        return $this;
+    }
+
+    public function withGroup(string $group): static
+    {
+        $new = clone $this;
+        $new->group = $group;
+
+        return $new;
     }
 
     public function shouldLock(): bool
