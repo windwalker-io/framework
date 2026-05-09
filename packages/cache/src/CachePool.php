@@ -53,12 +53,8 @@ class CachePool implements CachePoolInterface
         protected SerializerInterface $serializer = new RawSerializer(),
         LoggerInterface $logger = new NullLogger(),
         protected DateInterval|int|null $defaultTtl = null,
-        CacheItemPoolInterface|StorageInterface|null $tagPool = null,
     ) {
         $this->logger = $logger;
-
-        // Keep constructor signature backward-compatible; tagging now lives in TaggedCachePool.
-        unset($tagPool);
     }
 
     /**
