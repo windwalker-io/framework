@@ -21,6 +21,7 @@ use Windwalker\Cache\Storage\StorageInterface;
 class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
 {
     private const string TAG_VER_PREFIX = '--ww_tag_ver--';
+
     private const string TAG_ENV_PREFIX = '--ww_tag_env--';
 
     protected CacheItemPoolInterface $tagPool;
@@ -165,7 +166,10 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
     {
         $new = parent::withGroup($group);
 
-        if ($new->tagPool instanceof self && $new->tagPool->isGroupSupported()) {
+        if (
+            $new->tagPool instanceof CachePoolInterface
+            && $new->tagPool->isGroupSupported()
+        ) {
             $new->tagPool = $new->tagPool->withGroup($group);
         }
 
@@ -240,7 +244,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return bin2hex(random_bytes(8));
     }
 
-    /** @param string[] $tags
+    /** @param  string[]  $tags
      * @return array<string, string>
      */
     private function getCurrentTagVersions(array $tags): array
@@ -295,7 +299,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $versions;
     }
 
-    /** @param string[] $tags */
+    /** @param  string[]  $tags */
     private function saveTagEnvelope(string $key, array $tags, int $expiration): void
     {
         $envelope = $this->getOrCreateTagVersions($tags);
@@ -307,7 +311,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         $this->tagPool->save($item);
     }
 
-    /** @param string[] $tags
+    /** @param  string[]  $tags
      * @return array<string, string>
      */
     private function getOrCreateTagVersions(array $tags): array
@@ -346,7 +350,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $versions;
     }
 
-    /** @param string[] $tags */
+    /** @param  string[]  $tags */
     private function isTagValid(string $key, array $tags): bool
     {
         $item = $this->tagPool->getItem($this->tagEnvelopeKey($key));
