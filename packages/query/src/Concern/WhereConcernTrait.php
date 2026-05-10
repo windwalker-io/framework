@@ -413,6 +413,7 @@ trait WhereConcernTrait
         return $this->having($wheres, 'OR');
     }
 
+    /** @psalm-param  callable(Query): ?Query  $conditions */
     public function whereExists(Query|callable $conditions): static
     {
         return $this->handleWhereExists('where', $conditions, false);
