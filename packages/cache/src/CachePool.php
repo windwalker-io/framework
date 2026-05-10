@@ -21,6 +21,7 @@ use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PhpFileStorage;
 use Windwalker\Cache\Storage\StorageInterface;
+use Windwalker\Promise\Promise;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
@@ -279,16 +280,13 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function set($key, $value, $ttl = null, array $tags = []): bool
+    public function set($key, $value, $ttl = null): bool
     {
         $item = $this->getItem($key);
 
         $item->expiresAfter($ttl ?? $this->defaultTtl);
         $item->set($value);
 
-        if ($item instanceof CacheItem && $tags !== []) {
-            $item->tags(...$tags);
-        }
 
         return $this->save($item);
     }
@@ -367,7 +365,6 @@ class CachePool implements CachePoolInterface
      * @param  string                 $key
      * @param  CacheHandler           $handler  Invoked to compute the value on cache miss.
      *                                          Receives the CacheItem as first argument.
-     *                                          May call $item->tag('foo', 'bar') to associate tags.
      * @param  null|int|DateInterval  $ttl
      * @param  float                  $beta     XFetch beta factor.
      *                                          0   = no early expiration.
@@ -449,6 +446,108 @@ class CachePool implements CachePoolInterface
         bool $lock = false,
     ): mixed {
         return $this->fetch($key, $handler, $ttl, 1.0, $lock);
+    }
+
+    /**
+     * Asynchronous variant of fetch() that wraps the computation in a Promise.
+     *
+     * Differences from fetch():
+     *  - The handler may return either a value OR a Promise / thenable.
+     *    When a thenable is returned, the cache will only persist the resolved value
+     *    (NOT the promise object itself).
+     *  - The returned Promise can be combined with Promise::all(), Promise::race(), etc.
+     *
+     * Example:
+     *   Promise::all([
+     *       $pool->fetchAsync('a', fn() => fetchRemote('a')), // handler returns Promise
+     *       $pool->fetchAsync('b', fn() => fetchRemote('b')),
+     *   ])->then(fn(array $values) => useValues($values))->wait();
+     *
+     * @psalm-param callable(CacheItem): mixed $handler
+     */
+    public function fetchAsync(
+        string $key,
+        callable $handler,
+        DateInterval|int|null $ttl = null,
+        float $beta = 1.0,
+        bool $lock = true,
+    ): Promise {
+        if (!class_exists(Promise::class)) {
+            throw new \DomainException('Please install `windwalker/promise` to use fetchAsync().');
+        }
+
+        return new Promise(function ($resolve, $reject) use ($key, $handler, $ttl, $beta, $lock) {
+            $locked = $lock && CacheLock::lock($key, $isNew);
+            $released = false;
+
+            $release = static function () use (&$released, &$locked, $key) {
+                if ($locked && !$released) {
+                    CacheLock::release($key);
+                    $released = true;
+                }
+            };
+
+            try {
+                $item = $this->getItem($key);
+
+                // Re-entrant: another stripe in this process already holds the lock.
+                if ($locked && !$isNew) {
+                    $release();
+                    $resolve($item->get());
+
+                    return;
+                }
+
+                $isHit = $item->isHit();
+
+                if ($isHit && !$this->shouldRecomputeEarly($item, $beta)) {
+                    $release();
+                    $resolve($item->get());
+
+                    return;
+                }
+
+                $item->expiresAfter($ttl);
+
+                $start = microtime(true);
+                $data = $handler($item);
+
+                // Whether $data is a plain value or a Promise/thenable, Promise::resolve()
+                // normalises it. The .then() chain only fires once the (possibly async)
+                // value has actually been produced.
+                Promise::resolve($data)->then(
+                    function ($resolvedData) use ($item, $start, $resolve, $release) {
+                        try {
+                            $ctime = max(1, (int) round(max(0.0, microtime(true) - $start) * 1000));
+
+                            if (!$resolvedData instanceof CacheItemInterface) {
+                                $item->set($resolvedData);
+                            } else {
+                                $item = $resolvedData;
+                                $resolvedData = $item->get();
+                            }
+
+                            if ($item instanceof CacheItem) {
+                                $item->setCtime($ctime);
+                            }
+
+                            $this->save($item);
+                        } finally {
+                            $release();
+                        }
+
+                        $resolve($resolvedData);
+                    },
+                    function ($reason) use ($release, $reject) {
+                        $release();
+                        $reject($reason);
+                    }
+                );
+            } catch (\Throwable $e) {
+                $release();
+                $reject($e);
+            }
+        });
     }
 
     /**

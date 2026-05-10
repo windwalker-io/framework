@@ -14,6 +14,7 @@ use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\StorageInterface;
+use Windwalker\Promise\Promise;
 use Windwalker\Test\Traits\TestAccessorTrait;
 
 /**
@@ -786,5 +787,171 @@ class CachePoolTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('does not implement');
         $pool->withGroup('flower');
+    }
+
+    // -----------------------------------------------------------------------
+    // fetchAsync
+    // -----------------------------------------------------------------------
+
+    /** @see CachePool::fetchAsync — resolves with computed value on cache miss */
+    public function testFetchAsyncResolvesWithComputedValueOnMiss(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $promise = $pool->fetchAsync('key', static fn($item) => 'COMPUTED', 3600, 0.0, false);
+
+        self::assertInstanceOf(Promise::class, $promise);
+        self::assertSame('COMPUTED', $promise->wait());
+    }
+
+    /** @see CachePool::fetchAsync — resolves with cached value on hit (handler not called) */
+    public function testFetchAsyncServesFromCacheOnHit(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+        $calls = 0;
+
+        $compute = function ($item) use (&$calls) {
+            $calls++;
+
+            return 'V' . $calls;
+        };
+
+        // First call – computes
+        $pool->fetchAsync('key', $compute, 3600, 0.0, false)->wait();
+
+        // Second call – must serve from cache
+        $result = $pool->fetchAsync('key', $compute, 3600, 0.0, false)->wait();
+
+        self::assertSame('V1', $result, 'Should serve cached value on second call');
+        self::assertSame(1, $calls, 'Handler must not be called again on cache hit');
+    }
+
+    /** @see CachePool::fetchAsync — then/catch chaining works */
+    public function testFetchAsyncSupportsChaining(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $thenCalled = false;
+
+        $pool->fetchAsync('key', static fn($item) => 'DATA', 3600, 0.0, false)
+            ->then(function ($value) use (&$thenCalled) {
+                $thenCalled = true;
+                self::assertSame('DATA', $value);
+            })
+            ->wait();
+
+        self::assertTrue($thenCalled, 'then() callback must be invoked on resolve');
+    }
+
+    /** @see CachePool::fetchAsync — rejects when handler throws */
+    public function testFetchAsyncRejectsOnHandlerException(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $catchCalled = false;
+        $caughtReason = null;
+
+        $pool->fetchAsync('key', static function () {
+            throw new \RuntimeException('boom');
+        }, 3600, 0.0, false)
+            ->catch(function ($reason) use (&$catchCalled, &$caughtReason) {
+                $catchCalled = true;
+                $caughtReason = $reason;
+            })
+            ->wait();
+
+        self::assertTrue($catchCalled, 'catch() must be called when handler throws');
+        self::assertInstanceOf(\RuntimeException::class, $caughtReason);
+        self::assertSame('boom', $caughtReason->getMessage());
+    }
+
+    /** @see CachePool::fetchAsync — handler may return a Promise; resolved value is cached */
+    public function testFetchAsyncHandlerCanReturnPromise(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $result = $pool->fetchAsync(
+            'key',
+            static fn() => Promise::resolve('ASYNC_VALUE'),
+            3600,
+            0.0,
+            false,
+        )->wait();
+
+        self::assertSame('ASYNC_VALUE', $result, 'Promise return value must be unwrapped');
+
+        // The resolved value (not the Promise object) must be persisted in cache.
+        self::assertSame('ASYNC_VALUE', $pool->get('key'), 'Resolved value must be cached, not the Promise');
+    }
+
+    /** @see CachePool::fetchAsync — rejected Promise from handler propagates to catch() */
+    public function testFetchAsyncHandlerReturningRejectedPromiseRejects(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $caught = null;
+
+        $pool->fetchAsync(
+            'rejected',
+            static fn() => Promise::reject(new \DomainException('async fail')),
+            3600,
+            0.0,
+            false,
+        )
+            ->catch(function ($reason) use (&$caught) {
+                $caught = $reason;
+            })
+            ->wait();
+
+        self::assertInstanceOf(\DomainException::class, $caught);
+        self::assertSame('async fail', $caught->getMessage());
+
+        // Failed computation must not pollute the cache.
+        self::assertNull($pool->get('rejected'), 'Rejected handler must not write to cache');
+    }
+
+    /** @see CachePool::fetchAsync — multiple fetchAsync calls can be combined with Promise::all() */
+    public function testFetchAsyncCanBeComposedWithPromiseAll(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $values = Promise::all([
+            $pool->fetchAsync('a', static fn() => 'A', 3600, 0.0, false),
+            $pool->fetchAsync('b', static fn() => Promise::resolve('B'), 3600, 0.0, false),
+            $pool->fetchAsync('c', static fn() => 'C', 3600, 0.0, false),
+        ])->wait();
+
+        self::assertSame(['A', 'B', 'C'], $values);
+
+        // All three must be cached.
+        self::assertSame('A', $pool->get('a'));
+        self::assertSame('B', $pool->get('b'));
+        self::assertSame('C', $pool->get('c'));
+    }
+
+    /** @see CachePool::fetchAsync — Promise::all() short-circuits on first rejection */
+    public function testFetchAsyncPromiseAllRejectsOnAnyFailure(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $caught = null;
+
+        Promise::all([
+            $pool->fetchAsync('ok', static fn() => 'OK', 3600, 0.0, false),
+            $pool->fetchAsync(
+                'bad',
+                static fn() => Promise::reject(new \RuntimeException('nope')),
+                3600,
+                0.0,
+                false,
+            ),
+        ])
+            ->catch(function ($reason) use (&$caught) {
+                $caught = $reason;
+            })
+            ->wait();
+
+        self::assertInstanceOf(\RuntimeException::class, $caught);
+        self::assertSame('nope', $caught->getMessage());
     }
 }

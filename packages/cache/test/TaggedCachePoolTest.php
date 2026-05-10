@@ -8,15 +8,15 @@ use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
 use Windwalker\Cache\CacheItem;
 use Windwalker\Cache\CachePool;
-use Windwalker\Cache\TaggedCachePool;
 use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
+use Windwalker\Cache\TaggedCachePool;
+use Windwalker\Promise\Promise;
 
 class TaggedCachePoolTest extends TestCase
 {
     protected TaggedCachePool $instance;
-
 
     /** @see CachePool::save — tagPool failures make save() fail for tagged items */
     public function testSaveReturnsFalseWhenTagPoolFails(): void
@@ -356,7 +356,7 @@ class TaggedCachePoolTest extends TestCase
     {
         $storage = new ArrayStorage();
         $pool = new TaggedCachePool($storage, tagPool: new ArrayStorage())
-             // Set to separate storage first
+            // Set to separate storage first
             ->withTagPool(null); // Reset to use main storage
 
         $tagPool = $pool->getTagPool();
@@ -491,7 +491,6 @@ class TaggedCachePoolTest extends TestCase
         // No assertions needed - just verify no errors occur when cache is disabled
         self::assertTrue(true);
     }
-
 
     /** @see CachePool::set + CachePool::invalidateTags — values written via set(tags) must be invalidated */
     public function testSetWithTagsIsAffectedByInvalidateTags(): void
@@ -667,7 +666,6 @@ class TaggedCachePoolTest extends TestCase
         );
     }
 
-
     /** @see CachePool::hasItem — respects tag invalidation via getItem */
     public function testHasItemRespectsTagInvalidation(): void
     {
@@ -740,7 +738,6 @@ class TaggedCachePoolTest extends TestCase
         );
     }
 
-
     /** @see CachePool::isItemValid — validates expired items correctly */
     public function testIsItemValidReturnsFalseForExpiredItem(): void
     {
@@ -765,7 +762,6 @@ class TaggedCachePoolTest extends TestCase
         self::assertFalse($item->isHit(), 'Item with past expiration should not be a hit');
         self::assertFalse($this->instance->isItemValid($item), 'isItemValid should return false for expired item');
     }
-
 
     /** @see CachePool::isItemValid — batch validation scenario */
     public function testIsItemValidBatchValidation(): void
@@ -1239,9 +1235,180 @@ class TaggedCachePoolTest extends TestCase
         self::assertSame('V3', $values['item3'], 'Item with valid envelope should work');
     }
 
-protected function setUp(): void
+    // -----------------------------------------------------------------------
+    // fetchAsync on TaggedCachePool
+    // -----------------------------------------------------------------------
+
+    /** @see TaggedCachePool::fetchAsync — resolves with computed value and saves tags */
+    public function testFetchAsyncResolvesAndSavesTags(): void
+    {
+        $i = 0;
+
+        $promise = $this->instance->fetchAsync(
+            'user1',
+            function (CacheItem $item) use (&$i) {
+                $i++;
+                $item->tags('users');
+
+                return 'V' . $i;
+            },
+            3600,
+            0.0,
+            false,
+        );
+
+        self::assertInstanceOf(\Windwalker\Promise\Promise::class, $promise);
+        self::assertSame('V1', $promise->wait());
+        self::assertSame(1, $i);
+    }
+
+    /** @see TaggedCachePool::fetchAsync — invalidating tag forces recomputation via async path */
+    public function testFetchAsyncTaggedRecomputesAfterTagInvalidation(): void
+    {
+        $i = 0;
+
+        $compute = function (CacheItem $item) use (&$i) {
+            $i++;
+            $item->tags('users');
+
+            return 'V' . $i;
+        };
+
+        $this->instance->fetchAsync('user1', $compute, 3600, 0.0, false)->wait();
+        self::assertSame(1, $i);
+
+        $this->instance->invalidateTags('users');
+
+        $result = $this->instance->fetchAsync('user1', $compute, 3600, 0.0, false)->wait();
+
+        self::assertSame('V2', $result);
+        self::assertSame(2, $i, 'Handler must be called again after tag invalidation');
+    }
+
+    /** @see TaggedCachePool::fetchAsync — handler may return a Promise; tags still applied */
+    public function testFetchAsyncTaggedHandlerCanReturnPromise(): void
+    {
+        $i = 0;
+
+        // Handler tags the item, then returns an async-produced value.
+        $result = $this->instance->fetchAsync(
+            'async_tagged',
+            static function (CacheItem $item) use (&$i) {
+                $i++;
+                $item->tags('users');
+
+                return Promise::resolve('ASYNC_V' . $i);
+            },
+            3600,
+            0.0,
+            false,
+        )->wait();
+
+        self::assertSame('ASYNC_V1', $result);
+        self::assertSame('ASYNC_V1', $this->instance->get('async_tagged'));
+
+        // Tag invalidation must still bust the async-produced value.
+        $this->instance->invalidateTags('users');
+
+        $result = $this->instance->fetchAsync(
+            'async_tagged',
+            static function (CacheItem $item) use (&$i) {
+                $i++;
+                $item->tags('users');
+
+                return Promise::resolve('ASYNC_V' . $i);
+            },
+            3600,
+            0.0,
+            false,
+        )->wait();
+
+        self::assertSame('ASYNC_V2', $result);
+        self::assertSame(2, $i);
+    }
+
+    /** @see TaggedCachePool::fetchAsync — multiple tagged async fetches can be composed with Promise::all() */
+    public function testFetchAsyncTaggedComposableWithPromiseAll(): void
+    {
+        $values = Promise::all([
+            $this->instance->fetchAsync(
+                'k1',
+                static function (CacheItem $item) {
+                    $item->tags('grp');
+
+                    return Promise::resolve('V1');
+                },
+                3600,
+                0.0,
+                false,
+            ),
+            $this->instance->fetchAsync(
+                'k2',
+                static function (CacheItem $item) {
+                    $item->tags('grp');
+
+                    return 'V2';
+                },
+                3600,
+                0.0,
+                false,
+            ),
+        ])->wait();
+
+        self::assertSame(['V1', 'V2'], $values);
+
+        // Tag invalidation should affect both.
+        $this->instance->invalidateTags('grp');
+
+        self::assertFalse($this->instance->hasItem('k1'));
+        self::assertFalse($this->instance->hasItem('k2'));
+    }
+
+    /**
+     * @see TaggedCachePool::fetchAsync — rejected handler must NOT persist anything
+     *
+     * Tag-specific concern: tagged save() writes both the main value AND a tag envelope
+     * to the tagPool. A failed compute must not leave a stale envelope behind that would
+     * later make a hit look valid.
+     */
+    public function testFetchAsyncTaggedRejectedHandlerDoesNotWriteTagEnvelope(): void
+    {
+        $tagStorage = new ArrayStorage();
+        $pool = new TaggedCachePool(new ArrayStorage(), tagPool: $tagStorage);
+
+        $caught = null;
+
+        $pool->fetchAsync(
+            'fail_key',
+            static function (CacheItem $item) {
+                $item->tags('users');
+
+                return Promise::reject(new \RuntimeException('compute failed'));
+            },
+            3600,
+            0.0,
+            false,
+        )
+            ->catch(function ($reason) use (&$caught) {
+                $caught = $reason;
+            })
+            ->wait();
+
+        self::assertInstanceOf(\RuntimeException::class, $caught);
+
+        // Neither the main value nor the tag envelope should exist.
+        self::assertFalse($pool->hasItem('fail_key'), 'Failed async fetch must not produce a cache hit');
+        self::assertNull($pool->get('fail_key'), 'Failed async fetch must not write a value');
+
+        $envKey = '--ww_tag_env--' . hash('sha1', 'fail_key');
+        self::assertFalse(
+            $tagStorage->has($envKey),
+            'Failed async fetch must not write a tag envelope (would otherwise desync from main storage)'
+        );
+    }
+
+    protected function setUp(): void
     {
         $this->instance = new TaggedCachePool();
     }
 }
-

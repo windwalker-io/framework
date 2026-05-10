@@ -23,6 +23,7 @@
         "windwalker/test": "^4.0",
         "windwalker/filesystem": "^4.0",
         "windwalker/crypt": "^4.0",
+        "windwalker/promise": "^4.0",
         "league/flysystem": "^2.0",
         "mockery/mockery": "^1.4"
     },

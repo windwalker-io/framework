@@ -89,54 +89,23 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return true;
     }
 
-    /** @psalm-param callable(CacheItem): mixed $handler */
-    public function fetch(
-        string $key,
-        callable $handler,
-        DateInterval|int|null $ttl = null,
-        float $beta = 1.0,
-        bool $lock = true,
-    ): mixed {
-        $locked = $lock && CacheLock::lock($key, $isNew, $this->logger);
+    /**
+     * Tag-aware variant of set(): persists $value associated with the given $tags.
+     *
+     * @param  string[]  $tags
+     */
+    public function set($key, $value, $ttl = null, array $tags = []): bool
+    {
+        $item = $this->getItem($key);
 
-        try {
-            $item = $this->getItem($key);
+        $item->expiresAfter($ttl ?? $this->getDefaultTtl());
+        $item->set($value);
 
-            if ($locked && !$isNew) {
-                return $item->get();
-            }
-
-            $isHit = $item->isHit() && $this->isItemTagsValid($key);
-
-            if ($isHit && !$this->shouldRecomputeEarly($item, $beta)) {
-                return $item->get();
-            }
-
-            $item->expiresAfter($ttl);
-
-            $start = microtime(true);
-            $data = $handler($item);
-            $ctime = max(1, (int) round(max(0.0, microtime(true) - $start) * 1000));
-
-            if (!$data instanceof CacheItemInterface) {
-                $item->set($data);
-            } else {
-                $item = $data;
-                $data = $item->get();
-            }
-
-            if ($item instanceof CacheItem) {
-                $item->setCtime($ctime);
-            }
-
-            $this->save($item);
-
-            return $data;
-        } finally {
-            if ($locked) {
-                CacheLock::release($key, $this->logger);
-            }
+        if ($item instanceof CacheItem && $tags !== []) {
+            $item->tags(...$tags);
         }
+
+        return $this->save($item);
     }
 
     public function invalidateTags(string ...$tags): bool
