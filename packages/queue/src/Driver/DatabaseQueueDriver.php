@@ -105,6 +105,8 @@ class DatabaseQueueDriver implements QueueDriverInterface
                         ->where('reserved', '<', $now->modify('-' . $this->timeout . 'seconds'));
                 }
             )
+            ->order('visibility', 'ASC')
+            ->order('id', 'ASC')
             ->forUpdate($do);
 
         $data = $this->db->transaction(
