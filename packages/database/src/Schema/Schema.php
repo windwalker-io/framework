@@ -15,6 +15,7 @@ use Windwalker\Database\Schema\Ddl\Index;
  *
  * @method  Column  bigint(string $name)
  * @method  Column  binary(string $name)
+ * @method  Column  blob(string $name)
  * @method  Column  bit(string $name)
  * @method  Column  bool(string $name)
  * @method  Column  char(string $name)
@@ -36,6 +37,7 @@ use Windwalker\Database\Schema\Ddl\Index;
  * @method  Column  tinyint(string $name)
  * @method  Column  varchar(string $name)
  * @method  Column  json(string $name)
+ * @method  Column  vector(string $name)
  *
  * @since  2.1.8
  */
@@ -71,12 +73,18 @@ class Schema
 
     public function addColumn(Column|string $column, ?string $dataType = null): Column
     {
-        if (is_string($column) && class_exists($column)) {
-            $column = new $column();
+        if (is_string($column)) {
+            if (class_exists($column)) {
+                $column = new $column();
+            } else {
+                $column = new Column($column);
+            }
         }
 
         if (!$column instanceof Column) {
-            throw new InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
+            throw new InvalidArgumentException(
+                __METHOD__ . '() argument 1 should be column name or Column instance.'
+            );
         }
 
         if ($dataType) {
