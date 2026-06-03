@@ -1037,6 +1037,18 @@ class EntityMapper implements EventAwareInterface
 
         $data = $this->castForSave($this->extract($entity), $updateNulls, $entity);
 
+        // Strip AI key if necessary
+        $returningIdField = null;
+
+        if ($aiColumn = $metadata->getAutoIncrementColumn()) {
+            // Todo: MySQL no need to strip ai column, waiting pgsql test
+            // if (!in_array($aiColumn->getName(), $condFields, true)) {
+            //     unset($data[$aiColumn->getName()]);
+            // }
+
+            $returningIdField = $aiColumn->getName();
+        }
+
         if ($data !== []) {
             // @event
 
@@ -1047,6 +1059,7 @@ class EntityMapper implements EventAwareInterface
                 $updateFields,
                 [
                     'updateNulls' => $updateNulls,
+                    'returningIdField' => $returningIdField,
                 ]
             );
         }
