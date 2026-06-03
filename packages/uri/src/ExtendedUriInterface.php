@@ -84,21 +84,21 @@ interface ExtendedUriInterface extends UriInterface
      * Get URI username
      * Returns the username, or null if no username was specified.
      *
-     * @return  string  The URI username.
+     * @return  string|null  The URI username.
      *
      * @since   2.0
      */
-    public function getUser(): string;
+    public function getUser(): ?string;
 
     /**
      * Get URI password
      * Returns the password, or null if no password was specified.
      *
-     * @return  string  The URI password.
+     * @return  string|null  The URI password.
      *
      * @since   2.0
      */
-    public function getPassword(): string;
+    public function getPassword(): ?string;
 
     /**
      * Checks whether the current URI is using HTTPS.
