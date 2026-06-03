@@ -227,6 +227,7 @@ class WriterManager
 
         $platformName = $this->db->getPlatform()->getName();
         $updateNulls = $options['updateNulls'] ?? true;
+        $returningIdField = $options['returningIdField'] ?? null;
 
         if (!$updateNulls) {
             $data = array_filter($data, fn($v) => $v !== null);
@@ -264,6 +265,11 @@ class WriterManager
 
                 foreach ($quotedUpdateFields as $key) {
                     $updateActions->append("$key = VALUES($key)");
+                }
+
+                if ($returningIdField) {
+                    $returningIdField = $query->quoteName($returningIdField);
+                    $updateActions->append("$returningIdField = LAST_INSERT_ID({$returningIdField})");
                 }
 
                 $query->sql(
