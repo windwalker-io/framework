@@ -335,8 +335,11 @@ class NestedSetMapper extends EntityMapper
 
         if (is_array($event->source)) {
             $position = $event->source['position'];
-        } else {
+        } elseif ($event->source instanceof NestedEntityInterface) {
             $position = $event->source->getPosition();
+        } else {
+            // Here may be Collection or other object, keep position not change.
+            $position = new Position();
         }
 
         $this->hydrate(compact('position'), $entity);
