@@ -267,7 +267,7 @@ class Schema
             'primaryUuidBinary' => $column->dataType('binary')
                 ->length(16)
                 ->primary(true),
-            'json', 'datetime' => $column->nullable(true),
+            'json', 'datetime', 'date' => $column->nullable(true),
             default => $column
         };
     }

@@ -20,8 +20,6 @@ use function Windwalker\nope;
 
 /**
  * The Promise class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class Promise implements ExtendedPromiseInterface
 {
