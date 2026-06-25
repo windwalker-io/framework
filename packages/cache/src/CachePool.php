@@ -22,6 +22,7 @@ use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PhpFileStorage;
 use Windwalker\Cache\Storage\StorageInterface;
 use Windwalker\Promise\Promise;
+use Windwalker\Promise\PromiseInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 /**
@@ -464,6 +465,8 @@ class CachePool implements CachePoolInterface
      *   ])->then(fn(array $values) => useValues($values))->wait();
      *
      * @psalm-param callable(CacheItem): mixed $handler
+     *
+     * @return Promise
      */
     public function fetchAsync(
         string $key,
@@ -471,7 +474,7 @@ class CachePool implements CachePoolInterface
         DateInterval|int|null $ttl = null,
         float $beta = 1.0,
         bool $lock = true,
-    ): Promise {
+    ): PromiseInterface {
         if (!class_exists(Promise::class)) {
             throw new \DomainException('Please install `windwalker/promise` to use fetchAsync().');
         }
