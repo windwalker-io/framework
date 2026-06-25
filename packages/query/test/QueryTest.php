@@ -1468,6 +1468,29 @@ SQL
         );
     }
 
+    public function testOrderByPhp86Enum(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->order(
+                [
+                    ['id', \SortDirection::Ascending],
+                    'f1',
+                    ['f2', \SortDirection::Descending],
+                    'f3',
+                ]
+            )
+            ->order('f4', \SortDirection::Descending)
+            ->order('p1', \SortDirection::Ascending, Query::PREPEND)
+            ->order(raw('COUNT(f5)'));
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" ORDER BY "p1" ASC, "id" ASC, "f1", "f2" DESC, "f3", "f4" DESC, COUNT(f5)',
+            $q->render()
+        );
+    }
+
     public function testGroup()
     {
         $q = self::createQuery()

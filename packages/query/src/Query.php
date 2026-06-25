@@ -11,6 +11,7 @@ use Generator;
 use IteratorAggregate;
 use PDO;
 use ReflectionClass;
+use SortDirection;
 use SqlFormatter;
 use Stringable;
 use WeakReference;
@@ -577,13 +578,16 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     /**
      * @param  array|string|ClauseInterface  $column
-     * @param  string|null                   $dir
+     * @param  \SortDirection|string|null    $dir
      * @param  ClausePosition                $pos
      *
      * @return  static
      */
-    public function order(mixed $column, ?string $dir = null, ClausePosition $pos = ClausePosition::APPEND): static
-    {
+    public function order(
+        mixed $column,
+        \SortDirection|string|null $dir = null,
+        ClausePosition $pos = ClausePosition::APPEND
+    ): static {
         if (is_array($column)) {
             foreach ($column as $col) {
                 if (!is_array($col)) {
@@ -599,18 +603,30 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $order = [$this->resolveColumn($column)];
 
         if ($dir !== null) {
-            ArgumentsAssert::assert(
-                in_array($dir = strtoupper($dir), ['ASC', 'DESC'], true),
-                '{caller} argument 2 should be one of ASC/DESC, %s given',
-                $dir
-            );
-
-            $order[] = $dir;
+            $order[] = static::unwrapDirectionEnum($dir);
         }
 
         $this->orderRaw($this->clause('', $order), $pos);
 
         return $this;
+    }
+
+    private static function unwrapDirectionEnum(\SortDirection|string $dir): string
+    {
+        if ($dir instanceof \SortDirection) {
+            return match ($dir) {
+                SortDirection::Ascending => 'ASC',
+                SortDirection::Descending => 'DESC',
+            };
+        }
+
+        $dir = strtoupper($dir);
+
+        if ($dir !== 'ASC' && $dir !== 'DESC') {
+            throw new \InvalidArgumentException("Invalid sort direction: $dir");
+        }
+
+        return $dir;
     }
 
     public function orderRaw(string|Clause $order, mixed ...$args): static
