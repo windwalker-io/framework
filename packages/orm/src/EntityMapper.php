@@ -1041,12 +1041,13 @@ class EntityMapper implements EventAwareInterface
         $returningIdField = null;
 
         if ($aiColumn = $metadata->getAutoIncrementColumn()) {
-            // Todo: MySQL no need to strip ai column, waiting pgsql test
-            // if (!in_array($aiColumn->getName(), $condFields, true)) {
-            //     unset($data[$aiColumn->getName()]);
-            // }
+            $aiColumnName = $aiColumn->getName();
 
-            $returningIdField = $aiColumn->getName();
+            if (!in_array($aiColumnName, $condFields, true)) {
+                unset($data[$aiColumnName]);
+            }
+
+            $returningIdField = $aiColumnName;
         }
 
         if ($data !== []) {

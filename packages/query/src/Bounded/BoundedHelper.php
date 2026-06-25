@@ -118,6 +118,10 @@ class BoundedHelper
                 }
             }
 
+            if ($v === null && $param['dataType'] === ParamType::NULL) {
+                $v = 'NULL';
+            }
+
             $values[] = $v;
         }
 
