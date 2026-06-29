@@ -89,7 +89,7 @@ trait EnumExtendedTrait
         return \array_keys(static::values());
     }
 
-    public function jsonSerialize(): string
+    public function jsonSerialize(): string|int
     {
         return $this->value;
     }
