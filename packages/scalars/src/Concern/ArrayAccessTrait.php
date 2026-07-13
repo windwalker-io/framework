@@ -32,7 +32,13 @@ trait ArrayAccessTrait
             return null;
         }
 
-        return $this->storage[array_key_first($this->storage)] ?? null;
+        $key = array_key_first($this->storage);
+
+        if ($key === null) {
+            return null;
+        }
+
+        return $this->storage[$key] ?? null;
     }
 
     /**
