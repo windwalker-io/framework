@@ -230,10 +230,8 @@ class ReflectAccessor
      */
     public static function invoke(object $object, string $methodName, ...$args): mixed
     {
-        $method = new ReflectionMethod($object, $methodName);
-        $method->setAccessible(true);
-
-        return $method->invokeArgs(is_object($object) ? $object : null, $args);
+        return new ReflectionMethod($object, $methodName)
+            ->invokeArgs(is_object($object) ? $object : null, $args);
     }
 
     public static function reflect(mixed $value): Reflector
