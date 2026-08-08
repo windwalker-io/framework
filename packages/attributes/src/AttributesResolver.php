@@ -270,10 +270,6 @@ class AttributesResolver extends ObjectBuilder
                 continue;
             }
 
-            if ($property->isPrivate() || $property->isProtected()) {
-                $property->setAccessible(true);
-            }
-
             $shouldCall = false;
             $getter     = static fn() => $object && $property->isInitialized($object)
                 ? $property->getValue($object)
@@ -290,10 +286,6 @@ class AttributesResolver extends ObjectBuilder
 
             if ($shouldCall === true) {
                 $handler();
-            }
-
-            if ($property->isPrivate() || $property->isProtected()) {
-                $property->setAccessible(false);
             }
         }
 
