@@ -795,9 +795,12 @@ class CachePool implements CachePoolInterface
 
     public function touch(string $key, DateInterval|int|string|null $ttl = null): bool
     {
+        $ttl ??= $this->defaultTtl;
+        $ttl = static::normalizeTtl($ttl);
+
         if ($this->storage instanceof TouchableStorageInterface) {
             $item = CacheItem::create($key);
-            $item->expiresAfter($ttl ?? $this->defaultTtl);
+            $item->expiresAfter($ttl);
 
             $expiration = $item->getExpiration()->getTimestamp();
 
@@ -814,7 +817,7 @@ class CachePool implements CachePoolInterface
             return false;
         }
 
-        $item->expiresAfter($ttl ?? $this->defaultTtl);
+        $item->expiresAfter($ttl);
 
         return $this->save($item);
     }
