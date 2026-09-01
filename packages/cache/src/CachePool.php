@@ -558,6 +558,47 @@ class CachePool implements CachePoolInterface
         });
     }
 
+    public function touch(string $key, DateInterval|int|string|null $ttl = null, bool $lock = true): bool
+    {
+        $ttl ??= $this->defaultTtl;
+        $ttl = static::normalizeTtl($ttl);
+
+        // TouchableStorageInterface guarantees updateExpiration() is atomic at the storage layer
+        // (see interface docblock), so no app-level lock is needed here.
+        if ($this->storage instanceof TouchableStorageInterface) {
+            $item = CacheItem::create($key);
+            $item->expiresAfter($ttl);
+
+            $expiration = $item->getExpiration()->getTimestamp();
+
+            if ($expiration < time()) {
+                return $this->delete($key);
+            }
+
+            return $this->storage->updateExpiration($key, $expiration);
+        }
+
+        // Fallback for non-atomic storages: read-modify-write, guarded by a lock to avoid
+        // racing with a concurrent fetch()/save() on the same key.
+        $locked = $lock && CacheLock::lock($key, $isNew);
+
+        try {
+            $item = $this->getItem($key);
+
+            if (!$item->isHit()) {
+                return false;
+            }
+
+            $item->expiresAfter($ttl);
+
+            return $this->save($item);
+        } finally {
+            if ($locked) {
+                CacheLock::release($key);
+            }
+        }
+    }
+
     /**
      * XFetch probabilistic early-expiration check.
      *
@@ -791,35 +832,6 @@ class CachePool implements CachePoolInterface
         $new->defaultTtl = static::normalizeTtl($defaultTtl);
 
         return $new;
-    }
-
-    public function touch(string $key, DateInterval|int|string|null $ttl = null): bool
-    {
-        $ttl ??= $this->defaultTtl;
-        $ttl = static::normalizeTtl($ttl);
-
-        if ($this->storage instanceof TouchableStorageInterface) {
-            $item = CacheItem::create($key);
-            $item->expiresAfter($ttl);
-
-            $expiration = $item->getExpiration()->getTimestamp();
-
-            if ($expiration < time()) {
-                return $this->delete($key);
-            }
-
-            return $this->storage->updateExpiration($key, $expiration);
-        }
-
-        $item = $this->getItem($key);
-
-        if (!$item->isHit()) {
-            return false;
-        }
-
-        $item->expiresAfter($ttl);
-
-        return $this->save($item);
     }
 
     public function toTaggedPool(StorageInterface|CacheItemPoolInterface|null $tagPool): TaggedCachePool

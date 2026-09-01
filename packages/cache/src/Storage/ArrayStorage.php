@@ -25,8 +25,7 @@ class ArrayStorage implements
     public function __construct(
         protected float $pruneProbability = 0.01,
         public protected(set) string $group = '',
-    )
-    {
+    ) {
     }
 
     /**

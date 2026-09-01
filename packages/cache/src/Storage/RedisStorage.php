@@ -102,8 +102,6 @@ class RedisStorage implements
 
     /**
      * @inheritDoc
-     *
-     * Uses Redis EXPIREAT/PERSIST so the payload is never re-transmitted.
      */
     public function updateExpiration(string $key, int $expiration = 0): bool
     {
@@ -111,17 +109,23 @@ class RedisStorage implements
 
         $normalizedKey = $this->normalizeKey($key);
 
-        if (!$this->driver->exists($normalizedKey)) {
-            return false;
+        if ($expiration !== 0) {
+            return (bool) $this->driver->expireAt($normalizedKey, $expiration);
         }
 
-        if ($expiration === 0) {
-            $this->driver->persist($normalizedKey);
+        return (bool) $this->driver->eval(
+            <<<'LUA'
+            if redis.call('EXISTS', KEYS[1]) == 0 then
+                return 0
+            end
 
-            return true;
-        }
+            redis.call('PERSIST', KEYS[1])
 
-        return (bool) $this->driver->expireAt($normalizedKey, $expiration);
+            return 1
+            LUA,
+            [$normalizedKey],
+            1
+        );
     }
 
     /**

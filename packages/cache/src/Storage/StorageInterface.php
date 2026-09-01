@@ -10,8 +10,6 @@ namespace Windwalker\Cache\Storage;
 interface StorageInterface
 {
     /**
-     * get
-     *
      * @param  string  $key  The key to get value.
      *
      * @return  mixed
@@ -19,8 +17,6 @@ interface StorageInterface
     public function get(string $key): mixed;
 
     /**
-     * has
-     *
      * @param  string  $key  The key to check value existent.
      *
      * @return  bool
@@ -28,15 +24,11 @@ interface StorageInterface
     public function has(string $key): bool;
 
     /**
-     * clear
-     *
      * @return bool
      */
     public function clear(): bool;
 
     /**
-     * remove
-     *
      * @param  string  $key  The key to be deleted.
      *
      * @return bool
@@ -44,8 +36,6 @@ interface StorageInterface
     public function remove(string $key): bool;
 
     /**
-     * save
-     *
      * @param  string  $key         The key under which to store the value.
      * @param  mixed   $value       The value to store.
      * @param  int     $expiration  The expiration time, should be unix timestamp. Set to 0 will never expired.

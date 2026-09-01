@@ -245,10 +245,12 @@ class DatabaseStorage implements
 
     public function updateExpiration(string $key, int $expiration = 0): bool
     {
+        // An expiration of 0 means "never expires", consistent with save()/saveInternal(),
+        // which is represented as SQL NULL rather than the literal integer 0.
         $query = $this->db->createQuery();
 
         $stmt = $query->update($this->table)
-            ->set($this->expiredAtField, $expiration)
+            ->set($this->expiredAtField, $expiration ?: null)
             ->where($this->keyField, $key)
             ->where($this->groupField, $this->group)
             ->execute();

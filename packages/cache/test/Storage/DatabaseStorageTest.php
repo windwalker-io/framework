@@ -126,6 +126,21 @@ class DatabaseStorageTest extends TestCase
     }
 
     /**
+     * @see  DatabaseStorage::updateExpiration — an expiration of 0 means "never expires" and must be
+     *       stored as SQL NULL, consistent with save()/saveInternal(), not the literal integer 0.
+     */
+    public function testUpdateExpirationToZeroStoresNullAndKeepsItemReadable(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        self::assertTrue($this->instance->updateExpiration('foo', 0));
+        self::assertNull($this->getExpiredAt('foo', 'flower'));
+
+        self::assertTrue($this->instance->has('foo'));
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
      * @see  DatabaseStorage::updateExpiration — an expired timestamp still updates the row but item
      *       will no longer be returned by get()/has()
      */

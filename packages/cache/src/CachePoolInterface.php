@@ -32,6 +32,8 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
         bool $lock = true,
     ): PromiseInterface;
 
+    public function touch(string $key, DateInterval|string|int|null $ttl = null, bool $lock = true): bool;
+
     public function withLogger(LoggerInterface $logger): static;
 
     public function withGroup(string $group): static;
@@ -41,6 +43,4 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
     public function getDefaultTtl(): DateInterval|int|null;
 
     public function withDefaultTtl(DateInterval|string|int|null $defaultTtl): static;
-
-    public function touch(string $key, DateInterval|string|int|null $ttl = null): bool;
 }
