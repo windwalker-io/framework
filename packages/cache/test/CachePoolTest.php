@@ -638,6 +638,40 @@ class CachePoolTest extends TestCase
     }
 
     /**
+     * @see  CachePool::normalizeTtl — passes DateInterval, int and null through untouched
+     */
+    public function testNormalizeTtlPassesThroughNonStringValues(): void
+    {
+        $interval = new \DateInterval('P2D');
+
+        self::assertSame($interval, $this->invoke($this->instance, 'normalizeTtl', $interval));
+        self::assertSame(60, $this->invoke($this->instance, 'normalizeTtl', 60));
+        self::assertNull($this->invoke($this->instance, 'normalizeTtl', null));
+    }
+
+    /**
+     * @see  CachePool::normalizeTtl — converts an ISO-8601 duration string (starting with `P`) to a DateInterval
+     */
+    public function testNormalizeTtlConvertsIsoDurationString(): void
+    {
+        $result = $this->invoke($this->instance, 'normalizeTtl', 'P1D');
+
+        self::assertInstanceOf(\DateInterval::class, $result);
+        self::assertSame(1, $result->d);
+    }
+
+    /**
+     * @see  CachePool::normalizeTtl — converts a relative date string (e.g. `1 day`) to a DateInterval
+     */
+    public function testNormalizeTtlConvertsRelativeDateString(): void
+    {
+        $result = $this->invoke($this->instance, 'normalizeTtl', '1 day');
+
+        self::assertInstanceOf(\DateInterval::class, $result);
+        self::assertSame(1, $result->d);
+    }
+
+    /**
      * @see  CachePool::save — item with past expiry is removed rather than saved
      */
     public function testSaveExpiredItemRemovesIt(): void
@@ -678,6 +712,34 @@ class CachePoolTest extends TestCase
     }
 
     /**
+     * @see  CachePool::withDefaultTtl — accepts an ISO-8601 duration string
+     */
+    public function testWithDefaultTtlAcceptsIsoDurationString(): void
+    {
+        $pool = $this->instance->withDefaultTtl('P1D');
+
+        self::assertNotSame($this->instance, $pool);
+
+        $defaultTtl = $pool->getDefaultTtl();
+
+        self::assertInstanceOf(\DateInterval::class, $defaultTtl);
+        self::assertSame(1, $defaultTtl->d);
+    }
+
+    /**
+     * @see  CachePool::withDefaultTtl — accepts a relative date string (e.g. `1 hour`)
+     */
+    public function testWithDefaultTtlAcceptsRelativeDateString(): void
+    {
+        $pool = $this->instance->withDefaultTtl('1 hour');
+
+        $defaultTtl = $pool->getDefaultTtl();
+
+        self::assertInstanceOf(\DateInterval::class, $defaultTtl);
+        self::assertSame(1, $defaultTtl->h);
+    }
+
+    /**
      * @see  CachePool::fetch — handler receives the CacheItem as first argument
      */
     public function testFetchHandlerReceivesCacheItem(): void
@@ -692,6 +754,23 @@ class CachePoolTest extends TestCase
 
         self::assertInstanceOf(\Psr\Cache\CacheItemInterface::class, $receivedItem);
         self::assertEquals('item_arg', $receivedItem->getKey());
+    }
+
+    /**
+     * @see  CachePool::fetch — accepts a string ttl (relative date string)
+     */
+    public function testFetchAcceptsStringTtl(): void
+    {
+        $receivedItem = null;
+
+        $this->instance->fetch('item_string_ttl', function (CacheItem $item) use (&$receivedItem) {
+            $receivedItem = $item;
+
+            return 'value';
+        }, '1 hour', 0.0, false);
+
+        self::assertInstanceOf(CacheItem::class, $receivedItem);
+        self::assertEqualsWithDelta(microtime(true) + 3600, $receivedItem->realExpiry, 2);
     }
 
     /**
@@ -908,6 +987,23 @@ class CachePoolTest extends TestCase
 
         // Failed computation must not pollute the cache.
         self::assertNull($pool->get('rejected'), 'Rejected handler must not write to cache');
+    }
+
+    /** @see CachePool::fetchAsync — accepts a string ttl (ISO-8601 duration) */
+    public function testFetchAsyncAcceptsStringTtl(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $receivedItem = null;
+
+        $pool->fetchAsync('key', function (CacheItem $item) use (&$receivedItem) {
+            $receivedItem = $item;
+
+            return 'value';
+        }, 'PT1H', 0.0, false)->wait();
+
+        self::assertInstanceOf(CacheItem::class, $receivedItem);
+        self::assertEqualsWithDelta(microtime(true) + 3600, $receivedItem->realExpiry, 2);
     }
 
     /** @see CachePool::fetchAsync — multiple fetchAsync calls can be combined with Promise::all() */
