@@ -21,6 +21,7 @@ use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PhpFileStorage;
 use Windwalker\Cache\Storage\StorageInterface;
+use Windwalker\Cache\Storage\TouchableStorageInterface;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
@@ -790,6 +791,32 @@ class CachePool implements CachePoolInterface
         $new->defaultTtl = static::normalizeTtl($defaultTtl);
 
         return $new;
+    }
+
+    public function touch(string $key, DateInterval|int|string|null $ttl = null): bool
+    {
+        if ($this->storage instanceof TouchableStorageInterface) {
+            $item = CacheItem::create($key);
+            $item->expiresAfter($ttl ?? $this->defaultTtl);
+
+            $expiration = $item->getExpiration()->getTimestamp();
+
+            if ($expiration < time()) {
+                return $this->delete($key);
+            }
+
+            return $this->storage->updateExpiration($key, $expiration);
+        }
+
+        $item = $this->getItem($key);
+
+        if (!$item->isHit()) {
+            return false;
+        }
+
+        $item->expiresAfter($ttl ?? $this->defaultTtl);
+
+        return $this->save($item);
     }
 
     public function toTaggedPool(StorageInterface|CacheItemPoolInterface|null $tagPool): TaggedCachePool

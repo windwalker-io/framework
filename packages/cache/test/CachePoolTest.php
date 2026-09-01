@@ -14,6 +14,7 @@ use Windwalker\Cache\Serializer\RawSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\StorageInterface;
+use Windwalker\Cache\Storage\TouchableStorageInterface;
 use Windwalker\Promise\Promise;
 use Windwalker\Test\Traits\TestAccessorTrait;
 
@@ -737,6 +738,110 @@ class CachePoolTest extends TestCase
 
         self::assertInstanceOf(\DateInterval::class, $defaultTtl);
         self::assertSame(1, $defaultTtl->h);
+    }
+
+    /**
+     * @see  CachePool::touch — returns false when the item does not exist
+     */
+    public function testTouchReturnsFalseWhenItemMissing(): void
+    {
+        self::assertFalse($this->instance->touch('missing'));
+    }
+
+    /**
+     * @see  CachePool::touch — extends the expiration of an existing item
+     */
+    public function testTouchExtendsExpirationOfExistingItem(): void
+    {
+        $this->instance->set('foo', 'FOO', 10);
+
+        $result = $this->instance->touch('foo', 3600);
+
+        self::assertTrue($result);
+
+        $expiration = $this->getValue($this->instance->getStorage(), 'data')['foo'][0];
+
+        self::assertEqualsWithDelta(time() + 3600, $expiration, 2);
+        self::assertEquals('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  CachePool::touch — falls back to defaultTtl when no ttl is given
+     */
+    public function testTouchUsesDefaultTtlWhenTtlNotProvided(): void
+    {
+        $this->instance->setDefaultTtl(3600);
+        $this->instance->set('foo', 'FOO', 10);
+
+        self::assertTrue($this->instance->touch('foo'));
+
+        $expiration = $this->getValue($this->instance->getStorage(), 'data')['foo'][0];
+
+        self::assertEqualsWithDelta(time() + 3600, $expiration, 2);
+    }
+
+    /**
+     * @see  CachePool::touch — deletes the item when the new ttl is already expired
+     *
+     * Note: ArrayStorage implements TouchableStorageInterface, so touch() takes the
+     * delegating branch which returns delete()'s result (true) rather than save()'s
+     * result (false) used by the non-touchable fallback path.
+     */
+    public function testTouchDeletesItemWhenNewTtlAlreadyExpired(): void
+    {
+        $this->instance->set('foo', 'FOO', 3600);
+
+        $expiredTtl = new \DateInterval('PT10S');
+        $expiredTtl->invert = 1;
+
+        $result = $this->instance->touch('foo', $expiredTtl);
+
+        self::assertTrue($result);
+        self::assertFalse($this->instance->has('foo'));
+    }
+
+    /**
+     * @see  CachePool::touch — delegates to a TouchableStorageInterface without loading/saving the item
+     */
+    public function testTouchDelegatesToTouchableStorage(): void
+    {
+        $storageMock = $this->createMockForIntersectionOfInterfaces(
+            [StorageInterface::class, TouchableStorageInterface::class]
+        );
+        $storageMock->expects($this->once())
+            ->method('updateExpiration')
+            ->with(
+                'foo',
+                self::callback(static fn(int $expiration) => abs($expiration - (time() + 3600)) <= 1)
+            )
+            ->willReturn(true);
+        $storageMock->expects($this->never())->method('get');
+        $storageMock->expects($this->never())->method('save');
+
+        $this->instance = $this->instance->withStorage($storageMock);
+
+        self::assertTrue($this->instance->touch('foo', 3600));
+    }
+
+    /**
+     * @see  CachePool::touch — deletes the item via a TouchableStorageInterface when ttl is already expired
+     */
+    public function testTouchDeletesItemWhenTouchableStorageTtlAlreadyExpired(): void
+    {
+        $storageMock = $this->createMockForIntersectionOfInterfaces(
+            [StorageInterface::class, TouchableStorageInterface::class]
+        );
+        $storageMock->expects($this->never())->method('updateExpiration');
+        $storageMock->expects($this->exactly(2))
+            ->method('remove')
+            ->with(self::callback(static fn(string $key) => $key === 'foo' || str_starts_with($key, '--ww_item_meta--')));
+
+        $this->instance = $this->instance->withStorage($storageMock);
+
+        $expiredTtl = new \DateInterval('PT10S');
+        $expiredTtl->invert = 1;
+
+        self::assertTrue($this->instance->touch('foo', $expiredTtl));
     }
 
     /**

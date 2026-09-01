@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Cache\Storage\DatabaseStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
+use Windwalker\Cache\Storage\TouchableStorageInterface;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\DriverOptions;
@@ -78,6 +79,64 @@ class DatabaseStorageTest extends TestCase
     public function testImplementsGroupedStorageInterface(): void
     {
         self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testImplementsTouchableStorageInterface(): void
+    {
+        self::assertInstanceOf(TouchableStorageInterface::class, $this->instance);
+    }
+
+    /**
+     * @see  DatabaseStorage::updateExpiration
+     */
+    public function testUpdateExpirationUpdatesExpiredAtAndReturnsTrue(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($this->instance->updateExpiration('foo', $newExpiration));
+        self::assertSame($newExpiration, $this->getExpiredAt('foo', 'flower'));
+
+        // Payload must stay untouched.
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  DatabaseStorage::updateExpiration — returns false when the key does not exist
+     */
+    public function testUpdateExpirationReturnsFalseWhenKeyNotFound(): void
+    {
+        self::assertFalse($this->instance->updateExpiration('missing', time() + 60));
+    }
+
+    /**
+     * @see  DatabaseStorage::updateExpiration — scoped to the storage's own group
+     */
+    public function testUpdateExpirationIsScopedToGroup(): void
+    {
+        $this->instance->save('same-key', 'FLOWER', time() + 60);
+        $this->otherGroup->save('same-key', 'TREE', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($this->instance->updateExpiration('same-key', $newExpiration));
+        self::assertSame($newExpiration, $this->getExpiredAt('same-key', 'flower'));
+        self::assertNotSame($newExpiration, $this->getExpiredAt('same-key', 'tree'));
+    }
+
+    /**
+     * @see  DatabaseStorage::updateExpiration — an expired timestamp still updates the row but item
+     *       will no longer be returned by get()/has()
+     */
+    public function testUpdateExpirationToPastMakesItemUnreadable(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        self::assertTrue($this->instance->updateExpiration('foo', time() - 10));
+
+        self::assertFalse($this->instance->has('foo'));
+        self::assertNull($this->instance->get('foo'));
     }
 
     public function testWithGroupCreatesScopedClone(): void
@@ -249,6 +308,16 @@ class DatabaseStorageTest extends TestCase
             'SELECT COUNT(*) FROM cache_items WHERE "key" = ? AND "group" = ?',
             [$key, $group]
         )->result();
+    }
+
+    private function getExpiredAt(string $key, string $group): ?int
+    {
+        $value = $this->db->execute(
+            'SELECT expired_at FROM cache_items WHERE "key" = ? AND "group" = ?',
+            [$key, $group]
+        )->result();
+
+        return $value === null ? null : (int) $value;
     }
 }
 

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PdoStorage;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
+use Windwalker\Cache\Storage\TouchableStorageInterface;
 
 class PdoStorageTest extends TestCase
 {
@@ -70,6 +71,62 @@ class PdoStorageTest extends TestCase
     public function testImplementsGroupedStorageInterface(): void
     {
         self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testImplementsTouchableStorageInterface(): void
+    {
+        self::assertInstanceOf(TouchableStorageInterface::class, $this->instance);
+    }
+
+    /**
+     * @see  PdoStorage::updateExpiration
+     */
+    public function testUpdateExpirationUpdatesExpiredAtAndReturnsTrue(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($this->instance->updateExpiration('foo', $newExpiration));
+        self::assertSame($newExpiration, $this->getExpiredAt('foo', 'flower'));
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  PdoStorage::updateExpiration — returns false when the key does not exist
+     */
+    public function testUpdateExpirationReturnsFalseWhenKeyNotFound(): void
+    {
+        self::assertFalse($this->instance->updateExpiration('missing', time() + 60));
+    }
+
+    /**
+     * @see  PdoStorage::updateExpiration — scoped to the storage's own group
+     */
+    public function testUpdateExpirationIsScopedToGroup(): void
+    {
+        $this->instance->save('same-key', 'FLOWER', time() + 60);
+        $this->otherGroup->save('same-key', 'TREE', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($this->instance->updateExpiration('same-key', $newExpiration));
+        self::assertSame($newExpiration, $this->getExpiredAt('same-key', 'flower'));
+        self::assertNotSame($newExpiration, $this->getExpiredAt('same-key', 'tree'));
+    }
+
+    /**
+     * @see  PdoStorage::updateExpiration — an expired timestamp still updates the row but item is
+     *       no longer readable via get()/has()
+     */
+    public function testUpdateExpirationToPastMakesItemUnreadable(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        self::assertTrue($this->instance->updateExpiration('foo', time() - 10));
+
+        self::assertFalse($this->instance->has('foo'));
+        self::assertNull($this->instance->get('foo'));
     }
 
     public function testWithGroupCreatesScopedClone(): void
@@ -222,6 +279,18 @@ class PdoStorageTest extends TestCase
         $stmt->execute([':key' => $key, ':grp' => $group]);
 
         return (int) $stmt->fetchColumn();
+    }
+
+    private function getExpiredAt(string $key, string $group): ?int
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT expired_at FROM cache_items WHERE "key" = :key AND "group" = :grp'
+        );
+        $stmt->execute([':key' => $key, ':grp' => $group]);
+
+        $value = $stmt->fetchColumn();
+
+        return $value === null ? null : (int) $value;
     }
 
     private function tableExists(PDO $pdo, string $table): bool

@@ -9,7 +9,11 @@ use Redis;
 /**
  * The RedisStorage class.
  */
-class RedisStorage implements StorageInterface, MultiGetStorageInterface, GroupedStorageInterface
+class RedisStorage implements
+    StorageInterface,
+    MultiGetStorageInterface,
+    GroupedStorageInterface,
+    TouchableStorageInterface
 {
     /**
      * Property defaultHost.
@@ -94,6 +98,30 @@ class RedisStorage implements StorageInterface, MultiGetStorageInterface, Groupe
         $this->driver->del($this->normalizeKey($key));
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Uses Redis EXPIREAT/PERSIST so the payload is never re-transmitted.
+     */
+    public function updateExpiration(string $key, int $expiration = 0): bool
+    {
+        $this->connect();
+
+        $normalizedKey = $this->normalizeKey($key);
+
+        if (!$this->driver->exists($normalizedKey)) {
+            return false;
+        }
+
+        if ($expiration === 0) {
+            $this->driver->persist($normalizedKey);
+
+            return true;
+        }
+
+        return (bool) $this->driver->expireAt($normalizedKey, $expiration);
     }
 
     /**

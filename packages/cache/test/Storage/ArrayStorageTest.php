@@ -7,6 +7,7 @@ namespace Windwalker\Cache\Test\Storage;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
+use Windwalker\Cache\Storage\TouchableStorageInterface;
 
 /**
  * Tests for ArrayStorage (in-memory cache).
@@ -163,6 +164,79 @@ class ArrayStorageTest extends AbstractStorageTestCase
     public function testImplementsGroupedStorageInterface(): void
     {
         self::assertInstanceOf(GroupedStorageInterface::class, $this->instance);
+    }
+
+    public function testImplementsTouchableStorageInterface(): void
+    {
+        self::assertInstanceOf(TouchableStorageInterface::class, $this->instance);
+    }
+
+    /**
+     * @see  ArrayStorage::updateExpiration — updates expiration and returns true, keeping the value intact
+     */
+    public function testUpdateExpirationUpdatesExpirationAndReturnsTrue(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($this->instance->updateExpiration('foo', $newExpiration));
+        self::assertSame($newExpiration, $this->instance->getData()['foo'][0]);
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  ArrayStorage::updateExpiration — returns false when the key does not exist
+     */
+    public function testUpdateExpirationReturnsFalseWhenKeyNotFound(): void
+    {
+        self::assertFalse($this->instance->updateExpiration('missing', time() + 60));
+    }
+
+    /**
+     * @see  ArrayStorage::updateExpiration — expiration=0 means "never expires"
+     */
+    public function testUpdateExpirationWithZeroMeansNeverExpires(): void
+    {
+        $this->instance->save('foo', 'FOO', time() - 10);
+
+        self::assertFalse($this->instance->has('foo'), 'sanity check: item starts expired');
+
+        self::assertTrue($this->instance->updateExpiration('foo', 0));
+
+        self::assertTrue($this->instance->has('foo'));
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  ArrayStorage::updateExpiration — an expired timestamp makes item unreadable via has()/get()
+     */
+    public function testUpdateExpirationToPastMakesItemUnreadable(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        self::assertTrue($this->instance->updateExpiration('foo', time() - 10));
+
+        self::assertFalse($this->instance->has('foo'));
+        self::assertNull($this->instance->get('foo'));
+    }
+
+    /**
+     * @see  ArrayStorage::updateExpiration — scoped to the storage's own group
+     */
+    public function testUpdateExpirationIsScopedToGroup(): void
+    {
+        $flower = $this->instance->withGroup('flower');
+        $tree = $this->instance->withGroup('tree');
+
+        $flower->save('same-key', 'FLOWER', time() + 60);
+        $tree->save('same-key', 'TREE', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($flower->updateExpiration('same-key', $newExpiration));
+        self::assertSame($newExpiration, $flower->getData()['flower']['same-key'][0]);
+        self::assertNotSame($newExpiration, $tree->getData()['tree']['same-key'][0]);
     }
 
     public function testWithGroupCreatesScopedClone(): void

@@ -9,7 +9,11 @@ namespace Windwalker\Cache\Storage;
  *
  * @since 2.0
  */
-class ArrayStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
+class ArrayStorage implements
+    StorageInterface,
+    PrunableStorageInterface,
+    GroupedStorageInterface,
+    TouchableStorageInterface
 {
     /**
      * Property storage.
@@ -91,6 +95,28 @@ class ArrayStorage implements StorageInterface, PrunableStorageInterface, Groupe
             unset($this->data[$key]);
         } else {
             unset($this->data[$this->group][$key]);
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateExpiration(string $key, int $expiration = 0): bool
+    {
+        $exists = $this->group === ''
+            ? isset($this->data[$key])
+            : isset($this->data[$this->group][$key]);
+
+        if (!$exists) {
+            return false;
+        }
+
+        if ($this->group === '') {
+            $this->data[$key][0] = $expiration;
+        } else {
+            $this->data[$this->group][$key][0] = $expiration;
         }
 
         return true;

@@ -6,6 +6,7 @@ namespace Windwalker\Cache\Test\Storage;
 
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\RedisStorage;
+use Windwalker\Cache\Storage\TouchableStorageInterface;
 use Windwalker\Utilities\Env;
 
 /**
@@ -17,6 +18,8 @@ class RedisStorageTest extends AbstractStorageTestCase
      * @var RedisStorage
      */
     protected $instance;
+
+    protected \Redis $redis;
 
     /**
      * This method is called before the first test of this test class is run.
@@ -32,11 +35,11 @@ class RedisStorageTest extends AbstractStorageTestCase
     {
         parent::setUp();
 
-        $redis = new \Redis();
+        $this->redis = new \Redis();
         $port = (int) ($_SERVER['REDIS_PORT'] ?? $_ENV['REDIS_PORT'] ?? 6379);
-        $redis->connect('127.0.0.1', $port);
+        $this->redis->connect('127.0.0.1', $port);
 
-        $this->instance = new RedisStorage($redis);
+        $this->instance = new RedisStorage($this->redis);
     }
 
     protected function tearDown(): void
@@ -65,5 +68,58 @@ class RedisStorageTest extends AbstractStorageTestCase
         self::assertSame('FLOWER', $flower->get('same-key'));
         self::assertSame('TREE', $tree->get('same-key'));
         self::assertNull($this->instance->get('same-key'));
+    }
+
+    public function testImplementsTouchableStorageInterface(): void
+    {
+        self::assertInstanceOf(TouchableStorageInterface::class, $this->instance);
+    }
+
+    /**
+     * @see  RedisStorage::updateExpiration
+     */
+    public function testUpdateExpirationUpdatesTtlAndReturnsTrue(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        $newExpiration = time() + 3600;
+
+        self::assertTrue($this->instance->updateExpiration('foo', $newExpiration));
+        self::assertEqualsWithDelta($newExpiration, time() + $this->redis->ttl('foo'), 2);
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  RedisStorage::updateExpiration — returns false when the key does not exist
+     */
+    public function testUpdateExpirationReturnsFalseWhenKeyNotFound(): void
+    {
+        self::assertFalse($this->instance->updateExpiration('missing', time() + 60));
+    }
+
+    /**
+     * @see  RedisStorage::updateExpiration — expiration=0 removes the TTL (never expires)
+     */
+    public function testUpdateExpirationWithZeroPersistsKey(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 10);
+
+        self::assertTrue($this->instance->updateExpiration('foo', 0));
+
+        self::assertSame(-1, $this->redis->ttl('foo'));
+        self::assertSame('FOO', $this->instance->get('foo'));
+    }
+
+    /**
+     * @see  RedisStorage::updateExpiration — an expired timestamp makes item unreadable
+     */
+    public function testUpdateExpirationToPastMakesItemUnreadable(): void
+    {
+        $this->instance->save('foo', 'FOO', time() + 60);
+
+        self::assertTrue($this->instance->updateExpiration('foo', time() - 10));
+
+        self::assertFalse($this->instance->has('foo'));
+        self::assertNull($this->instance->get('foo'));
     }
 }

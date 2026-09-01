@@ -41,4 +41,6 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
     public function getDefaultTtl(): DateInterval|int|null;
 
     public function withDefaultTtl(DateInterval|string|int|null $defaultTtl): static;
+
+    public function touch(string $key, DateInterval|string|int|null $ttl = null): bool;
 }

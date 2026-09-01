@@ -8,7 +8,11 @@ use PDO;
 use PDOException;
 use Throwable;
 
-class PdoStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
+class PdoStorage implements
+    StorageInterface,
+    PrunableStorageInterface,
+    GroupedStorageInterface,
+    TouchableStorageInterface
 {
     public function __construct(
         protected PDO $pdo,
@@ -112,6 +116,30 @@ class PdoStorage implements StorageInterface, PrunableStorageInterface, GroupedS
         } catch (Throwable) {
             return false;
         }
+    }
+
+    public function updateExpiration(string $key, int $expiration = 0): bool
+    {
+        $expiredAt = $expiration ?: null;
+
+        $sql = sprintf(
+            'UPDATE %s SET %s = :expiredAt WHERE %s = :key AND %s = :grp',
+            $this->qn($this->table),
+            $this->qn($this->columns['expired_at']),
+            $this->qn($this->columns['key']),
+            $this->qn($this->columns['group'])
+        );
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(
+            [
+                ':expiredAt' => $expiredAt,
+                ':key' => $key,
+                ':grp' => $this->group,
+            ]
+        );
+
+        return $stmt->rowCount() !== 0;
     }
 
     public function prune(): int

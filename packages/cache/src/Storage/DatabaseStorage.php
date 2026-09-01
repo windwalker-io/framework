@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Storage;
 
+use Throwable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\ORM\ORM;
 use Windwalker\Query\Query;
-use Throwable;
 
 use function Windwalker\raw;
 
-class DatabaseStorage implements StorageInterface, PrunableStorageInterface, GroupedStorageInterface
+class DatabaseStorage implements
+    StorageInterface,
+    PrunableStorageInterface,
+    GroupedStorageInterface,
+    TouchableStorageInterface
 {
-
     protected ORM $orm {
         get => $this->db->orm();
     }
@@ -222,6 +225,7 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface, Gro
      * Set the prune probability (0.0 to 1.0)
      *
      * @param  float  $probability
+     *
      * @return  static  Return self to support chaining.
      */
     public function setPruneProbability(float $probability): static
@@ -237,6 +241,19 @@ class DatabaseStorage implements StorageInterface, PrunableStorageInterface, Gro
         $new->group = $group;
 
         return $new;
+    }
+
+    public function updateExpiration(string $key, int $expiration = 0): bool
+    {
+        $query = $this->db->createQuery();
+
+        $stmt = $query->update($this->table)
+            ->set($this->expiredAtField, $expiration)
+            ->where($this->keyField, $key)
+            ->where($this->groupField, $this->group)
+            ->execute();
+
+        return $stmt->countAffected() !== 0;
     }
 
     private function upsertSql(string $key, string $group, string $payload, string $expiredAt): ?Query
