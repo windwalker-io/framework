@@ -382,11 +382,13 @@ class CachePool implements CachePoolInterface
     public function fetch(
         string $key,
         callable $handler,
-        DateInterval|int|null $ttl = null,
+        DateInterval|string|int|null $ttl = null,
         float $beta = 1.0,
         bool $lock = true,
     ): mixed {
         $locked = $lock && CacheLock::lock($key, $isNew);
+
+        $ttl = static::normalizeTtl($ttl);
 
         try {
             // Re-fetch after acquiring the lock so we see any value a competing
@@ -471,7 +473,7 @@ class CachePool implements CachePoolInterface
     public function fetchAsync(
         string $key,
         callable $handler,
-        DateInterval|int|null $ttl = null,
+        DateInterval|string|int|null $ttl = null,
         float $beta = 1.0,
         bool $lock = true,
     ): PromiseInterface {
@@ -509,6 +511,8 @@ class CachePool implements CachePoolInterface
 
                     return;
                 }
+
+                $ttl = static::normalizeTtl($ttl);
 
                 $item->expiresAfter($ttl);
 
@@ -780,11 +784,10 @@ class CachePool implements CachePoolInterface
         return $this;
     }
 
-    public function withDefaultTtl(DateInterval|int|null $defaultTtl): static
+    public function withDefaultTtl(DateInterval|string|int|null $defaultTtl): static
     {
         $new = clone $this;
-        $new->defaultTtl = $defaultTtl;
-
+        $new->defaultTtl = static::normalizeTtl($defaultTtl);
 
         return $new;
     }
@@ -891,5 +894,18 @@ class CachePool implements CachePoolInterface
     public function isGroupSupported(): bool
     {
         return $this->storage instanceof GroupedStorageInterface;
+    }
+
+    protected static function normalizeTtl(DateInterval|int|string|null $ttl): int|null|DateInterval
+    {
+        if (is_string($ttl)) {
+            if (str_starts_with($ttl, 'P')) {
+                return new DateInterval($ttl);
+            }
+
+            return DateInterval::createFromDateString($ttl);
+        }
+
+        return $ttl;
     }
 }

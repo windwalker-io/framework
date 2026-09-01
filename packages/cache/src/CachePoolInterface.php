@@ -18,7 +18,7 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
     public function fetch(
         string $key,
         callable $handler,
-        DateInterval|int|null $ttl = null,
+        DateInterval|string|int|null $ttl = null,
         float $beta = 1.0,
         bool $lock = true,
     ): mixed;
@@ -27,7 +27,7 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
     public function fetchAsync(
         string $key,
         callable $handler,
-        DateInterval|int|null $ttl = null,
+        DateInterval|string|int|null $ttl = null,
         float $beta = 1.0,
         bool $lock = true,
     ): PromiseInterface;
@@ -40,5 +40,5 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
 
     public function getDefaultTtl(): DateInterval|int|null;
 
-    public function withDefaultTtl(DateInterval|int|null $defaultTtl): static;
+    public function withDefaultTtl(DateInterval|string|int|null $defaultTtl): static;
 }
