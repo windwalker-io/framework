@@ -132,6 +132,28 @@ class QueueDatabaseTest extends TestCase
     }
 
     /**
+     * @see  ChannelAwareDriverInterface::getChannels
+     */
+    public function testGetChannels(): void
+    {
+        $this->instance->push(new TestJob(['Foo']), 0, 'foo-channel');
+        $this->instance->push(new TestJob(['Bar']), 0, 'bar-channel');
+
+        $channels = [...$this->instance->getDriver()->getChannels()];
+
+        sort($channels);
+
+        self::assertEquals(
+            ['bar-channel', 'default', 'foo-channel'],
+            $channels
+        );
+
+        self::$db->delete('queue_jobs')
+            ->whereIn('channel', ['foo-channel', 'bar-channel'])
+            ->execute();
+    }
+
+    /**
      * @see  Queue::__construct
      */
     public function testConstruct(): void

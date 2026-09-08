@@ -17,7 +17,7 @@ use Windwalker\Queue\QueueMessage;
  *
  * @since  3.3
  */
-class PdoQueueDriver implements QueueDriverInterface
+class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterface
 {
     use UuidDriverTrait;
 
@@ -215,6 +215,16 @@ class PdoQueueDriver implements QueueDriverInterface
         $this->push($message);
 
         return $this;
+    }
+
+    public function getChannels(): iterable
+    {
+        $sql = 'SELECT DISTINCT channel FROM ' . $this->table;
+
+        $stat = $this->pdo->prepare($sql);
+        $stat->execute();
+
+        return $stat->fetchAll(PDO::FETCH_COLUMN);
     }
 
     /**

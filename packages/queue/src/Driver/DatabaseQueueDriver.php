@@ -20,7 +20,7 @@ use Windwalker\Queue\QueueMessage;
  *
  * @since  3.2
  */
-class DatabaseQueueDriver implements QueueDriverInterface
+class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterface
 {
     use UuidDriverTrait;
 
@@ -286,6 +286,16 @@ class DatabaseQueueDriver implements QueueDriverInterface
         $this->db->disconnect();
 
         return $this;
+    }
+
+    public function getChannels(): iterable
+    {
+        $query = $this->db->createQuery();
+
+        $query->selectRaw('DISTINCT channel')
+            ->from($this->table);
+
+        return $this->db->prepare($query)->loadColumn();
     }
 
     protected function checkCanSkipLocked(): bool
