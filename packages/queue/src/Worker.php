@@ -4,24 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue;
 
-use DateTimeImmutable;
-use Exception;
-use Psr\Log\AbstractLogger;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Throwable;
-use Windwalker\Event\EventAwareInterface;
-use Windwalker\Event\EventAwareTrait;
 use Windwalker\Queue\Attributes\JobBackoff;
 use Windwalker\Queue\Attributes\JobFailed;
 use Windwalker\Queue\Event\AfterJobRunEvent;
 use Windwalker\Queue\Event\BeforeJobRunEvent;
-use Windwalker\Queue\Event\DebugOutputEvent;
 use Windwalker\Queue\Event\JobFailureEvent;
-use Windwalker\Queue\Event\LoopEndEvent;
-use Windwalker\Queue\Event\LoopFailureEvent;
-use Windwalker\Queue\Event\LoopStartEvent;
-use Windwalker\Queue\Event\StopEvent;
 use Windwalker\Queue\Exception\MaxAttemptsExceededException;
 use Windwalker\Queue\Job\JobController;
 

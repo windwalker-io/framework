@@ -16,6 +16,7 @@ class RunnerOptions
         public int $timeout = 60,
         public int $maxRuns = 0,
         public int $lifetime = 0,
+        public bool $shuffleChannels = false,
         public bool $stopWhenEmpty = false,
         public ?string $restartSignal = null,
         public ?\Closure $controllerFactory = null,

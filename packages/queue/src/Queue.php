@@ -7,6 +7,7 @@ namespace Windwalker\Queue;
 use InvalidArgumentException;
 use JsonException;
 use Windwalker\DI\Definition\DefinitionInterface;
+use Windwalker\Queue\Driver\ChannelAwareDriverInterface;
 use Windwalker\Queue\Driver\QueueDriverInterface;
 use Windwalker\Queue\Job\ClosureJob;
 use Windwalker\Utilities\Classes\ObjectBuilderAwareTrait;
@@ -155,6 +156,18 @@ class Queue
         $message->setDelay($delay);
 
         $this->driver->defer($message);
+    }
+
+    /**
+     * @return  iterable<string>
+     */
+    public function getChannels(): iterable
+    {
+        if (!$this->driver instanceof ChannelAwareDriverInterface) {
+            throw new \DomainException('Driver does not support get channels.');
+        }
+
+        return $this->driver->getChannels();
     }
 
     /**

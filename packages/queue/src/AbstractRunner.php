@@ -87,6 +87,8 @@ abstract class AbstractRunner implements EventAwareInterface
     {
         gc_enable();
 
+        $isAllChannels = in_array('*', (array) $channel, true);
+
         // Last Restart
         $this->lastRestart = (int) new DateTimeImmutable('now')->format('U');
 
@@ -113,8 +115,18 @@ abstract class AbstractRunner implements EventAwareInterface
             $this->registerSignals();
 
             if (($this->options->force ?? null) || $this->canLoop()) {
+                $channels = $channel;
+
+                if ($isAllChannels) {
+                    $channels = iterator_to_array($this->queue->getChannels());
+                }
+
+                if ($this->options->shuffleChannels && is_array($channels)) {
+                    shuffle($channels);
+                }
+
                 try {
-                    $this->next($channel);
+                    $this->next($channels);
                 } catch (UnrecoverableException $e) {
                     $this->stop('[STOP] Unrecoverable error: ' . $e->getMessage(), 1, true);
                 } catch (Exception $exception) {
