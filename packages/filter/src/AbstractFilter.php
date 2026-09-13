@@ -29,7 +29,7 @@ abstract class AbstractFilter implements FilterInterface, ValidatorInterface
         $params = [];
 
         foreach (get_object_vars($this) as $key => $value) {
-            $params[] = $key . '=' . json_encode($value);
+            $params[] = $key . ': ' . json_encode($value);
         }
 
         return static::class . '(' . implode(', ', $params) . ')';

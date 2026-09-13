@@ -58,6 +58,7 @@ abstract class AbstractRequest implements RequestInterface
         'POST',
         'PUT',
         'TRACE',
+        'QUERY',
     ];
 
     /**
