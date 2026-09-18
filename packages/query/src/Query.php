@@ -1901,8 +1901,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $offset = $this->getOffset() ?? 0;
         $first = true;
         $lastItem = null;
+        $max = $this->getLimit();
+
+        $yielded = 0;
 
         while (true) {
+            if ($max !== null && $yielded >= $max) {
+                break;
+            }
+
             $query = clone $this;
 
             if (!$cursorHandler || $first) {
@@ -1910,7 +1917,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 $first = false;
             }
 
-            $query->limit($length);
+            $currentLength = $max !== null
+                ? min($length, $max - $yielded)
+                : $length;
+
+            $query->limit($currentLength);
 
             if ($cursorHandler && !$first && $lastItem) {
                 $query = $cursorHandler($query, $lastItem) ?? $query;
@@ -1921,13 +1932,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $count = 0;
 
             foreach ($items as $item) {
+                if ($max !== null && $yielded >= $max) {
+                    break;
+                }
+
                 $count++;
+                $yielded++;
                 yield $item;
 
                 $lastItem = $item;
             }
 
-            if ($count === 0 || $count < $length) {
+            if ($count === 0 || $count < $currentLength) {
                 break;
             }
 
@@ -1954,8 +1970,14 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $offset = $this->getOffset() ?? 0;
         $first = true;
         $lastItem = null;
+        $max = $this->getLimit();
+        $yielded = 0;
 
         while (true) {
+            if ($max !== null && $yielded >= $max) {
+                break;
+            }
+
             $query = clone $this;
 
             if (!$cursorHandler || $first) {
@@ -1963,7 +1985,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 $first = false;
             }
 
-            $query->limit($length);
+            $currentLength = $max !== null
+                ? min($length, $max - $yielded)
+                : $length;
+
+            $query->limit($currentLength);
 
             if ($cursorHandler && !$first && $lastItem) {
                 $query = $cursorHandler($query, $lastItem) ?? $query;
@@ -1976,8 +2002,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             }
 
             if ($cursorHandler) {
-                $runner = static function () use ($items, &$lastItem) {
+                $runner = static function () use ($items, &$lastItem, &$yielded, $max) {
                     foreach ($items as $item) {
+                        if ($max !== null && $yielded >= $max) {
+                            break;
+                        }
+
+                        $yielded++;
                         yield $item;
 
                         $lastItem = $item;
@@ -1986,10 +2017,15 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
                 yield $runner();
             } else {
+                if ($max !== null) {
+                    $items = $items->slice(0, max(0, $max - $yielded));
+                }
+
+                $yielded += count($items);
                 yield $items;
             }
 
-            if (count($items) < $length) {
+            if (count($items) < $currentLength) {
                 break;
             }
 
@@ -2012,20 +2048,36 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function iterateWhile(int $length, ?string $class = null, array $args = []): \Generator
     {
+        $max = $this->getLimit();
+        $yielded = 0;
         $query = clone $this;
         $query->offset(0)->limit($length);
 
         while (true) {
+            if ($max !== null && $yielded >= $max) {
+                break;
+            }
+
+            $currentLength = $max !== null
+                ? min($length, $max - $yielded)
+                : $length;
+
+            $query->limit($currentLength);
             $items = $query->getIterator($class, $args);
 
             $count = 0;
 
             foreach ($items as $item) {
+                if ($max !== null && $yielded >= $max) {
+                    break;
+                }
+
                 $count++;
+                $yielded++;
                 yield $item;
             }
 
-            if ($count === 0 || $count < $length) {
+            if ($count === 0 || $count < $currentLength) {
                 break;
             }
         }
@@ -2047,20 +2099,36 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function iterateBatchWhile(int $length, ?string $class = null, array $args = []): \Generator
     {
+        $max = $this->getLimit();
+        $yielded = 0;
         $query = clone $this;
         $query->offset(0)->limit($length);
 
         while (true) {
+            if ($max !== null && $yielded >= $max) {
+                break;
+            }
+
+            $currentLength = $max !== null
+                ? min($length, $max - $yielded)
+                : $length;
+
+            $query->limit($currentLength);
             $items = $query->all($class, $args);
 
             $count = 0;
 
             foreach ($items as $item) {
+                if ($max !== null && $yielded >= $max) {
+                    break;
+                }
+
                 $count++;
+                $yielded++;
                 yield $item;
             }
 
-            if ($count === 0 || $count < $length) {
+            if ($count === 0 || $count < $currentLength) {
                 break;
             }
         }
@@ -2097,9 +2165,27 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $cursorHandler = $perPage instanceof CursorPaginate ? $perPage->cursorHandler : null;
         $first = true;
         $lastItem = null;
+        $max = $this->getLimit();
+        $yielded = 0;
 
         return new PaginateIterator(
-            function (int $page, int $length) use ($args, $class, &$offset, &$first, &$lastItem, $cursorHandler) {
+            function (
+                int $page,
+                int $length
+            ) use (
+                $args,
+                $class,
+                &$offset,
+                &$first,
+                &$lastItem,
+                $cursorHandler,
+                $max,
+                &$yielded
+            ) {
+                if ($max !== null && $yielded >= $max) {
+                    return;
+                }
+
                 $query = clone $this;
 
                 if (!$cursorHandler || $first) {
@@ -2107,13 +2193,22 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                     $first = false;
                 }
 
-                $query->limit($length);
+                $currentLength = $max !== null
+                    ? min($length, $max - $yielded)
+                    : $length;
+
+                $query->limit($currentLength);
 
                 if ($cursorHandler && !$first && $lastItem) {
                     $query = $cursorHandler($query, $lastItem) ?? $query;
                 }
 
                 foreach ($query->getIterator($class, $args) as $item) {
+                    if ($max !== null && $yielded >= $max) {
+                        break;
+                    }
+
+                    $yielded++;
                     yield $item;
 
                     $lastItem = $item;
