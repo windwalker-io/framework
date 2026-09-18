@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Helper;
 
+use Windwalker\Utilities\Assert\TypeAssert;
+
 /**
  * The IpHelper class.
  *
@@ -50,6 +52,8 @@ class IpHelper
         $isV6 = str_contains($requestIp, ':');
 
         foreach ($ips as $ip) {
+            TypeAssert::assert(is_string($ip), 'IP must be a string, {type} given.');
+
             if ($isV6) {
                 $match = self::checkIpv6($requestIp, $ip);
             } else {
@@ -88,7 +92,11 @@ class IpHelper
             [$address, $netmask] = explode('/', $ip, 2);
 
             if ('0' === $netmask) {
-                return self::$checkedIps[$cacheKey] = filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
+                return self::$checkedIps[$cacheKey] = (bool) filter_var(
+                    $address,
+                    \FILTER_VALIDATE_IP,
+                    \FILTER_FLAG_IPV4
+                );
             }
 
             if ($netmask < 0 || $netmask > 32) {
@@ -103,21 +111,21 @@ class IpHelper
             return self::$checkedIps[$cacheKey] = false;
         }
 
-        return self::$checkedIps[$cacheKey] = 0 ===
-            substr_compare(
+        return self::$checkedIps[$cacheKey] =
+            (0 === substr_compare(
                 sprintf('%032b', ip2long($requestIp)),
                 sprintf('%032b', ip2long($address)),
                 0,
                 (int) $netmask
-            );
+            ));
     }
 
     /**
      * Compares two IPv6 addresses.
      * In case a subnet is given, it checks if it contains the request IP.
      *
-     * @param  string  $requestIp The request IP to check.
-     * @param  string  $ip  IPv6 address or subnet in CIDR notation
+     * @param  string  $requestIp  The request IP to check.
+     * @param  string  $ip         IPv6 address or subnet in CIDR notation
      *
      * @return bool
      *

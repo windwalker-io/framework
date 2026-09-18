@@ -15,7 +15,7 @@ class TypeAssert
      * @template T of mixed
      *
      * @param  T                $assertion
-     * @param  string|\Closure  $message
+     * @param  string|\Closure  $message    Can contain placeholders: {caller}, {value}, {type}.
      * @param  mixed            $value
      * @param  callable|null    $exception
      *
