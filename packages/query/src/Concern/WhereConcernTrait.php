@@ -19,7 +19,8 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 use function Windwalker\raw;
 
 /**
- * Trait WhereConcernTrait
+ * @psalm-type QueryCallback = \Closure(Query): mixed
+ * @psalm-type QueryCallable = callable(Query): mixed
  */
 trait WhereConcernTrait
 {
@@ -28,9 +29,7 @@ trait WhereConcernTrait
     protected ?Clause $having = null;
 
     /**
-     * where
-     *
-     * @param  string|array|Closure|ClauseInterface  $column  Column name, array where list or callback
+     * @param  string|array|QueryCallback|ClauseInterface  $column  Column name, array where list or callback
      *                                                         function as sub query.
      * @param  mixed                                 ...$args
      *
@@ -255,9 +254,7 @@ trait WhereConcernTrait
     }
 
     /**
-     * orWhere
-     *
-     * @param  array|Closure  $wheres
+     * @param  array|QueryCallback  $wheres
      *
      * @return  static
      */
@@ -283,9 +280,7 @@ trait WhereConcernTrait
     }
 
     /**
-     * orWhere
-     *
-     * @param  array|Closure  $wheres
+     * @param  array|QueryCallback  $wheres
      *
      * @return  static
      */
@@ -310,6 +305,13 @@ trait WhereConcernTrait
         return $this->where($wheres, 'AND');
     }
 
+    /**
+     * @param  string|array|QueryCallback|ClauseInterface  $column  Column name, array where list or callback
+     *                                                         function as sub query.
+     * @param  mixed                                 ...$args
+     *
+     * @return  static
+     */
     public function having(mixed $column, mixed ...$args): static
     {
         if ($column instanceof Closure) {
@@ -361,9 +363,7 @@ trait WhereConcernTrait
     }
 
     /**
-     * havingRaw
-     *
-     * @param  mixed  $string
+     * @param  string|Clause  $string
      * @param  array  ...$args
      *
      * @return  static
@@ -386,9 +386,7 @@ trait WhereConcernTrait
     }
 
     /**
-     * orWhere
-     *
-     * @param  array|Closure  $wheres
+     * @param  array|QueryCallback  $wheres
      *
      * @return  static
      */
@@ -413,22 +411,41 @@ trait WhereConcernTrait
         return $this->having($wheres, 'OR');
     }
 
-    /** @psalm-param  callable(Query): ?Query  $conditions */
+    /**
+     * @param  Query|QueryCallable  $conditions
+     *
+     * @return  $this
+     */
     public function whereExists(Query|callable $conditions): static
     {
         return $this->handleWhereExists('where', $conditions, false);
     }
 
+    /**
+     * @param  Query|QueryCallable  $conditions
+     *
+     * @return  $this
+     */
     public function whereNotExists(Query|callable $conditions): static
     {
         return $this->handleWhereExists('where', $conditions, true);
     }
 
+    /**
+     * @param  Query|QueryCallable  $conditions
+     *
+     * @return  $this
+     */
     public function havingExists(Query|callable $conditions): static
     {
         return $this->handleWhereExists('having', $conditions, false);
     }
 
+    /**
+     * @param  Query|QueryCallable  $conditions
+     *
+     * @return  $this
+     */
     public function havingNotExists(Query|callable $conditions): static
     {
         return $this->handleWhereExists('having', $conditions, true);

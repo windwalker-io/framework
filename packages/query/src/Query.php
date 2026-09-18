@@ -59,6 +59,9 @@ use function Windwalker\value;
 /**
  * The Query class.
  *
+ * @psalm-type QueryCallback = \Closure(Query): mixed
+ * @psalm-type QueryCallable = callable(Query): mixed
+ *
  * @method string|null getType()
  * @method Clause|null getSelect()
  * @method Clause|null getDelete()
@@ -273,7 +276,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     /**
      * from
      *
-     * @param  string|array|Query  $tables
+     * @param  string|array|Query|QueryCallback  $tables
      * @param  string|null         $alias
      *
      * @return  static
@@ -308,7 +311,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     /**
      * @param  string                        $type
-     * @param  string|Query|ClauseInterface  $table
+     * @param  string|Query|ClauseInterface|QueryCallback  $table
      * @param  string|null                   $alias
      * @param  array                         $on
      *
@@ -321,7 +324,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     /**
      * @param  string                        $type
-     * @param  string|Query|ClauseInterface  $table
+     * @param  string|Query|ClauseInterface|QueryCallback  $table
      * @param  string|null                   $alias
      * @param  array                         $on
      *
@@ -1221,6 +1224,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this->rowLock('SHARE', $do);
     }
 
+    /**
+     * @param  array|QueryCallable  $values
+     *
+     * @return  $this
+     */
     public function onDuplicateKeyUpdate(array|callable $values): static
     {
         if (!$this->getGrammar() instanceof MySQLGrammar) {
