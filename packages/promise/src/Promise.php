@@ -19,7 +19,7 @@ use Windwalker\Promise\Scheduler\ScheduleRunner;
 use function Windwalker\nope;
 
 /**
- * The Promise class.
+ * @template T of mixed
  */
 class Promise implements ExtendedPromiseInterface
 {
@@ -200,7 +200,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * Promise constructor.
      *
-     * @param  ?callable  $resolver
+     * @param  callable(\Closure(T): void, \Closure): void|null  $resolver
      *
      * @throws Throwable
      * @throws \ReflectionException
@@ -222,7 +222,11 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @inheritDoc
+     * @param  callable(T): mixed|null  $onFulfilled
+     *
+     * @return  $this
+     *
+     * @deprecated  Use then() instead.
      */
     public function done(?callable $onFulfilled = null): static
     {
@@ -230,7 +234,9 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @inheritDoc
+     * @param  callable(\Throwable|mixed): mixed|null  $onRejected
+     *
+     * @return  $this
      */
     public function catch(?callable $onRejected): static
     {
@@ -238,7 +244,9 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @inheritDoc
+     * @param  callable(T): mixed|null  $onFulfilledOrRejected
+     *
+     * @return  $this
      */
     public function finally(?callable $onFulfilledOrRejected): static
     {
@@ -257,7 +265,8 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @inheritDoc
+     * @param  callable(T): mixed|null  $onFulfilled  Invoked when the promise fulfills.
+     * @param  callable(T): mixed|null  $onRejected   Invoked when the promise is rejected.
      */
     public function then(?callable $onFulfilled = null, ?callable $onRejected = null): static
     {
@@ -379,7 +388,7 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @return  array{ 0: static, 1: callable, 2: callable }
+     * @return  array{ 0: static, 1: \Closure(T): void, 2: \Closure }
      */
     public static function withResolvers(): array
     {
@@ -397,7 +406,7 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @param  mixed|null  $value
+     * @param  T|null  $value
      *
      * @return  object|static
      *

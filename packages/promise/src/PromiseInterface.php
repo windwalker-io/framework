@@ -8,7 +8,7 @@ use LogicException;
 use Windwalker\Promise\Enum\PromiseState;
 
 /**
- * Interface PromiseInterface
+ * @template T
  */
 interface PromiseInterface
 {
@@ -33,8 +33,8 @@ interface PromiseInterface
      *
      * @see https://promisesaplus.com/#the-then-method
      *
-     * @param  callable|mixed  $onFulfilled  Invoked when the promise fulfills.
-     * @param  callable|mixed  $onRejected   Invoked when the promise is rejected.
+     * @param  callable(T): mixed|null  $onFulfilled  Invoked when the promise fulfills.
+     * @param  callable(T): mixed|null  $onRejected   Invoked when the promise is rejected.
      *
      * @return static
      */
