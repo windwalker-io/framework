@@ -87,8 +87,6 @@ abstract class AbstractRunner implements EventAwareInterface
     {
         gc_enable();
 
-        $isAllChannels = in_array('*', (array) $channel, true);
-
         // Last Restart
         $this->lastRestart = (int) new DateTimeImmutable('now')->format('U');
 
@@ -116,14 +114,6 @@ abstract class AbstractRunner implements EventAwareInterface
 
             if (($this->options->force ?? null) || $this->canLoop()) {
                 $channels = $channel;
-
-                if ($isAllChannels) {
-                    $channels = iterator_to_array($this->queue->getChannels());
-                }
-
-                if ($this->options->shuffleChannels && is_array($channels)) {
-                    shuffle($channels);
-                }
 
                 try {
                     $this->next($channels);
@@ -159,6 +149,23 @@ abstract class AbstractRunner implements EventAwareInterface
     protected function canLoop(): bool
     {
         return $this->getState() === static::STATE_ACTIVE;
+    }
+
+    protected function getSortedChannels(array|string $channels): array
+    {
+        $channels = (array) $channels;
+
+        $isAllChannels = in_array('*', $channels, true);
+
+        if ($isAllChannels) {
+            $channels = iterator_to_array($this->queue->getChannels());
+        }
+
+        if ($this->options->shuffleChannels && is_array($channels)) {
+            shuffle($channels);
+        }
+
+        return $channels;
     }
 
     /**

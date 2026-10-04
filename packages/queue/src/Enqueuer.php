@@ -30,7 +30,7 @@ class Enqueuer extends AbstractRunner
      */
     public function next(array|string $channel): void
     {
-        $channel = (array) $channel;
+        $channel = $this->getSortedChannels($channel);
 
         $empty = true;
 

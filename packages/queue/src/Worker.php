@@ -38,6 +38,8 @@ class Worker extends AbstractRunner
      */
     public function next(string|array $channel): void
     {
+        $channel = $this->getSortedChannels($channel);
+
         $message = $this->enqueueIfAvailable($channel);
 
         $message ??= $this->getNextMessage($channel);
