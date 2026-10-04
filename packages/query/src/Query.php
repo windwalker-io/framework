@@ -614,24 +614,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    private static function unwrapDirectionEnum(\SortDirection|string $dir): string
-    {
-        if ($dir instanceof \SortDirection) {
-            return match ($dir) {
-                SortDirection::Ascending => 'ASC',
-                SortDirection::Descending => 'DESC',
-            };
-        }
-
-        $dir = strtoupper($dir);
-
-        if ($dir !== 'ASC' && $dir !== 'DESC') {
-            throw new \InvalidArgumentException("Invalid sort direction: $dir");
-        }
-
-        return $dir;
-    }
-
     public function orderRaw(string|Clause $order, mixed ...$args): static
     {
         if (!$this->order) {
@@ -651,26 +633,55 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
+    private static function unwrapDirectionEnum(\SortDirection|string $dir): string
+    {
+        if ($dir instanceof \SortDirection) {
+            return match ($dir) {
+                SortDirection::Ascending => 'ASC',
+                SortDirection::Descending => 'DESC',
+            };
+        }
+
+        $dir = strtoupper($dir);
+
+        if ($dir !== 'ASC' && $dir !== 'DESC') {
+            throw new \InvalidArgumentException("Invalid sort direction: $dir");
+        }
+
+        return $dir;
+    }
+
     /**
-     * group
-     *
      * @param  string|array  ...$columns
      *
      * @return  static
      */
     public function group(...$columns): static
     {
+        foreach ($columns as $column) {
+            $group = [$this->resolveColumn($column)];
+
+            $this->groupRaw($this->clause('', $group));
+        }
+
+        return $this;
+    }
+
+    public function groupRaw(string|Clause $group, mixed ...$args): static
+    {
         if (!$this->group) {
             $this->group = $this->clause('GROUP BY', [], ', ');
         }
 
-        $method = static::getClausePosition($columns);
+        $method = static::getClausePosition($args);
 
-        $this->group->$method(
-            $this->qnMultiple(
-                array_values(Arr::flatten($columns))
-            )
-        );
+        if (is_string($group)) {
+            $group = $this->handleRawFormat($group, ...$args);
+        }
+
+        $this->findAndInjectSubQueries($group);
+
+        $this->group->$method($group);
 
         return $this;
     }
