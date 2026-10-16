@@ -267,12 +267,15 @@ class Filesystem
         $link = Path::normalize($link);
 
         if ($windows) {
+            $linkArg = escapeshellarg($link);
+            $targetArg = escapeshellarg($target);
+
             if (is_file($target)) {
                 // Files can only use symbolic link.
-                exec("mklink /D {$link} {$target}", $output, $returnVar);
+                exec("mklink /D {$linkArg} {$targetArg}", $output, $returnVar);
             } else {
                 // Try make dir link by junction.
-                exec("mklink /j {$link} {$target}", $output, $returnVar);
+                exec("mklink /j {$linkArg} {$targetArg}", $output, $returnVar);
             }
 
             return $returnVar === 0;

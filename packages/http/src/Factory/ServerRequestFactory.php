@@ -479,6 +479,14 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             $headerHost = implode(', ', $headerHost);
         }
 
+        $headerHost = trim(str_replace(["\r", "\n"], '', $headerHost));
+        $headerHost = explode(',', $headerHost, 2)[0];
+        $headerHost = trim($headerHost);
+
+        if ($headerHost !== '' && !preg_match('/^(?:\[[0-9A-Fa-f:.]+\]|[A-Za-z0-9.-]+)(?::\d+)?$/', $headerHost)) {
+            return;
+        }
+
         $host = $headerHost;
 
         if (preg_match('|\:(\d+)$|', $host, $matches)) {
