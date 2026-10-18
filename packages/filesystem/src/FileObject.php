@@ -784,8 +784,10 @@ class FileObject extends SplFileInfo
             return false;
         }
 
-        // Path is parent
-        if (str_starts_with($self, $parent)) {
+        $prefix = rtrim($parent, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+        // Path is child of parent directory.
+        if (str_starts_with($self, $prefix)) {
             return true;
         }
 

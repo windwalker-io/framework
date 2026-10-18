@@ -26,7 +26,7 @@ class RedirectResponse extends Response
     public function __construct(string|Stringable|null $uri = null, int $status = 303, array $headers = [])
     {
         if ($uri !== null) {
-            $headers['location'] = [(string) $uri];
+            $headers['location'] = [$this->sanitizeLocation((string) $uri)];
         }
 
         parent::__construct(new NullStream(), $status, $headers);
@@ -41,7 +41,10 @@ class RedirectResponse extends Response
     {
         if (headers_sent()) {
             $url = $this->getHeaderLine('location');
-            $html = "<script>document.location.href='$url';</script>\n";
+            $html = sprintf(
+                "<script>document.location.href=%s;</script>\n",
+                json_encode($url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)
+            );
 
             return Stream::fromString($html);
         }
@@ -52,5 +55,10 @@ class RedirectResponse extends Response
     public function getLocation(): string
     {
         return $this->getHeaderLine('location');
+    }
+
+    private function sanitizeLocation(string $uri): string
+    {
+        return preg_replace('/[\r\n]+/', '', $uri) ?? $uri;
     }
 }
