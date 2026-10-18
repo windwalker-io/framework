@@ -268,7 +268,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function get($key, $default = null): mixed
+    public function get($key, mixed $default = null): mixed
     {
         $item = $this->getItem($key);
 
@@ -282,7 +282,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function set($key, $value, $ttl = null): bool
+    public function set($key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         $item = $this->getItem($key);
 
@@ -305,7 +305,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function getMultiple($keys, $default = null): iterable
+    public function getMultiple($keys, mixed $default = null): iterable
     {
         foreach ($this->getItems($keys) as $key => $item) {
             yield $key => $item->isHit() ? $item->get() : $default;
@@ -315,7 +315,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function setMultiple($values, $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
     {
         ArgumentsAssert::assert(
             is_iterable($values),
@@ -335,7 +335,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function deleteMultiple($keys): bool
+    public function deleteMultiple(iterable $keys): bool
     {
         ArgumentsAssert::assert(
             is_iterable($keys),
@@ -356,7 +356,7 @@ class CachePool implements CachePoolInterface
      * @inheritDoc
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function has($key): bool
+    public function has(string $key): bool
     {
         return $this->hasItem($key);
     }
