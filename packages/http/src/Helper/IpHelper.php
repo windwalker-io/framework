@@ -69,6 +69,53 @@ class IpHelper
     }
 
     /**
+     * Gets the client IP using forwarding headers only when the direct peer is trusted.
+     *
+     * @param  array<string>  $trustedProxies  Trusted proxy IP addresses or CIDR ranges.
+     * @param  array          $server          Server data; defaults to $_SERVER.
+     */
+    public static function getTrustedIp(array $trustedProxies = [], array $server = []): string
+    {
+        $server = $server ?: $_SERVER;
+        $remoteAddress = (string) ($server['REMOTE_ADDR'] ?? '');
+
+        if (!self::isIp($remoteAddress) || !self::isTrustedProxy($remoteAddress, $trustedProxies)) {
+            return $remoteAddress;
+        }
+
+        $forwardedFor = trim((string) ($server['HTTP_X_FORWARDED_FOR'] ?? ''));
+
+        if ($forwardedFor === '') {
+            return $remoteAddress;
+        }
+
+        $addresses = array_map('trim', explode(',', $forwardedFor));
+
+        foreach (array_reverse($addresses) as $address) {
+            if (!self::isIp($address)) {
+                return $remoteAddress;
+            }
+
+            if (!self::isTrustedProxy($address, $trustedProxies)) {
+                return $address;
+            }
+        }
+
+        return $remoteAddress;
+    }
+
+    private static function isTrustedProxy(string $address, array $trustedProxies): bool
+    {
+        foreach ($trustedProxies as $trustedProxy) {
+            if (is_string($trustedProxy) && self::checkIp($address, $trustedProxy)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Compares two IPv4 addresses.
      * In case a subnet is given, it checks if it contains the request IP.
      *
