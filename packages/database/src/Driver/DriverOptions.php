@@ -17,13 +17,7 @@ class DriverOptions extends RecordOptions
         public ?string $user = null,
         public ?string $password = null,
         public int|string|null $port = null {
-            get {
-                if ($this->port === null) {
-                    return null;
-                }
-
-                return (int) $this->port;
-            }
+            get => $this->port !== null ? (int) $this->port : null;
         },
         public ?string $prefix = null,
         public ?string $charset = null,
@@ -35,7 +29,10 @@ class DriverOptions extends RecordOptions
         public array $pool = [],
         public bool $strict = true,
         public ?array $modes = null,
-        public array $afterConnect = [],
+        /**
+         * @var array<\Closure(AbstractDriver): void|string>
+         */
+        public \Closure|string|array $afterConnect = [],
         public array $extra = [],
     ) {
     }
