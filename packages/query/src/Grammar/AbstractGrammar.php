@@ -288,7 +288,10 @@ abstract class AbstractGrammar
             );
         }
 
-        return static::$nameQuote[0] . $name . static::$nameQuote[1];
+        $closingQuote = static::$nameQuote[1];
+        $name = str_replace($closingQuote, $closingQuote . $closingQuote, $name);
+
+        return static::$nameQuote[0] . $name . $closingQuote;
     }
 
     /**

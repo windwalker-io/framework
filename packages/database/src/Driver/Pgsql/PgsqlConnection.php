@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pgsql;
 
+use InvalidArgumentException;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
@@ -35,8 +36,12 @@ class PgsqlConnection extends AbstractConnection
         $params['password'] = $options->password;
 
         if (isset($options->charset)) {
+            if (!preg_match('/\A[A-Za-z0-9_-]+\z/', $options->charset)) {
+                throw new InvalidArgumentException('Invalid PostgreSQL client encoding.');
+            }
+
             $params['options'] = sprintf(
-                "'--client_encoding=%s'",
+                '--client_encoding=%s',
                 strtoupper($options->charset)
             );
         }
