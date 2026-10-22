@@ -40,11 +40,18 @@ class RedirectResponse extends Response
     public function getBody(): StreamInterface
     {
         if (headers_sent()) {
-            $url = $this->getHeaderLine('location');
-            $html = sprintf(
-                "<script>document.location.href=%s;</script>\n",
-                json_encode($url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)
+            $location = $this->getHeaderLine('location');
+            $scheme = parse_url($location, PHP_URL_SCHEME);
+
+            if ($scheme === false || ($scheme !== null && !in_array(strtolower($scheme), ['http', 'https'], true))) {
+                return Stream::fromString('');
+            }
+
+            $url = json_encode(
+                $location,
+                JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
             );
+            $html = "<script>document.location.href=$url;</script>\n";
 
             return Stream::fromString($html);
         }
