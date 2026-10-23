@@ -211,7 +211,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
         return $new;
     }
 
-    public function regenerate(bool $deleteOld = false, bool $saveOld = true): bool
+    public function regenerate(bool $deleteOld = true, bool $saveOld = true): bool
     {
         $this->bridge->regenerate($deleteOld, $saveOld);
 

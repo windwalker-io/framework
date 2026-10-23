@@ -24,6 +24,17 @@
 composer require windwalker/session ^4.0
 ```
 
+### Session security
+
+- `Session::regenerate()` and both bridges delete the previous session by default. Native bridge `restart()` also
+  deletes the previous session by default. Pass `deleteOld: false` explicitly only when retaining the old ID is intended;
+  `Session::fork()` preserves its source session.
+- Filesystem, database and PDO handlers reject expired sessions when reading, even before garbage collection runs.
+  The idle lifetime in seconds comes from the handler's `gc_maxlifetime` option, falling back to PHP's
+  `session.gc_maxlifetime` setting. Refreshing the timestamp extends the idle lifetime; this is not an absolute login timeout.
+- Redis writes and timestamp updates use the handler's `ttl` option, then its `gc_maxlifetime` option, then PHP's
+  `session.gc_maxlifetime`. The selected TTL must be a positive integer; integer strings are supported.
+
 ### Resources
 
 - [Documentation](https://windwalker.io/documentation/components/session/)

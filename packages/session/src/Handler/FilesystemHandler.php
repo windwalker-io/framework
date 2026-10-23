@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Session\Handler;
 
 use DomainException;
+use InvalidArgumentException;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Utilities\Options\OptionAccessTrait;
@@ -24,7 +25,10 @@ class FilesystemHandler extends AbstractHandler
      * FilesystemHandler constructor.
      *
      * @param  string|null  $path
-     * @param  array        $options
+     * @param  array{
+     *     prefix?: string|null,
+     *     gc_maxlifetime?: int|string|null
+     * } $options
      */
     public function __construct(?string $path = null, array $options = [])
     {
@@ -44,6 +48,10 @@ class FilesystemHandler extends AbstractHandler
 
     public function getFileName(string $id): string
     {
+        if (preg_match('/\A[a-zA-Z0-9,-]+\z/', $id) !== 1) {
+            throw new InvalidArgumentException('Session ID must contain only letters, digits, commas or hyphens.');
+        }
+
         $file = $id;
 
         if ($this->getOption('prefix')) {
@@ -72,6 +80,12 @@ class FilesystemHandler extends AbstractHandler
         $file = Filesystem::get($this->getFilePath($id));
 
         if (!$file->exists()) {
+            return null;
+        }
+
+        $lifetime = (int) ($this->getOption('gc_maxlifetime') ?? ini_get('session.gc_maxlifetime'));
+
+        if ($file->getMTime() <= time() - $lifetime) {
             return null;
         }
 
@@ -112,8 +126,11 @@ class FilesystemHandler extends AbstractHandler
     public function gc($maxlifetime): int|false
     {
         $past = time() - $maxlifetime;
+        $prefix = (string) ($this->getOption('prefix') ?: '');
+        $pattern = '/\A' . preg_quote($prefix, '/') . '[a-zA-Z0-9,-]+\z/';
 
         $files = Filesystem::files($this->path)
+            ->filter(fn(FileObject $file) => preg_match($pattern, $file->getBasename()) === 1)
             ->filter(fn(FileObject $file) => $file->getMTime() < $past);
 
         $count = 0;

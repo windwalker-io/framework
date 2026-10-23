@@ -47,9 +47,18 @@ class PhpBridge implements BridgeInterface
      *
      * @see https://gist.github.com/franksacco/d6e943c41189f8ee306c182bf8f07654
      *
-     * @param  array                $options
-     * @param HandlerInterface|null $handler
-     * @param  FormatInterface|null $serializer
+     * @param  array{
+     *     auto_commit?: bool,
+     *     with_super_global?: bool,
+     *     save_path?: string|null,
+     *     use_strict_mode?: bool|null,
+     *     lazy_write?: bool|null,
+     *     gc_maxlifetime?: int|string|null,
+     *     gc_probability?: int|string|null,
+     *     gc_divisor?: int|string|null
+     * } $options
+     * @param  HandlerInterface|null  $handler
+     * @param  FormatInterface|null   $serializer
      */
     public function __construct(
         array $options = [],
@@ -172,7 +181,7 @@ class PhpBridge implements BridgeInterface
      * @return  bool
      * @throws Exception
      */
-    public function regenerate(bool $deleteOld = false, bool $saveOld = true): bool
+    public function regenerate(bool $deleteOld = true, bool $saveOld = true): bool
     {
         $this->origin = $data = $this->encodeData($this->getStorage());
 

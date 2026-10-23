@@ -22,7 +22,9 @@ class NativeBridge implements BridgeInterface
     /**
      * NativeBridge constructor.
      *
-     * @param  array                  $options
+     * @param  array{
+     *     auto_commit?: bool
+     * }  $options
      * @param  HandlerInterface|null  $handler
      */
     public function __construct(array $options = [], ?HandlerInterface $handler = null)
@@ -123,7 +125,7 @@ class NativeBridge implements BridgeInterface
      *
      * @return  mixed
      */
-    public function restart(bool $deleteOld = false): bool
+    public function restart(bool $deleteOld = true): bool
     {
         $return = $this->regenerate($deleteOld);
 
@@ -141,7 +143,7 @@ class NativeBridge implements BridgeInterface
      *
      * @return  bool
      */
-    public function regenerate(bool $deleteOld = false, bool $saveOld = true): bool
+    public function regenerate(bool $deleteOld = true, bool $saveOld = true): bool
     {
         return session_regenerate_id($deleteOld);
     }

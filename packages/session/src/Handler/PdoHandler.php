@@ -34,8 +34,16 @@ class PdoHandler extends AbstractHandler
     /**
      * Class init.
      *
-     * @param  PDO   $db
-     * @param  array  $options
+     * @param  PDO  $db
+     * @param  array{
+     *     table?: string,
+     *     columns?: array{
+     *      id?: string,
+     *      data?: string,
+     *      time?: string,
+     *     },
+     *     gc_maxlifetime?: int|string|null
+     * } $options
      */
     public function __construct(PDO $db, array $options = [])
     {
@@ -66,10 +74,14 @@ class PdoHandler extends AbstractHandler
      */
     protected function doRead(string $id): ?string
     {
+        $columns = $this->getOption('columns');
+        $lifetime = (int) ($this->getOption('gc_maxlifetime') ?? ini_get('session.gc_maxlifetime'));
+
         $query = $this->createQuery()
-            ->select($this->getOption('columns')['data'])
+            ->select($columns['data'])
             ->from($this->getOption('table'))
-            ->where($this->getOption('columns')['id'], $id);
+            ->where($columns['id'], $id)
+            ->where($columns['time'], '>', time() - $lifetime);
 
         $stmt = $this->db->prepare($sql = $query->forPDO($params));
 
@@ -142,14 +154,15 @@ class PdoHandler extends AbstractHandler
             }
 
             $query = $this->createQuery()
-                ->update($this->getOption('table'));
+                ->update($this->getOption('table'))
+                ->where($columns['id'], $id);
 
             foreach ($item as $k => $v) {
                 $query->set($k, $v);
             }
 
-            $stmt = $this->db->prepare($query->forPDO($params));
-            $stmt->execute($params);
+            $stmt = $this->db->prepare($query->forPDO($updateParams));
+            $stmt->execute($updateParams);
             $this->db->commit();
 
             return true;

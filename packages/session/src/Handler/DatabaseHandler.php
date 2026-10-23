@@ -43,7 +43,15 @@ class DatabaseHandler extends AbstractHandler
      * Class init.
      *
      * @param  DatabaseAdapter  $db
-     * @param  array            $options
+     * @param  array{
+     *     table?: string,
+     *     columns?: array{
+     *      id?: string,
+     *      data?: string,
+     *      time?: string
+     *     },
+     *     gc_maxlifetime?: int|string|null
+     * } $options
      */
     public function __construct(DatabaseAdapter $db, array $options = [])
     {
@@ -74,9 +82,13 @@ class DatabaseHandler extends AbstractHandler
      */
     protected function doRead(string $id): ?string
     {
-        return $this->db->select($this->getOption('columns')['data'])
+        $columns = $this->getOption('columns');
+        $lifetime = (int) ($this->getOption('gc_maxlifetime') ?? ini_get('session.gc_maxlifetime'));
+
+        return $this->db->select($columns['data'])
             ->from($this->getOption('table'))
-            ->where($this->getOption('columns')['id'], (string) $id)
+            ->where($columns['id'], (string) $id)
+            ->where($columns['time'], '>', time() - $lifetime)
             ->result();
     }
 

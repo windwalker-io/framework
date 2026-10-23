@@ -68,13 +68,13 @@ interface BridgeInterface
     /**
      * regenerate
      *
-     * @param  bool  $deleteOld
+     * @param  bool  $deleteOld  Delete the previous session by default to prevent reuse of its ID.
      *
      * @param  bool  $saveOld
      *
      * @return  bool
      */
-    public function regenerate(bool $deleteOld = false, bool $saveOld = true): bool;
+    public function regenerate(bool $deleteOld = true, bool $saveOld = true): bool;
 
     /**
      * Force the session to be saved and closed.

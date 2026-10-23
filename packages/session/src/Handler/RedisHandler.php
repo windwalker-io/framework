@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
+use InvalidArgumentException;
 use Predis\ClientInterface;
 use Predis\Response\ErrorInterface;
 use Redis;
@@ -27,6 +28,11 @@ class RedisHandler extends AbstractHandler
      * RedisHandler constructor.
      *
      * @param  ClientInterface|Redis|RedisArray|RedisCaster  $driver
+     * @param  array{
+     *     prefix?: string|null,
+     *     ttl?: int|string|null,
+     *     gc_maxlifetime?: int|string|null
+     * } $options
      */
     public function __construct($driver, array $options = [])
     {
@@ -127,7 +133,7 @@ class RedisHandler extends AbstractHandler
         $result = $this->getDriver()
             ->setEx(
                 $this->getKey($id),
-                (int) ($this->ttl ?? $this->getOption('gc_maxlifetime') ?? ini_get('session.gc_maxlifetime')),
+                $this->getTtl(),
                 $data
             );
 
@@ -147,8 +153,24 @@ class RedisHandler extends AbstractHandler
         return (bool) $this->getDriver()
             ->expire(
                 $this->getKey($id),
-                (int) ($this->ttl ?? $this->getOption('gc_maxlifetime') ?? ini_get('session.gc_maxlifetime'))
+                $this->getTtl()
             );
+    }
+
+    protected function getTtl(): int
+    {
+        $ttl = $this->getOption('ttl')
+            ?? $this->getOption('gc_maxlifetime')
+            ?? ini_get('session.gc_maxlifetime');
+
+        if (
+            (!is_int($ttl) && !is_string($ttl))
+            || filter_var($ttl, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) === false
+        ) {
+            throw new InvalidArgumentException('Session TTL must be a positive integer.');
+        }
+
+        return (int) $ttl;
     }
 
     /**

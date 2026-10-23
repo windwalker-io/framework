@@ -256,7 +256,7 @@ class NativeBridgeTest extends TestCase
 
         $this->instance->start();
 
-        $this->instance->regenerate();
+        $this->instance->regenerate(false, true);
 
         $newId = $this->instance->getId();
 

@@ -285,7 +285,7 @@ class PhpBridgeTest extends TestCase
 
         $data['tree'] = 'Palm';
 
-        $this->instance->regenerate();
+        $this->instance->regenerate(false, true);
 
         $newId = $this->instance->getId();
 
