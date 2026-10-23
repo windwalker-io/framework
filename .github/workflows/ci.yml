@@ -8,10 +8,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '8.4', '8.5' ]
+        php-versions: [ '8.4', '8.5', '8.6' ]
         experimental: [false]
         include:
-          - php-versions: '8.5'
+          - php-versions: '8.6'
             allow_failure: true
     runs-on: ubuntu-latest
     services:
