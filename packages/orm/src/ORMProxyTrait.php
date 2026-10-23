@@ -378,6 +378,12 @@ trait ORMProxyTrait
     }
 
     /**
+     * @template T of object
+     *
+     * @param  class-string<T>  $entityClass
+     *
+     * @return  T
+     *
      * @throws \JsonException
      * @throws \ReflectionException
      */
@@ -387,7 +393,7 @@ trait ORMProxyTrait
         array|string|null $condFields = null,
         array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
-    ): ?StatementInterface {
+    ): object {
         return $this->mapper($entityClass)->upsert($item, $condFields, $updateFields, $options);
     }
 

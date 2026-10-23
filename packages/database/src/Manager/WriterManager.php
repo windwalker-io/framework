@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Manager;
 
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
 use JsonException;
 use RuntimeException;
 use Windwalker\Database\DatabaseAdapter;
@@ -216,13 +217,29 @@ class WriterManager
         return $this->insertOne($table, $data, $key, $options);
     }
 
+    /**
+     * @param  string        $table
+     * @param  array|object  $data
+     * @param  array|string  $keys
+     * @param  array|null    $updateFields
+     * @param  array{
+     *     updateNulls?: bool,
+     *     returningIdField?: string|null,
+     * } $options
+     *
+     * @return  array|object  The inserted or updated data with returning ID.
+     */
     public function upsert(
         string $table,
         array|object $data,
         array|string $keys,
         array|null $updateFields = null,
+        #[ArrayShape([
+            'updateNulls' => 'bool',
+            'returningIdField' => 'string|null',
+        ])]
         array $options = [],
-    ): StatementInterface {
+    ): array|object {
         $keys = (array) $keys;
 
         $platformName = $this->db->getPlatform()->getName();
@@ -236,7 +253,8 @@ class WriterManager
         $query = $this->db->createQuery();
 
         $table = (string) $query->quoteName($table);
-        $data = TypeCast::toArray($data);
+        $originData = $data;
+        $data = TypeCast::toArray($originData);
         $allFields = array_keys($data);
         // $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
@@ -268,8 +286,8 @@ class WriterManager
                 }
 
                 if ($returningIdField) {
-                    $returningIdField = $query->quoteName($returningIdField);
-                    $updateActions->append("$returningIdField = LAST_INSERT_ID({$returningIdField})");
+                    $quotedReturningIdField = $query->quoteName($returningIdField);
+                    $updateActions->append("$quotedReturningIdField = LAST_INSERT_ID($quotedReturningIdField)");
                 }
 
                 $query->sql(
@@ -295,11 +313,19 @@ class WriterManager
                     $excludeKeys->append("$key = EXCLUDED.$key");
                 }
 
+                $returning = '';
+
+                if ($returningIdField) {
+                    $quotedReturningIdField = $query->quoteName($returningIdField);
+                    $returning = "RETURNING $quotedReturningIdField";
+                }
+
                 $query->sql(
                     <<<SQL
                     INSERT INTO $table $columns
                     VALUES $values ON CONFLICT $updateActions DO UPDATE SET
                         $excludeKeys
+                    $returning
                     SQL
                 );
                 break;
@@ -339,6 +365,13 @@ class WriterManager
                     }
                 }
 
+                $output = '';
+
+                if ($returningIdField) {
+                    $quotedReturningIdField = $query->quoteName($returningIdField);
+                    $output = "OUTPUT INSERTED.$quotedReturningIdField";
+                }
+
                 // phpcs:disable
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
                 // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -346,19 +379,42 @@ class WriterManager
                     "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
                     WHEN NOT MATCHED THEN INSERT $columns
                     VALUES $values
-                    WHEN MATCHED THEN UPDATE SET $updateSet;"
+                    WHEN MATCHED THEN UPDATE SET $updateSet
+                    $output;"
                 );
                 break;
 
             case AbstractPlatform::SQLITE:
+                $returning = '';
+
+                if ($returningIdField) {
+                    $quotedReturningIdField = $query->quoteName($returningIdField);
+                    $returning = "RETURNING $quotedReturningIdField";
+                }
+
                 $query->sql(
                     "INSERT OR REPLACE INTO $table $columns
-                VALUES $values"
+                VALUES $values
+                $returning"
                 );
                 break;
         }
 
-        return $query->execute();
+        $statement = $query->execute();
+
+        if ($returningIdField) {
+            $id = $platformName === AbstractPlatform::MYSQL
+                ? $statement->lastInsertId()
+                : $statement->result();
+
+            if (is_array($originData)) {
+                $originData[$returningIdField] = $id;
+            } else {
+                $originData->$returningIdField = $id;
+            }
+        }
+
+        return $originData;
     }
 
     /**

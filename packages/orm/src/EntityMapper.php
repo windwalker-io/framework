@@ -994,16 +994,22 @@ class EntityMapper implements EventAwareInterface
         );
     }
 
+    /**
+     * @param  array|object       $item
+     * @param  array|string|null  $condFields
+     * @param  array|null         $updateFields
+     * @param  ORMOptions         $options
+     *
+     * @return  object|T
+     *
+     * @throws \ReflectionException
+     */
     public function upsert(
         array|object $item,
         array|string|null $condFields = null,
         array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
-    ): ?StatementInterface {
-        if ($item === []) {
-            return null;
-        }
-
+    ): object {
         $metadata = $this->getMetadata();
 
         $updateNulls = $options->updateNulls;
@@ -1063,11 +1069,18 @@ class EntityMapper implements EventAwareInterface
                     'returningIdField' => $returningIdField,
                 ]
             );
+
+            if ($returningIdField && isset($result[$returningIdField])) {
+                $entity = $this->hydrate(
+                    [$returningIdField => $result[$returningIdField]],
+                    $entity
+                );
+            }
         }
 
         // @event
 
-        return $result ?? null;
+        return $entity;
     }
 
     protected function prepareCreateInitData(mixed $initData, array $item, mixed $conditions): array

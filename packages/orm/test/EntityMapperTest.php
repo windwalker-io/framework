@@ -565,6 +565,59 @@ class EntityMapperTest extends AbstractORMTestCase
     }
 
     /**
+     * Method to test upsert().
+     *
+     * @return void
+     */
+    public function testUpsert(): void
+    {
+        // Update case - matched by existing PK, row should be updated in place.
+        /** @var StubFlower $flower */
+        $flower = $this->instance->upsert(
+            [
+                'id' => 20,
+                'catid' => 1,
+                'title' => 'White Renewed',
+                'meaning' => 'renewed',
+                'ordering' => 20,
+                'state' => 1,
+                'params' => '',
+            ]
+        );
+
+        self::assertInstanceOf(StubFlower::class, $flower);
+        self::assertEquals(20, $flower->id);
+        self::assertEquals('White Renewed', $flower->getTitle());
+
+        $row = static::$db->prepare('SELECT * FROM ww_flower WHERE id = 20')->get();
+
+        self::assertEquals('White Renewed', $row->title);
+        self::assertEquals('renewed', $row->meaning);
+
+        // Insert case - no matching PK, a new row should be created and
+        // the auto-increment ID should be returned back into the entity.
+        /** @var StubFlower $newFlower */
+        $newFlower = $this->instance->upsert(
+            [
+                'catid' => 2,
+                'title' => 'Upsert Flower',
+                'meaning' => 'brand new',
+                'ordering' => 999,
+                'state' => 1,
+                'params' => '',
+            ]
+        );
+
+        self::assertInstanceOf(StubFlower::class, $newFlower);
+        self::assertNotEmpty($newFlower->id);
+
+        $row = static::$db->prepare('SELECT * FROM ww_flower WHERE title = \'Upsert Flower\'')->get();
+
+        self::assertEquals($newFlower->id, $row->id);
+        self::assertEquals('brand new', $row->meaning);
+    }
+
+    /**
      * Method to test delete().
      *
      * @return void
@@ -656,7 +709,7 @@ class EntityMapperTest extends AbstractORMTestCase
         );
 
         self::assertInstanceOf(StubFlower::class, $flower);
-        self::assertEquals(99, $flower->id);
+        self::assertEquals(100, $flower->id);
         self::assertEquals('Fire Flower', $flower->getTitle());
         self::assertEquals('Hot', $flower->getMeaning());
 
@@ -672,7 +725,7 @@ class EntityMapperTest extends AbstractORMTestCase
         );
 
         self::assertInstanceOf(StubFlower::class, $flower);
-        self::assertEquals(100, $flower->id);
+        self::assertEquals(101, $flower->id);
         self::assertEquals('Ice Flower', $flower->getTitle());
         self::assertEquals('Cold', $flower->getMeaning());
     }
@@ -691,7 +744,7 @@ class EntityMapperTest extends AbstractORMTestCase
         );
 
         self::assertInstanceOf(StubFlower::class, $flower);
-        self::assertEquals(101, $flower->id);
+        self::assertEquals(102, $flower->id);
         self::assertEquals('Stone Flower', $flower->getTitle());
         self::assertEquals('Strong', $flower->getMeaning());
 
