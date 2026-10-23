@@ -106,7 +106,7 @@ class DataType
         self::TINYINT => [null, 0, 'int'],
         self::NUMERIC => [null, 0, 'int'],
 
-        self::DECIMAL => ['10,2', 0, 'float'],
+        self::DECIMAL => ['10,2', 0, 'string'],
         self::FLOAT => ['10,2', 0, 'float'],
         self::REAL => ['10,2', 0, 'float'],
         self::DOUBLE => ['10,2', 0, 'float'],
