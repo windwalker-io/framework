@@ -24,6 +24,15 @@ class PdoMysqlConnection extends AbstractPdoConnection
 
         $options->dsn ??= static::getDsn($params);
 
+        if ($options->tls !== null) {
+            $options->driverOptions[Mysql::ATTR_SSL_KEY] = $options->tls['key'] ?? null;
+            $options->driverOptions[Mysql::ATTR_SSL_CERT] = $options->tls['cert'] ?? null;
+            $options->driverOptions[Mysql::ATTR_SSL_CA] = $options->tls['ca'] ?? null;
+            $options->driverOptions[Mysql::ATTR_SSL_CAPATH] = $options->tls['capath'] ?? null;
+            $options->driverOptions[Mysql::ATTR_SSL_CIPHER] = $options->tls['cipherAlgos'] ?? null;
+            $options->driverOptions[Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = $options->tls['verify'] ?? true;
+        }
+
         if (version_compare(PHP_VERSION, '8.4', '>=')) {
             if (strtolower($params['charset']) === 'utf8mb4') {
                 $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';

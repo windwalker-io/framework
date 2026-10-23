@@ -20,6 +20,18 @@ class PdoPgsqlConnection extends AbstractPdoConnection
         $params['dbname'] = $options->dbname ?? null;
         $params['charset'] = $options->charset ?? null;
 
+        if ($options->tls !== null) {
+            $params['sslkey'] = $options->tls['key'] ?? null;
+            $params['sslcert'] = $options->tls['cert'] ?? null;
+            $params['sslrootcert'] = $options->tls['ca'] ?? null;
+            $params['sslcrl'] = $options->tls['capath'] ?? null;
+            $params['sslpassword'] = $options->tls['cipherAlgos'] ?? null;
+
+            if (isset($options->tls['verify'])) {
+                $params['sslmode'] = $options->tls['verify'] ? 'verify-full' : 'require';
+            }
+        }
+
         $options->dsn ??= static::getDsn($params);
 
         return $options;

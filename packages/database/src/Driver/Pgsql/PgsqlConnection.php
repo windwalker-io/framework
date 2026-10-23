@@ -35,6 +35,18 @@ class PgsqlConnection extends AbstractConnection
         $params['user'] = $options->user;
         $params['password'] = $options->password;
 
+        if ($options->tls !== null) {
+            $params['sslkey'] = $options->tls['key'] ?? null;
+            $params['sslcert'] = $options->tls['cert'] ?? null;
+            $params['sslrootcert'] = $options->tls['ca'] ?? null;
+            $params['sslcrl'] = $options->tls['capath'] ?? null;
+            $params['sslpassword'] = $options->tls['cipherAlgos'] ?? null;
+
+            if (isset($options->tls['verify'])) {
+                $params['sslmode'] = $options->tls['verify'] ? 'verify-full' : 'require';
+            }
+        }
+
         if (isset($options->charset)) {
             if (!preg_match('/\A[A-Za-z0-9_-]+\z/', $options->charset)) {
                 throw new InvalidArgumentException('Invalid PostgreSQL client encoding.');

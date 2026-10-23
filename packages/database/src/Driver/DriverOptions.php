@@ -34,6 +34,30 @@ class DriverOptions extends RecordOptions
          */
         public \Closure|string|array $afterConnect = [],
         public array $extra = [],
+        /**
+         * @var array{
+         *     key?: string,
+         *     cert?: string,
+         *     ca?: string,
+         *     capath?: string,
+         *     cipherAlgos?: string,
+         *     verify?: bool,
+         * }
+         */
+        public ?array $tls = null,
     ) {
+    }
+
+    public static function tlsOptions(
+        ?string $key = null,
+        ?string $cert = null,
+        ?string $ca = null,
+        ?string $capath = null,
+        ?string $cipherAlgos = null,
+        ?bool $verify = null
+    ): array {
+        $options = compact('key', 'cert', 'ca', 'capath', 'cipherAlgos', 'verify');
+
+        return array_filter($options, fn($value) => $value !== null);
     }
 }

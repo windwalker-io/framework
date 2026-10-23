@@ -32,6 +32,13 @@ class SqlsrvConnection extends AbstractConnection
         $params['PWD'] = $options->password ?? null;
         $params['CharacterSet'] = $options->charset ?? null;
 
+        if ($options->tls !== null) {
+            if (isset($options->tls['verify'])) {
+                $params['Encrypt'] = true;
+                $params['TrustServerCertificate'] = !$options->tls['verify'];
+            }
+        }
+
         $params = array_filter($params);
         $options->extra['params'] = $params;
 

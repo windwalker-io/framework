@@ -659,6 +659,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function group(...$columns): static
     {
         foreach ($columns as $column) {
+            if (is_array($column)) {
+                $this->group(...$column);
+
+                continue;
+            }
+
             $group = [$this->resolveColumn($column)];
 
             $this->groupRaw($this->clause('', $group));

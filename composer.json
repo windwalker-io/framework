@@ -41,7 +41,7 @@
         "illuminate/view": "^6.0||^7.0||^8.0||^9.0||^10.0||^11.0||^12.0||^13.0",
         "jdorn/sql-formatter": "^1.2",
         "laktak/hjson": "^2.1",
-        "league/flysystem": "^2.0",
+        "league/flysystem": "^2.0||^3.0",
         "league/plates": "^3.4",
         "masterminds/html5": "^2.7",
         "mikey179/vfsstream": "^1.6",
@@ -200,7 +200,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.4.6"
+            "php": "8.4.27"
         }
     },
     "extra": {

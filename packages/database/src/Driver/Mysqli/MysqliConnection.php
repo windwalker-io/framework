@@ -30,6 +30,19 @@ class MysqliConnection extends AbstractConnection
 
     public static function prepareDbOptions(DriverOptions $options): DriverOptions
     {
+        if ($options->tls !== null) {
+            $options->extra['tls'] = array_replace(
+                [
+                    'key' => null,
+                    'cert' => null,
+                    'ca' => null,
+                    'capath' => null,
+                    'cipherAlgos' => null,
+                ],
+                $options->tls
+            );
+        }
+
         return $options;
     }
 
@@ -37,7 +50,25 @@ class MysqliConnection extends AbstractConnection
     {
         mysqli_report(MYSQLI_REPORT_ALL | MYSQLI_REPORT_STRICT);
 
-        return mysqli_connect(
+        $connection = mysqli_init();
+
+        if (!$connection) {
+            return false;
+        }
+
+        if ($options->tls !== null) {
+            $tls = $options->extra['tls'] ?? [];
+
+            $connection->ssl_set(
+                $tls['key'],
+                $tls['cert'],
+                $tls['ca'],
+                $tls['capath'],
+                $tls['cipherAlgos']
+            );
+        }
+
+        $connection->real_connect(
             $options->host ?? null,
             $options->user ?? null,
             $options->password ?? null,
@@ -45,6 +76,8 @@ class MysqliConnection extends AbstractConnection
             $options->port ?? null,
             $options->unixSocket ?? null,
         );
+
+        return $connection;
     }
 
     /**

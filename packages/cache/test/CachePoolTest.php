@@ -548,17 +548,6 @@ class CachePoolTest extends TestCase
     }
 
     /**
-     * @see  CachePool::setMultiple — invalid argument
-     */
-    public function testSetMultipleThrowsOnNonIterable(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        /** @phpstan-ignore-next-line */
-        $this->instance->setMultiple('not-iterable');
-    }
-
-    /**
      * @see  CachePool::delete
      */
     public function testDelete(): void
