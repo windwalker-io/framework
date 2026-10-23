@@ -6,6 +6,8 @@ namespace Windwalker\Uri;
 
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+use Uri\Rfc3986\Uri as UriRfc3986;
+use Uri\WhatWg\Url as UrlWhatWg;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
 
 use function Windwalker\unwrap_enum;
@@ -75,12 +77,17 @@ class Uri implements ExtendedUriInterface
     ];
 
     /**
-     * @param  UriInterface|string|null  $uri
+     * @param  UriInterface|\Stringable|string|null  $uri
+     * @param  bool                                  $utf8
      *
      * @return  static
      */
-    public static function wrap(UriInterface|string|null $uri, bool $utf8 = false): static
+    public static function wrap(UriInterface|\Stringable|string|null $uri, bool $utf8 = false): static
     {
+        if ($uri instanceof \Stringable) {
+            $uri = (string) $uri;
+        }
+
         if ($uri instanceof static) {
             return $uri;
         }
@@ -96,13 +103,13 @@ class Uri implements ExtendedUriInterface
      * Constructor.
      * You can pass a URI string to the constructor to initialise a specific URI.
      *
-     * @param  string  $uri  The optional URI string
+     * @param  \Stringable|string  $uri  The optional URI string
      *
      * @since   2.0
      */
-    public function __construct(string $uri = '', bool $utf8 = false)
+    public function __construct(\Stringable|string $uri = '', bool $utf8 = false)
     {
-        $this->parse($uri, $utf8);
+        $this->parse((string) $uri, $utf8);
     }
 
     /**
@@ -813,5 +820,15 @@ class Uri implements ExtendedUriInterface
     public function getOriginal(): ?string
     {
         return $this->original;
+    }
+
+    public function toRfc3986(?UriRfc3986 $baseUrl = null): UriRfc3986
+    {
+        return new UriRfc3986($this->toString(), $baseUrl);
+    }
+
+    public function toWhatWg(?UrlWhatWg $baseUrl = null, &$softErrors = null): UrlWhatWg
+    {
+        return new UrlWhatWg($this->toString(), $baseUrl, $softErrors);
     }
 }

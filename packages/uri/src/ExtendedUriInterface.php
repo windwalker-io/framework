@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Uri;
 
 use Psr\Http\Message\UriInterface;
+use Uri\Rfc3986\Uri as UriRfc3986;
+use Uri\WhatWg\Url as UrlWhatWg;
 
 /**
  * Interface ExtendedUriInterface
@@ -108,4 +110,8 @@ interface ExtendedUriInterface extends UriInterface
      * @since   2.0
      */
     public function isSSL(): bool;
+
+    public function toRfc3986(?UriRfc3986 $baseUrl = null): UriRfc3986;
+
+    public function toWhatWg(?UrlWhatWg $baseUrl = null, &$softErrors = null): UrlWhatWg;
 }
