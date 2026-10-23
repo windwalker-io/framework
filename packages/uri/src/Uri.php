@@ -75,23 +75,21 @@ class Uri implements ExtendedUriInterface
     ];
 
     /**
-     * wrap
-     *
      * @param  UriInterface|string|null  $uri
      *
      * @return  static
      */
-    public static function wrap(UriInterface|string|null $uri): static
+    public static function wrap(UriInterface|string|null $uri, bool $utf8 = false): static
     {
         if ($uri instanceof static) {
             return $uri;
         }
 
         if ($uri instanceof UriInterface) {
-            return new static((string) $uri);
+            return new static((string) $uri, $utf8);
         }
 
-        return new static((string) $uri);
+        return new static((string) $uri, $utf8);
     }
 
     /**

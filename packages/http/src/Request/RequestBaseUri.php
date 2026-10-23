@@ -291,7 +291,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
 
             case 'current':
                 return $this->cacheStorage['current'] ??= rtrim(
-                    Uri::wrap($this->original)
+                    Uri::wrap($this->original, true)
                         ->toString(
                             static::FULL_HOST | static::PATH
                         ),
