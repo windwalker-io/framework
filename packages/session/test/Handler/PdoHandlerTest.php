@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test\Handler;
 
-use Windwalker\Database\Driver\ConnectionInterface;
+use PDO;
 use Windwalker\Session\Handler\AbstractHandler;
-use Windwalker\Session\Handler\ArrayHandler;
 use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Handler\PdoHandler;
-use Windwalker\Test\Traits\DatabaseTestTrait;
 
 /**
- * The ArrayHandlerTest class.
+ * The PdoHandlerTest class.
  */
 class PdoHandlerTest extends AbstractHandlerTestCase
 {
-    use DatabaseTestTrait;
+    protected ?PDO $db = null;
 
     /**
      * @var PdoHandler
@@ -24,63 +22,61 @@ class PdoHandlerTest extends AbstractHandlerTestCase
     protected ?AbstractHandler $instance = null;
 
     /**
-     * @see  ArrayHandler::updateTimestamp
+     * @see  PdoHandler::updateTimestamp
      */
     public function testUpdateTimestamp(): void
     {
         $session = $this->createSession();
 
-        $lastTime = self::$db->select('time')
-            ->from('windwalker_sessions')
-            ->where('id', static::$sess1)
-            ->result();
+        $query = $this->db->prepare('SELECT time FROM windwalker_sessions WHERE id = ?');
+        $query->execute([static::$sess1]);
+        $lastTime = (int) $query->fetchColumn();
 
         $session->setId(static::$sess1);
         $session->start();
         $session->stop();
 
-        $newTime = self::$db->select('time')
-            ->from('windwalker_sessions')
-            ->where('id', static::$sess1)
-            ->result();
+        $query->execute([static::$sess1]);
+        $newTime = (int) $query->fetchColumn();
 
-        self::assertTrue($lastTime < $newTime);
+        self::assertGreaterThan($lastTime, $newTime);
     }
 
     protected function createInstance(): HandlerInterface
     {
-        static::$db->getDriver()->useConnection(
-            function (ConnectionInterface $conn) {
-                $this->instance = new PdoHandler($conn->get());
-            }
-        );
-
-        self::$db->getTableManager('windwalker_sessions')->truncate();
+        $this->instance = new PdoHandler($this->db, ['gc_maxlifetime' => 1440]);
+        $this->db->exec('DELETE FROM windwalker_sessions');
+        $insert = $this->db->prepare('INSERT INTO windwalker_sessions (id, data, time) VALUES (?, ?, ?)');
 
         foreach ($this->prepareDefaultData() as $id => $item) {
-            self::$db->getWriter()->insertOne(
-                'windwalker_sessions',
-                [
-                    'id' => $id,
-                    'data' => $item['data'],
-                    'time' => $item['time'],
-                ]
-            );
+            $insert->execute([$id, $item['data'], $item['time']]);
         }
 
         return $this->instance;
     }
 
-    /**
-     * setupDatabase
-     *
-     * @return  void
-     */
-    protected static function setupDatabase(): void
+    protected function setUp(): void
     {
-        self::createDatabase('pdo_mysql');
+        parent::setUp();
 
-        self::$db->getTableManager('windwalker_sessions')->drop();
-        self::importFromFile(__DIR__ . '/../../resources/sql/mysql.sql');
+        if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
+            self::markTestSkipped('The pdo_sqlite extension is required.');
+        }
+
+        $this->prepareVfs();
+        $this->db = new PDO('sqlite::memory:', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $this->db->exec(
+            'CREATE TABLE windwalker_sessions (id TEXT PRIMARY KEY, data TEXT NOT NULL, time INTEGER NOT NULL)'
+        );
+    }
+
+    protected function tearDown(): void
+    {
+        $this->session?->stop();
+        $this->session = null;
+        $this->instance = null;
+        $this->db = null;
+
+        parent::tearDown();
     }
 }
