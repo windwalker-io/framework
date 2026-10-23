@@ -160,6 +160,21 @@ class CryptHelper
      */
     public static function strcpy(#[\SensitiveParameter] string $string): string
     {
+        $len = mb_strlen($string, '8bit');
+
+        $new = '';
+        $chunk = max($len >> 1, 1);
+
+        for ($i = 0; $i < $len; $i += $chunk) {
+            $new .= mb_substr($string, $i, $chunk, '8bit');
+        }
+
+        return $new;
+    }
+
+    #[\Deprecated('Use CryptHelper::strcpy() instead.')]
+    public static function strcpyLegacy(#[\SensitiveParameter] string $string): string
+    {
         $len = mb_strlen($string);
 
         $new = '';

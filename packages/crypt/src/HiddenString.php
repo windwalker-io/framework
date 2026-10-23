@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Crypt;
 
+use LogicException;
 use Throwable;
 
 use function sodium_memzero;
@@ -14,6 +15,8 @@ use function str_repeat;
  */
 class HiddenString
 {
+    protected bool $copyLegacy = false;
+
     /**
      * HiddenString constructor.
      *
@@ -38,6 +41,10 @@ class HiddenString
         }
 
         if ($copy) {
+            if ($this->copyLegacy) {
+                return CryptHelper::strcpyLegacy($this->value);
+            }
+
             return CryptHelper::strcpy($this->value);
         }
 
@@ -72,8 +79,27 @@ class HiddenString
         return $this->get();
     }
 
+    public function __debugInfo(): array
+    {
+        return ['value' => '[redacted]'];
+    }
+
+    public function __serialize(): array
+    {
+        throw new LogicException('Secret values cannot be serialized.');
+    }
+
+    public function __unserialize(array $data): void
+    {
+        throw new LogicException('Secret values cannot be unserialized.');
+    }
+
     public function __destruct()
     {
+        if (!isset($this->value)) {
+            return;
+        }
+
         if (function_exists('sodium_memzero')) {
             try {
                 sodium_memzero($this->value);
@@ -85,10 +111,17 @@ class HiddenString
         }
 
         // If sodium not available, attempt to wipe value from memory.
-        $zero = str_repeat("\0", mb_strlen($this->value));
+        $zero = str_repeat("\0", strlen($this->value));
 
         $this->value ^= ($zero ^ $this->value);
 
         unset($zero, $this->value);
+    }
+
+    public function useLegacyCopy(bool $copyLegacy = true): static
+    {
+        $this->copyLegacy = $copyLegacy;
+
+        return $this;
     }
 }
