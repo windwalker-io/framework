@@ -151,6 +151,14 @@ abstract class AbstractRunner implements EventAwareInterface
         return $this->getState() === static::STATE_ACTIVE;
     }
 
+    /**
+     * @return  iterable<string>
+     */
+    public function getAllChannels(): iterable
+    {
+        return $this->queue->getChannels();
+    }
+
     protected function getSortedChannels(array|string $channels): array
     {
         $channels = (array) $channels;
@@ -158,7 +166,7 @@ abstract class AbstractRunner implements EventAwareInterface
         $isAllChannels = in_array('*', $channels, true);
 
         if ($isAllChannels) {
-            $channels = iterator_to_array($this->queue->getChannels());
+            $channels = iterator_to_array($this->getAllChannels());
         }
 
         if ($this->options->shuffleChannels && is_array($channels)) {
