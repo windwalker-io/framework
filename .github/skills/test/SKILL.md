@@ -23,6 +23,10 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
    before relying on it, and stop to ask if uncertain.
 5. Write PHPUnit attribute-based tests (`#[Test]`, `#[DataProvider]`, etc. per PHPUnit 13) with
    `declare(strict_types=1);` at the top of every test file, matching the project's PHP 8.4+ style.
+   - Test methods do not need a `test` prefix; the `#[Test]` attribute marks them. Name them after the behavior
+     (e.g. `resolveCallArgumentsWithVariadic`).
+   - Data provider methods must end with `Provider` (e.g. `argumentsProvider`) and be referenced via
+     `#[DataProvider('argumentsProvider')]`.
 6. Run the smallest selector from the repository root:
 
    ```bash

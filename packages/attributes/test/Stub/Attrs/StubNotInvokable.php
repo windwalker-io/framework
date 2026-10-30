@@ -7,6 +7,4 @@ namespace Windwalker\Attributes\Test\Stub\Attrs;
 use Attribute;
 
 #[Attribute]
-class StubNotInvokable
-{
-}
+class StubNotInvokable {}

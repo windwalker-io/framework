@@ -6,8 +6,9 @@ namespace Windwalker\Attributes\Test;
 
 use Attribute;
 use LogicException;
-use ReflectionFunction;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use ReflectionFunction;
 use Windwalker\Attributes\AttributesResolver;
 use Windwalker\Attributes\AttributeType;
 use Windwalker\Attributes\Test\Stub\Attrs\PropWrap;
@@ -33,7 +34,8 @@ class AttributesResolverTest extends TestCase
 
     protected ?AttributesResolver $instance = null;
 
-    public function testRegisterAttribute(): void
+    #[Test]
+    public function registerAttribute(): void
     {
         // Test property type
         $this->instance->registerAttribute(StubWrapper::class, Attribute::TARGET_PROPERTY);
@@ -72,7 +74,8 @@ class AttributesResolverTest extends TestCase
         );
     }
 
-    public function testRegisterAttributeCallable(): void
+    #[Test]
+    public function registerAttributeCallable(): void
     {
         // Test property type
         $this->instance->registerAttribute(StrUpper::class, AttributeType::CALLABLE);
@@ -93,7 +96,8 @@ class AttributesResolverTest extends TestCase
         );
     }
 
-    public function testClassCreate()
+    #[Test]
+    public function classCreate(): void
     {
         $this->instance->registerAttribute(StubWrapper::class, Attribute::TARGET_CLASS);
 
@@ -103,7 +107,8 @@ class AttributesResolverTest extends TestCase
         self::assertInstanceOf(StubObject::class, $obj->instance);
     }
 
-    public function testClassCreateWithNamedArgs()
+    #[Test]
+    public function classCreateWithNamedArgs(): void
     {
         $this->instance->registerAttribute(StubWrapper::class, Attribute::TARGET_CLASS);
 
@@ -119,7 +124,8 @@ class AttributesResolverTest extends TestCase
         self::assertEquals(['foo' => 'bar'], $obj->instance->getOptions());
     }
 
-    public function testObjectDecorate()
+    #[Test]
+    public function objectDecorate(): void
     {
         $this->instance->registerAttribute(StubWrapper::class, Attribute::TARGET_CLASS);
 
@@ -144,7 +150,8 @@ class AttributesResolverTest extends TestCase
         self::assertEquals(['foo' => 'bar'], $obj->options);
     }
 
-    public function testResolveObjectMembers()
+    #[Test]
+    public function resolveObjectMembers(): void
     {
         $this->instance->registerAttribute(StubMemberResolver::class);
 
@@ -176,7 +183,8 @@ EOT,
         );
     }
 
-    public function testMethocCall()
+    #[Test]
+    public function methodCall(): void
     {
         $this->instance->registerAttribute(StrUpper::class, Attribute::TARGET_PARAMETER);
         $this->instance->registerAttribute(ValueImplode::class, AttributeType::CALLABLE);
@@ -201,7 +209,8 @@ EOT,
         self::assertEquals('HELLO WORLD', $r);
     }
 
-    public function testMethocCallWithReference()
+    #[Test]
+    public function methodCallWithReference(): void
     {
         $this->instance->registerAttribute(StrUpper::class, Attribute::TARGET_PARAMETER);
         $this->instance->registerAttribute(
@@ -227,7 +236,8 @@ EOT,
         self::assertEquals('bar', $opt['foo']);
     }
 
-    public function testProperties()
+    #[Test]
+    public function properties(): void
     {
         $this->instance->registerAttribute(PropWrap::class, Attribute::TARGET_PROPERTY);
 
@@ -249,7 +259,8 @@ EOT,
         );
     }
 
-    public function testResolveObjectDecorateWithReflectionFunction(): void
+    #[Test]
+    public function resolveObjectDecorateWithReflectionFunction(): void
     {
         $closure = fn() => 'foo';
 
@@ -258,10 +269,10 @@ EOT,
         self::assertSame($closure, $handler());
     }
 
-    public function testCallWithInvokeHandler(): void
+    #[Test]
+    public function callWithInvokeHandler(): void
     {
-        $context = new class {
-        };
+        $context = new class {};
 
         $this->instance->setInvokeHandler(
             fn(callable $callable, array $args, ?object $ctx) => [$callable(...$args), $ctx]
@@ -272,7 +283,8 @@ EOT,
         self::assertSame(['FOO', $context], $r);
     }
 
-    public function testCallWithContext(): void
+    #[Test]
+    public function callWithContext(): void
     {
         $context = new class {
             protected string $name = 'sakura';
@@ -285,7 +297,8 @@ EOT,
         self::assertSame('sakura', $this->instance->call($closure, [], $context));
     }
 
-    public function testResolveCallArguments(): void
+    #[Test]
+    public function resolveCallArguments(): void
     {
         $args = $this->instance->resolveCallArguments(
             fn(string $a, string $b = 'def') => $a . $b,
@@ -295,7 +308,8 @@ EOT,
         self::assertSame(['a' => 'x', 'b' => 'def'], $args);
     }
 
-    public function testResolveCallArgumentsWithVariadic(): void
+    #[Test]
+    public function resolveCallArgumentsWithVariadic(): void
     {
         $args = $this->instance->resolveCallArguments(
             fn(...$items) => $items,
@@ -316,7 +330,8 @@ EOT,
         self::assertSame(['x', ['y', 'z']], $r);
     }
 
-    public function testResolveObjectMembersSkipNoAttributes(): void
+    #[Test]
+    public function resolveObjectMembersSkipNoAttributes(): void
     {
         $this->instance->registerAttribute(StubMemberResolver::class);
 
@@ -325,9 +340,7 @@ EOT,
 
             public array $output = [];
 
-            public function plain(): void
-            {
-            }
+            public function plain(): void {}
 
             #[StubMemberResolver]
             public function hello(): string
@@ -341,22 +354,22 @@ EOT,
         self::assertSame(['ReflectionMethod = hello'], $foo->output);
     }
 
-    public function testRunNotInvokableAttribute(): void
+    #[Test]
+    public function runNotInvokableAttribute(): void
     {
         $this->instance->registerAttribute(StubNotInvokable::class, Attribute::TARGET_CLASS);
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('is not invokable');
+        $this->expectExceptionMessageIsOrContains('is not invokable');
 
         $this->instance->decorateObject(
             new
             #[StubNotInvokable]
-            class {
-            }
+            class {}
         );
     }
 
-    // public function testResolveMethods()
+    // public function resolveMethods()
     // {
     //     $this->instance->registerAttribute(StubSubscribe::class, \Attribute::TARGET_METHOD);
     //     $this->instance->resolveMethods();
