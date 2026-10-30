@@ -33,6 +33,8 @@ All code style instructions see: `/.github/instructions/cs.instructions.md`.
 
 All test code style instructions see: `/.github/instructions/test.instructions.md`.
 
+Full PHP-CS-Fixer ruleset explanation see: `/.github/docs/code-style.md`.
+
 ## Package Layout
 
 Every package follows this structure:
