@@ -26,6 +26,14 @@ class Enqueuer extends AbstractRunner
     }
 
     /**
+     * @return  iterable<string>
+     */
+    public function getAllChannels(): iterable
+    {
+        return array_keys($this->channelHandlers);
+    }
+
+    /**
      * @inheritDoc
      */
     public function next(array|string $channel): void
