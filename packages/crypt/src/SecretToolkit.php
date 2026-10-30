@@ -17,7 +17,7 @@ class SecretToolkit
     public static int $defaultLength = SECRET_128BIT;
 
     /**
-     * @throws \Exception
+     * @throws  \Exception
      */
     public static function genRawSecret(int $length = SECRET_LENGTH_DEFAULT): string
     {
@@ -29,7 +29,7 @@ class SecretToolkit
     }
 
     /**
-     * @throws \Exception
+     * @throws  \Exception
      */
     public static function genSecretString(
         int $length = SECRET_LENGTH_DEFAULT,
@@ -42,7 +42,7 @@ class SecretToolkit
     }
 
     /**
-     * @throws \Exception
+     * @throws  \Exception
      */
     public static function genSecret(
         int $length = SECRET_LENGTH_DEFAULT,
@@ -53,7 +53,7 @@ class SecretToolkit
     }
 
     /**
-     * @throws \Exception
+     * @throws  \Exception
      */
     public static function genSecretWithoutPrefix(
         int $length = SECRET_LENGTH_DEFAULT,
@@ -81,7 +81,11 @@ class SecretToolkit
         } elseif (is_a($encoderClass, Hex::class, true)) {
             $encoded = $encoderClass::encode($binaryString);
         } else {
-            $encoded = $encoderClass::encode($binaryString);
+            // @codeCoverageIgnoreStart
+            // The following line is unreachable because the chooseEncoder method will always return a valid encoder class.
+            // However, we keep it here for safety and to satisfy static analysis tools.
+            throw new \LogicException('Unsupported encoder class: ' . $encoderClass);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($withPrefix) {
@@ -180,14 +184,18 @@ class SecretToolkit
             return $decoder::decodeUpper($string);
         }
 
-        if (is_subclass_of($decoder, Base64::class)) {
+        if (is_a($decoder, Base64::class, true)) {
             return $decoder::decodeNoPadding($string);
         }
 
-        if (is_subclass_of($decoder, Hex::class)) {
+        if (is_a($decoder, Hex::class, true)) {
             return $decoder::decode($string);
         }
 
-        return $decoder::decode($string);
+        // @codeCoverageIgnoreStart
+        // The following line is unreachable because the chooseEncoder method will always return a valid encoder class.
+        // However, we keep it here for safety and to satisfy static analysis tools.
+        throw new \LogicException('Unsupported decoder class: ' . $decoder);
+        // @codeCoverageIgnoreEnd
     }
 }

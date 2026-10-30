@@ -20,6 +20,8 @@ use const Windwalker\Crypt\ENCODER_BASE64URLSAFE;
  * @since  3.0
  *
  * @deprecated  This class is keep for B/C, use SodiumCipher instead.
+ *
+ * @codeCoverageIgnore
  */
 class PhpAesCipher implements CipherInterface
 {

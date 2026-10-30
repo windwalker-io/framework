@@ -118,8 +118,8 @@ class CallbackFormatHandler implements FormatInterface
     public function setDumper(?callable $dumper): static
     {
         $this->dumper = $dumper
-            ?? static function (): array {
-                return [];
+            ?? static function (): string {
+                return '';
             };
 
         return $this;

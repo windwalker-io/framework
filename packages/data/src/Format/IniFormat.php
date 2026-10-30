@@ -100,7 +100,7 @@ class IniFormat implements FormatInterface
     protected static function getValueAsINI(mixed $value): string
     {
         return match (gettype($value)) {
-            'integer', 'double' => $value,
+            'integer', 'double' => (string) $value,
             'boolean' => $value ? 'true' : 'false',
             'string' => '"' . static::escapeString($value) . '"',
         };

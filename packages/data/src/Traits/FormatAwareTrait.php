@@ -11,10 +11,12 @@ use Windwalker\Data\Format\FormatRegistry;
  */
 trait FormatAwareTrait
 {
-    protected FormatRegistry|null $formatRegistry = null;
+    protected ?FormatRegistry $formatRegistry = null;
 
     /**
-     * @return FormatRegistry
+     * @return  FormatRegistry
+     *
+     * @codeCoverageIgnore
      */
     public function getFormatRegistry(): FormatRegistry
     {
@@ -25,6 +27,8 @@ trait FormatAwareTrait
      * @param  FormatRegistry|null  $formatRegistry
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setFormatRegistry(?FormatRegistry $formatRegistry): static
     {

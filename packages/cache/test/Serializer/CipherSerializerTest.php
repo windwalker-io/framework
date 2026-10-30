@@ -10,6 +10,7 @@ use Windwalker\Cache\Serializer\CipherSerializer;
 use Windwalker\Cache\Serializer\JsonAssocSerializer;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Serializer\RawSerializer;
+use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
@@ -17,6 +18,20 @@ use Windwalker\Crypt\Symmetric\CipherInterface;
 
 class CipherSerializerTest extends TestCase
 {
+    public function testSerializeReturnsNullWhenTheInnerSerializerReturnsNull(): void
+    {
+        $inner = $this->createMock(SerializerInterface::class);
+        $inner->expects($this->once())
+            ->method('serialize')
+            ->with(null)
+            ->willReturn(null);
+
+        $cipher = $this->createMock(CipherInterface::class);
+        $cipher->expects($this->never())->method('encrypt');
+
+        self::assertNull((new CipherSerializer($cipher, 'key', $inner))->serialize(null));
+    }
+
     public function testSerializeAndUnserializeRoundTripUsingCipherInterface(): void
     {
         $key = 'secret-key';
@@ -60,9 +75,31 @@ class CipherSerializerTest extends TestCase
         self::assertSame('abc', $serializer->unserialize('enc'));
     }
 
+    public function testSerializePassesACallableEncoderToTheCipher(): void
+    {
+        $cipher = $this->createMock(CipherInterface::class);
+        $cipher->expects($this->once())
+            ->method('encrypt')
+            ->with(
+                'VALUE',
+                'key',
+                self::callback(static fn(callable $encoder): bool => $encoder('VALUE') === 'encoded:VALUE')
+            )
+            ->willReturn('encrypted');
+
+        $serializer = new CipherSerializer(
+            $cipher,
+            'key',
+            new RawSerializer(),
+            static fn(string $value): string => 'encoded:' . $value
+        );
+
+        self::assertSame('encrypted', $serializer->serialize('VALUE'));
+    }
+
     public function testWorksWithCachePool(): void
     {
-        $cipher = new class implements CipherInterface {
+        $cipher = new class () implements CipherInterface {
             public function decrypt(
                 string $str,
                 Key|string $key,

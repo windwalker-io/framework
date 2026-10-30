@@ -109,7 +109,7 @@ class XmlFormat implements FormatInterface
                 $value = new stdClass();
 
                 foreach ($node->children() as $child) {
-                    $value->$child['name'] = static::getValueFromNode($child);
+                    $value->{(string) $child['name']} = static::getValueFromNode($child);
                 }
 
                 break;
@@ -132,7 +132,7 @@ class XmlFormat implements FormatInterface
         // Iterate over the object members.
         foreach ((array) $var as $k => $v) {
             if (is_scalar($v)) {
-                $n = $node->addChild($nodeName, $v);
+                $n = $node->addChild($nodeName, (string) $v);
                 $n->addAttribute('name', (string) $k);
                 $n->addAttribute('type', gettype($v));
             } else {

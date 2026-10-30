@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Crypt\Symmetric;
 
+use function sodium_memzero;
+
 use SodiumException;
 use Windwalker\Crypt\CryptHelper;
+
+use const Windwalker\Crypt\ENCODER_BASE64;
+
 use Windwalker\Crypt\Exception\CryptException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
-
-use function sodium_memzero;
-
-use const Windwalker\Crypt\ENCODER_BASE64;
 
 /**
  * The Openssl Cipher class.
@@ -26,6 +27,8 @@ use const Windwalker\Crypt\ENCODER_BASE64;
  * @since       2.0
  *
  * @deprecated  Use SodiumCipher instead.
+ *
+ * @codeCoverageIgnore
  */
 class LegacyOpensslCipher extends OpensslCipher
 {
@@ -34,8 +37,9 @@ class LegacyOpensslCipher extends OpensslCipher
      */
     public function decrypt(
         string $str,
-        #[\SensitiveParameter] Key|string $key,
-        string|callable $encoder = ENCODER_BASE64
+        #[\SensitiveParameter]
+        Key|string $key,
+        string|callable $encoder = ENCODER_BASE64,
     ): HiddenString {
         $key = Key::strip($key);
 
@@ -83,9 +87,11 @@ class LegacyOpensslCipher extends OpensslCipher
      * @inheritDoc
      */
     public function encrypt(
-        #[\SensitiveParameter] HiddenString|string $str,
-        #[\SensitiveParameter] Key|string $key,
-        string|callable $encoder = ENCODER_BASE64
+        #[\SensitiveParameter]
+        HiddenString|string $str,
+        #[\SensitiveParameter]
+        Key|string $key,
+        string|callable $encoder = ENCODER_BASE64,
     ): string {
         $str = HiddenString::strip($str);
         $key = Key::strip($key);
@@ -104,7 +110,7 @@ class LegacyOpensslCipher extends OpensslCipher
             $this->getMethod(),
             $encKey,
             OPENSSL_RAW_DATA,
-            $iv
+            $iv,
         );
 
         $hmac = $this->hmac($salt . $iv . $encrypted, $hmacKey);
@@ -116,7 +122,7 @@ class LegacyOpensslCipher extends OpensslCipher
                 SafeEncoder::encode($encoder, $salt),
                 SafeEncoder::encode($encoder, $iv),
                 SafeEncoder::encode($encoder, $encrypted),
-            ]
+            ],
         );
 
         if (function_exists('sodium_memzero')) {

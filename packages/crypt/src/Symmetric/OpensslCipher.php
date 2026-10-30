@@ -24,30 +24,32 @@ use const Windwalker\Crypt\ENCODER_BASE64;
  * @see    http://stackoverflow.com/a/19445173
  *
  * @since  2.0
+ *
+ * @codeCoverageIgnore
  */
 class OpensslCipher implements CipherInterface
 {
-    public const PBKDF2_HASH_ALGORITHM = 'SHA256';
+    public const string PBKDF2_HASH_ALGORITHM = 'SHA256';
 
-    public const PBKDF2_SALT_BYTE_SIZE = 32;
+    public const int PBKDF2_SALT_BYTE_SIZE = 32;
 
-    public const PBKDF2_HASH_BYTE_SIZE = 32;
+    public const int PBKDF2_HASH_BYTE_SIZE = 32;
 
-    public const HMAC_SIZE = 32;
+    public const int HMAC_SIZE = 32;
 
     /**
      * Property type.
      *
-     * @var string
+     * @var  string
      */
-    protected $method;
+    protected string $method;
 
     /**
      * Property options.
      *
      * @var  array
      */
-    protected $options;
+    protected array $options;
 
     /**
      * Constructor.
@@ -74,7 +76,7 @@ class OpensslCipher implements CipherInterface
             [
                 'pbkdf2_iteration' => 12000,
             ],
-            $options
+            $options,
         );
 
         $this->method = $method;
@@ -85,8 +87,9 @@ class OpensslCipher implements CipherInterface
      */
     public function decrypt(
         string $str,
-        #[\SensitiveParameter] Key|string $key,
-        string|callable $encoder = ENCODER_BASE64
+        #[\SensitiveParameter]
+        Key|string $key,
+        string|callable $encoder = ENCODER_BASE64,
     ): HiddenString {
         $key = Key::strip($key);
 
@@ -100,12 +103,12 @@ class OpensslCipher implements CipherInterface
         $encrypted = CryptHelper::substr(
             $message,
             static::PBKDF2_SALT_BYTE_SIZE + $this->getIVSize(),
-            $length - (static::PBKDF2_SALT_BYTE_SIZE + $this->getIVSize() + static::HMAC_SIZE)
+            $length - (static::PBKDF2_SALT_BYTE_SIZE + $this->getIVSize() + static::HMAC_SIZE),
         );
 
         $hmac = CryptHelper::substr(
             $message,
-            $length - static::HMAC_SIZE
+            $length - static::HMAC_SIZE,
         );
 
         [$encKey, $hmacKey] = $this->derivateSecureKeys($key, $salt);
@@ -144,9 +147,11 @@ class OpensslCipher implements CipherInterface
      * @inheritDoc
      */
     public function encrypt(
-        #[\SensitiveParameter] HiddenString|string $str,
-        #[\SensitiveParameter] Key|string $key,
-        string|callable $encoder = ENCODER_BASE64
+        #[\SensitiveParameter]
+        HiddenString|string $str,
+        #[\SensitiveParameter]
+        Key|string $key,
+        string|callable $encoder = ENCODER_BASE64,
     ): string {
         $str = HiddenString::strip($str);
         $key = Key::strip($key);
@@ -163,7 +168,7 @@ class OpensslCipher implements CipherInterface
             $this->getMethod(),
             $encKey,
             OPENSSL_RAW_DATA,
-            $iv
+            $iv,
         );
 
         $hmac = $this->hmac($salt . $iv . $encrypted, $hmacKey);
@@ -185,7 +190,7 @@ class OpensslCipher implements CipherInterface
 
         return SafeEncoder::encode(
             $encoder,
-            $message
+            $message,
         );
     }
 
@@ -206,7 +211,7 @@ class OpensslCipher implements CipherInterface
      *
      * @return  string
      *
-     * @throws CryptException
+     * @throws  CryptException
      */
     protected static function randomPseudoBytes(?int $size = null): string
     {
@@ -226,7 +231,7 @@ class OpensslCipher implements CipherInterface
      *
      * @return  string
      *
-     * @throws CryptException
+     * @throws  CryptException
      */
     public function getIV(): string
     {
@@ -239,8 +244,8 @@ class OpensslCipher implements CipherInterface
      * @param  string  $key
      * @param  string  $salt
      *
-     * @return array [$secureEncryptionKey, $secureHMACKey]
-     * @throws CryptException
+     * @return  array           [$secureEncryptionKey, $secureHMACKey]
+     * @throws  CryptException
      */
     protected function derivateSecureKeys(string $key, string $salt): array
     {
@@ -253,9 +258,9 @@ class OpensslCipher implements CipherInterface
                 $salt,
                 $iteration,
                 static::PBKDF2_HASH_BYTE_SIZE * 2,
-                true
+                true,
             ),
-            self::PBKDF2_HASH_BYTE_SIZE
+            self::PBKDF2_HASH_BYTE_SIZE,
         );
     }
 
@@ -265,7 +270,7 @@ class OpensslCipher implements CipherInterface
      * @param  string  $message
      * @param  string  $hmacKey
      *
-     * @return string
+     * @return  string
      */
     protected function hmac(string $message, string $hmacKey): string
     {
@@ -282,7 +287,7 @@ class OpensslCipher implements CipherInterface
      * @param  int     $keyLength  The length of the derived key in bytes
      * @param  bool    $rawOutput  If true, the key is returned in raw binary format. Hex encoded otherwise
      *
-     * @return string A $keyLength-byte key derived from the password and salt
+     * @return  string  A $keyLength-byte key derived from the password and salt
      */
     protected function pbkdf2(
         string $algorithm,
@@ -290,7 +295,7 @@ class OpensslCipher implements CipherInterface
         string $salt,
         int $count,
         int $keyLength,
-        bool $rawOutput = false
+        bool $rawOutput = false,
     ): string {
         $algorithm = strtolower($algorithm);
 

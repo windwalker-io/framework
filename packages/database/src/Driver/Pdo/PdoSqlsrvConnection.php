@@ -34,9 +34,14 @@ class PdoSqlsrvConnection extends AbstractPdoConnection
         $params['CharacterSet'] = $options->charset;
         $params['MultipleActiveResultSets'] = 'True';
 
-        if ($options->tls !== null && isset($options->tls['verify'])) {
+        if ($options->tls) {
             $params['Encrypt'] = 'yes';
-            $params['TrustServerCertificate'] = $options->tls['verify'] ? 'no' : 'yes';
+
+            if (isset($options->tls['verify'])) {
+                $params['TrustServerCertificate'] = $options->tls['verify'] ? 'no' : 'yes';
+            }
+        } elseif ($options->tls === false) {
+            $params['Encrypt'] = 'no';
         }
 
         $options->dsn ??= static::getDsn($params);

@@ -22,12 +22,28 @@ Run the check again after fixing and review the diff. Bare `composer cs-check` /
 configured tree; use them only when that scope is intended. See the [fixer guide](../docs/code-style.md#running-the-fixer)
 for prerequisites and direct CLI equivalents.
 
+## Clean up phpdoc
+
+Some phpdoc with a simple description which same as function name, and a `@since __DEPLOY_VERSION__` tag,
+is legacy from the old codebase, and should be removed. Keep necessary tags, and remove the rest.
+
+```php
+/**
+     * withRemoveDeep
+     *
+     * ...
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function withRemoveDeep()
+```
+
 ## Use New without parentheses in PHP 8.4
 
 Bad
 
 ```php
-(new FooBar()).run();
+(new FooBar())->run();
 ```
 
 Good

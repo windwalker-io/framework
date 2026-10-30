@@ -22,6 +22,13 @@ edge cases and error paths, then rerun the same coverage scope to check the impr
 with assertion-free tests or new coverage exclusions; preserve the logic-free getter/setter exception below.
 If coverage cannot run, report the limitation rather than claiming the gaps are covered.
 
+## Keep app-level tooling out of package test scope
+
+Files such as `src/*Package.php`, `etc/*.config.php`, and `src/Command/*` are generally wiring or tools used by a
+Windwalker framework application, rather than package behavior that needs standalone tests. Do not add tests solely
+for these files or include them in a package's coverage target by default. Test them only when they contain
+meaningful, independently testable logic or the requested change specifically requires validating their behavior.
+
 See [Testing and Coverage](../docs/testing.md) for test selectors, driver setup, report commands, and scope caveats.
 
 ## Exclude logic-free getters/setters from code coverage and tests

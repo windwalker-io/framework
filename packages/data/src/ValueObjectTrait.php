@@ -10,6 +10,11 @@ use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 
+/**
+ * @deprecated Use Record instead.
+ *
+ * @codeCoverageIgnore
+ */
 trait ValueObjectTrait
 {
     use RecordTrait;
@@ -52,7 +57,7 @@ trait ValueObjectTrait
 
         foreach ($attrs as $attr) {
             /**
-             * @var Cast $attrInstance
+             * @var  Cast  $attrInstance
              */
             $attrInstance = $attr->newInstance();
 

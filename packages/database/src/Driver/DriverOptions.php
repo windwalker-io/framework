@@ -42,9 +42,9 @@ class DriverOptions extends RecordOptions
          *     capath?: string,
          *     cipherAlgos?: string,
          *     verify?: bool,
-         * }
+         * }|bool
          */
-        public ?array $tls = null,
+        public array|bool|null $tls = null,
     ) {
     }
 

@@ -21,9 +21,11 @@ class HiddenString
      * HiddenString constructor.
      *
      * @param  string  $value
+     * @param  bool    $copy
      */
     public function __construct(
-        #[\SensitiveParameter] protected string $value,
+        #[\SensitiveParameter]
+        protected string $value,
         protected bool $copy = true
     ) {
         //
@@ -72,7 +74,7 @@ class HiddenString
     /**
      * The __toString method allows a class to decide how it will react when it is converted to a string.
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {
@@ -118,6 +120,9 @@ class HiddenString
         unset($zero, $this->value);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function useLegacyCopy(bool $copyLegacy = true): static
     {
         $this->copyLegacy = $copyLegacy;

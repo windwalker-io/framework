@@ -13,7 +13,7 @@ use RuntimeException;
 class MemcachedStorage implements StorageInterface, MultiGetStorageInterface
 {
     /**
-     * @var Memcached
+     * @var  Memcached
      */
     protected ?Memcached $driver;
 
@@ -90,6 +90,15 @@ class MemcachedStorage implements StorageInterface, MultiGetStorageInterface
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
         $this->connect();
+
+        $ttl = $expiration - time();
+
+        // Sometimes when Memcached running in container, the server clock may drift.
+        // If the expiration is more than 30 days in the future, Memcached treats it as a Unix timestamp
+        // instead of a relative TTL. To avoid this, we convert it to a relative TTL if it's within 30 days.
+        if ($expiration > 60 * 60 * 24 * 30 && $ttl <= 60 * 60 * 24 * 30) {
+            $expiration = $ttl;
+        }
 
         $this->driver->set($key, $value, $expiration);
 

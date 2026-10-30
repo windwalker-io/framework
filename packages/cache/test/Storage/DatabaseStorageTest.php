@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test\Storage;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Cache\Storage\DatabaseStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
@@ -31,7 +32,11 @@ class DatabaseStorageTest extends TestCase
         }
 
         $this->dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
-        mkdir(dirname($this->dbFile), 755);
+        $tmpDirectory = dirname($this->dbFile);
+
+        if (!is_dir($tmpDirectory) && !mkdir($tmpDirectory, 0755, true) && !is_dir($tmpDirectory)) {
+            self::fail(sprintf('Unable to create the temporary test directory "%s".', $tmpDirectory));
+        }
 
         register_shutdown_function(
             function () {
@@ -198,6 +203,39 @@ class DatabaseStorageTest extends TestCase
         self::assertSame(1, $this->countRows('fresh', 'flower'));
     }
 
+    #[Test]
+    public function clearOnlyRemovesEntriesFromTheCurrentGroup(): void
+    {
+        $this->instance->save('flower-key', 'FLOWER');
+        $this->otherGroup->save('tree-key', 'TREE');
+
+        self::assertTrue($this->instance->clear());
+        self::assertSame(0, $this->countRows('flower-key', 'flower'));
+        self::assertSame(1, $this->countRows('tree-key', 'tree'));
+    }
+
+    #[Test]
+    public function removeDeletesAnExistingEntry(): void
+    {
+        $this->instance->save('existing', 'VALUE');
+
+        self::assertTrue($this->instance->remove('existing'));
+        self::assertSame(0, $this->countRows('existing', 'flower'));
+    }
+
+    #[Test]
+    public function pruneAllRemovesExpiredEntriesAcrossGroups(): void
+    {
+        $this->instance->save('flower-expired', 'STALE', time() - 10);
+        $this->instance->save('flower-active', 'FRESH', time() + 60);
+        $this->otherGroup->save('tree-expired', 'STALE', time() - 10);
+
+        self::assertSame(2, $this->instance->pruneAll());
+        self::assertSame(1, $this->countRows('flower-active', 'flower'));
+        self::assertSame(0, $this->countRows('flower-expired', 'flower'));
+        self::assertSame(0, $this->countRows('tree-expired', 'tree'));
+    }
+
     public function testAutoCreateTable(): void
     {
         $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
@@ -335,5 +373,3 @@ class DatabaseStorageTest extends TestCase
         return $value === null ? null : (int) $value;
     }
 }
-
-

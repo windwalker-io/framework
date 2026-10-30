@@ -35,6 +35,24 @@ services:
       retries: 5
       start_period: 15s
 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: windwalker_sqlserver
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Ut1234!pass"
+    ports:
+      - "${SQLSERVER_PORT:-1433}:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"IF DB_ID('windwalker_test') IS NULL CREATE DATABASE windwalker_test\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   redis:
     image: redis:7-alpine
     container_name: windwalker_redis
@@ -58,4 +76,5 @@ volumes:
   mysql_data:
   postgresql_data:
   redis_data:
+  sqlserver_data:
 

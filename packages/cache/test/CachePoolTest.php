@@ -34,7 +34,7 @@ class CachePoolTest extends TestCase
      *
      * @return  void
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function testBasicUsage(): void
     {
@@ -387,7 +387,7 @@ class CachePoolTest extends TestCase
     public function toTaggedPoolPreservesStorageSerializerAndDefaultTtl(): void
     {
         $storage = new ArrayStorage(0.0);
-        $serializer = new RawSerializer;
+        $serializer = new RawSerializer();
         $pool = new CachePool($storage, $serializer, defaultTtl: 120);
 
         $taggedPool = $pool->toTaggedPool(null);
@@ -1028,7 +1028,7 @@ class CachePoolTest extends TestCase
     public function testWithGroupThrowsWhenStorageUnsupported(): void
     {
         // Create a mock storage that does NOT implement GroupedStorageInterface
-        $storage = $this->createMock(StorageInterface::class);
+        $storage = $this->createStub(StorageInterface::class);
 
         $pool = new CachePool($storage);
 

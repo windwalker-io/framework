@@ -17,13 +17,13 @@ use Windwalker\Utilities\TypeCast;
  *
  * @template-extends \IteratorAggregate<TKey, T>
  *
- * @method string toJson(array $options = [])
- * @method string toXml(array $options = [])
- * @method string toIni(array $options = [])
- * @method string toPhpString(array $options = [])
- * @method string toYaml(array $options = [])
- * @method string toHjson(array $options = [])
- * @method string toToml(array $options = [])
+ * @method  string  toJson(array $options = [])
+ * @method  string  toXml(array $options = [])
+ * @method  string  toIni(array $options = [])
+ * @method  string  toPhpString(array $options = [])
+ * @method  string  toYaml(array $options = [])
+ * @method  string  toHjson(array $options = [])
+ * @method  string  toToml(array $options = [])
  */
 class Collection extends ArrayObject
 {
@@ -46,7 +46,7 @@ class Collection extends ArrayObject
             return $data;
         }
 
-        return (new static())->load($data, $format, $options);
+        return new static()->load($data, $format, $options);
     }
 
     /**
@@ -234,7 +234,7 @@ class Collection extends ArrayObject
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isProxy(): bool
     {
@@ -242,14 +242,10 @@ class Collection extends ArrayObject
     }
 
     /**
-     * __call
-     *
      * @param  string  $name
      * @param  array   $args
      *
      * @return  mixed|string
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function __call(string $name, array $args): mixed
     {
@@ -257,10 +253,10 @@ class Collection extends ArrayObject
             'tojson' => 'json',
             'toxml' => 'xml',
             'toyaml' => 'yaml',
-            'tohjson' => 'jhson',
+            'tohjson' => 'hjson',
             'toini' => 'ini',
             'tophpstring' => 'php',
-            'totoml' => 'json',
+            'totoml' => 'toml',
         ];
 
         $method = strtolower($name);

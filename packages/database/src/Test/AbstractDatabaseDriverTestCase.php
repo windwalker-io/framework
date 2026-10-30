@@ -15,6 +15,7 @@ use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Pdo\AbstractPdoConnection;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\Reseter\AbstractReseter;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Grammar\AbstractGrammar;
@@ -51,6 +52,10 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         }
 
         $options = DriverOptions::wrap($params);
+
+        if (static::$platform === AbstractPlatform::SQLSERVER) {
+            $options->tls = false;
+        }
 
         $platform = static::$platform;
 

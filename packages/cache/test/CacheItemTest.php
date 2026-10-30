@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Windwalker\Cache\CacheItem;
 use Windwalker\Cache\Exception\InvalidArgumentException;
 
@@ -79,6 +80,31 @@ class CacheItemTest extends TestCase
 
         self::assertFalse($item->isHit());
         self::assertLessThanOrEqual(time(), $item->realExpiry);
+    }
+
+    #[Test]
+    public function unrepresentableNegativeTtlIsLoggedAndPreservesTheCurrentExpiration(): void
+    {
+        $item = CacheItem::create('large-negative-ttl')->expiresAfter(60);
+        $expiration = $item->getExpiration()->getTimestamp();
+        $realExpiry = $item->realExpiry;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('critical')
+            ->with(
+                'CacheItem::expiresAfter() caused an error.',
+                self::callback(
+                    static fn(array $context): bool => $context['key'] === 'large-negative-ttl'
+                        && $context['exception'] instanceof \Throwable
+                )
+            );
+        $item->setLogger($logger);
+
+        $item->expiresAfter(PHP_INT_MIN);
+
+        self::assertSame($expiration, $item->getExpiration()->getTimestamp());
+        self::assertSame($realExpiry, $item->realExpiry);
     }
 
     #[Test]

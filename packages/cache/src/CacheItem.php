@@ -192,21 +192,21 @@ class CacheItem implements CacheItemInterface
     {
         try {
             if ($time instanceof DateInterval) {
-                $this->expiration = new DateTime();
-                $this->expiration->add($time);
-                $this->syncRealExpiryFromExpiration();
+                $expiration = new DateTime();
+                $expiration->add($time);
             } elseif (is_numeric($time)) {
-                $this->expiration = new DateTime();
+                $expiration = new DateTime();
                 $interval = new DateInterval('PT' . abs($time) . 'S');
                 $interval->invert = $time < 0 ? 1 : 0;
-                $this->expiration->add($interval);
-                $this->syncRealExpiryFromExpiration();
+                $expiration->add($interval);
             } elseif ($time === null) {
-                $this->expiration = new DateTime($this->defaultExpiration);
-                $this->syncRealExpiryFromExpiration();
+                $expiration = new DateTime($this->defaultExpiration);
             } else {
                 throw new InvalidArgumentException('Invalid DateTime format.');
             }
+
+            $this->expiration = $expiration;
+            $this->syncRealExpiryFromExpiration();
         } catch (Throwable $e) {
             $this->logException(
                 'CacheItem::expiresAfter() caused an error.',

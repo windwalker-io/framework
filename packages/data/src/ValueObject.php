@@ -17,6 +17,8 @@ use Windwalker\Utilities\TypeCast;
  * The ValueObject class.
  *
  * @deprecated  Use Record instead.
+ *
+ * @codeCoverageIgnore
  */
 #[\AllowDynamicProperties]
 class ValueObject implements ValueObjectInterface

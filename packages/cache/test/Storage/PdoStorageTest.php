@@ -6,6 +6,8 @@ namespace Windwalker\Cache\Test\Storage;
 
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PdoStorage;
@@ -172,6 +174,227 @@ class PdoStorageTest extends TestCase
         self::assertSame(1, $this->countRows('cache_items', 'fresh', 'flower'));
     }
 
+    #[Test]
+    public function clearOnlyRemovesEntriesFromTheCurrentGroup(): void
+    {
+        $this->instance->save('flower-key', 'FLOWER');
+        $this->otherGroup->save('tree-key', 'TREE');
+
+        self::assertTrue($this->instance->clear());
+        self::assertNull($this->instance->get('flower-key'));
+        self::assertSame('TREE', $this->otherGroup->get('tree-key'));
+    }
+
+    #[Test]
+    public function removeReturnsSuccessForExistingAndMissingKeys(): void
+    {
+        $this->instance->save('existing', 'VALUE');
+
+        self::assertTrue($this->instance->remove('existing'));
+        self::assertFalse($this->instance->has('existing'));
+        self::assertTrue($this->instance->remove('missing'));
+    }
+
+    #[Test]
+    public function pruneAllRemovesExpiredEntriesAcrossGroups(): void
+    {
+        $this->instance->save('flower-expired', 'STALE', time() - 10);
+        $this->instance->save('flower-active', 'FRESH', time() + 60);
+        $this->otherGroup->save('tree-expired', 'STALE', time() - 10);
+
+        self::assertSame(2, $this->instance->pruneAll());
+        self::assertSame(1, $this->countRows('cache_items', 'flower-active', 'flower'));
+        self::assertSame(0, $this->countRows('cache_items', 'flower-expired', 'flower'));
+        self::assertSame(0, $this->countRows('cache_items', 'tree-expired', 'tree'));
+    }
+
+    #[Test]
+    public function saveUsesDriverSpecificUpsertStatements(): void
+    {
+        $cases = [
+            'mysql' => 'ON DUPLICATE KEY UPDATE',
+            'pgsql' => 'ON CONFLICT',
+            'sqlsrv' => 'MERGE INTO',
+        ];
+
+        foreach ($cases as $driver => $expectedSql) {
+            $statement = $this->createMock(\PDOStatement::class);
+            $statement->expects($this->once())
+                ->method('execute')
+                ->with($this->callback(static function (array $bindings) use ($driver): bool {
+                    if ($driver === 'sqlsrv') {
+                        return array_key_exists(':key1', $bindings)
+                            && array_key_exists(':key2', $bindings)
+                            && array_key_exists(':grp1', $bindings)
+                            && array_key_exists(':grp2', $bindings);
+                    }
+
+                    return array_key_exists(':key', $bindings)
+                        && array_key_exists(':grp', $bindings)
+                        && array_key_exists(':payload', $bindings)
+                        && array_key_exists(':expiredAt', $bindings);
+                }))
+                ->willReturn(true);
+
+            $pdo = $this->createMock(PDO::class);
+            $pdo->expects($this->atLeastOnce())
+                ->method('getAttribute')
+                ->with(PDO::ATTR_DRIVER_NAME)
+                ->willReturn($driver);
+            $pdo->expects($this->once())
+                ->method('prepare')
+                ->with($this->stringContains($expectedSql))
+                ->willReturn($statement);
+
+            self::assertTrue((new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0))->save('key', 'VALUE'));
+        }
+    }
+
+    #[Test]
+    public function saveUsesUpdateThenInsertForDriversWithoutUpsertSyntax(): void
+    {
+        $update = $this->createMock(\PDOStatement::class);
+        $update->expects($this->once())
+            ->method('execute')
+            ->with(self::callback(static fn(array $bindings): bool => $bindings[':payload'] === 'VALUE'))
+            ->willReturn(true);
+        $update->expects($this->once())->method('rowCount')->willReturn(0);
+
+        $insert = $this->createMock(\PDOStatement::class);
+        $insert->expects($this->once())
+            ->method('execute')
+            ->with(self::callback(static fn(array $bindings): bool => $bindings[':key'] === 'key'))
+            ->willReturn(true);
+
+        $pdo = $this->createMock(PDO::class);
+        $pdo->expects($this->atLeastOnce())
+            ->method('getAttribute')
+            ->with(PDO::ATTR_DRIVER_NAME)
+            ->willReturn('other');
+        $pdo->expects($this->exactly(2))
+            ->method('prepare')
+            ->willReturnOnConsecutiveCalls($update, $insert);
+
+        self::assertTrue((new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0))->save('key', 'VALUE'));
+    }
+
+    #[Test]
+    public function saveRetriesAnUpdateWhenFallbackInsertLosesAConcurrentRace(): void
+    {
+        $update = $this->createMock(\PDOStatement::class);
+        $update->expects($this->exactly(2))
+            ->method('execute')
+            ->with(self::callback(static fn(array $bindings): bool => $bindings[':key'] === 'key'))
+            ->willReturn(true);
+        $update->expects($this->once())->method('rowCount')->willReturn(0);
+
+        $insert = $this->createMock(\PDOStatement::class);
+        $insert->expects($this->once())
+            ->method('execute')
+            ->willThrowException(new PDOException('Duplicate key from concurrent insert.'));
+
+        $pdo = $this->createMock(PDO::class);
+        $pdo->expects($this->atLeastOnce())
+            ->method('getAttribute')
+            ->with(PDO::ATTR_DRIVER_NAME)
+            ->willReturn('other');
+        $pdo->expects($this->exactly(2))
+            ->method('prepare')
+            ->willReturnOnConsecutiveCalls($update, $insert);
+
+        self::assertTrue((new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0))->save('key', 'VALUE'));
+    }
+
+    #[Test]
+    public function createTableCanBeCalledMoreThanOnce(): void
+    {
+        PdoStorage::createTable($this->pdo, 'repeat_cache_items');
+        PdoStorage::createTable($this->pdo, 'repeat_cache_items');
+
+        self::assertTrue($this->tableExists($this->pdo, 'repeat_cache_items'));
+    }
+
+    #[Test]
+    #[DataProvider('createTableSchemaProvider')]
+    public function createTableUsesTheDriverSpecificSchema(
+        string $driver,
+        string $expectedIdDefinition,
+        string $expectedKeyDefinition
+    ): void {
+        $executedSql = [];
+        $pdo = $this->createMock(PDO::class);
+        $pdo->expects($this->once())
+            ->method('getAttribute')
+            ->with(PDO::ATTR_DRIVER_NAME)
+            ->willReturn($driver);
+        $pdo->expects($this->exactly(3))
+            ->method('exec')
+            ->willReturnCallback(
+                static function (string $sql) use (&$executedSql): int {
+                    $executedSql[] = $sql;
+
+                    return 0;
+                }
+            );
+
+        PdoStorage::createTable($pdo);
+
+        self::assertStringContainsString($expectedIdDefinition, $executedSql[0]);
+        self::assertStringContainsString($expectedKeyDefinition, $executedSql[0]);
+        self::assertStringContainsString('cache_items_key_group_unique', $executedSql[1]);
+        self::assertStringContainsString('cache_items_expired_at_index', $executedSql[2]);
+    }
+
+    /**
+     * @return  array<string, array{string, string, string}>
+     */
+    public static function createTableSchemaProvider(): array
+    {
+        return [
+            'sqlite' => ['sqlite', 'id INTEGER PRIMARY KEY AUTOINCREMENT', '"key" VARCHAR(255) NOT NULL'],
+            'mysql' => ['mysql', 'id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY', '`key` VARCHAR(255) NOT NULL'],
+            'postgresql' => ['pgsql', 'id BIGSERIAL PRIMARY KEY', '"key" VARCHAR(255) NOT NULL'],
+            'sql server' => ['sqlsrv', "IF OBJECT_ID(N'cache_items', N'U') IS NULL", '[key] NVARCHAR(255) NOT NULL'],
+            'fallback' => ['unknown', 'id BIGINT PRIMARY KEY', '"key" VARCHAR(255) NOT NULL']
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('missingTableExceptionProvider')]
+    public function missingTableDetectionUsesTheDriversErrorFormat(
+        string $driver,
+        string $message,
+        ?array $errorInfo,
+        int $code,
+        bool $expected
+    ): void {
+        $pdo = $this->createMock(PDO::class);
+        $pdo->expects($this->once())
+            ->method('getAttribute')
+            ->with(PDO::ATTR_DRIVER_NAME)
+            ->willReturn($driver);
+
+        $exception = new PDOException($message, $code);
+        $exception->errorInfo = $errorInfo;
+
+        self::assertSame($expected, (new InspectablePdoStorage($pdo))->detectsMissingTable($exception));
+    }
+
+    /**
+     * @return  array<string, array{string, string, ?array, int, bool}>
+     */
+    public static function missingTableExceptionProvider(): array
+    {
+        return [
+            'postgresql state' => ['pgsql', 'relation missing', ['42P01', 0], 0, true],
+            'sqlite message' => ['sqlite', 'no such table: cache_items', ['HY000', 1], 0, true],
+            'oracle code' => ['oci', 'table missing', null, 942, true],
+            'sql server code' => ['sqlsrv', 'table missing', null, 208, true],
+            'mysql code' => ['mysql', 'table missing', ['42S02', 1146], 0, true],
+            'unrecognized driver' => ['other', 'table missing', null, 0, false]
+        ];
+    }
+
     public function testAutoCreateTable(): void
     {
         $dbFile = __DIR__ . '/../../tmp/' . bin2hex(random_bytes(8)) . '.sqlite';
@@ -302,3 +525,10 @@ class PdoStorageTest extends TestCase
     }
 }
 
+final class InspectablePdoStorage extends PdoStorage
+{
+    public function detectsMissingTable(PDOException $exception): bool
+    {
+        return $this->isTableNotFoundException($exception);
+    }
+}

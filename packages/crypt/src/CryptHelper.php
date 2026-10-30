@@ -63,20 +63,22 @@ class CryptHelper
      * @param  string  $info    What sort of key are we deriving?
      * @param  string  $salt
      *
-     * @return string
+     * @return  string
      *
-     * @throws SodiumException
+     * @throws  SodiumException
      */
     public static function hkdfBlake2b(
         string $ikm,
         int $length,
-        #[\SensitiveParameter] string $info = '',
-        #[\SensitiveParameter] string $salt = ''
+        #[\SensitiveParameter]
+        string $info = '',
+        #[\SensitiveParameter]
+        string $salt = '',
     ): string {
         // Sanity-check the desired output length.
         if ($length < 0 || $length > (255 * SODIUM_CRYPTO_GENERICHASH_KEYBYTES)) {
             throw new InvalidArgumentException(
-                'Argument 2: Bad HKDF Digest Length'
+                'Argument 2: Bad HKDF Digest Length',
             );
         }
 
@@ -102,17 +104,14 @@ class CryptHelper
             $last_block = sodium_crypto_generichash(
                 $last_block . $info . chr($block_index),
                 $prk,
-                SODIUM_CRYPTO_GENERICHASH_BYTES
+                SODIUM_CRYPTO_GENERICHASH_BYTES,
             );
             // T = T(1) | T(2) | T(3) | ... | T(N)
             $t .= $last_block;
         }
 
         // ORM = first L octets of T
-        /** @var string $orm */
-        $orm = static::substr($t, 0, $length);
-
-        return $orm;
+        return static::substr($t, 0, $length);
     }
 
     /**
@@ -139,9 +138,10 @@ class CryptHelper
      * @return  string
      */
     public static function substr(
-        #[\SensitiveParameter] string $str,
+        #[\SensitiveParameter]
+        string $str,
         int $start = 0,
-        $length = null
+        ?int $length = null,
     ): string {
         if ($length === 0) {
             return '';
@@ -172,6 +172,9 @@ class CryptHelper
         return $new;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     #[\Deprecated('Use CryptHelper::strcpy() instead.')]
     public static function strcpyLegacy(#[\SensitiveParameter] string $string): string
     {

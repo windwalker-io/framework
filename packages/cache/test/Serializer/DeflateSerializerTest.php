@@ -9,10 +9,22 @@ use Windwalker\Cache\CachePool;
 use Windwalker\Cache\Serializer\DeflateSerializer;
 use Windwalker\Cache\Serializer\JsonAssocSerializer;
 use Windwalker\Cache\Serializer\PhpSerializer;
+use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Storage\ArrayStorage;
 
 class DeflateSerializerTest extends TestCase
 {
+    public function testSerializeReturnsNullWhenTheInnerSerializerReturnsNull(): void
+    {
+        $inner = $this->createMock(SerializerInterface::class);
+        $inner->expects($this->once())
+            ->method('serialize')
+            ->with(null)
+            ->willReturn(null);
+
+        self::assertNull((new DeflateSerializer($inner))->serialize(null));
+    }
+
     public function testSerializeAndUnserializeRoundTrip(): void
     {
         $serializer = new DeflateSerializer(new PhpSerializer());
@@ -50,4 +62,3 @@ class DeflateSerializerTest extends TestCase
         self::assertSame(['foo' => 'bar'], $pool->get('compressed_item'));
     }
 }
-

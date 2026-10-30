@@ -10,6 +10,7 @@ use Windwalker\Cache\Exception\InvalidArgumentException;
 use Windwalker\Cache\Exception\RuntimeException;
 use Windwalker\Cache\Serializer\JsonAssocSerializer;
 use Windwalker\Cache\Serializer\PhpSerializer;
+use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Serializer\SodiumSerializer;
 use Windwalker\Cache\Storage\ArrayStorage;
 
@@ -63,6 +64,27 @@ class SodiumSerializerTest extends TestCase
         (new SodiumSerializer($wrongKeypair, serializer: new PhpSerializer()))->unserialize($payload);
     }
 
+    public function testUnserializeRejectsInvalidBase64Payload(): void
+    {
+        $serializer = new SodiumSerializer(sodium_crypto_box_keypair());
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIsOrContains('Invalid base64 payload');
+
+        $serializer->unserialize('%%%');
+    }
+
+    public function testSerializeReturnsNullWhenTheInnerSerializerReturnsNull(): void
+    {
+        $inner = $this->createMock(SerializerInterface::class);
+        $inner->expects($this->once())
+            ->method('serialize')
+            ->with(null)
+            ->willReturn(null);
+
+        self::assertNull(new SodiumSerializer(sodium_crypto_box_keypair(), serializer: $inner)->serialize(null));
+    }
+
     public function testConstructorRejectsInvalidKeyLength(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -85,4 +107,3 @@ class SodiumSerializerTest extends TestCase
         self::assertSame(['foo' => 'bar'], $pool->get('encrypted_item'));
     }
 }
-

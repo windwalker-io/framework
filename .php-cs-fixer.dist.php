@@ -29,9 +29,9 @@ return new Config()
                 'named_class' => true,
             ],
             'nullable_type_declaration_for_default_null_value' => true,
-            'ordered_imports' => [
-                'sort_algorithm' => 'alpha',
-            ],
+            // 'ordered_imports' => [
+            //     'sort_algorithm' => 'alpha',
+            // ],
             'no_unused_imports' => true,
             'single_quote' => true,
             'trailing_comma_in_multiline' => false,
