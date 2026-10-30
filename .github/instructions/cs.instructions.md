@@ -4,6 +4,8 @@ applyTo: "**/*.php"
 
 # Advanced Code Style Instructions
 
+This project follows the [PER-3.1](https://www.php-fig.org/per/coding-style/) PHP coding standard.
+
 These rules are enforced by `.php-cs-fixer.dist.php` (`@PER-CS` ruleset plus project overrides). Run
 `composer cs-check` to verify and `composer cs-fix` to auto-fix. For the full rule set and rationale, see
 `/.github/docs/code-style.md`.
@@ -38,7 +40,7 @@ is legacy from the old codebase, and should be removed. Keep necessary tags, and
     public function withRemoveDeep()
 ```
 
-## Use New without parentheses in PHP 8.4
+## Use New without parentheses
 
 Bad
 
@@ -55,16 +57,6 @@ new FooBar()->run();
 ## Always declare strict types
 
 Every PHP source file must start with `declare(strict_types=1);`.
-
-Bad
-
-```php
-<?php
-
-namespace Windwalker\Foo;
-```
-
-Good
 
 ```php
 <?php
@@ -92,23 +84,6 @@ function foo(?FooBar $bar = null): void
 }
 ```
 
-## Sort `use` imports alphabetically and remove unused ones
-
-Bad
-
-```php
-use Windwalker\Utilities\Str;
-use Windwalker\Data\Collection;
-use Windwalker\Unused\Thing;
-```
-
-Good
-
-```php
-use Windwalker\Data\Collection;
-use Windwalker\Utilities\Str;
-```
-
 ## Use single quotes unless interpolation is needed
 
 Bad
@@ -124,23 +99,12 @@ $name = 'Simon';
 $greet = "Hello, $name";
 ```
 
-## No trailing comma in multiline arrays/arguments/parameters
-
-Bad
+## Allow trailing comma in multiline arrays/arguments/parameters
 
 ```php
 $array = [
     'foo',
     'bar',
-];
-```
-
-Good
-
-```php
-$array = [
-    'foo',
-    'bar'
 ];
 ```
 
@@ -156,34 +120,4 @@ Good
 
 ```php
 $str = $a . $b;
-```
-
-## Use short array syntax
-
-Bad
-
-```php
-$array = array('foo', 'bar');
-```
-
-Good
-
-```php
-$array = ['foo', 'bar'];
-```
-
-## No Yoda conditions
-
-Bad
-
-```php
-if (null === $value) {
-}
-```
-
-Good
-
-```php
-if ($value === null) {
-}
 ```
