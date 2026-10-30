@@ -16,9 +16,10 @@ use Windwalker\Attributes\Test\Stub\Attrs\ValueImplode;
 use Windwalker\Attributes\Test\Stub\StubAccessible;
 use Windwalker\Attributes\Test\Stub\StubObject;
 use Windwalker\Scalars\StringObject;
-use Windwalker\Test\Traits\BaseAssertionTrait;
 
 use function Windwalker\str;
+
+use Windwalker\Test\Traits\BaseAssertionTrait;
 
 /**
  * The AttributeResolverTest class.
@@ -106,7 +107,7 @@ class AttributesResolverTest extends TestCase
         $obj = $this->instance->createObject(
             StubObject::class,
             options: ['foo' => 'bar'],
-            stub: new StubAccessible()
+            stub: new StubAccessible
         );
 
         self::assertInstanceOf(StubWrapper::class, $obj);
@@ -119,7 +120,7 @@ class AttributesResolverTest extends TestCase
     {
         $this->instance->registerAttribute(StubWrapper::class, Attribute::TARGET_CLASS);
 
-        $obj = $this->instance->decorateObject(new StubObject());
+        $obj = $this->instance->decorateObject(new StubObject);
 
         self::assertInstanceOf(StubWrapper::class, $obj);
         self::assertInstanceOf(StubObject::class, $obj->instance);
@@ -253,6 +254,6 @@ EOT,
 
     protected function setUp(): void
     {
-        $this->instance = new AttributesResolver();
+        $this->instance = new AttributesResolver;
     }
 }

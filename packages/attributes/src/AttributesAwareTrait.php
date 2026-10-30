@@ -12,11 +12,11 @@ trait AttributesAwareTrait
     protected ?AttributesResolver $attributeResolver = null;
 
     /**
-     * @return AttributesResolver
+     * @return  AttributesResolver
      */
     public function getAttributesResolver(): AttributesResolver
     {
-        return $this->attributeResolver ??= new AttributesResolver();
+        return $this->attributeResolver ??= new AttributesResolver;
     }
 
     /**

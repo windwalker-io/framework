@@ -22,7 +22,7 @@ class PropWrap implements AttributeInterface
     /**
      * PropWrap constructor.
      *
-     * @param $wrap
+     * @param   $wrap
      */
     public function __construct(string $wrap)
     {

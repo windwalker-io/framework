@@ -7,6 +7,4 @@ namespace Windwalker\Attributes\Test\Stub;
 /**
  * The StubListener class.
  */
-class StubListener
-{
-}
+class StubListener {}

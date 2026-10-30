@@ -7,6 +7,4 @@ namespace Windwalker\Attributes\Test\Stub;
 /**
  * The StubDispatcher class.
  */
-class StubDispatcher
-{
-}
+class StubDispatcher {}

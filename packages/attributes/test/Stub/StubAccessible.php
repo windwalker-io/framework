@@ -7,6 +7,4 @@ namespace Windwalker\Attributes\Test\Stub;
 /**
  * The StubAccessible class.
  */
-class StubAccessible
-{
-}
+class StubAccessible {}

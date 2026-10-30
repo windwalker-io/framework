@@ -30,14 +30,14 @@ class AttributesResolver extends ObjectBuilder
     protected array $registry = [];
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $invokeHandler;
 
     /**
      * AttributesResolver constructor.
      *
-     * @param array $options
+     * @param  array  $options
      */
     public function __construct(array $options = [])
     {
@@ -50,11 +50,11 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Create object by class and resolve attributes.
      *
-     * @param string $class
-     * @param mixed  ...$args
+     * @param  string  $class
+     * @param  mixed   ...$args
      *
      * @return  object
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function createObject(string $class, ...$args): object
     {
@@ -71,13 +71,13 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Resolve class constructor and return create function.
      *
-     * @param string        $class
-     * @param callable|null $builder
-     * @param array         $options
+     * @param  string         $class
+     * @param  callable|null  $builder
+     * @param  array          $options
      *
      * @return  AttributeHandler
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function resolveClassCreate(
         string $class,
@@ -102,8 +102,8 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Decorate object by attributes.
      *
-     * @param object $object
-     * @param array  $options
+     * @param  object  $object
+     * @param  array   $options
      *
      * @return  object
      */
@@ -115,14 +115,14 @@ class AttributesResolver extends ObjectBuilder
     /**
      * Resolve object decorate function.
      *
-     * @param object $instance
+     * @param  object  $instance
      *
      * @return  AttributeHandler
      */
     public function resolveObjectDecorate(object $instance, array $options = []): AttributeHandler
     {
         $ref = $instance instanceof Reflector ? $instance : new ReflectionObject($instance);
-//        $object = $ref instanceof ReflectionObject ? $instance : null;
+        //        $object = $ref instanceof ReflectionObject ? $instance : null;
 
         // If is closure, get closure back.
         if ($instance instanceof ReflectionFunction) {
@@ -143,11 +143,11 @@ class AttributesResolver extends ObjectBuilder
     /**
      * call
      *
-     * @param callable    $callable
-     * @param mixed       ...$args
-     * @param object|null $context
+     * @param  callable     $callable
+     * @param  mixed        ...$args
+     * @param  object|null  $context
      *
-     * @return mixed
+     * @return  mixed
      */
     public function call(callable $callable, array $args = [], ?object $context = null, array $options = []): mixed
     {
@@ -399,8 +399,8 @@ class AttributesResolver extends ObjectBuilder
     /**
      * registerAttribute
      *
-     * @param string $attributeClass
-     * @param int    $target
+     * @param  string  $attributeClass
+     * @param  int     $target
      *
      * @return  static
      */
@@ -421,8 +421,8 @@ class AttributesResolver extends ObjectBuilder
     /**
      * removeAttribute
      *
-     * @param string $attributeClass
-     * @param int    $target
+     * @param  string  $attributeClass
+     * @param  int     $target
      *
      * @return  static
      */
@@ -467,10 +467,10 @@ class AttributesResolver extends ObjectBuilder
     /**
      * createAttributeHandler
      *
-     * @param callable    $getter
-     * @param Reflector   $reflector
-     * @param object|null $object
-     * @param array       $options
+     * @param  callable     $getter
+     * @param  Reflector    $reflector
+     * @param  object|null  $object
+     * @param  array        $options
      *
      * @return  AttributeHandler
      */
@@ -494,7 +494,7 @@ class AttributesResolver extends ObjectBuilder
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getInvokeHandler(): callable
     {
@@ -502,7 +502,7 @@ class AttributesResolver extends ObjectBuilder
     }
 
     /**
-     * @param callable $invokeHandler
+     * @param  callable  $invokeHandler
      *
      * @return  static  Return self to support chaining.
      */

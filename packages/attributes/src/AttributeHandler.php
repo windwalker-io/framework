@@ -12,18 +12,18 @@ use Reflector;
 class AttributeHandler
 {
     /**
-     * @var callable
+     * @var  callable
      */
     public $handler;
 
     /**
      * AttributeHandler constructor.
      *
-     * @param callable           $handler
-     * @param Reflector          $reflector
-     * @param object|null        $object
-     * @param AttributesResolver $resolver
-     * @param array              $options
+     * @param  callable            $handler
+     * @param  Reflector           $reflector
+     * @param  object|null         $object
+     * @param  AttributesResolver  $resolver
+     * @param  array               $options
      */
     public function __construct(
         callable $handler,
@@ -36,7 +36,7 @@ class AttributeHandler
 
         $this->options = array_merge(
             $this->resolver->getOptions(),
-            $this->options
+            $this->options,
         );
     }
 
@@ -63,7 +63,7 @@ class AttributeHandler
     }
 
     /**
-     * @return Reflector
+     * @return  Reflector
      */
     public function getReflector(): Reflector
     {
@@ -71,7 +71,7 @@ class AttributeHandler
     }
 
     /**
-     * @return AttributesResolver
+     * @return  AttributesResolver
      */
     public function getResolver(): AttributesResolver
     {
@@ -79,7 +79,7 @@ class AttributeHandler
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getObject(): mixed
     {
@@ -87,7 +87,7 @@ class AttributeHandler
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function &getOptions(): array
     {
@@ -95,7 +95,7 @@ class AttributeHandler
     }
 
     /**
-     * @param array $options
+     * @param  array  $options
      *
      * @return  static  Return self to support chaining.
      */

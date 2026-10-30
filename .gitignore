@@ -27,6 +27,12 @@ phpunit.xml
 .phpunit.cache
 .scannerwork
 
+# Code Style #
+.php-cs-fixer.cache
+.php-cs-fixer.php
+.php_cs.cache
+.php_cs
+
 # Docker #
 docker-compose.override.yml
 .env

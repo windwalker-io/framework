@@ -16,7 +16,7 @@ class StubObject
     use OptionAccessTrait;
 
     /**
-     * @var StubAccessible|null
+     * @var  StubAccessible|null
      */
     public ?StubAccessible $stub;
 
