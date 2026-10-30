@@ -34,6 +34,7 @@ phpunit.xml
 .php_cs
 
 # Docker #
+docker-compose.yml
 docker-compose.override.yml
 .env
 

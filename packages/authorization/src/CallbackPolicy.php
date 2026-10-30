@@ -62,10 +62,6 @@ class CallbackPolicy implements PolicyInterface
      */
     public function setHandler(callable $handler): static
     {
-        if (!is_callable($handler)) {
-            throw new InvalidArgumentException('Handler should be a valid callback');
-        }
-
         $this->handler = $handler;
 
         return $this;

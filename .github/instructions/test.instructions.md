@@ -7,11 +7,19 @@ applyTo: "**/{test,Test,tests,Tests}/**/*.php"
 For the full workflow of adding, updating, and running tests, see the
 [test skill](../skills/test/SKILL.md).
 
-## Exclude logic-free getters/setters from code coverage
+## Prefer attributes for lifecycle hooks
 
-Pure getters/setters (only return or assign a property, optionally `return $this`) may be excluded from code coverage
-with `@codeCoverageIgnore` in the method docblock. If logic is later added (validation, normalization, lazy init,
-side effects, etc.), you **must** remove the ignore tag so the method is covered by tests again.
+Prefer `#[Before]` / `#[After]`, `#[BeforeClass]` / `#[AfterClass]`, and `#[PreCondition]` / `#[PostCondition]`
+over conventional hooks (`setUp()`, `tearDown()`, etc.). Import from `PHPUnit\Framework\Attributes`; use descriptive
+method names, `void` returns, and static methods for class-level hooks. Avoid empty hooks and preserve inherited
+parent/trait behavior and execution order when migrating.
+
+## Exclude logic-free getters/setters from code coverage and tests
+
+Do not write separate tests solely to exercise pure getters/setters (only return or assign a property, optionally
+`return $this`). If such a method has no meaningful coverage through other behavior tests, exclude it from code
+coverage with `@codeCoverageIgnore` in the method docblock. If logic is later added (validation, normalization, lazy
+init, side effects, etc.), you **must** remove the ignore tag and cover the behavior with tests.
 
 ```php
 /**

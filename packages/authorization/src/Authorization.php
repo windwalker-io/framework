@@ -76,6 +76,8 @@ class Authorization implements AuthorizationInterface
      * Method to get property Policies
      *
      * @return  PolicyInterface[]
+     *
+     * @codeCoverageIgnore
      */
     public function getPolicies(): array
     {
@@ -85,7 +87,7 @@ class Authorization implements AuthorizationInterface
     /**
      * Method to set property policies
      *
-     * @param  PolicyInterface[]  $policies
+     * @param  (PolicyInterface|callable)[]  $policies
      *
      * @return  static  Return self to support chaining.
      */

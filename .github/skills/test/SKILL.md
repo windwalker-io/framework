@@ -8,7 +8,7 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
 ## Workflow
 
 1. Inspect the changed behavior and neighboring tests under `packages/{name}/test`; read
-   [Test Rules](../../instructions/test.instructions.md) (PHPUnit mock invocation-count matcher style) and
+   [Test Rules](../../instructions/test.instructions.md) (lifecycle attributes, exception and mock matcher style) and
    [Code Style Rules](../../instructions/cs.instructions.md).
 2. Match the package's existing test conventions: tests live in `packages/{name}/test/` and are namespaced
    `Windwalker\{Name}\Test\` (PSR-4, see root `composer.json` `autoload-dev`). Mirror the source path structure under
@@ -27,6 +27,8 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
      (e.g. `resolveCallArgumentsWithVariadic`).
    - Data provider methods must end with `Provider` (e.g. `argumentsProvider`) and be referenced via
      `#[DataProvider('argumentsProvider')]`.
+   - Prefer attribute-based lifecycle hooks as defined in the [Test Rules](../../instructions/test.instructions.md);
+     preserve inherited fixture behavior when migrating conventional hooks.
 6. Run the smallest selector from the repository root:
 
    ```bash
@@ -43,5 +45,4 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
    HTTP-related tests may need the bundled test server first: `php -S localhost:8000 bin/test-server.php`.
 7. Inspect failures, fix the root cause or fixture, and rerun the selector. Do not claim success if a required
    database or external service was not actually configured/running.
-
 
