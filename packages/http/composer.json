@@ -25,11 +25,11 @@
         "composer/ca-bundle": "^1.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0||^11.0||^12.0",
+        "phpunit/phpunit": "^13.0",
         "mikey179/vfsstream": "^1.6",
         "windwalker/test": "^4.0",
         "rize/uri-template": "^0.3.5||^0.4.0",
-        "asika/better-units": "^0.1.1",
+        "asika/better-units": "^0.3.0",
         "symfony/process": "^6.0||^7.0||^8.0"
     },
     "minimum-stability": "beta",

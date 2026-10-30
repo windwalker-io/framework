@@ -13,7 +13,7 @@
         "php": ">=8.4.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0||^11.0||^12.0",
+        "phpunit/phpunit": "^13.0",
         "windwalker/attributes": "^4.0",
         "windwalker/test": "^4.0",
         "windwalker/scalars": "^4.0",
@@ -23,7 +23,7 @@
     },
     "suggest": {
         "symfony/string": "Install to use inflector.",
-        "laravel/serializable-closure": "Install ^1.0 to support serializable Closure."
+        "laravel/serializable-closure": "Install ^2.0 to support serializable Closure."
     },
     "minimum-stability": "beta",
     "autoload": {

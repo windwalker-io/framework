@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "asika/sql-splitter": "^1.0",
-        "phpunit/phpunit": "^10.0||^11.0||^12.0",
+        "phpunit/phpunit": "^13.0",
         "mockery/mockery": "^1.4",
         "windwalker/test": "^4.0",
         "windwalker/data": "^4.0",
