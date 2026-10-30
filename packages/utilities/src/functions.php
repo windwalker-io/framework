@@ -94,7 +94,7 @@ namespace Windwalker {
     use MyCLabs\Enum\Enum;
     use Traversable;
     use WeakReference;
-    use Windwalker\Attributes\AttributesAccessor;
+    use Windwalker\Utilities\Attributes\AttributesAccessor;
     use Windwalker\Utilities\Attributes\Expose;
     use Windwalker\Utilities\Attributes\Invisible;
     use Windwalker\Utilities\Classes\TraitHelper;
@@ -456,23 +456,35 @@ namespace Windwalker {
     }
 
     if (!function_exists('\Windwalker\clamp')) {
-        function clamp(int|float $num, int|float|null $min, int|float|null $max): int|float
+        function clamp(int|float $value, int|float|null $min, int|float|null $max): int|float
         {
-            if ($min !== null && $max !== null && $max < $min) {
-                throw new \InvalidArgumentException(
-                    __FUNCTION__ . '(): Argument #2 ($min) cannot be greater than Argument #3 ($max)'
+            if (function_exists('clamp')) {
+                return \clamp($value, $min, $max);
+            }
+
+            if (\is_float($min) && is_nan($min)) {
+                throw new \ValueError('clamp(): Argument #2 ($min) must not be NAN');
+            }
+
+            if (\is_float($max) && is_nan($max)) {
+                throw new \ValueError('clamp(): Argument #3 ($max) must not be NAN');
+            }
+
+            if ($max < $min) {
+                throw new \ValueError(
+                    'clamp(): Argument #2 ($min) must be smaller than or equal to argument #3 ($max)'
                 );
             }
 
-            if ($min !== null && $num < $min) {
-                $num = $min;
+            if ($value > $max) {
+                return $max;
             }
 
-            if ($max !== null && $num > $max) {
-                $num = $max;
+            if ($value < $min) {
+                return $min;
             }
 
-            return $num;
+            return $value;
         }
     }
 

@@ -77,7 +77,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
             `catid` int(11) DEFAULT NULL,
             `alias` varchar(255) NOT NULL DEFAULT '',
             `title` varchar(255) NOT NULL DEFAULT 'H',
-            `price` decimal(20,6) NOT NULL DEFAULT 0,
+            `price` decimal(20,6) NOT NULL DEFAULT '0',
             `intro` text NOT NULL,
             `fulltext` text NOT NULL,
             `start_date` datetime DEFAULT NULL,
