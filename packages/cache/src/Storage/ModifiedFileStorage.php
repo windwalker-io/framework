@@ -60,6 +60,8 @@ class ModifiedFileStorage extends FileStorage
 
     /**
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public function getListenFiles(): array
     {
@@ -70,6 +72,8 @@ class ModifiedFileStorage extends FileStorage
      * @param  array  $listenFiles
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setListenFiles(array $listenFiles): static
     {

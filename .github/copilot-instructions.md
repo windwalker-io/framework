@@ -16,6 +16,7 @@ and where to place new AI-facing content.
   - [test.instructions.md](instructions/test.instructions.md) - Testing-specific code style and deprecated/preferred
     APIs.
   - [test skill](skills/test/SKILL.md) - Workflow for adding, updating, and running tests.
+  - [testing.md](docs/testing.md) - Test execution, coverage drivers, reports, and finding missing tests.
 - [Instruction Maintenance](instructions/instruction.instructions.md) - Where to place new rules across
   instructions / skills / docs.
 
@@ -26,5 +27,5 @@ feature/topic below. Keep this list alphabetical and append a new bullet wheneve
 `/.github/docs/` (also update `/.github/docs/README.md`'s table at the same time).
 
 - **Code style / PHP-CS-Fixer rules (`@PER-CS`, rule overrides, rationale)** → `/.github/docs/code-style.md`
-
+- **Testing / PHPUnit execution and code coverage** → `/.github/docs/testing.md`
 

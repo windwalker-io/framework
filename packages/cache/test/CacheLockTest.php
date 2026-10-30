@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Cache\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Windwalker\Cache\CacheLock;
@@ -526,6 +527,36 @@ class CacheLockTest extends TestCase
 
             CacheLock::$logger = $logger;
             CacheLock::lock('contested_key');
+        } finally {
+            flock($external, LOCK_UN);
+            fclose($external);
+        }
+    }
+
+    #[Test]
+    public function lockReturnsFalseWhenContentionExceedsTimeout(): void
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            self::markTestSkipped('flock contention test is not reliable on Windows.');
+        }
+
+        $files = self::useTempFiles(1);
+        $external = fopen($files[0], 'r+b');
+        flock($external, LOCK_EX);
+
+        try {
+            CacheLock::setTimeout(0.001);
+            CacheLock::setWaitInterval(1);
+
+            $logger = $this->createMock(LoggerInterface::class);
+            $logger->expects($this->once())
+                ->method('warning')
+                ->with(self::stringContains('Failed to acquire lock'), self::arrayHasKey('key'));
+
+            CacheLock::$logger = $logger;
+
+            self::assertFalse(CacheLock::lock('contended_key', $isNew));
+            self::assertFalse($isNew);
         } finally {
             flock($external, LOCK_UN);
             fclose($external);

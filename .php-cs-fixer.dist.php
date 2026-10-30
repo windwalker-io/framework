@@ -25,8 +25,8 @@ return new Config()
             // Project conventions on top of PER Coding Style
             'declare_strict_types' => true,
             'new_with_parentheses' => [
-                'anonymous_class' => false,
-                'named_class' => false,
+                'anonymous_class' => true,
+                'named_class' => true,
             ],
             'nullable_type_declaration_for_default_null_value' => true,
             'ordered_imports' => [

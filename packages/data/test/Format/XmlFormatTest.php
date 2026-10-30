@@ -4,67 +4,38 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test\Format;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Format\XmlFormat;
 
-/**
- * Test class of XmlFormat
- *
- * @since 2.0
- */
 class XmlFormatTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var XmlFormat
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function itDumpsValuesUsingConfiguredRootAndNodeNames(): void
     {
-        $this->instance = new XmlFormat();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test objectToString().
-     *
-     * @return void
-     */
-    public function testDump()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $format = new XmlFormat;
+        $xml = $format->dump(
+            ['name' => 'Sakura'],
+            ['name' => 'Flower', 'nodeName' => 'item']
         );
+
+        self::assertStringContainsString('<Flower>', $xml);
+        self::assertStringContainsString('<item name="name" type="string">Sakura</item>', $xml);
     }
 
-    /**
-     * Method to test stringToObject().
-     *
-     * @return void
-     */
-    public function testParse()
+    #[Test]
+    public function itParsesNestedTypedValues(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $format = new XmlFormat;
+        $xml = '<Data>'
+            . '<node name="name" type="string">Sakura</node>'
+            . '<node name="count" type="integer">3</node>'
+            . '<node name="meta" type="array"><node name="active" type="boolean">1</node></node>'
+            . '</Data>';
+
+        self::assertSame(
+            ['name' => 'Sakura', 'count' => 3, 'meta' => ['active' => true]],
+            $format->parse($xml)
         );
     }
 }

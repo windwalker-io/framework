@@ -68,7 +68,7 @@ auto-loaded, and move detailed prose into `docs/` either way.
 
 - `instructions/cs.instructions.md` — PHP-CS-Fixer-backed code style rules (applies to all PHP files).
 - `instructions/instruction.instructions.md` — how to place new rules across instructions / skills / docs.
-- `instructions/test.instructions.md` — PHPUnit mock style rules (applies to test files).
+- `instructions/test.instructions.md` — PHPUnit style and missing-test coverage rules (applies to test files).
 - `skills/test/SKILL.md` — end-to-end workflow for adding/running PHPUnit tests in this monorepo.
 - `docs/code-style.md` — full PHP-CS-Fixer ruleset explanation/rationale. See `docs/README.md` for the docs index.
-
+- `docs/testing.md` — PHPUnit execution and coverage setup, scoped reports, and finding missing tests.

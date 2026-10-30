@@ -176,6 +176,10 @@ class SecretToolkit
         /** @var class-string<EncoderInterface> $decoder */
         $decoder = SafeEncoder::chooseEncoder($decoder);
 
+        if (is_a($decoder, Base32::class, true)) {
+            return $decoder::decodeUpper($string);
+        }
+
         if (is_subclass_of($decoder, Base64::class)) {
             return $decoder::decodeNoPadding($string);
         }

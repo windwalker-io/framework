@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Crypt\Test\Symmetric;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use SodiumException;
+use UnexpectedValueException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\Symmetric\SodiumCipher;
+
+use const Windwalker\Crypt\ENCODER_RAW;
+use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 
 /**
  * Test class of Cipher3DES
@@ -76,5 +81,21 @@ class SodiumCipherTest extends TestCase
         $data = $this->instance->decrypt($data, $key);
 
         $this->assertEquals('windwalker', $data);
+    }
+
+    #[Test]
+    public function refusesCiphertextWithInvalidAuthentication(): void
+    {
+        $key = new Key('test key');
+        $cipher = new SodiumCipher;
+        $encrypted = $cipher->encrypt('authenticated data', $key, ENCODER_RAW);
+        $encrypted[32 + SODIUM_CRYPTO_SECRETBOX_NONCEBYTES] = chr(
+            ord($encrypted[32 + SODIUM_CRYPTO_SECRETBOX_NONCEBYTES]) ^ 1
+        );
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessageIs('Invalid message authentication code');
+
+        $cipher->decrypt($encrypted, $key, ENCODER_RAW);
     }
 }

@@ -4,67 +4,28 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test\Format;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Format\YamlFormat;
 
-/**
- * Test class of YamlFormat
- *
- * @since 2.0
- */
 class YamlFormatTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var YamlFormat
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function itDumpsAndParsesNestedValues(): void
     {
-        $this->instance = new YamlFormat();
+        $format = new YamlFormat;
+        $data = ['flower' => 'sakura', 'meta' => ['count' => 3]];
+        $yaml = $format->dump($data, ['indent' => 2]);
+
+        self::assertStringContainsString('flower: sakura', $yaml);
+        self::assertSame($data, $format->parse($yaml));
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function itTrimsWhitespaceBeforeParsing(): void
     {
-    }
+        $format = new YamlFormat;
 
-    /**
-     * Method to test objectToString().
-     *
-     * @return void
-     */
-    public function testDump()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test stringToObject().
-     *
-     * @return void
-     */
-    public function testParse()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame(['flower' => 'sakura'], $format->parse("flower: sakura\n"));
     }
 }

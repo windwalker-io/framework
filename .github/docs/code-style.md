@@ -9,6 +9,27 @@ ruleset, for anyone who needs more context than the quick instructions provide.
 
 ## Running the fixer
 
+Run from the repository root with development dependencies installed (`composer install`). Use a PHP CLI supported
+by the installed fixer and preferably matching the project's minimum PHP target, so formatting does not introduce
+syntax unavailable on that target.
+
+For normal changes, restrict the run to the PHP files you touched:
+
+```bash
+# Check without modifying files
+composer cs-check -- --path-mode=intersection packages/cache/src/CachePool.php packages/cache/test/CachePoolTest.php
+
+# Apply fixes only to those files
+composer cs-fix -- --path-mode=intersection packages/cache/src/CachePool.php packages/cache/test/CachePoolTest.php
+```
+
+The `--` forwards options to the Composer script. `--path-mode=intersection` keeps the configuration's Finder
+exclusions when paths are supplied (the fixer's default `override` mode replaces its Finder paths).
+Review the resulting diff and rerun the same check. Checks exit nonzero when formatting changes are needed.
+The configuration enables risky rules, so review semantic changes as well as whitespace.
+
+For an intentional full-tree check or formatting pass:
+
 ```bash
 # Check only (CI-friendly, shows a diff, does not modify files)
 composer cs-check
@@ -20,9 +41,14 @@ composer cs-fix
 Both commands are defined in the root `../../composer.json` and internally run:
 
 ```bash
-php-cs-fixer check --diff
-php-cs-fixer fix
+php vendor/bin/php-cs-fixer check --diff
+php vendor/bin/php-cs-fixer fix
 ```
+
+Composer resolves the `php-cs-fixer` binary from `vendor/bin`; the direct equivalents above need no global
+installation. You can also append `--path-mode=intersection` and file paths to either direct command.
+The fixer automatically discovers the root configuration; add `--config=.php-cs-fixer.dist.php` to explicitly use
+the tracked rules instead of a local `.php-cs-fixer.php` override.
 
 The fixer scans every `*.php` file under `../../packages`, excluding `tmp/` and `resources/` directories and `*.blade.php`
 templates (see the `Finder` setup in `.php-cs-fixer.dist.php`).
@@ -73,4 +99,3 @@ array of `../../.php-cs-fixer.dist.php`.
 `../../AGENTS.md` at the repository root also lists broader, non-automatable conventions (no global state, no static
 methods except pure utilities, no facades, no magic methods, etc.) that PHP-CS-Fixer cannot enforce mechanically.
 Those are a matter of code review, not of the fixer configuration described here.
-

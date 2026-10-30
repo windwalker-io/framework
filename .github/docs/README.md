@@ -36,4 +36,4 @@ If instead the content is a short, always-applicable rule tied to a file pattern
 | Doc | Summary | Linked from |
 | --- | --- | --- |
 | [`code-style.md`](./code-style.md) | Full PHP-CS-Fixer ruleset: `@PER-CS` baseline, every project rule override, indentation/line-ending settings. | `../instructions/cs.instructions.md`, `../../AGENTS.md` |
-
+| [`testing.md`](./testing.md) | PHPUnit execution, coverage drivers and scoped reports, and filling missing test coverage. | `../instructions/test.instructions.md`, `../skills/test/SKILL.md`, `../../AGENTS.md` |

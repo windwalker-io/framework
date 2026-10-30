@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test\Storage;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Cache\Storage\ArrayStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
@@ -270,6 +271,39 @@ class ArrayStorageTest extends AbstractStorageTestCase
         self::assertTrue($this->instance->has('active'));
         self::assertTrue($this->instance->has('forever'));
         self::assertSame(0, $this->instance->prune());
+    }
+
+    #[Test]
+    public function clearOnlyRemovesEntriesFromTheCurrentGroup(): void
+    {
+        $this->instance->save('root', 'ROOT');
+        $grouped = $this->instance->withGroup('users');
+        $grouped->save('grouped', 'GROUPED');
+
+        self::assertTrue($grouped->clear());
+        self::assertNull($grouped->get('grouped'));
+        self::assertSame('ROOT', $this->instance->get('root'));
+    }
+
+    #[Test]
+    public function getMultipleReturnsExistingNonNullValues(): void
+    {
+        $this->instance->save('present', 'VALUE');
+        $this->instance->save('null', null);
+
+        self::assertSame(['present' => 'VALUE'], $this->instance->getMultiple(['present', 'null', 'missing']));
+    }
+
+    #[Test]
+    public function pruneRemovesExpiredEntriesInTheCurrentGroup(): void
+    {
+        $grouped = $this->instance->withGroup('users');
+        $grouped->save('expired', 'STALE', time() - 1);
+        $grouped->save('active', 'FRESH', time() + 60);
+
+        self::assertSame(1, $grouped->prune());
+        self::assertFalse($grouped->has('expired'));
+        self::assertTrue($grouped->has('active'));
     }
 
     public function testGetSetPruneProbability(): void

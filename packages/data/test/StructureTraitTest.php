@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Collection;
-use Windwalker\Data\StructureTrait;
+use Windwalker\Data\Format\FormatRegistry;
 
 use function Windwalker\fs;
 
@@ -18,32 +19,53 @@ use function Windwalker\fs;
 class StructureTraitTest extends TestCase
 {
     /**
-     * @var StructureTrait
-     */
-    protected $instance;
-
-    /**
      * @see  StructureTrait::withLoad
      */
+    #[Test]
     public function testWithLoad(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $collection = new Collection(['original' => true]);
+        $loaded = $collection->withLoad('{"added": true}', 'json');
+
+        self::assertNotSame($collection, $loaded);
+        self::assertSame(['original' => true], $collection->dump());
+        self::assertEquals(['original' => true, 'added' => true], $loaded->dump());
     }
 
     /**
      * @see  StructureTrait::toString
      */
+    #[Test]
     public function testToString(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $collection = new Collection(['flower' => 'sakura']);
+
+        self::assertSame('{"flower":"sakura"}', $collection->toString());
+        self::assertSame(
+            ['flower' => 'sakura'],
+            json_decode($collection->toString(), true)
+        );
     }
 
     /**
      * @see  StructureTrait::setFormatRegistry
      */
+    #[Test]
     public function testSetFormatRegistry(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $registry = new FormatRegistry;
+        $registry->registerFormat(
+            'custom',
+            static fn(string $input): array => ['value' => $input],
+            static fn(mixed $data): string => $data['value']
+        );
+        $collection = new Collection;
+
+        self::assertSame($collection, $collection->setFormatRegistry($registry));
+        $collection->load('parsed', 'custom');
+
+        self::assertSame(['value' => 'parsed'], $collection->dump());
+        self::assertSame('parsed', $collection->toString('custom'));
     }
 
     /**
@@ -51,7 +73,7 @@ class StructureTraitTest extends TestCase
      */
     public function testLoad(): void
     {
-        $collection = new Collection();
+        $collection = new Collection;
 
         $this->assertEquals(
             $collection->reset()->load(
@@ -104,7 +126,7 @@ class StructureTraitTest extends TestCase
      */
     public function testLoadFile(): void
     {
-        $collection = new Collection();
+        $collection = new Collection;
 
         $this->assertEquals(
             $collection->reset()->loadFile(
@@ -156,7 +178,7 @@ class StructureTraitTest extends TestCase
      */
     public function testLoadFileAndStream(): void
     {
-        $collection = new Collection();
+        $collection = new Collection;
 
         $this->assertEquals(
             $collection->reset()->loadFile(
@@ -178,17 +200,13 @@ class StructureTraitTest extends TestCase
     /**
      * @see  StructureTrait::getFormatRegistry
      */
+    #[Test]
     public function testGetFormatRegistry(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $collection = new Collection;
+
+        self::assertInstanceOf(FormatRegistry::class, $collection->getFormatRegistry());
+        self::assertSame($collection->getFormatRegistry(), $collection->getFormatRegistry());
     }
 
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
-    }
 }

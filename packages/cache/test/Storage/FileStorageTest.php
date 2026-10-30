@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test\Storage;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Cache\Storage\FileStorage;
+use Windwalker\Cache\Storage\FlysystemStorage;
+use Windwalker\Cache\Storage\ForeverFileStorage;
 use Windwalker\Cache\Storage\GroupedStorageInterface;
 use Windwalker\Cache\Storage\PrunableStorageInterface;
 
@@ -80,12 +83,84 @@ class FileStorageTest extends TestCase
         self::assertEquals('FOOOOOOOOOO', $value);
     }
 
+    #[Test]
+    public function getThrowsWhenTheKeyDoesNotExist(): void
+    {
+        if ($this->instance instanceof FlysystemStorage) {
+            $this->expectException(\League\Flysystem\UnableToReadFile::class);
+        } else {
+            $this->expectException(RuntimeException::class);
+        }
+
+        $this->instance->get('missing');
+    }
+
     /**
      * @see  FileStorage::fetchStreamUri
      */
     public function testFetchStreamUri(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $filename = FileStorage::hashFilename('hello') . '.data';
+        $expected = $this->instance instanceof FlysystemStorage
+            ? $filename
+            : $this->root . '/' . $filename;
+
+        self::assertSame(
+            $expected,
+            $this->instance->fetchStreamUri('hello')
+        );
+    }
+
+    #[Test]
+    public function lockIsReentrantAndCanBeReleased(): void
+    {
+        $storage = new FileStorage($this->root, [], 0.0);
+
+        self::assertFalse($storage->isLocked('hello'));
+
+        self::assertTrue($storage->lock('hello', $isNew));
+        self::assertTrue($isNew);
+        self::assertTrue($storage->isLocked('hello'));
+
+        self::assertTrue($storage->lock('hello', $isNew));
+        self::assertFalse($isNew);
+
+        self::assertTrue($storage->release('hello'));
+        self::assertFalse($storage->isLocked('hello'));
+        self::assertTrue($storage->release('hello'));
+    }
+
+    #[Test]
+    public function lockCanBeDisabled(): void
+    {
+        $storage = new FileStorage($this->root, ['lock' => false], 0.0);
+
+        self::assertTrue($storage->lock('hello', $isNew));
+        self::assertFalse($isNew);
+        self::assertTrue($storage->release('hello'));
+        self::assertFalse($storage->isLocked('hello'));
+    }
+
+    #[Test]
+    public function foreverStorageKeepsExpiredEntries(): void
+    {
+        $storage = new ForeverFileStorage($this->root, [], 0.0);
+        $storage->save('forever', 'VALUE', time() - 1);
+
+        self::assertTrue($storage->has('forever'));
+        self::assertSame('VALUE', $storage->get('forever'));
+        self::assertSame(0, $storage->prune());
+        self::assertFalse(ForeverFileStorage::isExpired(time() - 1));
+    }
+
+    #[Test]
+    public function pruneProbabilityIsClampedToValidRange(): void
+    {
+        $this->instance->setPruneProbability(2.0);
+        self::assertSame(1.0, $this->instance->getPruneProbability());
+
+        $this->instance->setPruneProbability(-1.0);
+        self::assertSame(0.0, $this->instance->getPruneProbability());
     }
 
     /**

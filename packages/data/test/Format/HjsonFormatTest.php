@@ -4,67 +4,27 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test\Format;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Data\Format\JsonFormat;
+use Windwalker\Data\Format\HjsonFormat;
 
-/**
- * Test class of JsonFormat
- *
- * @since 2.0
- */
 class HjsonFormatTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var JsonFormat
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function itDumpsAndParsesHjson(): void
     {
-        $this->instance = new JsonFormat();
+        $format = new HjsonFormat;
+        $data = ['flower' => 'sakura', 'count' => 3];
+        $hjson = $format->dump($data);
+
+        self::assertSame($data, $format->parse($hjson));
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function itParsesHjsonWithoutQuotesAroundKeys(): void
     {
-    }
+        $format = new HjsonFormat;
 
-    /**
-     * Method to test objectToString().
-     *
-     * @return void
-     */
-    public function testDump()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test stringToObject().
-     *
-     * @return void
-     */
-    public function testParse()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame(['flower' => 'sakura'], $format->parse("flower: sakura\n"));
     }
 }

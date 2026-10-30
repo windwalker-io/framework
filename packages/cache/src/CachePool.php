@@ -64,6 +64,8 @@ class CachePool implements CachePoolInterface
      * Set the logger instance.
      *
      * @param  LoggerInterface  $logger
+     *
+     * @codeCoverageIgnore
      */
     public function setLogger(LoggerInterface $logger): void
     {
@@ -745,6 +747,7 @@ class CachePool implements CachePoolInterface
      * @return  static  Return self to support chaining.
      *
      * @deprecated Use withSerializer() instead.
+     * @codeCoverageIgnore
      */
     public function setSerializer(SerializerInterface $serializer): static
     {
@@ -765,6 +768,8 @@ class CachePool implements CachePoolInterface
      * Method to get property DeferredItems
      *
      * @return  array<CacheItem>
+     *
+     * @codeCoverageIgnore
      */
     public function getDeferredItems(): array
     {

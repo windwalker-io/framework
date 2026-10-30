@@ -25,7 +25,7 @@ class CacheItem implements CacheItemInterface
     protected string $key;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected mixed $value;
 
@@ -44,7 +44,7 @@ class CacheItem implements CacheItemInterface
     public protected(set) int $ctime = 0;
 
     /**
-     * @var string[]
+     * @var  string[]
      */
     protected array $tags = [];
 
@@ -145,7 +145,7 @@ class CacheItem implements CacheItemInterface
         } catch (Throwable $e) {
             $this->logException(
                 'CacheItem::isHit() caused an error',
-                $e
+                $e,
             );
 
             return false;
@@ -155,32 +155,22 @@ class CacheItem implements CacheItemInterface
     /**
      * Sets the expiration time for this cache item.
      *
-     * @param  ?DateTimeInterface  $expiration
-     *   The point in time after which the item MUST be considered expired.
-     *   If null is passed explicitly, a default value MAY be used. If none is set,
-     *   the value should be stored permanently or for as long as the
-     *   implementation allows.
+     * @param  ?DateTimeInterface  $expiration  The point in time after which the item MUST be considered expired.
+     *                                          If null is passed explicitly, a default value MAY be used. If none is
+     *                                          set, the value should be stored permanently or for as long as the
+     *                                          implementation allows.
      *
-     * @return static
-     *   The called object.
+     * @return  static
+     *                  The called object.
      */
     public function expiresAt(?DateTimeInterface $expiration): static
     {
-        try {
-            if ($expiration instanceof DateTimeInterface) {
-                $this->expiration = $expiration;
-                $this->syncRealExpiryFromExpiration();
-            } elseif ($expiration === null) {
-                $this->expiration = new DateTime($this->defaultExpiration);
-                $this->syncRealExpiryFromExpiration();
-            } else {
-                throw new \InvalidArgumentException('Invalid DateTime format.');
-            }
-        } catch (Throwable $e) {
-            $this->logException(
-                'CacheItem::expiresAt() causes an error',
-                $e
-            );
+        if ($expiration instanceof DateTimeInterface) {
+            $this->expiration = $expiration;
+            $this->syncRealExpiryFromExpiration();
+        } elseif ($expiration === null) {
+            $this->expiration = new DateTime($this->defaultExpiration);
+            $this->syncRealExpiryFromExpiration();
         }
 
         return $this;
@@ -189,15 +179,14 @@ class CacheItem implements CacheItemInterface
     /**
      * Sets the expiration time for this cache item.
      *
-     * @param  DateInterval|int|null  $time
-     *   The period of time from the present after which the item MUST be considered
-     *   expired. An integer parameter is understood to be the time in seconds until
-     *   expiration. If null is passed explicitly, a default value MAY be used.
-     *   If none is set, the value should be stored permanently or for as long as the
-     *   implementation allows.
+     * @param  DateInterval|int|null  $time  The period of time from the present after which the item MUST be considered
+     *                                       expired. An integer parameter is understood to be the time in seconds until
+     *                                       expiration. If null is passed explicitly, a default value MAY be used.
+     *                                       If none is set, the value should be stored permanently or for as long as the
+     *                                       implementation allows.
      *
-     * @return static
-     *   The called object.
+     * @return  static
+     *                  The called object.
      */
     public function expiresAfter(DateInterval|int|null $time): static
     {
@@ -208,7 +197,9 @@ class CacheItem implements CacheItemInterface
                 $this->syncRealExpiryFromExpiration();
             } elseif (is_numeric($time)) {
                 $this->expiration = new DateTime();
-                $this->expiration->add(new DateInterval('PT' . $time . 'S'));
+                $interval = new DateInterval('PT' . abs($time) . 'S');
+                $interval->invert = $time < 0 ? 1 : 0;
+                $this->expiration->add($interval);
                 $this->syncRealExpiryFromExpiration();
             } elseif ($time === null) {
                 $this->expiration = new DateTime($this->defaultExpiration);
@@ -219,7 +210,7 @@ class CacheItem implements CacheItemInterface
         } catch (Throwable $e) {
             $this->logException(
                 'CacheItem::expiresAfter() caused an error.',
-                $e
+                $e,
             );
         }
 
@@ -279,7 +270,6 @@ class CacheItem implements CacheItemInterface
         return $this->tags;
     }
 
-
     /**
      * Set computation time metadata (milliseconds).
      */
@@ -301,7 +291,6 @@ class CacheItem implements CacheItemInterface
 
         return $this;
     }
-
 
     /**
      * Keep metadata expiry in sync with the DateTime expiration object.
@@ -334,7 +323,7 @@ class CacheItem implements CacheItemInterface
      *
      * @return  void
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     private function validateKey(string $key): void
     {
@@ -358,7 +347,7 @@ class CacheItem implements CacheItemInterface
             [
                 'exception' => $e,
                 'key' => $this->getKey(),
-            ]
+            ],
         );
     }
 }

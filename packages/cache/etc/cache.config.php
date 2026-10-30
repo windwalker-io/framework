@@ -21,7 +21,7 @@ static fn() => [
     'default' => 'global',
 
     'providers' => [
-        CachePackage::class
+        CachePackage::class,
     ],
 
     'bindings' => [
@@ -31,13 +31,13 @@ static fn() => [
     'factories' => [
         'instances' => [
             'none' => static fn(): CachePool => new CachePool(new NullStorage()),
-            'global' => static fn () => CacheFactory::cachePoolFactory('file', PhpSerializer::class),
-            'html' => static fn () => CacheFactory::cachePoolFactory('file', RawSerializer::class),
-            'db' => static fn () => CacheFactory::cachePoolFactory('db', JsonAssocSerializer::class),
+            'global' => static fn() => CacheFactory::cachePoolFactory('file', PhpSerializer::class),
+            'html' => static fn() => CacheFactory::cachePoolFactory('file', RawSerializer::class),
+            'db' => static fn() => CacheFactory::cachePoolFactory('db', JsonAssocSerializer::class),
         ],
         'storages' => [
-            'file' => static fn () => CacheFactory::fileStorage(),
-            'db' => static fn () => CacheFactory::dbStorage(),
+            'file' => static fn() => CacheFactory::fileStorage(),
+            'db' => static fn() => CacheFactory::dbStorage(),
         ],
     ],
 ];

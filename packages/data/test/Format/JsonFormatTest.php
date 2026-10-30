@@ -4,67 +4,33 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test\Format;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Format\JsonFormat;
 
-/**
- * Test class of JsonFormat
- *
- * @since 2.0
- */
 class JsonFormatTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var JsonFormat
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function itDumpsDataAndHonorsEncodingOptions(): void
     {
-        $this->instance = new JsonFormat();
-    }
+        $format = new JsonFormat;
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test objectToString().
-     *
-     * @return void
-     */
-    public function testDump()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        self::assertSame('{"name":"Sakura"}', $format->dump(['name' => 'Sakura']));
+        self::assertSame(
+            "{\n    \"name\": \"Sakura\"\n}",
+            $format->dump(['name' => 'Sakura'], ['options' => JSON_PRETTY_PRINT])
         );
     }
 
-    /**
-     * Method to test stringToObject().
-     *
-     * @return void
-     */
-    public function testParse()
+    #[Test]
+    public function itParsesAssociativeArraysAndObjects(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $format = new JsonFormat;
+
+        self::assertSame(['name' => 'Sakura'], $format->parse(' {"name":"Sakura"} '));
+        self::assertEquals(
+            (object) ['name' => 'Sakura'],
+            $format->parse('{"name":"Sakura"}', ['assoc' => false])
         );
     }
 }

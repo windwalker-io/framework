@@ -4,67 +4,35 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test\Format;
 
+use LogicException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Format\PhpFormat;
 
-/**
- * Test class of PhpFormat
- *
- * @since 2.0
- */
 class PhpFormatTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var PhpFormat
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function itDumpsArraysAndCanGenerateAReturningPhpFile(): void
     {
-        $this->instance = new PhpFormat();
-    }
+        $format = new PhpFormat;
+        $data = ['flower' => 'sakura', 'count' => 2];
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test objectToString().
-     *
-     * @return void
-     */
-    public function testDump()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        self::assertSame(
+            "[\n    'flower' => 'sakura',\n    'count' => 2\n]",
+            $format->dump($data)
+        );
+        self::assertSame(
+            "<?php\n\ndeclare(strict_types=1);\n\nreturn [\n    'flower' => 'sakura',\n    'count' => 2\n];\n",
+            $format->dump($data, ['return' => true])
         );
     }
 
-    /**
-     * Method to test stringToObject().
-     *
-     * @return void
-     */
-    public function testParse()
+    #[Test]
+    public function parsingIsNotSupported(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageIs('Currently does not support parse php array.');
+
+        new PhpFormat()->parse('return [];');
     }
 }

@@ -14,6 +14,16 @@ over conventional hooks (`setUp()`, `tearDown()`, etc.). Import from `PHPUnit\Fr
 method names, `void` returns, and static methods for class-level hooks. Avoid empty hooks and preserve inherited
 parent/trait behavior and execution order when migrating.
 
+## Use coverage to find missing tests
+
+When the user asks to add missing tests, use code coverage when a coverage driver is available to identify
+uncovered lines and branches in the requested scope. Add meaningful behavior assertions for those gaps, including
+edge cases and error paths, then rerun the same coverage scope to check the improvement. Do not chase percentages
+with assertion-free tests or new coverage exclusions; preserve the logic-free getter/setter exception below.
+If coverage cannot run, report the limitation rather than claiming the gaps are covered.
+
+See [Testing and Coverage](../docs/testing.md) for test selectors, driver setup, report commands, and scope caveats.
+
 ## Exclude logic-free getters/setters from code coverage and tests
 
 Do not write separate tests solely to exercise pure getters/setters (only return or assign a property, optionally

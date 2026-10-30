@@ -48,7 +48,6 @@ class CacheLock
         __DIR__ . DIRECTORY_SEPARATOR . 'Exception' . DIRECTORY_SEPARATOR . 'InvalidArgumentException.php',
     ];
 
-
     public static function lock(string $key, ?bool &$isNew = null): bool
     {
         $logger = static::$logger;
@@ -113,10 +112,13 @@ class CacheLock
             if (!$acquired && $wouldBlock) {
                 // Timeout expired and lock is still held by another process
                 $isNew = false;
-                $logger?->warning('Cache lock: Failed to acquire lock within timeout', [
-                    'key' => $key,
-                    'timeout' => static::$timeout,
-                ]);
+                $logger?->warning(
+                    'Cache lock: Failed to acquire lock within timeout',
+                    [
+                        'key' => $key,
+                        'timeout' => static::$timeout,
+                    ]
+                );
 
                 return false;
             }
@@ -228,6 +230,7 @@ class CacheLock
         }
 
         set_error_handler(static fn() => null);
+
         try {
             // Try read-write first so LOCK_EX works on all platforms;
             // fall back to read-only (advisory LOCK_EX still works on POSIX).

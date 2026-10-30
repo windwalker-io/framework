@@ -4,67 +4,38 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test\Format;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Format\IniFormat;
 
-/**
- * Test class of IniFormat
- *
- * @since 2.0
- */
 class IniFormatTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var IniFormat
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function itDumpsGlobalValuesAndSections(): void
     {
-        $this->instance = new IniFormat();
-    }
+        $format = new IniFormat;
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test objectToString().
-     *
-     * @return void
-     */
-    public function testDump()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        self::assertSame(
+            "title=\"Sakura\"\nenabled=true\n\n[meta]\ndescription=\"spring\"",
+            $format->dump([
+                'title' => 'Sakura',
+                'enabled' => true,
+                'meta' => ['description' => 'spring']
+            ])
         );
     }
 
-    /**
-     * Method to test stringToObject().
-     *
-     * @return void
-     */
-    public function testParse()
+    #[Test]
+    public function itParsesSectionValuesWithTypedScanning(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $format = new IniFormat;
+
+        self::assertSame(
+            ['enabled' => true, 'meta' => ['count' => 3]],
+            $format->parse(
+                "enabled=true\n[meta]\ncount=3",
+                ['process_section' => true, 'mode' => INI_SCANNER_TYPED]
+            )
         );
     }
 }

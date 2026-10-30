@@ -8,6 +8,20 @@ These rules are enforced by `.php-cs-fixer.dist.php` (`@PER-CS` ruleset plus pro
 `composer cs-check` to verify and `composer cs-fix` to auto-fix. For the full rule set and rationale, see
 `/.github/docs/code-style.md`.
 
+## Running PHP-CS-Fixer
+
+Run from the repository root. Prefer limiting checks/fixes to the changed PHP files so unrelated work is untouched:
+
+```bash
+composer cs-check -- --path-mode=intersection packages/cache/src/CachePool.php
+composer cs-fix -- --path-mode=intersection packages/cache/src/CachePool.php
+```
+
+Pass multiple file paths when needed. `--path-mode=intersection` preserves the configured Finder exclusions.
+Run the check again after fixing and review the diff. Bare `composer cs-check` / `composer cs-fix` scan the whole
+configured tree; use them only when that scope is intended. See the [fixer guide](../docs/code-style.md#running-the-fixer)
+for prerequisites and direct CLI equivalents.
+
 ## Use New without parentheses in PHP 8.4
 
 Bad
@@ -157,4 +171,3 @@ Good
 if ($value === null) {
 }
 ```
-

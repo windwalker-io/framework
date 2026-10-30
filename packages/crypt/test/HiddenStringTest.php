@@ -6,6 +6,7 @@ namespace Windwalker\Crypt\Test;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Windwalker\Crypt\HiddenString;
@@ -13,6 +14,19 @@ use Windwalker\Crypt\Key;
 
 class HiddenStringTest extends TestCase
 {
+    #[Test]
+    public function wrapStripAndStringConversionPreserveTheSecret(): void
+    {
+        $secret = HiddenString::wrap('wrapped-secret', false);
+
+        self::assertSame($secret, HiddenString::wrap($secret));
+        self::assertSame('wrapped-secret', $secret->get());
+        self::assertSame('wrapped-secret', $secret->get(true));
+        self::assertSame('wrapped-secret', HiddenString::strip($secret));
+        self::assertSame('plain-value', HiddenString::strip('plain-value'));
+        self::assertSame('wrapped-secret', (string) $secret);
+    }
+
     public static function secretClasses(): array
     {
         return [

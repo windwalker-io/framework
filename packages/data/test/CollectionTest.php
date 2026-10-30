@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Data\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Data\Collection;
 
 use function Windwalker\collect;
+
+use Windwalker\Data\Collection;
 
 /**
  * The CollectionTest class.
@@ -17,16 +19,19 @@ use function Windwalker\collect;
 class CollectionTest extends TestCase
 {
     /**
-     * @var Collection
+     * @var  Collection
      */
     protected $instance;
 
     /**
      * @see  Collection::hasDeep
      */
+    #[Test]
     public function testHasDeep(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertTrue($this->instance->hasDeep('foo.bar.goo'));
+        self::assertFalse($this->instance->hasDeep('foo.bar.missing'));
+        self::assertTrue($this->instance->hasDeep('foo/bar/goo', '/'));
     }
 
     /**
@@ -54,10 +59,10 @@ class CollectionTest extends TestCase
         self::assertEquals($extracted->getDeep('foo.bar.goo'), $new->getDeep('foo.bar.goo'));
 
         // Extract to non-array
-        $this->expectExceptionMessage(
+        $this->expectExceptionMessageIsOrContains(
             sprintf(
-                'Method: %s::extract() extract to sub element should be array, object or NULL,' .
-                ' got string(4) "Hola".',
+                'Method: %s::extract() extract to sub element should be array, object or NULL,'
+                . ' got string(4) "Hola".',
                 Collection::class
             )
         );
@@ -105,7 +110,7 @@ class CollectionTest extends TestCase
         );
 
         // Extract to non-array
-        $this->expectExceptionMessage(
+        $this->expectExceptionMessageIsOrContains(
             sprintf(
                 'Method: %s::extract() Proxy to sub element should be array, got string(4) "Hola"',
                 Collection::class
@@ -138,25 +143,50 @@ class CollectionTest extends TestCase
     /**
      * @see  Collection::removeDeep
      */
+    #[Test]
     public function testRemoveDeep(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $result = $this->instance->removeDeep('foo.bar.goo');
+
+        self::assertSame($this->instance, $result);
+        self::assertFalse($this->instance->hasDeep('foo.bar.goo'));
+        self::assertTrue($this->instance->hasDeep('foo.bar.yoo'));
+
+        $copy = $this->instance->withRemoveDeep('foo.bar.yoo.uid');
+
+        self::assertTrue($this->instance->hasDeep('foo.bar.yoo.uid'));
+        self::assertFalse($copy->hasDeep('foo.bar.yoo.uid'));
     }
 
     /**
      * @see  Collection::getDeep
      */
+    #[Test]
     public function testGetDeep(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame('Hello', $this->instance->getDeep('foo.bar.goo'));
+
+        $value = &$this->instance->getDeep('foo.bar.goo');
+        $value = 'Updated';
+
+        self::assertSame('Updated', $this->instance->getDeep('foo.bar.goo'));
     }
 
     /**
      * @see  Collection::setDeep
      */
+    #[Test]
     public function testSetDeep(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $result = $this->instance->setDeep('foo.bar.new.value', 42);
+
+        self::assertSame($this->instance, $result);
+        self::assertSame(42, $this->instance->getDeep('foo.bar.new.value'));
+
+        $copy = $this->instance->withDeep('foo.bar.goo', 'Updated');
+
+        self::assertSame('Hello', $this->instance->getDeep('foo.bar.goo'));
+        self::assertSame('Updated', $copy->getDeep('foo.bar.goo'));
     }
 
     protected function setUp(): void
@@ -189,7 +219,5 @@ class CollectionTest extends TestCase
         );
     }
 
-    protected function tearDown(): void
-    {
-    }
+    protected function tearDown(): void {}
 }

@@ -32,17 +32,24 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
 6. Run the smallest selector from the repository root:
 
    ```bash
-   # Single test class or method
-   php vendor/bin/phpunit --filter ClassOrMethodName
+   # Single test file, optionally narrowed to a method
+   php vendor/bin/phpunit packages/{name}/test/ExampleTest.php --filter methodName
 
-   # One package's full suite (uses the package's own phpunit.xml.dist)
-   php vendor/bin/phpunit --configuration packages/{name}/phpunit.xml.dist
+   # One package's full suite, using the root configuration and autoloader
+   php vendor/bin/phpunit packages/{name}/test
 
-   # Whole monorepo (edit phpunit.xml to enable the suites/constants you need first)
+   # All suites enabled by the root configuration
    php vendor/bin/phpunit
    ```
 
+   PHPUnit loads root `phpunit.xml`, falling back to `phpunit.xml.dist`. Do not assume a package's standalone
+   configuration works in the monorepo: check its bootstrap path and PHPUnit compatibility first.
    HTTP-related tests may need the bundled test server first: `php -S localhost:8000 bin/test-server.php`.
 7. Inspect failures, fix the root cause or fixture, and rerun the selector. Do not claim success if a required
    database or external service was not actually configured/running.
-
+8. When asked to add missing tests, collect baseline coverage for the requested source scope, inspect uncovered
+   lines/branches, and cover meaningful missing behavior, edge cases, and error paths. Rerun the same selector and
+   source scope after adding tests; inspect the target files rather than relying only on an aggregate percentage.
+   Follow the logic-free getter/setter exclusion rule in [Test Rules](../../instructions/test.instructions.md).
+   See [Testing and Coverage](../../docs/testing.md) for executable commands, coverage drivers, and configuration
+   caveats. If the driver is unavailable or tests are skipped, state the limitation explicitly.

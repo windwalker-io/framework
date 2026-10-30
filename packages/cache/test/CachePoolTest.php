@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Windwalker\Cache\CacheItem;
 use Windwalker\Cache\CachePool;
 use Windwalker\Cache\Exception\RuntimeException;
@@ -329,6 +331,83 @@ class CachePoolTest extends TestCase
         $this->instance->clear();
 
         self::assertEmpty($storage->getData());
+    }
+
+    #[Test]
+    public function clearReturnsFalseWhenStorageThrows(): void
+    {
+        $storage = $this->createMock(StorageInterface::class);
+        $storage->expects($this->once())
+            ->method('clear')
+            ->willThrowException(new RuntimeException('clear failed'));
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('critical')
+            ->with('Clearing cache pool caused exception.', self::arrayHasKey('exception'));
+
+        $pool = new CachePool($storage);
+        $poolWithLogger = $pool->withLogger($logger);
+
+        self::assertNotSame($pool, $poolWithLogger);
+        self::assertFalse($poolWithLogger->clear());
+    }
+
+    #[Test]
+    public function touchUpdatesExpirationForNonTouchableStorage(): void
+    {
+        $storage = new ArrayStorage(0.0);
+        $pool = new CachePool($storage);
+        $pool->set('active', 'VALUE', 3600);
+
+        $before = time();
+        self::assertTrue($pool->touch('active', 120, false));
+        self::assertGreaterThanOrEqual($before + 120, $storage->getData()['active'][0]);
+        self::assertSame('VALUE', $pool->get('active'));
+
+        self::assertFalse($pool->touch('missing', 120, false));
+        self::assertTrue($pool->touch('active', -1, false));
+        self::assertFalse($pool->has('active'));
+    }
+
+    #[Test]
+    public function shouldRecomputeEarlyHandlesDisabledAndExpiredItems(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+        $item = CacheItem::create('expired')->set('STALE')->expiresAt(new \DateTimeImmutable('@1'));
+
+        self::assertFalse($this->invoke($pool, 'shouldRecomputeEarly', $item, 0.0));
+        self::assertTrue($this->invoke($pool, 'shouldRecomputeEarly', $item, 1.0));
+
+        $item->setRealExpiry(0);
+        self::assertTrue($this->invoke($pool, 'shouldRecomputeEarly', $item, 1.0));
+        self::assertTrue($this->invoke($pool, 'shouldRecomputeEarly', $item, INF));
+    }
+
+    #[Test]
+    public function toTaggedPoolPreservesStorageSerializerAndDefaultTtl(): void
+    {
+        $storage = new ArrayStorage(0.0);
+        $serializer = new RawSerializer;
+        $pool = new CachePool($storage, $serializer, defaultTtl: 120);
+
+        $taggedPool = $pool->toTaggedPool(null);
+
+        self::assertSame($storage, $taggedPool->getStorage());
+        self::assertSame($serializer, $taggedPool->getSerializer());
+        self::assertSame(120, $taggedPool->getDefaultTtl());
+    }
+
+    #[Test]
+    public function saveDeletesAnAlreadyExpiredItem(): void
+    {
+        $storage = new ArrayStorage(0.0);
+        $storage->save('expired', 'STALE', time() - 10);
+        $pool = new CachePool($storage);
+        $item = CacheItem::create('expired')->set('STALE')->expiresAt(new \DateTimeImmutable('@1'));
+
+        self::assertFalse($pool->save($item));
+        self::assertFalse($item->isHit());
+        self::assertFalse($storage->has('expired'));
     }
 
     /**
@@ -917,10 +996,6 @@ class CachePoolTest extends TestCase
     protected function setUp(): void
     {
         $this->instance = new CachePool();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     private static function isItemMetadataKey(string $key): bool

@@ -56,19 +56,23 @@ All source files begin with `declare(strict_types=1);`.
 ### Running Tests
 
 ```bash
-# All enabled tests (edit phpunit.xml to uncomment suites)
+# All suites enabled by the root configuration
 php vendor/bin/phpunit
 
-# Single package suite
-php vendor/bin/phpunit --configuration packages/orm/phpunit.xml.dist
+# Single package suite using the root configuration/autoloader
+php vendor/bin/phpunit packages/orm/test
 
 # Database/HTTP tests require setup first:
 php -S localhost:8000 bin/test-server.php   # HTTP test server
 # Set WINDWALKER_TEST_DB_DSN_MYSQL in phpunit.xml
 ```
 
-The root `phpunit.xml` is copied from `phpunit.xml.dist` and can be edited to enable/disable test suites. Each package
-also has its own `phpunit.xml.dist` for package-specific configuration (e.g. database DSN).
+PHPUnit loads the root `phpunit.xml`, falling back to `phpunit.xml.dist`. Create the local copy only if it does not
+already exist, and adjust test suites/service settings there. Package-level configs may expect standalone installs
+or older PHPUnit versions; prefer root configuration with an explicit test path in this monorepo.
+
+See [Testing and Coverage](.github/docs/testing.md) for driver setup, coverage reports, and identifying missing tests,
+and [Running the fixer](.github/docs/code-style.md#running-the-fixer) for scoped PHP-CS-Fixer commands.
 
 ### Test Base Classes
 
