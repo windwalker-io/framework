@@ -492,11 +492,6 @@ class AttributesResolver extends ObjectBuilder
         //
     }
 
-    protected static function normalizeClassName(string $className): string
-    {
-        return strtolower(trim($className, '\\'));
-    }
-
     /**
      * @return  callable
      *

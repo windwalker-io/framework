@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-	bootstrap="vendor/autoload.php"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	>
-	<php>
-		<ini name="error_reporting" value="-1" />
-	</php>
-
-	<testsuites>
-		<testsuite name="Unit">
-			<directory>test</directory>
-		</testsuite>
-	</testsuites>
+<phpunit bootstrap="vendor/autoload.php" cacheDirectory=".phpunit.cache">
+  <php>
+    <ini name="error_reporting" value="-1"/>
+  </php>
+  <testsuites>
+    <testsuite name="Unit">
+      <directory>test</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

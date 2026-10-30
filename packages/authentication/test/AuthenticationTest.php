@@ -4,145 +4,98 @@ declare(strict_types=1);
 
 namespace Windwalker\Authentication\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Authentication\Authentication;
 use Windwalker\Authentication\AuthResult;
-use Windwalker\Authentication\Credential;
-use Windwalker\Authentication\Method\ArrayMethod;
-use Windwalker\Authentication\Test\Mock\MockMethod;
+use Windwalker\Authentication\Method\MethodInterface;
 
-/**
- * Test class of Authentication
- *
- * @since 2.0
- */
 class AuthenticationTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var Authentication
-     */
-    protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Test]
+    public function authenticateReturnsFailureWhenNoMethodsAreRegistered(): void
     {
-        $this->instance = new Authentication();
+        $results = new Authentication()->authenticate(['username' => 'user', 'password' => 'secret']);
+
+        self::assertTrue($results->isFailure());
+        self::assertCount(0, $results);
+        self::assertNull($results->getMatchedMethod());
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function authenticateStopsAfterTheFirstSuccessfulMethod(): void
     {
+        $credential = ['username' => 'user', 'password' => 'secret'];
+
+        $firstMethod = $this->createMock(MethodInterface::class);
+        $firstMethod
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with($credential)
+            ->willReturn(new AuthResult(AuthResult::SUCCESS, $credential));
+
+        $laterMethod = $this->createMock(MethodInterface::class);
+        $laterMethod->expects($this->never())->method('authenticate');
+
+        $results = new Authentication([
+            'first' => $firstMethod,
+            'later' => $laterMethod
+        ])->authenticate($credential);
+
+        self::assertTrue($results->isSuccess());
+        self::assertSame('first', $results->getMatchedMethod());
+        self::assertCount(1, $results);
+        self::assertSame(AuthResult::SUCCESS, $results->getMatchedResult()->getStatus());
     }
 
-    /**
-     * Method to test authenticate().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Authentication\Authentication::authenticate
-     */
-    public function testAuthenticate()
+    #[Test]
+    public function authenticateTriesEveryMethodWhenAllMethodsFail(): void
     {
-        $credential = ['username' => 'flower', 'password' => '1234'];
+        $credential = ['username' => 'user', 'password' => 'wrong'];
+        $firstResult = new AuthResult(AuthResult::INVALID_CREDENTIAL, $credential);
+        $secondResult = new AuthResult(AuthResult::USER_NOT_FOUND, $credential);
 
-        $result = $this->instance->authenticate($credential);
+        $firstMethod = $this->createMock(MethodInterface::class);
+        $firstMethod
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with($credential)
+            ->willReturn($firstResult);
 
-        // Test if no method
-        self::assertFalse($result->isSuccess());
+        $secondMethod = $this->createMock(MethodInterface::class);
+        $secondMethod
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with($credential)
+            ->willReturn($secondResult);
 
-        // Test for MockMethod
-        $this->instance->addMethod('mock', new MockMethod());
+        $results = new Authentication([
+            'first' => $firstMethod,
+            'second' => $secondMethod
+        ])->authenticate($credential);
 
-        $result = $this->instance->authenticate($credential);
-
-        // Test success
-        self::assertTrue($result->isSuccess());
-
-        self::assertEquals('mock', $result->getMatchedMethod());
-
-        // Test invalid
-        $credential['password'] = '4321';
-
-        $result = $this->instance->authenticate($credential);
-
-        self::assertFalse($result->isSuccess());
-
-        $r = $result->getResults()['mock'];
-
-        self::assertEquals(AuthResult::INVALID_CREDENTIAL, $r->getStatus());
-
-        // Test No user
-        $credential['username'] = 'sakura';
-
-        $result = $this->instance->authenticate($credential);
-
-        self::assertFalse($result->isSuccess());
-
-        self::assertEquals(AuthResult::USER_NOT_FOUND, $result->getResults()['mock']->getStatus());
-    }
-
-    /**
-     * Method to test addMethod().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Authentication\Authentication::addMethod
-     */
-    public function testAddAndGetMethod()
-    {
-        $this->instance->addMethod('flower', new MockMethod());
-
-        self::assertInstanceOf(MockMethod::class, $this->instance->getMethod('flower'));
-    }
-
-    /**
-     * Method to test removeMethod().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Authentication\Authentication::removeMethod
-     */
-    public function testRemoveMethod()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getResults().
-     *
-     * @return void
-     */
-    public function testGetResults()
-    {
-        $this->instance->addMethod('a', new ArrayMethod());
-        $this->instance->addMethod('b', new MockMethod());
-
-        $credential = ['username' => 'flower', 'password' => '1234'];
-
-        $result = $this->instance->authenticate($credential);
-        $result = array_map(fn(AuthResult $r) => $r->getStatus(), $result->getResults());
-
-        self::assertEquals(
+        self::assertTrue($results->isFailure());
+        self::assertNull($results->getMatchedMethod());
+        self::assertSame(
             [
-                'a' => AuthResult::USER_NOT_FOUND,
-                'b' => AuthResult::SUCCESS,
+                'first' => $firstResult,
+                'second' => $secondResult
             ],
-            $result
+            $results->getResults()
         );
+    }
+
+    #[Test]
+    public function addGetAndRemoveMethods(): void
+    {
+        $authentication = new Authentication;
+        $method = $this->createStub(MethodInterface::class);
+
+        self::assertSame($authentication, $authentication->addMethod('local', $method));
+        self::assertSame($method, $authentication->getMethod('local'));
+        self::assertNull($authentication->getMethod('missing'));
+
+        self::assertSame($authentication, $authentication->removeMethod('local'));
+        self::assertNull($authentication->getMethod('local'));
     }
 }

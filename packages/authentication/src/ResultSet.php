@@ -77,7 +77,11 @@ class ResultSet implements IteratorAggregate, Countable
 
     public function first(): ?AuthResult
     {
-        return $this->results[array_key_first($this->results)] ?? null;
+        if ($this->results === []) {
+            return null;
+        }
+
+        return $this->results[array_key_first($this->results)];
     }
 
     /**
