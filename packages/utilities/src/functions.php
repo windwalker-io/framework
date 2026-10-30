@@ -456,10 +456,21 @@ namespace Windwalker {
     }
 
     if (!function_exists('\Windwalker\clamp')) {
+        /**
+         * @deprecated  Use native `clamp()` instead. (PHP 8.6+)
+         */
         function clamp(int|float $value, int|float|null $min, int|float|null $max): int|float
         {
-            if (function_exists('clamp')) {
-                return \clamp($value, $min, $max);
+            if ($min === null && $max === null) {
+                return $value;
+            }
+
+            if ($min === null) {
+                return min($value, $max);
+            }
+
+            if ($max === null) {
+                return max($value, $min);
             }
 
             if (\is_float($min) && is_nan($min)) {

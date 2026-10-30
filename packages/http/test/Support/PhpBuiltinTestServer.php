@@ -23,8 +23,7 @@ final class PhpBuiltinTestServer
         private readonly string $healthPath = '/__health',
         private readonly float $startupTimeoutSeconds = 5.0,
         private readonly float $shutdownTimeoutSeconds = 2.0,
-    ) {
-    }
+    ) {}
 
     public static function create(
         string $documentRoot,

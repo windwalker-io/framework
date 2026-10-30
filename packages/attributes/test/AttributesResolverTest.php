@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Windwalker\Attributes\Test;
 
 use Attribute;
+use LogicException;
+use ReflectionFunction;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Attributes\AttributesResolver;
 use Windwalker\Attributes\AttributeType;
 use Windwalker\Attributes\Test\Stub\Attrs\PropWrap;
 use Windwalker\Attributes\Test\Stub\Attrs\StrUpper;
 use Windwalker\Attributes\Test\Stub\Attrs\StubMemberResolver;
+use Windwalker\Attributes\Test\Stub\Attrs\StubNotInvokable;
 use Windwalker\Attributes\Test\Stub\Attrs\StubWrapper;
 use Windwalker\Attributes\Test\Stub\Attrs\ValueImplode;
 use Windwalker\Attributes\Test\Stub\StubAccessible;
@@ -243,6 +246,113 @@ EOT,
         self::assertEquals(
             'BAR',
             $obj->getFoo()->toUpperCase()->__toString()
+        );
+    }
+
+    public function testResolveObjectDecorateWithReflectionFunction(): void
+    {
+        $closure = fn() => 'foo';
+
+        $handler = $this->instance->resolveObjectDecorate(new ReflectionFunction($closure));
+
+        self::assertSame($closure, $handler());
+    }
+
+    public function testCallWithInvokeHandler(): void
+    {
+        $context = new class {
+        };
+
+        $this->instance->setInvokeHandler(
+            fn(callable $callable, array $args, ?object $ctx) => [$callable(...$args), $ctx]
+        );
+
+        $r = $this->instance->call(fn(string $a) => strtoupper($a), ['a' => 'foo'], $context);
+
+        self::assertSame(['FOO', $context], $r);
+    }
+
+    public function testCallWithContext(): void
+    {
+        $context = new class {
+            protected string $name = 'sakura';
+        };
+
+        $closure = function () {
+            return $this->name;
+        };
+
+        self::assertSame('sakura', $this->instance->call($closure, [], $context));
+    }
+
+    public function testResolveCallArguments(): void
+    {
+        $args = $this->instance->resolveCallArguments(
+            fn(string $a, string $b = 'def') => $a . $b,
+            ['x']
+        );
+
+        self::assertSame(['a' => 'x', 'b' => 'def'], $args);
+    }
+
+    public function testResolveCallArgumentsWithVariadic(): void
+    {
+        $args = $this->instance->resolveCallArguments(
+            fn(...$items) => $items,
+            ['x', 'y']
+        );
+
+        self::assertSame(['x', 'y'], $args);
+
+        $args = $this->instance->resolveCallArguments(
+            fn(string $a, ...$items) => [$a, $items],
+            ['x', 'y', 'z']
+        );
+
+        self::assertSame(['x', 'y', 'z'], $args);
+
+        $r = $this->instance->call(fn(string $a, ...$items) => [$a, $items], ['x', 'y', 'z']);
+
+        self::assertSame(['x', ['y', 'z']], $r);
+    }
+
+    public function testResolveObjectMembersSkipNoAttributes(): void
+    {
+        $this->instance->registerAttribute(StubMemberResolver::class);
+
+        $foo = new class {
+            public const PLAIN = 'plain';
+
+            public array $output = [];
+
+            public function plain(): void
+            {
+            }
+
+            #[StubMemberResolver]
+            public function hello(): string
+            {
+                return '';
+            }
+        };
+
+        $foo = $this->instance->resolveObjectMembers($foo);
+
+        self::assertSame(['ReflectionMethod = hello'], $foo->output);
+    }
+
+    public function testRunNotInvokableAttribute(): void
+    {
+        $this->instance->registerAttribute(StubNotInvokable::class, Attribute::TARGET_CLASS);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('is not invokable');
+
+        $this->instance->decorateObject(
+            new
+            #[StubNotInvokable]
+            class {
+            }
         );
     }
 

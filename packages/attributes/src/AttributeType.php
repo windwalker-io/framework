@@ -11,19 +11,19 @@ use Attribute;
  */
 abstract class AttributeType
 {
-    public const CLASSES = Attribute::TARGET_CLASS;
+    public const int CLASSES = Attribute::TARGET_CLASS;
 
-    public const FUNCTIONS = Attribute::TARGET_FUNCTION;
+    public const int FUNCTIONS = Attribute::TARGET_FUNCTION;
 
-    public const METHODS = Attribute::TARGET_METHOD;
+    public const int METHODS = Attribute::TARGET_METHOD;
 
-    public const PROPERTIES = Attribute::TARGET_PROPERTY;
+    public const int PROPERTIES = Attribute::TARGET_PROPERTY;
 
-    public const CLASS_CONSTANTS = Attribute::TARGET_CLASS_CONSTANT;
+    public const int CLASS_CONSTANTS = Attribute::TARGET_CLASS_CONSTANT;
 
-    public const PARAMETERS = Attribute::TARGET_PARAMETER;
+    public const int PARAMETERS = Attribute::TARGET_PARAMETER;
 
-    public const CALLABLE = 1 << 6;
+    public const int CALLABLE = 1 << 6;
 
-    public const ALL = (1 << 7) - 1;
+    public const int ALL = (1 << 7) - 1;
 }

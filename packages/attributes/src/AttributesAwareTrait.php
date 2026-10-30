@@ -13,10 +13,12 @@ trait AttributesAwareTrait
 
     /**
      * @return  AttributesResolver
+     *
+     * @codeCoverageIgnore
      */
     public function getAttributesResolver(): AttributesResolver
     {
-        return $this->attributeResolver ??= new AttributesResolver;
+        return $this->attributeResolver ??= new AttributesResolver();
     }
 
     /**
@@ -25,6 +27,8 @@ trait AttributesAwareTrait
      * @param  AttributesResolver  $attributesResolver
      *
      * @return  static
+     *
+     * @codeCoverageIgnore
      */
     public function setAttributesResolver(AttributesResolver $attributesResolver): static
     {

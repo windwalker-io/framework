@@ -38,16 +38,10 @@
 		</testsuite>
 	</testsuites>
 
-<!-- Code Coverage -->
-<!--    <filter>-->
-<!--        <whitelist processUncoveredFilesFromWhitelist="true">-->
-<!--            <directory suffix=".php">packages</directory>-->
-<!--            <exclude>-->
-<!--                <directory suffix=".php">packages/*/test</directory>-->
-<!--                <directory suffix=".php">packages/*/.ide</directory>-->
-<!--                <directory suffix=".php">packages/*/resources</directory>-->
-<!--                <file suffix=".php">packages/utilities/src/weak_reference.php</file>-->
-<!--            </exclude>-->
-<!--        </whitelist>-->
-<!--    </filter>-->
+    <!-- Code Coverage -->
+    <source>
+        <include>
+            <directory suffix=".php">packages/*/src</directory>
+        </include>
+    </source>
 </phpunit>

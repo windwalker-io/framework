@@ -240,6 +240,29 @@ class PhpBridgeTest extends TestCase
         );
     }
 
+    public function testSetStorageAndUnsetWithSuperGlobal(): void
+    {
+        $this->createInstance(
+            [
+                PhpBridge::OPTION_WITH_SUPER_GLOBAL => true,
+            ]
+        );
+
+        $this->instance->setId(static::$sess1);
+        $this->instance->start();
+
+        $this->instance->setStorage(['foo' => 'bar']);
+
+        self::assertSame(
+            ['foo' => 'bar'],
+            $_SESSION,
+        );
+
+        $this->instance->unset();
+
+        self::assertSame([], $_SESSION);
+    }
+
     /**
      * @see  PhpBridge::setId
      */

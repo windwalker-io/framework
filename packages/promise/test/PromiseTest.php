@@ -332,7 +332,7 @@ class PromiseTest extends AbstractPromiseTestCase
 
             $promise = $deferred->promise();
 
-            $deferred->reject('Hello');
+            $deferred->reject(new \RuntimeException('Hello'));
 
             return $promise;
         };

@@ -210,16 +210,20 @@ class AttributesResolver extends ObjectBuilder
 
                 $trailing = [];
 
-                foreach ($args as $key => $v) {
-                    if (is_numeric($key)) {
-                        $trailing[] = &$args[$key];
+                foreach ($args as $argKey => $v) {
+                    if (is_int($argKey)) {
+                        $trailing[] = &$args[$argKey];
                     }
 
                     unset($v);
                 }
 
                 $trailing = array_slice($trailing, $i);
-                $newArgs  = [...$newArgs, ...$trailing];
+
+                // Named arguments cannot be followed by positional ones when unpacking.
+                $newArgs = [...array_values($newArgs), ...$trailing];
+
+                continue;
             } elseif (array_key_exists($parameter->getName(), $args)) {
                 $newArgs[$key] = &$args[$parameter->getName()];
             } elseif (array_key_exists($i, $args)) {
@@ -495,6 +499,8 @@ class AttributesResolver extends ObjectBuilder
 
     /**
      * @return  callable
+     *
+     * @codeCoverageIgnore
      */
     public function getInvokeHandler(): callable
     {
@@ -505,6 +511,8 @@ class AttributesResolver extends ObjectBuilder
      * @param  callable  $invokeHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setInvokeHandler(callable $invokeHandler): static
     {

@@ -295,6 +295,10 @@ class PhpBridge implements BridgeInterface
     {
         $this->storage = $storage;
 
+        if ($this->getOption(static::OPTION_WITH_SUPER_GLOBAL)) {
+            $_SESSION = &$this->storage;
+        }
+
         return $this;
     }
 
@@ -342,7 +346,7 @@ class PhpBridge implements BridgeInterface
         $this->storage = [];
 
         if ($this->getOption(static::OPTION_WITH_SUPER_GLOBAL)) {
-            unset($_SESSION);
+            $_SESSION = &$this->storage;
         }
 
         return true;

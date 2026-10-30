@@ -50,6 +50,9 @@ class AttributeHandler
         // }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function set(callable $handler): static
     {
         $this->handler = $handler;
@@ -57,6 +60,9 @@ class AttributeHandler
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function get(): callable
     {
         return $this->handler;
@@ -64,6 +70,8 @@ class AttributeHandler
 
     /**
      * @return  Reflector
+     *
+     * @codeCoverageIgnore
      */
     public function getReflector(): Reflector
     {
@@ -72,6 +80,8 @@ class AttributeHandler
 
     /**
      * @return  AttributesResolver
+     *
+     * @codeCoverageIgnore
      */
     public function getResolver(): AttributesResolver
     {
@@ -80,6 +90,8 @@ class AttributeHandler
 
     /**
      * @return  mixed
+     *
+     * @codeCoverageIgnore
      */
     public function getObject(): mixed
     {
@@ -88,6 +100,8 @@ class AttributeHandler
 
     /**
      * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function &getOptions(): array
     {
@@ -98,6 +112,8 @@ class AttributeHandler
      * @param  array  $options
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptions(array $options): static
     {
