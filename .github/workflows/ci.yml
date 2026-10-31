@@ -24,6 +24,23 @@ jobs:
         ports:
           - 6379/tcp
         options: --entrypoint redis-server
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: 'Y'
+          MSSQL_SA_PASSWORD: 'Ut1234!pass'
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $MSSQL_SA_PASSWORD -Q 'SELECT 1' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 30s
+      sqs:
+        image: softwaremill/elasticmq-native:1.6.11
+        ports:
+          - 9324:9324
     steps:
       - uses: actions/checkout@v2
       # Memcached
@@ -45,7 +62,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: |
-            mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, mysqli,
+            mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlsrv, mysqli,
             php-memcached, redis, sqlite3, swoole
           coverage: none
 #          tools: php-cs-fixer, phpunit

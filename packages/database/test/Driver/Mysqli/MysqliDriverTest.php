@@ -51,7 +51,7 @@ class MysqliDriverTest extends AbstractDriverTestCase
     #[Test]
     public function transactionCommit(): void
     {
-        static::$driver->execute('CREATE TEMPORARY TABLE IF NOT EXISTS tmp_tran (id INT)');
+        static::$driver->execute('CREATE TEMPORARY TABLE IF NOT EXISTS tmp_tran (id INT PRIMARY KEY)');
         static::$driver->transactionStart();
         static::$driver->execute('INSERT INTO tmp_tran (id) VALUES (1)');
         self::assertTrue(static::$driver->transactionCommit());
@@ -65,7 +65,7 @@ class MysqliDriverTest extends AbstractDriverTestCase
     {
         $driver = static::$driver;
         $driver->execute('DROP TABLE IF EXISTS ww_tran_test');
-        $driver->execute('CREATE TABLE ww_tran_test (id INT) ENGINE=InnoDB');
+        $driver->execute('CREATE TABLE ww_tran_test (id INT PRIMARY KEY) ENGINE=InnoDB');
 
         try {
             $driver->transactionStart();

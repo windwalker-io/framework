@@ -11,10 +11,11 @@ use Throwable;
 use Windwalker\Queue\Driver\SqsQueueDriver;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Queue\Test\Stub\TestJob;
+use Windwalker\Utilities\Env;
 
 /**
  * Runs against a local SQS-compatible server (ElasticMQ), see `sqs` in docker-compose.dist.yml.
- * Set WINDWALKER_TEST_SQS_ENDPOINT to change the endpoint. Skipped when the server is not reachable.
+ * Set WINDWALKER_TEST_SQS_ENDPOINT to change the endpoint. Skipped unless SQS_ENABLED is set (e.g. in phpunit.xml).
  */
 class SqsQueueDriverTest extends TestCase
 {
@@ -28,6 +29,10 @@ class SqsQueueDriverTest extends TestCase
 
     protected function setUp(): void
     {
+        if (!Env::get('SQS_ENABLED')) {
+            self::markTestSkipped('SQS tests are not enabled. Set SQS_ENABLED=1 to run them.');
+        }
+
         $this->endpoint = $endpoint = getenv('WINDWALKER_TEST_SQS_ENDPOINT') ?: 'http://localhost:9324';
 
         $this->channel = 'wwtest' . bin2hex(random_bytes(4));
@@ -50,7 +55,7 @@ class SqsQueueDriverTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (isset($this->client)) {
+        if (isset($this->client, $this->driver)) {
             $this->client->deleteQueue(['QueueUrl' => $this->driver->getQueueUrl()]);
         }
     }
