@@ -26,7 +26,7 @@ class AuthorizationTest extends TestCase
 
         $authorization->addPolicy(
             'view',
-            static fn (object $policyUser, string $resource): bool => $policyUser === $user
+            static fn(object $policyUser, string $resource): bool => $policyUser === $user
                 && $resource === 'article'
         );
 
@@ -69,7 +69,7 @@ class AuthorizationTest extends TestCase
     public function registerPolicyProvider(): void
     {
         $authorization = new Authorization();
-        $provider = new class implements PolicyProviderInterface {
+        $provider = new class () implements PolicyProviderInterface {
             public function register(AuthorizationInterface $auth): void
             {
                 $auth->addPolicy('provided', static fn(mixed $user, string $role): bool => $role === 'admin');
