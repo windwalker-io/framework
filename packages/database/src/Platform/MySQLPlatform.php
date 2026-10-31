@@ -277,10 +277,18 @@ class MySQLPlatform extends AbstractPlatform
     public function listCheckConstraints(?string $schema, string $table): Collection
     {
         return $this->db->createQuery()
-            ->select()
-            ->from('information_schema.CHECK_CONSTRAINTS')
-            ->where('CONSTRAINT_SCHEMA', $schema ?? raw('DATABASE()'))
-            ->where('TABLE_NAME', $table)
+            ->select('cc.CONSTRAINT_NAME', 'cc.CHECK_CLAUSE')
+            ->from('information_schema.CHECK_CONSTRAINTS', 'cc')
+            ->leftJoin(
+                'information_schema.TABLE_CONSTRAINTS',
+                'tc',
+                [
+                    ['tc.CONSTRAINT_SCHEMA', '=', raw('cc.CONSTRAINT_SCHEMA')],
+                    ['tc.CONSTRAINT_NAME', '=', raw('cc.CONSTRAINT_NAME')],
+                ]
+            )
+            ->where('cc.CONSTRAINT_SCHEMA', $schema ?? raw('DATABASE()'))
+            ->where('tc.TABLE_NAME', $table)
             ->all()
             ->mapWithKeys(fn(Collection $item) => [$item->CONSTRAINT_NAME => $item->CHECK_CLAUSE]);
     }

@@ -6,8 +6,6 @@ namespace Windwalker\Queue\Driver;
 
 use DateTimeImmutable;
 use Exception;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 use Throwable;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Query\Query;
@@ -50,8 +48,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      *
      * @param  QueueMessage  $message
      *
-     * @return string
-     * @throws Exception
+     * @return  string
+     * @throws  Exception
      */
     public function push(QueueMessage $message): string
     {
@@ -81,8 +79,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
-     * @throws Throwable
+     * @return  QueueMessage|null
+     * @throws  Throwable
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -160,7 +158,7 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      *
      * @param  QueueMessage  $message
      *
-     * @return static
+     * @return  static
      */
     public function delete(QueueMessage $message): static
     {
@@ -177,8 +175,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
     /**
      * @param  QueueMessage  $message
      *
-     * @return static
-     * @throws \DateMalformedStringException
+     * @return  static
+     * @throws  \DateMalformedStringException
      */
     public function release(QueueMessage $message): static
     {
@@ -216,6 +214,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      * Method to get property Table
      *
      * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getTable(): string
     {
@@ -228,6 +228,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      * @param  mixed  $table
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTable(string $table): static
     {
@@ -240,6 +242,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      * Method to get property Db
      *
      * @return  DatabaseAdapter
+     *
+     * @codeCoverageIgnore
      */
     public function getDb(): DatabaseAdapter
     {
@@ -252,6 +256,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      * @param  DatabaseAdapter  $db
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setDb(DatabaseAdapter $db): static
     {

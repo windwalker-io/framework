@@ -271,7 +271,7 @@ abstract class AbstractGrammar
         }
 
         if (stripos($name, ' as ') !== false) {
-            [$name, $alias] = preg_split('/ as /i', $name);
+            [$name, $alias] = (array) preg_split('/ as /i', $name);
 
             return static::quoteName($name) . ' AS ' . static::quoteName($alias);
         }

@@ -43,14 +43,17 @@ class WriterManager
     /**
      * Inserts a row into a table based on an object's properties.
      *
-     * @param  string        $table    The name of the database table to insert into.
-     * @param  array|object &$data     A reference to an object whose public properties match the table fields.
-     * @param  string|null   $key      The name of the primary key. If provided the object property is updated.
-     * @param  array         $options  Options.
+     * @param  string        $table  The name of the database table to insert into.
+     * @param  array|object  &$data  A reference to an object whose public properties match the table fields.
+     * @param  string|null   $key    The name of the primary key. If provided the object property is updated.
+     * @param  array{
+     *     incrementField?: bool|string,
+     *     filterFields?: bool,
+     * }  $options  Options.
      *
-     * @return array|object
+     * @return  array|object
      *
-     * @throws JsonException
+     * @throws  JsonException
      * @since   2.0
      */
     public function insertOne(string $table, array|object $data, ?string $key = null, array $options = []): array|object
@@ -104,14 +107,19 @@ class WriterManager
     /**
      * Updates a row in a table based on an object's properties.
      *
-     * @param  string        $table    The name of the database table to update.
-     * @param  array|object  $data     A reference to an object whose public properties match the table fields.
-     * @param  array|string  $key      The name of the primary key.
-     * @param  array         $options  Options.
+     * @param  string        $table  The name of the database table to update.
+     * @param  array|object  $data   A reference to an object whose public properties match the table fields.
+     * @param  array|string  $key    The name of the primary key.
+     * @param  array{
+     *     updateNulls?: bool,
+     *     filterFields?: bool|array,
+     *     toJson?: bool,
+     *     lockCallback?: (callable(Query): void)|null,
+     * }  $options  Options.
      *
-     * @return StatementInterface
+     * @return  StatementInterface
      *
-     * @throws JsonException
+     * @throws  JsonException
      * @since   2.0
      */
     public function updateOne(
@@ -195,12 +203,12 @@ class WriterManager
      * @param  string        $table    The name of the database table to update.
      * @param  array|object  $data     A reference to an object whose public properties match the table fields.
      * @param  string|null   $key      The name of the primary key.
-     * @param  array         $options  Options.
+     * @param  array         $options  Same as insertOne() and updateOne() options.
      *
      * @return  mixed
-     * @throws JsonException
+     * @throws  JsonException
      */
-    public function saveOne(string $table, array|object $data, string|null $key, array $options = []): mixed
+    public function saveOne(string $table, array|object $data, ?string $key, array $options = []): mixed
     {
         if ($key !== null) {
             if (is_array($data)) {
@@ -233,7 +241,7 @@ class WriterManager
         string $table,
         array|object $data,
         array|string $keys,
-        array|null $updateFields = null,
+        ?array $updateFields = null,
         #[ArrayShape([
             'updateNulls' => 'bool',
             'returningIdField' => 'string|null',
@@ -247,7 +255,7 @@ class WriterManager
         $returningIdField = $options['returningIdField'] ?? null;
 
         if (!$updateNulls) {
-            $data = array_filter($data, fn($v) => $v !== null);
+            $data = array_filter(TypeCast::toArray($data), fn($v) => $v !== null);
         }
 
         $query = $this->db->createQuery();
@@ -259,6 +267,12 @@ class WriterManager
         // $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
         $updateFields ??= array_filter($allFields, fn($field) => !in_array($field, $keys, true));
+
+        // Nothing to update (e.g. all non-key values are null): re-assign keys so the statement stays valid
+        // and still yields the row ID.
+        if ($updateFields === []) {
+            $updateFields = $keys;
+        }
 
         $quotedUpdateFields = $query->qnMultiple($updateFields);
         $quotedFields = $query->qnMultiple($allFields);
@@ -392,9 +406,19 @@ class WriterManager
                     $returning = "RETURNING $quotedReturningIdField";
                 }
 
+                $conflictKeys = $query->clause('()', $quotedKeys, ',');
+                $setActions = $query->clause('', [], ',');
+
+                foreach ($quotedUpdateFields as $key) {
+                    $setActions->append("$key = excluded.$key");
+                }
+
+                $conflictAction = "DO UPDATE SET $setActions";
+
                 $query->sql(
-                    "INSERT OR REPLACE INTO $table $columns
+                    "INSERT INTO $table $columns
                 VALUES $values
+                ON CONFLICT $conflictKeys $conflictAction
                 $returning"
                 );
                 break;
@@ -420,13 +444,13 @@ class WriterManager
     /**
      * insertMultiple
      *
-     * @param  string       $table  The name of the database table to update.
-     * @param  array        $items  A reference to an object whose public properties match the table fields.
-     * @param  string|null  $key    The name of the primary key.
-     * @param  array        $options
+     * @param  string       $table    The name of the database table to update.
+     * @param  array        $items    A reference to an object whose public properties match the table fields.
+     * @param  string|null  $key      The name of the primary key.
+     * @param  array        $options  See insertOne().
      *
-     * @return array[]|object[]
-     * @throws JsonException
+     * @return  array[]|object[]
+     * @throws  JsonException
      */
     public function insertMultiple(string $table, iterable $items, ?string $key = null, array $options = []): array
     {
@@ -439,6 +463,12 @@ class WriterManager
         return $result;
     }
 
+    /**
+     * @param  array{
+     *     incrementField?: bool|string,
+     *     filterFields?: bool,
+     * }  $options
+     */
     public function insertBulk(
         string $table,
         iterable $items,
@@ -489,13 +519,13 @@ class WriterManager
     /**
      * updateMultiple
      *
-     * @param  string        $table  The name of the database table to update.
-     * @param  array         $items  A reference to an object whose public properties match the table fields.
-     * @param  array|string  $key    The name of the primary key.
-     * @param  array         $options
+     * @param  string        $table    The name of the database table to update.
+     * @param  array         $items    A reference to an object whose public properties match the table fields.
+     * @param  array|string  $key      The name of the primary key.
+     * @param  array         $options  See updateOne().
      *
-     * @return StatementInterface[]
-     * @throws JsonException
+     * @return  StatementInterface[]
+     * @throws  JsonException
      */
     public function updateMultiple(string $table, iterable $items, array|string $key, array $options = []): array
     {
@@ -511,13 +541,13 @@ class WriterManager
     /**
      * saveMultiple
      *
-     * @param  string             $table  The name of the database table to update.
-     * @param  array              $items  A reference to an object whose public properties match the table fields.
-     * @param  array|string|null  $key    The name of the primary key.
-     * @param  array              $options
+     * @param  string             $table    The name of the database table to update.
+     * @param  array              $items    A reference to an object whose public properties match the table fields.
+     * @param  array|string|null  $key      The name of the primary key.
+     * @param  array              $options  See insertOne() and updateOne().
      *
-     * @return array
-     * @throws JsonException
+     * @return  array
+     * @throws  JsonException
      */
     public function saveMultiple(
         string $table,
@@ -543,9 +573,9 @@ class WriterManager
      *                              Example:
      *                              - `['id' => 5]` => id = 5
      *
-     * @param  array   $options
+     * @param  array{filterFields?: bool}  $options
      *
-     * @return StatementInterface|null
+     * @return  StatementInterface|null
      */
     public function updateWhere(string $table, array $data, $conditions = [], array $options = []): ?StatementInterface
     {
@@ -617,7 +647,7 @@ class WriterManager
      *
      * @param  string|null  $sequence
      *
-     * @return string|null The value of the auto-increment field from the last inserted row.
+     * @return  string|null  The value of the auto-increment field from the last inserted row.
      *
      * @since   2.0
      */
@@ -673,8 +703,6 @@ class WriterManager
     }
 
     /**
-     * filterfields
-     *
      * @param  string  $table
      * @param  array   $item
      *
@@ -684,16 +712,6 @@ class WriterManager
     {
         $schema = $this->db->getTableManager($table)->getSchema();
         $tableManager = $schema->getTable($table);
-
-        if (!$tableManager) {
-            throw new RuntimeException(
-                sprintf(
-                    'Table: %s not exists in Schema: %s',
-                    $table,
-                    $schema->getName()
-                )
-            );
-        }
 
         return Arr::only($item, $tableManager->getColumnNames());
     }

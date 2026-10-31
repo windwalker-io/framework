@@ -19,14 +19,14 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * Property client.
      *
-     * @var SqsClient
+     * @var  SqsClient
      */
     protected SqsClient $client;
 
     /**
      * Property name.
      *
-     * @var string
+     * @var  string
      */
     protected string $channel;
 
@@ -50,8 +50,8 @@ class SqsQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return string
-     * @throws JsonException
+     * @return  string
+     * @throws  JsonException
      */
     public function push(QueueMessage $message): string
     {
@@ -80,7 +80,7 @@ class SqsQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -114,7 +114,7 @@ class SqsQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return static
+     * @return  static
      */
     public function delete(QueueMessage $message): static
     {
@@ -131,7 +131,7 @@ class SqsQueueDriver implements QueueDriverInterface
     /**
      * @param  QueueMessage  $message
      *
-     * @return static
+     * @return  static
      */
     public function release(QueueMessage $message): static
     {
@@ -158,7 +158,7 @@ class SqsQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return string
+     * @return  string
      */
     public function getQueueUrl(?string $channel = null): string
     {
@@ -191,7 +191,7 @@ class SqsQueueDriver implements QueueDriverInterface
      * @param  array   $options
      *
      * @return  SqsClient
-     * @throws DomainException
+     * @throws  DomainException
      */
     public function getSqsClient(string $key, string $secret, array $options = []): SqsClient
     {

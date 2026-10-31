@@ -44,8 +44,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      *
      * @param  QueueMessage  $message
      *
-     * @return string
-     * @throws Exception
+     * @return  string
+     * @throws  Exception
      */
     public function push(QueueMessage $message): string
     {
@@ -60,6 +60,10 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
             ':reserved' => null,
         ];
 
+        $idColumn = '';
+        $idValue = '';
+        $id = null;
+
         if ($this->idType->isUuid()) {
             $id = $this->generateUuidString();
             $idColumn = 'id, ';
@@ -67,13 +71,13 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
             $data[':id'] = $id;
         }
 
-        $sql = 'INSERT INTO ' . $this->table .
-            " ({$idColumn}channel, body, attempts, created, visibility, reserved)" .
-            " VALUES ({$idValue}:channel, :body, :attempts, :created, :visibility, :reserved)";
+        $sql = 'INSERT INTO ' . $this->table
+            . " ({$idColumn}channel, body, attempts, created, visibility, reserved)"
+            . " VALUES ({$idValue}:channel, :body, :attempts, :created, :visibility, :reserved)";
 
         $this->pdo->prepare($sql)->execute($data);
 
-        return (string) $this->pdo->lastInsertId();
+        return $id ?? (string) $this->pdo->lastInsertId();
     }
 
     /**
@@ -81,10 +85,10 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
-     * @throws Exception
-     * @throws InvalidArgumentException
-     * @throws Throwable
+     * @return  QueueMessage|null
+     * @throws  Exception
+     * @throws  InvalidArgumentException
+     * @throws  Throwable
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -92,10 +96,10 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
 
         $now = new DateTimeImmutable('now');
 
-        $sql = 'SELECT * FROM ' . $this->table .
-            ' WHERE channel = :channel AND visibility <= :visibility' .
-            ' AND (reserved IS NULL OR reserved < :reserved)' .
-            ' FOR UPDATE';
+        $sql = 'SELECT * FROM ' . $this->table
+            . ' WHERE channel = :channel AND visibility <= :visibility'
+            . ' AND (reserved IS NULL OR reserved < :reserved)'
+            . ' FOR UPDATE';
 
         $this->pdo->beginTransaction();
 
@@ -154,14 +158,14 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      *
      * @param  QueueMessage  $message
      *
-     * @return PdoQueueDriver
+     * @return  PdoQueueDriver
      */
     public function delete(QueueMessage $message): static
     {
         $channel = $message->getChannel() ?: $this->channel;
 
-        $sql = 'DELETE FROM ' . $this->table .
-            ' WHERE id = :id AND channel = :channel';
+        $sql = 'DELETE FROM ' . $this->table
+            . ' WHERE id = :id AND channel = :channel';
 
         $stat = $this->pdo->prepare($sql);
         $stat->bindValue(':id', $this->idType->toWritable($message->getId()));
@@ -175,8 +179,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
     /**
      * @param  QueueMessage  $message
      *
-     * @return static
-     * @throws \DateMalformedStringException
+     * @return  static
+     * @throws  \DateMalformedStringException
      */
     public function release(QueueMessage $message): static
     {
@@ -193,9 +197,9 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
             'attempts' => $message->getAttempts(),
         ];
 
-        $sql = 'UPDATE ' . $this->table .
-            ' SET reserved = :reserved, visibility = :visibility, attempts = :attempts' .
-            ' WHERE id = :id AND channel = :channel';
+        $sql = 'UPDATE ' . $this->table
+            . ' SET reserved = :reserved, visibility = :visibility, attempts = :attempts'
+            . ' WHERE id = :id AND channel = :channel';
 
         $stat = $this->pdo->prepare($sql);
 
@@ -231,6 +235,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      * Method to get property Table
      *
      * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getTable(): string
     {
@@ -243,6 +249,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      * @param  string  $table
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTable(string $table): static
     {
@@ -255,6 +263,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      * Method to get property Db
      *
      * @return  PDO
+     *
+     * @codeCoverageIgnore
      */
     public function getPdo(): PDO
     {
@@ -267,6 +277,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      * @param  PDO  $pdo
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPdo(PDO $pdo): static
     {

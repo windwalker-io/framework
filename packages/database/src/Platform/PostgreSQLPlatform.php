@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Platform;
 
-use PDO;
 use PDOException;
 use Windwalker\Data\Collection;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\Pdo\PdoDriver;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\Type\PostgreSQLDataType;
@@ -389,10 +389,10 @@ class PostgreSQLPlatform extends AbstractPlatform
     public function lastInsertId($insertQuery, ?string $sequence = null): ?string
     {
         if ($sequence && $this->db->getDriver() instanceof PdoDriver) {
-            /** @var PDO $pdo */
-            $pdo = $this->db->getDriver()->getConnectionFromPool()->get();
-
-            return $pdo->lastInsertId($sequence);
+            // Use the same connection as the INSERT and always release it back to the pool
+            return $this->db->getDriver()->useConnection(
+                static fn(ConnectionInterface $conn) => $conn->get()->lastInsertId($sequence)
+            );
         }
 
         if ($insertQuery instanceof Query) {
@@ -424,7 +424,9 @@ class PostgreSQLPlatform extends AbstractPlatform
         $insertidQuery->selectRaw($changedColName);
 
         try {
-            return $this->db->prepare($insertidQuery)->result();
+            $id = $this->db->prepare($insertidQuery)->result();
+
+            return $id === null ? null : (string) $id;
         } catch (PDOException $e) {
             // 55000 means we trying to insert value to serial column
             // Just return because insertedId get the last generated value.

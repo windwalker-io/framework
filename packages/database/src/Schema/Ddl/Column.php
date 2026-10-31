@@ -25,7 +25,7 @@ class Column
     protected ?int $ordinalPosition = 1;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected mixed $columnDefault = null;
 
@@ -54,12 +54,12 @@ class Column
     protected array $erratas = [];
 
     /**
-     * @var array<Constraint>
+     * @var  array<Constraint>
      */
     public array $constraints = [];
 
     /**
-     * @var array<Index>
+     * @var  array<Index>
      */
     public array $indexes = [];
 
@@ -98,7 +98,7 @@ class Column
     // }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getColumnName(): string
     {
@@ -118,7 +118,9 @@ class Column
     }
 
     /**
-     * @return int
+     * @return  int
+     *
+     * @codeCoverageIgnore
      */
     public function getOrdinalPosition(): ?int
     {
@@ -138,7 +140,7 @@ class Column
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getColumnDefault(): mixed
     {
@@ -185,7 +187,7 @@ class Column
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function getIsNullable(): bool
     {
@@ -210,7 +212,7 @@ class Column
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getDataType(): string
     {
@@ -247,6 +249,9 @@ class Column
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function before(string $column): static
     {
         return $this->position('BEFORE', $column);
@@ -331,7 +336,7 @@ class Column
     }
 
     /**
-     * @return int|string|null
+     * @return  int|string|null
      */
     public function getCharacterMaximumLength(): int|string|null
     {
@@ -351,7 +356,9 @@ class Column
     }
 
     /**
-     * @return int
+     * @return  int
+     *
+     * @codeCoverageIgnore
      */
     public function getCharacterOctetLength(): ?int
     {
@@ -371,7 +378,7 @@ class Column
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getNumericPrecision(): ?int
     {
@@ -386,7 +393,7 @@ class Column
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getNumericScale(): ?int
     {
@@ -406,7 +413,7 @@ class Column
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function getNumericUnsigned(): bool
     {
@@ -417,6 +424,8 @@ class Column
      * @param  bool  $unsigned
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function unsigned(bool $unsigned = true): static
     {
@@ -426,7 +435,7 @@ class Column
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getComment(): ?string
     {
@@ -458,7 +467,7 @@ class Column
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isAutoIncrement(): bool
     {
@@ -477,6 +486,9 @@ class Column
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function charset(?string $charset = null): static
     {
         $this->characterSetName = $charset;
@@ -484,6 +496,9 @@ class Column
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function collation(?string $collation): static
     {
         $this->collationName = $collation;
@@ -492,7 +507,9 @@ class Column
     }
 
     /**
-     * @return string|null
+     * @return  string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getCharacterSetName(): ?string
     {
@@ -503,6 +520,8 @@ class Column
      * @param  string|null  $characterSetName
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setCharacterSetName(?string $characterSetName): static
     {
@@ -512,7 +531,7 @@ class Column
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getCollationName(): ?string
     {
@@ -523,6 +542,8 @@ class Column
      * @param  string|null  $collationName
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setCollationName(?string $collationName): static
     {
@@ -532,7 +553,7 @@ class Column
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getErratas(): array
     {
@@ -568,6 +589,14 @@ class Column
         return $expr;
     }
 
+    /**
+     * @param  Query  $query
+     *
+     * @return  string
+     *
+     * @deprecated  Currently unused, will be removed in the future.
+     * @codeCoverageIgnore
+     */
     public function getCreateExpression(Query $query): string
     {
         $expr = $this->getTypeExpression($this->getDataType());

@@ -14,6 +14,8 @@ use Windwalker\Queue\Resque\Resque;
  * The ResqueQueueDriver class.
  *
  * @since  3.2
+ *
+ * @codeCoverageIgnore Requires an external queue service; legacy/unautoloaded driver.
  */
 class ResqueQueueDriver implements QueueDriverInterface
 {
@@ -45,8 +47,8 @@ class ResqueQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return string
-     * @throws DomainException
+     * @return  string
+     * @throws  DomainException
      */
     public function push(QueueMessage $message): string
     {
@@ -80,7 +82,7 @@ class ResqueQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -116,7 +118,7 @@ class ResqueQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return ResqueQueueDriver
+     * @return  ResqueQueueDriver
      */
     public function delete(QueueMessage $message): static
     {
@@ -132,7 +134,7 @@ class ResqueQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return static
+     * @return  static
      */
     public function release(QueueMessage $message): static
     {
@@ -176,8 +178,8 @@ class ResqueQueueDriver implements QueueDriverInterface
      *
      * @param  bool  $throwError
      *
-     * @return bool
-     * @throws DomainException
+     * @return  bool
+     * @throws  DomainException
      */
     public static function supportDelayed($throwError = false): bool
     {
@@ -201,7 +203,7 @@ class ResqueQueueDriver implements QueueDriverInterface
      * @param  int     $port
      *
      * @return  void
-     * @throws DomainException
+     * @throws  DomainException
      */
     public function connect(string $host, int $port): void
     {

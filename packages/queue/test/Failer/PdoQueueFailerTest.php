@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Test\Failer;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Queue\Failer\PdoQueueFailer;
 
 /**
@@ -11,7 +12,8 @@ use Windwalker\Queue\Failer\PdoQueueFailer;
  */
 class PdoQueueFailerTest extends DatabaseQueueFailerTest
 {
-    protected function setUp(): void
+    #[Before]
+    protected function createFailerInstance(): void
     {
         $conn = self::$db->getDriver()->getConnection();
 
@@ -20,9 +22,5 @@ class PdoQueueFailerTest extends DatabaseQueueFailerTest
         );
 
         $conn->release();
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

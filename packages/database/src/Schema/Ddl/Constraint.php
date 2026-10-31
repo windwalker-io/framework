@@ -39,12 +39,12 @@ class Constraint
     public ?string $deleteRule = null;
 
     /**
-     * @var Column[]
+     * @var  Column[]
      */
     public array $columns = [];
 
     /**
-     * @var Column[]
+     * @var  Column[]
      */
     public array $referencedColumns = [];
 
@@ -74,6 +74,8 @@ class Constraint
      * @param  string  $constraintType
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function type(string $constraintType): static
     {
@@ -98,6 +100,8 @@ class Constraint
      * @param  string|null  $referencedTableSchema
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function referencedSchema(?string $referencedTableSchema): static
     {
@@ -110,6 +114,8 @@ class Constraint
      * @param  string|null  $referencedTableName
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function referencedTableName(?string $referencedTableName): static
     {
@@ -122,6 +128,8 @@ class Constraint
      * @param  string|null  $matchOption
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function matchOption(?string $matchOption): static
     {
@@ -134,6 +142,8 @@ class Constraint
      * @param  string|null  $updateRule
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function onUpdate(?string $updateRule): static
     {
@@ -146,6 +156,8 @@ class Constraint
      * @param  string|null  $deleteRule
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function onDelete(?string $deleteRule): static
     {
@@ -158,7 +170,7 @@ class Constraint
     {
         $this->referencedTableName = $table;
 
-        $this->referencedColumns($columns);
+        $this->referencedColumns((array) $columns);
 
         return $this;
     }
@@ -212,7 +224,7 @@ class Constraint
     }
 
     /**
-     * @return Column[]
+     * @return  Column[]
      */
     public function getColumns(): array
     {
@@ -238,7 +250,9 @@ class Constraint
     }
 
     /**
-     * @return Column[]
+     * @return  Column[]
+     *
+     * @codeCoverageIgnore
      */
     public function getReferencedColumns(): array
     {

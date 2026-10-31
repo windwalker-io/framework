@@ -155,6 +155,80 @@ class SchemaTest extends AbstractDatabaseTestCase
         );
     }
 
+    #[Test]
+    public function addColumnInstantiatesColumnClassName(): void
+    {
+        $column = $this->instance->addColumn(Column::class);
+
+        self::assertInstanceOf(Column::class, $column);
+        self::assertSame($column, $this->instance->columns['']);
+    }
+
+    #[Test]
+    public function addIndexAcceptsIndexObjectAndCustomName(): void
+    {
+        $this->instance->integer('id');
+        $index = $this->instance->addIndex(['id'], 'my_idx', 'a comment');
+
+        self::assertSame('my_idx', $index->indexName);
+        self::assertSame('a comment', $index->indexComment);
+        self::assertSame($index, $this->instance->indexes['my_idx']);
+        self::assertSame($this->instance->columns['id'], $index->getColumns()['id']);
+
+        $ready = new \Windwalker\Database\Schema\Ddl\Index('ready_idx');
+        $ready->columns(['foo']);
+
+        self::assertSame($ready, $this->instance->addIndex($ready, 'custom_idx'));
+        self::assertSame('custom_idx', $ready->indexName);
+        self::assertArrayHasKey('custom_idx', $this->instance->indexes);
+    }
+
+    #[Test]
+    public function addForeignKeySetsReferences(): void
+    {
+        $fk = $this->instance->addForeignKey('category_id', 'ww_categories', 'id');
+
+        self::assertSame(['category_id'], $fk->getColumnNames());
+        self::assertSame('ww_categories', $fk->referencedTableName);
+        self::assertSame(['id'], array_keys($fk->getReferencedColumns()));
+    }
+
+    #[Test]
+    public function dropListsAccumulate(): void
+    {
+        $this->instance->dropColumns('a');
+        $this->instance->dropColumns('b', 'c');
+        $this->instance->dropIndexes('i1');
+        $this->instance->dropConstraints('c1', 'c2');
+
+        self::assertSame(['a', 'b', 'c'], $this->instance->dropColumns);
+        self::assertSame(['i1'], $this->instance->dropIndexes);
+        self::assertSame(['c1', 'c2'], $this->instance->dropConstraints);
+    }
+
+    #[Test]
+    public function magicCallAppliesTypeSpecificDefaults(): void
+    {
+        $bigint = $this->instance->primaryBigint('id');
+        $uuid = $this->instance->uuidChar('uuid');
+        $puuid = $this->instance->primaryUuidChar('puuid');
+        $bin = $this->instance->uuidBinary('bin');
+        $pbin = $this->instance->primaryUuidBinary('pbin');
+        $json = $this->instance->json('params');
+        $date = $this->instance->date('d');
+
+        self::assertSame('bigint', $bigint->getDataType());
+        self::assertTrue($bigint->isAutoIncrement());
+        self::assertTrue($bigint->isPrimary());
+        self::assertEquals(36, $uuid->getCharacterMaximumLength());
+        self::assertSame('ascii_bin', $uuid->getCollationName());
+        self::assertTrue($puuid->isPrimary());
+        self::assertEquals(16, $bin->getCharacterMaximumLength());
+        self::assertTrue($pbin->isPrimary());
+        self::assertTrue($json->getIsNullable());
+        self::assertTrue($date->getIsNullable());
+    }
+
     #[Before]
     protected function createSchemaFromTable(): void
     {

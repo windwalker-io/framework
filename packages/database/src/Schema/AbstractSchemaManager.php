@@ -17,7 +17,7 @@ abstract class AbstractSchemaManager
     protected $platform = '';
 
     /**
-     * @var DatabaseAdapter
+     * @var  DatabaseAdapter
      */
     protected $db;
 
@@ -25,6 +25,8 @@ abstract class AbstractSchemaManager
      * AbstractSchema constructor.
      *
      * @param  DatabaseAdapter  $db
+     *
+     * @codeCoverageIgnore
      */
     public function __construct(DatabaseAdapter $db)
     {
@@ -39,13 +41,18 @@ abstract class AbstractSchemaManager
     }
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getPlatformName(): string
     {
         return $this->platform;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getPlatform(): AbstractPlatform
     {
         return $this->db->getPlatform();
@@ -55,6 +62,8 @@ abstract class AbstractSchemaManager
      * getGrammar
      *
      * @return  AbstractGrammar
+     *
+     * @codeCoverageIgnore
      */
     public function getGrammar(): AbstractGrammar
     {

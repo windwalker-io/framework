@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Queue\Driver\DatabaseQueueDriver;
 use Windwalker\Queue\Queue;
@@ -22,7 +24,8 @@ class QueueDatabaseTest extends TestCase
     /**
      * @see  Queue::push
      */
-    public function testPush(): void
+    #[Test]
+    public function pushStoresJobInDefaultChannelAndReturnsId(): void
     {
         $job = new TestJob(['Hello']);
 
@@ -54,7 +57,8 @@ class QueueDatabaseTest extends TestCase
     /**
      * @see  Queue::pop
      */
-    public function testPop(): void
+    #[Test]
+    public function popReturnsMessageWithIncrementedAttemptsAndRunnableJob(): void
     {
         $message = $this->instance->pop();
 
@@ -74,17 +78,10 @@ class QueueDatabaseTest extends TestCase
     }
 
     /**
-     * @see  Queue::setDriver
-     */
-    public function testSetDriver(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  Queue::release
      */
-    public function testRelease(): void
+    #[Test]
+    public function releaseClearsReservedTimeOfPoppedMessage(): void
     {
         $job = new TestJob(['Welcome']);
 
@@ -112,7 +109,8 @@ class QueueDatabaseTest extends TestCase
     /**
      * @see  Queue::delete
      */
-    public function testDelete(): void
+    #[Test]
+    public function deleteRemovesJobById(): void
     {
         $this->instance->delete(2);
 
@@ -124,17 +122,10 @@ class QueueDatabaseTest extends TestCase
     }
 
     /**
-     * @see  Queue::getDriver
-     */
-    public function testGetDriver(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  ChannelAwareDriverInterface::getChannels
      */
-    public function testGetChannels(): void
+    #[Test]
+    public function getChannelsListsAllUsedChannels(): void
     {
         $this->instance->push(new TestJob(['Foo']), 0, 'foo-channel');
         $this->instance->push(new TestJob(['Bar']), 0, 'bar-channel');
@@ -154,38 +145,68 @@ class QueueDatabaseTest extends TestCase
     }
 
     /**
-     * @see  Queue::__construct
-     */
-    public function testConstruct(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  Queue::getMessageByJob
      */
-    public function testGetMessageByJob(): void
+    #[Test]
+    public function getMessageByJobReturnsMessageOfJob(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $message = $this->instance->getMessageByJob(new TestJob(['a']), ['foo' => 'bar']);
+
+        self::assertSame(TestJob::class, $message->getName());
+        self::assertSame(TestJob::class, $message->getData()['class']);
+        self::assertSame('bar', $message->getData()['foo']);
+        self::assertNotNull($message->serializedJob);
+        self::assertInstanceOf(TestJob::class, $message->getJob());
     }
 
     /**
      * @see  Queue::pushRaw
      */
-    public function testPushRaw(): void
+    #[Test]
+    public function pushRawStoresRawBody(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $id = $this->instance->pushRaw('{"job":"raw-body"}', 0, 'raw-channel');
+
+        $row = self::$db->select('*')
+            ->from('queue_jobs')
+            ->where('id', $id)
+            ->get();
+
+        self::assertSame('raw-channel', $row->channel);
+        self::assertSame('raw-body', json_decode($row->body, true)['job']);
+
+        self::$db->delete('queue_jobs')->where('id', $id)->execute();
     }
 
-    protected function setUp(): void
+    /**
+     * @see  Queue::defer
+     */
+    #[Test]
+    public function deferReleasesMessageWithoutCountingAttempt(): void
+    {
+        $this->instance->push(new TestJob(['later']), 0, 'defer-channel');
+        $message = $this->instance->pop('defer-channel');
+
+        self::assertSame(1, $message->getAttempts());
+
+        $this->instance->defer($message, 0);
+
+        // Some drivers re-create the row on defer, so look it up by channel.
+        $rows = self::$db->select('*')->from('queue_jobs')->where('channel', 'defer-channel')->all()->dump();
+
+        self::assertCount(1, $rows);
+        self::assertEquals(0, $rows[0]['attempts']);
+        self::assertNull($rows[0]['reserved']);
+
+        self::$db->delete('queue_jobs')->where('channel', 'defer-channel')->execute();
+    }
+
+    #[Before]
+    protected function createQueueInstance(): void
     {
         $this->instance = new Queue(
             new DatabaseQueueDriver(static::$db)
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**

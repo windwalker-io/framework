@@ -19,7 +19,7 @@ class Resque extends PhpResque
      * @param  string  $queue  The name of the queue to fetch an item from.
      * @param  array   $items
      *
-     * @return integer number of deleted items
+     * @return  integer  number of deleted items
      */
     public static function dequeue(string $queue, array $items = []): int
     {
@@ -41,7 +41,7 @@ class Resque extends PhpResque
      * @param  string  $queue  The name of the queue
      * @param  array   $items
      *
-     * @return integer number of deleted items
+     * @return  integer  number of deleted items
      */
     protected static function removeItems(string $queue, array $items = []): int
     {
@@ -95,7 +95,7 @@ class Resque extends PhpResque
      * @params string $string redis result in json
      * @params $items
      *
-     * @return (bool)
+     * @return  (bool)
      */
     protected static function matchItem($string, $items): bool
     {
@@ -135,7 +135,7 @@ class Resque extends PhpResque
      *
      * @params string $queue the name of the queue
      *
-     * @return integer number of deleted items belongs to this list
+     * @return  integer  number of deleted items belongs to this list
      */
     protected static function removeList($queue): int
     {
@@ -148,7 +148,7 @@ class Resque extends PhpResque
     /**
      * Generate an identifier to attach to a job for status tracking.
      *
-     * @return string
+     * @return  string
      */
     public static function generateJobId(): string
     {

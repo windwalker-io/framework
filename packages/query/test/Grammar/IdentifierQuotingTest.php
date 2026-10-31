@@ -60,5 +60,3 @@ class IdentifierQuotingTest extends TestCase
         self::assertSame([1, 2], $pdo->query($sql)->fetchAll(PDO::FETCH_COLUMN));
     }
 }
-
-

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Test;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Queue\Driver\PdoQueueDriver;
 use Windwalker\Queue\Queue;
 
@@ -12,17 +13,14 @@ use Windwalker\Queue\Queue;
  */
 class QueuePdoTest extends QueueDatabaseTest
 {
-    protected function setUp(): void
+    #[Before]
+    protected function createQueueInstance(): void
     {
         $conn = static::$db->getDriver()->getConnection();
 
         $this->instance = new Queue(new PdoQueueDriver($conn->get()));
 
         $conn->release();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**

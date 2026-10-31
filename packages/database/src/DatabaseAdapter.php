@@ -13,7 +13,6 @@ use Psr\Log\NullLogger;
 use Stringable;
 use Throwable;
 use Windwalker\Database\Driver\AbstractDriver;
-use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Hydrator\HydratorAwareInterface;
@@ -27,7 +26,6 @@ use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Table;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\Event\EventListenableInterface;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\ORM;
 use Windwalker\Query\Query;
@@ -38,10 +36,10 @@ use function Windwalker\raw;
 /**
  * The DatabaseAdapter class.
  *
- * @method Query select(...$columns)
- * @method Query update(string $table, ?string $alias = null)
- * @method Query delete(string $table, ?string $alias = null)
- * @method Query insert(string $table, bool $incrementField = false)
+ * @method  Query  select(...$columns)
+ * @method  Query  update(string $table, ?string $alias = null)
+ * @method  Query  delete(string $table, ?string $alias = null)
+ * @method  Query  insert(string $table, bool $incrementField = false)
  */
 class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 {
@@ -49,7 +47,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     use InstanceCacheTrait;
 
     /**
-     * @var Query|string|Stringable|null
+     * @var  Query|string|Stringable|null
      */
     protected mixed $query = null;
 
@@ -58,9 +56,9 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     /**
      * DatabaseAdapter constructor.
      *
-     * @param  AbstractDriver   $driver
-     * @param  AbstractPlatform $platform
-     * @param  LoggerInterface  $logger
+     * @param  AbstractDriver    $driver
+     * @param  AbstractPlatform  $platform
+     * @param  LoggerInterface   $logger
      */
     public function __construct(
         public protected(set) AbstractDriver $driver,
@@ -112,7 +110,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      *
      * @param  bool  $new
      *
-     * @return string|Query
+     * @return  string|Query
      */
     public function getQuery(bool $new = false): Query|Stringable|string|null
     {
@@ -141,9 +139,11 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     {
         return $this->once(
             'cached.query',
-            fn() => $this->getPlatform()
+            fn()
+                => $this
+                ->getPlatform()
                 ->createQuery($this->getDriver()),
-            $new
+            $new,
         );
     }
 
@@ -214,7 +214,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     }
 
     /**
-     * @return AbstractDriver
+     * @return  AbstractDriver
      */
     public function getDriver(): AbstractDriver
     {
@@ -222,7 +222,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     }
 
     /**
-     * @return AbstractPlatform
+     * @return  AbstractPlatform
      */
     public function getPlatform(): AbstractPlatform
     {
@@ -326,7 +326,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      *
      * @return  mixed
      *
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
     {
@@ -363,7 +363,8 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         if ($query instanceof Query) {
             $subQuery = clone $query;
 
-            $subQuery->clear('select', 'order', 'limit')
+            $subQuery
+                ->clear('select', 'order', 'limit')
                 ->selectAs(raw('COUNT(*)'), 'count');
         } else {
             $subQuery = $query->getSql();
@@ -371,7 +372,8 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
 
         $query = $this->createQuery();
 
-        $query->selectRaw('COUNT(%n)', 'count')
+        $query
+            ->selectRaw('COUNT(%n)', 'count')
             ->from($subQuery, 'c');
 
         return (int) $this->prepare($query)->result();
@@ -397,7 +399,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         return $this->getPlatform()->getGrammar()::nullDate();
     }
 
-    public function isNullDate(string|int|null|DateTimeInterface $date): bool
+    public function isNullDate(string|int|DateTimeInterface|null $date): bool
     {
         if ($date === null || $date === '') {
             return true;
@@ -428,7 +430,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         }
 
         throw new BadMethodCallException(
-            sprintf('Call to undefined method of: %s::%s()', static::class, $name)
+            sprintf('Call to undefined method of: %s::%s()', static::class, $name),
         );
     }
 
@@ -445,8 +447,10 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      *
      * @param  string|T  $entityClass
      *
-     * @return EntityMapper<T>
-     * @throws \ReflectionException
+     * @return  EntityMapper<T>
+     * @throws  \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function mapper(string $entityClass): EntityMapper
     {
@@ -454,7 +458,9 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     }
 
     /**
-     * @return ORM
+     * @return  ORM
+     *
+     * @codeCoverageIgnore
      */
     public function orm(): ORM
     {

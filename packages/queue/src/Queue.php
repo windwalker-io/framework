@@ -82,7 +82,7 @@ class Queue
         array $options = []
     ): int|string {
         if (is_string($body)) {
-            json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+            $body = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         }
 
         $message = new QueueMessage();
@@ -137,8 +137,9 @@ class Queue
     public function release(mixed $message, int $delay = 0): void
     {
         if (!$message instanceof QueueMessage) {
-            $msg = new QueueMessage();
-            $msg->setId($message);
+            $id = $message;
+            $message = new QueueMessage();
+            $message->setId($id);
         }
 
         $message->setDelay($delay);
@@ -149,8 +150,9 @@ class Queue
     public function defer(mixed $message, int $delay = 0): void
     {
         if (!$message instanceof QueueMessage) {
-            $msg = new QueueMessage();
-            $msg->setId($message);
+            $id = $message;
+            $message = new QueueMessage();
+            $message->setId($id);
         }
 
         $message->setDelay($delay);
@@ -206,7 +208,7 @@ class Queue
             $instance = new ClosureJob($job);
         } elseif (is_string($job)) {
             // Create by class name.
-            if (!class_exists($job) || method_exists($job, '__invoke')) {
+            if (!class_exists($job) || !method_exists($job, '__invoke')) {
                 throw new InvalidArgumentException(
                     'Job should be a class which has __invoke() method.'
                 );

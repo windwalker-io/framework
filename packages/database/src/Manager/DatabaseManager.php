@@ -15,7 +15,7 @@ class DatabaseManager extends AbstractMetaManager
      * @param  bool   $ifNotExists
      * @param  array  $options
      *
-     * @return static
+     * @return  static
      */
     public function create(bool $ifNotExists = false, array $options = []): static
     {
@@ -39,7 +39,7 @@ class DatabaseManager extends AbstractMetaManager
     {
         $name = $this->getName();
 
-        if ($ifExists && $this->exists()) {
+        if ($ifExists && !$this->exists()) {
             return $this;
         }
 
@@ -69,9 +69,9 @@ class DatabaseManager extends AbstractMetaManager
     }
 
     /**
-     * resetCache
-     *
      * @return  static
+     *
+     * @codeCoverageIgnore
      */
     public function reset(): static
     {

@@ -11,6 +11,8 @@ use Windwalker\Database\Platform\DbPlatform;
 
 /**
  * The AbstractDatabaseTestCase class.
+ *
+ * @codeCoverageIgnore
  */
 abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
 {

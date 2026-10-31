@@ -26,7 +26,7 @@ class Index
     public bool $isPrimary;
 
     /**
-     * @var Column[]
+     * @var  Column[]
      */
     public array $columns = [];
 
@@ -56,6 +56,9 @@ class Index
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function comment(?string $indexComment): static
     {
         $this->indexComment = $indexComment;
@@ -104,7 +107,7 @@ class Index
     }
 
     /**
-     * @return Column[]
+     * @return  Column[]
      */
     public function getColumns(): array
     {

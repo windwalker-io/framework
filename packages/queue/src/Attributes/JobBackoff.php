@@ -41,7 +41,9 @@ class JobBackoff
             return false;
         }
 
-        return min($maxSeconds, $base * ($pow ** $n) * $adaptive);
+        $factor = $pow === 1 ? $n + 1 : $pow ** $n;
+
+        return min($maxSeconds, $base * $factor * $adaptive);
     }
 
     public static function resolve(int $attempts, array|int|null|false $backoff): int|null|false

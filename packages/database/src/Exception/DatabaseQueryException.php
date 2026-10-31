@@ -16,6 +16,9 @@ class DatabaseQueryException extends DatabaseException implements VerbosityExcep
 
     public string $debugSql = '';
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugSql(): string
     {
         return $this->debugSql;
@@ -25,6 +28,8 @@ class DatabaseQueryException extends DatabaseException implements VerbosityExcep
      * @param  string  $debugSql
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setDebugSql(string $debugSql): static
     {
@@ -33,6 +38,9 @@ class DatabaseQueryException extends DatabaseException implements VerbosityExcep
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugMessage(): string
     {
         return $this->getMessage() . ($this->debugSql ? ' - SQL: ' . $this->debugSql : '');

@@ -68,3 +68,26 @@ XDEBUG_MODE=coverage php vendor/bin/phpunit \
   `TableManager` caches columns/indexes/constraints; call `reset()` after DDL before re-checking.
 - Helpers: `logQueries(fn)`, `assertSqlFormatEquals()`, `assertArraySimilar()`.
 - Mark platform-specific tests with the right base class/driver so they skip when the DSN is absent.
+
+## 5. Testing a small feature on a non-default database
+
+`AbstractDatabaseTestCase` targets MySQL. To cover one feature on PostgreSQL / SQL Server / SQLite (e.g. `upsert()`):
+
+1. Put the platform-agnostic tests in an abstract test case (see `test/Manager/AbstractUpsertTestCase.php`) that
+   declares an abstract static fixture method (DDL differs per platform) and calls it from `setupDatabase()`.
+2. Add one thin subclass per platform that overrides the static properties and the DDL only:
+
+   ```php
+   class PostgreSQLWriterManagerTest extends AbstractUpsertTestCase
+   {
+       protected static DbPlatform $platform = DbPlatform::PostgreSQL;
+       protected static string $driver = 'pdo_pgsql';   // pdo_sqlsrv, pdo_sqlite, ...
+       protected static string $schema = 'public';      // PostgreSQL only
+   }
+   ```
+
+   Forgetting `$driver` silently falls back to `pdo_mysql` (symptom: MySQL "Access denied" in a SQLite test).
+3. Create fixtures through `static::$baseConn` with platform-specific SQL (`SERIAL`, `IDENTITY(1,1)`,
+   `AUTOINCREMENT`); use unprefixed table names such as `ww_upsert_items`.
+4. A missing DSN skips the class; confirm the server is reachable (`nc -z 127.0.0.1 5432` / `1433`) so tests don't
+   skip silently. Run each platform's class on its own, sequentially.

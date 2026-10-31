@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Test\Failer;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
@@ -25,7 +27,8 @@ class DatabaseQueueFailerTest extends TestCase
     /**
      * @see  DatabaseQueueFailer::add
      */
-    public function testAdd(): void
+    #[Test]
+    public function addStoresFailedJobsAndReturnsLastId(): void
     {
         $this->instance->add(
             'test',
@@ -65,25 +68,10 @@ class DatabaseQueueFailerTest extends TestCase
     }
 
     /**
-     * @see  DatabaseQueueFailer::__construct
-     */
-    public function testConstruct(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  DatabaseQueueFailer::setTable
-     */
-    public function testSetTable(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  DatabaseQueueFailer::get
      */
-    public function testGet(): void
+    #[Test]
+    public function getReturnsFailedJobById(): void
     {
         $item = $this->instance->get(2);
 
@@ -106,7 +94,8 @@ class DatabaseQueueFailerTest extends TestCase
     /**
      * @see  DatabaseQueueFailer::all
      */
-    public function testAll(): void
+    #[Test]
+    public function allIteratesFailedJobsInInsertOrder(): void
     {
         $items = $this->instance->all();
 
@@ -119,7 +108,8 @@ class DatabaseQueueFailerTest extends TestCase
     /**
      * @see  DatabaseQueueFailer::remove
      */
-    public function testRemove(): void
+    #[Test]
+    public function removeDeletesFailedJobById(): void
     {
         $this->instance->remove(1);
 
@@ -134,7 +124,8 @@ class DatabaseQueueFailerTest extends TestCase
     /**
      * @see  DatabaseQueueFailer::clear
      */
-    public function testClear(): void
+    #[Test]
+    public function clearDeletesAllFailedJobs(): void
     {
         $this->instance->clear();
 
@@ -148,30 +139,20 @@ class DatabaseQueueFailerTest extends TestCase
     }
 
     /**
-     * @see  DatabaseQueueFailer::getTable
-     */
-    public function testGetTable(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  DatabaseQueueFailer::isSupported
      */
-    public function testIsSupported(): void
+    #[Test]
+    public function isSupportedReturnsTrue(): void
     {
         self::assertTrue($this->instance->isSupported());
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createFailerInstance(): void
     {
         $this->instance = new DatabaseQueueFailer(
             self::$db
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**

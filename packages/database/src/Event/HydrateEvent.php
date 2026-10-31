@@ -30,6 +30,8 @@ class HydrateEvent extends BaseEvent
 
     /**
      * @deprecated  Use property instead.
+     *
+     * @codeCoverageIgnore
      */
     public function &getItem(): array|object|null
     {

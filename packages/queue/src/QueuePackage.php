@@ -14,6 +14,8 @@ use Windwalker\Queue\Failer\QueueFailerInterface;
 
 /**
  * The QueuePackage class.
+ *
+ * @codeCoverageIgnore Package wiring only.
  */
 class QueuePackage extends AbstractPackage implements ServiceProviderInterface
 {
