@@ -97,7 +97,7 @@ abstract class ResponseHelper
      *
      * @param  int  $code  Status code to get phrase.
      *
-     * @return string|null
+     * @return  string|null
      */
     public static function getPhrase(int $code): ?string
     {
@@ -201,9 +201,9 @@ abstract class ResponseHelper
     /**
      * A simple method to quickly send attachment stream download.
      *
-     * @param  string|resource|StreamInterface $source     The file source, can be file path or resource.
-     * @param ResponseInterface|null           $response   A custom Response object to contain your headers.
-     * @param  array                           $options    Options to provide some settings, currently supports
+     * @param  string|resource|StreamInterface  $source    The file source, can be file path or resource.
+     * @param  ResponseInterface|null           $response  A custom Response object to contain your headers.
+     * @param  array                            $options   Options to provide some settings, currently supports
      *                                                     "delay" and "filename".
      *
      * @return  void

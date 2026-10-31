@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Form\Field\ButtonField;
 use Windwalker\Form\Field\TextField;
@@ -23,17 +25,12 @@ class ButtonFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var TextField
+     * @var  TextField
      */
     protected $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createButtonField(): void
     {
         $this->instance = new ButtonField(
             'flower',
@@ -50,22 +47,8 @@ class ButtonFieldTest extends TestCase
         $this->instance->setValue('Sakura');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test prepareAttributes().
-     *
-     * @return void
-     */
-    public function testRender()
+    #[Test]
+    public function renderInputOutputsButtonElementWithAttributes(): void
     {
         // phpcs:disable
         $html = <<<HTML

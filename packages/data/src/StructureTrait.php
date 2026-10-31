@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\Data;
 
 use Psr\Http\Message\StreamInterface;
@@ -15,7 +17,7 @@ use function Windwalker\str;
 trait StructureTrait
 {
     /**
-     * @var FormatRegistry
+     * @var  FormatRegistry
      */
     protected ?FormatRegistry $formatRegistry = null;
 
@@ -146,7 +148,7 @@ trait StructureTrait
      * @param  string|null  $format
      * @param  array        $options
      *
-     * @return StringObject
+     * @return  StringObject
      *
      * @since  __DEPLOY_VERSION__
      */

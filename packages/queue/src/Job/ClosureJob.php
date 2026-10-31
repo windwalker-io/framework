@@ -26,9 +26,12 @@ class ClosureJob
     public function __construct(Closure|SerializableClosure $job)
     {
         if ($job instanceof Closure) {
+            // @codeCoverageIgnoreStart
+            // Optional dependency guard: unreachable while the dev dependency is installed.
             if (!class_exists(SerializableClosure::class)) {
                 throw new \DomainException('Please install `laravel/serializable-closure` first');
             }
+            // @codeCoverageIgnoreEnd
 
             $job = new SerializableClosure($job);
         }
@@ -41,7 +44,7 @@ class ClosureJob
      *
      * @return  array|int|null
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     #[JobBackoff]
     public function backoff(): array|int|null
@@ -60,7 +63,7 @@ class ClosureJob
     }
 
     /**
-     * @return SerializableClosure
+     * @return  SerializableClosure
      */
     public function getJob(): SerializableClosure
     {
@@ -68,7 +71,7 @@ class ClosureJob
     }
 
     /**
-     * @return Closure
+     * @return  Closure
      */
     public function getJobClosure(): Closure
     {

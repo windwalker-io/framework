@@ -14,6 +14,9 @@ use Windwalker\Utilities\Str;
  * The DocblockHelper class.
  *
  * @since  3.0
+ *
+ * @internal  This method is for internal use only.
+ * @codeCoverageIgnore
  */
 class DocblockHelper
 {
@@ -81,7 +84,7 @@ class DocblockHelper
 
             $source = file($method->getFileName());
             $body = implode(
-                "",
+                '',
                 array_slice(
                     $source,
                     $method->getStartLine() - 1,

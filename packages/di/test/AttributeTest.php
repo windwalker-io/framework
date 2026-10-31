@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\DI\Test;
 
 use Attribute;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase;
 use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Autowire;
@@ -25,9 +27,10 @@ use function Windwalker\str;
  */
 class AttributeTest extends TestCase
 {
-    protected ?Container $instance;
+    protected Container $instance;
 
-    public function testObjectDecorate()
+    #[Test]
+    public function decoratesClassInstances(): void
     {
         $this->instance
             ->getAttributesResolver()
@@ -39,7 +42,8 @@ class AttributeTest extends TestCase
         self::assertInstanceOf(InnerStub::class, $result->instance);
     }
 
-    public function testObjectDecorateCallable()
+    #[Test]
+    public function decoratesCallableInstances(): void
     {
         $this->instance
             ->getAttributesResolver()
@@ -55,7 +59,8 @@ class AttributeTest extends TestCase
         self::assertInstanceOf(InnerStub::class, $result->instance);
     }
 
-    public function testObjectWrapCreator()
+    #[Test]
+    public function autowiresClassAttributes(): void
     {
         $this->instance
             ->getAttributesResolver()
@@ -67,7 +72,8 @@ class AttributeTest extends TestCase
         self::assertInstanceOf(StringObject::class, $result->logs[0]);
     }
 
-    public function testMethodAttributes()
+    #[Test]
+    public function appliesMethodAttributes(): void
     {
         $this->instance->set('stub', fn() => new StubService());
 
@@ -75,7 +81,7 @@ class AttributeTest extends TestCase
             ->getAttributesResolver()
             ->registerAttribute(ToUpper::class, AttributeType::CALLABLE);
 
-        $obj = new class {
+        $obj = new class () {
             #[ToUpper]
             public function foo(): string
             {
@@ -91,7 +97,8 @@ class AttributeTest extends TestCase
         );
     }
 
-    public function testMethodParamAttributes()
+    #[Test]
+    public function appliesParameterAttributes(): void
     {
         $this->instance->set('stub', fn() => new StubService());
 
@@ -99,7 +106,7 @@ class AttributeTest extends TestCase
             ->getAttributesResolver()
             ->registerAttribute(ParamLower::class, Attribute::TARGET_PARAMETER);
 
-        $obj = new class {
+        $obj = new class () {
             public function foo(
                 #[ParamLower]
                 StringObject $foo,
@@ -116,7 +123,8 @@ class AttributeTest extends TestCase
         );
     }
 
-    public function testCallClosure()
+    #[Test]
+    public function invokesClosuresAndWritesBackReferenceArguments(): void
     {
         $this->instance
             ->getAttributesResolver()
@@ -142,13 +150,9 @@ class AttributeTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    public function initializeContainer(): void
     {
         $this->instance = new Container();
-    }
-
-    protected function tearDown(): void
-    {
-        //
     }
 }

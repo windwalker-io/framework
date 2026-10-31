@@ -16,9 +16,7 @@ class UriTemplate implements \Stringable
 
     protected \Closure $extractHandler;
 
-    public function __construct(protected string $template, protected array $vars = [])
-    {
-    }
+    public function __construct(protected string $template, protected array $vars = []) {}
 
     public function expand(array $vars = []): string
     {
@@ -43,7 +41,9 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return array
+     * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function getVars(): array
     {
@@ -54,6 +54,8 @@ class UriTemplate implements \Stringable
      * @param  array  $vars
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setVars(array $vars): static
     {
@@ -63,7 +65,9 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getTemplate(): string
     {
@@ -74,6 +78,8 @@ class UriTemplate implements \Stringable
      * @param  string  $template
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTemplate(string $template): static
     {
@@ -83,7 +89,7 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return \Closure
+     * @return  \Closure
      */
     public function getExpandHandler(): \Closure
     {
@@ -92,6 +98,8 @@ class UriTemplate implements \Stringable
                 return (new RizeUriTemplate())->expand($template, $vars);
             }
 
+            // Fallbacks unreachable while the optional `rize/uri-template` dev dependency is installed.
+            // @codeCoverageIgnoreStart
             if (class_exists(GuzzleUriTemplate::class)) {
                 return GuzzleUriTemplate::expand($template, $vars);
             }
@@ -99,6 +107,7 @@ class UriTemplate implements \Stringable
             throw new \DomainException(
                 'Please install `rize/uri-template` or `guzzlehttp/uri-template` to support URI Template expand.'
             );
+            // @codeCoverageIgnoreEnd
         };
     }
 
@@ -106,6 +115,8 @@ class UriTemplate implements \Stringable
      * @param  \Closure  $expandHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setExpandHandler(\Closure $expandHandler): static
     {
@@ -115,7 +126,7 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return \Closure
+     * @return  \Closure
      */
     public function getExtractHandler(): \Closure
     {
@@ -124,9 +135,12 @@ class UriTemplate implements \Stringable
                 return (new RizeUriTemplate())->extract($template, $uri, $strict);
             }
 
+            // Unreachable while the optional `rize/uri-template` dev dependency is installed.
+            // @codeCoverageIgnoreStart
             throw new \DomainException(
                 'Please install `rize/uri-template` to support URI Template extract.'
             );
+            // @codeCoverageIgnoreEnd
         };
     }
 
@@ -134,6 +148,8 @@ class UriTemplate implements \Stringable
      * @param  \Closure  $extractHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setExtractHandler(\Closure $extractHandler): static
     {

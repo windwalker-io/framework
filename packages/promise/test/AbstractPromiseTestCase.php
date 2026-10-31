@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Test;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
-use Windwalker\Promise\Scheduler\ImmediateScheduler;
 use Windwalker\Promise\Scheduler\SchedulerInterface;
 use Windwalker\Promise\Scheduler\ScheduleRunner;
 use Windwalker\Promise\Scheduler\TaskQueue;
@@ -17,23 +19,20 @@ use Windwalker\Promise\Scheduler\TaskQueue;
 abstract class AbstractPromiseTestCase extends TestCase
 {
     /**
-     * @var array
+     * @var  array
      */
     protected array $values = [];
 
     protected array $serial = [];
 
-    /**
-     * This method is called before the first test of this test class is run.
-     */
-    public static function setUpBeforeClass(): void
+    #[BeforeClass]
+    public static function disableShutdownRunner(): void
     {
-        parent::setUpBeforeClass();
-
         TaskQueue::getInstance()->disableShutdownRunner();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function resetValuesAndScheduler(): void
     {
         $this->values = [];
         $this->serial = [];
@@ -42,10 +41,18 @@ abstract class AbstractPromiseTestCase extends TestCase
         static::prepareDefaultScheduler();
     }
 
-    protected function tearDown(): void
+    #[After]
+    protected function clearTaskQueue(): void
     {
         TaskQueue::getInstance()->clear();
+
+        $this->flushAsyncEvents();
     }
+
+    /**
+     * Hook for subclasses, runs after the task queue is cleared.
+     */
+    protected function flushAsyncEvents(): void {}
 
     protected static function prepareDefaultScheduler(): void
     {

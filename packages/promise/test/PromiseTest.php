@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Test;
 
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\UncaughtException;
-use Windwalker\Promise\Exception\UnsettledException;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
-use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Promise\SettledResult;
-use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\Promise\await;
 use function Windwalker\Promise\resolve;
@@ -23,7 +21,8 @@ use function Windwalker\Promise\resolve;
  */
 class PromiseTest extends AbstractPromiseTestCase
 {
-    public function testConstructorAndRun(): void
+    #[Test]
+    public function constructorRunsCallbackSynchronously(): void
     {
         $foo = null;
 
@@ -37,7 +36,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $foo);
     }
 
-    public function testConstructorResolve(): void
+    #[Test]
+    public function constructorResolveFulfillsPromiseWithValue(): void
     {
         // Resolve with value
         $p = new Promise(
@@ -50,10 +50,11 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Flower', $p->wait());
     }
 
-    public function testEmptyConstructorThen(): void
+    #[Test]
+    public function thenWithIdentityHandlerPassesResolvedValue(): void
     {
         [$p1, $resolve] = Promise::withResolvers();
-        $p2 = $p1->then(fn ($v) => $v);
+        $p2 = $p1->then(fn($v) => $v);
 
         $resolve('Flower');
 
@@ -63,18 +64,20 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Flower', $v);
     }
 
-    public function testWaitUnResolved(): void
+    #[Test]
+    public function waitOnUnresolvedPromiseThrowsWhenTaskQueueIsEmpty(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Running empty TaskQueue is not allowed, this may cause Promise lock.');
+        $this->expectExceptionMessageIsOrContains('Running empty TaskQueue is not allowed, this may cause Promise lock.');
 
         $p = new Promise();
-        $p = $p->then(fn ($v) => $v);
+        $p = $p->then(fn($v) => $v);
 
         $p->wait();
     }
 
-    public function testConstructorResolveAnotherPromise(): void
+    #[Test]
+    public function constructorResolvingFulfilledPromiseAdoptsItsValue(): void
     {
         $p1 = new Promise(
             function ($resolve) {
@@ -98,7 +101,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Sakura', $v);
     }
 
-    public function testConstructorCoroutine(): void
+    #[Test]
+    public function constructorResolvedByGeneratorSendRunsThenHandler(): void
     {
         self::useScheduler(new ImmediateScheduler());
 
@@ -125,7 +129,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Flower', $this->values['v1']);
     }
 
-    public function testResolve(): void
+    #[Test]
+    public function resolverFulfillsPromise(): void
     {
         [$p, $resolve] = Promise::withResolvers();
 
@@ -134,7 +139,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals(PromiseState::FULFILLED, $p->getState());
     }
 
-    public function testReject(): void
+    #[Test]
+    public function rejecterRejectsPromiseAndThrowsUncaughtException(): void
     {
         [$p,, $reject] = Promise::withResolvers();
 
@@ -145,16 +151,18 @@ class PromiseTest extends AbstractPromiseTestCase
         }
     }
 
-    public function testRejectedWithoutCatch(): void
+    #[Test]
+    public function waitOnRejectedPromiseWithoutCatchThrowsReason(): void
     {
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Hello');
+        $this->expectExceptionMessageIsOrContains('Hello');
 
         $promise = Promise::reject('Hello');
         $promise->wait();
     }
 
-    public function testResolvePendingPromise(): void
+    #[Test]
+    public function resolveWithPendingPromiseFollowsItsLaterValue(): void
     {
         [$promise, $resolve] = Promise::withResolvers();
 
@@ -172,7 +180,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Hello World', $r);
     }
 
-    public function testAllResolved()
+    #[Test]
+    public function allResolvesWithValuesWhenAllFulfilled()
     {
         $p = Promise::all(
             [
@@ -193,7 +202,9 @@ class PromiseTest extends AbstractPromiseTestCase
 
         self::assertEquals($this->numberOfAssertionsPerformed(), 1);
     }
-    public function testAllWithRejected()
+
+    #[Test]
+    public function allRejectsWithFirstReasonWhenAnyRejected()
     {
         $p = Promise::all(
             [
@@ -215,7 +226,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals(1, $this->numberOfAssertionsPerformed());
     }
 
-    public function testAllSettled(): void
+    #[Test]
+    public function allSettledReportsFulfilledAndRejectedWithDeferredScheduler(): void
     {
         self::useScheduler(new DeferredScheduler());
 
@@ -238,7 +250,11 @@ class PromiseTest extends AbstractPromiseTestCase
             );
 
         $promise->wait();
+    }
 
+    #[Test]
+    public function allSettledReportsFulfilledAndRejectedWithImmediateScheduler(): void
+    {
         self::useScheduler(new ImmediateScheduler());
 
         Promise::allSettled(
@@ -260,7 +276,8 @@ class PromiseTest extends AbstractPromiseTestCase
             );
     }
 
-    public function testAny(): void
+    #[Test]
+    public function anyResolvesWithFirstFulfilledValue(): void
     {
         $p = Promise::any(
             [
@@ -281,7 +298,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals(1, $this->numberOfAssertionsPerformed());
     }
 
-    public function testAnyAllRejected(): void
+    #[Test]
+    public function anyRejectsWithAllReasonsWhenAllRejected(): void
     {
         $p = Promise::any(
             [
@@ -302,7 +320,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals(1, $this->numberOfAssertionsPerformed());
     }
 
-    public function testTryResolved()
+    #[Test]
+    public function tryAdoptsResolvedThirdPartyPromise()
     {
         $reactPromiseFunction = function () {
             $deferred = new \React\Promise\Deferred();
@@ -325,7 +344,8 @@ class PromiseTest extends AbstractPromiseTestCase
         self::assertEquals(PromiseState::FULFILLED, $p->getState());
     }
 
-    public function testTryRejected()
+    #[Test]
+    public function tryAdoptsRejectedThirdPartyPromise()
     {
         $reactPromiseFunction = function () {
             $deferred = new \React\Promise\Deferred();
@@ -342,14 +362,15 @@ class PromiseTest extends AbstractPromiseTestCase
         );
 
         $this->expectException(UncaughtException::class);
-        $this->expectExceptionMessage('Hello');
+        $this->expectExceptionMessageIsOrContains('Hello');
 
         self::assertInstanceOf(Promise::class, $p);
 
         $p->wait();
     }
 
-    public function testTrySyncThrow()
+    #[Test]
+    public function tryRejectsWhenCallbackThrowsSynchronously()
     {
         $reactPromiseFunction = function () {
             throw new \RuntimeException('Error');
@@ -360,7 +381,7 @@ class PromiseTest extends AbstractPromiseTestCase
         );
 
         $this->expectException(UncaughtException::class);
-        $this->expectExceptionMessage('Error');
+        $this->expectExceptionMessageIsOrContains('Error');
 
         self::assertInstanceOf(Promise::class, $p);
 

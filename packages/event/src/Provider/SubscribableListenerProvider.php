@@ -23,16 +23,14 @@ use function Windwalker\disposable;
 class SubscribableListenerProvider implements SubscribableListenerProviderInterface
 {
     /**
-     * @var ListenersQueue[]
+     * @var  ListenersQueue[]
      */
     protected array $queues = [];
 
     /**
      * SubscribableListenerProvider constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @inheritDoc
@@ -56,7 +54,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
     public function on(
         string $event,
         callable $listener,
-        ?int $priority = ListenerPriority::NORMAL
+        ?int $priority = ListenerPriority::NORMAL,
     ): void {
         $event = strtolower($event);
 
@@ -89,7 +87,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
                     $this->on(
                         $listenTo->event,
                         $listener,
-                        $listenTo->priority
+                        $listenTo->priority,
                     );
                 }
 
@@ -97,13 +95,13 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
                 foreach (
                     $method->getAttributes(
                         EventInterface::class,
-                        ReflectionAttribute::IS_INSTANCEOF
+                        ReflectionAttribute::IS_INSTANCEOF,
                     ) as $attribute
                 ) {
                     $this->on(
                         $attribute->getName(),
                         [$subscriber, static::normalize($method->getName())],
-                        $priority
+                        $priority,
                     );
                 }
             }
@@ -114,7 +112,7 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
                 $this->on(
                     $method,
                     [$subscriber, static::normalize($method)],
-                    $priority
+                    $priority,
                 );
             }
         }
@@ -178,8 +176,8 @@ class SubscribableListenerProvider implements SubscribableListenerProviderInterf
         throw new InvalidArgumentException(
             sprintf(
                 'MethodName should be callable, %s got',
-                TypeAssert::describeValue($methodName)
-            )
+                TypeAssert::describeValue($methodName),
+            ),
         );
     }
 }

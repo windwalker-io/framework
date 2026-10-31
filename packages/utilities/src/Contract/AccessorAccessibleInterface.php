@@ -14,7 +14,7 @@ interface AccessorAccessibleInterface
      *
      * @param  string  $key
      *
-     * @return mixed
+     * @return  mixed
      */
     public function &get(mixed $key): mixed;
 
@@ -35,8 +35,6 @@ interface AccessorAccessibleInterface
      * @param  mixed  $default
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function def(mixed $key, mixed $default): mixed;
 
@@ -46,8 +44,6 @@ interface AccessorAccessibleInterface
      * @param  mixed  $key
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function has(mixed $key): bool;
 
@@ -57,8 +53,6 @@ interface AccessorAccessibleInterface
      * @param  mixed  $key
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function remove(mixed $key): static;
 
@@ -69,7 +63,7 @@ interface AccessorAccessibleInterface
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array;
 }

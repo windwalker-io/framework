@@ -15,17 +15,17 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     use OptionAccessTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = '';
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected mixed $connection = null;
 
     /**
-     * @var array
+     * @var  array
      */
     protected array $defaultOptions = [
         'dbname' => null,
@@ -78,7 +78,15 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
             return $this->connection;
         }
 
-        return $this->connection = $this->doConnect(static::prepareDbOptions(clone $this->options));
+        $options = $this->options;
+
+        if (is_object($options)) {
+            $options = clone $options;
+        }
+
+        $dbOptions = static::prepareDbOptions($options);
+
+        return $this->connection = $this->doConnect($dbOptions);
     }
 
     abstract protected function doConnect(DriverOptions $options);
@@ -101,7 +109,7 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function get(): mixed
     {
@@ -109,7 +117,7 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public static function getName(): string
     {

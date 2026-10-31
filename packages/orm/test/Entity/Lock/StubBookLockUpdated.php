@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Test\Entity\Lock;
 
 use Windwalker\ORM\Attributes\AutoIncrement;
-use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\OptimisticLock;

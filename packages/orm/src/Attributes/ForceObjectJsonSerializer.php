@@ -16,8 +16,7 @@ class ForceObjectJsonSerializer implements JsonSerializerInterface
         public bool $deep = false,
         public bool $nullable = false,
         public string $class = \stdClass::class
-    ) {
-    }
+    ) {}
 
     public function serialize(mixed $data): mixed
     {

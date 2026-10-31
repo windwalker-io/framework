@@ -12,7 +12,7 @@ class CookiesOptions
 
     // phpcs:disable
     public ?\DateTimeImmutable $expires = null {
-        set(\DateTimeImmutable|string|int|null $value) {
+        set(\DateTimeInterface|string|int|null $value) {
             if ($value === null) {
                 $this->expires = null;
 
@@ -67,7 +67,7 @@ class CookiesOptions
             'samesite' => $this->sameSite,
         ];
 
-        return array_filter($params, fn ($v) => $v !== null);
+        return array_filter($params, fn($v) => $v !== null);
     }
 
     public function toSessionCookieParams(): array
@@ -81,6 +81,6 @@ class CookiesOptions
             'samesite' => $this->sameSite,
         ];
 
-        return array_filter($params, fn ($v) => $v !== null);
+        return array_filter($params, fn($v) => $v !== null);
     }
 }

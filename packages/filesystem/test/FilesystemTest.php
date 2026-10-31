@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use SplFileInfo;
 use Windwalker\Filesystem\Exception\FileNotFoundException;
 use Windwalker\Filesystem\Exception\FilesystemException;
@@ -19,11 +20,12 @@ class FilesystemTest extends AbstractVfsTestCase
     use FilesystemTestTrait;
 
     /**
-     * @var Filesystem
+     * @var  Filesystem
      */
     protected $instance;
 
-    public function testItemsFirst(): void
+    #[Test]
+    public function itemsFirstReturnsFirstChild(): void
     {
         $fs = new Filesystem();
         $files = $fs::files('vfs://root/files', true);
@@ -34,7 +36,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::get
      */
-    public function testGet(): void
+    #[Test]
+    public function getReturnsFileObject(): void
     {
         $fs = new Filesystem();
         $file = $fs::get('vfs://root/files/folder2/file2.html');
@@ -47,7 +50,8 @@ class FilesystemTest extends AbstractVfsTestCase
      *
      * @return  void
      */
-    public function testRead(): void
+    #[Test]
+    public function readReturnsFileContents(): void
     {
         $fs = new Filesystem();
         $str = $fs::read('vfs://root/files/folder2/file2.html');
@@ -58,7 +62,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::delete
      */
-    public function testDelete(): void
+    #[Test]
+    public function deleteRemovesFilesAndFolders(): void
     {
         $fs = new Filesystem();
 
@@ -94,7 +99,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::mkdir
      */
-    public function testMkdir(): void
+    #[Test]
+    public function mkdirCreatesFolder(): void
     {
         $fs = new Filesystem();
         $dest = 'vfs://root/dest';
@@ -107,7 +113,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::copy
      */
-    public function testCopy(): void
+    #[Test]
+    public function copyDuplicatesFileOrFolder(): void
     {
         $fs = new Filesystem();
 
@@ -126,7 +133,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::move
      */
-    public function testMove(): void
+    #[Test]
+    public function moveRelocatesFileOrFolder(): void
     {
         $fs = new Filesystem();
 
@@ -147,7 +155,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::items
      */
-    public function testItems(): void
+    #[Test]
+    public function itemsListsChildren(): void
     {
         $fs = new Filesystem();
 
@@ -193,7 +202,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::glob
      */
-    public function testGlob(): void
+    #[Test]
+    public function globMatchesPattern(): void
     {
         $fs = new Filesystem();
         $files = $fs::glob('vfs://root/**/*');
@@ -207,7 +217,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::globAll
      */
-    public function testGlobAll(): void
+    #[Test]
+    public function globAllMatchesPatternRecursively(): void
     {
         $fs = new Filesystem();
 
@@ -236,7 +247,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::folders
      */
-    public function testFolders(): void
+    #[Test]
+    public function foldersListsOnlyFolders(): void
     {
         $fs = new Filesystem();
 
@@ -277,7 +289,8 @@ class FilesystemTest extends AbstractVfsTestCase
     /**
      * @see  Filesystem::files
      */
-    public function testFiles(): void
+    #[Test]
+    public function filesListsOnlyFiles(): void
     {
         $fs = new Filesystem();
 
@@ -313,5 +326,93 @@ class FilesystemTest extends AbstractVfsTestCase
         $files->rewind();
 
         $this->assertInstanceOf(FileObject::class, $files->current());
+    }
+
+    #[Test]
+    public function createTempCreatesFileAndDeletesItWhenDestructed(): void
+    {
+        $temp = Filesystem::createTemp(null, 'ww-test-');
+
+        $path = $temp->getPathname();
+
+        self::assertFileExists($path);
+        self::assertStringContainsString('ww-test-', basename($path));
+
+        unset($temp);
+
+        self::assertFileDoesNotExist($path);
+    }
+
+    #[Test]
+    public function createTempWithoutFlagsKeepsFileAfterDestruct(): void
+    {
+        $temp = Filesystem::createTemp(null, null, 0);
+        $path = $temp->getPathname();
+
+        unset($temp);
+
+        self::assertFileExists($path);
+
+        unlink($path);
+    }
+
+    #[Test]
+    public function createTempCreatesMissingDirectory(): void
+    {
+        $dir = sys_get_temp_dir() . '/windwalker-temp-dir-' . uniqid();
+
+        $temp = Filesystem::createTemp($dir);
+
+        self::assertDirectoryExists($dir);
+        self::assertSame(realpath($dir), realpath(dirname($temp->getPathname())));
+
+        unset($temp);
+
+        rmdir($dir);
+    }
+
+    #[Test]
+    public function createTempFolderCreatesFolderAndDeletesItWhenDestructed(): void
+    {
+        $temp = Filesystem::createTempFolder(null, 'ww-folder-');
+
+        $path = $temp->getPathname();
+
+        self::assertDirectoryExists($path);
+        self::assertStringContainsString('ww-folder-', basename($path));
+
+        unset($temp);
+
+        self::assertDirectoryDoesNotExist($path);
+    }
+
+    #[Test]
+    public function symlinkCreatesLinkToTarget(): void
+    {
+        $dir = sys_get_temp_dir() . '/windwalker-symlink-test-' . uniqid();
+        mkdir($dir);
+        file_put_contents($dir . '/target.txt', 'x');
+
+        try {
+            self::assertTrue(Filesystem::symlink($dir . '/target.txt', $dir . '/link.txt'));
+            self::assertTrue(is_link($dir . '/link.txt'));
+        } finally {
+            @unlink($dir . '/link.txt');
+            unlink($dir . '/target.txt');
+            rmdir($dir);
+        }
+    }
+
+    #[Test]
+    public function junctionHelpersReturnFalseOnNonWindows(): void
+    {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            self::markTestSkipped('Junctions are real on Windows.');
+        }
+
+        $fs = new Filesystem();
+
+        self::assertFalse($fs->isJunction('vfs://root/files/folder1'));
+        self::assertFalse($fs->removeJunction('vfs://root/files/folder1'));
     }
 }

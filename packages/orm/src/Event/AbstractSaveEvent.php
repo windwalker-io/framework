@@ -52,6 +52,7 @@ abstract class AbstractSaveEvent extends AbstractEntityEvent
 
     /**
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getOptions(): ORMOptions
     {

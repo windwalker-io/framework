@@ -13,12 +13,12 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 class FormatRawWrapper extends RawWrapper
 {
     /**
-     * @var Query
+     * @var  Query
      */
     protected $query;
 
     /**
-     * @var array
+     * @var  array
      */
     protected $args;
 

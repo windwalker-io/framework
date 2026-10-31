@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\Arr;
 
@@ -14,21 +18,19 @@ use Windwalker\Utilities\Arr;
  */
 abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
 {
-    protected static string $platform = '';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     /**
-     * @var AbstractConnection
+     * @var  AbstractConnection
      */
     protected static string $className = AbstractConnection::class;
 
     /**
-     * @var AbstractConnection
+     * @var  AbstractConnection
      */
     protected $instance;
 
-    protected static function setupDatabase(): void
-    {
-    }
+    protected static function setupDatabase(): void {}
 
     /**
      * @inheritDoc
@@ -44,7 +46,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         parent::setUpBeforeClass();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeConnection(): void
     {
         $this->instance = static::createConnection();
     }
@@ -64,6 +67,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
             ]
         );
 
+        $options = static::prepareTestOptions($options);
+
         return new $className($options);
     }
 
@@ -76,7 +81,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
      */
     abstract public function assertConnected(AbstractConnection $conn): void;
 
-    public function testConnect(): void
+    #[Test]
+    public function connect(): void
     {
         $conn = $this->instance;
         $conn->connect();
@@ -84,7 +90,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         $this->assertConnected($conn);
     }
 
-    public function testConnectWrong()
+    #[Test]
+    public function connectFailsWithInvalidCredentials(): void
     {
         $conn = $this->instance;
         $conn->setOption('user', 'notexists');
@@ -94,7 +101,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         $conn->connect();
     }
 
-    public function testDisconnect(): void
+    #[Test]
+    public function disconnect(): void
     {
         $conn = $this->instance;
         $conn->connect();
@@ -104,10 +112,9 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         self::assertNull($conn->get());
     }
 
-    protected function tearDown(): void
+    #[After]
+    protected function disconnectConnection(): void
     {
-        parent::tearDown();
-
         $this->instance->disconnect();
         $this->instance = null;
     }

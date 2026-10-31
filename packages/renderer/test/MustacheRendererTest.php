@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Throwable;
@@ -22,24 +24,19 @@ class MustacheRendererTest extends TestCase
     /**
      * Test instance.
      *
-     * @var MustacheRenderer
+     * @var  MustacheRenderer
      */
     protected MustacheRenderer $instance;
 
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static string $path = '';
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRenderer(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/mustache');
 
@@ -51,24 +48,10 @@ class MustacheRendererTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
+     * @throws  Throwable
      */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test render().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::render
-     * @throws Throwable
-     */
-    public function testRender()
+    #[Test]
+    public function renderHelloTemplateWithObjectData(): void
     {
         $html = $this->instance->render('hello', ['chris' => new Chris()]);
 
@@ -81,69 +64,18 @@ HTML;
         self::assertStringSafeEquals($expect, $html);
     }
 
-    /**
-     * Method to test getEngine().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::getEngine
-     * @TODO   Implement testGetEngine().
-     */
-    public function testGetEngine()
+    #[Test]
+    public function handleLayoutAppendsExtensionAndConvertsDots(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('foo/bar.mustache', $this->instance->handleLayout('foo.bar', 'mustache'));
     }
 
-    /**
-     * Method to test setEngine().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::setEngine
-     * @TODO   Implement testSetEngine().
-     */
-    public function testSetEngine()
+    #[Test]
+    public function handleLayoutKeepsLayoutAlreadyEndingWithExtension(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('foo/bar.mustache', $this->instance->handleLayout('foo/bar.mustache', 'mustache'));
     }
 
-    /**
-     * Method to test getLoader().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::getLoader
-     * @TODO   Implement testGetLoader().
-     */
-    public function testGetLoader()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test setLoader().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::setLoader
-     * @TODO   Implement testSetLoader().
-     */
-    public function testSetLoader()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
 }
 
 // phpcs:disable
@@ -160,7 +92,7 @@ class Chris
      *
      * @var  string
      */
-    public $name = "Chris";
+    public $name = 'Chris';
 
     /**
      * Property value.
@@ -172,7 +104,7 @@ class Chris
     /**
      * taxed_value
      *
-     * @return float|int
+     * @return  float|int
      */
     public function taxed_value(): float|int
     {

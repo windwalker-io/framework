@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Form\Form;
+use Windwalker\Utilities\Symbol;
 use Windwalker\Form\Test\Mock\MockFormRenderer;
 use Windwalker\Form\Test\Stub\StubAttrDefinition;
 use Windwalker\Form\Test\Stub\StubFieldDefinition;
@@ -25,19 +27,9 @@ class FormTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Form
+     * @var  Form
      */
     protected $instance;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-    }
 
     /**
      * getByDefine
@@ -56,21 +48,12 @@ class FormTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
      * Method to test addFields().
      *
-     * @return void
+     * @return  void
      */
-    public function testAddAndGetFields()
+    #[Test]
+    public function addAndGetFields(): void
     {
         $form = new Form();
 
@@ -119,11 +102,12 @@ class FormTest extends TestCase
     /**
      * Method to test addField().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::addField
      */
-    public function testAddAndGetField()
+    #[Test]
+    public function addAndGetField(): void
     {
         $form = new Form();
 
@@ -140,29 +124,24 @@ class FormTest extends TestCase
         self::assertEquals('sakura[yoo]', $form->getField('sakura/yoo')->getInputName());
     }
 
-    /**
-     * Method to test getIterator().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::getIterator
-     */
-    public function testGetIterator()
+    #[Test]
+    public function getIterator(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $form->addFields([new TextField('foo'), new TextField('bar')]);
+
+        self::assertSame(['foo', 'bar'], array_keys(iterator_to_array($form)));
     }
 
     /**
      * Method to test removeField().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::removeField
      */
-    public function testRemoveField()
+    #[Test]
+    public function removeField(): void
     {
         $form = $this->getByDefine();
 
@@ -172,89 +151,14 @@ class FormTest extends TestCase
     }
 
     /**
-     * Method to test removeFields().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::removeFields
-     */
-    public function testRemoveFields()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getFieldsets().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::getFieldsets
-     * @TODO   Implement testGetFieldsets().
-     */
-    public function testGetFieldsets()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getGroups().
-     *
-     * @return void
-     *
-     * @TODO   Implement testGetGroups().
-     */
-    public function testGetGroups()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test setAttribute().
-     *
-     * @return void
-     *
-     * @TODO   Implement testSetAttribute().
-     */
-    public function testSetAttribute()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getAttribute().
-     *
-     * @return void
-     *
-     * @TODO   Implement testGetAttribute().
-     */
-    public function testGetAttribute()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Method to test fill().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::fill
      */
-    public function testFill()
+    #[Test]
+    public function fill(): void
     {
         $data = [
             'id' => 5,
@@ -271,7 +175,8 @@ class FormTest extends TestCase
         self::assertEquals('foo', $fields['u/username']->getValue());
     }
 
-    public function testFillCollection()
+    #[Test]
+    public function fillCollection(): void
     {
         $data = \Windwalker\collect(
             [
@@ -290,7 +195,8 @@ class FormTest extends TestCase
         self::assertEquals('foo', $fields['u/username']->getValue());
     }
 
-    public function testBind()
+    #[Test]
+    public function bind(): void
     {
         $data = [
             'id' => 5,
@@ -313,9 +219,10 @@ class FormTest extends TestCase
     /**
      * Method to test validate().
      *
-     * @return void
+     * @return  void
      */
-    public function testValidate()
+    #[Test]
+    public function validate(): void
     {
         $form = $this->getByDefine();
 
@@ -359,9 +266,10 @@ class FormTest extends TestCase
     /**
      * Method to test prepareView().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetViews()
+    #[Test]
+    public function getViews(): void
     {
         $form = $this->getByDefine();
 
@@ -383,31 +291,30 @@ class FormTest extends TestCase
         self::assertEquals('123_ abc4456qwe:$yui', $array['Password']);
     }
 
-    /**
-     * Method to test prepareStore().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::prepareStore
-     */
-    public function testPrepareStore()
+    #[Test]
+    public function prepareStore(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $form->addField(new TextField('foo'));
+        $form->addField(new TextField('bar'), null, 'sakura');
+
+        $data = ['foo' => 'a', 'sakura' => ['bar' => 'b'], 'other' => 'c'];
+
+        self::assertSame($data, $form->prepareStore($data));
+        self::assertSame(['other' => 'c'], $form->prepareStore(['other' => 'c']));
     }
 
     /**
      * Method to test renderField().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::renderField
      *
      * @since  2.1.2
      */
-    public function testRenderField()
+    #[Test]
+    public function renderField(): void
     {
         $form = $this->getByDefine('windwalker');
 
@@ -425,28 +332,27 @@ class FormTest extends TestCase
         );
     }
 
-    /**
-     * Method to test renderFields().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::renderFields
-     * @TODO   Implement testRenderFields().
-     */
-    public function testRenderFields()
+    #[Test]
+    public function renderFields(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $form->setRenderer(new MockFormRenderer());
+        $form->addField(new TextField('foo'));
+        $form->addField(new TextField('bar'), 'flower');
+
+        self::assertStringContainsString('Hello World: foo', $form->renderFields(Symbol::none()));
+        self::assertStringNotContainsString('Hello World: bar', $form->renderFields(Symbol::none()));
+        self::assertStringContainsString('Hello World: bar', $form->renderFields('flower'));
+        self::assertStringNotContainsString('Hello World: foo', $form->renderFields('flower'));
     }
 
     /**
      * Method to test getControl().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetAndSetNamespace()
+    #[Test]
+    public function getAndSetNamespace(): void
     {
         $form = $this->getByDefine();
 
@@ -464,7 +370,8 @@ class FormTest extends TestCase
      * @covers \Windwalker\Form\Form::filter
      * @covers \Windwalker\Form\Form::getValues
      */
-    public function testFilterAndGetValues()
+    #[Test]
+    public function filterAndGetValues(): void
     {
         $form = $this->getByDefine();
 
@@ -485,7 +392,8 @@ class FormTest extends TestCase
         self::assertEquals('123abc4456qweyui', $filtered['b']['password']);
     }
 
-    public function testFilterWithDefaultValues(): void
+    #[Test]
+    public function filterWithDefaultValues(): void
     {
         $form = $this->getByDefine();
 
@@ -511,7 +419,8 @@ class FormTest extends TestCase
      *
      * @return  void
      */
-    public function testSetAndGetFieldRendererHandler()
+    #[Test]
+    public function setAndGetFieldRendererHandler(): void
     {
         $renderer = new MockFormRenderer();
 
@@ -526,7 +435,8 @@ class FormTest extends TestCase
         );
     }
 
-    public function testAttrDefinition()
+    #[Test]
+    public function attrDefinition(): void
     {
         $define = new StubAttrDefinition();
 
@@ -561,5 +471,143 @@ class FormTest extends TestCase
             ],
             $fields
         );
+    }
+
+    #[Test]
+    public function hasFieldAndMustGetField(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('foo'));
+
+        self::assertTrue($form->hasField('foo'));
+        self::assertFalse($form->hasField('bar'));
+        self::assertSame($form->getField('foo'), $form->mustGetField('foo'));
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessageIs('Field "bar" not exists.');
+
+        $form->mustGetField('bar');
+    }
+
+    #[Test]
+    public function arrayAccessReadsChecksAndUnsetsFields(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('foo'));
+
+        self::assertTrue(isset($form['foo']));
+        self::assertInstanceOf(TextField::class, $form['foo']);
+        self::assertNull($form['bar']);
+
+        unset($form['foo']);
+
+        self::assertFalse(isset($form['foo']));
+    }
+
+    #[Test]
+    public function countAndCountFields(): void
+    {
+        $form = new Form();
+        $form->addFields([new TextField('a'), new TextField('b')], 'one');
+        $form->addFields([new TextField('c')], 'two', 'ns');
+
+        self::assertCount(3, $form);
+        self::assertSame(2, $form->countFields('one'));
+        self::assertSame(1, $form->countFields(null, 'ns'));
+        self::assertSame(3, $form->countFields());
+    }
+
+    #[Test]
+    public function removeFieldsByFieldsetOrNamespace(): void
+    {
+        $form = new Form();
+        $form->addFields([new TextField('a'), new TextField('b')], 'one');
+        $form->addFields([new TextField('c')], 'two', 'ns');
+
+        $form->removeFields('one');
+
+        self::assertFalse($form->hasField('a'));
+        self::assertFalse($form->hasField('b'));
+        self::assertTrue($form->hasField('ns/c'));
+
+        $form->removeFields(null, 'ns');
+
+        self::assertCount(0, $form);
+    }
+
+    #[Test]
+    public function getValuesReturnsNestedFieldValues(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('foo'));
+        $form->addField(new TextField('bar'), null, 'sakura');
+        $form->fill(['foo' => 'a', 'sakura' => ['bar' => 'b']]);
+
+        self::assertSame(['foo' => 'a', 'sakura' => ['bar' => 'b']], $form->getValues());
+    }
+
+    #[Test]
+    public function fillToFillsDataUnderPath(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('bar'), null, 'sakura');
+
+        $form->fillTo('sakura', ['bar' => 'b']);
+
+        self::assertSame('b', $form->getField('sakura/bar')->getValue());
+    }
+
+    #[Test]
+    public function getBoundedReturnsReferenceToBoundData(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('foo'));
+        $data = ['foo' => 'a'];
+
+        $form->bind($data);
+
+        self::assertSame(['foo' => 'a'], $form->getBounded());
+    }
+
+    #[Test]
+    public function fieldsetsCanBeCreatedWithTitleFetchedAndRemoved(): void
+    {
+        $form = new Form();
+
+        $fieldset = $form->fieldsetWithTitle('basic', 'Basic Info');
+
+        self::assertSame($fieldset, $form->getFieldset('basic'));
+        self::assertSame('Basic Info', $fieldset->getTitle());
+        self::assertSame($form, $fieldset->getForm());
+        self::assertNull($form->getFieldset('none'));
+
+        $form->removeFieldset('basic');
+
+        self::assertNull($form->getFieldset('basic'));
+    }
+
+    #[Test]
+    public function appendNamespaceNormalizesSeparators(): void
+    {
+        $form = new Form('wind');
+
+        $form->appendNamespace('/sakura/');
+
+        self::assertSame('wind/sakura', $form->getNamespace());
+    }
+
+    #[Test]
+    public function groupWrapsFieldsInNamespace(): void
+    {
+        $form = new Form();
+
+        $form->group(
+            'sakura',
+            function (Form $form) {
+                $form->addField(new TextField('bar'));
+            }
+        );
+
+        self::assertTrue($form->hasField('sakura/bar'));
     }
 }

@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Helper;
 
+use RuntimeException;
 use Windwalker\Utilities\Assert\TypeAssert;
+
+use function defined;
+use function extension_loaded;
+use function strlen;
+
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
 
 /**
  * The IpHelper class.
@@ -18,9 +26,7 @@ class IpHelper
     /**
      * This class should not be instantiated.
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function isIp(string $ip): bool
     {
@@ -43,7 +49,7 @@ class IpHelper
      * @param  string        $requestIp  The request IP to check.
      * @param  string|array  $ips        List of IPs or subnets (can be a string if only a single one)
      *
-     * @return bool
+     * @return  bool
      */
     public static function checkIp(string $requestIp, string|array $ips): bool
     {
@@ -122,7 +128,7 @@ class IpHelper
      * @param  string  $requestIp  The request IP to check.
      * @param  string  $ip         IPv4 address or subnet in CIDR notation
      *
-     * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
+     * @return  bool  Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
      */
     public static function checkIpv4(string $requestIp, string $ip): bool
     {
@@ -131,7 +137,7 @@ class IpHelper
             return self::$checkedIps[$cacheKey];
         }
 
-        if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+        if (!filter_var($requestIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return self::$checkedIps[$cacheKey] = false;
         }
 
@@ -141,8 +147,8 @@ class IpHelper
             if ('0' === $netmask) {
                 return self::$checkedIps[$cacheKey] = (bool) filter_var(
                     $address,
-                    \FILTER_VALIDATE_IP,
-                    \FILTER_FLAG_IPV4
+                    FILTER_VALIDATE_IP,
+                    FILTER_FLAG_IPV4,
                 );
             }
 
@@ -158,12 +164,12 @@ class IpHelper
             return self::$checkedIps[$cacheKey] = false;
         }
 
-        return self::$checkedIps[$cacheKey] =
-            (0 === substr_compare(
+        return self::$checkedIps[$cacheKey]
+            = (0 === substr_compare(
                 sprintf('%032b', ip2long($requestIp)),
                 sprintf('%032b', ip2long($address)),
                 0,
-                (int) $netmask
+                (int) $netmask,
             ));
     }
 
@@ -174,7 +180,7 @@ class IpHelper
      * @param  string  $requestIp  The request IP to check.
      * @param  string  $ip         IPv6 address or subnet in CIDR notation
      *
-     * @return bool
+     * @return  bool
      *
      * @see    https://github.com/dsp/v6tools
      *
@@ -188,9 +194,9 @@ class IpHelper
             return self::$checkedIps[$cacheKey];
         }
 
-        if (!((\extension_loaded('sockets') && \defined('AF_INET6')) || @inet_pton('::1'))) {
-            throw new \RuntimeException(
-                'Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".'
+        if (!((extension_loaded('sockets') && defined('AF_INET6')) || @inet_pton('::1'))) {
+            throw new RuntimeException(
+                'Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".',
             );
         }
 
@@ -198,7 +204,7 @@ class IpHelper
             [$address, $netmask] = explode('/', $ip, 2);
 
             if ('0' === $netmask) {
-                return (bool) unpack('n*', @inet_pton($address));
+                return (bool) unpack('n*', (string) @inet_pton($address));
             }
 
             if ($netmask < 1 || $netmask > 128) {
@@ -209,8 +215,8 @@ class IpHelper
             $netmask = 128;
         }
 
-        $bytesAddr = unpack('n*', @inet_pton($address));
-        $bytesTest = unpack('n*', @inet_pton($requestIp));
+        $bytesAddr = unpack('n*', (string) @inet_pton($address));
+        $bytesTest = unpack('n*', (string) @inet_pton($requestIp));
 
         if (!$bytesAddr || !$bytesTest) {
             return self::$checkedIps[$cacheKey] = false;
@@ -245,7 +251,7 @@ class IpHelper
 
         $packedAddress = inet_pton($ip);
 
-        if (4 === \strlen($packedAddress)) {
+        if (4 === strlen($packedAddress)) {
             $mask = '255.255.255.0';
         } elseif ($ip === inet_ntop($packedAddress & inet_pton('::ffff:ffff:ffff'))) {
             $mask = '::ffff:ffff:ff00';

@@ -27,21 +27,33 @@ use function Windwalker\Query\clause;
  */
 abstract class AbstractPlatform
 {
-    public const string MYSQL = 'MySQL';
-
-    public const string POSTGRESQL = 'PostgreSQL';
-
-    public const string SQLSERVER = 'SQLServer';
-
-    public const string SQLITE = 'SQLite';
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string MYSQL = DbPlatform::MySQL->name;
 
     /**
-     * @var string
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string POSTGRESQL = DbPlatform::PostgreSQL->name;
+
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string SQLSERVER = DbPlatform::SQLServer->name;
+
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string SQLITE = DbPlatform::SQLite->name;
+
+    /**
+     * @var  string
      */
     protected string $name = '';
 
     /**
-     * @var string|null
+     * @var  string|null
      */
     protected static ?string $defaultSchema = null;
 
@@ -56,11 +68,23 @@ abstract class AbstractPlatform
     protected ?DataType $dataType = null;
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return  DbPlatform
+     *
+     * @codeCoverageIgnore
+     */
+    public function getDbType(): DbPlatform
+    {
+        return DbPlatform::wrap($this->name);
     }
 
     public static function createPlatform(string $platform, DatabaseAdapter $db)
@@ -71,7 +95,7 @@ abstract class AbstractPlatform
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public static function getDefaultSchema(): ?string
     {
@@ -205,38 +229,35 @@ abstract class AbstractPlatform
     public function createDatabase(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'CREATE DATABASE',
-                    !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
-                    $this->db->quoteName($name),
-                    'CHARACTER SET=' . ($options['charset'] ?? 'utf8mb4'),
-                    'COLLATE=' . ($options['collation'] ?? 'utf8mb4_unicode_ci'),
-                )
+            $this->getGrammar()::build(
+                'CREATE DATABASE',
+                !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
+                $this->db->quoteName($name),
+                'CHARACTER SET=' . ($options['charset'] ?? 'utf8mb4'),
+                'COLLATE=' . ($options['collation'] ?? 'utf8mb4_unicode_ci'),
+            )
         );
     }
 
     public function dropDatabase(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'DROP DATABASE',
-                    !empty($options['if_exists']) ? 'IF EXISTS' : null,
-                    $this->db->quoteName($name)
-                )
+            $this->getGrammar()::build(
+                'DROP DATABASE',
+                !empty($options['if_exists']) ? 'IF EXISTS' : null,
+                $this->db->quoteName($name)
+            )
         );
     }
 
     public function createSchema(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'CREATE SCHEMA',
-                    !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
-                    $this->db->quoteName($name)
-                )
+            $this->getGrammar()::build(
+                'CREATE SCHEMA',
+                !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
+                $this->db->quoteName($name)
+            )
         );
     }
 
@@ -251,11 +272,10 @@ abstract class AbstractPlatform
     public function dropSchema(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'DROP SCHEMA',
-                    $this->db->quoteName($name)
-                )
+            $this->getGrammar()::build(
+                'DROP SCHEMA',
+                $this->db->quoteName($name)
+            )
         );
     }
 
@@ -599,7 +619,7 @@ abstract class AbstractPlatform
      *
      * @return  mixed
      *
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
     {

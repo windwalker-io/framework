@@ -15,6 +15,8 @@ use Windwalker\Queue\QueueMessage;
  * The RabbitmqQueueDriver class.
  *
  * @since  3.2
+ *
+ * @codeCoverageIgnore Requires an external queue service; legacy/unautoloaded driver.
  */
 class RabbitmqQueueDriver implements QueueDriverInterface
 {
@@ -58,7 +60,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return string
+     * @return  string
      */
     public function push(QueueMessage $message): string
     {
@@ -90,7 +92,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -129,7 +131,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return RabbitmqQueueDriver
+     * @return  RabbitmqQueueDriver
      */
     public function delete(QueueMessage $message): static
     {
@@ -143,7 +145,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage|string  $message
      *
-     * @return static
+     * @return  static
      */
     public function release(QueueMessage $message): static
     {
@@ -174,7 +176,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
      * @param  array  $options
      *
      * @return  AMQPStreamConnection
-     * @throws DomainException
+     * @throws  DomainException
      */
     public function getAMQPConnection(array $options): AMQPStreamConnection
     {
@@ -199,7 +201,5 @@ class RabbitmqQueueDriver implements QueueDriverInterface
         );
     }
 
-    public function defer(QueueMessage $message): static
-    {
-    }
+    public function defer(QueueMessage $message): static {}
 }

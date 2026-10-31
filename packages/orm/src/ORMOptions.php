@@ -31,8 +31,7 @@ class ORMOptions
         public bool $optimisticLock = true,
         public bool|string $forUpdate = false,
         public bool|string $forShare = false,
-    ) {
-    }
+    ) {}
 
     public static function wrap(mixed $options): static
     {

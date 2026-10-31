@@ -14,7 +14,7 @@ use IteratorAggregate;
 class ResultSet implements IteratorAggregate, Countable
 {
     /**
-     * @var AuthResult[]
+     * @var  AuthResult[]
      */
     protected array $results = [];
 
@@ -85,7 +85,7 @@ class ResultSet implements IteratorAggregate, Countable
     }
 
     /**
-     * @return AuthResult[]
+     * @return  AuthResult[]
      */
     public function getResults(): array
     {
@@ -93,7 +93,7 @@ class ResultSet implements IteratorAggregate, Countable
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getMatchedMethod(): ?string
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Reseter;
 
 use PDO;
+use Windwalker\Database\Platform\DbPlatform;
 
 use function Windwalker\raw;
 
@@ -13,7 +14,7 @@ use function Windwalker\raw;
  */
 class PostgreSQLReseter extends AbstractReseter
 {
-    protected static string $platform = 'PostgreSQL';
+    protected static DbPlatform $platform = DbPlatform::PostgreSQL;
 
     public function createDatabase(PDO $pdo, string $dbname): void
     {

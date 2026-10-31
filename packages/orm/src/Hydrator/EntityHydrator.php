@@ -26,9 +26,7 @@ class EntityHydrator implements FieldHydratorInterface
      * @param  FieldHydratorInterface  $hydrator
      * @param  ORM                     $orm
      */
-    public function __construct(protected FieldHydratorInterface $hydrator, protected ORM $orm)
-    {
-    }
+    public function __construct(protected FieldHydratorInterface $hydrator, protected ORM $orm) {}
 
     /**
      * @inheritDoc
@@ -152,7 +150,7 @@ class EntityHydrator implements FieldHydratorInterface
 
         return static::castFieldForExtract(
             $metadata,
-            $column->getName(),
+            $column?->getName() ?? $field,
             $data[$prop] ?? null,
             $object
         );
@@ -275,7 +273,7 @@ class EntityHydrator implements FieldHydratorInterface
      *
      * @return  mixed
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     protected static function extractCastNameFromClosure(\Closure $hydrator): mixed
     {

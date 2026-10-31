@@ -9,6 +9,4 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * The DefinitionNotFoundException class.
  */
-class DefinitionNotFoundException extends DefinitionException implements NotFoundExceptionInterface
-{
-}
+class DefinitionNotFoundException extends DefinitionException implements NotFoundExceptionInterface {}

@@ -1,28 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\Utilities\Test;
 
 use ArrayObject;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Accessible\AccessibleTrait;
 use Windwalker\Utilities\Test\Stub\StubAccessible;
 
-/**
- * The AccessibleTraitTest class.
- *
- * @since  __DEPLOY_VERSION__
- */
 class AccessibleTraitTest extends TestCase
 {
     /**
-     * @var StubAccessible
+     * @var  StubAccessible
      */
     protected $instance;
 
     /**
      * @see  AccessibleTrait::set
      */
-    public function testSet(): void
+    #[Test]
+    public function setStoresValueByKey(): void
     {
         $this->instance->set('foo', 123);
 
@@ -32,7 +32,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::jsonSerialize
      */
-    public function testJsonSerialize(): void
+    #[Test]
+    public function jsonSerializeEncodesStorageAsJsonArray(): void
     {
         self::assertEquals('[1,2,3]', json_encode($this->instance));
     }
@@ -40,7 +41,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::remove
      */
-    public function testRemove(): void
+    #[Test]
+    public function removeDeletesItemByKey(): void
     {
         $this->instance->remove(2);
 
@@ -50,7 +52,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::reset
      */
-    public function testReset(): void
+    #[Test]
+    public function resetReplacesStorage(): void
     {
         $this->instance->reset([1, 1, 1]);
 
@@ -60,7 +63,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::__unset
      */
-    public function testMagicUnset(): void
+    #[Test]
+    public function magicUnsetRemovesItem(): void
     {
         unset($this->instance->{1});
 
@@ -70,7 +74,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::__set
      */
-    public function testMagicSet(): void
+    #[Test]
+    public function magicSetAddsItemToStorage(): void
     {
         $this->instance->foo = 'qwe';
 
@@ -80,7 +85,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::isNull
      */
-    public function testIsNull(): void
+    #[Test]
+    public function isNullReflectsWhetherStorageIsEmpty(): void
     {
         self::assertFalse($this->instance->isNull());
 
@@ -92,7 +98,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::count
      */
-    public function testCount(): void
+    #[Test]
+    public function countReturnsNumberOfItemsAndTracksChanges(): void
     {
         self::assertEquals(3, $this->instance->count());
 
@@ -104,7 +111,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::offsetUnset
      */
-    public function testOffsetUnset(): void
+    #[Test]
+    public function offsetUnsetRemovesItem(): void
     {
         unset($this->instance[2]);
 
@@ -114,7 +122,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::def
      */
-    public function testDef(): void
+    #[Test]
+    public function defSetsValueOnlyWhenKeyIsMissing(): void
     {
         $this->instance->def(1, 'qwe');
         $this->instance->def(3, 'flower');
@@ -122,24 +131,17 @@ class AccessibleTraitTest extends TestCase
         self::assertEquals([1, 2, 3, 'flower'], $this->instance->dump());
     }
 
-    /**
-     * @see  AccessibleTrait::dump
-     */
-    public function testDump(): void
+    #[Test]
+    public function dumpReturnsStorageAsArray(): void
     {
         self::assertEquals([1, 2, 3], $this->instance->dump());
+    }
 
-        $this->instance->reset(
-            [
-                1,
-                2,
-                (object) ['foo' => 'bar'],
-                new ArrayObject(['flower' => 'sakura']),
-                new StubAccessible(['car' => 'jeep']),
-            ]
-        );
+    #[Test]
+    public function dumpRecursivelyConvertsNestedObjectsToArrays(): void
+    {
+        $this->resetWithNestedObjects();
 
-        // Dump recursively
         self::assertEquals(
             [
                 1,
@@ -150,8 +152,13 @@ class AccessibleTraitTest extends TestCase
             ],
             $this->instance->dump(true)
         );
+    }
 
-        // Dump recursively but only DumpableInterface will dump to array
+    #[Test]
+    public function dumpRecursivelyOnlyConvertsDumpableObjectsWhenOnlyDumpableIsSet(): void
+    {
+        $this->resetWithNestedObjects();
+
         self::assertEquals(
             [
                 1,
@@ -164,10 +171,24 @@ class AccessibleTraitTest extends TestCase
         );
     }
 
+    protected function resetWithNestedObjects(): void
+    {
+        $this->instance->reset(
+            [
+                1,
+                2,
+                (object) ['foo' => 'bar'],
+                new ArrayObject(['flower' => 'sakura']),
+                new StubAccessible(['car' => 'jeep']),
+            ]
+        );
+    }
+
     /**
      * @see  AccessibleTrait::notNull
      */
-    public function testNotNull(): void
+    #[Test]
+    public function notNullReflectsWhetherStorageHasItems(): void
     {
         self::assertTrue($this->instance->notNull());
 
@@ -179,7 +200,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::get
      */
-    public function testGet(): void
+    #[Test]
+    public function getReturnsReferenceToStoredValue(): void
     {
         $v = &$this->instance->get(1);
 
@@ -191,7 +213,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::__get
      */
-    public function testMagicGet(): void
+    #[Test]
+    public function magicGetReturnsReferenceToStoredValue(): void
     {
         $v = &$this->instance->{1};
 
@@ -203,7 +226,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::has
      */
-    public function testHas(): void
+    #[Test]
+    public function hasDetectsExistingKeys(): void
     {
         self::assertTrue($this->instance->has(1));
         self::assertFalse($this->instance->has(5));
@@ -212,7 +236,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::getIterator
      */
-    public function testGetIterator(): void
+    #[Test]
+    public function getIteratorAllowsModifyingItemsByReference(): void
     {
         foreach ($this->instance as &$v) {
             $v++;
@@ -224,7 +249,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::offsetSet
      */
-    public function testOffsetSet(): void
+    #[Test]
+    public function offsetSetStoresValueAtKey(): void
     {
         $this->instance[3] = 'flower';
 
@@ -234,7 +260,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::offsetExists
      */
-    public function testOffsetExists(): void
+    #[Test]
+    public function offsetExistsDetectsExistingKeys(): void
     {
         self::assertTrue(isset($this->instance[1]));
         self::assertFalse(isset($this->instance[6]));
@@ -243,7 +270,8 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::offsetGet
      */
-    public function testOffsetGet(): void
+    #[Test]
+    public function offsetGetReturnsReferenceToStoredValue(): void
     {
         $v = &$this->instance[1];
 
@@ -255,18 +283,16 @@ class AccessibleTraitTest extends TestCase
     /**
      * @see  AccessibleTrait::__isset
      */
-    public function testMagicIsset(): void
+    #[Test]
+    public function magicIssetDetectsExistingKeys(): void
     {
         self::assertTrue(isset($this->instance->{1}));
         self::assertFalse(isset($this->instance->{6}));
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createInstance(): void
     {
         $this->instance = new StubAccessible([1, 2, 3]);
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

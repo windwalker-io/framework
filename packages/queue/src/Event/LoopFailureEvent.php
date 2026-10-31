@@ -7,7 +7,6 @@ namespace Windwalker\Queue\Event;
 use Throwable;
 use Windwalker\Event\BaseEvent;
 use Windwalker\Queue\AbstractRunner;
-use Windwalker\Queue\Worker;
 use Windwalker\Utilities\Accessible\AccessorBCTrait;
 
 /**

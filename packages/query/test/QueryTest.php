@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Windwalker\Query\Bounded\BoundedHelper;
@@ -17,7 +19,6 @@ use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
 use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
-
 use Windwalker\Utilities\Serial;
 
 use function Windwalker\Query\expr;
@@ -33,14 +34,15 @@ class QueryTest extends TestCase
     use QueryTestTrait;
 
     /**
-     * @var Query
+     * @var  Query
      */
     protected Query $instance;
 
     protected static mixed $escaper;
 
     #[DataProvider('selectProvider')]
-    public function testSelect(
+    #[Test]
+    public function selectBuildsSelectStatement(
         array $args,
         ?array $asArgs,
         string $expected,
@@ -145,7 +147,8 @@ class QueryTest extends TestCase
         ];
     }
 
-    public function testSelectWithNoColumns(): void
+    #[Test]
+    public function selectWithNoColumnsRendersAsterisk(): void
     {
         $this->instance->from('flowers')
             ->where('id', 123);
@@ -165,7 +168,8 @@ class QueryTest extends TestCase
      *
      */
     #[DataProvider('fromProvider')]
-    public function testFrom($tables, ?string $alias, string $expected): void
+    #[Test]
+    public function fromBuildsFromClause($tables, ?string $alias, string $expected): void
     {
         $q = $this->instance
             ->select('*')
@@ -268,7 +272,8 @@ class QueryTest extends TestCase
      *
      */
     #[DataProvider('joinProvider')]
-    public function testJoin(string $expt, ...$joins)
+    #[Test]
+    public function joinBuildsJoinClauses(string $expt, ...$joins)
     {
         $q = self::createQuery()
             ->select('*')
@@ -459,7 +464,8 @@ class QueryTest extends TestCase
         // phpcs:enable
     }
 
-    public function testUnion(): void
+    #[Test]
+    public function unionCombinesQueries(): void
     {
         // Select and union
         // $q = self::createQuery()
@@ -508,7 +514,8 @@ class QueryTest extends TestCase
         );
     }
 
-    public function testInsert(): void
+    #[Test]
+    public function insertBuildsInsertStatement(): void
     {
         $this->instance->insert('foo', true)
             ->columns('id', 'title', ['foo', 'bar'], 'yoo')
@@ -573,7 +580,8 @@ SQL
         );
     }
 
-    public function testUpdate(): void
+    #[Test]
+    public function updateBuildsUpdateStatement(): void
     {
         $q = self::createQuery()
             ->update('foo')
@@ -622,7 +630,8 @@ SQL
         );
     }
 
-    public function testDelete()
+    #[Test]
+    public function deleteBuildsDeleteStatement()
     {
         $q = self::createQuery()
             ->delete('foo')
@@ -661,7 +670,8 @@ SQL
      *
      */
     #[DataProvider('asProvider')]
-    public function testAs(string $expt, $value, $alias, bool $isColumn = true): void
+    #[Test]
+    public function asQuotesValueWithAlias(string $expt, $value, $alias, bool $isColumn = true): void
     {
         self::assertEquals(static::replaceQn($expt), (string) $this->instance->as($value, $alias, $isColumn));
     }
@@ -743,7 +753,8 @@ SQL
      *
      */
     #[DataProvider('whereProvider')]
-    public function testWhere(string $expt, ...$wheres)
+    #[Test]
+    public function whereBuildsConditions(string $expt, ...$wheres)
     {
         $this->instance->select('*')
             ->from('a');
@@ -958,7 +969,8 @@ SQL
         // phpcs:enable
     }
 
-    public function testOrWhere()
+    #[Test]
+    public function orWhereGroupsConditionsWithOr()
     {
         // Array
         $q = self::createQuery()
@@ -1028,7 +1040,8 @@ SQL
         );
     }
 
-    public function testAndWhere()
+    #[Test]
+    public function andWhereGroupsConditionsWithAnd()
     {
         // Array
         $q = self::createQuery()
@@ -1098,7 +1111,8 @@ SQL
         );
     }
 
-    public function testWhereVariant()
+    #[Test]
+    public function whereVariantsBuildInBetweenAndLikeConditions(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1117,7 +1131,11 @@ SQL
             SQL,
             $q->render(true)
         );
+    }
 
+    #[Test]
+    public function havingVariantsBuildInBetweenAndLikeConditions(): void
+    {
         $q = self::createQuery()
             ->select('*')
             ->from('foo')
@@ -1139,7 +1157,8 @@ SQL
         );
     }
 
-    public function testBindVariadicParams(): void
+    #[Test]
+    public function bindVariadicParamsExpandsArrayIntoList(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1153,7 +1172,8 @@ SQL
         );
     }
 
-    public function testAutoAlias(): void
+    #[Test]
+    public function autoAliasPrefixesColumnsWithTableAlias(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -1185,7 +1205,8 @@ SQL
      *
      */
     #[DataProvider('havingProvider')]
-    public function testHaving(string $expt, ...$wheres): void
+    #[Test]
+    public function havingBuildsConditions(string $expt, ...$wheres): void
     {
         $this->instance->select('*')
             ->from('a');
@@ -1375,7 +1396,8 @@ SQL
         ];
     }
 
-    public function testOrHaving()
+    #[Test]
+    public function orHavingGroupsConditionsWithOr()
     {
         // Array
         $q = self::createQuery()
@@ -1445,7 +1467,8 @@ SQL
         );
     }
 
-    public function testOrder(): void
+    #[Test]
+    public function orderAppendsAndPrependsSortings(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1468,7 +1491,8 @@ SQL
         );
     }
 
-    public function testOrderByPhp86Enum(): void
+    #[Test]
+    public function orderAcceptsSortDirectionEnum(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1491,7 +1515,8 @@ SQL
         );
     }
 
-    public function testGroup()
+    #[Test]
+    public function groupAppendsGroupByColumns()
     {
         $q = self::createQuery()
             ->select('*')
@@ -1507,7 +1532,8 @@ SQL
         );
     }
 
-    public function testLimitOffset()
+    #[Test]
+    public function limitOffsetRendersLimitClause()
     {
         // Limit
         $q = self::createQuery()
@@ -1548,7 +1574,8 @@ SQL
         );
     }
 
-    public function testSubQueryBounded(): void
+    #[Test]
+    public function subQueryKeepsBoundParams(): void
     {
         $q = self::createQuery()
             ->select('a.*')
@@ -1590,7 +1617,8 @@ SQL
         );
     }
 
-    public function testSubQueryInExpr(): void
+    #[Test]
+    public function subQueryRendersInsideExpression(): void
     {
         $q = self::createQuery();
         $q->from('articles', 'a')
@@ -1623,12 +1651,13 @@ SQL
         );
     }
 
-    public function testFormat(): void
+    #[Test]
+    public function formatReplacesTypedPlaceholders(): void
     {
         $result = $this->instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
 
-        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
-            ' WHERE ' . $this->instance->quoteName('id') . ' = 10';
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar')
+            . ' WHERE ' . $this->instance->quoteName('id') . ' = 10';
 
         $this->assertEquals($sql, $result);
 
@@ -1640,15 +1669,16 @@ SQL
             'nouse'
         );
 
-        $sql = 'SELECT ' . $this->instance->quoteName('id') . ' FROM ' . $this->instance->quoteName('#__foo') .
-            ' WHERE ' . $this->instance->quoteName('date') .
-            ' = ' . $this->instance->getExpression()->currentTimestamp() .
-            ' OR ' . $this->instance->quoteName('date') . ' = ' . $this->instance->quote($this->instance->nullDate());
+        $sql = 'SELECT ' . $this->instance->quoteName('id') . ' FROM ' . $this->instance->quoteName('#__foo')
+            . ' WHERE ' . $this->instance->quoteName('date')
+            . ' = ' . $this->instance->getExpression()->currentTimestamp()
+            . ' OR ' . $this->instance->quoteName('date') . ' = ' . $this->instance->quote($this->instance->nullDate());
 
         $this->assertEquals($sql, $result);
     }
 
-    public function testFormatMultiple(): void
+    #[Test]
+    public function formatExpandsArrayPlaceholders(): void
     {
         $result = $this->instance->format(
             'SELECT %n FROM %n WHERE %n IN(%a)',
@@ -1658,8 +1688,8 @@ SQL
             [10, 2, 3, 4]
         );
 
-        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
-            ' WHERE ' . $this->instance->quoteName('id') . ' IN(10, 2, 3, 4)';
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar')
+            . ' WHERE ' . $this->instance->quoteName('id') . ' IN(10, 2, 3, 4)';
 
         $this->assertEquals($sql, $result);
 
@@ -1671,13 +1701,14 @@ SQL
             ['foo', 'bar', 'yoo']
         );
 
-        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
-            ' WHERE ' . $this->instance->quoteName('type') . " IN('foo', 'bar', 'yoo')";
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar')
+            . ' WHERE ' . $this->instance->quoteName('type') . " IN('foo', 'bar', 'yoo')";
 
         $this->assertEquals($sql, $result);
     }
 
-    public function testFormatWrongType()
+    #[Test]
+    public function formatThrowsOnInvalidCastType()
     {
         $this->expectException(CastingException::class);
 
@@ -1687,7 +1718,8 @@ SQL
     /**
      * @see  Query::quoteName
      */
-    public function testQuoteName(): void
+    #[Test]
+    public function quoteNameQuotesIdentifier(): void
     {
         $this->assertEquals(self::replaceQn('"foo"'), $this->instance->quoteName('foo'));
         $this->assertEquals([self::replaceQn('"foo"')], $this->instance->qnMultiple(['foo']));
@@ -1696,7 +1728,8 @@ SQL
     /**
      * @see  Query::quote
      */
-    public function testQuote(): void
+    #[Test]
+    public function quoteEscapesValueWithEscaper(): void
     {
         $q = new Query(
             $func = static function (string $value) {
@@ -1709,7 +1742,7 @@ SQL
         self::assertEquals("'These are Simon\'s items'", $s);
 
         $q = new Query(
-            $obj = new class {
+            $obj = new class () {
                 public function escape(string $value): string
                 {
                     return addslashes($value);
@@ -1725,7 +1758,8 @@ SQL
     /**
      * @see  Query::escape
      */
-    public function testEscape(): void
+    #[Test]
+    public function escapeDelegatesToEscaper(): void
     {
         $q = new Query(
             $escaper = static function (string $value) {
@@ -1738,7 +1772,7 @@ SQL
         self::assertEquals("These are Simon\'s items", $s);
 
         $q = new Query(
-            $escaper = new class {
+            $escaper = new class () {
                 public function escape(string $value): string
                 {
                     return addslashes($value);
@@ -1751,7 +1785,8 @@ SQL
         self::assertEquals("These are Simon\'s items", $s);
     }
 
-    public function testSuffix(): void
+    #[Test]
+    public function suffixAppendsRawSuffix(): void
     {
         $q = self::createQuery()
             ->select('*')
@@ -1763,7 +1798,11 @@ SQL
             'SELECT * FROM "foo" WHERE "a" < 123 FOR UPDATE',
             $q
         );
+    }
 
+    #[Test]
+    public function forUpdateAppendsForUpdateSuffix(): void
+    {
         $q = self::createQuery()
             ->select('*')
             ->from('foo')
@@ -1774,7 +1813,11 @@ SQL
             'SELECT * FROM "foo" WHERE "a" < 123 FOR UPDATE',
             $q
         );
+    }
 
+    #[Test]
+    public function forShareAppendsForShareSuffixWithOption(): void
+    {
         $q = self::createQuery()
             ->select('*')
             ->from('foo')
@@ -1787,7 +1830,8 @@ SQL
         );
     }
 
-    public function testSql(): void
+    #[Test]
+    public function sqlSetsRawSqlString(): void
     {
         $q = self::createQuery()
             ->sql('SELECT * FROM foo WHERE id = 5');
@@ -1801,9 +1845,10 @@ SQL
     /**
      * Method to test clear().
      *
-     * @return void
+     * @return  void
      */
-    public function testClear(): void
+    #[Test]
+    public function clearResetsAllClauses(): void
     {
         $query = self::createQuery();
 
@@ -1818,11 +1863,12 @@ SQL
     /**
      * Method to test clear().
      *
-     * @return void
+     * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testClearClause()
+    #[Test]
+    public function clearClauseKeepsOtherClauses()
     {
         $q = self::createQuery();
 
@@ -1870,11 +1916,12 @@ SQL
     /**
      * Method to test clear().
      *
-     * @return void
+     * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testClearType()
+    #[Test]
+    public function clearTypeResetsTypeAndKeepsClauses()
     {
         $q = self::createQuery();
 
@@ -1932,7 +1979,8 @@ SQL
         }
     }
 
-    public function testStripQuote()
+    #[Test]
+    public function stripQuoteRemovesValueQuotes()
     {
         $quoteStr = $this->instance->quote('foo');
 
@@ -1944,7 +1992,8 @@ SQL
         );
     }
 
-    public function testStripNameQuote()
+    #[Test]
+    public function stripNameQuoteRemovesIdentifierQuotes()
     {
         $quoteStr = $this->instance->quoteName('foo');
 
@@ -1968,16 +2017,13 @@ SQL
         return new BaseGrammar();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeQueryAndSerial(): void
     {
         $this->instance = self::createQuery();
 
         Serial::reset('query.test');
 
-        ValueClause::$idHandler = fn () => Serial::get('query.test');
-    }
-
-    protected function tearDown(): void
-    {
+        ValueClause::$idHandler = fn() => Serial::get('query.test');
     }
 }

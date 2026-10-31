@@ -132,7 +132,7 @@ final class PhpBuiltinTestServer
                     'timeout' => 0.3,
                     'ignore_errors' => true,
                 ],
-            ]
+            ],
         );
 
         $deadline = microtime(true) + $this->startupTimeoutSeconds;
@@ -141,7 +141,7 @@ final class PhpBuiltinTestServer
             if (!$this->process->isRunning()) {
                 throw new RuntimeException(
                     'PHP built-in server process exited unexpectedly: '
-                    . $this->process->getErrorOutput()
+                    . $this->process->getErrorOutput(),
                 );
             }
 
@@ -160,7 +160,7 @@ final class PhpBuiltinTestServer
             sprintf(
                 'PHP built-in server did not become ready within %.1fs.',
                 $this->startupTimeoutSeconds,
-            )
+            ),
         );
     }
 

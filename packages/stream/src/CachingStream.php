@@ -16,22 +16,22 @@ class CachingStream extends DecoratorStream
     /**
      * Stream being wrapped
      *
-     * @var StreamInterface
+     * @var  StreamInterface
      */
     private StreamInterface $remoteStream;
 
     /**
      * Number of bytes to skip reading due to a write on the buffer
      *
-     * @var int
+     * @var  int
      */
     private int $skipReadBytes = 0;
 
     /**
      * We will treat the buffer object as the body of the stream
      *
-     * @param StreamInterface|string|resource $targetStream Stream to cache
-     * @param StreamInterface|null            $cacheStream  Optionally specify where data is cached
+     * @param  StreamInterface|string|resource  $targetStream  Stream to cache
+     * @param  StreamInterface|null             $cacheStream   Optionally specify where data is cached
      */
     public function __construct(
         mixed $targetStream,

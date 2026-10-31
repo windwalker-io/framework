@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Middleware;
 
+use DateTime;
+use DomainException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use SplFileInfo;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Mime\MimeTypesInterface;
-use Windwalker\Filesystem\Path;
 use Windwalker\Http\Response\Response;
 
 use function Windwalker\value;
@@ -27,7 +29,7 @@ class FileProcessMiddleware implements MiddlewareInterface
         protected array $options = [],
     ) {
         if (!interface_exists(MimeTypesInterface::class)) {
-            throw new \DomainException('Please install symfony/mime first');
+            throw new DomainException('Please install symfony/mime first');
         }
     }
 
@@ -38,7 +40,7 @@ class FileProcessMiddleware implements MiddlewareInterface
     {
         $path = ltrim($request->getUri()->getPath(), '/');
 
-        $file = new \SplFileInfo($this->publicPath . '/' . $path);
+        $file = new SplFileInfo($this->publicPath . '/' . $path);
 
         if (is_file($file->getPathname())) {
             $segments = explode('.', $file->getPathname());
@@ -51,7 +53,7 @@ class FileProcessMiddleware implements MiddlewareInterface
                 ->withHeader('Content-Type', $mime)
                 ->withHeader(
                     'Last-modified',
-                    \DateTime::createFromFormat('U', (string) $modified)->format(\DateTime::RFC850)
+                    DateTime::createFromFormat('U', (string) $modified)->format(DateTime::RFC850),
                 );
 
             foreach ($this->options['headers'] ?? [] as $header => $value) {
@@ -67,7 +69,7 @@ class FileProcessMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @return MimeTypesInterface
+     * @return  MimeTypesInterface
      */
     public function getMimeTypes(): MimeTypesInterface
     {
@@ -78,6 +80,8 @@ class FileProcessMiddleware implements MiddlewareInterface
      * @param  MimeTypesInterface|null  $mimeTypes
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMimeTypes(?MimeTypesInterface $mimeTypes): static
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Data\Collection;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
@@ -16,7 +17,8 @@ use Windwalker\ORM\Test\Entity\StubSakura;
  */
 class OneToManyTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsAllChildrenOfParent()
     {
         $mapper = $this->createTestMapper();
 
@@ -30,7 +32,8 @@ class OneToManyTest extends AbstractORMTestCase
         self::assertEquals([11, 12, 13, 14, 15], $roses->all(Collection::class)->column('id')->dump());
     }
 
-    public function testJsonSerialize()
+    #[Test]
+    public function jsonSerializeEncodesRelationAsNullUntilLoaded()
     {
         $mapper = $this->createTestMapper();
 
@@ -54,7 +57,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testCreate()
+    #[Test]
+    public function createStoresParentWithAttachedChildren()
     {
         $mapper = $this->createTestMapper();
 
@@ -106,7 +110,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateAttachAndDetach()
+    #[Test]
+    public function updateAttachesNewChildAndDetachesRemovedChild()
     {
         $mapper = $this->createTestMapper();
         /** @var StubLocation $location */
@@ -143,7 +148,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSync(): void
+    #[Test]
+    public function updateSyncReplacesChildrenCollection(): void
     {
         $mapper = $this->createTestMapper();
         /** @var StubLocation $location */
@@ -176,7 +182,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateCascade()
+    #[Test]
+    public function updateCascadeAppliesChildChangesAfterParentKeyChange()
     {
         $mapper = $this->createTestMapper();
         /** @var StubLocation $location */
@@ -221,7 +228,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSyncCascade()
+    #[Test]
+    public function updateSyncCascadeReplacesChildrenAfterParentKeyChange()
     {
         $mapper = $this->createTestMapper();
         /** @var StubLocation $location */
@@ -265,7 +273,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateWithoutInitCollection()
+    #[Test]
+    public function updateKeepsChildrenWhenCollectionNotLoaded()
     {
         $mapper = $this->createTestMapper();
         /** @var StubLocation $location */
@@ -290,7 +299,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateNoAction()
+    #[Test]
+    public function updateWithIgnoreActionLeavesChildrenUntouched()
     {
         $mapper = $this->createTestMapper(Action::IGNORE);
         /** @var StubLocation $location */
@@ -316,7 +326,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSetNull()
+    #[Test]
+    public function updateWithSetNullClearsChildForeignKey()
     {
         $mapper = $this->createTestMapper(Action::SET_NULL);
 
@@ -343,7 +354,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testDelete()
+    #[Test]
+    public function deleteRemovesChildrenWithParent()
     {
         $mapper = $this->createTestMapper();
 
@@ -366,7 +378,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteNoAction()
+    #[Test]
+    public function deleteWithIgnoreActionKeepsChildren()
     {
         $mapper = $this->createTestMapper(Action::IGNORE, Action::IGNORE);
 
@@ -385,7 +398,8 @@ class OneToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteSetNull()
+    #[Test]
+    public function deleteWithSetNullClearsChildForeignKey()
     {
         $mapper = $this->createTestMapper(Action::CASCADE, Action::SET_NULL);
 

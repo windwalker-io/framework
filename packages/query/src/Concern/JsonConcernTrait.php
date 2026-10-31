@@ -7,7 +7,6 @@ namespace Windwalker\Query\Concern;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\JsonGrammarInterface;
-use Windwalker\Query\Grammar\MySQLGrammar;
 use Windwalker\Query\Grammar\SQLServerGrammar;
 
 /**
@@ -15,7 +14,7 @@ use Windwalker\Query\Grammar\SQLServerGrammar;
  */
 trait JsonConcernTrait
 {
-    protected function getJsonGrammar(): AbstractGrammar & JsonGrammarInterface
+    protected function getJsonGrammar(): AbstractGrammar&JsonGrammarInterface
     {
         $grammar = $this->getGrammar();
 
@@ -72,7 +71,7 @@ trait JsonConcernTrait
      *
      * @return  $this
      *
-     * @throws \JsonException
+     * @throws  \JsonException
      */
     public function whereJsonContains(string $expr, mixed $value): static
     {

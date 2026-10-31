@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Windwalker\DI\Attributes;
 
 use Attribute;
+use Closure;
 use JetBrains\PhpStorm\Pure;
 use Psr\Container\ContainerExceptionInterface;
+use ReflectionException;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionUnionType;
 use RuntimeException;
+use Throwable;
+use UnitEnum;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
@@ -26,14 +30,14 @@ class Inject implements ContainerAttributeInterface
     /**
      * Inject constructor.
      *
-     * @param  string|null            $id
-     * @param  bool                   $forceNew
-     * @param  \UnitEnum|string|null  $tag
+     * @param  string|null           $id
+     * @param  bool                  $forceNew
+     * @param  UnitEnum|string|null  $tag
      */
     public function __construct(
         public ?string $id = null,
         public bool $forceNew = false,
-        public \UnitEnum|\Closure|string|null $tag = null,
+        public UnitEnum|Closure|string|null $tag = null,
     ) {
         //
     }
@@ -41,7 +45,7 @@ class Inject implements ContainerAttributeInterface
     /**
      * @param  AttributeHandler  $handler
      *
-     * @return mixed
+     * @return  mixed
      */
     #[Pure]
     public function __invoke(
@@ -68,8 +72,8 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      */
     protected function handleParameter(AttributeHandler $handler): mixed
     {
@@ -77,7 +81,7 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws DependencyResolutionException
+     * @throws  DependencyResolutionException
      */
     protected function getTypeName(ReflectionProperty|ReflectionParameter $reflector): mixed
     {
@@ -87,7 +91,7 @@ class Inject implements ContainerAttributeInterface
             $varClass = $this->id;
         } else {
             if ($type instanceof ReflectionUnionType) {
-                $types = [$type->getTypes()];
+                $types = $type->getTypes();
             } else {
                 $types = [$type];
             }
@@ -116,15 +120,15 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      */
     public function resolveInjectable(Container $container, ReflectionProperty|ReflectionParameter $reflector): mixed
     {
         $id = $this->getTypeName($reflector);
         $tag = $this->tag;
 
-        if ($tag instanceof \Closure) {
+        if ($tag instanceof Closure) {
             $tag = $tag($container, $id);
         }
 
@@ -148,8 +152,8 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws DefinitionResolveException
+     * @throws  ReflectionException
+     * @throws  DefinitionResolveException
      */
     protected function createObject(Container $container, string $id): object
     {
@@ -159,16 +163,16 @@ class Inject implements ContainerAttributeInterface
     /**
      * @param  ReflectionParameter|ReflectionProperty  $reflector
      * @param  mixed                                   $id
-     * @param  \Throwable|null                         $e
+     * @param  Throwable|null                          $e
      *
      * @return  void
      *
-     * @throws DependencyResolutionException
+     * @throws  DependencyResolutionException
      */
     protected function reportInjectingError(
         ReflectionParameter|ReflectionProperty $reflector,
         mixed $id,
-        ?\Throwable $e = null,
+        ?Throwable $e = null,
     ): void {
         if (!$reflector->getType()->allowsNull()) {
             if ($reflector instanceof ReflectionParameter) {
@@ -186,8 +190,8 @@ class Inject implements ContainerAttributeInterface
             }
 
             throw new DependencyResolutionException(
-                "Unable to inject object $id for $target" .
-                ($e ? ' - ' . $e->getMessage() : ''),
+                "Unable to inject object $id for $target"
+                . ($e ? ' - ' . $e->getMessage() : ''),
                 $e?->getCode() ?? 500,
                 $e,
             );

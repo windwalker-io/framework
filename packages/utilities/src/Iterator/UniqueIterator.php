@@ -13,12 +13,12 @@ use Iterator;
 class UniqueIterator extends FilterIterator
 {
     /**
-     * @var array
+     * @var  array
      */
     protected array $exists = [];
 
     /**
-     * @var int
+     * @var  int
      */
     protected int $flags = SORT_STRING;
 
@@ -81,7 +81,8 @@ class UniqueIterator extends FilterIterator
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setFlags(int $flags): static
     {

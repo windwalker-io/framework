@@ -6,10 +6,13 @@ namespace Windwalker\Pool\Test;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Pool\AbstractConnection;
 use Windwalker\Pool\AbstractPool;
 use Windwalker\Pool\Enum\ConnectionState;
+use Windwalker\Pool\Exception\ConnectionPoolException;
 use Windwalker\Pool\Stack\PhpStack;
 use Windwalker\Pool\Test\Stub\StubConnection;
 use Windwalker\Pool\Test\Stub\StubConnectionPool;
@@ -26,7 +29,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::setState
      */
-    public function testSetActive(): void
+    #[Test]
+    public function setStateSwitchesBetweenActiveAndInactive(): void
     {
         $this->instance->setState(ConnectionState::ACTIVE);
 
@@ -40,7 +44,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::getLastTime
      */
-    public function testGetLastTime(): void
+    #[Test]
+    public function updateLastTimeChangesLastTimeFromZero(): void
     {
         self::assertEquals(0, $this->instance->getLastTime());
 
@@ -52,7 +57,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::getId
      */
-    public function testGetId(): void
+    #[Test]
+    public function idIsAssignedFromPoolSerialWhenPoolIsSet(): void
     {
         self::assertEquals(0, $this->instance->getId());
 
@@ -64,7 +70,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::release
      */
-    public function testRelease(): void
+    #[Test]
+    public function releaseDelegatesToPool(): void
     {
         $pool = Mockery::mock(AbstractPool::class);
         $pool->shouldReceive('release')
@@ -82,20 +89,101 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::reconnect
      */
-    public function testReconnect(): void
+    #[Test]
+    public function reconnectReturnsConnectionResult(): void
     {
         $this->instance->reconnect();
 
         self::assertEquals('Hello', $this->instance->reconnect());
     }
 
-    protected function setUp(): void
+    #[Test]
+    public function releaseThrowsWhenNoPoolAssigned(): void
     {
-        $this->instance = new StubConnection();
+        $this->expectException(ConnectionPoolException::class);
+        $this->expectExceptionMessageIs('No assigned pool of this connection.');
+
+        $this->instance->release();
     }
 
-    protected function tearDown(): void
+    #[Test]
+    public function releaseSkipsPoolWhenConnectionInactiveAndNotForced(): void
     {
+        $pool = Mockery::mock(AbstractPool::class);
+        $pool->shouldReceive('getSerial')->andReturn(1);
+        $pool->shouldNotReceive('release');
+
+        $this->instance->setPool($pool);
+        $this->instance->release();
+    }
+
+    #[Test]
+    public function incrementUsesReturnsNewUseCount(): void
+    {
+        self::assertSame(1, $this->instance->incrementUses());
+        self::assertSame(2, $this->instance->incrementUses());
+    }
+
+    #[Test]
+    public function destructWarnsWhenActiveConnectionWasNotReleased(): void
+    {
+        $pool = static::createPool();
+        $conn = new StubConnection();
+        $conn->setPool($pool);
+        $conn->setState(ConnectionState::ACTIVE);
+
+        $messages = [];
+        set_error_handler(
+            function (int $no, string $message) use (&$messages) {
+                $messages[] = $message;
+
+                return true;
+            },
+            E_USER_WARNING
+        );
+
+        try {
+            unset($conn);
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertCount(1, $messages);
+        self::assertStringContainsString('was not released but destruct', $messages[0]);
+    }
+
+    #[Test]
+    public function destructDoesNotWarnWhenLeakProtectDisabled(): void
+    {
+        $pool = static::createPool();
+        $conn = new StubConnection();
+        $conn->leakProtect = false;
+        $conn->setPool($pool);
+        $conn->setState(ConnectionState::ACTIVE);
+
+        $messages = [];
+        set_error_handler(
+            function (int $no, string $message) use (&$messages) {
+                $messages[] = $message;
+
+                return true;
+            },
+            E_USER_WARNING
+        );
+
+        try {
+            unset($conn);
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertSame([], $messages);
+    }
+
+    #[Before]
+    protected function createConnection(): void
+    {
+        $this->instance = new StubConnection();
     }
 
     protected static function createPool(): StubConnectionPool

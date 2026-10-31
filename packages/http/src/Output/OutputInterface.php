@@ -19,7 +19,7 @@ interface OutputInterface
      *
      * @param  ResponseInterface  $response  Respond body output.
      *
-     * @return void
+     * @return  void
      *
      * @since   3.0
      */
@@ -28,10 +28,10 @@ interface OutputInterface
     /**
      * Method to send a header to the client.  We wrap header() function with this method for testing reason.
      *
-     * @param  string  $string     The header string.
-     * @param  bool    $replace    The optional replace parameter indicates whether the header should
+     * @param  string    $string   The header string.
+     * @param  bool      $replace  The optional replace parameter indicates whether the header should
      *                             replace a previous similar header, or add a second header of the same type.
-     * @param int|null $code       Forces the HTTP response code to the specified value. Note that
+     * @param  int|null  $code     Forces the HTTP response code to the specified value. Note that
      *                             this parameter only has an effect if the string is not empty.
      *
      * @return  static  Return self to support chaining.
@@ -52,7 +52,7 @@ interface OutputInterface
      *
      * @param  string  $str
      *
-     * @return  int Returns the number of bytes written to the stream.
+     * @return  int  Returns the number of bytes written to the stream.
      */
     public function write(string $str): int;
 

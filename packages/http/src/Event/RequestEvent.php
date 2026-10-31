@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Event;
 
+use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Event\BaseEvent;
@@ -18,7 +19,7 @@ class RequestEvent extends BaseEvent
         public ServerRequestInterface $request,
         public OutputInterface $output,
         public ?ResponseInterface $response = null,
-        public ?\Closure $endHandler = null,
+        public ?Closure $endHandler = null,
         public array $attributes = [],
         public int $fd = 0,
     ) {
@@ -26,9 +27,10 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return ServerRequestInterface
+     * @return  ServerRequestInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getRequest(): ServerRequestInterface
     {
@@ -36,9 +38,10 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return ?ResponseInterface
+     * @return  ?ResponseInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getResponse(): ?ResponseInterface
     {
@@ -51,6 +54,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setResponse(ResponseInterface $response): static
     {
@@ -65,6 +69,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setRequest(ServerRequestInterface $request): static
     {
@@ -74,9 +79,10 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getFd(): int
     {
@@ -89,6 +95,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setFd(int $fd): static
     {
@@ -98,9 +105,10 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return OutputInterface
+     * @return  OutputInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getOutput(): OutputInterface
     {
@@ -113,6 +121,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setOutput(OutputInterface $output): static
     {
@@ -122,9 +131,10 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return array
+     * @return  array
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getAttributes(): array
     {
@@ -137,6 +147,8 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     *
+     * @codeCoverageIgnore
      */
     public function setAttributes(array $attributes): static
     {
@@ -173,23 +185,25 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return \Closure|null
+     * @return  Closure|null
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
-    public function getEndHandler(): ?\Closure
+    public function getEndHandler(): ?Closure
     {
         return $this->endHandler;
     }
 
     /**
-     * @param  \Closure|null  $endHandler
+     * @param  Closure|null  $endHandler
      *
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
-    public function setEndHandler(?\Closure $endHandler): static
+    public function setEndHandler(?Closure $endHandler): static
     {
         $this->endHandler = $endHandler;
 

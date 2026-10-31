@@ -6,15 +6,12 @@ namespace Windwalker\Http\Response;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
-use RuntimeException;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
-use function Windwalker\response;
 use function Windwalker\uid;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
-use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
 use const Windwalker\Stream\READ_WRITE_RESET;
 
 /**
@@ -27,9 +24,9 @@ class AttachmentResponse extends Response
     /**
      * Constructor.
      *
-     * @param  mixed   $body     The body data.
-     * @param  int     $status   The status code.
-     * @param  array   $headers  The custom headers.
+     * @param  mixed  $body     The body data.
+     * @param  int    $status   The status code.
+     * @param  array  $headers  The custom headers.
      */
     public function __construct(mixed $body = 'php://temp', int $status = 200, array $headers = [])
     {
@@ -78,7 +75,8 @@ class AttachmentResponse extends Response
             throw new InvalidArgumentException('File: ' . $file . ' not exists.');
         }
 
-        return $this->withStreamBody($this->createStream(fopen($file, READ_ONLY_FROM_BEGIN)))
+        return $this
+            ->withStreamBody($this->createStream(fopen($file, READ_ONLY_FROM_BEGIN)))
             ->withContentTypeIfExists($contentType);
     }
 
@@ -115,7 +113,7 @@ class AttachmentResponse extends Response
      * @param  StreamInterface  $stream
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     protected function withStreamBody(StreamInterface $stream): static
     {
@@ -128,13 +126,13 @@ class AttachmentResponse extends Response
      * @param  string  $filename
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function withFilename(string $filename): static
     {
         return $this->withHeader(
             'Content-Disposition',
-            HeaderHelper::attachmentContentDisposition($filename)
+            HeaderHelper::attachmentContentDisposition($filename),
         );
     }
 
@@ -160,7 +158,7 @@ class AttachmentResponse extends Response
 
         return $new->withHeader(
             'Content-Disposition',
-            HeaderHelper::inlineContentDisposition($filename)
+            HeaderHelper::inlineContentDisposition($filename),
         );
     }
 

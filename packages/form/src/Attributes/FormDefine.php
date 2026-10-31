@@ -12,6 +12,5 @@ class FormDefine
 {
     public function __construct(
         public ?int $ordering = null
-    ) {
-    }
+    ) {}
 }

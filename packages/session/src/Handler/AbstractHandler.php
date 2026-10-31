@@ -19,7 +19,7 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
     protected bool $newSessionId = false;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $sessionIdHandler = null;
 
@@ -29,7 +29,7 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
      * @param  string  $savePath     Save path
      * @param  string  $sessionName  Session name, see http://php.net/function.session-name.php
      *
-     * @return bool true on success, false on failure
+     * @return  bool  true on success, false on failure
      */
     public function open($savePath, $sessionName): bool
     {
@@ -39,7 +39,7 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
     /**
      * Closes the current session.
      *
-     * @return bool true on success, false on failure
+     * @return  bool  true on success, false on failure
      */
     public function close(): bool
     {
@@ -95,7 +95,7 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
     /**
      * Create session ID
      * @link https://php.net/manual/en/sessionidinterface.create-sid.php
-     * @return string
+     * @return  string
      */
     // phpcs:disable
     public function create_sid(): string
@@ -105,17 +105,19 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getSessionIdHandler(): callable
     {
-        return $this->sessionIdHandler ?? fn () => session_create_id();
+        return $this->sessionIdHandler ?? fn() => session_create_id();
     }
 
     /**
      * @param  callable  $sessionIdHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSessionIdHandler(?callable $sessionIdHandler): static
     {

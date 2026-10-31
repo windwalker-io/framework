@@ -11,15 +11,15 @@ use Windwalker\Utilities\StrNormalize;
 /**
  * Class QueryExpression
  *
- * @method Clause year(string $field)
- * @method Clause month(string $field)
- * @method Clause day(string $field)
- * @method Clause hour(string $field)
- * @method Clause minute(string $field)
- * @method Clause second(string $field)
- * @method Clause length(string $field)
- * @method Clause currentTimestamp()
- * @method Clause charLength(string $field)
+ * @method  Clause  year(string $field)
+ * @method  Clause  month(string $field)
+ * @method  Clause  day(string $field)
+ * @method  Clause  hour(string $field)
+ * @method  Clause  minute(string $field)
+ * @method  Clause  second(string $field)
+ * @method  Clause  length(string $field)
+ * @method  Clause  currentTimestamp()
+ * @method  Clause  charLength(string $field)
  *
  * @since 2.0
  */
@@ -33,7 +33,7 @@ class Expression
     protected $query = null;
 
     /**
-     * @param $query
+     * @param   $query
      */
     public function __construct(Query $query)
     {
@@ -75,6 +75,8 @@ class Expression
      * getQuery
      *
      * @return  Query
+     *
+     * @codeCoverageIgnore
      */
     public function getQuery(): Query
     {
@@ -87,6 +89,8 @@ class Expression
      * @param  Query  $query
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setQuery(Query $query): static
     {

@@ -11,6 +11,4 @@ use Psr\SimpleCache\CacheException;
  */
 interface CacheExceptionInterface extends
     \Psr\Cache\CacheException,
-    CacheException
-{
-}
+    CacheException {}

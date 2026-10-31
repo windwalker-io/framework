@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Http;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use ReturnTypeWillChange;
 use RuntimeException;
 use Windwalker\Stream\Stream;
 
@@ -18,7 +20,7 @@ use const Windwalker\Stream\READ_WRITE_RESET;
  *
  * @since  2.1
  */
-class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \JsonSerializable
+class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, JsonSerializable
 {
     /**
      * Property clientFilename.
@@ -148,8 +150,8 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      *
      * @return  StreamInterface  Stream representation of the uploaded file.
      *
-     * @throws RuntimeException in cases when no stream is available or can be
-     *                           created.
+     * @throws  RuntimeException  in cases when no stream is available or can be
+     *                            created.
      */
     public function getStream(): Stream|StreamInterface
     {
@@ -192,11 +194,11 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      *
      * @param  string  $targetPath  Path to which to move the uploaded file.
      *
-     * @throws  InvalidArgumentException if the $path specified is invalid.
-     * @throws  RuntimeException         on any error during the move operation, or on
+     * @throws  InvalidArgumentException  if the $path specified is invalid.
+     * @throws  RuntimeException          on any error during the move operation, or on
      *                                    the second or subsequent call to the method.
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function moveTo($targetPath): void
     {
         $targetPath = (string) $targetPath;
@@ -220,6 +222,8 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
                 throw new RuntimeException('Error moving uploaded file');
             }
         }
+
+        $this->moved = true;
     }
 
     /**
@@ -229,7 +233,7 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      * the file in the $_FILES array if available, as PHP calculates this based
      * on the actual size transmitted.
      *
-     * @return   int|null  The file size in bytes or null if unknown.
+     * @return  int|null  The file size in bytes or null if unknown.
      */
     public function getSize(): ?int
     {
@@ -249,7 +253,7 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      *
      * @see      http://php.net/manual/en/features.file-upload.errors.php
      *
-     * @return   int  One of PHP's UPLOAD_ERR_XXX constants.
+     * @return  int  One of PHP's UPLOAD_ERR_XXX constants.
      */
     public function getError(): int
     {
@@ -266,8 +270,8 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      * Implementations SHOULD return the value stored in the "name" key of
      * the file in the $_FILES array.
      *
-     * @return   string|null  The filename sent by the client or null if none
-     *                        was provided.
+     * @return  string|null  The filename sent by the client or null if none
+     *                       was provided.
      */
     public function getClientFilename(): ?string
     {
@@ -284,8 +288,8 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      * Implementations SHOULD return the value stored in the "type" key of
      * the file in the $_FILES array.
      *
-     * @return   string|null  The media type sent by the client or null if none
-     *                        was provided.
+     * @return  string|null  The media type sent by the client or null if none
+     *                       was provided.
      */
     public function getClientMediaType(): ?string
     {

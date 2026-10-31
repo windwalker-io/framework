@@ -49,12 +49,12 @@ class Schema
     public protected(set) array $columns = [];
 
     /**
-     * @var Index[]
+     * @var  Index[]
      */
     public protected(set) array $indexes = [];
 
     /**
-     * @var Constraint[]
+     * @var  Constraint[]
      */
     public protected(set) array $constraints = [];
 
@@ -203,6 +203,9 @@ class Schema
         return $this->table;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setTable(TableManager $table): static
     {
         $this->table = $table;
@@ -224,6 +227,8 @@ class Schema
      * @param  Column[]  $columns
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setColumns(array $columns): static
     {
@@ -273,7 +278,7 @@ class Schema
     }
 
     /**
-     * @return Index[]
+     * @return  Index[]
      */
     public function getIndexes(): array
     {
@@ -284,6 +289,8 @@ class Schema
      * @param  Index[]  $indexes
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setIndexes(array $indexes): static
     {
@@ -293,7 +300,7 @@ class Schema
     }
 
     /**
-     * @return Constraint[]
+     * @return  Constraint[]
      */
     public function getConstraints(): array
     {
@@ -304,6 +311,8 @@ class Schema
      * @param  Constraint[]  $constraints
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setConstraints(array $constraints): static
     {

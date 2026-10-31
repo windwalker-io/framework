@@ -20,7 +20,8 @@
         "windwalker/test": "^4.0",
         "windwalker/stream": "^4.0",
         "mikey179/vfsstream": "^1.6",
-        "webmozart/glob": "^4.1"
+        "webmozart/glob": "^4.1",
+        "symfony/mime": "^6.0||^7.0||^8.0"
     },
     "suggest": {
         "webmozart/glob": "Install ^4.0 to support Ant-like glob().",
@@ -47,7 +48,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.4.6"
+            "php": "8.4.27"
         }
     }
 }

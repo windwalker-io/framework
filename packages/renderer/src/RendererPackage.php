@@ -9,6 +9,8 @@ use Windwalker\Core\Package\PackageInstaller;
 
 /**
  * The RendererPackage class.
+ *
+ * @codeCoverageIgnore Application wiring that only installs config files.
  */
 class RendererPackage extends AbstractPackage
 {

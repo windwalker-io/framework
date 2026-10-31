@@ -16,7 +16,5 @@ class HandshakeEvent extends BaseEvent
 {
     use AccessorBCTrait;
 
-    public function __construct(public Request $request, public Response $response)
-    {
-    }
+    public function __construct(public Request $request, public Response $response) {}
 }

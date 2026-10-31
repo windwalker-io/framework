@@ -14,7 +14,7 @@ interface SerializerInterface
      *
      * @param  mixed  $data
      *
-     * @return string|null
+     * @return  string|null
      */
     public function serialize(mixed $data): ?string;
 
@@ -23,7 +23,7 @@ interface SerializerInterface
      *
      * @param  mixed  $data
      *
-     * @return mixed
+     * @return  mixed
      */
     public function unserialize(string $data): mixed;
 }

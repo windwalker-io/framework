@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Handler;
 
+use BadMethodCallException;
 use Exception;
 use PDO;
 use Throwable;
-use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Options\OptionAccessTrait;
@@ -69,7 +69,7 @@ class PdoHandler extends AbstractHandler
      *
      * @return  string  The session data.
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0
      */
     protected function doRead(string $id): ?string
@@ -108,17 +108,27 @@ class PdoHandler extends AbstractHandler
     {
         $columns = $this->getOption('columns');
 
-        $mergeSql = $this->getMergeSql();
+        $query = $this->createQuery();
 
-        if ($mergeSql !== null) {
-            $stmt = $this->db->prepare($mergeSql);
-            $stmt->bindValue('id', $id, PDO::PARAM_STR);
-            $stmt->bindValue('data', $data, PDO::PARAM_STR);
-            $stmt->bindValue('time', time(), PDO::PARAM_INT);
+        try {
+            $sql = $query->getGrammar()->compileUpsert(
+                $query,
+                $this->getOption('table'),
+                [
+                    $columns['id'] => $id,
+                    $columns['data'] => $data,
+                    $columns['time'] => time(),
+                ],
+                [$columns['id']],
+                [$columns['data'], $columns['time']]
+            );
 
-            $stmt->execute();
+            $stmt = $this->db->prepare($query->sql($sql)->forPDO($upsertParams));
+            $stmt->execute($upsertParams);
 
             return true;
+        } catch (BadMethodCallException) {
+            // Grammar does not support upsert, fallback to select-then-write.
         }
 
         $this->db->beginTransaction();
@@ -205,7 +215,7 @@ class PdoHandler extends AbstractHandler
      *
      * @return  boolean  True on success, false otherwise.
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0
      */
     public function destroy($id): bool
@@ -250,82 +260,8 @@ class PdoHandler extends AbstractHandler
     /**
      * Returns a merge/upsert (i.e. insert or update) SQL query when supported by the database.
      *
-     * @return string|null The SQL string or null when not supported
+     * @return  string|null  The SQL string or null when not supported
      */
-    private function getMergeSql(): ?string
-    {
-        $platformName = $this->getPlatformName();
-
-        $columns = $this->getOption('columns');
-        $table = $this->getOption('table');
-
-        $query = $this->createQuery();
-
-        switch ($platformName) {
-            case AbstractPlatform::MYSQL:
-                return $query->format(
-                    "INSERT INTO %n (%n, %n, %n) VALUES (:id, :data, :time)
-ON DUPLICATE KEY UPDATE %n = VALUES(%n), %n = VALUES(%n)",
-                    $table,
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['data'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['time']
-                );
-
-            case 'oci':
-                // DUAL is Oracle specific dummy table
-                return $query->format(
-                    " MERGE INTO %n USING DUAL ON (%n = :id) WHEN NOT MATCHED
-                    THEN INSERT (%n, %n, %n) VALUES (:id, :data, :time) WHEN MATCHED
-                    THEN UPDATE SET %n = :data, %n = :time",
-                    $table,
-                    $columns['id'],
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['data'],
-                    $columns['time']
-                );
-
-            case AbstractPlatform::SQLSERVER === $platformName
-                && version_compare(
-                    $this->db->getDriver()->getVersion(),
-                    '10',
-                    '>='
-                ):
-                // phpcs:disable
-                // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
-                // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-                return $query->format(
-                    "MERGE INTO %n WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON (%n = :id)
-                    WHEN NOT MATCHED THEN INSERT (%n, %n, %n) VALUES (:id, :data, :time)
-                    WHEN MATCHED THEN UPDATE SET %n = :data, %n = :time;",
-                    $table,
-                    $columns['id'],
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time'],
-                    $columns['data'],
-                    $columns['time']
-                );
-
-            case AbstractPlatform::SQLITE:
-                return $query->format(
-                    "INSERT OR REPLACE INTO %n (%n, %n, %n) VALUES (:id, :data, :time)",
-                    $table,
-                    $columns['id'],
-                    $columns['data'],
-                    $columns['time']
-                );
-        }
-
-        return null;
-    }
-
     protected function createQuery(): Query
     {
         $platform = $this->getPlatformName();
@@ -355,6 +291,11 @@ ON DUPLICATE KEY UPDATE %n = VALUES(%n), %n = VALUES(%n)",
 
             case 'mysql':
                 $platform = 'MySQL';
+                break;
+
+            case 'oci':
+            case 'oracle':
+                $platform = 'Oracle';
                 break;
 
             case 'sqlite':

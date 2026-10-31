@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\File;
 
+use CURLStringFile;
+use LogicException;
+
 /**
  * The HttpUploadFile class.
  */
@@ -12,15 +15,17 @@ class HttpUploadStringFile implements HttpUploadFileInterface
     public function __construct(
         protected string $data,
         protected ?string $mimeType = null,
-        protected ?string $postname = null
+        protected ?string $postname = null,
     ) {
         if (PHP_VERSION_ID < 80100) {
-            throw new \LogicException(static::class . ' must use after PHP 8.1 or higher.');
+            throw new LogicException(static::class . ' must use after PHP 8.1 or higher.');
         }
     }
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getData(): string
     {
@@ -31,6 +36,8 @@ class HttpUploadStringFile implements HttpUploadFileInterface
      * @param  string  $data
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setData(string $data): static
     {
@@ -40,7 +47,7 @@ class HttpUploadStringFile implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMimeType(): ?string
     {
@@ -51,6 +58,8 @@ class HttpUploadStringFile implements HttpUploadFileInterface
      * @param  string  $mimeType
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMimeType(?string $mimeType): static
     {
@@ -60,7 +69,7 @@ class HttpUploadStringFile implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPostFilename(): ?string
     {
@@ -71,6 +80,8 @@ class HttpUploadStringFile implements HttpUploadFileInterface
      * @param  string  $postname
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPostFilename(?string $postname): static
     {
@@ -79,12 +90,12 @@ class HttpUploadStringFile implements HttpUploadFileInterface
         return $this;
     }
 
-    public function toCurlFile(): \CURLStringFile
+    public function toCurlFile(): CURLStringFile
     {
-        return new \CURLStringFile(
+        return new CURLStringFile(
             $this->getData(),
-            $this->getMimeType() ?: null,
-            $this->getPostFilename() ?: null
+            $this->getPostFilename() ?: '',
+            $this->getMimeType() ?: 'application/octet-stream',
         );
     }
 

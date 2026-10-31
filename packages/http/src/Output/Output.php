@@ -6,8 +6,8 @@ namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Response\CallbackResponse;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Response\CallbackResponse;
 use Windwalker\Stream\Stream;
 
 use const Windwalker\Stream\WRITE_ONLY_RESET;
@@ -44,7 +44,7 @@ class Output implements OutputInterface
      *
      * @param  ResponseInterface  $response  Respond body output.
      *
-     * @return void
+     * @return  void
      *
      * @since   3.0
      */
@@ -69,7 +69,7 @@ class Output implements OutputInterface
      *
      * @param  ResponseInterface  $response  Emmit string to respond.
      *
-     * @return void
+     * @return  void
      */
     public function sendBody(ResponseInterface $response): void
     {
@@ -91,10 +91,10 @@ class Output implements OutputInterface
     /**
      * Method to send a header to the client.  We wrap header() function with this method for testing reason.
      *
-     * @param  string  $string     The header string.
-     * @param  bool    $replace    The optional replace parameter indicates whether the header should
+     * @param  string    $string   The header string.
+     * @param  bool      $replace  The optional replace parameter indicates whether the header should
      *                             replace a previous similar header, or add a second header of the same type.
-     * @param int|null $code       Forces the HTTP response code to the specified value. Note that
+     * @param  int|null  $code     Forces the HTTP response code to the specified value. Note that
      *                             this parameter only has an effect if the string is not empty.
      *
      * @return  static  Return self to support chaining.
@@ -149,15 +149,15 @@ class Output implements OutputInterface
                 'HTTP/%s %d%s',
                 $response->getProtocolVersion(),
                 $response->getStatusCode(),
-                $reasonPhrase
-            )
+                $reasonPhrase,
+            ),
         );
     }
 
     /**
      * checkHeaderSent
      *
-     * @return bool
+     * @return  bool
      */
     public function headersSent(): bool
     {
@@ -165,7 +165,7 @@ class Output implements OutputInterface
     }
 
     /**
-     * @return StreamInterface
+     * @return  StreamInterface
      */
     public function getOutputStream(): StreamInterface
     {
@@ -179,7 +179,7 @@ class Output implements OutputInterface
      */
     public function setOutputStream(StreamInterface|string|null $outputStream): static
     {
-        $this->outputStream = $outputStream;
+        $this->outputStream = Stream::wrap($outputStream ?: 'php://output', WRITE_ONLY_RESET);
 
         return $this;
     }

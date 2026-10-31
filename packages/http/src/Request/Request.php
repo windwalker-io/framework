@@ -32,9 +32,9 @@ class Request extends AbstractRequest
      * While header names are not case-sensitive, getHeaders() will preserve the
      * exact case in which headers were originally specified.
      *
-     * @return array Returns an associative array of the message's headers. Each
-     *     key MUST be a header name, and each value MUST be an array of strings
-     *     for that header.
+     * @return  array  Returns an associative array of the message's headers. Each
+     *                 key MUST be a header name, and each value MUST be an array of strings
+     *                 for that header.
      */
     public function getHeaders(): array
     {
@@ -58,9 +58,9 @@ class Request extends AbstractRequest
      *
      * @param  string  $name  Case-insensitive header field name.
      *
-     * @return string[] An array of string values as provided for the given
-     *    header. If the header does not appear in the message, this method MUST
-     *    return an empty array.
+     * @return  string[]  An array of string values as provided for the given
+     *                    header. If the header does not appear in the message, this method MUST
+     *                    return an empty array.
      */
     public function getHeader($name): array
     {
@@ -82,9 +82,9 @@ class Request extends AbstractRequest
      *
      * @param  string  $name  Case-insensitive header field name.
      *
-     * @return bool Returns true if any header names match the given header
-     *     name using a case-insensitive string comparison. Returns false if
-     *     no matching header name is found in the message.
+     * @return  bool  Returns true if any header names match the given header
+     *                name using a case-insensitive string comparison. Returns false if
+     *                no matching header name is found in the message.
      */
     public function hasHeader($name): bool
     {
@@ -99,7 +99,7 @@ class Request extends AbstractRequest
     /**
      * Retrieve the host from the URI instance
      *
-     * @return string
+     * @return  string
      */
     protected function getHostFromUri(): string
     {

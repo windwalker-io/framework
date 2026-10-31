@@ -53,13 +53,13 @@ class StructureTraitTest extends TestCase
     #[Test]
     public function testSetFormatRegistry(): void
     {
-        $registry = new FormatRegistry;
+        $registry = new FormatRegistry();
         $registry->registerFormat(
             'custom',
             static fn(string $input): array => ['value' => $input],
             static fn(mixed $data): string => $data['value']
         );
-        $collection = new Collection;
+        $collection = new Collection();
 
         self::assertSame($collection, $collection->setFormatRegistry($registry));
         $collection->load('parsed', 'custom');
@@ -73,7 +73,7 @@ class StructureTraitTest extends TestCase
      */
     public function testLoad(): void
     {
-        $collection = new Collection;
+        $collection = new Collection();
 
         $this->assertEquals(
             $collection->reset()->load(
@@ -126,7 +126,7 @@ class StructureTraitTest extends TestCase
      */
     public function testLoadFile(): void
     {
-        $collection = new Collection;
+        $collection = new Collection();
 
         $this->assertEquals(
             $collection->reset()->loadFile(
@@ -178,7 +178,7 @@ class StructureTraitTest extends TestCase
      */
     public function testLoadFileAndStream(): void
     {
-        $collection = new Collection;
+        $collection = new Collection();
 
         $this->assertEquals(
             $collection->reset()->loadFile(
@@ -203,7 +203,7 @@ class StructureTraitTest extends TestCase
     #[Test]
     public function testGetFormatRegistry(): void
     {
-        $collection = new Collection;
+        $collection = new Collection();
 
         self::assertInstanceOf(FormatRegistry::class, $collection->getFormatRegistry());
         self::assertSame($collection->getFormatRegistry(), $collection->getFormatRegistry());

@@ -49,60 +49,60 @@ use Windwalker\Utilities\TypeCast;
  *
  * @formatter:off
  *
- * @method $this onStart(callable $handler)
- * @method $this onBeforeShutdown(callable $handler)
- * @method $this onShutdown(callable $handler)
- * @method $this onWorkerStart(callable $handler)
- * @method $this onWorkerStop(callable $handler)
- * @method $this onWorkerExit(callable $handler)
- * @method $this onConnect(callable $handler)
- * @method $this onReceive(callable $handler)
- * @method $this onPacket(callable $handler)
- * @method $this onClose(callable $handler)
- * @method $this onTask(callable $handler)
- * @method $this onFinish(callable $handler)
- * @method $this onPipeMessage(callable $handler)
- * @method $this onWorkerError(callable $handler)
- * @method $this onManagerStart(callable $handler)
- * @method $this onManagerStop(callable $handler)
- * @method $this onBeforeReload(callable $handler)
- * @method $this onAfterReload(callable $handler)
+ * @method  $this  onStart(callable $handler)
+ * @method  $this  onBeforeShutdown(callable $handler)
+ * @method  $this  onShutdown(callable $handler)
+ * @method  $this  onWorkerStart(callable $handler)
+ * @method  $this  onWorkerStop(callable $handler)
+ * @method  $this  onWorkerExit(callable $handler)
+ * @method  $this  onConnect(callable $handler)
+ * @method  $this  onReceive(callable $handler)
+ * @method  $this  onPacket(callable $handler)
+ * @method  $this  onClose(callable $handler)
+ * @method  $this  onTask(callable $handler)
+ * @method  $this  onFinish(callable $handler)
+ * @method  $this  onPipeMessage(callable $handler)
+ * @method  $this  onWorkerError(callable $handler)
+ * @method  $this  onManagerStart(callable $handler)
+ * @method  $this  onManagerStop(callable $handler)
+ * @method  $this  onBeforeReload(callable $handler)
+ * @method  $this  onAfterReload(callable $handler)
  *
- * @method $this onRequest(callable $handler)
- * @method $this onOpen(callable $handler)
- * @method $this onBeforeHandshakeResponse(callable $handler)
- * @method $this onHandshake(callable $handler)
- * @method $this onMessage(callable $handler)
- * @method $this onDisconnect(callable $handler)
+ * @method  $this  onRequest(callable $handler)
+ * @method  $this  onOpen(callable $handler)
+ * @method  $this  onBeforeHandshakeResponse(callable $handler)
+ * @method  $this  onHandshake(callable $handler)
+ * @method  $this  onMessage(callable $handler)
+ * @method  $this  onDisconnect(callable $handler)
  *
- * @method bool reload(bool $onlyReloadTaskWorker = false)
- * @method bool shutdown()
- * @method void tick(int $millisecond, callable $callback)
- * @method void after(int $millisecond, callable $callback)
- * @method bool clearTimer(int $timerId)
- * @method bool close(int $fd, bool $reset = false)
- * @method bool send(int|string $fd, string $data, int $serverSocket = -1)
- * @method bool sendfile(int $fd, string $filename, int $offset = 0, int $length = 0)
- * @method bool sendMessage(mixed $message, int $workerId)
- * @method bool exist(int $fd)
- * @method array stats()
- * @method int task(mixed $data, int $dstWorkerId = -1, callable $finishCallback = null)
- * @method mixed taskwait(mixed $data, float $timeout = 0.5, int $dstWorkerId = -1)
- * @method false|array taskWaitMulti(array $tasks, float $timeout = 0.5)
- * @method false|array taskCo(array $tasks, float $timeout = 0.5)
- * @method bool finish(mixed $data)
- * @method int|false getWorkerId()
- * @method int|false getWorkerPid(int $worker_id = -1)
- * @method int|false getWorkerStatus(int $worker_id = -1)
- * @method int getManagerPid()
- * @method int getMasterPid()
+ * @method  bool         reload(bool $onlyReloadTaskWorker = false)
+ * @method  bool         shutdown()
+ * @method  void         tick(int $millisecond, callable $callback)
+ * @method  void         after(int $millisecond, callable $callback)
+ * @method  bool         clearTimer(int $timerId)
+ * @method  bool         close(int $fd, bool $reset = false)
+ * @method  bool         send(int|string $fd, string $data, int $serverSocket = -1)
+ * @method  bool         sendfile(int $fd, string $filename, int $offset = 0, int $length = 0)
+ * @method  bool         sendMessage(mixed $message, int $workerId)
+ * @method  bool         exist(int $fd)
+ * @method  array        stats()
+ * @method  int          task(mixed $data, int $dstWorkerId = -1, callable $finishCallback = null)
+ * @method  mixed        taskwait(mixed $data, float $timeout = 0.5, int $dstWorkerId = -1)
+ * @method  false|array  taskWaitMulti(array $tasks, float $timeout = 0.5)
+ * @method  false|array  taskCo(array $tasks, float $timeout = 0.5)
+ * @method  bool         finish(mixed $data)
+ * @method  int|false    getWorkerId()
+ * @method  int|false    getWorkerPid(int $worker_id = -1)
+ * @method  int|false    getWorkerStatus(int $worker_id = -1)
+ * @method  int          getManagerPid()
+ * @method  int          getMasterPid()
  *
  * phpcs:ignore
- * @method int push(int $fd, Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
- * @method string pack(Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
- * @method Frame|false unpack(string $data)
- * @method bool disconnect(int $fd, int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL, string $reason = '')
- * @method bool isEstablished(int $fd)
+ * @method  int          push(int $fd, Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
+ * @method  string       pack(Frame|string $data, int $opcode = WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN)
+ * @method  Frame|false  unpack(string $data)
+ * @method  bool         disconnect(int $fd, int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL, string $reason = '')
+ * @method  bool         isEstablished(int $fd)
  *
  * @formatter:on
  */
@@ -155,7 +155,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
     ];
 
     /**
-     * @var array<static>
+     * @var  array<static>
      */
     protected array $subServers = [];
 
@@ -208,7 +208,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getConfig(): array
     {
@@ -277,7 +277,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getMode(): int
     {
@@ -297,7 +297,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getSockType(): int
     {
@@ -317,7 +317,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getHost(): ?string
     {
@@ -337,7 +337,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
     }
 
     /**
-     * @return \Closure|null
+     * @return  \Closure|null
      */
     public function getOutputBuilder(): ?\Closure
     {

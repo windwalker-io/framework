@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Event;
 
+use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use Windwalker\Event\Events\ErrorEventTrait;
 use Windwalker\Http\Output\OutputInterface;
 
@@ -17,11 +19,11 @@ class ErrorEvent extends RequestEvent
     use ErrorEventTrait;
 
     public function __construct(
-        \Throwable $exception,
+        Throwable $exception,
         ServerRequestInterface $request,
         OutputInterface $output,
         ?ResponseInterface $response = null,
-        ?\Closure $endHandler = null,
+        ?Closure $endHandler = null,
         array $attributes = [],
         int $fd = 0,
     ) {
@@ -33,7 +35,7 @@ class ErrorEvent extends RequestEvent
             output: $output,
             endHandler: $endHandler,
             attributes: $attributes,
-            fd: $fd
+            fd: $fd,
         );
     }
 }

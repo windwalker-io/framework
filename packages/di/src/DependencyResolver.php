@@ -4,24 +4,32 @@ declare(strict_types=1);
 
 namespace Windwalker\DI;
 
+use Closure;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionFunction;
 use ReflectionFunctionAbstract;
+use ReflectionIntersectionType;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionProperty;
 use ReflectionType;
 use ReflectionUnionType;
+use Reflector;
 use TypeError;
 use UnexpectedValueException;
-use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Attributes\Factory;
+use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Attributes\NoAutowire;
 use Windwalker\DI\Attributes\Service;
 use Windwalker\DI\Definition\DefinitionInterface;
 use Windwalker\DI\Definition\ObjectBuilderDefinition;
+use Windwalker\DI\Exception\DefinitionNotFoundException;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
 use Windwalker\Utilities\Reflection\ReflectionCallable;
@@ -29,7 +37,6 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
 use function Windwalker\collect;
-use function Windwalker\depth;
 
 /**
  * The ObjectFactory class.
@@ -49,8 +56,12 @@ class DependencyResolver
     }
 
     /**
-     * @throws DefinitionResolveException
-     * @throws ReflectionException
+     * @throws  ContainerExceptionInterface
+     * @throws  DefinitionResolveException
+     * @throws  DependencyResolutionException
+     * @throws  DefinitionNotFoundException
+     * @throws  NotFoundExceptionInterface
+     * @throws  ReflectionException
      */
     public function newInstance(mixed $class, array $args = [], DIOptions|int $options = new DIOptions()): object
     {
@@ -65,13 +76,15 @@ class DependencyResolver
 
         if (is_string($class)) {
             /** @var DIOptions $options */
-            $builder = fn(array $args, DIOptions $options) => $this->resolveMembersAttributes(
-                $this->newInstanceByClassName($class, $args, $options),
-                $options
-            );
+            $builder = fn(array $args, DIOptions $options)
+                => $this->resolveMembersAttributes(
+                    $this->newInstanceByClassName($class, $args, $options),
+                    $options,
+                );
 
             if (!$options->ignoreAttributes) {
-                $builder = $this->container->getAttributesResolver()
+                $builder = $this->container
+                    ->getAttributesResolver()
                     ->resolveClassCreate($class, $builder);
             }
 
@@ -85,15 +98,15 @@ class DependencyResolver
                         $e->getMessage(),
                     ),
                     $e->getCode(),
-                    $e
+                    $e,
                 );
             }
         } elseif (is_callable($class)) {
             $instance = $this->container->call($class, $args, null, $options);
 
             if (
-                $instance instanceof \Closure
-                && new \ReflectionFunction($instance)->getAttributes(Factory::class) !== []
+                $instance instanceof Closure
+                && new ReflectionFunction($instance)->getAttributes(Factory::class) !== []
             ) {
                 return $this->container->resolve($instance, $args, $options);
             }
@@ -102,15 +115,16 @@ class DependencyResolver
                 throw new UnexpectedValueException(
                     sprintf(
                         'Thr callback for creating instance must return an object, got %s.',
-                        get_debug_type($instance)
-                    )
+                        get_debug_type($instance),
+                    ),
                 );
             }
 
             $instance = $this->resolveMembersAttributes($instance, $options);
 
             if (!$options->ignoreAttributes) {
-                $instance = $this->container->getAttributesResolver()
+                $instance = $this->container
+                    ->getAttributesResolver()
                     ->decorateObject($instance);
             }
 
@@ -122,7 +136,7 @@ class DependencyResolver
             return $instance;
         } else {
             throw new InvalidArgumentException(
-                'New instance must get first argument as a class name, a callable or a DefinitionInterface object.'
+                'New instance must get first argument as a class name, a callable or a DefinitionInterface object.',
             );
         }
 
@@ -132,7 +146,8 @@ class DependencyResolver
     protected function resolveMembersAttributes(object $instance, DIOptions $options): object
     {
         if (!$options->ignoreAttributes) {
-            $instance = $this->container->getAttributesResolver()
+            $instance = $this->container
+                ->getAttributesResolver()
                 ->resolveObjectMembers($instance);
         }
 
@@ -140,13 +155,13 @@ class DependencyResolver
     }
 
     /**
-     * @throws ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      */
     public function newInstanceByClassName(
         string $class,
         array $args = [],
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): object {
         if (!$options->containerMerged) {
             $options = $this->mergeOptionsDefaults($options);
@@ -176,7 +191,7 @@ class DependencyResolver
             throw new DependencyResolutionException(
                 $e->getMessage() . ' - Target class: ' . $class,
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 
@@ -191,23 +206,23 @@ class DependencyResolver
     /**
      * Build an array of constructor parameters.
      *
-     * @param  ReflectionFunctionAbstract  $method  Method for which to build the argument array.
-     * @param  array                       $args    The default args if class hint not provided.
+     * @param  ReflectionFunctionAbstract  $method   Method for which to build the argument array.
+     * @param  array                       $args     The default args if class hint not provided.
      * @param  DIOptions|int               $options
      *
-     * @return array Array of arguments to pass to the method.
+     * @return  array  Array of arguments to pass to the method.
      *
-     * @throws ContainerExceptionInterface
-     * @throws DefinitionResolveException
-     * @throws DependencyResolutionException
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws  ContainerExceptionInterface
+     * @throws  DefinitionResolveException
+     * @throws  DependencyResolutionException
+     * @throws  NotFoundExceptionInterface
+     * @throws  ReflectionException
      * @since   2.0
      */
     protected function getMethodArgs(
         ReflectionFunctionAbstract $method,
         array $args = [],
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): array {
         if (!$options->containerMerged) {
             $options = $this->mergeOptionsDefaults($options);
@@ -293,8 +308,8 @@ class DependencyResolver
                     $i + 1,
                     $dependencyVarName,
                     $method instanceof ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' : '',
-                    $method->getShortName()
-                )
+                    $method->getShortName(),
+                ),
             );
             // $methodArgs[$i] = null;
         }
@@ -317,15 +332,15 @@ class DependencyResolver
     }
 
     /**
-     * @throws NotFoundExceptionInterface
-     * @throws DefinitionResolveException
-     * @throws ContainerExceptionInterface
-     * @throws ReflectionException
+     * @throws  NotFoundExceptionInterface
+     * @throws  DefinitionResolveException
+     * @throws  ContainerExceptionInterface
+     * @throws  ReflectionException
      */
     public function &resolveParameterDependency(
         ReflectionParameter $param,
         array $args = [],
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): mixed {
         if (!$options->containerMerged) {
             $options = $this->mergeOptionsDefaults($options);
@@ -341,20 +356,20 @@ class DependencyResolver
         // $dependencyVarName = $param->getName();
 
         // Currently we don't support IntersectionType
-        if (!$type || $type instanceof \ReflectionIntersectionType) {
+        if (!$type || $type instanceof ReflectionIntersectionType) {
             return $nope;
         }
 
         if ($type instanceof ReflectionUnionType) {
             $dependencies = $type->getTypes();
         } else {
-            /** @var array<\ReflectionNamedType> $dependencies */
+            /** @var array<ReflectionNamedType> $dependencies */
             $dependencies = [$type];
         }
 
         foreach ($dependencies as $type) {
             // Currently we don't support IntersectionType
-            if ($type instanceof \ReflectionIntersectionType) {
+            if ($type instanceof ReflectionIntersectionType) {
                 continue;
             }
 
@@ -386,7 +401,7 @@ class DependencyResolver
                 $param,
                 $dependency,
                 $autowire,
-                $dependencyClassName
+                $dependencyClassName,
             ) {
                 $depObject = null;
 
@@ -429,7 +444,7 @@ class DependencyResolver
                         $value = $create();
 
                         return $this->resolveParameterValue($value);
-                    }
+                    },
                 );
 
                 return $depObject;
@@ -453,8 +468,8 @@ class DependencyResolver
                     $param->getDeclaringClass()?->getName() ?? '*UnknownClass*',
                     $param->getPosition(),
                     (string) $types,
-                    get_debug_type($depObject)
-                )
+                    get_debug_type($depObject),
+                ),
             );
         }
 
@@ -466,7 +481,7 @@ class DependencyResolver
      *
      * @param  mixed  $value
      *
-     * @return mixed
+     * @return  mixed
      *
      * @since  3.5.1
      */
@@ -496,7 +511,7 @@ class DependencyResolver
     public function &resolveParameterAttributes(
         mixed &$value,
         ReflectionParameter $param,
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): mixed {
         if (!$options->containerMerged) {
             $options = $this->mergeOptionsDefaults($options);
@@ -504,7 +519,8 @@ class DependencyResolver
         }
 
         if (!$options->ignoreAttributes && $param->getAttributes()) {
-            $value = &$this->container->getAttributesResolver()
+            $value = &$this->container
+                ->getAttributesResolver()
                 ->resolveParameter($value, $param);
         }
 
@@ -519,19 +535,19 @@ class DependencyResolver
      * @param  object|null  $context
      * @param  int          $options
      *
-     * @return mixed
+     * @return  mixed
      *
-     * @throws ContainerExceptionInterface
-     * @throws DefinitionResolveException
-     * @throws DependencyResolutionException
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws  ContainerExceptionInterface
+     * @throws  DefinitionResolveException
+     * @throws  DependencyResolutionException
+     * @throws  NotFoundExceptionInterface
+     * @throws  ReflectionException
      */
     public function call(
         mixed $callable,
         array $args = [],
         ?object $context = null,
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): mixed {
         $ref = new ReflectionCallable($callable);
 
@@ -544,7 +560,8 @@ class DependencyResolver
             $args = $this->getMethodArgs($ref->getReflector(), $args, $options);
 
             if (!$options->ignoreAttributes) {
-                $callable = $this->container->getAttributesResolver()
+                $callable = $this->container
+                    ->getAttributesResolver()
                     ->resolveCallable($callable, $context);
             }
 
@@ -566,7 +583,7 @@ class DependencyResolver
      */
     protected static function isService(ReflectionClass $dependency): bool
     {
-        return $dependency->getAttributes(Service::class, \ReflectionAttribute::IS_INSTANCEOF) !== [];
+        return $dependency->getAttributes(Service::class, ReflectionAttribute::IS_INSTANCEOF) !== [];
     }
 
     public function mergeOptionsDefaults(int|DIOptions $options): DIOptions
@@ -575,18 +592,18 @@ class DependencyResolver
     }
 
     public function canLazy(
-        string|ReflectionClass|ReflectionParameter|\ReflectionProperty $classOrRef,
-        DIOptions $options
+        string|ReflectionClass|ReflectionParameter|ReflectionProperty $classOrRef,
+        DIOptions $options,
     ): bool {
-        $ref = is_string($classOrRef) ? new \ReflectionClass($classOrRef) : $classOrRef;
+        $ref = is_string($classOrRef) ? new ReflectionClass($classOrRef) : $classOrRef;
         $lazy = $options->lazy ?? $this->container->options->lazy;
 
         return ($lazy || static::getAttributeFromReflection($ref, Lazy::class));
     }
 
-    public static function isInternal(string|\Reflector $class): bool
+    public static function isInternal(string|Reflector $class): bool
     {
-        $ref = is_string($class) ? new \ReflectionClass($class) : $class;
+        $ref = is_string($class) ? new ReflectionClass($class) : $class;
 
         if (!$ref instanceof ReflectionClass) {
             return false;
@@ -610,16 +627,16 @@ class DependencyResolver
     /**
      * @template T
      *
-     * @param  ReflectionClass|ReflectionParameter|\ReflectionProperty  $ref
-     * @param  class-string<T>                                          $attr
+     * @param  ReflectionClass|ReflectionParameter|ReflectionProperty  $ref
+     * @param  class-string<T>                                         $attr
      *
-     * @return object|null
+     * @return  object|null
      */
     public static function getAttributeFromReflection(
-        ReflectionClass|ReflectionParameter|\ReflectionProperty $ref,
-        string $attr
+        ReflectionClass|ReflectionParameter|ReflectionProperty $ref,
+        string $attr,
     ): ?object {
-        $attrs = $ref->getAttributes($attr, \ReflectionAttribute::IS_INSTANCEOF);
+        $attrs = $ref->getAttributes($attr, ReflectionAttribute::IS_INSTANCEOF);
 
         if ($attrs === []) {
             return null;

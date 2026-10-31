@@ -49,17 +49,17 @@ class EntityMetadata implements EventAwareInterface
     protected ?Column $aiColumn = null;
 
     /**
-     * @var PK[]
+     * @var  PK[]
      */
     protected array $keys = [];
 
     /**
-     * @var EntityMember[]
+     * @var  EntityMember[]
      */
     public protected(set) array $propertyMembers;
 
     /**
-     * @var EntityMember[]
+     * @var  EntityMember[]
      */
     public protected(set) array $methodMembers;
 
@@ -68,7 +68,7 @@ class EntityMetadata implements EventAwareInterface
     protected RelationManager $relationManager;
 
     /**
-     * @var ORM
+     * @var  ORM
      */
     protected ORM $orm;
 
@@ -199,7 +199,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @param  string  $attr
+     * @param  string                               $attr
      * @param  ReflectionProperty|ReflectionMethod  $ref
      *
      * @return  void
@@ -364,7 +364,7 @@ class EntityMetadata implements EventAwareInterface
     /**
      * @return  array<int, ReflectionMethod>
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function getMethods(): array
     {
@@ -386,7 +386,7 @@ class EntityMetadata implements EventAwareInterface
 
     /**
      * @return  array<int, ReflectionProperty>
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function getProperties(): array
     {
@@ -409,7 +409,7 @@ class EntityMetadata implements EventAwareInterface
     /**
      * getColumns
      *
-     * @return Column[]
+     * @return  Column[]
      */
     public function getColumns(): array
     {
@@ -454,7 +454,7 @@ class EntityMetadata implements EventAwareInterface
      *
      * @return  ReflectionClass
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function getReflector(): ReflectionClass
     {
@@ -462,7 +462,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @return CastManager
+     * @return  CastManager
      */
     public function getCastManager(): CastManager
     {
@@ -473,6 +473,7 @@ class EntityMetadata implements EventAwareInterface
      * @param  CastManager  $castManager
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setCastManager(CastManager $castManager): static
     {
@@ -482,7 +483,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @return ORM
+     * @return  ORM
      */
     public function getORM(): ORM
     {
@@ -516,6 +517,7 @@ class EntityMetadata implements EventAwareInterface
      * @param  ORM  $orm
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setORM(ORM $orm): static
     {
@@ -525,7 +527,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @return RelationManager
+     * @return  RelationManager
      */
     public function getRelationManager(): RelationManager
     {
@@ -536,6 +538,7 @@ class EntityMetadata implements EventAwareInterface
      * @param  RelationManager  $relationManager
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setRelationManager(RelationManager $relationManager): static
     {
@@ -545,7 +548,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getTableAlias(): ?string
     {
@@ -553,7 +556,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMapperClass(): string
     {
@@ -700,7 +703,7 @@ class EntityMetadata implements EventAwareInterface
     }
 
     /**
-     * @return object|null
+     * @return  object|null
      */
     public function getCachedEntity(): ?object
     {

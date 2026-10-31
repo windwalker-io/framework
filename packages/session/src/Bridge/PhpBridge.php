@@ -32,7 +32,7 @@ class PhpBridge implements BridgeInterface
      *
      * This error often occurred by Symfony/VarDumper.
      *
-     * @var ?array
+     * @var  ?array
      */
     protected mixed $storage = [];
 
@@ -81,7 +81,7 @@ class PhpBridge implements BridgeInterface
      * start
      *
      * @return  bool
-     * @throws Exception
+     * @throws  Exception
      */
     public function start(): bool
     {
@@ -179,7 +179,7 @@ class PhpBridge implements BridgeInterface
      * @param  bool  $saveOld
      *
      * @return  bool
-     * @throws Exception
+     * @throws  Exception
      */
     public function regenerate(bool $deleteOld = true, bool $saveOld = true): bool
     {
@@ -317,7 +317,7 @@ class PhpBridge implements BridgeInterface
      *
      * @return  string
      *
-     * @throws Exception
+     * @throws  Exception
      */
     protected function createId(): string
     {
@@ -329,7 +329,7 @@ class PhpBridge implements BridgeInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getStatus(): int
     {
@@ -358,7 +358,7 @@ class PhpBridge implements BridgeInterface
     }
 
     /**
-     * @return HandlerInterface
+     * @return  HandlerInterface
      */
     public function getHandler(): HandlerInterface
     {
@@ -381,6 +381,9 @@ class PhpBridge implements BridgeInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getSerializer(): ?FormatInterface
     {
         return $this->serializer;

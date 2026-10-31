@@ -14,7 +14,6 @@ use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
-use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The WriterManager class.
@@ -43,14 +42,17 @@ class WriterManager
     /**
      * Inserts a row into a table based on an object's properties.
      *
-     * @param  string        $table    The name of the database table to insert into.
-     * @param  array|object &$data     A reference to an object whose public properties match the table fields.
-     * @param  string|null   $key      The name of the primary key. If provided the object property is updated.
-     * @param  array         $options  Options.
+     * @param  string        $table  The name of the database table to insert into.
+     * @param  array|object  &$data  A reference to an object whose public properties match the table fields.
+     * @param  string|null   $key    The name of the primary key. If provided the object property is updated.
+     * @param  array{
+     *     incrementField?: bool|string,
+     *     filterFields?: bool,
+     * }  $options  Options.
      *
-     * @return array|object
+     * @return  array|object
      *
-     * @throws JsonException
+     * @throws  JsonException
      * @since   2.0
      */
     public function insertOne(string $table, array|object $data, ?string $key = null, array $options = []): array|object
@@ -104,14 +106,19 @@ class WriterManager
     /**
      * Updates a row in a table based on an object's properties.
      *
-     * @param  string        $table    The name of the database table to update.
-     * @param  array|object  $data     A reference to an object whose public properties match the table fields.
-     * @param  array|string  $key      The name of the primary key.
-     * @param  array         $options  Options.
+     * @param  string        $table  The name of the database table to update.
+     * @param  array|object  $data   A reference to an object whose public properties match the table fields.
+     * @param  array|string  $key    The name of the primary key.
+     * @param  array{
+     *     updateNulls?: bool,
+     *     filterFields?: bool|array,
+     *     toJson?: bool,
+     *     lockCallback?: (callable(Query): void)|null,
+     * }  $options  Options.
      *
-     * @return StatementInterface
+     * @return  StatementInterface
      *
-     * @throws JsonException
+     * @throws  JsonException
      * @since   2.0
      */
     public function updateOne(
@@ -129,7 +136,7 @@ class WriterManager
             $options
         );
 
-        $item = TypeCast::toArray($data);
+        $item = $origin = TypeCast::toArray($data);
 
         $key = (array) $key;
 
@@ -178,7 +185,7 @@ class WriterManager
 
         foreach ($key as $k) {
             // Set the primary key to the WHERE clause instead of a field to update.
-            $query->where($k, $data[$k] ?? null);
+            $query->where($k, $origin[$k] ?? null);
         }
 
         if ($options['lockCallback'] ?? null) {
@@ -195,12 +202,12 @@ class WriterManager
      * @param  string        $table    The name of the database table to update.
      * @param  array|object  $data     A reference to an object whose public properties match the table fields.
      * @param  string|null   $key      The name of the primary key.
-     * @param  array         $options  Options.
+     * @param  array         $options  Same as insertOne() and updateOne() options.
      *
      * @return  mixed
-     * @throws JsonException
+     * @throws  JsonException
      */
-    public function saveOne(string $table, array|object $data, string|null $key, array $options = []): mixed
+    public function saveOne(string $table, array|object $data, ?string $key, array $options = []): mixed
     {
         if ($key !== null) {
             if (is_array($data)) {
@@ -233,7 +240,7 @@ class WriterManager
         string $table,
         array|object $data,
         array|string $keys,
-        array|null $updateFields = null,
+        ?array $updateFields = null,
         #[ArrayShape([
             'updateNulls' => 'bool',
             'returningIdField' => 'string|null',
@@ -247,158 +254,40 @@ class WriterManager
         $returningIdField = $options['returningIdField'] ?? null;
 
         if (!$updateNulls) {
-            $data = array_filter($data, fn($v) => $v !== null);
+            $data = array_filter(TypeCast::toArray($data), fn($v) => $v !== null);
         }
 
         $query = $this->db->createQuery();
 
-        $table = (string) $query->quoteName($table);
         $originData = $data;
         $data = TypeCast::toArray($originData);
         $allFields = array_keys($data);
-        // $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
         $updateFields ??= array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
-        $quotedUpdateFields = $query->qnMultiple($updateFields);
-        $quotedFields = $query->qnMultiple($allFields);
-        // $quotedValueFields = $query->qnMultiple($valueFields);
-        $quotedKeys = $query->qnMultiple($keys);
-
-        $columns = $query->clause('()', $quotedFields, ',');
-        $values = $query->clause('()', [], ',');
-
-        foreach ($data as $k => $v) {
-            if ($v instanceof RawWrapper) {
-                $values->append($v());
-            } else {
-                $query->bind($k, $v);
-                $values->append(":$k");
-            }
+        // Nothing to update (e.g. all non-key values are null): re-assign keys so the statement stays valid
+        // and still yields the row ID.
+        if ($updateFields === []) {
+            $updateFields = $keys;
         }
 
-        switch ($platformName) {
-            case AbstractPlatform::MYSQL:
-                $updateActions = $query->clause('', [], ',');
-
-                foreach ($quotedUpdateFields as $key) {
-                    $updateActions->append("$key = VALUES($key)");
-                }
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $updateActions->append("$quotedReturningIdField = LAST_INSERT_ID($quotedReturningIdField)");
-                }
-
-                $query->sql(
-                    <<<SQL
-                    INSERT INTO $table $columns
-                    VALUES $values
-                    ON DUPLICATE KEY UPDATE
-                        $updateActions
-                    SQL
-                );
-                break;
-
-            case AbstractPlatform::POSTGRESQL:
-                $updateActions = $query->clause('()', [], ',');
-
-                foreach ($quotedKeys as $key) {
-                    $updateActions->append($key);
-                }
-
-                $excludeKeys = $query->clause('', [], ',');
-
-                foreach ($quotedUpdateFields as $key) {
-                    $excludeKeys->append("$key = EXCLUDED.$key");
-                }
-
-                $returning = '';
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $returning = "RETURNING $quotedReturningIdField";
-                }
-
-                $query->sql(
-                    <<<SQL
-                    INSERT INTO $table $columns
-                    VALUES $values ON CONFLICT $updateActions DO UPDATE SET
-                        $excludeKeys
-                    $returning
-                    SQL
-                );
-                break;
-
-            case AbstractPlatform::SQLSERVER:
-                if (
-                    version_compare(
-                        $this->db->getDriver()->getVersion(),
-                        '10',
-                        '<'
-                    )
-                ) {
-                    throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
-                }
-
-                $srcOn = $query->clause('()', [], ' AND ');
-
-                foreach ($keys as $key) {
-                    $srcOn->append($query->quoteName($key) . " = :key_$key");
-                    $query->bind(
-                        "key_$key",
-                        $data[$key]
-                        ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
-                    );
-                }
-
-                $updateSet = $query->clause('', [], ',');
-
-                foreach ($updateFields as $k) {
-                    $v = $data[$k];
-
-                    if ($v instanceof RawWrapper) {
-                        $updateSet->append($query->quoteName($k) . '=' . $v());
-                    } else {
-                        $query->bind('update_set_' . $k, $v);
-                        $updateSet->append($query->quoteName($k) . " = :update_set_$k");
-                    }
-                }
-
-                $output = '';
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $output = "OUTPUT INSERTED.$quotedReturningIdField";
-                }
-
-                // phpcs:disable
-                // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
-                // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-                $query->sql(
-                    "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
-                    WHEN NOT MATCHED THEN INSERT $columns
-                    VALUES $values
-                    WHEN MATCHED THEN UPDATE SET $updateSet
-                    $output;"
-                );
-                break;
-
-            case AbstractPlatform::SQLITE:
-                $returning = '';
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $returning = "RETURNING $quotedReturningIdField";
-                }
-
-                $query->sql(
-                    "INSERT OR REPLACE INTO $table $columns
-                VALUES $values
-                $returning"
-                );
-                break;
+        if (
+            $platformName === AbstractPlatform::SQLSERVER
+            && version_compare($this->db->getDriver()->getVersion(), '10', '<')
+        ) {
+            throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
         }
+
+        $query->sql(
+            $query->getGrammar()->compileUpsert(
+                $query,
+                $table,
+                $data,
+                $keys,
+                $updateFields,
+                $returningIdField
+            )
+        );
 
         $statement = $query->execute();
 
@@ -420,13 +309,13 @@ class WriterManager
     /**
      * insertMultiple
      *
-     * @param  string       $table  The name of the database table to update.
-     * @param  array        $items  A reference to an object whose public properties match the table fields.
-     * @param  string|null  $key    The name of the primary key.
-     * @param  array        $options
+     * @param  string       $table    The name of the database table to update.
+     * @param  array        $items    A reference to an object whose public properties match the table fields.
+     * @param  string|null  $key      The name of the primary key.
+     * @param  array        $options  See insertOne().
      *
-     * @return array[]|object[]
-     * @throws JsonException
+     * @return  array[]|object[]
+     * @throws  JsonException
      */
     public function insertMultiple(string $table, iterable $items, ?string $key = null, array $options = []): array
     {
@@ -439,6 +328,12 @@ class WriterManager
         return $result;
     }
 
+    /**
+     * @param  array{
+     *     incrementField?: bool|string,
+     *     filterFields?: bool,
+     * }  $options
+     */
     public function insertBulk(
         string $table,
         iterable $items,
@@ -489,13 +384,13 @@ class WriterManager
     /**
      * updateMultiple
      *
-     * @param  string        $table  The name of the database table to update.
-     * @param  array         $items  A reference to an object whose public properties match the table fields.
-     * @param  array|string  $key    The name of the primary key.
-     * @param  array         $options
+     * @param  string        $table    The name of the database table to update.
+     * @param  array         $items    A reference to an object whose public properties match the table fields.
+     * @param  array|string  $key      The name of the primary key.
+     * @param  array         $options  See updateOne().
      *
-     * @return StatementInterface[]
-     * @throws JsonException
+     * @return  StatementInterface[]
+     * @throws  JsonException
      */
     public function updateMultiple(string $table, iterable $items, array|string $key, array $options = []): array
     {
@@ -511,13 +406,13 @@ class WriterManager
     /**
      * saveMultiple
      *
-     * @param  string             $table  The name of the database table to update.
-     * @param  array              $items  A reference to an object whose public properties match the table fields.
-     * @param  array|string|null  $key    The name of the primary key.
-     * @param  array              $options
+     * @param  string             $table    The name of the database table to update.
+     * @param  array              $items    A reference to an object whose public properties match the table fields.
+     * @param  array|string|null  $key      The name of the primary key.
+     * @param  array              $options  See insertOne() and updateOne().
      *
-     * @return array
-     * @throws JsonException
+     * @return  array
+     * @throws  JsonException
      */
     public function saveMultiple(
         string $table,
@@ -543,9 +438,9 @@ class WriterManager
      *                              Example:
      *                              - `['id' => 5]` => id = 5
      *
-     * @param  array   $options
+     * @param  array{filterFields?: bool}  $options
      *
-     * @return StatementInterface|null
+     * @return  StatementInterface|null
      */
     public function updateWhere(string $table, array $data, $conditions = [], array $options = []): ?StatementInterface
     {
@@ -617,7 +512,7 @@ class WriterManager
      *
      * @param  string|null  $sequence
      *
-     * @return string|null The value of the auto-increment field from the last inserted row.
+     * @return  string|null  The value of the auto-increment field from the last inserted row.
      *
      * @since   2.0
      */
@@ -673,8 +568,6 @@ class WriterManager
     }
 
     /**
-     * filterfields
-     *
      * @param  string  $table
      * @param  array   $item
      *
@@ -684,16 +577,6 @@ class WriterManager
     {
         $schema = $this->db->getTableManager($table)->getSchema();
         $tableManager = $schema->getTable($table);
-
-        if (!$tableManager) {
-            throw new RuntimeException(
-                sprintf(
-                    'Table: %s not exists in Schema: %s',
-                    $table,
-                    $schema->getName()
-                )
-            );
-        }
 
         return Arr::only($item, $tableManager->getColumnNames());
     }

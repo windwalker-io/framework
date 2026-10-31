@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Filesystem\Test;
 
 use Windwalker\Filesystem\Path;
-use Windwalker\Filesystem\Path\PathLocator;
 
 /**
  * Trait FilesystemTestTrait

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test\Handler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Session\Handler\AbstractHandler;
 use Windwalker\Session\Handler\ArrayHandler;
 use Windwalker\Session\Handler\HandlerInterface;
@@ -14,14 +15,15 @@ use Windwalker\Session\Handler\HandlerInterface;
 class ArrayHandlerTest extends AbstractHandlerTestCase
 {
     /**
-     * @var ArrayHandler
+     * @var  ArrayHandler
      */
     protected ?AbstractHandler $instance = null;
 
     /**
      * @see  ArrayHandler::updateTimestamp
      */
-    public function testUpdateTimestamp(): void
+    #[Test]
+    public function updateTimestampRefreshesStoredTime(): void
     {
         $session = $this->createSession();
 

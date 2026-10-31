@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test\Clause;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Clause\Clause;
 
@@ -15,11 +16,6 @@ use function Windwalker\Query\clause;
 class ClauseTest extends TestCase
 {
     /**
-     * @var Clause
-     */
-    protected $instance;
-
-    /**
      * @param  string  $name
      * @param  array   $elements
      * @param  string  $glue
@@ -29,7 +25,8 @@ class ClauseTest extends TestCase
      *
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('basicUsageProvider')]
-    public function testBasicUsage(string $name, array $elements, string $glue, string $expected): void
+    #[Test]
+    public function basicUsageRendersElementsWithGlue(string $name, array $elements, string $glue, string $expected): void
     {
         self::assertEquals(
             $expected,
@@ -67,7 +64,8 @@ class ClauseTest extends TestCase
         ];
     }
 
-    public function testNested(): void
+    #[Test]
+    public function nestedClausesRenderRecursively(): void
     {
         $clause = new Clause('WHERE');
 
@@ -92,7 +90,8 @@ class ClauseTest extends TestCase
     /**
      * @see  Clause::setGlue
      */
-    public function testGetSetGlue(): void
+    #[Test]
+    public function setGlueChangesGlue(): void
     {
         $clause = new Clause('IN()', [], '');
         $clause->setGlue(', ');
@@ -103,7 +102,8 @@ class ClauseTest extends TestCase
     /**
      * @see  Clause::setName
      */
-    public function testSetName(): void
+    #[Test]
+    public function setNameChangesName(): void
     {
         $clause = new Clause('');
         $clause->setName('HELLO');
@@ -114,7 +114,8 @@ class ClauseTest extends TestCase
     /**
      * @see  Clause::getElements
      */
-    public function testGetSetElements(): void
+    #[Test]
+    public function setElementsReplacesElements(): void
     {
         $clause = new Clause('IN()', [], '');
         $clause->setElements([1, 2, 3]);
@@ -125,7 +126,8 @@ class ClauseTest extends TestCase
     /**
      * @see  Clause::append
      */
-    public function testAppend(): void
+    #[Test]
+    public function appendAddsElements(): void
     {
         $clause = new Clause('IN()', [], '');
         $clause->append(1);
@@ -138,7 +140,8 @@ class ClauseTest extends TestCase
     /**
      * @see  Clause::__clone
      */
-    public function testClone(): void
+    #[Test]
+    public function cloneDeepCopiesChildClauses(): void
     {
         $clause = new Clause('IN()', [new Clause()], '');
         $clause2 = clone $clause;
@@ -149,7 +152,8 @@ class ClauseTest extends TestCase
         );
     }
 
-    public function testMagic(): void
+    #[Test]
+    public function magicPropertiesExposeClauseState(): void
     {
         $clause = clause('hello', [1, 2, 3]);
 
@@ -159,14 +163,5 @@ class ClauseTest extends TestCase
 
         self::assertTrue(isset($clause->elements));
         self::assertCount(3, $clause);
-    }
-
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

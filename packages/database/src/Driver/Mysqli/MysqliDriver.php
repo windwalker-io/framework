@@ -18,12 +18,12 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     protected static string $name = 'mysqli';
 
     /**
-     * @var string
+     * @var  string
      */
     protected string $platformName = 'mysql';
 
     /**
-     * @var ?ConnectionInterface
+     * @var  ?ConnectionInterface
      */
     protected ?ConnectionInterface $connection = null;
 
@@ -105,8 +105,8 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
     /**
      * @param  bool  $releaseConnection  *
      *
-     * @return bool
-     * @throws \Throwable
+     * @return  bool
+     * @throws  \Throwable
      * @inheritDoc
      */
     public function transactionRollback(bool $releaseConnection = true): bool
@@ -130,6 +130,6 @@ class MysqliDriver extends AbstractDriver implements TransactionDriverInterface
      */
     public function getVersion(): string
     {
-        return $this->useConnection(fn(ConnectionInterface $conn) => $conn->get()->server_version);
+        return $this->useConnection(fn(ConnectionInterface $conn) => $conn->get()->server_info);
     }
 }

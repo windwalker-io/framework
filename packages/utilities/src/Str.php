@@ -75,11 +75,11 @@ class Str
     /**
      * @template T of string|array
      *
-     * @param  T $subject
+     * @param  T  $subject
      *
-     * @return T
+     * @return  T
      *
-     * @throws \Exception
+     * @throws  \Exception
      */
     public static function safeReplace(
         string|array $search,

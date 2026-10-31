@@ -44,6 +44,8 @@ class ArrayHandler extends AbstractHandler
      * isSupported
      *
      * @return  bool
+     *
+     * @codeCoverageIgnore
      */
     public static function isSupported(): bool
     {
@@ -124,7 +126,7 @@ class ArrayHandler extends AbstractHandler
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getSessions(): array
     {
@@ -135,6 +137,8 @@ class ArrayHandler extends AbstractHandler
      * @param  array  $sessions
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSessions(array $sessions): static
     {

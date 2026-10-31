@@ -23,7 +23,7 @@ class NestedIterator implements OuterIterator
     protected ?Iterator $compiledIterator = null;
 
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     protected array $callbacks = [];
 
@@ -433,11 +433,17 @@ class NestedIterator implements OuterIterator
                             $it = $it();
                         }
 
-                        if (!($it instanceof Traversable)) {
+                        if (!is_iterable($it)) {
                             throw new \InvalidArgumentException('Iterator must be callable or iterable');
                         }
 
-                        $mi->attachIterator($it instanceof Iterator ? $it : new ArrayIterator($it));
+                        $mi->attachIterator(
+                            match (true) {
+                                $it instanceof Iterator => $it,
+                                is_array($it) => new ArrayIterator($it),
+                                default => new \IteratorIterator($it),
+                            }
+                        );
                     }
                 }
 
@@ -448,7 +454,7 @@ class NestedIterator implements OuterIterator
 
     public function infinite(): static
     {
-        return $this->with(fn (\Iterator $items) => new \InfiniteIterator($items));
+        return $this->with(fn(\Iterator $items) => new \InfiniteIterator($items));
     }
 
     public function toCachingIterator(int $flags = \CachingIterator::CALL_TOSTRING): \CachingIterator
@@ -513,7 +519,8 @@ class NestedIterator implements OuterIterator
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setInnerIterator(Traversable $innerIterator): static
     {

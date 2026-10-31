@@ -41,7 +41,7 @@ class NullQueueFailer implements QueueFailerInterface
      *
      * @param  mixed  $conditions
      *
-     * @return array|null
+     * @return  array|null
      */
     public function get(mixed $conditions): ?array
     {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Request;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Request\Request;
 use Windwalker\Uri\Uri;
@@ -15,42 +17,16 @@ use Windwalker\Uri\Uri;
  */
 class RequestTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var Request
-     */
-    protected $instance;
+    protected Request $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRequest(): void
     {
         $this->instance = new Request();
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test getHeaders().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\Request::getHeaders
-     */
-    public function testGetHeaders()
+    #[Test]
+    public function getHeadersIncludesHostHeaderFromUri(): void
     {
         self::assertEquals([], $this->instance->getHeaders());
 
@@ -59,14 +35,8 @@ class RequestTest extends TestCase
         self::assertEquals(['Host' => ['windwalker.io']], $request->getHeaders());
     }
 
-    /**
-     * Method to test getHeader().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\Request::getHeader
-     */
-    public function testGetHeader()
+    #[Test]
+    public function getHeaderReturnsHostHeaderFromUri(): void
     {
         self::assertEquals([], $this->instance->getHeader('host'));
 
@@ -75,19 +45,48 @@ class RequestTest extends TestCase
         self::assertEquals(['windwalker.io'], $request->getHeader('host'));
     }
 
-    /**
-     * Method to test hasHeader().
-     *
-     * @return  void
-     *
-     * @covers \Windwalker\Http\Request\Request::hasHeader
-     */
-    public function testHasHeader()
+    #[Test]
+    public function hasHeaderDetectsHostHeaderCaseInsensitively(): void
     {
         $request = new Request('http://example.com/foo', 'GET');
 
         self::assertTrue($request->hasHeader('host'));
         self::assertTrue($request->hasHeader('Host'));
         self::assertFalse($request->hasHeader('X-Foo'));
+    }
+
+    #[Test]
+    public function getHeaderReturnsEmptyArrayForMissingHeader(): void
+    {
+        $request = new Request('http://example.com/foo', 'GET');
+
+        self::assertSame([], $request->getHeader('X-Missing'));
+    }
+
+    #[Test]
+    public function hostHeaderIncludesPortFromUri(): void
+    {
+        $request = new Request('http://example.com:8080/foo', 'GET');
+
+        self::assertSame(['example.com:8080'], $request->getHeader('Host'));
+        self::assertSame(['example.com:8080'], $request->getHeaders()['Host']);
+    }
+
+    #[Test]
+    public function explicitHostHeaderTakesPrecedenceOverUriHost(): void
+    {
+        $request = new Request('http://example.com/foo', 'GET', 'php://memory', ['Host' => 'other.test']);
+
+        self::assertSame(['other.test'], $request->getHeaders()['Host']);
+    }
+
+    #[Test]
+    public function hostHeaderIsMissingWhenUriHasNoHost(): void
+    {
+        $request = new Request('/foo', 'GET');
+
+        self::assertFalse($request->hasHeader('host'));
+        self::assertArrayNotHasKey('Host', $request->getHeaders());
+        self::assertSame([], $request->getHeader('host'));
     }
 }

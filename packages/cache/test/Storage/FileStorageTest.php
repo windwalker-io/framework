@@ -19,12 +19,12 @@ use Windwalker\Cache\Storage\PrunableStorageInterface;
 class FileStorageTest extends TestCase
 {
     /**
-     * @var FileStorage
+     * @var  FileStorage
      */
     protected $instance;
 
     /**
-     * @var string
+     * @var  string
      */
     protected $root;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Filter\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\FilterInterface;
 use Windwalker\Filter\Rule\Absolute;
@@ -26,8 +27,9 @@ use Windwalker\Filter\ValidatorInterface;
  */
 class FilterRulesTest extends TestCase
 {
-    #[DataProvider('provideFilter')]
-    public function testFilter(string|callable $filter, mixed $value, mixed $expected, string $message = '')
+    #[Test]
+    #[DataProvider('filterRuleProvider')]
+    public function filterRuleReturnsExpectedValue(string|callable $filter, mixed $value, mixed $expected, string $message = '')
     {
         if (is_string($filter)) {
             $filter = fn() => new $filter();
@@ -43,7 +45,7 @@ class FilterRulesTest extends TestCase
         );
     }
 
-    public static function provideFilter(): array
+    public static function filterRuleProvider(): array
     {
         return [
             [
@@ -137,8 +139,9 @@ class FilterRulesTest extends TestCase
         ];
     }
 
-    #[DataProvider('provideValidate')]
-    public function testValidate(string|callable $filter, mixed $value, mixed $expected, string $message = '')
+    #[Test]
+    #[DataProvider('validatorRuleProvider')]
+    public function validatorRuleReturnsExpectedResult(string|callable $filter, mixed $value, mixed $expected, string $message = '')
     {
         if (is_string($filter)) {
             $filter = fn() => new $filter();
@@ -154,7 +157,7 @@ class FilterRulesTest extends TestCase
         );
     }
 
-    public static function provideValidate(): array
+    public static function validatorRuleProvider(): array
     {
         return [
             'Absolute F' => [

@@ -10,6 +10,7 @@ This project provides a Docker Compose setup so developers can quickly spin up a
 | PostgreSQL 17 | `postgres:17-alpine`   | 5432         |
 | Redis 7       | `redis:7-alpine`       | 6379         |
 | Memcached 1   | `memcached:1-alpine`   | 11211        |
+| SQS (ElasticMQ) | `softwaremill/elasticmq-native:1.6.11` | 9324 |
 
 ## Quick Start
 

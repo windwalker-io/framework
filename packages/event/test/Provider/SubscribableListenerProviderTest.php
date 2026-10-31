@@ -7,6 +7,8 @@ namespace Windwalker\Event\Test\Provider;
 use Closure;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Event\Attributes\EventSubscriber;
 use Windwalker\Event\Attributes\ListenTo;
@@ -24,20 +26,21 @@ class SubscribableListenerProviderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var SubscribableListenerProvider
+     * @var  SubscribableListenerProvider
      */
     protected $instance;
 
     /**
      * @see  SubscribableListenerProvider::subscribe
      */
-    public function testSubscribe(): void
+    #[Test]
+    public function subscribeRegistersListenToAttributesByPriority(): void
     {
         // phpcs:disable
         $subscriber = new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             #[ListenTo('flower.sakura')]
             public function onFlowerSakura(
                 $event
@@ -90,7 +93,8 @@ class SubscribableListenerProviderTest extends TestCase
      * @see  SubscribableListenerProvider::on
      * @see  SubscribableListenerProvider::getListenersForEvent
      */
-    public function testGetListenersForEvent(): void
+    #[Test]
+    public function getListenersForEventReturnsMatchingListeners(): void
     {
         $event = Mockery::mock(EventInterface::class);
         $event->shouldReceive('getName')->andReturn('HelloEvent');
@@ -113,7 +117,8 @@ class SubscribableListenerProviderTest extends TestCase
     /**
      * @see  SubscribableListenerProvider::getQueues
      */
-    public function testGetListeners(): void
+    #[Test]
+    public function getListenersReturnsQueuesByEventName(): void
     {
         $this->instance->on('hello', $fn1 = $this->nope());
         $this->instance->on('hello', $fn2 = $this->nope());
@@ -127,14 +132,10 @@ class SubscribableListenerProviderTest extends TestCase
         self::assertSame($fn3, array_values(TypeCast::toArray($listeners['world']))[0]);
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createProvider(): void
     {
         $this->instance = new SubscribableListenerProvider();
-    }
-
-    protected function tearDown(): void
-    {
-        //
     }
 
     protected function nope(): Closure

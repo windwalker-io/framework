@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Response;
 
+use Exception;
+use JsonException;
 use Windwalker\Data\Collection;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Helper\ResponseHelper;
@@ -44,7 +46,7 @@ trait ResponseTrait
     }
 
     /**
-     * @throws \JsonException
+     * @throws  JsonException
      */
     public function jsonDecode(?bool $associative = null, int $depth = 512, int $flags = 0): mixed
     {
@@ -62,13 +64,13 @@ trait ResponseTrait
     }
 
     /**
-     * @template T of class-string<\Exception>
+     * @template T of class-string<Exception>
      *
      * @param  string  $className
      *
      * @return  T
      */
-    public function toException(string $className = HttpRequestException::class): \Exception
+    public function toException(string $className = HttpRequestException::class): Exception
     {
         $e = new $className($this->getReasonPhrase(), $this->getStatusCode());
 
@@ -80,13 +82,13 @@ trait ResponseTrait
     }
 
     /**
-     * @template T of class-string<\Exception>
+     * @template T of class-string<Exception>
      *
      * @param  string  $className
      *
      * @return  never
      *
-     * @throws T
+     * @throws  T
      */
     public function throw(string $className = HttpRequestException::class): never
     {
@@ -94,13 +96,13 @@ trait ResponseTrait
     }
 
     /**
-     * @template T of class-string<\Exception>
+     * @template T of class-string<Exception>
      *
      * @param  string  $className
      *
      * @return  void
      *
-     * @throws T
+     * @throws  T
      */
     public function throwIfError(string $className = HttpRequestException::class): void
     {

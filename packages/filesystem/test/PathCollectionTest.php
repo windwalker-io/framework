@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\PathCollection;
 
 use function Windwalker\fs;
@@ -16,14 +18,10 @@ use function Windwalker\fs;
 class PathCollectionTest extends AbstractVfsTestCase
 {
     /**
-     * @var PathCollection
-     */
-    protected $instance;
-
-    /**
      * @see  PathCollection::isChild
      */
-    public function testIsChild(): void
+    #[Test]
+    public function isChildDetectsPathInCollection(): void
     {
         $p = new PathCollection(
             [
@@ -39,7 +37,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::addPaths
      */
-    public function testAddPaths(): void
+    #[Test]
+    public function addPathsAppendsMultiplePaths(): void
     {
         $p = new PathCollection(
             [
@@ -68,7 +67,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::add
      */
-    public function testAdd(): void
+    #[Test]
+    public function addAppendsSinglePath(): void
     {
         $p = new PathCollection(
             [
@@ -91,7 +91,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::appendAll
      */
-    public function testAppendAll(): void
+    #[Test]
+    public function appendAllAddsSuffixToEveryPath(): void
     {
         $p = new PathCollection(
             [
@@ -117,7 +118,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::prependAll
      */
-    public function testPrependAll(): void
+    #[Test]
+    public function prependAllAddsPrefixToEveryPath(): void
     {
         $p = new PathCollection(
             [
@@ -143,7 +145,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::getPaths
      */
-    public function testGetPaths(): void
+    #[Test]
+    public function getPathsReturnsAllPaths(): void
     {
         $p = new PathCollection(
             [
@@ -166,7 +169,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::withPaths
      */
-    public function testWithPaths(): void
+    #[Test]
+    public function withPathsReturnsNewInstance(): void
     {
         $p = new PathCollection(
             [
@@ -194,7 +198,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::items
      */
-    public function testItems(): void
+    #[Test]
+    public function itemsListsAllChildren(): void
     {
         $this->setUpNestedFiles();
 
@@ -219,7 +224,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::files
      */
-    public function testFiles(): void
+    #[Test]
+    public function filesListsOnlyFiles(): void
     {
         $this->setUpNestedFiles();
 
@@ -244,7 +250,8 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::folders
      */
-    public function testFolders(): void
+    #[Test]
+    public function foldersListsOnlyFolders(): void
     {
         $this->setUpNestedFiles();
 
@@ -269,17 +276,29 @@ class PathCollectionTest extends AbstractVfsTestCase
     /**
      * @see  PathCollection::getPath
      */
-    public function testGetPath(): void
+    #[Test]
+    public function getPathReturnsPathAtIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $p = new PathCollection(['vfs://foo/bar', 'vfs://foo/goo']);
+
+        self::assertPathEquals('vfs://foo/goo', $p->getPath(1)->getPathname());
+        self::assertNull($p->getPath(5));
     }
 
     /**
      * @see  PathCollection::map
      */
-    public function testMap(): void
+    #[Test]
+    public function mapTransformsPaths(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $p = new PathCollection(['vfs://foo/bar', 'vfs://foo/goo']);
+
+        $p2 = $p->map(fn(FileObject $file) => $file->appendPath('/sub'));
+
+        self::assertNotSame($p, $p2);
+        self::assertPathEquals('vfs://foo/bar/sub', $p2->getPath(0)->getPathname());
+        self::assertPathEquals('vfs://foo/goo/sub', $p2->getPath(1)->getPathname());
+        self::assertPathEquals('vfs://foo/bar', $p->getPath(0)->getPathname());
     }
 
     protected function setUpNestedFiles(): vfsStreamDirectory
@@ -314,14 +333,5 @@ class PathCollectionTest extends AbstractVfsTestCase
                 ],
             ]
         );
-    }
-
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

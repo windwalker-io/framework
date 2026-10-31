@@ -18,14 +18,44 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
     use JsonGrammarTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $name = 'SQLite';
 
     /**
-     * @var array
+     * @var  array
      */
     public static array $nameQuote = ['`', '`'];
+
+    public function compileUpsert(
+        Query $query,
+        string $table,
+        array $data,
+        array $keys,
+        array $updateFields,
+        ?string $returningIdField = null,
+    ): string {
+        $table = (string) $query->quoteName($table);
+        [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
+
+        $returning = '';
+
+        if ($returningIdField) {
+            $returning = 'RETURNING ' . $query->quoteName($returningIdField);
+        }
+
+        $conflictKeys = $query->clause('()', $query->qnMultiple($keys), ',');
+        $setActions = $query->clause('', [], ',');
+
+        foreach ($query->qnMultiple($updateFields) as $key) {
+            $setActions->append("$key = excluded.$key");
+        }
+
+        return "INSERT INTO $table $columns
+                VALUES $values
+                ON CONFLICT $conflictKeys DO UPDATE SET $setActions
+                $returning";
+    }
 
     public function compileJsonSelector(
         Query $query,

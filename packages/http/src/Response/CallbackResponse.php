@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Windwalker\Http\Response;
 
 use Windwalker\Http\Output\OutputInterface;
-use Windwalker\Http\Response\Response;
 
 class CallbackResponse extends Response
 {
     /**
-     * @var callable
+     * @var  callable
      */
     public protected(set) mixed $callback = null;
 

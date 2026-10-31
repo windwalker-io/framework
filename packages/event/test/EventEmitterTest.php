@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace Windwalker\Event\Test;
 
 use Closure;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Event\Attributes\EventSubscriber;
 use Windwalker\Event\Attributes\ListenTo;
+use Windwalker\Event\Event;
 use Windwalker\Event\EventDispatcher;
 use Windwalker\Event\EventEmitter;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\Provider\SimpleListenerProvider;
+use Windwalker\Event\Test\Stub\StubArgsEvent;
+use Windwalker\Event\Test\Stub\StubFlowerEvent;
+use Windwalker\Event\Test\Stub\StubTreeEvent;
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\disposable;
@@ -22,14 +28,15 @@ use function Windwalker\disposable;
 class EventEmitterTest extends TestCase
 {
     /**
-     * @var EventEmitter
+     * @var  EventEmitter
      */
     protected $instance;
 
     /**
      * @see  EventEmitter::getListeners
      */
-    public function testGetListeners(): void
+    #[Test]
+    public function getListenersReturnsQueueInRegistrationOrder(): void
     {
         $this->instance->on('hello', $fn1 = $this->nope(1));
         $this->instance->on('hello', $fn2 = $this->nope(2));
@@ -43,7 +50,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::once
      */
-    public function testOnce(): void
+    #[Test]
+    public function disposableListenerRunsOnlyOnce(): void
     {
         $count = 0;
         $fn = function () use (&$count) {
@@ -62,7 +70,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::once
      */
-    public function testOnceWithListenerCallable(): void
+    #[Test]
+    public function onceWithListenerCallableRunsOnlyOnce(): void
     {
         $count = 0;
         $fn = disposable(
@@ -83,7 +92,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::once
      */
-    public function testOnceWithDisposableCallable(): void
+    #[Test]
+    public function onceWithDisposableCallableRunsOnlyOnce(): void
     {
         $count = 0;
         $fn = disposable(
@@ -107,7 +117,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::emit
      */
-    public function testEmit(): void
+    #[Test]
+    public function emitInvokesListenersWithEvent(): void
     {
         $count = 0;
         $fn = function (EventInterface $event) use (&$count) {
@@ -124,7 +135,8 @@ class EventEmitterTest extends TestCase
         self::assertEquals(7, $event2['result']);
     }
 
-    public function testSubscribe()
+    #[Test]
+    public function subscribeRegistersListenToAttributesWithOnceSupport()
     {
         $subscriber = $this->getOnceSubscriber();
 
@@ -142,9 +154,10 @@ class EventEmitterTest extends TestCase
         self::assertEquals(72, $subscriber->count);
     }
 
-    public function testSubscribeSimpleObject(): void
+    #[Test]
+    public function subscribeRegistersPublicMethodsAsListeners(): void
     {
-        $subscriber = new class {
+        $subscriber = new class () {
             public $count = 0;
 
             public function foo(EventInterface $event): void
@@ -175,7 +188,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOff(): void
+    #[Test]
+    public function offRemovesListenerFromEvent(): void
     {
         $count = 0;
         $fn = function (EventInterface $event) use (&$count) {
@@ -198,7 +212,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffClosure(): void
+    #[Test]
+    public function offClosureRemovesOnlyThatListener(): void
     {
         $count = 0;
         $fn1 = function (EventInterface $event) use (&$count) {
@@ -222,7 +237,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffCallable(): void
+    #[Test]
+    public function offCallableRemovesOnlyThatListener(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -241,7 +257,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffSubscriber(): void
+    #[Test]
+    public function offSubscriberRemovesAllItsListeners(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -258,7 +275,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffSubscriberAsClosure(): void
+    #[Test]
+    public function offSubscriberRemovesListenersRegisteredAsClosures(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -276,7 +294,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::on
      */
-    public function testOn(): void
+    #[Test]
+    public function onRegistersListenersByPriority(): void
     {
         $values = [];
 
@@ -312,15 +331,155 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function constructAcceptsListenerProviderAndDispatcher(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $fn = static fn() => null;
+        $emitter = new EventEmitter(new SimpleListenerProvider(['foo' => [$fn]]));
+
+        self::assertSame([$fn], iterator_to_array($emitter->getListeners('foo'), false));
+    }
+
+    #[Test]
+    public function emitWithPlainClassStringCreatesObjectWithConstructorArguments(): void
+    {
+        $emitter = new EventEmitter();
+        $received = null;
+        $emitter->on(
+            StubArgsEvent::class,
+            static function (StubArgsEvent $event) use (&$received) {
+                $received = $event->value;
+            }
+        );
+
+        $event = $emitter->emit(StubArgsEvent::class, ['value' => 'hello']);
+
+        self::assertInstanceOf(StubArgsEvent::class, $event);
+        self::assertSame('hello', $received);
+    }
+
+    #[Test]
+    public function emitWithAbstractEventClassMergesArguments(): void
+    {
+        $emitter = new EventEmitter();
+
+        $event = $emitter->emit(StubTreeEvent::class, ['tree' => 'Oak']);
+
+        self::assertInstanceOf(StubTreeEvent::class, $event);
+        self::assertSame('Oak', $event['tree']);
+    }
+
+    #[Test]
+    public function emitWithEventObjectMergesArgumentsAndKeepsInstance(): void
+    {
+        $emitter = new EventEmitter();
+        $event = new Event('foo', ['a' => 1]);
+
+        self::assertSame($event, $emitter->emit($event, ['b' => 2]));
+        self::assertSame(['a' => 1, 'b' => 2], $event->getArguments());
+    }
+
+    #[Test]
+    public function emitWithPlainObjectDispatchesWithoutModification(): void
+    {
+        $emitter = new EventEmitter();
+        $received = null;
+        $emitter->appendProvider(
+            new SimpleListenerProvider(
+                [StubFlowerEvent::class => [static function ($event) use (&$received) {
+                    $received = $event;
+                }]]
+            )
+        );
+        $object = new StubFlowerEvent();
+
+        self::assertSame($object, $emitter->emit($object));
+        self::assertSame($object, $received);
+    }
+
+    #[Test]
+    public function dispatchForwardsEventToDealers(): void
+    {
+        $emitter = new EventEmitter();
+        $dealer = new EventEmitter();
+        $count = 0;
+        $dealer->on(
+            'foo',
+            static function () use (&$count) {
+                $count++;
+            }
+        );
+
+        self::assertSame($emitter, $emitter->addDealer($dealer));
+        $emitter->emit('foo');
+
+        self::assertSame(1, $count);
+        self::assertCount(1, $emitter->getDealers());
+    }
+
+    #[Test]
+    public function resetDealersStopsForwarding(): void
+    {
+        $emitter = new EventEmitter();
+        $dealer = new EventEmitter();
+        $count = 0;
+        $dealer->on(
+            'foo',
+            static function () use (&$count) {
+                $count++;
+            }
+        );
+        $emitter->addDealer($dealer);
+
+        self::assertSame($emitter, $emitter->resetDealers());
+        $emitter->emit('foo');
+
+        self::assertSame(0, $count);
+    }
+
+    #[Test]
+    public function cloneKeepsDealersAndListenersIndependent(): void
+    {
+        $emitter = new EventEmitter();
+        $dealer = new EventEmitter();
+        $emitter->addDealer($dealer);
+        $emitter->on('foo', static fn() => null);
+
+        $clone = clone $emitter;
+        $clone->resetDealers();
+        $clone->off('foo');
+
+        self::assertCount(1, $emitter->getDealers());
+        self::assertCount(1, iterator_to_array($emitter->getListeners('foo'), false));
+        self::assertCount(0, iterator_to_array($clone->getListeners('foo'), false));
+    }
+
+    #[Test]
+    public function onceMethodRegistersListenerThatRunsOnce(): void
+    {
+        $emitter = new EventEmitter();
+        $count = 0;
+
+        self::assertSame(
+            $emitter,
+            $emitter->once(
+                'foo',
+                static function () use (&$count) {
+                    $count++;
+                }
+            )
+        );
+        $emitter->emit('foo');
+        $emitter->emit('foo');
+
+        self::assertSame(1, $count);
     }
 
     /**
      * @see  EventEmitter::remove
      */
-    public function testRemoveCallable(): void
+    #[Test]
+    public function removeCallableRemovesListenerFromAllEvents(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -341,7 +500,8 @@ class EventEmitterTest extends TestCase
     /**
      * @see  EventEmitter::remove
      */
-    public function testRemoveSubscriber(): void
+    #[Test]
+    public function removeSubscriberRemovesListenersFromAllEvents(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -359,29 +519,13 @@ class EventEmitterTest extends TestCase
         self::assertEquals('', $subscriber->flower);
     }
 
-    /**
-     * @see  EventEmitter::setQueueHolder
-     */
-    public function testSetQueueHolder(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  EventEmitter::getQueueHolder
-     */
-    public function testGetQueueHolder(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
     protected function getCounterSubscriber(): object
     {
         // phpcs:disable
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public $count = 0;
 
             public $flower = '';
@@ -414,7 +558,7 @@ class EventEmitterTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public $count = 0;
 
             #[ListenTo('foo', 500, true)]
@@ -440,7 +584,8 @@ class EventEmitterTest extends TestCase
         };
     }
 
-    public function testObserve(): void
+    #[Test]
+    public function observeEmitsEventsToObservers(): void
     {
         $values = [];
 
@@ -470,7 +615,8 @@ class EventEmitterTest extends TestCase
         self::assertEquals([53, 54, 55], $values);
     }
 
-    public function testAppendProvider(): void
+    #[Test]
+    public function appendProviderRegistersListenersFromProvider(): void
     {
         $this->instance->on(
             'hello',
@@ -507,7 +653,8 @@ class EventEmitterTest extends TestCase
         self::assertEquals(['main', 'sub1', 'sub2'], array_keys($event->getArguments()));
     }
 
-    public function testRegisterDealer(): void
+    #[Test]
+    public function registerDealerForwardsEventsToDealer(): void
     {
         $this->instance->on(
             'hello',
@@ -548,13 +695,10 @@ class EventEmitterTest extends TestCase
         self::assertEquals(['main', 'sub1', 'sub2'], array_keys($event->getArguments()));
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createEmitter(): void
     {
         $this->instance = new EventEmitter();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     protected function nope($value = null): Closure

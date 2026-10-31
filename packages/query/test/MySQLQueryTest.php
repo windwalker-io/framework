@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\MySQLGrammar;
@@ -19,7 +20,8 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
     protected static array $nameQuote = ['`', '`'];
 
     #[DataProvider('parseJsonSelectorProvider')]
-    public function testParseJsonSelector(string $selector, string $expected): void
+    #[Test]
+    public function parseJsonSelectorConvertsToDbJsonPath(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);
 
@@ -62,7 +64,8 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         ];
     }
 
-    public function testJsonQuote(): void
+    #[Test]
+    public function jsonQuoteWrapsJsonExpression(): void
     {
         $query = $this->instance->select('foo -> bar ->> yoo AS yoo')
             ->selectRaw('%n AS l', 'foo -> bar -> loo')
@@ -83,7 +86,8 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testAutoAlias(): void
+    #[Test]
+    public function autoAliasPrefixesColumnsWithTableAlias(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -107,7 +111,8 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testJsonContains(): void
+    #[Test]
+    public function jsonContainsBuildsContainsCondition(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -125,7 +130,8 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testJsonNotContains(): void
+    #[Test]
+    public function jsonNotContainsBuildsNegatedCondition(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -143,7 +149,8 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testJsonLength(): void
+    #[Test]
+    public function jsonLengthBuildsLengthExpression(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -159,11 +166,6 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
             SQL,
             $q->render(true)
         );
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
     }
 
     public static function createGrammar(): AbstractGrammar

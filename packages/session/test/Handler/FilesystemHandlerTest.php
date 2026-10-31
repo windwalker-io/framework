@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Windwalker\Session\Test\Handler;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\PhpBridge;
 use Windwalker\Session\Handler\FilesystemHandler;
@@ -15,8 +17,9 @@ class FilesystemHandlerTest extends TestCase
 {
     use SessionVfsTestTrait;
 
+    #[Test]
     #[DataProvider('invalidIdProvider')]
-    public function testRejectsInvalidId(string $id, string $operation, string $prefix): void
+    public function operationRejectsInvalidSessionId(string $id, string $operation, string $prefix): void
     {
         $handler = new FilesystemHandler(self::getSessionPath(), ['prefix' => $prefix]);
 
@@ -58,8 +61,9 @@ class FilesystemHandlerTest extends TestCase
         }
     }
 
+    #[Test]
     #[DataProvider('validIdProvider')]
-    public function testValidId(string $id, string $prefix): void
+    public function validIdSupportsWholeFileLifecycle(string $id, string $prefix): void
     {
         $handler = new FilesystemHandler(self::getSessionPath(), ['prefix' => $prefix]);
         $path = self::getSessionPath($prefix . $id);
@@ -91,8 +95,9 @@ class FilesystemHandlerTest extends TestCase
         }
     }
 
+    #[Test]
     #[DataProvider('strictModeProvider')]
-    public function testBridgeRejectsTraversalBeforeFilesystemAccess(bool $strictMode): void
+    public function bridgeRejectsTraversalIdBeforeFilesystemAccess(bool $strictMode): void
     {
         $this->prepareVfs(
             [
@@ -116,8 +121,9 @@ class FilesystemHandlerTest extends TestCase
         yield 'non-strict' => [false];
     }
 
+    #[Test]
     #[DataProvider('gcPrefixProvider')]
-    public function testGcOnlyDeletesExpiredSessionFiles(string $prefix): void
+    public function gcOnlyDeletesExpiredSessionFiles(string $prefix): void
     {
         $this->prepareVfs(['tmp' => []]);
 
@@ -184,10 +190,9 @@ class FilesystemHandlerTest extends TestCase
         yield 'zero prefix' => ['0'];
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createSessionFilesystem(): void
     {
-        parent::setUp();
-
         $this->prepareVfs();
     }
 }

@@ -17,6 +17,8 @@ class NativeHandler extends SessionHandler implements HandlerInterface
      * isSupported
      *
      * @return  boolean
+     *
+     * @codeCoverageIgnore
      */
     public static function isSupported(): bool
     {

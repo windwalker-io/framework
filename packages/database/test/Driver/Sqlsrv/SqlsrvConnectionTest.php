@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Sqlsrv;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Sqlsrv\SqlsrvConnection;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 
 /**
@@ -13,11 +15,12 @@ use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
  */
 class SqlsrvConnectionTest extends AbstractConnectionTestCase
 {
-    protected static string $platform = 'SQLServer';
+    protected static DbPlatform $platform = DbPlatform::SQLServer;
 
     protected static string $className = SqlsrvConnection::class;
 
-    public function testConnect(): void
+    #[Test]
+    public function connect(): void
     {
         $conn = $this->instance;
         $conn->connect();

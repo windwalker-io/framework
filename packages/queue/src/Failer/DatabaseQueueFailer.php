@@ -55,7 +55,7 @@ class DatabaseQueueFailer implements QueueFailerInterface
      * @param  string  $exception
      *
      * @return  int|string
-     * @throws JsonException
+     * @throws  JsonException
      */
     public function add(string $connection, string $channel, string $body, string $exception): int|string
     {
@@ -81,8 +81,8 @@ class DatabaseQueueFailer implements QueueFailerInterface
      * all
      *
      * @return  iterable
-     * @throws RuntimeException
-     * @throws InvalidArgumentException
+     * @throws  RuntimeException
+     * @throws  InvalidArgumentException
      */
     public function all(): iterable
     {
@@ -102,7 +102,7 @@ class DatabaseQueueFailer implements QueueFailerInterface
      *
      * @param  mixed  $conditions
      *
-     * @return array|null
+     * @return  array|null
      */
     public function get(mixed $conditions): ?array
     {
@@ -157,6 +157,8 @@ class DatabaseQueueFailer implements QueueFailerInterface
      * Method to get property Table
      *
      * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getTable(): string
     {
@@ -169,6 +171,8 @@ class DatabaseQueueFailer implements QueueFailerInterface
      * @param  string  $table
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTable(string $table): static
     {

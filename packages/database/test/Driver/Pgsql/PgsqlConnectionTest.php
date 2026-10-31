@@ -6,6 +6,7 @@ namespace Windwalker\Database\Test\Driver\Pgsql;
 
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Pgsql\PgsqlConnection;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 
 /**
@@ -13,7 +14,7 @@ use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
  */
 class PgsqlConnectionTest extends AbstractConnectionTestCase
 {
-    protected static string $platform = 'PostgreSQL';
+    protected static DbPlatform $platform = DbPlatform::PostgreSQL;
 
     protected static string $className = PgsqlConnection::class;
 

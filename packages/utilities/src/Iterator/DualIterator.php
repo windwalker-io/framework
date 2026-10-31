@@ -72,7 +72,9 @@ class DualIterator implements Iterator
     /**
      * Get lhs.
      *
-     * @return Iterator Left Hand Side Iterator
+     * @return  Iterator  Left Hand Side Iterator
+     *
+     * @codeCoverageIgnore
      */
     public function getLHS(): Iterator
     {
@@ -82,7 +84,9 @@ class DualIterator implements Iterator
     /**
      * Get rhs.
      *
-     * @return Iterator Right Hand Side Iterator
+     * @return  Iterator  Right Hand Side Iterator
+     *
+     * @codeCoverageIgnore
      */
     public function getRHS(): Iterator
     {
@@ -94,7 +98,9 @@ class DualIterator implements Iterator
      *
      * @param  int  $flags  new flags
      *
-     * @return void
+     * @return  void
+     *
+     * @codeCoverageIgnore
      */
     public function setFlags(int $flags): void
     {
@@ -104,7 +110,9 @@ class DualIterator implements Iterator
     /**
      * Get flag.
      *
-     * @return int Current flags
+     * @return  int  Current flags
+     *
+     * @codeCoverageIgnore
      */
     public function getFlags(): int
     {
@@ -114,7 +122,7 @@ class DualIterator implements Iterator
     /**
      * Rewind both inner iterators
      *
-     * @return void
+     * @return  void
      */
     public function rewind(): void
     {
@@ -125,7 +133,7 @@ class DualIterator implements Iterator
     /**
      * Is valid.
      *
-     * @return boolean whether both inner iterators are valid
+     * @return  boolean  whether both inner iterators are valid
      */
     public function valid(): bool
     {
@@ -135,7 +143,7 @@ class DualIterator implements Iterator
     /**
      * Get current item.
      *
-     * @return mixed current value depending on CURRENT_* flags
+     * @return  mixed  current value depending on CURRENT_* flags
      */
     public function current(): mixed
     {
@@ -155,19 +163,19 @@ class DualIterator implements Iterator
     /**
      * Get current key.
      *
-     * @return mixed current value depending on KEY_* flags
+     * @return  mixed  current value depending on KEY_* flags
      */
     public function key(): mixed
     {
         switch ($this->flags & 0xF0) {
             default:
-            case self::CURRENT_ARRAY:
+            case self::KEY_ARRAY:
                 return [$this->lhs->key(), $this->rhs->key()];
-            case self::CURRENT_LHS:
+            case self::KEY_LHS:
                 return $this->lhs->key();
-            case self::CURRENT_RHS:
+            case self::KEY_RHS:
                 return $this->rhs->key();
-            case self::CURRENT_0:
+            case self::KEY_0:
                 return null;
         }
     }
@@ -175,7 +183,7 @@ class DualIterator implements Iterator
     /**
      * Move both inner iterators forward
      *
-     * @return void
+     * @return  void
      */
     public function next(): void
     {
@@ -186,8 +194,8 @@ class DualIterator implements Iterator
     /**
      * Are Identical.
      *
-     * @return boolean Whether both inner iterators are valid and have identical
-     *                 current and key values or both are non valid.
+     * @return  boolean  Whether both inner iterators are valid and have identical
+     *                   current and key values or both are non valid.
      */
     public function areIdentical(): bool
     {
@@ -200,8 +208,8 @@ class DualIterator implements Iterator
     /**
      * Are equal.
      *
-     * @return boolean whether both inner iterators are valid and have equal current
-     * and key values or both are non valid.
+     * @return  boolean  whether both inner iterators are valid and have equal current
+     *                   and key values or both are non valid.
      */
     public function areEqual(): bool
     {
@@ -218,7 +226,7 @@ class DualIterator implements Iterator
      * @param  Iterator  $rhs        Right Hand Side Iterator
      * @param  boolean   $identical  Whether to use areEqual() or areIdentical()
      *
-     * @return boolean whether both iterators are equal/identical
+     * @return  boolean  whether both iterators are equal/identical
      *
      * @note If one implements RecursiveIterator the other must do as well.
      *       And if both do then a recursive comparison is being used.

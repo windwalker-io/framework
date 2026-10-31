@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Compiler\Concern;
 
-use Windwalker\Utilities\TypeCast;
-
 /**
  * The CompileIncludeTrait class.
  */
@@ -16,7 +14,7 @@ trait CompileClassTrait
      *
      * @param  string|null  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileClass(?string $expression): string
     {

@@ -6,18 +6,16 @@ namespace Windwalker\Utilities\Context;
 
 /**
  * The LoopContext class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class Loop
 {
     /**
-     * @var int
+     * @var  int
      */
     public protected(set) int $index;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     public protected(set) mixed $key;
 
@@ -37,8 +35,7 @@ class Loop
         public protected(set) int $length,
         public protected(set) mixed &$target,
         public protected(set) ?Loop $parent = null
-    ) {
-    }
+    ) {}
 
     /**
      * loop
@@ -47,8 +44,6 @@ class Loop
      * @param  mixed  $key
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function loop(int $index, mixed $key): static
     {
@@ -58,6 +53,9 @@ class Loop
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function index(): int
     {
         return $this->index;
@@ -68,13 +66,17 @@ class Loop
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function key(): mixed
     {
         return $this->key;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function length(): int
     {
         return $this->length;
@@ -113,11 +115,11 @@ class Loop
 
     public function firstKey()
     {
-        return $this->target[array_key_first($this->target)];
+        return array_key_first($this->target);
     }
 
     public function lastKey()
     {
-        return $this->target[array_key_last($this->target)];
+        return array_key_last($this->target);
     }
 }

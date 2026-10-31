@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Response;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Response\Response;
 use Windwalker\Stream\Stream;
@@ -15,45 +17,28 @@ use Windwalker\Stream\Stream;
  */
 class ResponseTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var Response
-     */
-    protected $instance;
+    protected Response $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createResponse(): void
     {
         $this->instance = new Response();
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function constructWithoutParamsUsesMemoryStreamAndDefaults(): void
     {
-    }
-
-    public function testConstruct()
-    {
-        // Test no params
         $res = new Response();
 
         self::assertInstanceOf(Stream::class, $res->getBody());
         self::assertEquals('php://memory', $res->getBody()->getMetadata('uri'));
         self::assertEquals(200, $res->getStatusCode());
         self::assertEquals([], $res->getHeaders());
+    }
 
-        // Test with params
+    #[Test]
+    public function constructWithResourceBodyStatusAndHeadersAppliesThem(): void
+    {
         $body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
         $headers = [
             'X-Foo' => ['Flower', 'Sakura'],
@@ -68,23 +53,19 @@ class ResponseTest extends TestCase
         self::assertEquals(['application/json'], $res->getHeader('content-type'));
 
         fclose($body);
+    }
 
-        // Test with object params
+    #[Test]
+    public function constructWithStreamObjectKeepsSameStreamInstance(): void
+    {
         $body = new Stream();
         $res = new Response($body);
 
         self::assertSame($body, $res->getBody());
     }
 
-    /**
-     * Method to test getStatusCode().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Response\Response::getStatusCode()
-     * @covers \Windwalker\Http\Response\Response::withStatus
-     */
-    public function testWithAndGetStatusCode()
+    #[Test]
+    public function withStatusReturnsNewInstanceWithStatusCodeAndReasonPhrase(): void
     {
         self::assertEquals(200, $this->instance->getStatusCode());
 
@@ -99,14 +80,8 @@ class ResponseTest extends TestCase
         self::assertEquals('Unknown error', $res->getReasonPhrase());
     }
 
-    /**
-     * Method to test getReasonPhrase().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Response\Response::getReasonPhrase
-     */
-    public function testGetReasonPhrase()
+    #[Test]
+    public function getReasonPhraseReturnsDefaultPhraseForStatusCode(): void
     {
         $res = new Response();
 

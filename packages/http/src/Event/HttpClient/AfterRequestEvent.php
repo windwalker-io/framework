@@ -23,9 +23,10 @@ class AfterRequestEvent extends BaseEvent
     }
 
     /**
-     * @return RequestInterface
+     * @return  RequestInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getRequest(): RequestInterface
     {
@@ -38,6 +39,7 @@ class AfterRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setRequest(RequestInterface $request): static
     {
@@ -47,9 +49,10 @@ class AfterRequestEvent extends BaseEvent
     }
 
     /**
-     * @return HttpClient
+     * @return  HttpClient
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getHttpClient(): HttpClient
     {
@@ -62,6 +65,7 @@ class AfterRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setHttpClient(HttpClient $httpClient): static
     {
@@ -71,9 +75,10 @@ class AfterRequestEvent extends BaseEvent
     }
 
     /**
-     * @return ResponseInterface
+     * @return  ResponseInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getResponse(): ResponseInterface
     {
@@ -86,6 +91,7 @@ class AfterRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setResponse(ResponseInterface $response): static
     {

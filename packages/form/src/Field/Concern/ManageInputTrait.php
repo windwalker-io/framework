@@ -101,7 +101,7 @@ trait ManageInputTrait
     abstract public function prepareInput(HTMLElement $input): HTMLElement;
 
     /**
-     * @return HTMLElement
+     * @return  HTMLElement
      */
     public function getInput(): HTMLElement
     {
@@ -112,6 +112,8 @@ trait ManageInputTrait
      * @param  HTMLElement  $element
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setInput(HTMLElement $element): static
     {
@@ -125,7 +127,7 @@ trait ManageInputTrait
      *
      * @param  string  $name
      *
-     * @return string|null
+     * @return  string|null
      */
     public function getAttribute(string $name): ?string
     {

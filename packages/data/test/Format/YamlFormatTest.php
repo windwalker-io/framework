@@ -13,7 +13,7 @@ class YamlFormatTest extends TestCase
     #[Test]
     public function itDumpsAndParsesNestedValues(): void
     {
-        $format = new YamlFormat;
+        $format = new YamlFormat();
         $data = ['flower' => 'sakura', 'meta' => ['count' => 3]];
         $yaml = $format->dump($data, ['indent' => 2]);
 
@@ -24,7 +24,7 @@ class YamlFormatTest extends TestCase
     #[Test]
     public function itTrimsWhitespaceBeforeParsing(): void
     {
-        $format = new YamlFormat;
+        $format = new YamlFormat();
 
         self::assertSame(['flower' => 'sakura'], $format->parse("flower: sakura\n"));
     }

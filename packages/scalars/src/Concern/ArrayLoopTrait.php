@@ -11,11 +11,6 @@ use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Context\Loop;
 use Windwalker\Utilities\TypeCast;
 
-/**
- * The ArrayLoopConcern class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait ArrayLoopTrait
 {
     /**
@@ -124,7 +119,7 @@ trait ArrayLoopTrait
      * @param  int|null       $offset
      * @param  int|null       $limit
      *
-     * @return static
+     * @return  static
      */
     public function find(?callable $callback, bool $keepKey = false, ?int $offset = null, ?int $limit = null): static
     {
@@ -163,7 +158,7 @@ trait ArrayLoopTrait
     /**
      * findFirst
      *
-     * @param callable|null $callback
+     * @param  callable|null  $callback
      *
      * @return  mixed
      */
@@ -287,15 +282,6 @@ trait ArrayLoopTrait
         return $this->newInstance(Arr::mapWithKeys($this->storage, $handler, $groupType));
     }
 
-    /**
-     * flatMap
-     *
-     * @param  callable  $callback
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function flatMap(callable $callback): static
     {
         return $this->newInstance(Arr::flatMap($this->storage, $callback));

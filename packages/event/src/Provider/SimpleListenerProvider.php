@@ -13,7 +13,7 @@ use Windwalker\Event\EventInterface;
 class SimpleListenerProvider implements ListenerProviderInterface
 {
     /**
-     * @var array
+     * @var  array
      */
     protected $listeners = [];
 
@@ -76,6 +76,8 @@ class SimpleListenerProvider implements ListenerProviderInterface
      * @return  array
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getListeners(): array
     {

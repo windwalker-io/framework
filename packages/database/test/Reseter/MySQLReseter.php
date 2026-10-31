@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Reseter;
 
 use PDO;
+use Windwalker\Database\Platform\DbPlatform;
 
 /**
  * The AbstractMySQLTestCase class.
  */
 class MySQLReseter extends AbstractReseter
 {
-    protected static string $platform = 'MySQL';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     public function createDatabase(PDO $pdo, string $dbname): void
     {

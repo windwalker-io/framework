@@ -67,7 +67,7 @@ class PhpFormat implements FormatInterface
      * @param  string  $string   PHP Class formatted string to convert.
      * @param  array   $options  Options used by the formatter.
      *
-     * @return void Data array.
+     * @return  void  Data array.
      */
     public function parse(string $string, array $options = []): mixed
     {
@@ -77,7 +77,7 @@ class PhpFormat implements FormatInterface
     /**
      * Method to get an array as an exported string.
      *
-     * @param  array  $a  The array to get as a string.
+     * @param  array  $a      The array to get as a string.
      * @param  int    $level
      *
      * @return  string

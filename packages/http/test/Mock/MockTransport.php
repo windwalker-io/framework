@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Mock;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Response\HttpClientResponse;
-use Windwalker\Http\Response\Response;
 use Windwalker\Http\Transport\AbstractTransport;
 use Windwalker\Http\Transport\Options\TransportOptions;
-use Windwalker\Utilities\TypeCast;
 
 /**
  * The MockTransport class.
@@ -27,7 +24,7 @@ class MockTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to send.
+     * @param  RequestInterface  $request  The request object to send.
      *
      * @param  array|TransportOptions  $options
      *
@@ -47,7 +44,7 @@ class MockTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
      * @param  array|TransportOptions  $options
      *
@@ -86,7 +83,7 @@ class MockTransport extends AbstractTransport
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array|TransportOptions $options = []
+        array|TransportOptions $options = [],
     ): HttpClientResponse {
         $this->setOption('target_file', $dest);
 

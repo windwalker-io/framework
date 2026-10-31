@@ -12,7 +12,7 @@ trait ObjectBuilderAwareTrait
     protected ?ObjectBuilder $objectBuilder = null;
 
     /**
-     * @return ObjectBuilder
+     * @return  ObjectBuilder
      */
     public function getObjectBuilder(): ObjectBuilder
     {
@@ -23,6 +23,8 @@ trait ObjectBuilderAwareTrait
      * @param  ObjectBuilder|null  $objectBuilder
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setObjectBuilder(?ObjectBuilder $objectBuilder): static
     {

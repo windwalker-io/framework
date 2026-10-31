@@ -35,7 +35,7 @@ class StubSakuraRoseMap implements EntityInterface
     protected ?DateTimeImmutable $created = null;
 
     /**
-     * @return string
+     * @return  string
      */
     public function getSakuraNo(): string
     {
@@ -55,7 +55,7 @@ class StubSakuraRoseMap implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getRoseNo(): string
     {
@@ -75,7 +75,7 @@ class StubSakuraRoseMap implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getType(): string
     {
@@ -95,7 +95,7 @@ class StubSakuraRoseMap implements EntityInterface
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return  DateTimeImmutable
      */
     public function getCreated(): DateTimeImmutable
     {

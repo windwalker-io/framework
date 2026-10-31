@@ -15,7 +15,7 @@ use Windwalker\Cache\Exception\RuntimeException;
 class SodiumSerializer implements SerializerInterface
 {
     /**
-     * @var array<string>
+     * @var  array<string>
      */
     private array $keys;
 
@@ -85,4 +85,3 @@ class SodiumSerializer implements SerializerInterface
         return $keypair;
     }
 }
-

@@ -12,7 +12,7 @@ abstract class AbstractInputField extends AbstractField
     protected string $inputType = '';
 
     /**
-     * @return string
+     * @return  string
      */
     public function getInputType(): string
     {

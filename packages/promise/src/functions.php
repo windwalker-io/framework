@@ -20,7 +20,7 @@ if (!function_exists('\Windwalker\Promise\resolve')) {
      * @param  mixed|PromiseInterface  $promiseOrValue
      *
      * @return  ExtendedPromiseInterface
-     * @throws Throwable
+     * @throws  Throwable
      */
     function resolve(mixed $promiseOrValue = null): ExtendedPromiseInterface
     {
@@ -35,7 +35,7 @@ if (!function_exists('\Windwalker\Promise\reject')) {
      * @param  mixed|PromiseInterface  $promiseOrValue
      *
      * @return  ExtendedPromiseInterface
-     * @throws Throwable
+     * @throws  Throwable
      */
     function reject(mixed $promiseOrValue = null): ExtendedPromiseInterface
     {
@@ -86,7 +86,7 @@ if (!function_exists('\Windwalker\Promise\async')) {
      * @param  callable  $callable
      *
      * @return  Promise
-     * @throws Throwable
+     * @throws  Throwable
      */
     function async(callable $callable): Promise
     {
@@ -131,7 +131,7 @@ if (!function_exists('\Windwalker\Promise\coroutine')) {
      *
      * @return  ExtendedPromiseInterface
      *
-     * @throws Throwable
+     * @throws  Throwable
      */
     function coroutine(callable $callback): ExtendedPromiseInterface
     {
@@ -172,7 +172,7 @@ if (!function_exists('\Windwalker\Promise\coroutineable')) {
      *
      * @return  Closure|ReturnPromiseInterface
      *
-     * @throws Throwable
+     * @throws  Throwable
      * @see coroutine()
      *
      */

@@ -12,17 +12,17 @@ use Windwalker\DOM\HTMLElement;
 trait InputOptionsTrait
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $optionWrapperHandler = null;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $optionLabelHandler = null;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $optionHandler = null;
 
@@ -54,7 +54,7 @@ trait InputOptionsTrait
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getOptionWrapperHandler(): ?callable
     {
@@ -65,6 +65,8 @@ trait InputOptionsTrait
      * @param  callable  $optionWrapperHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptionWrapperHandler(?callable $optionWrapperHandler): static
     {
@@ -74,7 +76,7 @@ trait InputOptionsTrait
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getOptionHandler(): ?callable
     {
@@ -85,6 +87,8 @@ trait InputOptionsTrait
      * @param  callable  $optionHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptionHandler(?callable $optionHandler): static
     {
@@ -94,7 +98,7 @@ trait InputOptionsTrait
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getOptionLabelHandler(): ?callable
     {
@@ -105,6 +109,8 @@ trait InputOptionsTrait
      * @param  callable  $optionLabelHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptionLabelHandler(?callable $optionLabelHandler): static
     {

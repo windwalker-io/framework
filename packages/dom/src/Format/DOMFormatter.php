@@ -50,7 +50,7 @@ class DOMFormatter
      *
      * @var  static
      */
-    protected static $instance;
+    protected static array $instances = [];
 
     /**
      * getInstance
@@ -59,11 +59,7 @@ class DOMFormatter
      */
     public static function getInstance(): static
     {
-        if (empty(static::$instance)) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
+        return static::$instances[static::class] ??= new static();
     }
 
     /**
@@ -75,7 +71,7 @@ class DOMFormatter
      */
     public static function setInstance(self $instance)
     {
-        static::$instance = $instance;
+        static::$instances[static::class] = $instance;
     }
 
     /**
@@ -129,7 +125,7 @@ class DOMFormatter
      *
      * @param  string  $input  Dom input.
      *
-     * @return string Indented Dom.
+     * @return  string  Indented Dom.
      */
     public function doIndent(string $input): string
     {
@@ -289,7 +285,7 @@ class DOMFormatter
     /**
      * Debugging utility. Get log for the last indent operation.
      *
-     * @return array
+     * @return  array
      */
     public function getLog(): array
     {

@@ -63,9 +63,6 @@ class RoomMapping
      */
     public function leaveAllRooms(int $fd): array
     {
-        return array_map(
-            'intval',
-            $this->mapping->removeB((string) $fd)
-        );
+        return $this->mapping->removeB((string) $fd);
     }
 }

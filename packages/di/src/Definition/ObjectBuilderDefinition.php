@@ -7,15 +7,16 @@ namespace Windwalker\DI\Definition;
 use BadMethodCallException;
 use Closure;
 use ReflectionException;
+use UnitEnum;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
 /**
  * The ObjectBuilder class.
  *
- * @method object newInstance(Container $container, string $class, array $args = [], int $options = 0)
- * @method object createObject(Container $container, string $class, array $args = [], int $options = 0)
- * @method object createSharedObject(Container $container, string $class, array $args = [], int $options = 0)
+ * @method  object  newInstance(Container $container, string $class, array $args = [], int $options = 0)
+ * @method  object  createObject(Container $container, string $class, array $args = [], int $options = 0)
+ * @method  object  createSharedObject(Container $container, string $class, array $args = [], int $options = 0)
  */
 class ObjectBuilderDefinition implements DefinitionInterface
 {
@@ -41,13 +42,13 @@ class ObjectBuilderDefinition implements DefinitionInterface
     protected array $caches = [];
 
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     public protected(set) array $extends = [];
 
     protected ?object $instance = null;
 
-    public \UnitEnum|string|null $tag = null;
+    public UnitEnum|string|null $tag = null;
 
     public function fork(?array $args = null): static
     {
@@ -74,14 +75,14 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * Resolve this definition.
      *
      *
-     * @param  Container              $container
-     * @param  array                  $args
-     * @param  \UnitEnum|string|null  $tag
+     * @param  Container             $container
+     * @param  array                 $args
+     * @param  UnitEnum|string|null  $tag
      *
-     * @return object
-     * @throws ReflectionException
+     * @return  object
+     * @throws  ReflectionException
      */
-    public function resolve(Container $container, array $args = [], \UnitEnum|string|null $tag = null): object
+    public function resolve(Container $container, array $args = [], UnitEnum|string|null $tag = null): object
     {
         $args = $this->resolveArguments($container, $args);
 
@@ -116,8 +117,10 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  string  $name
      * @param  mixed   $default
      *
-     * @return array
-     * @throws ReflectionException
+     * @return  array
+     * @throws  ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function getArgument(mixed $name, mixed $default = null): mixed
     {
@@ -139,7 +142,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  string  $name
      * @param  mixed   $value
      *
-     * @return  static Return self to support chaining.
+     * @return  static  Return self to support chaining.
      */
     public function setArgument(mixed $name, mixed $value): static
     {
@@ -269,8 +272,8 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  array   $args
      *
      * @return  mixed
-     * @throws DependencyResolutionException
-     * @throws ReflectionException
+     * @throws  DependencyResolutionException
+     * @throws  ReflectionException
      */
     public function __call(string $name, array $args): mixed
     {
@@ -315,7 +318,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
         return $this->tag;
     }
 
-    public function tag(\UnitEnum|string|null $tag): static
+    public function tag(UnitEnum|string|null $tag): static
     {
         $this->tag = $tag;
 

@@ -9,6 +9,4 @@ use RuntimeException;
 /**
  * The ConnectionPoolException class.
  */
-class ConnectionPoolException extends RuntimeException
-{
-}
+class ConnectionPoolException extends RuntimeException {}

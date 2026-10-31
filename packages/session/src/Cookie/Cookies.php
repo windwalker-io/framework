@@ -46,6 +46,9 @@ class Cookies extends AbstractConfigurableCookies
         return setcookie($name, '', ['expires' => time() - 500]);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getStorage(): array
     {
         return $_COOKIE;

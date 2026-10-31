@@ -18,7 +18,7 @@ abstract class AbstractCallbackFilter extends AbstractFilter
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     abstract public function getHandler(): callable;
 }

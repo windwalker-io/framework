@@ -37,17 +37,17 @@ class CachePool implements CachePoolInterface
     private const string ITEM_META_PREFIX = '--ww_item_meta--';
 
     /**
-     * @var bool
+     * @var  bool
      */
     protected bool $commiting = false;
 
     /**
-     * @var array
+     * @var  array
      */
     protected array $deferredItems = [];
 
     /**
-     * @var bool
+     * @var  bool
      */
     private bool $autoCommit = true;
 
@@ -122,7 +122,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      *
-     * @return iterable<CacheItem>
+     * @return  iterable<CacheItem>
      */
     public function getItems(iterable $keys = []): iterable
     {
@@ -284,7 +284,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function set($key, mixed $value, null|int|\DateInterval $ttl = null): bool
+    public function set($key, mixed $value, int|\DateInterval|null $ttl = null): bool
     {
         $item = $this->getItem($key);
 
@@ -297,7 +297,7 @@ class CachePool implements CachePoolInterface
 
     /**
      * @inheritDoc
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws  \Psr\Cache\InvalidArgumentException
      */
     public function delete($key): bool
     {
@@ -317,7 +317,7 @@ class CachePool implements CachePoolInterface
     /**
      * @inheritDoc
      */
-    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, int|\DateInterval|null $ttl = null): bool
     {
         ArgumentsAssert::assert(
             is_iterable($values),
@@ -356,7 +356,7 @@ class CachePool implements CachePoolInterface
 
     /**
      * @inheritDoc
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws  \Psr\Cache\InvalidArgumentException
      */
     public function has(string $key): bool
     {
@@ -380,7 +380,7 @@ class CachePool implements CachePoolInterface
      *
      * @return  mixed
      *
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws  \Psr\Cache\InvalidArgumentException
      */
     public function fetch(
         string $key,
@@ -471,7 +471,7 @@ class CachePool implements CachePoolInterface
      *
      * @psalm-param callable(CacheItem): mixed $handler
      *
-     * @return Promise
+     * @return  Promise
      */
     public function fetchAsync(
         string $key,
@@ -709,7 +709,7 @@ class CachePool implements CachePoolInterface
      * Works only when the underlying storage implements GroupedStorageInterface;
      * throws LogicException otherwise.
      *
-     * @throws \LogicException
+     * @throws  \LogicException
      */
     public function withGroup(string $group): static
     {
@@ -943,7 +943,7 @@ class CachePool implements CachePoolInterface
         return $this->storage instanceof GroupedStorageInterface;
     }
 
-    protected static function normalizeTtl(DateInterval|int|string|null $ttl): int|null|DateInterval
+    protected static function normalizeTtl(DateInterval|int|string|null $ttl): int|DateInterval|null
     {
         if (is_string($ttl)) {
             if (str_starts_with($ttl, 'P')) {

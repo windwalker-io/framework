@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Exception\NestedHandleException;
 use Windwalker\ORM\Nested\MultiTreeNestedEntityInterface;
 use Windwalker\ORM\Nested\NestedEntityInterface;
@@ -12,8 +14,6 @@ use Windwalker\ORM\NestedSetMapper;
 use Windwalker\ORM\Test\Entity\StubMTNestedSet;
 use Windwalker\ORM\Test\Entity\StubNestedSet;
 
-use function Windwalker\uid;
-
 /**
  * The NestedSetMapperTest class.
  */
@@ -21,7 +21,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
 {
     protected ?NestedSetMapper $instance;
 
-    public function testRoot()
+    #[Test]
+    public function createRootCreatesRootNode()
     {
         $items = iterator_to_array($this->instance->findList([]));
 
@@ -41,7 +42,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         );
     }
 
-    public function testCheckInvalidParentId()
+    #[Test]
+    public function checkRejectsInvalidParentId()
     {
         $this->expectException(NestedHandleException::class);
         $this->expectExceptionMessage('ReferenceId is negative.');
@@ -54,7 +56,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         $this->instance->saveOne($child);
     }
 
-    public function testCheckParentIdNotExists()
+    #[Test]
+    public function checkRejectsMissingParent()
     {
         $this->expectExceptionMessage('Reference ID 999 not found.');
 
@@ -65,7 +68,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         $this->instance->createOne($child);
     }
 
-    public function testPostionAndSave()
+    #[Test]
+    public function saveComputesPositionsAndNestedSetValues()
     {
         $child = new StubNestedSet();
         $child->setTitle('Flower');
@@ -168,7 +172,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         );
     }
 
-    public function testGetPath()
+    #[Test]
+    public function getPathReturnsAncestorPath()
     {
         $path = $this->instance->getPath(6);
 
@@ -179,7 +184,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         self::assertEquals(['', 'sakura', 'sakura/olive'], $paths);
     }
 
-    public function testGetAncestors()
+    #[Test]
+    public function getAncestorsReturnsParentChain()
     {
         $path = $this->instance->getAncestors(6);
 
@@ -193,7 +199,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::getTree
      */
-    public function testGetTree(): void
+    #[Test]
+    public function getTreeReturnsDescendants(): void
     {
         $tree = $this->instance->getTree(2);
         $ids = $tree->column('id', null, true)->dump();
@@ -219,7 +226,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::isLeaf
      */
-    public function testIsLeaf(): void
+    #[Test]
+    public function isLeafDetectsNodesWithoutChildren(): void
     {
         self::assertTrue($this->instance->isLeaf(6));
         self::assertFalse($this->instance->isLeaf(5));
@@ -228,7 +236,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::move
      */
-    public function testMove(): void
+    #[Test]
+    public function moveRepositionsNodeAmongSiblings(): void
     {
         /** @var NestedEntityInterface $item */
         $item = $this->instance->findOne(9);
@@ -241,7 +250,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::moveByReference
      */
-    public function testMoveByReference(): void
+    #[Test]
+    public function moveByReferenceRepositionsNodeRelativeToTarget(): void
     {
         /** @var NestedEntityInterface $item */
         $item = $this->instance->findOne(9);
@@ -254,7 +264,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::moveByReference
      */
-    public function testMoveCrossTree(): void
+    #[Test]
+    public function moveCrossTreeMovesNodeToAnotherTree(): void
     {
         /** @var NestedEntityInterface|MultiTreeNestedEntityInterface $item */
         $item = $this->instance->findOne(5);
@@ -270,7 +281,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         self::assertEquals(1, $child->getRootId());
     }
 
-    public function testEntityGetChildrenAndAncestors(): void
+    #[Test]
+    public function entityReturnsChildrenAndAncestors(): void
     {
         /** @var NestedEntityInterface $item */
         $item = $this->instance->findOne(2);
@@ -300,7 +312,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::rebuild
      */
-    public function testRebuild(): void
+    #[Test]
+    public function rebuildRestoresNestedSetValues(): void
     {
         $this->instance->update()
             ->set('lft', 0)
@@ -324,7 +337,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::rebuildPath
      */
-    public function testRebuildPath(): void
+    #[Test]
+    public function rebuildPathRestoresPaths(): void
     {
         $this->instance->update()
             ->set('path', '')
@@ -354,7 +368,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         );
     }
 
-    public function testDelete(): void
+    #[Test]
+    public function deleteRemovesNodeAndDescendants(): void
     {
         $newChild = new StubNestedSet();
         $newChild->setTitle('Kapok');
@@ -378,7 +393,8 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
     /**
      * @see  NestedSetMapper::getRoot
      */
-    public function testGetRoot(): void
+    #[Test]
+    public function getRootReturnsRootNode(): void
     {
         /** @var StubNestedSet $root */
         $root = $this->instance->getRoot();
@@ -394,16 +410,13 @@ class MultiTreeNestedSetMapperTest extends AbstractORMTestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createMapperInstance(): void
     {
         /** @var NestedSetMapper $mapper */
         $mapper = self::$orm->mapper(StubMTNestedSet::class);
 
         $this->instance = $mapper;
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**

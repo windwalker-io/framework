@@ -68,6 +68,8 @@ class EdgeStringLoader implements EdgeLoaderInterface
      * @param  string  $content
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setContent(string $content): static
     {
@@ -78,6 +80,8 @@ class EdgeStringLoader implements EdgeLoaderInterface
 
     /**
      * @inheritDoc
+     *
+     * @codeCoverageIgnore
      */
     public function has(string $key): bool
     {

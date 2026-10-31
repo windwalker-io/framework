@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\Rule\IPAddress;
 use Windwalker\Filter\Rule\Regex;
+use Windwalker\Form\Form;
 use Windwalker\Form\Test\Mock\MockFilter;
 use Windwalker\Form\Test\Stub\StubField;
 use Windwalker\Form\Test\Stub\StubFilter;
@@ -24,17 +27,12 @@ class AbstractFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var StubField
+     * @var  StubField
      */
     protected StubField $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createStubField(): void
     {
         $this->instance = new StubField(
             'flower',
@@ -47,21 +45,12 @@ class AbstractFieldTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
      * Method to test renderInput().
      *
-     * @return void
+     * @return  void
      */
-    public function testRenderInput()
+    #[Test]
+    public function renderInput(): void
     {
         // phpcs:disable
         $expect = <<<HTML
@@ -109,24 +98,12 @@ HTML;
     }
 
     /**
-     * Method to test buildInput().
-     *
-     * @return void
-     */
-    public function testBuildInput()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Method to test renderLabel().
      *
-     * @return void
+     * @return  void
      */
-    public function testRenderLabel()
+    #[Test]
+    public function renderLabel(): void
     {
         $expect = <<<HTML
 <label id="input-flower-label" data-field-label for="input-flower">Flower</label>
@@ -138,9 +115,10 @@ HTML;
     /**
      * Method to test renderView().
      *
-     * @return void
+     * @return  void
      */
-    public function testRenderView()
+    #[Test]
+    public function renderView(): void
     {
         $this->instance->setValue('sakura');
 
@@ -150,9 +128,10 @@ HTML;
     /**
      * Method to test render().
      *
-     * @return void
+     * @return  void
      */
-    public function testRender()
+    #[Test]
+    public function renderFieldWithLabelAndInput(): void
     {
         $this->instance->setNamespace('windwalker');
         $this->instance->setValue('sakura');
@@ -187,9 +166,10 @@ HTML;
     /**
      * Method to test getLabel().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetLabelName()
+    #[Test]
+    public function getLabelName(): void
     {
         self::assertEquals('Flower', $this->instance->getLabelName());
     }
@@ -197,9 +177,10 @@ HTML;
     /**
      * Method to test getId().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetId()
+    #[Test]
+    public function getIdIncludesNamespaceAndName(): void
     {
         self::assertEquals('input-flower', $this->instance->getId());
 
@@ -215,9 +196,10 @@ HTML;
     /**
      * Method to test validate().
      *
-     * @return void
+     * @return  void
      */
-    public function testValidate()
+    #[Test]
+    public function validateAppliesRequiredAndRuleChecks(): void
     {
         $field = StubField::create(
             'flower',
@@ -242,9 +224,10 @@ HTML;
     /**
      * Method to test checkRequired().
      *
-     * @return void
+     * @return  void
      */
-    public function testCheckRequired()
+    #[Test]
+    public function checkRequired(): void
     {
         $field = new StubField(
             'flower',
@@ -262,24 +245,12 @@ HTML;
     }
 
     /**
-     * Method to test checkRule().
-     *
-     * @return void
-     */
-    public function testCheckRule()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Method to test filter().
      *
-     * @return void
+     * @return  void
      */
-    public function testFilter()
+    #[Test]
+    public function filterValue(): void
     {
         $field = StubField::create(
             'flower',
@@ -301,11 +272,12 @@ HTML;
     /**
      * Method to test getName().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::getName
      */
-    public function testGetName()
+    #[Test]
+    public function getNameIgnoresControlAndValue(): void
     {
         $this->instance->setControl('windwalker');
         $this->instance->setValue('sakura');
@@ -316,11 +288,12 @@ HTML;
     /**
      * Method to test setName().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::setName
      */
-    public function testSetName()
+    #[Test]
+    public function setNameUpdatesGeneratedId(): void
     {
         $this->instance->setNamespace('windwalker');
         $this->instance->appendNamespace('goo');
@@ -332,9 +305,10 @@ HTML;
     /**
      * Method to test getFieldName().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetFullName()
+    #[Test]
+    public function getFullName(): void
     {
         $this->instance->setNamespace('windwalker');
 
@@ -349,9 +323,10 @@ HTML;
     /**
      * Method to test setFieldName().
      *
-     * @return void
+     * @return  void
      */
-    public function testSetFieldName()
+    #[Test]
+    public function setFieldName(): void
     {
         $this->instance->setAttribute('name', 'foo[bar]');
 
@@ -361,9 +336,10 @@ HTML;
     /**
      * Method to test getGroup().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetAbdSetGroup()
+    #[Test]
+    public function getAndSetGroup(): void
     {
         $this->instance->appendNamespace('wind');
 
@@ -384,44 +360,38 @@ HTML;
         self::assertHtmlFormatEquals($expect, $this->instance->renderInput());
     }
 
-    /**
-     * Method to test getFieldset().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::getFieldset
-     * @TODO   Implement testGetFieldset().
-     */
-    public function testGetFieldset()
+    #[Test]
+    public function getFieldset(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertNull($this->instance->getFieldset());
+
+        $this->instance->setFieldset('basic');
+
+        self::assertSame('basic', $this->instance->getFieldset());
     }
 
-    /**
-     * Method to test setFieldset().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::setFieldset
-     * @TODO   Implement testSetFieldset().
-     */
-    public function testSetFieldset()
+    #[Test]
+    public function setFieldset(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $fieldset = $form->fieldset('meta');
+
+        $this->instance->setFieldset($fieldset);
+
+        self::assertSame('meta', $this->instance->getFieldset());
+
+        $this->instance->setFieldset(null);
+
+        self::assertNull($this->instance->getFieldset());
     }
 
     /**
      * Method to test getValue().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetAndSetValue()
+    #[Test]
+    public function getAndSetValue(): void
     {
         // Test default value
         $this->instance->defaultValue('joo');
@@ -437,9 +407,10 @@ HTML;
     /**
      * Method to test setFilter().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetAndSetFilter()
+    #[Test]
+    public function getAndSetFilter(): void
     {
         // Set filter type
         $this->instance->resetFilters()->addFilter(new Regex('/[0-9]+/'));
@@ -463,41 +434,8 @@ HTML;
         self::assertEquals('123123', $this->instance->filter('abc123cba123fgh'));
     }
 
-    /**
-     * Method to test getControl().
-     *
-     * @return void
-     */
-    public function testGetControl()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test setControl().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::setControl
-     * @TODO   Implement testSetControl().
-     */
-    public function testSetControl()
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * testAddClass
-     *
-     * @return  void
-     */
-    public function testAddClass()
+    #[Test]
+    public function addClass(): void
     {
         $this->instance->addClass('foo');
 
@@ -512,12 +450,8 @@ HTML;
         self::assertEquals('stub-flower foo bar yoo goo', $this->instance->getAttribute('class'));
     }
 
-    /**
-     * testRemoveClass
-     *
-     * @return  void
-     */
-    public function testRemoveClass()
+    #[Test]
+    public function removeClass(): void
     {
         $this->instance->addClass('foo bar yoo goo');
 
@@ -537,9 +471,10 @@ HTML;
     /**
      * Method to test getAttribute().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetAttribute()
+    #[Test]
+    public function getAttribute(): void
     {
         $field = new StubField(
             'flower',
@@ -559,40 +494,37 @@ HTML;
     /**
      * Method to test setAttribute().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::setAttribute
      */
-    public function testSetAttribute()
+    #[Test]
+    public function setAttribute(): void
     {
         $this->instance->setAttribute('host', 'localhost');
 
         self::assertEquals('localhost', $this->instance->getAttribute('host', 'default'));
     }
 
-    /**
-     * Method to test get().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::get
-     */
-    public function testGet()
+    #[Test]
+    public function get(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('default', $this->instance->get('foo', 'default'));
+
+        $this->instance->set('foo', 'bar');
+
+        self::assertSame('bar', $this->instance->get('foo', 'default'));
     }
 
     /**
      * Method to test getAttributes().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::getAttributes
      */
-    public function testGetAttributes()
+    #[Test]
+    public function getAttributes(): void
     {
         self::assertEquals(
             ['placeholder' => 'The Flower', 'class' => 'stub-flower'],

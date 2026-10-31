@@ -15,7 +15,7 @@ use Windwalker\Utilities\Env;
 class RedisStorageTest extends AbstractStorageTestCase
 {
     /**
-     * @var RedisStorage
+     * @var  RedisStorage
      */
     protected $instance;
 

@@ -9,7 +9,6 @@ use Windwalker\Query\Clause\ExprClause;
 use Windwalker\Query\Clause\QuoteNameClause;
 use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Wrapper\UuidBinWrapper;
-use Windwalker\Query\Wrapper\UuidWrapper;
 
 if (!function_exists(__NAMESPACE__ . '\clause')) {
     /**
@@ -91,7 +90,7 @@ if (!function_exists(__NAMESPACE__ . '\uuid2bin')) {
     /**
      * @param  string  $value
      *
-     * @return UuidBinWrapper|array
+     * @return  UuidBinWrapper|array
      */
     function uuid2bin(mixed $value): UuidBinWrapper|array
     {
@@ -107,7 +106,7 @@ if (!function_exists(__NAMESPACE__ . '\try_uuid2bin')) {
     /**
      * @param  string  $value
      *
-     * @return UuidBinWrapper|array|null
+     * @return  UuidBinWrapper|array|null
      */
     function try_uuid2bin(mixed $value): UuidBinWrapper|array|null
     {

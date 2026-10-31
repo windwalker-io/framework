@@ -6,7 +6,5 @@ namespace Windwalker\DI\Test\Mock;
 
 class WithEnum
 {
-    public function __construct(public FooEnum $foo)
-    {
-    }
+    public function __construct(public FooEnum $foo) {}
 }

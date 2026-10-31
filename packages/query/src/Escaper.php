@@ -19,12 +19,12 @@ use Windwalker\Utilities\Str;
 class Escaper
 {
     /**
-     * @var WeakReference<PDO|callable|mixed>|null
+     * @var  WeakReference<PDO|callable|mixed>|null
      */
     protected ?WeakReference $connection = null;
 
     /**
-     * @var Query|null
+     * @var  Query|null
      */
     protected ?Query $query = null;
 
@@ -32,7 +32,7 @@ class Escaper
      * Escaper constructor.
      *
      * @param  PDO|callable|object  $connection
-     * @param  Query|null            $query
+     * @param  Query|null           $query
      */
     public function __construct(mixed $connection, ?Query $query = null)
     {
@@ -54,7 +54,7 @@ class Escaper
      * escape
      *
      * @param  PDO|callable|mixed  $escaper
-     * @param  int|string           $value
+     * @param  int|string          $value
      *
      * @return  string
      */
@@ -87,7 +87,7 @@ class Escaper
      * quote
      *
      * @param  PDO|callable|mixed  $escaper
-     * @param  int|string           $value
+     * @param  int|string          $value
      *
      * @return  string
      */
@@ -163,7 +163,7 @@ class Escaper
      * @param  string       $sign
      * @param  string|null  $sign2
      *
-     * @return string|null
+     * @return  string|null
      */
     public static function stripQuoteIfExists(?string $value, string $sign = "'", ?string $sign2 = null): ?string
     {

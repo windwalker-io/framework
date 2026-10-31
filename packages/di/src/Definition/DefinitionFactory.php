@@ -9,6 +9,8 @@ use InvalidArgumentException;
 
 /**
  * The DefinitionFactory class.
+ *
+ * @deprecated  Currently not used. Will be removed in next major version.
  */
 class DefinitionFactory
 {

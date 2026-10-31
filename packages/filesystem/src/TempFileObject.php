@@ -11,11 +11,17 @@ class TempFileObject extends FileObject
 {
     public bool $deleteWhenDestruct = false;
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function deleteWhenShutdown(): void
     {
-        register_shutdown_function(fn () => $this->deleteIfExists());
+        register_shutdown_function(fn() => $this->deleteIfExists());
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function deleteWhenDestruct(bool $value = false): void
     {
         $this->deleteWhenDestruct = $value;

@@ -22,7 +22,7 @@ class OpensslCipherTest extends TestCase
     /**
      * Test instance.
      *
-     * @var OpensslCipher
+     * @var  OpensslCipher
      */
     protected $instance;
 
@@ -44,7 +44,7 @@ class OpensslCipherTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
+     * @return  void
      */
     protected function setUp(): void
     {
@@ -55,18 +55,16 @@ class OpensslCipherTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      *
-     * @return void
+     * @return  void
      */
-    protected function tearDown(): void
-    {
-    }
+    protected function tearDown(): void {}
 
     /**
      * Method to test encrypt().
      *
      * @param  string  $method
      *
-     * @return void
+     * @return  void
      *
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('methodsProvider')]

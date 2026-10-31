@@ -69,7 +69,7 @@ static fn() => [
 
     'factories' => [
         'instances' => [
-            'native' => static fn () => SessionFactory::createSession(
+            'native' => static fn() => SessionFactory::createSession(
                 'php',
                 'native',
                 'request',
@@ -77,7 +77,7 @@ static fn() => [
                     SessionInterface::OPTION_AUTO_COMMIT => true,
                 ]
             ),
-            'filesystem' => static fn () => SessionFactory::createSession(
+            'filesystem' => static fn() => SessionFactory::createSession(
                 'php',
                 'filesystem',
                 'request',
@@ -85,7 +85,7 @@ static fn() => [
                     SessionInterface::OPTION_AUTO_COMMIT => true,
                 ]
             ),
-            'database' => static fn () => SessionFactory::createSession(
+            'database' => static fn() => SessionFactory::createSession(
                 'php',
                 'database',
                 'request',
@@ -93,7 +93,7 @@ static fn() => [
                     SessionInterface::OPTION_AUTO_COMMIT => true,
                 ]
             ),
-            'null' => static fn () => SessionFactory::createSession(
+            'null' => static fn() => SessionFactory::createSession(
                 'php',
                 'null',
                 'request',
@@ -121,8 +121,8 @@ static fn() => [
             'redis' => RedisHandler::class,
         ],
         'cookies' => [
-            'request' => static fn () => SessionFactory::psrCookies(),
-            'native' => static fn () => SessionFactory::nativeCookies(),
+            'request' => static fn() => SessionFactory::psrCookies(),
+            'native' => static fn() => SessionFactory::nativeCookies(),
         ],
     ],
 ];

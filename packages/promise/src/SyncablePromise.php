@@ -12,7 +12,7 @@ class SyncablePromise extends Promise
     /**
      * @inheritDoc
      */
-    protected function scheduleFor(callable $callback): void
+    protected function scheduleFor(callable $callback, Promise $promise): void
     {
         $callback();
     }

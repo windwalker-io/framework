@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Asika\BetterUnits\FileSize;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\HttpClientOptions;
-use Windwalker\Http\Transport\Options\CurlOptions;
 use Windwalker\Http\Transport\ProgressEvent;
 
 include __DIR__ . '/../../../vendor/autoload.php';
@@ -23,5 +22,5 @@ $http->get(
 
             echo "Progress: $now / $total\n";
         },
-    )
+    ),
 );

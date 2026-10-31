@@ -10,7 +10,7 @@ namespace Windwalker\ORM\Nested;
 interface NestedPathableInterface extends NestedEntityInterface
 {
     /**
-     * @return string
+     * @return  string
      */
     public function getAlias(): string;
 
@@ -22,7 +22,7 @@ interface NestedPathableInterface extends NestedEntityInterface
     public function setAlias(string $alias): static;
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPath(): string;
 

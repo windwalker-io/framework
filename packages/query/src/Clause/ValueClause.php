@@ -19,12 +19,12 @@ class ValueClause implements ClauseInterface
     public static ?\Closure $idHandler = null;
 
     /**
-     * @var string|mixed|Query
+     * @var  string|mixed|Query
      */
     protected mixed $value;
 
     /**
-     * @var string|null
+     * @var  string|null
      */
     public protected(set) ?string $prefix = 'wqp__';
 
@@ -86,7 +86,7 @@ class ValueClause implements ClauseInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function value(mixed $value): static
     {
@@ -96,7 +96,7 @@ class ValueClause implements ClauseInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isLinked(): bool
     {
@@ -115,6 +115,9 @@ class ValueClause implements ClauseInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setPrefix(?string $prefix): static
     {
         $this->prefix = $prefix;

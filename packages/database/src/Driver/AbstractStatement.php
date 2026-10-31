@@ -30,24 +30,24 @@ abstract class AbstractStatement implements StatementInterface
     use EventAwareTrait;
 
     /**
-     * @var mixed|resource
+     * @var  mixed|resource
      */
     public protected(set) mixed $cursor = null;
 
     protected mixed $conn = null;
 
     /**
-     * @var bool
+     * @var  bool
      */
     public protected(set) bool $executed = false;
 
     /**
-     * @var AbstractDriver
+     * @var  AbstractDriver
      */
     protected AbstractDriver $driver;
 
     /**
-     * @var string
+     * @var  string
      */
     public protected(set) string $query;
 
@@ -73,7 +73,7 @@ abstract class AbstractStatement implements StatementInterface
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function getIterator(string|object|null $class = null, array $args = []): \Traversable
     {
@@ -136,7 +136,7 @@ abstract class AbstractStatement implements StatementInterface
      * @param  array|null  $params
      *
      * @return  static
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function execute(?array $params = null): static
     {
@@ -207,7 +207,7 @@ abstract class AbstractStatement implements StatementInterface
     /**
      * @param  array|null  $item
      *
-     * @return array|null
+     * @return  array|null
      */
     protected function itemFetchedEvent(?array $item): ?array
     {
@@ -292,7 +292,7 @@ abstract class AbstractStatement implements StatementInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getQuery(): string
     {
@@ -308,7 +308,7 @@ abstract class AbstractStatement implements StatementInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getDefaultItemClass(): string
     {

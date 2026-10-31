@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Server;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Factory\ServerRequestFactory;
@@ -24,14 +26,16 @@ class PhpServerTest extends TestCase
     /**
      * @see  PhpServer::listen
      */
-    public function testListen(): void
+    #[Test]
+    public function listenHandlesRequestAndOutputsResponseBody(): void
     {
         $this->instance->setHandler(
-            fn(PhpServer $server) => $server->handle(
-                ServerRequestFactory::createFromUri(
-                    'https://domain.com/hello?foo=bar'
-                )
-            )
+            fn(PhpServer $server)
+                => $server->handle(
+                    ServerRequestFactory::createFromUri(
+                        'https://domain.com/hello?foo=bar',
+                    ),
+                ),
         );
 
         $this->instance->on(
@@ -40,30 +44,27 @@ class PhpServerTest extends TestCase
                 $res = $event->request;
 
                 $event->response = Response::fromString('Hello: ' . $res->getUri());
-            }
+            },
         );
 
         $this->instance->listen();
 
         self::assertEquals(
             'Hello: https://domain.com/hello?foo=bar',
-            (string) $this->output->output
+            (string) $this->output->output,
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createServerWithMockOutput(): void
     {
         $this->instance = new HttpServer(
             [],
             new PhpServer(
                 [],
                 null,
-                fn () => $this->output = new MockOutput()
-            )
+                fn() => $this->output = new MockOutput(),
+            ),
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

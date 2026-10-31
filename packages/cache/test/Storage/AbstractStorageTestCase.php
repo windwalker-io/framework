@@ -13,7 +13,7 @@ use Windwalker\Cache\Storage\StorageInterface;
 abstract class AbstractStorageTestCase extends TestCase
 {
     /**
-     * @var StorageInterface
+     * @var  StorageInterface
      */
     protected $instance;
 

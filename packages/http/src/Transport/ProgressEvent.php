@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Transport;
 
 use Asika\BetterUnits\FileSize;
+use CurlHandle;
+use RuntimeException;
 
 class ProgressEvent
 {
@@ -25,19 +27,18 @@ class ProgressEvent
     }
 
     public function __construct(
-        readonly public \CurlHandle $handle,
-        readonly public float $downloadTotal,
-        readonly public float $downloaded,
-        readonly public float $uploadTotal,
-        readonly public float $uploaded,
-        readonly public array $info = [],
-    ) {
-    }
+        public readonly CurlHandle $handle,
+        public readonly float $downloadTotal,
+        public readonly float $downloaded,
+        public readonly float $uploadTotal,
+        public readonly float $uploaded,
+        public readonly array $info = [],
+    ) {}
 
     public static function wrapFileSize(float $size): FileSize
     {
         if (!class_exists(FileSize::class)) {
-            throw new \RuntimeException('Please install `asika/better-units` to use FileSize object.');
+            throw new RuntimeException('Please install `asika/better-units` to use FileSize object.');
         }
 
         return new FileSize($size, FileSize::UNIT_BYTES)->withOnlyBytesBinary();

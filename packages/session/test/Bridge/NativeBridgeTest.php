@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test\Bridge;
 
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Session\Bridge\NativeBridge;
@@ -44,12 +46,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
-     * @see                 NativeBridge::start
+     * @see NativeBridge::start
      */
-    public function testStart(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function startLoadsAndPersistsSessionData(): void
     {
         self::resetSessions();
 
@@ -95,12 +97,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::destroy
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::destroy
      */
-    public function testDestroy(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function destroyDeletesSessionFileAndClearsStorage(): void
     {
         self::resetSessions();
 
@@ -116,12 +118,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::setSessionName
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::start
      */
-    public function testStartSessionFromCookie(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function startUsesSessionIdFromCookie(): void
     {
         static::resetSessions();
 
@@ -140,11 +142,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::setSessionName
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::setSessionName
      */
-    public function testSetSessionName(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function setSessionNameUsesCustomCookieName(): void
     {
         static::resetSessions();
 
@@ -171,11 +174,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::isStarted
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::isStarted
      */
-    public function testIsStartedAndRestart(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function restartKeepsOldSessionFileWhenDeleteOldIsFalse(): void
     {
         self::resetSessions();
 
@@ -200,11 +204,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::restart
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::restart
      */
-    public function testRestartAndDestroyOld(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function restartDeletesOldSessionFileWhenDeleteOldIsTrue(): void
     {
         self::resetSessions();
 
@@ -229,11 +234,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::getId
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::getId
      */
-    public function testGetId(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function getIdReturnsCurrentSessionId(): void
     {
         session_id('qwe');
 
@@ -244,11 +250,12 @@ class NativeBridgeTest extends TestCase
     }
 
     /**
-     * @see                 NativeBridge::regenerate
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * @see NativeBridge::regenerate
      */
-    public function testRegenerate(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function regenerateKeepsOldSessionFileWhenDeleteOldIsFalse(): void
     {
         self::resetSessions();
 
@@ -271,9 +278,10 @@ class NativeBridgeTest extends TestCase
     /**
      * @see NativeBridge::regenerate
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testRegenerateDeleteOld(): void
+    public function regenerateDeletesOldSessionFileWhenDeleteOldIsTrue(): void
     {
         self::resetSessions();
 
@@ -296,27 +304,36 @@ class NativeBridgeTest extends TestCase
     /**
      * @see  NativeBridge::getStorage
      */
-    public function testGetStorage(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function getStorageReturnsSessionSuperGlobal(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
+        self::resetSessions();
 
-    protected function setUp(): void
-    {
-        $this->instance = new NativeBridge();
+        session_id(static::$sess1);
+
+        $this->instance->start();
+
+        self::assertSame(['flower' => 'Sakura', 'animal' => 'Cat'], $this->instance->getStorage());
+        self::assertSame($_SESSION, $this->instance->getStorage());
     }
 
     /**
-     * setUpBeforeClass
-     *
-     * @return  void
+     * @see  NativeBridge::__clone
      */
-    public static function setUpBeforeClass(): void
+    #[Test]
+    public function cloneDuplicatesHandler(): void
     {
-        parent::setUpBeforeClass();
+        $clone = clone $this->instance;
+        $property = new \ReflectionProperty(NativeBridge::class, 'handler');
+
+        self::assertNotSame($property->getValue($this->instance), $property->getValue($clone));
     }
 
-    protected function tearDown(): void
+    #[Before]
+    protected function createBridge(): void
     {
+        $this->instance = new NativeBridge();
     }
 }

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Windwalker\Session\Test\Handler;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Redis;
 use Windwalker\Session\Handler\RedisHandler;
@@ -16,8 +18,9 @@ use Windwalker\Session\Handler\RedisHandler;
 #[PreserveGlobalState(false)]
 class RedisHandlerTest extends TestCase
 {
+    #[Test]
     #[DataProvider('ttlProvider')]
-    public function testTtlUsedForWriteAndTimestampUpdate(array $options, int $expected): void
+    public function writeAndUpdateTimestampUseResolvedTtl(array $options, int $expected): void
     {
         $previous = ini_set('session.gc_maxlifetime', '180');
 
@@ -43,7 +46,8 @@ class RedisHandlerTest extends TestCase
         yield 'ini fallback' => [[], 180];
     }
 
-    public function testTtlCanBeChangedAfterConstruction(): void
+    #[Test]
+    public function setOptionChangesTtlAfterConstruction(): void
     {
         $driver = $this->createMock(Redis::class);
         $driver->expects($this->once())->method('setEx')->with('ww_sess_id', 45, 'data')->willReturn(true);
@@ -55,8 +59,9 @@ class RedisHandlerTest extends TestCase
         self::assertTrue($handler->updateTimestamp('id', 'data'));
     }
 
+    #[Test]
     #[DataProvider('invalidTtlProvider')]
-    public function testRejectsInvalidTtl(mixed $ttl, string $operation, string $option): void
+    public function operationRejectsInvalidTtl(mixed $ttl, string $operation, string $option): void
     {
         $driver = $this->createMock(Redis::class);
         $driver->expects($this->never())->method('setEx');
@@ -79,13 +84,51 @@ class RedisHandlerTest extends TestCase
         }
     }
 
-    protected function setUp(): void
+    #[Test]
+    public function realRedisRoundTripsReadWriteAndDestroy(): void
     {
-        parent::setUp();
+        $redis = $this->connectRealRedis();
+        $handler = new RedisHandler($redis, ['prefix' => 'ww_test_sess_', 'ttl' => 60]);
 
+        try {
+            self::assertTrue(RedisHandler::isSupported());
+            self::assertSame('', $handler->read('missing'));
+            self::assertTrue($handler->write('abc', 'payload'));
+            self::assertSame('payload', $handler->read('abc'));
+            self::assertTrue($handler->updateTimestamp('abc', 'payload'));
+            self::assertLessThanOrEqual(60, $redis->ttl('ww_test_sess_abc'));
+            self::assertGreaterThan(0, $redis->ttl('ww_test_sess_abc'));
+            self::assertSame(0, $handler->gc(1440));
+            self::assertTrue($handler->destroy('abc'));
+            self::assertSame('', $handler->read('abc'));
+        } finally {
+            $redis->del('ww_test_sess_abc');
+            $redis->close();
+        }
+    }
+
+    private function connectRealRedis(): Redis
+    {
+        $redis = new Redis();
+
+        try {
+            $connected = $redis->connect('127.0.0.1', 6379, 1.0);
+        } catch (\RedisException) {
+            $connected = false;
+        }
+
+        if (!$connected) {
+            self::markTestSkipped('A running Redis server is required.');
+        }
+
+        return $redis;
+    }
+
+    #[Before]
+    protected function requireRedisExtension(): void
+    {
         if (!class_exists(Redis::class)) {
             self::markTestSkipped('The redis extension is required for the driver mock.');
         }
     }
 }
-

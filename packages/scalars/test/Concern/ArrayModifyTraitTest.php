@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Scalars\Test\Concern;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Scalars\ArrayObject;
 use Windwalker\Utilities\Arr;
@@ -11,15 +13,14 @@ use Windwalker\Utilities\Arr;
 use function Windwalker\arr;
 
 /**
- * The ArrayModifyTraitTest class.
- *
- * @since  __DEPLOY_VERSION__
+ * Tests the array modification helpers of ArrayObject.
  */
 class ArrayModifyTraitTest extends TestCase
 {
-    protected $instance;
+    protected ArrayObject $instance;
 
-    public function testExcept(): void
+    #[Test]
+    public function exceptRemovesGivenKeys(): void
     {
         $src = arr(
             [
@@ -51,18 +52,24 @@ class ArrayModifyTraitTest extends TestCase
         );
     }
 
-    public function testRemoveFirst(): void
+    #[Test]
+    public function removeFirstDropsLeadingItems(): void
     {
         $a = $this->instance->removeFirst();
 
         self::assertEquals([2, 3], $a->dump());
+    }
 
+    #[Test]
+    public function removeFirstWithCountDropsThatManyItems(): void
+    {
         $a = $this->instance->removeFirst(2);
 
         self::assertEquals([3], $a->dump());
     }
 
-    public function testShuffle(): void
+    #[Test]
+    public function shuffleReordersItemsAndKeepsAllElements(): void
     {
         $this->instance = ArrayObject::range(1, 10);
 
@@ -75,7 +82,8 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals($this->instance->intersect($a)->dump(), $this->instance->dump());
     }
 
-    public function testReplaceRecursive(): void
+    #[Test]
+    public function replaceRecursiveMergesNestedArrays(): void
     {
         $a = arr(
             $data = [
@@ -109,7 +117,8 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals(array_replace_recursive($a->dump(), $b->dump()), $a->dump());
     }
 
-    public function testAppend(): void
+    #[Test]
+    public function appendAddsItemToEnd(): void
     {
         self::assertEquals(
             [1, 2, 3, 10],
@@ -117,20 +126,26 @@ class ArrayModifyTraitTest extends TestCase
         );
     }
 
-    public function testReverse(): void
+    #[Test]
+    public function reverseInvertsItemOrder(): void
     {
         self::assertEquals(
             [3, 2, 1],
             $this->instance->reverse()->dump()
         );
+    }
 
+    #[Test]
+    public function reversePreservingKeysKeepsOriginalKeys(): void
+    {
         self::assertEquals(
             [2 => 3, 1 => 2, 0 => 1],
             $this->instance->reverse(true)->dump()
         );
     }
 
-    public function testInsertBefore(): void
+    #[Test]
+    public function insertBeforeAddsItemBeforeKey(): void
     {
         self::assertEquals(
             [1, 'A', 2, 3],
@@ -138,7 +153,8 @@ class ArrayModifyTraitTest extends TestCase
         );
     }
 
-    public function testKeyBy(): void
+    #[Test]
+    public function keyByUsesFieldAsKey(): void
     {
         $src = arr(
             [
@@ -168,28 +184,32 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals(3, $src->keyBy('title')['Othello']['id']);
     }
 
-    public function testLeftPad(): void
+    #[Test]
+    public function leftPadPrependsFillerUntilLength(): void
     {
         $a = $this->instance->leftPad(5, 'A');
 
         self::assertEquals(['A', 'A', 1, 2, 3], $a->dump());
     }
 
-    public function testSlice(): void
+    #[Test]
+    public function sliceReturnsRequestedRange(): void
     {
         $a = $this->instance->slice(0, 2);
 
         self::assertEquals([1, 2], $a->dump());
     }
 
-    public function testPad(): void
+    #[Test]
+    public function padAppendsFillerUntilLength(): void
     {
         $a = ArrayObject::explode(',', '1,2,3')->pad(5, 'A');
 
         self::assertEquals([1, 2, 3, 'A', 'A'], $a->dump());
     }
 
-    public function testChunk(): void
+    #[Test]
+    public function chunkSplitsItemsIntoArrayObjects(): void
     {
         $a = ArrayObject::range(1, 12)->chunk(4);
 
@@ -205,7 +225,8 @@ class ArrayModifyTraitTest extends TestCase
         self::assertInstanceOf(ArrayObject::class, $a[0]);
     }
 
-    public function testGroupBy(): void
+    #[Test]
+    public function groupGroupsItemsByField(): void
     {
         $src = arr(
             [
@@ -238,7 +259,8 @@ class ArrayModifyTraitTest extends TestCase
         );
     }
 
-    public function testTakeout(): void
+    #[Test]
+    public function takeoutRemovesAndReturnsItemAtKey(): void
     {
         $v = $this->instance->takeout(1);
 
@@ -246,14 +268,16 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals([0 => 1, 2 => 3], $this->instance->dump());
     }
 
-    public function testRightPad(): void
+    #[Test]
+    public function rightPadAppendsFillerUntilLength(): void
     {
         $a = ArrayObject::explode(',', '1,2,3')->rightPad(5, 'A');
 
         self::assertEquals([1, 2, 3, 'A', 'A'], $a->dump());
     }
 
-    public function testPush(): void
+    #[Test]
+    public function pushAppendsItemsAndReturnsNewCount(): void
     {
         $r = $this->instance->push(5, 6);
 
@@ -262,19 +286,22 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals([1, 2, 3, 5, 6], $this->instance->dump());
     }
 
-    public function testReplace(): void
+    #[Test]
+    public function replaceOverwritesItemsByKey(): void
     {
         $r = $this->instance->replace([1 => 'A', 0 => 'B']);
 
         self::assertEquals(['B', 'A', 3], $r->dump());
     }
 
-    public function testPrepend(): void
+    #[Test]
+    public function prependAddsItemsToStart(): void
     {
         self::assertEquals(['A', 'B', 1, 2, 3], $this->instance->prepend('A', 'B')->dump());
     }
 
-    public function testShift(): void
+    #[Test]
+    public function shiftRemovesAndReturnsFirstItem(): void
     {
         $r = $this->instance->shift();
 
@@ -282,7 +309,8 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals([2, 3], $this->instance->dump());
     }
 
-    public function testPop(): void
+    #[Test]
+    public function popRemovesAndReturnsLastItem(): void
     {
         $r = $this->instance->pop();
 
@@ -290,18 +318,24 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals([1, 2], $this->instance->dump());
     }
 
-    public function testRemoveLast(): void
+    #[Test]
+    public function removeLastDropsTrailingItems(): void
     {
         $a = $this->instance->removeLast();
 
         self::assertEquals([1, 2], $a->dump());
+    }
 
+    #[Test]
+    public function removeLastWithCountDropsThatManyItems(): void
+    {
         $a = $this->instance->removeLast(2);
 
         self::assertEquals([1], $a->dump());
     }
 
-    public function testUnshift(): void
+    #[Test]
+    public function unshiftPrependsItemsAndReturnsNewCount(): void
     {
         $r = $this->instance->unshift('A', 'B');
 
@@ -309,7 +343,8 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals(['A', 'B', 1, 2, 3], $this->instance->dump());
     }
 
-    public function testSplice(): void
+    #[Test]
+    public function spliceRemovesRangeAndReturnsIt(): void
     {
         $r = $this->instance->splice(0, 2);
 
@@ -317,14 +352,16 @@ class ArrayModifyTraitTest extends TestCase
         self::assertEquals([3], $this->instance->dump());
     }
 
-    public function testInsertAfter(): void
+    #[Test]
+    public function insertAfterAddsItemAfterKey(): void
     {
         $a = $this->instance->insertAfter(1, 'A');
 
         self::assertEquals([1, 2, 'A', 3], $a->dump());
     }
 
-    public function testOnly(): void
+    #[Test]
+    public function onlyKeepsGivenKeys(): void
     {
         $src = arr(
             [
@@ -356,10 +393,8 @@ class ArrayModifyTraitTest extends TestCase
         );
     }
 
-    /**
-     * @see  ArrayObject::union
-     */
-    public function testUnion(): void
+    #[Test]
+    public function unionKeepsExistingKeysAndAddsMissing(): void
     {
         $a = arr(['a' => 'apple', 'b' => 'banana']);
         $b = arr(['a' => 'pear', 'b' => 'strawberry', 'c' => 'cherry']);
@@ -374,13 +409,10 @@ class ArrayModifyTraitTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createInstance(): void
     {
         $this->instance = arr([1, 2, 3]);
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     protected function getAssoc(): ArrayObject

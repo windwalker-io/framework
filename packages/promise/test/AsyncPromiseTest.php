@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use React\EventLoop\StreamSelectLoop;
-use Swoole\Coroutine\Channel;
 use Swoole\Event;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
@@ -16,7 +16,6 @@ use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\Reactor\SwooleTestTrait;
 
 use function Co\run;
-use function Windwalker\serial;
 
 /**
  * The AsyncPromiseTest class.
@@ -30,10 +29,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::useScheduler(new DeferredScheduler());
     }
 
-    protected function tearDown(): void
+    protected function flushAsyncEvents(): void
     {
-        parent::tearDown();
-
         // Ensure async events ran
         $this->nextTick();
     }
@@ -41,7 +38,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
     /**
      * @see  AsyncPromise
      */
-    public function testConstructorAsync(): void
+    #[Test]
+    public function constructorResolvesHandlersAsynchronously(): void
     {
         $promise = new Promise(
             function ($resolve) {
@@ -62,7 +60,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $this->values['v1']);
     }
 
-    public function testConstructorReturnPromise(): void
+    #[Test]
+    public function constructorResolvingPromiseAdoptsItsValue(): void
     {
         $promise = new Promise(
             function ($resolve) {
@@ -89,7 +88,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Flower', $this->values['v1']);
     }
 
-    public function testThenReturnPromise(): void
+    #[Test]
+    public function thenReturningPromiseChainsResolvedValue(): void
     {
         $promise = new Promise(
             function ($resolve) {
@@ -125,20 +125,22 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals('YOO', $this->values['v1']);
     }
 
-    public function testErrorInThen()
+    #[Test]
+    public function thenHandlerExceptionIsThrownWhenQueueRuns(): void
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Test Error');
+        $this->expectExceptionMessageIsOrContains('Test Error');
 
         $p = Promise::resolve('123')
             ->then(
-                fn () => throw new \Exception('Test Error')
+                fn() => throw new \Exception('Test Error')
             );
 
         TaskQueue::getInstance()->run();
     }
 
-    public function testSwooleAsync()
+    #[Test]
+    public function swooleSchedulerWaitsForChainedPromises(): void
     {
         static::skipIfSwooleNotInstalled();
 
@@ -193,7 +195,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals(3, $this->numberOfAssertionsPerformed());
     }
 
-    public function testEventLoopDeferred(): void
+    #[Test]
+    public function deferredSchedulerRunsHandlersFromPeriodicLoopTimer(): void
     {
         self::useScheduler(new DeferredScheduler());
 
@@ -218,7 +221,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $this->values['v1']);
     }
 
-    public function testEventLoopReact()
+    #[Test]
+    public function reactEventLoopSchedulerRunsHandlers(): void
     {
         $loop = new StreamSelectLoop();
 
@@ -242,7 +246,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $this->values['v1']);
     }
 
-    public function testEventLoopSwooleWithWait()
+    #[Test]
+    public function swooleEventLoopSchedulerWaitReturnsResolvedValue(): void
     {
         static::skipIfSwooleNotInstalled();
 
@@ -271,7 +276,8 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
         );
     }
 
-    public function testEventLoopSwooleResolveDeferred()
+    #[Test]
+    public function swooleEventLoopSchedulerRunsHandlerAfterDeferredResolve(): void
     {
         static::skipIfSwooleNotInstalled();
 

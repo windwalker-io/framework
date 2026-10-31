@@ -4,26 +4,31 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Platform\DbPlatform;
+
 /**
  * The MySQLSchemaTest class.
  */
 class MySQLPlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'MySQL';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driver = 'pdo_mysql';
 
     /**
      * Will be set at setUp()
      *
-     * @var string
+     * @var  string
      */
     protected static string $schema = '';
 
     /**
      * @see  AbstractSchemaManager::listDatabases
      */
-    public function testListDatabases(): void
+    #[Test]
+    public function listDatabases(): void
     {
         $schemas = $this->instance->listDatabases();
 
@@ -36,7 +41,8 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listSchemas
      */
-    public function testListSchemas(): void
+    #[Test]
+    public function listSchemas(): void
     {
         $schemas = $this->instance->listSchemas();
 
@@ -49,7 +55,8 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listTables
      */
-    public function testListTables(): void
+    #[Test]
+    public function listTables(): void
     {
         $tables = $this->instance->listTables(static::$schema);
 
@@ -79,7 +86,8 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listViews
      */
-    public function testListViews(): void
+    #[Test]
+    public function listViews(): void
     {
         $views = $this->instance->listViews(static::$schema);
 
@@ -103,7 +111,8 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listColumns
      */
-    public function testListColumns(): void
+    #[Test]
+    public function listColumns(): void
     {
         $columns = $this->instance->listColumns('#__articles', static::$schema);
 
@@ -414,7 +423,8 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listConstraints
      */
-    public function testListConstraints(): void
+    #[Test]
+    public function listConstraints(): void
     {
         $constraints = $this->instance->listConstraints('#__articles', static::$schema);
 
@@ -478,7 +488,8 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listIndexes
      */
-    public function testListIndexes(): void
+    #[Test]
+    public function listIndexes(): void
     {
         $indexes = $this->instance->listIndexes('#__articles', static::$schema);
 
@@ -603,10 +614,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeSchema(): void
     {
-        parent::setUp();
-
         static::$schema = static::$dbname;
     }
 }

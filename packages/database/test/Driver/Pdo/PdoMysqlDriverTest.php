@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pdo;
 
-use Windwalker\Database\Platform\AbstractPlatform;
+use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
@@ -12,14 +13,15 @@ use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
  */
 class PdoMysqlDriverTest extends AbstractDriverTestCase
 {
-    protected static string $platform = AbstractPlatform::MYSQL;
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driverName = 'pdo_mysql';
 
     /**
      * @see  AbstractDriver::quote
      */
-    public function testQuote(): void
+    #[Test]
+    public function quote(): void
     {
         self::assertEquals(
             "'foo\'s #hello --options'",
@@ -30,7 +32,8 @@ class PdoMysqlDriverTest extends AbstractDriverTestCase
     /**
      * @see  AbstractDriver::escape
      */
-    public function testEscape(): void
+    #[Test]
+    public function escape(): void
     {
         self::assertEquals(
             "foo\'s #hello --options",

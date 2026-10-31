@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Relation\Strategy;
 
 use LogicException;
-use Windwalker\Database\Driver\StatementInterface;
-use Windwalker\ORM\Attributes\MapMorphBy;
 use Windwalker\ORM\Attributes\MorphBy;
-use Windwalker\ORM\EntityMapper;
-use Windwalker\ORM\Exception\RelationRejectException;
 use Windwalker\ORM\ORMOptions;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Action;
@@ -157,7 +153,7 @@ class ManyToMany extends AbstractRelation
     /**
      * @param  array  $data
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function deleteAllRelatives(array $data): void
     {
@@ -242,7 +238,7 @@ class ManyToMany extends AbstractRelation
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getMapForeignKeys(): array
     {
@@ -250,7 +246,7 @@ class ManyToMany extends AbstractRelation
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getMapTable(): ?string
     {
@@ -328,7 +324,7 @@ class ManyToMany extends AbstractRelation
     }
 
     /**
-     * @return ForeignTable
+     * @return  ForeignTable
      */
     public function getMap(): ForeignTable
     {

@@ -10,12 +10,12 @@ namespace Windwalker\Utilities\Proxy;
 class TimesLimitedCallable extends CallableProxy
 {
     /**
-     * @var int|null
+     * @var  int|null
      */
     protected $limits = null;
 
     /**
-     * @var int
+     * @var  int
      */
     protected $callTimes = 0;
 
@@ -53,7 +53,8 @@ class TimesLimitedCallable extends CallableProxy
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getCallTimes(): int
     {
@@ -65,9 +66,10 @@ class TimesLimitedCallable extends CallableProxy
      *
      * @return  int
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
-    public function getLimits(): int
+    public function getLimits(): ?int
     {
         return $this->limits;
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Request;
 
 use BadMethodCallException;
+use JsonSerializable;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Windwalker\Uri\Uri;
@@ -13,27 +14,27 @@ use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Str;
 
 /**
- * @property-read string $full
- * @property-read string $current
- * @property-read string $script
- * @property-read string $root
- * @property-read string $host
- * @property-read string $path
- * @property-read string $route
- * @property-read string $routeWithQuery
+ * @property-read string   $full
+ * @property-read string   $current
+ * @property-read string   $script
+ * @property-read string   $root
+ * @property-read string   $host
+ * @property-read string   $path
+ * @property-read string   $route
+ * @property-read string   $routeWithQuery
  * @property-read string[] $routeAndQuery
  *
- * @method string full()
- * @method string current()
- * @method string script($uri = null)
- * @method string root($uri = null)
- * @method string route()
- * @method string[] routeAndQuery()
- * @method string host($uri = null)
- * @method string path($uri = null)
- * @method string scheme()
+ * @method  string    full()
+ * @method  string    current()
+ * @method  string    script($uri = null)
+ * @method  string    root($uri = null)
+ * @method  string    route()
+ * @method  string[]  routeAndQuery()
+ * @method  string    host($uri = null)
+ * @method  string    path($uri = null)
+ * @method  string    scheme()
  */
-class RequestBaseUri extends Uri implements \JsonSerializable
+class RequestBaseUri extends Uri implements JsonSerializable
 {
     use InstanceCacheTrait;
 
@@ -85,7 +86,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
     /**
      * @param  string|null  $ignore
      *
-     * @return string|null
+     * @return  string|null
      */
     public function getScriptName(?string $ignore = null): ?string
     {
@@ -151,14 +152,14 @@ class RequestBaseUri extends Uri implements \JsonSerializable
                     $url,
                     $full
                         ? $this->toString(Uri::FULL_HOST)
-                        : ''
+                        : '',
                 );
             } else {
                 $url = static::addPrefix(
                     $url,
                     $full
                         ? $this->toString(Uri::FULL_HOST | Uri::PATH)
-                        : $this->toString(Uri::PATH)
+                        : $this->toString(Uri::PATH),
                 );
             }
         }
@@ -216,7 +217,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
         $base = static::normalize(
             $full
                 ? $this->path
-                : $this->root
+                : $this->root,
         );
 
         return $base ?: '/';
@@ -228,7 +229,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
      * @param  string  $uri
      * @param  string  $path
      *
-     * @return string
+     * @return  string
      *
      * @since  3.5.22.6
      */
@@ -274,8 +275,8 @@ class RequestBaseUri extends Uri implements \JsonSerializable
     /**
      * Specify data which should be serialized to JSON
      * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
+     * @return  mixed  data which can be serialized by <b>json_encode</b>,
+     *                 which is a value of any type other than a resource.
      * @since 5.4
      */
     public function jsonSerialize(): array
@@ -293,9 +294,9 @@ class RequestBaseUri extends Uri implements \JsonSerializable
                 return $this->cacheStorage['current'] ??= rtrim(
                     Uri::wrap($this->original, true)
                         ->toString(
-                            static::FULL_HOST | static::PATH
+                            static::FULL_HOST | static::PATH,
                         ),
-                    '/'
+                    '/',
                 );
 
             case 'script':

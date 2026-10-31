@@ -14,7 +14,7 @@ class ResultSetTest extends TestCase
     #[Test]
     public function emptySetIsFailureAndHasNoFirstResult(): void
     {
-        $results = new ResultSet;
+        $results = new ResultSet();
 
         self::assertTrue($results->isFailure());
         self::assertFalse($results->isSuccess());

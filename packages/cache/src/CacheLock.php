@@ -215,7 +215,7 @@ class CacheLock
     /**
      * Open (or reuse) the file handle for the given stripe index.
      *
-     * @return resource|false
+     * @return  resource|false
      */
     private static function open(int $index)
     {

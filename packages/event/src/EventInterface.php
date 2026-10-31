@@ -36,7 +36,7 @@ interface EventInterface extends StoppableEventInterface
      * @template  T of EventInterface
      *
      * @param  string|class-string<T>  $name
-     * @param  array   $args
+     * @param  array                   $args
      *
      * @return  T
      */

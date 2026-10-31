@@ -12,7 +12,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 class DecorateListenerProvider implements ListenerProviderInterface
 {
     /**
-     * @var ListenerProviderInterface
+     * @var  ListenerProviderInterface
      */
     protected $provider;
 
@@ -40,6 +40,8 @@ class DecorateListenerProvider implements ListenerProviderInterface
      * @return  ListenerProviderInterface
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getProvider(): ListenerProviderInterface
     {

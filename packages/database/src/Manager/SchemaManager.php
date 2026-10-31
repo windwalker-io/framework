@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Windwalker\Database\Manager;
 
 use ReflectionAttribute;
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Database\Schema\Ddl\Table;
 use Windwalker\ORM\Attributes\Table as TableAttr;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
 
 /**
@@ -101,7 +101,7 @@ class SchemaManager extends AbstractMetaManager
 
     public function hasTable(string $table): bool
     {
-        return in_array($this->db->replacePrefix($table), $this->getTables(), true);
+        return isset($this->getTables()[$this->db->replacePrefix($table)]);
     }
 
     public function reset(): static

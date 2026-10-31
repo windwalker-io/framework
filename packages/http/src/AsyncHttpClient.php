@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use RangeException;
 use RuntimeException;
 use Windwalker\Http\Promise\PromiseResponse as Promise;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Http\Transport\TransportInterface;
@@ -17,14 +18,14 @@ use Windwalker\Http\Transport\TransportInterface;
 /**
  * The AsyncRequest class.
  *
- * @method Promise get($url, $data = null, $headers = [])
- * @method Promise post($url, $data, $headers = [])
- * @method Promise put($url, $data, $headers = [])
- * @method Promise patch($url, $data, $headers = [])
- * @method Promise delete($url, $data = null, $headers = [])
- * @method Promise head($url, $headers = [])
- * @method Promise options($url, $headers = [])
- * @method Promise sendRequest(RequestInterface $request)
+ * @method  Promise  get($url, $data = null, $headers = [])
+ * @method  Promise  post($url, $data, $headers = [])
+ * @method  Promise  put($url, $data, $headers = [])
+ * @method  Promise  patch($url, $data, $headers = [])
+ * @method  Promise  delete($url, $data = null, $headers = [])
+ * @method  Promise  head($url, $headers = [])
+ * @method  Promise  options($url, $headers = [])
+ * @method  Promise  sendRequest(RequestInterface $request)
  * @method Promise request($method, $url, mixed $body = null, $options = []):HttpClientResponse
  *
  * @since  3.2
@@ -41,7 +42,7 @@ class AsyncHttpClient extends HttpClient
     /**
      * Property handles.
      *
-     * @var  []
+     * @var    []
      */
     protected $tasks = [];
 
@@ -62,8 +63,8 @@ class AsyncHttpClient extends HttpClient
     /**
      * Class init.
      *
-     * @param  array             $options   The options of this client object.
-     * @param CurlTransport|null $transport The Transport handler, default is CurlTransport.
+     * @param  array               $options    The options of this client object.
+     * @param  CurlTransport|null  $transport  The Transport handler, default is CurlTransport.
      */
     public function __construct($options = [], ?CurlTransport $transport = null)
     {
@@ -97,7 +98,9 @@ class AsyncHttpClient extends HttpClient
             curl_multi_remove_handle($this->mh, $task['handle']);
         }
 
-        curl_multi_close($this->mh);
+        if ($this->mh) {
+            curl_multi_close($this->mh);
+        }
 
         $this->mh = null;
         $this->tasks = [];
@@ -111,16 +114,21 @@ class AsyncHttpClient extends HttpClient
      * @param  RequestInterface  $request  The Psr Request object.
      *
      * @return  Promise
-     * @throws RangeException
+     * @throws  RangeException
      */
     public function senRequest(RequestInterface $request): ResponseInterface
     {
         /** @var CurlTransport $transport */
         $transport = $this->getTransport();
 
+        $headers = null;
+        $content = null;
+
         $this->tasks[] = [
-            'handle' => $handle = $transport->createHandle($request),
+            'handle' => $handle = $transport->createHandle($request, [], $headers, $content),
             'promise' => $promise = new Promise(),
+            'headers' => &$headers,
+            'content' => &$content,
         ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
@@ -131,10 +139,10 @@ class AsyncHttpClient extends HttpClient
     /**
      * resolve
      *
-     * @param callable|null $callback
+     * @param  callable|null  $callback
      *
      * @return  Response[]
-     * @throws RuntimeException
+     * @throws  RuntimeException
      */
     public function resolve(?callable $callback = null): array
     {
@@ -163,19 +171,32 @@ class AsyncHttpClient extends HttpClient
         $responses = [];
         $errors = [];
         $transport = $this->getTransport();
+        $results = [];
+
+        // With multi handles, the transfer result is only reported by curl_multi_info_read()
+        while ($info = curl_multi_info_read($mh)) {
+            $results[spl_object_id($info['handle'])] = $info['result'];
+        }
 
         foreach ($this->tasks as $task) {
             /** @var Promise $promise */
             $handle = $task['handle'];
             $promise = $task['promise'];
 
-            $error = curl_error($handle);
+            $errno = $results[spl_object_id($handle)] ?? curl_errno($handle);
+            $error = $errno !== CURLE_OK ? (curl_error($handle) ?: curl_strerror($errno)) : '';
 
             if (!$error) {
-                $responses[] = $res = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+                $task['content']->rewind();
+
+                $responses[] = $res = $transport->injectHeadersToResponse(
+                    new HttpClientResponse($task['content'])->withInfo(curl_getinfo($handle)),
+                    (array) $task['headers'],
+                    (bool) $transport->getOption('allow_empty_status_code'),
+                );
                 $promise->resolve($res);
             } else {
-                $errors[] = $e = new RuntimeException($error, curl_errno($handle));
+                $errors[] = $e = new RuntimeException($error, $errno);
                 $promise->reject($e);
             }
         }
@@ -196,8 +217,8 @@ class AsyncHttpClient extends HttpClient
      *
      * @param  TransportInterface  $transport
      *
-     * @return  static  Return self to support chaining.
-     * @throws InvalidArgumentException
+     * @return  static                    Return self to support chaining.
+     * @throws  InvalidArgumentException
      */
     public function setTransport(TransportInterface $transport): static
     {
@@ -206,8 +227,8 @@ class AsyncHttpClient extends HttpClient
                 sprintf(
                     '%s only supports %s',
                     get_called_class(),
-                    CurlTransport::class
-                )
+                    CurlTransport::class,
+                ),
             );
         }
 
@@ -220,6 +241,8 @@ class AsyncHttpClient extends HttpClient
      * Method to get property Errors
      *
      * @return  RuntimeException[]
+     *
+     * @codeCoverageIgnore
      */
     public function getErrors(): array
     {
@@ -242,6 +265,8 @@ class AsyncHttpClient extends HttpClient
      * @return  resource[]
      *
      * @since  3.4
+     *
+     * @codeCoverageIgnore
      */
     public function getTasks(): array
     {

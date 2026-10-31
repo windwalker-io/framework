@@ -54,4 +54,3 @@ class DeflateSerializer implements SerializerInterface
         return $this->serializer->unserialize($data);
     }
 }
-

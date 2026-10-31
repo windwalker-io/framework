@@ -11,7 +11,5 @@ namespace Windwalker\Queue\Job;
  */
 class NullJob
 {
-    public function __invoke(): void
-    {
-    }
+    public function __invoke(): void {}
 }

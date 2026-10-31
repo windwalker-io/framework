@@ -9,6 +9,4 @@ use UnexpectedValueException;
 /**
  * The FieldRequiredException class.
  */
-class FieldRequiredException extends UnexpectedValueException
-{
-}
+class FieldRequiredException extends UnexpectedValueException {}

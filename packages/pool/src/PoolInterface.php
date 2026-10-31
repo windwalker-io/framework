@@ -50,14 +50,14 @@ interface PoolInterface extends Countable
     /**
      * Create connection
      *
-     * @return ConnectionInterface
+     * @return  ConnectionInterface
      */
     public function createConnection(): ConnectionInterface;
 
     /**
      * Get connection from pool
      *
-     * @return ConnectionInterface
+     * @return  ConnectionInterface
      */
     public function getConnection(): ConnectionInterface;
 
@@ -78,14 +78,14 @@ interface PoolInterface extends Countable
     public function release(ConnectionInterface $connection): void;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getSerial(): int;
 
     /**
      * Close connections
      *
-     * @return int
+     * @return  int
      */
     public function close(): int;
 }

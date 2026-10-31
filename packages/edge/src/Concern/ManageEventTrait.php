@@ -7,6 +7,4 @@ namespace Windwalker\Edge\Concern;
 /**
  * Trait ManageEventTrait
  */
-trait ManageEventTrait
-{
-}
+trait ManageEventTrait {}

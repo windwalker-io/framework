@@ -4,24 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\StrNormalize;
 
-/**
- * StrNormaliseTest
- *
- * @since  2.0
- */
 class StrNormaliseTest extends TestCase
 {
-    /**
-     * Method to seed data to testFromCamelCase.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function providerSplitCamelCase(): array
+    public static function splitCamelCaseProvider(): array
     {
         return [
             // Note: string, expected
@@ -35,14 +25,7 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to seed data to testToCamelCase.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function seedTestToPascalCase(): array
+    public static function pascalCaseProvider(): array
     {
         return [
             ['FooBar', 'Foo Bar'],
@@ -54,14 +37,7 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to seed data to testToDashSeparated.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function seedTestToKebabCase(): array
+    public static function kebabCaseProvider(): array
     {
         return [
             ['foo-bar', 'Foo Bar'],
@@ -76,14 +52,7 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to seed data to testToSpaceSeparated.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function seedTestToSpaceSeparated(): array
+    public static function spaceSeparatedProvider(): array
     {
         return [
             ['Foo Bar', 'Foo Bar'],
@@ -98,14 +67,7 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to seed data to testToUnderscoreSeparated.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function seedTestToUnderscoreSeparated(): array
+    public static function underscoreSeparatedProvider(): array
     {
         return [
             ['Foo_Bar', 'Foo Bar'],
@@ -120,14 +82,7 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to seed data to testToVariable.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function seedTestToVariable(): array
+    public static function variableProvider(): array
     {
         return [
             ['myFooBar', 'My Foo Bar'],
@@ -139,14 +94,7 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to seed data to testToKey.
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function seedTestToKey(): array
+    public static function keyProvider(): array
     {
         return [
             ['foo_bar', 'Foo Bar'],
@@ -158,123 +106,89 @@ class StrNormaliseTest extends TestCase
         ];
     }
 
-    /**
-     * Method to test StrNormalise::fromCamelCase(string, true).
-     *
-     * @param string $input    The input value for the method.
-     * @param string $expected The expected value from the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerSplitCamelCase')]
-    public function testSplitCamelCase($input, $expected)
+    #[Test]
+    #[DataProvider('splitCamelCaseProvider')]
+    public function splitCamelCaseSplitsStringAtWordBoundaries(string $input, array $expected): void
     {
         $this->assertEquals($expected, StrNormalize::splitCamelCase($input));
     }
 
-    /**
-     * Method to test StrNormalise::PascalCase().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToPascalCase')]
-    public function testToPascalCase($expected, $input)
+    #[Test]
+    #[DataProvider('pascalCaseProvider')]
+    public function toPascalCaseConvertsSeparatedWordsToPascalCase(string $expected, string $input): void
     {
         $this->assertEquals($expected, StrNormalize::toPascalCase($input));
     }
 
-    /**
-     * Method to test StrNormalise::PascalCase().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToPascalCase')]
-    public function testToCamelCase($expected, $input)
+    #[Test]
+    #[DataProvider('pascalCaseProvider')]
+    public function toCamelCaseConvertsSeparatedWordsToLowerFirstCamelCase(string $expected, string $input): void
     {
         $this->assertEquals(lcfirst($expected), StrNormalize::toCamelCase($input));
     }
 
-    /**
-     * Method to test StrNormalise::testToKebabCase().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToKebabCase')]
-    public function testToKebabCase($expected, $input)
+    #[Test]
+    #[DataProvider('kebabCaseProvider')]
+    public function toKebabCaseJoinsWordsWithDashes(string $expected, string $input): void
     {
         $this->assertEquals($expected, StrNormalize::toKebabCase($input));
     }
 
-    /**
-     * Method to test StrNormalise::toSpaceSeparated().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToSpaceSeparated')]
-    public function testToSpaceSeparated($expected, $input)
+    #[Test]
+    #[DataProvider('spaceSeparatedProvider')]
+    public function toSpaceSeparatedJoinsWordsWithSingleSpace(string $expected, string $input): void
     {
         $this->assertEquals($expected, StrNormalize::toSpaceSeparated($input));
     }
 
-    /**
-     * Method to test StrNormalise::toUnderscoreSeparated().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToUnderscoreSeparated')]
-    public function testToUnderscoreSeparated($expected, $input)
+    #[Test]
+    #[DataProvider('underscoreSeparatedProvider')]
+    public function toUnderscoreSeparatedJoinsWordsWithUnderscore(string $expected, string $input): void
     {
         $this->assertEquals($expected, StrNormalize::toUnderscoreSeparated($input));
     }
 
-    /**
-     * Method to test StrNormalise::toVariable().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToVariable')]
-    public function testToVariable($expected, $input)
+    #[Test]
+    #[DataProvider('variableProvider')]
+    public function toVariableConvertsWordsToLowerCamelCaseName(string $expected, string $input): void
     {
         $this->assertEquals($expected, StrNormalize::toVariable($input));
     }
 
-    /**
-     * Method to test StrNormalise::toKey().
-     *
-     * @param string $expected The expected value from the method.
-     * @param string $input    The input value for the method.
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('seedTestToKey')]
-    public function testToKey($expected, $input)
+    #[Test]
+    #[DataProvider('keyProvider')]
+    public function toKeyConvertsWordsToLowerSnakeCaseKey(string $expected, string $input): void
     {
         $this->assertEquals($expected, StrNormalize::toKey($input));
+    }
+
+    #[Test]
+    public function splitByDropsEmptySegments(): void
+    {
+        self::assertSame(['foo', 'bar'], array_values(StrNormalize::splitBy('foo__bar_', '_')));
+        self::assertSame(['a', 'b'], array_values(StrNormalize::splitBy('a-b', '-')));
+    }
+
+    #[Test]
+    public function toDotSeparatedAndToSnakeCaseNormalizeSeparators(): void
+    {
+        self::assertSame('foo.bar.baz', StrNormalize::toDotSeparated('foo-bar_baz'));
+        self::assertSame('foo_bar_baz', StrNormalize::toSnakeCase('Foo-Bar baz'));
+    }
+
+    #[Test]
+    #[DataProvider('classNamespaceProvider')]
+    public function toClassNamespaceNormalizesSeparatorsAndCasing(string $expected, string $input): void
+    {
+        self::assertSame($expected, StrNormalize::toClassNamespace($input));
+    }
+
+    public static function classNamespaceProvider(): array
+    {
+        return [
+            ['Foo\\Bar\\Baz', 'foo/bar/baz'],
+            ['Foo\\Bar', '\\foo\\bar\\'],
+            ['FooBar\\Yoo', 'foo_bar//yoo'],
+        ];
     }
 }

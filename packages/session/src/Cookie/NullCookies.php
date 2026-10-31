@@ -6,6 +6,8 @@ namespace Windwalker\Session\Cookie;
 
 /**
  * The NullCookies class.
+ *
+ * @codeCoverageIgnore Logic-free null object.
  */
 class NullCookies implements CookiesInterface
 {

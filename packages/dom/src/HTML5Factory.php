@@ -20,7 +20,6 @@ use Masterminds\HTML5;
 use Windwalker\DOM\HTML5\OutputRules;
 use Windwalker\DOM\HTML5\Traverser;
 use Windwalker\Utilities\Str;
-
 use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\value;
@@ -30,10 +29,10 @@ use const Dom\HTML_NO_DEFAULT_NS;
 /**
  * The HtmlFactory class.
  *
- * @method static HTMLElement option(array $attrs = [], $content = null)
- * @method static HTMLElement form(array $attrs = [], $content = null)
- * @method static HTMLElement input(array $attrs = [], $content = null)
- * @method static HTMLElement button(array $attrs = [], $content = null)
+ * @method  static  HTMLElement  option(array $attrs = [], $content = null)
+ * @method  static  HTMLElement  form(array $attrs = [], $content = null)
+ * @method  static  HTMLElement  input(array $attrs = [], $content = null)
+ * @method  static  HTMLElement  button(array $attrs = [], $content = null)
  */
 class HTML5Factory
 {
@@ -237,7 +236,7 @@ class HTML5Factory
         return static::document()->saveHtml($node);
     }
 
-    #[ArrayShape(['name' => "mixed|string", 'id' => "null|string", 'class' => "null|string"])]
+    #[ArrayShape(['name' => 'mixed|string', 'id' => 'null|string', 'class' => 'null|string'])]
     public static function splitCSSSelector(
         string $name,
     ): array {

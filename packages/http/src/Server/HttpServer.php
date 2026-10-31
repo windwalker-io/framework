@@ -11,9 +11,10 @@ use Windwalker\Utilities\Options\OptionAccessTrait;
 /**
  * The Server class.
  *
- * @since  3.0
+ * @since      3.0
  *
  * @deprecated no-longer need adapter pattern
+ * @codeCoverageIgnore
  */
 class HttpServer extends AdaptableServer
 {
@@ -24,24 +25,25 @@ class HttpServer extends AdaptableServer
     /**
      * Create a Server instance.
      *
-     * @param  array                $options
-     * @param  ServerInterface|null $adapter
-     * @param callable|null         $handler
+     * @param  array                 $options
+     * @param  ServerInterface|null  $adapter
+     * @param  callable|null         $handler
      */
     public function __construct(array $options = [], ?ServerInterface $adapter = null, ?callable $handler = null)
     {
         $this->prepareOptions(
             [],
-            $options
+            $options,
         );
 
         $this->handler = Closure::fromCallable(
-            $handler ?? fn($server, $host, $port, $options) => $this->getAdapter()->listen($host, $port, $options)
+            $handler ?? fn($server, $host, $port, $options) => $this->getAdapter()->listen($host, $port, $options),
         );
 
         parent::__construct($adapter);
 
-        $this->adapter->getEventDispatcher()
+        $this->adapter
+            ->getEventDispatcher()
             ->addDealer($this->getEventDispatcher());
     }
 
@@ -65,7 +67,8 @@ class HttpServer extends AdaptableServer
     }
 
     /**
-     * @return Closure
+     * @return  Closure
+     * @codeCoverageIgnore
      */
     public function getHandler(): Closure
     {
@@ -76,6 +79,7 @@ class HttpServer extends AdaptableServer
      * @param  Closure  $handler
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setHandler(Closure $handler): static
     {

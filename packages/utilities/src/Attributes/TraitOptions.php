@@ -17,8 +17,7 @@ class TraitOptions
 
     public function __construct(
         public array $options = []
-    ) {
-    }
+    ) {}
 
     public static function getOption(object|string $class, string $traitName, string $name): mixed
     {

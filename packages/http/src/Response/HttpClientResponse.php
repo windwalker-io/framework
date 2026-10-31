@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Response;
 
+use Closure;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Windwalker\Http\HttpClient;
 
 /**
  * The HttpClientResponse class.
@@ -16,18 +16,18 @@ class HttpClientResponse extends Response
     /**
      * Same details info from connection handler like CURL or socket.
      *
-     * @var mixed
+     * @var  mixed
      */
     public protected(set) mixed $info = null;
 
     public protected(set) RequestInterface $request;
 
-    protected \Closure $curlCmdCallback;
+    protected Closure $curlCmdCallback;
 
     public static function fromHttpClient(
         RequestInterface $request,
         ResponseInterface $response,
-        \Closure $curlCmdCallback,
+        Closure $curlCmdCallback,
     ): static {
         $res = static::from($response);
         $res->request = $request;

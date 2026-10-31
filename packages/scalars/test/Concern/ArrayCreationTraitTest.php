@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace Windwalker\Scalars\Test\Concern;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Scalars\ArrayObject;
 
 use function Windwalker\arr;
 
 /**
- * The ArrayCreationTraitTest class.
- *
- * @since  __DEPLOY_VERSION__
+ * Tests the array creation helpers of ArrayObject.
  */
 class ArrayCreationTraitTest extends TestCase
 {
-    /**
-     * @var  ArrayObject
-     */
-    protected $instance;
+    protected ArrayObject $instance;
 
-    public function testCombine(): void
+    #[Test]
+    public function combineUsesItemsAsKeysForGivenArray(): void
     {
         self::assertEquals(
             [
@@ -32,7 +30,11 @@ class ArrayCreationTraitTest extends TestCase
             ],
             $this->instance->combine(['foo', 'bar', 'yoo'])->dump()
         );
+    }
 
+    #[Test]
+    public function combineAcceptsArrayObject(): void
+    {
         self::assertEquals(
             [
                 1 => 'foo',
@@ -43,7 +45,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testMergeRecursive(): void
+    #[Test]
+    public function mergeRecursiveMergesNestedArraysWithLaterValuesWinning(): void
     {
         $data1 = arr(
             [
@@ -105,13 +108,18 @@ class ArrayCreationTraitTest extends TestCase
         $expected['ai'] = 'Ultron';
 
         $this->assertEquals($expected, $data1->mergeRecursive($data2, $data3)->dump());
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $data1->mergeRecursive('', 123);
     }
 
-    public function testFillKeys(): void
+    #[Test]
+    public function mergeRecursiveThrowsOnNonArrayArguments(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        arr(['foo' => 'bar'])->mergeRecursive('', 123);
+    }
+
+    #[Test]
+    public function fillKeysFillsEachKeyWithValueAndReturnsNewInstance(): void
     {
         $a = $this->instance->fillKeys(['foo', 'bar'], [1, 2, 3]);
 
@@ -133,7 +141,8 @@ class ArrayCreationTraitTest extends TestCase
         self::assertNotSame($a, $this->instance);
     }
 
-    public function testDiff(): void
+    #[Test]
+    public function diffReturnsItemsMissingFromGivenArray(): void
     {
         $a = $this->instance->diff([3, 4, 5, 6]);
 
@@ -144,7 +153,8 @@ class ArrayCreationTraitTest extends TestCase
         self::assertNotSame($a, $this->instance);
     }
 
-    public function testMerge(): void
+    #[Test]
+    public function mergeOverwritesKeysFromLaterArray(): void
     {
         $data1 = [
             'green' => 'Hulk',
@@ -181,7 +191,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testConcat(): void
+    #[Test]
+    public function concatAppendsValuesOfGivenArray(): void
     {
         $data1 = [
             'green' => 'Hulk',
@@ -218,7 +229,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testConcatStart(): void
+    #[Test]
+    public function concatStartPrependsValuesOfGivenArray(): void
     {
         $data1 = [
             'green' => 'Hulk',
@@ -245,7 +257,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testFillWith(): void
+    #[Test]
+    public function fillWithCreatesItemsFromStartIndex(): void
     {
         $a = ArrayObject::fillWith(5, 3, 'Y');
 
@@ -259,7 +272,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testIntersectKey(): void
+    #[Test]
+    public function intersectKeyKeepsItemsWithSharedKeys(): void
     {
         $a = $this->getAssoc();
 
@@ -268,7 +282,8 @@ class ArrayCreationTraitTest extends TestCase
         self::assertEquals(['flower' => 'sakura'], $a->intersectKey($b)->dump());
     }
 
-    public function testIntersect(): void
+    #[Test]
+    public function intersectKeepsItemsWithSharedValues(): void
     {
         $a = $this->getAssoc();
 
@@ -277,14 +292,16 @@ class ArrayCreationTraitTest extends TestCase
         self::assertEquals(['flower' => 'sakura'], $a->intersect($b)->dump());
     }
 
-    public function testRange(): void
+    #[Test]
+    public function rangeCreatesSequentialItems(): void
     {
         $a = ArrayObject::range(1, 5);
 
         self::assertEquals(range(1, 5), $a->dump());
     }
 
-    public function testFlip(): void
+    #[Test]
+    public function flipSwapsKeysAndValues(): void
     {
         $a = $this->getAssoc();
 
@@ -294,7 +311,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testDiffKeys(): void
+    #[Test]
+    public function diffKeysReturnsItemsWithKeysMissingFromGivenArray(): void
     {
         $a = $this->getAssoc();
 
@@ -303,10 +321,8 @@ class ArrayCreationTraitTest extends TestCase
         self::assertEquals(['foo' => 'bar'], $a->diffKeys($b)->dump());
     }
 
-    /**
-     * @see  ArrayObject::countValues()
-     */
-    public function testCountValues(): void
+    #[Test]
+    public function countValuesCountsOccurrencesOfEachValue(): void
     {
         $a = arr([1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 5, 5]);
 
@@ -322,10 +338,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    /**
-     * @see  ArrayObject::crossJoin()
-     */
-    public function testCrossJoin(): void
+    #[Test]
+    public function crossJoinBuildsCartesianProduct(): void
     {
         $a = arr([1, 2])->crossJoin(['a', 'b']);
 
@@ -338,7 +352,11 @@ class ArrayCreationTraitTest extends TestCase
             ],
             $a->dump()
         );
+    }
 
+    #[Test]
+    public function crossJoinSupportsMultipleArrays(): void
+    {
         $b = arr([1, 2])->crossJoin(['a', 'b'], ['I', 'II']);
 
         self::assertEquals(
@@ -356,7 +374,8 @@ class ArrayCreationTraitTest extends TestCase
         );
     }
 
-    public function testRand(): void
+    #[Test]
+    public function randReturnsRandomExistingKeys(): void
     {
         $a = arr(['A', 'B', 'C', 'D', 'E']);
 
@@ -365,13 +384,10 @@ class ArrayCreationTraitTest extends TestCase
         self::assertEquals($indexes->intersect($a->keys())->dump(), $indexes->dump());
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createInstance(): void
     {
         $this->instance = arr([1, 2, 3]);
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     protected function getAssoc(): ArrayObject

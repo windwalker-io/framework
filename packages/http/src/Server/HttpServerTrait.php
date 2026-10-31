@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
+use Closure;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use Windwalker\Event\EventInterface;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
@@ -21,12 +23,12 @@ use function Windwalker\DI\create;
  */
 trait HttpServerTrait
 {
-    protected \Closure|null $middlewareResolver = null;
+    protected ?Closure $middlewareResolver = null;
 
     public function __construct(
         protected array $middlewares = [],
         protected ?HttpFactory $httpFactory = null,
-        protected \Closure|null $outputBuilder = null,
+        protected ?Closure $outputBuilder = null,
     ) {
         $this->adaptLegacyEvents();
     }
@@ -44,7 +46,7 @@ trait HttpServerTrait
                     new RequestEvent(
                         request: $req,
                         output: $output,
-                    )
+                    ),
                 );
 
                 return $event->response ?? $this->getHttpFactory()->createResponse();
@@ -62,7 +64,7 @@ trait HttpServerTrait
                     response: $res,
                     endHandler: $event?->endHandler,
                     attributes: $event?->attributes ?? [],
-                )
+                ),
             );
 
             $endHandler = $event->endHandler;
@@ -78,16 +80,16 @@ trait HttpServerTrait
             if ($output->isWritable()) {
                 $output->close();
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $event = $this->emit(
                 new ErrorEvent(
                     exception: $e,
                     request: $request,
                     output: $output,
                     response: $this->getHttpFactory()->createResponse(
-                        ResponseHelper::isClientError($e->getCode()) ? $e->getCode() : 500
-                    )
-                )
+                        ResponseHelper::isClientError($e->getCode()) ? $e->getCode() : 500,
+                    ),
+                ),
             );
 
             if (!$event->isPropagationStopped()) {
@@ -123,21 +125,21 @@ trait HttpServerTrait
             RequestEvent::class,
             function (RequestEvent $event) {
                 $this->eventPassthrough('request', $event);
-            }
+            },
         );
 
         $this->on(
             ResponseEvent::class,
             function (ResponseEvent $event) {
                 $this->eventPassthrough('reponse', $event);
-            }
+            },
         );
 
         $this->on(
             ErrorEvent::class,
             function (ErrorEvent $event) {
                 $this->eventPassthrough('error', $event);
-            }
+            },
         );
     }
 
@@ -165,7 +167,7 @@ trait HttpServerTrait
     }
 
     /**
-     * @return HttpFactory
+     * @return  HttpFactory
      */
     public function getHttpFactory(): HttpFactory
     {
@@ -196,7 +198,7 @@ trait HttpServerTrait
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getMiddlewares(): array
     {
@@ -207,6 +209,8 @@ trait HttpServerTrait
      * @param  array  $middlewares
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMiddlewares(array $middlewares): static
     {
@@ -216,19 +220,19 @@ trait HttpServerTrait
     }
 
     /**
-     * @return \Closure
+     * @return  Closure
      */
-    public function getMiddlewareResolver(): \Closure
+    public function getMiddlewareResolver(): Closure
     {
         return $this->middlewareResolver ?? static fn($entry) => $entry;
     }
 
     /**
-     * @param  \Closure|null  $middlewareResolver
+     * @param  Closure|null  $middlewareResolver
      *
      * @return  static  Return self to support chaining.
      */
-    public function setMiddlewareResolver(?\Closure $middlewareResolver): static
+    public function setMiddlewareResolver(?Closure $middlewareResolver): static
     {
         $this->middlewareResolver = $middlewareResolver;
 
@@ -236,16 +240,16 @@ trait HttpServerTrait
     }
 
     /**
-     * @return \Closure|null
+     * @return  Closure|null
      */
-    abstract public function getOutputBuilder(): ?\Closure;
+    abstract public function getOutputBuilder(): ?Closure;
 
     /**
-     * @param  \Closure|null  $outputBuilder
+     * @param  Closure|null  $outputBuilder
      *
      * @return  static  Return self to support chaining.
      */
-    public function setOutputBuilder(?\Closure $outputBuilder): static
+    public function setOutputBuilder(?Closure $outputBuilder): static
     {
         $this->outputBuilder = $outputBuilder;
 

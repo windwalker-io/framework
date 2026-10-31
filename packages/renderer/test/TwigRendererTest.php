@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Windwalker\Dom\Test\AbstractDomTestCase;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Windwalker\Renderer\TwigRenderer;
+use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
@@ -22,24 +26,19 @@ class TwigRendererTest extends TestCase
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static $path;
 
     /**
      * Test instance.
      *
-     * @var TwigRenderer
+     * @var  TwigRenderer
      */
     protected $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRenderer(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/twig');
 
@@ -50,24 +49,46 @@ class TwigRendererTest extends TestCase
         $this->instance = new TwigRenderer(['paths' => static::$path]);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function handleLayoutAppendsExtensionAndConvertsDots(): void
     {
+        self::assertSame('foo/bar.twig', $this->instance->handleLayout('foo.bar', 'twig'));
     }
 
-    /**
-     * Method to test render().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\TwigRenderer::render
-     */
-    public function testRender()
+    #[Test]
+    public function handleLayoutKeepsLayoutAlreadyEndingWithExtension(): void
+    {
+        self::assertSame('foo/bar.twig', $this->instance->handleLayout('foo/bar.twig', 'twig'));
+    }
+
+    #[Test]
+    public function debugOptionRegistersDebugExtension(): void
+    {
+        $twig = (new TwigRenderer(['paths' => static::$path, 'debug' => true]))->createEngine();
+
+        self::assertTrue($twig->hasExtension(DebugExtension::class));
+        self::assertFalse($this->instance->createEngine()->hasExtension(DebugExtension::class));
+    }
+
+    #[Test]
+    public function extendedEngineExposesStubExtensionFilterFunctionAndGlobal(): void
+    {
+        $this->instance->extend(
+            function (Environment $twig) {
+                $twig->addExtension(new StubTwigExtension());
+
+                return $twig;
+            }
+        );
+
+        $html = $this->instance->render('ext-test.twig');
+
+        self::assertStringContainsString('<li>peace</li>', $html);
+        self::assertStringContainsString('<li>sakura</li>', $html);
+    }
+
+    #[Test]
+    public function renderTemplateWithIncludedPartials(): void
     {
         $html = $this->instance->render('default.twig');
 

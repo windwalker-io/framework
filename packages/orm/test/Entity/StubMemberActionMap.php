@@ -35,7 +35,7 @@ class StubMemberActionMap implements EntityInterface
     protected ?DateTimeImmutable $created = null;
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -55,7 +55,7 @@ class StubMemberActionMap implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMemberNo(): string
     {
@@ -75,7 +75,7 @@ class StubMemberActionMap implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getActionNo(): string
     {
@@ -95,7 +95,7 @@ class StubMemberActionMap implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getType(): string
     {
@@ -115,7 +115,7 @@ class StubMemberActionMap implements EntityInterface
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return  DateTimeImmutable|null
      */
     public function getCreated(): ?DateTimeImmutable
     {

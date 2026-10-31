@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Attributes;
 
 use Ramsey\Uuid\UuidInterface;
-use Windwalker\Cache\Exception\LogicException;
 use Windwalker\ORM\Cast\CastInterface;
 use Windwalker\ORM\Traits\UUIDTrait;
 use Windwalker\Query\Wrapper\UuidWrapper;

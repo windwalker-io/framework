@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
-use React\EventLoop\Factory as ReactFactory;
+use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
-use React\Http\Server;
-use React\Socket\Server as SocketServer;
+use React\Http\HttpServer;
+use React\Socket\SocketServer;
 use React\Socket\ServerInterface as ReactServerInterface;
 use RuntimeException;
 use Throwable;
@@ -30,13 +30,13 @@ class ReactServer implements ServerInterface
     public ?LoopInterface $loop = null;
 
     /**
-     * @var ReactServerInterface|null
+     * @var  ReactServerInterface|null
      */
     public ?ReactServerInterface $socket = null;
 
-    public ?Server $server = null;
+    public ?HttpServer $server = null;
 
-    public bool $listening;
+    public bool $listening = false;
 
     /**
      * ReactServerAdapter constructor.
@@ -78,17 +78,19 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return LoopInterface
+     * @return  LoopInterface
      */
     public function getLoop(): LoopInterface
     {
-        return $this->loop ??= ReactFactory::create();
+        return $this->loop ??= Loop::get();
     }
 
     /**
      * @param  LoopInterface|null  $loop
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setLoop(?LoopInterface $loop): static
     {
@@ -98,7 +100,7 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return ReactServerInterface
+     * @return  ReactServerInterface
      */
     public function getSocket(): ReactServerInterface
     {
@@ -107,13 +109,15 @@ class ReactServer implements ServerInterface
 
     public function createSocket(string $host, int $port): SocketServer
     {
-        return new SocketServer($host . ':' . $port, $this->getLoop());
+        return new SocketServer($host . ':' . $port, [], $this->getLoop());
     }
 
     /**
      * @param  ReactServerInterface|null  $socket
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSocket(?ReactServerInterface $socket): static
     {
@@ -123,18 +127,18 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return Server
+     * @return  HttpServer
      */
-    public function getServer(): Server
+    public function getServer(): HttpServer
     {
         return $this->server ??= $this->createServer();
     }
 
-    protected function createServer(): Server
+    protected function createServer(): HttpServer
     {
         $output = new Output();
 
-        $server = new Server(
+        $server = new HttpServer(
             $this->getLoop(),
             function (ServerRequestInterface $req) use ($output) {
                 try {
@@ -142,7 +146,7 @@ class ReactServer implements ServerInterface
                         new RequestEvent(
                             request: $req,
                             output: $output,
-                        )->setName('request')
+                        )->setName('request'),
                     );
                 } catch (Throwable $e) {
                     $code = $e->getCode();
@@ -163,7 +167,7 @@ class ReactServer implements ServerInterface
                 );
 
                 return $event->response;
-            }
+            },
         );
 
         $server->on(
@@ -174,20 +178,22 @@ class ReactServer implements ServerInterface
                         exception: $e,
                         request: new ServerRequest(), // Currently we send empty request
                         output: $output,
-                    )->setName('error')
+                    )->setName('error'),
                 );
-            }
+            },
         );
 
         return $server;
     }
 
     /**
-     * @param  Server|null  $server
+     * @param  HttpServer|null  $server
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
-    public function setServer(?Server $server): static
+    public function setServer(?HttpServer $server): static
     {
         $this->server = $server;
 
@@ -203,7 +209,7 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isListening(): bool
     {

@@ -22,7 +22,7 @@ class SimpleTemplate
     protected string $delimiter = '.';
 
     /**
-     * @var string
+     * @var  string
      */
     protected string $template = '';
 
@@ -72,12 +72,12 @@ class SimpleTemplate
      *
      * Example: The {{ foo.bar.yoo }} will be replace to value of `$data['foo']['bar']['yoo']`
      *
-     * @param  string      $string  The template to replace.
-     * @param  array       $data    The data to find.
+     * @param  string      $string     The template to replace.
+     * @param  array       $data       The data to find.
      * @param  string      $delimiter
      * @param  array|null  $wrapper
      *
-     * @return  string Replaced template.
+     * @return  string  Replaced template.
      */
     public static function render(
         string $string,
@@ -100,7 +100,8 @@ class SimpleTemplate
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getDelimiter(): string
     {
@@ -113,8 +114,6 @@ class SimpleTemplate
      * @param  string  $delimiter
      *
      * @return  static  Return self to support chaining.
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function setDelimiter(string $delimiter): static
     {
@@ -124,7 +123,9 @@ class SimpleTemplate
     }
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getTemplate(): string
     {
@@ -135,6 +136,8 @@ class SimpleTemplate
      * @param  string  $template
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTemplate(string $template): static
     {

@@ -73,7 +73,7 @@ class PluralSelector
      *
      * @param  array  $segments
      *
-     * @return array
+     * @return  array
      */
     private function stripConditions(array $segments): array
     {
@@ -93,7 +93,7 @@ class PluralSelector
      * @param  string  $locale
      * @param  int     $number
      *
-     * @return int
+     * @return  int
      */
     public function getPluralIndex(string $locale, int $number): int
     {

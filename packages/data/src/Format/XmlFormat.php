@@ -46,7 +46,7 @@ class XmlFormat implements FormatInterface
      * @param  string  $string   XML formatted string to convert.
      * @param  array   $options  Options used by the formatter.
      *
-     * @return array Data array.
+     * @return  array  Data array.
      *
      * @since   2.0
      */

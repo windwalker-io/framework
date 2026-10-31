@@ -25,7 +25,7 @@ class HtmlCleaner
     /**
      * The array of permitted tags (white list).
      *
-     * @var    array
+     * @var  array
      * @since  2.0
      */
     public array $tagsArray = [];
@@ -33,7 +33,7 @@ class HtmlCleaner
     /**
      * The array of permitted tag attributes (white list).
      *
-     * @var    array
+     * @var  array
      * @since  2.0
      */
     public array $attrArray = [];
@@ -41,7 +41,7 @@ class HtmlCleaner
     /**
      * The method for sanitising tags: WhiteList method = 0 (default), BlackList method = 1
      *
-     * @var    integer
+     * @var  integer
      * @since  2.0
      */
     public int $tagsMethod = self::USE_WHITE_LIST;
@@ -49,7 +49,7 @@ class HtmlCleaner
     /**
      * The method for sanitising attributes: WhiteList method = 0 (default), BlackList method = 1
      *
-     * @var    integer
+     * @var  integer
      * @since  2.0
      */
     public int $attrMethod = self::USE_WHITE_LIST;
@@ -57,7 +57,7 @@ class HtmlCleaner
     /**
      * A flag for XSS checks. Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
      *
-     * @var    integer
+     * @var  integer
      * @since  2.0
      */
     public int $xssAuto;
@@ -65,7 +65,7 @@ class HtmlCleaner
     /**
      * The list of the default blacklisted tags.
      *
-     * @var    array
+     * @var  array
      * @since  2.0
      */
     public array $tagBlacklist = [
@@ -96,7 +96,7 @@ class HtmlCleaner
     /**
      * The list of the default blacklisted tag attributes. All event handlers implicit.
      *
-     * @var    array
+     * @var  array
      * @since   2.0
      */
     public array $attrBlacklist = [
@@ -328,8 +328,7 @@ class HtmlCleaner
                     } else {
                         $attr = substr($fromSpace, 0, (int) $nextSpace);
                     }
-                } else // No more equal signs so add any extra text in the tag into the attribute array [eg. checked]
-                {
+                } else { // No more equal signs so add any extra text in the tag into the attribute array [eg. checked]
                     if ($fromSpace !== '/') {
                         $attr = substr($fromSpace, 0, (int) $nextSpace);
                     }
@@ -369,8 +368,7 @@ class HtmlCleaner
                     } else {
                         $preTag .= ' />';
                     }
-                } else // Closing tag
-                {
+                } else { // Closing tag
                     $preTag .= '</' . $tagName . '>';
                 }
             }
@@ -472,7 +470,7 @@ class HtmlCleaner
                 // Does the attribute have a value?
                 if (empty($attrSubSet[1]) === false) {
                     $newSet[] = $attrSubSet[0] . '="' . $attrSubSet[1] . '"';
-                } elseif ($attrSubSet[1] === "0") {
+                } elseif ($attrSubSet[1] === '0') {
                     // Special Case
                     // Is the value 0?
                     $newSet[] = $attrSubSet[0] . '="0"';

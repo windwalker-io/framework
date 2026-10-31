@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Stream\Test;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use RuntimeException;
 use Stringable;
-use Windwalker\Stream\Stream;
+use stdClass;
 use Windwalker\Stream\StringStream;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
@@ -25,7 +29,7 @@ class StringStreamTest extends TestCase
     /**
      * Test instance.
      *
-     * @var StringStream
+     * @var  StringStream
      */
     protected $instance;
 
@@ -36,24 +40,14 @@ class StringStreamTest extends TestCase
      */
     public $tmpnam;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createWritableStringStream(): void
     {
         $this->instance = new StringStream('', READ_WRITE_FROM_BEGIN);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[After]
+    protected function removeTempFile(): void
     {
         if ($this->tmpnam && is_file($this->tmpnam)) {
             unlink($this->tmpnam);
@@ -61,14 +55,12 @@ class StringStreamTest extends TestCase
     }
 
     /**
-     * testConstruct
-     *
-     * @return  void
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testConstruct()
+    #[Test]
+    public function constructWrapsStringableObjectAsResource(): void
     {
-        $stringObject = new class implements Stringable {
+        $stringObject = new class () implements Stringable {
             public function __toString(): string
             {
                 return 'FOO';
@@ -81,14 +73,8 @@ class StringStreamTest extends TestCase
         $this->assertIsObject(ReflectAccessor::getValue($stream, 'stream'));
     }
 
-    /**
-     * Method to test __toString().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::__toString
-     */
-    public function testToString()
+    #[Test]
+    public function toStringReturnsWrittenContents(): void
     {
         $message = 'foo bar';
 
@@ -98,14 +84,10 @@ class StringStreamTest extends TestCase
     }
 
     /**
-     * Method to test close().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::close
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testClose()
+    #[Test]
+    public function closeClearsResourceAndContents(): void
     {
         $stream = new StringStream();
         $stream->write('Foo Bar');
@@ -118,14 +100,10 @@ class StringStreamTest extends TestCase
     }
 
     /**
-     * Method to test detach().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::detach
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testDetach()
+    #[Test]
+    public function detachReturnsResourceAndClearsStream(): void
     {
         $stream = new StringStream('flower');
 
@@ -134,35 +112,30 @@ class StringStreamTest extends TestCase
         self::assertEmpty(ReflectAccessor::getValue($stream, 'stream'));
     }
 
-    /**
-     * Method to test getSize().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::getSize
-     */
-    public function testGetSize()
+    #[Test]
+    public function getSizeReturnsStringLength(): void
     {
         $stream = new StringStream('FOO BAR');
 
         $this->assertEquals(7, $stream->getSize());
     }
 
-    /**
-     * Method to test tell().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::tell
-     */
-    public function testTell()
+    #[Test]
+    public function tellReturnsCurrentPosition(): void
     {
         $stream = new StringStream('FOO BAR');
 
         $stream->seek(2);
 
         $this->assertEquals(2, $stream->tell());
+    }
 
+    #[Test]
+    public function tellThrowsWhenStreamIsDetached(): void
+    {
+        $stream = new StringStream('FOO BAR');
+
+        $stream->seek(2);
         $stream->detach();
 
         $this->expectException(RuntimeException::class);
@@ -170,28 +143,21 @@ class StringStreamTest extends TestCase
         $stream->tell();
     }
 
-    /**
-     * Method to test eof().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::eof
-     */
-    public function testEof()
+    #[Test]
+    public function eofIsFalseWhenPartiallyRead(): void
     {
         $stream = new StringStream('FOO BAR');
 
         $stream->read(2);
         $this->assertFalse($stream->eof());
+    }
 
-        $stream->rewind();
+    #[Test]
+    public function eofIsTrueWhenReadingPastEnd(): void
+    {
+        $stream = new StringStream('FOO BAR');
+
         $stream->read(8);
-        $this->assertTrue($stream->eof());
-
-        $stream->rewind();
-        $stream->seek(8);
-        $this->assertFalse($stream->eof());
-        $stream->read(1);
         $this->assertTrue($stream->eof());
 
         $stream->rewind();
@@ -199,30 +165,37 @@ class StringStreamTest extends TestCase
         $this->assertTrue($stream->eof());
     }
 
-    /**
-     * Method to test isSeekable().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::isSeekable
-     */
-    public function testIsSeekable()
+    #[Test]
+    public function eofBecomesTrueOnlyAfterReadingFromSoughtPastEnd(): void
+    {
+        $stream = new StringStream('FOO BAR');
+
+        $stream->seek(8);
+        $this->assertFalse($stream->eof());
+        $stream->read(1);
+        $this->assertTrue($stream->eof());
+    }
+
+    #[Test]
+    public function isSeekableIsTrueByDefault(): void
     {
         $stream = new StringStream('FOO BAR');
 
         $this->assertTrue($stream->isSeekable());
+    }
+
+    #[Test]
+    public function isSeekableIsFalseAfterDisablingSeekable(): void
+    {
+        $stream = new StringStream('FOO BAR');
 
         $stream->seekable(false);
 
         $this->assertFalse($stream->isSeekable());
     }
 
-    /**
-     * Method to test seek().
-     *
-     * @return void
-     */
-    public function testSeek()
+    #[Test]
+    public function seekMovesPositionByWhence(): void
     {
         $stream = new StringStream('FOO BAR');
 
@@ -236,14 +209,8 @@ class StringStreamTest extends TestCase
         $this->assertEquals(6, $stream->tell());
     }
 
-    /**
-     * Method to test rewind().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::rewind
-     */
-    public function testRewind()
+    #[Test]
+    public function rewindResetsPositionToStart(): void
     {
         $stream = new StringStream('FOO BAR');
 
@@ -254,28 +221,16 @@ class StringStreamTest extends TestCase
         $this->assertEquals(0, $stream->tell());
     }
 
-    /**
-     * Method to test isWritable().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::isWritable
-     */
-    public function testIsWritable()
+    #[Test]
+    public function isWritableIsFalseForReadOnlyMode(): void
     {
         $stream = new StringStream('php://memory', READ_ONLY_FROM_BEGIN);
 
         $this->assertFalse($stream->isWritable());
     }
 
-    /**
-     * Method to test write().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::write
-     */
-    public function testWrite()
+    #[Test]
+    public function writeAppendsAndOverwritesAtPosition(): void
     {
         $stream = new StringStream('');
         $stream->write('flower');
@@ -293,27 +248,15 @@ class StringStreamTest extends TestCase
         $this->assertEquals('flowtestloom', $stream->getResource());
     }
 
-    /**
-     * Method to test isReadable().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::isReadable
-     */
-    public function testIsReadable()
+    #[Test]
+    public function isReadableIsTrueByDefault(): void
     {
         $stream = new StringStream();
         $this->assertTrue($stream->isReadable());
     }
 
-    /**
-     * Method to test read().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::read
-     */
-    public function testRead()
+    #[Test]
+    public function readReturnsSequentialChunksAndRestartsAfterRewind(): void
     {
         $stream = new StringStream('FOO BAR');
 
@@ -325,19 +268,17 @@ class StringStreamTest extends TestCase
         $this->assertEquals('FOO', $stream->read(3));
     }
 
-    /**
-     * Method to test getContents().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::getContents
-     */
-    public function testGetContents()
+    #[Test]
+    public function getContentsReturnsWholeString(): void
     {
         $stream = new StringStream('FOO BAR');
 
         $this->assertEquals('FOO BAR', $stream->getContents());
+    }
 
+    #[Test]
+    public function getContentsReturnsRemainingStringFromPosition(): void
+    {
         $stream = new StringStream('FOO BAR');
 
         $stream->seek(2);
@@ -345,18 +286,102 @@ class StringStreamTest extends TestCase
         $this->assertEquals('O BAR', $stream->getContents());
     }
 
-    /**
-     * Method to test getMetadata().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\StringStream::getMetadata
-     */
-    public function testGetMetadata()
+    #[Test]
+    public function getMetadataReturnsAllOrSingleKey(): void
     {
         $this->assertIsArray($this->instance->getMetadata());
 
         $this->assertTrue($this->instance->getMetadata('seekable'));
-        $this->assertEquals('rb', $this->instance->getMetadata('mode'));
+        $this->assertEquals('rb+', $this->instance->getMetadata('mode'));
+    }
+
+    #[Test]
+    public function writableDependsOnAttachMode(): void
+    {
+        $this->assertTrue((new StringStream('A', READ_WRITE_FROM_BEGIN))->isWritable());
+        $this->assertTrue((new StringStream('A', 'wb'))->isWritable());
+        $this->assertFalse((new StringStream('A', READ_ONLY_FROM_BEGIN))->isWritable());
+    }
+
+    #[Test]
+    public function getMetadataReturnsNullForUnknownKey(): void
+    {
+        $this->assertNull($this->instance->getMetadata('not-exists'));
+    }
+
+    #[Test]
+    public function attachRejectsResource(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIs('StringStream do not support resource.');
+
+        new StringStream(fopen('php://memory', 'rb'));
+    }
+
+    #[Test]
+    public function attachRejectsArrayAndNonStringableObject(): void
+    {
+        foreach ([['foo'], new stdClass()] as $value) {
+            try {
+                new StringStream($value);
+                $this->fail('Expected InvalidArgumentException');
+            } catch (InvalidArgumentException $e) {
+                $this->assertEquals('StringStream only support string as resource.', $e->getMessage());
+            }
+        }
+    }
+
+    #[Test]
+    public function getSizeReturnsNullAfterClose(): void
+    {
+        $stream = new StringStream('FOO');
+        $stream->close();
+
+        $this->assertNull($stream->getSize());
+    }
+
+    #[Test]
+    public function getContentsReturnsEmptyStringAfterClose(): void
+    {
+        $stream = new StringStream('FOO');
+        $stream->close();
+
+        $this->assertSame('', $stream->getContents());
+    }
+
+    #[Test]
+    public function seekThrowsWhenNotSeekable(): void
+    {
+        $stream = new StringStream('FOO BAR');
+        $stream->seekable(false);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Stream is not seekable');
+
+        $stream->seek(1);
+    }
+
+    #[Test]
+    public function seekThrowsWhenPositionIsNegative(): void
+    {
+        $stream = new StringStream('FOO BAR');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Position should not less than 0.');
+
+        $stream->seek(-1);
+    }
+
+    #[Test]
+    public function writableControlsIsWritable(): void
+    {
+        $stream = new StringStream('FOO', READ_WRITE_FROM_BEGIN);
+
+        $this->assertSame($stream, $stream->writable(false));
+        $this->assertFalse($stream->isWritable());
+
+        $stream->writable(true);
+
+        $this->assertTrue($stream->isWritable());
     }
 }

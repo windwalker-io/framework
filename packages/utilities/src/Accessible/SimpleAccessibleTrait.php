@@ -31,7 +31,7 @@ trait SimpleAccessibleTrait
             return $ret;
         }
 
-        $ret =& $this->getStorage()[$key];
+        $ret = & $this->getStorage()[$key];
 
         return $ret;
     }
@@ -58,8 +58,6 @@ trait SimpleAccessibleTrait
      * @param  mixed  $default
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function def(mixed $key, mixed $default): mixed
     {
@@ -74,8 +72,6 @@ trait SimpleAccessibleTrait
      * @param  mixed  $key
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function has(mixed $key): bool
     {
@@ -88,8 +84,6 @@ trait SimpleAccessibleTrait
      * @param  mixed  $key
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function remove(mixed $key): static
     {
@@ -107,7 +101,7 @@ trait SimpleAccessibleTrait
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
@@ -123,7 +117,7 @@ trait SimpleAccessibleTrait
     /**
      * Convert the object into something JSON serializable.
      *
-     * @return array
+     * @return  array
      */
     public function jsonSerialize(): array
     {
@@ -134,8 +128,6 @@ trait SimpleAccessibleTrait
      * count
      *
      * @return  int
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function count(): int
     {
@@ -143,7 +135,7 @@ trait SimpleAccessibleTrait
     }
 
     /**
-     * @return array|null
+     * @return  array|null
      */
     public function &getStorage(): ?array
     {

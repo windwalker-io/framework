@@ -10,6 +10,4 @@ use Attribute;
  * The Prop class.
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Prop
-{
-}
+class Prop {}

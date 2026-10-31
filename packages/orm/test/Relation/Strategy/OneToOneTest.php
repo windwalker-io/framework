@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubLocation;
@@ -14,7 +15,8 @@ use Windwalker\ORM\Test\Entity\StubLocationData;
  */
 class OneToOneTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsRelatedEntity()
     {
         $mapper = $this->createTestMapper();
 
@@ -30,7 +32,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testLoadRelations()
+    #[Test]
+    public function loadAllRelationsPopulatesJsonOutput()
     {
         $mapper = $this->createTestMapper();
 
@@ -47,7 +50,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testCreate()
+    #[Test]
+    public function createStoresEntityWithRelatedEntity()
     {
         $mapper = $this->createTestMapper();
 
@@ -70,7 +74,8 @@ class OneToOneTest extends AbstractORMTestCase
         self::assertEquals('Location Data Create 1', $data->getData());
     }
 
-    public function testUpdate()
+    #[Test]
+    public function updateCascadesChangesToRelatedEntity()
     {
         $mapper = $this->createTestMapper();
         /** @var StubLocation $location */
@@ -106,7 +111,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateNoAction()
+    #[Test]
+    public function updateWithIgnoreActionLeavesRelatedEntityUntouched()
     {
         $mapper = $this->createTestMapper(Action::IGNORE);
 
@@ -137,7 +143,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSelNull()
+    #[Test]
+    public function updateWithSetNullClearsRelatedEntityForeignKey()
     {
         $mapper = $this->createTestMapper(Action::SET_NULL);
 
@@ -165,7 +172,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testDelete()
+    #[Test]
+    public function deleteRemovesRelatedEntity()
     {
         $mapper = $this->createTestMapper();
 
@@ -185,7 +193,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteNoAction()
+    #[Test]
+    public function deleteWithIgnoreActionKeepsRelatedEntity()
     {
         $mapper = $this->createTestMapper(Action::CASCADE, Action::IGNORE);
 
@@ -210,7 +219,8 @@ class OneToOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteSetNull()
+    #[Test]
+    public function deleteWithSetNullClearsRelatedEntityForeignKey()
     {
         $mapper = $this->createTestMapper(Action::CASCADE, Action::SET_NULL);
 

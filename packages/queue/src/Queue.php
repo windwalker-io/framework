@@ -24,7 +24,7 @@ class Queue
     /**
      * Property driver.
      *
-     * @var QueueDriverInterface
+     * @var  QueueDriverInterface
      */
     protected QueueDriverInterface $driver;
 
@@ -46,7 +46,7 @@ class Queue
      * @param  string|null  $channel
      * @param  array        $options
      *
-     * @return int|string
+     * @return  int|string
      */
     public function push(mixed $job, int $delay = 0, ?string $channel = null, array $options = []): int|string
     {
@@ -73,7 +73,7 @@ class Queue
      * @param  array         $options
      *
      * @return  int|string
-     * @throws JsonException
+     * @throws  JsonException
      */
     public function pushRaw(
         string|array $body,
@@ -82,7 +82,7 @@ class Queue
         array $options = []
     ): int|string {
         if (is_string($body)) {
-            json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+            $body = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         }
 
         $message = new QueueMessage();
@@ -100,7 +100,7 @@ class Queue
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -137,8 +137,9 @@ class Queue
     public function release(mixed $message, int $delay = 0): void
     {
         if (!$message instanceof QueueMessage) {
-            $msg = new QueueMessage();
-            $msg->setId($message);
+            $id = $message;
+            $message = new QueueMessage();
+            $message->setId($id);
         }
 
         $message->setDelay($delay);
@@ -149,8 +150,9 @@ class Queue
     public function defer(mixed $message, int $delay = 0): void
     {
         if (!$message instanceof QueueMessage) {
-            $msg = new QueueMessage();
-            $msg->setId($message);
+            $id = $message;
+            $message = new QueueMessage();
+            $message->setId($id);
         }
 
         $message->setDelay($delay);
@@ -176,8 +178,8 @@ class Queue
      * @param  mixed  $job
      * @param  array  $data
      *
-     * @return QueueMessage
-     * @throws InvalidArgumentException
+     * @return  QueueMessage
+     * @throws  InvalidArgumentException
      */
     public function getMessageByJob(mixed $job, array $data = []): QueueMessage
     {
@@ -206,7 +208,7 @@ class Queue
             $instance = new ClosureJob($job);
         } elseif (is_string($job)) {
             // Create by class name.
-            if (!class_exists($job) || method_exists($job, '__invoke')) {
+            if (!class_exists($job) || !method_exists($job, '__invoke')) {
                 throw new InvalidArgumentException(
                     'Job should be a class which has __invoke() method.'
                 );

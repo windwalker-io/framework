@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise;
 
-use Closure;
 use ReflectionFunction;
-use ReflectionMethod;
 use Throwable;
 use TypeError;
 use Windwalker\Promise\Enum\PromiseState;
@@ -26,17 +24,17 @@ class Promise implements ExtendedPromiseInterface
     protected PromiseState $state = PromiseState::PENDING;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected mixed $value = null;
 
     /**
-     * @var array<array{ 0: static, 1: callable, 2: ?callable }>
+     * @var  array<array{ 0: static, 1: callable, 2: ?callable }>
      */
     protected array $children = [];
 
     /**
-     * @var ScheduleCursor
+     * @var  ScheduleCursor
      */
     protected ScheduleCursor $scheduleCursor;
 
@@ -51,9 +49,9 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @param  callable|null  $resolver
      *
-     * @return static
-     * @throws Throwable
-     * @throws \ReflectionException
+     * @return  static
+     * @throws  Throwable
+     * @throws  \ReflectionException
      */
     public static function create(#[\SensitiveParameter] ?callable $resolver = null): static
     {
@@ -93,7 +91,7 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @throws Throwable
+     * @throws  Throwable
      */
     public static function allSettled(array $values): ExtendedPromiseInterface
     {
@@ -182,7 +180,7 @@ class Promise implements ExtendedPromiseInterface
     }
 
     /**
-     * @throws Throwable
+     * @throws  Throwable
      */
     public static function try(callable $callback, mixed ...$args): static
     {
@@ -202,8 +200,8 @@ class Promise implements ExtendedPromiseInterface
      *
      * @param  callable(\Closure(T): void, \Closure): void|null  $resolver
      *
-     * @throws Throwable
-     * @throws \ReflectionException
+     * @throws  Throwable
+     * @throws  \ReflectionException
      */
     public function __construct(#[\SensitiveParameter] ?callable $resolver = null)
     {
@@ -300,7 +298,7 @@ class Promise implements ExtendedPromiseInterface
      *
      * @return  void
      *
-     * @throws UncaughtException
+     * @throws  UncaughtException
      */
     private function settleChild(self $child, callable $onFulfilled, ?callable $onRejected): void
     {
@@ -332,7 +330,7 @@ class Promise implements ExtendedPromiseInterface
      *
      * @return  void
      *
-     * @throws Throwable
+     * @throws  Throwable
      */
     private function settle(PromiseState $state, mixed $value): void
     {
@@ -410,7 +408,7 @@ class Promise implements ExtendedPromiseInterface
      *
      * @return  object|static
      *
-     * @throws Throwable
+     * @throws  Throwable
      */
     public static function resolve(mixed $value = null): static
     {
@@ -425,8 +423,8 @@ class Promise implements ExtendedPromiseInterface
      * @param  PromiseInterface  $promise
      * @param  mixed             $value
      *
-     * @return void
-     * @throws Throwable
+     * @return  void
+     * @throws  Throwable
      */
     private static function resolvePromise(PromiseInterface $promise, mixed $value): void
     {
@@ -500,7 +498,7 @@ class Promise implements ExtendedPromiseInterface
     /**
      * @inheritDoc
      *
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function wait(): mixed
     {
@@ -529,7 +527,7 @@ class Promise implements ExtendedPromiseInterface
      * @param  UncaughtException  $e
      *
      * @return  void
-     * @throws UncaughtException
+     * @throws  UncaughtException
      */
     private function logOrThrow(UncaughtException $e): void
     {
@@ -607,8 +605,8 @@ class Promise implements ExtendedPromiseInterface
      * @param  callable  $cb
      *
      * @return  void
-     * @throws Throwable
-     * @throws \ReflectionException
+     * @throws  Throwable
+     * @throws  \ReflectionException
      */
     private function constructing(#[\SensitiveParameter] callable $cb): void
     {

@@ -69,7 +69,7 @@ class PK implements AttributeInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isPrimary(): bool
     {
@@ -77,7 +77,7 @@ class PK implements AttributeInterface
     }
 
     /**
-     * @return Column
+     * @return  Column
      */
     public function getColumn(): Column
     {
@@ -88,6 +88,7 @@ class PK implements AttributeInterface
      * @param  Column  $column
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setColumn(Column $column): static
     {

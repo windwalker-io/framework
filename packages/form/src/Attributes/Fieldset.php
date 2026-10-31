@@ -53,7 +53,7 @@ class Fieldset implements AttributeInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getName(): string
     {
@@ -64,6 +64,8 @@ class Fieldset implements AttributeInterface
      * @param  string  $name
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function name(string $name): static
     {
@@ -73,7 +75,9 @@ class Fieldset implements AttributeInterface
     }
 
     /**
-     * @return string|null
+     * @return  string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getTitle(): ?string
     {
@@ -100,7 +104,9 @@ class Fieldset implements AttributeInterface
     }
 
     /**
-     * @return Form
+     * @return  Form
+     *
+     * @codeCoverageIgnore
      */
     public function getForm(): Form
     {

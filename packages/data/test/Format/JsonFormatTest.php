@@ -13,7 +13,7 @@ class JsonFormatTest extends TestCase
     #[Test]
     public function itDumpsDataAndHonorsEncodingOptions(): void
     {
-        $format = new JsonFormat;
+        $format = new JsonFormat();
 
         self::assertSame('{"name":"Sakura"}', $format->dump(['name' => 'Sakura']));
         self::assertSame(
@@ -25,7 +25,7 @@ class JsonFormatTest extends TestCase
     #[Test]
     public function itParsesAssociativeArraysAndObjects(): void
     {
-        $format = new JsonFormat;
+        $format = new JsonFormat();
 
         self::assertSame(['name' => 'Sakura'], $format->parse(' {"name":"Sakura"} '));
         self::assertEquals(

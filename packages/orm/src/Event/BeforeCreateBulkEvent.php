@@ -10,6 +10,4 @@ use Attribute;
  * The BeforeUpdateBatchEvent class.
  */
 #[Attribute]
-class BeforeCreateBulkEvent extends AbstractCreateBulkEvent
-{
-}
+class BeforeCreateBulkEvent extends AbstractCreateBulkEvent {}

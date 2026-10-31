@@ -6,6 +6,8 @@ namespace Windwalker\Session\Handler;
 
 /**
  * The NullHandler class.
+ *
+ * @codeCoverageIgnore Logic-free null object.
  */
 class NullHandler extends AbstractHandler
 {

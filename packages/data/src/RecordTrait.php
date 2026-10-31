@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Data;
 
-use function Windwalker\get_object_dump_props;
-use function Windwalker\get_object_dump_values;
-
 use Windwalker\ORM\Attributes\JsonNoSerialize;
 use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Classes\TraitHelper;
 use Windwalker\Utilities\TypeCast;
+
+use function Windwalker\get_object_dump_props;
+use function Windwalker\get_object_dump_values;
 
 trait RecordTrait
 {

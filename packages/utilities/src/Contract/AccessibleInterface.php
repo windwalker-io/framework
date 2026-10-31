@@ -10,8 +10,6 @@ use JsonSerializable;
 
 /**
  * The AccessibleInterface class.
- *
- * @since  __DEPLOY_VERSION__
  */
 interface AccessibleInterface extends
     AccessorAccessibleInterface,
@@ -28,7 +26,7 @@ interface AccessibleInterface extends
      *
      * @param  string  $key
      *
-     * @return mixed
+     * @return  mixed
      */
     public function &__get(mixed $key): mixed;
 
@@ -38,7 +36,7 @@ interface AccessibleInterface extends
      * @param  string  $key
      * @param  mixed   $value
      *
-     * @return void
+     * @return  void
      */
     public function __set(mixed $key, mixed $value);
 
@@ -47,7 +45,7 @@ interface AccessibleInterface extends
      *
      * @param  string  $key
      *
-     * @return bool
+     * @return  bool
      */
     public function __isset(mixed $key): bool;
 
@@ -56,7 +54,7 @@ interface AccessibleInterface extends
      *
      * @param  string  $key
      *
-     * @return void
+     * @return  void
      */
     public function __unset(mixed $key);
 }

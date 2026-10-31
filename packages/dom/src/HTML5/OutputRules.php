@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\DOM\HTML5;
 
 use Dom\Attr;
@@ -36,7 +38,7 @@ class OutputRules implements RulesInterface
     /**
      * Holds the HTML5 element names that causes a namespace switch.
      *
-     * @var array
+     * @var  array
      */
     protected $implicitNamespaces = [
         self::NAMESPACE_HTML,
@@ -55,7 +57,7 @@ class OutputRules implements RulesInterface
     /**
      * Used as cache to detect if is available ENT_HTML5.
      *
-     * @var bool
+     * @var  bool
      */
     private $hasHTML5 = false;
 
@@ -472,7 +474,7 @@ class OutputRules implements RulesInterface
      *
      * @param  string  $text  The string to put into the output
      *
-     * @return $this
+     * @return  $this
      */
     protected function wr($text)
     {
@@ -484,7 +486,7 @@ class OutputRules implements RulesInterface
     /**
      * Write a new line character.
      *
-     * @return $this
+     * @return  $this
      */
     protected function nl()
     {
@@ -518,7 +520,7 @@ class OutputRules implements RulesInterface
      * @param  string  $text       Text to encode.
      * @param  bool    $attribute  True if we are encoding an attrubute, false otherwise.
      *
-     * @return string The encoded text.
+     * @return  string  The encoded text.
      */
     protected function enc($text, $attribute = false)
     {

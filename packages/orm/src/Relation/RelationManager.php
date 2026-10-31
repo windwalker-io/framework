@@ -19,7 +19,7 @@ use Windwalker\ORM\Relation\Strategy\RelationStrategyInterface;
 class RelationManager implements RelationStrategyInterface
 {
     /**
-     * @var AbstractRelation[]
+     * @var  AbstractRelation[]
      */
     protected array $relations = [];
 
@@ -181,7 +181,7 @@ class RelationManager implements RelationStrategyInterface
     }
 
     /**
-     * @return EntityMetadata
+     * @return  EntityMetadata
      */
     public function getMetadata(): EntityMetadata
     {
@@ -189,7 +189,7 @@ class RelationManager implements RelationStrategyInterface
     }
 
     /**
-     * @return AbstractRelation[]
+     * @return  AbstractRelation[]
      */
     public function getRelations(): array
     {

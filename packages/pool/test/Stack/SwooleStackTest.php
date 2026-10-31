@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Pool\Test\Stack;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\BeforeClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Swoole\Timer;
 use Windwalker\Pool\Stack\SwooleStack;
@@ -21,7 +24,8 @@ class SwooleStackTest extends TestCase
 
     protected ?SwooleStack $instance;
 
-    public function testSwooleWait(): void
+    #[Test]
+    public function popWaitsUntilConnectionIsPushedInCoroutine(): void
     {
         $v = null;
 
@@ -48,20 +52,15 @@ class SwooleStackTest extends TestCase
         self::assertNotNull($v);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function setUpBeforeClass(): void
+    #[BeforeClass]
+    public static function skipWhenSwooleUnavailable(): void
     {
         self::skipIfSwooleNotInstalled();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createStack(): void
     {
         $this->instance = new SwooleStack(10);
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

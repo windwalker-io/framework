@@ -10,7 +10,7 @@ namespace Windwalker\Utilities\Proxy;
 class CallableProxy
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $callable;
 
@@ -60,8 +60,6 @@ class CallableProxy
      * @param  bool  $recursive
      *
      * @return  callable
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function get(bool $recursive = false): callable
     {

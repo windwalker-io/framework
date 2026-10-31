@@ -7,6 +7,4 @@ namespace Windwalker\Utilities\Exception;
 /**
  * The CastingException class.
  */
-class CastingException extends \UnexpectedValueException
-{
-}
+class CastingException extends \UnexpectedValueException {}

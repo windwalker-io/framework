@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Reseter;
 
 use PDO;
+use Windwalker\Database\Platform\DbPlatform;
 
 /**
  * The SQLIteReseter class.
  */
 class SQLiteReseter extends AbstractReseter
 {
-    protected static string $platform = 'SQLite';
+    protected static DbPlatform $platform = DbPlatform::SQLite;
 
     public function createDatabase(PDO $pdo, string $dbname): void
     {

@@ -16,8 +16,8 @@ interface CookiesConfigurableInterface
     /**
      * @param  DateTimeInterface|int|string  $expires  Timestamp, DateTime or time modify string.
      *
-     * @return static Return self to support chaining.
-     * @throws \Exception
+     * @return  static      Return self to support chaining.
+     * @throws  \Exception
      */
     public function expires(int|string|DateTimeInterface $expires): static;
 

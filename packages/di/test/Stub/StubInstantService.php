@@ -10,6 +10,4 @@ use Windwalker\DI\Attributes\Service;
  * The StubInstantService class.
  */
 #[Service]
-class StubInstantService
-{
-}
+class StubInstantService {}

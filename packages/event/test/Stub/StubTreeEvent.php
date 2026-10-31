@@ -9,6 +9,4 @@ use Windwalker\Event\Event;
 /**
  * The StubTreeEvent class.
  */
-class StubTreeEvent extends Event
-{
-}
+class StubTreeEvent extends Event {}

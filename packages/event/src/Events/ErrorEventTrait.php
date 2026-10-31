@@ -12,7 +12,7 @@ use Throwable;
 trait ErrorEventTrait
 {
     /**
-     * @var Throwable
+     * @var  Throwable
      */
     public Throwable $exception;
 
@@ -20,6 +20,8 @@ trait ErrorEventTrait
      * @return  Throwable
      *
      * @deprecated  Use property instead.
+     *
+     * @codeCoverageIgnore
      */
     public function getException(): Throwable
     {
@@ -32,6 +34,8 @@ trait ErrorEventTrait
      * @return  $this
      *
      * @deprecated  Use property instead.
+     *
+     * @codeCoverageIgnore
      */
     public function setException(Throwable $exception): static
     {

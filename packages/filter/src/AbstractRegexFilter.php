@@ -44,7 +44,7 @@ abstract class AbstractRegexFilter extends AbstractFilter
      *
      * @param  string  $value
      *
-     * @return string|null
+     * @return  string|null
      */
     public function replace(string $value): string
     {

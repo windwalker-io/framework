@@ -4,28 +4,23 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Iterator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Context\Loop;
 use Windwalker\Utilities\Iterator\NestedIterator;
 
-/**
- * The MultiLevelIteratorTest class.
- */
 class NestedIteratorTest extends TestCase
 {
     /**
-     * @var NestedIterator
-     */
-    protected $instance;
-
-    /**
      * @see  NestedIterator::__construct
      */
-    public function testNestedWrap(): void
+    #[Test]
+    public function wrapChainsGeneratorCallbacksOverInnerIterator(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->wrap(
-        // Map
+            // Map
             static function ($iterator) {
                 foreach ($iterator as $item) {
                     yield strtoupper($item);
@@ -33,7 +28,7 @@ class NestedIteratorTest extends TestCase
             }
         )
             ->wrap(
-            // Filter
+                // Filter
                 static function ($iterator) {
                     foreach ($iterator as $item) {
                         if ($item !== 'D') {
@@ -49,7 +44,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testEach(): void
+    #[Test]
+    public function eachPassesKeyAndValueToCallback(): void
     {
         $iter = new NestedIterator([1, 2, 3]);
 
@@ -69,6 +65,13 @@ class NestedIteratorTest extends TestCase
             $r
         );
 
+    }
+
+    #[Test]
+    public function eachStopsLoopWhenLoopStopIsCalled(): void
+    {
+        $iter = new NestedIterator([1, 2, 3]);
+
         $r = [];
         $iter->each(
             static function ($v, $k, Loop $loop) use (&$r) {
@@ -87,6 +90,11 @@ class NestedIteratorTest extends TestCase
             $r
         );
 
+    }
+
+    #[Test]
+    public function eachStopsOuterLoopWhenNestedLoopStopsWithLevelTwo(): void
+    {
         $a = new NestedIterator(
             [
                 new NestedIterator([1, 2, 3]),
@@ -120,7 +128,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testMap(): void
+    #[Test]
+    public function mapAppliesCallbackToEachItem(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->map('strtoupper');
@@ -131,7 +140,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testFlatMap(): void
+    #[Test]
+    public function flatMapFlattensCallbackResults(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->flatMap(
@@ -144,7 +154,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testMapWithKey(): void
+    #[Test]
+    public function mapWithKeyUsesArrayKeysReturnedByCallback(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
             ->mapWithKey(fn($item) => [$item => strtoupper($item)]);
@@ -161,6 +172,11 @@ class NestedIteratorTest extends TestCase
             iterator_to_array($iter)
         );
 
+    }
+
+    #[Test]
+    public function mapWithKeyKeepsKeysYieldedByGeneratorCallback(): void
+    {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
             ->mapWithKey(fn($item) => yield $item => strtoupper($item));
 
@@ -176,6 +192,11 @@ class NestedIteratorTest extends TestCase
             iterator_to_array($iter)
         );
 
+    }
+
+    #[Test]
+    public function mapWithKeyDiscardsKeysWhenCallbackYieldsNullKey(): void
+    {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
             ->mapWithKey(fn($item) => yield null => strtoupper($item));
 
@@ -195,7 +216,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::slice
      */
-    public function testSlice(): void
+    #[Test]
+    public function sliceWithOffsetAndLengthReturnsFirstItems(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
 
@@ -203,9 +225,23 @@ class NestedIteratorTest extends TestCase
 
         self::assertEquals(['a', 'b', 'c'], iterator_to_array($sliced));
 
+    }
+
+    #[Test]
+    public function sliceWithoutLengthReturnsRemainingItems(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+
         $sliced = $iter->slice(3);
 
         self::assertEquals(['d', 'e', 'f'], iterator_to_array($sliced));
+
+    }
+
+    #[Test]
+    public function sliceWithOffsetAndLengthReturnsMiddleItems(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
 
         $sliced = $iter->slice(2, 2);
 
@@ -215,7 +251,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::explode
      */
-    public function testExplode(): void
+    #[Test]
+    public function explodeSplitsStringIntoItems(): void
     {
         $iter = NestedIterator::explode('|', 'foo|bar|yoo|goz');
 
@@ -228,6 +265,11 @@ class NestedIteratorTest extends TestCase
             ],
             iterator_to_array($iter)
         );
+    }
+
+    #[Test]
+    public function explodeWithLimitKeepsRemainderInLastItem(): void
+    {
         $iter = NestedIterator::explode('|', 'foo|bar|yoo|goz', 2);
 
         self::assertEquals(
@@ -242,7 +284,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::reduce
      */
-    public function testReduce(): void
+    #[Test]
+    public function reduceFoldsItemsWithInitialValue(): void
     {
         $iter = new NestedIterator([1, 2, 3, 4, 5]);
 
@@ -259,7 +302,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::concat
      */
-    public function testConcat(): void
+    #[Test]
+    public function concatAppendsArraysAndIterators(): void
     {
         $iter = new NestedIterator([1, 2, 3]);
 
@@ -274,7 +318,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testLimit(): void
+    #[Test]
+    public function limitWithZeroOffsetReturnsFirstItems(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
 
@@ -282,12 +327,20 @@ class NestedIteratorTest extends TestCase
 
         self::assertEquals(['a', 'b', 'c'], iterator_to_array($limited));
 
+    }
+
+    #[Test]
+    public function limitWithOffsetSkipsItemsAndPreservesKeys(): void
+    {
+        $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+
         $limited = $iter->limit(2, 2);
 
         self::assertEquals([2 => 'c', 3 => 'd'], iterator_to_array($limited));
     }
 
-    public function testRegex(): void
+    #[Test]
+    public function regexKeepsItemsMatchingPattern(): void
     {
         $iter = new NestedIterator(['foo', 'bar', 'baz', 'yoo', 'goz']);
 
@@ -296,7 +349,8 @@ class NestedIteratorTest extends TestCase
         self::assertEquals([1 => 'bar', 2 => 'baz'], iterator_to_array($filtered));
     }
 
-    public function testToCachingIterator(): void
+    #[Test]
+    public function toCachingIteratorCachesWrappedItems(): void
     {
         // Test PHP CachingIterator
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f'])
@@ -313,7 +367,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testParallel(): void
+    #[Test]
+    public function parallelZipsIteratorsFromArray(): void
     {
         $iter1 = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter2 = new NestedIterator([1, 2, 3]);
@@ -327,6 +382,14 @@ class NestedIteratorTest extends TestCase
             ['a1', 'b2', 'c3'],
             iterator_to_array($iter)
         );
+
+    }
+
+    #[Test]
+    public function parallelAttachesIteratorsWithCallback(): void
+    {
+        $iter1 = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
+        $iter2 = new NestedIterator([1, 2, 3]);
 
         $iter = $iter1->parallel(
             function (\MultipleIterator $mi, \Iterator $it) use ($iter2) {
@@ -344,7 +407,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testInfinite(): void
+    #[Test]
+    public function infiniteRepeatsItemsEndlessly(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c'])
             ->infinite();
@@ -370,7 +434,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::implode
      */
-    public function testImplode(): void
+    #[Test]
+    public function implodeJoinsItemsWithGlue(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
 
@@ -385,7 +450,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::keys
      */
-    public function testKeys(): void
+    #[Test]
+    public function keysReturnsIteratorKeys(): void
     {
         $iter = new NestedIterator(['a' => 'foo', 'b' => 'bar', 'c' => 'baz']);
 
@@ -398,7 +464,8 @@ class NestedIteratorTest extends TestCase
     /**
      * @see  NestedIterator::values
      */
-    public function testValues(): void
+    #[Test]
+    public function valuesReturnsIteratorValues(): void
     {
         $iter = new NestedIterator(['a' => 'foo', 'b' => 'bar', 'c' => 'baz']);
 
@@ -408,7 +475,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testFilter()
+    #[Test]
+    public function filterRemovesRejectedItemsAndKeepsKeys(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->filter(
@@ -421,7 +489,8 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    public function testRewind()
+    #[Test]
+    public function rewindRestartsWrappedIteration(): void
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->wrap(
@@ -450,7 +519,8 @@ class NestedIteratorTest extends TestCase
         self::assertEquals('A', $iter->current());
     }
 
-    public function testRewindGenerator(): void
+    #[Test]
+    public function rewindThrowsWhenSourceIsClosedGenerator(): void
     {
         $gen = function () {
             foreach (['a', 'b', 'c', 'd', 'e', 'f'] as $item) {
@@ -478,7 +548,8 @@ class NestedIteratorTest extends TestCase
         self::assertEquals('A', $iter->current());
     }
 
-    public function testRewindCallback(): void
+    #[Test]
+    public function rewindRestartsIterationFromGeneratorCallback(): void
     {
         $gen = function () {
             foreach (['a', 'b', 'c', 'd', 'e', 'f'] as $item) {
@@ -504,22 +575,10 @@ class NestedIteratorTest extends TestCase
         self::assertEquals('A', $iter->current());
     }
 
-    public function testChunk()
+    #[Test]
+    public function chunkSplitsItemsIntoGroups(): void
     {
-        $items = [
-            'a' => 'A',
-            'b' => 'B',
-            'c' => 'C',
-            'd' => 'D',
-            'e' => 'E',
-            'f' => 'F',
-        ];
-
-        $gen = function () use ($items) {
-            foreach ($items as $key => $item) {
-                yield $key => $item;
-            }
-        };
+        $gen = $this->createChunkSource();
 
         $iter = new NestedIterator($gen);
         $iter = $iter->chunk(4);
@@ -541,6 +600,13 @@ class NestedIteratorTest extends TestCase
             ],
             $r
         );
+
+    }
+
+    #[Test]
+    public function chunkWithPreserveKeysKeepsOriginalKeys(): void
+    {
+        $gen = $this->createChunkSource();
 
         $iter = new NestedIterator($gen);
         $iter = $iter->chunk(4, true);
@@ -572,12 +638,183 @@ class NestedIteratorTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    /**
+     * @see  NestedIterator::filter
+     */
+    #[Test]
+    #[DataProvider('filterFlagsProvider')]
+    public function filterPassesArgumentsAccordingToFlags(int $flags, callable $callback, array $expected): void
     {
-        $this->instance = null;
+        $iter = (new NestedIterator(['a' => 1, 'b' => 2, 'c' => 3]))->filter($callback, $flags);
+
+        self::assertSame($expected, iterator_to_array($iter));
     }
 
-    protected function tearDown(): void
+    public static function filterFlagsProvider(): array
     {
+        return [
+            'value only' => [0, static fn($v) => $v > 1, ['b' => 2, 'c' => 3]],
+            'key only' => [ARRAY_FILTER_USE_KEY, static fn($k) => $k !== 'b', ['a' => 1, 'c' => 3]],
+            'both' => [ARRAY_FILTER_USE_BOTH, static fn($v, $k) => $k === 'a' || $v === 3, ['a' => 1, 'c' => 3]],
+        ];
+    }
+
+    /**
+     * @see  NestedIterator::concat
+     */
+    #[Test]
+    public function concatReindexesNumericKeysAndKeepsStringKeys(): void
+    {
+        $iter = (new NestedIterator(['a', 'x' => 'b']))->concat(['c', 'y' => 'd']);
+
+        self::assertSame([0 => 'a', 'x' => 'b', 1 => 'c', 'y' => 'd'], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::chain
+     */
+    #[Test]
+    public function chainIsAliasOfConcat(): void
+    {
+        $iter = (new NestedIterator([1, 2]))->chain([3], [4]);
+
+        self::assertSame([1, 2, 3, 4], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::slice
+     */
+    #[Test]
+    public function sliceKeepsStringKeysAndReindexesNumericKeys(): void
+    {
+        $iter = (new NestedIterator([10, 'a' => 20, 30, 40]))->slice(1, 2);
+
+        self::assertSame(['a' => 20, 0 => 30], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::slice
+     */
+    #[Test]
+    public function sliceWithZeroLengthYieldsNothing(): void
+    {
+        $iter = (new NestedIterator([1, 2, 3]))->slice(0, 0);
+
+        self::assertSame([], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::slice
+     */
+    #[Test]
+    #[DataProvider('invalidSliceProvider')]
+    public function sliceRejectsNegativeOffsetOrLength(int $start, ?int $length, string $message): void
+    {
+        $iter = (new NestedIterator([1, 2, 3]))->slice($start, $length);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains($message);
+
+        iterator_to_array($iter);
+    }
+
+    public static function invalidSliceProvider(): array
+    {
+        return [
+            'negative start' => [-1, null, 'Start offset must be non-negative'],
+            'negative length' => [0, -1, 'Length must be non-negative'],
+        ];
+    }
+
+    /**
+     * @see  NestedIterator::explode
+     */
+    #[Test]
+    public function explodeRejectsEmptySeparator(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Separator must be non-empty string');
+
+        NestedIterator::explode('', 'abc');
+    }
+
+    /**
+     * @see  NestedIterator::parallel
+     */
+    #[Test]
+    public function parallelResolvesCallableIteratorsAndZipsValues(): void
+    {
+        $iter = (new NestedIterator([1, 2]))->parallel([[10, 20], static fn() => new \ArrayIterator([100, 200])]);
+
+        self::assertSame([[1, 10, 100], [2, 20, 200]], iterator_to_array($iter, false));
+    }
+
+    /**
+     * @see  NestedIterator::parallel
+     */
+    #[Test]
+    public function parallelRejectsNonTraversableCallableResult(): void
+    {
+        $iter = (new NestedIterator([1, 2]))->parallel([static fn() => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Iterator must be callable or iterable');
+
+        iterator_to_array($iter);
+    }
+
+    /**
+     * @see  NestedIterator::checkRewindable
+     */
+    #[Test]
+    public function checkRewindableTreatsOuterIteratorWithoutInnerAsRewindable(): void
+    {
+        $outer = new class () implements \OuterIterator {
+            public function getInnerIterator(): ?\Iterator
+            {
+                return null;
+            }
+
+            public function current(): mixed
+            {
+                return null;
+            }
+
+            public function next(): void {}
+
+            public function key(): mixed
+            {
+                return null;
+            }
+
+            public function valid(): bool
+            {
+                return false;
+            }
+
+            public function rewind(): void {}
+        };
+
+        $method = new \ReflectionMethod(NestedIterator::class, 'checkRewindable');
+
+        self::assertTrue($method->invoke(new NestedIterator([]), $outer));
+    }
+
+    protected function createChunkSource(): \Closure
+    {
+        $items = [
+            'a' => 'A',
+            'b' => 'B',
+            'c' => 'C',
+            'd' => 'D',
+            'e' => 'E',
+            'f' => 'F',
+        ];
+
+        return function () use ($items) {
+            foreach ($items as $key => $item) {
+                yield $key => $item;
+            }
+        };
     }
 }

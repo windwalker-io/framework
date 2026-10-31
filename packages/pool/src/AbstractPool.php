@@ -22,29 +22,29 @@ use Windwalker\Utilities\Serial;
 abstract class AbstractPool implements PoolInterface
 {
     /**
-     * @var StackInterface|null
+     * @var  StackInterface|null
      */
     protected ?StackInterface $stack = null;
 
     /**
-     * @var bool
+     * @var  bool
      */
     protected bool $init = false;
 
     /**
-     * @var LoggerInterface
+     * @var  LoggerInterface
      */
     protected LoggerInterface $logger;
 
     /**
-     * @var int
+     * @var  int
      */
     protected int $totalCount = 0;
 
     public protected(set) PoolOptions $options;
 
     /**
-     * @var \WeakMap<ConnectionInterface, int>
+     * @var  \WeakMap<ConnectionInterface, int>
      */
     protected \WeakMap $leakMap;
 
@@ -76,6 +76,8 @@ abstract class AbstractPool implements PoolInterface
      * @param  LoggerInterface  $logger
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setLogger(LoggerInterface $logger): static
     {

@@ -23,27 +23,27 @@ use function Windwalker\value;
 abstract class AbstractGrammar
 {
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = '';
 
     /**
-     * @var array
+     * @var  array
      */
     public static array $nameQuote = ['"', '"'];
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $nullDate = '0000-00-00 00:00:00';
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $dateFormat = 'Y-m-d H:i:s';
 
     /**
-     * @var Escaper
+     * @var  Escaper
      */
     protected Escaper $escaper;
 
@@ -271,7 +271,7 @@ abstract class AbstractGrammar
         }
 
         if (stripos($name, ' as ') !== false) {
-            [$name, $alias] = preg_split('/ as /i', $name);
+            [$name, $alias] = (array) preg_split('/ as /i', $name);
 
             return static::quoteName($name) . ' AS ' . static::quoteName($alias);
         }
@@ -386,6 +386,56 @@ abstract class AbstractGrammar
         }
 
         return implode(' ', $items);
+    }
+
+    /**
+     * Compile an upsert (insert or update on conflict) SQL string and bind the values to the query.
+     *
+     * @param  Query        $query
+     * @param  string       $table
+     * @param  array        $data              Column => value map.
+     * @param  array        $keys              Conflict key columns.
+     * @param  array        $updateFields      Columns to update on conflict.
+     * @param  string|null  $returningIdField  ID column to return.
+     *
+     * @return  string
+     */
+    public function compileUpsert(
+        Query $query,
+        string $table,
+        array $data,
+        array $keys,
+        array $updateFields,
+        ?string $returningIdField = null,
+    ): string {
+        throw new BadMethodCallException(
+            sprintf('%s dose not support "upsert" compiled', static::class)
+        );
+    }
+
+    /**
+     * Build the `(columns)` and `(values)` clauses of an upsert and bind the values.
+     *
+     * @param  Query  $query
+     * @param  array  $data
+     *
+     * @return  array{0: Clause, 1: Clause}
+     */
+    protected function compileUpsertColumnsAndValues(Query $query, array $data): array
+    {
+        $columns = $query->clause('()', $query->qnMultiple(array_keys($data)), ',');
+        $values = $query->clause('()', [], ',');
+
+        foreach ($data as $k => $v) {
+            if ($v instanceof RawWrapper) {
+                $values->append($v());
+            } else {
+                $query->bind($k, $v);
+                $values->append(":$k");
+            }
+        }
+
+        return [$columns, $values];
     }
 
     /**

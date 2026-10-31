@@ -59,7 +59,7 @@ class ModifiedFileStorage extends FileStorage
     }
 
     /**
-     * @return array
+     * @return  array
      *
      * @codeCoverageIgnore
      */

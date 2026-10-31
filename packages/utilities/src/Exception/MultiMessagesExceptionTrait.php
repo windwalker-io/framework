@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\Utilities\Exception;
 
 use Throwable;
@@ -21,9 +23,9 @@ trait MultiMessagesExceptionTrait
     /**
      * Class init.
      *
-     * @param string|array|null $messages
-     * @param  int              $code
-     * @param  Throwable|null   $previous
+     * @param  string|array|null  $messages
+     * @param  int                $code
+     * @param  Throwable|null     $previous
      */
     public function __construct(string|array|null $messages = null, int $code = 0, ?Throwable $previous = null)
     {
@@ -42,6 +44,8 @@ trait MultiMessagesExceptionTrait
      * Method to get property Messages
      *
      * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function getMessages(): array
     {
@@ -54,6 +58,8 @@ trait MultiMessagesExceptionTrait
      * @param  array  $messages
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMessages(array $messages): static
     {

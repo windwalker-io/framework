@@ -73,11 +73,11 @@ class HttpFactory extends UriFactory implements
      *                                       the value is a string, the factory MUST create a UriInterface
      *                                       instance based on it.
      *
-     * @return RequestInterface
+     * @return  RequestInterface
      */
     public function createRequest(string $method, $uri): RequestInterface
     {
-        return $this->requestFactory->createRequest($uri, $method);
+        return $this->requestFactory->createRequest($method, $uri);
     }
 
     /**
@@ -88,7 +88,9 @@ class HttpFactory extends UriFactory implements
      *                                in generated response; if none is provided implementations MAY use
      *                                the defaults as suggested in the HTTP specification.
      *
-     * @return ResponseInterface
+     * @return  ResponseInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
@@ -109,18 +111,26 @@ class HttpFactory extends UriFactory implements
      * @param  array                $serverParams  Array of SAPI parameters with which to seed
      *                                             the generated request instance.
      *
-     * @return ServerRequestInterface
+     * @return  ServerRequestInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         return $this->serverRequestFactory->createServerRequest($method, $uri, $serverParams);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createServerRequestFromGlobals(): ServerRequestInterface
     {
         return ServerRequestFactory::createFromGlobals();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createServerRequestFromUri(UriInterface|string $uri): ServerRequestInterface
     {
         return ServerRequestFactory::createFromUri($uri);
@@ -133,7 +143,9 @@ class HttpFactory extends UriFactory implements
      *
      * @param  string  $content  String content with which to populate the stream.
      *
-     * @return StreamInterface
+     * @return  StreamInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createStream(string $content = ''): StreamInterface
     {
@@ -151,9 +163,11 @@ class HttpFactory extends UriFactory implements
      * @param  string  $filename  Filename or stream URI to use as basis of stream.
      * @param  string  $mode      Mode with which to open the underlying filename/stream.
      *
-     * @return StreamInterface
-     * @throws RuntimeException If the file cannot be opened.
-     * @throws InvalidArgumentException If the mode is invalid.
+     * @return  StreamInterface
+     * @throws  RuntimeException          If the file cannot be opened.
+     * @throws  InvalidArgumentException  If the mode is invalid.
+     *
+     * @codeCoverageIgnore
      */
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
@@ -167,7 +181,9 @@ class HttpFactory extends UriFactory implements
      *
      * @param  resource  $resource  PHP resource to use as basis of stream.
      *
-     * @return StreamInterface
+     * @return  StreamInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createStreamFromResource($resource): StreamInterface
     {
@@ -183,29 +199,30 @@ class HttpFactory extends UriFactory implements
      * @see http://php.net/manual/features.file-upload.post-method.php
      * @see http://php.net/manual/features.file-upload.errors.php
      *
-     * @param  StreamInterface $stream            Underlying stream representing the
+     * @param  StreamInterface  $stream           Underlying stream representing the
      *                                            uploaded file content.
-     * @param int|null         $size              in bytes
-     * @param  int             $error             PHP file upload error
-     * @param string|null      $clientFilename    Filename as provided by the client, if any.
-     * @param string|null      $clientMediaType   Media type as provided by the client, if any.
+     * @param  int|null         $size             in bytes
+     * @param  int              $error            PHP file upload error
+     * @param  string|null      $clientFilename   Filename as provided by the client, if any.
+     * @param  string|null      $clientMediaType  Media type as provided by the client, if any.
      *
-     * @return UploadedFileInterface
+     * @return  UploadedFileInterface
      *
+     * @codeCoverageIgnore
      */
     public function createUploadedFile(
         StreamInterface $stream,
         ?int $size = null,
         int $error = UPLOAD_ERR_OK,
         ?string $clientFilename = null,
-        ?string $clientMediaType = null
+        ?string $clientMediaType = null,
     ): UploadedFileInterface {
         return $this->uploadedFileFactory->createUploadedFile(
             $stream,
             $size,
             $error,
             $clientFilename,
-            $clientMediaType
+            $clientMediaType,
         );
     }
 }

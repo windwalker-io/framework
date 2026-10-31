@@ -41,11 +41,17 @@ trait OptionAccessTrait
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getOptions(): array|ArrayAccess|AccessibleInterface|RecordOptions
     {
         return $this->options;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setOptions(array|ArrayAccess|AccessibleInterface|RecordOptions $options): static
     {
         $this->options = $options;

@@ -14,7 +14,7 @@ use IteratorAggregate;
 class ResultSet implements IteratorAggregate, Countable
 {
     /**
-     * @var ValidateResult[]
+     * @var  ValidateResult[]
      */
     protected array $results = [];
 
@@ -69,7 +69,9 @@ class ResultSet implements IteratorAggregate, Countable
     }
 
     /**
-     * @return ValidateResult[]
+     * @return  ValidateResult[]
+     *
+     * @codeCoverageIgnore
      */
     public function getResults(): array
     {

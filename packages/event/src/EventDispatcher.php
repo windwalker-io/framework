@@ -14,7 +14,7 @@ use Psr\EventDispatcher\StoppableEventInterface;
 class EventDispatcher implements EventDispatcherInterface
 {
     /**
-     * @var ListenerProviderInterface
+     * @var  ListenerProviderInterface
      */
     protected ListenerProviderInterface $provider;
 
@@ -85,6 +85,8 @@ class EventDispatcher implements EventDispatcherInterface
      * @return  static  Return self to support chaining.
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setProvider(ListenerProviderInterface $provider): static
     {
@@ -100,7 +102,7 @@ class EventDispatcher implements EventDispatcherInterface
      * then the newly created object's __clone() method will be called, to allow any necessary properties that need to
      * be changed. NOT CALLABLE DIRECTLY.
      *
-     * @return void
+     * @return  void
      * @link https://php.net/manual/en/language.oop5.cloning.php
      */
     public function __clone(): void

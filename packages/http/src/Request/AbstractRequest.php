@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use ReturnTypeWillChange;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\MessageTrait;
 use Windwalker\Stream\Stream;
@@ -25,14 +26,14 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Property method.
      *
-     * @var string
+     * @var  string
      */
     protected string $method = '';
 
     /**
      * Property uri.
      *
-     * @var UriInterface|null
+     * @var  UriInterface|null
      */
     protected ?UriInterface $uri;
 
@@ -64,16 +65,16 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Class init.
      *
-     * @param string|StreamInterface|UriInterface|null $uri     The uri target of this request.
-     * @param  string|null                             $method  The request method.
-     * @param  string                                  $body    The request body.
-     * @param  array                                   $headers The request headers.
+     * @param  string|StreamInterface|UriInterface|null  $uri      The uri target of this request.
+     * @param  string|null                               $method   The request method.
+     * @param  string                                    $body     The request body.
+     * @param  array                                     $headers  The request headers.
      */
     public function __construct(
         StreamInterface|UriInterface|string|null $uri = null,
         ?string $method = null,
         mixed $body = 'php://memory',
-        array $headers = []
+        array $headers = [],
     ) {
         if (!$body instanceof StreamInterface) {
             $body = new Stream($body, READ_WRITE_RESET);
@@ -118,7 +119,7 @@ abstract class AbstractRequest implements RequestInterface
      * If no URI is available, and no request-target has been specifically
      * provided, this method MUST return the string "/".
      *
-     * @return string
+     * @return  string
      */
     public function getRequestTarget(): string
     {
@@ -160,8 +161,8 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @param  mixed  $requestTarget
      *
-     * @return static
-     * @throws InvalidArgumentException if the request target is invalid.
+     * @return  static
+     * @throws  InvalidArgumentException  if the request target is invalid.
      */
     public function withRequestTarget(mixed $requestTarget): AbstractRequest|static
     {
@@ -178,9 +179,9 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * Retrieves the HTTP method of the request.
      *
-     * @return string Returns the request method.
+     * @return  string  Returns the request method.
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getMethod(): string
     {
         return $this->method;
@@ -199,8 +200,8 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @param  string  $method  Case-sensitive method.
      *
-     * @return static
-     * @throws InvalidArgumentException for invalid HTTP methods.
+     * @return  static
+     * @throws  InvalidArgumentException  for invalid HTTP methods.
      */
     public function withMethod($method): AbstractRequest|static
     {
@@ -219,10 +220,10 @@ abstract class AbstractRequest implements RequestInterface
      * This method MUST return a UriInterface instance.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     * @return UriInterface Returns a UriInterface instance
-     *     representing the URI of the request.
+     * @return  UriInterface  Returns a UriInterface instance
+     *                        representing the URI of the request.
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getUri(): UriInterface
     {
         return $this->uri;
@@ -258,7 +259,7 @@ abstract class AbstractRequest implements RequestInterface
      * @param  UriInterface  $uri           New request URI to use.
      * @param  bool          $preserveHost  Preserve the original state of the Host header.
      *
-     * @return static
+     * @return  static
      */
     public function withUri(UriInterface $uri, $preserveHost = false): static
     {

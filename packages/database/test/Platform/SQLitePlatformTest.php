@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
-use Windwalker\Test\Helper\TestStringHelper;
+use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Str;
 
@@ -13,7 +14,7 @@ use Windwalker\Utilities\Str;
  */
 class SQLitePlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'SQLite';
+    protected static DbPlatform $platform = DbPlatform::SQLite;
 
     protected static string $driver = 'pdo_sqlite';
 
@@ -25,7 +26,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listDatabases
      */
-    public function testListDatabases(): void
+    #[Test]
+    public function listDatabases(): void
     {
         $dbs = $this->instance->listDatabases();
 
@@ -38,7 +40,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listSchemas
      */
-    public function testListSchemas(): void
+    #[Test]
+    public function listSchemas(): void
     {
         $schemas = $this->instance->listSchemas();
 
@@ -51,7 +54,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listTables
      */
-    public function testListTables(): void
+    #[Test]
+    public function listTables(): void
     {
         $tables = $this->instance->listTables(static::getTestSchema());
 
@@ -83,7 +87,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listViews
      */
-    public function testListViews(): void
+    #[Test]
+    public function listViews(): void
     {
         $views = $this->instance->listViews(static::getTestSchema());
 
@@ -108,7 +113,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listColumns
      */
-    public function testListColumns(): void
+    #[Test]
+    public function listColumns(): void
     {
         $columns = $this->instance->listColumns('#__articles', static::getTestSchema());
 
@@ -379,7 +385,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listConstraints
      */
-    public function testListConstraints(): void
+    #[Test]
+    public function listConstraints(): void
     {
         $constraints = $this->instance->listConstraints('#__articles', static::getTestSchema());
 
@@ -409,7 +416,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listIndexes
      */
-    public function testListIndexes(): void
+    #[Test]
+    public function listIndexes(): void
     {
         $indexes = $this->instance->listIndexes('#__articles', static::getTestSchema());
 
@@ -498,7 +506,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testGetCurrentDatabase(): void
+    #[Test]
+    public function getCurrentDatabase(): void
     {
         $file = str_replace(
             ['/', '\\'],
@@ -512,36 +521,49 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testCreateDropDatabase(): void
+    #[Test]
+    public function createDropDatabase(): void
     {
-        $file = __DIR__ . '/../../tmp/hello.db';
+        $name = 'hello_' . bin2hex(random_bytes(8));
+        $file = __DIR__ . '/../../tmp/' . $name . '.db';
 
-        if (in_array('hello', $this->instance->listSchemas(), true)) {
-            $this->instance->dropSchema('hello', []);
+        try {
+            $this->instance->createDatabase($file, ['as' => $name]);
+
+            self::assertContains(
+                $name,
+                $this->instance->listSchemas()
+            );
+
+            $this->instance->dropDatabase($name);
+
+            self::assertNotContains(
+                $name,
+                $this->instance->listSchemas()
+            );
+        } finally {
+            @unlink($file);
         }
-
-        $this->instance->createDatabase($file, ['as' => 'hello']);
-
-        self::assertContains(
-            'hello',
-            $this->instance->listSchemas()
-        );
-
-        $this->instance->dropDatabase('hello');
-
-        self::assertNotContains(
-            'hello',
-            $this->instance->listSchemas()
-        );
     }
 
-    public function testCreateDropSchema(): void
+    #[Test]
+    public function createDropSchema(): void
     {
-        self::markTestSkipped();
-    }
+        $name = 'hello_' . bin2hex(random_bytes(8));
+        $file = __DIR__ . '/../../tmp/' . $name . '.db';
 
-    protected function tearDown(): void
-    {
+        try {
+            $this->instance->createSchema($file);
+
+            self::assertContains(
+                $name,
+                $this->instance->listSchemas()
+            );
+
+            $this->instance->dropSchema($name, []);
+        } finally {
+            @unlink($file);
+        }
     }
 
     /**
@@ -549,6 +571,6 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
      */
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::platformName() . '.sql');
     }
 }

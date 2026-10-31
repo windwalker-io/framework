@@ -35,7 +35,7 @@ class HjsonFormat implements FormatInterface
      * @param  string  $string   Formatted string
      * @param  array   $options  An array of options for the formatter.
      *
-     * @return mixed Data Object
+     * @return  mixed  Data Object
      *
      * @since   2.0
      */

@@ -10,6 +10,4 @@ interface ValueObjectInterface extends
     RecordInterface,
     ArrayAccessibleInterface,
     \IteratorAggregate,
-    \Stringable
-{
-}
+    \Stringable {}

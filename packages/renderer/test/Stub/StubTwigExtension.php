@@ -19,7 +19,7 @@ class StubTwigExtension extends AbstractExtension implements GlobalsInterface
     /**
      * Returns the name of the extension.
      *
-     * @return string The extension name
+     * @return  string  The extension name
      */
     public function getName(): string
     {
@@ -29,7 +29,7 @@ class StubTwigExtension extends AbstractExtension implements GlobalsInterface
     /**
      * Returns a list of filters to add to the existing list.
      *
-     * @return array An array of filters
+     * @return  array  An array of filters
      */
     public function getFilters(): array
     {
@@ -41,7 +41,7 @@ class StubTwigExtension extends AbstractExtension implements GlobalsInterface
     /**
      * Returns a list of functions to add to the existing list.
      *
-     * @return array An array of functions
+     * @return  array  An array of functions
      */
     public function getFunctions(): array
     {
@@ -53,7 +53,7 @@ class StubTwigExtension extends AbstractExtension implements GlobalsInterface
     /**
      * Returns a list of global variables to add to the existing list.
      *
-     * @return array An array of global variables
+     * @return  array  An array of global variables
      */
     public function getGlobals(): array
     {

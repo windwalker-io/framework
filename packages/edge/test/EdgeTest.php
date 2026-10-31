@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Edge\Cache\EdgeArrayCache;
 use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Edge;
-use Windwalker\Edge\Exception\EdgeException;
 use Windwalker\Edge\Loader\EdgeFileLoader;
+use Windwalker\Edge\Loader\EdgeStringLoader;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
@@ -23,17 +26,12 @@ class EdgeTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Edge
+     * @var  Edge
      */
     protected ?Edge $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    public function setUpEdgeInstance(): void
     {
         $this->instance = new Edge(
             new EdgeFileLoader(
@@ -42,34 +40,10 @@ class EdgeTest extends TestCase
                 ]
             )
         );
-
-        // Clear tmp
-        // $files = glob(__DIR__ . '/../tmp/~*');
-        //
-        // foreach ($files as $file) {
-        //     unlink($file);
-        // }
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test render().
-     *
-     * @return void
-     *
-     * @throws EdgeException
-     * @covers \Windwalker\Edge\Edge::render
-     */
-    public function testRender()
+    #[Test]
+    public function renderTemplateWithLayoutAndSections(): void
     {
         $result = $this->instance->render('hello');
 
@@ -91,7 +65,8 @@ HTML;
         $this->assertHtmlFormatEquals($expected, $result);
     }
 
-    public function testRenderEdgeFile()
+    #[Test]
+    public function renderEdgeFileWithEscapedAndRawOutput(): void
     {
         $result = $this->instance->render(
             'tmpl',
@@ -124,7 +99,8 @@ HTML,
         );
     }
 
-    public function testCachedFile()
+    #[Test]
+    public function renderWithContextWritesCacheFile(): void
     {
         $edge = new Edge(
             new EdgeFileLoader(
@@ -166,16 +142,9 @@ HTML,
         );
     }
 
-    public function testConditionalFile()
+    #[Test]
+    public function renderConditionalAssetsTemplate(): void
     {
-        // $edge = new Edge(
-        //     new EdgeFileLoader(
-        //         [
-        //             __DIR__ . '/tmpl',
-        //         ]
-        //     ),
-        // );
-
         $this->instance->setCache(
             new EdgeFileCache(
                 __DIR__ . '/../tmp'
@@ -205,5 +174,14 @@ HTML,
             HTML,
             $result
         );
+    }
+
+    #[Test]
+    public function setGlobalsIsChainableAndSharedWithViews(): void
+    {
+        $edge = new Edge(new EdgeStringLoader(), new EdgeArrayCache());
+
+        self::assertSame($edge, $edge->setGlobals(['g' => 'global']));
+        self::assertSame('global', $edge->render('{{ $g }}'));
     }
 }

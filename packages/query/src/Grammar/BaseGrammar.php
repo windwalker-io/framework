@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
-use LogicException;
-use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
 /**

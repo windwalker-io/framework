@@ -10,12 +10,10 @@ namespace Windwalker\Utilities\Attributes\Enum;
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 class Color
 {
-    public function __construct(public string $color)
-    {
-    }
+    public function __construct(public string $color) {}
 
     /**
-     * @return string
+     * @return  string
      */
     public function getColor(): string
     {

@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Compiler\Concern;
 
-use Illuminate\Support\Str;
-
-use Windwalker\Edge\Edge;
-
 use function Windwalker\uid;
 
 /**
@@ -20,7 +16,7 @@ trait CompileConditional
     /**
      * Identifier for the first case in switch statement.
      *
-     * @var bool
+     * @var  bool
      */
     protected bool $firstCaseInSwitch = true;
 
@@ -29,7 +25,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileIf(string $expression): string
     {
@@ -41,7 +37,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileElseif(string $expression): string
     {
@@ -53,7 +49,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileUnless(string $expression): string
     {
@@ -65,7 +61,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndunless(string $expression): string
     {
@@ -77,7 +73,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileElse(string $expression): string
     {
@@ -89,7 +85,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndif(string $expression): string
     {
@@ -101,7 +97,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileSwitch(string $expression): string
     {
@@ -115,7 +111,7 @@ trait CompileConditional
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileCase(string $expression): string
     {
@@ -131,7 +127,7 @@ trait CompileConditional
     /**
      * Compile the default statements in switch case into valid PHP.
      *
-     * @return string
+     * @return  string
      */
     protected function compileDefault(): string
     {
@@ -141,7 +137,7 @@ trait CompileConditional
     /**
      * Compile the end switch statements into valid PHP.
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndSwitch(): string
     {
@@ -157,7 +153,7 @@ trait CompileConditional
 
     protected function compileEndOnce(): string
     {
-        return "<?php endif; ?>";
+        return '<?php endif; ?>';
     }
 
     protected function compilePushOnce(string $expression): string
@@ -168,8 +164,8 @@ trait CompileConditional
 
         $id = trim($id) ?: "'" . uid() . "'";
 
-        return "<?php if (!isset(\$__edge->renderOnce[$id])): \$__edge->renderOnce[$id] = true; " .
-            "\$__edge->startPush($stack); ?>";
+        return "<?php if (!isset(\$__edge->renderOnce[$id])): \$__edge->renderOnce[$id] = true; "
+            . "\$__edge->startPush($stack); ?>";
     }
 
     protected function compileEndPushOnce(): string
@@ -228,6 +224,6 @@ trait CompileConditional
 
     protected function compileEndPushIf(): string
     {
-        return "<?php \$__edge->stopPush(); endif; ?>";
+        return '<?php $__edge->stopPush(); endif; ?>';
     }
 }

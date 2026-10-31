@@ -24,12 +24,11 @@ class CasterInfo
     }
 
     public function __construct(
-        readonly public object $entity,
-        readonly public bool $isNew,
-        readonly public string $field,
-        readonly public mixed $value,
-        readonly public Column $column,
-        readonly public ORM $orm,
-    ) {
-    }
+        public readonly object $entity,
+        public readonly bool $isNew,
+        public readonly string $field,
+        public readonly mixed $value,
+        public readonly Column $column,
+        public readonly ORM $orm,
+    ) {}
 }

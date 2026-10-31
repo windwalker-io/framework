@@ -35,7 +35,7 @@ class JsonResponse extends TextResponse
         parent::__construct(
             $this->encode($json, $options),
             $status,
-            $headers
+            $headers,
         );
     }
 
@@ -45,8 +45,8 @@ class JsonResponse extends TextResponse
      * @param  mixed  $data     The data to convert.
      * @param  int    $options  The json_encode() options flag.
      *
-     * @return  mixed  Encoded json.
-     * @throws JsonException
+     * @return  mixed          Encoded json.
+     * @throws  JsonException
      */
     protected function encode(mixed $data, int $options = 0): mixed
     {
@@ -72,7 +72,7 @@ class JsonResponse extends TextResponse
      * @param  mixed  $content
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function withContent(string $content): static
     {

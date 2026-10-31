@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Data;
 
-use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Contract\DumpableInterface;
 
 interface RecordInterface extends DumpableInterface, \JsonSerializable
@@ -26,7 +25,7 @@ interface RecordInterface extends DumpableInterface, \JsonSerializable
      *
      * @param  class-string<T>  $className
      *
-     * @return T
+     * @return  T
      */
     public function as(string $className): object;
 }

@@ -70,7 +70,7 @@ class PhpHelper
     /**
      * Get PHP version
      *
-     * @return string
+     * @return  string
      */
     public function getVersion(): string
     {
@@ -100,7 +100,7 @@ class PhpHelper
     /**
      * Returns true when the runtime used is PHP and Xdebug is loaded.
      *
-     * @return bool
+     * @return  bool
      */
     public function hasXdebug(): bool
     {

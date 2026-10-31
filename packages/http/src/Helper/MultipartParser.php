@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Helper;
 
+use Exception;
 use Windwalker\Http\File\HttpUploadFileInterface;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
@@ -23,7 +24,7 @@ class MultipartParser
      *
      * @return  string
      *
-     * @throws \Exception
+     * @throws  Exception
      */
     public static function toFormData(string $boundary, array $data): string
     {
@@ -38,7 +39,7 @@ class MultipartParser
                 $item = sprintf(
                     "Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"$eol",
                     $key,
-                    $val->getPostFilename() ?: uid() . '.txt'
+                    $val->getPostFilename() ?: uid() . '.txt',
                 );
 
                 $mime = $val->getMimeType() ?: 'text/plain';
@@ -49,7 +50,7 @@ class MultipartParser
 
                 $postdata[] = $item;
             } else {
-                $postdata[] = "Content-Disposition: form-data; name=\"" . $key . "\"{$eol}{$eol}" . $val;
+                $postdata[] = 'Content-Disposition: form-data; name="' . $key . "\"{$eol}{$eol}" . $val;
             }
         }
 
@@ -60,7 +61,7 @@ class MultipartParser
 
     public static function flattenToQueryName(
         array $array,
-        ?string $prefix = null
+        ?string $prefix = null,
     ): array {
         $temp = [];
 
@@ -86,7 +87,7 @@ class MultipartParser
     /**
      * @return  string
      *
-     * @throws \Exception
+     * @throws  Exception
      */
     public static function createBoundary(): string
     {
@@ -98,7 +99,7 @@ class MultipartParser
     /**
      * @param  string  $input
      *
-     * @return array
+     * @return  array
      *
      * @link  http://stackoverflow.com/questions/5483851/manually-parse-raw-http-data-with-php/5488449#5488449
      */
@@ -139,7 +140,7 @@ class MultipartParser
                 preg_match(
                     '/^form-data; *name="([^"]+)"(?:; *filename="([^"]+)")?/',
                     $headers['content-disposition'],
-                    $matches
+                    $matches,
                 );
 
                 $field = $matches[1];
@@ -149,7 +150,7 @@ class MultipartParser
 
                 // If we have no filename, save the data. Otherwise, save the file.
                 if ($fileName === null) {
-                    Arr::set($data, $fieldName, $content);
+                    $data = Arr::set($data, $fieldName, $content);
                 } else {
                     $tempFile = tempnam(sys_get_temp_dir(), 'sfy');
 
@@ -163,12 +164,12 @@ class MultipartParser
                         'size' => filesize($tempFile),
                     ];
 
-                    Arr::set($files, $fieldName, $content);
+                    $files = Arr::set($files, $fieldName, $content);
 
                     register_shutdown_function(
                         static function () use ($tempFile) {
                             @unlink($tempFile);
-                        }
+                        },
                     );
                 }
             }

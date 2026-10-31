@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
+use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,13 +35,13 @@ class StreamTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
      * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      *
-     * @throws \Exception
+     * @throws  Exception
      * @since   2.1
      */
     protected function doRequest(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
@@ -74,7 +75,7 @@ class StreamTransport extends AbstractTransport
             $headers,
             $content,
             new HttpClientResponse()->withInfo($metadata),
-            $options->allowEmptyStatusCode
+            $options->allowEmptyStatusCode,
         );
     }
 
@@ -84,7 +85,7 @@ class StreamTransport extends AbstractTransport
      *
      * @return  resource|false
      *
-     * @throws \Exception
+     * @throws  Exception
      */
     public function createConnection(RequestInterface $request, array|StreamOptions $options = []): mixed
     {
@@ -111,7 +112,7 @@ class StreamTransport extends AbstractTransport
                     }
 
                     return $value;
-                }
+                },
             );
         } else {
             $data = (string) $body;
@@ -141,7 +142,7 @@ class StreamTransport extends AbstractTransport
             if (!$request->getHeaderLine('Content-Type')) {
                 $request = $request->withHeader(
                     'Content-Type',
-                    'application/x-www-form-urlencoded; charset=utf-8'
+                    'application/x-www-form-urlencoded; charset=utf-8',
                 );
             }
         }
@@ -188,10 +189,10 @@ class StreamTransport extends AbstractTransport
         $context = stream_context_create(
             Arr::mergeRecursive(
                 [
-                    'http' => $opt
+                    'http' => $opt,
                 ],
-                $options->context
-            )
+                $options->context,
+            ),
         );
 
         // Capture PHP errors
@@ -205,7 +206,7 @@ class StreamTransport extends AbstractTransport
      * @param  StreamOptions     $options
      *
      * @return  Stream
-     * @throws \Exception
+     * @throws  Exception
      */
     protected function createStream(RequestInterface $request, StreamOptions $options): Stream
     {
@@ -223,11 +224,11 @@ class StreamTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param  array                   $headers  The response headers as an array.
-     * @param  string                  $body     The response body as a string.
+     * @param  array                   $headers   The response headers as an array.
+     * @param  string                  $body      The response body as a string.
      * @param  ResponseInterface|null  $response
      *
-     * @return ResponseInterface
+     * @return  ResponseInterface
      *
      * @psalm-template R
      * @psalm-param R                  $response
@@ -239,7 +240,7 @@ class StreamTransport extends AbstractTransport
         array $headers,
         string $body,
         ?ResponseInterface $response = null,
-        bool $allowEmptyStatusCode = false
+        bool $allowEmptyStatusCode = false,
     ): ResponseInterface {
         $response ??= new HttpClientResponse();
 
@@ -249,8 +250,8 @@ class StreamTransport extends AbstractTransport
         $response->getBody()->rewind();
 
         // Get the response code from the first offset of the response headers.
-        preg_match('/[0-9]{3}/', array_shift($headers), $matches);
-        $code = $matches[0];
+        preg_match('/[0-9]{3}/', (string) array_shift($headers), $matches);
+        $code = $matches[0] ?? null;
 
         if (is_numeric($code)) {
             $response = $response->withStatus($code);
@@ -281,7 +282,7 @@ class StreamTransport extends AbstractTransport
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array|TransportOptions $options = []
+        array|TransportOptions $options = [],
     ): HttpClientResponse {
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is emptty.');
@@ -312,18 +313,16 @@ class StreamTransport extends AbstractTransport
 
     protected function setCABundleToOptions(array $context, StreamOptions $options): array
     {
-        if ($options->certpath) {
-            $context['ssl']['capath'] = $options->context;
+        $caPathOrFile = $options->certpath ?: $this->findCAPathOrFile();
 
+        if ($caPathOrFile === null || $caPathOrFile === '') {
             return $context;
         }
 
-        $caPathOrFile = $this->findCAPathOrFile();
-
         if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
-            $context['ssl']['cafile'] = $caPathOrFile;
-        } else {
             $context['ssl']['capath'] = $caPathOrFile;
+        } else {
+            $context['ssl']['cafile'] = $caPathOrFile;
         }
 
         return $context;

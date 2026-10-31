@@ -69,12 +69,12 @@ class EntityMapper implements EventAwareInterface
     use EntityMapperConstantsTrait;
 
     /**
-     * @var ORM
+     * @var  ORM
      */
     protected ORM $orm;
 
     /**
-     * @var EntityMetadata
+     * @var  EntityMetadata
      */
     protected EntityMetadata $metadata;
 
@@ -331,8 +331,8 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T
      *
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function createOne(array|object $source = [], ORMOptions|int $options = new ORMOptions()): object
     {
@@ -430,8 +430,8 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int  $options
      *
      * @return  iterable<T>
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function createMultiple(iterable $items, ORMOptions|int $options = new ORMOptions()): iterable
     {
@@ -449,7 +449,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  array<T>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function createBulk(iterable $items, ORMOptions|int $options = new ORMOptions()): array
     {
@@ -645,7 +645,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function pushNextVersion(object|array $entity): object|array
     {
@@ -703,8 +703,8 @@ class EntityMapper implements EventAwareInterface
      * @param  Conditions      $conditions  Where conditions, you can use array or Compare object.
      * @param  ORMOptions|int  $options     The options.
      *
-     * @return StatementInterface
-     * @throws \ReflectionException
+     * @return  StatementInterface
+     * @throws  \ReflectionException
      *
      * @deprecated  Use updateBulk() instead
      */
@@ -726,8 +726,8 @@ class EntityMapper implements EventAwareInterface
      * @param  Conditions      $conditions  Where conditions, you can use array or Compare object.
      * @param  ORMOptions|int  $options     The options.
      *
-     * @return StatementInterface
-     * @throws \ReflectionException
+     * @return  StatementInterface
+     * @throws  \ReflectionException
      */
     public function updateBulk(
         array|object $source,
@@ -780,7 +780,7 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int  $options
      *
      * @return  StatementInterface[]
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function updateBatch(
         array|object $data,
@@ -808,7 +808,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  iterable<T>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function saveMultiple(
         iterable $items,
@@ -892,7 +892,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function saveOne(
         array|object $item,
@@ -909,8 +909,8 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int  $options
      *
      * @return  object|T
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function findOneOrCreate(
         mixed $conditions,
@@ -956,8 +956,8 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T
      *
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function updateOneOrCreate(
         array|object $item,
@@ -1002,12 +1002,12 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function upsert(
         array|object $item,
         array|string|null $condFields = null,
-        array|null $updateFields = null,
+        ?array $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): object {
         $metadata = $this->getMetadata();
@@ -1132,7 +1132,7 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int  $options
      *
      * @return  void
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @deprecated  Use deleteBatch() instead.
      */
@@ -1181,7 +1181,7 @@ class EntityMapper implements EventAwareInterface
                 throw new InvalidArgumentException(
                     sprintf(
                         'Unable to delete Entity: %s since the keys value contains NULL or empty string.',
-                        $conditions::class
+                        $entityObject::class
                     )
                 );
             }
@@ -1271,8 +1271,8 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int  $options
      *
      * @return  iterable<T>
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function flush(
         iterable $items,
@@ -1302,8 +1302,8 @@ class EntityMapper implements EventAwareInterface
      * @param  ORMOptions|int          $options
      *
      * @return  array<T>
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function copy(
         mixed $conditions,
@@ -1316,7 +1316,7 @@ class EntityMapper implements EventAwareInterface
 
         if (is_object($conditions)) {
             $metadata->validateSameEntity($conditions);
-            $items = [$conditions];
+            $items = [$this->toCollection($conditions)];
         } else {
             $conditions = $this->conditionsToWheres($conditions);
 
@@ -1391,8 +1391,8 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  T
      *
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function copyOne(
         mixed $conditions,
@@ -1418,8 +1418,8 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  array{ array<T>, array<T>, array<T> }
      *
-     * @throws JsonException
-     * @throws \ReflectionException
+     * @throws  JsonException
+     * @throws  \ReflectionException
      */
     public function sync(
         iterable $items,
@@ -1686,9 +1686,9 @@ class EntityMapper implements EventAwareInterface
     /**
      * @param  mixed  ...$args
      *
-     * @return T
+     * @return  T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function createEntity(...$args): object
     {
@@ -1760,7 +1760,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function toEntity(array|object $data): object
     {
@@ -1794,7 +1794,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T|null
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function toEntityOrNull(object|array|null $data): ?object
     {
@@ -1806,7 +1806,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T|null
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function tryEntity(object|array|null $data): ?object
     {
@@ -1849,7 +1849,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  object|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function hydrate(array $data, object $entity): object
     {
@@ -2087,7 +2087,7 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @return ORM
+     * @return  ORM
      */
     public function getORM(): ORM
     {
@@ -2100,7 +2100,7 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @return EntityMetadata
+     * @return  EntityMetadata
      */
     public function getMetadata(): EntityMetadata
     {
@@ -2130,7 +2130,7 @@ class EntityMapper implements EventAwareInterface
             if (!$method->isStatic()) {
                 throw new LogicException(
                     sprintf(
-                        "Entity event hook: %s::%s must be static method.",
+                        'Entity event hook: %s::%s must be static method.',
                         $this->metadata->getClassName(),
                         $method->getName()
                     )
@@ -2160,7 +2160,7 @@ class EntityMapper implements EventAwareInterface
      *
      * @return  Event
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function emits(EventInterface $event): EventInterface
     {
@@ -2185,7 +2185,7 @@ class EntityMapper implements EventAwareInterface
             if (!$method->isStatic()) {
                 throw new LogicException(
                     sprintf(
-                        "Entity event hook: %s::%s must be static method.",
+                        'Entity event hook: %s::%s must be static method.',
                         $this->metadata->getClassName(),
                         $method->getName()
                     )

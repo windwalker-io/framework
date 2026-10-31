@@ -35,7 +35,7 @@ class Position
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getReferenceId(): mixed
     {
@@ -55,7 +55,7 @@ class Position
     }
 
     /**
-     * @return NestedPosition
+     * @return  NestedPosition
      */
     public function getPosition(): NestedPosition
     {

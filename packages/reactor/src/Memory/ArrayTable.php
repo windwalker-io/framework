@@ -52,6 +52,10 @@ class ArrayTable implements MemoryTableInterface
             return false;
         }
 
+        if ($field === null) {
+            return $value;
+        }
+
         return $value[$field] ?? null;
     }
 

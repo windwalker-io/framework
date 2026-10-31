@@ -14,6 +14,8 @@ use Windwalker\Queue\QueueMessage;
  * The BeanstalkdQueueDriver class.
  *
  * @since  3.2
+ *
+ * @codeCoverageIgnore Requires an external queue service; legacy/unautoloaded driver.
  */
 class BeanstalkdQueueDriver implements QueueDriverInterface
 {
@@ -58,7 +60,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return string
+     * @return  string
      */
     public function push(QueueMessage $message): string
     {
@@ -77,7 +79,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -105,7 +107,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return BeanstalkdQueueDriver
+     * @return  BeanstalkdQueueDriver
      */
     public function delete(QueueMessage $message): static
     {
@@ -121,7 +123,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage|string  $message
      *
-     * @return static
+     * @return  static
      */
     public function release(QueueMessage $message): static
     {
@@ -140,7 +142,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      * @param  string  $host
      *
      * @return  Pheanstalk
-     * @throws DomainException
+     * @throws  DomainException
      */
     public function getPheanstalk($host = null): Pheanstalk
     {

@@ -29,7 +29,7 @@ class AnonymousComponent extends AbstractComponent
     /**
      * Get the data that should be supplied to the view.
      *
-     * @return array
+     * @return  array
      */
     public function data(): array
     {

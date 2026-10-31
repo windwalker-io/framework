@@ -16,7 +16,7 @@ class FormatRegistryTest extends TestCase
     #[Test]
     public function itUsesTheDefaultFormatAndResolvesAliases(): void
     {
-        $registry = new FormatRegistry;
+        $registry = new FormatRegistry();
 
         self::assertSame(['flower' => 'sakura'], $registry->parse('{"flower":"sakura"}'));
         self::assertSame('yaml', $registry->resolveFormatAlias('YML'));
@@ -30,8 +30,8 @@ class FormatRegistryTest extends TestCase
     #[Test]
     public function itRegistersAndRemovesFormatHandlers(): void
     {
-        $registry = new FormatRegistry;
-        $handler = new JsonFormat;
+        $registry = new FormatRegistry();
+        $handler = new JsonFormat();
 
         self::assertSame($registry, $registry->registerFormat('JSON', $handler));
         self::assertSame($handler, $registry->getFormatHandler('json'));
@@ -57,13 +57,13 @@ class FormatRegistryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIs('Dumper should be callable callable');
 
-        (new FormatRegistry)->registerFormat('custom', static fn(): array => []);
+        (new FormatRegistry())->registerFormat('custom', static fn(): array => []);
     }
 
     #[Test]
     public function itLoadsFilesByExtensionAndAcceptsFileInfo(): void
     {
-        $registry = new FormatRegistry;
+        $registry = new FormatRegistry();
         $json = __DIR__ . '/../fixtures/flower.json';
 
         self::assertSame('sakura', $registry->loadFile($json)['flower']);

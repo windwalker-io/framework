@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\Utilities\Test\Stub;
 
 use Windwalker\Utilities\Accessible\AccessibleTrait;
@@ -7,8 +9,6 @@ use Windwalker\Utilities\Contract\AccessibleInterface;
 
 /**
  * The StubAccessible class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class StubAccessible implements AccessibleInterface
 {

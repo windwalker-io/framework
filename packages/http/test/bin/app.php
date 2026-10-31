@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Http\HttpFactory;
 use Windwalker\Stream\Stream;
 
-return new class {
+return new class () {
     public ServerRequestInterface $req;
 
     public function __invoke(ServerRequestInterface $req): ResponseInterface

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Renderer\Test;
 
 use Illuminate\Contracts\View\Factory;
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Filesystem\Filesystem;
@@ -23,24 +27,19 @@ class BladeRendererTest extends TestCase
     /**
      * Test instance.
      *
-     * @var BladeRenderer
+     * @var  BladeRenderer
      */
     protected $instance;
 
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static $path;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRendererAndCacheDir(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/blade');
 
@@ -58,13 +57,8 @@ class BladeRendererTest extends TestCase
         );
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[After]
+    protected function deleteCacheDir(): void
     {
         Filesystem::delete(__DIR__ . '/cache');
     }
@@ -77,12 +71,8 @@ class BladeRendererTest extends TestCase
         Filesystem::deleteIfExists(__DIR__ . '/cache');
     }
 
-    /**
-     * Method to test render().
-     *
-     * @return void
-     */
-    public function testRender()
+    #[Test]
+    public function makeRendersTemplateExtendingMasterLayout(): void
     {
         $html = $this->instance->make('hello')();
 
@@ -102,12 +92,27 @@ HTML;
         self::assertHtmlFormatEquals($expect, $html);
     }
 
-    /**
-     * Method to test getBlade().
-     *
-     * @return void
-     */
-    public function testGetBlade()
+    #[Test]
+    public function createCompilerThrowsWhenCachePathMissing(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Please set cache_path to options.');
+
+        $this->instance->createCompiler();
+    }
+
+    #[Test]
+    public function createCompilerCreatesMissingCacheDirectory(): void
+    {
+        $path = __DIR__ . '/cache/nested';
+
+        $this->instance->createCompiler(null, $path);
+
+        self::assertDirectoryExists($path);
+    }
+
+    #[Test]
+    public function createEngineReturnsViewFactory(): void
     {
         self::assertInstanceOf(Factory::class, $this->instance->createEngine([]));
     }

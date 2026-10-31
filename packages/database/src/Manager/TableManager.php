@@ -197,7 +197,7 @@ class TableManager extends AbstractMetaManager
      *
      * @param  bool  $refresh
      *
-     * @return array Table columns with type.
+     * @return  array  Table columns with type.
      */
     public function getColumnNames(bool $refresh = false): array
     {
@@ -208,7 +208,7 @@ class TableManager extends AbstractMetaManager
      * @param  bool  $refresh
      * @param  bool  $syncKeys
      *
-     * @return Column[]
+     * @return  Column[]
      */
     public function getColumns(bool $refresh = false, bool $syncKeys = false): array
     {
@@ -287,7 +287,7 @@ class TableManager extends AbstractMetaManager
      * @param  string  $name
      * @param  bool    $syncKeys
      *
-     * @return Column|null
+     * @return  Column|null
      */
     public function getColumn(string $name, bool $syncKeys = false): ?Column
     {
@@ -315,7 +315,7 @@ class TableManager extends AbstractMetaManager
      * @param  null           $columnDefault
      * @param  array          $options
      *
-     * @return static
+     * @return  static
      */
     public function addColumn(
         string|Column $column = '',
@@ -358,6 +358,7 @@ class TableManager extends AbstractMetaManager
             }
 
             $platform->dropColumn($this->getName(), $name, $this->schemaName);
+            $this->reset();
         }
 
         return $this;
@@ -438,6 +439,7 @@ class TableManager extends AbstractMetaManager
         foreach ((array) $names as $name) {
             if ($this->hasIndex($name)) {
                 $platform->dropIndex($this->getName(), $name, $this->schemaName);
+                $this->reset();
             }
         }
 
@@ -560,6 +562,7 @@ class TableManager extends AbstractMetaManager
         foreach ((array) $names as $name) {
             if ($this->hasConstraint($name)) {
                 $platform->dropConstraint($this->getName(), $name, $this->schemaName);
+                $this->reset();
             }
         }
 
@@ -626,7 +629,7 @@ class TableManager extends AbstractMetaManager
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getErratas(): array
     {

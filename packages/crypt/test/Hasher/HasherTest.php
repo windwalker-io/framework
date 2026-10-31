@@ -13,7 +13,7 @@ class HasherTest extends TestCase
     #[Test]
     public function hashesWithConfiguredAlgorithmAndOutputFormat(): void
     {
-        self::assertSame(hash('sha256', 'secret'), (new Hasher)->hash('secret'));
+        self::assertSame(hash('sha256', 'secret'), (new Hasher())->hash('secret'));
         self::assertSame(
             hash('sha512', 'secret', true),
             (new Hasher('sha512', true))->hash('secret')
@@ -23,7 +23,7 @@ class HasherTest extends TestCase
     #[Test]
     public function comparesKnownAndUserStrings(): void
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         self::assertTrue($hasher->equals('same', 'same'));
         self::assertFalse($hasher->equals('known', 'user'));

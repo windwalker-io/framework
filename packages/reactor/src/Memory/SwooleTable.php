@@ -16,8 +16,8 @@ readonly class SwooleTable implements MemoryTableInterface
     }
 
     /**
-     * @param int $type Must be one of the following constants: Table::TYPE_INT, Table::TYPE_FLOAT, or Table::TYPE_STRING.
-     * @param int $size Length of the string. This parameter is ignored for other types.
+     * @param  int  $type  Must be one of the following constants: Table::TYPE_INT, Table::TYPE_FLOAT, or Table::TYPE_STRING.
+     * @param  int  $size  Length of the string. This parameter is ignored for other types.
      */
     public function column(string $name, int $type, int $size = 0): bool
     {
@@ -27,7 +27,7 @@ readonly class SwooleTable implements MemoryTableInterface
     /**
      * Create the table.
      *
-     * @return bool TRUE on success, FALSE on failure.
+     * @return  bool  TRUE on success, FALSE on failure.
      */
     public function create(): bool
     {
@@ -44,7 +44,7 @@ readonly class SwooleTable implements MemoryTableInterface
      *   - property $size and $memorySize still contain the same values of the table before it's destroyed.
      *   - method \Swoole\Table::getSize() and \Swoole\Table::getMemorySize() return 0.
      *
-     * @return bool returns TRUE all the time
+     * @return  bool  returns TRUE all the time
      */
     public function destroy(): bool
     {

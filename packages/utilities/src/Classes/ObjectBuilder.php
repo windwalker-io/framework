@@ -21,7 +21,7 @@ class ObjectBuilder
      * @param  mixed   ...$args
      *
      * @return  object
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function createObject(string $class, ...$args): object
     {
@@ -29,7 +29,7 @@ class ObjectBuilder
     }
 
     /**
-     * @return Closure
+     * @return  Closure
      */
     public function getBuilder(): Closure
     {
@@ -40,6 +40,8 @@ class ObjectBuilder
      * @param  Closure  $builder
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setBuilder(Closure $builder): static
     {

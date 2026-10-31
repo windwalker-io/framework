@@ -13,7 +13,7 @@ trait DICreateTrait
     {
         return create(
             static::class,
-            ...$args
+            ...$args,
         );
     }
 }

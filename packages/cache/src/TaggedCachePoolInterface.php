@@ -24,4 +24,3 @@ interface TaggedCachePoolInterface extends CachePoolInterface
 
     public function isItemValid(CacheItemInterface $item): bool;
 }
-

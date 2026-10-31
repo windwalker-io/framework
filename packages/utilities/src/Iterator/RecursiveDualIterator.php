@@ -4,79 +4,44 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Iterator;
 
-use RecursiveIteratorIterator;
+use RecursiveIterator;
 
 /**
  * The RecursiveDualIterator class.
  *
  * @since  2.0
  */
-class RecursiveDualIterator extends RecursiveIteratorIterator
+class RecursiveDualIterator extends DualIterator implements RecursiveIterator
 {
     /**
-     * Used to keep end of recursion equality. That is en leaving a nesting
-     * level we need to check whether both child iterators are at their end.
+     * Construct from two RecursiveIterators.
      *
-     * @var bool
+     * @param  RecursiveIterator  $lhs    Left Hand Side Iterator
+     * @param  RecursiveIterator  $rhs    Right Hand Side Iterator
+     * @param  int                $flags  Iteration flags
      */
-    protected bool $equal = false;
-
-    /**
-     * Construct from RecursiveDualIterator
-     *
-     * @param  RecursiveDualIterator  $it     RecursiveDualIterator
-     * @param  integer                $mode   Should be LEAVES_ONLY
-     * @param  integer                $flags  Should be 0
-     */
-    public function __construct(RecursiveDualIterator $it, int $mode = self::LEAVES_ONLY, int $flags = 0)
+    public function __construct(RecursiveIterator $lhs, RecursiveIterator $rhs, int $flags = self::DEFAULT_FLAGS)
     {
-        parent::__construct($it);
+        parent::__construct($lhs, $rhs, $flags);
     }
 
     /**
-     * Rewind iteration and comparison process. Starting with $equal = true.
-     *
-     * @return void
+     * Whether both inner iterators have children at the current position.
      */
-    public function rewind(): void
+    public function hasChildren(): bool
     {
-        $this->equal = true;
-
-        parent::rewind();
+        return $this->getLHS()->hasChildren() && $this->getRHS()->hasChildren();
     }
 
     /**
-     * Calculate $equal
-     *
-     * @return void
-     * @see $equal
-     *
+     * Create a dual iterator from the children of both inner iterators.
      */
-    public function endChildren(): void
+    public function getChildren(): RecursiveDualIterator
     {
-        $this->equal &= !$this->getInnerIterator()->getLHS()->valid()
-            && !$this->getInnerIterator()->getRHS()->valid();
-    }
-
-    /**
-     * Are Identical
-     *
-     * @return boolean Whether both inner iterators are valid and have identical
-     *                 current and key values or both are non valid.
-     */
-    public function areIdentical(): bool
-    {
-        return $this->equal && $this->getInnerIterator()->areIdentical();
-    }
-
-    /**
-     * Are equal.
-     *
-     * @return boolean Whether both inner iterators are valid and have equal current
-     *                 and key values or both are non valid.
-     */
-    public function areEqual(): bool
-    {
-        return $this->equal && $this->getInnerIterator()->areEqual();
+        return new static(
+            $this->getLHS()->getChildren(),
+            $this->getRHS()->getChildren(),
+            $this->getFlags()
+        );
     }
 }

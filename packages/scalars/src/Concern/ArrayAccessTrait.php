@@ -6,17 +6,12 @@ namespace Windwalker\Scalars\Concern;
 
 use Windwalker\Utilities\Arr;
 
-/**
- * The ArrayContentTrait class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait ArrayAccessTrait
 {
     /**
      * first
      *
-     * @param callable|null $conditions
+     * @param  callable|null  $conditions
      *
      * @return  mixed
      */
@@ -44,7 +39,7 @@ trait ArrayAccessTrait
     /**
      * last
      *
-     * @param callable|null $conditions
+     * @param  callable|null  $conditions
      *
      * @return  mixed
      */
@@ -111,16 +106,6 @@ trait ArrayAccessTrait
         return $this->newInstance($result);
     }
 
-    /**
-     * page
-     *
-     * @param  int  $page
-     * @param  int  $limit
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function page(int $page, int $limit): static|ArrayAccessTrait
     {
         $new = clone $this;

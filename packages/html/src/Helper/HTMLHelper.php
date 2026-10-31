@@ -39,11 +39,11 @@ abstract class HTMLHelper
         $arr_single_tags = ['meta', 'img', 'br', 'link', 'area'];
 
         // Put all opened tags into an array
-        preg_match_all("#<([a-z]+)( .*)?(?!/)>#iU", $html, $result);
+        preg_match_all('#<([a-z]+)( .*)?(?!/)>#iU', $html, $result);
         $openedtags = $result[1];
 
         // Put all closed tags into an array
-        preg_match_all("#</([a-z]+)>#iU", $html, $result);
+        preg_match_all('#</([a-z]+)>#iU', $html, $result);
 
         $closedtags = $result[1];
         $len_opened = count($openedtags);
@@ -59,7 +59,7 @@ abstract class HTMLHelper
         for ($i = 0; $i < $len_opened; $i++) {
             if (!in_array($openedtags[$i], $closedtags, true)) {
                 if (!in_array($openedtags[$i], $arr_single_tags, true)) {
-                    $html .= "</" . $openedtags[$i] . ">";
+                    $html .= '</' . $openedtags[$i] . '>';
                 }
             } else {
                 unset($closedtags[array_search($openedtags[$i], $closedtags, true)]);
@@ -75,9 +75,9 @@ abstract class HTMLHelper
      * @param  mixed  $data      The data to convert to JavaScript object notation
      * @param  bool   $quoteKey  Quote json key or not.
      *
-     * @return string JavaScript object notation representation of the array
+     * @return  string  JavaScript object notation representation of the array
      *
-     * @throws JsonException
+     * @throws  JsonException
      * @since  2.0
      */
     public static function getJSObject($data = [], bool $quoteKey = false): string
@@ -114,8 +114,9 @@ abstract class HTMLHelper
                     $output .= '[' . implode(',', $child) . ']';
                     break;
                 }
-            // Go to next body
+                // Go to next body
 
+                // no break
             case 'object':
                 $array = is_object($data) ? get_object_vars($data) : $data;
 

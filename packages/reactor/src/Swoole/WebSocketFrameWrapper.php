@@ -12,9 +12,7 @@ use Windwalker\Reactor\WebSocket\WebSocketFrameInterface;
  */
 class WebSocketFrameWrapper implements WebSocketFrameInterface
 {
-    public function __construct(protected Frame $frame)
-    {
-    }
+    public function __construct(protected Frame $frame) {}
 
     public function getFrame(): Frame
     {

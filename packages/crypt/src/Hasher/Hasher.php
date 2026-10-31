@@ -23,8 +23,10 @@ class Hasher implements HasherInterface
     }
 
     public function equals(
-        #[\SensitiveParameter] string $knownString,
-        #[\SensitiveParameter] string $userString,
+        #[\SensitiveParameter]
+        string $knownString,
+        #[\SensitiveParameter]
+        string $userString,
     ): bool {
         return hash_equals($knownString, $userString);
     }
@@ -35,7 +37,7 @@ class Hasher implements HasherInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getAlgo(): string
     {
@@ -55,7 +57,7 @@ class Hasher implements HasherInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isBinary(): bool
     {
@@ -75,7 +77,7 @@ class Hasher implements HasherInterface
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getOptions(): array
     {

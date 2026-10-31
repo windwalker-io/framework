@@ -25,7 +25,7 @@ class StreamFactory implements StreamFactoryInterface
      *
      * @param  string  $content  String content with which to populate the stream.
      *
-     * @return StreamInterface
+     * @return  StreamInterface
      */
     public function createStream(string $content = ''): StreamInterface
     {
@@ -47,9 +47,9 @@ class StreamFactory implements StreamFactoryInterface
      * @param  string  $filename  Filename or stream URI to use as basis of stream.
      * @param  string  $mode      Mode with which to open the underlying filename/stream.
      *
-     * @return StreamInterface
-     * @throws RuntimeException If the file cannot be opened.
-     * @throws InvalidArgumentException If the mode is invalid.
+     * @return  StreamInterface
+     * @throws  RuntimeException          If the file cannot be opened.
+     * @throws  InvalidArgumentException  If the mode is invalid.
      */
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
@@ -63,14 +63,14 @@ class StreamFactory implements StreamFactoryInterface
      *
      * @param  resource  $resource  PHP resource to use as basis of stream.
      *
-     * @return StreamInterface
+     * @return  StreamInterface
      */
     public function createStreamFromResource($resource): StreamInterface
     {
         ArgumentsAssert::assert(
             is_resource($resource),
             '{caller} argument 1 should be resource, {value} given.',
-            $resource
+            $resource,
         );
 
         return new Stream($resource);

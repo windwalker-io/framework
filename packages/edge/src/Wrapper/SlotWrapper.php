@@ -17,9 +17,7 @@ class SlotWrapper implements Stringable
      *
      * @param  Closure  $slotCallback
      */
-    public function __construct(protected Closure $slotCallback)
-    {
-    }
+    public function __construct(protected Closure $slotCallback) {}
 
     public function __invoke(...$args): string
     {
@@ -34,8 +32,8 @@ class SlotWrapper implements Stringable
      * Magic method {@see https://www.php.net/manual/en/language.oop5.magic.php}
      * called during serialization to string.
      *
-     * @return string Returns string representation of the object that
-     * implements this interface (and/or "__toString" magic method).
+     * @return  string  Returns string representation of the object that
+     *                  implements this interface (and/or "__toString" magic method).
      */
     public function __toString(): string
     {

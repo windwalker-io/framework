@@ -10,6 +10,4 @@ use Attribute;
  * The BeforeUpdateBatchEvent class.
  */
 #[Attribute]
-class BeforeUpdateWhereEvent extends AbstractUpdateWhereEvent
-{
-}
+class BeforeUpdateWhereEvent extends AbstractUpdateWhereEvent {}

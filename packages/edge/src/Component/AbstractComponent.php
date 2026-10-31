@@ -21,49 +21,49 @@ abstract class AbstractComponent
     /**
      * The cache of public property names, keyed by class.
      *
-     * @var array
+     * @var  array
      */
     protected static array $propertyCache = [];
 
     /**
      * The cache of public method names, keyed by class.
      *
-     * @var array
+     * @var  array
      */
     protected static array $methodCache = [];
 
     /**
      * The properties / methods that should not be exposed to the component.
      *
-     * @var array
+     * @var  array
      */
     protected array $except = [];
 
     /**
      * The component alias name.
      *
-     * @var string
+     * @var  string
      */
     public string $componentName = '';
 
     /**
      * The component attributes.
      *
-     * @var ComponentAttributes|null
+     * @var  ComponentAttributes|null
      */
     public ?ComponentAttributes $attributes = null;
 
     /**
      * Get the view / view contents that represent the component.
      *
-     * @return Closure|string
+     * @return  Closure|string
      */
     abstract public function render(): Closure|string;
 
     /**
      * Resolve the Blade view or view file that should be used when rendering the component.
      *
-     * @return Closure|string
+     * @return  Closure|string
      */
     public function resolveView(): Closure|string
     {
@@ -73,7 +73,7 @@ abstract class AbstractComponent
     /**
      * Get the data that should be supplied to the view.
      *
-     * @return array
+     * @return  array
      */
     public function data(): array
     {
@@ -96,7 +96,7 @@ abstract class AbstractComponent
     /**
      * Extract the public properties for the component.
      *
-     * @return array
+     * @return  array
      */
     protected function extractPublicProperties(): array
     {
@@ -124,8 +124,8 @@ abstract class AbstractComponent
     /**
      * Extract the public methods for the component.
      *
-     * @return array
-     * @throws \ReflectionException
+     * @return  array
+     * @throws  \ReflectionException
      */
     protected function extractPublicMethods(): array
     {
@@ -161,7 +161,7 @@ abstract class AbstractComponent
      *
      * @param  ReflectionMethod  $method
      *
-     * @return mixed
+     * @return  mixed
      */
     protected function createVariableFromMethod(ReflectionMethod $method)
     {
@@ -175,7 +175,7 @@ abstract class AbstractComponent
      *
      * @param  string  $method
      *
-     * @return InvokableComponentVariable
+     * @return  InvokableComponentVariable
      */
     protected function createInvokableVariable(string $method): InvokableComponentVariable
     {
@@ -191,7 +191,7 @@ abstract class AbstractComponent
      *
      * @param  string  $name
      *
-     * @return bool
+     * @return  bool
      */
     protected function shouldIgnore(string $name): bool
     {
@@ -201,7 +201,7 @@ abstract class AbstractComponent
     /**
      * Get the methods that should be ignored.
      *
-     * @return array
+     * @return  array
      */
     protected function ignoredMethods(): array
     {
@@ -224,7 +224,7 @@ abstract class AbstractComponent
      *
      * @param  string  $name
      *
-     * @return $this
+     * @return  $this
      */
     public function withName(string $name): static
     {
@@ -238,7 +238,7 @@ abstract class AbstractComponent
      *
      * @param  array  $attributes
      *
-     * @return static
+     * @return  static
      *
      * @deprecated  5.0 This method is not immutable, use new method to merge attributes.
      */
@@ -269,7 +269,7 @@ abstract class AbstractComponent
      *
      * @param  array  $attributes
      *
-     * @return ComponentAttributes
+     * @return  ComponentAttributes
      */
     protected function newAttributeBag(array $attributes = []): ComponentAttributes
     {
@@ -279,7 +279,7 @@ abstract class AbstractComponent
     /**
      * Determine if the component should be rendered.
      *
-     * @return bool
+     * @return  bool
      */
     public function shouldRender(): bool
     {

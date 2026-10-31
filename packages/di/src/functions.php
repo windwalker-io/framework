@@ -21,7 +21,7 @@ namespace Windwalker\DI {
             return new StoreDefinition(
                 '',
                 Container::define($class, $args),
-                Container::SHARED
+                Container::SHARED,
             );
         }
     }
@@ -32,7 +32,7 @@ namespace Windwalker\DI {
             $def = new StoreDefinition(
                 $class,
                 new ObjectBuilderDefinition($class),
-                $options
+                $options,
             );
 
             return $def->extend($extend);

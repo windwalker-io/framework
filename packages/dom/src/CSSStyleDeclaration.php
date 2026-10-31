@@ -20,12 +20,11 @@ class CSSStyleDeclaration
     public function setProperty(string $name, string|\Stringable $value): void
     {
         $properties = $this->getProperties();
+        $value = (string) $value;
 
-        if ($properties[$name] ?? null === $value) {
+        if (($properties[$name] ?? null) === $value) {
             return;
         }
-
-        $value = (string) $value;
 
         if ($value === '') {
             unset($properties[$name]);
@@ -110,16 +109,16 @@ class CSSStyleDeclaration
         $this->styleCache = $style;
 
         $properties = [];
-        $rules = explode(";", (string) ($this->element->getAttribute('style') ?? ''));
+        $rules = explode(';', (string) ($this->element->getAttribute('style') ?? ''));
 
         foreach ($rules as $rule) {
             $rule = trim($rule);
 
-            if ($rule === "") {
+            if ($rule === '') {
                 continue;
             }
 
-            [$name, $value] = array_map("trim", explode(':', $rule, 2));
+            [$name, $value] = array_map('trim', explode(':', $rule, 2));
 
             $properties[strtolower($name)] = $value;
         }

@@ -4,22 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Scalars;
 
-/**
- * The ScalarsFactory class.
- *
- * @since  __DEPLOY_VERSION__
- */
 class ScalarsFactory
 {
-    /**
-     * fromNative
-     *
-     * @param  mixed  $value
-     *
-     * @return  ArrayObject|StringObject|mixed
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public static function fromNative(mixed $value): mixed
     {
         if (is_array($value)) {

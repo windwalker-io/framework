@@ -24,7 +24,7 @@ class Password
      *
      * @return  string  Random Password
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0.9
      */
     public static function genRandomPassword(int $length = 20, string $seed = self::SEED_ALNUM): string

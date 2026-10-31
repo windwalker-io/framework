@@ -9,7 +9,7 @@ use JetBrains\PhpStorm\Pure;
 /**
  * The HttpHelper class.
  *
- * @since  3.5.13
+ * @since      3.5.13
  *
  * @deprecated Use {@see IpHelper} instead.
  */
@@ -28,7 +28,7 @@ class HttpHelper
      *
      * @return  bool
      *
-     * @since  3.5.15
+     * @since      3.5.15
      *
      * @deprecated Use {@see IpHelper::isIPv6()} instead.
      */

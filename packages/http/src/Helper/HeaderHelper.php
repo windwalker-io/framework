@@ -45,7 +45,7 @@ abstract class HeaderHelper
      * @param  string  $name     The name to search.
      * @param  mixed   $default  The default value if not found.
      *
-     * @return string  Found header value.
+     * @return  string  Found header value.
      *
      * @since      3.0
      *
@@ -55,7 +55,7 @@ abstract class HeaderHelper
     public static function getValue(
         array $headers,
         string $name,
-        mixed $default = null
+        mixed $default = null,
     ): mixed {
         if (array_key_exists($name, $headers)) {
             return is_array($headers[$name]) ? implode(', ', $headers[$name]) : $headers[$name];
@@ -112,8 +112,8 @@ abstract class HeaderHelper
 
             // Detect continuation sequences
             if ($ascii === 13) {
-                $lf = ord($value[$i + 1]);
-                $ws = ord($value[$i + 2]);
+                $lf = ord($value[$i + 1] ?? "\0");
+                $ws = ord($value[$i + 2] ?? "\0");
 
                 if ($lf === 10 && in_array($ws, [9, 32], true)) {
                     $string .= $value[$i] . $value[$i + 1];
@@ -298,9 +298,10 @@ abstract class HeaderHelper
      */
     public static function prepareAttachmentHeaders(
         ResponseInterface $response,
-        ?string $filename = null
+        ?string $filename = null,
     ): ResponseInterface {
-        $response = $response->withHeader('Content-Type', 'application/octet-stream')
+        $response = $response
+            ->withHeader('Content-Type', 'application/octet-stream')
             ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withHeader('Content-Encoding', 'none');
@@ -308,7 +309,7 @@ abstract class HeaderHelper
         if ($filename !== null) {
             $response = $response->withHeader(
                 'Content-Disposition',
-                static::attachmentContentDisposition($filename)
+                static::attachmentContentDisposition($filename),
             );
         }
 

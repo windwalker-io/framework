@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Data\Collection;
 use Windwalker\Data\Format\FormatRegistry;
 use Windwalker\Data\ReadonlyCloneableTrait;
-use Windwalker\Filesystem\FileObject;
 use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Contract\DumpableInterface;
 
@@ -37,7 +36,7 @@ class ExtraBehaviorTest extends TestCase
 
         self::assertSame(['a' => 1], $registry->load($stream));
 
-        $dumpable = new class implements DumpableInterface {
+        $dumpable = new class () implements DumpableInterface {
             public function dump(bool $recursive = false, bool $onlyDumpable = false): array
             {
                 return ['d' => 1];
@@ -80,9 +79,7 @@ class CloneableFixture
 {
     use ReadonlyCloneableTrait;
 
-    public function __construct(public readonly string $name, public readonly int $count)
-    {
-    }
+    public function __construct(public readonly string $name, public readonly int $count) {}
 }
 
 class CloneableFixtureProps

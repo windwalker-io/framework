@@ -30,7 +30,7 @@ class Key extends HiddenString
     /**
      * Index is disallow to print as string.
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {

@@ -507,6 +507,13 @@ class SQLServerPlatform extends AbstractPlatform
      *
      * @return  StatementInterface
      */
+    public function createDatabase(string $name, array $options = []): StatementInterface
+    {
+        return $this->db->execute(
+            $this->getGrammar()::build('CREATE DATABASE', $this->db->quoteName($name))
+        );
+    }
+
     public function dropDatabase(string $name, array $options = []): StatementInterface
     {
         $query = $this->db->createQuery();
@@ -689,9 +696,15 @@ SQL;
             $table = $schema . '.' . $table;
         }
 
+        $exists = $this->db->prepare(
+            'SELECT COUNT(*) FROM sys.fn_listextendedproperty(\'MS_Description\', \'SCHEMA\', \'dbo\', '
+            . '\'TABLE\', ' . $query->quote(preg_replace('/^.*\./', '', $table)) . ', '
+            . $query->quote($type) . ', ' . $query->quote($column) . ')'
+        )->result();
+
         return $this->db->execute(
             $this->getGrammar()::build(
-                'exec sp_addextendedproperty',
+                $exists ? 'exec sp_updateextendedproperty' : 'exec sp_addextendedproperty',
                 implode(
                     ',',
                     $query->quote(

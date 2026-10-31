@@ -17,7 +17,7 @@ class UncaughtException extends Exception
     /**
      * UncaughtException constructor.
      *
-     * @param  mixed            $reason
+     * @param  mixed           $reason
      * @param  Throwable|null  $previous
      */
     public function __construct(mixed $reason, ?Throwable $previous = null)
@@ -45,7 +45,7 @@ class UncaughtException extends Exception
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function getReason(): mixed
     {

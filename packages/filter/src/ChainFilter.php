@@ -15,7 +15,7 @@ use Windwalker\Utilities\TypeCast;
 class ChainFilter implements FilterInterface, ValidatorInterface
 {
     /**
-     * @var FilterInterface[]|ValidatorInterface[]|PriorityQueue
+     * @var  FilterInterface[]|ValidatorInterface[]|PriorityQueue
      */
     protected PriorityQueue $filters;
 
@@ -39,7 +39,7 @@ class ChainFilter implements FilterInterface, ValidatorInterface
      * @param  callable|FilterInterface  $filter
      * @param  int                       $priority
      *
-     * @return ChainFilter
+     * @return  ChainFilter
      */
     public function addFilter(FilterInterface|callable $filter, int $priority = PriorityQueue::NORMAL): static
     {
@@ -88,7 +88,7 @@ class ChainFilter implements FilterInterface, ValidatorInterface
     }
 
     /**
-     * @return FilterInterface[]|ValidatorInterface[]|PriorityQueue
+     * @return  FilterInterface[]|ValidatorInterface[]|PriorityQueue
      */
     public function getFilters(): PriorityQueue
     {

@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Assert;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 use Windwalker\Utilities\Assert\Assert;
 use Windwalker\Utilities\Assert\TypeAssert;
 
-/**
- * The TypeAssertTest class.
- *
- * @since  __DEPLOY_VERSION__
- */
 class TypeAssertTest extends TestCase
 {
-    /**
-     * @var Assert
-     */
-    protected ?Assert $instance;
-
-    public function testStaticAssert()
+    #[Test]
+    public function staticAssertThrowsTypeErrorWithCallerAndFormattedValue(): void
     {
         try {
             TypeAssert::assert(
@@ -31,26 +24,15 @@ class TypeAssertTest extends TestCase
             );
         } catch (TypeError $e) {
             self::assertEquals(
-                'Windwalker\Utilities\Test\Assert\TypeAssertTest::testStaticAssert() with wrong type integer(123).',
+                'Windwalker\Utilities\Test\Assert\TypeAssertTest::staticAssertThrowsTypeErrorWithCallerAndFormattedValue() with wrong type integer(123).',
                 $e->getMessage()
             );
         }
     }
 
-    /**
-     * testThrowException
-     *
-     * @param  string  $class
-     * @param  string  $message
-     * @param          $value
-     * @param  string  $caller
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerThrowException')]
-    public function testThrowException(string $class, string $message, $value, ?string $caller, string $expected): void
+    #[Test]
+    #[DataProvider('throwExceptionProvider')]
+    public function throwExceptionBuildsTypeErrorMessageWithCaller(string $class, string $message, $value, ?string $caller, string $expected): void
     {
         try {
             self::createInstance($caller)->throwException($message, $value);
@@ -59,7 +41,7 @@ class TypeAssertTest extends TestCase
         }
     }
 
-    public static function providerThrowException(): array
+    public static function throwExceptionProvider(): array
     {
         return [
             'Auto get caller' => [
@@ -67,8 +49,8 @@ class TypeAssertTest extends TestCase
                 'Method {caller} must with type X, %s given.',
                 5,
                 null,
-                'Method Windwalker\Utilities\Test\Assert\TypeAssertTest::testThrowException() ' .
-                'must with type X, integer(5) given.',
+                'Method Windwalker\Utilities\Test\Assert\TypeAssertTest::throwExceptionBuildsTypeErrorMessageWithCaller() '
+                . 'must with type X, integer(5) given.',
             ],
             'Custom caller' => [
                 TypeError::class,
@@ -92,11 +74,6 @@ class TypeAssertTest extends TestCase
                 'Method wrong.',
             ],
         ];
-    }
-
-    protected function setUp(): void
-    {
-        // $this->instance = new Assert(fn ($msg) => new TypeError($msg));
     }
 
     protected static function createInstance(?string $caller): Assert

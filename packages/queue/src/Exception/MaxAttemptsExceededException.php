@@ -11,6 +11,4 @@ use RuntimeException;
  *
  * @since  3.2
  */
-class MaxAttemptsExceededException extends RuntimeException
-{
-}
+class MaxAttemptsExceededException extends RuntimeException {}

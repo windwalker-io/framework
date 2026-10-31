@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pdo;
 
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
@@ -11,7 +12,7 @@ use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
  */
 class PdoPgsqlDriverTest extends AbstractDriverTestCase
 {
-    protected static string $platform = 'PostgreSQL';
+    protected static DbPlatform $platform = DbPlatform::PostgreSQL;
 
     protected static string $driverName = 'pdo_pgsql';
 }

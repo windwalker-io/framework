@@ -78,7 +78,7 @@ class BladeRenderer extends AbstractEngineRenderer
      *
      * @param  Filesystem|null  $fs
      *
-     * @param  string|null      $cachePath
+     * @param  string|null  $cachePath
      *
      * @return  EngineResolver
      */

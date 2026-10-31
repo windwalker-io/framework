@@ -502,9 +502,9 @@ abstract class UnicodeHelper
             ];
         }
 
-        $uni = utf8_to_unicode($string);
+        $uni = static::toUnicode($string);
 
-        if (!$uni) {
+        if ($uni === false) {
             return false;
         }
 
@@ -551,10 +551,12 @@ abstract class UnicodeHelper
                         if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) {
                             // found a surrogate
                             trigger_error(
-                                'utf8_from_unicode: Illegal surrogate ' .
-                                'at index: ' . $k . ', value: ' . $arr[$k],
+                                'utf8_from_unicode: Illegal surrogate '
+                                . 'at index: ' . $k . ', value: ' . $arr[$k],
                                 E_USER_WARNING
                             );
+
+                            ob_end_clean();
 
                             return false;
                             # 3 byte sequence
@@ -572,12 +574,14 @@ abstract class UnicodeHelper
                                     echo chr(0x80 | ($arr[$k] & 0x3f));
                                 } else {
                                     trigger_error(
-                                        'utf8_from_unicode: Codepoint out of Unicode range ' .
-                                        'at index: ' . $k . ', value: ' . $arr[$k],
+                                        'utf8_from_unicode: Codepoint out of Unicode range '
+                                        . 'at index: ' . $k . ', value: ' . $arr[$k],
                                         E_USER_WARNING
                                     );
 
                                     // out of range
+                                    ob_end_clean();
+
                                     return false;
                                 }
                             }
@@ -600,9 +604,9 @@ abstract class UnicodeHelper
      *
      * @note  Port of phputf8's utf8_to_unicode()
      *
-     * @return  bool
+     * @return  int[]|false
      */
-    public static function toUnicode(string $str): bool
+    public static function toUnicode(string $str): array|false
     {
         $mState = 0; // cached expected number of octets after the current octet
         // until the beginning of the next UTF8 character sequence
@@ -665,8 +669,8 @@ abstract class UnicodeHelper
                      * octet of a multi-octet sequence.
                      */
                     trigger_error(
-                        'utf8_to_unicode: Illegal sequence identifier ' .
-                        'in UTF-8 at byte ' . $i,
+                        'utf8_to_unicode: Illegal sequence identifier '
+                        . 'in UTF-8 at byte ' . $i,
                         E_USER_WARNING
                     );
 
@@ -692,18 +696,18 @@ abstract class UnicodeHelper
                     */
                     // From Unicode 3.1, non-shortest form is illegal
                     if (
-                        ((2 === $mBytes) && ($mUcs4 < 0x0080)) ||
-                        ((3 === $mBytes) && ($mUcs4 < 0x0800)) ||
-                        ((4 === $mBytes) && ($mUcs4 < 0x10000)) ||
-                        (4 < $mBytes) ||
+                        ((2 === $mBytes) && ($mUcs4 < 0x0080))
+                        || ((3 === $mBytes) && ($mUcs4 < 0x0800))
+                        || ((4 === $mBytes) && ($mUcs4 < 0x10000))
+                        || (4 < $mBytes)
                         // From Unicode 3.2, surrogate characters are illegal
-                        (($mUcs4 & 0xFFFFF800) === 0xD800) ||
+                        || (($mUcs4 & 0xFFFFF800) === 0xD800)
                         // Codepoints outside the Unicode range are illegal
-                        ($mUcs4 > 0x10FFFF)
+                        || ($mUcs4 > 0x10FFFF)
                     ) {
                         trigger_error(
-                            'utf8_to_unicode: Illegal sequence or codepoint ' .
-                            'in UTF-8 at byte ' . $i,
+                            'utf8_to_unicode: Illegal sequence or codepoint '
+                            . 'in UTF-8 at byte ' . $i,
                             E_USER_WARNING
                         );
 
@@ -726,13 +730,15 @@ abstract class UnicodeHelper
                  * Incomplete multi-octet sequence.
                  */
                 trigger_error(
-                    'utf8_to_unicode: Incomplete multi-octet ' .
-                    '   sequence in UTF-8 at byte ' . $i,
+                    'utf8_to_unicode: Incomplete multi-octet '
+                    . '   sequence in UTF-8 at byte ' . $i,
                     E_USER_WARNING
                 );
 
                 return false;
             }
         }
+
+        return $out;
     }
 }

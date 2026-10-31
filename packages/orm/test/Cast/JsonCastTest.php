@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Cast;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Cast\JsonCast;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubArticleParamsArray;
-use Windwalker\ORM\Test\Entity\StubArticleParamsObject;
 
 class JsonCastTest extends AbstractORMTestCase
 {
     /**
      * @see  JsonCast::hydrate
      */
-    public function testHydrate(): void
+    #[Test]
+    public function hydrateDecodesJsonObjectToListWhenTargetIsArrayList(): void
     {
         $orm = self::$orm;
         /** @var StubArticleParamsArray $article */
@@ -37,7 +38,8 @@ class JsonCastTest extends AbstractORMTestCase
     /**
      * @see  JsonCast::extract
      */
-    public function testExtract(): void
+    #[Test]
+    public function extractEncodesEmptyParamsAsJsonObject(): void
     {
         $article = new StubArticle();
         $article->setTitle('Hello');
@@ -48,7 +50,8 @@ class JsonCastTest extends AbstractORMTestCase
         self::assertEquals('{}', $data['params']);
     }
 
-    public function testExtractUescape(): void
+    #[Test]
+    public function extractKeepsUnicodeCharactersUnescaped(): void
     {
         $orm = self::$orm;
         /** @var StubArticleParamsArray $article */

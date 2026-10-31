@@ -12,7 +12,7 @@ use Windwalker\Filter\AbstractFilter;
 class DefaultValue extends AbstractFilter
 {
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected $default;
 

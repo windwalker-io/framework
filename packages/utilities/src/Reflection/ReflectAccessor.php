@@ -35,11 +35,12 @@ class ReflectAccessor
         $values = [];
 
         foreach ($properties as $property) {
-            $inited = is_object($object)
-                ? $property->isInitialized($object)
-                : $property->isInitialized();
+            $instance = is_object($object) ? $object : null;
 
-            $value = $inited ? $property->getValue($object) : null;
+            // Without an instance, only static properties can be read.
+            $inited = ($instance !== null || $property->isStatic()) && $property->isInitialized($instance);
+
+            $value = $inited ? $property->getValue($instance) : null;
 
             $values[$property->getName()] = $value;
         }
@@ -57,7 +58,7 @@ class ReflectAccessor
      *
      * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @since   2.0
      */
     public static function setValue(object $object, mixed $propertyName, mixed $value, bool $safe = false): void
@@ -163,9 +164,7 @@ class ReflectAccessor
         $exists = $refl->hasProperty($propertyName);
 
         // Check parent private
-        if (!$exists) {
-            $parent = get_parent_class($object);
-
+        if (!$exists && $parent = get_parent_class($object)) {
             $refl = new ReflectionClass($parent);
 
             $exists = $refl->hasProperty($propertyName);
@@ -182,7 +181,7 @@ class ReflectAccessor
      *
      * @return  mixed  The value of the property.
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @since   2.0
      */
     public static function getValue(object $object, string $propertyName): mixed
@@ -225,7 +224,7 @@ class ReflectAccessor
      *
      * @return  mixed
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @since   2.0
      */
     public static function invoke(object $object, string $methodName, ...$args): mixed
@@ -285,7 +284,7 @@ class ReflectAccessor
      * @param  int|null       $filters
      *
      * @return  ReflectionMethod[]
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public static function getReflectMethods(
         string|object $object,
@@ -304,7 +303,7 @@ class ReflectAccessor
     /**
      * getNoRepeatAttributes
      *
-     * @param  Reflector   $ref
+     * @param  Reflector    $ref
      * @param  string|null  $name
      * @param  int          $flags
      *

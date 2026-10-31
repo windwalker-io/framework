@@ -6,6 +6,8 @@ namespace Windwalker\Session\Test\Handler;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\PhpBridge;
 use Windwalker\Session\Cookie\ArrayCookies;
@@ -26,14 +28,15 @@ abstract class AbstractHandlerTestCase extends TestCase
     protected ?Session $session;
 
     /**
-     * @var AbstractHandler
+     * @var  AbstractHandler
      */
     protected ?AbstractHandler $instance = null;
 
     /**
      * @see  ArrayHandler::read
      */
-    public function testRead(): void
+    #[Test]
+    public function readReturnsStoredSessionData(): void
     {
         $session = $this->createSession();
 
@@ -52,7 +55,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::read
      */
-    public function testReadNoStrictWithIdNotExists(): void
+    #[Test]
+    public function readWithoutStrictModeKeepsUnknownIdAndReturnsEmptyData(): void
     {
         $session = $this->createSession(
             [
@@ -78,7 +82,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::read
      */
-    public function testReadStrictWithIdExists(): void
+    #[Test]
+    public function readInStrictModeReturnsExistingSessionData(): void
     {
         $session = $this->createSession(
             [
@@ -101,7 +106,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::read
      */
-    public function testReadStrictWithIdNotExists(): void
+    #[Test]
+    public function readInStrictModeReplacesUnknownIdWithNewId(): void
     {
         $session = $this->createSession(
             [
@@ -125,12 +131,13 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::updateTimestamp
      */
-    abstract public function testUpdateTimestamp(): void;
+    abstract public function updateTimestampRefreshesStoredTime(): void;
 
     /**
      * @see  ArrayHandler::updateTimestamp
      */
-    public function testLazyWrite(): void
+    #[Test]
+    public function lazyWriteOnlyUpdatesTimestampForUnchangedSession(): void
     {
         $session = $this->createSession();
 
@@ -152,7 +159,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::updateTimestamp
      */
-    public function testEagerWrite(): void
+    #[Test]
+    public function eagerWriteWritesUnchangedSessionWhenLazyWriteDisabled(): void
     {
         $session = $this->createSession();
 
@@ -175,7 +183,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::write
      */
-    public function testWrite(): void
+    #[Test]
+    public function writePersistsChangedSessionData(): void
     {
         $session = $this->createSession();
 
@@ -195,7 +204,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::destroy
      */
-    public function testDestroy(): void
+    #[Test]
+    public function destroyRemovesSessionData(): void
     {
         $session = $this->createSession();
 
@@ -210,7 +220,8 @@ abstract class AbstractHandlerTestCase extends TestCase
     /**
      * @see  ArrayHandler::gc
      */
-    public function testGc(): void
+    #[Test]
+    public function gcRemovesExpiredSessions(): void
     {
         $session = $this->createSession();
 
@@ -257,12 +268,9 @@ abstract class AbstractHandlerTestCase extends TestCase
         ];
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function resetSession(): void
     {
         $this->session = null;
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

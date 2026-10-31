@@ -9,8 +9,6 @@ use Windwalker\Utilities\TypeCast;
 
 /**
  * Trait ArrayModifyTrait
- *
- * @since  __DEPLOY_VERSION__
  */
 trait ArrayModifyTrait
 {
@@ -396,13 +394,7 @@ trait ArrayModifyTrait
     }
 
     /**
-     * union
-     *
      * @param  array[]  ...$args
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function union(...$args): static
     {

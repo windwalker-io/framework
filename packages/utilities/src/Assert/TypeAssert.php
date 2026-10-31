@@ -19,7 +19,7 @@ class TypeAssert
      * @param  mixed            $value
      * @param  callable|null    $exception
      *
-     * @return T
+     * @return  T
      */
     public static function assert(
         mixed $assertion,

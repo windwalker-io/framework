@@ -16,7 +16,7 @@ trait StreamOutputTrait
     /**
      * Delay every loop for microseconds.
      *
-     * @var int|null
+     * @var  int|null
      */
     protected ?int $delay = null;
 
@@ -33,6 +33,7 @@ trait StreamOutputTrait
 
         if ($maxBufferLength <= 0) {
             $this->write((string) $response->getBody());
+
             return;
         }
 
@@ -150,7 +151,9 @@ trait StreamOutputTrait
     /**
      * Method to get property Delay
      *
-     * @return int|null
+     * @return  int|null
+     *
+     * @codeCoverageIgnore
      */
     public function getDelay(): ?int
     {

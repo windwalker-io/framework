@@ -36,7 +36,7 @@ trait NestedEntityTrait
     protected ?RelationCollection $tree = null;
 
     /**
-     * @return Position
+     * @return  Position
      */
     public function getPosition(): Position
     {
@@ -44,7 +44,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getWidth(): int
     {
@@ -57,7 +57,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      */
@@ -81,7 +81,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      */
@@ -96,6 +96,7 @@ trait NestedEntityTrait
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setRgt(int $rgt): static
     {
@@ -105,7 +106,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      */
@@ -120,6 +121,7 @@ trait NestedEntityTrait
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setLevel(int $level): static
     {
@@ -129,7 +131,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return mixed|null
+     * @return  mixed|null
      *
      * @deprecated  Use property instead.
      */
@@ -144,6 +146,7 @@ trait NestedEntityTrait
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setParentId(mixed $parentId): static
     {
@@ -171,6 +174,7 @@ trait NestedEntityTrait
      * @param  RelationCollection  $children
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setChildren(RelationCollection $children): static
     {
@@ -188,6 +192,7 @@ trait NestedEntityTrait
      * @param  RelationCollection  $ancestors
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setAncestors(RelationCollection $ancestors): static
     {
@@ -197,7 +202,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return RelationCollection
+     * @return  RelationCollection
      */
     public function getTree(): RelationCollection
     {
@@ -208,6 +213,7 @@ trait NestedEntityTrait
      * @param  RelationCollection  $tree
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTree(RelationCollection $tree): static
     {

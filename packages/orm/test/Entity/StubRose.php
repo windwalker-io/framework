@@ -48,7 +48,7 @@ class StubRose implements EntityInterface
     protected ?StubSakuraRoseMap $map = null;
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -68,7 +68,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getLocationNo(): string
     {
@@ -88,7 +88,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getSakuraNo(): string
     {
@@ -108,7 +108,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -128,7 +128,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -148,7 +148,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -168,7 +168,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getSakuras(): RelationCollection
     {
@@ -188,7 +188,7 @@ class StubRose implements EntityInterface
     }
 
     /**
-     * @return StubSakuraRoseMap|null
+     * @return  StubSakuraRoseMap|null
      */
     public function getMap(): ?StubSakuraRoseMap
     {

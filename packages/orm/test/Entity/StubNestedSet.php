@@ -30,7 +30,7 @@ class StubNestedSet implements NestedPathableInterface
     protected int $access = 0;
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -50,7 +50,7 @@ class StubNestedSet implements NestedPathableInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -70,7 +70,7 @@ class StubNestedSet implements NestedPathableInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getAccess(): int
     {

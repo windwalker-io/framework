@@ -40,11 +40,12 @@ class SodiumCipher implements CipherInterface
 
     /**
      * @inheritDoc
-     * @throws SodiumException
+     * @throws  SodiumException
      */
     public function decrypt(
         string $str,
-        #[\SensitiveParameter] Key|string $key,
+        #[\SensitiveParameter]
+        Key|string $key,
         string|callable $encoder = ENCODER_BASE64URLSAFE
     ): HiddenString {
         $message = SafeEncoder::decode($encoder, $str);
@@ -93,12 +94,14 @@ class SodiumCipher implements CipherInterface
 
     /**
      * @inheritDoc
-     * @throws SodiumException
-     * @throws Exception
+     * @throws  SodiumException
+     * @throws  Exception
      */
     public function encrypt(
-        #[\SensitiveParameter] HiddenString|string $str,
-        #[\SensitiveParameter] Key|string $key,
+        #[\SensitiveParameter]
+        HiddenString|string $str,
+        #[\SensitiveParameter]
+        Key|string $key,
         string|callable $encoder = ENCODER_BASE64URLSAFE
     ): string {
         $str = HiddenString::strip($str);
@@ -147,10 +150,11 @@ class SodiumCipher implements CipherInterface
      *
      * @return  array
      *
-     * @throws SodiumException
+     * @throws  SodiumException
      */
     public static function derivateSecureKeys(
-        #[\SensitiveParameter] Key|string $key,
+        #[\SensitiveParameter]
+        Key|string $key,
         string $salt
     ): array {
         $binary = Key::strip($key);
@@ -179,7 +183,7 @@ class SodiumCipher implements CipherInterface
      *
      * @return  string
      *
-     * @throws SodiumException
+     * @throws  SodiumException
      */
     public static function hmac(string $message, string $hmacKey): string
     {
@@ -197,7 +201,7 @@ class SodiumCipher implements CipherInterface
      *
      * @return  Key
      *
-     * @throws Exception
+     * @throws  Exception
      */
     public static function generateKey(?int $length = SODIUM_CRYPTO_STREAM_KEYBYTES): Key
     {

@@ -19,7 +19,7 @@ trait ReflectConcernTrait
     /**
      * getAllTables
      *
-     * @return AsClause[]
+     * @return  AsClause[]
      */
     public function getAllTables(): array
     {

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Event\Test;
 
 use Closure;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Event\Attributes\EventSubscriber;
 use Windwalker\Event\Attributes\ListenTo;
@@ -21,7 +23,8 @@ class AttributeSubscriberTest extends TestCase
 
     protected ?EventEmitter $instance = null;
 
-    public function testSubscribe()
+    #[Test]
+    public function subscribeRegistersListenToAttributesWithOnceSupport()
     {
         $subscriber = $this->getOnceSubscriber();
 
@@ -39,7 +42,8 @@ class AttributeSubscriberTest extends TestCase
         self::assertEquals(72, $subscriber->count);
     }
 
-    public function testSubscribeStatic()
+    #[Test]
+    public function subscribeRegistersStaticListenerMethods()
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -53,7 +57,8 @@ class AttributeSubscriberTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffCallable(): void
+    #[Test]
+    public function offCallableRemovesOnlyThatListener(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -72,7 +77,8 @@ class AttributeSubscriberTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffSubscriber(): void
+    #[Test]
+    public function offSubscriberRemovesAllItsListeners(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -89,7 +95,8 @@ class AttributeSubscriberTest extends TestCase
     /**
      * @see  EventEmitter::off
      */
-    public function testOffSubscriberAsClosure(): void
+    #[Test]
+    public function offSubscriberRemovesListenersRegisteredAsClosures(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -107,7 +114,8 @@ class AttributeSubscriberTest extends TestCase
     /**
      * @see  EventEmitter::remove
      */
-    public function testRemoveCallable(): void
+    #[Test]
+    public function removeCallableRemovesListenerFromAllEvents(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -128,7 +136,8 @@ class AttributeSubscriberTest extends TestCase
     /**
      * @see  EventEmitter::remove
      */
-    public function testRemoveSubscriber(): void
+    #[Test]
+    public function removeSubscriberRemovesListenersFromAllEvents(): void
     {
         $subscriber = $this->getCounterSubscriber();
 
@@ -152,7 +161,7 @@ class AttributeSubscriberTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public int $count = 0;
 
             public string $flower = '';
@@ -193,7 +202,7 @@ class AttributeSubscriberTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public $count = 0;
 
             #[ListenTo('foo', 500, true)]
@@ -219,13 +228,10 @@ class AttributeSubscriberTest extends TestCase
         };
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createEmitter(): void
     {
         $this->instance = new EventEmitter();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     protected function nope($value = null): Closure

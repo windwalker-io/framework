@@ -17,19 +17,19 @@ class Clause implements Countable, ClauseInterface
     use ChainingTrait;
 
     /**
-     * @var    string  The name of the element.
+     * @var  string  The name of the element.
      * @since  2.0
      */
     public string $name = '';
 
     /**
-     * @var    array  An array of elements.
+     * @var  array  An array of elements.
      * @since  2.0
      */
     public array $elements = [];
 
     /**
-     * @var    string  Glue piece.
+     * @var  string  Glue piece.
      * @since  2.0
      */
     public string $glue = ' ';

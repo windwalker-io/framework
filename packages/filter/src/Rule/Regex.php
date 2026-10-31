@@ -14,7 +14,7 @@ class Regex extends AbstractRegexFilter
     /**
      * The regular expression to use in testing value.
      *
-     * @var string|null
+     * @var  string|null
      */
     protected ?string $regex = null;
 

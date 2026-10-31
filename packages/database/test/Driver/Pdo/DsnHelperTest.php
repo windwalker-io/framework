@@ -6,6 +6,7 @@ namespace Windwalker\Database\Test\Driver\Pdo;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
@@ -15,7 +16,8 @@ use Windwalker\Database\Driver\Pgsql\PgsqlConnection;
 
 class DsnHelperTest extends TestCase
 {
-    public function testLibpqValuesAreQuoted(): void
+    #[Test]
+    public function libpqValuesAreQuoted(): void
     {
         self::assertSame(
             "host='localhost' password='a b\'c\\\\d' dbname='demo host=attacker'",
@@ -27,7 +29,8 @@ class DsnHelperTest extends TestCase
         );
     }
 
-    public function testPreservesEmptyAndZeroValues(): void
+    #[Test]
+    public function preservesEmptyAndZeroValues(): void
     {
         self::assertSame(
             "password='' dbname='0' port='0'",
@@ -36,7 +39,8 @@ class DsnHelperTest extends TestCase
         self::assertSame('mysql:dbname=0', DsnHelper::build(['dbname' => '0'], 'mysql'));
     }
 
-    public function testPostgresqlStartupOptionsAreQuotedOnce(): void
+    #[Test]
+    public function postgresqlStartupOptionsAreQuotedOnce(): void
     {
         $options = PgsqlConnection::prepareDbOptions(
             new DriverOptions(host: 'localhost', password: "a b'c\\d", charset: 'utf8')
@@ -48,7 +52,8 @@ class DsnHelperTest extends TestCase
         );
     }
 
-    public function testPdoPostgresqlUsesLibpqQuoting(): void
+    #[Test]
+    public function pdoPostgresqlUsesLibpqQuoting(): void
     {
         $options = PdoPgsqlConnection::prepareDbOptions(
             new DriverOptions(host: 'localhost', dbname: "demo' host=attacker")
@@ -57,7 +62,8 @@ class DsnHelperTest extends TestCase
         self::assertSame("pgsql:host='localhost';dbname='demo\' host=attacker'", $options->dsn);
     }
 
-    public function testMysqlDsnRemainsCompatible(): void
+    #[Test]
+    public function mysqlDsnRemainsCompatible(): void
     {
         $options = PdoMysqlConnection::prepareDbOptions(new DriverOptions(dbname: 'test', port: 3306));
 
@@ -65,7 +71,8 @@ class DsnHelperTest extends TestCase
     }
 
     #[DataProvider('invalidDsnProvider')]
-    public function testRejectsInvalidDsnParameters(array $params, ?string $type, string $delimiter): void
+    #[Test]
+    public function rejectsInvalidDsnParameters(array $params, ?string $type, string $delimiter): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -84,7 +91,8 @@ class DsnHelperTest extends TestCase
         ];
     }
 
-    public function testRejectsAdditionalCharsetStartupOptions(): void
+    #[Test]
+    public function rejectsAdditionalCharsetStartupOptions(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

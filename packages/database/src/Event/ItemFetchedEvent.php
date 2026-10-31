@@ -15,7 +15,7 @@ class ItemFetchedEvent extends BaseEvent
     use QueryEventTrait;
 
     public function __construct(
-        public array|null $item = null,
+        public ?array $item = null,
         mixed $query = null,
         string $sql = '',
         array $bounded = [],

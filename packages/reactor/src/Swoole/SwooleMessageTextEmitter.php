@@ -12,9 +12,7 @@ use Windwalker\Reactor\WebSocket\MessageEmitterInterface;
  */
 class SwooleMessageTextEmitter implements MessageEmitterInterface
 {
-    public function __construct(protected Server $server)
-    {
-    }
+    public function __construct(protected Server $server) {}
 
     public function emit(int $fd, string $data): bool
     {

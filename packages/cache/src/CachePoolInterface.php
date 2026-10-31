@@ -9,7 +9,6 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
-use Windwalker\Promise\Promise;
 use Windwalker\Promise\PromiseInterface;
 
 interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, LoggerAwareInterface

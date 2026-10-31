@@ -6,9 +6,7 @@ namespace Windwalker\DI\Test\Stub;
 
 class StubLangCode
 {
-    public function __construct(public string|\UnitEnum $tag = 'USA')
-    {
-    }
+    public function __construct(public string|\UnitEnum $tag = 'USA') {}
 
     public function __invoke(): string
     {

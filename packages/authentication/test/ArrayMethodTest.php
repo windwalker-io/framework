@@ -114,7 +114,7 @@ class ArrayMethodTest extends TestCase
     #[Test]
     public function usersCanBeReplaced(): void
     {
-        $method = new ArrayMethod;
+        $method = new ArrayMethod();
         $users = ['user' => ['password' => password_hash('secret', PASSWORD_DEFAULT)]];
 
         self::assertSame($method, $method->setUsers($users));

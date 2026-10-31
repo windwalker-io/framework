@@ -40,18 +40,16 @@ class StubLocation implements EntityInterface
     #[Column('state')]
     protected int $state = 0;
 
-    #[
-        OneToOne(StubLocationData::class, no: 'location_no'),
+    #[OneToOne(StubLocationData::class, no: 'location_no'),
         OnUpdate(Action::CASCADE),
-        OnDelete(Action::CASCADE)
-    ]
+        OnDelete(Action::CASCADE)]
     #[Expose]
     protected ?StubLocationData $data = null;
 
     #[Expose]
-    protected RelationCollection|null $sakuras = null;
+    protected ?RelationCollection $sakuras = null;
 
-    protected RelationCollection|null $roses = null;
+    protected ?RelationCollection $roses = null;
 
     #[EntitySetup]
     public static function setup(
@@ -64,7 +62,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -84,7 +82,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -104,7 +102,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return StubLocationData|null
+     * @return  StubLocationData|null
      */
     public function getData(): ?StubLocationData
     {
@@ -124,7 +122,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -144,7 +142,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getSakuras(): ?RelationCollection
     {
@@ -164,7 +162,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getRoses(): ?RelationCollection
     {
@@ -184,7 +182,7 @@ class StubLocation implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {

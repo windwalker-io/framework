@@ -33,7 +33,7 @@ class Watch implements AttributeInterface
     public const int INCLUDE_UPDATE_WHERE = 1 << 2;
 
     /**
-     * @var callable|string
+     * @var  callable|string
      */
     protected $columnOrHandler;
 

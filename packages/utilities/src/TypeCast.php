@@ -20,27 +20,27 @@ use function Windwalker\get_object_dump_values;
 /**
  * The TypeCast class.
  *
- * @method static int|null tryInteger($value, bool $strict = false)
- * @method static float|null tryFloat($value, bool $strict = false)
- * @method static int|float|null tryNumeric($value, bool $strict = false)
- * @method static string|null tryString($value, bool $strict = false)
- * @method static bool|null tryBoolean($value, bool $strict = false)
- * @method static array|null tryArray($value, bool $strict = false)
- * @method static object|null tryObject($value, bool $strict = false)
- * @method static int|null safeInteger($value)
- * @method static float|null safeFloat($value)
- * @method static int|float|null safeNumeric($value)
- * @method static string|null safeString($value)
- * @method static bool|null safeBoolean($value)
- * @method static array|null safeArray($value)
- * @method static object|null safeObject($value)
- * @method static int mustInteger($value)
- * @method static float mustFloat($value)
- * @method static int|float mustNumeric($value)
- * @method static string mustString($value)
- * @method static bool mustBoolean($value)
- * @method static array mustArray($value)
- * @method static object mustObject($value)
+ * @method  static  int|null        tryInteger($value, bool $strict = false)
+ * @method  static  float|null      tryFloat($value, bool $strict = false)
+ * @method  static  int|float|null  tryNumeric($value, bool $strict = false)
+ * @method  static  string|null     tryString($value, bool $strict = false)
+ * @method  static  bool|null       tryBoolean($value, bool $strict = false)
+ * @method  static  array|null      tryArray($value, bool $strict = false)
+ * @method  static  object|null     tryObject($value, bool $strict = false)
+ * @method  static  int|null        safeInteger($value)
+ * @method  static  float|null      safeFloat($value)
+ * @method  static  int|float|null  safeNumeric($value)
+ * @method  static  string|null     safeString($value)
+ * @method  static  bool|null       safeBoolean($value)
+ * @method  static  array|null      safeArray($value)
+ * @method  static  object|null     safeObject($value)
+ * @method  static  int             mustInteger($value)
+ * @method  static  float           mustFloat($value)
+ * @method  static  int|float       mustNumeric($value)
+ * @method  static  string          mustString($value)
+ * @method  static  bool            mustBoolean($value)
+ * @method  static  array           mustArray($value)
+ * @method  static  object          mustObject($value)
  *
  * @since  4.0
  */
@@ -237,8 +237,6 @@ abstract class TypeCast
      * @param  mixed  $data  The data to convert.
      *
      * @return  string
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function forceString(mixed $data): string
     {
@@ -252,8 +250,6 @@ abstract class TypeCast
      * @param  string  $typeOrClass
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function mapAs(array $src, string $typeOrClass): array
     {
@@ -464,6 +460,7 @@ abstract class TypeCast
                         return false;
                 }
 
+                // no break
             case 'float':
             case 'double':
             case 'real':
@@ -471,10 +468,10 @@ abstract class TypeCast
             case 'numeric':
                 // Fork from: https://github.com/theodorejb/PolyCast
                 switch (gettype($value)) {
-                    case "double":
-                    case "integer":
+                    case 'double':
+                    case 'integer':
                         return true;
-                    case "string":
+                    case 'string':
                         // Reject leading zeros unless they are followed by a decimal point
                         if (strlen($value) > 1 && $value[0] === '0' && $value[1] !== '.') {
                             return false;
@@ -482,18 +479,19 @@ abstract class TypeCast
 
                         // Use regular expressions to check is valid float expression.
                         // Based on http://php.net/manual/en/language.types.float.php
-                        $lnum = "[0-9]+";
+                        $lnum = '[0-9]+';
                         $dnum = "([0-9]*[\.]{$lnum})|({$lnum}[\.][0-9]*)";
                         $expDnum = "/^[+-]?(({$lnum}|{$dnum})[eE][+-]?{$lnum})$/";
 
                         return
-                            preg_match("/^[+-]?{$lnum}$/", $value) ||
-                            preg_match("/^[+-]?{$dnum}$/", $value) ||
-                            preg_match($expDnum, $value);
+                            preg_match("/^[+-]?{$lnum}$/", $value)
+                            || preg_match("/^[+-]?{$dnum}$/", $value)
+                            || preg_match($expDnum, $value);
                     default:
                         return false;
                 }
 
+                // no break
             case 'string':
                 return match (gettype($value)) {
                     'string', 'integer', 'double' => true,
@@ -521,8 +519,6 @@ abstract class TypeCast
      * @param  array   $args
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function __callStatic(string $name, array $args): mixed
     {

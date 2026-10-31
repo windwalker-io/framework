@@ -7,6 +7,4 @@ namespace Windwalker\Form\Field;
 /**
  * Interface HiddenFieldInterface
  */
-interface HiddenFieldInterface
-{
-}
+interface HiddenFieldInterface {}

@@ -10,12 +10,10 @@ namespace Windwalker\Utilities\Attributes\Enum;
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 class Meta
 {
-    public function __construct(public array $meta)
-    {
-    }
+    public function __construct(public array $meta) {}
 
     /**
-     * @return array
+     * @return  array
      */
     public function getMeta(): array
     {

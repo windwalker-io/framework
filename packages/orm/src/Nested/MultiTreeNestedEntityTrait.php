@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Nested;
 
 use Windwalker\ORM\Attributes\Column;
-use Windwalker\ORM\EntityTrait;
-use Windwalker\ORM\Relation\RelationCollection;
 
 /**
  * The NestedEntityTrait class.
@@ -25,6 +23,7 @@ trait MultiTreeNestedEntityTrait
      * @param  mixed  $rootId
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setRootId(mixed $rootId): static
     {

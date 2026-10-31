@@ -19,14 +19,14 @@ trait BindableTrait
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param string|integer|array  $key             The key that will be used in your SQL query to reference the value.
+     * @param  string|integer|array  $key            The key that will be used in your SQL query to reference the value.
      *                                               Usually of the form ':key', but can also be an integer.
-     * @param mixed                &$value           The value that will be bound. The value is passed by reference to
+     * @param  mixed                 &$value         The value that will be bound. The value is passed by reference to
      *                                               support output parameters such as those possible with stored
      *                                               procedures.
-     * @param mixed                 $dataType        Constant corresponding to a SQL datatype.
-     * @param integer               $length          The length of the variable. Usually required for OUTPUT parameters.
-     * @param array                 $driverOptions   Optional driver options to be used.
+     * @param  mixed                 $dataType       Constant corresponding to a SQL datatype.
+     * @param  integer               $length         The length of the variable. Usually required for OUTPUT parameters.
+     * @param  array                 $driverOptions  Optional driver options to be used.
      *
      * @return  static
      *
@@ -93,12 +93,12 @@ trait BindableTrait
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param string|integer|array  $key             The key that will be used in your SQL query to reference the
-     *                                               value. Usually of the form ':key', but can also be an integer.
-     * @param mixed                &$value           The value that will be bound. The value is passed by reference to
-     *                                               support output parameters such as those possible with stored
-     *                                               procedures.
-     * @param mixed                 $dataType        Constant corresponding to a SQL datatype.
+     * @param  string|integer|array  $key       The key that will be used in your SQL query to reference the
+     *                                          value. Usually of the form ':key', but can also be an integer.
+     * @param  mixed                 &$value    The value that will be bound. The value is passed by reference to
+     *                                          support output parameters such as those possible with stored
+     *                                          procedures.
+     * @param  mixed                 $dataType  Constant corresponding to a SQL datatype.
      *
      * @return  static
      *
@@ -116,7 +116,7 @@ trait BindableTrait
      * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then
      * that item is returned.
      *
-     * @param mixed $key The bounded variable key to retrieve.
+     * @param  mixed  $key  The bounded variable key to retrieve.
      *
      * @return  array|null
      *
@@ -141,6 +141,8 @@ trait BindableTrait
      * resetBounded
      *
      * @return  static
+     *
+     * @codeCoverageIgnore
      */
     public function resetBounded(): static
     {
@@ -152,7 +154,7 @@ trait BindableTrait
     /**
      * unbind
      *
-     * @param string|array $keys
+     * @param  string|array  $keys
      *
      * @return  static
      */

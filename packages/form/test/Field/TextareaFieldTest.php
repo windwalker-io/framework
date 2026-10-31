@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Form\Field\TextareaField;
 use Windwalker\Test\Traits\DOMTestTrait;
@@ -20,17 +22,12 @@ class TextareaFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var TextareaField
+     * @var  TextareaField
      */
     protected $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createTextareaField(): void
     {
         $this->instance = new TextareaField(
             'flower',
@@ -50,22 +47,8 @@ class TextareaFieldTest extends TestCase
         $this->instance->setValue('sakura');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test prepareAttributes().
-     *
-     * @return void
-     */
-    public function testRender()
+    #[Test]
+    public function renderInputOutputsTextareaWithAttributes(): void
     {
         // phpcs:disable
         $html = <<<HTML

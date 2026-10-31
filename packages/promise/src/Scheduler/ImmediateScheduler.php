@@ -52,6 +52,8 @@ class ImmediateScheduler implements SchedulerInterface
 
     /**
      * @inheritDoc
+     *
+     * @codeCoverageIgnore
      */
     public function wait(ScheduleCursor $cursor): void
     {
@@ -60,6 +62,8 @@ class ImmediateScheduler implements SchedulerInterface
 
     /**
      * @inheritDoc
+     *
+     * @codeCoverageIgnore
      */
     public function done(?ScheduleCursor $cursor): void
     {

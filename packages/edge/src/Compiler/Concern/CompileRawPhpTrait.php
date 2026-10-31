@@ -14,7 +14,7 @@ trait CompileRawPhpTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compilePhp(string $expression): string
     {
@@ -26,7 +26,7 @@ trait CompileRawPhpTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndphp(string $expression): string
     {
@@ -38,7 +38,7 @@ trait CompileRawPhpTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileUnset(string $expression): string
     {

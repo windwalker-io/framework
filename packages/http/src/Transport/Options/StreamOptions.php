@@ -28,7 +28,7 @@ class StreamOptions extends TransportOptions
             followLocation: $followLocation,
             certpath: $certpath,
             verifyPeer: $verifyPeer,
-            files: $files
+            files: $files,
         );
     }
 }

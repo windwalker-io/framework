@@ -7,11 +7,6 @@ namespace Windwalker\Scalars\Concern;
 use Windwalker\Scalars\StringObject;
 use Windwalker\Utilities\StrInflector;
 
-/**
- * The StrInflectorTrait class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait StringInflectorTrait
 {
     public function isPlural(): bool

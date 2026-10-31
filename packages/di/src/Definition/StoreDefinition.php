@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Definition;
 
+use BackedEnum;
 use Closure;
+use ReflectionClass;
+use ReflectionException;
+use UnitEnum;
 use Windwalker\DI\Attributes\Isolation;
 use Windwalker\DI\Container;
 use Windwalker\DI\DIOptions;
 use Windwalker\DI\Exception\DefinitionException;
 
 use function Windwalker\has_attributes;
-use function Windwalker\unwrap_enum;
 
 /**
  * The NewStoreDefinition class.
@@ -32,7 +35,7 @@ class StoreDefinition implements StoreDefinitionInterface
         public string $id,
         public protected(set) mixed $value,
         DIOptions|int $options = new DIOptions(),
-        public \UnitEnum|string|null $tag = null
+        public UnitEnum|string|null $tag = null,
     ) {
         $this->options = DIOptions::wrap($options);
 
@@ -46,15 +49,15 @@ class StoreDefinition implements StoreDefinitionInterface
         return $this->options->isolation
             ?? (
                 class_exists($this->id)
-                && has_attributes(new \ReflectionClass($this->id), Isolation::class, true)
+                && has_attributes(new ReflectionClass($this->id), Isolation::class, true)
             );
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws DefinitionException
+     * @throws  ReflectionException
+     * @throws  DefinitionException
      */
-    public function resolve(?Container $container = null, array $args = [], \UnitEnum|string|null $tag = null): mixed
+    public function resolve(?Container $container = null, array $args = [], UnitEnum|string|null $tag = null): mixed
     {
         $container ??= $this->container ?? throw new DefinitionException('This definition has no container.');
         $tag ??= $this->tag;
@@ -65,7 +68,7 @@ class StoreDefinition implements StoreDefinitionInterface
 
         if (!$this->validateProvidedIn($container)) {
             throw new DefinitionException(
-                "Container ID: {$this->id} cannot provide to level: {$container->getLevel()}"
+                "Container ID: {$this->id} cannot provide to level: {$container->getLevel()}",
             );
         }
 
@@ -151,7 +154,9 @@ class StoreDefinition implements StoreDefinitionInterface
     }
 
     /**
-     * @return DIOptions
+     * @return  DIOptions
+     *
+     * @codeCoverageIgnore
      */
     public function getOptions(): DIOptions
     {
@@ -162,6 +167,8 @@ class StoreDefinition implements StoreDefinitionInterface
      * @param  DIOptions  $options
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptions(DIOptions $options): static
     {
@@ -171,7 +178,9 @@ class StoreDefinition implements StoreDefinitionInterface
     }
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getId(): string
     {
@@ -182,6 +191,8 @@ class StoreDefinition implements StoreDefinitionInterface
      * @param  string  $id
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setId(string $id): static
     {
@@ -190,21 +201,21 @@ class StoreDefinition implements StoreDefinitionInterface
         return $this;
     }
 
-    public function getCache(\UnitEnum|string|null $tag = null): mixed
+    public function getCache(UnitEnum|string|null $tag = null): mixed
     {
         $key = $this->buildCacheKey($tag);
 
         return $this->cache[$key] ?? null;
     }
 
-    protected function hasCache(\UnitEnum|string|null $tag = null): bool
+    protected function hasCache(UnitEnum|string|null $tag = null): bool
     {
         $key = $this->buildCacheKey($tag);
 
         return isset($this->cache[$key]);
     }
 
-    protected function setCache(mixed $value, \UnitEnum|string|null $tag = null): static
+    protected function setCache(mixed $value, UnitEnum|string|null $tag = null): static
     {
         $key = $this->buildCacheKey($tag);
 
@@ -249,6 +260,9 @@ class StoreDefinition implements StoreDefinitionInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getProvidedIn(): int|array|Closure|null
     {
         return $this->providedIn;
@@ -275,15 +289,15 @@ class StoreDefinition implements StoreDefinitionInterface
         return (bool) $provided($level);
     }
 
-    protected function buildCacheKey(\UnitEnum|string|null $tag = null): string
+    protected function buildCacheKey(UnitEnum|string|null $tag = null): string
     {
         $tag = $tag ?? $this->tag;
 
-        if ($tag instanceof \BackedEnum) {
+        if ($tag instanceof BackedEnum) {
             return $tag->value;
         }
 
-        if ($tag instanceof \UnitEnum) {
+        if ($tag instanceof UnitEnum) {
             return $tag->name;
         }
 

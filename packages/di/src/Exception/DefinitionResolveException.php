@@ -7,6 +7,4 @@ namespace Windwalker\DI\Exception;
 /**
  * The DefinitionResolveException class.
  */
-class DefinitionResolveException extends DefinitionException
-{
-}
+class DefinitionResolveException extends DefinitionException {}

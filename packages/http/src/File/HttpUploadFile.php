@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\File;
 
+use CURLFile;
+
 /**
  * The HttpUploadFile class.
  */
@@ -12,12 +14,13 @@ class HttpUploadFile implements HttpUploadFileInterface
     public function __construct(
         protected string $filename,
         protected ?string $mimeType = null,
-        protected ?string $postname = null
-    ) {
-    }
+        protected ?string $postname = null,
+    ) {}
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getFilename(): string
     {
@@ -28,6 +31,8 @@ class HttpUploadFile implements HttpUploadFileInterface
      * @param  string  $filename
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setFilename(string $filename): static
     {
@@ -37,7 +42,7 @@ class HttpUploadFile implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMimeType(): ?string
     {
@@ -56,6 +61,8 @@ class HttpUploadFile implements HttpUploadFileInterface
      * @param  string  $mimeType
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMimeType(?string $mimeType): static
     {
@@ -65,7 +72,7 @@ class HttpUploadFile implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPostFilename(): ?string
     {
@@ -76,6 +83,8 @@ class HttpUploadFile implements HttpUploadFileInterface
      * @param  string|null  $postname
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPostFilename(?string $postname): static
     {
@@ -84,12 +93,12 @@ class HttpUploadFile implements HttpUploadFileInterface
         return $this;
     }
 
-    public function toCurlFile(): \CURLFile
+    public function toCurlFile(): CURLFile
     {
-        return new \CURLFile(
+        return new CURLFile(
             $this->getFilename(),
             $this->getMimeType() ?: null,
-            $this->getPostFilename() ?: null
+            $this->getPostFilename() ?: null,
         );
     }
 

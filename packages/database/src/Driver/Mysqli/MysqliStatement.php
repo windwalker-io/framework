@@ -9,7 +9,6 @@ use mysqli_result;
 use mysqli_stmt;
 use Windwalker\Database\Driver\AbstractStatement;
 use Windwalker\Database\Driver\ConnectionInterface;
-use Windwalker\Database\Driver\DriverInterface;
 use Windwalker\Database\Exception\StatementException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
@@ -20,19 +19,19 @@ use Windwalker\Query\Bounded\ParamType;
 class MysqliStatement extends AbstractStatement
 {
     /**
-     * @var mysqli_stmt
+     * @var  mysqli_stmt
      */
     public protected(set) mixed $cursor = null;
 
     /**
-     * @var mysqli
+     * @var  mysqli
      */
     protected mixed $conn = null;
 
     /**
-     * @var mysqli_result|bool|null
+     * @var  mysqli_result|bool|null
      */
-    public protected(set) mysqli_result | bool | null $result = null;
+    public protected(set) mysqli_result|bool|null $result = null;
 
     /**
      * @inheritDoc

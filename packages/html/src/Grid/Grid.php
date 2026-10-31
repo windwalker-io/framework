@@ -25,31 +25,31 @@ class Grid
 
     /**
      * Array of columns
-     * @var array
+     * @var  array
      */
     protected array $columns = [];
 
     /**
      * Current active row
-     * @var int
+     * @var  int
      */
     protected int $activeRow = 0;
 
     /**
      * Rows of the table (including header and footer rows)
-     * @var array
+     * @var  array
      */
     protected array $rows = [];
 
     /**
      * Header and Footer row-IDs
-     * @var array
+     * @var  array
      */
     protected array $specialRows = ['header' => [], 'footer' => []];
 
     /**
      * Associative array of attributes for the table-tag
-     * @var array
+     * @var  array
      */
     protected array $attrs;
 
@@ -70,7 +70,7 @@ class Grid
      *
      * @param  array  $attrs
      *
-     * @return static
+     * @return  static
      */
     public static function create(array $attrs = []): static
     {
@@ -95,7 +95,7 @@ class Grid
      * @param  array  $attrs    Associative array of attributes for the table-tag
      * @param  bool   $replace  Replace possibly existing attributes
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since 2.1
      */
@@ -113,7 +113,7 @@ class Grid
     /**
      * Get the Attributes of the current table
      *
-     * @return  array Associative array of attributes
+     * @return  array  Associative array of attributes
      *
      * @since 2.1
      */
@@ -127,7 +127,7 @@ class Grid
      *
      * @param  string  $name  Internal column name
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since 2.1
      */
@@ -141,7 +141,7 @@ class Grid
     /**
      * Returns the list of internal columns
      *
-     * @return  array List of internal columns
+     * @return  array  List of internal columns
      *
      * @since 2.1
      */
@@ -155,7 +155,7 @@ class Grid
      *
      * @param  string  $name  Name of the column to be deleted
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since 2.1
      */
@@ -177,7 +177,7 @@ class Grid
      *
      * @param  array  $columns  List of internal column names
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since 2.1
      */
@@ -195,7 +195,7 @@ class Grid
      * @param  array     $attrs    Associative array of attributes for the row
      * @param  int|bool  $special  1 for a new row in the header, 2 for a new row in the footer
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since   2.1
      */
@@ -228,7 +228,7 @@ class Grid
     /**
      * Method to get the attributes of the currently active row
      *
-     * @return array Associative array of attributes
+     * @return  array  Associative array of attributes
      *
      * @since   2.1
      */
@@ -242,7 +242,7 @@ class Grid
      *
      * @param  array  $attrs  Associative array of attributes
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since   2.1
      */
@@ -256,7 +256,7 @@ class Grid
     /**
      * Get the currently active row ID
      *
-     * @return  int ID of the currently active row
+     * @return  int  ID of the currently active row
      *
      * @since   2.1
      */
@@ -270,7 +270,7 @@ class Grid
      *
      * @param  int  $id  ID of the row to be set to current
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since  2.1
      */
@@ -290,7 +290,7 @@ class Grid
      * @param  array   $attrs    Associative array of attributes for the td-element
      * @param  bool    $replace  If false, the content is appended to the current content of the cell
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since 2.1
      */
@@ -322,9 +322,9 @@ class Grid
     /**
      * Get all data for a row
      *
-     * @param   ?int  $id  ID of the row to return
+     * @param  ?int  $id  ID of the row to return
      *
-     * @return  ?array Array of columns of a table row
+     * @return  ?array  Array of columns of a table row
      *
      * @since   2.1
      */
@@ -340,7 +340,7 @@ class Grid
      *
      * @param  int|bool  $special  false for the standard rows, 1 for the header rows, 2 for the footer rows
      *
-     * @return  array Array of IDs
+     * @return  array  Array of IDs
      *
      * @since 2.1
      */
@@ -365,7 +365,7 @@ class Grid
      *
      * @param  int  $id  ID of the row to be deleted
      *
-     * @return  static This object for chaining
+     * @return  static  This object for chaining
      *
      * @since   2.1
      */
@@ -391,7 +391,7 @@ class Grid
     /**
      * Render the HTML table
      *
-     * @return  string The rendered HTML table
+     * @return  string  The rendered HTML table
      *
      * @since   2.1
      */
@@ -429,7 +429,7 @@ class Grid
      * @param  string  $area  Name of the area to render. Valid: tbody, tfoot, thead
      * @param  string  $cell  Name of the cell to render. Valid: td, th
      *
-     * @return string The rendered table area
+     * @return  string  The rendered table area
      *
      * @since 2.1
      */
@@ -462,7 +462,7 @@ class Grid
      *
      * @param  array  $attrs  Associative array of attributes
      *
-     * @return  string The HTML attribute string
+     * @return  string  The HTML attribute string
      *
      * @since   2.1
      */

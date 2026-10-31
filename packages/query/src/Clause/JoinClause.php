@@ -18,34 +18,34 @@ use function Windwalker\Query\val;
 /**
  * The JoinClause class.
  *
- * @method string raw($value, ...$args)
- * @method string format(string $text, ...$args)
- * @method Clause clause(string $name, $elements = [], string $glue = ' ')
- * @method string dateFormat()
- * @method string nullDate()
- * @method mixed  escape($values)
- * @method mixed  quote($values)
- * @method mixed  quoteName($values)
+ * @method  string  raw($value, ...$args)
+ * @method  string  format(string $text, ...$args)
+ * @method  Clause  clause(string $name, $elements = [], string $glue = ' ')
+ * @method  string  dateFormat()
+ * @method  string  nullDate()
+ * @method  mixed   escape($values)
+ * @method  mixed   quote($values)
+ * @method  mixed   quoteName($values)
  */
 class JoinClause implements ClauseInterface
 {
     /**
-     * @var string|AsClause
+     * @var  string|AsClause
      */
     protected $table;
 
     /**
-     * @var Query
+     * @var  Query
      */
     protected $query;
 
     /**
-     * @var Clause
+     * @var  Clause
      */
     protected $on;
 
     /**
-     * @var string
+     * @var  string
      */
     protected $prefix;
 
@@ -107,7 +107,7 @@ class JoinClause implements ClauseInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPrefix(): string
     {
@@ -118,6 +118,8 @@ class JoinClause implements ClauseInterface
      * @param  string  $prefix
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPrefix(string $prefix): static
     {
@@ -299,7 +301,7 @@ class JoinClause implements ClauseInterface
     }
 
     /**
-     * @return string|AsClause
+     * @return  string|AsClause
      */
     public function getTable(): AsClause|string
     {

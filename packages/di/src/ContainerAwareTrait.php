@@ -12,7 +12,7 @@ trait ContainerAwareTrait
     protected ?Container $container = null;
 
     /**
-     * @return Container
+     * @return  Container
      */
     public function getContainer(): Container
     {

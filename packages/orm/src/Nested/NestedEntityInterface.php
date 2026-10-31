@@ -13,7 +13,7 @@ use Windwalker\ORM\Relation\RelationCollection;
 interface NestedEntityInterface extends EntityInterface
 {
     /**
-     * @return Position
+     * @return  Position
      */
     public function getPosition(): Position;
 
@@ -25,7 +25,7 @@ interface NestedEntityInterface extends EntityInterface
     public function getPrimaryKeyValue(): mixed;
 
     /**
-     * @return mixed|null
+     * @return  mixed|null
      */
     public function getParentId(): mixed;
 
@@ -37,7 +37,7 @@ interface NestedEntityInterface extends EntityInterface
     public function setParentId(mixed $parentId): static;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getWidth(): int;
 
@@ -49,7 +49,7 @@ interface NestedEntityInterface extends EntityInterface
     public function childrenCount(): int;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getLft(): int;
 
@@ -61,7 +61,7 @@ interface NestedEntityInterface extends EntityInterface
     public function setLft(int $lft): static;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getRgt(): int;
 
@@ -73,7 +73,7 @@ interface NestedEntityInterface extends EntityInterface
     public function setRgt(int $rgt): static;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getLevel(): int;
 
@@ -107,7 +107,7 @@ interface NestedEntityInterface extends EntityInterface
     public function setAncestors(RelationCollection $ancestors): static;
 
     /**
-     * @return RelationCollection
+     * @return  RelationCollection
      */
     public function getTree(): RelationCollection;
 

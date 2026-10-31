@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * The ArrConverterTest class.
- *
- * @since  {DEPLOY_VERSION}
  */
 class ArrConverterTraitTest extends TestCase
 {
-    public function testFlipMatrix(): void
+    #[Test]
+    public function flipMatrixMapsInnerValuesToOuterKeys(): void
     {
         $src = [
             'A' => [
@@ -47,27 +48,14 @@ class ArrConverterTraitTest extends TestCase
         self::assertEquals($expected, Arr::flipMatrix($src));
     }
 
-    /**
-     * testGroup
-     *
-     * @param $source
-     * @param $key
-     * @param $expected
-     * @param $type
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestGroup')]
-    public function testGroup($source, $key, $expected, int $type, ?string $delimiter = '')
+    #[Test]
+    #[DataProvider('groupByPathProvider')]
+    public function groupByPathGroupsItemsByKeyPath($source, $key, $expected, int $type, ?string $delimiter = ''): void
     {
         self::assertEquals($expected, Arr::groupByPath($source, $key, $type, (string) $delimiter));
     }
 
-    /**
-     * providerTestGroup
-     *
-     * @return  array
-     */
-    public static function providerTestGroup(): array
+    public static function groupByPathProvider(): array
     {
         return [
             'A scalar array' => [
@@ -240,7 +228,8 @@ class ArrConverterTraitTest extends TestCase
         ];
     }
 
-    public function testTranspose(): void
+    #[Test]
+    public function transposeSwapsRowsAndColumns(): void
     {
         $src = [
             [
@@ -273,7 +262,8 @@ class ArrConverterTraitTest extends TestCase
         self::assertEquals($expected, Arr::transpose($src));
     }
 
-    public function testGroupPrefix(): void
+    #[Test]
+    public function groupPrefixExtractsPrefixedKeysAndKeepsOthers(): void
     {
         $src = [
             'id' => 123,
@@ -300,7 +290,8 @@ class ArrConverterTraitTest extends TestCase
         );
     }
 
-    public function testExtractPrefix(): void
+    #[Test]
+    public function extractPrefixAddsPrefixToKeys(): void
     {
         $item = [
             'id' => 123,
@@ -321,6 +312,21 @@ class ArrConverterTraitTest extends TestCase
             ],
             Arr::extractPrefix($src, 'params_')
         );
+    }
+
+    #[Test]
+    public function extractPrefixMergesIntoGivenItem(): void
+    {
+        $item = [
+            'id' => 123,
+            'title' => 'Hello',
+        ];
+
+        $src = [
+            'foo' => 'Foo',
+            'bar' => 'Bar',
+            'yoo' => 'Yoo',
+        ];
 
         self::assertEquals(
             [
@@ -334,7 +340,8 @@ class ArrConverterTraitTest extends TestCase
         );
     }
 
-    public function testMapWithKey(): void
+    #[Test]
+    public function mapWithKeysBuildsKeysFromCallback(): void
     {
         $src = [
             'A' => [
@@ -418,7 +425,8 @@ class ArrConverterTraitTest extends TestCase
         );
     }
 
-    public static function testMapGenerator(): void
+    #[Test]
+    public static function mapGeneratorCollectsYieldedKeysAndValues(): void
     {
         $gen = static function () {
             yield 1 => 'A';
@@ -441,7 +449,8 @@ class ArrConverterTraitTest extends TestCase
     /**
      * @see  Arr::crossJoin()
      */
-    public function testCrossJoin(): void
+    #[Test]
+    public function crossJoinCombinesTwoArrays(): void
     {
         $a = Arr::crossJoin([1, 2], ['a', 'b']);
 
@@ -454,7 +463,11 @@ class ArrConverterTraitTest extends TestCase
             ],
             $a
         );
+    }
 
+    #[Test]
+    public function crossJoinCombinesThreeArrays(): void
+    {
         $b = Arr::crossJoin([1, 2], ['a', 'b'], ['I', 'II']);
 
         self::assertEquals(
@@ -470,5 +483,79 @@ class ArrConverterTraitTest extends TestCase
             ],
             $b
         );
+    }
+
+    #[Test]
+    public function groupDispatchesByPathOrCallback(): void
+    {
+        $src = [
+            ['t' => 'a', 'v' => 1],
+            ['t' => 'b', 'v' => 2],
+            ['t' => 'a', 'v' => 3],
+        ];
+
+        $byPath = Arr::group($src, 't');
+        $byCallback = Arr::group($src, fn(array $item) => $item['t']);
+
+        self::assertSame([1, 3], array_column($byPath['a'], 'v'));
+        self::assertEquals($byPath, $byCallback);
+        self::assertSame(['a', 'b'], array_keys(Arr::group($src, 't', Arr::GROUP_TYPE_MIX)));
+        self::assertSame(['x'], array_keys(Arr::group(['x'], null)));
+    }
+
+    #[Test]
+    #[DataProvider('mapWithKeysProvider')]
+    public function mapWithKeysAppliesGroupingTypeToDuplicateKeys(int $type, array $expected): void
+    {
+        $result = Arr::mapWithKeys(
+            [1, 2, 3, 4],
+            fn(int $v) => [$v % 2 ? 'odd' : 'even' => $v],
+            $type
+        );
+
+        self::assertSame($expected, $result);
+    }
+
+    public static function mapWithKeysProvider(): array
+    {
+        return [
+            'key by' => [Arr::GROUP_TYPE_KEY_BY, ['odd' => 3, 'even' => 4]],
+            'array' => [Arr::GROUP_TYPE_ARRAY, ['odd' => [1, 3], 'even' => [2, 4]]],
+            'mix' => [Arr::GROUP_TYPE_MIX, ['odd' => [1, 3], 'even' => [2, 4]]],
+        ];
+    }
+
+    #[Test]
+    public function mapWithKeysAppendsNullKeysAndAcceptsGenerators(): void
+    {
+        $result = Arr::mapWithKeys(
+            ['a', 'b'],
+            function (string $v) {
+                yield null => $v;
+                yield 'k' => $v;
+            }
+        );
+
+        self::assertSame(['a', 'k' => 'b', 'b'], [$result[0], 'k' => $result['k'], $result[1]]);
+    }
+
+    #[Test]
+    public function mapWithKeysMixKeepsThirdAndLaterValuesInArray(): void
+    {
+        $result = Arr::mapWithKeys(
+            [1, 2, 3],
+            fn(int $v) => ['k' => $v],
+            Arr::GROUP_TYPE_MIX
+        );
+
+        self::assertSame(['k' => [1, 2, 3]], $result);
+    }
+
+    #[Test]
+    public function mapWithKeysRejectsNonIterableHandlerResult(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        Arr::mapWithKeys([1], fn() => 'nope');
     }
 }

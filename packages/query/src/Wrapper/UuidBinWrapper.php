@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Wrapper;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
-use Windwalker\Utilities\Wrapper\WrapperInterface;
-
 /**
  * The UuidBinaryWrapper class.
  */

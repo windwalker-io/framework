@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Http;
 
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ResponseInterface;
 use Stringable;
 use Windwalker\Http\Response\HttpClientResponse;
 
@@ -34,6 +33,6 @@ interface HttpClientInterface extends ClientInterface
         string $method,
         Stringable|string $url,
         mixed $body = null,
-        array $options = []
+        array $options = [],
     ): HttpClientResponse;
 }

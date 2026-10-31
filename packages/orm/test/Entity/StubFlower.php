@@ -43,7 +43,7 @@ class StubFlower
     public array $c = [];
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -63,7 +63,7 @@ class StubFlower
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getCatid(): int
     {
@@ -83,7 +83,7 @@ class StubFlower
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -103,7 +103,7 @@ class StubFlower
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMeaning(): string
     {
@@ -123,7 +123,7 @@ class StubFlower
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getOrdering(): int
     {
@@ -143,7 +143,7 @@ class StubFlower
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -163,7 +163,7 @@ class StubFlower
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getParams(): array
     {

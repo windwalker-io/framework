@@ -18,7 +18,7 @@ declare(strict_types=1);
 // e.g. REQUEST_URI "//json?foo=bar" (from CurlTransport's URI building) should be treated as "/json".
 $requestPath = '/' . ltrim(
     explode('?', $_SERVER['REQUEST_URI'] ?? '/')[0],
-    '/'
+    '/',
 );
 
 // Health check – used by PhpBuiltinServer to detect readiness
@@ -88,4 +88,3 @@ header('Content-Type: text/plain');
 echo 'Not Found';
 
 return true;
-

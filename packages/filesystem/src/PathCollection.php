@@ -21,7 +21,7 @@ class PathCollection
     /**
      * Paths bag.
      *
-     * @var FileObject[]
+     * @var  FileObject[]
      */
     protected $paths = [];
 
@@ -62,12 +62,12 @@ class PathCollection
     /**
      * Add one path to bag.
      *
-     * @param  string|SplFileInfo  $path   The path your want to store in bag,
-     *                                     have to be a string or FileObject.
+     * @param  string|SplFileInfo  $path  The path your want to store in bag,
+     *                                    have to be a string or FileObject.
      *
      * @return  static  Return new object to support chaining.
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      * @since  2.0
      */
     public function add(SplFileInfo|string $path): static|PathCollection
@@ -96,7 +96,7 @@ class PathCollection
      *
      * @param  int  $key  The key of path you want to get.
      *
-     * @return FileObject|null
+     * @return  FileObject|null
      *
      * @since  2.0
      */
@@ -126,7 +126,7 @@ class PathCollection
     /**
      * Append all paths' iterator into an OuterIterator.
      *
-     * @param Closure|null $getter Contains the logic that how to get iterator from file object.
+     * @param  Closure|null  $getter  Contains the logic that how to get iterator from file object.
      *
      * @return  FilesIterator  Appended iterators.
      *
@@ -234,7 +234,7 @@ class PathCollection
      *
      * @param  callable  $callback
      *
-     * @return  static Return new object.
+     * @return  static  Return new object.
      */
     public function map(callable $callback): static|PathCollection
     {

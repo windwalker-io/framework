@@ -18,7 +18,7 @@ interface MethodInterface
      *
      * @param  array  $credential
      *
-     * @return AuthResult
+     * @return  AuthResult
      */
     public function authenticate(array $credential): AuthResult;
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Driver;
 
-use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\TypeCast;
@@ -19,7 +18,7 @@ class SyncQueueDriver implements QueueDriverInterface
     use OptionAccessTrait;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $handler;
 
@@ -45,7 +44,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return string
+     * @return  string
      */
     public function push(QueueMessage $message): string
     {
@@ -65,7 +64,7 @@ class SyncQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getHandler(): callable
     {
@@ -84,6 +83,9 @@ class SyncQueueDriver implements QueueDriverInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore Unused protected hook kept for subclasses; nothing in the driver calls it.
+     */
     protected function runJob(callable $job)
     {
         return $job();
@@ -94,7 +96,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -106,7 +108,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return SyncQueueDriver
+     * @return  SyncQueueDriver
      */
     public function delete(QueueMessage $message): static
     {
@@ -118,7 +120,7 @@ class SyncQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return static
+     * @return  static
      */
     public function release(QueueMessage $message): static
     {

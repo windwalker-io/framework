@@ -13,7 +13,9 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
 2. Match the package's existing test conventions: tests live in `packages/{name}/test/` and are namespaced
    `Windwalker\{Name}\Test\` (PSR-4, see root `composer.json` `autoload-dev`). Mirror the source path structure under
    `src/`.
-3. Choose the smallest test boundary. Prefer plain unit tests with mocks/stubs for pure logic. For DB/Query/DOM-backed
+3. Choose the smallest test boundary. Prefer plain unit tests with mocks/stubs for pure logic. When the subject depends on many
+   other objects/services, use PHPUnit 13 stubs/mocks instead of building real data each time (see
+   [Test Doubles](../../instructions/test.instructions.md#test-doubles-mock--stub)). For DB/Query/DOM-backed
    behavior, use the traits in `Windwalker\Test\Traits` (e.g. `DatabaseTestTrait`, `QueryTestTrait`, `DOMTestTrait`)
    instead of hand-rolled fixtures.
 4. For database tests, confirm a test DB DSN constant (e.g. `WINDWALKER_TEST_DB_DSN_SQLITE`,
@@ -51,5 +53,7 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
    lines/branches, and cover meaningful missing behavior, edge cases, and error paths. Rerun the same selector and
    source scope after adding tests; inspect the target files rather than relying only on an aggregate percentage.
    Follow the logic-free getter/setter exclusion rule in [Test Rules](../../instructions/test.instructions.md).
+   For DB-backed tests see [Database Testing](../../docs/database-testing.md).
+
    See [Testing and Coverage](../../docs/testing.md) for executable commands, coverage drivers, and configuration
    caveats. If the driver is unavailable or tests are skipped, state the limitation explicitly.

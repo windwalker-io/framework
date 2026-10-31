@@ -19,7 +19,7 @@ trait CompileComponentTrait
     /**
      * The component name hash stack.
      *
-     * @var array
+     * @var  array
      */
     protected static array $componentUidStack = [];
 
@@ -28,7 +28,7 @@ trait CompileComponentTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileComponent(string $expression): string
     {
@@ -48,8 +48,8 @@ trait CompileComponentTrait
     /**
      * Get a new component hash for a component name.
      *
-     * @return string
-     * @throws \Exception
+     * @return  string
+     * @throws  \Exception
      */
     public static function newComponentUid(): string
     {
@@ -66,7 +66,7 @@ trait CompileComponentTrait
      * @param  string  $data
      * @param  string  $uid
      *
-     * @return string
+     * @return  string
      */
     public static function compileClassComponentOpening(string $component, string $name, string $data, string $uid)
     {
@@ -91,7 +91,7 @@ trait CompileComponentTrait
     /**
      * Compile the end-component statements into valid PHP.
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndComponent(): string
     {
@@ -112,12 +112,12 @@ trait CompileComponentTrait
     /**
      * Compile the end-component statements into valid PHP.
      *
-     * @return string
+     * @return  string
      */
     public function compileEndComponentClass(): string
     {
-        return $this->compileEndComponent() . "\n" .
-            implode(
+        return $this->compileEndComponent() . "\n"
+            . implode(
                 "\n",
                 [
                     '<?php endif ?>',
@@ -130,7 +130,7 @@ trait CompileComponentTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileProps(string $expression): string
     {
@@ -150,7 +150,7 @@ trait CompileComponentTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileSlot(string $expression): string
     {
@@ -163,7 +163,7 @@ trait CompileComponentTrait
             count($expr) <= 1
             && strtolower($expr[0] ?? '') !== 'null'
         ) {
-            $slots = "(function (...\$__scope) use (\$__edge, \$__data) { extract(\$__data);";
+            $slots = '(function (...$__scope) use ($__edge, $__data) { extract($__data);';
         }
 
         return "<?php \$__data = get_defined_vars(); \$__edge->slot({$expression})$slots ?>";
@@ -201,7 +201,7 @@ trait CompileComponentTrait
     /**
      * Compile the end-slot statements into valid PHP.
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndSlot(): string
     {
@@ -213,7 +213,7 @@ trait CompileComponentTrait
      *
      * @param  mixed  $value
      *
-     * @return mixed
+     * @return  mixed
      */
     public static function sanitizeComponentAttribute(mixed $value): mixed
     {

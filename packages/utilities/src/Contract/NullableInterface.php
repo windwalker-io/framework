@@ -6,8 +6,6 @@ namespace Windwalker\Utilities\Contract;
 
 /**
  * Interface NullableInterface
- *
- * @since  __DEPLOY_VERSION__
  */
 interface NullableInterface
 {
@@ -15,8 +13,6 @@ interface NullableInterface
      * isNull
      *
      * @return  bool
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function isNull(): bool;
 
@@ -24,8 +20,6 @@ interface NullableInterface
      * notNull
      *
      * @return  bool
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function notNull(): bool;
 }

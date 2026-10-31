@@ -21,12 +21,12 @@ trait ManageLayoutTrait
     /**
      * The stack of in-progress sections.
      *
-     * @var array
+     * @var  array
      */
     protected array $sectionStack = [];
 
     /**
-     * @var array
+     * @var  array
      */
     protected array $hasParents = [];
 
@@ -38,7 +38,7 @@ trait ManageLayoutTrait
      * @param  string  $section
      * @param  mixed   $content
      *
-     * @return void
+     * @return  void
      */
     public function startSection(string $section, $content = null): void
     {
@@ -59,7 +59,7 @@ trait ManageLayoutTrait
      * @param  string  $section
      * @param  mixed   $content
      *
-     * @return void
+     * @return  void
      */
     public function inject(string $section, mixed $content): void
     {
@@ -69,7 +69,7 @@ trait ManageLayoutTrait
     /**
      * Stop injecting content into a section and return its contents.
      *
-     * @return string
+     * @return  string
      */
     public function yieldSection(): string
     {
@@ -85,8 +85,8 @@ trait ManageLayoutTrait
      *
      * @param  bool  $overwrite
      *
-     * @return string
-     * @throws InvalidArgumentException
+     * @return  string
+     * @throws  InvalidArgumentException
      */
     public function stopSection(bool $overwrite = false): string
     {
@@ -112,8 +112,8 @@ trait ManageLayoutTrait
     /**
      * Stop injecting content into a section and append it.
      *
-     * @return string
-     * @throws InvalidArgumentException
+     * @return  string
+     * @throws  InvalidArgumentException
      */
     public function appendSection(): string
     {
@@ -138,7 +138,7 @@ trait ManageLayoutTrait
      * @param  string  $section
      * @param  string  $content
      *
-     * @return void
+     * @return  void
      */
     protected function extendSection(string $section, string $content): void
     {
@@ -169,7 +169,7 @@ trait ManageLayoutTrait
      * @param  string  $section
      * @param  string  $default
      *
-     * @return string
+     * @return  string
      */
     public function yieldContent(string $section, string $default = ''): string
     {
@@ -194,7 +194,7 @@ trait ManageLayoutTrait
      *
      * @param  string  $section
      *
-     * @return string
+     * @return  string
      */
     public static function parentPlaceholder(string $section = ''): string
     {
@@ -204,7 +204,7 @@ trait ManageLayoutTrait
     /**
      * Flush all of the section contents.
      *
-     * @return void
+     * @return  void
      */
     public function flushSections(): void
     {
@@ -221,7 +221,7 @@ trait ManageLayoutTrait
     /**
      * Flush all of the section contents if done rendering.
      *
-     * @return void
+     * @return  void
      */
     public function flushSectionsIfDoneRendering(): void
     {

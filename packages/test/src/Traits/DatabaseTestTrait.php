@@ -30,10 +30,12 @@ trait DatabaseTestTrait
 
         $params = $params ?? self::getTestParams($platform);
 
+        if (!$params) {
+            self::markTestSkipped('DSN of ' . $platform . ' not available for test case: ' . static::class);
+        }
+
         $params['driver'] = $driver;
         static::$lastQueries = [];
-
-        $params = $params ?? self::getTestParams($platform);
 
         $db = (new DatabaseFactory())->create($driver, $params);
 

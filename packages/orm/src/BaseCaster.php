@@ -22,12 +22,10 @@ class BaseCaster
 
     public function castDateTime(\DateTimeInterface $value): ?string
     {
-        $tz = $value->getTimezone();
+        $tz = $this->dbTimezone;
 
         if ($tz && $tz->getName() !== $value->getTimezone()->getName()) {
-            $date = \DateTimeImmutable::createFromInterface($value);
-
-            $value = $date->setTimezone($tz);
+            $value = \DateTimeImmutable::createFromInterface($value)->setTimezone($tz);
         }
 
         return $value->format($this->db->getDateFormat());
@@ -52,6 +50,9 @@ class BaseCaster
         return $value;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDbTimezone(): ?\DateTimeZone
     {
         return $this->dbTimezone;
@@ -60,8 +61,8 @@ class BaseCaster
     /**
      * @param  \DateTimeZone|string  $dbTimezone
      *
-     * @return  static  Return self to support chaining.
-     * @throws \Exception
+     * @return  static      Return self to support chaining.
+     * @throws  \Exception
      */
     public function setDbTimezone(\DateTimeZone|string|null $dbTimezone): static
     {

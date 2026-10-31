@@ -54,7 +54,9 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     }
 
     /**
-     * @return ?\DateTimeInterface
+     * @return  ?\DateTimeInterface
+     *
+     * @codeCoverageIgnore
      */
     public function getExpires(): ?\DateTimeInterface
     {
@@ -64,8 +66,8 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     /**
      * @param  DateTimeInterface|int|string|null  $expires  Timestamp, DateTime or time modify string.
      *
-     * @return static Return self to support chaining.
-     * @throws \Exception
+     * @return  static      Return self to support chaining.
+     * @throws  \Exception
      */
     public function expires(int|string|DateTimeInterface|null $expires): static
     {
@@ -93,7 +95,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPath(): string
     {
@@ -104,6 +106,8 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      * @param  string  $path
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function path(string $path): static
     {
@@ -113,7 +117,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getDomain(): string
     {
@@ -124,6 +128,8 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      * @param  string  $domain
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function domain(string $domain): static
     {
@@ -133,7 +139,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isSecure(): bool
     {
@@ -153,7 +159,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isHttpOnly(): bool
     {
@@ -173,7 +179,7 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function isSameSite(): string
     {

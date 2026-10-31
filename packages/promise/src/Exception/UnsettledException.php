@@ -7,6 +7,4 @@ namespace Windwalker\Promise\Exception;
 /**
  * The UnsettledException class.
  */
-class UnsettledException extends \LogicException
-{
-}
+class UnsettledException extends \LogicException {}

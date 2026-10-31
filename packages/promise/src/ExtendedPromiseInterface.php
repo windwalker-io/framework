@@ -12,21 +12,21 @@ interface ExtendedPromiseInterface extends PromiseInterface
     /**
      * @param  callable|null  $onFulfilled
      *
-     * @return static
+     * @return  static
      */
     public function done(?callable $onFulfilled = null): static;
 
     /**
      * @param  callable|null  $onRejected
      *
-     * @return static
+     * @return  static
      */
     public function catch(?callable $onRejected): static;
 
     /**
      * @param  callable|null  $onFulfilledOrRejected
      *
-     * @return static
+     * @return  static
      */
     public function finally(?callable $onFulfilledOrRejected): static;
 }

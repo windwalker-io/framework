@@ -14,7 +14,7 @@ interface FilterInterface
      *
      * @param  mixed  $value
      *
-     * @return mixed
+     * @return  mixed
      */
     public function filter(mixed $value): mixed;
 }

@@ -17,7 +17,7 @@ class HelloWrapper implements ContainerAttributeInterface
     /**
      * HelloWrapper constructor.
      *
-     * @param $foo
+     * @param   $foo
      */
     public function __construct(public $foo)
     {

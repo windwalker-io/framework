@@ -28,7 +28,7 @@ use Windwalker\Utilities\Test\Iterator\NestedIteratorTest;
 class RewindableGenerator implements OuterIterator
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $callable;
 

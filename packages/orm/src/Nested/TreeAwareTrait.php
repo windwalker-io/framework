@@ -7,6 +7,4 @@ namespace Windwalker\ORM\Nested;
 /**
  * The TreeAwareTrait class.
  */
-class TreeAwareTrait
-{
-}
+class TreeAwareTrait {}

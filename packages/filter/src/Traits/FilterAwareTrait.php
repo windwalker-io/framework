@@ -14,7 +14,7 @@ trait FilterAwareTrait
     protected ?FilterFactory $filterFactory = null;
 
     /**
-     * @return FilterFactory
+     * @return  FilterFactory
      */
     public function getFilterFactory(): FilterFactory
     {

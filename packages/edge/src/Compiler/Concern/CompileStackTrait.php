@@ -14,7 +14,7 @@ trait CompileStackTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileStack(string $expression): string
     {
@@ -26,7 +26,7 @@ trait CompileStackTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compilePush(string $expression): string
     {
@@ -38,7 +38,7 @@ trait CompileStackTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndpush(string $expression): string
     {

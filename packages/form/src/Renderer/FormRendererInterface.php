@@ -21,7 +21,7 @@ interface FormRendererInterface
      * @param  HTMLElement    $wrapper
      * @param  array          $options
      *
-     * @return string
+     * @return  string
      */
     public function renderField(AbstractField $field, HTMLElement $wrapper, array $options = []): string;
 
@@ -32,7 +32,7 @@ interface FormRendererInterface
      * @param  HTMLElement    $label
      * @param  array          $options
      *
-     * @return string
+     * @return  string
      */
     public function renderLabel(AbstractField $field, HTMLElement $label, array $options = []): string;
 
@@ -43,7 +43,7 @@ interface FormRendererInterface
      * @param  HTMLElement    $input
      * @param  array          $options
      *
-     * @return string
+     * @return  string
      */
     public function renderInput(AbstractField $field, HTMLElement $input, array $options = []): string;
 }

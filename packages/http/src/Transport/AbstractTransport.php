@@ -31,7 +31,8 @@ abstract class AbstractTransport implements TransportInterface
      */
     public function request(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
     {
-        $uri = (string) $request->getUri()
+        $uri = (string) $request
+            ->getUri()
             ?->withPath('')
             ?->withQuery('')
             ?->withFragment('');
@@ -55,7 +56,7 @@ abstract class AbstractTransport implements TransportInterface
      */
     abstract protected function doRequest(
         RequestInterface $request,
-        array|TransportOptions $options = []
+        array|TransportOptions $options = [],
     ): HttpClientResponse;
 
     /**

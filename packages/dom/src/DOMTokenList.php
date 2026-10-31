@@ -16,19 +16,19 @@ use DOMException;
 class DOMTokenList
 {
     /**
-     * @var string
+     * @var  string
      */
     protected $name;
 
     /**
-     * @var array|null
+     * @var  array|null
      */
     protected $supports;
 
     /**
      * Property html.
      *
-     * @var DOMElement
+     * @var  DOMElement
      */
     protected $element;
 
@@ -190,7 +190,7 @@ class DOMTokenList
      *
      * @return  bool
      *
-     * @throws DOMException
+     * @throws  DOMException
      */
     public function supports(string $token): bool
     {

@@ -124,7 +124,7 @@ class NestedSetMapper extends EntityMapper
                 ->where('p.' . $key, '!=', $pk)
                 ->tapIf(
                     $this->isMultiTree(),
-                    fn (Query $query) => $query->where('n.root_id', $item->getRootId())
+                    fn(Query $query) => $query->where('n.root_id', $item->getRootId())
                 )
                 ->order('p.lft')
         );
@@ -148,7 +148,7 @@ class NestedSetMapper extends EntityMapper
                 ->where('p.' . $key, '=', $pk)
                 ->tapIf(
                     $this->isMultiTree(),
-                    fn (Query $query) => $query->where('n.root_id', $item->getRootId())
+                    fn(Query $query) => $query->where('n.root_id', $item->getRootId())
                 )
                 ->order('n.lft')
         );
@@ -186,7 +186,7 @@ class NestedSetMapper extends EntityMapper
             ->where('n.' . $key, '=', $pk)
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->whereRaw('n.root_id = p.root_id')
+                fn(Query $query) => $query->whereRaw('n.root_id = p.root_id')
             )
             ->order('p.lft')
             ->all($metadata->getClassName());
@@ -225,7 +225,7 @@ class NestedSetMapper extends EntityMapper
             ->where('p.' . $key, '!=', $pk)
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->whereRaw('n.root_id = p.root_id')
+                fn(Query $query) => $query->whereRaw('n.root_id = p.root_id')
             )
             ->order('p.lft')
             ->all($metadata->getClassName());
@@ -261,7 +261,7 @@ class NestedSetMapper extends EntityMapper
             ->where('p.' . $key, '=', $pk)
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->whereRaw('n.root_id = p.root_id')
+                fn(Query $query) => $query->whereRaw('n.root_id = p.root_id')
             )
             ->order('n.lft')
             ->all($metadata->getClassName());
@@ -272,7 +272,7 @@ class NestedSetMapper extends EntityMapper
         $metadata = $this->getMetadata();
 
         if (is_object($pkOrEntity) && $metadata::isEntity($pkOrEntity)) {
-            $node = $this->extract($pkOrEntity);
+            $node = $pkOrEntity;
         } else {
             $node = $this->findOne($pkOrEntity);
 
@@ -461,7 +461,10 @@ class NestedSetMapper extends EntityMapper
         $source = $event->source;
 
         if (is_array($source) && ($source['is_root'] ?? null)) {
-            $this->checkRootExists();
+            // Multi-tree allows many roots
+            if (!$this->isMultiTree()) {
+                $this->checkRootExists();
+            }
         } else {
             // Parent ID should not be NULL
             if (!$parentId) {
@@ -511,7 +514,7 @@ class NestedSetMapper extends EntityMapper
      * @param  mixed         $conditions
      *
      * @return  false|NestedEntityInterface|T
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function move(array|object $source, int $delta, mixed $conditions = []): false|NestedEntityInterface
     {
@@ -553,9 +556,9 @@ class NestedSetMapper extends EntityMapper
      * @param  mixed           $reference
      * @param  NestedPosition  $position
      *
-     * @return NestedEntityInterface
+     * @return  NestedEntityInterface
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function moveByReference(
         mixed $source,
@@ -592,7 +595,7 @@ class NestedSetMapper extends EntityMapper
             ->where('lft', 'between', [$node->getLft(), $node->getRgt()])
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->where('root_id', $reference->getRootId())
+                fn(Query $query) => $query->where('root_id', $reference->getRootId())
             )
             ->loadColumn()
             ->dump();
@@ -617,7 +620,7 @@ class NestedSetMapper extends EntityMapper
             ->set('rgt', raw('rgt * (-1)'))
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->set('root_id', $reference->getRootId())
+                fn(Query $query) => $query->set('root_id', $reference->getRootId())
                     ->where('root_id', $node->getRootId())
             )
             ->where('lft', 'between', [$node->getLft(), $node->getRgt()])
@@ -633,7 +636,7 @@ class NestedSetMapper extends EntityMapper
             ->where('lft', '>', $node->getRgt())
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->where('root_id', $node->getRootId())
+                fn(Query $query) => $query->where('root_id', $node->getRootId())
             )
             ->execute();
 
@@ -643,7 +646,7 @@ class NestedSetMapper extends EntityMapper
             ->where('rgt', '>', $node->getRgt())
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->where('root_id', $node->getRootId())
+                fn(Query $query) => $query->where('root_id', $node->getRootId())
             )
             ->execute();
 
@@ -713,7 +716,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  NestedEntityInterface|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function prependTo(mixed $source, mixed $referenceId): NestedEntityInterface
     {
@@ -729,7 +732,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  NestedEntityInterface
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function appendTo(mixed $source, mixed $referenceId): NestedEntityInterface
     {
@@ -745,7 +748,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  NestedEntityInterface|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function putBefore(mixed $source, mixed $referenceId): NestedEntityInterface
     {
@@ -761,7 +764,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  NestedEntityInterface|T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function putAfter(mixed $source, mixed $referenceId): NestedEntityInterface
     {
@@ -789,7 +792,7 @@ class NestedSetMapper extends EntityMapper
                 ->where('lft', 'between', [$entity->getLft(), $entity->getRgt()])
                 ->tapIf(
                     $this->isMultiTree(),
-                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                    fn(Query $query) => $query->where('root_id', $entity->getRootId())
                 )
                 ->getIterator($this->getMetadata()->getClassName());
 
@@ -802,7 +805,7 @@ class NestedSetMapper extends EntityMapper
                 ->where('lft', 'between', [$entity->getLft(), $entity->getRgt()])
                 ->tapIf(
                     $this->isMultiTree(),
-                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                    fn(Query $query) => $query->where('root_id', $entity->getRootId())
                 )
                 ->execute();
         }
@@ -815,7 +818,7 @@ class NestedSetMapper extends EntityMapper
                 ->where('lft', '>', $entity->getLft())
                 ->tapIf(
                     $this->isMultiTree(),
-                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                    fn(Query $query) => $query->where('root_id', $entity->getRootId())
                 )
                 ->execute();
 
@@ -825,7 +828,7 @@ class NestedSetMapper extends EntityMapper
                 ->where('rgt', '>', $entity->getRgt())
                 ->tapIf(
                     $this->isMultiTree(),
-                    fn (Query $query) => $query->where('root_id', $entity->getRootId())
+                    fn(Query $query) => $query->where('root_id', $entity->getRootId())
                 )
                 ->execute();
         }
@@ -850,9 +853,9 @@ class NestedSetMapper extends EntityMapper
     /**
      * rebuild
      *
-     * @param  mixed|null  $source
-     * @param  int|null  $lft
-     * @param  int  $level
+     * @param  mixed|null   $source
+     * @param  int|null     $lft
+     * @param  int          $level
      * @param  string|null  $path
      *
      * @return  int  Return the right value of this node + 1
@@ -911,7 +914,7 @@ class NestedSetMapper extends EntityMapper
             ->where($this->getMainKey(), $parentId)
             ->tapIf(
                 $this->isMultiTree(),
-                fn (Query $query) => $query->where('root_id', $parent->getRootId())
+                fn(Query $query) => $query->where('root_id', $parent->getRootId())
             )
             ->execute();
 
@@ -1007,8 +1010,8 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  NestedEntityInterface|T
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      */
     public function createRoot(array $data = []): NestedEntityInterface
     {
@@ -1045,10 +1048,10 @@ class NestedSetMapper extends EntityMapper
      * @param  array  $data
      * @param  array  $condFields
      *
-     * @return NestedEntityInterface
+     * @return  NestedEntityInterface
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      */
     public function createRootIfNotExist(array $data = [], array $condFields = ['title']): NestedEntityInterface
     {
@@ -1095,7 +1098,7 @@ class NestedSetMapper extends EntityMapper
      *
      * @return  void
      */
-    protected function checkRootExists(mixed $conditions = null): void
+    protected function checkRootExists(mixed $conditions = []): void
     {
         $root = $this->getRoot($conditions);
 

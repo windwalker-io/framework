@@ -25,6 +25,9 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
 {
     use IniSetterTrait;
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function install(PackageInstaller $installer): void
     {
         $installer->installConfig(__DIR__ . '/../etc/*.php', 'config');
@@ -55,7 +58,9 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
      * @param  Container  $container  The DI container.
      *
      * @return  void
-     * @throws \Windwalker\DI\Exception\DefinitionException
+     * @throws  \Windwalker\DI\Exception\DefinitionException
+     *
+     * @codeCoverageIgnore
      */
     public function register(Container $container): void
     {

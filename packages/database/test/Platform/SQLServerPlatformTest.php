@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Platform\SQLServerPlatform;
-use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Utilities\Str;
 
 /**
@@ -13,26 +14,22 @@ use Windwalker\Utilities\Str;
  */
 class SQLServerPlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'SQLServer';
+    protected static DbPlatform $platform = DbPlatform::SQLServer;
 
     protected static string $driver = 'pdo_sqlsrv';
 
     protected static string $schema = 'dbo';
 
     /**
-     * @var SQLServerPlatform
-     */
-    protected $instance;
-
-    /**
      * @see  SQLServerPlatform::listDatabases()
      */
-    public function testListDatabases(): void
+    #[Test]
+    public function listDatabases(): void
     {
         $databases = $this->instance->listDatabases();
 
         self::assertContains(
-            self::getTestParams()['database'],
+            self::getTestParams()['dbname'],
             $databases
         );
     }
@@ -40,7 +37,8 @@ class SQLServerPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  SQLServerPlatform::listSchemas
      */
-    public function testListSchemas(): void
+    #[Test]
+    public function listSchemas(): void
     {
         $schemas = $this->instance->listSchemas();
 
@@ -64,7 +62,8 @@ class SQLServerPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  SQLServerPlatform::getTables
      */
-    public function testGetTables(): void
+    #[Test]
+    public function getTables(): void
     {
         $tables = $this->instance->listTables(static::$schema);
 
@@ -94,7 +93,8 @@ class SQLServerPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  SQLServerPlatform::getViews
      */
-    public function testGetViews(): void
+    #[Test]
+    public function getViews(): void
     {
         $views = $this->instance->listViews(static::$schema);
 
@@ -122,7 +122,8 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'
     /**
      * @see  SQLServerPlatform::getColumns
      */
-    public function testGetColumns(): void
+    #[Test]
+    public function getColumns(): void
     {
         $columns = $this->instance->listColumns('#__articles', static::$schema);
 
@@ -393,7 +394,8 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'
     /**
      * @see  SQLServerPlatform::getConstraints
      */
-    public function testGetConstraints(): void
+    #[Test]
+    public function getConstraints(): void
     {
         $constraints = $this->instance->listConstraints('#__articles', static::$schema);
 
@@ -446,7 +448,8 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'
         );
     }
 
-    public function testGetIndexes(): void
+    #[Test]
+    public function getIndexes(): void
     {
         $indexes = $this->instance->listIndexes('#__articles', static::$schema);
 
@@ -545,20 +548,11 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'
         );
     }
 
-    protected function setUp(): void
-    {
-        $this->instance = static::$db->getPlatform();
-    }
-
-    protected function tearDown(): void
-    {
-    }
-
     /**
      * @inheritDoc
      */
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::platformName() . '.sql');
     }
 }

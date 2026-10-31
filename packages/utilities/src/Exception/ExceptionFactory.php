@@ -19,7 +19,7 @@ class ExceptionFactory
      * @param  string       $name
      * @param  string|null  $caller
      *
-     * @return BadMethodCallException
+     * @return  BadMethodCallException
      */
     #[NoReturn]
     public static function badMethodCall(string $name, ?string $caller = null): BadMethodCallException

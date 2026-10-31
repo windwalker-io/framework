@@ -13,6 +13,7 @@ use ParagonIE\ConstantTime\Hex;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Crypt\SafeEncoder;
 
 use const Windwalker\Crypt\ENCODER_BASE32;
 use const Windwalker\Crypt\ENCODER_BASE32HEX;
@@ -21,8 +22,6 @@ use const Windwalker\Crypt\ENCODER_BASE64DOTSLASH;
 use const Windwalker\Crypt\ENCODER_BASE64URLSAFE;
 use const Windwalker\Crypt\ENCODER_HEX;
 use const Windwalker\Crypt\ENCODER_RAW;
-
-use Windwalker\Crypt\SafeEncoder;
 
 class SafeEncoderTest extends TestCase
 {

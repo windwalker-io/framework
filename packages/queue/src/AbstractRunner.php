@@ -6,7 +6,6 @@ namespace Windwalker\Queue;
 
 use DateTimeImmutable;
 use Exception;
-use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Windwalker\Event\EventAwareInterface;
@@ -55,7 +54,7 @@ abstract class AbstractRunner implements EventAwareInterface
     public ?int $pid = null;
 
     /**
-     * @var ?callable
+     * @var  ?callable
      */
     protected $invoker = null;
 
@@ -65,8 +64,7 @@ abstract class AbstractRunner implements EventAwareInterface
         protected Queue $queue,
         public RunnerOptions $options = new RunnerOptions(),
         protected LoggerInterface $logger = new NullLogger()
-    ) {
-    }
+    ) {}
 
     abstract public function getRunnerName(): string;
 
@@ -81,7 +79,7 @@ abstract class AbstractRunner implements EventAwareInterface
      * @param  string|array  $channel
      *
      * @return  void
-     * @throws Exception
+     * @throws  Exception
      */
     public function loop(string|array $channel): void
     {
@@ -183,9 +181,12 @@ abstract class AbstractRunner implements EventAwareInterface
     {
         $timeout = $this->options->timeout;
 
+        // @codeCoverageIgnoreStart
+        // Environment-dependent: only reachable when pcntl is missing, but tests require pcntl.
         if (!extension_loaded('pcntl')) {
             return;
         }
+        // @codeCoverageIgnoreEnd
 
         declare(ticks=1);
 
@@ -222,7 +223,7 @@ abstract class AbstractRunner implements EventAwareInterface
      * @param  int     $code
      * @param  bool    $instant
      *
-     * @return void
+     * @return  void
      */
     public function stop(string $reason = 'Unknown reason', int $code = 0, bool $instant = false): void
     {
@@ -239,7 +240,10 @@ abstract class AbstractRunner implements EventAwareInterface
         $this->setState(static::STATE_STOP);
 
         if ($instant) {
+            // @codeCoverageIgnoreStart
+            // exit() terminates the process, so it cannot be exercised in-process (tests override stop()).
             exit($code);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -329,7 +333,7 @@ abstract class AbstractRunner implements EventAwareInterface
             }
         }
 
-        if ($this->options->maxRuns > 0 && ++$this->runTimes >= $this->options->maxRuns) {
+        if ($this->options->maxRuns > 0 && $this->runTimes >= $this->options->maxRuns) {
             $this->stop('Max run times reached. PID: ' . $this->pid);
         }
 

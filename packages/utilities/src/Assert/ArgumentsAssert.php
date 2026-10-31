@@ -8,8 +8,6 @@ use InvalidArgumentException;
 
 /**
  * The ArgumentsAssert class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class ArgumentsAssert extends TypeAssert
 {

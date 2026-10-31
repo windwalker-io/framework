@@ -21,12 +21,12 @@ interface CastAttributeInterface extends AttributeInterface
     public const int EMPTY_STRING_TO_NULL = 1 << 5;
 
     /**
-     * @return callable|class-string
+     * @return  callable|class-string
      */
     public function getHydrate(): mixed;
 
     /**
-     * @return callable|class-string
+     * @return  callable|class-string
      */
     public function getExtract(): mixed;
 

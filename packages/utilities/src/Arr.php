@@ -13,7 +13,6 @@ use ReflectionObject;
 use Windwalker\Utilities\Classes\PreventInitialTrait;
 use Windwalker\Utilities\Compare\WhereWrapper;
 use Windwalker\Utilities\Dumper\VarDumper;
-
 use Windwalker\Utilities\Wrapper\DepthWrapper;
 
 use function Windwalker\count;
@@ -86,7 +85,7 @@ abstract class Arr
      * @param  string        $delimiter  Separator to split paths.
      *
      * @return  array|object
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      * @since 4.0
      */
     public static function def(object|array $array, string $key, mixed $value, string $delimiter = '.'): object|array
@@ -162,7 +161,7 @@ abstract class Arr
      * @param  string|int  $key        The key path.
      * @param  string      $delimiter  Separator of paths.
      *
-     * @return mixed Found value, null if not exists.
+     * @return  mixed  Found value, null if not exists.
      *
      * @since   2.0
      */
@@ -202,7 +201,7 @@ abstract class Arr
      * @param  string  $storeType  The new store data type, default is `array`. you can set object class name.
      *
      * @return  array|object
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      * @since   2.0
      */
     public static function set(
@@ -225,7 +224,7 @@ abstract class Arr
          *
          * @return  array
          *
-         * @throws InvalidArgumentException
+         * @throws  InvalidArgumentException
          */
         $createStore = static function (string $type) {
             if (strtolower($type) === 'array') {
@@ -242,6 +241,12 @@ abstract class Arr
         $dataTmp = &$data;
 
         foreach ($nodes as $node) {
+            if (!is_object($dataTmp) && !is_array($dataTmp)) {
+                // If a node is value but path is not go to the end, we replace this value as a new store.
+                // Then next node can insert new value to this store.
+                $dataTmp = $createStore($storeType);
+            }
+
             if (is_object($dataTmp)) {
                 // If this node not exists, create new one.
                 if (empty($dataTmp->$node)) {
@@ -256,10 +261,6 @@ abstract class Arr
                 }
 
                 $dataTmp = &$dataTmp[$node];
-            } else {
-                // If a node is value but path is not go to the end, we replace this value as a new store.
-                // Then next node can insert new value to this store.
-                $dataTmp = &$createStore($storeType);
             }
         }
 
@@ -291,6 +292,12 @@ abstract class Arr
         $dataTmp = &$data;
 
         foreach ($nodes as $node) {
+            if (!is_object($dataTmp) && !is_array($dataTmp)) {
+                // If a node is value but path is not go to the end, we replace this value as a new store.
+                // Then next node can insert new value to this store.
+                $dataTmp = $createStore($storeType);
+            }
+
             if (is_object($dataTmp)) {
                 if (empty($dataTmp->$node)) {
                     return $data;
@@ -354,7 +361,7 @@ abstract class Arr
      * @param  int           $depth      Only flatten limited depth, 0 means on limit.
      * @param  string|null   $prefix     Last level key prefix.
      *
-     * @return array
+     * @return  array
      */
     public static function flatten(
         object|array $array,
@@ -390,7 +397,7 @@ abstract class Arr
      * @param  array         $fields
      *
      * @return  array|object
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public static function only(object|array $data, array $fields): object|array
     {
@@ -398,19 +405,15 @@ abstract class Arr
             return array_intersect_key($data, array_flip($fields));
         }
 
-        if (is_object($data)) {
-            $keeps = array_keys(array_diff_key(get_object_vars($data), array_flip($fields)));
+        $keeps = array_keys(array_diff_key(get_object_vars($data), array_flip($fields)));
 
-            foreach ($keeps as $key) {
-                if (property_exists($data, $key)) {
-                    unset($data->$key);
-                }
+        foreach ($keeps as $key) {
+            if (property_exists($data, $key)) {
+                unset($data->$key);
             }
-
-            return $data;
         }
 
-        throw new InvalidArgumentException('Argument 1 not array or object');
+        return $data;
     }
 
     /**
@@ -420,8 +423,6 @@ abstract class Arr
      * @param  array         $fields
      *
      * @return  array|object
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function except(object|array $data, array $fields): object|array
     {
@@ -429,17 +430,13 @@ abstract class Arr
             return array_diff_key($data, array_flip($fields));
         }
 
-        if (is_object($data)) {
-            foreach ($fields as $key) {
-                if (property_exists($data, $key)) {
-                    unset($data->$key);
-                }
+        foreach ($fields as $key) {
+            if (property_exists($data, $key)) {
+                unset($data->$key);
             }
-
-            return $data;
         }
 
-        throw new InvalidArgumentException('Argument 1 not array or object');
+        return $data;
     }
 
     /**
@@ -451,7 +448,7 @@ abstract class Arr
      * @param  int|null       $offset
      * @param  int|null       $limit
      *
-     * @return array
+     * @return  array
      */
     public static function find(
         array $data,
@@ -713,7 +710,9 @@ abstract class Arr
     ): array {
         $result = [];
 
-        foreach (TypeCast::toIterable($src) as $key => $item) {
+        foreach (TypeCast::toIterable($src) as $item) {
+            $itemKey = $keyName;
+
             if (is_object($item) && !isset($item->$column) && $invasive) {
                 $ref = new ReflectionObject($item);
 
@@ -724,12 +723,12 @@ abstract class Arr
                 $prop = $ref->getProperty($column);
                 $value = $prop->getValue($item);
 
-                if ($keyName !== null) {
-                    if ($ref->hasProperty($keyName)) {
-                        $prop = $ref->getProperty($keyName);
-                        $keyName = $prop->getValue($item);
+                if ($itemKey !== null) {
+                    if ($ref->hasProperty($itemKey)) {
+                        $prop = $ref->getProperty($itemKey);
+                        $itemKey = $prop->getValue($item);
                     } else {
-                        $keyName = null;
+                        $itemKey = null;
                     }
                 }
             } else {
@@ -737,23 +736,23 @@ abstract class Arr
                     continue;
                 }
 
-                if (method_exists($item, '__get')) {
+                if (is_object($item) && method_exists($item, '__get')) {
                     $value = $item->__get($column);
 
-                    if ($keyName !== null) {
-                        $keyName = $item->__get($keyName);
+                    if ($itemKey !== null) {
+                        $itemKey = $item->__get($itemKey);
                     }
                 } else {
                     $value = static::get($item, $column, '');
 
-                    if ($keyName !== null) {
-                        $keyName = static::get($item, $keyName, '');
+                    if ($itemKey !== null) {
+                        $itemKey = static::get($item, $itemKey, '');
                     }
                 }
             }
 
-            if ($keyName) {
-                $result[$keyName] = $item;
+            if ($itemKey) {
+                $result[$itemKey] = $item;
             } else {
                 $result[] = $value;
             }
@@ -769,8 +768,6 @@ abstract class Arr
      * @param  callable      $callback
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function flatMap(object|array $array, callable $callback): array
     {
@@ -800,8 +797,6 @@ abstract class Arr
      * @param  bool      $loopIterable
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function mapRecursive(
         array $array,
@@ -829,7 +824,7 @@ abstract class Arr
     /**
      * A simple merge proxy to avoid resources greedy construction.
      *
-     * @param ...$args
+     * @param   ...$args
      *
      * @return  array
      */
@@ -843,7 +838,7 @@ abstract class Arr
      *
      * @param  array  ...$args
      *
-     * @return  array Merged array.
+     * @return  array  Merged array.
      * @since   4.0
      */
     public static function mergeRecursive(...$args): array
@@ -880,7 +875,7 @@ abstract class Arr
      *
      * @param  array  ...$args
      *
-     * @return  array Unioned array.
+     * @return  array  Unioned array.
      */
     public static function unionRecursive(...$args): array
     {
@@ -1082,14 +1077,14 @@ abstract class Arr
     /**
      * Query a two-dimensional array values to get second level array.
      *
-     * @param  array|object  $array           An array to query.
-     * @param  array         $queries         Query strings or callback, may contain Comparison Operators: '>', '>=',
-     *                                        '<', '<='. Example: array(
-     *                                        'id'          => 6,   // Get all elements where id=6
-     *                                        'published >' => 0    // Get all elements where published>0
-     *                                        );
-     * @param  bool          $strict          Use strict to compare equals.
-     * @param  bool          $keepKey         Keep origin array keys.
+     * @param  array|object  $array    An array to query.
+     * @param  array         $queries  Query strings or callback, may contain Comparison Operators: '>', '>=',
+     *                                 '<', '<='. Example: array(
+     *                                 'id'          => 6,   // Get all elements where id=6
+     *                                 'published >' => 0    // Get all elements where published>0
+     *                                 );
+     * @param  bool          $strict   Use strict to compare equals.
+     * @param  bool          $keepKey  Keep origin array keys.
      *
      * @return  array|object  An new two-dimensional array queried.
      *
@@ -1131,17 +1126,15 @@ abstract class Arr
     /**
      * Query a two-dimensional array values to get second level array, return only first.
      *
-     * @param  array|object  $array           An array to query.
-     * @param  array         $queries         Query strings or callback, may contain Comparison Operators: '>', '>=',
-     *                                        '<', '<='. Example: array(
-     *                                        'id'          => 6,   // Get all elements where id=6
-     *                                        'published >' => 0    // Get all elements where published>0
-     *                                        );
-     * @param  bool          $strict          Use strict to compare equals.
+     * @param  array|object  $array    An array to query.
+     * @param  array         $queries  Query strings or callback, may contain Comparison Operators: '>', '>=',
+     *                                 '<', '<='. Example: array(
+     *                                 'id'          => 6,   // Get all elements where id=6
+     *                                 'published >' => 0    // Get all elements where published>0
+     *                                 );
+     * @param  bool          $strict   Use strict to compare equals.
      *
-     * @return mixed
-     *
-     * @since  __DEPLOY_VERSION__
+     * @return  mixed
      */
     public static function queryFirst(object|array $array, $queries = [], bool $strict = false): mixed
     {
@@ -1181,12 +1174,29 @@ abstract class Arr
             } elseif ($strict) {
                 $results[] = static::get($array, $key) === $val;
             } else {
-                $results[] = static::get($array, $key) == $val;
+                $item = static::get($array, $key);
+
+                $results[] = static::looseEquals($item, $val);
             }
         }
 
         // Must all TRUE.
         return !in_array(false, $results, true);
+    }
+
+    /**
+     * Loose equals that keeps PHP's object-to-number semantics (an object counts as 1)
+     * without raising the "could not be converted" notice.
+     */
+    protected static function looseEquals(mixed $a, mixed $b): bool
+    {
+        if (is_object($a) && (is_int($b) || is_float($b))) {
+            $a = 1;
+        } elseif (is_object($b) && (is_int($a) || is_float($a))) {
+            $b = 1;
+        }
+
+        return $a == $b;
     }
 
     /**
@@ -1258,7 +1268,7 @@ abstract class Arr
 
             foreach ($args as $i => $arg) {
                 if (is_int($i)) {
-                    $scope = sprintf("[Value %s]", $i + 1);
+                    $scope = sprintf('[Value %s]', $i + 1);
                 } else {
                     $scope = "[$i]";
                 }

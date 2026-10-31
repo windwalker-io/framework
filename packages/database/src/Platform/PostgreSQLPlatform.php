@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Platform;
 
-use PDO;
 use PDOException;
 use Windwalker\Data\Collection;
+use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\Pdo\PdoDriver;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Platform\Type\PostgreSQLDataType;
@@ -389,10 +389,10 @@ class PostgreSQLPlatform extends AbstractPlatform
     public function lastInsertId($insertQuery, ?string $sequence = null): ?string
     {
         if ($sequence && $this->db->getDriver() instanceof PdoDriver) {
-            /** @var PDO $pdo */
-            $pdo = $this->db->getDriver()->getConnectionFromPool()->get();
-
-            return $pdo->lastInsertId($sequence);
+            // Use the same connection as the INSERT and always release it back to the pool
+            return $this->db->getDriver()->useConnection(
+                static fn(ConnectionInterface $conn) => $conn->get()->lastInsertId($sequence)
+            );
         }
 
         if ($insertQuery instanceof Query) {
@@ -424,7 +424,9 @@ class PostgreSQLPlatform extends AbstractPlatform
         $insertidQuery->selectRaw($changedColName);
 
         try {
-            return $this->db->prepare($insertidQuery)->result();
+            $id = $this->db->prepare($insertidQuery)->result();
+
+            return $id === null ? null : (string) $id;
         } catch (PDOException $e) {
             // 55000 means we trying to insert value to serial column
             // Just return because insertedId get the last generated value.
@@ -489,15 +491,14 @@ class PostgreSQLPlatform extends AbstractPlatform
     public function createDatabase(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'CREATE DATABASE',
-                    !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
-                    $this->db->quoteName($name),
-                    isset($options['lc_collate']) ? 'LC_COLLATE=' . $options['lc_collate'] : null,
-                    isset($options['lc_type']) ? 'LC_CTYPE=' . $options['lc_type'] : null,
-                    isset($options['tablespace']) ? 'TABLESPACE=' . $options['tablespace'] : null,
-                )
+            $this->getGrammar()::build(
+                'CREATE DATABASE',
+                !empty($options['if_not_exists']) ? 'IF NOT EXISTS' : null,
+                $this->db->quoteName($name),
+                isset($options['lc_collate']) ? 'LC_COLLATE=' . $options['lc_collate'] : null,
+                isset($options['lc_type']) ? 'LC_CTYPE=' . $options['lc_type'] : null,
+                isset($options['tablespace']) ? 'TABLESPACE=' . $options['tablespace'] : null,
+            )
         );
     }
 
@@ -512,11 +513,10 @@ class PostgreSQLPlatform extends AbstractPlatform
         // $this->db->setQuery($query)->execute();
 
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'DROP DATABASE',
-                    $this->db->quoteName($name)
-                )
+            $this->getGrammar()::build(
+                'DROP DATABASE',
+                $this->db->quoteName($name)
+            )
         );
     }
 
@@ -525,19 +525,18 @@ class PostgreSQLPlatform extends AbstractPlatform
      *
      * @param  string  $name
      *
-     * @param  array   $options
+     * @param  array  $options
      *
-     * @return StatementInterface
+     * @return  StatementInterface
      */
     public function dropSchema(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'DROP SCHEMA',
-                    $this->db->quoteName($name),
-                    'CASCADE'
-                )
+            $this->getGrammar()::build(
+                'DROP SCHEMA',
+                $this->db->quoteName($name),
+                'CASCADE'
+            )
         );
     }
 
@@ -548,7 +547,7 @@ class PostgreSQLPlatform extends AbstractPlatform
      * @param  bool    $ifNotExists
      * @param  array   $options
      *
-     * @return StatementInterface
+     * @return  StatementInterface
      */
     public function createTable(Schema $schema, bool $ifNotExists = false, array $options = []): StatementInterface
     {
@@ -693,7 +692,7 @@ class PostgreSQLPlatform extends AbstractPlatform
             );
         }
 
-        $this->db->execute(implode(";", $sql));
+        $this->db->execute(implode(';', $sql));
 
         $alter = $this->createQuery()
             ->alter('TABLE', $schema . '.' . $table);
@@ -716,13 +715,13 @@ class PostgreSQLPlatform extends AbstractPlatform
     /**
      * renameColumn
      *
-     * @param  string       $table
-     * @param  string       $from
-     * @param  string       $to
+     * @param  string  $table
+     * @param  string  $from
+     * @param  string  $to
      *
      * @param  string|null  $schema
      *
-     * @return StatementInterface
+     * @return  StatementInterface
      */
     public function renameColumn(string $table, string $from, string $to, ?string $schema = null): StatementInterface
     {
@@ -774,7 +773,7 @@ class PostgreSQLPlatform extends AbstractPlatform
                     'pg_depend',
                     'd',
                     static function (JoinClause $join) {
-                        $join->on("d.objid", '=', "s.oid");
+                        $join->on('d.objid', '=', 's.oid');
                         $join->onRaw("d.classid = 'pg_class'::regclass");
                         $join->onRaw("d.refclassid = 'pg_class'::regclass");
                     }

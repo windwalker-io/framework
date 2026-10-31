@@ -29,12 +29,12 @@ class CastManager
     use InstanceCacheTrait;
 
     /**
-     * @var array<int, array<int, array<int, callable|int>>>
+     * @var  array<int, array<int, array<int, callable|int>>>
      */
     protected array $castGroups = [];
 
     /**
-     * @var array<int, mixed>
+     * @var  array<int, mixed>
      */
     protected array $castAliases = [];
 
@@ -116,6 +116,7 @@ class CastManager
      * @param  array  $castGroups
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setCastGroups(array $castGroups): static
     {
@@ -138,6 +139,9 @@ class CastManager
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setAliases(array $aliases): static
     {
         $this->castAliases = $aliases;

@@ -6,10 +6,9 @@ namespace Windwalker\Data\Test;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Data\Collection;
 
 use function Windwalker\collect;
-
-use Windwalker\Data\Collection;
 
 /**
  * The CollectionTest class.

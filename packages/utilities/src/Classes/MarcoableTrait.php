@@ -9,8 +9,6 @@ use Closure;
 
 /**
  * The MarcoableTrait class.
- *
- * @since  __DEPLOY_VERSION__
  */
 trait MarcoableTrait
 {

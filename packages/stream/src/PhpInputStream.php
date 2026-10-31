@@ -20,7 +20,7 @@ class PhpInputStream extends CachingStream
     /**
      * Class init.
      *
-     * @param  StreamInterface|null  $cache The cache stream.
+     * @param  StreamInterface|null  $cache  The cache stream.
      */
     protected function __construct(?StreamInterface $cache = null)
     {

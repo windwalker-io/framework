@@ -10,6 +10,4 @@ use Psr\Container\ContainerExceptionInterface;
 /**
  * The DefinitionException class.
  */
-class DefinitionException extends Exception implements ContainerExceptionInterface
-{
-}
+class DefinitionException extends Exception implements ContainerExceptionInterface {}

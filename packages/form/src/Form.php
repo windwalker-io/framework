@@ -45,7 +45,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     protected ?Fieldset $fieldset = null;
 
     /**
-     * @var Fieldset[]
+     * @var  Fieldset[]
      */
     protected array $fieldsets = [];
 
@@ -92,7 +92,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      *
      * @return  $this
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function defineFormFields(object|string $define): static
     {
@@ -112,13 +112,13 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     /**
      * @template T
      *
-     * @param  string                  $name
-     * @param  mixed|class-string<T>|T $field
-     * @param  string|null  $fieldset
+     * @param  string                   $name
+     * @param  mixed|class-string<T>|T  $field
+     * @param  string|null              $fieldset
      *
      * @return  AbstractField|T
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function add(string $name, mixed $field, ?string $fieldset = null): AbstractField
     {
@@ -282,7 +282,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      * @param  Symbol|string|null  $fieldset
      * @param  string              $namespace
      *
-     * @return Generator
+     * @return  Generator
      *
      * @psalm-return AbstractField[]
      */
@@ -535,7 +535,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
      * @param  string|null         $namespace
      * @param  array               $options
      *
-     * @return string
+     * @return  string
      */
     public function renderFields(
         Symbol|string|null $fieldset = null,
@@ -584,7 +584,9 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     }
 
     /**
-     * @return AttributesResolver
+     * @return  AttributesResolver
+     *
+     * @codeCoverageIgnore
      */
     public function getAttributeResolver(): AttributesResolver
     {
@@ -592,7 +594,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     }
 
     /**
-     * @return FormRendererInterface
+     * @return  FormRendererInterface
      */
     public function getRenderer(): FormRendererInterface
     {
@@ -612,7 +614,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNamespace(): string
     {
@@ -640,7 +642,7 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     }
 
     /**
-     * @return Fieldset[]
+     * @return  Fieldset[]
      */
     public function getFieldsets(): array
     {
@@ -655,8 +657,8 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
     /**
      * Count elements of an object
      * @link https://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * The return value is cast to an integer.
+     * @return  int  The custom count as an integer.
+     *               The return value is cast to an integer.
      */
     public function count(): int
     {

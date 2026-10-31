@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Stream\Test;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use ReflectionException;
 use RuntimeException;
 use Windwalker\Stream\Stream;
@@ -25,7 +30,7 @@ class StreamTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Stream
+     * @var  Stream
      */
     protected $instance;
 
@@ -36,31 +41,22 @@ class StreamTest extends TestCase
      */
     public $tmpnam;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createMemoryStream(): void
     {
         $this->instance = new Stream('php://memory', READ_WRITE_RESET);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[After]
+    protected function removeTempFile(): void
     {
         if ($this->tmpnam && is_file($this->tmpnam)) {
             unlink($this->tmpnam);
         }
     }
 
-    public function testConstruct()
+    #[Test]
+    public function constructAcceptsResourceAndDefaultsToMemory(): void
     {
         $resource = fopen('php://memory', READ_WRITE_RESET);
         $stream = new Stream($resource);
@@ -73,22 +69,19 @@ class StreamTest extends TestCase
         $this->assertEquals('php://memory', ReflectAccessor::getValue($stream, 'stream'));
     }
 
-    /**
-     * Method to test __toString().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::__toString
-     */
-    public function testToString()
+    #[Test]
+    public function toStringReturnsWrittenContents(): void
     {
         $message = 'foo bar';
 
         $this->instance->write($message);
 
         $this->assertEquals($message, (string) $this->instance);
+    }
 
-        // Not readable should return empty string
+    #[Test]
+    public function toStringReturnsEmptyStringWhenNotReadable(): void
+    {
         $this->createTempFile();
 
         file_put_contents($this->tmpnam, 'FOO BAR');
@@ -99,14 +92,10 @@ class StreamTest extends TestCase
     }
 
     /**
-     * Method to test close().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::close
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testClose()
+    #[Test]
+    public function closeClosesResourceAndClearsContents(): void
     {
         $this->createTempFile();
 
@@ -123,14 +112,10 @@ class StreamTest extends TestCase
     }
 
     /**
-     * Method to test detach().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::detach
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
-    public function testDetach()
+    #[Test]
+    public function detachReturnsResourceAndClearsStream(): void
     {
         $resource = fopen('php://memory', READ_WRITE_RESET);
         $stream = new Stream($resource);
@@ -140,14 +125,8 @@ class StreamTest extends TestCase
         self::assertEmpty(ReflectAccessor::getValue($stream, 'stream'));
     }
 
-    /**
-     * Method to test getSize().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::getSize
-     */
-    public function testGetSize()
+    #[Test]
+    public function getSizeReturnsFileSize(): void
     {
         $this->createTempFile();
 
@@ -159,14 +138,8 @@ class StreamTest extends TestCase
         $this->assertEquals(7, $stream->getSize());
     }
 
-    /**
-     * Method to test tell().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::tell
-     */
-    public function testTell()
+    #[Test]
+    public function tellReturnsCurrentPosition(): void
     {
         $this->createTempFile();
 
@@ -178,6 +151,19 @@ class StreamTest extends TestCase
         fseek($resource, 2);
 
         $this->assertEquals(2, $stream->tell());
+    }
+
+    #[Test]
+    public function tellThrowsWhenStreamIsDetached(): void
+    {
+        $this->createTempFile();
+
+        file_put_contents($this->tmpnam, 'FOO BAR');
+        $resource = fopen($this->tmpnam, READ_WRITE_RESET);
+
+        $stream = new Stream($resource);
+
+        fseek($resource, 2);
 
         $stream->detach();
 
@@ -188,14 +174,8 @@ class StreamTest extends TestCase
         $stream->tell();
     }
 
-    /**
-     * Method to test eof().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::eof
-     */
-    public function testEof()
+    #[Test]
+    public function eofIsFalseBeforeReachingEnd(): void
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
@@ -204,6 +184,15 @@ class StreamTest extends TestCase
 
         fseek($resource, 2);
         $this->assertFalse($stream->eof());
+    }
+
+    #[Test]
+    public function eofIsTrueAfterReadingToEnd(): void
+    {
+        $this->createTempFile();
+        file_put_contents($this->tmpnam, 'FOO BAR');
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
+        $stream = new Stream($resource);
 
         while (!feof($resource)) {
             fread($resource, 4096);
@@ -215,22 +204,24 @@ class StreamTest extends TestCase
         $stream->read(8);
 
         $this->assertTrue($stream->eof());
+    }
 
-        $stream->rewind();
+    #[Test]
+    public function eofBecomesTrueOnlyAfterReadingFromSoughtPastEnd(): void
+    {
+        $this->createTempFile();
+        file_put_contents($this->tmpnam, 'FOO BAR');
+        $resource = fopen($this->tmpnam, READ_ONLY_FROM_BEGIN);
+        $stream = new Stream($resource);
+
         $stream->seek(8);
         $this->assertFalse($stream->eof());
         $stream->read(1);
         $this->assertTrue($stream->eof());
     }
 
-    /**
-     * Method to test isSeekable().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::isSeekable
-     */
-    public function testIsSeekable()
+    #[Test]
+    public function isSeekableIsTrueForFileResource(): void
     {
         $this->createTempFile();
 
@@ -241,14 +232,8 @@ class StreamTest extends TestCase
         $this->assertTrue($stream->isSeekable());
     }
 
-    /**
-     * Method to test seek().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::seek
-     */
-    public function testSeek()
+    #[Test]
+    public function seekMovesPositionByWhence(): void
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
@@ -266,14 +251,8 @@ class StreamTest extends TestCase
         $this->assertEquals(6, $stream->tell());
     }
 
-    /**
-     * Method to test rewind().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::rewind
-     */
-    public function testRewind()
+    #[Test]
+    public function rewindResetsPositionToStart(): void
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
@@ -288,28 +267,23 @@ class StreamTest extends TestCase
         $this->assertEquals(0, $stream->tell());
     }
 
-    /**
-     * Method to test isWritable().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::isWritable
-     */
-    public function testIsWritable()
+    #[Test]
+    public function isWritableUsesOpenModeForStreamsWithoutUri(): void
+    {
+        $this->assertTrue(Stream::wrap(fopen('php://memory', 'w+b'))->isWritable());
+        $this->assertTrue(Stream::wrap(fopen('php://temp', 'wb'))->isWritable());
+    }
+
+    #[Test]
+    public function isWritableIsFalseForReadOnlyMode(): void
     {
         $stream = new Stream('php://memory', READ_ONLY_FROM_BEGIN);
 
         $this->assertFalse($stream->isWritable());
     }
 
-    /**
-     * Method to test write().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::write
-     */
-    public function testWrite()
+    #[Test]
+    public function writeAppendsAndOverwritesAtPosition(): void
     {
         $this->createTempFile();
         $resource = fopen($this->tmpnam, READ_WRITE_RESET);
@@ -330,14 +304,8 @@ class StreamTest extends TestCase
         $this->assertEquals('flowtestloom', file_get_contents($this->tmpnam));
     }
 
-    /**
-     * Method to test isReadable().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::isReadable
-     */
-    public function testIsReadable()
+    #[Test]
+    public function isReadableIsFalseForWriteOnlyMode(): void
     {
         $this->createTempFile();
 
@@ -345,14 +313,8 @@ class StreamTest extends TestCase
         $this->assertFalse($stream->isReadable());
     }
 
-    /**
-     * Method to test read().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::read
-     */
-    public function testRead()
+    #[Test]
+    public function readReturnsSequentialChunksAndRestartsAfterRewind(): void
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
@@ -368,14 +330,8 @@ class StreamTest extends TestCase
         $this->assertEquals('FOO', $stream->read(3));
     }
 
-    /**
-     * Method to test getContents().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::getContents
-     */
-    public function testGetContents()
+    #[Test]
+    public function getContentsReturnsWholeFile(): void
     {
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
@@ -386,14 +342,8 @@ class StreamTest extends TestCase
         $this->assertEquals('FOO BAR', $stream->getContents());
     }
 
-    /**
-     * Method to test getMetadata().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Stream\Stream::getMetadata
-     */
-    public function testGetMetadata()
+    #[Test]
+    public function getMetadataReturnsAllOrSingleKeyOfAttachedResource(): void
     {
         $this->createTempFile();
         $resource = fopen($this->tmpnam, READ_WRITE_FROM_BEGIN);
@@ -406,11 +356,133 @@ class StreamTest extends TestCase
         fclose($resource);
     }
 
-    /**
-     * createTempFile
-     *
-     * @return  string
-     */
+    #[Test]
+    public function fromStringWritesContentsIntoMemoryStream(): void
+    {
+        $stream = Stream::fromString('FOO BAR');
+        $stream->rewind();
+
+        $this->assertEquals('FOO BAR', $stream->getContents());
+    }
+
+    #[Test]
+    public function fromFilePathOpensFile(): void
+    {
+        $this->createTempFile();
+        file_put_contents($this->tmpnam, 'FOO BAR');
+
+        $stream = Stream::fromFilePath($this->tmpnam, READ_ONLY_FROM_BEGIN);
+
+        $this->assertEquals('FOO BAR', $stream->getContents());
+    }
+
+    #[Test]
+    public function wrapReturnsExistingStreamOrCreatesNewOne(): void
+    {
+        $this->assertSame($this->instance, Stream::wrap($this->instance));
+        $this->assertInstanceOf(Stream::class, Stream::wrap('php://memory'));
+    }
+
+    #[Test]
+    public function attachRejectsInvalidResource(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIs('Invalid resource.');
+
+        $this->instance->attach(123);
+    }
+
+    #[Test]
+    public function closeDoesNothingWhenNoResource(): void
+    {
+        $this->instance->detach();
+        $this->instance->close();
+
+        $this->assertNull($this->instance->getResource());
+    }
+
+    #[Test]
+    public function getSizeReturnsNullWithoutResource(): void
+    {
+        $this->instance->detach();
+
+        $this->assertNull($this->instance->getSize());
+    }
+
+    #[Test]
+    public function stateIsUnavailableWithoutResource(): void
+    {
+        $this->instance->detach();
+
+        $this->assertTrue($this->instance->eof());
+        $this->assertFalse($this->instance->isSeekable());
+        $this->assertFalse($this->instance->isWritable());
+        $this->assertFalse($this->instance->isReadable());
+        $this->assertSame('', $this->instance->getContents());
+        $this->assertSame('', (string) $this->instance);
+    }
+
+    #[Test]
+    #[DataProvider('operationsWithoutResourceProvider')]
+    public function operationsThrowWithoutResource(string $method, array $args): void
+    {
+        $this->instance->detach();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('No resource available.');
+
+        $this->instance->$method(...$args);
+    }
+
+    public static function operationsWithoutResourceProvider(): array
+    {
+        return [
+            'tell' => ['tell', []],
+            'seek' => ['seek', [0]],
+            'rewind' => ['rewind', []],
+            'write' => ['write', ['x']],
+            'read' => ['read', [1]],
+        ];
+    }
+
+    #[Test]
+    public function seekThrowsWhenStreamIsNotSeekable(): void
+    {
+        $stream = new Stream('php://output', WRITE_ONLY_RESET);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Stream is not seekable');
+
+        $stream->seek(0);
+    }
+
+    #[Test]
+    public function seekThrowsWhenSeekFails(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Error seeking within stream');
+
+        $this->instance->seek(-1);
+    }
+
+    #[Test]
+    public function readThrowsWhenStreamIsNotReadable(): void
+    {
+        $this->createTempFile();
+        $stream = new Stream($this->tmpnam, WRITE_ONLY_RESET);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Stream is not readable');
+
+        $stream->read(1);
+    }
+
+    #[Test]
+    public function getMetadataReturnsNullForUnknownKey(): void
+    {
+        $this->assertNull($this->instance->getMetadata('not-exists'));
+    }
+
     protected function createTempFile(): string
     {
         return $this->tmpnam = tempnam(sys_get_temp_dir(), 'windwalker');

@@ -9,8 +9,6 @@ use Windwalker\Utilities\Arr;
 
 /**
  * The ValueReference class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class ValueReference implements WrapperInterface
 {
@@ -47,8 +45,6 @@ class ValueReference implements WrapperInterface
      * @param  string|null   $delimiter
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function __invoke(mixed $src, ?string $delimiter = null): mixed
     {
@@ -64,7 +60,8 @@ class ValueReference implements WrapperInterface
      *
      * @return  string|null
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getDelimiter(): ?string
     {
@@ -76,7 +73,8 @@ class ValueReference implements WrapperInterface
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getPath(): string
     {

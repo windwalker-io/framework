@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Test;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Test\Entity\StubArticle;
 
@@ -15,7 +16,8 @@ class EntityEventTest extends AbstractORMTestCase
 {
     protected EntityMapper $instance;
 
-    public function testEnergize(): void
+    #[Test]
+    public function energizeInitializesEntityMetadata(): void
     {
         $article = new StubArticle();
 
@@ -26,7 +28,8 @@ class EntityEventTest extends AbstractORMTestCase
         self::assertEquals('HAHA', (string) $str);
     }
 
-    public function testSaveAndStoreEvent()
+    #[Test]
+    public function saveDispatchesStoreEventsAroundWrite()
     {
         StubArticle::$counter = 0;
 
@@ -68,11 +71,6 @@ class EntityEventTest extends AbstractORMTestCase
             ],
             StubArticle::$diff,
         );
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
     }
 
     /**

@@ -30,7 +30,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * Function name to get apache request headers. This property is for test use.
      *
-     * @var callable
+     * @var  callable
      */
     public static $apacheRequestHeaders = 'apache_request_headers';
 
@@ -43,7 +43,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             $serverParams,
             [],
             $uri,
-            $method
+            $method,
         );
     }
 
@@ -53,22 +53,22 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * If any argument is not supplied, the corresponding superglobal value will
      * be used.
      *
-     * @param  array|HttpParameters $server     The $_SERVER superglobal variable.
-     * @param  array                $query      The $_GET superglobal variable.
-     * @param array|null            $parsedBody The $_POST superglobal variable.
-     * @param  array                $cookies    The $_COOKIE superglobal variable.
-     * @param  array                $files      The $_FILES superglobal variable.
+     * @param  array|HttpParameters  $server      The $_SERVER superglobal variable.
+     * @param  array                 $query       The $_GET superglobal variable.
+     * @param  array|null            $parsedBody  The $_POST superglobal variable.
+     * @param  array                 $cookies     The $_COOKIE superglobal variable.
+     * @param  array                 $files       The $_FILES superglobal variable.
      *
-     * @return ServerRequestInterface
+     * @return  ServerRequestInterface
      *
-     * @throws JsonException
+     * @throws  JsonException
      */
     public static function createFromGlobals(
         array|HttpParameters $server = [],
         array $query = [],
         ?array $parsedBody = null,
         array $cookies = [],
-        array $files = []
+        array $files = [],
     ): ServerRequestInterface {
         $server = HttpParameters::wrap($server ?: $_SERVER);
         $server = static::prepareServers($server);
@@ -109,7 +109,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             $cookies ?: $_COOKIE,
             $query ?: $_GET,
             $parsedBody ?: $decodedBody,
-            static::getProtocolVersion($server)
+            static::getProtocolVersion($server),
         );
     }
 
@@ -125,7 +125,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * @param  array                 $files
      *
      * @return  ServerRequestInterface
-     * @throws JsonException
+     * @throws  JsonException
      */
     public static function createFromUri(
         string|UriInterface $uri,
@@ -134,7 +134,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         array $query = [],
         ?array $parsedBody = null,
         array $cookies = [],
-        array $files = []
+        array $files = [],
     ): ServerRequestInterface {
         if (is_string($uri)) {
             $uri = new Uri($uri);
@@ -158,7 +158,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @param  array|HttpParameters  $server  The $_SERVER superglobal variable.
      *
-     * @return HttpParameters
+     * @return  HttpParameters
      */
     public static function prepareServers(array|HttpParameters $server): HttpParameters
     {
@@ -194,7 +194,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @return  UploadedFileInterface[]
      *
-     * @throws  InvalidArgumentException for unrecognized values
+     * @throws  InvalidArgumentException  for unrecognized values
      */
     public static function prepareFiles(array $files): array
     {
@@ -232,7 +232,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @param  array|HttpParameters  $server  The $_SERVER superglobal variable.
      *
-     * @return HttpParameters
+     * @return  HttpParameters
      */
     public static function prepareHeaders(array|HttpParameters $server): HttpParameters
     {
@@ -276,7 +276,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      */
     public static function prepareUri(
         array|HttpParameters $server,
-        array|HttpParameters|null $headers = null
+        array|HttpParameters|null $headers = null,
     ): UriInterface {
         $server = HttpParameters::wrap($server);
 
@@ -323,7 +323,8 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             [$path, $fragment] = explode('#', $path, 2);
         }
 
-        return $uri->withScheme($scheme)
+        return $uri
+            ->withScheme($scheme)
             ->withUserInfo($user, $pass)
             ->withHost($host)
             ->withPort($port)
@@ -349,7 +350,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         string &$host,
         ?int &$port,
         array|HttpParameters $server,
-        array|HttpParameters $headers
+        array|HttpParameters $headers,
     ): void {
         $server = HttpParameters::wrap($server);
         $headers = HttpParameters::wrap($headers);
@@ -404,7 +405,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @param  array|HttpParameters  $server
      *
-     * @return string
+     * @return  string
      */
     public static function getRequestUri(array|HttpParameters $server): string
     {
@@ -517,7 +518,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             $value['size'],
             $value['error'],
             $value['name'],
-            $value['type']
+            $value['type'],
         );
 
         if (!empty($value['full_path']) && is_string($value['full_path'])) {
@@ -576,8 +577,8 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             throw new UnexpectedValueException(
                 sprintf(
                     'Invalid protocol version format (%s)',
-                    $server['SERVER_PROTOCOL']
-                )
+                    $server['SERVER_PROTOCOL'],
+                ),
             );
         }
 

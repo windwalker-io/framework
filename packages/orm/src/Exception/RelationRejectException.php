@@ -7,6 +7,4 @@ namespace Windwalker\ORM\Exception;
 /**
  * The RelationRejectException class.
  */
-class RelationRejectException extends \RuntimeException
-{
-}
+class RelationRejectException extends \RuntimeException {}

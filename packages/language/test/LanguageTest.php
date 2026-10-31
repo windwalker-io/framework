@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Language\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
 use ReflectionMethod;
 use Windwalker\Language\Language;
 
@@ -19,17 +20,12 @@ class LanguageTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Language
+     * @var  Language
      */
     protected Language $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function loadLanguageFixtures(): void
     {
         $this->instance = new Language();
 
@@ -37,37 +33,18 @@ class LanguageTest extends TestCase
             ->load(__DIR__ . '/fixtures/ini/zh-TW.ini', 'ini', 'zh-TW');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function loadReadsFixtureFilesForEachLocale(): void
     {
+        self::assertTrue($this->instance->has('WINDWALKER_LANGUAGE_TEST_FLOWER', 'en-GB'));
+        self::assertTrue($this->instance->has('WINDWALKER_LANGUAGE_TEST_FLOWER', 'zh-TW'));
+        self::assertEquals(['en-GB', 'Flower'], $this->instance->get('WINDWALKER_LANGUAGE_TEST_FLOWER', 'en-GB'));
+        self::assertEquals(['zh-TW', '花'], $this->instance->get('WINDWALKER_LANGUAGE_TEST_FLOWER', 'zh-TW'));
+        self::assertFalse($this->instance->has('A key not exists', 'en-GB', false));
     }
 
-    /**
-     * Method to test load().
-     *
-     * @return void
-     */
-    public function testLoad()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test trans().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     */
-    public function testTrans()
+    #[Test]
+    public function transTranslatesKeysInCurrentLocale(): void
     {
         $this->instance->setLocale('zh-TW');
 
@@ -76,14 +53,20 @@ class LanguageTest extends TestCase
         self::assertEquals('Sunflower', $this->instance->trans('Windwalker Language Test Sunflower'));
 
         self::assertEquals('A key not exists', $this->instance->trans('A key not exists'));
+    }
 
+    #[Test]
+    public function transWrapsFoundAndMissingKeysInDebugMode(): void
+    {
+        $this->instance->setLocale('zh-TW');
         $this->instance->setDebug(true);
 
         self::assertEquals('**Sunflower**', $this->instance->trans('Windwalker Language Test Sunflower'));
         self::assertEquals('??A key not exists??', $this->instance->trans('A key not exists'));
     }
 
-    public function testTransWithNotExists(): void
+    #[Test]
+    public function transRecordsMissingKeyAsOrphanInDebugMode(): void
     {
         $this->instance->setDebug(true);
 
@@ -97,20 +80,18 @@ class LanguageTest extends TestCase
         );
     }
 
-    /**
-     * Method to test choice().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     * @covers \Windwalker\Language\Language::choice
-     */
-    public function testChoice()
+    #[Test]
+    public function choiceSelectsStringByCountInDefaultLocale(): void
     {
         self::assertEquals('No Sunflower', $this->instance->choice('Windwalker Language Test Sunflower Choice', 0));
         self::assertEquals('Sunflower', $this->instance->choice('Windwalker Language Test Sunflower Choice', 1));
         self::assertEquals('Sunflowers', $this->instance->choice('Windwalker Language Test Sunflower Choice', 2));
 
+    }
+
+    #[Test]
+    public function choiceSelectsStringByCountInCurrentLocale(): void
+    {
         $this->instance->setLocale('zh-TW');
 
         self::assertEquals('沒有花', $this->instance->choice('Windwalker Language Test flower Choice', 0));
@@ -118,7 +99,8 @@ class LanguageTest extends TestCase
         self::assertEquals('花', $this->instance->choice('Windwalker Language Test flower Choice', 2));
     }
 
-    public function testChoiceNotExists(): void
+    #[Test]
+    public function choiceWrapsStringsAndMissingKeysInDebugMode(): void
     {
         $this->instance->setDebug(true);
 
@@ -133,12 +115,8 @@ class LanguageTest extends TestCase
         );
     }
 
-    /**
-     * Method to test sprintf().
-     *
-     * @return void
-     */
-    public function testReplace()
+    #[Test]
+    public function transReplacesPlaceholdersWithArguments(): void
     {
         self::assertEquals(
             'The Sakura is beautiful~~~!!!',
@@ -150,28 +128,15 @@ class LanguageTest extends TestCase
         );
     }
 
-    /**
-     * Method to test exists().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Language\Language::exists
-     */
-    public function testHas()
+    #[Test]
+    public function hasReportsWhetherKeyExists(): void
     {
         self::assertTrue($this->instance->has('Windwalker Language Test flower'));
         self::assertFalse($this->instance->has('Windwalker Language Test rose'));
     }
 
-    /**
-     * Method to test addString().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     * @covers \Windwalker\Language\Language::addString
-     */
-    public function testAddString()
+    #[Test]
+    public function addStringMakesKeyTranslatable(): void
     {
         $this->instance->addString('windwalker language test rose', 'Rose');
 
@@ -180,16 +145,8 @@ class LanguageTest extends TestCase
         self::assertEquals('Rose', $this->instance->trans('WINDWALKER_LANGUAGE_TEST_ROSE'));
     }
 
-    /**
-     * Method to test addStrings().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     * @covers \Windwalker\Language\Language::addStrings
-     * @TODO   Implement testAddStrings().
-     */
-    public function testAddStrings()
+    #[Test]
+    public function addStringsMakesAllKeysTranslatable(): void
     {
         $strings = [
             'foo' => 'bar',
@@ -202,7 +159,8 @@ class LanguageTest extends TestCase
         self::assertEquals('walker', $this->instance->trans('wind'));
     }
 
-    public function testParent()
+    #[Test]
+    public function extractedChildResolvesKeysWithNamespacePrefix(): void
     {
         $this->instance->setLocale('zh-TW');
         $child = $this->instance->extract('windwalker.language');
@@ -214,15 +172,8 @@ class LanguageTest extends TestCase
         );
     }
 
-    /**
-     * Method to test setDebug().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     * @covers \Windwalker\Language\Language::setDebug
-     */
-    public function testSetDebug()
+    #[Test]
+    public function setDebugWrapsTranslationsWithMarkers(): void
     {
         $this->instance->setDebug(true);
 
@@ -230,15 +181,8 @@ class LanguageTest extends TestCase
         self::assertEquals('??A key not exists??', $this->instance->trans('A key not exists'));
     }
 
-    /**
-     * Method to test getOrphans().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     * @covers \Windwalker\Language\Language::getOrphans
-     */
-    public function testGetOrphans()
+    #[Test]
+    public function getOrphansReturnsMissingKeysWithCallerInfo(): void
     {
         $this->instance->setDebug(true);
 
@@ -265,15 +209,8 @@ class LanguageTest extends TestCase
         self::assertEquals('Windwalker\Language\Language::trans', $called['class'] . '::' . $called['function']);
     }
 
-    /**
-     * Method to test getUsed().
-     *
-     * @return void
-     *
-     * @throws ReflectionException
-     * @covers \Windwalker\Language\Language::getUsed
-     */
-    public function testGetUsed()
+    #[Test]
+    public function getUsedReturnsOnlyExistingKeysTranslated(): void
     {
         // Exists
         $this->instance->trans('Windwalker Language Test Sakura');
@@ -287,14 +224,8 @@ class LanguageTest extends TestCase
         self::assertEquals(['windwalker.language.test.sakura'], $used);
     }
 
-    /**
-     * Method to test getLocale().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Language\Language::getLocale
-     */
-    public function testGetAndSetLocale()
+    #[Test]
+    public function setLocaleNormalizesLocaleToBCP47(): void
     {
         self::assertEquals('en-GB', $this->instance->getLocale());
 
@@ -303,14 +234,8 @@ class LanguageTest extends TestCase
         self::assertEquals('zh-TW', $this->instance->getLocale());
     }
 
-    /**
-     * Method to test normalize().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Language\Language::normalize
-     */
-    public function testNormalize()
+    #[Test]
+    public function normalizeUsesCustomHandlerWhenSet(): void
     {
         self::assertEquals('windwalker.is.good', $this->instance->normalize('Windwalker is good ~~~!!!'));
 
@@ -321,5 +246,90 @@ class LanguageTest extends TestCase
         );
 
         self::assertEquals('WINDWALKER-ROCKS', $this->instance->normalize('Windwalker is good ~~~!!!'));
+    }
+
+    #[Test]
+    public function transReturnsRawWrapperValueUntouched(): void
+    {
+        self::assertEquals('Raw {key}', $this->instance->trans(\Windwalker\raw('Raw {key}')));
+    }
+
+    #[Test]
+    public function choiceReturnsRawWrapperValueUntouched(): void
+    {
+        self::assertEquals('Raw {key}', $this->instance->choice(\Windwalker\raw('Raw {key}'), 2));
+    }
+
+    #[Test]
+    public function replaceSubstitutesNamedPlaceholdersWithCaseVariants(): void
+    {
+        self::assertEquals(
+            'hi sakura, SAKURA, Sakura',
+            $this->instance->replace('hi :name, :NAME, :Name', ['name' => 'sakura'])
+        );
+    }
+
+    #[Test]
+    public function replacePrefersLongerPlaceholderNames(): void
+    {
+        self::assertEquals(
+            'A B',
+            $this->instance->replace(':foo :foobar', ['foo' => 'A', 'foobar' => 'B'])
+        );
+    }
+
+    #[Test]
+    public function replaceReturnsEmptyStringAsIs(): void
+    {
+        self::assertSame('', $this->instance->replace('', ['a' => 'b']));
+    }
+
+    #[Test]
+    public function choiceReplacesCountPlaceholder(): void
+    {
+        $this->instance->addString('apples', '{0} no apples|{1} one apple|[2,*] :count apples');
+
+        self::assertEquals('5 apples', $this->instance->choice('apples', 5));
+    }
+
+    #[Test]
+    public function transFallsBackToFallbackLocaleWhenKeyMissingInCurrentLocale(): void
+    {
+        $this->instance->setLocale('zh-TW');
+
+        self::assertEquals('Sunflower', $this->instance->trans('WINDWALKER_LANGUAGE_TEST_SUNFLOWER'));
+    }
+
+    #[Test]
+    public function findDoesNotUseFallbackWhenDisabled(): void
+    {
+        self::assertSame([null, null], $this->instance->find('windwalker.language.test.sunflower', 'zh-TW', false));
+    }
+
+    #[Test]
+    public function findLooksUpParentWhenChildHasNoString(): void
+    {
+        $child = (new Language())->setParent($this->instance);
+
+        self::assertSame(
+            ['en-GB', 'Sakura'],
+            $child->find('windwalker.language.test.sakura', 'en-GB')
+        );
+    }
+
+    #[Test]
+    public function loadReadsStringsFromFileForGivenLocale(): void
+    {
+        $lang = new Language();
+        $lang->load(__DIR__ . '/fixtures/ini/zh-TW.ini', 'ini', 'zh-TW');
+        $lang->setLocale('zh-TW');
+
+        self::assertEquals('櫻花', $lang->trans('WINDWALKER_LANGUAGE_TEST_SAKURA'));
+    }
+
+    #[Test]
+    public function getSelectorReturnsSameLazyInstance(): void
+    {
+        self::assertSame($this->instance->getSelector(), $this->instance->getSelector());
     }
 }

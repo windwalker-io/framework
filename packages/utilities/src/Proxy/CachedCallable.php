@@ -10,7 +10,7 @@ namespace Windwalker\Utilities\Proxy;
 class CachedCallable extends DisposableCallable
 {
     /**
-     * @var mixed
+     * @var  mixed
      */
     private $value;
 

@@ -60,7 +60,7 @@ class FormatRegistry
      * @param  string  $format
      * @param  array   $options
      *
-     * @return array
+     * @return  array
      *
      * @since  __DEPLOY_VERSION__
      */
@@ -240,7 +240,7 @@ class FormatRegistry
                 }
 
                 if ($v instanceof Closure) {
-                    return "[Object Closure]";
+                    return '[Object Closure]';
                 }
 
                 return $v;

@@ -13,8 +13,6 @@ use Windwalker\Utilities\Reflection\ReflectAccessor;
  *
  * @since  2.0
  *
- * @deprecated
+ * @deprecated  Use Windwalker\Utilities\Reflection\ReflectAccessor instead.
  */
-class TestHelper extends ReflectAccessor
-{
-}
+class TestHelper extends ReflectAccessor {}

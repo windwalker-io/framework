@@ -20,7 +20,7 @@ class SqlsrvStatement extends AbstractStatement
      *
      * @see https://stackoverflow.com/questions/16562704/php-sqlsrv-passing-a-resource-from-a-function
      *
-     * @var resource
+     * @var  resource
      */
     protected mixed $conn = null;
 

@@ -11,6 +11,4 @@ use Windwalker\Http\Request\AbstractRequest;
  *
  * @since  2.1
  */
-class StubRequest extends AbstractRequest
-{
-}
+class StubRequest extends AbstractRequest {}

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Filter\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\FilterFactory;
 use Windwalker\Test\Traits\BaseAssertionTrait;
@@ -20,7 +22,8 @@ class FilterFactoryTest extends TestCase
     /**
      * @see  FilterFactory::createFromSyntax
      */
-    public function testCreateFromSyntax(): void
+    #[Test]
+    public function createFromSyntaxBuildsRangeFilterWithNamedArguments(): void
     {
         $filter = $this->instance->createFromSyntax('range(min : 5, max:10)');
 
@@ -28,14 +31,22 @@ class FilterFactoryTest extends TestCase
             10,
             $filter->filter(20)
         );
+    }
 
+    #[Test]
+    public function createFromSyntaxBuildsBoolFilter(): void
+    {
         $filter = $this->instance->createFromSyntax('bool');
 
         self::assertEquals(
             true,
             $filter->filter('Hello')
         );
+    }
 
+    #[Test]
+    public function createFromSyntaxBuildsDefaultFilterReturningFallbackForNull(): void
+    {
         $filter = $this->instance->createFromSyntax('default("foo")');
 
         self::assertEquals(
@@ -44,7 +55,8 @@ class FilterFactoryTest extends TestCase
         );
     }
 
-    public function testCreateMap()
+    #[Test]
+    public function createNestedFiltersNestedValuesByRules(): void
     {
         $map = $this->instance->createNested(
             [
@@ -85,11 +97,12 @@ class FilterFactoryTest extends TestCase
         );
     }
 
-    public function testValidateMap()
+    #[Test]
+    public function createNestedTestThrowsWhenRuleFails(): void
     {
-        $this->expectExceptionMessage(
-            'Field "id" not match - Validator: Windwalker\Filter\Rule\Range(min: 1, max: 100)' .
-            ' test failure, value is: string(3) "600"'
+        $this->expectExceptionMessageIsOrContains(
+            'Field "id" not match - Validator: Windwalker\Filter\Rule\Range(min: 1, max: 100)'
+            . ' test failure, value is: string(3) "600"'
         );
 
         $map = $this->instance->createNested(
@@ -103,7 +116,7 @@ class FilterFactoryTest extends TestCase
             ]
         );
 
-        $result = $map->test(
+        $map->test(
             [
                 'id' => '600',
                 'alias' => 'title is here 123 Hello World',
@@ -116,12 +129,9 @@ class FilterFactoryTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createFilterFactory(): void
     {
         $this->instance = new FilterFactory();
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

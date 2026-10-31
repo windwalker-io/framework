@@ -15,7 +15,7 @@ interface RelationStrategyInterface
      * @param  array   $data
      * @param  object  $entity
      *
-     * @return array
+     * @return  array
      */
     public function load(array $data, object $entity): array;
 

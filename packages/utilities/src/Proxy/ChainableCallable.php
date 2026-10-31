@@ -22,16 +22,16 @@ namespace Windwalker\Utilities\Proxy;
 class ChainableCallable extends CallableProxy
 {
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     protected $queue = [];
 
     /**
      * @inheritDoc
      */
-    public function __invoke(...$args)
+    public function __invoke(...$args): mixed
     {
-        $result = parent::__invoke($args);
+        $result = parent::__invoke(...$args);
 
         foreach ($this->queue as $callable) {
             $result = $callable($result);
@@ -57,9 +57,10 @@ class ChainableCallable extends CallableProxy
     /**
      * Method to get property Queue
      *
-     * @return  array[callable]
+     * @return    array[callable]
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getQueue(): array
     {

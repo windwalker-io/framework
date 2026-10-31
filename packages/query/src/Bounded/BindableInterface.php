@@ -16,7 +16,7 @@ interface BindableInterface
      *
      * @param  string|integer|array  $key            The key that will be used in your SQL query to reference the value.
      *                                               Usually of the form ':key', but can also be an integer.
-     * @param  mixed                &$value          The value that will be bound. The value is passed by reference to
+     * @param  mixed                 &$value         The value that will be bound. The value is passed by reference to
      *                                               support output parameters such as those possible with stored
      *                                               procedures.
      * @param  mixed                 $dataType       Constant corresponding to a SQL datatype.
@@ -38,12 +38,12 @@ interface BindableInterface
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param  string|integer|array  $key            The key that will be used in your SQL query to reference the
-     *                                               value. Usually of the form ':key', but can also be an integer.
-     * @param  mixed                &$value          The value that will be bound. The value is passed by reference to
-     *                                               support output parameters such as those possible with stored
-     *                                               procedures.
-     * @param  mixed                 $dataType       Constant corresponding to a SQL datatype.
+     * @param  string|integer|array  $key       The key that will be used in your SQL query to reference the
+     *                                          value. Usually of the form ':key', but can also be an integer.
+     * @param  mixed                 &$value    The value that will be bound. The value is passed by reference to
+     *                                          support output parameters such as those possible with stored
+     *                                          procedures.
+     * @param  mixed                 $dataType  Constant corresponding to a SQL datatype.
      *
      * @return  static
      */

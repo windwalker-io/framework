@@ -14,7 +14,6 @@ use DOMNodeList;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use LogicException;
-use Masterminds\HTML5;
 use Symfony\Component\DomCrawler\Crawler;
 use Windwalker\Utilities\Str;
 
@@ -133,7 +132,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @param  DOMNode|array|string  $newnode  The appended child.
      *
-     * @return DOMNode The node added.
+     * @return  DOMNode  The node added.
      */
     public function appendChild(mixed $newnode): DOMNode
     {
@@ -318,8 +317,8 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @param  mixed  $offset  An offset to check for.
      *
-     * @return bool True on success or false on failure.
-     *                 The return value will be casted to boolean if non-boolean was returned.
+     * @return  bool  True on success or false on failure.
+     *                The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -331,7 +330,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @param  mixed  $offset  The offset to retrieve.
      *
-     * @return mixed Can return all value types.
+     * @return  mixed  Can return all value types.
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -344,8 +343,8 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      * @param  mixed  $offset  The offset to assign the value to.
      * @param  mixed  $value   The value to set.
      *
-     * @return void
-     * @throws DOMException
+     * @return  void
+     * @throws  DOMException
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -357,7 +356,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
      *
      * @param  mixed  $offset  The offset to unset.
      *
-     * @return void
+     * @return  void
      */
     public function offsetUnset(mixed $offset): void
     {
@@ -591,7 +590,7 @@ class DOMElement extends NativeDOMElement implements ArrayAccess
         return $this->$name;
     }
 
-    #[ArrayShape(['name' => "mixed|string", 'id' => "null|string", 'class' => "null|string"])]
+    #[ArrayShape(['name' => 'mixed|string', 'id' => 'null|string', 'class' => 'null|string'])]
     public static function splitCSSSelector(
         string $name
     ): array {

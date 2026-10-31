@@ -11,7 +11,5 @@ use Windwalker\Scalars\ArrayObject;
  */
 class IntersectionTypeStub
 {
-    public function __construct(public ArrayObject | (\Iterator & \Countable) $iter)
-    {
-    }
+    public function __construct(public ArrayObject|(\Iterator&\Countable) $iter) {}
 }

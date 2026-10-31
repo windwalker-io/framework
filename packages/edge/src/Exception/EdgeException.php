@@ -23,6 +23,8 @@ class EdgeException extends Exception
      * @param  null  $file      File name.
      * @param  null  $line      File line.
      * @param  null  $previous  The previous exception used for the exception chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct($message = null, $code = null, $file = null, $line = null, $previous = null)
     {

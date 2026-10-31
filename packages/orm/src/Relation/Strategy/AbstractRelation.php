@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Relation\Strategy;
 
-use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\ORM\Attributes\MorphBy;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\ORM;
@@ -54,7 +53,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return EntityMetadata
+     * @return  EntityMetadata
      */
     public function getMetadata(): EntityMetadata
     {
@@ -257,7 +256,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return ORM
+     * @return  ORM
      */
     public function getORM(): ORM
     {
@@ -265,7 +264,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isFlush(): bool
     {
@@ -285,7 +284,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPropName(): string
     {
@@ -303,6 +302,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
      * @param  string  $propName
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function propName(string $propName): static
     {
@@ -312,7 +312,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTargetTable(): string
     {
@@ -320,7 +320,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return ForeignTable
+     * @return  ForeignTable
      */
     public function getTarget(): ForeignTable
     {
@@ -328,7 +328,8 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return string
+     * @return  string
+     * @codeCoverageIgnore
      */
     public function getOnUpdate(): string
     {
@@ -348,7 +349,8 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return string
+     * @return  string
+     * @codeCoverageIgnore
      */
     public function getOnDelete(): string
     {
@@ -368,7 +370,8 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return array
+     * @return  array
+     * @codeCoverageIgnore
      */
     public function getOptions(): array
     {
@@ -379,6 +382,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
      * @param  array  $options
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setOptions(array $options): static
     {
@@ -388,7 +392,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getForeignKeys(): array
     {
@@ -433,7 +437,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getMorphs(): array
     {

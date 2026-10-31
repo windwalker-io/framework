@@ -14,7 +14,7 @@ trait CompileIncludeTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEach(string $expression): string
     {
@@ -26,7 +26,7 @@ trait CompileIncludeTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileInclude(string $expression): string
     {
@@ -42,7 +42,7 @@ trait CompileIncludeTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileIncludeIf(string $expression): string
     {

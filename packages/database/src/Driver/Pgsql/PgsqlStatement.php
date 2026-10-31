@@ -10,7 +10,6 @@ use Windwalker\Database\Exception\StatementException;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
 use Windwalker\Query\Grammar\AbstractGrammar;
-use Windwalker\Query\Grammar\PostgreSQLGrammar;
 use Windwalker\Query\Query;
 
 use function Windwalker\uid;
@@ -21,7 +20,7 @@ use function Windwalker\uid;
 class PgsqlStatement extends AbstractStatement
 {
     /**
-     * @var mixed|null
+     * @var  mixed|null
      */
     protected mixed $conn = null;
 

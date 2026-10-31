@@ -9,9 +9,7 @@ namespace Windwalker\Reactor\WebSocket;
  */
 class WebSocketFrame implements WebSocketFrameInterface
 {
-    public function __construct(protected int $fd, protected string $data = '')
-    {
-    }
+    public function __construct(protected int $fd, protected string $data = '') {}
 
     public function getFd(): int
     {

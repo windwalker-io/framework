@@ -26,7 +26,7 @@ trait RuntimeCacheTrait
         return isset(static::$cacheStorage[$id]);
     }
 
-    public static function cacheRemove(string $id): static
+    public static function cacheRemove(string $id): void
     {
         unset(static::$cacheStorage[$id]);
     }

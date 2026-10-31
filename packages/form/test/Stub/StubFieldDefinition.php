@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Stub;
 
-use Windwalker\Filter\InputFilter;
 use Windwalker\Filter\Rule\CastTo;
 use Windwalker\Filter\Rule\EmailAddress;
 use Windwalker\Form\Field\PasswordField;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Form\FieldDefinitionInterface;
 use Windwalker\Form\Form;
-use Windwalker\Validator\Rule\EmailValidator;
 
 /**
  * The StubFieldDefinition class.

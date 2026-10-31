@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
-use Exception;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\CustomHtmlField;
 use Windwalker\Test\Traits\DOMTestTrait;
 
@@ -23,13 +23,8 @@ class CustomHtmlTest extends TestCase
 
     protected CustomHtmlField $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createCustomHtmlField(): void
     {
         $this->instance = new CustomHtmlField(
             'flower',
@@ -39,23 +34,8 @@ class CustomHtmlTest extends TestCase
         $this->instance->content(h('div', ['data-test-element' => true], 'Sakura'));
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test prepareAttributes().
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function testRender()
+    #[Test]
+    public function renderInputOutputsCustomContent(): void
     {
         $html = <<<HTML
 <div data-test-element>Sakura</div>

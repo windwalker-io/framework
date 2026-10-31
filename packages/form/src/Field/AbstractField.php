@@ -29,19 +29,19 @@ use function Windwalker\DOM\h;
 /**
  * The AbstractField class.
  *
- * @method $this help(string $value)
- * @method mixed getHelp()
- * @method $this description(string $value)
- * @method mixed getDescription()
- * @method $this title(string $value)
- * @method mixed getTitle()
- * @method $this id(string $value)
- * @method $this required(bool $value)
- * @method mixed isRequired()
- * @method $this disabled(bool $value)
- * @method mixed isDisabled()
- * @method $this readonly(bool $value)
- * @method mixed isReadonly()
+ * @method  $this  help(string $value)
+ * @method  mixed  getHelp()
+ * @method  $this  description(string $value)
+ * @method  mixed  getDescription()
+ * @method  $this  title(string $value)
+ * @method  mixed  getTitle()
+ * @method  $this  id(string $value)
+ * @method  $this  required(bool $value)
+ * @method  mixed  isRequired()
+ * @method  $this  disabled(bool $value)
+ * @method  mixed  isDisabled()
+ * @method  $this  readonly(bool $value)
+ * @method  mixed  isReadonly()
  * @method  $this  onchange(string $value = null)
  * @method  mixed  getOnchange()
  * @method  $this  onfocus(string $value = null)
@@ -77,7 +77,7 @@ abstract class AbstractField
      *
      * @var  ?string
      */
-    protected string|null $fieldset = null;
+    protected ?string $fieldset = null;
 
     /**
      * Property control.
@@ -101,7 +101,7 @@ abstract class AbstractField
     protected ?Form $form = null;
 
     /**
-     * @var array<callable>
+     * @var  array<callable>
      */
     protected array $surrounds = [];
 
@@ -126,7 +126,7 @@ abstract class AbstractField
      * @param  string  $label
      * @param  array   $attributes
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function __construct(string $name = '', string $label = '', array $attributes = [])
     {
@@ -175,7 +175,7 @@ abstract class AbstractField
      *
      * @param  array  $options
      *
-     * @return string
+     * @return  string
      */
     public function render(array $options = []): string
     {
@@ -398,6 +398,8 @@ abstract class AbstractField
      * getRawValue
      *
      * @return  mixed
+     *
+     * @codeCoverageIgnore
      */
     public function getRawValue(): mixed
     {
@@ -496,7 +498,7 @@ abstract class AbstractField
      * @param  string  $name     The attribute name.
      * @param  mixed   $default  The default value.
      *
-     * @return mixed The return value of this attribute.
+     * @return  mixed  The return value of this attribute.
      */
     public function get(string $name, $default = null): mixed
     {
@@ -579,7 +581,7 @@ abstract class AbstractField
      *
      * @return  mixed
      *
-     * @throws BadMethodCallException
+     * @throws  BadMethodCallException
      */
     public function __call(string $method, array $args): mixed
     {
@@ -671,7 +673,7 @@ abstract class AbstractField
     }
 
     /**
-     * @return callable[]
+     * @return  callable[]
      */
     public function getSurrounds(): array
     {
@@ -682,6 +684,8 @@ abstract class AbstractField
      * @param  array<callable|\DOMElement|Element>  $surrounds
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSurrounds(array $surrounds): static
     {

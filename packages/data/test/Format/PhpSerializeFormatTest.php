@@ -13,7 +13,7 @@ class PhpSerializeFormatTest extends TestCase
     #[Test]
     public function itSerializesAndRestoresNestedData(): void
     {
-        $format = new PhpSerializeFormat;
+        $format = new PhpSerializeFormat();
         $data = ['flower' => 'sakura', 'meta' => ['count' => 3]];
         $serialized = $format->dump($data);
 
@@ -24,7 +24,7 @@ class PhpSerializeFormatTest extends TestCase
     #[Test]
     public function itPassesAllowedClassesOptionsToUnserialize(): void
     {
-        $format = new PhpSerializeFormat;
+        $format = new PhpSerializeFormat();
         $serialized = serialize(['flower' => 'sakura']);
 
         self::assertSame(

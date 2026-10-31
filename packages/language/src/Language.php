@@ -26,7 +26,7 @@ class Language implements LanguageInterface
     /**
      * Property locale.
      *
-     * @var string
+     * @var  string
      */
     protected ?string $locale = null;
 
@@ -59,7 +59,7 @@ class Language implements LanguageInterface
     protected array $orphans = [];
 
     /**
-     * @var array
+     * @var  array
      */
     protected array $trace = [];
 
@@ -171,7 +171,7 @@ class Language implements LanguageInterface
      * @param  bool         $fallback
      *
      * @return  array<string>
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     #[ArrayShape(['string', 'string'])]
     public function get(
@@ -430,7 +430,7 @@ class Language implements LanguageInterface
      * @param  string  $string
      *
      * @return  mixed
-     * @throws UnexpectedValueException
+     * @throws  UnexpectedValueException
      */
     public function normalize(string $string): mixed
     {
@@ -468,7 +468,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return PluralSelector
+     * @return  PluralSelector
      */
     public function getSelector(): PluralSelector
     {
@@ -479,6 +479,8 @@ class Language implements LanguageInterface
      * @param  PluralSelector|null  $selector
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSelector(PluralSelector $selector): static
     {
@@ -509,7 +511,7 @@ class Language implements LanguageInterface
      * @param  string  $id
      *
      * @return  array
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     protected function backtrace(string $id): array
     {
@@ -523,6 +525,8 @@ class Language implements LanguageInterface
      * Method to get property Trace
      *
      * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function getTrace(): array
     {
@@ -535,6 +539,8 @@ class Language implements LanguageInterface
      * @return  string[]
      *
      * @since  3.5.2
+     *
+     * @codeCoverageIgnore
      */
     public function getStrings(): array
     {
@@ -549,6 +555,8 @@ class Language implements LanguageInterface
      * @return  static  Return self to support chaining.
      *
      * @since  3.5.2
+     *
+     * @codeCoverageIgnore
      */
     public function setStrings(array $strings): self
     {
@@ -558,7 +566,9 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return string
+     * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getNamespace(): string
     {
@@ -578,7 +588,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isDebug(): bool
     {
@@ -586,7 +596,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return self
+     * @return  self
      */
     public function getParent(): ?self
     {

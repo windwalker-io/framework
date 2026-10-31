@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Request;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Test\Stub\StubRequest;
 use Windwalker\Stream\Stream;
@@ -22,35 +24,15 @@ class AbstractRequestTest extends TestCase
 
     protected ?StubRequest $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRequest(): void
     {
         $this->instance = new StubRequest();
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[Test]
+    public function constructWithoutParamsUsesEmptyUriMethodAndMemoryBody(): void
     {
-    }
-
-    /**
-     * testConstruct
-     *
-     * @return  void
-     */
-    public function testConstruct()
-    {
-        // Test no params
         $request = new StubRequest();
 
         self::assertInstanceOf(Uri::class, $request->getUri());
@@ -59,8 +41,11 @@ class AbstractRequestTest extends TestCase
         self::assertInstanceOf(Stream::class, $request->getBody());
         self::assertEquals('php://memory', $request->getBody()->getMetadata('uri'));
         self::assertEquals([], $request->getHeaders());
+    }
 
-        // Test with params
+    #[Test]
+    public function constructWithScalarParamsNormalizesUriMethodBodyAndHeaders(): void
+    {
         $uri = 'http://example.com/?foo=bar#baz';
         $method = 'post';
         $body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
@@ -80,8 +65,11 @@ class AbstractRequestTest extends TestCase
         self::assertEquals(['application/json'], $request->getHeader('content-type'));
 
         fclose($body);
+    }
 
-        // Test with object params
+    #[Test]
+    public function constructWithObjectParamsKeepsSameUriAndBodyInstances(): void
+    {
         $uri = new Uri('http://example.com/flower/sakura?foo=bar#baz');
         $body = new Stream();
         $request = new StubRequest($uri, null, $body);
@@ -90,12 +78,8 @@ class AbstractRequestTest extends TestCase
         self::assertSame($body, $request->getBody());
     }
 
-    /**
-     * Method to test getRequestTarget().
-     *
-     * @return void
-     */
-    public function testWithAndGetRequestTarget()
+    #[Test]
+    public function withRequestTargetOverridesTargetDerivedFromUri(): void
     {
         self::assertEquals('/', $this->instance->getRequestTarget());
 
@@ -113,12 +97,8 @@ class AbstractRequestTest extends TestCase
         self::assertEquals('*', $request->getRequestTarget());
     }
 
-    /**
-     * Method to test getMethod().
-     *
-     * @return void
-     */
-    public function testWithAndGetMethod()
+    #[Test]
+    public function withMethodReturnsNewInstanceWithUppercasedMethod(): void
     {
         self::assertEquals('', $this->instance->getMethod());
 
@@ -126,21 +106,23 @@ class AbstractRequestTest extends TestCase
 
         self::assertNotSame($request, $this->instance);
         self::assertEquals('PATCH', $request->getMethod());
+    }
+
+    #[Test]
+    public function withMethodThrowsOnInvalidMethod(): void
+    {
+        $request = $this->instance->withMethod('patch');
 
         self::assertExpectedException(
             function () use ($request) {
                 $request->withMethod('FLY');
             },
-            new InvalidArgumentException()
+            new InvalidArgumentException(),
         );
     }
 
-    /**
-     * Method to test getUri().
-     *
-     * @return void
-     */
-    public function testWithAndGetUri()
+    #[Test]
+    public function withUriPreservingHostKeepsHostHeaderUntouched(): void
     {
         self::assertInstanceOf(Uri::class, $this->instance->getUri());
         self::assertEquals('', (string) $this->instance->getUri());
@@ -150,10 +132,74 @@ class AbstractRequestTest extends TestCase
         self::assertNotSame($request, $this->instance);
         self::assertEquals('http://example.com/flower/sakura?foo=bar#baz', (string) $request->getUri());
         self::assertEquals([], $request->getHeader('host'));
+    }
 
+    #[Test]
+    public function withUriUpdatesHostHeaderFromUri(): void
+    {
         $request = $this->instance->withUri(new Uri('http://windwalker.io/flower/sakura?foo=bar#baz'));
 
         self::assertEquals('http://windwalker.io/flower/sakura?foo=bar#baz', (string) $request->getUri());
         self::assertEquals(['windwalker.io'], $request->getHeader('host'));
+    }
+
+    #[Test]
+    public function getRequestTargetDerivesFromUriPathAndQuery(): void
+    {
+        self::assertSame('/', $this->instance->getRequestTarget());
+
+        $request = $this->instance->withUri(new Uri('http://example.com/foo/bar?a=1'));
+        self::assertSame('/foo/bar?a=1', $request->getRequestTarget());
+
+        $request = $this->instance->withUri(new Uri('http://example.com'));
+        self::assertSame('/', $request->getRequestTarget());
+    }
+
+    #[Test]
+    public function withRequestTargetThrowsOnWhitespace(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('whitespace');
+
+        $this->instance->withRequestTarget('/foo bar');
+    }
+
+    #[Test]
+    public function constructThrowsOnInvalidHeaders(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new StubRequest(null, null, 'php://memory', ['X-Foo' => [1]]);
+    }
+
+    #[Test]
+    public function constructThrowsOnInvalidHeaderName(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Invalid header name');
+
+        new StubRequest(null, null, 'php://memory', ['Bad Name' => 'foo']);
+    }
+
+    #[Test]
+    public function withUriAddsPortToHostHeader(): void
+    {
+        $request = $this->instance->withUri(new Uri('http://example.com:8080/foo'));
+
+        self::assertSame(['example.com:8080'], $request->getHeader('host'));
+    }
+
+    #[Test]
+    public function withUriKeepsHostHeaderWhenUriHasNoHost(): void
+    {
+        $request = $this->instance->withHeader('Host', 'keep.me')->withUri(new Uri('/relative/path'));
+
+        self::assertSame(['keep.me'], $request->getHeader('host'));
+    }
+
+    #[Test]
+    public function getMethodReturnsEmptyStringWhenNotSet(): void
+    {
+        self::assertSame('', $this->instance->getMethod());
     }
 }

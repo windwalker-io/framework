@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Windwalker\Session\Test;
 
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\BridgeInterface;
 use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Bridge\PhpBridge;
 use Windwalker\Session\Cookie\ArrayCookies;
+use Windwalker\Session\Cookie\Cookies;
 use Windwalker\Session\Cookie\CookiesInterface;
+use Windwalker\Session\FlashBag;
 use Windwalker\Session\Handler\ArrayHandler;
 use Windwalker\Session\Session;
 
@@ -34,9 +36,10 @@ class SessionTest extends TestCase
      * @cookie              native
      * @autoCommit          true
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testNativeBridgeNativeCookieWithoutId(): void
+    public function startWithNativeBridgeAndNativeCookieWithoutIdCreatesNewSession(): void
     {
         error_reporting(-1);
 
@@ -67,9 +70,10 @@ class SessionTest extends TestCase
      * @cookie              native
      * @autoCommit          true
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testNativeBridgeNativeCookieWithId(): void
+    public function startWithNativeBridgeAndNativeCookieWithIdRestoresSession(): void
     {
         $sess = $this->createInstance(
             [],
@@ -100,9 +104,10 @@ class SessionTest extends TestCase
      * @cookie              native
      * @autoCommit          true
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testNativeBridgeArrayCookieWithId(): void
+    public function startWithNativeBridgeAndArrayCookieWithIdRestoresSession(): void
     {
         $sess = $this->createInstance(
             [
@@ -142,9 +147,10 @@ class SessionTest extends TestCase
      * @cookie              array
      * @autoCommit          true
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testPhpBridgeNativeCookieWithId(): void
+    public function startWithPhpBridgeAndNativeCookieWithIdRestoresSession(): void
     {
         $sess = $this->createInstance(
             [],
@@ -193,9 +199,10 @@ class SessionTest extends TestCase
      * @cookie              native
      * @autoCommit          true
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testPhpBridgeNativeCookieWithoutId(): void
+    public function startWithPhpBridgeAndNativeCookieWithoutIdCreatesNewSession(): void
     {
         $sess = $this->createInstance(
             [],
@@ -234,9 +241,10 @@ class SessionTest extends TestCase
      * @cookie              array
      * @autoCommit          true
      */
+    #[Test]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testPhpBridgeArrayCookieWithId(): void
+    public function startWithPhpBridgeAndArrayCookieWithIdRestoresSession(): void
     {
         $sess = $this->createInstance(
             [],
@@ -274,7 +282,8 @@ class SessionTest extends TestCase
     /**
      * @see  Session::addFlash
      */
-    public function testAddFlash(): void
+    #[Test]
+    public function addFlashStoresMessagesInFlashBag(): void
     {
         $sess = $this->createInstance(
             [],
@@ -337,7 +346,8 @@ class SessionTest extends TestCase
     /**
      * @see  Session::fork
      */
-    public function testFork(): void
+    #[Test]
+    public function forkCreatesSeparateSessionWithNewOrGivenId(): void
     {
         $sess = $this->createInstance(
             [],
@@ -387,71 +397,138 @@ class SessionTest extends TestCase
     /**
      * @see  Session::getCookies
      */
-    public function testGetCookies(): void
+    #[Test]
+    public function getCookiesReturnsCookiesInstance(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $cookies = new ArrayCookies();
+
+        self::assertSame($cookies, $this->createInstance([], new PhpBridge([], new ArrayHandler()), $cookies)->getCookies());
+        self::assertInstanceOf(Cookies::class, $this->createInstance([], new PhpBridge([], new ArrayHandler()))->getCookies());
     }
 
     /**
      * @see  Session::stop
      */
-    public function testStop(): void
+    #[Test]
+    public function stopWritesAndClosesSession(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $handler = new ArrayHandler();
+        $sess = $this->createInstance([], new PhpBridge([], $handler));
+        $sess->setId('stop-id');
+        $sess->set('flower', 'Sakura');
+
+        self::assertTrue($sess->stop());
+        self::assertFalse($sess->isStarted());
+
+        $restored = new Session([], new PhpBridge([], $handler));
+        $restored->setId('stop-id');
+
+        self::assertSame('Sakura', $restored->get('flower'));
     }
 
     /**
      * @see  Session::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function constructAppliesOptionsBridgeAndCookies(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $bridge = new PhpBridge([], new ArrayHandler());
+        $cookies = new ArrayCookies();
+        $sess = $this->createInstance(['name' => 'CUSTOM_SESS'], $bridge, $cookies);
+
+        self::assertSame($bridge, $sess->getBridge());
+        self::assertSame($cookies, $sess->getCookies());
+        self::assertSame('CUSTOM_SESS', $sess->getName());
     }
 
     /**
      * @see  Session::setCookieParams
      */
-    public function testSetCookieParams(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function setCookieParamsUpdatesCookieOptions(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new NativeBridge([]));
+
+        $sess->setCookieParams(['path' => '/session-test', 'httponly' => true]);
+
+        self::assertSame('/session-test', session_get_cookie_params()['path']);
+        self::assertTrue(session_get_cookie_params()['httponly']);
     }
 
     /**
      * @see  Session::registerINI
      */
-    public function testRegisterINI(): void
+    #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function registerIniAppliesSessionIniOptions(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance(
+            ['ini' => ['gc_maxlifetime' => '777', 'session.cache_expire' => '55', 'cache_limiter' => null]],
+            new NativeBridge([]),
+        );
+
+        $sess->registerINI();
+
+        self::assertSame('777', ini_get('session.gc_maxlifetime'));
+        self::assertSame('55', ini_get('session.cache_expire'));
     }
 
     /**
      * @see  Session::restart
      */
-    public function testRestart(): void
+    #[Test]
+    public function restartRestartsSessionWithNewId(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->start();
+        $oldId = $sess->getId();
+
+        self::assertTrue($sess->restart());
+        self::assertNotSame($oldId, $sess->getId());
     }
 
     /**
      * @see  Session::getFlashBag
      */
-    public function testGetFlashBag(): void
+    #[Test]
+    public function getFlashBagReturnsFlashBag(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+
+        $flashBag = $sess->getFlashBag();
+
+        self::assertSame($flashBag, $sess->getFlashBag());
+
+        $flashBag->add('Hello');
+
+        self::assertSame(['info' => ['Hello']], $sess->get('_flash'));
     }
 
     /**
      * @see  Session::setFlashBag
      */
-    public function testSetFlashBag(): void
+    #[Test]
+    public function setFlashBagReplacesFlashBag(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $flashBag = new FlashBag();
+
+        self::assertSame($sess, $sess->setFlashBag($flashBag));
+        self::assertSame($flashBag, $sess->getFlashBag());
+
+        $flashBag->add('Linked', 'warning');
+
+        self::assertSame(['warning' => ['Linked']], $sess->get('_flash'));
     }
 
     /**
      * @see  Session::jsonSerialize
      */
-    public function testJsonSerialize(): void
+    #[Test]
+    public function jsonSerializeEncodesSessionData(): void
     {
         $sess = $this->createInstance(
             [],
@@ -470,68 +547,180 @@ class SessionTest extends TestCase
     /**
      * @see  Session::getName
      */
-    public function testGetName(): void
+    #[Test]
+    public function getNameReturnsSessionName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->setName('FOO_SESS');
+
+        self::assertSame('FOO_SESS', $sess->getName());
     }
 
     /**
      * @see  Session::clear
      */
-    public function testClear(): void
+    #[Test]
+    public function clearRemovesAllSessionData(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->set('a', 1)->set('b', 2);
+
+        self::assertTrue($sess->clear());
+        self::assertSame([], $sess->all());
     }
 
     /**
      * @see  Session::setCookies
      */
-    public function testSetCookies(): void
+    #[Test]
+    public function setCookiesReplacesCookiesInstance(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $cookies = new ArrayCookies();
+
+        self::assertSame($sess, $sess->setCookies($cookies));
+        self::assertSame($cookies, $sess->getCookies());
     }
 
     /**
      * @see  Session::setName
      */
-    public function testSetName(): void
+    #[Test]
+    public function setNameChangesSessionName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+
+        self::assertSame($sess, $sess->setName('NEW_NAME'));
+        self::assertSame('NEW_NAME', $sess->getBridge()->getSessionName());
     }
 
     /**
      * @see  Session::all
      */
-    public function testAll(): void
+    #[Test]
+    public function allReturnsAllSessionData(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->set('a', 1)->set('b', 2);
+
+        self::assertSame(['a' => 1, 'b' => 2], $sess->all());
     }
 
     /**
      * @see  Session::getStorage
      */
-    public function testGetStorage(): void
+    #[Test]
+    public function getStorageReturnsBridgeStorage(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $bridge = new PhpBridge([], new ArrayHandler());
+        $sess = $this->createInstance([], $bridge);
+        $sess->set('a', 1);
+
+        self::assertSame($bridge->getStorage(), $sess->getStorage());
+        self::assertSame(['a' => 1], $sess->getStorage());
     }
 
     /**
      * @see  Session::getFlashes
      */
-    public function testGetFlashes(): void
+    #[Test]
+    public function getFlashesReturnsAndClearsFlashMessages(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->addFlash(['One', 'Two'], 'info')->addFlash('Bad', 'error');
+
+        self::assertSame(['info' => ['One', 'Two'], 'error' => ['Bad']], $sess->getFlashes());
+        self::assertSame([], $sess->get('_flash'));
     }
 
     /**
      * @see  Session::count
      */
-    public function testCount(): void
+    #[Test]
+    public function countReturnsNumberOfSessionItems(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+
+        self::assertCount(0, $sess);
+
+        $sess->set('a', 1)->set('b', 2);
+
+        self::assertCount(2, $sess);
     }
 
-    protected function setUp(): void
+    /**
+     * @see  Session::def
+     */
+    #[Test]
+    public function defSetsDefaultOnlyWhenMissing(): void
+    {
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+
+        self::assertSame('x', $sess->def('key', 'x'));
+        self::assertSame('x', $sess->def('key', 'y'));
+    }
+
+    /**
+     * @see  Session::remove
+     */
+    #[Test]
+    public function removeDeletesExistingKeyAndIgnoresMissing(): void
+    {
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->set('a', 1);
+
+        $sess->remove('a')->remove('missing');
+
+        self::assertFalse($sess->has('a'));
+    }
+
+    /**
+     * @see  Session::dump
+     */
+    #[Test]
+    public function dumpReturnsStorageOrRecursiveArray(): void
+    {
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->set('obj', (object) ['a' => 1]);
+
+        self::assertInstanceOf(\stdClass::class, $sess->dump()['obj']);
+        self::assertSame(['obj' => ['a' => 1]], $sess->dump(true));
+    }
+
+    /**
+     * @see  Session::overrideWith
+     */
+    #[Test]
+    public function overrideWithReadsOrReplacesValue(): void
+    {
+        $sess = $this->createInstance([], new PhpBridge([], new ArrayHandler()));
+        $sess->set('a', 'old');
+
+        self::assertSame('old', $sess->overrideWith('a'));
+        self::assertSame('new', $sess->overrideWith('a', 'new'));
+        self::assertSame('new', $sess->get('a'));
+    }
+
+    /**
+     * @see  Session::destroy
+     */
+    #[Test]
+    public function destroyRemovesStoredSession(): void
+    {
+        $handler = new ArrayHandler();
+        $sess = $this->createInstance([], new PhpBridge([], $handler));
+        $sess->setId('destroy-id');
+        $sess->set('a', 1);
+        $sess->stop();
+
+        $sess->start();
+        $sess->destroy();
+
+        self::assertSame('', $handler->read('destroy-id'));
+    }
+
+    #[Before]
+    protected function resetSessionAndVfs(): void
     {
         $this->instance = null;
 
@@ -548,9 +737,5 @@ class SessionTest extends TestCase
             $bridge,
             $cookies
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

@@ -10,7 +10,7 @@ namespace Windwalker\Http\Transport;
 abstract class AbstractDelegationTransport
 {
     /**
-     * @var TransportInterface|null
+     * @var  TransportInterface|null
      */
     protected ?TransportInterface $transport;
 
@@ -26,7 +26,8 @@ abstract class AbstractDelegationTransport
     }
 
     /**
-     * @return TransportInterface|null
+     * @return  TransportInterface|null
+     * @codeCoverageIgnore
      */
     public function getTransport(): ?TransportInterface
     {
@@ -37,6 +38,7 @@ abstract class AbstractDelegationTransport
      * @param  TransportInterface|null  $transport
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTransport(?TransportInterface $transport): static
     {

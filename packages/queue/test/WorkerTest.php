@@ -4,10 +4,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Queue\Driver\DatabaseQueueDriver;
+use Windwalker\Queue\Driver\NullQueueDriver;
+use Windwalker\Queue\Driver\QueueDriverInterface;
+use Windwalker\Queue\Event\JobFailureEvent;
 use Windwalker\Queue\Event\LoopEndEvent;
+use Windwalker\Queue\Event\StopEvent;
 use Windwalker\Queue\Queue;
+use Windwalker\Queue\QueueMessage;
+use Windwalker\Queue\RunnerOptions;
+use Windwalker\Queue\Test\Stub\TestJob;
 use Windwalker\Queue\Worker;
 use Windwalker\Test\Traits\DatabaseTestTrait;
 
@@ -27,7 +36,8 @@ class WorkerTest extends TestCase
     /**
      * @see  Worker::loop
      */
-    public function testLoop(): void
+    #[Test]
+    public function loopExecutesPushedJobOnCustomChannelUntilStopped(): void
     {
         // if (!in_array('closure', stream_get_wrappers(), true)) {
         //     self::markTestSkipped('Closure serialize not supported now.');
@@ -60,86 +70,205 @@ class WorkerTest extends TestCase
     /**
      * @see  Worker::stopIfNecessary
      */
-    public function testStopIfNecessary(): void
+    #[Test]
+    public function stopIfNecessaryStopsWhenStopConditionMet(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(memoryLimit: 0));
+
+        $worker->stopIfNecessary();
+
+        self::assertTrue($worker->isStop());
     }
 
-    /**
-     * @see  Worker::getState
-     */
-    public function testGetState(): void
+    #[Test]
+    public function stopIfNecessaryDoesNothingWhenNoConditionMet(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->stopIfNecessary();
+
+        self::assertFalse($this->instance->isStop());
+    }
+
+    #[Test]
+    public function maxRunsCountsEachProcessedMessageOnce(): void
+    {
+        $driver = $this->createStub(QueueDriverInterface::class);
+        $driver->method('pop')->willReturnCallback(fn() => new QueueMessage(new TestJob())->setId(1));
+        $driver->method('delete')->willReturnSelf();
+        $worker = new Worker(new Queue($driver), new RunnerOptions(maxRuns: 2));
+
+        $worker->next('default');
+        $worker->stopIfNecessary();
+        self::assertFalse($worker->isStop());
+
+        $worker->next('default');
+        $worker->stopIfNecessary();
+        self::assertTrue($worker->isStop());
+    }
+
+    #[Test]
+    public function nextStopsWhenQueueIsEmptyAndStopWhenEmptyEnabled(): void
+    {
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(stopWhenEmpty: true));
+
+        $worker->next('default');
+
+        self::assertTrue($worker->isStop());
+    }
+
+    #[Test]
+    public function nextKeepsRunningWhenQueueIsEmpty(): void
+    {
+        $worker = new Worker(new Queue(new NullQueueDriver()));
+
+        $worker->next(['default', 'foo']);
+
+        self::assertFalse($worker->isStop());
     }
 
     /**
      * @see  Worker::stop
      */
-    public function testStop(): void
+    #[Test]
+    public function stopChangesStateToStopped(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $events = [];
+        $this->instance->on(StopEvent::class, function (StopEvent $event) use (&$events) {
+            $events[] = $event->reason;
+        });
+
+        $this->instance->stop('manual');
+
+        self::assertSame(Worker::STATE_STOP, $this->instance->getState());
+        self::assertTrue($this->instance->isStop());
+        self::assertSame(['manual'], $events);
     }
 
     /**
      * @see  Worker::runNextJob
      */
-    public function testRunNextJob(): void
+    #[Test]
+    public function runNextJobProcessesNextMessageFromQueue(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
+        $message = new QueueMessage(new TestJob(['x']))->setId(5);
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->expects($this->once())->method('pop')->with('default')->willReturn($message);
+        $driver->expects($this->once())->method('delete')->with($this->identicalTo($message))->willReturnSelf();
 
-    /**
-     * @see  Worker::setState
-     */
-    public function testSetState(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
+        new Worker(new Queue($driver))->runNextJob('default');
     }
 
     /**
      * @see  Worker::process
      */
-    public function testProcess(): void
+    #[Test]
+    public function processInvokesJobOfMessage(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $job = new TestJob(['done']);
+        $message = new QueueMessage($job)->setId(9);
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->expects($this->once())->method('delete')->with($this->identicalTo($message))->willReturnSelf();
+        $driver->expects($this->never())->method('release');
+
+        new Worker(new Queue($driver))->process($message);
+
+        self::assertSame(['done'], $job->executed);
+        self::assertTrue($message->isDeleted());
     }
 
-    /**
-     * @see  Worker::__construct
-     */
-    public function testConstruct(): void
+    #[Test]
+    public function processReleasesFailedMessageWithBackoff(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $job = new class () {
+            public function __invoke(): void
+            {
+                throw new \RuntimeException('boom');
+            }
+        };
+        $message = new QueueMessage($job)->setId(3);
+        $failures = [];
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->expects($this->once())
+            ->method('release')
+            ->willReturnCallback(function (QueueMessage $m) use ($driver) {
+                self::assertSame(3, $m->getId());
+
+                return $driver;
+            });
+        $driver->expects($this->never())->method('delete');
+
+        $worker = new Worker(new Queue($driver));
+        $worker->on(JobFailureEvent::class, function (JobFailureEvent $event) use (&$failures) {
+            $failures[] = $event->exception->getMessage();
+        });
+        $worker->process($message);
+
+        self::assertSame(['boom'], $failures);
+    }
+
+    #[Test]
+    public function processDeletesMessageWhenMaxAttemptsExceeded(): void
+    {
+        $job = new TestJob();
+        $message = new QueueMessage($job)->setId(4);
+        $message->setAttempts(10);
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->expects($this->atLeastOnce())->method('delete')->willReturnSelf();
+        $driver->expects($this->never())->method('release');
+
+        new Worker(new Queue($driver), new RunnerOptions(tries: 2))->process($message);
+
+        self::assertNull($job->executed);
     }
 
     /**
      * @see  Worker::shutdown
      */
-    public function testShutdown(): void
+    #[Test]
+    public function shutdownStopsWorker(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->shutdown();
+
+        self::assertSame(Worker::STATE_EXITING, $this->instance->getState());
+        self::assertTrue($this->instance->isStop());
+
+        $this->instance->stopIfNecessary();
+
+        self::assertSame(Worker::STATE_STOP, $this->instance->getState());
     }
 
-    /**
-     * @see  Worker::getQueue
-     */
-    public function testGetAdapter(): void
+    #[Test]
+    public function failureCountsAttemptButDeferDoesNot(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $queue = $this->instance->getQueue();
+        $queue->push(fn() => throw new \RuntimeException('fail'), 0, 'worker-attempt');
+        $worker = new Worker($queue, new RunnerOptions(tries: 10));
+
+        $worker->next('worker-attempt');
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'worker-attempt')->get();
+        self::assertEquals(1, $row->attempts);
+
+        self::$db->delete('queue_jobs')->where('channel', 'worker-attempt')->execute();
+
+        $queue->push(
+            fn(\Windwalker\Queue\Job\JobController $c) => $c->defer(0),
+            0,
+            'worker-attempt'
+        );
+        $worker->next('worker-attempt');
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'worker-attempt')->get();
+        self::assertEquals(0, $row->attempts);
+
+        self::$db->delete('queue_jobs')->where('channel', 'worker-attempt')->execute();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createWorkerInstance(): void
     {
         $this->instance = new Worker(
             new Queue(
                 new DatabaseQueueDriver(self::$db)
             )
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**

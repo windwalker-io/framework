@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver;
 
-use Generator;
 use IteratorAggregate;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Windwalker\Data\Collection;
@@ -55,7 +54,7 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
      * @param  string|object|T  $class
      * @param  array            $args
      *
-     * @return Collection|Collection[]|T[]
+     * @return  Collection|Collection[]|T[]
      */
     public function all(string|object|null $class = null, array $args = []): Collection;
 
@@ -129,12 +128,12 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
      *
      * @param  string|null  $sequence
      *
-     * @return string|null
+     * @return  string|null
      */
     public function lastInsertId(?string $sequence = null): ?string;
 
     /**
-     * @return string
+     * @return  string
      */
     public function getQuery(): string;
 
@@ -146,7 +145,7 @@ interface StatementInterface extends BindableInterface, IteratorAggregate, Event
     public function &getBounded(mixed $key = null): ?array;
 
     /**
-     * @return string
+     * @return  string
      */
     public function getDefaultItemClass(): string;
 

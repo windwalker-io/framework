@@ -46,7 +46,7 @@ class StubSakura implements EntityInterface
 
     protected ?StubLocation $location = null;
 
-    protected RelationCollection|null $roses = null;
+    protected ?RelationCollection $roses = null;
 
     #[Mapping('sakura_rose_map')]
     #[Cast(StubSakuraRoseMap::class, options: Cast::USE_HYDRATOR)]
@@ -88,7 +88,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -108,7 +108,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getLocationNo(): string
     {
@@ -128,7 +128,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getRoseNo(): string
     {
@@ -148,7 +148,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -168,7 +168,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -188,7 +188,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -208,7 +208,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return StubLocation|null
+     * @return  StubLocation|null
      */
     public function getLocation(): ?StubLocation
     {
@@ -228,7 +228,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getRoses(): ?RelationCollection
     {
@@ -248,7 +248,7 @@ class StubSakura implements EntityInterface
     }
 
     /**
-     * @return StubSakuraRoseMap|null
+     * @return  StubSakuraRoseMap|null
      */
     public function getMap(): ?StubSakuraRoseMap
     {

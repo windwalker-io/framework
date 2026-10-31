@@ -22,11 +22,12 @@ class QuoteNameClause implements ClauseInterface
     public function __construct(
         protected mixed $value,
         protected ?Query $query = null
-    ) {
-    }
+    ) {}
 
     /**
-     * @return mixed
+     * @return  mixed
+     *
+     * @codeCoverageIgnore
      */
     public function getValue(): mixed
     {
@@ -37,6 +38,8 @@ class QuoteNameClause implements ClauseInterface
      * @param  mixed  $value
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setValue(mixed $value): static
     {
@@ -46,7 +49,9 @@ class QuoteNameClause implements ClauseInterface
     }
 
     /**
-     * @return Query|null
+     * @return  Query|null
+     *
+     * @codeCoverageIgnore
      */
     public function getQuery(): ?Query
     {

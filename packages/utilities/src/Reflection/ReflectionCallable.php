@@ -28,7 +28,7 @@ class ReflectionCallable implements Reflector
     protected int $type = 0;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $callable;
 
@@ -72,6 +72,9 @@ class ReflectionCallable implements Reflector
         return Closure::fromCallable($this->callable);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getType(): int
     {
         return $this->type;
@@ -149,7 +152,7 @@ class ReflectionCallable implements Reflector
      * Exports a class
      *
      * @link       https://php.net/manual/en/reflector.export.php
-     * @return string|null
+     * @return  string|null
      * @deprecated 7.4
      * @removed    8.0
      */
@@ -164,7 +167,7 @@ class ReflectionCallable implements Reflector
      * Please note that since PHP 8.0 this method is absent in this interface
      * and inherits from the {@see Stringable} parent.
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {
@@ -172,7 +175,9 @@ class ReflectionCallable implements Reflector
     }
 
     /**
-     * @return string|null
+     * @return  string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getClass(): ?string
     {
@@ -180,7 +185,9 @@ class ReflectionCallable implements Reflector
     }
 
     /**
-     * @return object|null
+     * @return  object|null
+     *
+     * @codeCoverageIgnore
      */
     public function getObject(): ?object
     {
@@ -188,7 +195,9 @@ class ReflectionCallable implements Reflector
     }
 
     /**
-     * @return string|null
+     * @return  string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getFunctionName(): ?string
     {

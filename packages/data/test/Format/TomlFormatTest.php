@@ -13,7 +13,7 @@ class TomlFormatTest extends TestCase
     #[Test]
     public function itDumpsAndParsesNestedValues(): void
     {
-        $format = new TomlFormat;
+        $format = new TomlFormat();
         $data = ['flower' => 'sakura', 'meta' => ['count' => 3]];
         $toml = $format->dump($data);
 
@@ -24,7 +24,7 @@ class TomlFormatTest extends TestCase
     #[Test]
     public function itCanParseIntoAnObject(): void
     {
-        $format = new TomlFormat;
+        $format = new TomlFormat();
         $result = $format->parse('flower = "sakura"', ['resultAsObject' => true]);
 
         self::assertEquals((object) ['flower' => 'sakura'], $result);

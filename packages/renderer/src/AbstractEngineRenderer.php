@@ -25,9 +25,9 @@ abstract class AbstractEngineRenderer implements
     /**
      * Property engine.
      *
-     * @var object|null
+     * @var  object|null
      */
-    protected object|null $engine = null;
+    protected ?object $engine = null;
 
     /**
      * AbstractEngineRenderer constructor.
@@ -92,7 +92,7 @@ abstract class AbstractEngineRenderer implements
     }
 
     /**
-     * @return Closure|null
+     * @return  Closure|null
      */
     public function getEngineBuilder(): ?Closure
     {

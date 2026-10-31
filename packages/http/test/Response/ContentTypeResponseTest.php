@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Response;
 
 use DOMDocument;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Windwalker\Http\Response\EmptyResponse;
@@ -15,7 +16,7 @@ use Windwalker\Http\Response\XmlResponse;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 
 /**
- * Test class of EmptyResponse
+ * Test class of content type responses.
  *
  * @since 3.0
  */
@@ -23,22 +24,8 @@ class ContentTypeResponseTest extends TestCase
 {
     use BaseAssertionTrait;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-    }
-
-    /**
-     * testOutput
-     *
-     * @return  void
-     */
-    public function testHtmlOutput()
+    #[Test]
+    public function htmlResponseSetsBodyAndHtmlContentType(): void
     {
         $response = new HtmlResponse('Flower');
 
@@ -46,12 +33,8 @@ class ContentTypeResponseTest extends TestCase
         $this->assertEquals(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
     }
 
-    /**
-     * testOutput
-     *
-     * @return  void
-     */
-    public function testEmptyOutput()
+    #[Test]
+    public function emptyResponseKeepsBodyEmptyAndReadOnly(): void
     {
         $response = new EmptyResponse(204, ['x-foo' => 'bar']);
 
@@ -65,12 +48,8 @@ class ContentTypeResponseTest extends TestCase
         $this->assertEquals(['bar'], $response->getHeader('x-foo'));
     }
 
-    /**
-     * testOutput
-     *
-     * @return  void
-     */
-    public function testJsonOutput()
+    #[Test]
+    public function jsonResponseEncodesArrayAndSetsJsonContentType(): void
     {
         $data = [
             'foo' => 'bar',
@@ -80,18 +59,18 @@ class ContentTypeResponseTest extends TestCase
 
         $this->assertEquals(json_encode($data), $response->getBody()->__toString());
         $this->assertEquals(['application/json; charset=utf-8'], $response->getHeader('Content-Type'));
+    }
 
+    #[Test]
+    public function jsonResponseKeepsJsonStringAsIs(): void
+    {
         $response = new JsonResponse('{"foo": 123}');
 
         $this->assertEquals('{"foo": 123}', $response->getBody()->__toString());
     }
 
-    /**
-     * testOutput
-     *
-     * @return  void
-     */
-    public function testXmlOutput()
+    #[Test]
+    public function xmlResponseRendersSimpleXmlElementAndSetsXmlContentType(): void
     {
         $xml = new SimpleXMLElement('<root />');
         $child = $xml->addChild('foo', 'bar');
@@ -104,9 +83,13 @@ class ContentTypeResponseTest extends TestCase
 
         $this->assertXmlStringEqualsXmlString($expected, $response->getBody()->__toString());
         $this->assertEquals(['application/xml; charset=utf-8'], $response->getHeader('Content-Type'));
+    }
 
+    #[Test]
+    public function xmlResponseRendersDomDocument(): void
+    {
         $xml = new DOMDocument();
-        $xml->loadXML("<root />");
+        $xml->loadXML('<root />');
 
         $child = $xml->createElement('foo', 'bar');
         $child->setAttribute('flower', 'sakura');
@@ -121,12 +104,8 @@ class ContentTypeResponseTest extends TestCase
         $this->assertXmlStringEqualsXmlString($expected, $response->getBody()->__toString());
     }
 
-    /**
-     * testRedirectOutput
-     *
-     * @return  void
-     */
-    public function testRedirectOutput()
+    #[Test]
+    public function redirectResponseSetsLocationHeaderAndStatusCode(): void
     {
         $response = new RedirectResponse('http://example.com', 307);
 

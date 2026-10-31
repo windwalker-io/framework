@@ -13,9 +13,7 @@ use Windwalker\Utilities\Iterator\PriorityQueue;
  */
 class FormDefinitionWrapper implements FieldDefinitionInterface
 {
-    public function __construct(protected object $definition)
-    {
-    }
+    public function __construct(protected object $definition) {}
 
     /**
      * @inheritDoc

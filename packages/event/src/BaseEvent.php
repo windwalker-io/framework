@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
+use ReflectionClass;
+
 class BaseEvent implements EventInterface
 {
     /**
      * The event name.
      *
-     * @var string|null
+     * @var  string|null
      *
      * @since  2.0
      */
@@ -18,7 +20,7 @@ class BaseEvent implements EventInterface
     /**
      * A flag to see if the event propagation is stopped.
      *
-     * @var    bool
+     * @var  bool
      *
      * @since  2.0
      */
@@ -66,7 +68,7 @@ class BaseEvent implements EventInterface
      * @template  T of EventInterface
      *
      * @param  string|class-string<T>  $name
-     * @param  array   $args
+     * @param  array                   $args
      *
      * @return  T
      */
@@ -92,6 +94,8 @@ class BaseEvent implements EventInterface
      * @param  string  $name
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setName(string $name): static
     {
@@ -141,8 +145,8 @@ class BaseEvent implements EventInterface
     /**
      * Method to set property arguments
      *
-     * @param  array  $arguments   An associative array of argument names as keys
-     *                             and their values as values.
+     * @param  array  $arguments  An associative array of argument names as keys
+     *                            and their values as values.
      *
      * @return  static  Return self to support chaining.
      */

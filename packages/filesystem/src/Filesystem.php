@@ -30,32 +30,32 @@ use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
  *
  * @see   FileObject
  *
- * @method static FileObject      mkdir(string $path = '', int $mode = 0755)
- * @method static FileObject      copy(string $src, string $dest, bool $force = false)
- * @method static FileObject      move(string $src, string $dest, bool $force = false)
- * @method static StringObject    read(string $path)
- * @method static StreamInterface readStream(string $path, string $mode = READ_ONLY_FROM_BEGIN)
- * @method static Collection      readAndParse(?string $format = null, array $options = [])
- * @method static FileObject      write(string $path, string $buffer)
- * @method static FileObject      writeStream(string $path, string|resource|StreamInterface $stream)
- * @method static FileObject      delete(string $path)
- * @method static FileObject      deleteIfExists(string $path)
- * @method static FilesIterator   files(string $path, bool $recursive = false, ?int $flags = null)
- * @method static FilesIterator   folders(string $path, bool $recursive = false, ?int $flags = null)
- * @method static FilesIterator   items(string $path, bool $recursive = false, ?int $flags = null)
- * @method static Promise mkdirAsync(string $path = '', int $mode = 0755)
- * @method static Promise copyAsync(string $src, string $dest, bool $force = false)
- * @method static Promise moveAsync(string $src, string $dest, bool $force = false)
- * @method static Promise readAsync(string $path)
- * @method static Promise readStreamAsync(string $path, string $mode = READ_ONLY_FROM_BEGIN)
- * @method static Promise writeAsync(string $path, string $buffer)
- * @method static Promise writeStreamAsync(string $path, string|resource|StreamInterface $stream)
- * @method static Promise deleteAsync(string $path)
- * @method static Promise deleteIfExistsAsync(string $path)
- * @method static Promise filesAsync(string $path, bool $recursive = false, ?int $flags = null)
- * @method static Promise foldersAsync(string $path, bool $recursive = false, ?int $flags = null)
- * @method static Promise itemsAsync(string $path, bool $recursive = false, ?int $flags = null)
- * @method static Promise createTempAsync(?string $dir = null, ?string $prefix = null)
+ * @method  static  FileObject       mkdir(string $path = '', int $mode = 0755)
+ * @method  static  FileObject       copy(string $src, string $dest, bool $force = false)
+ * @method  static  FileObject       move(string $src, string $dest, bool $force = false)
+ * @method  static  StringObject     read(string $path)
+ * @method  static  StreamInterface  readStream(string $path, string $mode = READ_ONLY_FROM_BEGIN)
+ * @method  static  Collection       readAndParse(?string $format = null, array $options = [])
+ * @method  static  FileObject       write(string $path, string $buffer)
+ * @method  static  FileObject       writeStream(string $path, string|resource|StreamInterface $stream)
+ * @method  static  FileObject       delete(string $path)
+ * @method  static  FileObject       deleteIfExists(string $path)
+ * @method  static  FilesIterator    files(string $path, bool $recursive = false, ?int $flags = null)
+ * @method  static  FilesIterator    folders(string $path, bool $recursive = false, ?int $flags = null)
+ * @method  static  FilesIterator    items(string $path, bool $recursive = false, ?int $flags = null)
+ * @method  static  Promise          mkdirAsync(string $path = '', int $mode = 0755)
+ * @method  static  Promise          copyAsync(string $src, string $dest, bool $force = false)
+ * @method  static  Promise          moveAsync(string $src, string $dest, bool $force = false)
+ * @method  static  Promise          readAsync(string $path)
+ * @method  static  Promise          readStreamAsync(string $path, string $mode = READ_ONLY_FROM_BEGIN)
+ * @method  static  Promise          writeAsync(string $path, string $buffer)
+ * @method  static  Promise          writeStreamAsync(string $path, string|resource|StreamInterface $stream)
+ * @method  static  Promise          deleteAsync(string $path)
+ * @method  static  Promise          deleteIfExistsAsync(string $path)
+ * @method  static  Promise          filesAsync(string $path, bool $recursive = false, ?int $flags = null)
+ * @method  static  Promise          foldersAsync(string $path, bool $recursive = false, ?int $flags = null)
+ * @method  static  Promise          itemsAsync(string $path, bool $recursive = false, ?int $flags = null)
+ * @method  static  Promise          createTempAsync(?string $dir = null, ?string $prefix = null)
  *
  * @since 2.0
  */
@@ -184,7 +184,7 @@ class Filesystem
      * @param  string|null  $prefix
      * @param  int          $flags
      *
-     * @return TempFileObject
+     * @return  TempFileObject
      *
      * @since  3.5.12
      */
@@ -302,7 +302,7 @@ class Filesystem
      *
      * @param  string  $junction
      *
-     * @return bool
+     * @return  bool
      */
     public function removeJunction(string $junction): bool
     {

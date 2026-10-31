@@ -23,7 +23,7 @@ class ArrayMethod implements MethodInterface
     /**
      * Property verifyHandler.
      *
-     * @var callable
+     * @var  callable
      */
     protected $verifyHandler;
 
@@ -42,7 +42,7 @@ class ArrayMethod implements MethodInterface
      *
      * @param  array  $credential
      *
-     * @return AuthResult
+     * @return  AuthResult
      */
     public function authenticate(array $credential): AuthResult
     {

@@ -6,41 +6,25 @@ namespace Windwalker\Utilities\Test;
 
 use BadMethodCallException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Utf8String;
 
-/**
- * Test class of String
- *
- * @since 2.0
- */
 class MbUtf8StringTest extends TestCase
 {
     use MbstringTestTrait;
 
-    /**
-     * testCallStatic
-     *
-     * @return  void
-     */
-    public function testCallStatic()
+    #[Test]
+    public function callStaticThrowsBadMethodCallExceptionForUnknownMethod()
     {
         $this->expectException(BadMethodCallException::class);
 
         Utf8String::noexists('test');
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $string    @todo
-     * @param  boolean  $expected  @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('isAsciiProvider')]
-    public function testIsAscii($string, $expected)
+    public function isAsciiDetectsAsciiOnlyStrings($string, $expected)
     {
         $this->assertEquals(
             $expected,
@@ -48,156 +32,73 @@ class MbUtf8StringTest extends TestCase
         );
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $expect    @todo
-     * @param  string   $haystack  @todo
-     * @param  string   $needle    @todo
-     * @param  integer  $offset    @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strposProvider')]
-    public function testStrpos($expect, $haystack, $needle, $offset = 0)
+    public function strposFindsMultibyteNeedlePosition($expect, $haystack, $needle, $offset = 0)
     {
         $actual = Utf8String::strpos($haystack, $needle, $offset);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $expect    @todo
-     * @param  string   $haystack  @todo
-     * @param  string   $needle    @todo
-     * @param  integer  $offset    @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strrposProvider')]
-    public function testStrrpos($expect, $haystack, $needle, $offset = 0)
+    public function strrposFindsLastMultibyteNeedlePosition($expect, $haystack, $needle, $offset = 0)
     {
         $actual = Utf8String::strrpos($haystack, $needle, $offset);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string    $expect  @todo
-     * @param  string    $string  @todo
-     * @param  string    $start   @todo
-     * @param  bool|int  $length  @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('substrProvider')]
-    public function testSubstr($expect, $string, $start, $length = null)
+    public function substrExtractsMultibyteSubstring($expect, $string, $start, $length = null)
     {
         $actual = Utf8String::substr($string, $start, $length);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strtolowerProvider')]
-    public function testStrtolower($string, $expect): void
+    public function strtolowerConvertsMultibyteStringToLowerCase($string, $expect): void
     {
         $actual = Utf8String::strtolower($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strtoupperProvider')]
-    public function testStrtoupper($string, $expect): void
+    public function strtoupperConvertsMultibyteStringToUpperCase($string, $expect): void
     {
         $actual = Utf8String::strtoupper($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strlenProvider')]
-    public function testStrlen($string, $expect): void
+    public function strlenCountsMultibyteCharacters($string, $expect): void
     {
         $actual = Utf8String::strlen($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $search   @todo
-     * @param  string   $replace  @todo
-     * @param  string   $subject  @todo
-     * @param  integer  $count    @todo
-     * @param  string   $expect   @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strIreplaceProvider')]
-    public function testStrIreplace($search, $replace, $subject, $count, $expect): void
+    public function strIreplaceReplacesCaseInsensitivelyAndReportsCount($search, $replace, $subject, $count, $expect): void
     {
         $actual = Utf8String::strIreplace($search, $replace, $subject, $count);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string        @todo
-     * @param  int     $split_length  @todo
-     * @param  string  $expect        @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strSplitProvider')]
-    public function testStrSplit($string, $split_length, $expect): void
+    public function strSplitSplitsMultibyteStringByLength($string, $split_length, $expect): void
     {
         $actual = Utf8String::strSplit($string, $split_length);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string1  @todo
-     * @param  string  $string2  @todo
-     * @param  string  $expect   @todo
-     *
-     * @return void
-     *
-     */
+    #[Test]
     #[DataProvider('strcasecmpProvider')]
-    public function testStrcasecmp($string1, $string2, $expect)
+    public function strcasecmpComparesStringsCaseInsensitively($string1, $string2, $expect)
     {
         $actual = Utf8String::strcasecmp($string1, $string2);
 
@@ -208,19 +109,9 @@ class MbUtf8StringTest extends TestCase
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string1  @todo
-     * @param  string  $string2  @todo
-     * @param  string  $locale   @todo
-     * @param  string  $expect   @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strcmpProvider')]
-    public function testStrcmp($string1, $string2, $expect): void
+    public function strcmpComparesStringsCaseSensitively($string1, $string2, $expect): void
     {
         $actual = Utf8String::strcmp($string1, $string2);
 
@@ -231,98 +122,49 @@ class MbUtf8StringTest extends TestCase
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $haystack  @todo
-     * @param  string   $needles   @todo
-     * @param  integer  $start     @todo
-     * @param  integer  $len       @todo
-     * @param  string   $expect    @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strcspnProvider')]
-    public function testStrcspn($haystack, $needles, $start, $len, $expect): void
+    public function strcspnCountsLeadingCharactersNotInMask($haystack, $needles, $start, $len, $expect): void
     {
         $actual = Utf8String::strcspn($haystack, $needles, $start, $len);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $haystack  @todo
-     * @param  string  $needle    @todo
-     * @param  string  $expect    @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('stristrProvider')]
-    public function testStristr($haystack, $needle, $expect): void
+    public function stristrReturnsRemainderFromCaseInsensitiveMatch($haystack, $needle, $expect): void
     {
         $actual = Utf8String::stristr($haystack, $needle);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strrevProvider')]
-    public function testStrrev($string, $expect): void
+    public function strrevReversesMultibyteString($string, $expect): void
     {
         $actual = Utf8String::strrev($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $subject  @todo
-     * @param  string   $mask     @todo
-     * @param  integer  $start    @todo
-     * @param  integer  $length   @todo
-     * @param  string   $expect   @todo
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('strspnProvider')]
-    public function testStrspn($subject, $mask, $start, $length, $expect): void
+    public function strspnCountsLeadingCharactersInMask($subject, $mask, $start, $length, $expect): void
     {
         $actual = Utf8String::strspn($subject, $mask, $start, $length);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string   $expect       @todo
-     * @param  string   $string       @todo
-     * @param  string   $replacement  @todo
-     * @param  integer  $start        @todo
-     * @param  integer  $length       @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('substrReplaceProvider')]
-    public function testSubstrReplace($expect, $string, $replacement, $start, $length): void
+    public function substrReplaceReplacesMultibyteSegment($expect, $string, $replacement, $start, $length): void
     {
         $actual = Utf8String::substrReplace($string, $replacement, $start, $length);
         $this->assertEquals($expect, $actual);
     }
 
+    #[Test]
     #[DataProvider('ltrimProvider')]
-    public function testLtrim(string $string, ?string $charlist, ?string $expect): void
+    public function ltrimStripsLeadingCharacters(string $string, ?string $charlist, ?string $expect): void
     {
         if ($charlist === null) {
             $actual = Utf8String::ltrim($string);
@@ -333,8 +175,9 @@ class MbUtf8StringTest extends TestCase
         $this->assertEquals($expect, $actual);
     }
 
+    #[Test]
     #[DataProvider('rtrimProvider')]
-    public function testRtrim(string $string, ?string $charlist, string $expect): void
+    public function rtrimStripsTrailingCharacters(string $string, ?string $charlist, string $expect): void
     {
         if ($charlist === null) {
             $actual = Utf8String::rtrim($string);
@@ -345,18 +188,9 @@ class MbUtf8StringTest extends TestCase
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string    @todo
-     * @param  string  $charlist  @todo
-     * @param  string  $expect    @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('trimProvider')]
-    public function testTrim($string, $charlist, $expect): void
+    public function trimStripsSurroundingCharacters($string, $charlist, $expect): void
     {
         if ($charlist === null) {
             $actual = Utf8String::trim($string);
@@ -367,159 +201,80 @@ class MbUtf8StringTest extends TestCase
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('ucfirstProvider')]
-    public function testUcfirst($string, $expect): void
+    public function ucfirstUppercasesFirstCharacter($string, $expect): void
     {
         $actual = Utf8String::ucfirst($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * testLcfirst
-     *
-     * @param  string  $string
-     * @param  string  $expect
-     *
-     * @return  void
-     *
-     */
+    #[Test]
     #[DataProvider('lcfirstProvider')]
-    public function testLcfirst($string, $expect)
+    public function lcfirstLowercasesFirstCharacter($string, $expect)
     {
         $actual = Utf8String::lcfirst($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('ucwordsProvider')]
-    public function testUcwords($string, $expect): void
+    public function ucwordsUppercasesFirstCharacterOfEachWord($string, $expect): void
     {
         $actual = Utf8String::ucwords($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * testSubstr_count
-     *
-     * @param $string
-     * @param $search
-     * @param $expected
-     * @param $caseSensitive
-     *
-     */
+    #[Test]
     #[DataProvider('substrCountProvider')]
-    public function testSubstrCount($string, $search, $expected, $caseSensitive)
+    public function substrCountCountsOccurrencesWithCaseSensitivityOption($string, $search, $expected, $caseSensitive)
     {
         self::assertEquals($expected, Utf8String::substrCount($string, $search, $caseSensitive));
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $source         @todo
-     * @param  string  $from_encoding  @todo
-     * @param  string  $to_encoding    @todo
-     * @param  string  $expect         @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('convertEncodingProvider')]
-    public function testConvertEncoding($source, $from_encoding, $to_encoding, $expect): void
+    public function convertEncodingConvertsBetweenEncodings($source, $from_encoding, $to_encoding, $expect): void
     {
         $actual = Utf8String::convertEncoding($source, $from_encoding, $to_encoding);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('isUtf8Provider')]
-    public function testValid($string, $expect): void
+    public function isUtf8ValidatesUtf8Strings($string, $expect): void
     {
         $actual = Utf8String::isUtf8($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('unicodeToUtf8Provider')]
-    public function testUnicodeToUtf8($string, $expect): void
+    public function unicodeToUtf8ConvertsCodePointsToUtf8($string, $expect): void
     {
         $actual = Utf8String::unicodeToUtf8($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('unicodeToUtf16Provider')]
-    public function testUnicodeToUtf16($string, $expect): void
+    public function unicodeToUtf16ConvertsCodePointsToUtf16($string, $expect): void
     {
         $actual = Utf8String::unicodeToUtf16($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * Test...
-     *
-     * @param  string  $string  @todo
-     * @param  string  $expect  @todo
-     *
-     * @return  array
-     *
-     */
+    #[Test]
     #[DataProvider('isUtf8Provider')]
-    public function testCompliant($string, $expect): void
+    public function compliantDetectsUtf8CompliantStrings($string, $expect): void
     {
         $actual = Utf8String::compliant($string);
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * testShuffle
-     *
-     * @return  void
-     *
-     */
-    #[DataProvider('providerTestShuffle')]
-    public function testShuffle($string)
+    #[Test]
+    #[DataProvider('shuffleProvider')]
+    public function shuffleReordersCharactersPreservingCharacterCounts($string)
     {
         $result = Utf8String::shuffle($string);
 
@@ -537,7 +292,8 @@ class MbUtf8StringTest extends TestCase
         }
     }
 
-    public function testToAscii(): void
+    #[Test]
+    public function toAsciiReturnsOneBasedCharacterCodes(): void
     {
         self::assertEquals(
             [
@@ -550,5 +306,25 @@ class MbUtf8StringTest extends TestCase
             ],
             Utf8String::toAscii('Flower'),
         );
+    }
+
+    #[Test]
+    public function strIreplaceWithArraysFallsBackToEmptyReplacementForMissingKeys(): void
+    {
+        self::assertSame(
+            'X Xnd  z',
+            Utf8String::strIreplace(['A', 'b'], ['X'], 'a and B z')
+        );
+        self::assertSame(
+            'Z Znd Z z',
+            Utf8String::strIreplace(['A', 'b'], 'Z', 'a and B z')
+        );
+    }
+
+    #[Test]
+    public function isValidUtf8ChecksEncoding(): void
+    {
+        self::assertTrue(Utf8String::isValidUtf8('哈囉 abc'));
+        self::assertFalse(Utf8String::isValidUtf8("\xC3\x28"));
     }
 }

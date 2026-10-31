@@ -83,7 +83,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -103,7 +103,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -123,7 +123,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getName(): string
     {
@@ -143,7 +143,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getEmail(): string
     {
@@ -163,7 +163,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPassword(): string
     {
@@ -183,7 +183,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getAvatar(): string
     {
@@ -203,7 +203,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return  DateTimeImmutable|null
      */
     public function getRegistered(): ?DateTimeImmutable
     {
@@ -223,7 +223,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return StubLicense|null
+     * @return  StubLicense|null
      */
     public function getStudentLicense(): ?StubLicense
     {
@@ -243,7 +243,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return StubLicense|null
+     * @return  StubLicense|null
      */
     public function getTeacherLicense(): ?StubLicense
     {
@@ -263,7 +263,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getActions(): RelationCollection
     {
@@ -283,7 +283,7 @@ class StubMember implements EntityInterface
     }
 
     /**
-     * @return StubMemberActionMap|null
+     * @return  StubMemberActionMap|null
      */
     public function getMap(): ?StubMemberActionMap
     {

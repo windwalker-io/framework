@@ -74,7 +74,7 @@ class TomlFormat implements FormatInterface
      * @param  string  $string   Formatted string
      * @param  array   $options  An array of options for the formatter.
      *
-     * @return mixed|stdClass|null Data Object
+     * @return  mixed|stdClass|null  Data Object
      *
      * @since   2.0
      */

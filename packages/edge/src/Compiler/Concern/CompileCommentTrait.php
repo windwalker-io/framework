@@ -14,7 +14,7 @@ trait CompileCommentTrait
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function compileComments(string $value): string
     {

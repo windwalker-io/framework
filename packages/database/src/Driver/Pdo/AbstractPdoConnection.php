@@ -16,7 +16,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
     protected static string $name = 'pdo';
 
     /**
-     * @var string
+     * @var  string
      */
     protected static string $dbtype = '';
 
@@ -53,7 +53,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public static function getDefaultAttributes(): array
     {
@@ -81,7 +81,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
     }
 
     /**
-     * @return PDO|null
+     * @return  PDO|null
      */
     public function get(): ?PDO
     {
@@ -99,7 +99,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public static function getDbType(): string
     {

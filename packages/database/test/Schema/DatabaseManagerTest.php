@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Schema;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Manager\DatabaseManager;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 /**
@@ -12,19 +14,15 @@ use Windwalker\Database\Test\AbstractDatabaseTestCase;
  */
 class DatabaseManagerTest extends AbstractDatabaseTestCase
 {
-    protected static string $platform = 'MySQL';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driver = 'pdo_mysql';
 
     /**
-     * @var DatabaseManager
-     */
-    protected $instance;
-
-    /**
      * @see  DatabaseManager::create
      */
-    public function testCreate(): void
+    #[Test]
+    public function create(): void
     {
         $dbname = static::$db->getDriver()->getOption('dbname');
 
@@ -42,7 +40,8 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  DatabaseManager::drop
      */
-    public function testDrop(): void
+    #[Test]
+    public function drop(): void
     {
         $dbname = static::$db->getDriver()->getOption('dbname');
 
@@ -60,19 +59,8 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
         );
     }
 
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
-    }
-
     /**
      * @inheritDoc
      */
-    protected static function setupDatabase(): void
-    {
-    }
+    protected static function setupDatabase(): void {}
 }

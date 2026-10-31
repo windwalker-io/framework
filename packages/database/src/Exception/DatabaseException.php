@@ -9,6 +9,4 @@ use RuntimeException;
 /**
  * The DatabaseException class.
  */
-class DatabaseException extends RuntimeException
-{
-}
+class DatabaseException extends RuntimeException {}

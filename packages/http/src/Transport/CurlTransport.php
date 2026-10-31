@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
+use CurlHandle;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -33,7 +34,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * @param  array|TransportOptions  $options
      *
-     * @return CurlOptions
+     * @return  CurlOptions
      */
     public function prepareRequestOptions(array|TransportOptions $options): CurlOptions
     {
@@ -43,7 +44,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
      * @param  array|TransportOptions  $options
      *
@@ -85,9 +86,9 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * Method to get a response object from a server response.
      *
-     * @param  string  $content   The complete server response, including headers
-     *                            as a string if the response has no errors.
-     * @param  array   $info      The cURL request information.
+     * @param  string  $content  The complete server response, including headers
+     *                           as a string if the response has no errors.
+     * @param  array   $info     The cURL request information.
      *
      * @return  Response|ResponseInterface
      *
@@ -101,7 +102,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         // Create the response object.
         $return = $this->createResponse();
 
-        return $this->contentToResponse($content, $info, $return, $this->getOption('allow_empty_status_code'));
+        return $this->contentToResponse($content, $info, $return, (bool) $this->getOption('allow_empty_status_code'));
     }
 
     /**
@@ -200,7 +201,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      * @param  array|null            $headers
      * @param  StreamInterface|null  $content
      *
-     * @return  \CurlHandle|false
+     * @return  CurlHandle|false
      *
      * @since  3.2
      */
@@ -209,7 +210,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         array|CurlOptions $options,
         ?array &$headers = null,
         ?StreamInterface &$content = null,
-    ): \CurlHandle|false {
+    ): CurlHandle|false {
         $options = CurlOptions::wrap($options);
 
         // Setup the cURL handle.
@@ -221,7 +222,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $headerItems = [];
 
         $opt[CURLOPT_HEADERFUNCTION] ??= static function (
-            \CurlHandle $ch,
+            CurlHandle $ch,
             string $header,
         ) use (
             &$headers,
@@ -337,7 +338,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         if ($options->progress) {
             $opt[CURLOPT_NOPROGRESS] = false;
             $opt[CURLOPT_XFERINFOFUNCTION] = static function (
-                \CurlHandle $handle,
+                CurlHandle $handle,
                 float $dlTotal,
                 float $dlNow,
                 float $ulTotal,
@@ -353,7 +354,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
                         uploadTotal: $ulTotal,
                         uploaded: $ulNow,
                         info: $info,
-                    )
+                    ),
                 );
             };
         }

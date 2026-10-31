@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Edge;
 
 use Windwalker\Utilities\TypeCast;
-use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The EdgeHelper class.

@@ -35,7 +35,7 @@ class RedirectResponse extends Response
     /**
      * Gets the body of the message.
      *
-     * @return StreamInterface Returns the body as a stream.
+     * @return  StreamInterface  Returns the body as a stream.
      */
     public function getBody(): StreamInterface
     {
@@ -50,7 +50,7 @@ class RedirectResponse extends Response
             $url = json_encode(
                 $location,
                 JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
-                | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
+                | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR,
             );
             $html = "<script>document.location.href=$url;</script>\n";
 

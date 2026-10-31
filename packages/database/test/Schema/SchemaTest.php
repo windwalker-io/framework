@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Schema;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
@@ -17,7 +20,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::getNullDate
      */
-    public function testGetNullDate(): void
+    #[Test]
+    public function getNullDate(): void
     {
         self::assertEquals(
             $this->instance->getNullDate(),
@@ -28,7 +32,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::addIndex()
      */
-    public function testAddIndex(): void
+    #[Test]
+    public function addIndex(): void
     {
         $this->instance->addIndex('id');
         $this->instance->addIndex(['foo', 'bar']);
@@ -42,7 +47,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::__call
      */
-    public function testMagicCall(): void
+    #[Test]
+    public function magicCall(): void
     {
         $this->instance->primary('id');
         $this->instance->integer('category_id')->length(11);
@@ -75,7 +81,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::getDateFormat
      */
-    public function testGetDateFormat(): void
+    #[Test]
+    public function getDateFormat(): void
     {
         self::assertEquals(
             self::$db->getDateFormat(),
@@ -84,76 +91,148 @@ class SchemaTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @see  Schema::setColumns
-     */
-    public function testSetColumns(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Schema::getKeys
-     */
-    public function testGetIndexes(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Schema::__construct
-     */
-    public function testConstruct(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  Schema::addColumn
      */
-    public function testAddColumn(): void
+    #[Test]
+    public function addColumn(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
+        $column = $this->instance->addColumn('new_column', 'varchar');
 
-    /**
-     * @see  Schema::getColumns
-     */
-    public function testGetColumns(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame($column, $this->instance->columns['new_column']);
+        self::assertSame('varchar', $column->getDataType());
+
+        $existingColumn = new Column('existing_column', 'integer');
+
+        self::assertSame(
+            $existingColumn,
+            $this->instance->addColumn($existingColumn)
+        );
+        self::assertSame($existingColumn, $this->instance->columns['existing_column']);
     }
 
     /**
      * @see  Schema::addPrimaryKey()
      */
-    public function testAddPrimaryKey(): void
+    #[Test]
+    public function addPrimaryKey(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $constraint = $this->instance->addPrimaryKey(['id', 'category_id']);
+
+        self::assertTrue($constraint->isPrimary());
+        self::assertSame('pk_ww_flower', $constraint->constraintName);
+        self::assertSame(['id', 'category_id'], $constraint->getColumnNames());
+        self::assertSame($constraint, $this->instance->constraints['pk_ww_flower']);
     }
 
     /**
      * @see  Schema::primary
      */
-    public function testPrimary(): void
+    #[Test]
+    public function primary(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $column = $this->instance->primary('id');
+
+        self::assertSame($column, $this->instance->columns['id']);
+        self::assertSame('integer', $column->getDataType());
+        self::assertTrue($column->isPrimary());
+        self::assertTrue($column->isAutoIncrement());
     }
 
     /**
      * @see  Schema::addUniqueKey
      */
-    public function testAddUniqueKey(): void
+    #[Test]
+    public function addUniqueKey(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $constraint = $this->instance->addUniqueKey(['email', 'username']);
+
+        self::assertTrue($constraint->isUnique());
+        self::assertSame('idx_ww_flower_email_username', $constraint->constraintName);
+        self::assertSame(['email', 'username'], $constraint->getColumnNames());
+        self::assertSame(
+            $constraint,
+            $this->instance->constraints['idx_ww_flower_email_username']
+        );
     }
 
-    protected function setUp(): void
+    #[Test]
+    public function addColumnInstantiatesColumnClassName(): void
+    {
+        $column = $this->instance->addColumn(Column::class);
+
+        self::assertInstanceOf(Column::class, $column);
+        self::assertSame($column, $this->instance->columns['']);
+    }
+
+    #[Test]
+    public function addIndexAcceptsIndexObjectAndCustomName(): void
+    {
+        $this->instance->integer('id');
+        $index = $this->instance->addIndex(['id'], 'my_idx', 'a comment');
+
+        self::assertSame('my_idx', $index->indexName);
+        self::assertSame('a comment', $index->indexComment);
+        self::assertSame($index, $this->instance->indexes['my_idx']);
+        self::assertSame($this->instance->columns['id'], $index->getColumns()['id']);
+
+        $ready = new \Windwalker\Database\Schema\Ddl\Index('ready_idx');
+        $ready->columns(['foo']);
+
+        self::assertSame($ready, $this->instance->addIndex($ready, 'custom_idx'));
+        self::assertSame('custom_idx', $ready->indexName);
+        self::assertArrayHasKey('custom_idx', $this->instance->indexes);
+    }
+
+    #[Test]
+    public function addForeignKeySetsReferences(): void
+    {
+        $fk = $this->instance->addForeignKey('category_id', 'ww_categories', 'id');
+
+        self::assertSame(['category_id'], $fk->getColumnNames());
+        self::assertSame('ww_categories', $fk->referencedTableName);
+        self::assertSame(['id'], array_keys($fk->getReferencedColumns()));
+    }
+
+    #[Test]
+    public function dropListsAccumulate(): void
+    {
+        $this->instance->dropColumns('a');
+        $this->instance->dropColumns('b', 'c');
+        $this->instance->dropIndexes('i1');
+        $this->instance->dropConstraints('c1', 'c2');
+
+        self::assertSame(['a', 'b', 'c'], $this->instance->dropColumns);
+        self::assertSame(['i1'], $this->instance->dropIndexes);
+        self::assertSame(['c1', 'c2'], $this->instance->dropConstraints);
+    }
+
+    #[Test]
+    public function magicCallAppliesTypeSpecificDefaults(): void
+    {
+        $bigint = $this->instance->primaryBigint('id');
+        $uuid = $this->instance->uuidChar('uuid');
+        $puuid = $this->instance->primaryUuidChar('puuid');
+        $bin = $this->instance->uuidBinary('bin');
+        $pbin = $this->instance->primaryUuidBinary('pbin');
+        $json = $this->instance->json('params');
+        $date = $this->instance->date('d');
+
+        self::assertSame('bigint', $bigint->getDataType());
+        self::assertTrue($bigint->isAutoIncrement());
+        self::assertTrue($bigint->isPrimary());
+        self::assertEquals(36, $uuid->getCharacterMaximumLength());
+        self::assertSame('ascii_bin', $uuid->getCollationName());
+        self::assertTrue($puuid->isPrimary());
+        self::assertEquals(16, $bin->getCharacterMaximumLength());
+        self::assertTrue($pbin->isPrimary());
+        self::assertTrue($json->getIsNullable());
+        self::assertTrue($date->getIsNullable());
+    }
+
+    #[Before]
+    protected function createSchemaFromTable(): void
     {
         $this->instance = static::$db->getTableManager('ww_flower')->createSchemaObject();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**
@@ -161,6 +240,6 @@ class SchemaTest extends AbstractDatabaseTestCase
      */
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::platformName() . '.sql');
     }
 }

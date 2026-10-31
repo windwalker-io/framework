@@ -7,15 +7,12 @@ namespace Windwalker\Form\Field\Concern;
 use Dom\Element;
 use Dom\Node;
 use MyCLabs\Enum\Enum;
-use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\Classic;
 use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
-use Windwalker\DOM\HTMLFactory;
 use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Enum\EnumMetaInterface;
-use Windwalker\Utilities\Enum\EnumRichInterface;
 use Windwalker\Utilities\Enum\EnumTranslatableInterface;
 
 /**
@@ -66,7 +63,7 @@ trait ListOptionsTrait
      * setOptions
      *
      * @param  array|HTMLElement[]  $options
-     * @param  null|string         $group
+     * @param  null|string          $group
      *
      * @return  static
      */
@@ -82,7 +79,7 @@ trait ListOptionsTrait
      * addOptions
      *
      * @param  array<HTMLElement|\DOMElement>  $options
-     * @param  null|string         $group
+     * @param  null|string                     $group
      *
      * @return  $this
      *
@@ -261,7 +258,7 @@ trait ListOptionsTrait
      * @param  array        $attrs
      * @param  string|null  $group
      *
-     * @return static
+     * @return  static
      */
     public function option(
         \DOMNode|Node|string|null $text = null,

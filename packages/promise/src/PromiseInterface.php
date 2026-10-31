@@ -36,7 +36,7 @@ interface PromiseInterface
      * @param  callable(T): mixed|null  $onFulfilled  Invoked when the promise fulfills.
      * @param  callable(T): mixed|null  $onRejected   Invoked when the promise is rejected.
      *
-     * @return static
+     * @return  static
      */
     public function then(
         ?callable $onFulfilled = null,
@@ -49,7 +49,7 @@ interface PromiseInterface
      * The three states can be checked against the constants defined on
      * PromiseState: PENDING, FULFILLED, and REJECTED.
      *
-     * @return PromiseState
+     * @return  PromiseState
      */
     public function getState(): PromiseState;
 
@@ -58,9 +58,9 @@ interface PromiseInterface
      *
      * If the promise cannot be waited on, then the promise will be rejected.
      *
-     * @return mixed
-     * @throws LogicException if the promise has no wait function or if the
-     *                         promise does not settle after waiting.
+     * @return  mixed
+     * @throws  LogicException  if the promise has no wait function or if the
+     *                          promise does not settle after waiting.
      */
     public function wait(): mixed;
 }
