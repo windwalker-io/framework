@@ -303,6 +303,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
      * @param  string  $propName
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function propName(string $propName): static
     {
@@ -329,6 +330,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getOnUpdate(): string
     {
@@ -349,6 +351,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getOnDelete(): string
     {
@@ -369,6 +372,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getOptions(): array
     {
@@ -379,6 +383,7 @@ abstract class AbstractRelation implements RelationStrategyInterface, RelationCo
      * @param  array  $options
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setOptions(array $options): static
     {

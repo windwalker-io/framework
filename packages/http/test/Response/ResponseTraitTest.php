@@ -22,7 +22,7 @@ class ResponseTraitTest extends TestCase
         bool $redirect,
         bool $authError,
         bool $serverError,
-        bool $error
+        bool $error,
     ): void {
         $response = new Response('php://memory', $status);
 

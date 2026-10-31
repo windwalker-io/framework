@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Test\Stub\StubStreamOutput;
+use Windwalker\Stream\Stream;
 
 class StreamOutputTest extends TestCase
 {
@@ -106,7 +107,7 @@ class StreamOutputTest extends TestCase
     #[Test]
     public function prepareContentLengthKeepsResponseWhenBodySizeIsUnknown(): void
     {
-        $body = new class () extends \Windwalker\Stream\Stream {
+        $body = new class () extends Stream {
             public function __construct()
             {
                 parent::__construct('php://memory', 'wb+');

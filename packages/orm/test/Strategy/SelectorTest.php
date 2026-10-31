@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Strategy;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\SelectorQuery;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubArticle;
@@ -22,7 +24,8 @@ class SelectorTest extends AbstractORMTestCase
 {
     protected SelectorQuery $instance;
 
-    public function testGroupByJoins()
+    #[Test]
+    public function groupByJoinsHydratesJoinedRows()
     {
         $this->instance->select('*')
             ->from(StubFlower::class, 'f')
@@ -85,7 +88,8 @@ class SelectorTest extends AbstractORMTestCase
         );
     }
 
-    public function testAutoJoinByRelation(): void
+    #[Test]
+    public function autoJoinByRelationJoinsRelatedTables(): void
     {
         $mapper = self::$orm->mapper(StubSakura::class);
 
@@ -136,7 +140,8 @@ class SelectorTest extends AbstractORMTestCase
         );
     }
 
-    public function testAutoJoinByColumns(): void
+    #[Test]
+    public function autoJoinByColumnsJoinsReferencedTables(): void
     {
         $this->instance->from(StubPeony::class)
             ->leftJoin(StubLocation::class)
@@ -162,7 +167,8 @@ class SelectorTest extends AbstractORMTestCase
         );
     }
 
-    public function testGroupWithEntity()
+    #[Test]
+    public function groupWithEntityHydratesGroupedEntities()
     {
         $this->instance->select('*')
             ->from(StubArticle::class, 'a')
@@ -185,7 +191,8 @@ class SelectorTest extends AbstractORMTestCase
         );
     }
 
-    public function testSelectOne()
+    #[Test]
+    public function selectOneReturnsSingleHydratedEntity()
     {
         /** @var StubArticle $item */
         $item = $this->instance->from(StubArticle::class)
@@ -217,7 +224,8 @@ class SelectorTest extends AbstractORMTestCase
         self::importFromFile(__DIR__ . '/../Stub/relations.sql');
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createSelectorInstance(): void
     {
         $this->instance = new SelectorQuery(self::$orm);
     }

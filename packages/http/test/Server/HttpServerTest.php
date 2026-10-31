@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Server;
 
+use LogicException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Event\ResponseEvent;
@@ -28,7 +30,7 @@ class HttpServerTest extends TestCase
         return new PhpServer(
             $middlewares,
             null,
-            fn() => $this->output = new MockOutput()
+            fn() => $this->output = new MockOutput(),
         );
     }
 
@@ -65,7 +67,7 @@ class HttpServerTest extends TestCase
         $server->setHandler(
             function ($adapter, $host, $port, $options) use (&$captured) {
                 $captured = [$host, $port, $options];
-            }
+            },
         );
 
         $server->listen('127.0.0.1', 8080, ['baz' => 'qux']);
@@ -171,7 +173,7 @@ class HttpServerTest extends TestCase
         $server = $this->createPhpServer();
 
         $server->onRequest(function () {
-            throw new \RuntimeException('boom');
+            throw new RuntimeException('boom');
         });
 
         $caught = null;
@@ -190,10 +192,10 @@ class HttpServerTest extends TestCase
     {
         $server = $this->createPhpServer();
         $server->onRequest(function () {
-            throw new \LogicException('unhandled', 404);
+            throw new LogicException('unhandled', 404);
         });
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('unhandled');
 
         $server->handle($this->request());
@@ -207,7 +209,7 @@ class HttpServerTest extends TestCase
         foreach ([404, 0] as $code) {
             $server = $this->createPhpServer();
             $server->onRequest(function () use ($code) {
-                throw new \RuntimeException('x', $code);
+                throw new RuntimeException('x', $code);
             });
             $server->onError(function (ErrorEvent $e) use (&$statuses) {
                 $statuses[] = $e->response->getStatusCode();
@@ -236,7 +238,7 @@ class HttpServerTest extends TestCase
         $server = $this->createPhpServer(['name']);
         $server->setMiddlewareResolver(
             fn(string $name) => fn(ServerRequestInterface $req, RequestHandlerInterface $next)
-                => Response::fromString('resolved:' . $name)
+                => Response::fromString('resolved:' . $name),
         );
 
         $server->handle($this->request());

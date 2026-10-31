@@ -117,7 +117,7 @@ class AbstractRequestTest extends TestCase
             function () use ($request) {
                 $request->withMethod('FLY');
             },
-            new InvalidArgumentException()
+            new InvalidArgumentException(),
         );
     }
 

@@ -7,6 +7,7 @@ namespace Windwalker\Http\Response;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use ReturnTypeWillChange;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\MessageTrait;
@@ -14,7 +15,6 @@ use Windwalker\Stream\Stream;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
 use const Windwalker\Stream\READ_WRITE_FROM_BEGIN;
-use const Windwalker\Stream\READ_WRITE_RESET;
 
 /**
  * The AbstractResponse class.
@@ -182,7 +182,7 @@ class Response implements ResponseInterface
      *
      * @return  string  Reason phrase; must return an empty string if none present.
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getReasonPhrase(): string
     {
         if (!$this->reasonPhrase) {

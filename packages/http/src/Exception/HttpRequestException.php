@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Exception;
 
+use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use UnexpectedValueException;
@@ -21,7 +22,7 @@ class HttpRequestException extends UnexpectedValueException
         get => $this->response?->getBody();
     }
 
-    protected \Closure $curlCmdCallback;
+    protected Closure $curlCmdCallback;
 
     public function withResponse(ResponseInterface $response): static
     {
@@ -35,7 +36,7 @@ class HttpRequestException extends UnexpectedValueException
         return $new;
     }
 
-    public function setCurlCmdCallback(\Closure $callback): static
+    public function setCurlCmdCallback(Closure $callback): static
     {
         $this->curlCmdCallback = $callback;
 

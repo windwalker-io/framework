@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test;
 
+use Closure;
 use Composer\CaBundle\CaBundle;
+use LogicException;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
@@ -13,7 +15,7 @@ use Windwalker\Http\CaBundleFinder;
 
 class CaBundleFinderTest extends TestCase
 {
-    private \Closure $originalFinder;
+    private Closure $originalFinder;
 
     #[Before]
     public function backupFinder(): void
@@ -33,7 +35,7 @@ class CaBundleFinderTest extends TestCase
     public function findReturnsExistingDefaultPathFirst(): void
     {
         CaBundleFinder::setDefaultPath(__FILE__);
-        CaBundleFinder::setFinder(static fn() => throw new \LogicException('Finder must not be called.'));
+        CaBundleFinder::setFinder(static fn() => throw new LogicException('Finder must not be called.'));
 
         self::assertSame(__FILE__, CaBundleFinder::find());
         self::assertSame(__FILE__, CaBundleFinder::getDefaultPath());

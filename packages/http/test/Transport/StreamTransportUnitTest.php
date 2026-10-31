@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Transport;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use UnexpectedValueException;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Transport\Options\StreamOptions;
@@ -15,7 +18,7 @@ class StreamTransportUnitTest extends TestCase
 {
     protected function caOptions(StreamTransport $transport, StreamOptions|array $options): array
     {
-        $ref = new \ReflectionMethod($transport, 'setCABundleToOptions');
+        $ref = new ReflectionMethod($transport, 'setCABundleToOptions');
 
         return $ref->invoke($transport, [], StreamOptions::wrap($options));
     }
@@ -25,7 +28,7 @@ class StreamTransportUnitTest extends TestCase
     {
         $res = (new StreamTransport())->toResponse(
             ['HTTP/1.1 202 Accepted', 'X-Foo: bar'],
-            'payload'
+            'payload',
         );
 
         self::assertSame(202, $res->getStatusCode());
@@ -36,7 +39,7 @@ class StreamTransportUnitTest extends TestCase
     #[Test]
     public function toResponseThrowsWhenStatusLineMissing(): void
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         (new StreamTransport())->toResponse(['not a status line'], '');
     }
@@ -97,7 +100,7 @@ class StreamTransportUnitTest extends TestCase
     #[Test]
     public function downloadThrowsWhenDestinationIsEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         (new StreamTransport())->download(new Request(), '');
     }

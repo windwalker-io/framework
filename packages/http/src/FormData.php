@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http;
 
-use Windwalker\Data\Collection;
+use JsonSerializable;
 use Windwalker\Uri\UriHelper;
 use Windwalker\Utilities\Accessible\AccessibleTrait;
 use Windwalker\Utilities\TypeCast;
@@ -12,7 +12,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * The FormData class.
  */
-class FormData implements \JsonSerializable
+class FormData implements JsonSerializable
 {
     use AccessibleTrait;
 

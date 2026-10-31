@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Http\Event\HttpClient;
 
 use Windwalker\Event\BaseEvent;
-use Windwalker\Http\HttpClientOptions;
 use Windwalker\Http\HttpClient;
+use Windwalker\Http\HttpClientOptions;
 
 /**
  * The BeforeRequestEvent class.

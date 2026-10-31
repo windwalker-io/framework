@@ -7,8 +7,9 @@ namespace Windwalker\Http\Test\Helper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Http\Helper\IpHelper;
+use Throwable;
 use Windwalker\Http\Helper\HttpHelper;
+use Windwalker\Http\Helper\IpHelper;
 
 class IpHelperAddressTest extends TestCase
 {
@@ -61,7 +62,7 @@ class IpHelperAddressTest extends TestCase
     #[Test]
     public function checkIpRejectsNonStringEntries(): void
     {
-        $this->expectException(\Throwable::class);
+        $this->expectException(Throwable::class);
 
         IpHelper::checkIp('10.0.0.1', [123]);
     }
@@ -89,7 +90,7 @@ class IpHelperAddressTest extends TestCase
     {
         self::assertSame(
             '10.0.0.2',
-            IpHelper::getTrustedIp(['10.0.0.2'], ['REMOTE_ADDR' => '10.0.0.2', 'HTTP_X_FORWARDED_FOR' => ' '])
+            IpHelper::getTrustedIp(['10.0.0.2'], ['REMOTE_ADDR' => '10.0.0.2', 'HTTP_X_FORWARDED_FOR' => ' ']),
         );
     }
 

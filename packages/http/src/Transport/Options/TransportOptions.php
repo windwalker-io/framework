@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport\Options;
 
+use AllowDynamicProperties;
+use Closure;
 use Windwalker\Http\HttpClientOptions;
 use Windwalker\Http\Transport\ProgressEvent;
 use Windwalker\Utilities\Options\RecordOptions;
 
-#[\AllowDynamicProperties]
+#[AllowDynamicProperties]
 class TransportOptions extends RecordOptions
 {
     public function __construct(
@@ -22,11 +24,10 @@ class TransportOptions extends RecordOptions
         public bool $verifyPeer = true,
         public ?array $files = null,
         /**
-         * @var \Closure(ProgressEvent $event): void|null
+         * @var Closure(ProgressEvent $event): void|null
          */
-        public ?\Closure $progress = null,
-    ) {
-    }
+        public ?Closure $progress = null,
+    ) {}
 
     public static function fromHttpClientOptions(HttpClientOptions $options): static
     {

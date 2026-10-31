@@ -61,4 +61,47 @@ class LanguageNormalizeTest extends TestCase
     {
         self::assertEquals($expected, LanguageNormalizer::normalize($origin));
     }
+
+    #[Test]
+    public function toISO15897UsesUnderscoreSeparator(): void
+    {
+        self::assertEquals('en_GB', LanguageNormalizer::toISO15897('en-gb'));
+        self::assertEquals('zh_TW', LanguageNormalizer::toISO15897('ZH_tw'));
+    }
+
+    #[Test]
+    public function normalizeLangCodeKeepsLanguageOnlyCodeWithoutRegion(): void
+    {
+        self::assertEquals('en-', LanguageNormalizer::normalizeLangCode('EN'));
+    }
+
+    #[Test]
+    public function sanitizeRemovesSpacesQuotesDotsAndSlashes(): void
+    {
+        self::assertEquals('enGB', LanguageNormalizer::sanitize("en #GB'\"./\\\\"));
+    }
+
+    #[Test]
+    #[DataProvider('shortLangCodeProvider')]
+    public function shortLangCodeReducesCodeToShortForm(string $code, string $expected): void
+    {
+        self::assertEquals($expected, LanguageNormalizer::shortLangCode($code));
+    }
+
+    public static function shortLangCodeProvider(): array
+    {
+        return [
+            'language only' => ['EN', 'en'],
+            'same language and region' => ['fr-FR', 'fr'],
+            'different region' => ['en-gb', 'en_GB'],
+            'underscore input' => ['zh_tw', 'zh_TW'],
+        ];
+    }
+
+    #[Test]
+    public function extractSplitsCodeIntoLanguageAndRegion(): void
+    {
+        self::assertSame(['en', 'GB'], LanguageNormalizer::extract('en_GB'));
+        self::assertSame(['en', null], LanguageNormalizer::extract('en'));
+    }
 }

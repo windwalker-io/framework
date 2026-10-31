@@ -35,7 +35,7 @@ class JsonResponse extends TextResponse
         parent::__construct(
             $this->encode($json, $options),
             $status,
-            $headers
+            $headers,
         );
     }
 

@@ -25,6 +25,7 @@ trait MultiTreeNestedEntityTrait
      * @param  mixed  $rootId
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setRootId(mixed $rootId): static
     {

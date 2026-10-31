@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Transport;
 
+use RuntimeException;
 use Windwalker\Http\Test\Support\TestServerRegistry;
 
 trait TestServerExistsTrait
@@ -21,9 +22,9 @@ trait TestServerExistsTrait
             function_exists('swoole_version')
             && version_compare(swoole_version(), '6.0.0', '<')
         ) {
-            throw new \RuntimeException(
-                'Swoole version must be 6.0.0 or higher to run Windwalker HTTP with Swoole.' .
-                ' Please update your Swoole extension.'
+            throw new RuntimeException(
+                'Swoole version must be 6.0.0 or higher to run Windwalker HTTP with Swoole.'
+                . ' Please update your Swoole extension.',
             );
         }
 

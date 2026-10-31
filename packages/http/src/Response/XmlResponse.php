@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Windwalker\Http\Response;
 
 use DOMDocument;
+use DOMException;
 use DOMImplementation;
 use InvalidArgumentException;
+use RuntimeException;
 use SimpleXMLElement;
-use Windwalker\DOM\DOMFactory;
 
 /**
  * The XmlResponse class.
@@ -36,7 +37,7 @@ class XmlResponse extends TextResponse
         parent::__construct(
             $this->toString($xml),
             $status,
-            $headers
+            $headers,
         );
     }
 
@@ -73,15 +74,15 @@ class XmlResponse extends TextResponse
         throw new InvalidArgumentException(
             sprintf(
                 'Invalid XML content type, %s provided.',
-                gettype($data)
-            )
+                gettype($data),
+            ),
         );
     }
 
     /**
      * @return  DOMDocument
      *
-     * @throws \DOMException
+     * @throws DOMException
      */
     protected function createDocument(): DOMDocument
     {
@@ -90,7 +91,7 @@ class XmlResponse extends TextResponse
         $doc = $impl->createDocument();
 
         if (!$doc) {
-            throw new \RuntimeException('Unable to create DOMDocument');
+            throw new RuntimeException('Unable to create DOMDocument');
         }
 
         $doc->encoding = 'UTF-8';

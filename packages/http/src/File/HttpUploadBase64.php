@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\File;
 
+use CURLStringFile;
+use LogicException;
 use Unicorn\Flysystem\Base64DataUri;
 
 /**
@@ -18,10 +20,10 @@ class HttpUploadBase64 implements HttpUploadFileInterface
     public function __construct(
         string $base64,
         protected ?string $mimeType = null,
-        protected ?string $postname = null
+        protected ?string $postname = null,
     ) {
         if (PHP_VERSION_ID < 80100) {
-            throw new \LogicException(static::class . ' must use after PHP 8.1 or higher.');
+            throw new LogicException(static::class . ' must use after PHP 8.1 or higher.');
         }
 
         $this->setBase64($base64);
@@ -29,6 +31,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getBase64(): string
     {
@@ -57,6 +61,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getMimeType(): ?string
     {
@@ -67,6 +73,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
      * @param  string  $mimeType
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMimeType(?string $mimeType): static
     {
@@ -77,6 +85,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getPostFilename(): ?string
     {
@@ -87,6 +97,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
      * @param  string  $postname
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPostFilename(?string $postname): static
     {
@@ -95,18 +107,18 @@ class HttpUploadBase64 implements HttpUploadFileInterface
         return $this;
     }
 
-    public function toCurlFile(): \CURLStringFile
+    public function toCurlFile(): CURLStringFile
     {
-        return new \CURLStringFile(
-            $this->getBase64(),
-            $this->getMimeType() ?: null,
-            $this->getPostFilename() ?: null
+        return new CURLStringFile(
+            $this->getContent(),
+            $this->getPostFilename() ?: '',
+            $this->getMimeType() ?: 'application/octet-stream',
         );
     }
 
     public function getContent(): string
     {
-        return $this->base64;
+        return base64_decode($this->data);
     }
 
     protected static function decode(string $base64, ?string &$mime = null): string
@@ -121,6 +133,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getData(): string
     {
@@ -131,6 +145,8 @@ class HttpUploadBase64 implements HttpUploadFileInterface
      * @param  string  $data
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setData(string $data): static
     {

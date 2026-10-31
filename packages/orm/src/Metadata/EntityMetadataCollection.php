@@ -71,6 +71,7 @@ class EntityMetadataCollection
 
     /**
      * @return EntityMetadata[]
+     * @codeCoverageIgnore
      */
     public function getMetadataList(): array
     {
@@ -81,6 +82,7 @@ class EntityMetadataCollection
      * @param  EntityMetadata[]  $metadataList
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setMetadataList(array $metadataList): static
     {
@@ -101,6 +103,7 @@ class EntityMetadataCollection
      * @param  ORM  $orm
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setORM(ORM $orm): static
     {

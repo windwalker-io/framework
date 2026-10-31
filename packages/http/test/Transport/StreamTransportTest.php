@@ -25,21 +25,22 @@ class StreamTransportTest extends AbstractTransportTestCase
     #[Test]
     public function requestSendsMultipartBodyWhenFormDataContainsUploadFile(): void
     {
-        $request = $this->createRequest()
+        $request = $this
+            ->createRequest()
             ->withBody(
                 new RequestBodyStream(
                     [
                         'foo' => 'bar',
                         'file' => HttpClient::uploadFileData('file-content-123', 'text/plain', 'a.txt'),
-                    ]
-                )
+                    ],
+                ),
             )
             ->withUri(new Uri(static::getTestUrlFromConstant()))
             ->withMethod('POST');
 
         $response = $this->instance->request(
             $request,
-            ['timeout' => 10, 'userAgent' => 'Windwalker-Test']
+            ['timeout' => 10, 'userAgent' => 'Windwalker-Test'],
         );
         $body = (string) $response->getBody();
 
@@ -50,7 +51,8 @@ class StreamTransportTest extends AbstractTransportTestCase
     #[Test]
     public function requestEncodesArrayBodyAsFormUrlEncoded(): void
     {
-        $request = $this->createRequest()
+        $request = $this
+            ->createRequest()
             ->withBody(new RequestBodyStream(['foo' => ['bar' => 'baz']]))
             ->withUri(new Uri(static::getTestUrlFromConstant()))
             ->withMethod('POST');

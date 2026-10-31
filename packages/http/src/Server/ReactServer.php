@@ -89,6 +89,8 @@ class ReactServer implements ServerInterface
      * @param  LoopInterface|null  $loop
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setLoop(?LoopInterface $loop): static
     {
@@ -114,6 +116,8 @@ class ReactServer implements ServerInterface
      * @param  ReactServerInterface|null  $socket
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSocket(?ReactServerInterface $socket): static
     {
@@ -142,7 +146,7 @@ class ReactServer implements ServerInterface
                         new RequestEvent(
                             request: $req,
                             output: $output,
-                        )->setName('request')
+                        )->setName('request'),
                     );
                 } catch (Throwable $e) {
                     $code = $e->getCode();
@@ -163,7 +167,7 @@ class ReactServer implements ServerInterface
                 );
 
                 return $event->response;
-            }
+            },
         );
 
         $server->on(
@@ -174,9 +178,9 @@ class ReactServer implements ServerInterface
                         exception: $e,
                         request: new ServerRequest(), // Currently we send empty request
                         output: $output,
-                    )->setName('error')
+                    )->setName('error'),
                 );
-            }
+            },
         );
 
         return $server;
@@ -186,6 +190,8 @@ class ReactServer implements ServerInterface
      * @param  Server|null  $server
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setServer(?Server $server): static
     {

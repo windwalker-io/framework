@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Windwalker\Http\Transport;
 
 use CurlHandle;
+use CurlMultiHandle;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Throwable;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Transport\Options\CurlOptions;
@@ -25,7 +27,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 {
     use OptionAccessTrait;
 
-    protected ?\CurlMultiHandle $mh = null;
+    protected ?CurlMultiHandle $mh = null;
 
     protected ?PromiseInterface $promise = null;
 
@@ -60,7 +62,7 @@ class MultiCurlTransport implements AsyncTransportInterface
         $this->transport = $transport ?? new CurlTransport();
     }
 
-    public function getMainHandle(): \CurlMultiHandle
+    public function getMainHandle(): CurlMultiHandle
     {
         $this->mh ??= curl_multi_init();
 
@@ -89,7 +91,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 
     /**
      * @inheritDoc
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function sendRequest(RequestInterface $request, array|TransportOptions $options = []): PromiseInterface
     {
@@ -118,7 +120,7 @@ class MultiCurlTransport implements AsyncTransportInterface
      * resolve
      *
      * @return  mixed|PromiseInterface
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function resolve(): mixed
     {
@@ -128,7 +130,7 @@ class MultiCurlTransport implements AsyncTransportInterface
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function prepareResolvePromise(): PromiseInterface
     {
@@ -162,7 +164,7 @@ class MultiCurlTransport implements AsyncTransportInterface
                     if ($mrc !== CURLM_OK) {
                         throw new RuntimeException(
                             "Curl multi read error $mrc\n",
-                            E_USER_WARNING
+                            E_USER_WARNING,
                         );
                     }
 
@@ -185,7 +187,7 @@ class MultiCurlTransport implements AsyncTransportInterface
                             $res = $transport->injectHeadersToResponse(
                                 new HttpClientResponse($content)->withInfo(curl_getinfo($handle)),
                                 (array) $task['headers'],
-                                (bool) $options->allowEmptyStatusCode
+                                (bool) $options->allowEmptyStatusCode,
                             );
                             $taskResolve($res);
                         } else {
@@ -196,8 +198,8 @@ class MultiCurlTransport implements AsyncTransportInterface
                     $this->reset();
 
                     $resolve(Promise::all($promises));
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -213,7 +215,7 @@ class MultiCurlTransport implements AsyncTransportInterface
     public function download(
         RequestInterface $request,
         StreamInterface|string $dest,
-        array|CurlOptions $options = []
+        array|CurlOptions $options = [],
     ): mixed {
         return null;
     }

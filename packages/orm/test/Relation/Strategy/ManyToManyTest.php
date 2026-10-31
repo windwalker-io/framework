@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Data\Collection;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Relation\RelationCollection;
@@ -17,7 +18,8 @@ use Windwalker\ORM\Test\Entity\StubSakuraRoseMap;
  */
 class ManyToManyTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsRelatedItemsThroughMapTable()
     {
         // Prepare Entity relations
         $this->createRoseMapper();
@@ -41,7 +43,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testLoadWithMap()
+    #[Test]
+    public function loadExposesMapTableDataOnRelatedItems()
     {
         $sakuraMapper = $this->createSakuraMapper();
 
@@ -58,7 +61,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testCreate()
+    #[Test]
+    public function createStoresEntityWithAttachedRelatedItems()
     {
         $sakuraMapper = $this->createSakuraMapper();
 
@@ -93,7 +97,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateAttachAndDetach()
+    #[Test]
+    public function updateAttachesNewItemAndDetachesRemovedItem()
     {
         $sakuraMapper = $this->createSakuraMapper();
 
@@ -152,7 +157,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSync()
+    #[Test]
+    public function updateSyncReplacesRelatedItems()
     {
         $roseMapper = $this->createRoseMapper();
 
@@ -194,7 +200,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateCascade()
+    #[Test]
+    public function updateCascadeKeepsMapRowsAfterKeyChange()
     {
         $sakuraMapper = $this->createSakuraMapper();
 
@@ -220,7 +227,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSetNull()
+    #[Test]
+    public function updateWithSetNullClearsMapRows()
     {
         $sakuraMapper = $this->createSakuraMapper(Action::SET_NULL);
 
@@ -265,7 +273,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSyncCascade()
+    #[Test]
+    public function updateSyncCascadeReplacesRelatedItemsAfterKeyChange()
     {
         $roseMapper = $this->createRoseMapper();
 
@@ -318,7 +327,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteSetNull()
+    #[Test]
+    public function deleteWithSetNullClearsMapRows()
     {
         $sakuraMapper = $this->createSakuraMapper(Action::CASCADE, Action::SET_NULL);
 
@@ -346,7 +356,8 @@ class ManyToManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteCascade()
+    #[Test]
+    public function deleteCascadeRemovesMapRows()
     {
         $sakuraMapper = $this->createSakuraMapper();
 

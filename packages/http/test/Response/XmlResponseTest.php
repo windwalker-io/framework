@@ -20,7 +20,7 @@ class XmlResponseTest extends TestCase
 
         self::assertXmlStringEqualsXmlString(
             '<root><foo>bar</foo></root>',
-            (string) $response->getBody()
+            (string) $response->getBody(),
         );
         self::assertSame('application/xml; charset=utf-8', $response->getHeaderLine('Content-Type'));
     }

@@ -152,11 +152,11 @@ class HeaderHelperTest extends TestCase
 
         self::assertSame(
             ['Content-Type: text/html', 'X-Multi-Value: a,b'],
-            HeaderHelper::toHeaderLines($headers)
+            HeaderHelper::toHeaderLines($headers),
         );
         self::assertSame(
             "Content-Type: text/html\r\nX-Multi-Value: a,b",
-            HeaderHelper::toHeaderLines($headers, true)
+            HeaderHelper::toHeaderLines($headers, true),
         );
     }
 
@@ -186,7 +186,7 @@ class HeaderHelperTest extends TestCase
 
         self::assertSame(
             "attachment; filename*=utf-8''report.pdf",
-            $response->getHeaderLine('Content-Disposition')
+            $response->getHeaderLine('Content-Disposition'),
         );
     }
 
@@ -195,11 +195,11 @@ class HeaderHelperTest extends TestCase
     {
         self::assertSame(
             "inline; filename*=utf-8''%E6%B8%AC%E8%A9%A6.txt",
-            HeaderHelper::inlineContentDisposition('測試.txt')
+            HeaderHelper::inlineContentDisposition('測試.txt'),
         );
         self::assertSame(
             'attachment; filename="a%20b.txt"',
-            HeaderHelper::attachmentContentDisposition('a b.txt', false)
+            HeaderHelper::attachmentContentDisposition('a b.txt', false),
         );
     }
 
@@ -208,11 +208,11 @@ class HeaderHelperTest extends TestCase
     {
         self::assertSame(
             "attachment; filename*=utf-8''abc.txt",
-            HeaderHelper::contentDisposition('attachment', 'a"b/c.txt')
+            HeaderHelper::contentDisposition('attachment', 'a"b/c.txt'),
         );
         self::assertSame(
             "attachment; filename*=utf-8''abctxt",
-            HeaderHelper::contentDisposition('attachment', 'a"b/c..txt')
+            HeaderHelper::contentDisposition('attachment', 'a"b/c..txt'),
         );
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -143,7 +144,7 @@ class MessageTraitTest extends TestCase
     #[Test]
     public function withProtocolVersionThrowsOnInvalidVersion(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('Invalid version number');
 
         $this->message->withProtocolVersion('abc');
@@ -169,7 +170,7 @@ class MessageTraitTest extends TestCase
     #[DataProvider('invalidHeaderProvider')]
     public function withAddedHeaderThrowsOnInvalidNameOrValue(string $name, mixed $value): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->message->withAddedHeader($name, $value);
     }
@@ -190,7 +191,7 @@ class MessageTraitTest extends TestCase
 
         try {
             $message->withHeader('X-Foo', [1]);
-        } catch (\InvalidArgumentException) {
+        } catch (InvalidArgumentException) {
         }
 
         self::assertSame(['a'], $message->getHeader('X-Foo'));

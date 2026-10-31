@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\File;
 
+use CURLStringFile;
+use LogicException;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Stream\Stream;
 
@@ -24,10 +26,10 @@ class HttpUploadStream implements HttpUploadFileInterface
     public function __construct(
         mixed $stream,
         protected ?string $mimeType = null,
-        protected ?string $postname = null
+        protected ?string $postname = null,
     ) {
         if (PHP_VERSION_ID < 80100) {
-            throw new \LogicException(static::class . ' must use after PHP 8.1 or higher.');
+            throw new LogicException(static::class . ' must use after PHP 8.1 or higher.');
         }
 
         $this->setStream(Stream::wrap($stream, READ_ONLY_FROM_BEGIN));
@@ -55,6 +57,8 @@ class HttpUploadStream implements HttpUploadFileInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getMimeType(): ?string
     {
@@ -65,6 +69,8 @@ class HttpUploadStream implements HttpUploadFileInterface
      * @param  string  $mimeType
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMimeType(?string $mimeType): static
     {
@@ -75,6 +81,8 @@ class HttpUploadStream implements HttpUploadFileInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getPostFilename(): ?string
     {
@@ -85,6 +93,8 @@ class HttpUploadStream implements HttpUploadFileInterface
      * @param  string  $postname
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPostFilename(?string $postname): static
     {
@@ -93,12 +103,12 @@ class HttpUploadStream implements HttpUploadFileInterface
         return $this;
     }
 
-    public function toCurlFile(): \CURLStringFile
+    public function toCurlFile(): CURLStringFile
     {
-        return new \CURLStringFile(
+        return new CURLStringFile(
             $this->getStream()->getContents(),
-            $this->getMimeType() ?: null,
-            $this->getPostFilename() ?: null
+            $this->getPostFilename() ?: '',
+            $this->getMimeType() ?: 'application/octet-stream',
         );
     }
 

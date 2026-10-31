@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test;
 
-use PHPUnit\Framework\Attributes\After;
 use InvalidArgumentException;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -23,23 +25,12 @@ class UploadedFileTest extends TestCase
 {
     use BaseAssertionTrait;
 
-    protected mixed $tmpFile = null;
+    protected vfsStreamDirectory $root;
 
-    /** @var string[] */
-    protected array $sourceFiles = [];
-
-    #[After]
-    protected function removeMovedTmpFile(): void
+    #[Before]
+    protected function setUpVirtualFilesystem(): void
     {
-        foreach ($this->sourceFiles as $file) {
-            @unlink($file);
-        }
-
-        $this->sourceFiles = [];
-
-        if (is_scalar($this->tmpFile) && file_exists($this->tmpFile)) {
-            unlink($this->tmpFile);
-        }
+        $this->root = vfsStream::setup('root', null, ['uploads' => [], 'target' => []]);
     }
 
     #[Test]
@@ -73,7 +64,7 @@ class UploadedFileTest extends TestCase
     public function getStreamThrowsAfterFileMoved(): void
     {
         $upload = new UploadedFile($this->createUploadSource('Foo'));
-        $this->tmpFile = $to = $this->createTargetPath();
+        $to = $this->createTargetPath();
 
         $upload->moveTo($to);
 
@@ -87,7 +78,7 @@ class UploadedFileTest extends TestCase
     public function moveToThrowsWhenFileAlreadyMoved(): void
     {
         $upload = new UploadedFile($this->createUploadSource('Foo'));
-        $this->tmpFile = $to = $this->createTargetPath();
+        $to = $this->createTargetPath();
 
         $upload->moveTo($to);
 
@@ -115,7 +106,7 @@ class UploadedFileTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessageIsOrContains('Unable to write to path');
 
-        @$upload->moveTo(sys_get_temp_dir() . '/windwalker-no-such-dir-' . uniqid() . '/file');
+        @$upload->moveTo('vfs://root/no-such-dir/file');
     }
 
     #[Test]
@@ -166,7 +157,7 @@ class UploadedFileTest extends TestCase
                 'size' => 12,
                 'full_path' => 'dir/a.txt',
             ],
-            $upload->jsonSerialize()
+            $upload->jsonSerialize(),
         );
     }
 
@@ -183,16 +174,15 @@ class UploadedFileTest extends TestCase
 
     protected function createUploadSource(string $contents): string
     {
-        $file = sys_get_temp_dir() . '/upload-' . uniqid();
+        $file = 'vfs://root/uploads/upload-' . uniqid();
         file_put_contents($file, $contents);
-        $this->sourceFiles[] = $file;
 
         return $file;
     }
 
     protected function createTargetPath(): string
     {
-        return sys_get_temp_dir() . '/windwalker-' . uniqid();
+        return 'vfs://root/target/windwalker-' . uniqid();
     }
 
     #[Test]
@@ -202,7 +192,7 @@ class UploadedFileTest extends TestCase
         $stream->write('Foo bar!');
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $to = $this->createTargetPath();
 
         self::assertFalse(is_file($to));
 
@@ -218,11 +208,10 @@ class UploadedFileTest extends TestCase
     #[Test]
     public function moveToMovesUploadedFileFromPathToTargetPath(): void
     {
-        $uploadFile = sys_get_temp_dir() . '/upload-' . uniqid();
-        file_put_contents($uploadFile, 'Foo bar!');
+        $uploadFile = $this->createUploadSource('Foo bar!');
         $upload = new UploadedFile($uploadFile, 0, UPLOAD_ERR_OK);
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $to = $this->createTargetPath();
 
         self::assertFalse(is_file($to));
 
@@ -233,8 +222,6 @@ class UploadedFileTest extends TestCase
         $contents = file_get_contents($to);
 
         self::assertEquals('Foo bar!', $contents);
-
-        @unlink($uploadFile);
     }
 
     #[Test]
@@ -245,7 +232,7 @@ class UploadedFileTest extends TestCase
         $upload = new UploadedFile($stream, 0, UPLOAD_ERR_OK);
         $upload->setSapi('cgi');
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $to = $this->createTargetPath();
 
         self::assertFalse(is_file($to));
 
@@ -261,26 +248,21 @@ class UploadedFileTest extends TestCase
     #[Test]
     public function moveToThrowsForNonUploadedFileInNonCliSapi(): void
     {
-        $uploadFile = sys_get_temp_dir() . '/upload-' . uniqid();
-        file_put_contents($uploadFile, 'Foo bar!');
+        $uploadFile = $this->createUploadSource('Foo bar!');
         $upload = new UploadedFile($uploadFile, 0, UPLOAD_ERR_OK);
         $upload->setSapi('cgi');
 
-        $this->tmpFile = $to = sys_get_temp_dir() . '/windwalker-' . uniqid();
+        $to = $this->createTargetPath();
 
         self::assertFalse(is_file($to));
 
-        try {
-            self::assertExpectedException(
-                function () use ($upload, $to) {
-                    $upload->moveTo($to);
-                },
-                'RuntimeException',
-                'Error moving uploaded file'
-            );
-        } finally {
-            @unlink($uploadFile);
-        }
+        self::assertExpectedException(
+            function () use ($upload, $to) {
+                $upload->moveTo($to);
+            },
+            'RuntimeException',
+            'Error moving uploaded file',
+        );
     }
 
     #[Test]
@@ -291,7 +273,7 @@ class UploadedFileTest extends TestCase
             123,
             UPLOAD_ERR_OK,
             'foo.png',
-            'image/png'
+            'image/png',
         );
 
         self::assertSame(123, $upload->getSize());

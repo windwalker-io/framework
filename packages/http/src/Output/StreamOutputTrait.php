@@ -33,6 +33,7 @@ trait StreamOutputTrait
 
         if ($maxBufferLength <= 0) {
             $this->write((string) $response->getBody());
+
             return;
         }
 
@@ -151,6 +152,8 @@ trait StreamOutputTrait
      * Method to get property Delay
      *
      * @return int|null
+     *
+     * @codeCoverageIgnore
      */
     public function getDelay(): ?int
     {

@@ -6,8 +6,8 @@ namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Response\CallbackResponse;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Response\CallbackResponse;
 use Windwalker\Stream\Stream;
 
 use const Windwalker\Stream\WRITE_ONLY_RESET;
@@ -149,8 +149,8 @@ class Output implements OutputInterface
                 'HTTP/%s %d%s',
                 $response->getProtocolVersion(),
                 $response->getStatusCode(),
-                $reasonPhrase
-            )
+                $reasonPhrase,
+            ),
         );
     }
 

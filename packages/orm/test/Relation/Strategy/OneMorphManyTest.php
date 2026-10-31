@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubAttachment;
@@ -14,7 +15,8 @@ use Windwalker\ORM\Test\Entity\StubPage;
  */
 class OneMorphManyTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsMorphedChildren()
     {
         $mapper = $this->createTestMapper();
 
@@ -28,7 +30,8 @@ class OneMorphManyTest extends AbstractORMTestCase
         self::assertEquals([61, 62, 63, 64, 65], $articleAttachments->column('id', null, true)->dump());
     }
 
-    public function testCreate()
+    #[Test]
+    public function createStoresEntityWithMorphedChildren()
     {
         $mapper = $this->createTestMapper();
 
@@ -61,7 +64,8 @@ class OneMorphManyTest extends AbstractORMTestCase
         self::assertEquals(['AA22002'], $aa->column('no', null, true)->dump());
     }
 
-    public function testUpdate()
+    #[Test]
+    public function updateCascadesChangesToMorphedChildren()
     {
         $mapper = $this->createTestMapper();
         /** @var StubPage $page */
@@ -94,7 +98,8 @@ class OneMorphManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSelNull()
+    #[Test]
+    public function updateWithSetNullClearsMorphedChildrenForeignKey()
     {
         $mapper = $this->createTestMapper(Action::SET_NULL);
 
@@ -126,7 +131,8 @@ class OneMorphManyTest extends AbstractORMTestCase
         );
     }
 
-    public function testDelete()
+    #[Test]
+    public function deleteRemovesMorphedChildren()
     {
         $att = new StubAttachment();
         $att->setNo('AC00001');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
+use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -40,7 +41,7 @@ class StreamTransport extends AbstractTransport
      *
      * @return  HttpClientResponse
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   2.1
      */
     protected function doRequest(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
@@ -74,7 +75,7 @@ class StreamTransport extends AbstractTransport
             $headers,
             $content,
             new HttpClientResponse()->withInfo($metadata),
-            $options->allowEmptyStatusCode
+            $options->allowEmptyStatusCode,
         );
     }
 
@@ -84,7 +85,7 @@ class StreamTransport extends AbstractTransport
      *
      * @return  resource|false
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function createConnection(RequestInterface $request, array|StreamOptions $options = []): mixed
     {
@@ -111,7 +112,7 @@ class StreamTransport extends AbstractTransport
                     }
 
                     return $value;
-                }
+                },
             );
         } else {
             $data = (string) $body;
@@ -141,7 +142,7 @@ class StreamTransport extends AbstractTransport
             if (!$request->getHeaderLine('Content-Type')) {
                 $request = $request->withHeader(
                     'Content-Type',
-                    'application/x-www-form-urlencoded; charset=utf-8'
+                    'application/x-www-form-urlencoded; charset=utf-8',
                 );
             }
         }
@@ -188,10 +189,10 @@ class StreamTransport extends AbstractTransport
         $context = stream_context_create(
             Arr::mergeRecursive(
                 [
-                    'http' => $opt
+                    'http' => $opt,
                 ],
-                $options->context
-            )
+                $options->context,
+            ),
         );
 
         // Capture PHP errors
@@ -205,7 +206,7 @@ class StreamTransport extends AbstractTransport
      * @param  StreamOptions     $options
      *
      * @return  Stream
-     * @throws \Exception
+     * @throws Exception
      */
     protected function createStream(RequestInterface $request, StreamOptions $options): Stream
     {
@@ -239,7 +240,7 @@ class StreamTransport extends AbstractTransport
         array $headers,
         string $body,
         ?ResponseInterface $response = null,
-        bool $allowEmptyStatusCode = false
+        bool $allowEmptyStatusCode = false,
     ): ResponseInterface {
         $response ??= new HttpClientResponse();
 
@@ -281,7 +282,7 @@ class StreamTransport extends AbstractTransport
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array|TransportOptions $options = []
+        array|TransportOptions $options = [],
     ): HttpClientResponse {
         if (!$dest) {
             throw new InvalidArgumentException('Target file path is emptty.');

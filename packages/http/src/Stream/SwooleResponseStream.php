@@ -12,9 +12,7 @@ use Windwalker\Stream\NullStream;
  */
 class SwooleResponseStream extends NullStream
 {
-    public function __construct(protected Response $response)
-    {
-    }
+    public function __construct(protected Response $response) {}
 
     public function close(): void
     {

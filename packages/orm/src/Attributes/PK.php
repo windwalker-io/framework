@@ -88,6 +88,7 @@ class PK implements AttributeInterface
      * @param  Column  $column
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setColumn(Column $column): static
     {

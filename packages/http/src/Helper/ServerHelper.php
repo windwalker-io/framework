@@ -31,7 +31,7 @@ abstract class ServerHelper
     public static function getValue(
         array $servers,
         string $name,
-        mixed $default = null
+        mixed $default = null,
     ): mixed {
         if (array_key_exists($name, $servers)) {
             return $servers[$name];

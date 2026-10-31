@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 
 /**
  * The Request Handler class.
@@ -16,7 +17,7 @@ class RequestHandler extends AbstractRequestHandler
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $entry      = current($this->queue);
+        $entry = current($this->queue);
         $middleware = ($this->resolver)($entry);
         next($this->queue);
 
@@ -32,12 +33,12 @@ class RequestHandler extends AbstractRequestHandler
             return $middleware($request, $this);
         }
 
-        throw new \RuntimeException(
+        throw new RuntimeException(
             sprintf(
                 'Invalid middleware queue entry: %s. Middleware must either be callable or implement %s.',
                 $middleware,
-                MiddlewareInterface::class
-            )
+                MiddlewareInterface::class,
+            ),
         );
     }
 

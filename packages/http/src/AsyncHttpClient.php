@@ -62,8 +62,8 @@ class AsyncHttpClient extends HttpClient
     /**
      * Class init.
      *
-     * @param  array             $options   The options of this client object.
-     * @param CurlTransport|null $transport The Transport handler, default is CurlTransport.
+     * @param  array               $options    The options of this client object.
+     * @param  CurlTransport|null  $transport  The Transport handler, default is CurlTransport.
      */
     public function __construct($options = [], ?CurlTransport $transport = null)
     {
@@ -131,7 +131,7 @@ class AsyncHttpClient extends HttpClient
     /**
      * resolve
      *
-     * @param callable|null $callback
+     * @param  callable|null  $callback
      *
      * @return  Response[]
      * @throws RuntimeException
@@ -206,8 +206,8 @@ class AsyncHttpClient extends HttpClient
                 sprintf(
                     '%s only supports %s',
                     get_called_class(),
-                    CurlTransport::class
-                )
+                    CurlTransport::class,
+                ),
             );
         }
 
@@ -220,6 +220,8 @@ class AsyncHttpClient extends HttpClient
      * Method to get property Errors
      *
      * @return  RuntimeException[]
+     *
+     * @codeCoverageIgnore
      */
     public function getErrors(): array
     {
@@ -242,6 +244,8 @@ class AsyncHttpClient extends HttpClient
      * @return  resource[]
      *
      * @since  3.4
+     *
+     * @codeCoverageIgnore
      */
     public function getTasks(): array
     {

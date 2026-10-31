@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Helper;
 
+use RuntimeException;
 use Windwalker\Utilities\Assert\TypeAssert;
+
+use function defined;
+use function extension_loaded;
+use function strlen;
+
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
 
 /**
  * The IpHelper class.
@@ -18,9 +26,7 @@ class IpHelper
     /**
      * This class should not be instantiated.
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function isIp(string $ip): bool
     {
@@ -131,7 +137,7 @@ class IpHelper
             return self::$checkedIps[$cacheKey];
         }
 
-        if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+        if (!filter_var($requestIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return self::$checkedIps[$cacheKey] = false;
         }
 
@@ -141,8 +147,8 @@ class IpHelper
             if ('0' === $netmask) {
                 return self::$checkedIps[$cacheKey] = (bool) filter_var(
                     $address,
-                    \FILTER_VALIDATE_IP,
-                    \FILTER_FLAG_IPV4
+                    FILTER_VALIDATE_IP,
+                    FILTER_FLAG_IPV4,
                 );
             }
 
@@ -160,11 +166,11 @@ class IpHelper
 
         return self::$checkedIps[$cacheKey] =
             (0 === substr_compare(
-                sprintf('%032b', ip2long($requestIp)),
-                sprintf('%032b', ip2long($address)),
-                0,
-                (int) $netmask
-            ));
+                    sprintf('%032b', ip2long($requestIp)),
+                    sprintf('%032b', ip2long($address)),
+                    0,
+                    (int) $netmask,
+                ));
     }
 
     /**
@@ -188,9 +194,9 @@ class IpHelper
             return self::$checkedIps[$cacheKey];
         }
 
-        if (!((\extension_loaded('sockets') && \defined('AF_INET6')) || @inet_pton('::1'))) {
-            throw new \RuntimeException(
-                'Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".'
+        if (!((extension_loaded('sockets') && defined('AF_INET6')) || @inet_pton('::1'))) {
+            throw new RuntimeException(
+                'Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".',
             );
         }
 
@@ -245,7 +251,7 @@ class IpHelper
 
         $packedAddress = inet_pton($ip);
 
-        if (4 === \strlen($packedAddress)) {
+        if (4 === strlen($packedAddress)) {
             $mask = '255.255.255.0';
         } elseif ($ip === inet_ntop($packedAddress & inet_pton('::ffff:ffff:ffff'))) {
             $mask = '::ffff:ffff:ff00';

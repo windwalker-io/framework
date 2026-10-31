@@ -18,7 +18,7 @@ class SafeJson implements WrapperInterface
         readonly public string $json,
         protected bool $assoc = false,
         protected int $depth = 512,
-        protected int $flags = JSON_THROW_ON_ERROR
+        protected int $flags = JSON_THROW_ON_ERROR,
     ) {
         $this->decoded = Symbol::empty();
     }

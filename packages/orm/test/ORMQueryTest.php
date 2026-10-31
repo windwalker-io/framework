@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Event\QueryStartEvent;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\ORM\ORM;
@@ -16,7 +17,8 @@ class ORMQueryTest extends AbstractDatabaseTestCase
         get => self::$db->orm();
     }
 
-    public function testPaginatedIterator(): void
+    #[Test]
+    public function paginatedIteratorIteratesAllPages(): void
     {
         $queries = [];
 

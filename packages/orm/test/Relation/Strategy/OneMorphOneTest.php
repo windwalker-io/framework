@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubLicense;
@@ -15,7 +16,8 @@ use Windwalker\ORM\Test\Entity\StubMember;
  */
 class OneMorphOneTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsMorphedRelatedEntities()
     {
         $mapper = $this->createTestMapper();
 
@@ -34,7 +36,8 @@ class OneMorphOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testCreate()
+    #[Test]
+    public function createStoresEntityWithMorphedRelatedEntities()
     {
         $mapper = $this->createTestMapper();
 
@@ -59,7 +62,8 @@ class OneMorphOneTest extends AbstractORMTestCase
         self::assertEquals('LS00008', $lic->getNo());
     }
 
-    public function testUpdate()
+    #[Test]
+    public function updateCascadesChangesToMorphedEntity()
     {
         $mapper = $this->createTestMapper();
         /** @var StubMember $member */
@@ -95,7 +99,8 @@ class OneMorphOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSelNull()
+    #[Test]
+    public function updateWithSetNullClearsMorphedEntityForeignKey()
     {
         $mapper = $this->createTestMapper(Action::SET_NULL);
 
@@ -121,7 +126,8 @@ class OneMorphOneTest extends AbstractORMTestCase
         );
     }
 
-    public function testDelete()
+    #[Test]
+    public function deleteRemovesMorphedEntities()
     {
         $mapper = $this->createTestMapper();
 

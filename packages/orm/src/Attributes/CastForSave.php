@@ -32,6 +32,7 @@ class CastForSave implements CastForSaveInterface
      * @param  mixed  $caster
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setCaster(mixed $caster): static
     {

@@ -446,6 +446,7 @@ class ORM implements EventAwareInterface
      * @param  DatabaseAdapter  $db
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setDb(DatabaseAdapter $db): static
     {
@@ -485,6 +486,7 @@ class ORM implements EventAwareInterface
      * @param  EntityMetadataCollection  $entityMetadataCollection
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setEntityMetadataCollection(EntityMetadataCollection $entityMetadataCollection): static
     {
@@ -511,6 +513,7 @@ class ORM implements EventAwareInterface
      * @param  FieldHydratorInterface|null  $hydrator
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setEntityHydrator(?FieldHydratorInterface $hydrator): static
     {
@@ -569,6 +572,7 @@ class ORM implements EventAwareInterface
      * @param  BaseCaster  $caster
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setCaster(BaseCaster $caster): static
     {

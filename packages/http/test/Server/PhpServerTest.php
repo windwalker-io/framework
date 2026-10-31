@@ -30,11 +30,12 @@ class PhpServerTest extends TestCase
     public function listenHandlesRequestAndOutputsResponseBody(): void
     {
         $this->instance->setHandler(
-            fn(PhpServer $server) => $server->handle(
+            fn(PhpServer $server)
+                => $server->handle(
                 ServerRequestFactory::createFromUri(
-                    'https://domain.com/hello?foo=bar'
-                )
-            )
+                    'https://domain.com/hello?foo=bar',
+                ),
+            ),
         );
 
         $this->instance->on(
@@ -43,14 +44,14 @@ class PhpServerTest extends TestCase
                 $res = $event->request;
 
                 $event->response = Response::fromString('Hello: ' . $res->getUri());
-            }
+            },
         );
 
         $this->instance->listen();
 
         self::assertEquals(
             'Hello: https://domain.com/hello?foo=bar',
-            (string) $this->output->output
+            (string) $this->output->output,
         );
     }
 
@@ -62,8 +63,8 @@ class PhpServerTest extends TestCase
             new PhpServer(
                 [],
                 null,
-                fn () => $this->output = new MockOutput()
-            )
+                fn() => $this->output = new MockOutput(),
+            ),
         );
     }
 }

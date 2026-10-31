@@ -6,6 +6,7 @@ namespace Windwalker\Http\Test;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Windwalker\Http\HttpParameters;
 
 class HttpParametersTest extends TestCase
@@ -83,7 +84,7 @@ class HttpParametersTest extends TestCase
         $params = new HttpParameters(['obj' => (object) ['x' => (object) ['y' => 1]]]);
 
         self::assertSame(['obj' => ['x' => ['y' => 1]]], $params->dump(true));
-        self::assertInstanceOf(\stdClass::class, $params->dump()['obj']);
+        self::assertInstanceOf(stdClass::class, $params->dump()['obj']);
     }
 
     #[Test]

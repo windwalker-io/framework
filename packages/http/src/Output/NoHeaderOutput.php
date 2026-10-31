@@ -14,9 +14,9 @@ class NoHeaderOutput extends Output
     /**
      * header
      *
-     * @param  string  $string
-     * @param  bool    $replace
-     * @param int|null $code
+     * @param  string    $string
+     * @param  bool      $replace
+     * @param  int|null  $code
      *
      * @return  $this
      */

@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\SafeJson;
 use Windwalker\Http\UploadedFile;
@@ -50,7 +51,7 @@ class ServerRequestTest extends TestCase
             $uri,
             $method,
             'php://memory',
-            $headers
+            $headers,
         );
 
         $this->assertEquals($server, $request->getServerParams());
@@ -78,7 +79,7 @@ class ServerRequestTest extends TestCase
             cookies: ['a' => '1'],
             queryParams: ['b' => '2'],
             parsedBody: ['c' => '3'],
-            protocol: '2.0'
+            protocol: '2.0',
         );
 
         self::assertSame(['a' => '1'], $request->getCookieParams());
@@ -133,7 +134,7 @@ class ServerRequestTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->instance->withUploadedFiles(['file' => new \stdClass()]);
+        $this->instance->withUploadedFiles(['file' => new stdClass()]);
     }
 
     #[Test]
@@ -153,7 +154,7 @@ class ServerRequestTest extends TestCase
     #[Test]
     public function withParsedBodyReturnsNewInstanceWithParsedBody(): void
     {
-        $object = new \stdClass();
+        $object = new stdClass();
         $new = $this->instance->withParsedBody($object);
 
         self::assertNotSame($this->instance, $new);

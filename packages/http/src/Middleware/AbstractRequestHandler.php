@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Middleware;
 
+use InvalidArgumentException;
 use Psr\Http\Server\RequestHandlerInterface;
+use TypeError;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -22,13 +24,13 @@ abstract class AbstractRequestHandler implements RequestHandlerInterface
     public function __construct(iterable $queue, ?callable $resolver = null)
     {
         if (!is_iterable($queue)) {
-            throw new \TypeError('Queue must be array or Traversable.');
+            throw new TypeError('Queue must be array or Traversable.');
         }
 
         $queue = TypeCast::toArray($queue);
 
         if (empty($queue)) {
-            throw new \InvalidArgumentException('Queue is empty');
+            throw new InvalidArgumentException('Queue is empty');
         }
 
         $this->queue = $queue;

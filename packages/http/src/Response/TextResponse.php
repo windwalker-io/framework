@@ -36,8 +36,8 @@ class TextResponse extends AbstractContentTypeResponse
             throw new InvalidArgumentException(
                 sprintf(
                     'Invalid body content type %s, please provide string or StreamInterface',
-                    gettype($body)
-                )
+                    gettype($body),
+                ),
             );
         }
 

@@ -197,6 +197,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
      * @param  object[]  $attachedEntities
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setAttachedEntities(array $attachedEntities): static
     {
@@ -217,6 +218,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
      * @param  object[]  $detachedEntities
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setDetachedEntities(array $detachedEntities): static
     {

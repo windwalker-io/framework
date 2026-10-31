@@ -38,7 +38,7 @@ class MultiCurlTransportTest extends TestCase
             [
                 $http->getAsync(WINDWALKER_TEST_HTTP_URL . '/json?a=1'),
                 $http->getAsync(WINDWALKER_TEST_HTTP_URL . '/json?a=2'),
-            ]
+            ],
         )->wait();
 
         self::assertSame('{"a":"1"}', $r1->getContent());

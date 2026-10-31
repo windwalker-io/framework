@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubAction;
@@ -17,7 +18,8 @@ use Windwalker\ORM\Test\Entity\StubMemberAttrNew;
  */
 class ManyMorphManyAttrNewTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsMorphedRelatedItems()
     {
         $memberMapper = $this->createMemberMapper();
 
@@ -53,7 +55,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testCreate()
+    #[Test]
+    public function createStoresEntityWithMorphedRelatedItems()
     {
         $memberMapper = $this->createMemberMapper();
 
@@ -109,7 +112,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateAttachAndDetach()
+    #[Test]
+    public function updateAttachesNewItemAndDetachesRemovedItem()
     {
         $memberMapper = $this->createMemberMapper();
 
@@ -144,7 +148,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSync()
+    #[Test]
+    public function updateSyncReplacesMorphedItems()
     {
         $memberMapper = $this->createMemberMapper();
 
@@ -176,7 +181,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateCascade()
+    #[Test]
+    public function updateCascadeAppliesChangesAfterKeyChange()
     {
         $memberMapper = $this->createMemberMapper();
 
@@ -210,7 +216,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateSetNull()
+    #[Test]
+    public function updateWithSetNullClearsMorphedForeignKeys()
     {
         $memberMapper = $this->createMemberMapper(Action::SET_NULL);
 
@@ -245,7 +252,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteCascade()
+    #[Test]
+    public function deleteCascadeRemovesMorphedItems()
     {
         $memberMapper = $this->createMemberMapper();
 
@@ -288,7 +296,8 @@ class ManyMorphManyAttrNewTest extends AbstractORMTestCase
         );
     }
 
-    public function testDeleteSetNull()
+    #[Test]
+    public function deleteWithSetNullClearsMorphedForeignKeys()
     {
         $memberMapper = $this->createMemberMapper(Action::CASCADE, Action::SET_NULL);
 

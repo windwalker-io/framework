@@ -23,12 +23,12 @@ $server->on(
         $res = $app($event->getRequest());
 
         $event->setResponse($res);
-    }
+    },
 );
 $server->on(
     'error',
     static function ($event) {
         echo $event->getException();
-    }
+    },
 );
 $server->listen();

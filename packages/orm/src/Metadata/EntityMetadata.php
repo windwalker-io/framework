@@ -473,6 +473,7 @@ class EntityMetadata implements EventAwareInterface
      * @param  CastManager  $castManager
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setCastManager(CastManager $castManager): static
     {
@@ -516,6 +517,7 @@ class EntityMetadata implements EventAwareInterface
      * @param  ORM  $orm
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setORM(ORM $orm): static
     {
@@ -536,6 +538,7 @@ class EntityMetadata implements EventAwareInterface
      * @param  RelationManager  $relationManager
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setRelationManager(RelationManager $relationManager): static
     {

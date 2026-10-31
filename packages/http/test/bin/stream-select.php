@@ -16,13 +16,13 @@ include $autoload;
 $t1 = new StreamTransport();
 $fp1 = $t1->createConnection(
     (new Request())
-        ->withRequestTarget('https://google.com')
+        ->withRequestTarget('https://google.com'),
 );
 
 $t2 = new StreamTransport();
 $fp2 = $t1->createConnection(
     (new Request())
-        ->withRequestTarget('https://github.com')
+        ->withRequestTarget('https://github.com'),
 );
 
 $master = [];

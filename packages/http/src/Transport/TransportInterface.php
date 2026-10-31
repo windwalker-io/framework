@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Transport\Options\TransportOptions;
@@ -43,7 +42,7 @@ interface TransportInterface
     public function download(
         RequestInterface $request,
         string|StreamInterface $dest,
-        array|TransportOptions $options = []
+        array|TransportOptions $options = [],
     ): HttpClientResponse;
 
     /**

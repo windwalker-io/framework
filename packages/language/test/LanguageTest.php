@@ -7,7 +7,6 @@ namespace Windwalker\Language\Test;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
 use ReflectionMethod;
 use Windwalker\Language\Language;
 
@@ -21,7 +20,7 @@ class LanguageTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Language
+     * @var  Language
      */
     protected Language $instance;
 
@@ -246,5 +245,90 @@ class LanguageTest extends TestCase
         );
 
         self::assertEquals('WINDWALKER-ROCKS', $this->instance->normalize('Windwalker is good ~~~!!!'));
+    }
+
+    #[Test]
+    public function transReturnsRawWrapperValueUntouched(): void
+    {
+        self::assertEquals('Raw {key}', $this->instance->trans(\Windwalker\raw('Raw {key}')));
+    }
+
+    #[Test]
+    public function choiceReturnsRawWrapperValueUntouched(): void
+    {
+        self::assertEquals('Raw {key}', $this->instance->choice(\Windwalker\raw('Raw {key}'), 2));
+    }
+
+    #[Test]
+    public function replaceSubstitutesNamedPlaceholdersWithCaseVariants(): void
+    {
+        self::assertEquals(
+            'hi sakura, SAKURA, Sakura',
+            $this->instance->replace('hi :name, :NAME, :Name', ['name' => 'sakura'])
+        );
+    }
+
+    #[Test]
+    public function replacePrefersLongerPlaceholderNames(): void
+    {
+        self::assertEquals(
+            'A B',
+            $this->instance->replace(':foo :foobar', ['foo' => 'A', 'foobar' => 'B'])
+        );
+    }
+
+    #[Test]
+    public function replaceReturnsEmptyStringAsIs(): void
+    {
+        self::assertSame('', $this->instance->replace('', ['a' => 'b']));
+    }
+
+    #[Test]
+    public function choiceReplacesCountPlaceholder(): void
+    {
+        $this->instance->addString('apples', '{0} no apples|{1} one apple|[2,*] :count apples');
+
+        self::assertEquals('5 apples', $this->instance->choice('apples', 5));
+    }
+
+    #[Test]
+    public function transFallsBackToFallbackLocaleWhenKeyMissingInCurrentLocale(): void
+    {
+        $this->instance->setLocale('zh-TW');
+
+        self::assertEquals('Sunflower', $this->instance->trans('WINDWALKER_LANGUAGE_TEST_SUNFLOWER'));
+    }
+
+    #[Test]
+    public function findDoesNotUseFallbackWhenDisabled(): void
+    {
+        self::assertSame([null, null], $this->instance->find('windwalker.language.test.sunflower', 'zh-TW', false));
+    }
+
+    #[Test]
+    public function findLooksUpParentWhenChildHasNoString(): void
+    {
+        $child = (new Language())->setParent($this->instance);
+
+        self::assertSame(
+            ['en-GB', 'Sakura'],
+            $child->find('windwalker.language.test.sakura', 'en-GB')
+        );
+    }
+
+    #[Test]
+    public function loadReadsStringsFromFileForGivenLocale(): void
+    {
+        $lang = new Language();
+        $lang->load(__DIR__ . '/fixtures/ini/zh-TW.ini', 'ini', 'zh-TW');
+        $lang->setLocale('zh-TW');
+
+        self::assertEquals('櫻花', $lang->trans('WINDWALKER_LANGUAGE_TEST_SAKURA'));
+    }
+
+    #[Test]
+    public function getSelectorReturnsSameLazyInstance(): void
+    {
+        self::assertSame($this->instance->getSelector(), $this->instance->getSelector());
     }
 }

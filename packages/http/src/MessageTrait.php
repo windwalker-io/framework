@@ -76,8 +76,8 @@ trait MessageTrait
             throw new InvalidArgumentException(
                 sprintf(
                     'Invalid version number, require "<major>.<minor>" format, %s provided',
-                    $version
-                )
+                    $version,
+                ),
             );
         }
 

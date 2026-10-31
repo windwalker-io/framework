@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test;
 
+use BadMethodCallException;
+use DomainException;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Http\Event\HttpClient\AfterRequestEvent;
-use Windwalker\Http\Event\HttpClient\BeforeRequestEvent;
-use Windwalker\Http\FormData;
-use Windwalker\Http\HttpClient;
-use Windwalker\Http\Request\Request;
-use Windwalker\Http\Response\HttpClientResponse;
-use Windwalker\Http\Response\JsonResponse;
-use Windwalker\Http\Test\Mock\MockTransport;
-use Windwalker\Http\Test\Transport\TestServerExistsTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
+use RangeException;
+use Windwalker\Http\Event\HttpClient\AfterRequestEvent;
+use Windwalker\Http\Event\HttpClient\BeforeRequestEvent;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\File\HttpUploadFile;
 use Windwalker\Http\File\HttpUploadStream;
 use Windwalker\Http\File\HttpUploadStringFile;
+use Windwalker\Http\FormData;
+use Windwalker\Http\HttpClient;
+use Windwalker\Http\HttpClientOptions;
+use Windwalker\Http\Request\Request;
+use Windwalker\Http\Response\HttpClientResponse;
+use Windwalker\Http\Response\JsonResponse;
 use Windwalker\Http\Stream\RequestBodyStream;
-use Windwalker\Stream\Stream;
+use Windwalker\Http\Test\Mock\MockTransport;
+use Windwalker\Http\Test\Transport\TestServerExistsTrait;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Http\Transport\MultiCurlTransport;
 use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Promise\Promise;
+use Windwalker\Stream\Stream;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
@@ -69,6 +73,7 @@ class HttpClientTest extends TestCase
         self::assertEquals('http://example.com', $this->transport->request->getRequestTarget());
         self::assertEquals('/path/to/file', $this->transport->getOption('target_file'));
     }
+
     #[Test]
     public function downloadWithPostRequestKeepsMethodAndSetsTargetFile(): void
     {
@@ -77,7 +82,7 @@ class HttpClientTest extends TestCase
 
         $request = $this->instance::createRequest(
             'POST',
-            $url
+            $url,
         );
 
         $this->instance->download($request, $dest);
@@ -99,7 +104,7 @@ class HttpClientTest extends TestCase
             [
                 'params' => ['flower' => 'sakura'],
                 'headers' => ['X-Foo' => 'Bar'],
-            ]
+            ],
         );
 
         self::assertEquals('GET', $this->transport->request->getMethod());
@@ -123,7 +128,7 @@ class HttpClientTest extends TestCase
                 'X-Foo' => ['Bar'],
                 'Content-Type' => ['application/json; charset=utf-8'],
             ],
-            $this->transport->request->getHeaders()
+            $this->transport->request->getHeaders(),
         );
     }
 
@@ -148,7 +153,7 @@ class HttpClientTest extends TestCase
 
         self::assertEquals(
             'http://example.com/foo/bar?foo=bar&flower=sakura',
-            $this->transport->request->getRequestTarget()
+            $this->transport->request->getRequestTarget(),
         );
     }
 
@@ -185,7 +190,7 @@ class HttpClientTest extends TestCase
                         CURLOPT_SSL_VERIFYPEER => false,
                     ],
                 ],
-            ]
+            ],
         );
 
         /** @var CurlTransport $transport */
@@ -218,7 +223,7 @@ class HttpClientTest extends TestCase
             [
                 'params' => ['flower' => 'sakura'],
                 'headers' => ['X-Foo' => 'Bar'],
-            ]
+            ],
         );
 
         self::assertEquals('GET', $this->transport->request->getMethod());
@@ -311,8 +316,8 @@ class HttpClientTest extends TestCase
             [
                 $http->getAsync('json?a=1'),
                 $http->getAsync('json?a=2'),
-                $http->getAsync('json?a=3')
-            ]
+                $http->getAsync('json?a=3'),
+            ],
         );
 
         /** @var HttpClientResponse $res1 */
@@ -336,14 +341,14 @@ class HttpClientTest extends TestCase
                 $event->httpClient->setOption('base_uri', 'https://api.foo.com/');
 
                 $options['headers']['X-XSRF-Token'] = 'TokenValue';
-            }
+            },
         );
 
         $this->instance->on(
             AfterRequestEvent::class,
             function (AfterRequestEvent $event) {
                 $event->response = new JsonResponse([123]); // Will be converted to HttpClientResponse
-            }
+            },
         );
 
         $res = $this->instance->get('validate');
@@ -354,7 +359,7 @@ class HttpClientTest extends TestCase
 
         self::assertEquals(
             '[123]',
-            (string) $res->getBody()
+            (string) $res->getBody(),
         );
     }
 
@@ -371,7 +376,7 @@ class HttpClientTest extends TestCase
 
         self::assertEquals(
             'https://example.org/foo/123?bar=yoo',
-            $this->transport->request->getRequestTarget()
+            $this->transport->request->getRequestTarget(),
         );
     }
 
@@ -386,14 +391,14 @@ class HttpClientTest extends TestCase
                 'vars' => [
                     'foo' => 123,
                     'bar' => 'yoo',
-                    'v' => 'v3'
-                ]
-            ]
+                    'v' => 'v3',
+                ],
+            ],
         );
 
         self::assertEquals(
             'https://example.org/v3/foo/123?bar=yoo',
-            $this->transport->request->getRequestTarget()
+            $this->transport->request->getRequestTarget(),
         );
     }
 
@@ -402,7 +407,8 @@ class HttpClientTest extends TestCase
     {
         $request = new Request();
 
-        $request = $request->withRequestTarget('https://example.com?foo=123&bar=yoo')
+        $request = $request
+            ->withRequestTarget('https://example.com?foo=123&bar=yoo')
             ->withMethod('POST')
             ->withAddedHeader('Content-Type', 'multipart/form-data');
 
@@ -411,19 +417,19 @@ class HttpClientTest extends TestCase
                 [
                     'foo' => 'bar',
                     'yoo' => 'GOO',
-                ]
-            )
+                ],
+            ),
         );
 
         $curl = $this->instance->toCurlCmd($request);
 
         self::assertStringSafeEquals(
             <<<CMD
-            curl --location --request POST 'https://example.com?foo=123&bar=yoo' \
-            --form 'foo=bar' \
-            --form 'yoo=GOO'
-            CMD,
-            $curl
+                curl --location --request POST 'https://example.com?foo=123&bar=yoo' \
+                --form 'foo=bar' \
+                --form 'yoo=GOO'
+                CMD,
+            $curl,
         );
     }
 
@@ -437,24 +443,24 @@ class HttpClientTest extends TestCase
                 [
                     'foo' => 'bar',
                     'yoo' => 'GOO',
-                ]
+                ],
             ),
             [
                 'headers' => [
                     'X-CSRF-Token' => 'qETt34lmfd',
                 ],
-            ]
+            ],
         );
 
         self::assertStringSafeEquals(
             <<<CMD
-            curl --location --request POST 'https://example.com?foo=123&bar=yoo' \
-            --header 'X-CSRF-Token: qETt34lmfd' \
-            --header 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
-            --data-urlencode 'foo=bar' \
-            --data-urlencode 'yoo=GOO'
-            CMD,
-            $curl
+                curl --location --request POST 'https://example.com?foo=123&bar=yoo' \
+                --header 'X-CSRF-Token: qETt34lmfd' \
+                --header 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
+                --data-urlencode 'foo=bar' \
+                --data-urlencode 'yoo=GOO'
+                CMD,
+            $curl,
         );
     }
 
@@ -464,25 +470,25 @@ class HttpClientTest extends TestCase
         $http = new HttpClient(
             [
                 'transport' => [
-                    'root' => true
-                ]
+                    'root' => true,
+                ],
             ],
-            $transport = new MockTransport()
+            $transport = new MockTransport(),
         );
 
         $http->get('.', ['transport' => ['foo' => 'bar']]);
 
         self::assertTrue(
-            $transport->receivedOptions->root
+            $transport->receivedOptions->root,
         );
 
         self::assertEquals(
             'bar',
-            $transport->receivedOptions->foo
+            $transport->receivedOptions->foo,
         );
 
         self::assertTrue(
-            $transport->receivedOptions->optionMerged
+            $transport->receivedOptions->optionMerged,
         );
     }
 
@@ -492,25 +498,25 @@ class HttpClientTest extends TestCase
         $http = new HttpClient(
             [
                 'transport' => [
-                    'root' => true
-                ]
+                    'root' => true,
+                ],
             ],
-            $transport = new MockTransport()
+            $transport = new MockTransport(),
         );
 
         $http->request('GET', '.', null, ['transport' => ['foo' => 'bar']]);
 
         self::assertTrue(
-            $transport->receivedOptions->root
+            $transport->receivedOptions->root,
         );
 
         self::assertEquals(
             'bar',
-            $transport->receivedOptions->foo
+            $transport->receivedOptions->foo,
         );
 
         self::assertTrue(
-            $transport->receivedOptions->optionMerged
+            $transport->receivedOptions->optionMerged,
         );
     }
 
@@ -520,24 +526,24 @@ class HttpClientTest extends TestCase
         $http = new HttpClient(
             [
                 'transport' => [
-                    'root' => true
-                ]
+                    'root' => true,
+                ],
             ],
-            $transport = new MockTransport()
+            $transport = new MockTransport(),
         );
 
         $http->sendRequest(
             new Request(),
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         self::assertTrue(
-            $transport->receivedOptions->root
+            $transport->receivedOptions->root,
         );
 
         self::assertEquals(
             'bar',
-            $transport->receivedOptions->foo
+            $transport->receivedOptions->foo,
         );
     }
 
@@ -561,15 +567,14 @@ class HttpClientTest extends TestCase
             AfterRequestEvent::class,
             function (AfterRequestEvent $event) {
                 $event->response = $event->response->withStatus(404);
-            }
+            },
         );
 
-        $this->expectException(\Windwalker\Http\Exception\HttpRequestException::class);
+        $this->expectException(HttpRequestException::class);
         $this->expectExceptionCode(404);
 
         $this->instance->mustGet('http://example.com/not-found');
     }
-
 
     #[Test]
     public function mustRequestSuccessReturnsResponse(): void
@@ -587,13 +592,18 @@ class HttpClientTest extends TestCase
             AfterRequestEvent::class,
             function (AfterRequestEvent $event) {
                 $event->response = $event->response->withStatus(503);
-            }
+            },
         );
 
-        $this->expectException(\Windwalker\Http\Exception\HttpRequestException::class);
+        $this->expectException(HttpRequestException::class);
         $this->expectExceptionCode(503);
 
-        $this->instance->mustRequest('POST', 'http://example.com/api', ['data' => 1], new \Windwalker\Http\HttpClientOptions());
+        $this->instance->mustRequest(
+            'POST',
+            'http://example.com/api',
+            ['data' => 1],
+            new HttpClientOptions(),
+        );
     }
 
     #[Test]
@@ -603,10 +613,10 @@ class HttpClientTest extends TestCase
             AfterRequestEvent::class,
             function (AfterRequestEvent $event) {
                 $event->response = $event->response->withStatus(422);
-            }
+            },
         );
 
-        $this->expectException(\Windwalker\Http\Exception\HttpRequestException::class);
+        $this->expectException(HttpRequestException::class);
         $this->expectExceptionCode(422);
 
         $this->instance->mustPost('http://example.com/api', ['flower' => 'sakura']);
@@ -625,7 +635,7 @@ class HttpClientTest extends TestCase
             [
                 'base_uri' => Str::ensureEnd(WINDWALKER_TEST_HTTP_URL, '/'),
                 'timeout' => 10,
-            ]
+            ],
         );
 
         $response = $http->get('json');
@@ -642,7 +652,7 @@ class HttpClientTest extends TestCase
             [
                 'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
                 'user_agent' => 'WindwalkerTest/4.0',
-            ]
+            ],
         );
 
         $response = $http->get('server');
@@ -660,7 +670,7 @@ class HttpClientTest extends TestCase
             [
                 'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
                 'verify_peer' => false,
-            ]
+            ],
         );
 
         $response = $http->get('json');
@@ -677,7 +687,7 @@ class HttpClientTest extends TestCase
             [
                 'base_uri' => Str::ensureRight(WINDWALKER_TEST_HTTP_URL, '/'),
                 'follow_location' => false,
-            ]
+            ],
         );
 
         $response = $http->get('json');
@@ -715,7 +725,7 @@ class HttpClientTest extends TestCase
             }
         };
 
-        $this->expectException(\RangeException::class);
+        $this->expectException(RangeException::class);
 
         $this->createClient([], $transport)->get('http://example.com');
     }
@@ -730,7 +740,7 @@ class HttpClientTest extends TestCase
             }
         };
 
-        $this->expectException(\RangeException::class);
+        $this->expectException(RangeException::class);
 
         $this->createClient([], $transport)->download('http://example.com', '/path/to/file');
     }
@@ -820,7 +830,7 @@ class HttpClientTest extends TestCase
     #[Test]
     public function callThrowsBadMethodCallForUnknownMethod(): void
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
 
         $this->instance->notExistsMethod();
     }
@@ -828,7 +838,7 @@ class HttpClientTest extends TestCase
     #[Test]
     public function getAsyncTransportThrowsWhenTransportIsNotCurl(): void
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
 
         $this->instance->getAsyncTransport();
     }

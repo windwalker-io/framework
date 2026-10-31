@@ -69,7 +69,7 @@ class IpHelperTest extends TestCase
 
         self::assertSame(
             '198.51.100.30',
-            IpHelper::getTrustedIp(['2001:db8:1:0:8000::/65'], $server)
+            IpHelper::getTrustedIp(['2001:db8:1:0:8000::/65'], $server),
         );
     }
 

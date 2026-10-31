@@ -33,7 +33,7 @@ abstract class AbstractContentTypeResponse extends Response
         parent::__construct(
             $this->handleBody($body),
             $status,
-            $this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8')
+            $this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8'),
         );
     }
 

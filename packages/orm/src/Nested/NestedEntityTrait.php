@@ -96,6 +96,7 @@ trait NestedEntityTrait
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setRgt(int $rgt): static
     {
@@ -120,6 +121,7 @@ trait NestedEntityTrait
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setLevel(int $level): static
     {
@@ -144,6 +146,7 @@ trait NestedEntityTrait
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setParentId(mixed $parentId): static
     {
@@ -171,6 +174,7 @@ trait NestedEntityTrait
      * @param  RelationCollection  $children
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setChildren(RelationCollection $children): static
     {
@@ -188,6 +192,7 @@ trait NestedEntityTrait
      * @param  RelationCollection  $ancestors
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setAncestors(RelationCollection $ancestors): static
     {
@@ -208,6 +213,7 @@ trait NestedEntityTrait
      * @param  RelationCollection  $tree
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTree(RelationCollection $tree): static
     {

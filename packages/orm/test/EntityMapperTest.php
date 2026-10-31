@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Test;
 
 use Exception;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\ORM\EntityMapper;
@@ -42,10 +44,9 @@ class EntityMapperTest extends AbstractORMTestCase
      * @return void
      * @throws Exception
      */
-    protected function setUp(): void
+    #[Before]
+    protected function createMapperInstance(): void
     {
-        parent::setUp();
-
         $this->instance = self::$orm->mapper(StubFlower::class);
     }
 
@@ -56,7 +57,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @throws Exception
      */
-    public function testFind()
+    #[Test]
+    public function findReturnsMatchingEntities()
     {
         $dataset = $this->instance->select()
             ->limit(3)
@@ -116,7 +118,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testFindOne()
+    #[Test]
+    public function findOneReturnsSingleEntity()
     {
         // Find by primary key
         /** @var StubFlower $data */
@@ -150,7 +153,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return  void
      */
-    public function testFindColumn()
+    #[Test]
+    public function findColumnReturnsColumnValues()
     {
         $columns = $this->instance->select('id')
             ->order(['catid', 'ordering'])
@@ -165,7 +169,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testCreateMultiple()
+    #[Test]
+    public function createMultipleStoresAllEntities()
     {
         // Create from array
         $items = [
@@ -215,7 +220,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testCreateOne()
+    #[Test]
+    public function createOneStoresEntityAndReturnsIt()
     {
         // Create from array
         $data = [
@@ -258,7 +264,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testUpdate()
+    #[Test]
+    public function updateAppliesDataToAllMatchedEntities()
     {
         // Update from array
         $items = [
@@ -299,7 +306,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testUpdateOne()
+    #[Test]
+    public function updateOneModifiesSingleEntity()
     {
         // Update from array
         $data = ['id' => 10, 'params' => '{}'];
@@ -327,7 +335,8 @@ class EntityMapperTest extends AbstractORMTestCase
         // TODO: Test Update Nulls
     }
 
-    public function testUpdateCurrentTime()
+    #[Test]
+    public function updateRefreshesCurrentTimeColumns()
     {
         $mapper = static::$orm->mapper(StubComment::class);
 
@@ -351,7 +360,8 @@ class EntityMapperTest extends AbstractORMTestCase
         );
     }
 
-    public function testUpdateOptimisticLock(): void
+    #[Test]
+    public function updateOptimisticLockRejectsStaleVersion(): void
     {
         $mapper = static::$orm->mapper(StubBookLockUpdated::class);
 
@@ -431,7 +441,8 @@ class EntityMapperTest extends AbstractORMTestCase
         );
     }
 
-    public function testPushNextVersion()
+    #[Test]
+    public function pushNextVersionIncrementsVersionColumn()
     {
         $mapper = static::$orm->mapper(StubBookLockUpdated::class);
 
@@ -472,7 +483,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testUpdateWhere()
+    #[Test]
+    public function updateWhereUpdatesOnlyMatchingRows()
     {
         $data = ['state' => 0];
 
@@ -483,7 +495,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals([0, 0, 0], $dataset->column('state')->dump());
     }
 
-    public function testUpdateBatch()
+    #[Test]
+    public function updateBatchUpdatesAllEntities()
     {
         $data = ['state' => 2];
 
@@ -499,7 +512,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testFlush()
+    #[Test]
+    public function flushReplacesTableContents()
     {
         // Prepare test data
         static::$db->execute('UPDATE ww_flower SET catid = 3 WHERE id IN (6, 7, 8)');
@@ -524,7 +538,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testSaveMultiple()
+    #[Test]
+    public function saveMultipleCreatesOrUpdatesEntities()
     {
         $items = [
             ['title' => 'Sunflower', 'catid' => 5, 'meaning' => '', 'params' => ''],
@@ -547,7 +562,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testSaveOne()
+    #[Test]
+    public function saveOneCreatesOrUpdatesEntity()
     {
         $data = ['title' => 'Sakura', 'catid' => 6, 'meaning' => '', 'params' => ''];
 
@@ -569,7 +585,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testUpsert(): void
+    #[Test]
+    public function upsertInsertsOrUpdatesOnDuplicateKey(): void
     {
         // Update case - matched by existing PK, row should be updated in place.
         /** @var StubFlower $flower */
@@ -622,7 +639,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testDelete()
+    #[Test]
+    public function deleteRemovesMatchingRows()
     {
         $this->instance->deleteWhere(['id' => 16]);
 
@@ -635,7 +653,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertNull(static::$db->prepare('SELECT * FROM ww_flower WHERE id = 17')->get());
     }
 
-    public function testSync()
+    #[Test]
+    public function syncMakesTableMatchGivenDataset()
     {
         $comments = static::$orm->from(StubComment::class)
             ->where('type', 'article')
@@ -695,7 +714,8 @@ class EntityMapperTest extends AbstractORMTestCase
         );
     }
 
-    public function testFindOneOrCreate()
+    #[Test]
+    public function findOneOrCreateCreatesWhenMissing()
     {
         /** @var StubFlower $flower */
         $flower = $this->instance->findOneOrCreate(
@@ -730,7 +750,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals('Cold', $flower->getMeaning());
     }
 
-    public function testUpdateOneOrCreate()
+    #[Test]
+    public function updateOneOrCreateCreatesWhenMissing()
     {
         /** @var StubFlower $flower */
         $flower = $this->instance->updateOneOrCreate(
@@ -772,7 +793,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals('calming2', $flower->getMeaning());
     }
 
-    public function testIncrement(): void
+    #[Test]
+    public function incrementAddsToColumnValue(): void
     {
         $mapper = static::$orm->mapper(StubArticle::class);
 
@@ -789,7 +811,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals(4, $hits);
     }
 
-    public function testIncrementOrCreate(): void
+    #[Test]
+    public function incrementOrCreateCreatesWhenMissing(): void
     {
         $mapper = static::$orm->mapper(StubArticle::class);
 
@@ -804,7 +827,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals(11, $hits);
     }
 
-    public function testDecrement(): void
+    #[Test]
+    public function decrementSubtractsFromColumnValue(): void
     {
         $mapper = static::$orm->mapper(StubArticle::class);
 
@@ -821,7 +845,8 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertEquals(1, $hits);
     }
 
-    public function testDecrementOrCreate(): void
+    #[Test]
+    public function decrementOrCreateCreatesWhenMissing(): void
     {
         $mapper = static::$orm->mapper(StubArticle::class);
 
@@ -843,7 +868,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @throws \ReflectionException
      */
-    public function testCreateBulk(): void
+    #[Test]
+    public function createBulkInsertsAllEntitiesInOneQuery(): void
     {
         // Create from array
         $items = [
@@ -879,7 +905,8 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @throws Exception
      */
-    public function testGetMainKey()
+    #[Test]
+    public function getMainKeyReturnsPrimaryKeyName()
     {
         self::assertEquals('id', $this->instance->getMainKey());
     }
@@ -889,9 +916,112 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return void
      */
-    public function testGetTableName()
+    #[Test]
+    public function getTableNameReturnsEntityTable()
     {
         self::assertEquals('ww_flower', $this->instance->getTableName());
+    }
+
+    #[Test]
+    public function findResultReturnsSingleValue(): void
+    {
+        self::assertEquals('Alstroemeria', $this->instance->findResult('title', ['id' => 1]));
+    }
+
+    #[Test]
+    public function findResultAppliesLockOptions(): void
+    {
+        $result = $this->instance->findResult('title', ['id' => 1], new ORMOptions(forUpdate: true));
+
+        self::assertEquals('Alstroemeria', $result);
+    }
+
+    #[Test]
+    public function findColumnAppliesLockOptions(): void
+    {
+        $result = $this->instance->findColumn('id', ['id' => 1], new ORMOptions(forShare: true));
+
+        self::assertEquals([1], $result->dump());
+    }
+
+    #[Test]
+    public function countColumnCountsMatchingRows(): void
+    {
+        self::assertSame(3, $this->instance->countColumn('id', ['id' => [1, 2, 3]]));
+    }
+
+    #[Test]
+    public function countColumnSupportsGroups(): void
+    {
+        self::assertGreaterThan(0, $this->instance->countColumn('id', [], 'catid'));
+    }
+
+    #[Test]
+    public function sumColumnSumsMatchingRows(): void
+    {
+        self::assertSame(6.0, $this->instance->sumColumn('id', ['id' => [1, 2, 3]]));
+    }
+
+    #[Test]
+    public function sumColumnSupportsGroups(): void
+    {
+        self::assertGreaterThan(0.0, $this->instance->sumColumn('id', [], 'catid'));
+    }
+
+    #[Test]
+    public function tryEntityReturnsNullForNullAndEntityForArray(): void
+    {
+        self::assertNull($this->instance->tryEntity(null));
+        self::assertNull($this->instance->toEntityOrNull(null));
+
+        $entity = $this->instance->tryEntity(['id' => 5, 'title' => 'Foo']);
+
+        self::assertInstanceOf(StubFlower::class, $entity);
+        self::assertEquals('Foo', $entity->getTitle());
+    }
+
+    #[Test]
+    public function toCollectionHandlesArraysEntitiesAndPlainObjects(): void
+    {
+        self::assertEquals(['a' => 1], $this->instance->toCollection(['a' => 1])->dump());
+        self::assertEquals(['a' => 1], $this->instance->toCollection((object) ['a' => 1])->dump());
+
+        $entity = $this->instance->toEntity(['id' => 5, 'title' => 'Foo']);
+        $collection = $this->instance->toCollection($entity);
+
+        self::assertEquals(5, $collection['id']);
+        self::assertEquals('Foo', $collection['title']);
+    }
+
+    #[Test]
+    public function findOneAcceptsScalarPrimaryKeyCondition(): void
+    {
+        $entity = $this->instance->findOne(1);
+
+        self::assertEquals('Alstroemeria', $entity->getTitle());
+    }
+
+    #[Test]
+    public function emitEventSkipsListenersWhenIgnoreEventsIsSet(): void
+    {
+        $called = false;
+        $this->instance->on('foo', function () use (&$called) {
+            $called = true;
+        });
+
+        $event = $this->instance->emitEvent('foo', ['options' => new ORMOptions(ignoreEvents: true)]);
+
+        self::assertFalse($called);
+        self::assertEquals('foo', $event->getName());
+    }
+
+    #[Test]
+    public function queryFactoriesBuildStatementsForEntityTable(): void
+    {
+        self::assertStringContainsString('SELECT', (string) $this->instance->select());
+        self::assertStringContainsString('INSERT', (string) $this->instance->insert());
+        self::assertStringContainsString('UPDATE', (string) $this->instance->update());
+        self::assertStringContainsString('DELETE', (string) $this->instance->delete());
     }
 
     /**

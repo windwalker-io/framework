@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http;
 
-use Traversable;
+use ArrayIterator;
+use IteratorAggregate;
 use Windwalker\Utilities\Contract\AccessorAccessibleInterface;
 use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\TypeCast;
@@ -12,7 +13,7 @@ use Windwalker\Utilities\TypeCast;
 /**
  * A parameter bag class that store a set or data, and make getters/setters key insensitive.
  */
-class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInterface, \IteratorAggregate
+class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInterface, IteratorAggregate
 {
     protected array $storage = [];
 
@@ -154,8 +155,8 @@ class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInte
         return $this->storage;
     }
 
-    public function getIterator(): \ArrayIterator
+    public function getIterator(): ArrayIterator
     {
-        return new \ArrayIterator($this->storage);
+        return new ArrayIterator($this->storage);
     }
 }

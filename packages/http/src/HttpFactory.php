@@ -183,12 +183,12 @@ class HttpFactory extends UriFactory implements
      * @see http://php.net/manual/features.file-upload.post-method.php
      * @see http://php.net/manual/features.file-upload.errors.php
      *
-     * @param  StreamInterface $stream            Underlying stream representing the
+     * @param  StreamInterface  $stream           Underlying stream representing the
      *                                            uploaded file content.
-     * @param int|null         $size              in bytes
-     * @param  int             $error             PHP file upload error
-     * @param string|null      $clientFilename    Filename as provided by the client, if any.
-     * @param string|null      $clientMediaType   Media type as provided by the client, if any.
+     * @param  int|null         $size             in bytes
+     * @param  int              $error            PHP file upload error
+     * @param  string|null      $clientFilename   Filename as provided by the client, if any.
+     * @param  string|null      $clientMediaType  Media type as provided by the client, if any.
      *
      * @return UploadedFileInterface
      *
@@ -198,14 +198,14 @@ class HttpFactory extends UriFactory implements
         ?int $size = null,
         int $error = UPLOAD_ERR_OK,
         ?string $clientFilename = null,
-        ?string $clientMediaType = null
+        ?string $clientMediaType = null,
     ): UploadedFileInterface {
         return $this->uploadedFileFactory->createUploadedFile(
             $stream,
             $size,
             $error,
             $clientFilename,
-            $clientMediaType
+            $clientMediaType,
         );
     }
 }

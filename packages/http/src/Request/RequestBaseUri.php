@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Http\Request;
 
 use BadMethodCallException;
+use JsonSerializable;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Windwalker\Uri\Uri;
@@ -13,14 +14,14 @@ use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Str;
 
 /**
- * @property-read string $full
- * @property-read string $current
- * @property-read string $script
- * @property-read string $root
- * @property-read string $host
- * @property-read string $path
- * @property-read string $route
- * @property-read string $routeWithQuery
+ * @property-read string   $full
+ * @property-read string   $current
+ * @property-read string   $script
+ * @property-read string   $root
+ * @property-read string   $host
+ * @property-read string   $path
+ * @property-read string   $route
+ * @property-read string   $routeWithQuery
  * @property-read string[] $routeAndQuery
  *
  * @method string full()
@@ -33,7 +34,7 @@ use Windwalker\Utilities\Str;
  * @method string path($uri = null)
  * @method string scheme()
  */
-class RequestBaseUri extends Uri implements \JsonSerializable
+class RequestBaseUri extends Uri implements JsonSerializable
 {
     use InstanceCacheTrait;
 
@@ -151,14 +152,14 @@ class RequestBaseUri extends Uri implements \JsonSerializable
                     $url,
                     $full
                         ? $this->toString(Uri::FULL_HOST)
-                        : ''
+                        : '',
                 );
             } else {
                 $url = static::addPrefix(
                     $url,
                     $full
                         ? $this->toString(Uri::FULL_HOST | Uri::PATH)
-                        : $this->toString(Uri::PATH)
+                        : $this->toString(Uri::PATH),
                 );
             }
         }
@@ -216,7 +217,7 @@ class RequestBaseUri extends Uri implements \JsonSerializable
         $base = static::normalize(
             $full
                 ? $this->path
-                : $this->root
+                : $this->root,
         );
 
         return $base ?: '/';
@@ -293,9 +294,9 @@ class RequestBaseUri extends Uri implements \JsonSerializable
                 return $this->cacheStorage['current'] ??= rtrim(
                     Uri::wrap($this->original, true)
                         ->toString(
-                            static::FULL_HOST | static::PATH
+                            static::FULL_HOST | static::PATH,
                         ),
-                    '/'
+                    '/',
                 );
 
             case 'script':

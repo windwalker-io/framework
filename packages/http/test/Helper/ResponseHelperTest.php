@@ -96,7 +96,7 @@ class ResponseHelperTest extends TestCase
         self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
         self::assertSame(
             "attachment; filename*=utf-8''ResponseHelperTest.php",
-            $response->getHeaderLine('Content-Disposition')
+            $response->getHeaderLine('Content-Disposition'),
         );
     }
 
@@ -110,7 +110,7 @@ class ResponseHelperTest extends TestCase
         ResponseHelper::sendAttachment(
             $stream,
             new Response('php://memory', 201),
-            ['filename' => 'custom.bin']
+            ['filename' => 'custom.bin'],
         );
 
         $response = $captured->response;
@@ -120,7 +120,7 @@ class ResponseHelperTest extends TestCase
         self::assertSame($stream, $response->getBody());
         self::assertSame(
             "attachment; filename*=utf-8''custom.bin",
-            $response->getHeaderLine('Content-Disposition')
+            $response->getHeaderLine('Content-Disposition'),
         );
     }
 

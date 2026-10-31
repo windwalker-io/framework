@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Response;
 
+use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\After;
 use Windwalker\Http\Response\RedirectResponse;
 use Windwalker\Http\Test\Stub\HeadersSentSwitch;
 use Windwalker\Uri\Uri;
@@ -69,7 +69,7 @@ class RedirectResponseTest extends TestCase
 
         self::assertSame(
             "<script>document.location.href=\"http:\\/\\/example.com\\/a?b=1\\u0026c=2\";</script>\n",
-            (string) $response->getBody()
+            (string) $response->getBody(),
         );
     }
 

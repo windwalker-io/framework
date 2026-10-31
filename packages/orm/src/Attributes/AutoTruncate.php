@@ -9,9 +9,7 @@ use Windwalker\ORM\Cast\CasterInfo;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class AutoTruncate implements CastForSaveInterface
 {
-    public function __construct(protected ?int $maxLength = null)
-    {
-    }
+    public function __construct(protected ?int $maxLength = null) {}
 
     public function getCaster(): mixed
     {

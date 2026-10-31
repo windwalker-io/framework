@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test\Relation\Strategy;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubLocation;
@@ -14,7 +15,8 @@ use Windwalker\ORM\Test\Entity\StubSakura;
  */
 class ManyToOneTest extends AbstractORMTestCase
 {
-    public function testLoad()
+    #[Test]
+    public function loadReturnsParentOfChild()
     {
         $mapper = $this->createTestMapper();
 

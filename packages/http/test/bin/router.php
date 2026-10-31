@@ -17,9 +17,9 @@ declare(strict_types=1);
 // Normalise multiple leading slashes produced by URI base + path concatenation.
 // e.g. REQUEST_URI "//json?foo=bar" (from CurlTransport's URI building) should be treated as "/json".
 $requestPath = '/' . ltrim(
-    explode('?', $_SERVER['REQUEST_URI'] ?? '/')[0],
-    '/'
-);
+        explode('?', $_SERVER['REQUEST_URI'] ?? '/')[0],
+        '/',
+    );
 
 // Health check – used by PhpBuiltinServer to detect readiness
 if ($requestPath === '/__health') {

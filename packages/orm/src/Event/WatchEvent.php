@@ -36,6 +36,7 @@ class WatchEvent extends AbstractSaveEvent
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isUpdateWhere(): bool
     {

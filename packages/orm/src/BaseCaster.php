@@ -52,6 +52,9 @@ class BaseCaster
         return $value;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDbTimezone(): ?\DateTimeZone
     {
         return $this->dbTimezone;

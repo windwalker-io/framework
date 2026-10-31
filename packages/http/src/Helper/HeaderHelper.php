@@ -55,7 +55,7 @@ abstract class HeaderHelper
     public static function getValue(
         array $headers,
         string $name,
-        mixed $default = null
+        mixed $default = null,
     ): mixed {
         if (array_key_exists($name, $headers)) {
             return is_array($headers[$name]) ? implode(', ', $headers[$name]) : $headers[$name];
@@ -298,9 +298,10 @@ abstract class HeaderHelper
      */
     public static function prepareAttachmentHeaders(
         ResponseInterface $response,
-        ?string $filename = null
+        ?string $filename = null,
     ): ResponseInterface {
-        $response = $response->withHeader('Content-Type', 'application/octet-stream')
+        $response = $response
+            ->withHeader('Content-Type', 'application/octet-stream')
             ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withHeader('Content-Encoding', 'none');
@@ -308,7 +309,7 @@ abstract class HeaderHelper
         if ($filename !== null) {
             $response = $response->withHeader(
                 'Content-Disposition',
-                static::attachmentContentDisposition($filename)
+                static::attachmentContentDisposition($filename),
             );
         }
 

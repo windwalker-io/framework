@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Http;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use ReturnTypeWillChange;
 use RuntimeException;
 use Windwalker\Stream\Stream;
 
@@ -18,7 +20,7 @@ use const Windwalker\Stream\READ_WRITE_RESET;
  *
  * @since  2.1
  */
-class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \JsonSerializable
+class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, JsonSerializable
 {
     /**
      * Property clientFilename.
@@ -196,7 +198,7 @@ class UploadedFile implements UploadedFileInterface, FullPathAwareInterface, \Js
      * @throws  RuntimeException          on any error during the move operation, or on
      *                                    the second or subsequent call to the method.
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function moveTo($targetPath): void
     {
         $targetPath = (string) $targetPath;

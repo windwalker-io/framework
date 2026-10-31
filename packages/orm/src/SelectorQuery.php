@@ -467,11 +467,17 @@ class SelectorQuery extends Query implements EventAwareInterface
             );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isLoadColumnsFromDb(): bool
     {
         return $this->loadColumnsFromDb;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function loadColumnsFromDb(bool $fetchColumnsFromDb = true): static
     {
         $this->loadColumnsFromDb = $fetchColumnsFromDb;

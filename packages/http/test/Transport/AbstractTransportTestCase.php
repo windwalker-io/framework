@@ -61,7 +61,8 @@ abstract class AbstractTransportTestCase extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar'))
+        $request = $request
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
@@ -75,7 +76,8 @@ abstract class AbstractTransportTestCase extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar&baz[3]=yoo'))
+        $request = $request
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar&baz[3]=yoo'))
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
@@ -91,7 +93,8 @@ abstract class AbstractTransportTestCase extends TestCase
 
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri('http://not.exists.url/flower.sakura'))
+        $request = $request
+            ->withUri(new Uri('http://not.exists.url/flower.sakura'))
             ->withMethod('GET');
 
         $this->instance->request($request);
@@ -102,7 +105,8 @@ abstract class AbstractTransportTestCase extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/wrong'))
+        $request = $request
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/wrong'))
             ->withMethod('POST');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -118,7 +122,8 @@ abstract class AbstractTransportTestCase extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(static::getTestUrlFromConstant()))
+        $request = $request
+            ->withUri(new Uri(static::getTestUrlFromConstant()))
             ->withMethod('POST');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -127,7 +132,7 @@ abstract class AbstractTransportTestCase extends TestCase
 
         self::assertStringSafeEquals(
             'foo=bar',
-            $response->getBody()->getContents()
+            $response->getBody()->getContents(),
         );
     }
 
@@ -136,7 +141,8 @@ abstract class AbstractTransportTestCase extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(static::getTestUrlFromConstant()))
+        $request = $request
+            ->withUri(new Uri(static::getTestUrlFromConstant()))
             ->withMethod('PUT');
 
         $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
@@ -145,7 +151,7 @@ abstract class AbstractTransportTestCase extends TestCase
 
         self::assertStringSafeEquals(
             'foo=bar',
-            $response->getBody()->getContents()
+            $response->getBody()->getContents(),
         );
     }
 
@@ -157,14 +163,15 @@ abstract class AbstractTransportTestCase extends TestCase
         $uri = new Uri(static::getTestUrlFromConstant() . '/auth');
         $uri = $uri->withUserInfo('username', 'pass1234');
 
-        $request = $request->withUri($uri)
+        $request = $request
+            ->withUri($uri)
             ->withMethod('GET');
 
         $response = $this->instance->request($request);
 
         self::assertStringSafeEquals(
             'username:pass1234',
-            $response->getBody()->getContents()
+            $response->getBody()->getContents(),
         );
     }
 
@@ -173,7 +180,8 @@ abstract class AbstractTransportTestCase extends TestCase
     {
         $request = $this->createRequest();
 
-        $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '?foo=bar'))
+        $request = $request
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '?foo=bar'))
             ->withMethod('POST');
 
         $request->getBody()->write('flower=sakura');
@@ -182,7 +190,7 @@ abstract class AbstractTransportTestCase extends TestCase
 
         self::assertStringSafeEquals(
             'flower=sakura',
-            $response->getBody()->getContents()
+            $response->getBody()->getContents(),
         );
     }
 
@@ -194,7 +202,7 @@ abstract class AbstractTransportTestCase extends TestCase
             0755,
             [
                 'download' => [],
-            ]
+            ],
         );
 
         $dest = 'vfs://root/download/downloaded.tmp';
@@ -205,14 +213,15 @@ abstract class AbstractTransportTestCase extends TestCase
 
         $src = static::getTestUrlFromConstant();
 
-        $request = $request->withUri(new Uri($src . '/json?foo=bar'))
+        $request = $request
+            ->withUri(new Uri($src . '/json?foo=bar'))
             ->withMethod('GET');
 
         $response = $this->instance->download($request, $dest);
 
         self::assertStringSafeEquals(
             '{"foo":"bar"}',
-            trim(file_get_contents($dest))
+            trim(file_get_contents($dest)),
         );
     }
 
@@ -224,7 +233,7 @@ abstract class AbstractTransportTestCase extends TestCase
             0755,
             [
                 'download' => [],
-            ]
+            ],
         );
 
         $dest = 'vfs://root/download/stream.tmp';
@@ -234,19 +243,20 @@ abstract class AbstractTransportTestCase extends TestCase
         $request = $this->createRequest();
         $src = static::getTestUrlFromConstant();
 
-        $request = $request->withUri(new Uri($src . '/json?foo=bar'))
+        $request = $request
+            ->withUri(new Uri($src . '/json?foo=bar'))
             ->withMethod('GET');
 
         $res = $this->instance->request(
             $request,
             [
-                'write_stream' => Stream::fromFilePath($dest)
-            ]
+                'write_stream' => Stream::fromFilePath($dest),
+            ],
         );
 
         self::assertStringSafeEquals(
             '{"foo":"bar"}',
-            trim(file_get_contents($dest))
+            trim(file_get_contents($dest)),
         );
     }
 

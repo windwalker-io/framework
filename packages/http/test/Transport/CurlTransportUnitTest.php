@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Transport;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Response\Response;
@@ -19,7 +21,7 @@ class CurlTransportUnitTest extends TestCase
     protected function prepare(Request $request, CurlOptions|array $options = []): array
     {
         $transport = new CurlTransport();
-        $ref = new \ReflectionMethod($transport, 'prepareCurlOptions');
+        $ref = new ReflectionMethod($transport, 'prepareCurlOptions');
 
         return $ref->invoke($transport, $request, CurlOptions::wrap($options));
     }
@@ -50,7 +52,7 @@ class CurlTransportUnitTest extends TestCase
         $res = (new CurlTransport())->injectHeadersToResponse(
             new Response(),
             ['garbage', 'X-A: 1'],
-            true
+            true,
         );
 
         self::assertSame(200, $res->getStatusCode());
@@ -135,7 +137,7 @@ class CurlTransportUnitTest extends TestCase
     #[Test]
     public function downloadThrowsWhenDestinationIsEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         (new CurlTransport())->download(new Request(), '');
     }

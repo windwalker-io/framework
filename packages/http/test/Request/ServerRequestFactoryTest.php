@@ -9,10 +9,13 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 use Windwalker\Http\Factory\ServerRequestFactory;
+use Windwalker\Http\Request\RequestBaseUri;
 use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Stream\Stream;
+use Windwalker\Uri\Uri;
 
 /**
  * Test class of ServerRequestFactory
@@ -170,7 +173,7 @@ class ServerRequestFactoryTest extends TestCase
         array $servers,
         array $headers,
         string $expected,
-        int $line
+        int $line,
     ): void {
         $uri = ServerRequestFactory::prepareUri($servers, $headers);
 
@@ -331,7 +334,7 @@ class ServerRequestFactoryTest extends TestCase
         array $server,
         array $headers,
         string $expectedHost,
-        ?int $expectedPort
+        ?int $expectedPort,
     ): void {
         $host = '';
         $port = null;
@@ -474,7 +477,7 @@ class ServerRequestFactoryTest extends TestCase
                     'name' => 'a.txt',
                     'type' => 'text/plain',
                 ],
-            ]
+            ],
         );
 
         self::assertInstanceOf(UploadedFile::class, $request->getUploadedFiles()['upload']);
@@ -486,7 +489,7 @@ class ServerRequestFactoryTest extends TestCase
         $request = ServerRequestFactory::createFromUri(
             'http://example.com/index.php/foo',
             'index.php',
-            ['REQUEST_METHOD' => 'GET']
+            ['REQUEST_METHOD' => 'GET'],
         );
 
         self::assertSame('http://example.com/index.php/foo', (string) $request->getUri());
@@ -497,7 +500,7 @@ class ServerRequestFactoryTest extends TestCase
     #[Test]
     public function createFromUriAcceptsUriObjectAndNormalizesScriptName(): void
     {
-        $uri = new \Windwalker\Uri\Uri('https://example.org/bar');
+        $uri = new Uri('https://example.org/bar');
 
         $request = ServerRequestFactory::createFromUri($uri, null, ['SCRIPT_NAME' => 'app.php']);
 
@@ -511,12 +514,12 @@ class ServerRequestFactoryTest extends TestCase
         $request = ServerRequestFactory::createFromUri(
             'http://example.com/index.php/foo',
             '/index.php',
-            ['REQUEST_METHOD' => 'GET', 'SCRIPT_FILENAME' => '/var/www/index.php']
+            ['REQUEST_METHOD' => 'GET', 'SCRIPT_FILENAME' => '/var/www/index.php'],
         );
 
         $base = ServerRequestFactory::createBaseUriFromRequest($request);
 
-        self::assertInstanceOf(\Windwalker\Http\Request\RequestBaseUri::class, $base);
+        self::assertInstanceOf(RequestBaseUri::class, $base);
     }
 
     #[Test]
@@ -538,7 +541,7 @@ class ServerRequestFactoryTest extends TestCase
     #[Test]
     public function getProtocolVersionThrowsOnInvalidFormat(): void
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessageIsOrContains('Invalid protocol version format');
 
         ServerRequestFactory::getProtocolVersion(['SERVER_PROTOCOL' => 'HTTP/2']);

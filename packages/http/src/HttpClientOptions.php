@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http;
 
+use Closure;
 use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Http\Transport\ProgressEvent;
 use Windwalker\Utilities\Options\RecordOptions;
@@ -26,9 +27,9 @@ class HttpClientOptions extends RecordOptions
         public ?string $certpath = null,
         public bool $verifyPeer = true,
         /**
-         * @var \Closure(ProgressEvent $event): void|null
+         * @var Closure(ProgressEvent $event): void|null
          */
-        public ?\Closure $progress = null,
+        public ?Closure $progress = null,
     ) {
         $this->transport = TransportOptions::tryWrap($transport);
     }

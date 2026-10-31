@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\ORM;
@@ -21,7 +23,8 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::findOne
      */
-    public function testFindOne(): void
+    #[Test]
+    public function findOneReturnsHydratedEntity(): void
     {
         $article = $this->instance->findOne(StubArticle::class, 1);
 
@@ -43,7 +46,8 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function constructInitializesOrm(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -51,7 +55,8 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::getDb
      */
-    public function testGetDb(): void
+    #[Test]
+    public function getDbReturnsAdapter(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -59,7 +64,8 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::from
      */
-    public function testFrom(): void
+    #[Test]
+    public function fromCreatesSelectorQuery(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -67,7 +73,8 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::setDb
      */
-    public function testSetDb(): void
+    #[Test]
+    public function setDbReplacesAdapter(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -75,7 +82,8 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::conditionsToWheres
      */
-    public function testConditionsToWheres(): void
+    #[Test]
+    public function conditionsToWheresBuildsWhereClauses(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -83,18 +91,16 @@ class ORMTest extends AbstractDatabaseTestCase
     /**
      * @see  ORM::select
      */
-    public function testSelect(): void
+    #[Test]
+    public function selectCreatesSelectorQuery(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createOrmInstance(): void
     {
         $this->instance = new ORM(self::$db);
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**

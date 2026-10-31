@@ -70,7 +70,7 @@ class StreamFactory implements StreamFactoryInterface
         ArgumentsAssert::assert(
             is_resource($resource),
             '{caller} argument 1 should be resource, {value} given.',
-            $resource
+            $resource,
         );
 
         return new Stream($resource);

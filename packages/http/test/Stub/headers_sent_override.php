@@ -9,13 +9,17 @@ declare(strict_types=1);
  */
 
 namespace Windwalker\Http\Response {
+
+    use Windwalker\Http\Test\Stub\HeadersSentSwitch;
+
     function headers_sent(): bool
     {
-        return \Windwalker\Http\Test\Stub\HeadersSentSwitch::$forced ?? \headers_sent();
+        return HeadersSentSwitch::$forced ?? \headers_sent();
     }
 }
 
 namespace Windwalker\Http\Test\Stub {
+
     class HeadersSentSwitch
     {
         public static ?bool $forced = null;

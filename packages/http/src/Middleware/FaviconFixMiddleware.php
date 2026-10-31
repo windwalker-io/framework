@@ -15,9 +15,7 @@ use Windwalker\Http\Response\Response;
  */
 class FaviconFixMiddleware implements MiddlewareInterface
 {
-    public function __construct(protected string $publicPath)
-    {
-    }
+    public function __construct(protected string $publicPath) {}
 
     /**
      * @inheritDoc

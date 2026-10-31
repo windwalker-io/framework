@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Transport;
 
+use CurlHandle;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -200,7 +201,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      * @param  array|null            $headers
      * @param  StreamInterface|null  $content
      *
-     * @return  \CurlHandle|false
+     * @return  CurlHandle|false
      *
      * @since  3.2
      */
@@ -209,7 +210,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         array|CurlOptions $options,
         ?array &$headers = null,
         ?StreamInterface &$content = null,
-    ): \CurlHandle|false {
+    ): CurlHandle|false {
         $options = CurlOptions::wrap($options);
 
         // Setup the cURL handle.
@@ -221,7 +222,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         $headerItems = [];
 
         $opt[CURLOPT_HEADERFUNCTION] ??= static function (
-            \CurlHandle $ch,
+            CurlHandle $ch,
             string $header,
         ) use (
             &$headers,
@@ -337,7 +338,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         if ($options->progress) {
             $opt[CURLOPT_NOPROGRESS] = false;
             $opt[CURLOPT_XFERINFOFUNCTION] = static function (
-                \CurlHandle $handle,
+                CurlHandle $handle,
                 float $dlTotal,
                 float $dlNow,
                 float $ulTotal,
@@ -353,7 +354,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
                         uploadTotal: $ulTotal,
                         uploaded: $ulNow,
                         info: $info,
-                    )
+                    ),
                 );
             };
         }

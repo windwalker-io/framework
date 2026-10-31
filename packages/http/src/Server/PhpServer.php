@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
+use Closure;
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Event\EventAwareTrait;
-use Windwalker\Http\Event\RequestEvent;
-use Windwalker\Http\Event\ResponseEvent;
-use Windwalker\Http\HttpFactory;
-use Windwalker\Http\Output\OutputInterface;
 use Windwalker\Http\Output\StreamOutput;
 
 /**
@@ -31,7 +28,7 @@ class PhpServer implements ServerInterface
 
         $this->handleRequest(
             $request ?? $this->getHttpFactory()->createServerRequestFromGlobals(),
-            $output
+            $output,
         );
     }
 
@@ -41,9 +38,9 @@ class PhpServer implements ServerInterface
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getOutputBuilder(): ?\Closure
+    public function getOutputBuilder(): ?Closure
     {
         return $this->outputBuilder ??= static fn() => new StreamOutput();
     }

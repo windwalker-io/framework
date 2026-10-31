@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Middleware;
 
+use ArrayIterator;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Middleware\RequestHandler;
 use Windwalker\Http\Middleware\RequestRunner;
@@ -25,7 +28,7 @@ class RequestHandlerTest extends TestCase
     #[Test]
     public function constructorThrowsOnEmptyQueue(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         new RequestHandler([]);
     }
@@ -34,7 +37,7 @@ class RequestHandlerTest extends TestCase
     public function constructorAcceptsTraversableQueue(): void
     {
         $handler = new RequestHandler(
-            new \ArrayIterator([fn() => Response::fromString('gen')])
+            new ArrayIterator([fn() => Response::fromString('gen')]),
         );
 
         self::assertSame('gen', (string) $handler->handle($this->createRequest())->getBody());
@@ -59,7 +62,7 @@ class RequestHandlerTest extends TestCase
         $middleware = new class () implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $handler
+                RequestHandlerInterface $handler,
             ): ResponseInterface {
                 return $handler->handle($request)->withHeader('X-Mw', 'yes');
             }
@@ -83,7 +86,7 @@ class RequestHandlerTest extends TestCase
     {
         $handler = new RequestHandler(
             ['hello'],
-            fn(string $entry) => fn() => Response::fromString(strtoupper($entry))
+            fn(string $entry) => fn() => Response::fromString(strtoupper($entry)),
         );
 
         self::assertSame('HELLO', (string) $handler->handle($this->createRequest())->getBody());
@@ -94,7 +97,7 @@ class RequestHandlerTest extends TestCase
     {
         $handler = new RequestHandler(['not-callable']);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid middleware queue entry: not-callable');
 
         $handler->handle($this->createRequest());

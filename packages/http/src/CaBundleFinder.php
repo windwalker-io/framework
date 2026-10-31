@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http;
 
+use Closure;
 use Composer\CaBundle\CaBundle;
 
 /**
@@ -13,7 +14,7 @@ class CaBundleFinder
 {
     protected static ?string $defaultPath = null;
 
-    protected static \Closure $finder;
+    protected static Closure $finder;
 
     public static function find(): ?string
     {
@@ -34,17 +35,17 @@ class CaBundleFinder
         return null;
     }
 
-    public static function getFinder(): \Closure
+    public static function getFinder(): Closure
     {
-        return self::$finder ??= static fn () => CaBundle::getBundledCaBundlePath();
+        return self::$finder ??= static fn() => CaBundle::getBundledCaBundlePath();
     }
 
     /**
-     * @param  \Closure  $finder
+     * @param  Closure  $finder
      *
      * @return  void
      */
-    public static function setFinder(\Closure $finder): void
+    public static function setFinder(Closure $finder): void
     {
         static::$finder = $finder;
     }
