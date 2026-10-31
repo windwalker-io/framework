@@ -6,13 +6,14 @@ namespace Windwalker\Database\Test\Driver\Pdo;
 
 use RuntimeException;
 use Windwalker\Database\Driver\Pdo\PdoSqliteConnection;
+use Windwalker\Database\Platform\AbstractPlatform;
 
 /**
  * The PdoSqliteConnection class.
  */
 class PdoSqliteConnectionTest extends AbstractPdoConnectionTestCase
 {
-    protected static string $platform = 'SQLite';
+    protected static string $platform = AbstractPlatform::SQLITE;
 
     protected static string $className = PdoSqliteConnection::class;
 

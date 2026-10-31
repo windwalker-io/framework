@@ -6,6 +6,8 @@ namespace Windwalker\Database\Test\Driver;
 
 use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
+use Windwalker\Database\Driver\DriverOptions;
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\Arr;
 
@@ -63,6 +65,14 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
                 'port',
             ]
         );
+
+        $options = DriverOptions::wrap($options);
+
+        // Is test mode, SQLServ DB service in container uses self signed cert.
+        // We must force trust it.
+        if (static::$platform === AbstractPlatform::SQLSERVER) {
+            $options->tls['verify'] = false;
+        }
 
         return new $className($options);
     }

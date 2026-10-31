@@ -6,6 +6,7 @@ namespace Windwalker\Database\Test\Driver\Mysqli;
 
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Mysqli\MysqliConnection;
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 use Windwalker\Database\Test\Reseter\MySQLTestTrait;
 
@@ -14,7 +15,7 @@ use Windwalker\Database\Test\Reseter\MySQLTestTrait;
  */
 class MysqliConnectionTest extends AbstractConnectionTestCase
 {
-    protected static string $platform = 'MySQL';
+    protected static string $platform = AbstractPlatform::MYSQL;
 
     protected static string $className = MysqliConnection::class;
 

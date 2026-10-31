@@ -7,6 +7,7 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Event\QueryEndEvent;
+use Windwalker\Database\Platform\AbstractPlatform;
 
 /**
  * The AbstractDatabaseTestCase class.
@@ -37,9 +38,14 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
     {
         $params = $params ?? self::getTestParams();
         $params['driver'] = static::$driver;
+
+        if (static::$platform === AbstractPlatform::SQLSERVER) {
+            $params['tls']['verify'] = false;
+        }
+
         static::$lastQueries = [];
 
-        $db = (new DatabaseFactory())->create(
+        $db = new DatabaseFactory()->create(
             static::$driver,
             $params
         );

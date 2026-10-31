@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Platform\SQLServerPlatform;
-use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Utilities\Str;
 
 /**
@@ -13,7 +13,7 @@ use Windwalker\Utilities\Str;
  */
 class SQLServerPlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'SQLServer';
+    protected static string $platform = AbstractPlatform::SQLSERVER;
 
     protected static string $driver = 'pdo_sqlsrv';
 

@@ -8,6 +8,7 @@ use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Event\QueryEndEvent;
 use Windwalker\Database\Exception\DatabaseQueryException;
+use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\TypeCast;
 
@@ -332,6 +333,10 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     {
         $params = $params ?? self::getTestParams();
         $params['driver'] = static::$driverName;
+
+        if (static::$platform === AbstractPlatform::SQLSERVER) {
+            $params['tls']['verify'] = false;
+        }
 
         return new DatabaseFactory()->createDriver(static::$driverName, $params);
     }

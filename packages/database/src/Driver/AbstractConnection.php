@@ -78,7 +78,15 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
             return $this->connection;
         }
 
-        return $this->connection = $this->doConnect(static::prepareDbOptions(clone $this->options));
+        $options = $this->options;
+
+        if (is_object($options)) {
+            $options = clone $options;
+        }
+
+        $dbOptions = static::prepareDbOptions($options);
+
+        return $this->connection = $this->doConnect($dbOptions);
     }
 
     abstract protected function doConnect(DriverOptions $options);
