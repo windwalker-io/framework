@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Mysqli;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
@@ -19,7 +20,8 @@ class MysqliDriverTest extends AbstractDriverTestCase
     /**
      * @see  AbstractDriver::quote
      */
-    public function testQuote(): void
+    #[Test]
+    public function quote(): void
     {
         self::assertEquals(
             "'foo\'s #hello --options'",
@@ -30,7 +32,8 @@ class MysqliDriverTest extends AbstractDriverTestCase
     /**
      * @see  AbstractDriver::escape
      */
-    public function testEscape(): void
+    #[Test]
+    public function escape(): void
     {
         self::assertEquals(
             "foo\'s #hello --options",

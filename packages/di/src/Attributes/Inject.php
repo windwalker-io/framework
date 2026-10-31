@@ -87,7 +87,7 @@ class Inject implements ContainerAttributeInterface
             $varClass = $this->id;
         } else {
             if ($type instanceof ReflectionUnionType) {
-                $types = [$type->getTypes()];
+                $types = $type->getTypes();
             } else {
                 $types = [$type];
             }

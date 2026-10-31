@@ -103,6 +103,43 @@ class ParametersTest extends TestCase
         self::assertSame($this->instance, $foo->getParent());
     }
 
+    #[Test]
+    public function createsChildScopesWithParentFallbackAndLocalOverrides(): void
+    {
+        $child = $this->instance->createChild();
+
+        self::assertSame('Hello', $child->getDeep('foo.bar.yoo'));
+
+        $child->setDeep('foo.bar.yoo', 'World');
+
+        self::assertSame('World', $child->getDeep('foo.bar.yoo'));
+        self::assertSame('Hello', $this->instance->getDeep('foo.bar.yoo'));
+    }
+
+    #[Test]
+    public function iteratesParentValuesOnlyWhenRequested(): void
+    {
+        $child = $this->instance->createChild();
+        $child->set('local', 'child');
+        $this->instance->set('added-later', 'parent');
+
+        self::assertArrayNotHasKey('added-later', iterator_to_array($child->getIterator(false)));
+        self::assertSame('parent', iterator_to_array($child->getIterator())['added-later']);
+    }
+
+    #[Test]
+    public function dumpsLocalAndParentValuesAndResolvesReferences(): void
+    {
+        $child = $this->instance->createChild();
+        $child->set('local', 'child');
+
+        $dump = $child->dump();
+
+        self::assertSame('Hello', $dump['ref']);
+        self::assertSame('child', $dump['local']);
+        self::assertArrayHasKey('foo', $dump);
+    }
+
     #[Before]
     public function initializeParameters(): void
     {

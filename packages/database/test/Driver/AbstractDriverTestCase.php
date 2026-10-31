@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Event\QueryEndEvent;
@@ -26,7 +27,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::prepare
      */
-    public function testPrepare(): void
+    #[Test]
+    public function prepare(): void
     {
         $st = static::$driver->prepare('SELECT * FROM ww_flower WHERE id <= :id')
             ->bind('id', 2);
@@ -49,7 +51,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         );
     }
 
-    public function testPrepareBounded(): void
+    #[Test]
+    public function prepareBounded(): void
     {
         // Bind param
         $id = 1;
@@ -72,7 +75,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         );
     }
 
-    public function testPrepareWithQuery(): void
+    #[Test]
+    public function prepareWithQuery(): void
     {
         $id = 1;
 
@@ -104,7 +108,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::execute
      */
-    public function testPrepareAndExecute(): void
+    #[Test]
+    public function prepareAndExecute(): void
     {
         $st = static::$driver->prepare('SELECT * FROM ww_flower WHERE id <= ?')
             ->execute([2]);
@@ -154,7 +159,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::execute
      */
-    public function testExecute(): void
+    #[Test]
+    public function execute(): void
     {
         $st = static::$driver->execute(
             'UPDATE ww_flower SET params = ? WHERE id <= ?',
@@ -178,7 +184,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         );
     }
 
-    public function testExecuteInsert(): void
+    #[Test]
+    public function executeInsert(): void
     {
         $st = static::$driver->execute(
             'INSERT INTO ww_flower (title, meaning, params) VALUES (?, ?, ?)',
@@ -200,7 +207,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         );
     }
 
-    public function testQueryFailed(): void
+    #[Test]
+    public function includesSqlInExceptionWhenQueryFails(): void
     {
         $sql = 'SELECT * FROM notexists WHERE foo = 123';
 
@@ -212,7 +220,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         static::$driver->prepare($sql)->get();
     }
 
-    public function testEvents()
+    #[Test]
+    public function emitsQueryEndEvent(): void
     {
         $stmt = static::$driver->prepare(
             $q = static::createQuery()
@@ -239,7 +248,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         );
     }
 
-    public function testIterator(): void
+    #[Test]
+    public function iterator(): void
     {
         $st = static::$driver->prepare('SELECT id, title FROM ww_flower WHERE id <= ?')
             ->execute([2]);
@@ -264,7 +274,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::getPlatformName
      */
-    public function testGetPlatformName(): void
+    #[Test]
+    public function getPlatformName(): void
     {
         self::assertEquals(
             static::platformName(),
@@ -275,7 +286,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::disconnectAll
      */
-    public function testDisconnect(): void
+    #[Test]
+    public function disconnect(): void
     {
         static::$driver->disconnectAll();
 
@@ -285,7 +297,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::quote
      */
-    public function testQuote(): void
+    #[Test]
+    public function quote(): void
     {
         self::assertEquals(
             "'foo''s #hello --options'",
@@ -296,7 +309,8 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     /**
      * @see  AbstractDriver::escape
      */
-    public function testEscape(): void
+    #[Test]
+    public function escape(): void
     {
         self::assertEquals(
             "foo''s #hello --options",

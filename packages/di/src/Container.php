@@ -1341,6 +1341,8 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  DependencyResolver  $dependencyResolver
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setDependencyResolver(DependencyResolver $dependencyResolver): static
     {
@@ -1388,6 +1390,9 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this->level;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getAliases(): array
     {
         return $this->aliases;

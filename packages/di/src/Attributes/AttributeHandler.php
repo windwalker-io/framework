@@ -28,6 +28,8 @@ class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
 
     /**
      * @return Container
+     *
+     * @codeCoverageIgnore
      */
     public function getContainer(): Container
     {
@@ -36,6 +38,8 @@ class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
 
     /**
      * @return AttributesResolver
+     *
+     * @codeCoverageIgnore
      */
     public function getResolver(): AttributesResolver
     {

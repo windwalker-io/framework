@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Schema;
 
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
@@ -18,7 +20,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::getNullDate
      */
-    public function testGetNullDate(): void
+    #[Test]
+    public function getNullDate(): void
     {
         self::assertEquals(
             $this->instance->getNullDate(),
@@ -29,7 +32,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::addIndex()
      */
-    public function testAddIndex(): void
+    #[Test]
+    public function addIndex(): void
     {
         $this->instance->addIndex('id');
         $this->instance->addIndex(['foo', 'bar']);
@@ -43,7 +47,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::__call
      */
-    public function testMagicCall(): void
+    #[Test]
+    public function magicCall(): void
     {
         $this->instance->primary('id');
         $this->instance->integer('category_id')->length(11);
@@ -76,7 +81,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     /**
      * @see  Schema::getDateFormat
      */
-    public function testGetDateFormat(): void
+    #[Test]
+    public function getDateFormat(): void
     {
         self::assertEquals(
             self::$db->getDateFormat(),
@@ -85,67 +91,68 @@ class SchemaTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @see  Schema::setColumns
-     */
-    public function testSetColumns(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Schema::getKeys
-     */
-    public function testGetIndexes(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Schema::__construct
-     */
-    public function testConstruct(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
      * @see  Schema::addColumn
      */
-    public function testAddColumn(): void
+    #[Test]
+    public function addColumn(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
+        $column = $this->instance->addColumn('new_column', 'varchar');
 
-    /**
-     * @see  Schema::getColumns
-     */
-    public function testGetColumns(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame($column, $this->instance->columns['new_column']);
+        self::assertSame('varchar', $column->getDataType());
+
+        $existingColumn = new Column('existing_column', 'integer');
+
+        self::assertSame(
+            $existingColumn,
+            $this->instance->addColumn($existingColumn)
+        );
+        self::assertSame($existingColumn, $this->instance->columns['existing_column']);
     }
 
     /**
      * @see  Schema::addPrimaryKey()
      */
-    public function testAddPrimaryKey(): void
+    #[Test]
+    public function addPrimaryKey(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $constraint = $this->instance->addPrimaryKey(['id', 'category_id']);
+
+        self::assertTrue($constraint->isPrimary());
+        self::assertSame('pk_ww_flower', $constraint->constraintName);
+        self::assertSame(['id', 'category_id'], $constraint->getColumnNames());
+        self::assertSame($constraint, $this->instance->constraints['pk_ww_flower']);
     }
 
     /**
      * @see  Schema::primary
      */
-    public function testPrimary(): void
+    #[Test]
+    public function primary(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $column = $this->instance->primary('id');
+
+        self::assertSame($column, $this->instance->columns['id']);
+        self::assertSame('integer', $column->getDataType());
+        self::assertTrue($column->isPrimary());
+        self::assertTrue($column->isAutoIncrement());
     }
 
     /**
      * @see  Schema::addUniqueKey
      */
-    public function testAddUniqueKey(): void
+    #[Test]
+    public function addUniqueKey(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $constraint = $this->instance->addUniqueKey(['email', 'username']);
+
+        self::assertTrue($constraint->isUnique());
+        self::assertSame('idx_ww_flower_email_username', $constraint->constraintName);
+        self::assertSame(['email', 'username'], $constraint->getColumnNames());
+        self::assertSame(
+            $constraint,
+            $this->instance->constraints['idx_ww_flower_email_username']
+        );
     }
 
     #[Before]

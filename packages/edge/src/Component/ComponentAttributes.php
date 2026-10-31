@@ -137,7 +137,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      */
     public function filter(callable $callback): static
     {
-        return new static(collect($this->attributes)->filter($callback)->all());
+        return new static(array_filter($this->attributes, $callback, ARRAY_FILTER_USE_BOTH));
     }
 
     /**

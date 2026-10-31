@@ -6,6 +6,7 @@ namespace Windwalker\Database\Test\Driver;
 
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Platform\DbPlatform;
@@ -80,7 +81,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
      */
     abstract public function assertConnected(AbstractConnection $conn): void;
 
-    public function testConnect(): void
+    #[Test]
+    public function connect(): void
     {
         $conn = $this->instance;
         $conn->connect();
@@ -88,7 +90,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         $this->assertConnected($conn);
     }
 
-    public function testConnectWrong()
+    #[Test]
+    public function connectFailsWithInvalidCredentials(): void
     {
         $conn = $this->instance;
         $conn->setOption('user', 'notexists');
@@ -98,7 +101,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         $conn->connect();
     }
 
-    public function testDisconnect(): void
+    #[Test]
+    public function disconnect(): void
     {
         $conn = $this->instance;
         $conn->connect();

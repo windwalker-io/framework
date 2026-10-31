@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Edge\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Component\ComponentExtension;
@@ -22,17 +24,12 @@ class ComponentTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Edge
+     * @var  Edge
      */
     protected ?Edge $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    public function setUpEdgeWithComponents(): void
     {
         $this->instance = new Edge(
             new EdgeFileLoader(
@@ -55,17 +52,8 @@ class ComponentTest extends TestCase
         }
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    public function testComponent()
+    #[Test]
+    public function renderClassAnonymousAndDynamicComponents(): void
     {
         $v = $this->instance->render('components.tags');
 

@@ -29,6 +29,12 @@ edge cases and error paths, then rerun the same coverage scope to check the impr
 with assertion-free tests or new coverage exclusions; preserve the logic-free getter/setter exception below.
 If coverage cannot run, report the limitation rather than claiming the gaps are covered.
 
+## Document test fixtures and integration targets
+
+Add a class docblock to test-only fixtures and integration targets explaining their role and the behavior or tests that
+depend on them. State when the fixture can be removed (for example, once the covered behavior is removed and no tests
+reference it), so future maintainers can distinguish intentional test support from unused code.
+
 ## Keep app-level tooling out of package test scope
 
 Files such as `src/*Package.php`, `etc/*.config.php`, and `src/Command/*` are generally wiring or tools used by a

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Str;
@@ -25,7 +26,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listDatabases
      */
-    public function testListDatabases(): void
+    #[Test]
+    public function listDatabases(): void
     {
         $dbs = $this->instance->listDatabases();
 
@@ -38,7 +40,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listSchemas
      */
-    public function testListSchemas(): void
+    #[Test]
+    public function listSchemas(): void
     {
         $schemas = $this->instance->listSchemas();
 
@@ -51,7 +54,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listTables
      */
-    public function testListTables(): void
+    #[Test]
+    public function listTables(): void
     {
         $tables = $this->instance->listTables(static::getTestSchema());
 
@@ -83,7 +87,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listViews
      */
-    public function testListViews(): void
+    #[Test]
+    public function listViews(): void
     {
         $views = $this->instance->listViews(static::getTestSchema());
 
@@ -108,7 +113,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listColumns
      */
-    public function testListColumns(): void
+    #[Test]
+    public function listColumns(): void
     {
         $columns = $this->instance->listColumns('#__articles', static::getTestSchema());
 
@@ -379,7 +385,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listConstraints
      */
-    public function testListConstraints(): void
+    #[Test]
+    public function listConstraints(): void
     {
         $constraints = $this->instance->listConstraints('#__articles', static::getTestSchema());
 
@@ -409,7 +416,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     /**
      * @see  AbstractSchemaManager::listIndexes
      */
-    public function testListIndexes(): void
+    #[Test]
+    public function listIndexes(): void
     {
         $indexes = $this->instance->listIndexes('#__articles', static::getTestSchema());
 
@@ -498,7 +506,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testGetCurrentDatabase(): void
+    #[Test]
+    public function getCurrentDatabase(): void
     {
         $file = str_replace(
             ['/', '\\'],
@@ -512,7 +521,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testCreateDropDatabase(): void
+    #[Test]
+    public function createDropDatabase(): void
     {
         $file = __DIR__ . '/../../tmp/hello.db';
 
@@ -535,7 +545,8 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testCreateDropSchema(): void
+    #[Test]
+    public function createDropSchema(): void
     {
         self::markTestSkipped();
     }

@@ -17,6 +17,8 @@ missing tests, then add tests to cover the gaps.
    directly related defect; keep any such fix minimal and covered by a regression test.
 5. Rerun the same package test and coverage scope. Also run the relevant style check and inspect the final diff.
    Preserve unrelated working-tree changes.
+6. For the logic-free getter/setter, see the instructions in `.github/instructions/test.instructions.md`. 
+   If a getter/setter is later modified to include meaningful behavior, remove the `@codeCoverageIgnore` tag and cover the new behavior with tests.
 
 Success means the package test suite passes, new tests assert meaningful behavior for identified gaps, and coverage
 results are reported for the package's source. If a coverage driver or required external service is unavailable,

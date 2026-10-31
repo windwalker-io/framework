@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pdo;
 
+use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Windwalker\Database\Driver\Pdo\PdoSqliteConnection;
 use Windwalker\Database\Platform\DbPlatform;
@@ -17,7 +18,8 @@ class PdoSqliteConnectionTest extends AbstractPdoConnectionTestCase
 
     protected static string $className = PdoSqliteConnection::class;
 
-    public function testConnectWrong()
+    #[Test]
+    public function connectFailsWithInvalidCredentials(): void
     {
         $conn = $this->instance;
 

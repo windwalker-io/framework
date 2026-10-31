@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Manager;
 
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
@@ -23,7 +24,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::create
      */
-    public function testCreate(): void
+    #[Test]
+    public function create(): void
     {
         $table = self::$db->getTableManager('enterprise');
 
@@ -106,7 +108,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getConstraints
      */
-    public function testGetConstraints(): void
+    #[Test]
+    public function getConstraints(): void
     {
         $constraints = $this->instance->getConstraints();
         $constraints = array_filter($constraints, fn(Constraint $item) => $item->constraintType !== 'CHECK');
@@ -120,7 +123,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getDetail
      */
-    public function testGetDetail(): void
+    #[Test]
+    public function getDetail(): void
     {
         $detail = $this->instance->getDetail();
 
@@ -161,7 +165,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::update
      */
-    public function testUpdate(): void
+    #[Test]
+    public function update(): void
     {
         self::markTestIncomplete('Current SQLitePlatform not support schema change');
     }
@@ -169,7 +174,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::addIndex
      */
-    public function testAddIndex(): void
+    #[Test]
+    public function addIndex(): void
     {
         $logs = $this->logQueries(
             function () {
@@ -209,7 +215,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::hasConstraint
      */
-    public function testHasConstraint(): void
+    #[Test]
+    public function hasConstraint(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -217,7 +224,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::createSchemaObject
      */
-    public function testGetSchemaObject(): void
+    #[Test]
+    public function getSchemaObject(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -225,7 +233,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::hasIndex
      */
-    public function testHasIndex(): void
+    #[Test]
+    public function hasIndex(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -233,7 +242,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::dropIndex
      */
-    public function testDropIndex(): void
+    #[Test]
+    public function dropIndex(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -241,7 +251,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::addConstraint
      */
-    public function testAddConstraint(): void
+    #[Test]
+    public function addConstraint(): void
     {
         self::markTestIncomplete('Current SQLitePlatform not support schema change');
     }
@@ -249,7 +260,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::dropColumn
      */
-    public function testDropColumn(): void
+    #[Test]
+    public function dropColumn(): void
     {
         self::markTestIncomplete('Current SQLitePlatform not support schema change');
     }
@@ -257,7 +269,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::modifyColumn
      */
-    public function testModifyColumn(): void
+    #[Test]
+    public function modifyColumn(): void
     {
         self::markTestIncomplete('Current SQLitePlatform not support schema change');
     }
@@ -265,7 +278,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::save
      */
-    public function testSave(): void
+    #[Test]
+    public function save(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -273,7 +287,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::addColumn
      */
-    public function testAddColumn(): void
+    #[Test]
+    public function addColumn(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -281,7 +296,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::truncate
      */
-    public function testTruncate(): void
+    #[Test]
+    public function truncate(): void
     {
         $logs = $this->logQueries(fn() => $this->instance->truncate());
 
@@ -291,7 +307,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getColumns
      */
-    public function testGetColumns(): void
+    #[Test]
+    public function getColumns(): void
     {
         $cols = array_keys($this->instance->reset()->getColumns());
 
@@ -318,7 +335,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::setName
      */
-    public function testSetName(): void
+    #[Test]
+    public function setName(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -326,7 +344,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::hasColumn
      */
-    public function testHasColumn(): void
+    #[Test]
+    public function hasColumn(): void
     {
         self::assertTrue($this->instance->hasColumn('alias'));
         self::assertFalse($this->instance->hasColumn('enemy'));
@@ -335,7 +354,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getColumnNames
      */
-    public function testGetColumnNames(): void
+    #[Test]
+    public function getColumnNames(): void
     {
         self::assertEquals(
             [
@@ -360,7 +380,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getIndex
      */
-    public function testGetIndex(): void
+    #[Test]
+    public function getIndex(): void
     {
         $index = $this->instance->getIndex('idx_enterprise_catid_type');
 
@@ -378,7 +399,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::reset
      */
-    public function testReset(): void
+    #[Test]
+    public function reset(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -386,7 +408,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::exists
      */
-    public function testExists(): void
+    #[Test]
+    public function exists(): void
     {
         self::assertTrue($this->instance->exists());
         self::assertFalse(self::$db->getTableManager('enterprise_j')->exists());
@@ -395,7 +418,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getColumn
      */
-    public function testGetColumn(): void
+    #[Test]
+    public function getColumn(): void
     {
         $column = $this->instance->reset()->getColumn('updated');
 
@@ -406,7 +430,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getConstraint
      */
-    public function testGetConstraint(): void
+    #[Test]
+    public function getConstraint(): void
     {
         self::markTestIncomplete('Currently SQLitePlatform cannot get constraints'); // TODO: Complete this test
     }
@@ -414,7 +439,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getIndexes
      */
-    public function testGetIndexes(): void
+    #[Test]
+    public function getIndexes(): void
     {
         $indexes = array_keys($this->instance->getIndexes());
 
@@ -430,12 +456,14 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
         );
     }
 
-    public function testGetDatabase(): void
+    #[Test]
+    public function getDatabase(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    public function testGetSchema(): void
+    #[Test]
+    public function getSchema(): void
     {
         $this->instance->schemaName = $this->instance->getPlatform()::getDefaultSchema();
 
@@ -452,12 +480,14 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::dropConstraint
      */
-    public function testDropConstraint(): void
+    #[Test]
+    public function dropConstraint(): void
     {
         self::markTestIncomplete('Currently SQLitePlatform not support schema change');
     }
 
-    public function testRenameColumn(): void
+    #[Test]
+    public function renameColumn(): void
     {
         self::markTestIncomplete('Currently SQLitePlatform not support schema change');
     }
@@ -465,7 +495,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::rename
      */
-    public function testRename(): void
+    #[Test]
+    public function rename(): void
     {
         $newTable = $this->instance->rename('enterprise_d');
 
@@ -482,7 +513,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::drop
      */
-    public function testDrop(): void
+    #[Test]
+    public function drop(): void
     {
         $this->instance->setName('enterprise_d')->reset();
         $this->instance->drop();
@@ -496,9 +528,7 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @inheritDoc
      */
-    protected static function setupDatabase(): void
-    {
-    }
+    protected static function setupDatabase(): void {}
 
     #[Before]
     protected function initializeTableManager(): void

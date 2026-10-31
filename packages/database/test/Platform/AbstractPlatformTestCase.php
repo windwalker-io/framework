@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Platform;
 
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\MySQLPlatform;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\Database\Test\Reseter\AbstractReseter;
@@ -30,7 +31,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
      *
      * @return  void
      */
-    public function testTransactionCommit(): void
+    #[Test]
+    public function transactionCommit(): void
     {
         $reseter = AbstractReseter::create(static::$platform);
         $reseter->clearAllTables(static::$baseConn, static::$dbname);
@@ -61,7 +63,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
      *
      * @return  void
      */
-    public function testTransactionNested(): void
+    #[Test]
+    public function transactionNested(): void
     {
         $table = '#__flower';
 
@@ -98,7 +101,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
         static::setupDatabase();
     }
 
-    public function testGetCurrentDatabase(): void
+    #[Test]
+    public function getCurrentDatabase(): void
     {
         self::assertEquals(
             self::$db->getDriver()->getOption('dbname'),
@@ -106,7 +110,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
         );
     }
 
-    public function testCreateDropDatabase(): void
+    #[Test]
+    public function createDropDatabase(): void
     {
         if (in_array('hello', $this->instance->listDatabases(), true)) {
             $this->instance->dropDatabase('hello');
@@ -122,7 +127,8 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
         $this->instance->dropDatabase('hello');
     }
 
-    public function testCreateDropSchema(): void
+    #[Test]
+    public function createDropSchema(): void
     {
         if (in_array('hello', $this->instance->listSchemas(), true)) {
             $this->instance->dropSchema('hello', []);

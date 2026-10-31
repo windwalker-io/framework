@@ -118,6 +118,8 @@ class ObjectBuilderDefinition implements DefinitionInterface
      *
      * @return array
      * @throws ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function getArgument(mixed $name, mixed $default = null): mixed
     {

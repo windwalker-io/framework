@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Platform\PostgreSQLPlatform;
 use Windwalker\Utilities\Str;
@@ -22,7 +23,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  PostgreSQLSchemaManager::getDatabases()
      */
-    public function testGetDatabases(): void
+    #[Test]
+    public function getDatabases(): void
     {
         $databases = $this->instance->listDatabases();
 
@@ -35,7 +37,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  PostgreSQLSchemaManager::getSchemas
      */
-    public function testGetSchemas(): void
+    #[Test]
+    public function getSchemas(): void
     {
         $schemas = $this->instance->listSchemas();
 
@@ -45,7 +48,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  PostgreSQLSchemaManager::getTables
      */
-    public function testGetTables(): void
+    #[Test]
+    public function getTables(): void
     {
         $tables = $this->instance->listTables(static::$schema);
 
@@ -77,7 +81,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  PostgreSQLSchemaManager::getViews
      */
-    public function testGetViews(): void
+    #[Test]
+    public function getViews(): void
     {
         $views = $this->instance->listViews(static::$schema);
 
@@ -130,7 +135,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  PostgreSQLSchemaManager::getColumns
      */
-    public function testGetColumns(): void
+    #[Test]
+    public function getColumns(): void
     {
         $columns = $this->instance->listColumns('#__articles', static::$schema);
 
@@ -401,7 +407,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
     /**
      * @see  PostgreSQLSchemaManager::getConstraints
      */
-    public function testGetConstraints(): void
+    #[Test]
+    public function getConstraints(): void
     {
         $constraints = $this->instance->listConstraints('#__articles', static::$schema);
 
@@ -469,7 +476,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testGetIndexes(): void
+    #[Test]
+    public function getIndexes(): void
     {
         $indexes = $this->instance->listIndexes('#__articles', static::$schema);
 
@@ -564,7 +572,8 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    public function testGetTableSequence()
+    #[Test]
+    public function getTableSequence()
     {
         $seq = $this->instance->getTableSequences('#__articles');
 

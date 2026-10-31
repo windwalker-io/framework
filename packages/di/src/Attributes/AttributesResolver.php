@@ -34,6 +34,8 @@ class AttributesResolver extends BaseAttributesResolver
 
     /**
      * @return Container
+     *
+     * @codeCoverageIgnore
      */
     public function getContainer(): Container
     {

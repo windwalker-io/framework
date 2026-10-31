@@ -152,6 +152,8 @@ class StoreDefinition implements StoreDefinitionInterface
 
     /**
      * @return DIOptions
+     *
+     * @codeCoverageIgnore
      */
     public function getOptions(): DIOptions
     {
@@ -162,6 +164,8 @@ class StoreDefinition implements StoreDefinitionInterface
      * @param  DIOptions  $options
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptions(DIOptions $options): static
     {
@@ -172,6 +176,8 @@ class StoreDefinition implements StoreDefinitionInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getId(): string
     {
@@ -182,6 +188,8 @@ class StoreDefinition implements StoreDefinitionInterface
      * @param  string  $id
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setId(string $id): static
     {
@@ -249,6 +257,9 @@ class StoreDefinition implements StoreDefinitionInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getProvidedIn(): int|array|Closure|null
     {
         return $this->providedIn;

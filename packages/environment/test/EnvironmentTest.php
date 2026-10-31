@@ -4,97 +4,32 @@ declare(strict_types=1);
 
 namespace Windwalker\Environment\Test;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Environment\Environment;
-use Windwalker\Environment\Platform;
+use Windwalker\Environment\PhpHelper;
 
-/**
- * Test class of Server
- *
- * @since 2.0
- */
 class EnvironmentTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var Environment
-     */
     protected Environment $instance;
 
-    /**
-     * Property os.
-     *
-     * @var boolean
-     */
-    protected $os;
-
-    /**
-     * Property isWin.
-     *
-     * @var  boolean
-     */
-    protected $isWin;
-
-    /**
-     * Property isMac.
-     *
-     * @var  boolean
-     */
-    protected $isMac;
-
-    /**
-     * Property isUnix.
-     *
-     * @var  boolean
-     */
-    protected $isUnix;
-
-    /**
-     * Property isLinux.
-     *
-     * @var  boolean
-     */
-    protected $isLinux;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createEnvironment(): void
     {
         $this->instance = new Environment();
-
-        // Detect the native operating system type.
-        $this->os = strtoupper(substr(PHP_OS, 0, 3));
-
-        $this->isWin = $this->os === 'WIN';
-
-        $this->isMac = $this->os === 'MAC';
-
-        $this->isUnix = in_array($this->os, ['CYG', 'DAR', 'FRE', 'LIN', 'NET', 'OPE', 'MAC']);
-
-        $this->isLinux = $this->os === 'LIN';
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
+    #[After]
+    protected function resetStaticPlatformState(): void
     {
+        Environment::setOS('');
+        Environment::setUname(PHP_OS);
     }
 
-    /**
-     * getOSTestData
-     *
-     * @return  array
-     */
-    public static function getIsWinTestData(): array
+    public static function windowsDetectionProvider(): array
     {
         return [
             ['CYGWIN_NT-5.1', false],
@@ -113,12 +48,7 @@ class EnvironmentTest extends TestCase
         ];
     }
 
-    /**
-     * getOSTestData
-     *
-     * @return  array
-     */
-    public static function getIsUnixTestData(): array
+    public static function unixDetectionProvider(): array
     {
         return [
             ['CYGWIN_NT-5.1', true],
@@ -137,12 +67,7 @@ class EnvironmentTest extends TestCase
         ];
     }
 
-    /**
-     * getOSTestData
-     *
-     * @return  array
-     */
-    public static function getIsLinuxTestData(): array
+    public static function linuxDetectionProvider(): array
     {
         return [
             ['CYGWIN_NT-5.1', false],
@@ -161,29 +86,17 @@ class EnvironmentTest extends TestCase
         ];
     }
 
-    /**
-     * Method to test getOS().
-     *
-     * @return void
-     */
-    public function testGetOS()
+    #[Test]
+    public function getOsReturnsShortCodeFromUname(): void
     {
         $this->instance->setUname('Darwin');
 
         $this->assertEquals('DAR', $this->instance->getOS());
     }
 
-    /**
-     * Method to test isWin().
-     *
-     * @param  string   $os
-     * @param  boolean  $value
-     *
-     * @return void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('getIsWinTestData')]
-    public function testIsWin($os, $value)
+    #[Test]
+    #[DataProvider('windowsDetectionProvider')]
+    public function isWindowsDetectsPlatformFromUname(string $os, bool $value): void
     {
         $this->instance->setOS('');
         $this->instance->setUname($os);
@@ -191,17 +104,9 @@ class EnvironmentTest extends TestCase
         $this->assertEquals($value, $this->instance->isWindows());
     }
 
-    /**
-     * Method to test isUnix().
-     *
-     * @param  string   $os
-     * @param  boolean  $value
-     *
-     * @return void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('getIsUnixTestData')]
-    public function testIsUnix($os, $value)
+    #[Test]
+    #[DataProvider('unixDetectionProvider')]
+    public function isUnixDetectsPlatformFromUname(string $os, bool $value): void
     {
         $this->instance->setOS('');
         $this->instance->setUname($os);
@@ -209,21 +114,126 @@ class EnvironmentTest extends TestCase
         $this->assertEquals($value, $this->instance->isUnix());
     }
 
-    /**
-     * Method to test isLinux().
-     *
-     * @param  string   $os
-     * @param  boolean  $value
-     *
-     * @return void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('getIsLinuxTestData')]
-    public function testIsLinux($os, $value)
+    #[Test]
+    #[DataProvider('linuxDetectionProvider')]
+    public function isLinuxDetectsPlatformFromUname(string $os, bool $value): void
     {
         $this->instance->setOS('');
         $this->instance->setUname($os);
 
         $this->assertEquals($value, $this->instance->isLinux());
+    }
+
+    #[Test]
+    public function setOsUppercasesAndOverridesDetection(): void
+    {
+        Environment::setOS('win');
+
+        $this->assertSame('WIN', Environment::getOS());
+        $this->assertTrue(Environment::isWindows());
+    }
+
+    #[Test]
+    public function getUnameReturnsConfiguredValue(): void
+    {
+        Environment::setUname('Linux');
+
+        $this->assertSame('Linux', Environment::getUname());
+    }
+
+    #[Test]
+    public function cliHelpersReflectCurrentSapi(): void
+    {
+        $this->assertSame(in_array(PHP_SAPI, ['cli', 'cli-server'], true), Environment::isCli());
+        $this->assertSame(PhpHelper::isWebServer(), Environment::isWebServer());
+    }
+
+    #[Test]
+    public function serverParamsCanBeReadAndReplaced(): void
+    {
+        $env = new Environment(['A' => '1']);
+
+        $this->assertSame(['A' => '1'], $env->getServerParams());
+        $this->assertSame($env, $env->setServerParams(['B' => '2']));
+        $this->assertSame(['B' => '2'], $env->getServerParams());
+    }
+
+    #[Test]
+    public function constructorFallsBackToGlobalServer(): void
+    {
+        $this->assertSame($_SERVER, (new Environment())->getServerParams());
+    }
+
+    #[Test]
+    public function getUserHomeDirPrefersHomeThenDriveAndPath(): void
+    {
+        $this->assertSame('/home/me', (new Environment(['HOME' => '/home/me']))->getUserHomeDir());
+        $this->assertSame(
+            'C:\\Users\\me',
+            (new Environment(['HOMEDRIVE' => 'C:', 'HOMEPATH' => '\\Users\\me']))->getUserHomeDir()
+        );
+    }
+
+    #[Test]
+    public function getUserNameFallsBackToUsername(): void
+    {
+        $this->assertSame('simon', (new Environment(['USER' => 'simon', 'USERNAME' => 'other']))->getUserName());
+        $this->assertSame('other', (new Environment(['USERNAME' => 'other']))->getUserName());
+        $this->assertNull((new Environment([]))->getUserName());
+    }
+
+    #[Test]
+    public function getDeviceNameReadsUserDomain(): void
+    {
+        $this->assertSame('my-pc', (new Environment(['USERDOMAIN' => 'my-pc']))->getDeviceName());
+        $this->assertNull((new Environment([]))->getDeviceName());
+    }
+
+    #[Test]
+    public function directoryHelpersReturnSystemValues(): void
+    {
+        $this->assertSame(getcwd(), $this->instance->getWorkingDirectory());
+        $this->assertSame(sys_get_temp_dir(), $this->instance->getTempDir());
+    }
+
+    #[Test]
+    public function getEntryStripsWorkingDirectoryAndRebuildsFullPathInCli(): void
+    {
+        $cwd = getcwd();
+        $env = new Environment(['SCRIPT_FILENAME' => $cwd . '/bin/app.php', 'SCRIPT_NAME' => './app.php']);
+
+        $this->assertSame($cwd . DIRECTORY_SEPARATOR . 'bin/app.php', $env->getEntry());
+        $this->assertSame('app.php', $env->getEntry(false));
+    }
+
+    #[Test]
+    public function getRootReturnsEntryDirectory(): void
+    {
+        $cwd = getcwd();
+        $env = new Environment(['SCRIPT_FILENAME' => $cwd . '/bin/app.php']);
+
+        $this->assertSame($cwd . DIRECTORY_SEPARATOR . 'bin', $env->getRoot());
+    }
+
+    #[Test]
+    public function requestHelpersReadServerParams(): void
+    {
+        $env = new Environment([
+            'DOCUMENT_ROOT' => '/var/www',
+            'REQUEST_URI' => '/foo?a=1',
+            'PHP_SELF' => '/foo',
+            'HTTP_HOST' => 'example.com',
+            'SERVER_PORT' => '443',
+            'REQUEST_SCHEME' => 'https',
+        ]);
+
+        $this->assertSame('/var/www', $env->getServerPublicRoot());
+        $this->assertSame('/foo?a=1', $env->getRequestUri());
+        $this->assertSame('/foo', $env->getRequestUri(false));
+        $this->assertSame('example.com', $env->getHost());
+        $this->assertSame('443', $env->getPort());
+        $this->assertSame('https', $env->getScheme());
+        $this->assertTrue($env->isSSL());
+        $this->assertFalse((new Environment(['REQUEST_SCHEME' => 'http']))->isSSL());
     }
 }

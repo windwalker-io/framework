@@ -6,6 +6,7 @@ namespace Windwalker\Database\Test\Manager;
 
 use PDO;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Platform\MySQLPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
@@ -19,7 +20,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::create
      */
-    public function testCreate(): void
+    #[Test]
+    public function create(): void
     {
         $table = self::$db->getTableManager('enterprise');
 
@@ -101,7 +103,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getConstraints
      */
-    public function testGetConstraints(): void
+    #[Test]
+    public function getConstraints(): void
     {
         $constraints = $this->instance->getConstraints();
         $constraints = array_filter($constraints, fn(Constraint $item) => $item->constraintType !== 'CHECK');
@@ -115,7 +118,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::getDetail
      */
-    public function testGetDetail(): void
+    #[Test]
+    public function getDetail(): void
     {
         $detail = $this->instance->getDetail();
 
@@ -135,7 +139,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::update
      */
-    public function testUpdate(): void
+    #[Test]
+    public function update(): void
     {
         $this->instance->update(
             function (Schema $schema) {
@@ -184,7 +189,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::addIndex
      */
-    public function testAddIndex(): void
+    #[Test]
+    public function addIndex(): void
     {
         $this->instance->addIndex('created');
         $this->instance->addIndex(['start_date', 'title']);
@@ -208,7 +214,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::hasConstraint
      */
-    public function testHasConstraint(): void
+    #[Test]
+    public function hasConstraint(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -216,7 +223,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::createSchemaObject
      */
-    public function testGetSchemaObject(): void
+    #[Test]
+    public function getSchemaObject(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -224,7 +232,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::hasIndex
      */
-    public function testHasIndex(): void
+    #[Test]
+    public function hasIndex(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -232,7 +241,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::dropIndex
      */
-    public function testDropIndex(): void
+    #[Test]
+    public function dropIndex(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -240,7 +250,8 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     /**
      * @see  TableManager::addConstraint
      */
-    public function testAddConstraint(): void
+    #[Test]
+    public function addConstraint(): void
     {
         $logs = $this->logQueries(
             fn() => $this->instance->addConstraint(
@@ -298,7 +309,8 @@ SQL,
     /**
      * @see  TableManager::dropColumn
      */
-    public function testDropColumn(): void
+    #[Test]
+    public function dropColumn(): void
     {
         $this->instance->reset();
         $this->instance->dropColumn(['captain', 'first_officer']);
@@ -312,7 +324,8 @@ SQL,
     /**
      * @see  TableManager::modifyColumn
      */
-    public function testModifyColumn(): void
+    #[Test]
+    public function modifyColumn(): void
     {
         $this->instance->modifyColumn(
             'price',
@@ -332,7 +345,8 @@ SQL,
     /**
      * @see  TableManager::save
      */
-    public function testSave(): void
+    #[Test]
+    public function save(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -340,7 +354,8 @@ SQL,
     /**
      * @see  TableManager::addColumn
      */
-    public function testAddColumn(): void
+    #[Test]
+    public function addColumn(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -348,7 +363,8 @@ SQL,
     /**
      * @see  TableManager::truncate
      */
-    public function testTruncate(): void
+    #[Test]
+    public function truncate(): void
     {
         $logs = $this->logQueries(fn() => $this->instance->truncate());
 
@@ -358,7 +374,8 @@ SQL,
     /**
      * @see  TableManager::getColumns
      */
-    public function testGetColumns(): void
+    #[Test]
+    public function getColumns(): void
     {
         $cols = array_keys($this->instance->reset()->getColumns());
 
@@ -385,7 +402,8 @@ SQL,
     /**
      * @see  TableManager::setName
      */
-    public function testSetName(): void
+    #[Test]
+    public function setName(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -393,7 +411,8 @@ SQL,
     /**
      * @see  TableManager::hasColumn
      */
-    public function testHasColumn(): void
+    #[Test]
+    public function hasColumn(): void
     {
         self::assertTrue($this->instance->hasColumn('alias'));
         self::assertFalse($this->instance->hasColumn('enemy'));
@@ -402,7 +421,8 @@ SQL,
     /**
      * @see  TableManager::getColumnNames
      */
-    public function testGetColumnNames(): void
+    #[Test]
+    public function getColumnNames(): void
     {
         self::assertEquals(
             [
@@ -427,7 +447,8 @@ SQL,
     /**
      * @see  TableManager::getIndex
      */
-    public function testGetIndex(): void
+    #[Test]
+    public function getIndex(): void
     {
         $index = $this->instance->getIndex('idx_enterprise_start_date_title');
 
@@ -445,7 +466,8 @@ SQL,
     /**
      * @see  TableManager::reset
      */
-    public function testReset(): void
+    #[Test]
+    public function reset(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -453,7 +475,8 @@ SQL,
     /**
      * @see  TableManager::exists
      */
-    public function testExists(): void
+    #[Test]
+    public function exists(): void
     {
         self::assertTrue($this->instance->exists());
         self::assertFalse(self::$db->getTableManager('enterprise_j')->exists());
@@ -462,7 +485,8 @@ SQL,
     /**
      * @see  TableManager::getColumn
      */
-    public function testGetColumn(): void
+    #[Test]
+    public function getColumn(): void
     {
         $column = $this->instance->reset()->getColumn('updated');
 
@@ -474,7 +498,8 @@ SQL,
     /**
      * @see  TableManager::getConstraint
      */
-    public function testGetConstraint(): void
+    #[Test]
+    public function getConstraint(): void
     {
         $constraint = $this->instance->reset()->getConstraint('idx_enterprise_alias');
 
@@ -489,7 +514,8 @@ SQL,
     /**
      * @see  TableManager::getIndexes
      */
-    public function testGetIndexes(): void
+    #[Test]
+    public function getIndexes(): void
     {
         $indexes = array_keys($this->instance->getIndexes());
 
@@ -506,12 +532,14 @@ SQL,
         );
     }
 
-    public function testGetDatabase(): void
+    #[Test]
+    public function getDatabase(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    public function testGetSchema(): void
+    #[Test]
+    public function getSchema(): void
     {
         $this->instance->schemaName = self::$db->getDriver()->getOption('dbname');
 
@@ -547,7 +575,8 @@ SQL,
     /**
      * @see  TableManager::dropConstraint
      */
-    public function testDropConstraint(): void
+    #[Test]
+    public function dropConstraint(): void
     {
         $this->instance->dropConstraint('idx_enterprise_alias');
 
@@ -566,7 +595,8 @@ SQL,
         );
     }
 
-    public function testRenameColumn(): void
+    #[Test]
+    public function renameColumn(): void
     {
         $this->instance->renameColumn('type', 'kind');
 
@@ -579,7 +609,8 @@ SQL,
     /**
      * @see  TableManager::rename
      */
-    public function testRename(): void
+    #[Test]
+    public function rename(): void
     {
         $newTable = $this->instance->rename('enterprise_d');
 
@@ -596,7 +627,8 @@ SQL,
     /**
      * @see  TableManager::drop
      */
-    public function testDrop(): void
+    #[Test]
+    public function drop(): void
     {
         $this->instance->setName('enterprise_d')->reset();
         $this->instance->drop();
@@ -610,9 +642,7 @@ SQL,
     /**
      * @inheritDoc
      */
-    protected static function setupDatabase(): void
-    {
-    }
+    protected static function setupDatabase(): void {}
 
     #[Before]
     protected function initializeTableManager(): void

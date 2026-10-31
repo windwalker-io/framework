@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Pdo;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
@@ -17,24 +18,10 @@ class PdoDriverTest extends AbstractDriverTestCase
     protected static string $driverName = 'pdo_mysql';
 
     /**
-     * //  * @see  AbstractDriver::setPlatformName
-     * //  */
-    // public function testSetPlatformName(): void
-    // {
-    //     $driver = self::createDriver([]);
-    //     $driver->setPlatformName('sqlsrv');
-    //     $conn = $driver->createConnection();
-    //
-    //     self::assertInstanceOf(
-    //         PdoSqlsrvConnection::class,
-    //         $conn
-    //     );
-    // }
-
-    /**
      * @see  AbstractDriver::quote
      */
-    public function testQuote(): void
+    #[Test]
+    public function quote(): void
     {
         self::assertEquals(
             "'foo\'s #hello --options'",
@@ -45,7 +32,8 @@ class PdoDriverTest extends AbstractDriverTestCase
     /**
      * @see  AbstractDriver::escape
      */
-    public function testEscape(): void
+    #[Test]
+    public function escape(): void
     {
         self::assertEquals(
             "foo\'s #hello --options",
