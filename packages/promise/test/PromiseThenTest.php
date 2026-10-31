@@ -10,12 +10,10 @@ use ReflectionException;
 use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Promise\Promise;
-use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\TestAccessorTrait;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\nope;
-use function Windwalker\Promise\await;
 
 /**
  * The PromiseThenTest class.
@@ -25,7 +23,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
     use TestAccessorTrait;
 
     /**
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @see  Promise::then
      */
     #[Test]
@@ -200,7 +198,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @see  Promise::then
      */
     #[Test]
@@ -309,7 +307,7 @@ class PromiseThenTest extends AbstractPromiseTestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @see  Promise::then
      */
     #[Test]

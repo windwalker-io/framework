@@ -9,7 +9,6 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
-use Windwalker\Promise\Scheduler\ImmediateScheduler;
 use Windwalker\Promise\Scheduler\SchedulerInterface;
 use Windwalker\Promise\Scheduler\ScheduleRunner;
 use Windwalker\Promise\Scheduler\TaskQueue;
@@ -20,7 +19,7 @@ use Windwalker\Promise\Scheduler\TaskQueue;
 abstract class AbstractPromiseTestCase extends TestCase
 {
     /**
-     * @var array
+     * @var  array
      */
     protected array $values = [];
 
@@ -53,9 +52,7 @@ abstract class AbstractPromiseTestCase extends TestCase
     /**
      * Hook for subclasses, runs after the task queue is cleared.
      */
-    protected function flushAsyncEvents(): void
-    {
-    }
+    protected function flushAsyncEvents(): void {}
 
     protected static function prepareDefaultScheduler(): void
     {

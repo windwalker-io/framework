@@ -6,9 +6,6 @@ namespace Windwalker\Promise\Scheduler;
 
 use DomainException;
 use React\EventLoop\LoopInterface;
-use React\EventLoop\StreamSelectLoop;
-use Swoole\Coroutine\Channel;
-use Swoole\Event;
 
 /**
  * The EventLoopScheduler class.
@@ -80,9 +77,9 @@ class EventLoopScheduler implements SchedulerInterface
 
             // Return schedule/waiter/doner
             return [
-                fn (callable $callable) => $scheduler->schedule($cursor, $callable),
-                fn () => $scheduler->wait($cursor),
-                fn () => $scheduler->done($cursor),
+                fn(callable $callable) => $scheduler->schedule($cursor, $callable),
+                fn() => $scheduler->wait($cursor),
+                fn() => $scheduler->done($cursor),
             ];
         };
     }
@@ -90,7 +87,7 @@ class EventLoopScheduler implements SchedulerInterface
     public static function swoole(?int $timeout = null): static
     {
         return new static(
-            static::createSwooleTimer($timeout)
+            static::createSwooleTimer($timeout),
         );
     }
 
@@ -107,12 +104,13 @@ class EventLoopScheduler implements SchedulerInterface
         $timerCallback = $this->timerCallback;
 
         return new ScheduleCursor(
-            $timerCallback()
+            $timerCallback(),
         );
     }
 
     /**
      * @param  ScheduleCursor  $cursor  *
+     *
      * @inheritDoc
      */
     public function schedule(ScheduleCursor $cursor, callable $callback): void
@@ -138,7 +136,7 @@ class EventLoopScheduler implements SchedulerInterface
     public function done(?ScheduleCursor $cursor): void
     {
         if ($cursor) {
-            [,, $done] = $cursor->get();
+            [, , $done] = $cursor->get();
 
             $done();
         }

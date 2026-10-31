@@ -8,13 +8,10 @@ use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\UncaughtException;
-use Windwalker\Promise\Exception\UnsettledException;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
-use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Promise\SettledResult;
-use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 use function Windwalker\Promise\await;
 use function Windwalker\Promise\resolve;
@@ -57,7 +54,7 @@ class PromiseTest extends AbstractPromiseTestCase
     public function thenWithIdentityHandlerPassesResolvedValue(): void
     {
         [$p1, $resolve] = Promise::withResolvers();
-        $p2 = $p1->then(fn ($v) => $v);
+        $p2 = $p1->then(fn($v) => $v);
 
         $resolve('Flower');
 
@@ -74,7 +71,7 @@ class PromiseTest extends AbstractPromiseTestCase
         $this->expectExceptionMessageIsOrContains('Running empty TaskQueue is not allowed, this may cause Promise lock.');
 
         $p = new Promise();
-        $p = $p->then(fn ($v) => $v);
+        $p = $p->then(fn($v) => $v);
 
         $p->wait();
     }

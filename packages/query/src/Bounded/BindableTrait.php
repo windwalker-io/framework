@@ -141,6 +141,8 @@ trait BindableTrait
      * resetBounded
      *
      * @return  static
+     *
+     * @codeCoverageIgnore
      */
     public function resetBounded(): static
     {

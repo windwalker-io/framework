@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
+use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Query;
 use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
@@ -167,6 +168,97 @@ class BoundedHelperTest extends TestCase
         self::assertEquals(
             "SELECT * FROM foo WHERE foo = 'FOO' AND bar = 'baz' AND yoo IN(1, 2, 3) AND flower = 'Sakura'",
             $sql2
+        );
+    }
+
+    #[Test]
+    public function emulatePreparedReturnsSqlWhenNothingIsBound(): void
+    {
+        self::assertEquals(
+            'SELECT 100 % 3',
+            BoundedHelper::emulatePrepared(new MockEscaper(), 'SELECT 100 % 3', [])
+        );
+    }
+
+    #[Test]
+    public function emulatePreparedConvertsBinaryUuidToUnhex(): void
+    {
+        $bin = hex2bin('3a9b1c7e5d2f4e8a9b1c7e5d2f4e8a9b');
+        $query = new Query();
+        $query->bind([$bin]);
+
+        $sql = BoundedHelper::emulatePrepared(
+            new MockEscaper(),
+            'SELECT * FROM foo WHERE id = ?',
+            $query->getBounded()
+        );
+
+        self::assertEquals(
+            "SELECT * FROM foo WHERE id = UNHEX(REPLACE('3a9b1c7e-5d2f-4e8a-9b1c-7e5d2f4e8a9b', '-', ''))",
+            $sql
+        );
+    }
+
+    #[Test]
+    public function emulatePreparedRendersNullValue(): void
+    {
+        $query = new Query();
+        $query->bind([null]);
+
+        $sql = BoundedHelper::emulatePrepared(
+            new MockEscaper(),
+            'SELECT * FROM foo WHERE a = ?',
+            $query->getBounded()
+        );
+
+        self::assertEquals('SELECT * FROM foo WHERE a = NULL', $sql);
+    }
+
+    #[Test]
+    public function forPdoReturnsEmptyParamsWhenNothingIsBound(): void
+    {
+        self::assertSame(['SELECT 1', []], BoundedHelper::forPDO('SELECT 1', []));
+    }
+
+    #[Test]
+    public function forPdoReplacesNamedParamsWithScalarValues(): void
+    {
+        $query = new Query();
+        $query->bind(['a' => 1, 'b' => 'x']);
+
+        [$sql, $params] = BoundedHelper::forPDO('SELECT * FROM foo WHERE a = :a AND b = :b', $query->getBounded());
+
+        self::assertEquals('SELECT * FROM foo WHERE a = ? AND b = ?', $sql);
+        self::assertSame([1, 'x'], $params);
+    }
+
+    #[Test]
+    public function toScalarUnwrapsValueClauseAndKeepsScalarsAndNull(): void
+    {
+        self::assertSame('foo', BoundedHelper::toScalar(new ValueClause('foo')));
+        self::assertSame(5, BoundedHelper::toScalar(5));
+        self::assertNull(BoundedHelper::toScalar(null));
+    }
+
+    #[Test]
+    public function toScalarCastsStringableObjectToString(): void
+    {
+        $obj = new class {
+            public function __toString(): string
+            {
+                return 'stringable';
+            }
+        };
+
+        self::assertSame('stringable', BoundedHelper::toScalar($obj));
+    }
+
+    #[Test]
+    public function binToUuidFormatsBytesAsUuidString(): void
+    {
+        self::assertSame(
+            '3a9b1c7e-5d2f-4e8a-9b1c-7e5d2f4e8a9b',
+            BoundedHelper::binToUUID(hex2bin('3a9b1c7e5d2f4e8a9b1c7e5d2f4e8a9b'))
         );
     }
 }

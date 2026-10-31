@@ -6,10 +6,7 @@ namespace Windwalker\Promise\Test;
 
 use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Attributes\Test;
-use Swoole\Coroutine\Channel;
-use Throwable;
 use Windwalker\Promise\ExtendedPromiseInterface;
-use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
 use Windwalker\Promise\Scheduler\ImmediateScheduler;
 use Windwalker\Promise\Scheduler\SwooleScheduler;

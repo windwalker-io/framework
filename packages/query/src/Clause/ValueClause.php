@@ -86,7 +86,7 @@ class ValueClause implements ClauseInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function value(mixed $value): static
     {

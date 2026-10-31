@@ -48,6 +48,8 @@ class TaskQueue
      * TaskQueue constructor.
      *
      * @param  bool  $runAtShutdown
+     *
+     * @codeCoverageIgnore
      */
     public function __construct(bool $runAtShutdown = true)
     {

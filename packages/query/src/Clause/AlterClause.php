@@ -44,17 +44,17 @@ class AlterClause implements ClauseInterface
 
     public function table(string $table): static
     {
-        return $this->target('TABLE', $this->query->quoteName($table));
+        return $this->target('TABLE', $table);
     }
 
     public function database(string $database): static
     {
-        return $this->target('DATABASE', $this->query->quoteName($database));
+        return $this->target('DATABASE', $database);
     }
 
     public function schema(string $database): static
     {
-        return $this->target('SCHEMA', $this->query->quoteName($database));
+        return $this->target('SCHEMA', $database);
     }
 
     public function subClause(string $name, array $elements = []): Clause

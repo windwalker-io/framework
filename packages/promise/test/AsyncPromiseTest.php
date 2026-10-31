@@ -6,7 +6,6 @@ namespace Windwalker\Promise\Test;
 
 use PHPUnit\Framework\Attributes\Test;
 use React\EventLoop\StreamSelectLoop;
-use Swoole\Coroutine\Channel;
 use Swoole\Event;
 use Windwalker\Promise\Promise;
 use Windwalker\Promise\Scheduler\DeferredScheduler;
@@ -17,7 +16,6 @@ use Windwalker\Promise\Scheduler\TaskQueue;
 use Windwalker\Test\Traits\Reactor\SwooleTestTrait;
 
 use function Co\run;
-use function Windwalker\serial;
 
 /**
  * The AsyncPromiseTest class.
@@ -135,7 +133,7 @@ class AsyncPromiseTest extends AbstractPromiseTestCase
 
         $p = Promise::resolve('123')
             ->then(
-                fn () => throw new \Exception('Test Error')
+                fn() => throw new \Exception('Test Error')
             );
 
         TaskQueue::getInstance()->run();
