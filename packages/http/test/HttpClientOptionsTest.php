@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\HttpClient;
 use Windwalker\Http\HttpClientOptions;
@@ -20,7 +21,8 @@ class HttpClientOptionsTest extends TestCase
     // TransportOptions::fromHttpClientOptions()
     // ------------------------------------------------------------------
 
-    public function testFromHttpClientOptionsConvertsProxyFields(): void
+    #[Test]
+    public function fromHttpClientOptionsConvertsProxyFields(): void
     {
         $clientOptions = new HttpClientOptions(
             timeout: 15,
@@ -40,7 +42,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertTrue($transportOptions->optionMerged);
     }
 
-    public function testFromHttpClientOptionsUsesExistingTransportSubOptionsAsBase(): void
+    #[Test]
+    public function fromHttpClientOptionsUsesExistingTransportSubOptionsAsBase(): void
     {
         $clientOptions = new HttpClientOptions(
             transport: new TransportOptions(allowEmptyStatusCode: true),
@@ -56,7 +59,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertTrue($transportOptions->optionMerged);
     }
 
-    public function testFromHttpClientOptionsWithNoTransportSubOptions(): void
+    #[Test]
+    public function fromHttpClientOptionsWithNoTransportSubOptions(): void
     {
         $clientOptions = new HttpClientOptions();
 
@@ -74,7 +78,8 @@ class HttpClientOptionsTest extends TestCase
     // TransportOptions::withMergeHttpClientOptions()
     // ------------------------------------------------------------------
 
-    public function testWithMergeHttpClientOptionsOverridesFields(): void
+    #[Test]
+    public function withMergeHttpClientOptionsOverridesFields(): void
     {
         $base = new TransportOptions(
             timeout: 5,
@@ -102,7 +107,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertTrue($merged->optionMerged);
     }
 
-    public function testWithMergeHttpClientOptionsMergesProgress(): void
+    #[Test]
+    public function withMergeHttpClientOptionsMergesProgress(): void
     {
         $called = false;
         $clientOptions = new HttpClientOptions(
@@ -116,7 +122,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertNotNull($merged->progress);
     }
 
-    public function testWithMergeHttpClientOptionsMergesFiles(): void
+    #[Test]
+    public function withMergeHttpClientOptionsMergesFiles(): void
     {
         $clientOptions = new HttpClientOptions(
             files: ['upload' => '/tmp/file.txt'],
@@ -131,7 +138,8 @@ class HttpClientOptionsTest extends TestCase
     // HttpClientOptions array-wrapping (snake_case keys)
     // ------------------------------------------------------------------
 
-    public function testHttpClientOptionsWrapsFromSnakeCaseKeys(): void
+    #[Test]
+    public function httpClientOptionsWrapsFromSnakeCaseKeys(): void
     {
         $options = HttpClientOptions::wrap([
             'timeout' => 45,
@@ -152,7 +160,8 @@ class HttpClientOptionsTest extends TestCase
     // End-to-end: proxy fields travel through HttpClient → transport
     // ------------------------------------------------------------------
 
-    public function testProxyOptionsReachTransportViaRequest(): void
+    #[Test]
+    public function proxyOptionsReachTransportViaRequest(): void
     {
         $http = new HttpClient([], $transport = new MockTransport());
 
@@ -171,7 +180,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertSame('/certs/ca.pem', $transport->receivedOptions->certpath);
     }
 
-    public function testClientLevelProxyOptionsReachTransport(): void
+    #[Test]
+    public function clientLevelProxyOptionsReachTransport(): void
     {
         // Nullable proxy fields (timeout, userAgent, certpath…) set at client-constructor level
         // propagate to the transport because per-request HttpClientOptions defaults them to null,
@@ -190,7 +200,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertSame('GlobalBot/1.0', $transport->receivedOptions->userAgent);
     }
 
-    public function testClientLevelBoolProxyOptionIsOverriddenByPerRequestDefault(): void
+    #[Test]
+    public function clientLevelBoolProxyOptionIsOverriddenByPerRequestDefault(): void
     {
         // NOTE: Boolean proxy fields that have a non-null per-request default (e.g. followLocation=true)
         // cannot be overridden at the client constructor level because withDefaults() re-applies the
@@ -208,7 +219,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertTrue($transport->receivedOptions->followLocation);
     }
 
-    public function testPerRequestProxyOptionsMergedWithClientOptions(): void
+    #[Test]
+    public function perRequestProxyOptionsMergedWithClientOptions(): void
     {
         $http = new HttpClient(
             ['timeout' => 10],
@@ -221,7 +233,8 @@ class HttpClientOptionsTest extends TestCase
         self::assertSame(99, $transport->receivedOptions->timeout);
     }
 
-    public function testTransportSubOptionsAndProxyOptionsAreBothApplied(): void
+    #[Test]
+    public function transportSubOptionsAndProxyOptionsAreBothApplied(): void
     {
         $http = new HttpClient([], $transport = new MockTransport());
 

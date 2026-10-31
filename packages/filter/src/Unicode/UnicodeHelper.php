@@ -502,9 +502,9 @@ abstract class UnicodeHelper
             ];
         }
 
-        $uni = utf8_to_unicode($string);
+        $uni = static::toUnicode($string);
 
-        if (!$uni) {
+        if ($uni === false) {
             return false;
         }
 
@@ -556,6 +556,8 @@ abstract class UnicodeHelper
                                 E_USER_WARNING
                             );
 
+                            ob_end_clean();
+
                             return false;
                             # 3 byte sequence
                         } else {
@@ -578,6 +580,8 @@ abstract class UnicodeHelper
                                     );
 
                                     // out of range
+                                    ob_end_clean();
+
                                     return false;
                                 }
                             }
@@ -600,9 +604,9 @@ abstract class UnicodeHelper
      *
      * @note  Port of phputf8's utf8_to_unicode()
      *
-     * @return  bool
+     * @return  int[]|false
      */
-    public static function toUnicode(string $str): bool
+    public static function toUnicode(string $str): array|false
     {
         $mState = 0; // cached expected number of octets after the current octet
         // until the beginning of the next UTF8 character sequence
@@ -734,5 +738,7 @@ abstract class UnicodeHelper
                 return false;
             }
         }
+
+        return $out;
     }
 }

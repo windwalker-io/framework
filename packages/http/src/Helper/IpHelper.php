@@ -198,7 +198,7 @@ class IpHelper
             [$address, $netmask] = explode('/', $ip, 2);
 
             if ('0' === $netmask) {
-                return (bool) unpack('n*', @inet_pton($address));
+                return (bool) unpack('n*', (string) @inet_pton($address));
             }
 
             if ($netmask < 1 || $netmask > 128) {
@@ -209,8 +209,8 @@ class IpHelper
             $netmask = 128;
         }
 
-        $bytesAddr = unpack('n*', @inet_pton($address));
-        $bytesTest = unpack('n*', @inet_pton($requestIp));
+        $bytesAddr = unpack('n*', (string) @inet_pton($address));
+        $bytesTest = unpack('n*', (string) @inet_pton($requestIp));
 
         if (!$bytesAddr || !$bytesTest) {
             return self::$checkedIps[$cacheKey] = false;

@@ -29,6 +29,7 @@ class RequestEvent extends BaseEvent
      * @return ServerRequestInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getRequest(): ServerRequestInterface
     {
@@ -39,6 +40,7 @@ class RequestEvent extends BaseEvent
      * @return ?ResponseInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getResponse(): ?ResponseInterface
     {
@@ -51,6 +53,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setResponse(ResponseInterface $response): static
     {
@@ -65,6 +68,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setRequest(ServerRequestInterface $request): static
     {
@@ -77,6 +81,7 @@ class RequestEvent extends BaseEvent
      * @return int
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getFd(): int
     {
@@ -89,6 +94,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setFd(int $fd): static
     {
@@ -101,6 +107,7 @@ class RequestEvent extends BaseEvent
      * @return OutputInterface
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getOutput(): OutputInterface
     {
@@ -113,6 +120,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setOutput(OutputInterface $output): static
     {
@@ -125,6 +133,7 @@ class RequestEvent extends BaseEvent
      * @return array
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getAttributes(): array
     {
@@ -176,6 +185,7 @@ class RequestEvent extends BaseEvent
      * @return \Closure|null
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getEndHandler(): ?\Closure
     {
@@ -188,6 +198,7 @@ class RequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setEndHandler(?\Closure $endHandler): static
     {

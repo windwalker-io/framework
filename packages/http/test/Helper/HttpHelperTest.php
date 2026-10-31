@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Helper;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Helper\HttpHelper;
 
 class HttpHelperTest extends TestCase
 {
-    public function testLegacyGetIpUsesSafeRemoteAddressByDefault(): void
+    #[Test]
+    public function legacyGetIpUsesSafeRemoteAddressByDefault(): void
     {
         $server = [
             'REMOTE_ADDR' => '203.0.113.10',

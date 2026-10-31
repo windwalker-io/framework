@@ -102,7 +102,7 @@ class FilterFactory
     public function createChainFromSyntax(mixed $syntax, array $options = []): FilterInterface|ValidatorInterface
     {
         if (is_string($syntax)) {
-            $clauses = Arr::explodeAndClear('|', $syntax);
+            $clauses = $this->splitClauses($syntax);
         } elseif (!is_array($syntax)) {
             $clauses = [$syntax];
         } else {
@@ -153,17 +153,7 @@ class FilterFactory
 
         $type = trim($type);
 
-        preg_match_all('/(\w+)(\s?[=:]\s?(\w+))?/', $params, $matches, PREG_SET_ORDER);
-
-        $options = [];
-        foreach ($matches as $match) {
-            if (isset($match[1])) {
-                $key = $match[1];
-                $value = $match[3] ?? true;
-
-                $options[$key] = $value;
-            }
-        }
+        $options = $this->parseParams($params);
 
         return $this->createByFactory($type, $options);
     }
@@ -264,6 +254,64 @@ class FilterFactory
         $this->factories = $factories;
 
         return $this;
+    }
+
+    /**
+     * Split clauses by "|" while ignoring pipes inside quoted strings.
+     *
+     * @return  string[]
+     */
+    protected function splitClauses(string $syntax): array
+    {
+        preg_match_all(
+            '/(?:"(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\'|[^|])+/s',
+            $syntax,
+            $matches
+        );
+
+        return array_values(
+            array_filter(
+                array_map('trim', $matches[0]),
+                static fn(string $clause) => $clause !== ''
+            )
+        );
+    }
+
+    /**
+     * Parse "key:value", "key=value" or bare "key" tokens. Keys and values may be wrapped by single or double quotes,
+     * and quoted tokens are returned as plain strings with escaped quotes and backslashes unescaped.
+     */
+    protected function parseParams(string $params): array
+    {
+        $dq = '"((?:[^"\\\\]|\\\\.)*)"';
+        $sq = "'((?:[^'\\\\]|\\\\.)*)'";
+
+        preg_match_all(
+            "/(?:$dq|$sq|(\\w+))(?:\\s*[=:]\\s*(?:$dq|$sq|(\\w+)))?/s",
+            $params,
+            $matches,
+            PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL
+        );
+
+        $unescape = static fn(string $v) => preg_replace('/\\\\([\\\\"\'])/', '$1', $v);
+
+        $options = [];
+
+        foreach ($matches as $match) {
+            $key = $match[1] !== null ? $unescape($match[1]) : ($match[2] !== null ? $unescape($match[2]) : $match[3]);
+
+            if ($match[4] !== null) {
+                $value = $unescape($match[4]);
+            } elseif ($match[5] !== null) {
+                $value = $unescape($match[5]);
+            } else {
+                $value = $match[6] ?? true;
+            }
+
+            $options[$key] = $value;
+        }
+
+        return $options;
     }
 
     protected function prepareDefaultFactories(): void

@@ -230,6 +230,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 
     /**
      * @return CurlTransport
+     * @codeCoverageIgnore
      */
     public function getTransport(): CurlTransport
     {
@@ -240,6 +241,7 @@ class MultiCurlTransport implements AsyncTransportInterface
      * @param  CurlTransport  $transport
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTransport(CurlTransport $transport): static
     {

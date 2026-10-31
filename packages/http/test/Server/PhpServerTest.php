@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Server;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Factory\ServerRequestFactory;
@@ -24,7 +26,8 @@ class PhpServerTest extends TestCase
     /**
      * @see  PhpServer::listen
      */
-    public function testListen(): void
+    #[Test]
+    public function listenHandlesRequestAndOutputsResponseBody(): void
     {
         $this->instance->setHandler(
             fn(PhpServer $server) => $server->handle(
@@ -51,7 +54,8 @@ class PhpServerTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createServerWithMockOutput(): void
     {
         $this->instance = new HttpServer(
             [],
@@ -61,9 +65,5 @@ class PhpServerTest extends TestCase
                 fn () => $this->output = new MockOutput()
             )
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Response;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Windwalker\Http\Test\Stub\StubContentTypeResponse;
@@ -16,42 +18,16 @@ use Windwalker\Test\TestHelper;
  */
 class AbstractContentTypeResponseTest extends TestCase
 {
-    /**
-     * Test instance.
-     *
-     * @var StubContentTypeResponse
-     */
-    protected $instance;
+    protected StubContentTypeResponse $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createContentTypeResponse(): void
     {
         $this->instance = new StubContentTypeResponse('Flower');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * testConstruct
-     *
-     * @return  void
-     *
-     * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::__construct
-     */
-    public function testConstruct()
+    #[Test]
+    public function constructSetsContentTypeHeadersBodyAndStatus(): void
     {
         $response = new StubContentTypeResponse('Flower', 123, ['x-foo' => 'bar']);
 
@@ -61,14 +37,8 @@ class AbstractContentTypeResponseTest extends TestCase
         $this->assertEquals(123, $response->getStatusCode());
     }
 
-    /**
-     * Method to test withContentType().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::withContentType
-     */
-    public function testWithContentType()
+    #[Test]
+    public function withContentTypeReplacesContentTypeHeaderWithCharset(): void
     {
         $response = $this->instance->withContentType('application/flower');
 
@@ -76,14 +46,10 @@ class AbstractContentTypeResponseTest extends TestCase
     }
 
     /**
-     * testNormalizeContentType
-     *
-     * @return  void
-     *
      * @throws ReflectionException
-     * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::normalizeContentType
      */
-    public function testNormalizeContentType()
+    #[Test]
+    public function normalizeContentTypeLowercasesContentType(): void
     {
         $this->assertEquals('text/plain', TestHelper::invoke($this->instance, 'normalizeContentType', 'Text/Plain'));
     }

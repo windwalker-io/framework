@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Windwalker\Http\Test\Transport;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\BeforeClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
@@ -17,72 +20,44 @@ use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
 
 /**
- * Test class of CurlTransport
- *
- * @since 2.1
+ * Shared transport behavior tests run against each concrete transport.
  */
 abstract class AbstractTransportTestCase extends TestCase
 {
     use BaseAssertionTrait;
     use TestServerExistsTrait;
 
-    /**
-     * Property options.
-     *
-     * @var  array
-     */
     protected array $options = [
         'options' => [],
     ];
 
-    /**
-     * Test instance.
-     *
-     * @var AbstractTransport
-     */
-    protected $instance;
+    protected AbstractTransport $instance;
 
-    /**
-     * setUpBeforeClass
-     *
-     * @return  void
-     */
-    public static function setUpBeforeClass(): void
+    abstract protected function createTransport(): AbstractTransport;
+
+    #[BeforeClass]
+    public static function ensureTestServerIsRunning(): void
     {
         self::checkTestServerRunningOrSkip();
     }
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createTransportOrSkipIfUnsupported(): void
     {
+        $this->instance = $this->createTransport();
+
         if (!$this->instance::isSupported()) {
             $this->markTestSkipped(get_class($this->instance) . ' driver not supported.');
         }
     }
 
-    /**
-     * createRequest
-     *
-     * @param  StreamInterface  $stream
-     *
-     * @return Request
-     */
-    protected function createRequest($stream = null): Request
+    protected function createRequest(?StreamInterface $stream = null): Request
     {
         return new Request($stream ?: new StringStream());
     }
 
-    /**
-     * testRequestGet
-     *
-     * @return  void
-     */
-    public function testRequestGet()
+    #[Test]
+    public function requestGetReturnsJsonResponseWithOkStatus(): void
     {
         $request = $this->createRequest();
 
@@ -93,7 +68,11 @@ abstract class AbstractTransportTestCase extends TestCase
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertJson($response->getBody()->getContents());
+    }
 
+    #[Test]
+    public function requestGetParsesNestedQueryParametersOnServer(): void
+    {
         $request = $this->createRequest();
 
         $request = $request->withUri(new Uri(static::getTestUrlFromConstant() . '/json?foo=bar&baz[3]=yoo'))
@@ -105,12 +84,8 @@ abstract class AbstractTransportTestCase extends TestCase
         self::assertEquals(['foo' => 'bar', 'baz' => [3 => 'yoo']], $data);
     }
 
-    /**
-     * testBadDomainGet
-     *
-     * @return  void
-     */
-    public function testBadDomainGet()
+    #[Test]
+    public function requestToUnresolvableDomainThrowsRuntimeException(): void
     {
         $this->expectException(RuntimeException::class);
 
@@ -122,12 +97,8 @@ abstract class AbstractTransportTestCase extends TestCase
         $this->instance->request($request);
     }
 
-    /**
-     * testBadPathGet
-     *
-     * @return  void
-     */
-    public function testBadPathGet()
+    #[Test]
+    public function requestToUnknownPathReturnsNotFoundResponse(): void
     {
         $request = $this->createRequest();
 
@@ -142,12 +113,8 @@ abstract class AbstractTransportTestCase extends TestCase
         self::assertEquals('Not Found', $response->getReasonPhrase());
     }
 
-    /**
-     * testRequestPost
-     *
-     * @return  void
-     */
-    public function testRequestPost()
+    #[Test]
+    public function requestPostSendsFormBodyToServer(): void
     {
         $request = $this->createRequest();
 
@@ -164,12 +131,8 @@ abstract class AbstractTransportTestCase extends TestCase
         );
     }
 
-    /**
-     * testRequestPut
-     *
-     * @return  void
-     */
-    public function testRequestPut()
+    #[Test]
+    public function requestPutSendsFormBodyToServer(): void
     {
         $request = $this->createRequest();
 
@@ -186,12 +149,8 @@ abstract class AbstractTransportTestCase extends TestCase
         );
     }
 
-    /**
-     * testRequestCredentials
-     *
-     * @return  void
-     */
-    public function testRequestCredentials()
+    #[Test]
+    public function requestWithUserInfoSendsBasicAuthCredentials(): void
     {
         $request = $this->createRequest();
 
@@ -209,12 +168,8 @@ abstract class AbstractTransportTestCase extends TestCase
         );
     }
 
-    /**
-     * testRequestPostScalar
-     *
-     * @return  void
-     */
-    public function testRequestPostScalar()
+    #[Test]
+    public function requestPostSendsRawStringBodyToServer(): void
     {
         $request = $this->createRequest();
 
@@ -231,12 +186,8 @@ abstract class AbstractTransportTestCase extends TestCase
         );
     }
 
-    /**
-     * testDownload
-     *
-     * @return  void
-     */
-    public function testDownload()
+    #[Test]
+    public function downloadWritesResponseBodyToDestinationFile(): void
     {
         $root = vfsStream::setup(
             'root',
@@ -265,7 +216,8 @@ abstract class AbstractTransportTestCase extends TestCase
         );
     }
 
-    public function testWriteStream(): void
+    #[Test]
+    public function requestWithWriteStreamWritesResponseBodyToStream(): void
     {
         $root = vfsStream::setup(
             'root',
@@ -308,10 +260,7 @@ abstract class AbstractTransportTestCase extends TestCase
         return static::getTestUrl()->toString(Uri::HOST | Uri::PORT);
     }
 
-    /**
-     * @return  mixed
-     */
-    protected static function getTestUrlFromConstant()
+    protected static function getTestUrlFromConstant(): string
     {
         return WINDWALKER_TEST_HTTP_URL;
     }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Helper;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Helper\IpHelper;
 
 class IpHelperTest extends TestCase
 {
-    public function testIgnoresForwardingHeadersFromUntrustedPeers(): void
+    #[Test]
+    public function ignoresForwardingHeadersFromUntrustedPeers(): void
     {
         $server = [
             'REMOTE_ADDR' => '203.0.113.10',
@@ -20,7 +22,8 @@ class IpHelperTest extends TestCase
         self::assertSame('203.0.113.10', IpHelper::getTrustedIp(['10.0.0.1'], $server));
     }
 
-    public function testFindsFirstUntrustedAddressFromTrustedProxyChain(): void
+    #[Test]
+    public function findsFirstUntrustedAddressFromTrustedProxyChain(): void
     {
         $server = [
             'REMOTE_ADDR' => '10.0.0.2',
@@ -30,19 +33,34 @@ class IpHelperTest extends TestCase
         self::assertSame('198.51.100.30', IpHelper::getTrustedIp(['10.0.0.1', '10.0.0.2'], $server));
     }
 
-    public function testAcceptsTrustedIpv4CidrRanges(): void
+    #[Test]
+    public function acceptsTrustedIpv4CidrRangeContainingPeer(): void
     {
-        $server = [
+        self::assertSame('198.51.100.30', IpHelper::getTrustedIp(['10.0.0.0/25'], $this->ipv4Server()));
+    }
+
+    #[Test]
+    public function ignoresIpv4CidrRangeNotContainingPeer(): void
+    {
+        self::assertSame('10.0.0.127', IpHelper::getTrustedIp(['10.0.1.0/24'], $this->ipv4Server()));
+    }
+
+    #[Test]
+    public function ignoresIpv4CidrRangeWithInvalidPrefixLength(): void
+    {
+        self::assertSame('10.0.0.127', IpHelper::getTrustedIp(['10.0.0.0/33'], $this->ipv4Server()));
+    }
+
+    protected function ipv4Server(): array
+    {
+        return [
             'REMOTE_ADDR' => '10.0.0.127',
             'HTTP_X_FORWARDED_FOR' => '198.51.100.30',
         ];
-
-        self::assertSame('198.51.100.30', IpHelper::getTrustedIp(['10.0.0.0/25'], $server));
-        self::assertSame('10.0.0.127', IpHelper::getTrustedIp(['10.0.1.0/24'], $server));
-        self::assertSame('10.0.0.127', IpHelper::getTrustedIp(['10.0.0.0/33'], $server));
     }
 
-    public function testAcceptsTrustedIpv6CidrRanges(): void
+    #[Test]
+    public function acceptsTrustedIpv6CidrRanges(): void
     {
         $server = [
             'REMOTE_ADDR' => '2001:db8:1:0:8000::2',
@@ -55,7 +73,8 @@ class IpHelperTest extends TestCase
         );
     }
 
-    public function testFallsBackToRemoteAddressWhenForwardedChainIsInvalid(): void
+    #[Test]
+    public function fallsBackToRemoteAddressWhenForwardedChainIsInvalid(): void
     {
         $server = [
             'REMOTE_ADDR' => '10.0.0.2',

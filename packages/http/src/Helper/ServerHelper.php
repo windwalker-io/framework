@@ -60,7 +60,9 @@ abstract class ServerHelper
     {
         foreach ($files as $file) {
             if (is_array($file)) {
-                static::validateUploadedFiles($file);
+                if (!static::validateUploadedFiles($file)) {
+                    return false;
+                }
 
                 continue;
             }

@@ -23,6 +23,7 @@ abstract class AdaptableServer extends AbstractServer
 
     /**
      * @return ServerInterface
+     * @codeCoverageIgnore
      */
     public function getAdapter(): ServerInterface
     {
@@ -33,6 +34,7 @@ abstract class AdaptableServer extends AbstractServer
      * @param  ServerInterface  $adapter
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setAdapter(ServerInterface $adapter): static
     {

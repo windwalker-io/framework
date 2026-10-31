@@ -27,6 +27,7 @@ abstract class AbstractDelegationTransport
 
     /**
      * @return TransportInterface|null
+     * @codeCoverageIgnore
      */
     public function getTransport(): ?TransportInterface
     {
@@ -37,6 +38,7 @@ abstract class AbstractDelegationTransport
      * @param  TransportInterface|null  $transport
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTransport(?TransportInterface $transport): static
     {

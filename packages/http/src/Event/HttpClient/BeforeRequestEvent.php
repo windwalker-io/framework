@@ -27,6 +27,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return string
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function &getMethod(): string
     {
@@ -39,6 +40,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setMethod(string $method): static
     {
@@ -51,6 +53,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return string
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function &getUrl(): string
     {
@@ -63,6 +66,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setUrl(string $url): static
     {
@@ -75,6 +79,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return mixed
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function &getBody(): mixed
     {
@@ -87,6 +92,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setBody(mixed $body): static
     {
@@ -99,6 +105,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return HttpClientOptions
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getOptions(): HttpClientOptions
     {
@@ -111,6 +118,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setOptions(HttpClientOptions $options): static
     {
@@ -123,6 +131,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return HttpClient
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function getHttpClient(): HttpClient
     {
@@ -135,6 +144,7 @@ class BeforeRequestEvent extends BaseEvent
      * @return  static  Return self to support chaining.
      *
      * @deprecated  Use property instead.
+     * @codeCoverageIgnore
      */
     public function setHttpClient(HttpClient $httpClient): static
     {

@@ -4,56 +4,34 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Request;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
 use Windwalker\Http\Request\ServerRequest;
+use Windwalker\Http\SafeJson;
 use Windwalker\Http\UploadedFile;
+use Windwalker\Stream\PhpInputStream;
 use Windwalker\Uri\Uri;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
-/**
- * Test class of ServerRequest
- *
- * @since 2.1
- */
 class ServerRequestTest extends TestCase
 {
     protected ?ServerRequest $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createServerRequest(): void
     {
         $this->instance = new ServerRequest();
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * testConstruct
-     *
-     * @return  void
-     * @throws ReflectionException
-     */
-    public function testConstruct()
+    #[Test]
+    public function constructAppliesServerParamsFilesUriMethodBodyAndHeaders(): void
     {
         $server = [
             'foo' => 'bar',
             'baz' => 'bat',
         ];
-
         $server['server'] = true;
 
         $files = [
@@ -77,7 +55,6 @@ class ServerRequestTest extends TestCase
 
         $this->assertEquals($server, $request->getServerParams());
         $this->assertEquals($files, $request->getUploadedFiles());
-
         $this->assertSame($uri, $request->getUri());
         $this->assertEquals($method, $request->getMethod());
         $this->assertEquals($headers, $request->getHeaders());
@@ -88,211 +65,140 @@ class ServerRequestTest extends TestCase
         $this->assertEquals('php://memory', $stream);
     }
 
-    /**
-     * Method to test getServerParams().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getServerParams
-     * @TODO   Implement testGetServerParams().
-     */
-    public function testGetServerParams()
+    #[Test]
+    public function constructUsesPhpInputStreamByDefault(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertInstanceOf(PhpInputStream::class, $this->instance->getBody());
     }
 
-    /**
-     * Method to test getCookieParams().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getCookieParams
-     * @TODO   Implement testGetCookieParams().
-     */
-    public function testGetCookieParams()
+    #[Test]
+    public function constructAppliesCookiesQueryParsedBodyAndProtocol(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $request = new ServerRequest(
+            cookies: ['a' => '1'],
+            queryParams: ['b' => '2'],
+            parsedBody: ['c' => '3'],
+            protocol: '2.0'
         );
+
+        self::assertSame(['a' => '1'], $request->getCookieParams());
+        self::assertSame(['b' => '2'], $request->getQueryParams());
+        self::assertSame(['c' => '3'], $request->getParsedBody());
+        self::assertSame('2.0', $request->getProtocolVersion());
     }
 
-    /**
-     * Method to test withCookieParams().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::withCookieParams
-     * @TODO   Implement testWithCookieParams().
-     */
-    public function testWithCookieParams()
+    #[Test]
+    public function constructThrowsOnInvalidUploadedFiles(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Invalid uploaded files');
+
+        new ServerRequest([], ['file' => 'not-an-uploaded-file']);
     }
 
-    /**
-     * Method to test getQueryParams().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getQueryParams
-     * @TODO   Implement testGetQueryParams().
-     */
-    public function testGetQueryParams()
+    #[Test]
+    public function withCookieParamsReturnsNewInstanceWithCookieParams(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $new = $this->instance->withCookieParams(['sid' => 'abc']);
+
+        self::assertNotSame($this->instance, $new);
+        self::assertSame(['sid' => 'abc'], $new->getCookieParams());
+        self::assertSame([], $this->instance->getCookieParams());
     }
 
-    /**
-     * Method to test withQueryParams().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::withQueryParams
-     * @TODO   Implement testWithQueryParams().
-     */
-    public function testWithQueryParams()
+    #[Test]
+    public function withQueryParamsReturnsNewInstanceWithQueryParams(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $new = $this->instance->withQueryParams(['page' => '2']);
+
+        self::assertNotSame($this->instance, $new);
+        self::assertSame(['page' => '2'], $new->getQueryParams());
+        self::assertSame([], $this->instance->getQueryParams());
     }
 
-    /**
-     * Method to test getUploadedFiles().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getUploadedFiles
-     * @TODO   Implement testGetUploadedFiles().
-     */
-    public function testGetUploadedFiles()
+    #[Test]
+    public function withUploadedFilesReturnsNewInstanceWithUploadedFiles(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $files = ['file' => new UploadedFile('php://temp', 0)];
+
+        $new = $this->instance->withUploadedFiles($files);
+
+        self::assertNotSame($this->instance, $new);
+        self::assertSame($files, $new->getUploadedFiles());
+        self::assertSame([], $this->instance->getUploadedFiles());
     }
 
-    /**
-     * Method to test withUploadedFiles().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::withUploadedFiles
-     * @TODO   Implement testWithUploadedFiles().
-     */
-    public function testWithUploadedFiles()
+    #[Test]
+    public function withUploadedFilesThrowsOnInvalidFile(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->instance->withUploadedFiles(['file' => new \stdClass()]);
     }
 
-    /**
-     * Method to test getParsedBody().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getParsedBody
-     * @TODO   Implement testGetParsedBody().
-     */
-    public function testGetParsedBody()
+    #[Test]
+    public function getParsedBodyDecodesSafeJsonLazily(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $request = $this->instance->withParsedBody(new SafeJson('{"foo":"bar"}', true));
+
+        self::assertSame(['foo' => 'bar'], $request->getParsedBody());
     }
 
-    /**
-     * Method to test withParsedBody().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::withParsedBody
-     * @TODO   Implement testWithParsedBody().
-     */
-    public function testWithParsedBody()
+    #[Test]
+    public function getParsedBodyReturnsNullByDefault(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertNull($this->instance->getParsedBody());
     }
 
-    /**
-     * Method to test getAttributes().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getAttributes
-     * @TODO   Implement testGetAttributes().
-     */
-    public function testGetAttributes()
+    #[Test]
+    public function withParsedBodyReturnsNewInstanceWithParsedBody(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $object = new \stdClass();
+        $new = $this->instance->withParsedBody($object);
+
+        self::assertNotSame($this->instance, $new);
+        self::assertSame($object, $new->getParsedBody());
+        self::assertNull($this->instance->getParsedBody());
     }
 
-    /**
-     * Method to test getAttribute().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::getAttribute
-     * @TODO   Implement testGetAttribute().
-     */
-    public function testGetAttribute()
+    #[Test]
+    public function getAttributeReturnsAttributeOrDefault(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $request = $this->instance->withAttribute('nullable', null)->withAttribute('foo', 'bar');
+
+        self::assertSame('bar', $request->getAttribute('foo'));
+        self::assertNull($request->getAttribute('nullable', 'default'));
+        self::assertSame('default', $request->getAttribute('missing', 'default'));
+        self::assertNull($request->getAttribute('missing'));
     }
 
-    /**
-     * Method to test withAttribute().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::withAttribute
-     * @TODO   Implement testWithAttribute().
-     */
-    public function testWithAttribute()
+    #[Test]
+    public function withAttributeReturnsNewInstanceWithAttribute(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $new = $this->instance->withAttribute('foo', 'bar');
+
+        self::assertNotSame($this->instance, $new);
+        self::assertSame(['foo' => 'bar'], $new->getAttributes());
+        self::assertSame([], $this->instance->getAttributes());
     }
 
-    /**
-     * Method to test withoutAttribute().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequest::withoutAttribute
-     * @TODO   Implement testWithoutAttribute().
-     */
-    public function testWithoutAttribute()
+    #[Test]
+    public function withoutAttributeReturnsNewInstanceWithoutAttribute(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $request = $this->instance->withAttribute('foo', 'bar')->withAttribute('baz', 'bat');
+
+        $new = $request->withoutAttribute('foo');
+
+        self::assertSame(['baz' => 'bat'], $new->getAttributes());
+        self::assertSame(['foo' => 'bar', 'baz' => 'bat'], $request->getAttributes());
+    }
+
+    #[Test]
+    public function withoutAttributeReturnsCloneWhenAttributeIsMissing(): void
+    {
+        $new = $this->instance->withoutAttribute('missing');
+
+        self::assertNotSame($this->instance, $new);
+        self::assertSame([], $new->getAttributes());
     }
 }

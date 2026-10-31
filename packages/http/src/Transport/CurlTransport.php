@@ -101,7 +101,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         // Create the response object.
         $return = $this->createResponse();
 
-        return $this->contentToResponse($content, $info, $return, $this->getOption('allow_empty_status_code'));
+        return $this->contentToResponse($content, $info, $return, (bool) $this->getOption('allow_empty_status_code'));
     }
 
     /**

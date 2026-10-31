@@ -28,6 +28,10 @@ class HttpRequestException extends UnexpectedValueException
         $new = new static($this->getMessage(), $this->getCode(), $this);
         $new->response = $response;
 
+        if (isset($this->curlCmdCallback)) {
+            $new->curlCmdCallback = $this->curlCmdCallback;
+        }
+
         return $new;
     }
 

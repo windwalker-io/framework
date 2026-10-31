@@ -479,6 +479,8 @@ class Language implements LanguageInterface
      * @param  PluralSelector|null  $selector
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSelector(PluralSelector $selector): static
     {
@@ -523,6 +525,8 @@ class Language implements LanguageInterface
      * Method to get property Trace
      *
      * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function getTrace(): array
     {
@@ -535,6 +539,8 @@ class Language implements LanguageInterface
      * @return  string[]
      *
      * @since  3.5.2
+     *
+     * @codeCoverageIgnore
      */
     public function getStrings(): array
     {
@@ -549,6 +555,8 @@ class Language implements LanguageInterface
      * @return  static  Return self to support chaining.
      *
      * @since  3.5.2
+     *
+     * @codeCoverageIgnore
      */
     public function setStrings(array $strings): self
     {
@@ -559,6 +567,8 @@ class Language implements LanguageInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getNamespace(): string
     {

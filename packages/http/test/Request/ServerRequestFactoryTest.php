@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Test\Request;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Http\Factory\ServerRequestFactory;
 use Windwalker\Http\Request\ServerRequest;
@@ -17,31 +21,31 @@ use Windwalker\Stream\Stream;
  */
 class ServerRequestFactoryTest extends TestCase
 {
-    /**
-     * Method to test create().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals
-     */
-    public function testCreate()
+    protected mixed $apacheRequestHeadersBackup = null;
+
+    #[Test]
+    public function createFromGlobalsReturnsServerRequest(): void
     {
         $request = ServerRequestFactory::createFromGlobals();
 
         self::assertTrue($request instanceof ServerRequest);
     }
 
-    /**
-     * Method to test prepareServers().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareServers
-     */
-    public function testPrepareServers()
+    #[Before]
+    protected function backupApacheRequestHeadersResolver(): void
     {
-        $bak = ServerRequestFactory::$apacheRequestHeaders;
+        $this->apacheRequestHeadersBackup = ServerRequestFactory::$apacheRequestHeaders;
+    }
 
+    #[After]
+    protected function restoreApacheRequestHeadersResolver(): void
+    {
+        ServerRequestFactory::$apacheRequestHeaders = $this->apacheRequestHeadersBackup;
+    }
+
+    #[Test]
+    public function prepareServersAddsAuthorizationHeaderFromApacheRequestHeaders(): void
+    {
         ServerRequestFactory::$apacheRequestHeaders = [$this, 'apacheRequestHeaders'];
 
         $server = [];
@@ -49,8 +53,11 @@ class ServerRequestFactoryTest extends TestCase
         $server = ServerRequestFactory::prepareServers($server);
 
         self::assertEquals('foo', $server['HTTP_AUTHORIZATION']);
+    }
 
-        // Test no auth
+    #[Test]
+    public function prepareServersSkipsAuthorizationWhenApacheHeadersAreEmpty(): void
+    {
         ServerRequestFactory::$apacheRequestHeaders = [$this, 'apacheRequestHeadersEmpty'];
 
         $server = [];
@@ -58,15 +65,8 @@ class ServerRequestFactoryTest extends TestCase
         $server = ServerRequestFactory::prepareServers($server);
 
         self::assertTrue(empty($server['HTTP_AUTHORIZATION']));
-
-        ServerRequestFactory::$apacheRequestHeaders = $bak;
     }
 
-    /**
-     * apacheRequestHeaders
-     *
-     * @return  array
-     */
     public function apacheRequestHeaders(): array
     {
         return [
@@ -74,24 +74,13 @@ class ServerRequestFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * apacheRequestHeadersEmpty
-     *
-     * @return  array
-     */
     public function apacheRequestHeadersEmpty(): array
     {
         return [];
     }
 
-    /**
-     * Method to test prepareFiles().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareFiles
-     */
-    public function testPrepareFiles()
+    #[Test]
+    public function prepareFilesConvertsFlatFileSpecToUploadedFile(): void
     {
         $files = [
             [
@@ -109,7 +98,11 @@ class ServerRequestFactoryTest extends TestCase
         self::assertInstanceOf(Stream::class, $files[0]->getStream());
         self::assertEquals('foo_name', $files[0]->getClientFilename());
         self::assertEquals(0, $files[0]->getError());
+    }
 
+    #[Test]
+    public function prepareFilesConvertsNestedFileSpecsToUploadedFiles(): void
+    {
         $files = [
             'first' => [
                 'tmp_name' => [
@@ -149,14 +142,8 @@ class ServerRequestFactoryTest extends TestCase
         self::assertTrue($files['second'] instanceof UploadedFile);
     }
 
-    /**
-     * Method to test prepareHeaders().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareHeaders
-     */
-    public function testPrepareHeaders()
+    #[Test]
+    public function prepareHeadersNormalizesHttpAndContentServerKeys(): void
     {
         $headers = [
             'HTTP_X_FOO' => 'foo',
@@ -177,27 +164,19 @@ class ServerRequestFactoryTest extends TestCase
         self::assertEquals($expected, ServerRequestFactory::prepareHeaders($headers)->dump());
     }
 
-    /**
-     * Method to test prepareUri().
-     *
-     * @param  array   $servers
-     * @param  array   $headers
-     * @param  string  $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('prepareUriProvider')]
-    public function testPrepareUri($servers, $headers, $expected)
-    {
+    #[DataProvider('prepareUriProvider')]
+    #[Test]
+    public function prepareUriBuildsUriFromServerParamsAndHeaders(
+        array $servers,
+        array $headers,
+        string $expected,
+        int $line
+    ): void {
         $uri = ServerRequestFactory::prepareUri($servers, $headers);
 
         self::assertEquals($expected, $uri->__toString());
     }
 
-    /**
-     * prepareUriProvider
-     *
-     * @return  array
-     */
     public static function prepareUriProvider(): array
     {
         return [
@@ -346,51 +325,270 @@ class ServerRequestFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * Method to test getHostAndPortFromHeaders().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::getHostAndPortFromHeaders
-     * @TODO   Implement testGetHostAndPortFromHeaders().
-     */
-    public function testGetHostAndPortFromHeaders()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+    #[Test]
+    #[DataProvider('hostAndPortProvider')]
+    public function getHostAndPortFromHeadersReturnsHostAndPort(
+        array $server,
+        array $headers,
+        string $expectedHost,
+        ?int $expectedPort
+    ): void {
+        $host = '';
+        $port = null;
+
+        ServerRequestFactory::getHostAndPortFromHeaders($host, $port, $server, $headers);
+
+        self::assertSame($expectedHost, $host);
+        self::assertSame($expectedPort, $port);
     }
 
-    /**
-     * Method to test getRequestUri().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::getRequestUri
-     * @TODO   Implement testGetRequestUri().
-     */
-    public function testGetRequestUri()
+    public static function hostAndPortProvider(): array
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        return [
+            'host header with port' => [[], ['host' => 'example.com:8080'], 'example.com', 8080],
+            'host header without port' => [[], ['host' => 'example.com'], 'example.com', null],
+            'ipv6 host header' => [[], ['host' => '[::1]:81'], '[::1]', 81],
+            'multiple hosts uses first' => [[], ['host' => 'a.com, b.com'], 'a.com', null],
+            'invalid host header ignored' => [[], ['host' => 'bad host!'], '', null],
+            'server name and port' => [
+                ['SERVER_NAME' => 'srv.test', 'SERVER_PORT' => '8000'],
+                [],
+                'srv.test',
+                8000,
+            ],
+            'server name only' => [['SERVER_NAME' => 'srv.test'], [], 'srv.test', null],
+            'nothing available' => [[], [], '', null],
+            'ipv6 server name uses server addr' => [
+                ['SERVER_NAME' => '[::1]', 'SERVER_ADDR' => '::1', 'SERVER_PORT' => '8080'],
+                [],
+                '[::1]',
+                8080,
+            ],
+            'ipv6 server name defaults port 80' => [
+                ['SERVER_NAME' => '[::1]', 'SERVER_ADDR' => '::1'],
+                [],
+                '[::1]',
+                80,
+            ],
+        ];
     }
 
-    /**
-     * Method to test stripQueryString().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Http\Request\ServerRequestFactory::stripQueryString
-     * @TODO   Implement testStripQueryString().
-     */
-    public function testStripQueryString()
+    #[Test]
+    #[DataProvider('requestUriProvider')]
+    public function getRequestUriReturnsRequestUriFromServerParams(array $server, string $expected): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        self::assertSame($expected, ServerRequestFactory::getRequestUri($server));
+    }
+
+    public static function requestUriProvider(): array
+    {
+        return [
+            'request uri' => [['REQUEST_URI' => '/foo?bar=1'], '/foo?bar=1'],
+            'absolute request uri' => [['REQUEST_URI' => 'http://example.com/foo'], '/foo'],
+            'IIS rewrite' => [
+                ['IIS_WasUrlRewritten' => '1', 'UNENCODED_URL' => '/iis//path', 'REQUEST_URI' => '/other'],
+                '/iis//path',
+            ],
+            'IIS rewrite without unencoded url' => [
+                ['IIS_WasUrlRewritten' => '1', 'REQUEST_URI' => '/other'],
+                '/other',
+            ],
+            'x rewrite url' => [['REQUEST_URI' => '/a', 'HTTP_X_REWRITE_URL' => '/rewrite'], '/rewrite'],
+            'x original url wins' => [
+                ['REQUEST_URI' => '/a', 'HTTP_X_REWRITE_URL' => '/rewrite', 'HTTP_X_ORIGINAL_URL' => '/original'],
+                '/original',
+            ],
+            'orig path info' => [['ORIG_PATH_INFO' => '/orig'], '/orig'],
+            'fallback' => [[], '/'],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('stripQueryStringProvider')]
+    public function stripQueryStringRemovesQueryString(string $path, string $expected): void
+    {
+        self::assertSame($expected, ServerRequestFactory::stripQueryString($path));
+    }
+
+    public static function stripQueryStringProvider(): array
+    {
+        return [
+            'with query' => ['/foo?bar=1', '/foo'],
+            'without query' => ['/foo', '/foo'],
+            'only query' => ['?a=1', ''],
+        ];
+    }
+
+    #[Test]
+    public function createServerRequestBuildsRequestWithMethodUriAndServerParams(): void
+    {
+        $factory = new ServerRequestFactory();
+
+        $request = $factory->createServerRequest('post', 'http://example.com/foo', ['FOO' => 'bar']);
+
+        self::assertInstanceOf(ServerRequest::class, $request);
+        self::assertSame('POST', $request->getMethod());
+        self::assertSame('http://example.com/foo', (string) $request->getUri());
+        self::assertSame(['FOO' => 'bar'], $request->getServerParams());
+    }
+
+    #[Test]
+    public function createFromGlobalsBuildsRequestFromServerParams(): void
+    {
+        $request = ServerRequestFactory::createFromGlobals(
+            [
+                'REQUEST_METHOD' => 'PUT',
+                'HTTPS' => 'on',
+                'HTTP_HOST' => 'example.com:8443',
+                'REQUEST_URI' => '/foo/bar?a=1',
+                'QUERY_STRING' => 'a=1',
+                'SERVER_PROTOCOL' => 'HTTP/2.0',
+                'CONTENT_TYPE' => 'text/plain',
+            ],
+            ['a' => '1'],
+            ['p' => '2'],
+            ['c' => '3'],
         );
+
+        self::assertSame('PUT', $request->getMethod());
+        self::assertSame('https://example.com:8443/foo/bar?a=1', (string) $request->getUri());
+        self::assertSame('2.0', $request->getProtocolVersion());
+        self::assertSame(['a' => '1'], $request->getQueryParams());
+        self::assertSame(['p' => '2'], $request->getParsedBody());
+        self::assertSame(['c' => '3'], $request->getCookieParams());
+        self::assertSame('text/plain', $request->getHeaderLine('content-type'));
+        self::assertSame('example.com:8443', $request->getHeaderLine('host'));
+        self::assertSame('PUT', $request->getServerParams()['REQUEST_METHOD']);
+    }
+
+    #[Test]
+    public function createFromGlobalsConvertsProvidedFiles(): void
+    {
+        $request = ServerRequestFactory::createFromGlobals(
+            ['REQUEST_METHOD' => 'POST'],
+            files: [
+                'upload' => [
+                    'tmp_name' => 'php://temp',
+                    'size' => 1,
+                    'error' => 0,
+                    'name' => 'a.txt',
+                    'type' => 'text/plain',
+                ],
+            ]
+        );
+
+        self::assertInstanceOf(UploadedFile::class, $request->getUploadedFiles()['upload']);
+    }
+
+    #[Test]
+    public function createFromUriReplacesUriAndSetsScriptName(): void
+    {
+        $request = ServerRequestFactory::createFromUri(
+            'http://example.com/index.php/foo',
+            'index.php',
+            ['REQUEST_METHOD' => 'GET']
+        );
+
+        self::assertSame('http://example.com/index.php/foo', (string) $request->getUri());
+        self::assertSame('/index.php', $request->getServerParams()['SCRIPT_NAME']);
+        self::assertSame('example.com', $request->getHeaderLine('host'));
+    }
+
+    #[Test]
+    public function createFromUriAcceptsUriObjectAndNormalizesScriptName(): void
+    {
+        $uri = new \Windwalker\Uri\Uri('https://example.org/bar');
+
+        $request = ServerRequestFactory::createFromUri($uri, null, ['SCRIPT_NAME' => 'app.php']);
+
+        self::assertSame($uri, $request->getUri());
+        self::assertSame('/app.php', $request->getServerParams()['SCRIPT_NAME']);
+    }
+
+    #[Test]
+    public function createBaseUriFromRequestParsesRequest(): void
+    {
+        $request = ServerRequestFactory::createFromUri(
+            'http://example.com/index.php/foo',
+            '/index.php',
+            ['REQUEST_METHOD' => 'GET', 'SCRIPT_FILENAME' => '/var/www/index.php']
+        );
+
+        $base = ServerRequestFactory::createBaseUriFromRequest($request);
+
+        self::assertInstanceOf(\Windwalker\Http\Request\RequestBaseUri::class, $base);
+    }
+
+    #[Test]
+    #[DataProvider('protocolVersionProvider')]
+    public function getProtocolVersionParsesServerProtocol(array $server, string $expected): void
+    {
+        self::assertSame($expected, ServerRequestFactory::getProtocolVersion($server));
+    }
+
+    public static function protocolVersionProvider(): array
+    {
+        return [
+            'default' => [[], '1.1'],
+            'http 1.0' => [['SERVER_PROTOCOL' => 'HTTP/1.0'], '1.0'],
+            'without prefix' => [['SERVER_PROTOCOL' => '1.1'], '1.1'],
+        ];
+    }
+
+    #[Test]
+    public function getProtocolVersionThrowsOnInvalidFormat(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessageIsOrContains('Invalid protocol version format');
+
+        ServerRequestFactory::getProtocolVersion(['SERVER_PROTOCOL' => 'HTTP/2']);
+    }
+
+    #[Test]
+    public function prepareFilesKeepsFullPathOfFlatAndNestedSpecs(): void
+    {
+        $files = ServerRequestFactory::prepareFiles([
+            'flat' => [
+                'tmp_name' => 'php://temp',
+                'size' => 1,
+                'error' => 0,
+                'name' => 'a.txt',
+                'type' => 'text/plain',
+                'full_path' => 'dir/a.txt',
+            ],
+            'nested' => [
+                'tmp_name' => ['x' => 'php://temp'],
+                'size' => ['x' => 1],
+                'error' => ['x' => 0],
+                'name' => ['x' => 'b.txt'],
+                'type' => ['x' => 'text/plain'],
+                'full_path' => ['x' => 'dir/b.txt'],
+            ],
+        ]);
+
+        self::assertSame('dir/a.txt', $files['flat']->getFullPath());
+        self::assertSame('dir/b.txt', $files['nested']['x']->getFullPath());
+    }
+
+    #[Test]
+    public function prepareHeadersSkipsEmptyValuesAndNonHeaderKeys(): void
+    {
+        $headers = ServerRequestFactory::prepareHeaders([
+            'HTTP_X_EMPTY' => '',
+            'SERVER_NAME' => 'example.com',
+            'HTTP_X_REAL_IP' => '1.2.3.4',
+        ])->dump();
+
+        self::assertSame(['x-real-ip' => '1.2.3.4'], $headers);
+    }
+
+    #[Test]
+    public function prepareServersKeepsExistingAuthorizationHeader(): void
+    {
+        ServerRequestFactory::$apacheRequestHeaders = fn() => ['Authorization' => 'Bearer other'];
+
+        $server = ServerRequestFactory::prepareServers(['HTTP_AUTHORIZATION' => 'Bearer mine']);
+
+        self::assertSame('Bearer mine', $server['HTTP_AUTHORIZATION']);
     }
 }

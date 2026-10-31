@@ -367,6 +367,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  TransportInterface  $transport
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTransport(TransportInterface $transport): static
     {
@@ -594,7 +595,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         $new = clone $this;
 
         if ($merge) {
-            $new->options->merge($options);
+            $new->options = $options->withDefaults($new->options, true);
         } else {
             $new->options = $options;
         }
@@ -630,7 +631,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     public function withOption(string $key, mixed $value): static
     {
         $new = clone $this;
-        $new->$key = $value;
+        $new->options->merge([$key => $value]);
 
         return $new;
     }
@@ -710,6 +711,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  AsyncTransportInterface|null  $asyncTransport
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setAsyncTransport(?AsyncTransportInterface $asyncTransport): static
     {

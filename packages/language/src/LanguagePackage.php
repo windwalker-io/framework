@@ -14,6 +14,8 @@ use Windwalker\DI\ServiceProviderInterface;
 
 /**
  * The LanguagePackage class.
+ *
+ * @codeCoverageIgnore
  */
 class LanguagePackage extends AbstractPackage implements ServiceProviderInterface, RequestBootableProviderInterface
 {

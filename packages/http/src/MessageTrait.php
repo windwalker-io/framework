@@ -49,7 +49,7 @@ trait MessageTrait
      *
      * The string MUST contain only the HTTP version number (e.g., "1.1", "1.0").
      *
-     * @return string HTTP protocol version.
+     * @return  string  HTTP protocol version.
      */
     public function getProtocolVersion(): string
     {
@@ -68,7 +68,7 @@ trait MessageTrait
      *
      * @param  string  $version  HTTP protocol version
      *
-     * @return static
+     * @return  static
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
@@ -110,9 +110,9 @@ trait MessageTrait
      * While header names are not case-sensitive, getHeaders() will preserve the
      * exact case in which headers were originally specified.
      *
-     * @return array Returns an associative array of the message's headers. Each
-     *     key MUST be a header name, and each value MUST be an array of strings
-     *     for that header.
+     * @return  array  Returns an associative array of the message's headers. Each
+     *                 key MUST be a header name, and each value MUST be an array of strings
+     *                 for that header.
      */
     public function getHeaders(): array
     {
@@ -124,9 +124,9 @@ trait MessageTrait
      *
      * @param  string  $name  Case-insensitive header field name.
      *
-     * @return bool Returns true if any header names match the given header
-     *     name using a case-insensitive string comparison. Returns false if
-     *     no matching header name is found in the message.
+     * @return  bool  Returns true if any header names match the given header
+     *                name using a case-insensitive string comparison. Returns false if
+     *                no matching header name is found in the message.
      */
     public function hasHeader(string $name): bool
     {
@@ -144,9 +144,9 @@ trait MessageTrait
      *
      * @param  string  $name  Case-insensitive header field name.
      *
-     * @return string[] An array of string values as provided for the given
-     *    header. If the header does not appear in the message, this method MUST
-     *    return an empty array.
+     * @return  string[]  An array of string values as provided for the given
+     *                    header. If the header does not appear in the message, this method MUST
+     *                    return an empty array.
      */
     public function getHeader(string $name): array
     {
@@ -175,9 +175,9 @@ trait MessageTrait
      *
      * @param  string  $name  Case-insensitive header field name.
      *
-     * @return string A string of values as provided for the given header
-     *    concatenated together using a comma. If the header does not appear in
-     *    the message, this method MUST return an empty string.
+     * @return  string  A string of values as provided for the given header
+     *                  concatenated together using a comma. If the header does not appear in
+     *                  the message, this method MUST return an empty string.
      */
     public function getHeaderLine(string $name): string
     {
@@ -203,8 +203,8 @@ trait MessageTrait
      * @param  string           $name   Case-insensitive header field name.
      * @param  string|string[]  $value  Header value(s).
      *
-     * @return static
-     * @throws InvalidArgumentException for invalid header names or values.
+     * @return  static
+     * @throws  InvalidArgumentException  for invalid header names or values.
      */
     public function withHeader(string $name, $value): MessageInterface
     {
@@ -229,8 +229,8 @@ trait MessageTrait
      * @param  string  $name   Case-insensitive header field name to add.
      * @param  mixed   $value  Header value(s).
      *
-     * @return static
-     * @throws InvalidArgumentException for invalid header names or values.
+     * @return  static
+     * @throws  InvalidArgumentException  for invalid header names or values.
      */
     public function withAddedHeader(string $name, $value): MessageInterface
     {
@@ -268,7 +268,7 @@ trait MessageTrait
      *
      * @param  string  $name  Case-insensitive header field name to remove.
      *
-     * @return static
+     * @return  static
      */
     public function withoutHeader(string $name): MessageInterface
     {
@@ -289,7 +289,7 @@ trait MessageTrait
     /**
      * Gets the body of the message.
      *
-     * @return StreamInterface Returns the body as a stream.
+     * @return  StreamInterface  Returns the body as a stream.
      */
     public function getBody(): StreamInterface
     {
@@ -307,8 +307,8 @@ trait MessageTrait
      *
      * @param  StreamInterface  $body  Body.
      *
-     * @return static
-     * @throws InvalidArgumentException When the body is not valid.
+     * @return  static
+     * @throws  InvalidArgumentException  When the body is not valid.
      */
     public function withBody(StreamInterface $body): MessageInterface
     {
@@ -331,6 +331,10 @@ trait MessageTrait
         $new = clone $this;
 
         $normalized = strtolower($name);
+
+        if (isset($new->headerNames[$normalized])) {
+            unset($new->headers[$new->headerNames[$normalized]]);
+        }
 
         $name = HeaderHelper::normalizeHeaderName($name);
 

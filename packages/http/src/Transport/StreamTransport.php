@@ -249,8 +249,8 @@ class StreamTransport extends AbstractTransport
         $response->getBody()->rewind();
 
         // Get the response code from the first offset of the response headers.
-        preg_match('/[0-9]{3}/', array_shift($headers), $matches);
-        $code = $matches[0];
+        preg_match('/[0-9]{3}/', (string) array_shift($headers), $matches);
+        $code = $matches[0] ?? null;
 
         if (is_numeric($code)) {
             $response = $response->withStatus($code);
@@ -312,18 +312,16 @@ class StreamTransport extends AbstractTransport
 
     protected function setCABundleToOptions(array $context, StreamOptions $options): array
     {
-        if ($options->certpath) {
-            $context['ssl']['capath'] = $options->context;
+        $caPathOrFile = $options->certpath ?: $this->findCAPathOrFile();
 
+        if ($caPathOrFile === null || $caPathOrFile === '') {
             return $context;
         }
 
-        $caPathOrFile = $this->findCAPathOrFile();
-
         if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
-            $context['ssl']['cafile'] = $caPathOrFile;
-        } else {
             $context['ssl']['capath'] = $caPathOrFile;
+        } else {
+            $context['ssl']['cafile'] = $caPathOrFile;
         }
 
         return $context;

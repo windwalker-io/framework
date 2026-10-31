@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Language\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Language\LanguageNormalizer;
 
@@ -14,12 +16,7 @@ use Windwalker\Language\LanguageNormalizer;
  */
 class LanguageNormalizeTest extends TestCase
 {
-    /**
-     * getToTagCases
-     *
-     * @return  array
-     */
-    public static function getToTagCases(): array
+    public static function normalizeKeyProvider(): array
     {
         return [
             [
@@ -49,14 +46,8 @@ class LanguageNormalizeTest extends TestCase
         ];
     }
 
-    /**
-     * Method to test toBCP47().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Language\LanguageNormalizer::toBCP47
-     */
-    public function testToBCP47()
+    #[Test]
+    public function toBCP47NormalizesLanguageAndRegionCase(): void
     {
         self::assertEquals('en-GB', LanguageNormalizer::toBCP47('en_gb'));
         self::assertEquals('en-GB', LanguageNormalizer::toBCP47('EN_GB'));
@@ -64,19 +55,9 @@ class LanguageNormalizeTest extends TestCase
         self::assertEquals('en-GB', LanguageNormalizer::toBCP47('EN-gB'));
     }
 
-    /**
-     * Method to test toLanguageKey().
-     *
-     * @param  string  $origin
-     * @param  string  $expected
-     *
-     * @return void
-     *
-     * @covers       \Windwalker\Language\LanguageNormalizer::normalize
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('getToTagCases')]
-    public function testToLanguageKey($origin, $expected)
+    #[Test]
+    #[DataProvider('normalizeKeyProvider')]
+    public function normalizeConvertsTextToDottedLowercaseKey(string $origin, string $expected): void
     {
         self::assertEquals($expected, LanguageNormalizer::normalize($origin));
     }

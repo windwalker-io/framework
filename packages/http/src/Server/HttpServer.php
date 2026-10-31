@@ -66,6 +66,7 @@ class HttpServer extends AdaptableServer
 
     /**
      * @return Closure
+     * @codeCoverageIgnore
      */
     public function getHandler(): Closure
     {
@@ -76,6 +77,7 @@ class HttpServer extends AdaptableServer
      * @param  Closure  $handler
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setHandler(Closure $handler): static
     {

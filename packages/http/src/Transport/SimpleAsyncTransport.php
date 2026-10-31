@@ -37,6 +37,7 @@ class SimpleAsyncTransport implements AsyncTransportInterface
 
     /**
      * @return TransportInterface
+     * @codeCoverageIgnore
      */
     public function getTransport(): TransportInterface
     {
@@ -47,6 +48,7 @@ class SimpleAsyncTransport implements AsyncTransportInterface
      * @param  TransportInterface  $transport
      *
      * @return  static  Return self to support chaining.
+     * @codeCoverageIgnore
      */
     public function setTransport(TransportInterface $transport): static
     {

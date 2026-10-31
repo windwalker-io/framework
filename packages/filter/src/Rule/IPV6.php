@@ -24,7 +24,7 @@ class IPV6 extends AbstractRegexFilter
      */
     public function test(mixed $value, bool $strict = false): bool
     {
-        return filter_var(
+        return (bool) filter_var(
             $value,
             FILTER_VALIDATE_IP,
             FILTER_FLAG_IPV6

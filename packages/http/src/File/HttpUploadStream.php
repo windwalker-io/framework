@@ -14,6 +14,8 @@ use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
  */
 class HttpUploadStream implements HttpUploadFileInterface
 {
+    protected StreamInterface $stream;
+
     /**
      * @param  mixed        $stream
      * @param  string|null  $mimeType
