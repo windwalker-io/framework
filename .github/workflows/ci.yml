@@ -8,12 +8,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ ubuntu-latest, windows-latest ]
         php-versions: [ '8.4', '8.5', '8.6' ]
         experimental: [false]
         include:
-          - php-versions: '8.6'
+          - os: ubuntu-latest
+            php-versions: '8.6'
             allow_failure: true
-    runs-on: ubuntu-latest
+          - os: windows-latest
+            allow_failure: true
+    runs-on: ${{ matrix.os }}
     services:
       memcached:
         image: memcached:1.6-alpine
