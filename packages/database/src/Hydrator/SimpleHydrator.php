@@ -32,6 +32,10 @@ class SimpleHydrator implements HydratorInterface, FieldHydratorInterface
             return iterator_to_array($object);
         }
 
+        if ($object instanceof \stdClass) {
+            return get_object_vars($object);
+        }
+
         return ReflectAccessor::getPropertiesValues($object);
     }
 

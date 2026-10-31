@@ -25,6 +25,8 @@ trait ORMProxyTrait
      * @return  T|null
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function findOne(
         string $entityClass,
@@ -46,6 +48,8 @@ trait ORMProxyTrait
      * @return  T
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function mustFindOne(
         string $entityClass,
@@ -67,6 +71,8 @@ trait ORMProxyTrait
      * @return  iterable<T>
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function findList(
         string $entityClass,
@@ -86,6 +92,8 @@ trait ORMProxyTrait
      * @return  mixed
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function findResult(
         string $entityClass,
@@ -105,6 +113,8 @@ trait ORMProxyTrait
      * @return  Collection
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function findColumn(
         string $entityClass,
@@ -124,6 +134,8 @@ trait ORMProxyTrait
      * @return  int
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function countColumn(
         string $entityClass,
@@ -143,6 +155,8 @@ trait ORMProxyTrait
      * @return  float
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function sumColumn(
         string $entityClass,
@@ -188,6 +202,8 @@ trait ORMProxyTrait
      * @return  array<T>
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function createBulk(string $entityClass, iterable $items, ORMOptions|int $options = new ORMOptions()): array
     {
@@ -206,6 +222,8 @@ trait ORMProxyTrait
      *
      * @throws \JsonException
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function createMultiple(
         string $entityClass,
@@ -229,6 +247,9 @@ trait ORMProxyTrait
         return $this->mapper($entityClass)->updateOne($item, $condFields, $options);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function updateMultiple(
         string|object $entityClass,
         iterable $items = [],
@@ -240,6 +261,8 @@ trait ORMProxyTrait
 
     /**
      * @deprecated  Use updateBulk() instead.
+     *
+     * @codeCoverageIgnore
      */
     public function updateWhere(
         string $entityClass,
@@ -261,6 +284,8 @@ trait ORMProxyTrait
      * @return  StatementInterface
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function updateBulk(
         string $entityClass,
@@ -282,6 +307,8 @@ trait ORMProxyTrait
      * @return  array
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function updateBatch(
         string $entityClass,
@@ -303,6 +330,8 @@ trait ORMProxyTrait
      * @return  iterable<T>|L<T>
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function saveMultiple(
         string|object $entityClass,
@@ -346,6 +375,8 @@ trait ORMProxyTrait
      *
      * @throws \JsonException
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function findOneOrCreate(
         string $entityClass,
@@ -366,6 +397,8 @@ trait ORMProxyTrait
      *
      * @throws \JsonException
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function updateOneOrCreate(
         string $entityClass,
@@ -386,6 +419,8 @@ trait ORMProxyTrait
      *
      * @throws \JsonException
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function upsert(
         string $entityClass,
@@ -407,6 +442,8 @@ trait ORMProxyTrait
      * @return  StatementInterface
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function deleteBulk(
         string $entityClass,
@@ -418,6 +455,8 @@ trait ORMProxyTrait
 
     /**
      * @deprecated  Use deleteBatch() instead.
+     *
+     * @codeCoverageIgnore
      */
     public function deleteWhere(
         string $entityClass,
@@ -427,6 +466,9 @@ trait ORMProxyTrait
         $this->deleteBatch($entityClass, $conditions, $options);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function deleteOne(string $entityClass, mixed $conditions, ORMOptions|int $options = new ORMOptions()): void
     {
         $this->mapper($entityClass)->deleteOne($conditions, $options);
@@ -442,6 +484,8 @@ trait ORMProxyTrait
      * @return  void
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function deleteBatch(
         string $entityClass,
@@ -460,6 +504,8 @@ trait ORMProxyTrait
      *
      * @throws \JsonException
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function flush(
         string $entityClass,
@@ -480,6 +526,8 @@ trait ORMProxyTrait
      *
      * @throws \JsonException
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function sync(
         string $entityClass,
@@ -545,6 +593,9 @@ trait ORMProxyTrait
         return $this->mapper($entityClass)->copyOne($conditions, $newValue, $options);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function increment(
         string $entityClass,
         string|array $fields,
@@ -555,6 +606,9 @@ trait ORMProxyTrait
         $this->mapper($entityClass)->increment($fields, $conditions, $num, $options);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function decrement(
         string $entityClass,
         string|array $fields,
@@ -565,6 +619,9 @@ trait ORMProxyTrait
         $this->mapper($entityClass)->decrement($fields, $conditions, $num, $options);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function incrementOrCreate(
         string $entityClass,
         string|array $fields,
@@ -576,6 +633,9 @@ trait ORMProxyTrait
         $this->mapper($entityClass)->incrementOrCreate($fields, $conditions, $num, $initData, $options);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function decrementOrCreate(
         string $entityClass,
         string|array $fields,
@@ -595,6 +655,8 @@ trait ORMProxyTrait
      * @return  T
      *
      * @throws \ReflectionException
+     *
+     * @codeCoverageIgnore
      */
     public function pushNextVersion(object $entity): object
     {

@@ -6,6 +6,11 @@ namespace Windwalker\ORM\Test;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\ORM\Attributes\JsonNoSerialize;
+use Windwalker\ORM\Attributes\JsonSerializer;
+use Windwalker\ORM\Attributes\Table;
+use Windwalker\ORM\EntityInterface;
+use Windwalker\ORM\EntityTrait;
 use Windwalker\ORM\Test\Entity\StubLocation;
 
 /**
@@ -74,5 +79,39 @@ class EntityTraitTest extends TestCase
         $entity = new StubLocation();
 
         self::assertSame(['data' => null, 'sakuras' => null], $entity->jsonSerialize());
+    }
+
+    #[Test]
+    public function defaultAliasReadsTableAttribute(): void
+    {
+        self::assertSame('location', StubLocation::defaultAlias());
+    }
+
+    #[Test]
+    public function jsonSerializeAppliesSerializerAttributes(): void
+    {
+        $entity = new #[Table('things', 'thing')] class () implements EntityInterface {
+            use EntityTrait;
+
+            public string $name = 'a';
+
+            #[JsonNoSerialize]
+            public string $secret = 'hidden';
+
+            #[JsonSerializer('strtoupper')]
+            public string $title = 'abc';
+
+            protected bool $active = true;
+
+            public function isActive(): bool
+            {
+                return $this->active;
+            }
+        };
+
+        self::assertSame(['name' => 'a', 'title' => 'ABC'], $entity->jsonSerialize());
+        self::assertTrue(isset($entity->active));
+        self::assertTrue($entity->active);
+        self::assertTrue(isset($entity->name));
     }
 }

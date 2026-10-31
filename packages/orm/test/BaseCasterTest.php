@@ -70,4 +70,34 @@ class BaseCasterTest extends TestCase
         self::assertNull($this->instance->castValue(new \stdClass()));
         self::assertSame(5, $this->instance->castValue(5));
     }
+
+    #[Test]
+    public function castDateTimeConvertsToDatabaseTimezone(): void
+    {
+        $this->instance->setDbTimezone('Asia/Taipei');
+
+        self::assertSame(
+            '2024-01-02 11:00:00',
+            $this->instance->castDateTime(new DateTimeImmutable('2024-01-02 03:00:00', new \DateTimeZone('UTC')))
+        );
+        self::assertSame('Asia/Taipei', $this->instance->getDbTimezone()->getName());
+
+        $this->instance->setDbTimezone(null);
+
+        self::assertSame(
+            '2024-01-02 03:00:00',
+            $this->instance->castDateTime(new DateTimeImmutable('2024-01-02 03:00:00', new \DateTimeZone('UTC')))
+        );
+    }
+
+    #[Test]
+    public function castEnumUnwrapsBackedValues(): void
+    {
+        self::assertSame('a', $this->instance->castEnum(BaseCasterStubEnum::A));
+    }
+}
+
+enum BaseCasterStubEnum: string
+{
+    case A = 'a';
 }

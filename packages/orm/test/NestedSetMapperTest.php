@@ -313,23 +313,25 @@ class NestedSetMapperTest extends AbstractORMTestCase
     #[Test]
     public function deleteRemovesNodeAndDescendants(): void
     {
-        $newChild = new StubNestedSet();
-        $newChild->setTitle('Kapok');
-        $newChild->setAlias('kapok');
+        $this->rollbackAfter(function () {
+            $newChild = new StubNestedSet();
+            $newChild->setTitle('Kapok');
+            $newChild->setAlias('kapok');
 
-        $this->instance->putBefore($newChild, 2);
+            $this->instance->putBefore($newChild, 2);
 
-        $this->instance->deleteWhere(8);
+            $this->instance->deleteWhere(8);
 
-        self::assertNull(
-            $this->instance->findOne(8)
-        );
+            self::assertNull(
+                $this->instance->findOne(8)
+            );
 
-        // Delete children
-        $this->instance->deleteWhere(2);
+            // Delete children
+            $this->instance->deleteWhere(2);
 
-        self::assertNull($this->instance->findOne(3));
-        self::assertNull($this->instance->findOne(4));
+            self::assertNull($this->instance->findOne(3));
+            self::assertNull($this->instance->findOne(4));
+        });
     }
 
     /**
@@ -350,6 +352,107 @@ class NestedSetMapperTest extends AbstractORMTestCase
             'root',
             $root->getAlias()
         );
+    }
+
+    #[Test]
+    public function isLeafAcceptsEntitiesAndReturnsFalseForMissingNodes(): void
+    {
+        self::assertTrue($this->instance->isLeaf($this->instance->findOne(5)));
+        self::assertFalse($this->instance->isLeaf($this->instance->findOne(2)));
+        self::assertFalse($this->instance->isLeaf(99999));
+    }
+
+    #[Test]
+    public function setPositionAcceptsReferenceEntitiesAndShortcuts(): void
+    {
+        $reference = $this->instance->findOne(2);
+        $entity = new StubNestedSet();
+
+        $this->instance->setPositionAppendTo($entity, $reference);
+
+        self::assertEquals(2, $entity->getPosition()->getReferenceId());
+        self::assertSame(Position::LAST_CHILD, $entity->getPosition()->getPosition());
+
+        $this->instance->setPositionPrependTo($entity, 3);
+
+        self::assertEquals(3, $entity->getPosition()->getReferenceId());
+        self::assertSame(Position::FIRST_CHILD, $entity->getPosition()->getPosition());
+    }
+
+    #[Test]
+    public function createRootRejectsWhenRootAlreadyExists(): void
+    {
+        $this->expectException(NestedHandleException::class);
+        $this->expectExceptionMessage('Root has already exists.');
+
+        $this->instance->createRoot(['title' => 'root2']);
+    }
+
+    #[Test]
+    public function createRootIfNotExistReturnsExistingRoot(): void
+    {
+        $root = $this->instance->createRootIfNotExist(['title' => 'root']);
+
+        self::assertEquals(1, $root->getId());
+    }
+
+    #[Test]
+    public function appendToAndPrependToSaveNodeUnderReference(): void
+    {
+        $this->rollbackAfter(function () {
+            $appended = new StubNestedSet();
+            $appended->setTitle('Appended');
+            $appended->setAlias('appended');
+
+            $appended = $this->instance->appendTo($appended, 1);
+
+            self::assertEquals(1, $appended->getParentId());
+
+            $prepended = new StubNestedSet();
+            $prepended->setTitle('Prepended');
+            $prepended->setAlias('prepended');
+
+            $prepended = $this->instance->prependTo($prepended, 1);
+
+            self::assertEquals(1, $prepended->getParentId());
+            self::assertLessThan($appended->getLft(), $this->instance->findOne($prepended->getId())->getLft());
+        });
+    }
+
+    #[Test]
+    public function saveRejectsParentThatIsSelfOrChild(): void
+    {
+        $this->rollbackAfter(function () {
+            $node = $this->instance->findOne(2);
+
+            $this->instance->setPositionAppendTo($node, 2);
+
+            try {
+                $this->instance->saveOne($node);
+                self::fail('Expected NestedHandleException for self parent.');
+            } catch (NestedHandleException) {
+                self::assertTrue(true);
+            }
+
+            $node = $this->instance->findOne(2);
+            $this->instance->setPositionAppendTo($node, 3);
+
+            $this->expectException(NestedHandleException::class);
+
+            $this->instance->saveOne($node);
+        });
+    }
+
+    private function rollbackAfter(callable $callback): void
+    {
+        $platform = self::$db->getPlatform();
+        $platform->transactionStart();
+
+        try {
+            $callback();
+        } finally {
+            $platform->transactionRollback();
+        }
     }
 
     #[Before]

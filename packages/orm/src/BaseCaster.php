@@ -22,12 +22,10 @@ class BaseCaster
 
     public function castDateTime(\DateTimeInterface $value): ?string
     {
-        $tz = $value->getTimezone();
+        $tz = $this->dbTimezone;
 
         if ($tz && $tz->getName() !== $value->getTimezone()->getName()) {
-            $date = \DateTimeImmutable::createFromInterface($value);
-
-            $value = $date->setTimezone($tz);
+            $value = \DateTimeImmutable::createFromInterface($value)->setTimezone($tz);
         }
 
         return $value->format($this->db->getDateFormat());
