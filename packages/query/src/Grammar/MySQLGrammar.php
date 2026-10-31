@@ -33,6 +33,36 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
      */
     public static string $nullDate = '1000-01-01 00:00:00';
 
+    public function compileUpsert(
+        Query $query,
+        string $table,
+        array $data,
+        array $keys,
+        array $updateFields,
+        ?string $returningIdField = null,
+    ): string {
+        $table = (string) $query->quoteName($table);
+        [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
+
+        $updateActions = $query->clause('', [], ',');
+
+        foreach ($query->qnMultiple($updateFields) as $key) {
+            $updateActions->append("$key = VALUES($key)");
+        }
+
+        if ($returningIdField) {
+            $quotedReturningIdField = $query->quoteName($returningIdField);
+            $updateActions->append("$quotedReturningIdField = LAST_INSERT_ID($quotedReturningIdField)");
+        }
+
+        return <<<SQL
+        INSERT INTO $table $columns
+        VALUES $values
+        ON DUPLICATE KEY UPDATE
+            $updateActions
+        SQL;
+    }
+
     /**
      * If no connection set, we escape it with default function.
      *

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
+use InvalidArgumentException;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
@@ -31,6 +33,56 @@ class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
      * @var string
      */
     public static string $nullDate = '1900-01-01 00:00:00';
+
+    public function compileUpsert(
+        Query $query,
+        string $table,
+        array $data,
+        array $keys,
+        array $updateFields,
+        ?string $returningIdField = null,
+    ): string {
+        $table = (string) $query->quoteName($table);
+        [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
+
+        $srcOn = $query->clause('()', [], ' AND ');
+
+        foreach ($keys as $key) {
+            $srcOn->append($query->quoteName($key) . " = :key_$key");
+            $query->bind(
+                "key_$key",
+                $data[$key]
+                ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
+            );
+        }
+
+        $updateSet = $query->clause('', [], ',');
+
+        foreach ($updateFields as $k) {
+            $v = $data[$k];
+
+            if ($v instanceof RawWrapper) {
+                $updateSet->append($query->quoteName($k) . '=' . $v());
+            } else {
+                $query->bind('update_set_' . $k, $v);
+                $updateSet->append($query->quoteName($k) . " = :update_set_$k");
+            }
+        }
+
+        $output = '';
+
+        if ($returningIdField) {
+            $output = 'OUTPUT INSERTED.' . $query->quoteName($returningIdField);
+        }
+
+        // MERGE is only available since SQL Server 2008 and must be terminated by semicolon.
+        // It also requires HOLDLOCK to avoid upsert race conditions.
+        return "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
+                    WHEN NOT MATCHED THEN INSERT $columns
+                    VALUES $values
+                    WHEN MATCHED THEN UPDATE SET $updateSet
+                    $output;";
+    }
 
     public function compileInsert(Query $query): string
     {

@@ -291,6 +291,8 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
      * Reconnect database to avoid long connect issues.
      *
      * @return  static
+     *
+     * @codeCoverageIgnore
      */
     public function reconnect(): static
     {

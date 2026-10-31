@@ -33,7 +33,7 @@ class PdoQueueFailer implements QueueFailerInterface
     /**
      * DatabaseQueueFailer constructor.
      *
-     * @param  PDO    $pdo
+     * @param  PDO     $pdo
      * @param  string  $table
      */
     public function __construct(PDO $pdo, string $table = 'queue_failed_jobs')
@@ -73,9 +73,9 @@ class PdoQueueFailer implements QueueFailerInterface
         // For B/C
         $created = (new DateTime('now'))->format('Y-m-d H:i:s');
 
-        $sql = 'INSERT INTO ' . $this->table .
-            ' (connection, channel, body, exception, created)' .
-            ' VALUES (:connection, :channel, :body, :exception, :created)';
+        $sql = 'INSERT INTO ' . $this->table
+            . ' (connection, channel, body, exception, created)'
+            . ' VALUES (:connection, :channel, :body, :exception, :created)';
 
         $stat = $this->pdo->prepare($sql);
         $stat->bindValue(':connection', $connection);
@@ -93,8 +93,8 @@ class PdoQueueFailer implements QueueFailerInterface
      * all
      *
      * @return  iterable
-     * @throws RuntimeException
-     * @throws InvalidArgumentException
+     * @throws  RuntimeException
+     * @throws  InvalidArgumentException
      */
     public function all(): iterable
     {
@@ -112,18 +112,18 @@ class PdoQueueFailer implements QueueFailerInterface
      *
      * @param  mixed  $conditions
      *
-     * @return array|null
+     * @return  array|null
      */
     public function get(mixed $conditions): ?array
     {
-        $sql = 'SELECT * FROM ' . $this->table .
-            ' WHERE id = :id';
+        $sql = 'SELECT * FROM ' . $this->table
+            . ' WHERE id = :id';
 
         $stat = $this->pdo->prepare($sql);
         $stat->bindValue(':id', $conditions);
         $stat->execute();
 
-        return $stat->fetch(PDO::FETCH_ASSOC);
+        return $stat->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
     /**
@@ -135,8 +135,8 @@ class PdoQueueFailer implements QueueFailerInterface
      */
     public function remove(mixed $conditions): bool
     {
-        $sql = 'DELETE FROM ' . $this->table .
-            ' WHERE id = :id';
+        $sql = 'DELETE FROM ' . $this->table
+            . ' WHERE id = :id';
 
         $stat = $this->pdo->prepare($sql);
         $stat->bindValue(':id', $conditions);
@@ -160,6 +160,8 @@ class PdoQueueFailer implements QueueFailerInterface
      * Method to get property Table
      *
      * @return  string
+     *
+     * @codeCoverageIgnore
      */
     public function getTable(): string
     {
@@ -172,6 +174,8 @@ class PdoQueueFailer implements QueueFailerInterface
      * @param  string  $table
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTable(string $table): static
     {

@@ -20,7 +20,7 @@ class DatabaseQueueFailerTest extends TestCase
     use DatabaseTestTrait;
 
     /**
-     * @var QueueFailerInterface|null
+     * @var  QueueFailerInterface|null
      */
     protected ?QueueFailerInterface $instance = null;
 
@@ -145,6 +145,12 @@ class DatabaseQueueFailerTest extends TestCase
     public function isSupportedReturnsTrue(): void
     {
         self::assertTrue($this->instance->isSupported());
+    }
+
+    #[Test]
+    public function getReturnsNullForUnknownId(): void
+    {
+        self::assertNull($this->instance->get(987654));
     }
 
     #[Before]

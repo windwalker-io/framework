@@ -273,11 +273,8 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
      */
     public function reconnect(): static
     {
-        $this->disconnect();
-
-        $this->db->connect();
-
-        return $this;
+        // The adapter reconnects lazily on the next query.
+        return $this->disconnect();
     }
 
     /**

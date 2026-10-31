@@ -14,7 +14,6 @@ use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
-use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The WriterManager class.
@@ -260,11 +259,9 @@ class WriterManager
 
         $query = $this->db->createQuery();
 
-        $table = (string) $query->quoteName($table);
         $originData = $data;
         $data = TypeCast::toArray($originData);
         $allFields = array_keys($data);
-        // $valueFields = array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
         $updateFields ??= array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
@@ -274,155 +271,23 @@ class WriterManager
             $updateFields = $keys;
         }
 
-        $quotedUpdateFields = $query->qnMultiple($updateFields);
-        $quotedFields = $query->qnMultiple($allFields);
-        // $quotedValueFields = $query->qnMultiple($valueFields);
-        $quotedKeys = $query->qnMultiple($keys);
-
-        $columns = $query->clause('()', $quotedFields, ',');
-        $values = $query->clause('()', [], ',');
-
-        foreach ($data as $k => $v) {
-            if ($v instanceof RawWrapper) {
-                $values->append($v());
-            } else {
-                $query->bind($k, $v);
-                $values->append(":$k");
-            }
+        if (
+            $platformName === AbstractPlatform::SQLSERVER
+            && version_compare($this->db->getDriver()->getVersion(), '10', '<')
+        ) {
+            throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
         }
 
-        switch ($platformName) {
-            case AbstractPlatform::MYSQL:
-                $updateActions = $query->clause('', [], ',');
-
-                foreach ($quotedUpdateFields as $key) {
-                    $updateActions->append("$key = VALUES($key)");
-                }
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $updateActions->append("$quotedReturningIdField = LAST_INSERT_ID($quotedReturningIdField)");
-                }
-
-                $query->sql(
-                    <<<SQL
-                    INSERT INTO $table $columns
-                    VALUES $values
-                    ON DUPLICATE KEY UPDATE
-                        $updateActions
-                    SQL
-                );
-                break;
-
-            case AbstractPlatform::POSTGRESQL:
-                $updateActions = $query->clause('()', [], ',');
-
-                foreach ($quotedKeys as $key) {
-                    $updateActions->append($key);
-                }
-
-                $excludeKeys = $query->clause('', [], ',');
-
-                foreach ($quotedUpdateFields as $key) {
-                    $excludeKeys->append("$key = EXCLUDED.$key");
-                }
-
-                $returning = '';
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $returning = "RETURNING $quotedReturningIdField";
-                }
-
-                $query->sql(
-                    <<<SQL
-                    INSERT INTO $table $columns
-                    VALUES $values ON CONFLICT $updateActions DO UPDATE SET
-                        $excludeKeys
-                    $returning
-                    SQL
-                );
-                break;
-
-            case AbstractPlatform::SQLSERVER:
-                if (
-                    version_compare(
-                        $this->db->getDriver()->getVersion(),
-                        '10',
-                        '<'
-                    )
-                ) {
-                    throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
-                }
-
-                $srcOn = $query->clause('()', [], ' AND ');
-
-                foreach ($keys as $key) {
-                    $srcOn->append($query->quoteName($key) . " = :key_$key");
-                    $query->bind(
-                        "key_$key",
-                        $data[$key]
-                        ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
-                    );
-                }
-
-                $updateSet = $query->clause('', [], ',');
-
-                foreach ($updateFields as $k) {
-                    $v = $data[$k];
-
-                    if ($v instanceof RawWrapper) {
-                        $updateSet->append($query->quoteName($k) . '=' . $v());
-                    } else {
-                        $query->bind('update_set_' . $k, $v);
-                        $updateSet->append($query->quoteName($k) . " = :update_set_$k");
-                    }
-                }
-
-                $output = '';
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $output = "OUTPUT INSERTED.$quotedReturningIdField";
-                }
-
-                // phpcs:disable
-                // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
-                // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-                $query->sql(
-                    "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
-                    WHEN NOT MATCHED THEN INSERT $columns
-                    VALUES $values
-                    WHEN MATCHED THEN UPDATE SET $updateSet
-                    $output;"
-                );
-                break;
-
-            case AbstractPlatform::SQLITE:
-                $returning = '';
-
-                if ($returningIdField) {
-                    $quotedReturningIdField = $query->quoteName($returningIdField);
-                    $returning = "RETURNING $quotedReturningIdField";
-                }
-
-                $conflictKeys = $query->clause('()', $quotedKeys, ',');
-                $setActions = $query->clause('', [], ',');
-
-                foreach ($quotedUpdateFields as $key) {
-                    $setActions->append("$key = excluded.$key");
-                }
-
-                $conflictAction = "DO UPDATE SET $setActions";
-
-                $query->sql(
-                    "INSERT INTO $table $columns
-                VALUES $values
-                ON CONFLICT $conflictKeys $conflictAction
-                $returning"
-                );
-                break;
-        }
+        $query->sql(
+            $query->getGrammar()->compileUpsert(
+                $query,
+                $table,
+                $data,
+                $keys,
+                $updateFields,
+                $returningIdField
+            )
+        );
 
         $statement = $query->execute();
 
