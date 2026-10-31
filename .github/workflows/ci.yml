@@ -56,6 +56,14 @@ jobs:
       # PostgreSQL
       - name: Setup PostgreSQL
         run: docker run --rm --name=postgres -e POSTGRES_PASSWORD=ut1234 -e POSTGRES_DB=windwalker_test -p 5432:5432 -d postgres
+      # Microsoft ODBC Driver, required by sqlsrv / pdo_sqlsrv
+      - name: Setup ODBC Driver for SQL Server
+        run: |
+          curl -sSL -O "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+          sudo dpkg -i packages-microsoft-prod.deb
+          rm packages-microsoft-prod.deb
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
       # PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
