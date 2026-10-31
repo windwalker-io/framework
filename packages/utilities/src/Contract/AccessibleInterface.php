@@ -10,8 +10,6 @@ use JsonSerializable;
 
 /**
  * The AccessibleInterface class.
- *
- * @since  __DEPLOY_VERSION__
  */
 interface AccessibleInterface extends
     AccessorAccessibleInterface,

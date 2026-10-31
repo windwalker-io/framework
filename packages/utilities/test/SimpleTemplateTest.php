@@ -50,4 +50,13 @@ class SimpleTemplateTest extends TestCase
             )
         );
     }
+
+    #[Test]
+    public function renderConvertsArrayValueToString(): void
+    {
+        $result = SimpleTemplate::render('List: {{ foo }}', ['foo' => ['a', 'b']]);
+
+        self::assertStringStartsWith('List: ', $result);
+        self::assertNotSame('List: ', $result);
+    }
 }

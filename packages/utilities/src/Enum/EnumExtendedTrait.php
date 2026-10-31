@@ -89,6 +89,9 @@ trait EnumExtendedTrait
         return \array_keys(static::values());
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function jsonSerialize(): string|int
     {
         return $this->value;

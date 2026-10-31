@@ -133,8 +133,10 @@ trait EnumPhpAdapterTrait
     public static function tryFrom(string|int $value): ?static
     {
         if (is_subclass_of(static::class, \UnitEnum::class)) {
-            // Native Enum
+            // @codeCoverageIgnoreStart
+            // Unreachable: native enums cannot use this trait's tryFrom(), the built-in one is used instead.
             return static::tryFrom($value);
+            // @codeCoverageIgnoreEnd
         }
 
         try {

@@ -108,4 +108,13 @@ class CompareHelperTest extends TestCase
     {
         self::assertEquals($result, CompareHelper::compare($a, $b, $operator, $strict));
     }
+
+    #[Test]
+    public function compareThrowsOnUnknownOperator(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Invalid compare operator: ~~');
+
+        CompareHelper::compare(1, 2, '~~');
+    }
 }

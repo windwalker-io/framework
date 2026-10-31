@@ -15,7 +15,6 @@ namespace {
          *
          * @return  void
          * @since   2.0
-         *
          */
         function show(...$args)
         {
@@ -260,8 +259,6 @@ namespace Windwalker {
          * @param  Traversable  $iterable
          *
          * @return  array
-         *
-         * @since  __DEPLOY_VERSION__
          */
         #[Pure]
         function iterator_keys(
@@ -281,8 +278,6 @@ namespace Windwalker {
          * @param  bool    $strict
          *
          * @return  WhereWrapper
-         *
-         * @since  __DEPLOY_VERSION__
          */
         #[Pure]
         function where(
@@ -303,8 +298,6 @@ namespace Windwalker {
          * @param  mixed          ...$args
          *
          * @return  mixed
-         *
-         * @since  __DEPLOY_VERSION__
          */
         function value(mixed $value, mixed ...$args): mixed
         {
@@ -399,8 +392,6 @@ namespace Windwalker {
          * @param  string|null  $delimiter
          *
          * @return  ValueReference
-         *
-         * @since  __DEPLOY_VERSION__
          */
         #[Pure]
         function ref(

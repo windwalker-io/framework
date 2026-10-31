@@ -35,8 +35,6 @@ interface AccessorAccessibleInterface
      * @param  mixed  $default
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function def(mixed $key, mixed $default): mixed;
 
@@ -46,8 +44,6 @@ interface AccessorAccessibleInterface
      * @param  mixed  $key
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function has(mixed $key): bool;
 
@@ -57,8 +53,6 @@ interface AccessorAccessibleInterface
      * @param  mixed  $key
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function remove(mixed $key): static;
 

@@ -237,8 +237,6 @@ abstract class TypeCast
      * @param  mixed  $data  The data to convert.
      *
      * @return  string
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function forceString(mixed $data): string
     {
@@ -252,8 +250,6 @@ abstract class TypeCast
      * @param  string  $typeOrClass
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function mapAs(array $src, string $typeOrClass): array
     {
@@ -521,8 +517,6 @@ abstract class TypeCast
      * @param  array   $args
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function __callStatic(string $name, array $args): mixed
     {

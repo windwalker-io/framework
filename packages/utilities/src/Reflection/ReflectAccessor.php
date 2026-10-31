@@ -35,11 +35,12 @@ class ReflectAccessor
         $values = [];
 
         foreach ($properties as $property) {
-            $inited = is_object($object)
-                ? $property->isInitialized($object)
-                : $property->isInitialized();
+            $instance = is_object($object) ? $object : null;
 
-            $value = $inited ? $property->getValue($object) : null;
+            // Without an instance, only static properties can be read.
+            $inited = ($instance !== null || $property->isStatic()) && $property->isInitialized($instance);
+
+            $value = $inited ? $property->getValue($instance) : null;
 
             $values[$property->getName()] = $value;
         }

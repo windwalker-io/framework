@@ -100,7 +100,8 @@ class SimpleTemplate
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getDelimiter(): string
     {
@@ -113,8 +114,6 @@ class SimpleTemplate
      * @param  string  $delimiter
      *
      * @return  static  Return self to support chaining.
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function setDelimiter(string $delimiter): static
     {
@@ -125,6 +124,8 @@ class SimpleTemplate
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getTemplate(): string
     {
@@ -135,6 +136,8 @@ class SimpleTemplate
      * @param  string  $template
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTemplate(string $template): static
     {

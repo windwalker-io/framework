@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Classes;
 
+use BadMethodCallException;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -69,6 +70,33 @@ class MarcoableTraitTest extends TestCase
         $this->instance::clearMarco();
 
         self::assertFalse($this->instance::hasMacro('foo'));
+    }
+
+    #[Test]
+    public function callingMissingMacroOnInstanceThrows(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessageIsOrContains('::missing does not exist.');
+
+        $this->instance->missing();
+    }
+
+    #[Test]
+    public function callingMissingMacroStaticallyThrows(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessageIsOrContains('::missing does not exist.');
+
+        $this->instance::missing();
+    }
+
+    #[Test]
+    public function nonClosureMacroIsCalledAsIs(): void
+    {
+        $this->instance::macro('up', 'strtoupper');
+
+        self::assertSame('ABC', $this->instance::up('abc'));
+        self::assertSame('ABC', $this->instance->up('abc'));
     }
 
     #[Before]

@@ -233,8 +233,12 @@ class AttributesAccessor
         string $name,
         int $flags = 0
     ): \Generator {
-        /** @var \ReflectionClassConstant $constant */
-        foreach ($ref->getConstants() as $constant) {
+        foreach ($ref->getReflectionConstants() as $constant) {
+            // Enum cases are handled separately below.
+            if ($constant->isEnumCase()) {
+                continue;
+            }
+
             if ($attr = static::getFirstAttribute($constant, $name, $flags)) {
                 yield $constant->getName() => [$constant, $attr];
             }
@@ -252,8 +256,10 @@ class AttributesAccessor
             }
         }
 
-        if ($ref instanceof \ReflectionEnum) {
-            foreach ($ref->getCases() as $case) {
+        if ($ref->isEnum()) {
+            $enumRef = $ref instanceof \ReflectionEnum ? $ref : new \ReflectionEnum($ref->getName());
+
+            foreach ($enumRef->getCases() as $case) {
                 if ($attr = static::getFirstAttribute($case, $name, $flags)) {
                     yield $case->getName() => [$case, $attr];
                 }

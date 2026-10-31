@@ -30,7 +30,7 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
      */
     public function __construct(RecursiveDualIterator $it, int $mode = self::LEAVES_ONLY, int $flags = 0)
     {
-        parent::__construct($it);
+        parent::__construct($it, $mode, $flags);
     }
 
     /**
@@ -54,7 +54,8 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
      */
     public function endChildren(): void
     {
-        $this->equal &= !$this->getInnerIterator()->getLHS()->valid()
+        $this->equal = $this->equal
+            && !$this->getInnerIterator()->getLHS()->valid()
             && !$this->getInnerIterator()->getRHS()->valid();
     }
 

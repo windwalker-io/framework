@@ -161,4 +161,34 @@ class StrNormaliseTest extends TestCase
     {
         $this->assertEquals($expected, StrNormalize::toKey($input));
     }
+
+    #[Test]
+    public function splitByDropsEmptySegments(): void
+    {
+        self::assertSame(['foo', 'bar'], array_values(StrNormalize::splitBy('foo__bar_', '_')));
+        self::assertSame(['a', 'b'], array_values(StrNormalize::splitBy('a-b', '-')));
+    }
+
+    #[Test]
+    public function toDotSeparatedAndToSnakeCaseNormalizeSeparators(): void
+    {
+        self::assertSame('foo.bar.baz', StrNormalize::toDotSeparated('foo-bar_baz'));
+        self::assertSame('foo_bar_baz', StrNormalize::toSnakeCase('Foo-Bar baz'));
+    }
+
+    #[Test]
+    #[DataProvider('classNamespaceProvider')]
+    public function toClassNamespaceNormalizesSeparatorsAndCasing(string $expected, string $input): void
+    {
+        self::assertSame($expected, StrNormalize::toClassNamespace($input));
+    }
+
+    public static function classNamespaceProvider(): array
+    {
+        return [
+            ['Foo\\Bar\\Baz', 'foo/bar/baz'],
+            ['Foo\\Bar', '\\foo\\bar\\'],
+            ['FooBar\\Yoo', 'foo_bar//yoo'],
+        ];
+    }
 }

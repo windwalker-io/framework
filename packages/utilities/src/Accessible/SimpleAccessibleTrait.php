@@ -58,8 +58,6 @@ trait SimpleAccessibleTrait
      * @param  mixed  $default
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function def(mixed $key, mixed $default): mixed
     {
@@ -74,8 +72,6 @@ trait SimpleAccessibleTrait
      * @param  mixed  $key
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function has(mixed $key): bool
     {
@@ -88,8 +84,6 @@ trait SimpleAccessibleTrait
      * @param  mixed  $key
      *
      * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function remove(mixed $key): static
     {
@@ -134,8 +128,6 @@ trait SimpleAccessibleTrait
      * count
      *
      * @return  int
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function count(): int
     {

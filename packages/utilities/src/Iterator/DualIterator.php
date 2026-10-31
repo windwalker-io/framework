@@ -73,6 +73,8 @@ class DualIterator implements Iterator
      * Get lhs.
      *
      * @return Iterator Left Hand Side Iterator
+     *
+     * @codeCoverageIgnore
      */
     public function getLHS(): Iterator
     {
@@ -83,6 +85,8 @@ class DualIterator implements Iterator
      * Get rhs.
      *
      * @return Iterator Right Hand Side Iterator
+     *
+     * @codeCoverageIgnore
      */
     public function getRHS(): Iterator
     {
@@ -95,6 +99,8 @@ class DualIterator implements Iterator
      * @param  int  $flags  new flags
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public function setFlags(int $flags): void
     {
@@ -105,6 +111,8 @@ class DualIterator implements Iterator
      * Get flag.
      *
      * @return int Current flags
+     *
+     * @codeCoverageIgnore
      */
     public function getFlags(): int
     {
@@ -161,13 +169,13 @@ class DualIterator implements Iterator
     {
         switch ($this->flags & 0xF0) {
             default:
-            case self::CURRENT_ARRAY:
+            case self::KEY_ARRAY:
                 return [$this->lhs->key(), $this->rhs->key()];
-            case self::CURRENT_LHS:
+            case self::KEY_LHS:
                 return $this->lhs->key();
-            case self::CURRENT_RHS:
+            case self::KEY_RHS:
                 return $this->rhs->key();
-            case self::CURRENT_0:
+            case self::KEY_0:
                 return null;
         }
     }

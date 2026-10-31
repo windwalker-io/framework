@@ -51,7 +51,7 @@ class DateCaster
                 substr((string) $i->f, 2)
             )
             : '';
-        $format = '%R ' === $format ? '0s' : $format;
+        $format = '%R' === $format ? '0s' : $format;
 
         return $i->format(rtrim($format));
     }

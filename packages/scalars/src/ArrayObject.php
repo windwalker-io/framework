@@ -308,7 +308,7 @@ class ArrayObject implements AccessibleInterface
      */
     public function sum(): float|int
     {
-        return array_sum($this->storage);
+        return array_sum(array_filter($this->storage, is_numeric(...)));
     }
 
     /**

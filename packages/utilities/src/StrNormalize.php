@@ -6,8 +6,6 @@ namespace Windwalker\Utilities;
 
 /**
  * The StrNotmalise class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class StrNormalize
 {

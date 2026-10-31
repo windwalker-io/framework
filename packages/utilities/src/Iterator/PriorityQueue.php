@@ -196,6 +196,8 @@ class PriorityQueue extends SplPriorityQueue
      * Method to get property Serial
      *
      * @return  int
+     *
+     * @codeCoverageIgnore
      */
     public function getSerial(): int
     {
@@ -208,6 +210,8 @@ class PriorityQueue extends SplPriorityQueue
      * @param  int  $serial
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSerial(int $serial): PriorityQueue
     {

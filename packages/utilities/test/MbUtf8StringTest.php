@@ -273,7 +273,7 @@ class MbUtf8StringTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('providerTestShuffle')]
+    #[DataProvider('shuffleProvider')]
     public function shuffleReordersCharactersPreservingCharacterCounts($string)
     {
         $result = Utf8String::shuffle($string);
@@ -306,5 +306,25 @@ class MbUtf8StringTest extends TestCase
             ],
             Utf8String::toAscii('Flower'),
         );
+    }
+
+    #[Test]
+    public function strIreplaceWithArraysFallsBackToEmptyReplacementForMissingKeys(): void
+    {
+        self::assertSame(
+            'X Xnd  z',
+            Utf8String::strIreplace(['A', 'b'], ['X'], 'a and B z')
+        );
+        self::assertSame(
+            'Z Znd Z z',
+            Utf8String::strIreplace(['A', 'b'], 'Z', 'a and B z')
+        );
+    }
+
+    #[Test]
+    public function isValidUtf8ChecksEncoding(): void
+    {
+        self::assertTrue(Utf8String::isValidUtf8('哈囉 abc'));
+        self::assertFalse(Utf8String::isValidUtf8("\xC3\x28"));
     }
 }

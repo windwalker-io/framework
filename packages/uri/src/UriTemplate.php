@@ -100,6 +100,8 @@ class UriTemplate implements \Stringable
                 return (new RizeUriTemplate())->expand($template, $vars);
             }
 
+            // Fallbacks unreachable while the optional `rize/uri-template` dev dependency is installed.
+            // @codeCoverageIgnoreStart
             if (class_exists(GuzzleUriTemplate::class)) {
                 return GuzzleUriTemplate::expand($template, $vars);
             }
@@ -107,6 +109,7 @@ class UriTemplate implements \Stringable
             throw new \DomainException(
                 'Please install `rize/uri-template` or `guzzlehttp/uri-template` to support URI Template expand.'
             );
+            // @codeCoverageIgnoreEnd
         };
     }
 
@@ -134,9 +137,12 @@ class UriTemplate implements \Stringable
                 return (new RizeUriTemplate())->extract($template, $uri, $strict);
             }
 
+            // Unreachable while the optional `rize/uri-template` dev dependency is installed.
+            // @codeCoverageIgnoreStart
             throw new \DomainException(
                 'Please install `rize/uri-template` to support URI Template extract.'
             );
+            // @codeCoverageIgnoreEnd
         };
     }
 

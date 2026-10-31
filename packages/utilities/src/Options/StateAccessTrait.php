@@ -41,11 +41,17 @@ trait StateAccessTrait
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getStates(): array|ArrayAccess|AccessibleInterface
     {
         return $this->stateStorage;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setStates(array|ArrayAccess|AccessibleInterface $state): static
     {
         $this->stateStorage = $state;

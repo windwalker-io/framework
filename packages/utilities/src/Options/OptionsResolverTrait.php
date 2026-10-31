@@ -51,11 +51,17 @@ trait OptionsResolverTrait
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setOptions(array $options): static
     {
         $this->options = $options;

@@ -216,9 +216,12 @@ class UriHelper
      */
     public static function filterFragment(string $fragment): string
     {
+        // `$fragment` is typed `string`, so this defensive fallback is unreachable.
+        // @codeCoverageIgnoreStart
         if (null === $fragment) {
             $fragment = '';
         }
+        // @codeCoverageIgnoreEnd
 
         if (!empty($fragment) && str_starts_with($fragment, '#')) {
             $fragment = substr($fragment, 1);

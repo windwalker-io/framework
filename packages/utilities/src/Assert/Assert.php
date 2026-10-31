@@ -43,7 +43,7 @@ class Assert
     ): static {
         return new static(
             fn($message) => new $exceptionClass($message, $code),
-            $caller
+            $caller ?? static::getCaller(2)
         );
     }
 

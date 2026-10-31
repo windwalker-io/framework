@@ -843,4 +843,13 @@ class StrTest extends TestCase
             ],
         ];
     }
+
+    #[Test]
+    public function removeStartAndEndSupportAsciiEncoding(): void
+    {
+        self::assertSame('bar', Str::removeStart('foobar', 'foo', 'ascii'));
+        self::assertSame('foobar', Str::removeStart('foobar', 'bar', 'ascii'));
+        self::assertSame('foo', Str::removeEnd('foobar', 'bar', 'ascii'));
+        self::assertSame('foobar', Str::removeEnd('foobar', 'foo', 'ascii'));
+    }
 }

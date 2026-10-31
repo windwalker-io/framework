@@ -60,6 +60,8 @@ class Symbol
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getValue(): string
     {

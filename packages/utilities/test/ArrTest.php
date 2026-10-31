@@ -1060,7 +1060,7 @@ SHOW;
     }
 
     #[Test]
-    public static function whereFiltersItemsByFieldComparison(): void
+    public function whereFiltersItemsByFieldComparison(): void
     {
         $data = [
             [
@@ -1383,5 +1383,223 @@ SHOW;
             ['name' => 'SALLY', 'school' => 'ARKANSAS', 'age' => '28'],
             $b
         );
+    }
+
+    #[Test]
+    public function getReadsPropertiesFromObjectWithoutMagicIsset(): void
+    {
+        $data = (object) ['foo' => (object) ['bar' => 'yoo']];
+
+        self::assertSame('yoo', Arr::get($data, 'foo.bar'));
+        self::assertNull(Arr::get($data, 'foo.none'));
+    }
+
+    #[Test]
+    public function explodeAndClearSupportsArrayDelimitersAndTrimsItems(): void
+    {
+        self::assertSame(['a', 'b', 'c'], Arr::explodeAndClear([',', ';'], 'a, b;;c ,'));
+        self::assertSame(['a', 'b'], Arr::explodeAndClear(',', ' a ,, b ,'));
+        self::assertSame(['a', 'b;c'], Arr::explodeAndClear([',', ';'], 'a,b;c', 2));
+    }
+
+    #[Test]
+    public function padStartAndPadEndFillArrayToLength(): void
+    {
+        self::assertSame([0, 0, 1], Arr::padStart([1], 3, 0));
+        self::assertSame([1, 0, 0], Arr::padEnd([1], -3, 0));
+    }
+
+    #[Test]
+    public function rejectSupportsStringCallables(): void
+    {
+        self::assertSame([0 => 0, 2 => '', 4 => null], Arr::reject([0, 1, '', 'a', null], 'boolval', true));
+    }
+
+    #[Test]
+    public function getColumnReadsPrivatePropertiesInvasivelyAndKeysByProperty(): void
+    {
+        $a = new class () {
+            public int $id = 5;
+
+            private string $name = 'x';
+        };
+
+        self::assertSame(['x'], Arr::getColumn([$a], 'name'));
+        self::assertSame([5 => $a], Arr::getColumn([$a], 'name', 'id'));
+        self::assertSame(['x'], Arr::getColumn([$a], 'name', 'none'));
+        self::assertSame([], Arr::getColumn([$a], 'missing'));
+    }
+
+    #[Test]
+    public function getColumnSupportsArrayRowsAndKeyColumn(): void
+    {
+        $rows = [['id' => 'a', 'n' => 1], ['id' => 'b', 'n' => 2]];
+
+        self::assertSame([1, 2], Arr::getColumn($rows, 'n'));
+        self::assertSame(['a' => $rows[0], 'b' => $rows[1]], Arr::getColumn($rows, 'n', 'id'));
+    }
+
+    #[Test]
+    public function getColumnKeepsKeyNameForEveryObjectRow(): void
+    {
+        $rows = [(object) ['id' => 'a', 'n' => 1], (object) ['id' => 'b', 'n' => 2]];
+
+        self::assertSame(['a', 'b'], array_keys(Arr::getColumn($rows, 'n', 'id')));
+    }
+
+    #[Test]
+    public function setReplacesScalarNodeInTheMiddleOfPath(): void
+    {
+        $data = ['a' => 'scalar'];
+
+        $result = Arr::set($data, 'a.b', 'v');
+
+        self::assertSame(['a' => ['b' => 'v']], $result);
+    }
+
+    #[Test]
+    public function getColumnUsesMagicGetterWhenAvailable(): void
+    {
+        $item = new class () {
+            public function __get(string $name): mixed
+            {
+                return ['n' => 'v', 'id' => 'k'][$name] ?? null;
+            }
+
+            public function __isset(string $name): bool
+            {
+                return true;
+            }
+        };
+
+        self::assertSame(['v'], Arr::getColumn([$item], 'n'));
+        self::assertSame(['k' => $item], Arr::getColumn([$item], 'n', 'id'));
+    }
+
+    #[Test]
+    public function getColumnReadsPublicObjectProperties(): void
+    {
+        $rows = [(object) ['id' => 1, 'n' => 'a'], (object) ['id' => 2, 'n' => 'b']];
+
+        self::assertSame(['a', 'b'], Arr::getColumn($rows, 'n'));
+        self::assertSame(['a'], Arr::getColumn([(object) ['n' => 'a'], (object) ['x' => 1]], 'n'));
+    }
+
+    #[Test]
+    public function mergeCombinesArrays(): void
+    {
+        self::assertSame([1, 2, 'a' => 3], Arr::merge([1], [2], ['a' => 3]));
+    }
+
+    #[Test]
+    public function unionRecursiveMergesNestedArraysPreferringLaterValues(): void
+    {
+        self::assertSame(
+            ['a' => ['x' => 2, 'y' => 1], 'b' => 3],
+            Arr::unionRecursive(['a' => ['x' => 1, 'y' => 1]], ['a' => ['x' => 2], 'b' => 3])
+        );
+    }
+
+    #[Test]
+    public function unionRecursiveThrowsForNonArrayArguments(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Argument #2 is not an array.');
+
+        Arr::unionRecursive([], 'foo');
+    }
+
+    #[Test]
+    public function arrayEqualsComparesValuesObjectsAndResources(): void
+    {
+        $obj = new stdClass();
+        $res = fopen('php://memory', 'rb');
+
+        self::assertTrue(Arr::arrayEquals(['b' => 1, 'a' => $obj, 'r' => $res], ['a' => $obj, 'r' => $res, 'b' => 1]));
+        self::assertFalse(Arr::arrayEquals(['a' => new stdClass()], ['a' => new stdClass()]));
+        self::assertFalse(Arr::arrayEquals(['a' => 1.5], ['a' => 2.5]));
+
+        fclose($res);
+    }
+
+    #[Test]
+    public function dumpMarksUninitializedAndNonPublicProperties(): void
+    {
+        $subject = new class () {
+            public int $typed;
+
+            protected int $prot = 1;
+
+            private int $priv = 2;
+
+            public static int $stat = 3;
+        };
+
+        $dump = Arr::dump($subject);
+
+        self::assertStringContainsString('(Not initialized)', $dump);
+        self::assertStringContainsString('prot:protected', $dump);
+        self::assertStringContainsString(':private', $dump);
+        self::assertStringContainsString(':static', $dump);
+        self::assertSame('foo', Arr::dump('foo'));
+        self::assertStringContainsString('*MAX LEVEL*', Arr::dump([[1]], 1));
+    }
+
+    #[Test]
+    public function whereAcceptsArrayQueryAndNormalizesEqualOperator(): void
+    {
+        $data = [['a' => 1], ['a' => 2]];
+
+        self::assertSame([['a' => 2]], Arr::where($data, 'a', '=', 2));
+        self::assertSame([['a' => 1]], Arr::where($data, ['a' => 1]));
+    }
+
+    #[Test]
+    public function queryFirstReturnsFirstMatchOrNull(): void
+    {
+        $data = [['a' => 1], ['a' => 2], ['a' => 2, 'b' => 1]];
+
+        self::assertSame(['a' => 2], Arr::queryFirst($data, ['a' => 2]));
+        self::assertNull(Arr::queryFirst($data, ['a' => 9]));
+    }
+
+    #[Test]
+    public function matchLooselyComparesObjectsToNumbers(): void
+    {
+        self::assertCount(1, Arr::query([['a' => new stdClass()]], ['a' => 1]));
+    }
+
+    #[Test]
+    public function filterRecursiveRemovesFalsyValuesAfterCallback(): void
+    {
+        self::assertSame(
+            ['a' => ['c' => 2], 'd' => 4],
+            Arr::filterRecursive(['a' => ['b' => 0, 'c' => 2], 'd' => 4, 'e' => 5], fn($v, $k) => $k !== 'e')
+        );
+    }
+
+    #[Test]
+    public function showWritesDumpedValuesToConfiguredOutput(): void
+    {
+        $out = fopen('php://memory', 'w+b');
+        $backup = Arr::$output;
+        Arr::$output = $out;
+
+        try {
+            Arr::show('foo');
+            Arr::show('a', ['b' => 1], new \Windwalker\Utilities\Wrapper\DepthWrapper(2));
+            Arr::show(...['k' => 'v']);
+
+            rewind($out);
+            $content = stream_get_contents($out);
+        } finally {
+            Arr::$output = $backup;
+            fclose($out);
+        }
+
+        self::assertStringContainsString('foo', $content);
+        self::assertStringContainsString('[Value 1]', $content);
+        self::assertStringContainsString('[Value 2]', $content);
+        self::assertStringContainsString('[k]', $content);
     }
 }

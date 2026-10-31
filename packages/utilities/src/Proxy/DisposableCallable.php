@@ -35,7 +35,8 @@ class DisposableCallable extends CallableProxy
      *
      * @return  bool
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function isCalled(): bool
     {

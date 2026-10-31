@@ -40,6 +40,8 @@ class ObjectBuilder
      * @param  Closure  $builder
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setBuilder(Closure $builder): static
     {

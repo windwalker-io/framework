@@ -6,6 +6,8 @@ namespace Windwalker\Utilities\Classes;
 
 /**
  * The ImmutableHelperTrait class.
+ *
+ * @deprecated  Use clone-with instead.
  */
 trait ImmutableHelperTrait
 {

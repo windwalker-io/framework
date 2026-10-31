@@ -9,8 +9,6 @@ use Windwalker\Utilities\Wrapper\WrapperInterface;
 
 /**
  * The CompareWrapper class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class WhereWrapper implements WrapperInterface
 {
@@ -56,8 +54,6 @@ class WhereWrapper implements WrapperInterface
      * @param  array|object  $src
      *
      * @return  bool
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function __invoke(mixed $src): bool
     {
@@ -74,7 +70,8 @@ class WhereWrapper implements WrapperInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getVar1(): mixed
     {
@@ -88,7 +85,8 @@ class WhereWrapper implements WrapperInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setVar1(mixed $var1): static
     {
@@ -102,7 +100,8 @@ class WhereWrapper implements WrapperInterface
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getVar2(): mixed
     {
@@ -116,7 +115,8 @@ class WhereWrapper implements WrapperInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setVar2(mixed $var2): static
     {
@@ -130,7 +130,8 @@ class WhereWrapper implements WrapperInterface
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getOperator(): string
     {
@@ -144,7 +145,8 @@ class WhereWrapper implements WrapperInterface
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setOperator(string $operator): static
     {

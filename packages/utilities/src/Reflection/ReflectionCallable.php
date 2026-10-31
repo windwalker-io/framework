@@ -72,6 +72,9 @@ class ReflectionCallable implements Reflector
         return Closure::fromCallable($this->callable);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getType(): int
     {
         return $this->type;
@@ -173,6 +176,8 @@ class ReflectionCallable implements Reflector
 
     /**
      * @return string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getClass(): ?string
     {
@@ -181,6 +186,8 @@ class ReflectionCallable implements Reflector
 
     /**
      * @return object|null
+     *
+     * @codeCoverageIgnore
      */
     public function getObject(): ?object
     {
@@ -189,6 +196,8 @@ class ReflectionCallable implements Reflector
 
     /**
      * @return string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getFunctionName(): ?string
     {

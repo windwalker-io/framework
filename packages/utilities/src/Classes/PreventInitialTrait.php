@@ -6,8 +6,6 @@ namespace Windwalker\Utilities\Classes;
 
 /**
  * Trait PreventInitialTrait
- *
- * @since  __DEPLOY_VERSION__
  */
 trait PreventInitialTrait
 {

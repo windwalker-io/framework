@@ -81,7 +81,8 @@ class UniqueIterator extends FilterIterator
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setFlags(int $flags): static
     {

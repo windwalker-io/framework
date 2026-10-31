@@ -8,8 +8,6 @@ use Windwalker\Utilities\Utf8String;
 
 /**
  * Trait MbstringTestTrait
- *
- * @since  __DEPLOY_VERSION__
  */
 trait MbstringTestTrait
 {
@@ -47,7 +45,7 @@ trait MbstringTestTrait
             [false, 'missing', 'sting', 0],
             [4, 'missing', 'ing', 0],
             [10, ' объектов на карте с', 'на карте', 0],
-            [0, 'на карте с', 'на карте', 0, 0],
+            [0, 'на карте с', 'на карте', 0],
             [false, 'на карте с', 'на каррте', 0],
             [false, 'на карте с', 'на карте', 2],
             [3, 'missing', 'sing', 0],
@@ -493,11 +491,9 @@ trait MbstringTestTrait
     }
 
     /**
-     * providerTestShuffle
-     *
      * @return  array
      */
-    public static function providerTestShuffle(): array
+    public static function shuffleProvider(): array
     {
         return [
             ['foo bar'],

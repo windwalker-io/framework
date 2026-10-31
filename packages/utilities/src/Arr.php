@@ -242,6 +242,12 @@ abstract class Arr
         $dataTmp = &$data;
 
         foreach ($nodes as $node) {
+            if (!is_object($dataTmp) && !is_array($dataTmp)) {
+                // If a node is value but path is not go to the end, we replace this value as a new store.
+                // Then next node can insert new value to this store.
+                $dataTmp = $createStore($storeType);
+            }
+
             if (is_object($dataTmp)) {
                 // If this node not exists, create new one.
                 if (empty($dataTmp->$node)) {
@@ -256,10 +262,6 @@ abstract class Arr
                 }
 
                 $dataTmp = &$dataTmp[$node];
-            } else {
-                // If a node is value but path is not go to the end, we replace this value as a new store.
-                // Then next node can insert new value to this store.
-                $dataTmp = &$createStore($storeType);
             }
         }
 
@@ -291,6 +293,12 @@ abstract class Arr
         $dataTmp = &$data;
 
         foreach ($nodes as $node) {
+            if (!is_object($dataTmp) && !is_array($dataTmp)) {
+                // If a node is value but path is not go to the end, we replace this value as a new store.
+                // Then next node can insert new value to this store.
+                $dataTmp = $createStore($storeType);
+            }
+
             if (is_object($dataTmp)) {
                 if (empty($dataTmp->$node)) {
                     return $data;
@@ -398,19 +406,15 @@ abstract class Arr
             return array_intersect_key($data, array_flip($fields));
         }
 
-        if (is_object($data)) {
-            $keeps = array_keys(array_diff_key(get_object_vars($data), array_flip($fields)));
+        $keeps = array_keys(array_diff_key(get_object_vars($data), array_flip($fields)));
 
-            foreach ($keeps as $key) {
-                if (property_exists($data, $key)) {
-                    unset($data->$key);
-                }
+        foreach ($keeps as $key) {
+            if (property_exists($data, $key)) {
+                unset($data->$key);
             }
-
-            return $data;
         }
 
-        throw new InvalidArgumentException('Argument 1 not array or object');
+        return $data;
     }
 
     /**
@@ -420,8 +424,6 @@ abstract class Arr
      * @param  array         $fields
      *
      * @return  array|object
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function except(object|array $data, array $fields): object|array
     {
@@ -429,17 +431,13 @@ abstract class Arr
             return array_diff_key($data, array_flip($fields));
         }
 
-        if (is_object($data)) {
-            foreach ($fields as $key) {
-                if (property_exists($data, $key)) {
-                    unset($data->$key);
-                }
+        foreach ($fields as $key) {
+            if (property_exists($data, $key)) {
+                unset($data->$key);
             }
-
-            return $data;
         }
 
-        throw new InvalidArgumentException('Argument 1 not array or object');
+        return $data;
     }
 
     /**
@@ -713,7 +711,9 @@ abstract class Arr
     ): array {
         $result = [];
 
-        foreach (TypeCast::toIterable($src) as $key => $item) {
+        foreach (TypeCast::toIterable($src) as $item) {
+            $itemKey = $keyName;
+
             if (is_object($item) && !isset($item->$column) && $invasive) {
                 $ref = new ReflectionObject($item);
 
@@ -724,12 +724,12 @@ abstract class Arr
                 $prop = $ref->getProperty($column);
                 $value = $prop->getValue($item);
 
-                if ($keyName !== null) {
-                    if ($ref->hasProperty($keyName)) {
-                        $prop = $ref->getProperty($keyName);
-                        $keyName = $prop->getValue($item);
+                if ($itemKey !== null) {
+                    if ($ref->hasProperty($itemKey)) {
+                        $prop = $ref->getProperty($itemKey);
+                        $itemKey = $prop->getValue($item);
                     } else {
-                        $keyName = null;
+                        $itemKey = null;
                     }
                 }
             } else {
@@ -737,23 +737,23 @@ abstract class Arr
                     continue;
                 }
 
-                if (method_exists($item, '__get')) {
+                if (is_object($item) && method_exists($item, '__get')) {
                     $value = $item->__get($column);
 
-                    if ($keyName !== null) {
-                        $keyName = $item->__get($keyName);
+                    if ($itemKey !== null) {
+                        $itemKey = $item->__get($itemKey);
                     }
                 } else {
                     $value = static::get($item, $column, '');
 
-                    if ($keyName !== null) {
-                        $keyName = static::get($item, $keyName, '');
+                    if ($itemKey !== null) {
+                        $itemKey = static::get($item, $itemKey, '');
                     }
                 }
             }
 
-            if ($keyName) {
-                $result[$keyName] = $item;
+            if ($itemKey) {
+                $result[$itemKey] = $item;
             } else {
                 $result[] = $value;
             }
@@ -769,8 +769,6 @@ abstract class Arr
      * @param  callable      $callback
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function flatMap(object|array $array, callable $callback): array
     {
@@ -800,8 +798,6 @@ abstract class Arr
      * @param  bool      $loopIterable
      *
      * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function mapRecursive(
         array $array,
@@ -1140,8 +1136,6 @@ abstract class Arr
      * @param  bool          $strict          Use strict to compare equals.
      *
      * @return mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public static function queryFirst(object|array $array, $queries = [], bool $strict = false): mixed
     {
@@ -1181,12 +1175,29 @@ abstract class Arr
             } elseif ($strict) {
                 $results[] = static::get($array, $key) === $val;
             } else {
-                $results[] = static::get($array, $key) == $val;
+                $item = static::get($array, $key);
+
+                $results[] = static::looseEquals($item, $val);
             }
         }
 
         // Must all TRUE.
         return !in_array(false, $results, true);
+    }
+
+    /**
+     * Loose equals that keeps PHP's object-to-number semantics (an object counts as 1)
+     * without raising the "could not be converted" notice.
+     */
+    protected static function looseEquals(mixed $a, mixed $b): bool
+    {
+        if (is_object($a) && (is_int($b) || is_float($b))) {
+            $a = 1;
+        } elseif (is_object($b) && (is_int($a) || is_float($a))) {
+            $b = 1;
+        }
+
+        return $a == $b;
     }
 
     /**

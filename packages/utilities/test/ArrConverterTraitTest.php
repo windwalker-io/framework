@@ -484,4 +484,78 @@ class ArrConverterTraitTest extends TestCase
             $b
         );
     }
+
+    #[Test]
+    public function groupDispatchesByPathOrCallback(): void
+    {
+        $src = [
+            ['t' => 'a', 'v' => 1],
+            ['t' => 'b', 'v' => 2],
+            ['t' => 'a', 'v' => 3],
+        ];
+
+        $byPath = Arr::group($src, 't');
+        $byCallback = Arr::group($src, fn(array $item) => $item['t']);
+
+        self::assertSame([1, 3], array_column($byPath['a'], 'v'));
+        self::assertEquals($byPath, $byCallback);
+        self::assertSame(['a', 'b'], array_keys(Arr::group($src, 't', Arr::GROUP_TYPE_MIX)));
+        self::assertSame(['x'], array_keys(Arr::group(['x'], null)));
+    }
+
+    #[Test]
+    #[DataProvider('mapWithKeysProvider')]
+    public function mapWithKeysAppliesGroupingTypeToDuplicateKeys(int $type, array $expected): void
+    {
+        $result = Arr::mapWithKeys(
+            [1, 2, 3, 4],
+            fn(int $v) => [$v % 2 ? 'odd' : 'even' => $v],
+            $type
+        );
+
+        self::assertSame($expected, $result);
+    }
+
+    public static function mapWithKeysProvider(): array
+    {
+        return [
+            'key by' => [Arr::GROUP_TYPE_KEY_BY, ['odd' => 3, 'even' => 4]],
+            'array' => [Arr::GROUP_TYPE_ARRAY, ['odd' => [1, 3], 'even' => [2, 4]]],
+            'mix' => [Arr::GROUP_TYPE_MIX, ['odd' => [1, 3], 'even' => [2, 4]]],
+        ];
+    }
+
+    #[Test]
+    public function mapWithKeysAppendsNullKeysAndAcceptsGenerators(): void
+    {
+        $result = Arr::mapWithKeys(
+            ['a', 'b'],
+            function (string $v) {
+                yield null => $v;
+                yield 'k' => $v;
+            }
+        );
+
+        self::assertSame(['a', 'k' => 'b', 'b'], [$result[0], 'k' => $result['k'], $result[1]]);
+    }
+
+    #[Test]
+    public function mapWithKeysMixKeepsThirdAndLaterValuesInArray(): void
+    {
+        $result = Arr::mapWithKeys(
+            [1, 2, 3],
+            fn(int $v) => ['k' => $v],
+            Arr::GROUP_TYPE_MIX
+        );
+
+        self::assertSame(['k' => [1, 2, 3]], $result);
+    }
+
+    #[Test]
+    public function mapWithKeysRejectsNonIterableHandlerResult(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        Arr::mapWithKeys([1], fn() => 'nope');
+    }
 }

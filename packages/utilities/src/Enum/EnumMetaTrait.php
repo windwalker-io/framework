@@ -145,9 +145,12 @@ trait EnumMetaTrait
         if ($this instanceof \UnitEnum) {
             $ref = new \ReflectionEnum($this);
 
+            // @codeCoverageIgnoreStart
+            // Unreachable: an enum instance always has a case with its own name.
             if (!$ref->hasCase($this->name)) {
                 return null;
             }
+            // @codeCoverageIgnoreEnd
 
             $case = $ref->getCase($this->name);
 
@@ -160,9 +163,12 @@ trait EnumMetaTrait
         $ref = new \ReflectionClass($this);
         $constant = $ref->getReflectionConstant($this->getKey());
 
+        // @codeCoverageIgnoreStart
+        // Unreachable: the key of a legacy enum instance always maps to a constant.
         if (!$constant) {
             return null;
         }
+        // @codeCoverageIgnoreEnd
 
         return $attrs[$this->getValue()][$attr]
             ??= AttributesAccessor::getFirstAttributeInstance($constant, $attr);

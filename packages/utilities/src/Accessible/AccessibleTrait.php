@@ -135,8 +135,6 @@ trait AccessibleTrait
      * Get storage iterator.
      *
      * @return  Generator|iterable<T>
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function &getIterator(): Generator
     {

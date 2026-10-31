@@ -27,4 +27,22 @@ class StrInflectorTest extends TestCase
             StrInflector::$inflector
         );
     }
+
+    #[Test]
+    public function pluralAndSingularFormsAreDetectedAndConverted(): void
+    {
+        self::assertSame('words', StrInflector::toPlural('word'));
+        self::assertSame('word', StrInflector::toSingular('words'));
+        self::assertTrue(StrInflector::isPlural('words'));
+        self::assertFalse(StrInflector::isPlural('word'));
+        self::assertTrue(StrInflector::isSingular('word'));
+        self::assertFalse(StrInflector::isSingular('words'));
+    }
+
+    #[Test]
+    public function possibleFormsReturnAllInflectionCandidates(): void
+    {
+        self::assertContains('indexes', StrInflector::getPossiblePluralize('index'));
+        self::assertContains('person', StrInflector::getPossibleSingularize('people'));
+    }
 }

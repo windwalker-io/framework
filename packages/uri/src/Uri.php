@@ -84,10 +84,6 @@ class Uri implements ExtendedUriInterface
      */
     public static function wrap(UriInterface|\Stringable|string|null $uri, bool $utf8 = false): static
     {
-        if ($uri instanceof \Stringable) {
-            $uri = (string) $uri;
-        }
-
         if ($uri instanceof static) {
             return $uri;
         }
@@ -651,10 +647,12 @@ class Uri implements ExtendedUriInterface
      */
     public function getQuery(): string
     {
-        // If the query is empty build it first
+        // `$query` is a non-nullable string, so this defensive fallback is unreachable.
+        // @codeCoverageIgnoreStart
         if ($this->query === null) {
             $this->query = UriHelper::buildQuery($this->vars);
         }
+        // @codeCoverageIgnoreEnd
 
         return $this->query;
     }

@@ -6,8 +6,6 @@ namespace Windwalker\Utilities\Wrapper;
 
 /**
  * Interface WrapperInterface
- *
- * @since  __DEPLOY_VERSION__
  */
 interface WrapperInterface
 {
@@ -17,8 +15,6 @@ interface WrapperInterface
      * @param  mixed  $src
      *
      * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function __invoke(mixed $src): mixed;
 }

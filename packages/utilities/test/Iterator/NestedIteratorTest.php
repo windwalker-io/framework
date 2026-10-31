@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Iterator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Context\Loop;
@@ -635,6 +636,168 @@ class NestedIteratorTest extends TestCase
             ],
             $r
         );
+    }
+
+    /**
+     * @see  NestedIterator::filter
+     */
+    #[Test]
+    #[DataProvider('filterFlagsProvider')]
+    public function filterPassesArgumentsAccordingToFlags(int $flags, callable $callback, array $expected): void
+    {
+        $iter = (new NestedIterator(['a' => 1, 'b' => 2, 'c' => 3]))->filter($callback, $flags);
+
+        self::assertSame($expected, iterator_to_array($iter));
+    }
+
+    public static function filterFlagsProvider(): array
+    {
+        return [
+            'value only' => [0, static fn($v) => $v > 1, ['b' => 2, 'c' => 3]],
+            'key only' => [ARRAY_FILTER_USE_KEY, static fn($k) => $k !== 'b', ['a' => 1, 'c' => 3]],
+            'both' => [ARRAY_FILTER_USE_BOTH, static fn($v, $k) => $k === 'a' || $v === 3, ['a' => 1, 'c' => 3]],
+        ];
+    }
+
+    /**
+     * @see  NestedIterator::concat
+     */
+    #[Test]
+    public function concatReindexesNumericKeysAndKeepsStringKeys(): void
+    {
+        $iter = (new NestedIterator(['a', 'x' => 'b']))->concat(['c', 'y' => 'd']);
+
+        self::assertSame([0 => 'a', 'x' => 'b', 1 => 'c', 'y' => 'd'], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::chain
+     */
+    #[Test]
+    public function chainIsAliasOfConcat(): void
+    {
+        $iter = (new NestedIterator([1, 2]))->chain([3], [4]);
+
+        self::assertSame([1, 2, 3, 4], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::slice
+     */
+    #[Test]
+    public function sliceKeepsStringKeysAndReindexesNumericKeys(): void
+    {
+        $iter = (new NestedIterator([10, 'a' => 20, 30, 40]))->slice(1, 2);
+
+        self::assertSame(['a' => 20, 0 => 30], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::slice
+     */
+    #[Test]
+    public function sliceWithZeroLengthYieldsNothing(): void
+    {
+        $iter = (new NestedIterator([1, 2, 3]))->slice(0, 0);
+
+        self::assertSame([], iterator_to_array($iter));
+    }
+
+    /**
+     * @see  NestedIterator::slice
+     */
+    #[Test]
+    #[DataProvider('invalidSliceProvider')]
+    public function sliceRejectsNegativeOffsetOrLength(int $start, ?int $length, string $message): void
+    {
+        $iter = (new NestedIterator([1, 2, 3]))->slice($start, $length);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains($message);
+
+        iterator_to_array($iter);
+    }
+
+    public static function invalidSliceProvider(): array
+    {
+        return [
+            'negative start' => [-1, null, 'Start offset must be non-negative'],
+            'negative length' => [0, -1, 'Length must be non-negative'],
+        ];
+    }
+
+    /**
+     * @see  NestedIterator::explode
+     */
+    #[Test]
+    public function explodeRejectsEmptySeparator(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Separator must be non-empty string');
+
+        NestedIterator::explode('', 'abc');
+    }
+
+    /**
+     * @see  NestedIterator::parallel
+     */
+    #[Test]
+    public function parallelResolvesCallableIteratorsAndZipsValues(): void
+    {
+        $iter = (new NestedIterator([1, 2]))->parallel([[10, 20], static fn() => new \ArrayIterator([100, 200])]);
+
+        self::assertSame([[1, 10, 100], [2, 20, 200]], iterator_to_array($iter, false));
+    }
+
+    /**
+     * @see  NestedIterator::parallel
+     */
+    #[Test]
+    public function parallelRejectsNonTraversableCallableResult(): void
+    {
+        $iter = (new NestedIterator([1, 2]))->parallel([static fn() => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Iterator must be callable or iterable');
+
+        iterator_to_array($iter);
+    }
+
+    /**
+     * @see  NestedIterator::checkRewindable
+     */
+    #[Test]
+    public function checkRewindableTreatsOuterIteratorWithoutInnerAsRewindable(): void
+    {
+        $outer = new class () implements \OuterIterator {
+            public function getInnerIterator(): ?\Iterator
+            {
+                return null;
+            }
+
+            public function current(): mixed
+            {
+                return null;
+            }
+
+            public function next(): void {}
+
+            public function key(): mixed
+            {
+                return null;
+            }
+
+            public function valid(): bool
+            {
+                return false;
+            }
+
+            public function rewind(): void {}
+        };
+
+        $method = new \ReflectionMethod(NestedIterator::class, 'checkRewindable');
+
+        self::assertTrue($method->invoke(new NestedIterator([]), $outer));
     }
 
     protected function createChunkSource(): \Closure

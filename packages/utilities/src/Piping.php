@@ -27,6 +27,9 @@ class Piping implements \JsonSerializable, \Countable, \IteratorAggregate, \Stri
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getIterator(): Traversable
     {
         return $this->value;
@@ -42,11 +45,17 @@ class Piping implements \JsonSerializable, \Countable, \IteratorAggregate, \Stri
         return (string) $this->value;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function jsonSerialize(): mixed
     {
         return $this->value;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function __invoke(mixed $src = null): mixed
     {
         return $this->value;

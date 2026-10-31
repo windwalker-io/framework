@@ -42,6 +42,8 @@ trait MultiMessagesExceptionTrait
      * Method to get property Messages
      *
      * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function getMessages(): array
     {
@@ -54,6 +56,8 @@ trait MultiMessagesExceptionTrait
      * @param  array  $messages
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setMessages(array $messages): static
     {

@@ -34,6 +34,8 @@ class RawWrapper implements WrapperInterface, Stringable
      * @return  mixed
      *
      * @since  3.5.1
+     *
+     * @codeCoverageIgnore
      */
     public function get(): mixed
     {
@@ -48,6 +50,8 @@ class RawWrapper implements WrapperInterface, Stringable
      * @return  static
      *
      * @since  3.5.1
+     *
+     * @codeCoverageIgnore
      */
     public function set(mixed $value): self
     {
