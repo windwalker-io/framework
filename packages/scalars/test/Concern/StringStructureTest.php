@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Scalars\Test\Concern;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function Windwalker\str;
@@ -13,7 +14,8 @@ use function Windwalker\str;
  */
 class StringStructureTest extends TestCase
 {
-    public function testParseToCollection(): void
+    #[Test]
+    public function parseToCollectionDecodesJsonIntoCollection(): void
     {
         $str = str('{"foo": "bar"}');
         $json = $str->parseToCollection('json');
@@ -21,7 +23,8 @@ class StringStructureTest extends TestCase
         self::assertEquals('bar', $json['foo']);
     }
 
-    public function testJsonDecode(): void
+    #[Test]
+    public function jsonDecodeReturnsDecodedValues(): void
     {
         $str = str('{"foo": "bar"}');
         $json = $str->jsonDecode();
@@ -29,7 +32,8 @@ class StringStructureTest extends TestCase
         self::assertEquals('bar', $json['foo']);
     }
 
-    public function testToDOMDocument(): void
+    #[Test]
+    public function toDOMDocumentParsesXmlStringIntoDocument(): void
     {
         $str = str('<root><foo bar="yoo" /></root>');
         $dom = $str->toDOMDocument();
@@ -37,7 +41,8 @@ class StringStructureTest extends TestCase
         self::assertEquals('yoo', (string) $dom->documentElement->childNodes[0]->getAttribute('bar'));
     }
 
-    public function testToHTMLDocument(): void
+    #[Test]
+    public function toHTMLDocumentParsesHtmlStringIntoDocument(): void
     {
         $str = str('<div><p bar="yoo" /></div>');
         $dom = $str->toHTMLDocument();
@@ -48,20 +53,13 @@ class StringStructureTest extends TestCase
         self::assertEquals('yoo', (string) $elements[0]->getAttribute('bar'));
     }
 
-    public function testToSimpleXML(): void
+    #[Test]
+    public function toSimpleXMLParsesXmlStringIntoElement(): void
     {
         $str = str('<div><p bar="yoo" /></div>');
         $xml = $str->toSimpleXML();
         $elements = $xml->xpath('/div/p');
 
         self::assertEquals('yoo', (string) $elements[0]['bar']);
-    }
-
-    protected function setUp(): void
-    {
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

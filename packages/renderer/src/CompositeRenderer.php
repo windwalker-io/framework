@@ -200,9 +200,17 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
         return $this->once(
             'renderer.' . $type,
             function () use ($options, $type) {
-                [$factory, $exts] = $this->getFactory($type);
+                $factory = $this->getFactory($type);
 
-                return $this->getObjectBuilder()->createObject($factory, $options);
+                if (!$factory) {
+                    throw new \UnexpectedValueException(
+                        sprintf('Renderer factory %s not registered.', $type)
+                    );
+                }
+
+                [$factoryClass] = $factory;
+
+                return $this->getObjectBuilder()->createObject($factoryClass, $options);
             }
         );
     }
@@ -243,6 +251,11 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
         unset($this->factories[$type]);
     }
 
+    /**
+     * @param  string  $type
+     *
+     * @return  array{ class-string, string[] }|null
+     */
     public function getFactory(string $type): ?array
     {
         return $this->factories[$type] ?? null;
@@ -273,28 +286,6 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
     }
 
     /**
-     * getFoundFileInfo
-     *
-     * @param  string  $filePath
-     * @param  string  $path
-     *
-     * @return  array
-     */
-    protected static function getFoundFileInfo(string $filePath, string $path): array
-    {
-        $filename = Str::removeLeft(
-            $filePath = Path::normalize($filePath),
-            $path = Path::normalize($path),
-        );
-
-        return [
-            $filePath,
-            $path,
-            ltrim($filename, '/\\'),
-        ];
-    }
-
-    /**
      * alias
      *
      * @param  string  $alias
@@ -319,7 +310,9 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
     }
 
     /**
-     * @return array
+     * @return  array
+     *
+     * @codeCoverageIgnore
      */
     public function getAliases(): array
     {
@@ -330,6 +323,8 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
      * @param  array  $aliases
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setAliases(array $aliases): static
     {

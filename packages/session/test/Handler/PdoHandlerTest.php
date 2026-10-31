@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Windwalker\Session\Test\Handler;
 
 use PDO;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Session\Handler\AbstractHandler;
 use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Handler\PdoHandler;
@@ -24,7 +27,8 @@ class PdoHandlerTest extends AbstractHandlerTestCase
     /**
      * @see  PdoHandler::updateTimestamp
      */
-    public function testUpdateTimestamp(): void
+    #[Test]
+    public function updateTimestampRefreshesStoredTime(): void
     {
         $session = $this->createSession();
 
@@ -55,10 +59,9 @@ class PdoHandlerTest extends AbstractHandlerTestCase
         return $this->instance;
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createSqliteDatabase(): void
     {
-        parent::setUp();
-
         if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
             self::markTestSkipped('The pdo_sqlite extension is required.');
         }
@@ -70,13 +73,12 @@ class PdoHandlerTest extends AbstractHandlerTestCase
         );
     }
 
-    protected function tearDown(): void
+    #[After]
+    protected function closeSessionAndDatabase(): void
     {
         $this->session?->stop();
         $this->session = null;
         $this->instance = null;
         $this->db = null;
-
-        parent::tearDown();
     }
 }

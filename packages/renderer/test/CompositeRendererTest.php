@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use UnexpectedValueException;
 use Windwalker\Edge\Exception\LayoutNotFoundException;
 use Windwalker\Renderer\TwigRenderer;
 use Windwalker\Renderer\CompositeRenderer;
@@ -282,6 +283,15 @@ class CompositeRendererTest extends TestCase
 
         self::assertInstanceOf(TwigRenderer::class, $renderer);
         self::assertSame($renderer, $this->instance->getRenderer('twig'));
+    }
+
+    #[Test]
+    public function getRendererThrowsWhenFactoryNotRegistered(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessageIsOrContains('Renderer factory unknown not registered.');
+
+        $this->instance->getRenderer('unknown');
     }
 
     #[Test]
