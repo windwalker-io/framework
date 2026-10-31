@@ -39,15 +39,13 @@ abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
         $params = $params ?? self::getTestParams();
         $params['driver'] = static::$driver;
 
-        if (static::$platform === AbstractPlatform::SQLSERVER) {
-            $params['tls']['verify'] = false;
-        }
+        $options = static::prepareTestOptions($params);
 
         static::$lastQueries = [];
 
         $db = new DatabaseFactory()->create(
             static::$driver,
-            $params
+            $options
         );
 
         $logFile = __DIR__ . '/../../tmp/test-sql.sql';

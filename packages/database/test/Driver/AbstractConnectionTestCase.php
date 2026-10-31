@@ -66,13 +66,7 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
             ]
         );
 
-        $options = DriverOptions::wrap($options);
-
-        // Is test mode, SQLServ DB service in container uses self signed cert.
-        // We must force trust it.
-        if (static::$platform === AbstractPlatform::SQLSERVER) {
-            $options->tls['verify'] = false;
-        }
+        $options = static::prepareTestOptions($options);
 
         return new $className($options);
     }

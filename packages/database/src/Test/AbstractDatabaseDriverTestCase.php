@@ -110,6 +110,19 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         );
     }
 
+    protected static function prepareTestOptions(DriverOptions|array $options): DriverOptions
+    {
+        $options = DriverOptions::wrap($options);
+
+        // Sometimes if SQLServ DB running in container, will use self-signed cert.
+        // We must force trust it, otherwise will get error message.
+        if (static::$platform === AbstractPlatform::SQLSERVER) {
+            $options->tls['verify'] = false;
+        }
+
+        return $options;
+    }
+
     /**
      * setupDatabase
      *
