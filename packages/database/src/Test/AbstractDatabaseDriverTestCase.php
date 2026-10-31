@@ -24,6 +24,8 @@ use Windwalker\Test\Traits\QueryTestTrait;
 
 /**
  * The AbstractDatabaseTestCase class.
+ *
+ * @codeCoverageIgnore
  */
 abstract class AbstractDatabaseDriverTestCase extends TestCase
 {

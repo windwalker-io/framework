@@ -69,10 +69,22 @@ abstract class AbstractPlatform
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return  DbPlatform
+     *
+     * @codeCoverageIgnore
+     */
+    public function getDbType(): DbPlatform
+    {
+        return DbPlatform::wrap($this->name);
     }
 
     public static function createPlatform(string $platform, DatabaseAdapter $db)

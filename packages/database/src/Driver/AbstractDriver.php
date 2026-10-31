@@ -18,6 +18,7 @@ use Windwalker\Database\Exception\DatabaseQueryException;
 use Windwalker\Database\Hydrator\HydratorAwareInterface;
 use Windwalker\Database\Hydrator\HydratorInterface;
 use Windwalker\Database\Hydrator\SimpleHydrator;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\AbstractSchemaManager;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Pool\ConnectionPool;
@@ -424,6 +425,8 @@ abstract class AbstractDriver implements HydratorAwareInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getPlatformName(): string
     {
@@ -434,12 +437,22 @@ abstract class AbstractDriver implements HydratorAwareInterface
      * @param  string  $platformName
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPlatformName(string $platformName): static
     {
         $this->platformName = $platformName;
 
         return $this;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDbType(): DbPlatform
+    {
+        return DbPlatform::wrap($this->getPlatformName());
     }
 
     /**

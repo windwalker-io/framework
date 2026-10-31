@@ -15,6 +15,8 @@ use Windwalker\Utilities\TypeCast;
 
 /**
  * The AbstractDriverTest class.
+ *
+ * @codeCoverageIgnore
  */
 abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
 {

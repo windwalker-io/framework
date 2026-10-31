@@ -23,6 +23,7 @@ use Windwalker\Database\Manager\SchemaManager;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Manager\WriterManager;
 use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Table;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
@@ -67,6 +68,14 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
         protected LoggerInterface $logger = new NullLogger(),
     ) {
         $this->platform->setDbAdapter($this);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDbType(): DbPlatform
+    {
+        return $this->getPlatform()->getDbType();
     }
 
     /**
