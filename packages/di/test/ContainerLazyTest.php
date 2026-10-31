@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Container;
@@ -11,9 +12,7 @@ use Windwalker\DI\DIOptions;
 use Windwalker\DI\Test\Mock\Bar;
 use Windwalker\DI\Test\Mock\Foo;
 use Windwalker\DI\Test\Mock\StubStack;
-
 use Windwalker\DI\Test\Stub\StubLazy;
-
 use Windwalker\DI\Test\Stub\StubLazyProperty;
 
 use function Windwalker\object_is_proxy;
@@ -23,7 +22,8 @@ use function Windwalker\unwrap_object_id;
 
 class ContainerLazyTest extends TestCase
 {
-    public function testCreateLazyObject(): void
+    #[Test]
+    public function createsLazyObjectsAndEagerInternalDependencies(): void
     {
         $container = new Container(options: new DIOptions(autowire: true, lazy: true));
 
@@ -45,7 +45,8 @@ class ContainerLazyTest extends TestCase
         self::assertIsNotUninitializedLazyProxy($stack);
     }
 
-    public function testCreateObjectWithLazyDependency(): void
+    #[Test]
+    public function createsAnEagerObjectWithLazyDependencies(): void
     {
         $container = new Container(options: new DIOptions(autowire: true));
 
@@ -56,7 +57,8 @@ class ContainerLazyTest extends TestCase
         self::assertIsNotUninitializedLazyProxy($foo->bar);
     }
 
-    public function testNewInstanceWithCallable(): void
+    #[Test]
+    public function createsObjectsFromCallablesWithLazyDependencies(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
@@ -67,7 +69,8 @@ class ContainerLazyTest extends TestCase
         self::assertIsUninitializedLazyProxy($foo->lazy);
     }
 
-    public function testLazyParameters(): void
+    #[Test]
+    public function injectsLazyParametersAndInitializesOnAccess(): void
     {
         $container = new Container(options: new DIOptions(autowire: true));
         $container->registerDefaultAttributes();
@@ -102,7 +105,8 @@ class ContainerLazyTest extends TestCase
         self::assertIsNotLazyProxy(unwrap_lazy_object($bar), 'Unwrapped object should not be lazy proxy.');
     }
 
-    public function testLazyProperty(): void
+    #[Test]
+    public function injectsLazyPropertiesAndInitializesOnAccess(): void
     {
         $container = new Container(options: new DIOptions(autowire: true));
         $container->registerDefaultAttributes();

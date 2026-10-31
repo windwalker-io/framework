@@ -7,14 +7,14 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\DatabaseAdapter;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Event\QueryEndEvent;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 
 /**
  * The AbstractDatabaseTestCase class.
  */
 abstract class AbstractDatabaseTestCase extends AbstractDatabaseDriverTestCase
 {
-    protected static string $platform = 'MySQL';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driver = 'pdo_mysql';
 

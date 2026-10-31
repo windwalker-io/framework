@@ -7,7 +7,7 @@ namespace Windwalker\Database\Test\Driver\Pdo;
 use PDO;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Pdo\PdoMysqlConnection;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 
 /**
@@ -15,7 +15,7 @@ use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
  */
 class MysqlConnectionTest extends AbstractConnectionTestCase
 {
-    protected static string $platform = AbstractPlatform::MYSQL;
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $className = PdoMysqlConnection::class;
 

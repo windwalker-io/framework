@@ -6,6 +6,7 @@ namespace Windwalker\Database\Test\Reseter;
 
 use PDO;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Query;
 
@@ -14,18 +15,18 @@ use Windwalker\Query\Query;
  */
 abstract class AbstractReseter
 {
-    protected static string $platform = '';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     /**
      * create
      *
-     * @param  string  $platform
+     * @param  DbPlatform  $platform
      *
      * @return  static
      */
-    public static function create(string $platform): static
+    public static function create(DbPlatform $platform): static
     {
-        $class = __NAMESPACE__ . '\\' . DatabaseFactory::getPlatformName($platform) . 'Reseter';
+        $class = __NAMESPACE__ . '\\' . DatabaseFactory::getPlatformName($platform->name) . 'Reseter';
 
         return new $class();
     }
@@ -36,11 +37,11 @@ abstract class AbstractReseter
 
     public static function qn(string $value): string
     {
-        return AbstractGrammar::create(static::$platform)::quoteName($value);
+        return AbstractGrammar::create(static::$platform->name)::quoteName($value);
     }
 
     public function createQuery($escaper = null): Query
     {
-        return new Query($escaper, AbstractGrammar::create(static::$platform));
+        return new Query($escaper, AbstractGrammar::create(static::$platform->name));
     }
 }

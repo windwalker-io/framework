@@ -8,7 +8,7 @@ use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDriver;
 use Windwalker\Database\Event\QueryEndEvent;
 use Windwalker\Database\Exception\DatabaseQueryException;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\TypeCast;
 
@@ -17,7 +17,7 @@ use Windwalker\Utilities\TypeCast;
  */
 abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
 {
-    protected static string $platform = '';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driverName = '';
 
@@ -205,7 +205,7 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         $sql = 'SELECT * FROM notexists WHERE foo = 123';
 
         $this->expectException(DatabaseQueryException::class);
-        $this->expectExceptionMessageMatches(sprintf('/(%s)/', preg_quote($sql)));
+        $this->expectExceptionMessageMatches(sprintf('/(%s)/', preg_quote($sql, '/')));
 
         static::$driver->getOptions()->debug = true;
 
@@ -267,7 +267,7 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
     public function testGetPlatformName(): void
     {
         self::assertEquals(
-            static::$platform,
+            static::platformName(),
             static::$driver->getPlatformName()
         );
     }
@@ -304,15 +304,6 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
         );
     }
 
-    protected function setUp(): void
-    {
-        //
-    }
-
-    protected function tearDown(): void
-    {
-    }
-
     /**
      * @inheritDoc
      */
@@ -326,7 +317,7 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
             self::markTestSkipped('Driver: ' . static::$driverName . ' not available.');
         }
 
-        static::$driver->setPlatformName(static::$platform);
+        static::$driver->setPlatformName(static::platformName());
     }
 
     protected static function createDriver(?array $params = null): AbstractDriver
@@ -341,7 +332,7 @@ abstract class AbstractDriverTestCase extends AbstractDatabaseDriverTestCase
 
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/' . static::platformName() . '.sql');
     }
 
     /**

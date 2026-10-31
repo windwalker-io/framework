@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\DI\Test;
 
 use Attribute;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use SplPriorityQueue;
@@ -14,9 +16,11 @@ use Windwalker\Data\Collection;
 use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Inject;
 use Windwalker\DI\Container;
+use Windwalker\DI\Definition\StoreDefinition;
 use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Exception\DependencyResolutionException;
+use Windwalker\DI\Parameters;
 use Windwalker\DI\Test\Injection\Attrs\ToUpper;
 use Windwalker\DI\Test\Injection\HelloInner;
 use Windwalker\DI\Test\Injection\HelloWrapper;
@@ -54,9 +58,10 @@ class ContainerTest extends TestCase
 {
     use BaseAssertionTrait;
 
-    protected ?Container $instance;
+    protected Container $instance;
 
-    public function testGetAndSet()
+    #[Test]
+    public function registersDefinitionsWithSharedAndTransientLifetimes(): void
     {
         $container = new Container();
 
@@ -92,7 +97,8 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(SplStack::class, $container->get('sakura'));
     }
 
-    public function testSetAsProtect()
+    #[Test]
+    public function preventsOverridingProtectedDefinitions(): void
     {
         $this->expectException(DefinitionException::class);
 
@@ -117,7 +123,8 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(SplStack::class, $container->get('olive'));
     }
 
-    public function testSetAndRemoveAlias()
+    #[Test]
+    public function resolvesDirectDefinitionsBeforeAliases(): void
     {
         $container = new Container();
 
@@ -133,7 +140,8 @@ class ContainerTest extends TestCase
      *
      * @return  void
      */
-    public function testGetFromParent()
+    #[Test]
+    public function resolvesDefinitionsFromParentContainers(): void
     {
         $container = new Container($this->instance);
 
@@ -141,13 +149,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test protect().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::protect
      */
-    public function testProtect()
+    #[Test]
+    public function protectsDefinitionsFromReplacement(): void
     {
         $this->expectException(DefinitionException::class);
 
@@ -173,13 +178,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test share().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::share
      */
-    public function testShare()
+    #[Test]
+    public function sharesInstancesAndAllowsDefinitionReplacement(): void
     {
         $container = new Container();
 
@@ -205,13 +207,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test alias().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::alias
      */
-    public function testAlias()
+    #[Test]
+    public function resolvesDefinitionsByAlias(): void
     {
         $this->instance->alias('foo', 'flower');
 
@@ -221,9 +220,10 @@ class ContainerTest extends TestCase
     /**
      * Method to test exists().
      *
-     * @return void
+     * @return  void
      */
-    public function testHas()
+    #[Test]
+    public function reportsWhetherDefinitionsExist(): void
     {
         self::assertTrue($this->instance->has('Hello'));
         self::assertFalse($this->instance->has('Wind'));
@@ -232,9 +232,10 @@ class ContainerTest extends TestCase
     /**
      * Method to test getNewInstance().
      *
-     * @return void
+     * @return  void
      */
-    public function testGetNewInstance()
+    #[Test]
+    public function createsNewInstancesWhenRequested(): void
     {
         $container = new Container();
 
@@ -248,7 +249,8 @@ class ContainerTest extends TestCase
         self::assertNotSame($container->get('flower'), $container->get('flower', true));
     }
 
-    public function testGetAutoService(): void
+    #[Test]
+    public function resolvesAttributedServicesAsSharedInstances(): void
     {
         $container = new Container();
 
@@ -266,7 +268,8 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testDependByAutoService(): void
+    #[Test]
+    public function injectsAttributedServicesIntoCallables(): void
     {
         $container = new Container();
 
@@ -283,16 +286,13 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test createObject().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::createObject
      * @covers \Windwalker\DI\Container::createSharedObject
      * @covers \Windwalker\DI\Container::newInstance
-     * @throws DefinitionException
+     * @throws  DefinitionException
      */
-    public function testCreateObject()
+    #[Test]
+    public function createsObjectsAndResolvesTheirDependencies(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
@@ -351,7 +351,8 @@ class ContainerTest extends TestCase
         self::assertSame($foo, $foo2);
     }
 
-    public function testNewInstanceWithCallable(): void
+    #[Test]
+    public function createsInstancesFromCallables(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
@@ -361,7 +362,8 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(Bar::class, $foo->bar);
     }
 
-    public function testNewInstanceWithUnionTypes(): void
+    #[Test]
+    public function resolvesUnionTypedDependencies(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
@@ -373,7 +375,8 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testNewInstanceWithIntersectionTypes(): void
+    #[Test]
+    public function resolvesDependenciesWithIntersectionTypes(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
@@ -389,7 +392,8 @@ class ContainerTest extends TestCase
     /**
      * @see  Container::newInstance
      */
-    public function testNewInstanceWithoutAutowire(): void
+    #[Test]
+    public function requiresAutowiringForUnresolvedConstructorArguments(): void
     {
         $container = new Container(null, Container::AUTO_WIRE);
 
@@ -414,13 +418,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test newInstance().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::prepareObject
      */
-    public function testPrepareObject()
+    #[Test]
+    public function preparesUnsharedObjects(): void
     {
         $container = new Container();
 
@@ -432,13 +433,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test newInstance().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::prepareSharedObject
      */
-    public function testPrepareSharedObject()
+    #[Test]
+    public function preparesSharedObjects(): void
     {
         $container = new Container();
 
@@ -456,10 +454,11 @@ class ContainerTest extends TestCase
      * @see  https://github.com/ventoviro/windwalker/issues/318
      *
      * @return  void
-     * @throws ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      */
-    public function testNewInstanceWithNoDefaultValueAvailable()
+    #[Test]
+    public function createsInstancesWhenConstructorArgumentsHaveNoDefaults(): void
     {
         $container = new Container();
 
@@ -473,12 +472,13 @@ class ContainerTest extends TestCase
      *
      * @return  void
      *
-     * @throws ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      *
      * @since  3.4.4
      */
-    public function testNewInstanceWithPropertyAttributes(): void
+    #[Test]
+    public function injectsDependenciesIntoAttributedProperties(): void
     {
         $container = new Container();
         $container->getAttributesResolver()
@@ -502,7 +502,8 @@ class ContainerTest extends TestCase
         self::assertEquals(4, $obj->yoo->getCounter());
     }
 
-    public function testNewInstanceWithVariadic(): void
+    #[Test]
+    public function resolvesVariadicConstructorArguments(): void
     {
         $container = new Container();
         $v = $container->newInstance(
@@ -519,7 +520,8 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(Collection::class, $v->args[Collection::class]);
     }
 
-    public function testNewInstanceWithEnum(): void
+    #[Test]
+    public function injectsEnumDependencies(): void
     {
         $container = new Container();
         $container->share(FooEnum::class, FooEnum::B);
@@ -530,13 +532,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test createChild().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::createChild
      */
-    public function testCreateChild()
+    #[Test]
+    public function createsChildContainers(): void
     {
         self::assertInstanceOf(Container::class, $this->instance->createChild());
         self::assertNotSame($this->instance, $this->instance->createChild());
@@ -544,13 +543,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test extend().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::extend
      */
-    public function testExtend(): void
+    #[Test]
+    public function extendsRegisteredServices(): void
     {
         $this->instance->extend(
             'Hello',
@@ -560,7 +556,8 @@ class ContainerTest extends TestCase
         self::assertEquals('World~~~!!!', $this->instance->get('Hello'));
     }
 
-    public function testExtendBeforeRegister(): void
+    #[Test]
+    public function appliesExtensionsRegisteredBeforeServices(): void
     {
         $this->instance->extend(
             'Hello2',
@@ -569,13 +566,14 @@ class ContainerTest extends TestCase
 
         $this->instance->share(
             'Hello2',
-            fn () => 'World2'
+            fn() => 'World2'
         );
 
         self::assertEquals('World2~~~!!!', $this->instance->get('Hello2'));
     }
 
-    public function testExtendForNewInstance(): void
+    #[Test]
+    public function extendsNewInstances(): void
     {
         $this->instance->extendForCreate(
             StubLangCode::class,
@@ -594,13 +592,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * testFork
-     *
-     * @return  void
-     *
      * @covers \Windwalker\DI\Container::fork
      */
-    public function testFork()
+    #[Test]
+    public function forksDefinitionsWithOptionalFreshInstances(): void
     {
         $hello = $this->instance->fork('Hello', 'Hello2');
 
@@ -621,13 +616,10 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * Method to test registerServiceProvider().
-     *
-     * @return void
-     *
      * @covers \Windwalker\DI\Container::registerServiceProvider
      */
-    public function testRegisterServiceProvider()
+    #[Test]
+    public function registersServicesFromAProvider(): void
     {
         $this->instance->registerServiceProvider(new StubServiceProvider());
 
@@ -639,7 +631,8 @@ class ContainerTest extends TestCase
      *
      * @return  void
      */
-    public function testArrayAccess()
+    #[Test]
+    public function supportsArrayAccessForServices(): void
     {
         self::assertEquals('World', $this->instance['Hello']);
 
@@ -651,7 +644,8 @@ class ContainerTest extends TestCase
     /**
      * @see  Container::call
      */
-    public function testCall(): void
+    #[Test]
+    public function callsCallbacksWithInjectedDependencies(): void
     {
         $this->instance->prepareSharedObject(StubStack::class);
 
@@ -672,7 +666,8 @@ class ContainerTest extends TestCase
     /**
      * @see  Container::call
      */
-    public function testCallWithNullable(): void
+    #[Test]
+    public function callsCallbacksWithNullableDependencies(): void
     {
         /** @var StubStack $stack */
         $stack = $this->instance->call(
@@ -684,32 +679,11 @@ class ContainerTest extends TestCase
         self::assertNull($stack);
     }
 
-    // public function testCallFirstClassCallable(): void
-
-    // {
-    //     if (PHP_VERSION_ID < 80100) {
-    //         self::markTestSkipped('Only support PHP 8.1');
-    //     }
-    //
-    //     $r = $this->instance->call(
-    //         $this->firstCallableProvider(...),
-    //         ['str' => new StringObject('STR')]
-    //     );
-    //
-    //     self::assertEquals(
-    //         'STR',
-    //         $r
-    //     );
-    // }
-    public function firstCallableProvider(StringObject $str): string
-    {
-        return (string) $str;
-    }
-
     /**
      * @see  Container::call
      */
-    public function testCallStaticMagicMethod(): void
+    #[Test]
+    public function callsStaticMethodsWithInjectedArguments(): void
     {
         $result = $this->instance->call(
             [
@@ -727,7 +701,8 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testCallObjectInvoke(): void
+    #[Test]
+    public function callsInvokableObjectsWithInjectedArguments(): void
     {
         $object = new class () {
             public function __invoke(StringObject $str)
@@ -744,7 +719,8 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testCallFirstClassCallable(): void
+    #[Test]
+    public function callsFirstClassCallablesWithInjectedArguments(): void
     {
         if (PHP_VERSION_ID < 80100) {
             static::markTestSkipped('First class callable only support PHP 8.1');
@@ -772,119 +748,114 @@ class ContainerTest extends TestCase
     /**
      * @see  Container::bind
      */
-    public function testBind(): void
+    #[Test]
+    public function bindCreatesANewServiceEachTime(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->bind('service', static fn() => new \stdClass());
+
+        self::assertNotSame(
+            $this->instance->get('service'),
+            $this->instance->get('service')
+        );
     }
 
-    /**
-     * @see  Container::bindShared
-     */
-    public function testBindShared(): void
+    #[Test]
+    public function bindSharedReusesTheResolvedService(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->bindShared('service', static fn() => new \stdClass());
+
+        self::assertSame(
+            $this->instance->get('service'),
+            $this->instance->get('service')
+        );
     }
 
-    /**
-     * @see  Container::createSharedObject
-     */
-    public function testCreateSharedObject(): void
+    #[Test]
+    public function setParentAllowsResolvingParentServices(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $parent = new Container();
+        $parent->set('parent-service', 'value');
+
+        self::assertSame($this->instance, $this->instance->setParent($parent));
+        self::assertSame($parent, $this->instance->getParent());
+        self::assertSame('value', $this->instance->get('parent-service'));
     }
 
-    /**
-     * @see  Container::getParameters
-     */
-    public function testGetParameters(): void
+    #[Test]
+    public function countTracksRegisteredDefinitions(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $count = count($this->instance);
+
+        $this->instance->set('another-service', 'value');
+
+        self::assertSame($count + 1, count($this->instance));
     }
 
-    /**
-     * @see  Container::setParent
-     */
-    public function testSetParent(): void
+    #[Test]
+    public function setParametersReplacesTheCurrentParameters(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $parameters = new Parameters(['answer' => 42]);
+
+        self::assertSame($this->instance, $this->instance->setParameters($parameters));
+        self::assertSame($parameters, $this->instance->getParameters());
+        self::assertSame(42, $this->instance->getParameters()->get('answer'));
+
+        $this->instance->setParameters(['answer' => 43]);
+
+        self::assertSame(43, $this->instance->getParameters()->get('answer'));
     }
 
-    /**
-     * @see  Container::count
-     */
-    public function testCount(): void
+    #[Test]
+    public function getIteratorYieldsRegisteredDefinitions(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $definitions = iterator_to_array($this->instance);
+
+        self::assertArrayHasKey('Hello', $definitions);
+        self::assertSame($this->instance->getDefinition('Hello'), $definitions['Hello']);
     }
 
-    /**
-     * @see  Container::setParameters
-     */
-    public function testSetParameters(): void
+    #[Test]
+    public function removeAliasStopsResolvingThroughTheAlias(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->alias('flower-alias', 'flower');
+
+        self::assertTrue($this->instance->has('flower-alias'));
+        self::assertSame($this->instance, $this->instance->removeAlias('flower-alias'));
+        self::assertFalse($this->instance->has('flower-alias'));
     }
 
-    /**
-     * @see  Container::getIterator
-     */
-    public function testGetIterator(): void
+    #[Test]
+    public function getParentsReturnsTheCompleteParentChain(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $ancestor = new Container();
+        $parent = new Container($ancestor);
+        $child = new Container($parent);
+
+        self::assertSame([$parent, $ancestor], $child->getParents());
     }
 
-    /**
-     * @see  Container::removeAlias
-     */
-    public function testRemoveAlias(): void
+    #[Test]
+    public function setDefinitionAssociatesAndResolvesTheDefinition(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $definition = new StoreDefinition('service', static fn() => 'value');
+
+        self::assertSame($definition, $this->instance->setDefinition('service', $definition));
+        self::assertSame($this->instance, $definition->getContainer());
+        self::assertSame('value', $this->instance->get('service'));
     }
 
-    /**
-     * @see  Container::getParents
-     */
-    public function testGetParents(): void
+    #[Test]
+    public function removeDeletesARegisteredService(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Container::set
-     */
-    public function testSet(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Container::getParent
-     */
-    public function testGetParent(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Container::setDefinition
-     */
-    public function testSetDefinition(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    /**
-     * @see  Container::remove
-     */
-    public function testRemove(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame($this->instance, $this->instance->remove('flower'));
+        self::assertFalse($this->instance->has('flower'));
     }
 
     /**
      * @see  Container::resolve
      */
-    public function testResolve(): void
+    #[Test]
+    public function resolvesClassesCallablesAndDefinitions(): void
     {
         // Test wrapper
         self::assertEquals(
@@ -931,8 +902,8 @@ class ContainerTest extends TestCase
             $this->instance->resolve(
                 create(
                     Bar::class,
-                    queue: fn () => new SplPriorityQueue(),
-                    stack: fn () => new SplStack()
+                    queue: fn() => new SplPriorityQueue(),
+                    stack: fn() => new SplStack()
                 )
             )
         );
@@ -941,8 +912,8 @@ class ContainerTest extends TestCase
             $this->instance->resolve(
                 create(
                     fn(...$args) => new Bar(...$args),
-                    queue: fn () => new SplPriorityQueue(),
-                    stack: fn () => new SplStack()
+                    queue: fn() => new SplPriorityQueue(),
+                    stack: fn() => new SplStack()
                 )
             )
         );
@@ -982,7 +953,8 @@ class ContainerTest extends TestCase
     /**
      * @see  Container::resolve
      */
-    public function testResolveWithDecorator(): void
+    #[Test]
+    public function resolvesObjectsWithRegisteredDecorators(): void
     {
         $this->instance->getAttributesResolver()->registerAttribute(
             HelloWrapper::class,
@@ -1002,12 +974,18 @@ class ContainerTest extends TestCase
     /**
      * @see  Container::whenCreating
      */
-    public function testWhenCreating(): void
+    #[Test]
+    public function whenCreatingReturnsTheCachedBuilderForEachClassAndTag(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $builder = $this->instance->whenCreating(Foo::class);
+
+        self::assertSame($builder, $this->instance->whenCreating(Foo::class));
+        self::assertSame(Foo::class, $builder->getClass());
+        self::assertNotSame($builder, $this->instance->whenCreating(Foo::class, 'special'));
     }
 
-    protected function setUp(): void
+    #[Before]
+    public function initializeContainer(): void
     {
         $this->instance = new Container();
 
@@ -1027,7 +1005,4 @@ class ContainerTest extends TestCase
         );
     }
 
-    protected function tearDown(): void
-    {
-    }
 }

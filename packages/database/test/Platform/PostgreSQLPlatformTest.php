@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Platform\PostgreSQLPlatform;
 use Windwalker\Utilities\Str;
 
@@ -12,16 +13,11 @@ use Windwalker\Utilities\Str;
  */
 class PostgreSQLPlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'PostgreSQL';
+    protected static DbPlatform $platform = DbPlatform::PostgreSQL;
 
     protected static string $driver = 'pdo_pgsql';
 
     protected static string $schema = 'public';
-
-    /**
-     * @var PostgreSQLPlatform
-     */
-    protected $instance;
 
     /**
      * @see  PostgreSQLSchemaManager::getDatabases()
@@ -575,12 +571,4 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
         self::assertEquals('ww_articles_id_seq', $seq->first()->sequence);
     }
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-    }
 }

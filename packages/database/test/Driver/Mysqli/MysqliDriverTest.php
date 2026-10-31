@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver\Mysqli;
 
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
 
 /**
@@ -12,7 +12,7 @@ use Windwalker\Database\Test\Driver\AbstractDriverTestCase;
  */
 class MysqliDriverTest extends AbstractDriverTestCase
 {
-    protected static string $platform = AbstractPlatform::MYSQL;
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driverName = 'mysqli';
 

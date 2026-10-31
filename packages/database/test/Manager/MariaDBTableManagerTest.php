@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Manager;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
@@ -650,7 +651,8 @@ SQL,
     {
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeTableManager(): void
     {
         $this->instance = self::$db->getTableManager('enterprise');
 

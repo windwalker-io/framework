@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use PHPUnit\Framework\Attributes\Before;
+use Windwalker\Database\Platform\DbPlatform;
+
 /**
  * The MySQLSchemaTest class.
  */
 class MySQLPlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'MySQL';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driver = 'pdo_mysql';
 
@@ -603,10 +606,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeSchema(): void
     {
-        parent::setUp();
-
         static::$schema = static::$dbname;
     }
 }

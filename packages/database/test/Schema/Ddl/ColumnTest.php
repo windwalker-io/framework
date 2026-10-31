@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Schema\Ddl;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Database\Schema\Ddl\Column;
 
@@ -12,148 +14,33 @@ use Windwalker\Database\Schema\Ddl\Column;
  */
 class ColumnTest extends TestCase
 {
-    /**
-     * @var Column
-     */
-    protected $instance;
+    #[Test]
+    #[DataProvider('columnDefinitionsProvider')]
+    public function constructParsesDataTypeLength(
+        string $name,
+        string $definition,
+        string $dataType,
+        ?int $precision,
+        ?int $scale,
+        int|string|null $characterLength,
+        ?string $lengthExpression
+    ): void {
+        $column = new Column($name, $definition, false, 1);
 
-    /**
-     * @see  Column::__construct
-     */
-    public function testConstructWithoutLength(): void
-    {
-        $col = new Column(
-            'id',
-            'integer',
-            false,
-            1,
-            []
-        );
-
-        self::assertEquals(
-            'integer',
-            $col->getDataType()
-        );
-        self::assertEquals(
-            null,
-            $col->getNumericPrecision()
-        );
-        self::assertEquals(
-            null,
-            $col->getNumericScale()
-        );
-        self::assertEquals(
-            null,
-            $col->getCharacterOctetLength()
-        );
-        self::assertEquals(
-            '',
-            $col->getLengthExpression()
-        );
+        self::assertSame($dataType, $column->getDataType());
+        self::assertSame($precision, $column->getNumericPrecision());
+        self::assertSame($scale, $column->getNumericScale());
+        self::assertSame($characterLength, $column->getCharacterMaximumLength());
+        self::assertSame($lengthExpression, $column->getLengthExpression());
     }
 
-    public function testConstructVarchar(): void
+    public static function columnDefinitionsProvider(): array
     {
-        $col = new Column(
-            'alias',
-            'varchar(255)',
-            false,
-            1,
-            []
-        );
-
-        self::assertEquals(
-            'varchar',
-            $col->getDataType()
-        );
-        self::assertEquals(
-            null,
-            $col->getNumericPrecision()
-        );
-        self::assertEquals(
-            null,
-            $col->getNumericScale()
-        );
-        self::assertEquals(
-            255,
-            $col->getCharacterMaximumLength()
-        );
-        self::assertEquals(
-            '255',
-            $col->getLengthExpression()
-        );
-    }
-
-    public function testConstructInteger(): void
-    {
-        $col = new Column(
-            'id',
-            'int(11)',
-            false,
-            1,
-            []
-        );
-
-        self::assertEquals(
-            'int',
-            $col->getDataType()
-        );
-        self::assertEquals(
-            11,
-            $col->getNumericPrecision()
-        );
-        self::assertEquals(
-            null,
-            $col->getNumericScale()
-        );
-        self::assertEquals(
-            '11',
-            $col->getLengthExpression()
-        );
-    }
-
-    public function testConstructDecimal(): void
-    {
-        $col = new Column(
-            'price',
-            'decimal(10,6)',
-            false,
-            1.5,
-            []
-        );
-
-        self::assertEquals(
-            'decimal',
-            $col->getDataType()
-        );
-        self::assertEquals(
-            10,
-            $col->getNumericPrecision()
-        );
-        self::assertEquals(
-            6,
-            $col->getNumericScale()
-        );
-        self::assertEquals(
-            '10,6',
-            $col->getLengthExpression()
-        );
-    }
-
-    /**
-     * @see  Column::fill
-     */
-    public function testBind(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
+        return [
+            'integer without length' => ['id', 'integer', 'integer', null, null, null, null],
+            'varchar with character length' => ['alias', 'varchar(255)', 'varchar', null, null, 255, '255'],
+            'integer with precision' => ['id', 'int(11)', 'int', 11, null, null, '11'],
+            'decimal with precision and scale' => ['price', 'decimal(10,6)', 'decimal', 10, 6, null, '10,6']
+        ];
     }
 }

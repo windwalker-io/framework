@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
-use Windwalker\Test\Helper\TestStringHelper;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Str;
 
@@ -13,7 +13,7 @@ use Windwalker\Utilities\Str;
  */
 class SQLitePlatformTest extends AbstractPlatformTestCase
 {
-    protected static string $platform = 'SQLite';
+    protected static DbPlatform $platform = DbPlatform::SQLite;
 
     protected static string $driver = 'pdo_sqlite';
 
@@ -540,15 +540,11 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         self::markTestSkipped();
     }
 
-    protected function tearDown(): void
-    {
-    }
-
     /**
      * @inheritDoc
      */
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::platformName() . '.sql');
     }
 }

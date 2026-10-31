@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Schema;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
@@ -147,13 +148,10 @@ class SchemaTest extends AbstractDatabaseTestCase
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createSchemaFromTable(): void
     {
         $this->instance = static::$db->getTableManager('ww_flower')->createSchemaObject();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**
@@ -161,6 +159,6 @@ class SchemaTest extends AbstractDatabaseTestCase
      */
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::platformName() . '.sql');
     }
 }

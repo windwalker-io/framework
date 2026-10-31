@@ -27,13 +27,25 @@ use function Windwalker\Query\clause;
  */
 abstract class AbstractPlatform
 {
-    public const string MYSQL = 'MySQL';
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string MYSQL = DbPlatform::MySQL->name;
 
-    public const string POSTGRESQL = 'PostgreSQL';
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string POSTGRESQL = DbPlatform::PostgreSQL->name;
 
-    public const string SQLSERVER = 'SQLServer';
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string SQLSERVER = DbPlatform::SQLServer->name;
 
-    public const string SQLITE = 'SQLite';
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
+    public const string SQLITE = DbPlatform::SQLite->name;
 
     /**
      * @var string

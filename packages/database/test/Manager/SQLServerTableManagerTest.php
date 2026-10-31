@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Manager;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Database\Manager\TableManager;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 class SQLServerTableManagerTest extends AbstractDatabaseTestCase
 {
-    protected static string $platform = 'SQLServer';
+    protected static DbPlatform $platform = DbPlatform::SQLServer;
 
     protected static string $driver = 'pdo_sqlsrv';
 
@@ -553,7 +555,8 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     {
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeTableManager(): void
     {
         $this->instance = self::$db->getTableManager('enterprise');
     }

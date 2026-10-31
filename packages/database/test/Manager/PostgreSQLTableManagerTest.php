@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Manager;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Database\Manager\TableManager;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
 {
-    protected static string $platform = 'PostgreSQL';
+    protected static DbPlatform $platform = DbPlatform::PostgreSQL;
 
     protected static string $driver = 'pdo_pgsql';
 
@@ -586,7 +588,8 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
     {
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeTableManager(): void
     {
         $this->instance = self::$db->getTableManager('enterprise');
     }

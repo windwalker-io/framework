@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Platform;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Database\Platform\MySQLPlatform;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\Database\Test\Reseter\AbstractReseter;
@@ -14,11 +15,12 @@ use Windwalker\Database\Test\Reseter\AbstractReseter;
 abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
 {
     /**
-     * @var MySQLPlatform
+     * @var  MySQLPlatform
      */
     protected $instance;
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializePlatform(): void
     {
         $this->instance = static::$db->getPlatform();
     }
@@ -26,36 +28,14 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
     /**
      * Method to test start().
      *
-     * @return void
-     */
-    // public function testTransactionRollback()
-    // {
-    //     $table = '#__flower';
-    //
-    //     $sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('A', '', ''), ('B', '', ''), ('C', '', '')";
-    //
-    //     $this->instance->transactionStart();
-    //
-    //     static::$db->execute($sql);
-    //
-    //     $this->instance->transactionRollback();
-    //
-    //     $result = static::$db->prepare('SELECT title FROM #__flower WHERE title = \'A\'')->loadResult();
-    //
-    //     $this->assertNull($result);
-    // }
-
-    /**
-     * Method to test start().
-     *
-     * @return void
+     * @return  void
      */
     public function testTransactionCommit(): void
     {
         $reseter = AbstractReseter::create(static::$platform);
         $reseter->clearAllTables(static::$baseConn, static::$dbname);
 
-        self::importFromFile(__DIR__ . '/../stub/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/' . static::platformName() . '.sql');
 
         $table = '#__flower';
 
@@ -158,16 +138,12 @@ abstract class AbstractPlatformTestCase extends AbstractDatabaseTestCase
         $this->instance->dropSchema('hello', []);
     }
 
-    protected function tearDown(): void
-    {
-    }
-
     /**
      * @inheritDoc
      */
     protected static function setupDatabase(): void
     {
-        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::$platform . '.sql');
+        self::importFromFile(__DIR__ . '/../stub/metadata/' . static::platformName() . '.sql');
     }
 
     protected static function dropAllTables(): void

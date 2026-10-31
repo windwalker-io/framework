@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Driver;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use RuntimeException;
 use Windwalker\Database\Driver\AbstractConnection;
-use Windwalker\Database\Driver\DriverOptions;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\AbstractDatabaseDriverTestCase;
 use Windwalker\Utilities\Arr;
 
@@ -16,21 +17,19 @@ use Windwalker\Utilities\Arr;
  */
 abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
 {
-    protected static string $platform = '';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     /**
-     * @var AbstractConnection
+     * @var  AbstractConnection
      */
     protected static string $className = AbstractConnection::class;
 
     /**
-     * @var AbstractConnection
+     * @var  AbstractConnection
      */
     protected $instance;
 
-    protected static function setupDatabase(): void
-    {
-    }
+    protected static function setupDatabase(): void {}
 
     /**
      * @inheritDoc
@@ -46,7 +45,8 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         parent::setUpBeforeClass();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeConnection(): void
     {
         $this->instance = static::createConnection();
     }
@@ -108,10 +108,9 @@ abstract class AbstractConnectionTestCase extends AbstractDatabaseDriverTestCase
         self::assertNull($conn->get());
     }
 
-    protected function tearDown(): void
+    #[After]
+    protected function disconnectConnection(): void
     {
-        parent::tearDown();
-
         $this->instance->disconnect();
         $this->instance = null;
     }

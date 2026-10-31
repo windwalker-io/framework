@@ -6,7 +6,7 @@ namespace Windwalker\Database\Test\Driver\Sqlsrv;
 
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\Sqlsrv\SqlsrvConnection;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
 
 /**
@@ -14,7 +14,7 @@ use Windwalker\Database\Test\Driver\AbstractConnectionTestCase;
  */
 class SqlsrvConnectionTest extends AbstractConnectionTestCase
 {
-    protected static string $platform = AbstractPlatform::SQLSERVER;
+    protected static DbPlatform $platform = DbPlatform::SQLServer;
 
     protected static string $className = SqlsrvConnection::class;
 

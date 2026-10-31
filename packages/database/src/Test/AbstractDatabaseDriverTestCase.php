@@ -15,7 +15,7 @@ use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\DriverOptions;
 use Windwalker\Database\Driver\Pdo\AbstractPdoConnection;
 use Windwalker\Database\Driver\Pdo\DsnHelper;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\Reseter\AbstractReseter;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Grammar\AbstractGrammar;
@@ -29,7 +29,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 {
     use QueryTestTrait;
 
-    protected static string $platform = '';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static ?string $dbname = '';
 
@@ -48,16 +48,16 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         $params = static::getTestParams();
 
         if (!$params) {
-            self::markTestSkipped('DSN of ' . static::$platform . ' not available for test case: ' . static::class);
+            self::markTestSkipped('DSN of ' . static::platformName() . ' not available for test case: ' . static::class);
         }
 
         $options = DriverOptions::wrap($params);
 
-        if (static::$platform === AbstractPlatform::SQLSERVER) {
+        if (static::$platform === DbPlatform::SQLServer) {
             $options->tls = false;
         }
 
-        $platform = static::$platform;
+        $platform = static::platformName();
 
         $platform = DatabaseFactory::getDriverShortName($platform);
 
@@ -116,7 +116,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
         // Sometimes if SQLServ DB running in container, will use self-signed cert.
         // We must force trust it, otherwise will get error message.
-        if (static::$platform === AbstractPlatform::SQLSERVER) {
+        if (static::$platform === DbPlatform::SQLServer) {
             $options->tls['verify'] = false;
         }
 
@@ -193,7 +193,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
      */
     protected static function getTestParams(): array
     {
-        $const = 'WINDWALKER_TEST_DB_DSN_' . strtoupper(static::$platform);
+        $const = 'WINDWALKER_TEST_DB_DSN_' . strtoupper(static::platformName());
 
         // First let's look to see if we have a DSN defined or in the environment variables.
         if (defined($const) || getenv($const)) {
@@ -214,13 +214,18 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
      */
     public static function getGrammar(mixed $escaper = null): AbstractGrammar
     {
-        $grammar = AbstractGrammar::create(static::$platform);
+        $grammar = AbstractGrammar::create(static::platformName());
 
         if ($escaper) {
             $grammar->setEscaper(new Escaper($escaper));
         }
 
         return $grammar;
+    }
+
+    protected static function platformName(): string
+    {
+        return static::$platform->name;
     }
 
     public static function createQuery($escaper = null): Query

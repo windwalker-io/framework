@@ -1117,7 +1117,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
         while ($parent) {
             $parents[] = $parent;
-            $parent = $this->getParent();
+            $parent = $parent->getParent();
         }
 
         return $parents;

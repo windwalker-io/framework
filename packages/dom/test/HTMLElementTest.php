@@ -4,306 +4,225 @@ declare(strict_types=1);
 
 namespace Windwalker\DOM\Test;
 
-use Dom\HTMLDocument;
-use DOMDocument;
-use Masterminds\HTML5;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\DOMFactory;
-use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
+use Windwalker\DOM\HTML5Factory;
 use Windwalker\Test\Traits\DOMTestTrait;
 
-use const Dom\HTML_NO_DEFAULT_NS;
-
-/**
- * The DomElementTest class.
- */
-class HTMLElementTest extends DOMElementTest
+class HTMLElementTest extends TestCase
 {
     use DOMTestTrait;
 
-    /**
-     * @var DOMElement
-     */
-    protected $instance;
-
-    // public function testAttr()
-    // {
-    //     // $dom = new DOMDocument();
-    //     // $input = $dom->createElement('input');
-    //     // $input->setAttribute('type', 'text');
-    //     // $input->setAttribute('required', '');
-    //     // $input->setAttribute('data-hello', '');
-    //     //
-    //     // $oldDoc = DOMFactory::document();
-    //     // show($oldDoc->firstElementChild->namespaceURI);
-    //     //
-    //     //
-    //     // $doc = HTMLDocument::createFromString(
-    //     //     '<div><input type="text" required hello data-foo></div>',
-    //     //     LIBXML_HTML_NOIMPLIED | HTML_NO_DEFAULT_NS,
-    //     //     'UTF-8'
-    //     // );
-    //     //
-    //     // show($doc->firstElementChild->namespaceURI);
-    //     // show(HTML5Factory::saveHtml($doc->firstElementChild), 'F');
-    //
-    //     $html = HTMLDocument::createEmpty();
-    //     $div = HTML5Factory::element('div');
-    //     $div->setAttribute('data-hello', '');
-    //     $div->setAttribute('required', '');
-    //
-    //     show($div->namespaceURI);
-    //
-    //     show(
-    //         $div->render(true)
-    //     );
-    // }
-
-    /**
-     * @see  HTMLElement::create
-     */
-    public function testCreate(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function createsElementWithAttributesAndContent(bool $legacy): void
     {
-        $ele = HTMLElement::new(
+        $element = self::createElement(
+            $legacy,
             'field',
             [
                 'name' => 'foo',
                 'label' => 'FOO',
-                'class' => function () {
-                    return 'col-12 form-control';
-                },
+                'class' => static fn() => 'col-12 form-control',
                 'data-options' => [
                     'handle' => '.handle',
-                    'enabled' => true,
-                ],
+                    'enabled' => true
+                ]
             ]
         );
 
         self::assertDomStringEqualsDomString(
-            '<field name="foo" label="FOO" class="col-12 form-control" ' .
-            'data-options="{&quot;handle&quot;:&quot;.handle&quot;,&quot;enabled&quot;:true}"></field>',
-            $ele
+            '<field name="foo" label="FOO" class="col-12 form-control" '
+            . 'data-options="{&quot;handle&quot;:&quot;.handle&quot;,&quot;enabled&quot;:true}"></field>',
+            $element
         );
 
-        $ele = HTMLElement::new(
+        $element = self::createElement(
+            $legacy,
             'field',
             [
                 'name' => 'foo',
                 'label' => 'FOO',
-                'class' => function () {
-                    return 'col-12 form-control';
-                },
+                'class' => static fn() => 'col-12 form-control',
                 'data-options' => [
                     'handle' => '.handle',
-                    'enabled' => true,
-                ],
+                    'enabled' => true
+                ]
             ],
-            HTMLElement::new('span', [], 'Hello')
+            self::createElement($legacy, 'span', [], 'Hello')
         );
 
         self::assertDomStringEqualsDomString(
-            '<field name="foo" label="FOO" class="col-12 form-control" ' .
-            'data-options="{&quot;handle&quot;:&quot;.handle&quot;,&quot;enabled&quot;:true}">' .
-            '<span>Hello</span></field>',
-            $ele
+            '<field name="foo" label="FOO" class="col-12 form-control" '
+            . 'data-options="{&quot;handle&quot;:&quot;.handle&quot;,&quot;enabled&quot;:true}">'
+            . '<span>Hello</span></field>',
+            $element
         );
     }
 
-    public function testSelfClosed(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function rendersVoidAndNormalElements(bool $legacy): void
     {
-        $img = HTMLElement::new('img', ['src' => 'hello.jpg', 'width' => 300], '');
+        $image = self::createElement($legacy, 'img', ['src' => 'hello.jpg', 'width' => 300], '');
+        $div = self::createElement($legacy, 'div', ['class' => 'hello']);
 
-        self::assertEquals('<img src="hello.jpg" width="300">', $img->render());
-
-        $div = HTMLElement::new('div', ['class' => 'hello']);
-
-        self::assertEquals('<div class="hello"></div>', $div->render());
+        self::assertSame('<img src="hello.jpg" width="300">', self::renderElement($image));
+        self::assertSame('<div class="hello"></div>', self::renderElement($div));
     }
 
-    /**
-     * @see  DOMElement::offsetSet
-     * @see  DOMElement::offsetGet
-     */
-    public function testOffsetAccess(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function supportsArrayAccess(bool $legacy): void
     {
-        $ele = HTMLElement::new('hello');
-        $ele['data-foo'] = 'bar';
+        $element = self::createElement($legacy, 'hello');
+        $element['data-foo'] = 'bar';
 
-        self::assertTrue(isset($ele['data-foo']));
-        self::assertEquals('bar', $ele['data-foo']);
-        self::assertEquals('<hello data-foo="bar"></hello>', $ele->render());
+        self::assertTrue(isset($element['data-foo']));
+        self::assertSame('bar', $element['data-foo']);
+        self::assertSame('<hello data-foo="bar"></hello>', self::renderElement($element));
 
-        unset($ele['data-foo']);
+        unset($element['data-foo']);
 
-        self::assertEquals('<hello></hello>', $ele->render());
-        self::assertFalse(isset($ele['data-foo']));
+        self::assertSame('<hello></hello>', self::renderElement($element));
+        self::assertFalse(isset($element['data-foo']));
     }
 
-    /**
-     * @see  DOMElement::__toString
-     */
-    public function testToString(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function convertsToString(bool $legacy): void
     {
-        $ele = HTMLElement::create('hello');
-        $ele['data-foo'] = 'bar';
+        $element = self::createElement($legacy, 'hello');
+        $element['data-foo'] = 'bar';
 
-        self::assertEquals('<hello data-foo="bar"></hello>', (string) $ele);
+        self::assertSame('<hello data-foo="bar"></hello>', (string) $element);
     }
 
-    /**
-     * @see  DOMElement::querySelectorAll
-     */
-    public function testQuerySelectorAll(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function queriesAllSelectorMatches(bool $legacy): void
     {
-        /** @var HTMLDocument $dom */
-        $dom = HTMLDocument::createFromString(
-            <<<XML
-<div class="row">
-    <div class="col-lg-6 first-col">
-        <img src="hello.jpg"/>
-    </div>
-    <div class="col-lg-6 second-col">
-        <img src="flower.jpg"/>
-    </div>
-    <div class="col-lg-6 third-col">
-        <img src="sakura.jpg"/>
-    </div>
-</div>
-XML
-        );
+        $element = self::createImageFixture($legacy);
+        $images = [];
 
-        $ele = HTMLElement::new(
-            'div',
-            ['class' => 'root-node'],
-            $dom->documentElement
-        );
-
-        $imgs = $ele->querySelectorAll('img');
-
-        foreach ($imgs as $img) {
-            $images[] = $img['src'];
+        foreach ($element->querySelectorAll('img') as $image) {
+            $images[] = $image->getAttribute('src');
         }
 
-        self::assertEquals(
-            [
-                'hello.jpg',
-                'flower.jpg',
-                'sakura.jpg',
-            ],
-            $images
-        );
+        self::assertSame(['hello.jpg', 'flower.jpg', 'sakura.jpg'], $images);
     }
 
-    /**
-     * @see  DOMElement::querySelector
-     */
-    public function testQuerySelector(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function queriesFirstSelectorMatch(bool $legacy): void
     {
-        /** @var HTMLDocument $dom */
-        $dom = HTMLDocument::createFromString(
-            <<<XML
-<div class="row">
-    <div class="col-lg-6 first-col">
-        <img src="hello.jpg"/>
-    </div>
-    <div class="col-lg-6 second-col">
-        <img src="flower.jpg"/>
-    </div>
-    <div class="col-lg-6 third-col">
-        <img src="sakura.jpg"/>
-    </div>
-</div>
-XML
-        );
+        $element = self::createImageFixture($legacy);
+        $image = $element->querySelector('img');
 
-        $ele = HTMLElement::new(
-            'div',
-            ['class' => 'root-node'],
-            $dom->documentElement
-        );
+        if ($legacy) {
+            self::assertSame(1, $image->count());
+            self::assertSame('hello.jpg', $image->attr('src'));
 
-        $img = $ele->querySelector('img');
+            return;
+        }
 
-        self::assertEquals(
-            'hello.jpg',
-            $img->getAttribute('src')
-        );
+        self::assertSame('hello.jpg', $image->getAttribute('src'));
     }
 
-    /**
-     * @see  DOMElement::getName
-     */
-    public function testGetName(): void
+    #[Test]
+    #[DataProvider('elementNameProvider')]
+    #[IgnoreDeprecations]
+    public function returnsElementName(bool $legacy, string $expected): void
     {
-        $ele = HTMLElement::new('hello');
-
-        self::assertEquals('HELLO', $ele->getName());
+        self::assertSame($expected, self::createElement($legacy, 'hello')->getName());
     }
 
-    /**
-     * @see  DOMElement::getAttributes
-     */
-    public function testGetAttributes(): void
+    public static function elementNameProvider(): array
     {
-        $ele = HTMLElement::new(
-            'hello',
-            [
-                'foo' => 'bar',
-                'flower' => 'sakura',
-            ]
-        );
-
-        $attrs = $ele->getAttributes();
-
-        self::assertEquals('sakura', $attrs['flower']->value);
-
-        $attrs = $ele->getAttributes(true);
-
-        self::assertEquals('sakura', $attrs['flower']);
+        return [
+            'new API' => [false, 'HELLO'],
+            'legacy API' => [true, 'hello']
+        ];
     }
 
-    /**
-     * @see  DOMElement::setAttributes
-     */
-    public function testSetAttributes(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function returnsAttributes(bool $legacy): void
     {
-        $ele = HTMLElement::create('hello');
+        $element = self::createElement($legacy, 'hello', ['foo' => 'bar', 'flower' => 'sakura']);
 
-        $ele->setAttributes(
-            [
-                'foo' => 'bar',
-                'flower' => 'sakura',
-            ]
-        );
-
-        self::assertEquals('bar', $ele['foo']);
-        self::assertEquals('sakura', $ele['flower']);
+        self::assertSame('sakura', $element->getAttributes()['flower']->value);
+        self::assertSame('sakura', $element->getAttributes(true)['flower']);
     }
 
-    public function testWith(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function setsAttributes(bool $legacy): void
     {
-        $dom = new DOMDocument();
-        $root = $dom->createElement('root');
+        $element = self::createElement($legacy, 'hello');
+        $element->setAttributes(['foo' => 'bar', 'flower' => 'sakura']);
 
-        $ele = HTMLElement::create('hello');
-        $root->appendChild($ele->with($root));
-
-        self::assertEquals('<root><hello/></root>', $dom->saveXML($root));
+        self::assertSame('bar', $element['foo']);
+        self::assertSame('sakura', $element['flower']);
     }
 
-    public function testCreateChild(): void
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function importsIntoAnotherDocument(bool $legacy): void
     {
-        $ele = HTMLElement::create('root');
-        $hello = $ele->createChild('hello');
-        $hello->setAttribute('foo', 'bar');
+        if ($legacy) {
+            $document = DOMFactory::create();
+        } else {
+            $document = HTML5Factory::create();
+        }
 
-        self::assertEquals('<root><hello foo="bar"></hello></root>', $ele->render(null));
+        $root = $document->createElement('root');
+        $root->appendChild(self::createElement($legacy, 'hello')->with($root));
+
+        self::assertSame($legacy ? 'hello' : 'HELLO', $root->firstChild->nodeName);
+        self::assertSame($root, $root->firstChild->parentNode);
     }
 
-    public function testBuildAttributes()
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function createsChildElements(bool $legacy): void
     {
-        $attrs = HTMLElement::buildAttributes(
+        $element = self::createElement($legacy, 'root');
+        $child = $element->createChild('hello');
+        $child->setAttribute('foo', 'bar');
+
+        self::assertSame('<root><hello foo="bar"></hello></root>', self::renderElement($element));
+    }
+
+    #[Test]
+    #[DataProvider('elementFactoriesProvider')]
+    #[IgnoreDeprecations]
+    public function createsElementFromCssSelector(bool $legacy): void
+    {
+        $element = self::createElement($legacy, 'img#hero.preview');
+
+        self::assertSame('<img id="hero" class="preview">', self::renderElement($element));
+    }
+
+    #[Test]
+    public function buildsAttributes(): void
+    {
+        $attributes = HTMLElement::buildAttributes(
             [
                 'class' => 'foo bar',
                 'data-foo' => 'yoo',
@@ -311,40 +230,68 @@ XML
                 'selected' => true,
                 'disabled' => false,
                 'no-show' => null,
-                'normal-attr' => '',
+                'normal-attr' => ''
             ]
         );
 
-        self::assertEquals('class="foo bar" data-foo="yoo" required selected normal-attr', $attrs);
+        self::assertSame('class="foo bar" data-foo="yoo" required selected normal-attr', $attributes);
     }
 
-    public function testFromDOMElement()
+    #[Test]
+    public function convertsLegacyElement(): void
     {
-        $doc = DOMFactory::create();
-        $doc->loadHTML(
-            <<<HTML
-            <div class="foo">
-                <div>Hello</div>
-                <div>World</div>
-            </div>
-            HTML,
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-        );
+        $document = DOMFactory::create();
+        $document->loadXML('<div class="foo"><div>Hello</div><div>World</div></div>');
 
-        $ele = HTMLElement::fromLegacyElement($doc->firstElementChild);
+        $element = HTMLElement::fromLegacyElement($document->documentElement);
 
-        self::assertEquals('DIV', $ele->nodeName);
-        self::assertEquals('foo', $ele->getAttribute('class'));
-        self::assertEquals('Hello', $ele->firstElementChild->textContent);
-        self::assertEquals('World', $ele->lastElementChild->textContent);
+        self::assertSame('DIV', $element->nodeName);
+        self::assertSame('foo', $element->getAttribute('class'));
+        self::assertSame('Hello', $element->firstElementChild->textContent);
+        self::assertSame('World', $element->lastElementChild->textContent);
     }
 
-    protected function setUp(): void
+    public static function elementFactoriesProvider(): array
     {
-        $this->instance = DOMElement::class;
+        return [
+            'new API' => [false],
+            'legacy API' => [true]
+        ];
     }
 
-    protected function tearDown(): void
+    private static function createElement(
+        bool $legacy,
+        string $name,
+        array $attributes = [],
+        mixed $content = null
+    ): DOMElement|HTMLElement {
+        if ($legacy) {
+            return HTMLElement::create($name, $attributes, $content);
+        }
+
+        return HTMLElement::new($name, $attributes, $content);
+    }
+
+    private static function createImageFixture(bool $legacy): DOMElement|HTMLElement
     {
+        $columns = [];
+
+        foreach (['hello.jpg', 'flower.jpg', 'sakura.jpg'] as $imageSource) {
+            $image = self::createElement($legacy, 'img', ['src' => $imageSource]);
+            $columns[] = self::createElement($legacy, 'div', ['class' => 'col-lg-6'], $image);
+        }
+
+        $row = self::createElement($legacy, 'div', ['class' => 'row'], $columns);
+
+        return self::createElement($legacy, 'div', ['class' => 'root-node'], $row);
+    }
+
+    private static function renderElement(DOMElement|HTMLElement $element): string
+    {
+        if ($element instanceof HTMLElement) {
+            return $element->render();
+        }
+
+        return $element->render(null);
     }
 }

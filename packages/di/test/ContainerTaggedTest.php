@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DefinitionNotFoundException;
 use Windwalker\DI\Test\Stub\StubInstantTaggedService;
 use Windwalker\DI\Test\Stub\StubLangCode;
 use Windwalker\DI\Test\Stub\StubLangEnum;
-use Windwalker\Utilities\Reflection\ReflectAccessor;
 
 class ContainerTaggedTest extends TestCase
 {
     protected Container $instance;
 
-    public function testSetAndGet(): void
+    #[Test]
+    public function setsAndGetsStringTaggedServices(): void
     {
         $this->instance->set(StubLangCode::class, 'en');
         $this->instance->set(StubLangCode::class, 'en-US', tag: 'USA');
@@ -33,7 +35,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('en-GB', $this->instance->get(StubLangCode::class, tag: 'UK'));
     }
 
-    public function testSetAndGetEnum(): void
+    #[Test]
+    public function setsAndGetsEnumTaggedServices(): void
     {
         $this->instance->set(StubLangCode::class, 'en');
         $this->instance->set(StubLangCode::class, 'en-US', tag: StubLangEnum::USA);
@@ -50,7 +53,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('en-GB', $this->instance->get(StubLangCode::class, tag: StubLangEnum::UK));
     }
 
-    public function testSetFactory(): void
+    #[Test]
+    public function createsFactoriesForPresetTagsAndRejectsUnknownTags(): void
     {
         // Preset tag
         $this->instance->set(
@@ -73,7 +77,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testTaggingWhenGet(): void
+    #[Test]
+    public function passesDynamicTagsToFactories(): void
     {
         $this->instance->set(
             StubLangCode::class,
@@ -86,7 +91,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('vi-VN', $this->instance->get(StubLangCode::class, tag: 'Vietnam')());
     }
 
-    public function testServiceAttribute(): void
+    #[Test]
+    public function resolvesTaggedServicesFromAttributes(): void
     {
         $service = $this->instance->get(StubInstantTaggedService::class, tag: 'foo');
 
@@ -104,7 +110,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testCreateObject(): void
+    #[Test]
+    public function createsUnsharedTaggedObjects(): void
     {
         $lang = $this->instance->createObject(StubLangCode::class, args: ['tag' => 'Germany'], tag: 'Germany');
         $lang2 = $this->instance->get(StubLangCode::class, tag: 'Germany');
@@ -121,7 +128,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testCreateSharedObject(): void
+    #[Test]
+    public function createsSharedTaggedObjects(): void
     {
         $lang = $this->instance->createSharedObject(StubLangCode::class, args: ['tag' => 'Germany'], tag: 'Germany');
         $lang2 = $this->instance->get(StubLangCode::class, tag: 'Germany');
@@ -138,7 +146,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testPrepareObject(): void
+    #[Test]
+    public function preparesUnsharedTaggedObjects(): void
     {
         $this->instance->prepareObject(StubLangCode::class, tag: 'Germany');
         $lang = $this->instance->get(StubLangCode::class, tag: 'Germany');
@@ -159,7 +168,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testPrepareSharedObject(): void
+    #[Test]
+    public function preparesSharedTaggedObjects(): void
     {
         $this->instance->prepareSharedObject(StubLangCode::class, tag: 'Germany');
         $lang = $this->instance->get(StubLangCode::class, tag: 'Germany');
@@ -180,7 +190,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testBind()
+    #[Test]
+    public function bindsFactoriesThatReceiveStringTags(): void
     {
         $this->instance->bind(
             StubLangCode::class,
@@ -197,7 +208,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('de-DE', $lang());
     }
 
-    public function testBindWithEnum()
+    #[Test]
+    public function bindsFactoriesThatReceiveEnumTags(): void
     {
         $this->instance->bind(
             StubLangCode::class,
@@ -214,7 +226,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('de-DE', $lang());
     }
 
-    public function testBindPresetTags()
+    #[Test]
+    public function bindsFactoriesToPresetTags(): void
     {
         $this->instance->bind(
             StubLangCode::class,
@@ -237,7 +250,8 @@ class ContainerTaggedTest extends TestCase
         }
     }
 
-    public function testExtendsWithPresetTags(): void
+    #[Test]
+    public function extendsServicesForPresetTags(): void
     {
         $this->instance->prepareSharedObject(StubLangCode::class);
         $this->instance->extend(
@@ -254,7 +268,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('de-DE', $lang());
     }
 
-    public function testExtendsWithDynamicTags(): void
+    #[Test]
+    public function extendsServicesForDynamicTags(): void
     {
         $this->instance->prepareSharedObject(StubLangCode::class);
         $this->instance->extend(
@@ -276,7 +291,8 @@ class ContainerTaggedTest extends TestCase
         self::assertEquals('en-US', $lang());
     }
 
-    public function setUp(): void
+    #[Before]
+    public function initializeContainer(): void
     {
         $this->instance = new Container();
     }

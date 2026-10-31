@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Test\Manager;
 
+use PHPUnit\Framework\Attributes\Before;
 use Windwalker\Database\Manager\TableManager;
-use Windwalker\Database\Platform\AbstractPlatform;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
-use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Utilities\Str;
 
 class SQLiteTableManagerTest extends AbstractDatabaseTestCase
 {
-    protected static string $platform = AbstractPlatform::SQLITE;
+    protected static DbPlatform $platform = DbPlatform::SQLite;
 
     protected static string $driver = 'pdo_sqlite';
 
@@ -500,7 +500,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     {
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function initializeTableManager(): void
     {
         $this->instance = self::$db->getTableManager('enterprise');
     }

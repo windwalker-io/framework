@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Test\Schema;
 
 use Windwalker\Database\Manager\DatabaseManager;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 /**
@@ -12,14 +13,9 @@ use Windwalker\Database\Test\AbstractDatabaseTestCase;
  */
 class DatabaseManagerTest extends AbstractDatabaseTestCase
 {
-    protected static string $platform = 'MySQL';
+    protected static DbPlatform $platform = DbPlatform::MySQL;
 
     protected static string $driver = 'pdo_mysql';
-
-    /**
-     * @var DatabaseManager
-     */
-    protected $instance;
 
     /**
      * @see  DatabaseManager::create
@@ -58,15 +54,6 @@ class DatabaseManagerTest extends AbstractDatabaseTestCase
             $newDbname,
             $dbs
         );
-    }
-
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     /**
