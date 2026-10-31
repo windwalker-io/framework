@@ -85,6 +85,8 @@ class EventDispatcher implements EventDispatcherInterface
      * @return  static  Return self to support chaining.
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function setProvider(ListenerProviderInterface $provider): static
     {

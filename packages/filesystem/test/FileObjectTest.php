@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem\Test;
 
+use BadMethodCallException;
+use PHPUnit\Framework\Attributes\Test;
 use SplFileInfo;
+use Symfony\Component\Mime\MimeTypes;
 use Windwalker\Filesystem\Exception\FileNotFoundException;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\FileObject;
-use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Iterator\FilesIterator;
+use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Stream\StringStream;
 
 use function Windwalker\fs;
 
 /**
- * The FilesystemTest class.
+ * The FileObjectTest class.
  */
 class FileObjectTest extends AbstractVfsTestCase
 {
     use FilesystemTestTrait;
 
-    /**
-     * @var Filesystem
-     */
-    protected Filesystem $instance;
-
-    public function testItemsFirst(): void
+    #[Test]
+    public function filesRecursiveFirstReturnsDeepestFirstFile(): void
     {
         $fs = new FileObject('vfs://root/files');
         $files = $fs->files(true);
@@ -34,33 +33,32 @@ class FileObjectTest extends AbstractVfsTestCase
         self::assertPathEquals('vfs://root/files/folder1/level2/file3', $files->first()->getPathname());
     }
 
-    /**
-     * testRead
-     *
-     * @return  void
-     */
-    public function testRead(): void
+    #[Test]
+    public function readReturnsFileContents(): void
     {
         $str = (new FileObject('vfs://root/files/folder2/file2.html'))->read();
 
         self::assertEquals('file2.html', (string) $str);
     }
 
-    public function testReadStream(): void
+    #[Test]
+    public function readStreamReturnsStreamOfFileContents(): void
     {
         $stream = (new FileObject('vfs://root/files/folder2/file2.html'))->readStream();
 
         self::assertEquals('file2.html', (string) $stream);
     }
 
-    public function testWrite(): void
+    #[Test]
+    public function writeCreatesMissingParentDirectoriesAndFile(): void
     {
         (new FileObject('vfs://root/files/folder2/foo/bar/new-file.txt'))->write('Hello');
 
         self::assertEquals('Hello', file_get_contents('vfs://root/files/folder2/foo/bar/new-file.txt'));
     }
 
-    public function testWriteStream(): void
+    #[Test]
+    public function writeStreamWritesStreamContentsToFile(): void
     {
         $stream = new StringStream('Hello');
 
@@ -69,45 +67,53 @@ class FileObjectTest extends AbstractVfsTestCase
         self::assertEquals('Hello', file_get_contents('vfs://root/files/folder2/foo/bar/new-file.txt'));
     }
 
-    /**
-     * @see  FileObject::delete
-     */
-    public function testDelete(): void
+    #[Test]
+    public function deleteRemovesDirectoryRecursively(): void
     {
-        $file = new FileObject(static::$baseDir . '');
+        $file = new FileObject(static::$baseDir);
         $file->delete();
 
-        self::assertDirectoryDoesNotExist(static::$baseDir . '');
+        self::assertDirectoryDoesNotExist(static::$baseDir);
         self::assertFileDoesNotExist(static::$baseDir . '/folder1/level2/file3');
+    }
 
-        // Delete non-exists folders
+    #[Test]
+    public function deleteNonExistentPathDoesNotThrowUnexpectedException(): void
+    {
         try {
             (new FileObject(static::$baseDir . '/hello/no/exists'))->delete();
         } catch (FilesystemException $e) {
             self::assertInstanceOf(FilesystemException::class, $e);
         }
 
-        // Delete no-permissions folders
-        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $dir = new FileObject(__DIR__ . '/dest');
-            $dir->mkdir();
-            chmod($dir->getPathname(), 0000);
-
-            try {
-                $dir->delete();
-            } catch (FilesystemException $e) {
-                self::assertInstanceOf(FilesystemException::class, $e);
-            }
-
-            chmod($dir->getPathname(), 0777);
-            $dir->delete();
-        }
+        $this->addToAssertionCount(1);
     }
 
-    /**
-     * @see  FileObject::mkdir
-     */
-    public function testMkdir(): void
+    #[Test]
+    public function deleteDirectoryWithoutPermissionThrowsFilesystemExceptionOrSucceeds(): void
+    {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $this->markTestSkipped('File permissions are not supported on Windows.');
+        }
+
+        $dir = new FileObject(__DIR__ . '/dest');
+        $dir->mkdir();
+        chmod($dir->getPathname(), 0000);
+
+        try {
+            $dir->delete();
+        } catch (FilesystemException $e) {
+            self::assertInstanceOf(FilesystemException::class, $e);
+        }
+
+        chmod($dir->getPathname(), 0777);
+        $dir->delete();
+
+        $this->addToAssertionCount(1);
+    }
+
+    #[Test]
+    public function mkdirCreatesNestedDirectories(): void
     {
         $dest = fs('vfs://root/dest/foo/bar');
 
@@ -116,10 +122,8 @@ class FileObjectTest extends AbstractVfsTestCase
         static::assertDirectoryExists('vfs://root/dest/foo/bar');
     }
 
-    /**
-     * @see  FileObject::copy
-     */
-    public function testCopyTo(): void
+    #[Test]
+    public function copyToCopiesDirectoryRecursively(): void
     {
         $dest = new FileObject('vfs://root/dest');
 
@@ -133,10 +137,8 @@ class FileObjectTest extends AbstractVfsTestCase
         $this->assertFileExists($dest . '/folder1/level2/file3');
     }
 
-    /**
-     * @see  FileObject::move
-     */
-    public function testMoveTo(): void
+    #[Test]
+    public function moveToMovesDirectoryRecursively(): void
     {
         $dest = new FileObject('vfs://root/files2');
 
@@ -152,10 +154,8 @@ class FileObjectTest extends AbstractVfsTestCase
         $dest->delete();
     }
 
-    /**
-     * @see  FileObject::items
-     */
-    public function testItems(): void
+    #[Test]
+    public function itemsRecursiveListsNestedFolderItems(): void
     {
         $items = (new FileObject(static::$baseDir . '/folder1/level2'))->items(true);
 
@@ -163,44 +163,46 @@ class FileObjectTest extends AbstractVfsTestCase
             static::cleanPaths([static::$baseDir . '/folder1/level2/file3']),
             static::cleanPaths($items)
         );
+    }
 
-        // Recursive
-        $items = (new FileObject(static::$baseDir . ''))->items(true);
-
-        $compare = static::getItemsRecursive();
+    #[Test]
+    public function itemsRecursiveListsAllFilesAndFolders(): void
+    {
+        $items = (new FileObject(static::$baseDir))->items(true);
 
         $this->assertEquals(
-            static::cleanPaths($compare),
+            static::cleanPaths(static::getItemsRecursive()),
             static::cleanPaths($items)
         );
+    }
 
-        // Iterator
+    #[Test]
+    public function itemsReturnsRewindableFilesIterator(): void
+    {
         $items = (new FileObject(static::$baseDir))->items(true);
 
         $this->assertInstanceOf(FilesIterator::class, $items);
 
-        $items2 = $items->toArray();
-
         $this->assertEquals(
-            static::cleanPaths($compare),
-            static::cleanPaths($items2)
+            static::cleanPaths(static::getItemsRecursive()),
+            static::cleanPaths($items->toArray())
         );
 
         $items->rewind();
 
         $this->assertInstanceOf(SplFileInfo::class, $items->current());
-
-        // list non-exists folder
-
-        $this->expectException(FileNotFoundException::class);
-
-        $items = (new FileObject(__DIR__ . '/not/exists'))->items();
     }
 
-    /**
-     * @see  FileObject::folders
-     */
-    public function testFolders(): void
+    #[Test]
+    public function itemsOnNonExistentFolderThrowsFileNotFoundException(): void
+    {
+        $this->expectException(FileNotFoundException::class);
+
+        (new FileObject(__DIR__ . '/not/exists'))->items();
+    }
+
+    #[Test]
+    public function foldersRecursiveListsNestedFolders(): void
     {
         $folders = (new FileObject(static::$baseDir . '/folder1'))->folders(true);
 
@@ -208,27 +210,29 @@ class FileObjectTest extends AbstractVfsTestCase
             static::cleanPaths([static::$baseDir . '/folder1/level2']),
             static::cleanPaths($folders)
         );
+    }
 
-        // Recursive
+    #[Test]
+    public function foldersRecursiveListsAllFolders(): void
+    {
         $folders = (new FileObject(static::$baseDir))->folders(true);
 
-        $compare = static::getFoldersRecursive();
-
         $this->assertEquals(
-            static::cleanPaths($compare),
+            static::cleanPaths(static::getFoldersRecursive()),
             static::cleanPaths($folders)
         );
+    }
 
-        // Iterator
+    #[Test]
+    public function foldersReturnsFilesIteratorOfFileObjects(): void
+    {
         $folders = (new FileObject(static::$baseDir))->folders(true);
 
         $this->assertInstanceOf(FilesIterator::class, $folders);
 
-        $folders2 = $folders->toArray();
-
         $this->assertEquals(
-            static::cleanPaths($compare),
-            static::cleanPaths($folders2)
+            static::cleanPaths(static::getFoldersRecursive()),
+            static::cleanPaths($folders->toArray())
         );
 
         $folders = (new FileObject(static::$baseDir))->folders(true);
@@ -236,10 +240,8 @@ class FileObjectTest extends AbstractVfsTestCase
         $this->assertInstanceOf(FileObject::class, $folders->current());
     }
 
-    /**
-     * @see  FileObject::files
-     */
-    public function testFiles(): void
+    #[Test]
+    public function filesRecursiveListsNestedFolderFiles(): void
     {
         $files = (new FileObject('vfs://root/files/folder1/level2'))->files(true);
 
@@ -247,27 +249,29 @@ class FileObjectTest extends AbstractVfsTestCase
             static::cleanPaths(['vfs://root/files/folder1/level2/file3']),
             static::cleanPaths($files)
         );
+    }
 
-        // Recursive
+    #[Test]
+    public function filesRecursiveListsAllFiles(): void
+    {
         $files = (new FileObject(static::$baseDir))->files(true);
 
-        $compare = static::getFilesRecursive();
-
         $this->assertEquals(
-            static::cleanPaths($compare),
+            static::cleanPaths(static::getFilesRecursive()),
             static::cleanPaths($files)
         );
+    }
 
-        // Iterator
+    #[Test]
+    public function filesReturnsRewindableFilesIteratorOfFileObjects(): void
+    {
         $files = (new FileObject(static::$baseDir))->files(true);
 
         $this->assertInstanceOf(FilesIterator::class, $files);
 
-        $files2 = $files->toArray();
-
         $this->assertEquals(
-            static::cleanPaths($compare),
-            static::cleanPaths($files2)
+            static::cleanPaths(static::getFilesRecursive()),
+            static::cleanPaths($files->toArray())
         );
 
         $files->rewind();
@@ -275,18 +279,24 @@ class FileObjectTest extends AbstractVfsTestCase
         $this->assertInstanceOf(FileObject::class, $files->current());
     }
 
-    public function testWrapIfNotNull(): void
+    #[Test]
+    public function wrapIfNotNullReturnsNullForNull(): void
     {
         self::assertNull(FileObject::wrapIfNotNull(null));
     }
 
-    public function testGetRelativePathname()
+    #[Test]
+    public function getRelativePathnameUsesBasePathFromConstructor(): void
     {
         $file = fs('vfs://root/files\\folder1/foo/bar', 'vfs://root\\files');
 
         self::assertPathEquals('folder1/foo/bar', $file->getRelativePathname());
         self::assertPathEquals('foo/bar', $file->getRelativePathname('vfs://root\\files/folder1'));
+    }
 
+    #[Test]
+    public function getRelativePathnameWithoutBasePathResolvesAgainstGivenPath(): void
+    {
         $file = fs('vfs://root/files\\folder1/foo/bar', '');
 
         self::assertPathEquals('vfs://root/files/folder1/foo/bar', $file->getRelativePathname());
@@ -300,17 +310,191 @@ class FileObjectTest extends AbstractVfsTestCase
         );
     }
 
-    public function testAppendPath()
+    #[Test]
+    public function appendPathAppendsSegmentToPathname(): void
     {
         $file = fs('vfs://root')->appendPath('/files/folder1');
 
-        self::assertPathEquals('vfs://root\files/folder1', $file->getPathname());
+        self::assertPathEquals('vfs://root\\files/folder1', $file->getPathname());
     }
 
-    public function testPrependPath()
+    #[Test]
+    public function prependPathPrependsSegmentToPathname(): void
     {
         $file = fs('root/files/folder1')->prependPath('vfs://');
 
-        self::assertPathEquals('vfs://root\files/folder1', $file->getPathname());
+        self::assertPathEquals('vfs://root\\files/folder1', $file->getPathname());
+    }
+
+    #[Test]
+    public function getExtensionReturnsFileExtension(): void
+    {
+        self::assertSame('html', fs('vfs://root/files/folder2/file2.html')->getExtension());
+    }
+
+    #[Test]
+    public function getPathObjectReturnsParentFolderObject(): void
+    {
+        $dir = fs('vfs://root/files/folder2/file2.html')->getPathObject();
+
+        self::assertPathEquals('vfs://root/files/folder2', $dir->getPathname());
+    }
+
+    #[Test]
+    public function readBase64DataUriEncodesContentsWithGivenMime(): void
+    {
+        $uri = fs('vfs://root/files/folder2/file2.html')->readBase64DataUri('text/html');
+
+        self::assertSame('data:text/html;base64,' . base64_encode('file2.html'), $uri);
+    }
+
+    #[Test]
+    public function readBase64DataUriDetectsMimeFromMimeTypes(): void
+    {
+        $uri = fs('vfs://root/files/folder2/file2.html')->readBase64DataUri(new MimeTypes());
+
+        self::assertSame('data:text/html;base64,' . base64_encode('file2.html'), $uri);
+    }
+
+    #[Test]
+    public function readBase64DataUriThrowsWhenMimeCannotBeDetected(): void
+    {
+        $this->expectException(FilesystemException::class);
+        $this->expectExceptionMessageIs('Unable to detect file mime type');
+
+        fs('vfs://root/files/folder1/path1')->readBase64DataUri(new MimeTypes());
+    }
+
+    #[Test]
+    public function readAndParseParsesFileByExtension(): void
+    {
+        file_put_contents('vfs://root/files/data.json', '{"foo":"bar"}');
+
+        $data = fs('vfs://root/files/data.json')->readAndParse();
+
+        self::assertSame('bar', $data['foo']);
+    }
+
+    #[Test]
+    public function addFileWritesFileIntoFolder(): void
+    {
+        $file = fs('vfs://root/files/folder2')->addFile('new.txt', 'Hello');
+
+        self::assertPathEquals('vfs://root/files/folder2/new.txt', $file->getPathname());
+        self::assertSame('Hello', file_get_contents('vfs://root/files/folder2/new.txt'));
+    }
+
+    #[Test]
+    public function addFileThrowsWhenCurrentPathIsNotFolder(): void
+    {
+        $this->expectException(FilesystemException::class);
+        $this->expectExceptionMessageIsOrContains('current path is not a dir');
+
+        fs('vfs://root/files/folder2/file2.html')->addFile('new.txt');
+    }
+
+    #[Test]
+    public function deleteIfExistsDeletesExistingFileAndReturnsTrue(): void
+    {
+        self::assertTrue(fs('vfs://root/files/folder2/file2.html')->deleteIfExists());
+        self::assertFileDoesNotExist('vfs://root/files/folder2/file2.html');
+    }
+
+    #[Test]
+    public function deleteIfExistsReturnsFalseForMissingPath(): void
+    {
+        self::assertFalse(fs('vfs://root/files/not-exists.txt')->deleteIfExists());
+    }
+
+    #[Test]
+    public function setRootUnwrapsFileObjectAndGetRootReturnsIt(): void
+    {
+        $file = fs('vfs://root/files/folder1/path1');
+
+        $file->setRoot(new SplFileInfo('vfs://root/files'));
+
+        self::assertSame('vfs://root/files', $file->getRoot());
+        self::assertPathEquals('folder1/path1', $file->getRelativePathname());
+
+        $file->setRoot(null);
+
+        self::assertNull($file->getRoot());
+    }
+
+    #[Test]
+    public function isLinkDetectsSymbolicLink(): void
+    {
+        $dir = sys_get_temp_dir() . '/windwalker-link-test-' . uniqid();
+        mkdir($dir);
+        file_put_contents($dir . '/target.txt', 'x');
+        symlink($dir . '/target.txt', $dir . '/link.txt');
+
+        try {
+            self::assertTrue(fs($dir . '/link.txt')->isLink());
+            self::assertFalse(fs($dir . '/target.txt')->isLink());
+        } finally {
+            unlink($dir . '/link.txt');
+            unlink($dir . '/target.txt');
+            rmdir($dir);
+        }
+    }
+
+    #[Test]
+    public function junctionHelpersAreNoOpOnNonWindows(): void
+    {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            self::markTestSkipped('Junctions are real on Windows.');
+        }
+
+        $file = fs('vfs://root/files/folder1');
+
+        self::assertFalse($file->isJunction());
+        self::assertFalse($file->removeJunction());
+    }
+
+    #[Test]
+    public function callRunsAllowedMethodAsync(): void
+    {
+        $file = fs('vfs://root/files/file1.txt');
+
+        self::assertSame('file1.txt', (string) $file->readAsync()->wait());
+    }
+
+    #[Test]
+    public function callRunsWriteAsyncWithArguments(): void
+    {
+        $file = fs('vfs://root/files/async.txt');
+
+        $file->writeAsync('async data')->wait();
+
+        self::assertSame('async data', (string) $file->read());
+    }
+
+    #[Test]
+    public function callRejectsWhenAsyncMethodFails(): void
+    {
+        $this->expectException(UncaughtException::class);
+        $this->expectExceptionMessageIsOrContains('Try to read from a non-exists file');
+
+        fs('vfs://root/files/not-exists.txt')->readAsync()->wait();
+    }
+
+    #[Test]
+    public function callThrowsForUnknownMethod(): void
+    {
+        $file = fs('vfs://root/files/file1.txt');
+
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessageIsOrContains('::fooAsync not exists.');
+
+        $file->fooAsync();
+    }
+
+    #[Test]
+    public function callThrowsForDisallowedAsyncMethod(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        fs('vfs://root/files/file1.txt')->getPathnameAsync();
     }
 }

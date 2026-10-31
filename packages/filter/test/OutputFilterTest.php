@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Filter\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\OutputFilter;
 use Windwalker\Test\Traits\DOMTestTrait;
@@ -16,8 +17,9 @@ class OutputFilterTest extends TestCase
     /**
      * @see  OutputFilter::safeHTML
      */
+    #[Test]
     #[DataProvider('safeHtmlProvider')]
-    public function testSafeHTML(int $flags, string $expected): void
+    public function safeHtmlRemovesTagsExceptKeptFlags(int $flags, string $expected): void
     {
         $html = <<<HTML
 <p>A</p>

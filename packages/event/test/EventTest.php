@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Event\Event;
 
@@ -17,55 +19,92 @@ class EventTest extends TestCase
     /**
      * @see  Event::merge
      */
-    public function testMerge(): void
+    #[Test]
+    public function mergeCombinesArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $result = $this->instance->merge(['flower' => 'Rose', 'tree' => 'Oak']);
+
+        self::assertSame($this->instance, $result);
+        self::assertSame(
+            ['flower' => 'Rose', 'starship' => 'Enterprise', 'tree' => 'Oak'],
+            $this->instance->getArguments()
+        );
     }
 
     /**
      * @see  Event::jsonSerialize
      */
-    public function testJsonSerialize(): void
+    #[Test]
+    public function jsonSerializeReturnsNameAndArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame(
+            [
+                'name' => 'onHelloWelcome',
+                'stopped' => false,
+                'arguments' => ['flower' => 'Sakura', 'starship' => 'Enterprise'],
+            ],
+            $this->instance->jsonSerialize()
+        );
     }
 
     /**
      * @see  Event::isPropagationStopped
      */
-    public function testIsPropagationStopped(): void
+    #[Test]
+    public function isPropagationStoppedReflectsState(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertFalse($this->instance->isPropagationStopped());
+
+        $this->instance->stopPropagation();
+
+        self::assertTrue($this->instance->isPropagationStopped());
     }
 
     /**
      * @see  Event::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function constructSetsNameAndArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $event = new Event('foo', ['bar' => 'baz']);
+
+        self::assertSame('foo', $event->getName());
+        self::assertSame(['bar' => 'baz'], $event->getArguments());
+        self::assertSame(Event::class, new Event()->getName());
     }
 
     /**
      * @see  Event::unserialize
      */
-    public function testUnserialize(): void
+    #[Test]
+    public function unserializeRestoresNameAndArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $event = new Event();
+
+        $event->__unserialize(['restored', ['flower' => 'Rose'], true]);
+
+        self::assertSame('restored', $event->getName());
+        self::assertSame(['flower' => 'Rose'], $event->getArguments());
+        self::assertTrue($event->isPropagationStopped());
     }
 
     /**
      * @see  Event::setArguments
      */
-    public function testSetArguments(): void
+    #[Test]
+    public function setArgumentsReplacesArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $result = $this->instance->setArguments(['tree' => 'Oak']);
+
+        self::assertSame($this->instance, $result);
+        self::assertSame(['tree' => 'Oak'], $this->instance->getArguments());
     }
 
     /**
      * @see  Event::mirror
      */
-    public function testMirror(): void
+    #[Test]
+    public function mirrorCreatesNewEventWithMergedArguments(): void
     {
         $event = $this->instance->mirror('LiveLong', ['flower' => 'rose']);
         self::assertNotSame($this->instance, $event);
@@ -86,15 +125,17 @@ class EventTest extends TestCase
     /**
      * @see  Event::getName
      */
-    public function testGetName(): void
+    #[Test]
+    public function getNameReturnsEventName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame('onHelloWelcome', $this->instance->getName());
     }
 
     /**
      * @see  Event::serialize
      */
-    public function testSerialize(): void
+    #[Test]
+    public function serializeRoundTripKeepsNameAndArguments(): void
     {
         $s = serialize($this->instance);
 
@@ -117,36 +158,63 @@ class EventTest extends TestCase
     /**
      * @see  Event::getArguments
      */
-    public function testGetArguments(): void
+    #[Test]
+    public function getArgumentsReturnsAllArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame(
+            ['flower' => 'Sakura', 'starship' => 'Enterprise'],
+            $this->instance->getArguments()
+        );
     }
 
     /**
      * @see  Event::stopPropagation
      */
-    public function testStopPropagation(): void
+    #[Test]
+    public function stopPropagationMarksEventStopped(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->stopPropagation();
+
+        self::assertTrue($this->instance->isPropagationStopped());
+
+        $mirror = $this->instance->mirror('another');
+
+        self::assertFalse($mirror->isPropagationStopped());
     }
 
     /**
      * @see  Event::wrap
      */
-    public function testWrap(): void
+    #[Test]
+    public function wrapCreatesEventFromObject(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $event = Event::wrap('hello', ['flower' => 'Rose']);
+
+        self::assertInstanceOf(Event::class, $event);
+        self::assertSame('hello', $event->getName());
+        self::assertSame(['flower' => 'Rose'], $event->getArguments());
+
+        $wrapped = Event::wrap($this->instance, ['tree' => 'Oak']);
+
+        self::assertSame($this->instance, $wrapped);
+        self::assertSame('Oak', $wrapped['tree']);
     }
 
     /**
      * @see  Event::clear
      */
-    public function testClear(): void
+    #[Test]
+    public function clearRemovesArguments(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $result = $this->instance->clear();
+
+        self::assertSame($this->instance, $result);
+        self::assertSame([], $this->instance->getArguments());
+        self::assertSame('onHelloWelcome', $this->instance->getName());
     }
 
-    public function testGetterSetter()
+    #[Test]
+    public function magicGetterAndSetterAccessArguments()
     {
         $this->instance->setFlower('Olive');
         $flower = $this->instance->getFlower('Olive');
@@ -161,7 +229,8 @@ class EventTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createEvent(): void
     {
         $this->instance = new Event(
             'onHelloWelcome',
@@ -170,9 +239,5 @@ class EventTest extends TestCase
                 'starship' => 'Enterprise',
             ]
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

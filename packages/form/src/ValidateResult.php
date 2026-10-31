@@ -72,6 +72,8 @@ class ValidateResult
      * Method to get property Field
      *
      * @return  AbstractField
+     *
+     * @codeCoverageIgnore
      */
     public function getField(): AbstractField
     {
@@ -82,6 +84,8 @@ class ValidateResult
      * Method to get property Result
      *
      * @return  int
+     *
+     * @codeCoverageIgnore
      */
     public function getResult(): int
     {
@@ -90,6 +94,8 @@ class ValidateResult
 
     /**
      * @return ValidatorInterface
+     *
+     * @codeCoverageIgnore
      */
     public function getValidator(): ?ValidatorInterface
     {

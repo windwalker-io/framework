@@ -114,7 +114,7 @@ class ListenersQueue implements IteratorAggregate, Countable
         $listeners = [];
 
         foreach ($this as $listener) {
-            $listeners[] = $listener[0];
+            $listeners[] = $listener;
         }
 
         return $listeners;

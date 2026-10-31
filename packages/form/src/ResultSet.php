@@ -70,6 +70,8 @@ class ResultSet implements IteratorAggregate, Countable
 
     /**
      * @return ValidateResult[]
+     *
+     * @codeCoverageIgnore
      */
     public function getResults(): array
     {

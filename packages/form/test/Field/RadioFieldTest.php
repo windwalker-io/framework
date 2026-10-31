@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\RadioField;
@@ -26,13 +28,8 @@ class RadioFieldTest extends TestCase
      */
     protected $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRadioField(): void
     {
         $this->instance = new RadioField(
             'flower',
@@ -58,22 +55,8 @@ class RadioFieldTest extends TestCase
         $this->instance->setAttribute('multiple', false);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test prepareAttributes().
-     *
-     * @return void
-     */
-    public function testRender()
+    #[Test]
+    public function renderInputMarksSelectedRadioOption(): void
     {
         // phpcs:disable
         $html = <<<HTML

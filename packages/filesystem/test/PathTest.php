@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Windwalker\Filesystem\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\File;
 use Windwalker\Filesystem\Path;
+
+use function Windwalker\fs;
 
 /**
  * Test class of Path
@@ -46,36 +49,152 @@ class PathTest extends AbstractVfsTestCase
         ];
     }
 
-    /**
-     * Method to test setPermissions().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Filesystem\Path::setPermissions
-     * @TODO   Implement testSetPermissions().
-     */
-    public function testSetPermissions()
+    #[Test]
+    public function setPermissionsAppliesFileAndFolderModesRecursively(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $root = $this->createTempFolderPath();
+        mkdir($root . '/sub', 0777, true);
+        file_put_contents($root . '/a.txt', 'a');
+        file_put_contents($root . '/sub/b.txt', 'b');
+
+        try {
+            self::assertTrue(Path::setPermissions($root, '0600', '0750'));
+
+            self::assertSame('600', Path::getPermissions($root . '/a.txt'));
+            self::assertSame('600', Path::getPermissions($root . '/sub/b.txt'));
+            self::assertSame('750', Path::getPermissions($root . '/sub'));
+            self::assertSame('750', Path::getPermissions($root));
+        } finally {
+            Path::setPermissions($root, '0644', '0755');
+            fs($root)->delete();
+        }
+    }
+
+    #[Test]
+    public function setPermissionsOnSingleFileOnlyChangesFileMode(): void
+    {
+        $root = $this->createTempFolderPath();
+        file_put_contents($root . '/a.txt', 'a');
+
+        try {
+            self::assertTrue(Path::setPermissions($root . '/a.txt', '0640'));
+            self::assertSame('640', Path::getPermissions($root . '/a.txt'));
+        } finally {
+            fs($root)->delete();
+        }
+    }
+
+    #[Test]
+    public function setPermissionsReturnsFalseWhenChmodFails(): void
+    {
+        self::assertFalse(Path::setPermissions(sys_get_temp_dir() . '/windwalker-not-exists-' . uniqid()));
+    }
+
+    #[Test]
+    public function getPermissionsReturnsOctalOrSymbolicString(): void
+    {
+        $root = $this->createTempFolderPath();
+        file_put_contents($root . '/a.txt', 'a');
+        chmod($root . '/a.txt', 0640);
+
+        try {
+            self::assertSame('640', Path::getPermissions($root . '/a.txt'));
+            self::assertSame('rw-r-----', Path::getPermissions($root . '/a.txt', true));
+        } finally {
+            fs($root)->delete();
+        }
+    }
+
+    #[Test]
+    public function getPermissionsOfMissingPathAsStringReturnsPlaceholder(): void
+    {
+        self::assertSame(
+            '---------',
+            Path::getPermissions(sys_get_temp_dir() . '/windwalker-not-exists-' . uniqid(), true)
         );
     }
 
-    /**
-     * Method to test getPermissions().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Filesystem\Path::getPermissions
-     * @TODO   Implement testGetPermissions().
-     */
-    public function testGetPermissions()
+    #[Test]
+    public function makeUtf8SafeKeepsUnicodeNamesAndStripsUnsafeCharacters(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('文件 name_1-2.txt', Path::makeUtf8Safe('文件 name_1-2.txt'));
+        self::assertSame('abc.txt', Path::makeUtf8Safe('a<b>c.txt'));
+        self::assertSame('filephp', Path::makeUtf8Safe('file..php'));
+    }
+
+    #[Test]
+    public function makeSafeAbsoluteResolvesPathInsideBase(): void
+    {
+        self::assertPathEquals('/var/www/foo/bar.txt', Path::makeSafeAbsolute('foo/bar.txt', '/var/www'));
+    }
+
+    #[Test]
+    public function makeSafeAbsoluteRejectsDotsByDefault(): void
+    {
+        $this->expectException(FilesystemException::class);
+        $this->expectExceptionMessageIs('Invalid path.');
+
+        Path::makeSafeAbsolute('../etc/passwd', '/var/www');
+    }
+
+    #[Test]
+    public function makeSafeAbsoluteRejectsPathEscapingBaseWhenDotsAllowed(): void
+    {
+        $this->expectException(FilesystemException::class);
+        $this->expectExceptionMessageIs('Invalid path.');
+
+        Path::makeSafeAbsolute('../etc/passwd', '/var/www', true);
+    }
+
+    #[Test]
+    public function makeSafeAbsoluteAllowsDotsThatStayInsideBase(): void
+    {
+        self::assertPathEquals('/var/www/b.txt', Path::makeSafeAbsolute('a/../b.txt', '/var/www', true));
+    }
+
+    #[Test]
+    public function getHomeDirectoryReturnsHomeEnvironment(): void
+    {
+        $original = getenv('HOME');
+
+        try {
+            putenv('HOME=/tmp/windwalker-home');
+
+            self::assertSame('/tmp/windwalker-home', Path::getHomeDirectory());
+        } finally {
+            $original === false ? putenv('HOME') : putenv('HOME=' . $original);
+        }
+    }
+
+    #[Test]
+    public function getHomeDirectoryThrowsWhenNoHomeCanBeFound(): void
+    {
+        $env = [];
+
+        foreach (['HOME', 'HOMEDRIVE', 'HOMEPATH'] as $name) {
+            $env[$name] = getenv($name);
+            putenv($name);
+        }
+
+        try {
+            $this->expectException(\RuntimeException::class);
+
+            Path::getHomeDirectory();
+        } finally {
+            foreach ($env as $name => $value) {
+                if ($value !== false) {
+                    putenv($name . '=' . $value);
+                }
+            }
+        }
+    }
+
+    private function createTempFolderPath(): string
+    {
+        $path = sys_get_temp_dir() . '/windwalker-path-test-' . uniqid();
+        mkdir($path, 0755, true);
+
+        return $path;
     }
 
     /**
@@ -85,12 +204,13 @@ class PathTest extends AbstractVfsTestCase
      * @param  string  $ds
      * @param  string  $expected
      *
-     * @return void
+     * @return  void
      *
      * @covers        \Windwalker\Filesystem\Path::clean
      */
     #[DataProvider('cleanProvider')]
-    public function testClean(string $input, string $ds, string $expected): void
+    #[Test]
+    public function cleanNormalizesSeparators(string $input, string $ds, string $expected): void
     {
         $this->assertEquals(
             $expected,
@@ -105,10 +225,11 @@ class PathTest extends AbstractVfsTestCase
      * @param  bool    $sExists
      * @param  bool    $iExists
      *
-     * @return void
+     * @return  void
      */
     #[DataProvider('existsProvider')]
-    public function testExists(string $path, bool $sExists, bool $iExists): void
+    #[Test]
+    public function existsChecksPathWithCaseSensitivity(string $path, bool $sExists, bool $iExists): void
     {
         self::assertSame($sExists, Path::exists($path, Path::CASE_SENSITIVE));
         self::assertSame($iExists, Path::exists($path, Path::CASE_INSENSITIVE));
@@ -155,19 +276,16 @@ class PathTest extends AbstractVfsTestCase
      *
      * @return  void
      */
-    public function testFixCase()
+    #[Test]
+    public function fixCaseResolvesActualFilenameCase(): void
     {
         $path = __DIR__ . '/case/Flower/saKura/test.txt';
 
         self::assertEquals(Path::clean(__DIR__ . '/case/Flower/saKura/TEST.txt'), Path::fixCase($path));
     }
 
-    /**
-     * Method to test stripExtension().
-     *
-     * @return void
-     */
-    public function testStripExtension()
+    #[Test]
+    public function stripExtensionRemovesFileExtension(): void
     {
         $name = Path::stripExtension('Wu-la.la');
 
@@ -178,24 +296,16 @@ class PathTest extends AbstractVfsTestCase
         $this->assertEquals(__DIR__ . '/Wu-la', $name);
     }
 
-    /**
-     * Method to test getExtension().
-     *
-     * @return void
-     */
-    public function testGetExtension()
+    #[Test]
+    public function getExtensionReturnsFileExtension(): void
     {
         $ext = Path::getExtension('Wu-la.la');
 
         $this->assertEquals('la', $ext);
     }
 
-    /**
-     * Method to test getFilename().
-     *
-     * @return void
-     */
-    public function testGetFilename()
+    #[Test]
+    public function getFilenameReturnsNameWithoutDirectory(): void
     {
         $name = Path::getFilename(__DIR__ . '/Wu-la.la');
 
@@ -259,22 +369,25 @@ class PathTest extends AbstractVfsTestCase
      * @param  string  $expected    The expected safe file name
      * @param  string  $message     The message to show on failure of test
      *
-     * @return void
+     * @return  void
      */
     #[DataProvider('makeSafeProvider')]
-    public function testMakeSafe($name, $stripChars, $expected, $message)
+    #[Test]
+    public function makeSafeStripsUnsafeCharacters($name, $stripChars, $expected, $message): void
     {
         $this->assertEquals(Path::makeSafe($name, $stripChars), $expected, $message);
     }
 
-    public function testRealpath(): void
+    #[Test]
+    public function realpathResolvesPath(): void
     {
         $p = Path::realpath('foo/bar');
 
         self::assertEquals(Path::clean(getcwd() . '/foo/bar'), $p);
     }
 
-    public function testBasename(): void
+    #[Test]
+    public function basenameReturnsLastSegment(): void
     {
         $file = '/var/www/foo/bar/yoo.inc.foo';
 
@@ -306,7 +419,8 @@ class PathTest extends AbstractVfsTestCase
      * @return  void
      */
     #[DataProvider('isChildProvider')]
-    public function testIsChild(string $path, string $root, bool $isChild)
+    #[Test]
+    public function isChildDetectsPathUnderRoot(string $path, string $root, bool $isChild): void
     {
         self::assertEquals(
             Path::isChild($path, $root),
@@ -355,7 +469,8 @@ class PathTest extends AbstractVfsTestCase
         ];
     }
 
-    public function testFindRoot(): void
+    #[Test]
+    public function findRootReturnsCommonParent(): void
     {
         self::assertPathEquals(
             '/',
@@ -381,7 +496,8 @@ class PathTest extends AbstractVfsTestCase
     }
 
     #[DataProvider('makeAbsoluteProvider')]
-    public function testMakeAbsolute(string $path, string $base, string $expected)
+    #[Test]
+    public function makeAbsoluteResolvesRelativePath(string $path, string $base, string $expected): void
     {
         if ($expected === FilesystemException::class) {
             $this->expectException(FilesystemException::class);

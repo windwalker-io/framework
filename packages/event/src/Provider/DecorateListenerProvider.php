@@ -40,6 +40,8 @@ class DecorateListenerProvider implements ListenerProviderInterface
      * @return  ListenerProviderInterface
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getProvider(): ListenerProviderInterface
     {

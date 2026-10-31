@@ -53,9 +53,8 @@ class Event extends AbstractEvent implements AccessibleInterface
     public function clear(): static
     {
         // Break the reference
-        unset($this->storage);
-
-        $this->storage = [];
+        $storage = [];
+        $this->storage = &$storage;
 
         return $this;
     }

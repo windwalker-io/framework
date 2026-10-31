@@ -14,6 +14,7 @@ use RuntimeException;
  * This class is for test use, do not use in production code.
  *
  * @deprecated
+ * @internal
  */
 class FsStreamWrapper
 {
@@ -41,6 +42,13 @@ class FsStreamWrapper
      * @var StreamInterface
      */
     private $stream;
+
+    /**
+     * Populated by PHP when the wrapper is opened; declared to avoid a dynamic property deprecation.
+     *
+     * @var resource|null
+     */
+    public $context;
 
     /**
      * fetchUri
@@ -181,7 +189,7 @@ class FsStreamWrapper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function getProtocol(): string
     {

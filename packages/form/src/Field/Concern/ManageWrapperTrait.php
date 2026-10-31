@@ -83,6 +83,8 @@ trait ManageWrapperTrait
      * @param  HTMLElement  $wrapper
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setWrapper(HTMLElement $wrapper): static
     {

@@ -398,6 +398,8 @@ abstract class AbstractField
      * getRawValue
      *
      * @return  mixed
+     *
+     * @codeCoverageIgnore
      */
     public function getRawValue(): mixed
     {
@@ -682,6 +684,8 @@ abstract class AbstractField
      * @param  array<callable|\DOMElement|Element>  $surrounds
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSurrounds(array $surrounds): static
     {

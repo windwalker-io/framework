@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Event\Event;
 use Windwalker\Event\EventDispatcher;
 use Windwalker\Event\Provider\SimpleListenerProvider;
 use Windwalker\Event\Test\Stub\StubFlowerEvent;
@@ -22,23 +25,31 @@ class EventDispatcherTest extends TestCase
     /**
      * @see  EventDispatcher::setListenerProvider
      */
-    public function testSetListenerProvider(): void
+    #[Test]
+    public function setListenerProviderReplacesProvider(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $provider = new SimpleListenerProvider([]);
+
+        self::assertSame($this->instance, $this->instance->setProvider($provider));
+        self::assertSame($provider, $this->instance->getProvider());
     }
 
     /**
      * @see  EventDispatcher::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function constructAcceptsListenerProvider(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $provider = new SimpleListenerProvider([]);
+
+        self::assertSame($provider, new EventDispatcher($provider)->getProvider());
     }
 
     /**
      * @see  EventDispatcher::dispatch
      */
-    public function testDispatch(): void
+    #[Test]
+    public function dispatchInvokesListenersAndReturnsSameEvent(): void
     {
         $value = null;
 
@@ -61,10 +72,63 @@ class EventDispatcherTest extends TestCase
         self::assertEquals('Hello', $value);
     }
 
+    #[Test]
+    public function dispatchSkipsListenersWhenEventAlreadyStopped(): void
+    {
+        $called = false;
+        $d = new EventDispatcher(
+            new SimpleListenerProvider(
+                ['hello' => [static function () use (&$called) {
+                    $called = true;
+                }]]
+            )
+        );
+        $event = new Event('hello');
+        $event->stopPropagation();
+
+        $d->dispatch($event);
+
+        self::assertFalse($called);
+    }
+
+    #[Test]
+    public function dispatchStopsAfterListenerStopsPropagation(): void
+    {
+        $calls = [];
+        $d = new EventDispatcher(
+            new SimpleListenerProvider(
+                [
+                    'hello' => [
+                        static function (Event $event) use (&$calls) {
+                            $calls[] = 1;
+                            $event->stopPropagation();
+                        },
+                        static function () use (&$calls) {
+                            $calls[] = 2;
+                        },
+                    ],
+                ]
+            )
+        );
+
+        $d->dispatch(new Event('hello'));
+
+        self::assertSame([1], $calls);
+    }
+
+    #[Test]
+    public function cloneDuplicatesProvider(): void
+    {
+        $clone = clone $this->instance;
+
+        self::assertNotSame($this->instance->getProvider(), $clone->getProvider());
+    }
+
     /**
      * @see  EventDispatcher::getListenerProvider
      */
-    public function testGetListenerProvider(): void
+    #[Test]
+    public function getProviderReturnsInjectedProvider(): void
     {
         self::assertInstanceOf(SimpleListenerProvider::class, $this->instance->getProvider());
     }
@@ -87,12 +151,9 @@ class EventDispatcherTest extends TestCase
     //     self::assertEquals('YOO', $event2['foo']);
     // }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createDispatcher(): void
     {
         $this->instance = new EventDispatcher(new SimpleListenerProvider([]));
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

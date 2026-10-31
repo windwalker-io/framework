@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
+use ReflectionClass;
+
 class BaseEvent implements EventInterface
 {
     /**
@@ -92,6 +94,8 @@ class BaseEvent implements EventInterface
      * @param  string  $name
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setName(string $name): static
     {

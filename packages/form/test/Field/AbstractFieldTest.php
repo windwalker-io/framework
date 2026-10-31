@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\Rule\IPAddress;
 use Windwalker\Filter\Rule\Regex;
@@ -28,13 +30,8 @@ class AbstractFieldTest extends TestCase
      */
     protected StubField $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createStubField(): void
     {
         $this->instance = new StubField(
             'flower',
@@ -47,21 +44,12 @@ class AbstractFieldTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
      * Method to test renderInput().
      *
      * @return void
      */
-    public function testRenderInput()
+    #[Test]
+    public function renderInput(): void
     {
         // phpcs:disable
         $expect = <<<HTML
@@ -113,7 +101,8 @@ HTML;
      *
      * @return void
      */
-    public function testBuildInput()
+    #[Test]
+    public function buildInput(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -126,7 +115,8 @@ HTML;
      *
      * @return void
      */
-    public function testRenderLabel()
+    #[Test]
+    public function renderLabel(): void
     {
         $expect = <<<HTML
 <label id="input-flower-label" data-field-label for="input-flower">Flower</label>
@@ -140,7 +130,8 @@ HTML;
      *
      * @return void
      */
-    public function testRenderView()
+    #[Test]
+    public function renderView(): void
     {
         $this->instance->setValue('sakura');
 
@@ -152,7 +143,8 @@ HTML;
      *
      * @return void
      */
-    public function testRender()
+    #[Test]
+    public function renderFieldWithLabelAndInput(): void
     {
         $this->instance->setNamespace('windwalker');
         $this->instance->setValue('sakura');
@@ -189,7 +181,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetLabelName()
+    #[Test]
+    public function getLabelName(): void
     {
         self::assertEquals('Flower', $this->instance->getLabelName());
     }
@@ -199,7 +192,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetId()
+    #[Test]
+    public function getIdIncludesNamespaceAndName(): void
     {
         self::assertEquals('input-flower', $this->instance->getId());
 
@@ -217,7 +211,8 @@ HTML;
      *
      * @return void
      */
-    public function testValidate()
+    #[Test]
+    public function validateAppliesRequiredAndRuleChecks(): void
     {
         $field = StubField::create(
             'flower',
@@ -244,7 +239,8 @@ HTML;
      *
      * @return void
      */
-    public function testCheckRequired()
+    #[Test]
+    public function checkRequired(): void
     {
         $field = new StubField(
             'flower',
@@ -266,7 +262,8 @@ HTML;
      *
      * @return void
      */
-    public function testCheckRule()
+    #[Test]
+    public function checkRule(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -279,7 +276,8 @@ HTML;
      *
      * @return void
      */
-    public function testFilter()
+    #[Test]
+    public function filterValue(): void
     {
         $field = StubField::create(
             'flower',
@@ -305,7 +303,8 @@ HTML;
      *
      * @covers \Windwalker\Form\Field\AbstractField::getName
      */
-    public function testGetName()
+    #[Test]
+    public function getNameIgnoresControlAndValue(): void
     {
         $this->instance->setControl('windwalker');
         $this->instance->setValue('sakura');
@@ -320,7 +319,8 @@ HTML;
      *
      * @covers \Windwalker\Form\Field\AbstractField::setName
      */
-    public function testSetName()
+    #[Test]
+    public function setNameUpdatesGeneratedId(): void
     {
         $this->instance->setNamespace('windwalker');
         $this->instance->appendNamespace('goo');
@@ -334,7 +334,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetFullName()
+    #[Test]
+    public function getFullName(): void
     {
         $this->instance->setNamespace('windwalker');
 
@@ -351,7 +352,8 @@ HTML;
      *
      * @return void
      */
-    public function testSetFieldName()
+    #[Test]
+    public function setFieldName(): void
     {
         $this->instance->setAttribute('name', 'foo[bar]');
 
@@ -363,7 +365,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetAbdSetGroup()
+    #[Test]
+    public function getAndSetGroup(): void
     {
         $this->instance->appendNamespace('wind');
 
@@ -392,7 +395,8 @@ HTML;
      * @covers \Windwalker\Form\Field\AbstractField::getFieldset
      * @TODO   Implement testGetFieldset().
      */
-    public function testGetFieldset()
+    #[Test]
+    public function getFieldset(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -408,7 +412,8 @@ HTML;
      * @covers \Windwalker\Form\Field\AbstractField::setFieldset
      * @TODO   Implement testSetFieldset().
      */
-    public function testSetFieldset()
+    #[Test]
+    public function setFieldset(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -421,7 +426,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetAndSetValue()
+    #[Test]
+    public function getAndSetValue(): void
     {
         // Test default value
         $this->instance->defaultValue('joo');
@@ -439,7 +445,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetAndSetFilter()
+    #[Test]
+    public function getAndSetFilter(): void
     {
         // Set filter type
         $this->instance->resetFilters()->addFilter(new Regex('/[0-9]+/'));
@@ -468,7 +475,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetControl()
+    #[Test]
+    public function getControl(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -484,7 +492,8 @@ HTML;
      * @covers \Windwalker\Form\Field\AbstractField::setControl
      * @TODO   Implement testSetControl().
      */
-    public function testSetControl()
+    #[Test]
+    public function setControl(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -492,12 +501,8 @@ HTML;
         );
     }
 
-    /**
-     * testAddClass
-     *
-     * @return  void
-     */
-    public function testAddClass()
+    #[Test]
+    public function addClass(): void
     {
         $this->instance->addClass('foo');
 
@@ -512,12 +517,8 @@ HTML;
         self::assertEquals('stub-flower foo bar yoo goo', $this->instance->getAttribute('class'));
     }
 
-    /**
-     * testRemoveClass
-     *
-     * @return  void
-     */
-    public function testRemoveClass()
+    #[Test]
+    public function removeClass(): void
     {
         $this->instance->addClass('foo bar yoo goo');
 
@@ -539,7 +540,8 @@ HTML;
      *
      * @return void
      */
-    public function testGetAttribute()
+    #[Test]
+    public function getAttribute(): void
     {
         $field = new StubField(
             'flower',
@@ -563,7 +565,8 @@ HTML;
      *
      * @covers \Windwalker\Form\Field\AbstractField::setAttribute
      */
-    public function testSetAttribute()
+    #[Test]
+    public function setAttribute(): void
     {
         $this->instance->setAttribute('host', 'localhost');
 
@@ -577,7 +580,8 @@ HTML;
      *
      * @covers \Windwalker\Form\Field\AbstractField::get
      */
-    public function testGet()
+    #[Test]
+    public function get(): void
     {
         // Remove the following lines when you implement this test.
         self::markTestIncomplete(
@@ -592,7 +596,8 @@ HTML;
      *
      * @covers \Windwalker\Form\Field\AbstractField::getAttributes
      */
-    public function testGetAttributes()
+    #[Test]
+    public function getAttributes(): void
     {
         self::assertEquals(
             ['placeholder' => 'The Flower', 'class' => 'stub-flower'],

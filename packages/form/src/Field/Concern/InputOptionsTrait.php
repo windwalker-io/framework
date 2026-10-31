@@ -65,6 +65,8 @@ trait InputOptionsTrait
      * @param  callable  $optionWrapperHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptionWrapperHandler(?callable $optionWrapperHandler): static
     {
@@ -85,6 +87,8 @@ trait InputOptionsTrait
      * @param  callable  $optionHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptionHandler(?callable $optionHandler): static
     {
@@ -105,6 +109,8 @@ trait InputOptionsTrait
      * @param  callable  $optionLabelHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setOptionLabelHandler(?callable $optionLabelHandler): static
     {

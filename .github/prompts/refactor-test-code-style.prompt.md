@@ -11,9 +11,20 @@ Refactoring Requirements:
 
 - Follow the repository's existing PHP/PHPUnit versions and testing conventions; retain `declare(strict_types=1);`,
   correct namespaces, imports, and type declarations.
-- Ensure test names clearly describe the behavior being validated, using explicit and searchable naming. Adhere to
-  repository guidelines and use attributes like `#[Test]` and `#[DataProvider]`, avoiding changes to test meaning simply
-  for renaming.
+- Actually rename test methods; do not only check formatting. Follow the naming rules in
+  `.github/skills/test/SKILL.md`:
+  - Remove the `test` prefix from every test method, mark it with `#[Test]`, and import
+    `PHPUnit\Framework\Attributes\Test`.
+  - Use a camelCase name that describes the behavior under test (subject + action + expected outcome), e.g.
+    `testRead` → `readReturnsFileContents`, `testDelete` → `deleteRemovesDirectoryRecursively`. Vague names such as
+    `testFoo`, `testItems`, or names that only repeat the method under test are not acceptable.
+  - Split a test that verifies several independent scenarios into one test per scenario, each with its own name,
+    without weakening or dropping assertions. Keep them together only when they are steps of a single scenario.
+  - Data provider methods must end with `Provider` and be referenced via `#[DataProvider('...')]`.
+  - Do not rename tests inherited from or overriding a parent/trait/interface when the name is part of its contract,
+    and do not change test meaning merely for renaming.
+  - After renaming, grep for the old names (`--filter`, docs, `@depends`, `#[Depends]`, `#[DataProvider]`
+    references) and update every usage.
 - For lifecycle setup/teardown, prioritize using PHPUnit's attributes like `#[Before]`, `#[After]`, `#[BeforeClass]`,
   and `#[AfterClass]`, replacing vague `setUp()`/`tearDown()` names with names that express the actual behavior.
 - Before migrating lifecycle hooks, trace the initialization/cleanup order of parent classes, traits, and inheritance;
@@ -35,6 +46,6 @@ minimum PHPUnit selector that covers the changes. If tests require unconfigured 
 not falsely claim a pass; try appropriate temporary PHPUnit or CLI settings as instructed, otherwise clearly list the
 scope of failures, skips, and incomplete results.
 
-Success criteria: The target test structure and naming are clear and consistent, the lifecycle behavior is the same as
+Success criteria: No test method in the scope still uses the `test` prefix or a vague name, the target test structure and naming are clear and consistent, the lifecycle behavior is the same as
 the original test, the assertion meaning is not weakened, the scope of modification is controlled, and the actual
 inspection and test results have been reported.

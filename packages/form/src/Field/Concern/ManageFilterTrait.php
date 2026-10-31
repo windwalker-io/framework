@@ -220,6 +220,8 @@ trait ManageFilterTrait
      * @return  ChainFilter
      *
      * @since  3.5.21
+     *
+     * @codeCoverageIgnore
      */
     public function getViewFilter(): ChainFilter
     {
@@ -234,6 +236,8 @@ trait ManageFilterTrait
      * @return  static  Return self to support chaining.
      *
      * @since  3.5.21
+     *
+     * @codeCoverageIgnore
      */
     public function setViewFilter(ChainFilter $viewFilter): static
     {

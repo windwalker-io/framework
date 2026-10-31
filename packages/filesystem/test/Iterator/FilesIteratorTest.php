@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem\Test\Iterator;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Iterator\FilesIterator;
 use Windwalker\Filesystem\Test\AbstractVfsTestCase;
-use Windwalker\Filter\Rule\Regex;
 use Windwalker\Test\Traits\BaseAssertionTrait;
-
-use function Windwalker\regex;
 
 /**
  * The FilesIteratorTest class.
@@ -22,26 +20,22 @@ class FilesIteratorTest extends AbstractVfsTestCase
     /**
      * Property dest.
      *
-     * @var string
+     * @var  string
      */
     protected static $dest = __DIR__ . '/../dest';
 
     /**
      * Property src.
      *
-     * @var string
+     * @var  string
      */
     protected static $src = __DIR__ . '/../files';
 
     /**
-     * @var FilesIterator
-     */
-    protected $instance;
-
-    /**
      * @see  FilesIterator::getInnerIterator
      */
-    public function testIter(): void
+    #[Test]
+    public function iteratesAllItemsRecursively(): void
     {
         $it = FilesIterator::create(static::$baseDir, true);
 
@@ -51,7 +45,8 @@ class FilesIteratorTest extends AbstractVfsTestCase
         );
     }
 
-    public function testFirst()
+    #[Test]
+    public function firstReturnsFirstItem(): void
     {
         $it = FilesIterator::create(static::$baseDir, true);
 
@@ -64,7 +59,8 @@ class FilesIteratorTest extends AbstractVfsTestCase
     /**
      * @see  FilesIterator::map
      */
-    public function testMap(): void
+    #[Test]
+    public function mapTransformsItems(): void
     {
         $it = FilesIterator::create('vfs://root/files');
 
@@ -83,7 +79,8 @@ class FilesIteratorTest extends AbstractVfsTestCase
     /**
      * @see  FilesIterator::filter
      */
-    public function testFilter(): void
+    #[Test]
+    public function filterKeepsMatchingItems(): void
     {
         $it = FilesIterator::create('vfs://root/files');
 
@@ -120,7 +117,8 @@ class FilesIteratorTest extends AbstractVfsTestCase
         );
     }
 
-    public function testObserve()
+    #[Test]
+    public function observeCallsCallbackForEachItem(): void
     {
         $ob = FilesIterator::observable('vfs://root/files');
 

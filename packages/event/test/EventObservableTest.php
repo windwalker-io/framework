@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Event\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use React\EventLoop\StreamSelectLoop;
 use Rx\Scheduler;
@@ -24,7 +26,8 @@ class EventObservableTest extends TestCase
      */
     protected $instance;
 
-    public function testObserve(): void
+    #[Test]
+    public function observeEmitsValuesToObservers(): void
     {
         // $loop = new StreamSelectLoop();
         // $scheduler = new EventLoopScheduler($loop);
@@ -64,7 +67,8 @@ class EventObservableTest extends TestCase
         self::assertEquals([53, 54, 55], $values);
     }
 
-    public function testObserveSwoole(): void
+    #[Test]
+    public function observeEmitsValuesWithSwooleScheduler(): void
     {
         $loop = new StreamSelectLoop();
         $scheduler = new EventLoopScheduler($loop);
@@ -108,12 +112,9 @@ class EventObservableTest extends TestCase
         $loop->run();
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createEmitter(): void
     {
         $this->instance = new EventEmitter();
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

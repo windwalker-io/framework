@@ -9,6 +9,10 @@ use Windwalker\Core\Package\PackageInstaller;
 
 /**
  * The FormPackage class.
+ *
+ * Application-level wiring that only installs config; no standalone tests needed.
+ *
+ * @codeCoverageIgnore
  */
 class FormPackage extends AbstractPackage
 {

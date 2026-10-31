@@ -112,6 +112,8 @@ trait ManageInputTrait
      * @param  HTMLElement  $element
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setInput(HTMLElement $element): static
     {

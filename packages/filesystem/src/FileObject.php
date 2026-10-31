@@ -812,6 +812,8 @@ class FileObject extends SplFileInfo
      * @see https://github.com/composer/composer/blob/4e5be9ee7d924d8efc58d676439b0c7bd18a9ce4/src/Composer/Util/Filesystem.php#L828
      *
      * @return  bool
+     *
+     * @codeCoverageIgnore  This is a windows only function.
      */
     public function isJunction(): bool
     {
@@ -861,11 +863,7 @@ class FileObject extends SplFileInfo
      */
     protected function doAsync(string $name, array $args = []): Promise
     {
-        return async(
-            function ($resolve) use ($name, $args) {
-                $resolve(static::$name(...$args));
-            }
-        );
+        return async(fn() => $this->$name(...$args));
     }
 
     /**
@@ -873,7 +871,7 @@ class FileObject extends SplFileInfo
      *
      * @return string|null
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function getRoot(): ?string
     {
@@ -891,9 +889,7 @@ class FileObject extends SplFileInfo
      */
     public function setRoot(string|SplFileInfo|null $root): static
     {
-        $root = static::unwrap($root);
-
-        $this->root = $root;
+        $this->root = $root === null ? null : static::unwrap($root);
 
         return $this;
     }

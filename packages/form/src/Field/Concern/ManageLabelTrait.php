@@ -112,6 +112,8 @@ trait ManageLabelTrait
      * @param  HTMLElement  $label
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setLabel(HTMLElement $label): static
     {

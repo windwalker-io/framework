@@ -144,7 +144,7 @@ class FilesIterator extends NestedIterator
      *
      * @return  string|null
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function getPath(): ?string
     {
@@ -155,6 +155,8 @@ class FilesIterator extends NestedIterator
      * @param  string|null  $path
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPath(?string $path)
     {

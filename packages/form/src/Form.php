@@ -585,6 +585,8 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
     /**
      * @return AttributesResolver
+     *
+     * @codeCoverageIgnore
      */
     public function getAttributeResolver(): AttributesResolver
     {

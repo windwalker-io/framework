@@ -8,6 +8,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use org\bovigo\vfs\visitor\vfsStreamVisitor;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Path;
@@ -22,7 +23,7 @@ abstract class AbstractVfsTestCase extends TestCase
     use FilesystemTestTrait;
 
     /**
-     * @var array
+     * @var  array
      */
     protected static array $structure = [
         'files' => [
@@ -42,58 +43,19 @@ abstract class AbstractVfsTestCase extends TestCase
     /**
      * Property src.
      *
-     * @var string
+     * @var  string
      */
     protected static string $baseDir = 'vfs://root/files';
 
     /**
-     * @var ?vfsStreamDirectory
+     * @var  ?vfsStreamDirectory
      */
     protected ?vfsStreamDirectory $root = null;
 
-    /**
-     * setUpBeforeClass
-     *
-     * @return  void
-     */
-    public static function setUpBeforeClass(): void
-    {
-    }
-
-    /**
-     * tearDownAfterClass
-     *
-     * @return  void
-     */
-    public static function tearDownAfterClass(): void
-    {
-    }
-
-    /**
-     * __desctuct
-     */
-    public function __destruct()
-    {
-    }
-
-    /**
-     * setUp
-     *
-     * @return  void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createVfsRoot(): void
     {
         $this->root = vfsStream::setup('root', null, static::$structure);
-    }
-
-    /**
-     * tearDown
-     *
-     * @return  void
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 
     protected function inspectVfs(): vfsStreamVisitor

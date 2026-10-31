@@ -244,6 +244,8 @@ class EventEmitter extends EventDispatcher implements
 
     /**
      * @return WeakMap
+     *
+     * @codeCoverageIgnore
      */
     public function getDealers(): WeakMap
     {

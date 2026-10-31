@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Test\Field;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\CheckboxesField;
@@ -26,13 +28,8 @@ class CheckboxesFieldTest extends TestCase
      */
     protected CheckboxesField $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createCheckboxesField(): void
     {
         $this->instance = new CheckboxesField(
             'flower',
@@ -58,22 +55,8 @@ class CheckboxesFieldTest extends TestCase
         $this->instance->setAttribute('multiple', false);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test prepareAttributes().
-     *
-     * @return void
-     */
-    public function testRender()
+    #[Test]
+    public function renderInputOutputsCheckboxOptions(): void
     {
         // phpcs:disable
         $html = <<<HTML

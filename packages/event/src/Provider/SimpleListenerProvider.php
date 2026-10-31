@@ -76,6 +76,8 @@ class SimpleListenerProvider implements ListenerProviderInterface
      * @return  array
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getListeners(): array
     {

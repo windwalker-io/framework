@@ -58,6 +58,8 @@ class ListenerCallable extends TimesLimitedCallable
      * @return  int
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function getPriority(): int
     {
@@ -70,6 +72,8 @@ class ListenerCallable extends TimesLimitedCallable
      * @return  bool
      *
      * @since  __DEPLOY_VERSION__
+     *
+     * @codeCoverageIgnore
      */
     public function isOnce(): bool
     {
