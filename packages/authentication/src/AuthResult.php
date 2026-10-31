@@ -10,13 +10,13 @@ use Windwalker\Utilities\StrNormalize;
 /**
  * The AuthenticationResult class.
  *
- * @method static $this userNotFound(array $credential, \Throwable $e = null)
- * @method static $this emptyCredential(array $credential, \Throwable $e = null)
- * @method static $this success(array $credential, \Throwable $e = null)
- * @method static $this invalidPassword(array $credential, \Throwable $e = null)
- * @method static $this invalidUsername(array $credential, \Throwable $e = null)
- * @method static $this invalidCredential(array $credential, \Throwable $e = null)
- * @method static $this authorizeFail(array $credential, \Throwable $e = null)
+ * @method  static  $this  userNotFound(array $credential, \Throwable $e = null)
+ * @method  static  $this  emptyCredential(array $credential, \Throwable $e = null)
+ * @method  static  $this  success(array $credential, \Throwable $e = null)
+ * @method  static  $this  invalidPassword(array $credential, \Throwable $e = null)
+ * @method  static  $this  invalidUsername(array $credential, \Throwable $e = null)
+ * @method  static  $this  invalidCredential(array $credential, \Throwable $e = null)
+ * @method  static  $this  authorizeFail(array $credential, \Throwable $e = null)
  */
 class AuthResult
 {
@@ -43,9 +43,9 @@ class AuthResult
     /**
      * AuthResult constructor.
      *
-     * @param  string        $status
-     * @param  array         $credential
-     * @param Throwable|null $e
+     * @param  string          $status
+     * @param  array           $credential
+     * @param  Throwable|null  $e
      */
     public function __construct(string $status, array $credential, ?Throwable $e = null)
     {
@@ -70,7 +70,7 @@ class AuthResult
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getCredential(): array
     {
@@ -78,7 +78,7 @@ class AuthResult
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getStatus(): string
     {

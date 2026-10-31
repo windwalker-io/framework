@@ -35,7 +35,7 @@ class Authentication implements AuthenticationInterface
      *
      * @param  array  $credential
      *
-     * @return ResultSet
+     * @return  ResultSet
      */
     public function authenticate(array $credential): ResultSet
     {

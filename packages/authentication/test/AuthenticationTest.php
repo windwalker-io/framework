@@ -88,7 +88,7 @@ class AuthenticationTest extends TestCase
     #[Test]
     public function addGetAndRemoveMethods(): void
     {
-        $authentication = new Authentication;
+        $authentication = new Authentication();
         $method = $this->createStub(MethodInterface::class);
 
         self::assertSame($authentication, $authentication->addMethod('local', $method));
