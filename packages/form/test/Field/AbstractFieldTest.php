@@ -27,7 +27,7 @@ class AbstractFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var StubField
+     * @var  StubField
      */
     protected StubField $instance;
 
@@ -47,7 +47,7 @@ class AbstractFieldTest extends TestCase
     /**
      * Method to test renderInput().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function renderInput(): void
@@ -100,7 +100,7 @@ HTML;
     /**
      * Method to test renderLabel().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function renderLabel(): void
@@ -115,7 +115,7 @@ HTML;
     /**
      * Method to test renderView().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function renderView(): void
@@ -128,7 +128,7 @@ HTML;
     /**
      * Method to test render().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function renderFieldWithLabelAndInput(): void
@@ -166,7 +166,7 @@ HTML;
     /**
      * Method to test getLabel().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getLabelName(): void
@@ -177,7 +177,7 @@ HTML;
     /**
      * Method to test getId().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getIdIncludesNamespaceAndName(): void
@@ -196,7 +196,7 @@ HTML;
     /**
      * Method to test validate().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function validateAppliesRequiredAndRuleChecks(): void
@@ -224,7 +224,7 @@ HTML;
     /**
      * Method to test checkRequired().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function checkRequired(): void
@@ -247,7 +247,7 @@ HTML;
     /**
      * Method to test filter().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function filterValue(): void
@@ -272,7 +272,7 @@ HTML;
     /**
      * Method to test getName().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::getName
      */
@@ -288,7 +288,7 @@ HTML;
     /**
      * Method to test setName().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::setName
      */
@@ -305,7 +305,7 @@ HTML;
     /**
      * Method to test getFieldName().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getFullName(): void
@@ -323,7 +323,7 @@ HTML;
     /**
      * Method to test setFieldName().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function setFieldName(): void
@@ -336,7 +336,7 @@ HTML;
     /**
      * Method to test getGroup().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getAndSetGroup(): void
@@ -388,7 +388,7 @@ HTML;
     /**
      * Method to test getValue().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getAndSetValue(): void
@@ -407,7 +407,7 @@ HTML;
     /**
      * Method to test setFilter().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getAndSetFilter(): void
@@ -471,7 +471,7 @@ HTML;
     /**
      * Method to test getAttribute().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getAttribute(): void
@@ -494,7 +494,7 @@ HTML;
     /**
      * Method to test setAttribute().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::setAttribute
      */
@@ -519,7 +519,7 @@ HTML;
     /**
      * Method to test getAttributes().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Field\AbstractField::getAttributes
      */

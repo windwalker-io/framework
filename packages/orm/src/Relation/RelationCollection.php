@@ -19,17 +19,17 @@ use Windwalker\Utilities\TypeCast;
 class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAccess, \Countable
 {
     /**
-     * @var object[]
+     * @var  object[]
      */
     protected array $attachedEntities = [];
 
     /**
-     * @var object[]
+     * @var  object[]
      */
     protected array $detachedEntities = [];
 
     /**
-     * @var object[]
+     * @var  object[]
      */
     public ?array $cache = null;
 
@@ -122,8 +122,8 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
      *
      * @param  string|null  $class
      *
-     * @return Collection
-     * @throws Exception
+     * @return  Collection
+     * @throws  Exception
      */
     public function all(?string $class = null): Collection
     {
@@ -169,7 +169,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     }
 
     /**
-     * @return SelectorQuery|null
+     * @return  SelectorQuery|null
      */
     public function getQuery(): ?SelectorQuery
     {
@@ -186,7 +186,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     }
 
     /**
-     * @return object[]
+     * @return  object[]
      */
     public function getAttachedEntities(): array
     {
@@ -207,7 +207,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     }
 
     /**
-     * @return object[]
+     * @return  object[]
      */
     public function getDetachedEntities(): array
     {
@@ -236,7 +236,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isSync(): bool
     {

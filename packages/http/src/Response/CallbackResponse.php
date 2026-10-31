@@ -9,7 +9,7 @@ use Windwalker\Http\Output\OutputInterface;
 class CallbackResponse extends Response
 {
     /**
-     * @var callable
+     * @var  callable
      */
     public protected(set) mixed $callback = null;
 

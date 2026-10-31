@@ -38,17 +38,17 @@ use function Windwalker\Uri\uri_prepare;
 /**
  * The HttpClient class.
  *
- * @method PromiseInterface|mixed optionsAsync(Stringable|string $url, array $options = [])
- * @method PromiseInterface|mixed headAsync(Stringable|string $url, array $options = [])
- * @method PromiseInterface|mixed getAsync(Stringable|string $url, array $options = [])
- * @method PromiseInterface|mixed postAsync(Stringable|string $url, mixed $body, array $options = [])
- * @method PromiseInterface|mixed putAsync(Stringable|string $url, mixed $body, array $options = [])
- * @method PromiseInterface|mixed deleteAsync(Stringable|string $url, mixed $body, array $options = [])
- * @method PromiseInterface|mixed patchAsync(Stringable|string $url, mixed $body, array $options = [])
- * @method PromiseInterface|mixed traceAsync(Stringable|string $url, array $options = [])
- * @method HttpClientResponse mustGet(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
- * @method HttpClientResponse mustOptions(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
- * @method HttpClientResponse mustHead(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @method  PromiseInterface|mixed  optionsAsync(Stringable|string $url, array $options = [])
+ * @method  PromiseInterface|mixed  headAsync(Stringable|string $url, array $options = [])
+ * @method  PromiseInterface|mixed  getAsync(Stringable|string $url, array $options = [])
+ * @method  PromiseInterface|mixed  postAsync(Stringable|string $url, mixed $body, array $options = [])
+ * @method  PromiseInterface|mixed  putAsync(Stringable|string $url, mixed $body, array $options = [])
+ * @method  PromiseInterface|mixed  deleteAsync(Stringable|string $url, mixed $body, array $options = [])
+ * @method  PromiseInterface|mixed  patchAsync(Stringable|string $url, mixed $body, array $options = [])
+ * @method  PromiseInterface|mixed  traceAsync(Stringable|string $url, array $options = [])
+ * @method  HttpClientResponse      mustGet(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @method  HttpClientResponse      mustOptions(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @method  HttpClientResponse      mustHead(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
  * @method HttpClientResponse mustPost(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
  *         HttpClientOptions())
  * @method HttpClientResponse mustPut(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
@@ -57,8 +57,8 @@ use function Windwalker\Uri\uri_prepare;
  *         HttpClientOptions())
  * @method HttpClientResponse mustPatch(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
  *         HttpClientOptions())
- * @method HttpClientResponse mustTrace(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
- * @property HttpClientOptions $options
+ * @method    HttpClientResponse  mustTrace(Stringable|string $url, HttpClientOptions $options = new HttpClientOptions())
+ * @property  HttpClientOptions   $options
  *
  * @since  2.1
  */
@@ -111,10 +111,10 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     /**
      * Download file to target path.
      *
-     * @param  Stringable|RequestInterface|string  $url      The URL to request, may be string or Uri object.
+     * @param  Stringable|RequestInterface|string  $url  The URL to request, may be string or Uri object.
      * @param  string|                             $dest     The dest file path can be a StreamInterface.
-     * @param  mixed                               $body     The request body data, can be an array of POST data.
-     * @param  array|HttpClientOptions             $options  The options array.
+     * @param  mixed                    $body     The request body data, can be an array of POST data.
+     * @param  array|HttpClientOptions  $options  The options array.
      *
      * @return  HttpClientResponse
      */
@@ -150,7 +150,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     /**
      * Send a request to remote.
      *
-     * @param  RequestInterface         $request  The Psr Request object.
+     * @param  RequestInterface         $request           The Psr Request object.
      * @param  array|HttpClientOptions  $transportOptions
      *
      * @return  HttpClientResponse
@@ -337,7 +337,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      *
      * @return  HttpClientResponse
      *
-     * @throws HttpRequestException
+     * @throws  HttpRequestException
      */
     public function mustRequest(
         string $method,
@@ -567,7 +567,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
      * @param  mixed                    $body     The request body data, can be an array of POST data.
      * @param  array|HttpClientOptions  $options  The options array.
      *
-     * @return PromiseInterface|mixed
+     * @return  PromiseInterface|mixed
      */
     public function requestAsync(
         string $method,
@@ -708,7 +708,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
     }
 
     /**
-     * @return AsyncTransportInterface
+     * @return  AsyncTransportInterface
      */
     public function getAsyncTransport(): AsyncTransportInterface
     {

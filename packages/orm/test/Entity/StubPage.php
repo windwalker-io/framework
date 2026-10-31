@@ -38,7 +38,7 @@ class StubPage implements EntityInterface
     protected ?RelationCollection $articleAttachments = null;
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -58,7 +58,7 @@ class StubPage implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -78,7 +78,7 @@ class StubPage implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -98,7 +98,7 @@ class StubPage implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getContent(): string
     {
@@ -118,7 +118,7 @@ class StubPage implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getPageAttachments(): ?RelationCollection
     {
@@ -138,7 +138,7 @@ class StubPage implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getArticleAttachments(): ?RelationCollection
     {

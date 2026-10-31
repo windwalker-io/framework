@@ -9,9 +9,7 @@ use Windwalker\Utilities\Wrapper\WrapperInterface;
 
 class Piping implements \JsonSerializable, \Countable, \IteratorAggregate, \Stringable, WrapperInterface
 {
-    public function __construct(public mixed $value)
-    {
-    }
+    public function __construct(public mixed $value) {}
 
     public function pipe(callable $callback, ...$args): static
     {

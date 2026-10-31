@@ -126,7 +126,7 @@ class Response implements ResponseInterface
      * The status code is a 3-digit integer result code of the server's attempt
      * to understand and satisfy the request.
      *
-     * @return int Status code.
+     * @return  int  Status code.
      */
     public function getStatusCode(): int
     {
@@ -152,8 +152,8 @@ class Response implements ResponseInterface
      *                                provided status code; if none is provided, implementations MAY
      *                                use the defaults as suggested in the HTTP specification.
      *
-     * @return static
-     * @throws InvalidArgumentException For invalid status code arguments.
+     * @return  static
+     * @throws  InvalidArgumentException  For invalid status code arguments.
      */
     public function withStatus($code, $reasonPhrase = ''): Response|static
     {

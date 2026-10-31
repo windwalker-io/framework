@@ -27,7 +27,7 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return ServerRequestInterface
+     * @return  ServerRequestInterface
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -38,7 +38,7 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return ?ResponseInterface
+     * @return  ?ResponseInterface
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -79,7 +79,7 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -105,7 +105,7 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return OutputInterface
+     * @return  OutputInterface
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -131,7 +131,7 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return array
+     * @return  array
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -185,7 +185,7 @@ class RequestEvent extends BaseEvent
     }
 
     /**
-     * @return Closure|null
+     * @return  Closure|null
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore

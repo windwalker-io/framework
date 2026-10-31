@@ -14,12 +14,12 @@ class DefaultConnection
     protected static $escaper;
 
     /**
-     * @var AbstractGrammar
+     * @var  AbstractGrammar
      */
     protected static $grammar;
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public static function getEscaper(): mixed
     {
@@ -39,7 +39,7 @@ class DefaultConnection
     }
 
     /**
-     * @return AbstractGrammar
+     * @return  AbstractGrammar
      */
     public static function getGrammar(): ?AbstractGrammar
     {

@@ -6,7 +6,6 @@ namespace Windwalker\Database\Driver;
 
 use JetBrains\PhpStorm\Pure;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Event\FullFetchedEvent;
 use Windwalker\Database\Event\HydrateEvent;
@@ -25,8 +24,6 @@ use Windwalker\Pool\ConnectionPool;
 use Windwalker\Pool\PoolInterface;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Assert\TypeAssert;
-use Windwalker\Utilities\Options\OptionsResolverTrait;
-use Windwalker\Utilities\Options\RecordOptions;
 use Windwalker\Utilities\StrNormalize;
 
 /**
@@ -35,27 +32,27 @@ use Windwalker\Utilities\StrNormalize;
 abstract class AbstractDriver implements HydratorAwareInterface
 {
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = '';
 
     /**
-     * @var string
+     * @var  string
      */
     protected string $platformName = '';
 
     /**
-     * @var Query|string
+     * @var  Query|string
      */
     protected mixed $lastQuery = null;
 
     /**
-     * @var ?ConnectionInterface
+     * @var  ?ConnectionInterface
      */
     protected ?ConnectionInterface $connection = null;
 
     /**
-     * @var ?AbstractSchemaManager
+     * @var  ?AbstractSchemaManager
      */
     protected ?AbstractSchemaManager $schema = null;
 
@@ -85,7 +82,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
     }
 
     /**
-     * @return string|Query
+     * @return  string|Query
      */
     public function getLastQuery(): mixed
     {
@@ -120,7 +117,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
      * @param  bool  $keep  Keep connection for reuse.
      *
      * @return  ConnectionInterface
-     * @throws \Throwable
+     * @throws  \Throwable
      */
     public function getConnection(bool $keep = false): ConnectionInterface
     {
@@ -424,7 +421,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -456,7 +453,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
     }
 
     /**
-     * @return ConnectionInterface
+     * @return  ConnectionInterface
      */
     public function getConnectionFromPool(): ConnectionInterface
     {
@@ -536,7 +533,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
     }
 
     /**
-     * @return PoolInterface
+     * @return  PoolInterface
      */
     public function getPool(): PoolInterface
     {

@@ -13,12 +13,12 @@ use Windwalker\Database\Platform\AbstractPlatform;
 abstract class AbstractMetaManager
 {
     /**
-     * @var ?string
+     * @var  ?string
      */
     protected ?string $name = null;
 
     /**
-     * @var DatabaseAdapter
+     * @var  DatabaseAdapter
      */
     protected DatabaseAdapter $db;
 
@@ -35,7 +35,7 @@ abstract class AbstractMetaManager
     }
 
     /**
-     * @return DatabaseAdapter
+     * @return  DatabaseAdapter
      */
     public function getDb(): DatabaseAdapter
     {
@@ -43,7 +43,7 @@ abstract class AbstractMetaManager
     }
 
     /**
-     * @return ?string
+     * @return  ?string
      */
     public function getName(): ?string
     {

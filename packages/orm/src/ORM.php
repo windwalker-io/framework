@@ -12,7 +12,6 @@ use Windwalker\Attributes\AttributesAwareTrait;
 use Windwalker\Attributes\AttributesResolver;
 use Windwalker\Data\Collection;
 use Windwalker\Database\DatabaseAdapter;
-use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Database\Hydrator\FieldHydratorInterface;
 use Windwalker\Event\EventAwareInterface;
@@ -48,11 +47,9 @@ use Windwalker\ORM\Event\BeforeStoreEvent;
 use Windwalker\ORM\Event\BeforeUpdateWhereEvent;
 use Windwalker\ORM\Event\EnergizeEvent;
 use Windwalker\ORM\Hydrator\EntityHydrator;
-use Windwalker\ORM\Iterator\ResultIterator;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Metadata\EntityMetadataCollection;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The ORM class.
@@ -146,7 +143,7 @@ class ORM implements EventAwareInterface
      * @param  ?string          $mapperClass
      *
      * @return  EntityMapper<K>
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function mapper(string $entityClass, ?string $mapperClass = null): EntityMapper
     {
@@ -160,7 +157,7 @@ class ORM implements EventAwareInterface
      * @param  ?string  $mapperClass
      *
      * @return  EntityMapper<K>
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function __invoke(string $entityClass, ?string $mapperClass = null): EntityMapper
     {
@@ -235,7 +232,7 @@ class ORM implements EventAwareInterface
      *
      * @return  T
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function createEntity(string $entityClass, array $data = []): object
     {
@@ -252,7 +249,7 @@ class ORM implements EventAwareInterface
      *
      * @return  T
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function createEntityArgs(string $entityClass, mixed ...$args): object
     {
@@ -266,7 +263,7 @@ class ORM implements EventAwareInterface
      * @param  object|T  $entity
      *
      * @return  object|T
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function hydrateEntity(array $data, object $entity): object
     {
@@ -303,7 +300,7 @@ class ORM implements EventAwareInterface
      *
      * @return  T
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function energize(object $entity, bool $force = false): object
     {
@@ -328,7 +325,7 @@ class ORM implements EventAwareInterface
      *
      * @return  E
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function toEntity(string $entityClass, array|object $data): object
     {
@@ -346,7 +343,7 @@ class ORM implements EventAwareInterface
      *
      * @return  E|null
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      *
      * @deprecated  Use tryEntity() instead.
      */
@@ -366,7 +363,7 @@ class ORM implements EventAwareInterface
      *
      * @return  E|null
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function tryEntity(string $entityClass, array|object|null $data): ?object
     {
@@ -435,7 +432,7 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * @return DatabaseAdapter
+     * @return  DatabaseAdapter
      */
     public function getDb(): DatabaseAdapter
     {
@@ -462,7 +459,7 @@ class ORM implements EventAwareInterface
      *
      * @return  mixed
      *
-     * @throws \Throwable
+     * @throws  \Throwable
      */
     public function transaction(callable $callback, bool $autoCommit = true, bool $enabled = true): mixed
     {
@@ -475,7 +472,7 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * @return EntityMetadataCollection
+     * @return  EntityMetadataCollection
      */
     public function getEntityMetadataCollection(): EntityMetadataCollection
     {
@@ -496,8 +493,8 @@ class ORM implements EventAwareInterface
     }
 
     /**
-     * @return FieldHydratorInterface
-     * @throws ReflectionException
+     * @return  FieldHydratorInterface
+     * @throws  ReflectionException
      */
     public function getEntityHydrator(): FieldHydratorInterface
     {

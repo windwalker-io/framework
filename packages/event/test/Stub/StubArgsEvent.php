@@ -10,9 +10,7 @@ namespace Windwalker\Event\Test\Stub;
  */
 class StubArgsEvent
 {
-    public function __construct(public string $value = '')
-    {
-    }
+    public function __construct(public string $value = '') {}
 
     public function setName(string $name): static
     {

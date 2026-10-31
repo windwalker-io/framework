@@ -12,7 +12,6 @@ use Windwalker\Filter\Traits\FilterAwareTrait;
 use Windwalker\Filter\ValidatorInterface;
 use Windwalker\Form\Form;
 use Windwalker\Form\ValidateResult;
-use Windwalker\Utilities\TypeCast;
 
 /**
  * Trait ManageFilterTrait
@@ -101,7 +100,7 @@ trait ManageFilterTrait
      * @param  mixed  $value
      * @param  int    $formFilterOptions
      *
-     * @return mixed
+     * @return  mixed
      */
     public function filter(mixed $value, int $formFilterOptions = 0): mixed
     {
@@ -142,7 +141,7 @@ trait ManageFilterTrait
      * @param  ValidatorInterface|callable|string  $validators
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function addValidator(ValidatorInterface|callable|string ...$validators): static
     {
@@ -181,7 +180,7 @@ trait ManageFilterTrait
      * @param  FilterInterface|callable|string  ...$filters
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function addFilter(FilterInterface|callable|string ...$filters): static
     {
@@ -252,7 +251,7 @@ trait ManageFilterTrait
      * @param  FilterInterface|callable|string  ...$filters
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function addViewFilter(FilterInterface|callable|string ...$filters): static
     {

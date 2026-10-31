@@ -14,8 +14,8 @@ use MyCLabs\Enum\Enum;
 class EnumSingleton extends Enum
 {
     /**
-     * @param mixed $value
-     * @return static
+     * @param   mixed   $value
+     * @return  static
      */
     public static function from($value): self
     {

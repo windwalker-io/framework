@@ -63,7 +63,7 @@ class FilterFactory
     use ObjectBuilderAwareTrait;
 
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     protected array $factories = [];
 
@@ -127,7 +127,7 @@ class FilterFactory
                     );
                 } elseif (class_exists($clause)) {
                     if (is_a($clause, RecordInterface::class, true)) {
-                        $filter = new CallbackFilter(fn ($v) => $clause::wrap($v));
+                        $filter = new CallbackFilter(fn($v) => $clause::wrap($v));
                     } else {
                         $filter = $this->create($clause);
                     }
@@ -219,7 +219,7 @@ class FilterFactory
 
     public function addFilterCallback(string $type, \Closure $callback): static
     {
-        return $this->addFactory($type, fn () => new CallbackFilter($callback));
+        return $this->addFactory($type, fn() => new CallbackFilter($callback));
     }
 
     /**
@@ -237,7 +237,7 @@ class FilterFactory
     }
 
     /**
-     * @return callable[]
+     * @return  callable[]
      */
     public function getFactories(): array
     {

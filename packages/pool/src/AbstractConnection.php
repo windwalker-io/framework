@@ -26,14 +26,14 @@ abstract class AbstractConnection implements ConnectionInterface
      * The connection pool instance must store in WeakReference to prevent circular reference
      * and memory leak.
      *
-     * @var \WeakReference<AbstractPool>|null
+     * @var  \WeakReference<AbstractPool>|null
      */
     protected ?\WeakReference $pool = null;
 
     /**
      * Set this to TRUE, if a connection not released back to pool but destructed, will throw an exception.
      *
-     * @var bool
+     * @var  bool
      */
     public bool $leakProtect = true;
 

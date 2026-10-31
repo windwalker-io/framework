@@ -12,17 +12,17 @@ use Windwalker\DOM\HTMLElement;
 trait InputOptionsTrait
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $optionWrapperHandler = null;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $optionLabelHandler = null;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $optionHandler = null;
 
@@ -54,7 +54,7 @@ trait InputOptionsTrait
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getOptionWrapperHandler(): ?callable
     {
@@ -76,7 +76,7 @@ trait InputOptionsTrait
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getOptionHandler(): ?callable
     {
@@ -98,7 +98,7 @@ trait InputOptionsTrait
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getOptionLabelHandler(): ?callable
     {

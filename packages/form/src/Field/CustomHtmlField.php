@@ -19,7 +19,7 @@ class CustomHtmlField extends AbstractField
      * buildInput
      *
      * @param  HTMLElement  $input
-     * @param  array       $options
+     * @param  array        $options
      *
      * @return  string|HTMLElement
      */
@@ -43,7 +43,7 @@ class CustomHtmlField extends AbstractField
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getContent(): mixed
     {

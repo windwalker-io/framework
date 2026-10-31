@@ -13,12 +13,12 @@ use Iterator;
 class UniqueIterator extends FilterIterator
 {
     /**
-     * @var array
+     * @var  array
      */
     protected array $exists = [];
 
     /**
-     * @var int
+     * @var  int
      */
     protected int $flags = SORT_STRING;
 

@@ -22,7 +22,7 @@ interface BridgeInterface
      *
      * @return  bool  True if started.
      *
-     * @throws RuntimeException If something goes wrong starting the session.
+     * @throws  RuntimeException  If something goes wrong starting the session.
      */
     public function start(): bool;
 
@@ -36,7 +36,7 @@ interface BridgeInterface
     /**
      * Returns the session ID
      *
-     * @return string|null The session ID or empty.
+     * @return  string|null  The session ID or empty.
      */
     public function getId(): ?string;
 
@@ -52,7 +52,7 @@ interface BridgeInterface
     /**
      * Returns the session name
      *
-     * @return string|null The session name.
+     * @return  string|null  The session name.
      */
     public function getSessionName(): ?string;
 
@@ -86,10 +86,10 @@ interface BridgeInterface
      *
      * @param  bool  $unset
      *
-     * @return bool
+     * @return  bool
      *
-     * @throws RuntimeException If the session is saved without being started, or if the session
-     *                           is already closed.
+     * @throws  RuntimeException  If the session is saved without being started, or if the session
+     *                            is already closed.
      */
     public function writeClose(bool $unset = true): bool;
 
@@ -131,12 +131,12 @@ interface BridgeInterface
     /**
      * getStorage
      *
-     * @return mixed
+     * @return  mixed
      */
     public function &getStorage(): mixed;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getStatus(): int;
 }

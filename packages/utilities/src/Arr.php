@@ -13,7 +13,6 @@ use ReflectionObject;
 use Windwalker\Utilities\Classes\PreventInitialTrait;
 use Windwalker\Utilities\Compare\WhereWrapper;
 use Windwalker\Utilities\Dumper\VarDumper;
-
 use Windwalker\Utilities\Wrapper\DepthWrapper;
 
 use function Windwalker\count;
@@ -86,7 +85,7 @@ abstract class Arr
      * @param  string        $delimiter  Separator to split paths.
      *
      * @return  array|object
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      * @since 4.0
      */
     public static function def(object|array $array, string $key, mixed $value, string $delimiter = '.'): object|array
@@ -162,7 +161,7 @@ abstract class Arr
      * @param  string|int  $key        The key path.
      * @param  string      $delimiter  Separator of paths.
      *
-     * @return mixed Found value, null if not exists.
+     * @return  mixed  Found value, null if not exists.
      *
      * @since   2.0
      */
@@ -202,7 +201,7 @@ abstract class Arr
      * @param  string  $storeType  The new store data type, default is `array`. you can set object class name.
      *
      * @return  array|object
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      * @since   2.0
      */
     public static function set(
@@ -225,7 +224,7 @@ abstract class Arr
          *
          * @return  array
          *
-         * @throws InvalidArgumentException
+         * @throws  InvalidArgumentException
          */
         $createStore = static function (string $type) {
             if (strtolower($type) === 'array') {
@@ -362,7 +361,7 @@ abstract class Arr
      * @param  int           $depth      Only flatten limited depth, 0 means on limit.
      * @param  string|null   $prefix     Last level key prefix.
      *
-     * @return array
+     * @return  array
      */
     public static function flatten(
         object|array $array,
@@ -398,7 +397,7 @@ abstract class Arr
      * @param  array         $fields
      *
      * @return  array|object
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public static function only(object|array $data, array $fields): object|array
     {
@@ -449,7 +448,7 @@ abstract class Arr
      * @param  int|null       $offset
      * @param  int|null       $limit
      *
-     * @return array
+     * @return  array
      */
     public static function find(
         array $data,
@@ -825,7 +824,7 @@ abstract class Arr
     /**
      * A simple merge proxy to avoid resources greedy construction.
      *
-     * @param ...$args
+     * @param   ...$args
      *
      * @return  array
      */
@@ -839,7 +838,7 @@ abstract class Arr
      *
      * @param  array  ...$args
      *
-     * @return  array Merged array.
+     * @return  array  Merged array.
      * @since   4.0
      */
     public static function mergeRecursive(...$args): array
@@ -876,7 +875,7 @@ abstract class Arr
      *
      * @param  array  ...$args
      *
-     * @return  array Unioned array.
+     * @return  array  Unioned array.
      */
     public static function unionRecursive(...$args): array
     {
@@ -1078,14 +1077,14 @@ abstract class Arr
     /**
      * Query a two-dimensional array values to get second level array.
      *
-     * @param  array|object  $array           An array to query.
-     * @param  array         $queries         Query strings or callback, may contain Comparison Operators: '>', '>=',
-     *                                        '<', '<='. Example: array(
-     *                                        'id'          => 6,   // Get all elements where id=6
-     *                                        'published >' => 0    // Get all elements where published>0
-     *                                        );
-     * @param  bool          $strict          Use strict to compare equals.
-     * @param  bool          $keepKey         Keep origin array keys.
+     * @param  array|object  $array    An array to query.
+     * @param  array         $queries  Query strings or callback, may contain Comparison Operators: '>', '>=',
+     *                                 '<', '<='. Example: array(
+     *                                 'id'          => 6,   // Get all elements where id=6
+     *                                 'published >' => 0    // Get all elements where published>0
+     *                                 );
+     * @param  bool          $strict   Use strict to compare equals.
+     * @param  bool          $keepKey  Keep origin array keys.
      *
      * @return  array|object  An new two-dimensional array queried.
      *
@@ -1127,15 +1126,15 @@ abstract class Arr
     /**
      * Query a two-dimensional array values to get second level array, return only first.
      *
-     * @param  array|object  $array           An array to query.
-     * @param  array         $queries         Query strings or callback, may contain Comparison Operators: '>', '>=',
-     *                                        '<', '<='. Example: array(
-     *                                        'id'          => 6,   // Get all elements where id=6
-     *                                        'published >' => 0    // Get all elements where published>0
-     *                                        );
-     * @param  bool          $strict          Use strict to compare equals.
+     * @param  array|object  $array    An array to query.
+     * @param  array         $queries  Query strings or callback, may contain Comparison Operators: '>', '>=',
+     *                                 '<', '<='. Example: array(
+     *                                 'id'          => 6,   // Get all elements where id=6
+     *                                 'published >' => 0    // Get all elements where published>0
+     *                                 );
+     * @param  bool          $strict   Use strict to compare equals.
      *
-     * @return mixed
+     * @return  mixed
      */
     public static function queryFirst(object|array $array, $queries = [], bool $strict = false): mixed
     {
@@ -1269,7 +1268,7 @@ abstract class Arr
 
             foreach ($args as $i => $arg) {
                 if (is_int($i)) {
-                    $scope = sprintf("[Value %s]", $i + 1);
+                    $scope = sprintf('[Value %s]', $i + 1);
                 } else {
                     $scope = "[$i]";
                 }

@@ -7,7 +7,6 @@ namespace Windwalker\Query\Concern;
 use Closure;
 use InvalidArgumentException;
 use MyCLabs\Enum\Enum;
-use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\QuoteNameClause;
@@ -29,9 +28,9 @@ trait WhereConcernTrait
     protected ?Clause $having = null;
 
     /**
-     * @param  string|array|QueryCallback|ClauseInterface  $column  Column name, array where list or callback
-     *                                                         function as sub query.
-     * @param  mixed                                 ...$args
+     * @param  string|array|QueryCallback|ClauseInterface  $column   Column name, array where list or callback
+     *                                                               function as sub query.
+     * @param  mixed                                       ...$args
      *
      * @return  static
      */
@@ -306,9 +305,9 @@ trait WhereConcernTrait
     }
 
     /**
-     * @param  string|array|QueryCallback|ClauseInterface  $column  Column name, array where list or callback
-     *                                                         function as sub query.
-     * @param  mixed                                 ...$args
+     * @param  string|array|QueryCallback|ClauseInterface  $column   Column name, array where list or callback
+     *                                                               function as sub query.
+     * @param  mixed                                       ...$args
      *
      * @return  static
      */
@@ -364,7 +363,7 @@ trait WhereConcernTrait
 
     /**
      * @param  string|Clause  $string
-     * @param  array  ...$args
+     * @param  array          ...$args
      *
      * @return  static
      */

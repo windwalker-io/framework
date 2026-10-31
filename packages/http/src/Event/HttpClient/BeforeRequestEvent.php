@@ -24,7 +24,7 @@ class BeforeRequestEvent extends BaseEvent
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -50,7 +50,7 @@ class BeforeRequestEvent extends BaseEvent
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -76,7 +76,7 @@ class BeforeRequestEvent extends BaseEvent
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -102,7 +102,7 @@ class BeforeRequestEvent extends BaseEvent
     }
 
     /**
-     * @return HttpClientOptions
+     * @return  HttpClientOptions
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -128,7 +128,7 @@ class BeforeRequestEvent extends BaseEvent
     }
 
     /**
-     * @return HttpClient
+     * @return  HttpClient
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore

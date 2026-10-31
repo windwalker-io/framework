@@ -22,7 +22,7 @@ trait NestedPathableTrait
     public string $path = '';
 
     /**
-     * @return string
+     * @return  string
      *
      * @deprecated  Use property instead.
      */
@@ -46,7 +46,7 @@ trait NestedPathableTrait
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @deprecated  Use property instead.
      */

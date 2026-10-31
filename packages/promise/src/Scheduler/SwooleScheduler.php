@@ -15,7 +15,7 @@ use Swoole\Event;
 class SwooleScheduler implements SchedulerInterface
 {
     /**
-     * @var int|null
+     * @var  int|null
      */
     protected ?int $timeout;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\Edge\Cache;
 
 use Windwalker\Cache\Storage\StorageInterface;
@@ -12,7 +14,7 @@ use Windwalker\Cache\Storage\StorageInterface;
 class EdgeStorageCache implements EdgeCacheInterface
 {
     /**
-     * @var StorageInterface
+     * @var  StorageInterface
      */
     protected StorageInterface $cache;
 

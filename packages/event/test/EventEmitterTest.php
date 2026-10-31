@@ -28,7 +28,7 @@ use function Windwalker\disposable;
 class EventEmitterTest extends TestCase
 {
     /**
-     * @var EventEmitter
+     * @var  EventEmitter
      */
     protected $instance;
 
@@ -157,7 +157,7 @@ class EventEmitterTest extends TestCase
     #[Test]
     public function subscribeRegistersPublicMethodsAsListeners(): void
     {
-        $subscriber = new class {
+        $subscriber = new class () {
             public $count = 0;
 
             public function foo(EventInterface $event): void
@@ -525,7 +525,7 @@ class EventEmitterTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public $count = 0;
 
             public $flower = '';
@@ -558,7 +558,7 @@ class EventEmitterTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public $count = 0;
 
             #[ListenTo('foo', 500, true)]

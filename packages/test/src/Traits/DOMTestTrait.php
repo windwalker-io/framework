@@ -62,7 +62,7 @@ trait DOMTestTrait
      * @param  mixed   $actual
      * @param  string  $message
      *
-     * @throws Exception
+     * @throws  Exception
      */
     public static function assertHtmlFormatEquals(
         $expected,

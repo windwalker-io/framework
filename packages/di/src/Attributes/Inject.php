@@ -30,8 +30,8 @@ class Inject implements ContainerAttributeInterface
     /**
      * Inject constructor.
      *
-     * @param  string|null            $id
-     * @param  bool                   $forceNew
+     * @param  string|null           $id
+     * @param  bool                  $forceNew
      * @param  UnitEnum|string|null  $tag
      */
     public function __construct(
@@ -45,7 +45,7 @@ class Inject implements ContainerAttributeInterface
     /**
      * @param  AttributeHandler  $handler
      *
-     * @return mixed
+     * @return  mixed
      */
     #[Pure]
     public function __invoke(
@@ -72,8 +72,8 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      */
     protected function handleParameter(AttributeHandler $handler): mixed
     {
@@ -81,7 +81,7 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws DependencyResolutionException
+     * @throws  DependencyResolutionException
      */
     protected function getTypeName(ReflectionProperty|ReflectionParameter $reflector): mixed
     {
@@ -120,8 +120,8 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws ReflectionException
-     * @throws DependencyResolutionException
+     * @throws  ReflectionException
+     * @throws  DependencyResolutionException
      */
     public function resolveInjectable(Container $container, ReflectionProperty|ReflectionParameter $reflector): mixed
     {
@@ -152,8 +152,8 @@ class Inject implements ContainerAttributeInterface
     }
 
     /**
-     * @throws ReflectionException
-     * @throws DefinitionResolveException
+     * @throws  ReflectionException
+     * @throws  DefinitionResolveException
      */
     protected function createObject(Container $container, string $id): object
     {
@@ -163,11 +163,11 @@ class Inject implements ContainerAttributeInterface
     /**
      * @param  ReflectionParameter|ReflectionProperty  $reflector
      * @param  mixed                                   $id
-     * @param  Throwable|null                         $e
+     * @param  Throwable|null                          $e
      *
      * @return  void
      *
-     * @throws DependencyResolutionException
+     * @throws  DependencyResolutionException
      */
     protected function reportInjectingError(
         ReflectionParameter|ReflectionProperty $reflector,

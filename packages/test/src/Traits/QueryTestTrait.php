@@ -7,7 +7,6 @@ namespace Windwalker\Test\Traits;
 use SqlFormatter;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Query;
-use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Utilities\Str;
 
 /**

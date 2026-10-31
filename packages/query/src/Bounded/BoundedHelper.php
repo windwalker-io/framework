@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Query\Bounded;
 
 use PDO;
-use Ramsey\Uuid\Uuid;
 use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
 use Windwalker\Query\Wrapper\UuidBinWrapper;
-use Windwalker\Query\Wrapper\UuidWrapper;
 use Windwalker\Utilities\TypeCast;
 
 /**
@@ -72,8 +70,8 @@ class BoundedHelper
      * simulatePrepared
      *
      * @param  PDO|callable|Query|mixed  $escaper
-     * @param  string                     $sql
-     * @param  array                      $bounded
+     * @param  string                    $sql
+     * @param  array                     $bounded
      *
      * @return  string
      */
@@ -153,7 +151,7 @@ class BoundedHelper
         return [
             $sql,
             array_map(
-                fn ($value) => static::toScalar($value),
+                fn($value) => static::toScalar($value),
                 array_column($params, 'value')
             )
         ];

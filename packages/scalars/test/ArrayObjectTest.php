@@ -456,7 +456,7 @@ class ArrayObjectTest extends TestCase
             [3, true, true],
             [4, false, true],
             [4, null, false],
-            [7, fn ($v) => $v === null, true],
+            [7, fn($v) => $v === null, true],
         ];
     }
 

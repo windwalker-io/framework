@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Form\Field\Concern;
 
-use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTMLElement;
 use Windwalker\Form\FormNormalizer;
 
@@ -64,7 +63,7 @@ trait ManageLabelTrait
     /**
      * @return  HTMLElement
      *
-     * @throws \DOMException
+     * @throws  \DOMException
      * @deprecated  Use compileLabel() instead.
      */
     public function getPreparedLabel(): HTMLElement
@@ -127,7 +126,7 @@ trait ManageLabelTrait
      *
      * @param  string  $name
      *
-     * @return string|null
+     * @return  string|null
      */
     public function getLabelAttribute(string $name): ?string
     {
@@ -150,7 +149,7 @@ trait ManageLabelTrait
      * @param  mixed   $value
      *
      * @return  static
-     * @throws \DOMException
+     * @throws  \DOMException
      */
     public function setLabelAttribute(string $name, string $value): static
     {
@@ -178,7 +177,7 @@ trait ManageLabelTrait
      * @param  mixed   $value
      *
      * @return  static
-     * @throws \DOMException
+     * @throws  \DOMException
      */
     public function labelAttr(string $name, mixed $value = null): static
     {

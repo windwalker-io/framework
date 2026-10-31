@@ -13,7 +13,7 @@ class IniFormatTest extends TestCase
     #[Test]
     public function itDumpsGlobalValuesAndSections(): void
     {
-        $format = new IniFormat;
+        $format = new IniFormat();
 
         self::assertSame(
             "title=\"Sakura\"\nenabled=true\n\n[meta]\ndescription=\"spring\"",
@@ -28,7 +28,7 @@ class IniFormatTest extends TestCase
     #[Test]
     public function itParsesSectionValuesWithTypedScanning(): void
     {
-        $format = new IniFormat;
+        $format = new IniFormat();
 
         self::assertSame(
             ['enabled' => true, 'meta' => ['count' => 3]],

@@ -30,7 +30,7 @@ class UploadedFileFactory implements UploadedFileFactoryInterface
      * @param  string|null      $clientFilename   Filename as provided by the client, if any.
      * @param  string|null      $clientMediaType  Media type as provided by the client, if any.
      *
-     * @return UploadedFileInterface
+     * @return  UploadedFileInterface
      *
      */
     public function createUploadedFile(

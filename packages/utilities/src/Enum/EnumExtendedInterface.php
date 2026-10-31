@@ -31,7 +31,7 @@ interface EnumExtendedInterface extends \JsonSerializable
      *
      * @psalm-pure
      * @psalm-return list<string>
-     * @return array
+     * @return  array
      */
     public static function names(): array;
 }

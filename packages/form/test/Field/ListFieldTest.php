@@ -24,7 +24,7 @@ class ListFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var ListField
+     * @var  ListField
      */
     protected $instance;
 

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Event;
 
-use ReflectionClass;
-use Windwalker\Utilities\Assert\ArgumentsAssert;
-
 /**
  * The AbstractEvent class.
  *

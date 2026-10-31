@@ -16,7 +16,7 @@ interface ArrayAccessibleInterface extends ArrayAccess
      *
      * @param  mixed  $key
      *
-     * @return bool
+     * @return  bool
      */
     public function offsetExists(mixed $key): bool;
 
@@ -25,7 +25,7 @@ interface ArrayAccessibleInterface extends ArrayAccess
      *
      * @param  mixed  $key
      *
-     * @return mixed
+     * @return  mixed
      */
     public function &offsetGet(mixed $key): mixed;
 
@@ -34,10 +34,10 @@ interface ArrayAccessibleInterface extends ArrayAccess
      *
      * @param  mixed  $key
      * @param  mixed  $value
-     *                      \
-     *                      ]cdf
+     *                        \
+     *                        ]cdf
      *
-     * @return void
+     * @return  void
      */
     public function offsetSet(mixed $key, mixed $value): void;
 
@@ -46,7 +46,7 @@ interface ArrayAccessibleInterface extends ArrayAccess
      *
      * @param  mixed  $key
      *
-     * @return void
+     * @return  void
      */
     public function offsetUnset(mixed $key): void;
 }

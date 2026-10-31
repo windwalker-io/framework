@@ -194,7 +194,7 @@ class RequestBodyStream implements StreamInterface
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getData(): array
     {

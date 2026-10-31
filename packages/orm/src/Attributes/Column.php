@@ -33,7 +33,7 @@ class Column implements AttributeInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getName(): string
     {
@@ -41,7 +41,7 @@ class Column implements AttributeInterface
     }
 
     /**
-     * @return ReflectionProperty
+     * @return  ReflectionProperty
      */
     public function getProperty(): ReflectionProperty
     {

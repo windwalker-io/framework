@@ -10,7 +10,7 @@ namespace Windwalker\Utilities\Proxy;
 class CallableProxy
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $callable;
 

@@ -49,7 +49,7 @@ trait EnumPhpAdapterTrait
     /**
      * @return  array<string, static>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public static function values(): array
     {
@@ -65,13 +65,13 @@ trait EnumPhpAdapterTrait
             return $cases;
         }
 
-        return array_map(fn ($value) => static::wrap($value), static::toArray());
+        return array_map(fn($value) => static::wrap($value), static::toArray());
     }
 
     /**
      * @return  array<static>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public static function cases(): array
     {
@@ -80,7 +80,7 @@ trait EnumPhpAdapterTrait
 
     public static function rawValues(): array
     {
-        return array_map(fn (self $case) => $case->value, self::values());
+        return array_map(fn(self $case) => $case->value, self::values());
     }
 
     /**
@@ -152,7 +152,7 @@ trait EnumPhpAdapterTrait
      *
      * @psalm-pure
      * @psalm-return list<string>
-     * @return array
+     * @return  array
      */
     public static function keys(): array
     {
@@ -166,8 +166,8 @@ trait EnumPhpAdapterTrait
      * @psalm-suppress ImpureStaticProperty
      *
      * @psalm-return array<string, mixed>
-     * @return array Constant name in key, constant value in value
-     * @throws \ReflectionException
+     * @return  array                 Constant name in key, constant value in value
+     * @throws  \ReflectionException
      */
     public static function toArray(): array
     {
@@ -179,9 +179,9 @@ trait EnumPhpAdapterTrait
             if (is_subclass_of(static::class, \UnitEnum::class)) {
                 $reflection = new \ReflectionEnum($class);
                 $values = arr($reflection->getCases())
-                    ->map(fn (\ReflectionEnumBackedCase|\ReflectionEnumUnitCase $case) => $case->getValue())
-                    ->mapWithKeys(fn (\UnitEnum|\BackedEnum $enum) => [$enum->name => $enum])
-                    ->map(fn (\UnitEnum|\BackedEnum $enum) => $enum->value ?? $enum->name)
+                    ->map(fn(\ReflectionEnumBackedCase|\ReflectionEnumUnitCase $case) => $case->getValue())
+                    ->mapWithKeys(fn(\UnitEnum|\BackedEnum $enum) => [$enum->name => $enum])
+                    ->map(fn(\UnitEnum|\BackedEnum $enum) => $enum->value ?? $enum->name)
                     ->dump();
 
                 $caches[$class] = $values;
@@ -198,7 +198,7 @@ trait EnumPhpAdapterTrait
      * Specify data which should be serialized to JSON. This method returns data that can be serialized by json_encode()
      * natively.
      *
-     * @return mixed
+     * @return  mixed
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @psalm-pure
      */

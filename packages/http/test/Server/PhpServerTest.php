@@ -32,10 +32,10 @@ class PhpServerTest extends TestCase
         $this->instance->setHandler(
             fn(PhpServer $server)
                 => $server->handle(
-                ServerRequestFactory::createFromUri(
-                    'https://domain.com/hello?foo=bar',
+                    ServerRequestFactory::createFromUri(
+                        'https://domain.com/hello?foo=bar',
+                    ),
                 ),
-            ),
         );
 
         $this->instance->on(

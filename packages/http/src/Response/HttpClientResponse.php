@@ -16,7 +16,7 @@ class HttpClientResponse extends Response
     /**
      * Same details info from connection handler like CURL or socket.
      *
-     * @var mixed
+     * @var  mixed
      */
     public protected(set) mixed $info = null;
 

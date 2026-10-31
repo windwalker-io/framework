@@ -17,7 +17,7 @@ abstract class AbstractRequestHandler implements RequestHandlerInterface
     protected array $queue;
 
     /**
-     * @var callable|null
+     * @var  callable|null
      */
     protected $resolver;
 

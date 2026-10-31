@@ -14,7 +14,7 @@ class PhpFormatTest extends TestCase
     #[Test]
     public function itDumpsArraysAndCanGenerateAReturningPhpFile(): void
     {
-        $format = new PhpFormat;
+        $format = new PhpFormat();
         $data = ['flower' => 'sakura', 'count' => 2];
 
         self::assertSame(

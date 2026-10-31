@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Relation\Strategy;
 
-use Windwalker\ORM\EntityMapper;
 use Windwalker\ORM\Exception\RelationRejectException;
 use Windwalker\ORM\ORMOptions;
 use Windwalker\ORM\Relation\Action;
@@ -150,7 +149,7 @@ class OneToOne extends AbstractRelation
      *
      * @return  array
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     protected function getForeignData(object $entity): ?array
     {

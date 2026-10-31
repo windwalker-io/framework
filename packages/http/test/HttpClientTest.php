@@ -718,7 +718,7 @@ class HttpClientTest extends TestCase
     #[Test]
     public function sendRequestThrowsWhenTransportIsNotSupported(): void
     {
-        $transport = new class extends MockTransport {
+        $transport = new class () extends MockTransport {
             public static function isSupported(): bool
             {
                 return false;
@@ -733,7 +733,7 @@ class HttpClientTest extends TestCase
     #[Test]
     public function downloadThrowsWhenTransportIsNotSupported(): void
     {
-        $transport = new class extends MockTransport {
+        $transport = new class () extends MockTransport {
             public static function isSupported(): bool
             {
                 return false;
@@ -902,7 +902,7 @@ class HttpClientTest extends TestCase
     #[Test]
     public function toCurlCmdAttachesCommandToThrownRequestException(): void
     {
-        $transport = new class extends MockTransport {
+        $transport = new class () extends MockTransport {
             public function request(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
             {
                 throw new HttpRequestException('failed');

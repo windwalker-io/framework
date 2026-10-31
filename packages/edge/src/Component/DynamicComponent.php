@@ -20,7 +20,7 @@ class DynamicComponent extends AbstractComponent
     /**
      * The name of the component.
      *
-     * @var string
+     * @var  string
      */
     #[Prop]
     public string $is = '';
@@ -33,14 +33,14 @@ class DynamicComponent extends AbstractComponent
     /**
      * The cached component classes.
      *
-     * @var array
+     * @var  array
      */
     protected static array $componentClasses = [];
 
     /**
      * Get the view / contents that represent the component.
      *
-     * @return Closure|string
+     * @return  Closure|string
      */
     public function render(): Closure|string
     {
@@ -86,7 +86,7 @@ EOF;
      *
      * @param  array  $bindings
      *
-     * @return string
+     * @return  string
      */
     protected function compileProps(array $bindings): string
     {
@@ -94,8 +94,8 @@ EOF;
             return '';
         }
 
-        return '@props([\'' .
-            implode(
+        return '@props([\''
+            . implode(
                 '\',\'',
                 collect($bindings)->map(
                     function ($dataKey) {
@@ -111,7 +111,7 @@ EOF;
      *
      * @param  array  $bindings
      *
-     * @return string
+     * @return  string
      */
     protected function compileBindings(array $bindings): string
     {
@@ -129,7 +129,7 @@ EOF;
      *
      * @param  array  $slots
      *
-     * @return string
+     * @return  string
      */
     protected function compileSlots(array $slots): string
     {
@@ -146,7 +146,7 @@ EOF;
     /**
      * Get the class for the current component.
      *
-     * @return string
+     * @return  string
      */
     protected function classForComponent(): string
     {
@@ -154,8 +154,8 @@ EOF;
             return static::$componentClasses[$this->is];
         }
 
-        return static::$componentClasses[$this->is] =
-            $this->compiler()->componentClass($this->is);
+        return static::$componentClasses[$this->is]
+            = $this->compiler()->componentClass($this->is);
     }
 
     /**
@@ -163,7 +163,7 @@ EOF;
      *
      * @param  string  $class
      *
-     * @return array
+     * @return  array
      */
     protected function bindings(string $class): array
     {
@@ -178,7 +178,7 @@ EOF;
     /**
      * Get an instance of the Blade tag compiler.
      *
-     * @return ComponentTagCompiler
+     * @return  ComponentTagCompiler
      */
     protected function compiler(): ComponentTagCompiler
     {

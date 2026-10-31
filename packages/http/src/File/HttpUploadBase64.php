@@ -6,7 +6,6 @@ namespace Windwalker\Http\File;
 
 use CURLStringFile;
 use LogicException;
-use Unicorn\Flysystem\Base64DataUri;
 
 /**
  * The HttpUploadFile class.
@@ -30,7 +29,7 @@ class HttpUploadBase64 implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -60,7 +59,7 @@ class HttpUploadBase64 implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -84,7 +83,7 @@ class HttpUploadBase64 implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -132,7 +131,7 @@ class HttpUploadBase64 implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */

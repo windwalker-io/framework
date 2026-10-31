@@ -247,5 +247,3 @@ class HttpClientOptionsTest extends TestCase
         self::assertTrue($transport->receivedOptions->allowEmptyStatusCode);
     }
 }
-
-

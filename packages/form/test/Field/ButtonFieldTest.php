@@ -25,7 +25,7 @@ class ButtonFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var TextField
+     * @var  TextField
      */
     protected $instance;
 

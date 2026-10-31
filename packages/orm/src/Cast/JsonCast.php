@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM\Cast;
 
-use JsonException;
 use Windwalker\ORM\Attributes\CastAttributeInterface;
-use Windwalker\ORM\Attributes\CastAttributeTrait;
-use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\Utilities\TypeCast;
 
 /**

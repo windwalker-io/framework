@@ -46,7 +46,7 @@ class NoResultException extends \UnexpectedValueException
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      *
      * @codeCoverageIgnore
      */
@@ -61,7 +61,7 @@ class NoResultException extends \UnexpectedValueException
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      *
      * @codeCoverageIgnore
      */

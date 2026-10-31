@@ -49,7 +49,7 @@ class IpHelper
      * @param  string        $requestIp  The request IP to check.
      * @param  string|array  $ips        List of IPs or subnets (can be a string if only a single one)
      *
-     * @return bool
+     * @return  bool
      */
     public static function checkIp(string $requestIp, string|array $ips): bool
     {
@@ -128,7 +128,7 @@ class IpHelper
      * @param  string  $requestIp  The request IP to check.
      * @param  string  $ip         IPv4 address or subnet in CIDR notation
      *
-     * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
+     * @return  bool  Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
      */
     public static function checkIpv4(string $requestIp, string $ip): bool
     {
@@ -164,13 +164,13 @@ class IpHelper
             return self::$checkedIps[$cacheKey] = false;
         }
 
-        return self::$checkedIps[$cacheKey] =
-            (0 === substr_compare(
-                    sprintf('%032b', ip2long($requestIp)),
-                    sprintf('%032b', ip2long($address)),
-                    0,
-                    (int) $netmask,
-                ));
+        return self::$checkedIps[$cacheKey]
+            = (0 === substr_compare(
+                sprintf('%032b', ip2long($requestIp)),
+                sprintf('%032b', ip2long($address)),
+                0,
+                (int) $netmask,
+            ));
     }
 
     /**
@@ -180,7 +180,7 @@ class IpHelper
      * @param  string  $requestIp  The request IP to check.
      * @param  string  $ip         IPv6 address or subnet in CIDR notation
      *
-     * @return bool
+     * @return  bool
      *
      * @see    https://github.com/dsp/v6tools
      *

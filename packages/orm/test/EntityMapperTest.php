@@ -36,7 +36,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Test instance.
      *
-     * @var EntityMapper
+     * @var  EntityMapper
      */
     protected EntityMapper $instance;
 
@@ -44,8 +44,8 @@ class EntityMapperTest extends AbstractORMTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
-     * @throws Exception
+     * @return  void
+     * @throws  Exception
      */
     #[Before]
     protected function createMapperInstance(): void
@@ -56,9 +56,9 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test find().
      *
-     * @return void
+     * @return  void
      *
-     * @throws Exception
+     * @throws  Exception
      */
     #[Test]
     public function findReturnsMatchingEntities()
@@ -119,7 +119,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test findOne().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function findOneReturnsSingleEntity()
@@ -170,7 +170,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test create().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function createMultipleStoresAllEntities()
@@ -221,7 +221,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test createOne().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function createOneStoresEntityAndReturnsIt()
@@ -265,7 +265,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test update().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function updateAppliesDataToAllMatchedEntities()
@@ -307,7 +307,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test updateOne().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function updateOneModifiesSingleEntity()
@@ -484,7 +484,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test updateAll().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function updateWhereUpdatesOnlyMatchingRows()
@@ -513,7 +513,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test flush().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function flushReplacesTableContents()
@@ -539,7 +539,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test save().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function saveMultipleCreatesOrUpdatesEntities()
@@ -563,7 +563,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test saveOne().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function saveOneCreatesOrUpdatesEntity()
@@ -586,7 +586,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test upsert().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function upsertInsertsOrUpdatesOnDuplicateKey(): void
@@ -640,7 +640,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test delete().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function deleteRemovesMatchingRows()
@@ -869,7 +869,7 @@ class EntityMapperTest extends AbstractORMTestCase
      *
      * @return  void
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     #[Test]
     public function createBulkInsertsAllEntitiesInOneQuery(): void
@@ -904,9 +904,9 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test getPrimaryKey().
      *
-     * @return void
+     * @return  void
      *
-     * @throws Exception
+     * @throws  Exception
      */
     #[Test]
     public function getMainKeyReturnsPrimaryKeyName()
@@ -917,7 +917,7 @@ class EntityMapperTest extends AbstractORMTestCase
     /**
      * Method to test getTable().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getTableNameReturnsEntityTable()

@@ -53,7 +53,7 @@ class Fieldset implements AttributeInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getName(): string
     {
@@ -75,7 +75,7 @@ class Fieldset implements AttributeInterface
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      *
      * @codeCoverageIgnore
      */
@@ -104,7 +104,7 @@ class Fieldset implements AttributeInterface
     }
 
     /**
-     * @return Form
+     * @return  Form
      *
      * @codeCoverageIgnore
      */

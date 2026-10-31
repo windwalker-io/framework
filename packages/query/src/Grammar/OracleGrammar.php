@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\Query\Grammar;
 
 use InvalidArgumentException;
-use LogicException;
-use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
@@ -16,12 +14,12 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 class OracleGrammar extends BaseGrammar
 {
     /**
-     * @var string
+     * @var  string
      */
     public static string $name = 'Oracle';
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $nullDate = 'RRRR-MM-DD HH24:MI:SS';
 

@@ -61,8 +61,8 @@ class BaseCaster
     /**
      * @param  \DateTimeZone|string  $dbTimezone
      *
-     * @return  static  Return self to support chaining.
-     * @throws \Exception
+     * @return  static      Return self to support chaining.
+     * @throws  \Exception
      */
     public function setDbTimezone(\DateTimeZone|string|null $dbTimezone): static
     {

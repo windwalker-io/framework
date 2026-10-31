@@ -26,7 +26,7 @@ class SubscribableListenerProviderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var SubscribableListenerProvider
+     * @var  SubscribableListenerProvider
      */
     protected $instance;
 
@@ -40,7 +40,7 @@ class SubscribableListenerProviderTest extends TestCase
         $subscriber = new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             #[ListenTo('flower.sakura')]
             public function onFlowerSakura(
                 $event

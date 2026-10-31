@@ -24,7 +24,7 @@ class Service extends Inject
     public function __construct(
         ?string $id = null,
         bool|string $forceNewOrService = false,
-        public int|array|null|Closure $providedIn = null,
+        public int|array|Closure|null $providedIn = null,
         UnitEnum|Closure|string|null $tag = null,
     ) {
         if (is_string($forceNewOrService)) {

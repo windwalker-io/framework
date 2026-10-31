@@ -14,9 +14,9 @@ use Windwalker\DI\Exception\DependencyResolutionException;
 /**
  * The ObjectBuilder class.
  *
- * @method object newInstance(Container $container, string $class, array $args = [], int $options = 0)
- * @method object createObject(Container $container, string $class, array $args = [], int $options = 0)
- * @method object createSharedObject(Container $container, string $class, array $args = [], int $options = 0)
+ * @method  object  newInstance(Container $container, string $class, array $args = [], int $options = 0)
+ * @method  object  createObject(Container $container, string $class, array $args = [], int $options = 0)
+ * @method  object  createSharedObject(Container $container, string $class, array $args = [], int $options = 0)
  */
 class ObjectBuilderDefinition implements DefinitionInterface
 {
@@ -42,7 +42,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
     protected array $caches = [];
 
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     public protected(set) array $extends = [];
 
@@ -75,12 +75,12 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * Resolve this definition.
      *
      *
-     * @param  Container              $container
-     * @param  array                  $args
+     * @param  Container             $container
+     * @param  array                 $args
      * @param  UnitEnum|string|null  $tag
      *
-     * @return object
-     * @throws ReflectionException
+     * @return  object
+     * @throws  ReflectionException
      */
     public function resolve(Container $container, array $args = [], UnitEnum|string|null $tag = null): object
     {
@@ -117,8 +117,8 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  string  $name
      * @param  mixed   $default
      *
-     * @return array
-     * @throws ReflectionException
+     * @return  array
+     * @throws  ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -142,7 +142,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  string  $name
      * @param  mixed   $value
      *
-     * @return  static Return self to support chaining.
+     * @return  static  Return self to support chaining.
      */
     public function setArgument(mixed $name, mixed $value): static
     {
@@ -272,8 +272,8 @@ class ObjectBuilderDefinition implements DefinitionInterface
      * @param  array   $args
      *
      * @return  mixed
-     * @throws DependencyResolutionException
-     * @throws ReflectionException
+     * @throws  DependencyResolutionException
+     * @throws  ReflectionException
      */
     public function __call(string $name, array $args): mixed
     {

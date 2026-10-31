@@ -29,7 +29,7 @@ class PriorityQueue extends SplPriorityQueue
     public const MAX = 300;
 
     /**
-     * @var int Seed used to ensure queue order for items of the same priority
+     * @var  int  Seed used to ensure queue order for items of the same priority
      */
     protected int $serial = PHP_INT_MAX;
 
@@ -96,7 +96,7 @@ class PriorityQueue extends SplPriorityQueue
      *
      * Array will be priority => data pairs
      *
-     * @return array
+     * @return  array
      */
     public function toArray(): array
     {
@@ -112,7 +112,7 @@ class PriorityQueue extends SplPriorityQueue
     /**
      * Serialize
      *
-     * @return array
+     * @return  array
      */
     public function __serialize(): array
     {
@@ -134,7 +134,7 @@ class PriorityQueue extends SplPriorityQueue
      *
      * @param  array  $data
      *
-     * @return void
+     * @return  void
      */
     public function __unserialize(array $data): void
     {

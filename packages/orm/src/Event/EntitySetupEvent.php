@@ -11,6 +11,5 @@ class EntitySetupEvent extends BaseEvent
 {
     public function __construct(
         public EntityMetadata $metadata,
-    ) {
-    }
+    ) {}
 }

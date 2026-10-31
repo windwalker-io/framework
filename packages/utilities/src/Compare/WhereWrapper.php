@@ -18,12 +18,12 @@ class WhereWrapper implements WrapperInterface
     protected string $operator;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected $var1;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected $var2;
 

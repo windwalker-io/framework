@@ -7,6 +7,4 @@ namespace Windwalker\Event;
 /**
  * Interface EventAwareInterface
  */
-interface EventAwareInterface extends EventListenableInterface, EventEmitterInterface, DispatcherAwareInterface
-{
-}
+interface EventAwareInterface extends EventListenableInterface, EventEmitterInterface, DispatcherAwareInterface {}

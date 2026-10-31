@@ -24,7 +24,7 @@ trait ORMProxyTrait
      *
      * @return  T|null
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -47,7 +47,7 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -70,7 +70,7 @@ trait ORMProxyTrait
      *
      * @return  iterable<T>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -91,7 +91,7 @@ trait ORMProxyTrait
      *
      * @return  mixed
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -112,7 +112,7 @@ trait ORMProxyTrait
      *
      * @return  Collection
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -133,7 +133,7 @@ trait ORMProxyTrait
      *
      * @return  int
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -154,7 +154,7 @@ trait ORMProxyTrait
      *
      * @return  float
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -176,8 +176,8 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      */
     public function createOne(
         string|object $entityClass,
@@ -201,7 +201,7 @@ trait ORMProxyTrait
      *
      * @return  array<T>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -220,8 +220,8 @@ trait ORMProxyTrait
      *
      * @return  iterable<T>|L<T>
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -283,7 +283,7 @@ trait ORMProxyTrait
      *
      * @return  StatementInterface
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -306,7 +306,7 @@ trait ORMProxyTrait
      *
      * @return  array
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -329,7 +329,7 @@ trait ORMProxyTrait
      *
      * @return  iterable<T>|L<T>
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -349,7 +349,7 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public function saveOne(
         string|object $entityClass,
@@ -373,8 +373,8 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -395,8 +395,8 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -417,8 +417,8 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -426,7 +426,7 @@ trait ORMProxyTrait
         string $entityClass,
         array|object $item,
         array|string|null $condFields = null,
-        array|null $updateFields = null,
+        ?array $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): object {
         return $this->mapper($entityClass)->upsert($item, $condFields, $updateFields, $options);
@@ -441,7 +441,7 @@ trait ORMProxyTrait
      *
      * @return  StatementInterface
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -483,7 +483,7 @@ trait ORMProxyTrait
      *
      * @return  void
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -502,8 +502,8 @@ trait ORMProxyTrait
      *
      * @return  iterable<T>
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -524,8 +524,8 @@ trait ORMProxyTrait
      *
      * @return  array{ array<T>, array<T>, array<T> }
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */
@@ -547,8 +547,8 @@ trait ORMProxyTrait
      *
      * @return  array<T>
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      */
     public function copy(
         string|object $entityClass,
@@ -574,8 +574,8 @@ trait ORMProxyTrait
      *
      * @return  T|null
      *
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      */
     public function copyOne(
         string|object $entityClass,
@@ -654,7 +654,7 @@ trait ORMProxyTrait
      *
      * @return  T
      *
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      *
      * @codeCoverageIgnore
      */

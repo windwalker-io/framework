@@ -22,7 +22,7 @@ namespace Windwalker\Utilities\Proxy;
 class ChainableCallable extends CallableProxy
 {
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     protected $queue = [];
 
@@ -57,7 +57,7 @@ class ChainableCallable extends CallableProxy
     /**
      * Method to get property Queue
      *
-     * @return  array[callable]
+     * @return    array[callable]
      *
      *
      * @codeCoverageIgnore

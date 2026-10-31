@@ -13,17 +13,17 @@ use Windwalker\Query\Bounded\ParamType;
 /**
  * The PdoStatement class.
  *
- * @method \PDOStatement getCursor()
+ * @method  \PDOStatement  getCursor()
  */
 class PdoStatement extends AbstractStatement
 {
     /**
-     * @var \PDOStatement
+     * @var  \PDOStatement
      */
     public protected(set) mixed $cursor = null;
 
     /**
-     * @var PDO
+     * @var  PDO
      */
     protected mixed $conn = null;
 

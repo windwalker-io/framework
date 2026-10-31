@@ -34,18 +34,18 @@ class MultiCurlTransport implements AsyncTransportInterface
     /**
      * Property handles.
      *
-     * @var  array<array{
-     *     handle: CurlHandle,
-     *     promise: array{ 0: PromiseInterface, 1: callable, 2: callable },
-     *     options: array,
-     *     headers: array,
-     *     content: StreamInterface
-     * }>
+     * @var    array<array{
+     *        handle: CurlHandle,
+     *        promise: array{ 0: PromiseInterface, 1: callable, 2: callable },
+     *        options: array,
+     *        headers: array,
+     *        content: StreamInterface
+     *        }>
      */
     protected array $tasks = [];
 
     /**
-     * @var CurlTransportInterface|null
+     * @var  CurlTransportInterface|null
      */
     protected ?CurlTransportInterface $transport;
 
@@ -91,7 +91,7 @@ class MultiCurlTransport implements AsyncTransportInterface
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function sendRequest(RequestInterface $request, array|TransportOptions $options = []): PromiseInterface
     {
@@ -120,7 +120,7 @@ class MultiCurlTransport implements AsyncTransportInterface
      * resolve
      *
      * @return  mixed|PromiseInterface
-     * @throws Throwable
+     * @throws  Throwable
      */
     public function resolve(): mixed
     {
@@ -130,7 +130,7 @@ class MultiCurlTransport implements AsyncTransportInterface
     }
 
     /**
-     * @throws Throwable
+     * @throws  Throwable
      */
     protected function prepareResolvePromise(): PromiseInterface
     {
@@ -231,7 +231,7 @@ class MultiCurlTransport implements AsyncTransportInterface
     }
 
     /**
-     * @return CurlTransport
+     * @return  CurlTransport
      * @codeCoverageIgnore
      */
     public function getTransport(): CurlTransport

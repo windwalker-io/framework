@@ -18,14 +18,14 @@ use Windwalker\Http\Transport\TransportInterface;
 /**
  * The AsyncRequest class.
  *
- * @method Promise get($url, $data = null, $headers = [])
- * @method Promise post($url, $data, $headers = [])
- * @method Promise put($url, $data, $headers = [])
- * @method Promise patch($url, $data, $headers = [])
- * @method Promise delete($url, $data = null, $headers = [])
- * @method Promise head($url, $headers = [])
- * @method Promise options($url, $headers = [])
- * @method Promise sendRequest(RequestInterface $request)
+ * @method  Promise  get($url, $data = null, $headers = [])
+ * @method  Promise  post($url, $data, $headers = [])
+ * @method  Promise  put($url, $data, $headers = [])
+ * @method  Promise  patch($url, $data, $headers = [])
+ * @method  Promise  delete($url, $data = null, $headers = [])
+ * @method  Promise  head($url, $headers = [])
+ * @method  Promise  options($url, $headers = [])
+ * @method  Promise  sendRequest(RequestInterface $request)
  * @method Promise request($method, $url, mixed $body = null, $options = []):HttpClientResponse
  *
  * @since  3.2
@@ -42,7 +42,7 @@ class AsyncHttpClient extends HttpClient
     /**
      * Property handles.
      *
-     * @var  []
+     * @var    []
      */
     protected $tasks = [];
 
@@ -114,7 +114,7 @@ class AsyncHttpClient extends HttpClient
      * @param  RequestInterface  $request  The Psr Request object.
      *
      * @return  Promise
-     * @throws RangeException
+     * @throws  RangeException
      */
     public function senRequest(RequestInterface $request): ResponseInterface
     {
@@ -142,7 +142,7 @@ class AsyncHttpClient extends HttpClient
      * @param  callable|null  $callback
      *
      * @return  Response[]
-     * @throws RuntimeException
+     * @throws  RuntimeException
      */
     public function resolve(?callable $callback = null): array
     {
@@ -217,8 +217,8 @@ class AsyncHttpClient extends HttpClient
      *
      * @param  TransportInterface  $transport
      *
-     * @return  static  Return self to support chaining.
-     * @throws InvalidArgumentException
+     * @return  static                    Return self to support chaining.
+     * @throws  InvalidArgumentException
      */
     public function setTransport(TransportInterface $transport): static
     {

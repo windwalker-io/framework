@@ -18,7 +18,7 @@ class HttpRequestException extends UnexpectedValueException
 {
     public protected(set) ?ResponseInterface $response = null;
 
-    public StreamInterface|null $body {
+    public ?StreamInterface $body {
         get => $this->response?->getBody();
     }
 

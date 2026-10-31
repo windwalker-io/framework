@@ -6,7 +6,6 @@ namespace Windwalker\ORM\Test\Entity;
 
 use DateTimeImmutable;
 use Windwalker\ORM\Attributes\AutoIncrement;
-use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
 use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\CurrentTime;
@@ -47,7 +46,7 @@ class StubComment
     protected int $createdBy = 0;
 
     /**
-     * @return ?int
+     * @return  ?int
      */
     public function getId(): ?int
     {
@@ -67,7 +66,7 @@ class StubComment
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getTargetId(): int
     {
@@ -87,7 +86,7 @@ class StubComment
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getUserId(): int
     {
@@ -107,7 +106,7 @@ class StubComment
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getType(): string
     {
@@ -127,7 +126,7 @@ class StubComment
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getContent(): string
     {
@@ -147,7 +146,7 @@ class StubComment
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return  DateTimeImmutable
      */
     public function getCreated(): ?DateTimeImmutable
     {
@@ -167,7 +166,7 @@ class StubComment
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getCreatedBy(): int
     {

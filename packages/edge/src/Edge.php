@@ -69,7 +69,7 @@ class Edge
     /**
      * The number of active rendering operations.
      *
-     * @var int
+     * @var  int
      */
     protected int $renderCount = 0;
 
@@ -78,7 +78,7 @@ class Edge
     /**
      * Property loader.
      *
-     * @var EdgeLoaderInterface|null
+     * @var  EdgeLoaderInterface|null
      */
     protected ?EdgeLoaderInterface $loader = null;
 
@@ -92,7 +92,7 @@ class Edge
     /**
      * Property cacheHandler.
      *
-     * @var EdgeCacheInterface|null
+     * @var  EdgeCacheInterface|null
      */
     protected ?EdgeCacheInterface $cache = null;
 
@@ -101,9 +101,9 @@ class Edge
     /**
      * EdgeEnvironment constructor.
      *
-     * @param EdgeLoaderInterface|null   $loader
-     * @param EdgeCacheInterface|null    $cache
-     * @param EdgeCompilerInterface|null $compiler
+     * @param  EdgeLoaderInterface|null    $loader
+     * @param  EdgeCacheInterface|null     $cache
+     * @param  EdgeCompilerInterface|null  $compiler
      */
     public function __construct(
         ?EdgeLoaderInterface $loader = null,
@@ -124,7 +124,7 @@ class Edge
      *
      * @return  string
      *
-     * @throws EdgeException
+     * @throws  EdgeException
      */
     public function renderWithContext(string $layout, array $data = [], ?object $context = null): string
     {
@@ -144,8 +144,8 @@ class Edge
      * @param  array            $__data
      * @param  array            $__more
      *
-     * @return string
-     * @throws EdgeException
+     * @return  string
+     * @throws  EdgeException
      */
     public function render(string|Closure $__layout, array $__data = [], array $__more = []): string
     {
@@ -306,7 +306,7 @@ TEXT;
      *
      * @return  void
      *
-     * @throws EdgeException
+     * @throws  EdgeException
      */
     protected function wrapException(Throwable $e, string|Closure $path, string|Closure $layout): void
     {
@@ -329,7 +329,7 @@ TEXT;
     }
 
     /**
-     * @return object|null
+     * @return  object|null
      */
     public function getContext(): ?object
     {
@@ -355,7 +355,7 @@ TEXT;
      *
      * @param  string  $name
      *
-     * @return string
+     * @return  string
      */
     protected function normalizeName(string $name): string
     {
@@ -388,8 +388,8 @@ TEXT;
      * @param  string  $iterator
      * @param  string  $empty
      *
-     * @return string
-     * @throws EdgeException
+     * @return  string
+     * @throws  EdgeException
      */
     public function renderEach(string $layout, array $data, string $iterator, string $empty = 'raw|'): string
     {
@@ -419,7 +419,7 @@ TEXT;
     /**
      * Increment the rendering counter.
      *
-     * @return void
+     * @return  void
      */
     public function incrementRender(): void
     {
@@ -429,7 +429,7 @@ TEXT;
     /**
      * Decrement the rendering counter.
      *
-     * @return void
+     * @return  void
      */
     public function decrementRender(): void
     {
@@ -439,7 +439,7 @@ TEXT;
     /**
      * Check if there are no active render operations.
      *
-     * @return bool
+     * @return  bool
      */
     public function doneRendering(): bool
     {
@@ -451,7 +451,7 @@ TEXT;
      *
      * @param  EdgeCompilerInterface  $compiler
      *
-     * @return EdgeCompilerInterface
+     * @return  EdgeCompilerInterface
      */
     public function prepareExtensions(EdgeCompilerInterface $compiler): EdgeCompilerInterface
     {
@@ -490,7 +490,7 @@ TEXT;
      *
      * @param  bool  $withExtensions
      *
-     * @return array
+     * @return  array
      */
     public function getGlobals(bool $withExtensions = false): array
     {
@@ -628,7 +628,7 @@ TEXT;
      * @param  EdgeExtensionInterface  $extension
      * @param  string|null             $name
      *
-     * @return static
+     * @return  static
      */
     public function addExtension(EdgeExtensionInterface $extension, ?string $name = null): static
     {

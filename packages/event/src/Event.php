@@ -107,7 +107,7 @@ class Event extends AbstractEvent implements AccessibleInterface
     /**
      * Convert the object into something JSON serializable.
      *
-     * @return array
+     * @return  array
      */
     public function jsonSerialize(): array
     {

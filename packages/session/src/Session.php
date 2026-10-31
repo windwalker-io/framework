@@ -32,7 +32,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     protected ?FlashBag $flashBag = null;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $destructor = null;
 
@@ -43,7 +43,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      * @param  BridgeInterface|null   $bridge
      * @param  CookiesInterface|null  $cookies
      *
-     * @throws \Exception
+     * @throws  \Exception
      */
     public function __construct(array $options = [], ?BridgeInterface $bridge = null, ?CookiesInterface $cookies = null)
     {
@@ -332,7 +332,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
@@ -348,7 +348,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     /**
      * Convert the object into something JSON serializable.
      *
-     * @return array
+     * @return  array
      */
     public function jsonSerialize(): array
     {
@@ -372,7 +372,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     }
 
     /**
-     * @return array|null
+     * @return  array|null
      */
     public function &getStorage(): ?array
     {
@@ -397,7 +397,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     /**
      * clear
      *
-     * @return bool
+     * @return  bool
      */
     public function clear(): bool
     {
@@ -440,7 +440,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     }
 
     /**
-     * @return CookiesInterface|null
+     * @return  CookiesInterface|null
      */
     public function getCookies(): ?CookiesInterface
     {
@@ -469,7 +469,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     }
 
     /**
-     * @return FlashBag
+     * @return  FlashBag
      */
     public function getFlashBag(): FlashBag
     {
@@ -532,7 +532,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
     }
 
     /**
-     * @return BridgeInterface
+     * @return  BridgeInterface
      */
     public function getBridge(): BridgeInterface
     {

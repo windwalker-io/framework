@@ -35,5 +35,5 @@ interface StoreDefinitionInterface extends DefinitionInterface
 
     public function getTag(): ?string;
 
-    public function providedIn(int|array|null|Closure $levels): static;
+    public function providedIn(int|array|Closure|null $levels): static;
 }

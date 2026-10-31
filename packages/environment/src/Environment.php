@@ -14,7 +14,7 @@ class Environment
     /**
      * Property os.
      *
-     * @var string
+     * @var  string
      */
     protected static string $os = '';
 
@@ -35,7 +35,7 @@ class Environment
     /**
      * Class init.
      *
-     * @param array|null $serverParams
+     * @param  array|null  $serverParams
      */
     public function __construct(
         ?array $serverParams = null,
@@ -262,7 +262,7 @@ class Environment
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isSSL(): bool
     {

@@ -46,7 +46,7 @@ class AbstractContentTypeResponseTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     #[Test]
     public function normalizeContentTypeLowercasesContentType(): void

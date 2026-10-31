@@ -41,7 +41,7 @@ class Table implements AttributeInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getName(): string
     {
@@ -49,7 +49,7 @@ class Table implements AttributeInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getAlias(): string
     {
@@ -57,7 +57,7 @@ class Table implements AttributeInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMapperClass(): string
     {
@@ -65,7 +65,7 @@ class Table implements AttributeInterface
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getOptions(): array
     {

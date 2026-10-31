@@ -38,9 +38,7 @@ use function Windwalker\value;
  */
 class DatabasePackage extends AbstractPackage implements ServiceProviderInterface, BootableProviderInterface
 {
-    public function __construct(protected ApplicationInterface $app)
-    {
-    }
+    public function __construct(protected ApplicationInterface $app) {}
 
     public function install(PackageInstaller $installer): void
     {
@@ -67,7 +65,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
      * @param  Container  $container  The DI container.
      *
      * @return  void
-     * @throws \Windwalker\DI\Exception\DefinitionException
+     * @throws  \Windwalker\DI\Exception\DefinitionException
      */
     public function register(Container $container): void
     {
@@ -118,7 +116,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
         $databaseFactory = $container->newInstance(DatabaseFactory::class);
         $connections = $container->getParam('database.connections');
 
-        $this->app->log("Enable DB Connection Pool");
+        $this->app->log('Enable DB Connection Pool');
 
         foreach ($connections as $connection => $connConfig) {
             $this->app->log("[DB][$connection] Initializing connection pool");
@@ -143,11 +141,11 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
             $pool->setConnectionBuilder(fn() => $driver->createConnection());
             $pool->init();
 
-            $this->app->log("  Connections created, count: " . $pool->count());
+            $this->app->log('  Connections created, count: ' . $pool->count());
 
             $container->share('database.connection.driver.' . $connection, $driver);
 
-            $this->app->log("  Create DB driver: " . $connConfig['driver']);
+            $this->app->log('  Create DB driver: ' . $connConfig['driver']);
         }
     }
 
@@ -177,7 +175,7 @@ class DatabasePackage extends AbstractPackage implements ServiceProviderInterfac
     {
         $logger = new Logger('connection-pool-' . $connection);
 
-        $handler = new class extends AbstractHandler {
+        $handler = new class () extends AbstractHandler {
             public ApplicationInterface $app;
 
             public function handle(LogRecord $record): bool

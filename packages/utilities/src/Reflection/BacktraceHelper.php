@@ -67,7 +67,7 @@ class BacktraceHelper
      * @param  string|null  $replaceRoot
      *
      * @return  array
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public static function normalizeBacktrace(array $trace, ?string $replaceRoot = null): array
     {
@@ -107,8 +107,8 @@ class BacktraceHelper
 
         return [
             'file' => $file,
-            'function' => ($trace['class'] ? $trace['class'] . $trace['type'] : null) . $trace['function'] .
-                sprintf('(%s)', implode(', ', $args)),
+            'function' => ($trace['class'] ? $trace['class'] . $trace['type'] : null) . $trace['function']
+                . sprintf('(%s)', implode(', ', $args)),
             'pathname' => $trace['file'],
             'line' => $trace['line'],
         ];
@@ -121,7 +121,7 @@ class BacktraceHelper
      * @param  string|null  $replaceRoot
      *
      * @return  array
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public static function normalizeBacktraces(array $traces, ?string $replaceRoot = null): array
     {

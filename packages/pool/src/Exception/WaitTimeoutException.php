@@ -7,6 +7,4 @@ namespace Windwalker\Pool\Exception;
 /**
  * The WaitTimeoutException class.
  */
-class WaitTimeoutException extends ConnectionPoolException
-{
-}
+class WaitTimeoutException extends ConnectionPoolException {}

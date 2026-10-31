@@ -17,7 +17,7 @@ class CursorPaginate
     public function __construct(
         public int $length,
         /**
-         * @var string|\Closure(Query $query): ?Query
+         * @var  string|\Closure(Query $query): ?Query
          */
         \Closure|string $cursorBy
     ) {

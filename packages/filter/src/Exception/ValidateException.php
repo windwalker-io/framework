@@ -29,7 +29,7 @@ class ValidateException extends UnexpectedValueException
     }
 
     /**
-     * @return ValidatorInterface
+     * @return  ValidatorInterface
      */
     public function getValidator(): ValidatorInterface
     {

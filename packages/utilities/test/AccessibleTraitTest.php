@@ -14,7 +14,7 @@ use Windwalker\Utilities\Test\Stub\StubAccessible;
 class AccessibleTraitTest extends TestCase
 {
     /**
-     * @var StubAccessible
+     * @var  StubAccessible
      */
     protected $instance;
 

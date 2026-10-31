@@ -35,7 +35,7 @@ class RedirectResponse extends Response
     /**
      * Gets the body of the message.
      *
-     * @return StreamInterface Returns the body as a stream.
+     * @return  StreamInterface  Returns the body as a stream.
      */
     public function getBody(): StreamInterface
     {

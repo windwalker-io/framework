@@ -13,12 +13,12 @@ use Windwalker\Utilities\Assert\ArgumentsAssert;
 class MapProxy
 {
     /**
-     * @var Collection
+     * @var  Collection
      */
     protected Collection $collection;
 
     /**
-     * @var string|null
+     * @var  string|null
      */
     protected ?string $column = null;
 
@@ -54,8 +54,8 @@ class MapProxy
         ArgumentsAssert::assert(
             $items instanceof Collection,
             sprintf(
-                'Collection::proxyMap(...)->%s(...) not supported. ' .
-                'You must call a method which will return Collection itself or new instance',
+                'Collection::proxyMap(...)->%s(...) not supported. '
+                . 'You must call a method which will return Collection itself or new instance',
                 $name
             )
         );

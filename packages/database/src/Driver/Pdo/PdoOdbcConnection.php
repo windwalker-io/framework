@@ -12,7 +12,7 @@ use Windwalker\Database\Driver\DriverOptions;
 class PdoOdbcConnection extends AbstractPdoConnection
 {
     /**
-     * @var string
+     * @var  string
      */
     protected static string $dbtype = 'odbc';
 

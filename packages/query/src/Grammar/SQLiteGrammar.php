@@ -18,12 +18,12 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
     use JsonGrammarTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $name = 'SQLite';
 
     /**
-     * @var array
+     * @var  array
      */
     public static array $nameQuote = ['`', '`'];
 

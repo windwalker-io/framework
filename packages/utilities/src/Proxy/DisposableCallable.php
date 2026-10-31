@@ -10,7 +10,7 @@ namespace Windwalker\Utilities\Proxy;
 class DisposableCallable extends CallableProxy
 {
     /**
-     * @var bool
+     * @var  bool
      */
     protected bool $called = false;
 

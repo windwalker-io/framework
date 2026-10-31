@@ -56,7 +56,7 @@ class StubActionAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -76,7 +76,7 @@ class StubActionAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -96,7 +96,7 @@ class StubActionAttrNew implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -116,7 +116,7 @@ class StubActionAttrNew implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getMembers(): ?RelationCollection
     {
@@ -136,7 +136,7 @@ class StubActionAttrNew implements EntityInterface
     }
 
     /**
-     * @return StubMemberActionMap|null
+     * @return  StubMemberActionMap|null
      */
     public function getMap(): ?StubMemberActionMap
     {
@@ -156,7 +156,7 @@ class StubActionAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getType(): string
     {

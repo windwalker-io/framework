@@ -14,7 +14,7 @@ class JsonCastArrayList extends JsonCast
 {
     /**
      * @inheritDoc
-     * @throws JsonException
+     * @throws  JsonException
      */
     public function extract(mixed $value): mixed
     {

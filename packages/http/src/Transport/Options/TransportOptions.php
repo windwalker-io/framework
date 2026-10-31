@@ -24,7 +24,7 @@ class TransportOptions extends RecordOptions
         public bool $verifyPeer = true,
         public ?array $files = null,
         /**
-         * @var Closure(ProgressEvent $event): void|null
+         * @var  Closure(ProgressEvent $event): void|null
          */
         public ?Closure $progress = null,
     ) {}

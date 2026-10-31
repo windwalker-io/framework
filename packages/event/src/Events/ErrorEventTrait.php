@@ -12,7 +12,7 @@ use Throwable;
 trait ErrorEventTrait
 {
     /**
-     * @var Throwable
+     * @var  Throwable
      */
     public Throwable $exception;
 

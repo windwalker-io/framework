@@ -22,9 +22,9 @@ trait HasManyTrait
      * @param  object      $entity
      * @param  array|null  $oldData
      *
-     * @return array
+     * @return  array
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function diffRelated(array $data, object $entity, ?array $oldData): array
     {

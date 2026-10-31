@@ -30,16 +30,16 @@ $master = [];
 $master[] = fopen($fp1);
 $master[] = fopen();
 $read = $master;
-show("Stat: ", fstat($socket));
+show('Stat: ', fstat($socket));
 while (1) {
     $read = $master;
     $_w = $_e = null;
     $mod_fd = stream_select($read, $_w, $_e, 5);
-    show("Stat: ", fstat($socket));
+    show('Stat: ', fstat($socket));
     foreach ($read as $stream) {
         if ($stream === $socket) {
             $conn = stream_socket_accept($socket);
-            fwrite($conn, "Hello! The time is " . date("n/j/Y g:i a") . "\n");
+            fwrite($conn, 'Hello! The time is ' . date('n/j/Y g:i a') . "\n");
             $master[] = $conn;
         } else {
             $sock_data = fread($stream, 1024);
@@ -50,13 +50,13 @@ while (1) {
                 unset($master[$key_to_del]);
             } else {
                 if ($sock_data === false) {
-                    echo "Something bad happened";
+                    echo 'Something bad happened';
                     $key_to_del = array_search($stream, $master, true);
                     unset($master[$key_to_del]);
                 } else {
-                    echo "The client has sent :";
+                    echo 'The client has sent :';
                     var_dump($sock_data);
-                    fwrite($stream, "You have sent :[" . $sock_data . "]\n");
+                    fwrite($stream, 'You have sent :[' . $sock_data . "]\n");
                     fclose($stream);
                     unset($master[array_search($stream, $master)]);
                 }

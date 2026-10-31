@@ -12,7 +12,7 @@ namespace Windwalker\Utilities\Enum;
 trait EnumBCTrait
 {
     /**
-     * @param $variable
+     * @param   $variable
      *
      * @return  bool
      *

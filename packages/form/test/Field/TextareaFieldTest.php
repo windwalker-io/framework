@@ -22,7 +22,7 @@ class TextareaFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var TextareaField
+     * @var  TextareaField
      */
     protected $instance;
 

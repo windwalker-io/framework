@@ -30,7 +30,7 @@ class DriverOptions extends RecordOptions
         public bool $strict = true,
         public ?array $modes = null,
         /**
-         * @var array<\Closure(AbstractDriver): void|string>
+         * @var  array<\Closure(AbstractDriver): void|string>
          */
         public \Closure|string|array $afterConnect = [],
         public array $extra = [],

@@ -9,7 +9,6 @@ use Windwalker\ORM\Cast\JsonCast;
 use Windwalker\ORM\Test\AbstractORMTestCase;
 use Windwalker\ORM\Test\Entity\StubArticle;
 use Windwalker\ORM\Test\Entity\StubArticleParamsArray;
-use Windwalker\ORM\Test\Entity\StubArticleParamsObject;
 
 class JsonCastTest extends AbstractORMTestCase
 {

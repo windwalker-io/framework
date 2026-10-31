@@ -14,7 +14,7 @@ class Length extends AbstractFilter
     /**
      * Property max.
      *
-     * @var int
+     * @var  int
      */
     protected int $max;
 
@@ -28,8 +28,8 @@ class Length extends AbstractFilter
     /**
      * MaxlengthFilter constructor.
      *
-     * @param $max
-     * @param $utf8
+     * @param   $max
+     * @param   $utf8
      */
     public function __construct(int $max, bool $utf8 = true)
     {
@@ -40,9 +40,9 @@ class Length extends AbstractFilter
     /**
      * clean
      *
-     * @param $value
+     * @param   $value
      *
-     * @return mixed
+     * @return  mixed
      */
     public function filter(mixed $value): mixed
     {

@@ -22,7 +22,7 @@ class EventObservableTest extends TestCase
     use SwooleTestTrait;
 
     /**
-     * @var EventEmitter
+     * @var  EventEmitter
      */
     protected $instance;
 

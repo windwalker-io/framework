@@ -27,7 +27,7 @@ class ForeignTable
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getName(): ?string
     {
@@ -47,7 +47,7 @@ class ForeignTable
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getFks(): array
     {
@@ -69,7 +69,7 @@ class ForeignTable
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getMorphs(): array
     {

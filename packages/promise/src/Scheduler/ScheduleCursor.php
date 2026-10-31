@@ -10,7 +10,7 @@ namespace Windwalker\Promise\Scheduler;
 class ScheduleCursor
 {
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected readonly mixed $cursor;
 
@@ -39,7 +39,7 @@ class ScheduleCursor
     }
 
     /**
-     * @return bool
+     * @return  bool
      *
      * @codeCoverageIgnore
      */

@@ -136,7 +136,7 @@ trait EnumMetaTrait
      * @param  string|T  $attr
      *
      * @return  object|null|T
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     protected function getAttr(string $attr): ?object
     {

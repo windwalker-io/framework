@@ -13,7 +13,7 @@ use React\EventLoop\LoopInterface;
 class EventLoopScheduler implements SchedulerInterface
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $timerCallback;
 

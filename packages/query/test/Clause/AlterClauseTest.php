@@ -44,7 +44,7 @@ class AlterClauseTest extends TestCase
 
         self::assertEquals(
             "ALTER TABLE \"foo\"\nADD CONSTRAINT \"fk\" FOREIGN KEY (uid) REFERENCES (id)"
-            . " ON UPDATE CASCADE ON DELETE SET NULL",
+            . ' ON UPDATE CASCADE ON DELETE SET NULL',
             (string) $alter
         );
     }
@@ -88,7 +88,7 @@ class AlterClauseTest extends TestCase
     {
         $alter = self::createQuery()->alter('TABLE', 'foo');
 
-        self::assertEquals("ALTER TABLE \"foo\".\"bar\"", trim((string) $alter->table('foo.bar')));
+        self::assertEquals('ALTER TABLE "foo"."bar"', trim((string) $alter->table('foo.bar')));
         self::assertEquals('ALTER DATABASE "d"', trim((string) $alter->database('d')));
         self::assertEquals('ALTER SCHEMA "s"', trim((string) $alter->schema('s')));
     }

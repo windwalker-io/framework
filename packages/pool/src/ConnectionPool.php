@@ -10,7 +10,7 @@ namespace Windwalker\Pool;
 class ConnectionPool extends AbstractPool
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $builder;
 

@@ -20,7 +20,7 @@ class RedisHandler extends AbstractHandler
     use OptionAccessTrait;
 
     /**
-     * @var Redis|RedisArray|ClientInterface
+     * @var  Redis|RedisArray|ClientInterface
      */
     protected $driver;
 
@@ -174,7 +174,7 @@ class RedisHandler extends AbstractHandler
     }
 
     /**
-     * @return ClientInterface|Redis|RedisArray
+     * @return  ClientInterface|Redis|RedisArray
      */
     public function getDriver(): ClientInterface|RedisCaster|Redis|RedisArray
     {

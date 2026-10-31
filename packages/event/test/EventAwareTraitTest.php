@@ -48,7 +48,7 @@ class EventAwareTraitTest extends TestCase
     public function subscribeRegistersPublicMethodsOnDispatcher(): void
     {
         $aware = $this->createAware();
-        $subscriber = new class {
+        $subscriber = new class () {
             public int $count = 0;
 
             public function foo(): void
@@ -94,7 +94,7 @@ class EventAwareTraitTest extends TestCase
 
     private function createAware(): object
     {
-        return new class implements DispatcherAwareInterface {
+        return new class () implements DispatcherAwareInterface {
             use EventAwareTrait;
         };
     }

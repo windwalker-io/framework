@@ -16,7 +16,7 @@ trait StreamOutputTrait
     /**
      * Delay every loop for microseconds.
      *
-     * @var int|null
+     * @var  int|null
      */
     protected ?int $delay = null;
 
@@ -151,7 +151,7 @@ trait StreamOutputTrait
     /**
      * Method to get property Delay
      *
-     * @return int|null
+     * @return  int|null
      *
      * @codeCoverageIgnore
      */

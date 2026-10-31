@@ -136,7 +136,7 @@ class DataType
      *
      * @param  string  $type
      *
-     * @return int|string
+     * @return  int|string
      */
     public static function getLength(string $type): int|string|null
     {
@@ -148,7 +148,7 @@ class DataType
      *
      * @param  string  $type
      *
-     * @return mixed
+     * @return  mixed
      */
     public static function getDefaultValue(string $type): mixed
     {

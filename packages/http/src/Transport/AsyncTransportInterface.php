@@ -16,7 +16,7 @@ interface AsyncTransportInterface
     /**
      * sendRequest
      *
-     * @param  RequestInterface        $request
+     * @param  RequestInterface  $request
      *
      * @param  array|TransportOptions  $options
      *

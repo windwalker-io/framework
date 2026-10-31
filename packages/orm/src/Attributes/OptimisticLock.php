@@ -22,7 +22,7 @@ class OptimisticLock implements AttributeInterface, OptimisticLockInterface, Cas
     public EntityMember $member;
 
     /**
-     * @var callable|null
+     * @var  callable|null
      */
     protected mixed $nextHandler;
 

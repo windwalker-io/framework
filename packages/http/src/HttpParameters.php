@@ -41,7 +41,7 @@ class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInte
             return $ret;
         }
 
-        $ret =& $this->getStorage()[$key];
+        $ret = & $this->getStorage()[$key];
 
         return $ret;
     }
@@ -117,7 +117,7 @@ class HttpParameters implements AccessorAccessibleInterface, ArrayAccessibleInte
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {

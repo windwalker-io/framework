@@ -11,6 +11,4 @@ use SplStack;
  *
  * @since  2.0
  */
-class StubStack extends SplStack
-{
-}
+class StubStack extends SplStack {}

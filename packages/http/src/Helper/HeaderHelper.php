@@ -45,7 +45,7 @@ abstract class HeaderHelper
      * @param  string  $name     The name to search.
      * @param  mixed   $default  The default value if not found.
      *
-     * @return string  Found header value.
+     * @return  string  Found header value.
      *
      * @since      3.0
      *

@@ -32,7 +32,7 @@ class DecoratorStream implements StreamInterface
     /**
      * Closes the stream and any underlying resources.
      *
-     * @return void
+     * @return  void
      *
      * @codeCoverageIgnore
      */
@@ -46,7 +46,7 @@ class DecoratorStream implements StreamInterface
      *
      * After the stream has been detached, the stream is in an unusable state.
      *
-     * @return resource|null Underlying PHP stream, if any
+     * @return  resource|null  Underlying PHP stream, if any
      *
      * @codeCoverageIgnore
      */
@@ -58,7 +58,7 @@ class DecoratorStream implements StreamInterface
     /**
      * Get the size of the stream if known.
      *
-     * @return int|null Returns the size in bytes if known, or null if unknown.
+     * @return  int|null  Returns the size in bytes if known, or null if unknown.
      *
      * @codeCoverageIgnore
      */
@@ -70,8 +70,8 @@ class DecoratorStream implements StreamInterface
     /**
      * Returns the current position of the file read/write pointer
      *
-     * @return int Position of the file pointer
-     * @throws \RuntimeException on error.
+     * @return  int                Position of the file pointer
+     * @throws  \RuntimeException  on error.
      *
      * @codeCoverageIgnore
      */
@@ -83,7 +83,7 @@ class DecoratorStream implements StreamInterface
     /**
      * Returns true if the stream is at the end of the stream.
      *
-     * @return bool
+     * @return  bool
      *
      * @codeCoverageIgnore
      */
@@ -95,7 +95,7 @@ class DecoratorStream implements StreamInterface
     /**
      * Returns whether or not the stream is seekable.
      *
-     * @return bool
+     * @return  bool
      *
      * @codeCoverageIgnore
      */
@@ -116,7 +116,7 @@ class DecoratorStream implements StreamInterface
      *                       offset bytes SEEK_CUR: Set position to current location plus offset
      *                       SEEK_END: Set position to end-of-stream plus offset.
      *
-     * @throws \RuntimeException on failure.
+     * @throws  \RuntimeException  on failure.
      *
      * @codeCoverageIgnore
      */
@@ -131,7 +131,7 @@ class DecoratorStream implements StreamInterface
      * If the stream is not seekable, this method will raise an exception;
      * otherwise, it will perform a seek(0).
      *
-     * @throws \RuntimeException on failure.
+     * @throws  \RuntimeException  on failure.
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
@@ -143,7 +143,7 @@ class DecoratorStream implements StreamInterface
     /**
      * Returns whether or not the stream is writable.
      *
-     * @return bool
+     * @return  bool
      *
      * @codeCoverageIgnore
      */
@@ -157,8 +157,8 @@ class DecoratorStream implements StreamInterface
      *
      * @param  string  $string  The string that is to be written.
      *
-     * @return int Returns the number of bytes written to the stream.
-     * @throws \RuntimeException on failure.
+     * @return  int                Returns the number of bytes written to the stream.
+     * @throws  \RuntimeException  on failure.
      *
      * @codeCoverageIgnore
      */
@@ -170,7 +170,7 @@ class DecoratorStream implements StreamInterface
     /**
      * Returns whether or not the stream is readable.
      *
-     * @return bool
+     * @return  bool
      *
      * @codeCoverageIgnore
      */
@@ -186,9 +186,9 @@ class DecoratorStream implements StreamInterface
      *                       them. Fewer than $length bytes may be returned if underlying stream
      *                       call returns fewer bytes.
      *
-     * @return string Returns the data read from the stream, or an empty string
-     *     if no bytes are available.
-     * @throws \RuntimeException if an error occurs.
+     * @return  string             Returns the data read from the stream, or an empty string
+     *                             if no bytes are available.
+     * @throws  \RuntimeException  if an error occurs.
      *
      * @codeCoverageIgnore
      */
@@ -200,9 +200,9 @@ class DecoratorStream implements StreamInterface
     /**
      * Returns the remaining contents in a string
      *
-     * @return string
-     * @throws \RuntimeException if unable to read or an error occurs while
-     *     reading.
+     * @return  string
+     * @throws  \RuntimeException  if unable to read or an error occurs while
+     *                             reading.
      */
     public function getContents(): string
     {
@@ -219,9 +219,9 @@ class DecoratorStream implements StreamInterface
      *
      * @param  string  $key  Specific metadata to retrieve.
      *
-     * @return array|mixed|null Returns an associative array if no key is
-     *     provided. Returns a specific key value if a key is provided and the
-     *     value is found, or null if the key is not found.
+     * @return  array|mixed|null  Returns an associative array if no key is
+     *                            provided. Returns a specific key value if a key is provided and the
+     *                            value is found, or null if the key is not found.
      *
      * @codeCoverageIgnore
      */
@@ -231,7 +231,7 @@ class DecoratorStream implements StreamInterface
     }
 
     /**
-     * @return StreamInterface
+     * @return  StreamInterface
      *
      * @codeCoverageIgnore
      */

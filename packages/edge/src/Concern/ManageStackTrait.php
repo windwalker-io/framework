@@ -16,14 +16,14 @@ trait ManageStackTrait
     /**
      * The stack of in-progress push sections.
      *
-     * @var array
+     * @var  array
      */
     protected array $pushStack = [];
 
     /**
      * Property pushes.
      *
-     * @var array
+     * @var  array
      */
     protected array $pushes = [];
 
@@ -33,7 +33,7 @@ trait ManageStackTrait
      * @param  string  $section
      * @param  string  $content
      *
-     * @return void
+     * @return  void
      */
     public function startPush(string $section, ?string $content = null): void
     {
@@ -49,8 +49,8 @@ trait ManageStackTrait
     /**
      * Stop injecting content into a push section.
      *
-     * @return string
-     * @throws InvalidArgumentException
+     * @return  string
+     * @throws  InvalidArgumentException
      */
     public function stopPush(): string
     {
@@ -71,7 +71,7 @@ trait ManageStackTrait
      * @param  string  $section
      * @param  string  $content
      *
-     * @return void
+     * @return  void
      */
     protected function extendPush(string $section, string $content): void
     {
@@ -92,7 +92,7 @@ trait ManageStackTrait
      * @param  string  $section
      * @param  string  $default
      *
-     * @return string
+     * @return  string
      */
     public function yieldPushContent(string $section, string $default = ''): string
     {

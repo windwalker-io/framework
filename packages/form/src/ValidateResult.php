@@ -23,14 +23,14 @@ class ValidateResult
     protected int $result = self::STATUS_SUCCESS;
 
     /**
-     * @var ?ValidatorInterface
+     * @var  ?ValidatorInterface
      */
     protected ?ValidatorInterface $validator = null;
 
     /**
      * Property field.
      *
-     * @var AbstractField
+     * @var  AbstractField
      */
     protected AbstractField $field;
 
@@ -93,7 +93,7 @@ class ValidateResult
     }
 
     /**
-     * @return ValidatorInterface
+     * @return  ValidatorInterface
      *
      * @codeCoverageIgnore
      */

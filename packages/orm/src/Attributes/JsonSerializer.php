@@ -12,9 +12,7 @@ use Windwalker\ORM\Cast\CastInterface;
 #[\Attribute]
 class JsonSerializer implements JsonSerializerInterface
 {
-    public function __construct(public mixed $handler)
-    {
-    }
+    public function __construct(public mixed $handler) {}
 
     public function serialize(mixed $data): mixed
     {

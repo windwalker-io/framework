@@ -8,7 +8,6 @@ use Windwalker\Database\Test\Manager\AbstractCreatableDatabaseManagerTestCase;
 
 class DatabaseAndSchemaManagerTest extends AbstractCreatableDatabaseManagerTestCase
 {
-
     protected static function createItemsTable(): void
     {
         self::$baseConn->exec('CREATE TABLE IF NOT EXISTS `ww_mgr_items` (`id` int NOT NULL)');

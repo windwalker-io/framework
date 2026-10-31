@@ -77,7 +77,7 @@ class NativeBridge implements BridgeInterface
     /**
      * getId
      *
-     * @return string|null
+     * @return  string|null
      */
     public function getId(): ?string
     {
@@ -89,7 +89,7 @@ class NativeBridge implements BridgeInterface
      *
      * @param  string  $id
      *
-     * @return void
+     * @return  void
      */
     public function setId(string $id): void
     {
@@ -153,7 +153,7 @@ class NativeBridge implements BridgeInterface
      *
      * @param  bool  $unset
      *
-     * @return bool
+     * @return  bool
      */
     public function writeClose(bool $unset = true): bool
     {
@@ -186,7 +186,7 @@ class NativeBridge implements BridgeInterface
     /**
      * getStorage
      *
-     * @return array
+     * @return  array
      */
     public function &getStorage(): mixed
     {

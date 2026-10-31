@@ -9,6 +9,4 @@ use Windwalker\Database\Exception\DatabaseQueryException;
 /**
  * The NestedHandleException class.
  */
-class NestedHandleException extends DatabaseQueryException
-{
-}
+class NestedHandleException extends DatabaseQueryException {}

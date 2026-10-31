@@ -16,16 +16,14 @@ class InvokableComponentVariable
      *
      * @param  Closure  $callable
      */
-    public function __construct(protected Closure $callable)
-    {
-    }
+    public function __construct(protected Closure $callable) {}
 
     /**
      * Dynamically proxy attribute access to the variable.
      *
      * @param  string  $key
      *
-     * @return mixed
+     * @return  mixed
      */
     public function __get(string $key)
     {
@@ -38,7 +36,7 @@ class InvokableComponentVariable
      * @param  string  $method
      * @param  array   $args
      *
-     * @return mixed
+     * @return  mixed
      */
     public function __call(string $method, array $args)
     {
@@ -48,7 +46,7 @@ class InvokableComponentVariable
     /**
      * Resolve the variable.
      *
-     * @return mixed
+     * @return  mixed
      */
     public function __invoke()
     {
@@ -58,7 +56,7 @@ class InvokableComponentVariable
     /**
      * Resolve the variable as a string.
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {

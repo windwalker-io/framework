@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var ComponentAttributes $attributes
+ * @var  ComponentAttributes  $attributes
  */
 
 use Windwalker\Edge\Component\ComponentAttributes;

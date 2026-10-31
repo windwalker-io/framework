@@ -6,7 +6,6 @@ namespace Windwalker\ORM\Test\Entity;
 
 use DateTimeImmutable;
 use Windwalker\Data\Collection;
-use Windwalker\DI\Attributes\Autowire;
 use Windwalker\ORM\Attributes\AutoIncrement;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
@@ -17,7 +16,6 @@ use Windwalker\ORM\Cast\JsonCast;
 use Windwalker\ORM\Event\AfterSaveEvent;
 use Windwalker\ORM\Event\BeforeStoreEvent;
 use Windwalker\ORM\Event\EnergizeEvent;
-use Windwalker\Scalars\StringObject;
 
 /**
  * The Article class.
@@ -102,7 +100,7 @@ class StubArticle
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -122,7 +120,7 @@ class StubArticle
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getImage(): string
     {
@@ -142,7 +140,7 @@ class StubArticle
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getContent(): string
     {
@@ -162,7 +160,7 @@ class StubArticle
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return  DateTimeImmutable|null
      */
     public function getCreated(): ?DateTimeImmutable
     {
@@ -182,7 +180,7 @@ class StubArticle
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getCreatedBy(): int
     {
@@ -202,7 +200,7 @@ class StubArticle
     }
 
     /**
-     * @return array|null
+     * @return  array|null
      */
     public function getParams(): ?array
     {
@@ -222,7 +220,7 @@ class StubArticle
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getCategoryId(): int
     {
@@ -242,7 +240,7 @@ class StubArticle
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -262,7 +260,7 @@ class StubArticle
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {

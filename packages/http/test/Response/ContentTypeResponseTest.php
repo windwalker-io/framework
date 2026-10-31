@@ -89,7 +89,7 @@ class ContentTypeResponseTest extends TestCase
     public function xmlResponseRendersDomDocument(): void
     {
         $xml = new DOMDocument();
-        $xml->loadXML("<root />");
+        $xml->loadXML('<root />');
 
         $child = $xml->createElement('foo', 'bar');
         $child->setAttribute('flower', 'sakura');

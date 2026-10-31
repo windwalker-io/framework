@@ -27,7 +27,7 @@ class HttpClientOptions extends RecordOptions
         public ?string $certpath = null,
         public bool $verifyPeer = true,
         /**
-         * @var Closure(ProgressEvent $event): void|null
+         * @var  Closure(ProgressEvent $event): void|null
          */
         public ?Closure $progress = null,
     ) {

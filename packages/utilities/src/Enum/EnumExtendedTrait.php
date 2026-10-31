@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Enum;
 
-use function Windwalker\arr;
-
 trait EnumExtendedTrait
 {
     public static function preprocessValue(mixed $value): mixed
@@ -60,7 +58,7 @@ trait EnumExtendedTrait
 
     public static function rawValues(): array
     {
-        return array_map(static fn (self $case) => $case->value, self::values());
+        return array_map(static fn(self $case) => $case->value, self::values());
     }
 
     /**
@@ -82,7 +80,7 @@ trait EnumExtendedTrait
      *
      * @psalm-pure
      * @psalm-return list<string>
-     * @return array
+     * @return  array
      */
     public static function names(): array
     {

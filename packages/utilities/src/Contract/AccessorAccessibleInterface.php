@@ -14,7 +14,7 @@ interface AccessorAccessibleInterface
      *
      * @param  string  $key
      *
-     * @return mixed
+     * @return  mixed
      */
     public function &get(mixed $key): mixed;
 
@@ -63,7 +63,7 @@ interface AccessorAccessibleInterface
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array;
 }

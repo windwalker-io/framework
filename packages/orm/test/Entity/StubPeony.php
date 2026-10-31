@@ -34,7 +34,7 @@ class StubPeony implements EntityInterface
     protected int $state = 0;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getId(): int
     {
@@ -42,7 +42,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @param int $id
+     * @param  int  $id
      *
      * @return  static  Return self to support chaining.
      */
@@ -54,7 +54,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -62,7 +62,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return  static  Return self to support chaining.
      */
@@ -74,7 +74,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -82,7 +82,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @param int $state
+     * @param  int  $state
      *
      * @return  static  Return self to support chaining.
      */
@@ -94,7 +94,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -102,7 +102,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @param string $no
+     * @param  string  $no
      *
      * @return  static  Return self to support chaining.
      */
@@ -114,7 +114,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getLocationId(): int
     {
@@ -122,7 +122,7 @@ class StubPeony implements EntityInterface
     }
 
     /**
-     * @param int $locationId
+     * @param  int  $locationId
      *
      * @return  static  Return self to support chaining.
      */

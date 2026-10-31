@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Windwalker\Filesystem;
 
 use InvalidArgumentException;
-use JetBrains\PhpStorm\ArrayShape;
 use UnexpectedValueException;
 use Windwalker\Filesystem\Exception\FilesystemException;
-use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Str;
 
 /**
@@ -118,7 +116,7 @@ class Path
      *
      * @return  string  The cleaned path.
      *
-     * @throws  UnexpectedValueException If $path is not a string.
+     * @throws  UnexpectedValueException  If $path is not a string.
      * @throws  InvalidArgumentException
      * @since   2.0
      */
@@ -153,7 +151,7 @@ class Path
         if (($ds === '\\') && ($path[0] === '\\') && ($path[1] === '\\')) {
             // Remove double slashes and backslashes and convert all slashes and backslashes to DIRECTORY_SEPARATOR
             // If dealing with a UNC path don't forget to prepend the path with a backslash.
-            $path = "\\" . preg_replace('#[/\\\\]+#', $ds, $path);
+            $path = '\\' . preg_replace('#[/\\\\]+#', $ds, $path);
         } else {
             $path = (string) preg_replace('#[/\\\\]+#', $ds, $path);
         }
@@ -240,7 +238,7 @@ class Path
      * @param  int     $sensitive  Sensitive file name case.
      *
      * @return  bool
-     * @throws UnexpectedValueException
+     * @throws  UnexpectedValueException
      */
     public static function exists(string $path, int $sensitive = self::CASE_OS_DEFAULT): bool
     {
@@ -441,8 +439,8 @@ class Path
      *
      * @param  string  $path  A path string.
      *
-     * @return bool Returns true if the path is absolute, false if it is
-     *              relative or empty.
+     * @return  bool  Returns true if the path is absolute, false if it is
+     *                relative or empty.
      */
     public static function isAbsolute(string $path): bool
     {
@@ -488,8 +486,8 @@ class Path
      *
      * @param  string  $path  A path string.
      *
-     * @return bool Returns true if the path is relative or empty, false if
-     *              it is absolute.
+     * @return  bool  Returns true if the path is relative or empty, false if
+     *                it is absolute.
      */
     public static function isRelative(string $path): bool
     {

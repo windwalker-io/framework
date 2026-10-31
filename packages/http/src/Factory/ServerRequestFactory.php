@@ -30,7 +30,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * Function name to get apache request headers. This property is for test use.
      *
-     * @var callable
+     * @var  callable
      */
     public static $apacheRequestHeaders = 'apache_request_headers';
 
@@ -59,9 +59,9 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * @param  array                 $cookies     The $_COOKIE superglobal variable.
      * @param  array                 $files       The $_FILES superglobal variable.
      *
-     * @return ServerRequestInterface
+     * @return  ServerRequestInterface
      *
-     * @throws JsonException
+     * @throws  JsonException
      */
     public static function createFromGlobals(
         array|HttpParameters $server = [],
@@ -125,7 +125,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * @param  array                 $files
      *
      * @return  ServerRequestInterface
-     * @throws JsonException
+     * @throws  JsonException
      */
     public static function createFromUri(
         string|UriInterface $uri,
@@ -158,7 +158,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @param  array|HttpParameters  $server  The $_SERVER superglobal variable.
      *
-     * @return HttpParameters
+     * @return  HttpParameters
      */
     public static function prepareServers(array|HttpParameters $server): HttpParameters
     {
@@ -194,7 +194,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @return  UploadedFileInterface[]
      *
-     * @throws  InvalidArgumentException for unrecognized values
+     * @throws  InvalidArgumentException  for unrecognized values
      */
     public static function prepareFiles(array $files): array
     {
@@ -232,7 +232,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @param  array|HttpParameters  $server  The $_SERVER superglobal variable.
      *
-     * @return HttpParameters
+     * @return  HttpParameters
      */
     public static function prepareHeaders(array|HttpParameters $server): HttpParameters
     {
@@ -405,7 +405,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @param  array|HttpParameters  $server
      *
-     * @return string
+     * @return  string
      */
     public static function getRequestUri(array|HttpParameters $server): string
     {

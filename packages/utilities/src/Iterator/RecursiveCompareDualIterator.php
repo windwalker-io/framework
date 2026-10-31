@@ -17,7 +17,7 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
      * Used to keep end of recursion equality. That is en leaving a nesting
      * level we need to check whether both child iterators are at their end.
      *
-     * @var bool
+     * @var  bool
      */
     protected bool $equal = false;
 
@@ -36,7 +36,7 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
     /**
      * Rewind iteration and comparison process. Starting with $equal = true.
      *
-     * @return void
+     * @return  void
      */
     public function rewind(): void
     {
@@ -48,7 +48,7 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
     /**
      * Calculate $equal
      *
-     * @return void
+     * @return  void
      * @see $equal
      *
      */
@@ -62,8 +62,8 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
     /**
      * Are Identical.
      *
-     * @return boolean Whether both inner iterators are valid and have identical
-     *                 current and key values or both are non valid.
+     * @return  boolean  Whether both inner iterators are valid and have identical
+     *                   current and key values or both are non valid.
      */
     public function areIdentical(): bool
     {
@@ -73,8 +73,8 @@ class RecursiveCompareDualIterator extends RecursiveIteratorIterator
     /**
      * Are equal.
      *
-     * @return boolean Whether both inner iterators are valid and have equal current
-     *                 and key values or both are non valid.
+     * @return  boolean  Whether both inner iterators are valid and have equal current
+     *                   and key values or both are non valid.
      */
     public function areEqual(): bool
     {

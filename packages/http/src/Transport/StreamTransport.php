@@ -35,13 +35,13 @@ class StreamTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
      * @param  array|TransportOptions  $options
      *
      * @return  HttpClientResponse
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.1
      */
     protected function doRequest(RequestInterface $request, array|TransportOptions $options = []): HttpClientResponse
@@ -85,7 +85,7 @@ class StreamTransport extends AbstractTransport
      *
      * @return  resource|false
      *
-     * @throws Exception
+     * @throws  Exception
      */
     public function createConnection(RequestInterface $request, array|StreamOptions $options = []): mixed
     {
@@ -206,7 +206,7 @@ class StreamTransport extends AbstractTransport
      * @param  StreamOptions     $options
      *
      * @return  Stream
-     * @throws Exception
+     * @throws  Exception
      */
     protected function createStream(RequestInterface $request, StreamOptions $options): Stream
     {
@@ -224,11 +224,11 @@ class StreamTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param  array                   $headers  The response headers as an array.
-     * @param  string                  $body     The response body as a string.
+     * @param  array                   $headers   The response headers as an array.
+     * @param  string                  $body      The response body as a string.
      * @param  ResponseInterface|null  $response
      *
-     * @return ResponseInterface
+     * @return  ResponseInterface
      *
      * @psalm-template R
      * @psalm-param R                  $response

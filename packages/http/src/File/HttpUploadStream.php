@@ -36,7 +36,7 @@ class HttpUploadStream implements HttpUploadFileInterface
     }
 
     /**
-     * @return StreamInterface
+     * @return  StreamInterface
      */
     public function getStream(): StreamInterface
     {
@@ -56,7 +56,7 @@ class HttpUploadStream implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -80,7 +80,7 @@ class HttpUploadStream implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */

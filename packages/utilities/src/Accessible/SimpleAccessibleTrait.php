@@ -31,7 +31,7 @@ trait SimpleAccessibleTrait
             return $ret;
         }
 
-        $ret =& $this->getStorage()[$key];
+        $ret = & $this->getStorage()[$key];
 
         return $ret;
     }
@@ -101,7 +101,7 @@ trait SimpleAccessibleTrait
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
@@ -117,7 +117,7 @@ trait SimpleAccessibleTrait
     /**
      * Convert the object into something JSON serializable.
      *
-     * @return array
+     * @return  array
      */
     public function jsonSerialize(): array
     {
@@ -135,7 +135,7 @@ trait SimpleAccessibleTrait
     }
 
     /**
-     * @return array|null
+     * @return  array|null
      */
     public function &getStorage(): ?array
     {

@@ -126,7 +126,7 @@ class ArrayHandler extends AbstractHandler
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getSessions(): array
     {

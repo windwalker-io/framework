@@ -72,7 +72,7 @@ trait ManageWrapperTrait
     }
 
     /**
-     * @return HTMLElement
+     * @return  HTMLElement
      */
     public function getWrapper(): HTMLElement
     {
@@ -98,7 +98,7 @@ trait ManageWrapperTrait
      *
      * @param  string  $name
      *
-     * @return string|null
+     * @return  string|null
      */
     public function getWrapperAttribute(string $name): ?string
     {
@@ -121,7 +121,7 @@ trait ManageWrapperTrait
      * @param  mixed   $value
      *
      * @return  static
-     * @throws \DOMException
+     * @throws  \DOMException
      */
     public function setWrapperAttribute(string $name, string $value): static
     {
@@ -149,7 +149,7 @@ trait ManageWrapperTrait
      * @param  mixed   $value
      *
      * @return  static
-     * @throws \DOMException
+     * @throws  \DOMException
      */
     public function wrapperAttr(string $name, mixed $value = null): static
     {

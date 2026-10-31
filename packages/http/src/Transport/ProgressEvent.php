@@ -27,12 +27,12 @@ class ProgressEvent
     }
 
     public function __construct(
-        readonly public CurlHandle $handle,
-        readonly public float $downloadTotal,
-        readonly public float $downloaded,
-        readonly public float $uploadTotal,
-        readonly public float $uploaded,
-        readonly public array $info = [],
+        public readonly CurlHandle $handle,
+        public readonly float $downloadTotal,
+        public readonly float $downloaded,
+        public readonly float $uploadTotal,
+        public readonly float $uploaded,
+        public readonly array $info = [],
     ) {}
 
     public static function wrapFileSize(float $size): FileSize

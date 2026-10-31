@@ -23,21 +23,21 @@ interface ConnectionInterface
     /**
      * Create connection
      *
-     * @return mixed
+     * @return  mixed
      */
     public function connect(): mixed;
 
     /**
      * Reconnect connection
      *
-     * @return mixed
+     * @return  mixed
      */
     public function reconnect(): mixed;
 
     /**
      * Close connection
      *
-     * @return mixed
+     * @return  mixed
      */
     public function disconnect(): mixed;
 
@@ -51,7 +51,7 @@ interface ConnectionInterface
     /**
      * Get connection id
      *
-     * @return int
+     * @return  int
      */
     public function getId(): int;
 
@@ -65,7 +65,7 @@ interface ConnectionInterface
     /**
      * Get last time
      *
-     * @return int
+     * @return  int
      */
     public function getLastTime(): int;
 

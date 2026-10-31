@@ -90,10 +90,8 @@ class ListenToTest extends TestCase
     #[Test]
     public function eventSubscriberDetectsAttributedClasses(): void
     {
-        $subscriber = new #[EventSubscriber] class {
-        };
-        $plain = new class {
-        };
+        $subscriber = new #[EventSubscriber] class () {};
+        $plain = new class () {};
 
         self::assertTrue(EventSubscriber::isSubscriber($subscriber));
         self::assertTrue(EventSubscriber::isSubscriber(new \ReflectionClass($subscriber)));

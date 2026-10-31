@@ -16,7 +16,7 @@ class MysqliConnection extends AbstractConnection
     protected static string $name = 'mysqli';
 
     /**
-     * @var mysqli
+     * @var  mysqli
      */
     protected mixed $connection = null;
 
@@ -97,7 +97,7 @@ class MysqliConnection extends AbstractConnection
     }
 
     /**
-     * @return mysqli
+     * @return  mysqli
      */
     public function get(): ?mysqli
     {

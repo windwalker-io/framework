@@ -24,7 +24,7 @@ class CompareHelper
      *
      * @return  bool|int
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public static function compare(mixed $a, mixed $b, ?string $operator = null, bool $strict = false): int|bool
     {

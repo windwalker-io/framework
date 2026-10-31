@@ -32,7 +32,7 @@ trait AccessibleTrait
      *
      * @param  mixed  $key
      *
-     * @return bool
+     * @return  bool
      */
     public function offsetExists(mixed $key): bool
     {
@@ -44,7 +44,7 @@ trait AccessibleTrait
      *
      * @param  mixed  $key
      *
-     * @return mixed|T
+     * @return  mixed|T
      */
     public function &offsetGet(mixed $key): mixed
     {
@@ -57,7 +57,7 @@ trait AccessibleTrait
      * @param  mixed  $key
      * @param  mixed  $value
      *
-     * @return void
+     * @return  void
      */
     public function offsetSet(mixed $key, mixed $value): void
     {
@@ -75,7 +75,7 @@ trait AccessibleTrait
      *
      * @param  mixed  $key
      *
-     * @return void
+     * @return  void
      */
     public function offsetUnset(mixed $key): void
     {
@@ -87,7 +87,7 @@ trait AccessibleTrait
      *
      * @param  string  $key
      *
-     * @return mixed|T
+     * @return  mixed|T
      */
     public function &__get(mixed $key): mixed
     {
@@ -100,7 +100,7 @@ trait AccessibleTrait
      * @param  string  $key
      * @param  mixed   $value
      *
-     * @return void
+     * @return  void
      */
     public function __set(mixed $key, mixed $value)
     {
@@ -112,7 +112,7 @@ trait AccessibleTrait
      *
      * @param  string  $key
      *
-     * @return bool
+     * @return  bool
      */
     public function __isset(mixed $key): bool
     {
@@ -124,7 +124,7 @@ trait AccessibleTrait
      *
      * @param  string  $key
      *
-     * @return void
+     * @return  void
      */
     public function __unset(mixed $key)
     {

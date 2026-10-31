@@ -14,8 +14,6 @@ use Windwalker\ORM\NestedSetMapper;
 use Windwalker\ORM\Test\Entity\StubMTNestedSet;
 use Windwalker\ORM\Test\Entity\StubNestedSet;
 
-use function Windwalker\uid;
-
 /**
  * The NestedSetMapperTest class.
  */

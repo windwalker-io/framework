@@ -41,7 +41,7 @@ class CompareWith extends AbstractFilter
      * @param  string  $operator
      * @param  bool    $strict
      *
-     * @throws DomainException
+     * @throws  DomainException
      */
     public function __construct($compareA = null, ?string $operator = null, bool $strict = false)
     {

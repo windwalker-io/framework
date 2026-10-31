@@ -13,9 +13,7 @@ use Windwalker\Utilities\StrNormalize;
  */
 class DOMStringMap implements \JsonSerializable
 {
-    public function __construct(protected DOMElement|HTMLElement $element)
-    {
-    }
+    public function __construct(protected DOMElement|HTMLElement $element) {}
 
     /**
      * Method to get property Html

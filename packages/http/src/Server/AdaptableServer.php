@@ -22,7 +22,7 @@ abstract class AdaptableServer extends AbstractServer
     }
 
     /**
-     * @return ServerInterface
+     * @return  ServerInterface
      * @codeCoverageIgnore
      */
     public function getAdapter(): ServerInterface

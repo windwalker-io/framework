@@ -52,7 +52,7 @@ abstract class AbstractContentTypeResponse extends Response
      * @param  string  $content
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function withContent(string $content): static
     {
@@ -85,7 +85,7 @@ abstract class AbstractContentTypeResponse extends Response
      * @param  array   $headers      The headers variable.
      * @param  string  $contentType  The content-type.
      *
-     * @return array
+     * @return  array
      */
     protected function addContentTypeToHeader(array $headers, string $contentType): array
     {

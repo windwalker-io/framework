@@ -20,7 +20,7 @@ class Assert
     public string $caller;
 
     /**
-     * @var callable
+     * @var  callable
      */
     protected $exceptionHandler;
 
@@ -50,9 +50,9 @@ class Assert
     /**
      * @template T of mixed
      *
-     * @param  T  $assertion
+     * @param  T                      $assertion
      * @param  string|MessageClosure  $message
-     * @param  mixed  $value
+     * @param  mixed                  $value
      *
      * @return  T
      */
@@ -74,9 +74,9 @@ class Assert
     /**
      * @template T of mixed
      *
-     * @param  T  $assertion
+     * @param  T                      $assertion
      * @param  string|MessageClosure  $message
-     * @param  mixed  $value
+     * @param  mixed                  $value
      *
      * @return  T
      */
@@ -135,7 +135,7 @@ class Assert
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws  \ReflectionException
      */
     public static function describeValue(mixed $value, ?int $truncate = 50): string
     {

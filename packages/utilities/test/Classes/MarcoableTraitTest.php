@@ -102,7 +102,7 @@ class MarcoableTraitTest extends TestCase
     #[Before]
     protected function registerFooMacro(): void
     {
-        $this->instance = new class {
+        $this->instance = new class () {
             use MarcoableTrait;
         };
 

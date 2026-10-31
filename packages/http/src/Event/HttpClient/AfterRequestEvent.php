@@ -23,7 +23,7 @@ class AfterRequestEvent extends BaseEvent
     }
 
     /**
-     * @return RequestInterface
+     * @return  RequestInterface
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -49,7 +49,7 @@ class AfterRequestEvent extends BaseEvent
     }
 
     /**
-     * @return HttpClient
+     * @return  HttpClient
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore
@@ -75,7 +75,7 @@ class AfterRequestEvent extends BaseEvent
     }
 
     /**
-     * @return ResponseInterface
+     * @return  ResponseInterface
      *
      * @deprecated  Use property instead.
      * @codeCoverageIgnore

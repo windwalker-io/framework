@@ -142,7 +142,7 @@ class CompositeRenderer implements RendererInterface, TemplateFactoryInterface, 
      *
      * @param  string  $layout
      *
-     * @return \SplFileInfo|null
+     * @return  \SplFileInfo|null
      */
     public function findFile(string $layout): ?\SplFileInfo
     {

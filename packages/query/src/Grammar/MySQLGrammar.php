@@ -19,17 +19,17 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
     use JsonGrammarTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = 'MySQL';
 
     /**
-     * @var array
+     * @var  array
      */
     public static array $nameQuote = ['`', '`'];
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $nullDate = '1000-01-01 00:00:00';
 

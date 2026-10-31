@@ -18,7 +18,7 @@ class AlterClause implements ClauseInterface
     protected Clause $clause;
 
     /**
-     * @var Query
+     * @var  Query
      */
     protected Query $query;
 
@@ -159,7 +159,7 @@ class AlterClause implements ClauseInterface
     /**
      * __toString
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {
@@ -167,7 +167,7 @@ class AlterClause implements ClauseInterface
     }
 
     /**
-     * @return Clause
+     * @return  Clause
      *
      * @codeCoverageIgnore
      */

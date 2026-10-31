@@ -16,7 +16,7 @@ trait PathsAwareTrait
     /**
      * Property paths.
      *
-     * @var PriorityQueue
+     * @var  PriorityQueue
      */
     protected PriorityQueue $paths;
 
@@ -35,7 +35,7 @@ trait PathsAwareTrait
      *
      * @param  array|string|SplPriorityQueue  $paths
      *
-     * @return static Return self to support chaining.
+     * @return  static  Return self to support chaining.
      */
     public function setPaths(array|string|SplPriorityQueue $paths): static
     {

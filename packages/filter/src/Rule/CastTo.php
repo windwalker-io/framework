@@ -45,7 +45,7 @@ class CastTo extends AbstractFilter
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getType(): string
     {
@@ -65,7 +65,7 @@ class CastTo extends AbstractFilter
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isStrict(): bool
     {

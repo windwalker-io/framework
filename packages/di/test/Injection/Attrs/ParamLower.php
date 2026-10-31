@@ -7,7 +7,6 @@ namespace Windwalker\DI\Test\Injection\Attrs;
 use Attribute;
 use Windwalker\DI\Attributes\AttributeHandler;
 use Windwalker\DI\Attributes\ContainerAttributeInterface;
-use Windwalker\DI\Attributes\ParameterDecoratorInterface;
 
 /**
  * The ParamLower class.

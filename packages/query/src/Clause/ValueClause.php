@@ -19,12 +19,12 @@ class ValueClause implements ClauseInterface
     public static ?\Closure $idHandler = null;
 
     /**
-     * @var string|mixed|Query
+     * @var  string|mixed|Query
      */
     protected mixed $value;
 
     /**
-     * @var string|null
+     * @var  string|null
      */
     public protected(set) ?string $prefix = 'wqp__';
 
@@ -96,7 +96,7 @@ class ValueClause implements ClauseInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isLinked(): bool
     {

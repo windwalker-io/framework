@@ -34,7 +34,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * @param  array|TransportOptions  $options
      *
-     * @return CurlOptions
+     * @return  CurlOptions
      */
     public function prepareRequestOptions(array|TransportOptions $options): CurlOptions
     {
@@ -44,7 +44,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
      * @param  array|TransportOptions  $options
      *
@@ -86,9 +86,9 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
     /**
      * Method to get a response object from a server response.
      *
-     * @param  string  $content   The complete server response, including headers
-     *                            as a string if the response has no errors.
-     * @param  array   $info      The cURL request information.
+     * @param  string  $content  The complete server response, including headers
+     *                           as a string if the response has no errors.
+     * @param  array   $info     The cURL request information.
      *
      * @return  Response|ResponseInterface
      *

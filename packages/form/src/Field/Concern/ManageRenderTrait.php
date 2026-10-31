@@ -7,6 +7,4 @@ namespace Windwalker\Form\Field\Concern;
 /**
  * Trait ManageRenderTrait
  */
-trait ManageRenderTrait
-{
-}
+trait ManageRenderTrait {}

@@ -61,57 +61,57 @@ use function Windwalker\value;
  * @psalm-type QueryCallback = \Closure(Query): mixed
  * @psalm-type QueryCallable = callable(Query): mixed
  *
- * @method string|null getType()
- * @method Clause|null getSelect()
- * @method Clause|null getDelete()
- * @method Clause|null getFrom()
- * @method Clause|null getJoin()
- * @method Clause|null getUnion()
- * @method Clause|null getWhere()
- * @method Clause|null getHaving()
- * @method Clause|null getOrder()
- * @method Clause|null getGroup()
- * @method int|null getLimit()
- * @method int|null getOffset()
- * @method Clause|null getInsert()
- * @method Clause|null getUpdate()
- * @method Clause|null getColumns()
- * @method Clause|null getValues()
- * @method Clause|null getSet()
- * @method Query[]     getSubQueries()
- * @method string|null getAlias()
- * @method Clause|null getPrefix()
- * @method Clause|null getSuffix()
- * @method string|null getSql()
- * @method bool getIncrementField()
- * @method $this leftJoin($table, ?string $alias = null, ...$on)
- * @method $this rightJoin($table, ?string $alias = null, ...$on)
- * @method $this outerJoin($table, ?string $alias = null, ...$on)
- * @method $this innerJoin($table, ?string $alias = null, ...$on)
- * @method $this leftJoinLateral($table, ?string $alias = null, ...$on)
- * @method $this innerJoinLateral($table, ?string $alias = null, ...$on)
- * @method $this whereIn($column, iterable $values)
- * @method $this whereNotIn($column, iterable $values)
- * @method $this whereBetween($column, $start, $end)
- * @method $this whereNotBetween($column, $start, $end)
- * @method $this whereLike($column, string $search)
- * @method $this whereNotLike($column, string $search)
- * @method $this havingIn($column, iterable $values)
- * @method $this havingNotIn($column, iterable $values)
- * @method $this havingBetween($column, $start, $end)
- * @method $this havingNotBetween($column, $start, $end)
- * @method $this havingLike($column, string $search)
- * @method $this havingNotLike($column, string $search)
- * @method string|array qn($text)
- * @method string|array q($text)
+ * @method  string|null   getType()
+ * @method  Clause|null   getSelect()
+ * @method  Clause|null   getDelete()
+ * @method  Clause|null   getFrom()
+ * @method  Clause|null   getJoin()
+ * @method  Clause|null   getUnion()
+ * @method  Clause|null   getWhere()
+ * @method  Clause|null   getHaving()
+ * @method  Clause|null   getOrder()
+ * @method  Clause|null   getGroup()
+ * @method  int|null      getLimit()
+ * @method  int|null      getOffset()
+ * @method  Clause|null   getInsert()
+ * @method  Clause|null   getUpdate()
+ * @method  Clause|null   getColumns()
+ * @method  Clause|null   getValues()
+ * @method  Clause|null   getSet()
+ * @method  Query[]       getSubQueries()
+ * @method  string|null   getAlias()
+ * @method  Clause|null   getPrefix()
+ * @method  Clause|null   getSuffix()
+ * @method  string|null   getSql()
+ * @method  bool          getIncrementField()
+ * @method  $this         leftJoin($table, ?string $alias = null, ...$on)
+ * @method  $this         rightJoin($table, ?string $alias = null, ...$on)
+ * @method  $this         outerJoin($table, ?string $alias = null, ...$on)
+ * @method  $this         innerJoin($table, ?string $alias = null, ...$on)
+ * @method  $this         leftJoinLateral($table, ?string $alias = null, ...$on)
+ * @method  $this         innerJoinLateral($table, ?string $alias = null, ...$on)
+ * @method  $this         whereIn($column, iterable $values)
+ * @method  $this         whereNotIn($column, iterable $values)
+ * @method  $this         whereBetween($column, $start, $end)
+ * @method  $this         whereNotBetween($column, $start, $end)
+ * @method  $this         whereLike($column, string $search)
+ * @method  $this         whereNotLike($column, string $search)
+ * @method  $this         havingIn($column, iterable $values)
+ * @method  $this         havingNotIn($column, iterable $values)
+ * @method  $this         havingBetween($column, $start, $end)
+ * @method  $this         havingNotBetween($column, $start, $end)
+ * @method  $this         havingLike($column, string $search)
+ * @method  $this         havingNotLike($column, string $search)
+ * @method  string|array  qn($text)
+ * @method  string|array  q($text)
  *
  * @see AbstractStatement
- * @method Collection|object|null get(?string $class = null, array $args = [])
- * @method Collection|Collection[]|object[] all(?string $class = null, array $args = [])
- * @method Collection loadColumn(int|string $offset = 0)
- * @method mixed result(bool $throwsIfNotFound = false)
- * @method int count()
- * @method StatementInterface execute(?array $params = null)
+ * @method  Collection|object|null            get(?string $class = null, array $args = [])
+ * @method  Collection|Collection[]|object[]  all(?string $class = null, array $args = [])
+ * @method  Collection                        loadColumn(int|string $offset = 0)
+ * @method  mixed                             result(bool $throwsIfNotFound = false)
+ * @method  int                               count()
+ * @method  StatementInterface                execute(?array $params = null)
  */
 class Query implements QueryInterface, BindableInterface, IteratorAggregate
 {
@@ -229,7 +229,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  string|null  $alias
      * @param  bool         $isColumn
      *
-     * @return static
+     * @return  static
      */
     public function selectAs(mixed $column, ?string $alias = null, bool $isColumn = true): static
     {
@@ -277,7 +277,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * from
      *
      * @param  string|array|Query|QueryCallback  $tables
-     * @param  string|null         $alias
+     * @param  string|null                       $alias
      *
      * @return  static
      */
@@ -310,10 +310,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @param  string                        $type
+     * @param  string                                      $type
      * @param  string|Query|ClauseInterface|QueryCallback  $table
-     * @param  string|null                   $alias
-     * @param  array                         $on
+     * @param  string|null                                 $alias
+     * @param  array                                       $on
      *
      * @return  static
      */
@@ -323,10 +323,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @param  string                        $type
+     * @param  string                                      $type
      * @param  string|Query|ClauseInterface|QueryCallback  $table
-     * @param  string|null                   $alias
-     * @param  array                         $on
+     * @param  string|null                                 $alias
+     * @param  array                                       $on
      *
      * @return  static
      */
@@ -488,7 +488,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  mixed   $query  The Query object or string to union.
      * @param  string  $type   The union type, can be `DISTINCT` or `ALL`, default is empty.
      *
-     * @return  static    The Query object on success or boolean false on failure.
+     * @return  static  The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
@@ -538,7 +538,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @param  mixed  $query  The Query object or string to union.
      *
-     * @return  static   The Query object on success or boolean false on failure.
+     * @return  static  The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
@@ -830,8 +830,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
                 ArgumentsAssert::assert(
                     $this->values instanceof self,
-                    'You must set sub query as values to {caller} since current mode is ' .
-                    'INSERT ... SELECT ..., %s given',
+                    'You must set sub query as values to {caller} since current mode is '
+                    . 'INSERT ... SELECT ..., %s given',
                     $values
                 );
 
@@ -849,8 +849,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
                 ArgumentsAssert::assert(
                     is_iterable($values),
-                    'Please set every value as array or iterator, ' .
-                    'example: value(array, array, array), {value} given.',
+                    'Please set every value as array or iterator, '
+                    . 'example: value(array, array, array), {value} given.',
                     $values
                 );
 
@@ -1018,7 +1018,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @param  mixed|WrapperInterface  $value
      *
-     * @return string
+     * @return  string
      */
     public function quote(mixed $value): mixed
     {
@@ -1074,7 +1074,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  string|Stringable  $name
      * @param  int                $flags
      *
-     * @return mixed
+     * @return  mixed
      */
     public function quoteName(string|Stringable $name, int $flags = 0): string|Clause
     {
@@ -1538,7 +1538,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  bool           $format
      * @param  bool           $asString
      *
-     * @return mixed|static
+     * @return  mixed|static
      */
     public function debug(bool|\Closure $pre = false, bool $format = true, bool $asString = false): mixed
     {
@@ -1709,8 +1709,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @param  string|null          $class
-     * @param  array                $args
+     * @param  string|null  $class
+     * @param  array        $args
      *
      * @return  object|Collection
      *
@@ -1770,7 +1770,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @param  string|array  $clauses  Optionally, the name of the clause to clear, or nothing to clear the whole query.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return  static  Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1940,7 +1940,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      *
      * @codeCoverageIgnore
      */

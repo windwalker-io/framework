@@ -19,7 +19,6 @@ use Windwalker\Query\Test\Mock\MockEscaper;
 use Windwalker\Test\Traits\QueryTestTrait;
 use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
-
 use Windwalker\Utilities\Serial;
 
 use function Windwalker\Query\expr;
@@ -35,7 +34,7 @@ class QueryTest extends TestCase
     use QueryTestTrait;
 
     /**
-     * @var Query
+     * @var  Query
      */
     protected Query $instance;
 
@@ -1657,8 +1656,8 @@ SQL
     {
         $result = $this->instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
 
-        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
-            ' WHERE ' . $this->instance->quoteName('id') . ' = 10';
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar')
+            . ' WHERE ' . $this->instance->quoteName('id') . ' = 10';
 
         $this->assertEquals($sql, $result);
 
@@ -1670,10 +1669,10 @@ SQL
             'nouse'
         );
 
-        $sql = 'SELECT ' . $this->instance->quoteName('id') . ' FROM ' . $this->instance->quoteName('#__foo') .
-            ' WHERE ' . $this->instance->quoteName('date') .
-            ' = ' . $this->instance->getExpression()->currentTimestamp() .
-            ' OR ' . $this->instance->quoteName('date') . ' = ' . $this->instance->quote($this->instance->nullDate());
+        $sql = 'SELECT ' . $this->instance->quoteName('id') . ' FROM ' . $this->instance->quoteName('#__foo')
+            . ' WHERE ' . $this->instance->quoteName('date')
+            . ' = ' . $this->instance->getExpression()->currentTimestamp()
+            . ' OR ' . $this->instance->quoteName('date') . ' = ' . $this->instance->quote($this->instance->nullDate());
 
         $this->assertEquals($sql, $result);
     }
@@ -1689,8 +1688,8 @@ SQL
             [10, 2, 3, 4]
         );
 
-        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
-            ' WHERE ' . $this->instance->quoteName('id') . ' IN(10, 2, 3, 4)';
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar')
+            . ' WHERE ' . $this->instance->quoteName('id') . ' IN(10, 2, 3, 4)';
 
         $this->assertEquals($sql, $result);
 
@@ -1702,8 +1701,8 @@ SQL
             ['foo', 'bar', 'yoo']
         );
 
-        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar') .
-            ' WHERE ' . $this->instance->quoteName('type') . " IN('foo', 'bar', 'yoo')";
+        $sql = 'SELECT ' . $this->instance->quoteName('foo') . ' FROM ' . $this->instance->quoteName('#__bar')
+            . ' WHERE ' . $this->instance->quoteName('type') . " IN('foo', 'bar', 'yoo')";
 
         $this->assertEquals($sql, $result);
     }
@@ -1743,7 +1742,7 @@ SQL
         self::assertEquals("'These are Simon\'s items'", $s);
 
         $q = new Query(
-            $obj = new class {
+            $obj = new class () {
                 public function escape(string $value): string
                 {
                     return addslashes($value);
@@ -1773,7 +1772,7 @@ SQL
         self::assertEquals("These are Simon\'s items", $s);
 
         $q = new Query(
-            $escaper = new class {
+            $escaper = new class () {
                 public function escape(string $value): string
                 {
                     return addslashes($value);
@@ -1846,7 +1845,7 @@ SQL
     /**
      * Method to test clear().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function clearResetsAllClauses(): void
@@ -1864,9 +1863,9 @@ SQL
     /**
      * Method to test clear().
      *
-     * @return void
+     * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     #[Test]
     public function clearClauseKeepsOtherClauses()
@@ -1917,9 +1916,9 @@ SQL
     /**
      * Method to test clear().
      *
-     * @return void
+     * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     #[Test]
     public function clearTypeResetsTypeAndKeepsClauses()
@@ -2025,6 +2024,6 @@ SQL
 
         Serial::reset('query.test');
 
-        ValueClause::$idHandler = fn () => Serial::get('query.test');
+        ValueClause::$idHandler = fn() => Serial::get('query.test');
     }
 }

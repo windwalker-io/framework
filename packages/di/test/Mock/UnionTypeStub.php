@@ -16,7 +16,5 @@ class UnionTypeStub
     /**
      * UnionTypeStub constructor.
      */
-    public function __construct(public NonExistsClass|ArrayObject|ArrayIterator $iter)
-    {
-    }
+    public function __construct(public NonExistsClass|ArrayObject|ArrayIterator $iter) {}
 }

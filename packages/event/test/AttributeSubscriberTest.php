@@ -161,7 +161,7 @@ class AttributeSubscriberTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public int $count = 0;
 
             public string $flower = '';
@@ -202,7 +202,7 @@ class AttributeSubscriberTest extends TestCase
         return new
         #[EventSubscriber]
         // phpcs:enable
-        class {
+        class () {
             public $count = 0;
 
             #[ListenTo('foo', 500, true)]

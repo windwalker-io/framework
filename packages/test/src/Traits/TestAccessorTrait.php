@@ -20,7 +20,7 @@ trait TestAccessorTrait
      *
      * @return  mixed
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function getValue(object $obj, string $name): mixed
     {
@@ -36,7 +36,7 @@ trait TestAccessorTrait
      *
      * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function setValue(object $obj, string $name, mixed $value): void
     {
@@ -52,7 +52,7 @@ trait TestAccessorTrait
      *
      * @return  mixed
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function invoke(object $obj, string $method, ...$args): mixed
     {

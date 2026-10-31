@@ -11,31 +11,31 @@ use BadMethodCallException;
  * Wraps the phputf8 library
  * All functions assume the validity of utf-8 strings.
  *
- * @method  static int|bool strpos(string $str, string $search, int $offset = 0, string $encoding = null)
- * @method  static int|bool strrpos(string $str, string $search, int $offset = 0, string $encoding = null)
- * @method  static string substr(string $str, $offset, int $length = null, string $encoding = null)
- * @method  static string strtolower(string $str, string $encoding = null)
- * @method  static string strtoupper(string $str, string $encoding = null)
- * @method  static int    strlen(string $str, string $encoding = null)
- * @method  static string stristr(string $str, string $search, string $encoding = null)
- * @method  static mixed  stripos(string $haystack, string $needle, int $offset = 0, string $encoding = null)
- * @method  static string strrchr(string $haystack, string $needle, $part = false, string $encoding = null)
- * @method  static string strrichr(string $haystack, string $needle, $part = false, string $encoding = null)
- * @method  static int    strripos(string $haystack, string $needle, int $offset = 0, string $encoding = null)
- * @method  static string strstr(string $haystack, string $needle, $part = false, string $encoding = null)
- * @method  static string chr(string $code, string $encoding = null)
- * @method  static string ord(string $s, string $encoding = null)
- * @method  static string parseStr(string $encoded_string, array &$result)
- * @method  static string convertCase(string $s, $mode, string $encoding = null)
- * @method  static string detectEncoding(string $str, $encodingList = null, bool $strict = false)
- * @method  static mixed  detectOrder($encodingList = null)
- * @method  static string eregReplace(string $pattern, string $replacement, string $string, string $option = 'msr')
- * @method  static string eregiReplace(string $pattern, string $replacement, string $string, string $option = 'msr')
- * @method  static string trim(string $string, ?string $characters = null, ?string $encoding = null)
- * @method  static string ltrim(string $string, ?string $characters = null, ?string $encoding = null)
- * @method  static string rtrim(string $string, ?string $characters = null, ?string $encoding = null)
- * @method  static string ucfirst(string $string, ?string $encoding = null)
- * @method  static string lcfirst(string $string, ?string $encoding = null)
+ * @method  static  int|bool  strpos(string $str, string $search, int $offset = 0, string $encoding = null)
+ * @method  static  int|bool  strrpos(string $str, string $search, int $offset = 0, string $encoding = null)
+ * @method  static  string    substr(string $str, $offset, int $length = null, string $encoding = null)
+ * @method  static  string    strtolower(string $str, string $encoding = null)
+ * @method  static  string    strtoupper(string $str, string $encoding = null)
+ * @method  static  int       strlen(string $str, string $encoding = null)
+ * @method  static  string    stristr(string $str, string $search, string $encoding = null)
+ * @method  static  mixed     stripos(string $haystack, string $needle, int $offset = 0, string $encoding = null)
+ * @method  static  string    strrchr(string $haystack, string $needle, $part = false, string $encoding = null)
+ * @method  static  string    strrichr(string $haystack, string $needle, $part = false, string $encoding = null)
+ * @method  static  int       strripos(string $haystack, string $needle, int $offset = 0, string $encoding = null)
+ * @method  static  string    strstr(string $haystack, string $needle, $part = false, string $encoding = null)
+ * @method  static  string    chr(string $code, string $encoding = null)
+ * @method  static  string    ord(string $s, string $encoding = null)
+ * @method  static  string    parseStr(string $encoded_string, array &$result)
+ * @method  static  string    convertCase(string $s, $mode, string $encoding = null)
+ * @method  static  string    detectEncoding(string $str, $encodingList = null, bool $strict = false)
+ * @method  static  mixed     detectOrder($encodingList = null)
+ * @method  static  string    eregReplace(string $pattern, string $replacement, string $string, string $option = 'msr')
+ * @method  static  string    eregiReplace(string $pattern, string $replacement, string $string, string $option = 'msr')
+ * @method  static  string    trim(string $string, ?string $characters = null, ?string $encoding = null)
+ * @method  static  string    ltrim(string $string, ?string $characters = null, ?string $encoding = null)
+ * @method  static  string    rtrim(string $string, ?string $characters = null, ?string $encoding = null)
+ * @method  static  string    ucfirst(string $string, ?string $encoding = null)
+ * @method  static  string    lcfirst(string $string, ?string $encoding = null)
  *
  * @since  2.0
  */
@@ -59,7 +59,7 @@ abstract class Utf8String
      *
      * @param  string  $str  The string to test.
      *
-     * @return  bool True if the string is all ASCII
+     * @return  bool  True if the string is all ASCII
      *
      * @since   2.0
      */
@@ -163,11 +163,11 @@ abstract class Utf8String
      * UTF-8/LOCALE aware alternative to strcasecmp
      * A case insensitive string comparison
      *
-     * @param  string       $str1  string 1 to compare
-     * @param  string       $str2  string 2 to compare
+     * @param  string       $str1      string 1 to compare
+     * @param  string       $str2      string 2 to compare
      * @param  string|null  $encoding
      *
-     * @return  int   < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
+     * @return  int  < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      *
      * @see     http://www.php.net/strcasecmp
      * @since   2.0
@@ -198,12 +198,12 @@ abstract class Utf8String
      * UTF-8 aware alternative to strcspn
      * Find length of initial segment not matching mask
      *
-     * @param  string      $str    The string to process
-     * @param  string      $mask   The mask
-     * @param  int         $start  Optional starting character position (in characters)
-     * @param int|null     $length Optional length
+     * @param  string    $str     The string to process
+     * @param  string    $mask    The mask
+     * @param  int       $start   Optional starting character position (in characters)
+     * @param  int|null  $length  Optional length
      *
-     * @param  string|null $encoding
+     * @param  string|null  $encoding
      *
      * @return  int  The length of the initial segment of str1 which does not contain any of the characters in str2
      *
@@ -244,7 +244,7 @@ abstract class Utf8String
      *
      * @param  string  $str  String to be reversed
      *
-     * @return  string   The string in reverse character order
+     * @return  string  The string in reverse character order
      *
      * @see     http://www.php.net/strrev
      * @since   2.0
@@ -260,12 +260,12 @@ abstract class Utf8String
      * UTF-8 aware alternative to strspn
      * Find length of initial segment matching mask
      *
-     * @param  string      $str    The haystack
-     * @param  string      $mask   The mask
-     * @param  int         $start  Start optional
-     * @param int|null     $length Length optional
+     * @param  string    $str     The haystack
+     * @param  string    $mask    The mask
+     * @param  int       $start   Start optional
+     * @param  int|null  $length  Length optional
      *
-     * @param  string|null $encoding
+     * @param  string|null  $encoding
      *
      * @return  int
      *
@@ -305,10 +305,10 @@ abstract class Utf8String
      * UTF-8 aware substr_replace
      * Replace text within a portion of a string
      *
-     * @param  string       $str     The haystack
-     * @param  string       $repl    The replacement string
-     * @param  int          $start   Start
-     * @param  int|null     $length  Length (optional)
+     * @param  string       $str       The haystack
+     * @param  string       $repl      The replacement string
+     * @param  int          $start     Start
+     * @param  int|null     $length    Length (optional)
      * @param  string|null  $encoding
      *
      * @return  string
@@ -341,7 +341,7 @@ abstract class Utf8String
      * UTF-8 aware alternative to ucwords
      * Uppercase the first character of each word in a string
      *
-     * @param  string       $str  String to be processed
+     * @param  string       $str       String to be processed
      * @param  string|null  $encoding
      *
      * @return  string  String with first char of each word uppercase
@@ -496,14 +496,14 @@ abstract class Utf8String
                     */
                     // From Unicode 3.1, non-shortest form is illegal
                     if (
-                        ((2 === $mBytes) && ($mUcs4 < 0x0080)) ||
-                        ((3 === $mBytes) && ($mUcs4 < 0x0800)) ||
-                        ((4 === $mBytes) && ($mUcs4 < 0x10000)) ||
-                        (4 < $mBytes) ||
+                        ((2 === $mBytes) && ($mUcs4 < 0x0080))
+                        || ((3 === $mBytes) && ($mUcs4 < 0x0800))
+                        || ((4 === $mBytes) && ($mUcs4 < 0x10000))
+                        || (4 < $mBytes)
                         // From Unicode 3.2, surrogate characters are illegal
-                        (($mUcs4 & 0xFFFFF800) === 0xD800) ||
+                        || (($mUcs4 & 0xFFFFF800) === 0xD800)
                         // Codepoints outside the Unicode range are illegal
-                        ($mUcs4 > 0x10FFFF)
+                        || ($mUcs4 > 0x10FFFF)
                     ) {
                         // @codeCoverageIgnoreStart
                         return false;

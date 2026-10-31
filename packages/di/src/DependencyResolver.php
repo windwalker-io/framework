@@ -56,12 +56,12 @@ class DependencyResolver
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws DefinitionResolveException
-     * @throws DependencyResolutionException
-     * @throws DefinitionNotFoundException
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws  ContainerExceptionInterface
+     * @throws  DefinitionResolveException
+     * @throws  DependencyResolutionException
+     * @throws  DefinitionNotFoundException
+     * @throws  NotFoundExceptionInterface
+     * @throws  ReflectionException
      */
     public function newInstance(mixed $class, array $args = [], DIOptions|int $options = new DIOptions()): object
     {

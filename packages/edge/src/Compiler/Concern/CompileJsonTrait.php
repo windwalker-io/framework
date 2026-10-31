@@ -12,15 +12,15 @@ trait CompileJsonTrait
     /**
      * The default JSON encoding options.
      *
-     * @var int
+     * @var  int
      */
     public int $jsonOptions = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
     /**
      * Compile the JSON statement into valid PHP.
      *
-     * @param  string  $expression
-     * @return string
+     * @param   string  $expression
+     * @return  string
      */
     protected function compileJson(string $expression): string
     {
@@ -36,8 +36,8 @@ trait CompileJsonTrait
     /**
      * Compile the JSON statement into valid PHP.
      *
-     * @param  string  $expression
-     * @return string
+     * @param   string  $expression
+     * @return  string
      */
     protected function compileJs(string $expression): string
     {

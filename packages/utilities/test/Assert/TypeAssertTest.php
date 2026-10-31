@@ -49,8 +49,8 @@ class TypeAssertTest extends TestCase
                 'Method {caller} must with type X, %s given.',
                 5,
                 null,
-                'Method Windwalker\Utilities\Test\Assert\TypeAssertTest::throwExceptionBuildsTypeErrorMessageWithCaller() ' .
-                'must with type X, integer(5) given.',
+                'Method Windwalker\Utilities\Test\Assert\TypeAssertTest::throwExceptionBuildsTypeErrorMessageWithCaller() '
+                . 'must with type X, integer(5) given.',
             ],
             'Custom caller' => [
                 TypeError::class,

@@ -108,7 +108,7 @@ class TextField extends AbstractInputField
     /**
      * max
      *
-     * @param ?int   $length
+     * @param  ?int  $length
      * @param  bool  $addFilter
      * @param  bool  $utf8
      *

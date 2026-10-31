@@ -28,4 +28,4 @@ for ($i = 0; $i < NUM_TESTS; $i++) {
 
 $end = microtime(true);
 
-echo "Time: " . number_format($end - $start, 5);
+echo 'Time: ' . number_format($end - $start, 5);

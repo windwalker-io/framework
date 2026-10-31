@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\Utilities\Test\Stub;
 
 use Windwalker\Utilities\Accessible\AccessibleTrait;

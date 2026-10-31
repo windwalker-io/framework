@@ -24,7 +24,7 @@ use Windwalker\Utilities\Iterator\NestedIterator;
 class FilesIterator extends NestedIterator
 {
     /**
-     * @var string|null
+     * @var  string|null
      */
     protected ?string $path = null;
 
@@ -112,7 +112,7 @@ class FilesIterator extends NestedIterator
     /**
      * @inheritDoc
      *
-     * @return FileObject
+     * @return  FileObject
      */
     public function current(): ?FileObject
     {
@@ -122,7 +122,7 @@ class FilesIterator extends NestedIterator
     /**
      * first
      *
-     * @return FileObject|null
+     * @return  FileObject|null
      */
     public function first(): ?FileObject
     {

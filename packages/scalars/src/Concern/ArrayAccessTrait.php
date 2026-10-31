@@ -11,7 +11,7 @@ trait ArrayAccessTrait
     /**
      * first
      *
-     * @param callable|null $conditions
+     * @param  callable|null  $conditions
      *
      * @return  mixed
      */
@@ -39,7 +39,7 @@ trait ArrayAccessTrait
     /**
      * last
      *
-     * @param callable|null $conditions
+     * @param  callable|null  $conditions
      *
      * @return  mixed
      */

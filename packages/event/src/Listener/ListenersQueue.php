@@ -17,7 +17,7 @@ use Windwalker\Utilities\Proxy\CallableProxy;
 class ListenersQueue implements IteratorAggregate, Countable
 {
     /**
-     * @var ListenerCallable[]
+     * @var  ListenerCallable[]
      */
     protected array $queue = [];
 

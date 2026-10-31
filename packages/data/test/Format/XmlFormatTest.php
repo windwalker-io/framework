@@ -13,7 +13,7 @@ class XmlFormatTest extends TestCase
     #[Test]
     public function itDumpsValuesUsingConfiguredRootAndNodeNames(): void
     {
-        $format = new XmlFormat;
+        $format = new XmlFormat();
         $xml = $format->dump(
             ['name' => 'Sakura'],
             ['name' => 'Flower', 'nodeName' => 'item']
@@ -26,7 +26,7 @@ class XmlFormatTest extends TestCase
     #[Test]
     public function itParsesNestedTypedValues(): void
     {
-        $format = new XmlFormat;
+        $format = new XmlFormat();
         $xml = '<Data>'
             . '<node name="name" type="string">Sakura</node>'
             . '<node name="count" type="integer">3</node>'

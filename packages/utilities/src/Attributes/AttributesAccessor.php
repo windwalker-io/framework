@@ -145,7 +145,7 @@ class AttributesAccessor
      */
     public static function getAttributesFromAny(
         mixed $value,
-        string|null $name = null,
+        ?string $name = null,
         int $flags = 0
     ): ?array {
         if (!$value instanceof \Reflector) {

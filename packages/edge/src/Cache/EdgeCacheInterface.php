@@ -16,7 +16,7 @@ interface EdgeCacheInterface
      *
      * @param  string  $path
      *
-     * @return bool
+     * @return  bool
      */
     public function isExpired(string $path): bool;
 
@@ -44,7 +44,7 @@ interface EdgeCacheInterface
      * @param  string  $path
      * @param  string  $value
      *
-     * @return void
+     * @return  void
      */
     public function store(string $path, string $value): void;
 
@@ -53,7 +53,7 @@ interface EdgeCacheInterface
      *
      * @param  string  $path
      *
-     * @return void
+     * @return  void
      */
     public function remove(string $path): void;
 }

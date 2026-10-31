@@ -7,7 +7,6 @@ namespace Windwalker\Form\Test\Field;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\CustomHtmlField;
 use Windwalker\Test\Traits\DOMTestTrait;
 

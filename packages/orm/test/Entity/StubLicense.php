@@ -43,7 +43,7 @@ class StubLicense implements EntityInterface
     protected ?DateTimeImmutable $created = null;
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -63,7 +63,7 @@ class StubLicense implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -83,7 +83,7 @@ class StubLicense implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getType(): string
     {
@@ -103,7 +103,7 @@ class StubLicense implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTargetNo(): string
     {
@@ -123,7 +123,7 @@ class StubLicense implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -143,7 +143,7 @@ class StubLicense implements EntityInterface
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return  DateTimeImmutable|null
      */
     public function getCreated(): ?DateTimeImmutable
     {

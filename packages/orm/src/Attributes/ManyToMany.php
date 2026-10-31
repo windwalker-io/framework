@@ -9,8 +9,6 @@ use ReflectionProperty;
 use Windwalker\ORM\Relation\RelationManager;
 use Windwalker\ORM\Relation\Strategy\RelationConfigureInterface;
 
-use function React\Promise\map;
-
 /**
  * The ManyToMany class.
  */
@@ -18,7 +16,7 @@ use function React\Promise\map;
 class ManyToMany extends AbstractRelationAttribute
 {
     /**
-     * @var RelationConfigureAttributeInterface[]
+     * @var  RelationConfigureAttributeInterface[]
      */
     public array $attributes;
 

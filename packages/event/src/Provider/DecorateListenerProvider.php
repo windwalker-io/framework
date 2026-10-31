@@ -12,7 +12,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 class DecorateListenerProvider implements ListenerProviderInterface
 {
     /**
-     * @var ListenerProviderInterface
+     * @var  ListenerProviderInterface
      */
     protected $provider;
 

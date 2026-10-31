@@ -18,7 +18,7 @@ class StringStream extends Stream
     /**
      * Stream resource.
      *
-     * @var string
+     * @var  string
      */
     protected mixed $resource;
 
@@ -81,7 +81,7 @@ class StringStream extends Stream
     /**
      * Closes the stream and any underlying resources.
      *
-     * @return void
+     * @return  void
      */
     #[\ReturnTypeWillChange]
     public function close(): void
@@ -95,7 +95,7 @@ class StringStream extends Stream
      * @param  string|resource  $stream  The stream resource cursor.
      * @param  string           $mode    Mode with which to open stream
      *
-     * @return  static Return self to support chaining.
+     * @return  static  Return self to support chaining.
      */
     public function attach(mixed $stream, string $mode = 'rb+'): static
     {
@@ -121,7 +121,7 @@ class StringStream extends Stream
      *
      * After the stream has been detached, the stream is in an unusable state.
      *
-     * @return ?string Underlying PHP stream, if any
+     * @return  ?string  Underlying PHP stream, if any
      */
     public function detach(): ?string
     {
@@ -139,7 +139,7 @@ class StringStream extends Stream
     /**
      * Get the size of the stream if known.
      *
-     * @return int|null Returns the size in bytes if known, or null if unknown.
+     * @return  int|null  Returns the size in bytes if known, or null if unknown.
      */
     #[Pure]
     public function getSize(): ?int
@@ -154,8 +154,8 @@ class StringStream extends Stream
     /**
      * Returns the current position of the file read/write pointer
      *
-     * @return int Position of the file pointer
-     * @throws RuntimeException on error.
+     * @return  int               Position of the file pointer
+     * @throws  RuntimeException  on error.
      */
     public function tell(): int
     {
@@ -169,7 +169,7 @@ class StringStream extends Stream
     /**
      * Returns true if the stream is at the end of the stream.
      *
-     * @return bool
+     * @return  bool
      */
     #[Pure]
     public function eof(): bool
@@ -180,7 +180,7 @@ class StringStream extends Stream
     /**
      * Returns whether or not the stream is seekable.
      *
-     * @return bool
+     * @return  bool
      */
     public function isSeekable(): bool
     {
@@ -199,9 +199,9 @@ class StringStream extends Stream
      *                       offset bytes SEEK_CUR: Set position to current location plus offset
      *                       SEEK_END: Set position to end-of-stream plus offset.
      *
-     * @return void
+     * @return  void
      *
-     * @throws RuntimeException on failure.
+     * @throws  RuntimeException  on failure.
      */
     #[\ReturnTypeWillChange]
     public function seek($offset, $whence = SEEK_SET): void
@@ -230,7 +230,7 @@ class StringStream extends Stream
      * If the stream is not seekable, this method will raise an exception;
      * otherwise, it will perform a seek(0).
      *
-     * @throws RuntimeException on failure.
+     * @throws  RuntimeException  on failure.
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
@@ -245,7 +245,7 @@ class StringStream extends Stream
     /**
      * Returns whether or not the stream is writable.
      *
-     * @return bool
+     * @return  bool
      */
     public function isWritable(): bool
     {
@@ -257,8 +257,8 @@ class StringStream extends Stream
      *
      * @param  string  $string  The string that is to be written.
      *
-     * @return int Returns the number of bytes written to the stream.
-     * @throws RuntimeException on failure.
+     * @return  int               Returns the number of bytes written to the stream.
+     * @throws  RuntimeException  on failure.
      */
     public function write($string): int
     {
@@ -277,7 +277,7 @@ class StringStream extends Stream
     /**
      * Returns whether or not the stream is readable.
      *
-     * @return bool
+     * @return  bool
      */
     public function isReadable(): bool
     {
@@ -291,9 +291,9 @@ class StringStream extends Stream
      *                       them. Fewer than $length bytes may be returned if underlying stream
      *                       call returns fewer bytes.
      *
-     * @return string Returns the data read from the stream, or an empty string
-     *     if no bytes are available.
-     * @throws RuntimeException if an error occurs.
+     * @return  string            Returns the data read from the stream, or an empty string
+     *                            if no bytes are available.
+     * @throws  RuntimeException  if an error occurs.
      */
     public function read($length): string
     {
@@ -310,9 +310,9 @@ class StringStream extends Stream
     /**
      * Returns the remaining contents in a string
      *
-     * @return string
-     * @throws RuntimeException if unable to read or an error occurs while
-     *     reading.
+     * @return  string
+     * @throws  RuntimeException  if unable to read or an error occurs while
+     *                            reading.
      */
     public function getContents(): string
     {
@@ -339,9 +339,9 @@ class StringStream extends Stream
      *
      * @param  string  $key  Specific metadata to retrieve.
      *
-     * @return array|mixed|null Returns an associative array if no key is
-     *     provided. Returns a specific key value if a key is provided and the
-     *     value is found, or null if the key is not found.
+     * @return  array|mixed|null  Returns an associative array if no key is
+     *                            provided. Returns a specific key value if a key is provided and the
+     *                            value is found, or null if the key is not found.
      */
     public function getMetadata($key = null): mixed
     {

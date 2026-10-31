@@ -73,7 +73,7 @@ class SwooleCoroutineServer extends AbstractHttpServer
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getConfig(): array
     {
@@ -113,7 +113,7 @@ class SwooleCoroutineServer extends AbstractHttpServer
     }
 
     /**
-     * @return string|null
+     * @return  string|null
      */
     public function getHost(): ?string
     {
@@ -133,7 +133,7 @@ class SwooleCoroutineServer extends AbstractHttpServer
     }
 
     /**
-     * @return \Closure|null
+     * @return  \Closure|null
      */
     public function getOutputBuilder(): ?\Closure
     {

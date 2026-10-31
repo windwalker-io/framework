@@ -11,9 +11,7 @@ use Psr\Log\AbstractLogger;
  */
 class CallbackLogger extends AbstractLogger
 {
-    public function __construct(protected \Closure $callback)
-    {
-    }
+    public function __construct(protected \Closure $callback) {}
 
     public function log($level, \Stringable|string $message, array $context = []): void
     {

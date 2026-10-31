@@ -7,7 +7,6 @@ namespace Windwalker\Edge\Concern;
 use Closure;
 use Windwalker\Edge\Exception\EdgeException;
 use Windwalker\Edge\Wrapper\SlotWrapper;
-use Windwalker\Utilities\Symbol;
 
 /**
  * The ComponentConcernTrait class.
@@ -19,28 +18,28 @@ trait ManageComponentTrait
     /**
      * The components being rendered.
      *
-     * @var array
+     * @var  array
      */
     protected array $componentStack = [];
 
     /**
      * The original data passed to the component.
      *
-     * @var array
+     * @var  array
      */
     protected array $componentData = [];
 
     /**
      * The slot contents for the component.
      *
-     * @var array
+     * @var  array
      */
     protected array $slots = [];
 
     /**
      * The names of the slots being rendered.
      *
-     * @var array
+     * @var  array
      */
     protected array $slotStack = [];
 
@@ -50,7 +49,7 @@ trait ManageComponentTrait
      * @param  string|callable  $name
      * @param  array            $data
      *
-     * @return void
+     * @return  void
      */
     public function startComponent(string|callable $name, array $data = []): void
     {
@@ -64,8 +63,8 @@ trait ManageComponentTrait
     /**
      * Render the current component.
      *
-     * @return string
-     * @throws EdgeException
+     * @return  string
+     * @throws  EdgeException
      */
     public function renderComponent(): string
     {
@@ -90,7 +89,7 @@ trait ManageComponentTrait
      *
      * @param  callable|null  $slot
      *
-     * @return array
+     * @return  array
      */
     protected function componentData(?callable $slot): array
     {
@@ -115,7 +114,7 @@ trait ManageComponentTrait
      * @param  string|null  $name
      * @param  string|null  $content
      *
-     * @return Closure
+     * @return  Closure
      */
     public function slot(?string $name = null, ?string $content = null): Closure
     {
@@ -138,7 +137,7 @@ trait ManageComponentTrait
     /**
      * Save the slot content for rendering.
      *
-     * @return void
+     * @return  void
      */
     public function endSlot(): void
     {
@@ -152,7 +151,7 @@ trait ManageComponentTrait
     /**
      * Get the index for the current component.
      *
-     * @return int
+     * @return  int
      */
     protected function currentComponent(): int
     {

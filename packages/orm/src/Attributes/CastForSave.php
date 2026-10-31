@@ -16,12 +16,10 @@ class CastForSave implements CastForSaveInterface
     /**
      * CastForSave constructor.
      */
-    public function __construct(protected mixed $caster = null, public int $options = 0)
-    {
-    }
+    public function __construct(protected mixed $caster = null, public int $options = 0) {}
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getCaster(): mixed
     {

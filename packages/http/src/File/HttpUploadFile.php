@@ -18,7 +18,7 @@ class HttpUploadFile implements HttpUploadFileInterface
     ) {}
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -42,7 +42,7 @@ class HttpUploadFile implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getMimeType(): ?string
     {
@@ -72,7 +72,7 @@ class HttpUploadFile implements HttpUploadFileInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPostFilename(): ?string
     {

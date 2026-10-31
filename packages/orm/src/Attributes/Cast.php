@@ -17,9 +17,9 @@ class Cast implements CastAttributeInterface
     /**
      * Cast constructor.
      *
-     * @param  string  $hydrate
+     * @param  string      $hydrate
      * @param  mixed|null  $extract
-     * @param  int  $options
+     * @param  int         $options
      */
     public function __construct(
         protected mixed $hydrate = null,
@@ -30,7 +30,7 @@ class Cast implements CastAttributeInterface
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getHydrate(): mixed
     {
@@ -38,7 +38,7 @@ class Cast implements CastAttributeInterface
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getExtract(): mixed
     {
@@ -46,7 +46,7 @@ class Cast implements CastAttributeInterface
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getOptions(): int
     {

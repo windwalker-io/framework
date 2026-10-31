@@ -27,7 +27,7 @@ class FormTest extends TestCase
     /**
      * Test instance.
      *
-     * @var Form
+     * @var  Form
      */
     protected $instance;
 
@@ -50,7 +50,7 @@ class FormTest extends TestCase
     /**
      * Method to test addFields().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function addAndGetFields(): void
@@ -102,7 +102,7 @@ class FormTest extends TestCase
     /**
      * Method to test addField().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::addField
      */
@@ -136,7 +136,7 @@ class FormTest extends TestCase
     /**
      * Method to test removeField().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::removeField
      */
@@ -153,7 +153,7 @@ class FormTest extends TestCase
     /**
      * Method to test fill().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::fill
      */
@@ -219,7 +219,7 @@ class FormTest extends TestCase
     /**
      * Method to test validate().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function validate(): void
@@ -266,7 +266,7 @@ class FormTest extends TestCase
     /**
      * Method to test prepareView().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getViews(): void
@@ -307,7 +307,7 @@ class FormTest extends TestCase
     /**
      * Method to test renderField().
      *
-     * @return void
+     * @return  void
      *
      * @covers \Windwalker\Form\Form::renderField
      *
@@ -349,7 +349,7 @@ class FormTest extends TestCase
     /**
      * Method to test getControl().
      *
-     * @return void
+     * @return  void
      */
     #[Test]
     public function getAndSetNamespace(): void

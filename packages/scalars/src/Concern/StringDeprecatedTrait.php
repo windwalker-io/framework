@@ -77,4 +77,3 @@ trait StringDeprecatedTrait
         return $this->padEnd($length, $substring);
     }
 }
-

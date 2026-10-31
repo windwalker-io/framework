@@ -7,14 +7,14 @@ namespace Windwalker\Utilities;
 /**
  * The Symbol class.
  *
- * @method static self default()
- * @method static self main()
- * @method static self root()
- * @method static self empty()
- * @method static self full()
- * @method static self none()
- * @method static self all()
- * @method static self noAction()
+ * @method  static  self  default()
+ * @method  static  self  main()
+ * @method  static  self  root()
+ * @method  static  self  empty()
+ * @method  static  self  full()
+ * @method  static  self  none()
+ * @method  static  self  all()
+ * @method  static  self  noAction()
  */
 class Symbol
 {
@@ -25,9 +25,7 @@ class Symbol
      *
      * @param  string  $value
      */
-    public function __construct(readonly protected string $value)
-    {
-    }
+    public function __construct(protected readonly string $value) {}
 
     private static function wrapValue(string $value): string
     {
@@ -59,7 +57,7 @@ class Symbol
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */

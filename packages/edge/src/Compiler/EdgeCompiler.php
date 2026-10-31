@@ -56,70 +56,70 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * The file currently being compiled.
      *
-     * @var string
+     * @var  string
      */
     protected string $path;
 
     /**
      * Array of opening and closing tags for raw echos.
      *
-     * @var array
+     * @var  array
      */
     protected array $rawTags = ['{!!', '!!}'];
 
     /**
      * Array of opening and closing tags for regular echos.
      *
-     * @var array
+     * @var  array
      */
     protected array $contentTags = ['{{', '}}'];
 
     /**
      * Array of opening and closing tags for escaped echos.
      *
-     * @var array
+     * @var  array
      */
     protected array $escapedTags = ['{{{', '}}}'];
 
     /**
      * The "regular" / legacy echo string format.
      *
-     * @var string
+     * @var  string
      */
     protected string $echoFormat = '$__edge->escape(%s)';
 
     /**
      * Array of footer lines to be added to template.
      *
-     * @var array
+     * @var  array
      */
     protected array $footer = [];
 
     /**
      * Placeholder to temporary mark the position of verbatim blocks.
      *
-     * @var string
+     * @var  string
      */
     protected string $verbatimPlaceholder = '@__verbatim__@';
 
     /**
      * Array to temporary store the verbatim blocks found in the template.
      *
-     * @var array
+     * @var  array
      */
     protected array $verbatimBlocks = [];
 
     /**
      * Counter to keep track of nested forelse statements.
      *
-     * @var int
+     * @var  int
      */
     protected int $forelseCounter = 0;
 
     /**
      * All of the available compiler functions.
      *
-     * @var array
+     * @var  array
      */
     protected array $compilers = [
         'Parsers',
@@ -172,7 +172,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function storeVerbatimBlocks(string $value): string
     {
@@ -192,7 +192,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  string  $result
      *
-     * @return string
+     * @return  string
      */
     protected function restoreVerbatimBlocks(string $result): string
     {
@@ -214,7 +214,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  array  $token
      *
-     * @return string
+     * @return  string
      */
     protected function parseToken(array $token): string
     {
@@ -250,7 +250,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  string  $value
      *
-     * @return mixed
+     * @return  mixed
      */
     protected function compileStatements(string $value): mixed
     {
@@ -286,7 +286,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function stripParentheses(string $expression): string
     {
@@ -303,7 +303,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  string    $name
      * @param  callable  $handler
      *
-     * @return EdgeCompiler
+     * @return  EdgeCompiler
      */
     public function directive(string $name, callable $handler): static
     {
@@ -315,7 +315,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Get the list of custom directives.
      *
-     * @return array
+     * @return  array
      */
     public function getDirectives(): array
     {
@@ -343,7 +343,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  callable  $handler
      *
-     * @return static
+     * @return  static
      */
     public function parser(callable $handler): static
     {
@@ -381,7 +381,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Gets the raw tags used by the compiler.
      *
-     * @return array
+     * @return  array
      *
      * @codeCoverageIgnore
      */
@@ -396,7 +396,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  string  $openTag
      * @param  string  $closeTag
      *
-     * @return void
+     * @return  void
      */
     public function setRawTags(string $openTag, string $closeTag): void
     {
@@ -410,7 +410,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  string  $closeTag
      * @param  bool    $escaped
      *
-     * @return void
+     * @return  void
      */
     public function setContentTags(string $openTag, string $closeTag, bool $escaped = false)
     {
@@ -425,7 +425,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  string  $openTag
      * @param  string  $closeTag
      *
-     * @return void
+     * @return  void
      */
     public function setEscapedContentTags(string $openTag, string $closeTag): void
     {
@@ -435,7 +435,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Gets the content tags used for the compiler.
      *
-     * @return array
+     * @return  array
      */
     public function getContentTags(): array
     {
@@ -445,7 +445,7 @@ class EdgeCompiler implements EdgeCompilerInterface
     /**
      * Gets the escaped content tags used for the compiler.
      *
-     * @return array
+     * @return  array
      */
     public function getEscapedContentTags(): array
     {
@@ -457,7 +457,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  bool  $escaped
      *
-     * @return array
+     * @return  array
      */
     protected function getTags(bool $escaped = false): array
     {
@@ -471,7 +471,7 @@ class EdgeCompiler implements EdgeCompilerInterface
      *
      * @param  string  $format
      *
-     * @return void
+     * @return  void
      *
      * @codeCoverageIgnore
      */

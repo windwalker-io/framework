@@ -9,7 +9,7 @@ class AppendableAttributeValue
     /**
      * The attribute value.
      *
-     * @var mixed
+     * @var  mixed
      */
     public mixed $value;
 
@@ -26,7 +26,7 @@ class AppendableAttributeValue
     /**
      * Get the string value.
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {

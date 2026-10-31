@@ -69,7 +69,7 @@ class PdoHandler extends AbstractHandler
      *
      * @return  string  The session data.
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0
      */
     protected function doRead(string $id): ?string
@@ -215,7 +215,7 @@ class PdoHandler extends AbstractHandler
      *
      * @return  boolean  True on success, false otherwise.
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0
      */
     public function destroy($id): bool
@@ -260,7 +260,7 @@ class PdoHandler extends AbstractHandler
     /**
      * Returns a merge/upsert (i.e. insert or update) SQL query when supported by the database.
      *
-     * @return string|null The SQL string or null when not supported
+     * @return  string|null  The SQL string or null when not supported
      */
     protected function createQuery(): Query
     {

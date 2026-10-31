@@ -36,7 +36,7 @@ trait NestedEntityTrait
     protected ?RelationCollection $tree = null;
 
     /**
-     * @return Position
+     * @return  Position
      */
     public function getPosition(): Position
     {
@@ -44,7 +44,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getWidth(): int
     {
@@ -57,7 +57,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      */
@@ -81,7 +81,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      */
@@ -106,7 +106,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return int
+     * @return  int
      *
      * @deprecated  Use property instead.
      */
@@ -131,7 +131,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return mixed|null
+     * @return  mixed|null
      *
      * @deprecated  Use property instead.
      */
@@ -202,7 +202,7 @@ trait NestedEntityTrait
     }
 
     /**
-     * @return RelationCollection
+     * @return  RelationCollection
      */
     public function getTree(): RelationCollection
     {

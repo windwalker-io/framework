@@ -551,8 +551,8 @@ abstract class UnicodeHelper
                         if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) {
                             // found a surrogate
                             trigger_error(
-                                'utf8_from_unicode: Illegal surrogate ' .
-                                'at index: ' . $k . ', value: ' . $arr[$k],
+                                'utf8_from_unicode: Illegal surrogate '
+                                . 'at index: ' . $k . ', value: ' . $arr[$k],
                                 E_USER_WARNING
                             );
 
@@ -574,8 +574,8 @@ abstract class UnicodeHelper
                                     echo chr(0x80 | ($arr[$k] & 0x3f));
                                 } else {
                                     trigger_error(
-                                        'utf8_from_unicode: Codepoint out of Unicode range ' .
-                                        'at index: ' . $k . ', value: ' . $arr[$k],
+                                        'utf8_from_unicode: Codepoint out of Unicode range '
+                                        . 'at index: ' . $k . ', value: ' . $arr[$k],
                                         E_USER_WARNING
                                     );
 
@@ -669,8 +669,8 @@ abstract class UnicodeHelper
                      * octet of a multi-octet sequence.
                      */
                     trigger_error(
-                        'utf8_to_unicode: Illegal sequence identifier ' .
-                        'in UTF-8 at byte ' . $i,
+                        'utf8_to_unicode: Illegal sequence identifier '
+                        . 'in UTF-8 at byte ' . $i,
                         E_USER_WARNING
                     );
 
@@ -696,18 +696,18 @@ abstract class UnicodeHelper
                     */
                     // From Unicode 3.1, non-shortest form is illegal
                     if (
-                        ((2 === $mBytes) && ($mUcs4 < 0x0080)) ||
-                        ((3 === $mBytes) && ($mUcs4 < 0x0800)) ||
-                        ((4 === $mBytes) && ($mUcs4 < 0x10000)) ||
-                        (4 < $mBytes) ||
+                        ((2 === $mBytes) && ($mUcs4 < 0x0080))
+                        || ((3 === $mBytes) && ($mUcs4 < 0x0800))
+                        || ((4 === $mBytes) && ($mUcs4 < 0x10000))
+                        || (4 < $mBytes)
                         // From Unicode 3.2, surrogate characters are illegal
-                        (($mUcs4 & 0xFFFFF800) === 0xD800) ||
+                        || (($mUcs4 & 0xFFFFF800) === 0xD800)
                         // Codepoints outside the Unicode range are illegal
-                        ($mUcs4 > 0x10FFFF)
+                        || ($mUcs4 > 0x10FFFF)
                     ) {
                         trigger_error(
-                            'utf8_to_unicode: Illegal sequence or codepoint ' .
-                            'in UTF-8 at byte ' . $i,
+                            'utf8_to_unicode: Illegal sequence or codepoint '
+                            . 'in UTF-8 at byte ' . $i,
                             E_USER_WARNING
                         );
 
@@ -730,8 +730,8 @@ abstract class UnicodeHelper
                  * Incomplete multi-octet sequence.
                  */
                 trigger_error(
-                    'utf8_to_unicode: Incomplete multi-octet ' .
-                    '   sequence in UTF-8 at byte ' . $i,
+                    'utf8_to_unicode: Incomplete multi-octet '
+                    . '   sequence in UTF-8 at byte ' . $i,
                     E_USER_WARNING
                 );
 

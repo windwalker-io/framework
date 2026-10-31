@@ -119,7 +119,7 @@ trait ArrayLoopTrait
      * @param  int|null       $offset
      * @param  int|null       $limit
      *
-     * @return static
+     * @return  static
      */
     public function find(?callable $callback, bool $keepKey = false, ?int $offset = null, ?int $limit = null): static
     {
@@ -158,7 +158,7 @@ trait ArrayLoopTrait
     /**
      * findFirst
      *
-     * @param callable|null $callback
+     * @param  callable|null  $callback
      *
      * @return  mixed
      */

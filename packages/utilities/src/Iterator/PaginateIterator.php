@@ -8,13 +8,12 @@ class PaginateIterator implements \IteratorAggregate
 {
     public function __construct(
         /**
-         * @var \Closure(int $page, int $perPage): iterable
+         * @var  \Closure(int $page, int $perPage): iterable
          */
         public \Closure $callback,
         public \Closure|int $perPage,
         public ?int $limit = null
-    ) {
-    }
+    ) {}
 
     public function getIterator(): \Generator
     {

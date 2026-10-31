@@ -9,6 +9,4 @@ namespace Windwalker\Form\Test\Mock;
  *
  * @since  2.0
  */
-class FakeFilter
-{
-}
+class FakeFilter {}

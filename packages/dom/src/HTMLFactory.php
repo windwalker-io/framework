@@ -12,10 +12,10 @@ use Masterminds\HTML5;
 /**
  * The HtmlFactory class.
  *
- * @method static DOMElement option(array $attrs = [], $content = null)
- * @method static DOMElement form(array $attrs = [], $content = null)
- * @method static DOMElement input(array $attrs = [], $content = null)
- * @method static DOMElement button(array $attrs = [], $content = null)
+ * @method  static  DOMElement  option(array $attrs = [], $content = null)
+ * @method  static  DOMElement  form(array $attrs = [], $content = null)
+ * @method  static  DOMElement  input(array $attrs = [], $content = null)
+ * @method  static  DOMElement  button(array $attrs = [], $content = null)
  *
  * @deprecated  Use HTML5Factory instead.
  */
@@ -42,7 +42,7 @@ class HTMLFactory extends DOMFactory
      * @param  array  $options
      *
      * @return  DOMDocument
-     * @throws \DOMException
+     * @throws  \DOMException
      */
     public static function create(array $options = []): DOMDocument
     {

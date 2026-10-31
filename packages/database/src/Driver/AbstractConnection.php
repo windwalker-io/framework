@@ -15,17 +15,17 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     use OptionAccessTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = '';
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     protected mixed $connection = null;
 
     /**
-     * @var array
+     * @var  array
      */
     protected array $defaultOptions = [
         'dbname' => null,
@@ -109,7 +109,7 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function get(): mixed
     {
@@ -117,7 +117,7 @@ abstract class AbstractConnection extends AbstractPoolConnection implements Conn
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public static function getName(): string
     {

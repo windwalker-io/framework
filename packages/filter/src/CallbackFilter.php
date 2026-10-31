@@ -10,7 +10,7 @@ namespace Windwalker\Filter;
 class CallbackFilter extends AbstractCallbackFilter
 {
     /**
-     * @var callable
+     * @var  callable
      */
     protected $handler;
 
@@ -25,7 +25,7 @@ class CallbackFilter extends AbstractCallbackFilter
     }
 
     /**
-     * @return callable
+     * @return  callable
      */
     public function getHandler(): callable
     {

@@ -362,13 +362,12 @@ class SQLitePlatform extends AbstractPlatform
         $as = $options['as'] ?? pathinfo($name, PATHINFO_FILENAME);
 
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'ATTACH DATABASE',
-                    $this->db->quote($name),
-                    'AS',
-                    $this->db->quoteName($as)
-                )
+            $this->getGrammar()::build(
+                'ATTACH DATABASE',
+                $this->db->quote($name),
+                'AS',
+                $this->db->quoteName($as)
+            )
         );
     }
 
@@ -401,11 +400,10 @@ class SQLitePlatform extends AbstractPlatform
             $dbname = $databases[$name]->name;
 
             return $this->db->execute(
-                $this->getGrammar()
-                    ::build(
-                        'DETACH DATABASE',
-                        $this->db->quoteName($dbname)
-                    )
+                $this->getGrammar()::build(
+                    'DETACH DATABASE',
+                    $this->db->quoteName($dbname)
+                )
             );
         }
 
@@ -417,18 +415,17 @@ class SQLitePlatform extends AbstractPlatform
      *
      * @param  string  $name
      *
-     * @param  array   $options
+     * @param  array  $options
      *
      * @return  StatementInterface
      */
     public function dropSchema(string $name, array $options = []): StatementInterface
     {
         return $this->db->execute(
-            $this->getGrammar()
-                ::build(
-                    'DETACH DATABASE',
-                    $this->db->quoteName($name)
-                )
+            $this->getGrammar()::build(
+                'DETACH DATABASE',
+                $this->db->quoteName($name)
+            )
         );
     }
 

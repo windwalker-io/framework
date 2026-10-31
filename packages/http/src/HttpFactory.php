@@ -73,7 +73,7 @@ class HttpFactory extends UriFactory implements
      *                                       the value is a string, the factory MUST create a UriInterface
      *                                       instance based on it.
      *
-     * @return RequestInterface
+     * @return  RequestInterface
      */
     public function createRequest(string $method, $uri): RequestInterface
     {
@@ -88,7 +88,7 @@ class HttpFactory extends UriFactory implements
      *                                in generated response; if none is provided implementations MAY use
      *                                the defaults as suggested in the HTTP specification.
      *
-     * @return ResponseInterface
+     * @return  ResponseInterface
      *
      * @codeCoverageIgnore
      */
@@ -111,7 +111,7 @@ class HttpFactory extends UriFactory implements
      * @param  array                $serverParams  Array of SAPI parameters with which to seed
      *                                             the generated request instance.
      *
-     * @return ServerRequestInterface
+     * @return  ServerRequestInterface
      *
      * @codeCoverageIgnore
      */
@@ -143,7 +143,7 @@ class HttpFactory extends UriFactory implements
      *
      * @param  string  $content  String content with which to populate the stream.
      *
-     * @return StreamInterface
+     * @return  StreamInterface
      *
      * @codeCoverageIgnore
      */
@@ -163,9 +163,9 @@ class HttpFactory extends UriFactory implements
      * @param  string  $filename  Filename or stream URI to use as basis of stream.
      * @param  string  $mode      Mode with which to open the underlying filename/stream.
      *
-     * @return StreamInterface
-     * @throws RuntimeException If the file cannot be opened.
-     * @throws InvalidArgumentException If the mode is invalid.
+     * @return  StreamInterface
+     * @throws  RuntimeException          If the file cannot be opened.
+     * @throws  InvalidArgumentException  If the mode is invalid.
      *
      * @codeCoverageIgnore
      */
@@ -181,7 +181,7 @@ class HttpFactory extends UriFactory implements
      *
      * @param  resource  $resource  PHP resource to use as basis of stream.
      *
-     * @return StreamInterface
+     * @return  StreamInterface
      *
      * @codeCoverageIgnore
      */
@@ -206,7 +206,7 @@ class HttpFactory extends UriFactory implements
      * @param  string|null      $clientFilename   Filename as provided by the client, if any.
      * @param  string|null      $clientMediaType  Media type as provided by the client, if any.
      *
-     * @return UploadedFileInterface
+     * @return  UploadedFileInterface
      *
      * @codeCoverageIgnore
      */

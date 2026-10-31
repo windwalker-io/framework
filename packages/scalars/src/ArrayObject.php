@@ -314,7 +314,7 @@ class ArrayObject implements AccessibleInterface
     /**
      * If array is empty, will return NULL.
      *
-     * @return float|int|null
+     * @return  float|int|null
      */
     public function avg(): float|int|null
     {

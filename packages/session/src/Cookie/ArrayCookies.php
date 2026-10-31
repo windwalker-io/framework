@@ -10,7 +10,7 @@ namespace Windwalker\Session\Cookie;
 class ArrayCookies extends AbstractConfigurableCookies
 {
     /**
-     * @var array<string, ArrayCookieItem>
+     * @var  array<string, ArrayCookieItem>
      */
     protected array $newStorage = [];
 
@@ -30,7 +30,7 @@ class ArrayCookies extends AbstractConfigurableCookies
     /**
      * ArrayCookies constructor.
      *
-     * @param  array  $storage
+     * @param  array                 $storage
      * @param  CookiesOptions|array  $options
      */
     public function __construct(array $storage = [], CookiesOptions|array $options = [])
@@ -89,7 +89,7 @@ class ArrayCookies extends AbstractConfigurableCookies
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getStorage(): array
     {
@@ -186,7 +186,7 @@ class ArrayCookies extends AbstractConfigurableCookies
     }
 
     /**
-     * @return array
+     * @return  array
      *
      * @codeCoverageIgnore
      */
@@ -210,7 +210,7 @@ class ArrayCookies extends AbstractConfigurableCookies
     }
 
     /**
-     * @return array
+     * @return  array
      *
      * @codeCoverageIgnore
      */

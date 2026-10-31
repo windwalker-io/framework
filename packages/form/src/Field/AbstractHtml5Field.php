@@ -22,7 +22,7 @@ abstract class AbstractHtml5Field extends TextField
      * @param  int|null  $max
      * @param  bool      $addFilter
      *
-     * @return static
+     * @return  static
      *
      * @since  3.4.2
      */
@@ -41,7 +41,7 @@ abstract class AbstractHtml5Field extends TextField
      * @param  int|null  $min
      * @param  bool      $addFilter
      *
-     * @return static
+     * @return  static
      *
      * @since  3.4.2
      */

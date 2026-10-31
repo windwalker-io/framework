@@ -14,7 +14,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileFor(string $expression): string
     {
@@ -26,7 +26,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileForeach(string $expression): string
     {
@@ -38,7 +38,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileBreak(string $expression): string
     {
@@ -50,7 +50,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileContinue(string $expression): string
     {
@@ -62,7 +62,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileForelse(string $expression): string
     {
@@ -76,7 +76,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEmpty(string $expression): string
     {
@@ -90,7 +90,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileWhile(string $expression): string
     {
@@ -102,7 +102,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndwhile(string $expression): string
     {
@@ -114,7 +114,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndfor(string $expression): string
     {
@@ -126,7 +126,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndforeach(string $expression): string
     {
@@ -138,7 +138,7 @@ trait CompileLoopTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndforelse(string $expression): string
     {

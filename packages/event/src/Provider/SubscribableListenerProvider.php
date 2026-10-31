@@ -23,7 +23,7 @@ use function Windwalker\disposable;
 class SubscribableListenerProvider implements SubscribableListenerProviderInterface
 {
     /**
-     * @var ListenersQueue[]
+     * @var  ListenersQueue[]
      */
     protected array $queues = [];
 

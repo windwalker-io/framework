@@ -84,7 +84,7 @@ class DocblockHelper
 
             $source = file($method->getFileName());
             $body = implode(
-                "",
+                '',
                 array_slice(
                     $source,
                     $method->getStartLine() - 1,

@@ -24,7 +24,7 @@ class ComponentTagCompiler
     /**
      * The "bind:" attributes that have been compiled for the current component.
      *
-     * @var array
+     * @var  array
      */
     protected array $boundAttributes = [];
 
@@ -46,7 +46,7 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     public function compile(string $value): string
     {
@@ -60,9 +60,9 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function compileTags(string $value): string
     {
@@ -78,9 +78,9 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     protected function compileOpeningTags(string $value): string
     {
@@ -135,9 +135,9 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     protected function compileSelfClosingTags(string $value): string
     {
@@ -193,9 +193,9 @@ class ComponentTagCompiler
      * @param  string  $component
      * @param  array   $attributes
      *
-     * @return string
+     * @return  string
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     protected function componentString(string $component, array $attributes): string
     {
@@ -234,15 +234,15 @@ class ComponentTagCompiler
             unset($attributes['']);
         }
 
-        return "@component('{$class}', '{$component}', [" .
-            $this->attributesToString(
+        return "@component('{$class}', '{$component}', ["
+            . $this->attributesToString(
                 $parameters,
                 false
             ) . '])
 <?php $component->withAttributes([' . $this->attributesToString(
                 $attributes->dump(),
                 is_a($class, DynamicComponent::class, true)
-            ) . "]); ?>";
+            ) . ']); ?>';
     }
 
     /**
@@ -250,9 +250,9 @@ class ComponentTagCompiler
      *
      * @param  string  $component
      *
-     * @return string
+     * @return  string
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function componentClass(string $component): string
     {
@@ -298,7 +298,7 @@ class ComponentTagCompiler
      * @param  string  $class
      * @param  array   $attributes
      *
-     * @return array<Collection>
+     * @return  array<Collection>
      */
     public function partitionDataAndAttributes(string $class, array $attributes)
     {
@@ -334,7 +334,7 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function compileClosingTags(string $value): string
     {
@@ -346,7 +346,7 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     public function compileSlots(string $value): string
     {
@@ -376,7 +376,7 @@ class ComponentTagCompiler
      *
      * @param  string  $attributeString
      *
-     * @return array
+     * @return  array
      */
     protected function getAttributesFromAttributeString(string $attributeString): array
     {
@@ -439,7 +439,7 @@ class ComponentTagCompiler
      *
      * @param  string  $attributeString
      *
-     * @return string
+     * @return  string
      */
     protected function parseAttributeBag(string $attributeString)
     {
@@ -456,7 +456,7 @@ class ComponentTagCompiler
      *
      * @param  string  $attributeString
      *
-     * @return string
+     * @return  string
      */
     protected function parseBindAttributes(string $attributeString)
     {
@@ -477,7 +477,7 @@ class ComponentTagCompiler
      *
      * @param  string  $attributeString
      *
-     * @return string
+     * @return  string
      */
     protected function compileAttributeEchos(string $attributeString): string
     {
@@ -499,7 +499,7 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function escapeSingleQuotesOutsideOfPhpBlocks(string $value): string
     {
@@ -524,7 +524,7 @@ class ComponentTagCompiler
      * @param  array  $attributes
      * @param  bool   $escapeBound
      *
-     * @return string
+     * @return  string
      */
     protected function attributesToString(array $attributes, bool $escapeBound = true): string
     {
@@ -555,7 +555,7 @@ class ComponentTagCompiler
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     public function stripQuotes(string $value): string
     {

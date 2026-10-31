@@ -10,6 +10,4 @@ use Windwalker\DI\Attributes\Service;
  * The StubInstantService class.
  */
 #[Service(tag: 'foo')]
-class StubInstantTaggedService
-{
-}
+class StubInstantTaggedService {}

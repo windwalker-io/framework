@@ -10,12 +10,12 @@ namespace Windwalker\Utilities\Proxy;
 class TimesLimitedCallable extends CallableProxy
 {
     /**
-     * @var int|null
+     * @var  int|null
      */
     protected $limits = null;
 
     /**
-     * @var int
+     * @var  int
      */
     protected $callTimes = 0;
 

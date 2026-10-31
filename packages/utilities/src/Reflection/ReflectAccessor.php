@@ -58,7 +58,7 @@ class ReflectAccessor
      *
      * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @since   2.0
      */
     public static function setValue(object $object, mixed $propertyName, mixed $value, bool $safe = false): void
@@ -181,7 +181,7 @@ class ReflectAccessor
      *
      * @return  mixed  The value of the property.
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @since   2.0
      */
     public static function getValue(object $object, string $propertyName): mixed
@@ -224,7 +224,7 @@ class ReflectAccessor
      *
      * @return  mixed
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      * @since   2.0
      */
     public static function invoke(object $object, string $methodName, ...$args): mixed
@@ -284,7 +284,7 @@ class ReflectAccessor
      * @param  int|null       $filters
      *
      * @return  ReflectionMethod[]
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public static function getReflectMethods(
         string|object $object,
@@ -303,7 +303,7 @@ class ReflectAccessor
     /**
      * getNoRepeatAttributes
      *
-     * @param  Reflector   $ref
+     * @param  Reflector    $ref
      * @param  string|null  $name
      * @param  int          $flags
      *

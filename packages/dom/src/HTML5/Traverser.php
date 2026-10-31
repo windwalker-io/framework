@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Windwalker\DOM\HTML5;
 
 use Dom\Document;
@@ -37,13 +39,13 @@ class Traverser
     /**
      * Create a traverser.
      *
-     * @param  Node|NodeList  $dom           The document or node to traverse.
-     * @param  resource       $out           A stream that allows writing. The traverser will output into this
-     *                                       stream.
-     * @param  array          $options       An array of options for the traverser as key/value pairs. These include:
-     *                                       - encode_entities: A bool to specify if full encding should happen for all
-     *                                       named charachter references. Defaults to false which escapes &'<>".
-     *                                       - output_rules: The path to the class handling the output rules.
+     * @param  Node|NodeList  $dom      The document or node to traverse.
+     * @param  resource       $out      A stream that allows writing. The traverser will output into this
+     *                                  stream.
+     * @param  array          $options  An array of options for the traverser as key/value pairs. These include:
+     *                                  - encode_entities: A bool to specify if full encding should happen for all
+     *                                  named charachter references. Defaults to false which escapes &'<>".
+     *                                  - output_rules: The path to the class handling the output rules.
      */
     public function __construct($dom, $out, RulesInterface $rules, $options = [])
     {
@@ -58,7 +60,7 @@ class Traverser
     /**
      * Tell the traverser to walk the DOM.
      *
-     * @return resource $out Returns the output stream.
+     * @return  resource  $out Returns the output stream.
      */
     public function walk()
     {
@@ -107,7 +109,7 @@ class Traverser
             case XML_COMMENT_NODE:
                 $this->rules->comment($node);
                 break;
-            // Currently we don't support embedding DTDs.
+                // Currently we don't support embedding DTDs.
             default:
                 //print '<!-- Skipped -->';
                 break;
@@ -131,7 +133,7 @@ class Traverser
      *
      * @param  mixed  $ele  An element that implement \DOMNode.
      *
-     * @return bool true if local and false otherwise.
+     * @return  bool  true if local and false otherwise.
      */
     public function isLocalElement($ele)
     {

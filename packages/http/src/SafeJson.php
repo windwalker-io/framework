@@ -15,7 +15,7 @@ class SafeJson implements WrapperInterface
     protected mixed $decoded = null;
 
     public function __construct(
-        readonly public string $json,
+        public readonly string $json,
         protected bool $assoc = false,
         protected int $depth = 512,
         protected int $flags = JSON_THROW_ON_ERROR,
@@ -32,7 +32,7 @@ class SafeJson implements WrapperInterface
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function get(): mixed
     {

@@ -12,7 +12,7 @@ trait PublicVisibleContainerAwareTrait
     public protected(set) Container $container;
 
     /**
-     * @return Container
+     * @return  Container
      */
     public function getContainer(): Container
     {

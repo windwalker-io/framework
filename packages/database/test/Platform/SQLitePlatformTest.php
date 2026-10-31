@@ -524,25 +524,46 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
     #[Test]
     public function createDropDatabase(): void
     {
-        $file = __DIR__ . '/../../tmp/hello.db';
+        $name = 'hello_' . bin2hex(random_bytes(8));
+        $file = __DIR__ . '/../../tmp/' . $name . '.db';
 
-        if (in_array('hello', $this->instance->listSchemas(), true)) {
-            $this->instance->dropSchema('hello', []);
+        try {
+            $this->instance->createDatabase($file, ['as' => $name]);
+
+            self::assertContains(
+                $name,
+                $this->instance->listSchemas()
+            );
+
+            $this->instance->dropDatabase($name);
+
+            self::assertNotContains(
+                $name,
+                $this->instance->listSchemas()
+            );
+        } finally {
+            @unlink($file);
         }
+    }
 
-        $this->instance->createDatabase($file, ['as' => 'hello']);
+    #[Test]
+    public function createDropSchema(): void
+    {
+        $name = 'hello_' . bin2hex(random_bytes(8));
+        $file = __DIR__ . '/../../tmp/' . $name . '.db';
 
-        self::assertContains(
-            'hello',
-            $this->instance->listSchemas()
-        );
+        try {
+            $this->instance->createSchema($file);
 
-        $this->instance->dropDatabase('hello');
+            self::assertContains(
+                $name,
+                $this->instance->listSchemas()
+            );
 
-        self::assertNotContains(
-            'hello',
-            $this->instance->listSchemas()
-        );
+            $this->instance->dropSchema($name, []);
+        } finally {
+            @unlink($file);
+        }
     }
 
     /**

@@ -19,7 +19,7 @@ interface OutputInterface
      *
      * @param  ResponseInterface  $response  Respond body output.
      *
-     * @return void
+     * @return  void
      *
      * @since   3.0
      */
@@ -52,7 +52,7 @@ interface OutputInterface
      *
      * @param  string  $str
      *
-     * @return  int Returns the number of bytes written to the stream.
+     * @return  int  Returns the number of bytes written to the stream.
      */
     public function write(string $str): int;
 

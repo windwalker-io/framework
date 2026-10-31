@@ -16,7 +16,7 @@ class VarDumper
     /**
      * Property handler.
      *
-     * @var callable
+     * @var  callable
      */
     private static $handler;
 
@@ -62,7 +62,7 @@ class VarDumper
     /**
      * setHandler
      *
-     * @param callable|null $callable
+     * @param  callable|null  $callable
      *
      * @return  callable
      *

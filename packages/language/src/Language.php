@@ -26,7 +26,7 @@ class Language implements LanguageInterface
     /**
      * Property locale.
      *
-     * @var string
+     * @var  string
      */
     protected ?string $locale = null;
 
@@ -59,7 +59,7 @@ class Language implements LanguageInterface
     protected array $orphans = [];
 
     /**
-     * @var array
+     * @var  array
      */
     protected array $trace = [];
 
@@ -171,7 +171,7 @@ class Language implements LanguageInterface
      * @param  bool         $fallback
      *
      * @return  array<string>
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     #[ArrayShape(['string', 'string'])]
     public function get(
@@ -430,7 +430,7 @@ class Language implements LanguageInterface
      * @param  string  $string
      *
      * @return  mixed
-     * @throws UnexpectedValueException
+     * @throws  UnexpectedValueException
      */
     public function normalize(string $string): mixed
     {
@@ -468,7 +468,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return PluralSelector
+     * @return  PluralSelector
      */
     public function getSelector(): PluralSelector
     {
@@ -511,7 +511,7 @@ class Language implements LanguageInterface
      * @param  string  $id
      *
      * @return  array
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     protected function backtrace(string $id): array
     {
@@ -566,7 +566,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -588,7 +588,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isDebug(): bool
     {
@@ -596,7 +596,7 @@ class Language implements LanguageInterface
     }
 
     /**
-     * @return self
+     * @return  self
      */
     public function getParent(): ?self
     {

@@ -66,7 +66,7 @@ class IniFormat implements FormatInterface
      * @param  string  $string   INI formatted string to convert.
      * @param  array   $options  An array of options used by the formatter, or a boolean setting to process sections.
      *
-     * @return array|false Data array.
+     * @return  array|false  Data array.
      */
     public function parse(string $string, array $options = []): bool|array
     {

@@ -18,7 +18,7 @@ use Windwalker\Event\Test\Stub\StubFlowerEvent;
 class EventDispatcherTest extends TestCase
 {
     /**
-     * @var EventDispatcher
+     * @var  EventDispatcher
      */
     protected $instance;
 

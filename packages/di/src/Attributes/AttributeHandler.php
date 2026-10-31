@@ -27,7 +27,7 @@ class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
     }
 
     /**
-     * @return Container
+     * @return  Container
      *
      * @codeCoverageIgnore
      */
@@ -37,7 +37,7 @@ class AttributeHandler extends \Windwalker\Attributes\AttributeHandler
     }
 
     /**
-     * @return AttributesResolver
+     * @return  AttributesResolver
      *
      * @codeCoverageIgnore
      */

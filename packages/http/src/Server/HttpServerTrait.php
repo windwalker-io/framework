@@ -23,12 +23,12 @@ use function Windwalker\DI\create;
  */
 trait HttpServerTrait
 {
-    protected Closure|null $middlewareResolver = null;
+    protected ?Closure $middlewareResolver = null;
 
     public function __construct(
         protected array $middlewares = [],
         protected ?HttpFactory $httpFactory = null,
-        protected Closure|null $outputBuilder = null,
+        protected ?Closure $outputBuilder = null,
     ) {
         $this->adaptLegacyEvents();
     }
@@ -167,7 +167,7 @@ trait HttpServerTrait
     }
 
     /**
-     * @return HttpFactory
+     * @return  HttpFactory
      */
     public function getHttpFactory(): HttpFactory
     {
@@ -198,7 +198,7 @@ trait HttpServerTrait
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getMiddlewares(): array
     {
@@ -220,7 +220,7 @@ trait HttpServerTrait
     }
 
     /**
-     * @return Closure
+     * @return  Closure
      */
     public function getMiddlewareResolver(): Closure
     {
@@ -240,7 +240,7 @@ trait HttpServerTrait
     }
 
     /**
-     * @return Closure|null
+     * @return  Closure|null
      */
     abstract public function getOutputBuilder(): ?Closure;
 

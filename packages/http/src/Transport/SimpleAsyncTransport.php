@@ -36,7 +36,7 @@ class SimpleAsyncTransport implements AsyncTransportInterface
     }
 
     /**
-     * @return TransportInterface
+     * @return  TransportInterface
      * @codeCoverageIgnore
      */
     public function getTransport(): TransportInterface

@@ -14,12 +14,12 @@ use Windwalker\Database\Driver\StatementInterface;
 class PgsqlDriver extends AbstractDriver
 {
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = 'pgsql';
 
     /**
-     * @var string
+     * @var  string
      */
     protected string $platformName = 'pgsql';
 

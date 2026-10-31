@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Subscriber;
 
 use Windwalker\Event\Attributes\EventSubscriber;
-use Windwalker\ORM\Event\BeforeSaveEvent;
 use Windwalker\ORM\Event\BeforeStoreEvent;
 
 /**

@@ -6,7 +6,6 @@ namespace Windwalker\ORM\Attributes;
 
 use Attribute;
 use DateTimeImmutable;
-use Windwalker\Filter\FilterInterface;
 use Windwalker\ORM\ORM;
 
 /**

@@ -9,7 +9,6 @@ use Generator;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use ReflectionException;
 use ReflectionFunction;
-use Windwalker\Event\Event;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\Listener\ListenerCallable;
 use Windwalker\Event\Listener\ListenerPriority;
@@ -24,12 +23,12 @@ use Windwalker\Utilities\Proxy\TimesLimitedCallable;
 class CompositeListenerProvider implements SubscribableListenerProviderInterface
 {
     /**
-     * @var SubscribableListenerProviderInterface
+     * @var  SubscribableListenerProviderInterface
      */
     protected SubscribableListenerProviderInterface $mainProvider;
 
     /**
-     * @var ListenerProviderInterface[]
+     * @var  ListenerProviderInterface[]
      */
     protected array $providers = [];
 
@@ -56,8 +55,8 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
     /**
      * CompositeListenerProvider constructor.
      *
-     * @param SubscribableListenerProvider|null $mainProvider
-     * @param  ListenerProviderInterface[]      $providers
+     * @param  SubscribableListenerProvider|null  $mainProvider
+     * @param  ListenerProviderInterface[]        $providers
      */
     public function __construct(?SubscribableListenerProvider $mainProvider = null, array $providers = [])
     {
@@ -123,7 +122,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     private function removeIfNecessary(object $event, callable $listener): void
     {
@@ -147,7 +146,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  static
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function remove(mixed $listenerOrSubscriber): static
     {
@@ -171,7 +170,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      * @param  callable|object|null   $listenerOrSubscriber
      *
      * @return  static
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function off(string|EventInterface $event, callable|object|null $listenerOrSubscriber = null): static
     {
@@ -212,7 +211,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      *
      * @return  void
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     private function offSubscriber(ListenersQueue $queue, object $subscriber): void
     {
@@ -293,7 +292,7 @@ class CompositeListenerProvider implements SubscribableListenerProviderInterface
      * then the newly created object's __clone() method will be called, to allow any necessary properties that need to
      * be changed. NOT CALLABLE DIRECTLY.
      *
-     * @return void
+     * @return  void
      * @link https://php.net/manual/en/language.oop5.cloning.php
      */
     public function __clone(): void

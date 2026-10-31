@@ -52,7 +52,7 @@ class ComponentExtension implements EdgeExtensionInterface, ParsersExtensionInte
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getComponents(): array
     {

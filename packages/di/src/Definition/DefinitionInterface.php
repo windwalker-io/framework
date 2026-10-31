@@ -15,11 +15,11 @@ interface DefinitionInterface
     /**
      * Resolve this definition.
      *
-     * @param  Container              $container  The Container object.
-     * @param  array                  $args
+     * @param  Container             $container  The Container object.
+     * @param  array                 $args
      * @param  UnitEnum|string|null  $tag
      *
-     * @return mixed
+     * @return  mixed
      */
     public function resolve(Container $container, array $args = [], UnitEnum|string|null $tag = null): mixed;
 

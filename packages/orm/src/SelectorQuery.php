@@ -16,11 +16,9 @@ use Windwalker\ORM\Attributes\UUIDBin;
 use Windwalker\ORM\Metadata\EntityMetadata;
 use Windwalker\ORM\Relation\Strategy\ManyToMany;
 use Windwalker\Query\Clause\AsClause;
-use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\JoinClause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Arr;
-
 use Windwalker\Utilities\Attributes\AttributesAccessor;
 
 use function Windwalker\Query\try_uuid2bin;
@@ -428,8 +426,8 @@ class SelectorQuery extends Query implements EventAwareInterface
      * then the newly created object's __clone() method will be called, to allow any necessary properties that need to
      * be changed. NOT CALLABLE DIRECTLY.
      *
-     * @return void
-     * @throws \ReflectionException
+     * @return  void
+     * @throws  \ReflectionException
      * @link https://php.net/manual/en/language.oop5.cloning.php
      */
     public function __clone(): void

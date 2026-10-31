@@ -14,7 +14,7 @@ trait CompileEchoTrait
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     public function compileEchos(string $value): string
     {
@@ -30,7 +30,7 @@ trait CompileEchoTrait
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function compileRawEchos(string $value): string
     {
@@ -53,7 +53,7 @@ trait CompileEchoTrait
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function compileRegularEchos(string $value): string
     {
@@ -75,7 +75,7 @@ trait CompileEchoTrait
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function compileEscapedEchos(string $value): string
     {
@@ -99,7 +99,7 @@ trait CompileEchoTrait
      *
      * @param  string  $value
      *
-     * @return string
+     * @return  string
      */
     protected function compileEchoDefaults(string $value): string
     {
@@ -109,7 +109,7 @@ trait CompileEchoTrait
     /**
      * Get the echo methods in the proper order for compilation.
      *
-     * @return array
+     * @return  array
      */
     protected function getEchoMethods(): array
     {

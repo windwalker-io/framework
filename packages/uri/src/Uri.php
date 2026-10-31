@@ -267,7 +267,7 @@ class Uri implements ExtendedUriInterface
      *
      * @return  static  A new instance with the specified scheme.
      *
-     * @throws  InvalidArgumentException for invalid or unsupported schemes.
+     * @throws  InvalidArgumentException  for invalid or unsupported schemes.
      */
     public function withScheme($scheme): Uri|static
     {
@@ -356,7 +356,7 @@ class Uri implements ExtendedUriInterface
      *
      * @return  static  A new instance with the specified host.
      *
-     * @throws  InvalidArgumentException for invalid hostnames.
+     * @throws  InvalidArgumentException  for invalid hostnames.
      */
     public function withHost($host): Uri|static
     {
@@ -382,11 +382,11 @@ class Uri implements ExtendedUriInterface
      * A null value provided for the port is equivalent to removing the port
      * information.
      *
-     * @param  ?int  $port   The port to use with the new instance; a null value
+     * @param  ?int  $port  The port to use with the new instance; a null value
      *                      removes the port information.
      *
-     * @return  static  A new instance with the specified port.
-     * @throws  InvalidArgumentException for invalid ports.
+     * @return  static                    A new instance with the specified port.
+     * @throws  InvalidArgumentException  for invalid ports.
      */
     public function withPort($port): Uri|static
     {
@@ -428,8 +428,8 @@ class Uri implements ExtendedUriInterface
      *
      * @param  string  $path  The path to use with the new instance.
      *
-     * @return  static  A new instance with the specified path.
-     * @throws  InvalidArgumentException for invalid paths.
+     * @return  static                    A new instance with the specified path.
+     * @throws  InvalidArgumentException  for invalid paths.
      */
     public function withPath($path): Uri|static
     {
@@ -481,8 +481,8 @@ class Uri implements ExtendedUriInterface
      *
      * @param  string  $query  The query string to use with the new instance.
      *
-     * @return  static  A new instance with the specified query string.
-     * @throws  InvalidArgumentException for invalid query strings.
+     * @return  static                    A new instance with the specified query string.
+     * @throws  InvalidArgumentException  for invalid query strings.
      */
     public function withQuery($query): Uri|static
     {
@@ -679,10 +679,10 @@ class Uri implements ExtendedUriInterface
     /**
      * Returns a query variable by name.
      *
-     * @param  string     $name    Name of the query variable to get.
-     * @param string|null $default Default value to return if the variable is not set.
+     * @param  string       $name     Name of the query variable to get.
+     * @param  string|null  $default  Default value to return if the variable is not set.
      *
-     * @return  mixed   Query variables.
+     * @return  mixed  Query variables.
      *
      * @since   2.0
      */
@@ -734,7 +734,7 @@ class Uri implements ExtendedUriInterface
      * Section 3.2.2.
      *
      * @see http://tools.ietf.org/html/rfc3986#section-3.2.2
-     * @return string The URI host.
+     * @return  string  The URI host.
      */
     public function getHost(): string
     {
@@ -745,7 +745,7 @@ class Uri implements ExtendedUriInterface
      * Get URI port
      * Returns the port number, or null if no port was specified.
      *
-     * @return int|null The URI port number.
+     * @return  int|null  The URI port number.
      *
      * @since   2.0
      */
@@ -803,7 +803,7 @@ class Uri implements ExtendedUriInterface
      * added.
      *
      * @see https://tools.ietf.org/html/rfc3986#section-3.1
-     * @return string The URI scheme.
+     * @return  string  The URI scheme.
      */
     public function getScheme(): string
     {

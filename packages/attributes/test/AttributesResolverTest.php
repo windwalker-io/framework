@@ -20,10 +20,9 @@ use Windwalker\Attributes\Test\Stub\Attrs\ValueImplode;
 use Windwalker\Attributes\Test\Stub\StubAccessible;
 use Windwalker\Attributes\Test\Stub\StubObject;
 use Windwalker\Scalars\StringObject;
+use Windwalker\Test\Traits\BaseAssertionTrait;
 
 use function Windwalker\str;
-
-use Windwalker\Test\Traits\BaseAssertionTrait;
 
 /**
  * The AttributeResolverTest class.
@@ -80,7 +79,7 @@ class AttributesResolverTest extends TestCase
         // Test property type
         $this->instance->registerAttribute(StrUpper::class, AttributeType::CALLABLE);
 
-        $foo = new class {
+        $foo = new class () {
             #[StrUpper]
             public function foo(): string
             {
@@ -115,7 +114,7 @@ class AttributesResolverTest extends TestCase
         $obj = $this->instance->createObject(
             StubObject::class,
             options: ['foo' => 'bar'],
-            stub: new StubAccessible
+            stub: new StubAccessible()
         );
 
         self::assertInstanceOf(StubWrapper::class, $obj);
@@ -129,7 +128,7 @@ class AttributesResolverTest extends TestCase
     {
         $this->instance->registerAttribute(StubWrapper::class, Attribute::TARGET_CLASS);
 
-        $obj = $this->instance->decorateObject(new StubObject);
+        $obj = $this->instance->decorateObject(new StubObject());
 
         self::assertInstanceOf(StubWrapper::class, $obj);
         self::assertInstanceOf(StubObject::class, $obj->instance);
@@ -138,7 +137,7 @@ class AttributesResolverTest extends TestCase
         $obj = $this->instance->decorateObject(
             new
             #[StubWrapper]
-            class {
+            class () {
                 public $foo = 'bar';
             },
             ['foo' => 'bar']
@@ -155,7 +154,7 @@ class AttributesResolverTest extends TestCase
     {
         $this->instance->registerAttribute(StubMemberResolver::class);
 
-        $foo = new class {
+        $foo = new class () {
             #[StubMemberResolver]
             public const FLOWER = 'sakura';
 
@@ -241,7 +240,7 @@ EOT,
     {
         $this->instance->registerAttribute(PropWrap::class, Attribute::TARGET_PROPERTY);
 
-        $obj = new class {
+        $obj = new class () {
             #[PropWrap(StringObject::class)]
             protected $foo = 'bar';
 
@@ -272,7 +271,7 @@ EOT,
     #[Test]
     public function callWithInvokeHandler(): void
     {
-        $context = new class {};
+        $context = new class () {};
 
         $this->instance->setInvokeHandler(
             fn(callable $callable, array $args, ?object $ctx) => [$callable(...$args), $ctx]
@@ -286,7 +285,7 @@ EOT,
     #[Test]
     public function callWithContext(): void
     {
-        $context = new class {
+        $context = new class () {
             protected string $name = 'sakura';
         };
 
@@ -335,7 +334,7 @@ EOT,
     {
         $this->instance->registerAttribute(StubMemberResolver::class);
 
-        $foo = new class {
+        $foo = new class () {
             public const PLAIN = 'plain';
 
             public array $output = [];
@@ -365,7 +364,7 @@ EOT,
         $this->instance->decorateObject(
             new
             #[StubNotInvokable]
-            class {}
+            class () {}
         );
     }
 
@@ -377,6 +376,6 @@ EOT,
 
     protected function setUp(): void
     {
-        $this->instance = new AttributesResolver;
+        $this->instance = new AttributesResolver();
     }
 }

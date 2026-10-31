@@ -14,7 +14,7 @@ trait CompileLayoutTrait
     /**
      * The name of the last section that was started.
      *
-     * @var string
+     * @var  string
      */
     protected string $lastSection = '';
 
@@ -23,7 +23,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileExtends(string $expression): string
     {
@@ -43,7 +43,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileYield(string $expression): string
     {
@@ -55,7 +55,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileShow(string $expression): string
     {
@@ -67,7 +67,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileSection(string $expression): string
     {
@@ -87,7 +87,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileAppend(string $expression): string
     {
@@ -99,7 +99,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileEndsection(string $expression): string
     {
@@ -111,7 +111,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileStop(string $expression): string
     {
@@ -123,7 +123,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileOverwrite(string $expression): string
     {
@@ -135,7 +135,7 @@ trait CompileLayoutTrait
      *
      * @param  string  $expression
      *
-     * @return string
+     * @return  string
      */
     protected function compileHasSection(string $expression): string
     {
@@ -145,7 +145,7 @@ trait CompileLayoutTrait
     /**
      * Replace the @parent directive to a placeholder.
      *
-     * @return string
+     * @return  string
      */
     protected function compileParent(): string
     {

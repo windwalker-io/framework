@@ -12,7 +12,7 @@ use Windwalker\Utilities\Wrapper\WrapperInterface;
 class CallbackWrapper implements WrapperInterface
 {
     /**
-     * @var callable
+     * @var  callable
      */
     public $callable;
 

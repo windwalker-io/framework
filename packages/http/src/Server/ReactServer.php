@@ -30,7 +30,7 @@ class ReactServer implements ServerInterface
     public ?LoopInterface $loop = null;
 
     /**
-     * @var ReactServerInterface|null
+     * @var  ReactServerInterface|null
      */
     public ?ReactServerInterface $socket = null;
 
@@ -78,7 +78,7 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return LoopInterface
+     * @return  LoopInterface
      */
     public function getLoop(): LoopInterface
     {
@@ -100,7 +100,7 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return ReactServerInterface
+     * @return  ReactServerInterface
      */
     public function getSocket(): ReactServerInterface
     {
@@ -127,7 +127,7 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return HttpServer
+     * @return  HttpServer
      */
     public function getServer(): HttpServer
     {
@@ -209,7 +209,7 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isListening(): bool
     {

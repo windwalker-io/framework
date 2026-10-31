@@ -20,7 +20,7 @@ class DateCaster
         $fromNow = (new \DateTime())->diff($d);
 
         $title = $d->format(\DateTimeInterface::RFC3339_EXTENDED);
-        $dst = $location ? ($d->format('I') ? "On" : "Off") : '';
+        $dst = $location ? ($d->format('I') ? 'On' : 'Off') : '';
 
         unset(
             $a[Caster::PREFIX_DYNAMIC . 'date'],

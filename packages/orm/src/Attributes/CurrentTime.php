@@ -6,7 +6,6 @@ namespace Windwalker\ORM\Attributes;
 
 use Attribute;
 use DateTimeImmutable;
-use Windwalker\Filter\FilterInterface;
 use Windwalker\ORM\ORM;
 
 /**
@@ -21,9 +20,7 @@ class CurrentTime implements CastForSaveInterface
      * @param  string  $time
      * @param  bool    $onlyUpdate
      */
-    public function __construct(protected string $time = 'now', public bool $onlyUpdate = true)
-    {
-    }
+    public function __construct(protected string $time = 'now', public bool $onlyUpdate = true) {}
 
     public function getCurrent(): DateTimeImmutable
     {

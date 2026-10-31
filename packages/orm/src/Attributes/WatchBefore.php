@@ -5,13 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Attributes;
 
 use Attribute;
-use ReflectionProperty;
-use Windwalker\Attributes\AttributeHandler;
-use Windwalker\Attributes\AttributeInterface;
-use Windwalker\ORM\Event\AbstractSaveEvent;
-use Windwalker\ORM\Event\AbstractUpdateWhereEvent;
-use Windwalker\ORM\Event\WatchEvent;
-use Windwalker\ORM\Metadata\EntityMetadata;
 
 /**
  * The Watch class.

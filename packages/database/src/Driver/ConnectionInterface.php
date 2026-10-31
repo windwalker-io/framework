@@ -14,12 +14,12 @@ interface ConnectionInterface extends PoolConnectionInterface
     /**
      * Get exists connection.
      *
-     * @return mixed
+     * @return  mixed
      */
     public function get(): mixed;
 
     /**
-     * @return string
+     * @return  string
      */
     public static function getName(): string;
 }

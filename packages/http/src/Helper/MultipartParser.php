@@ -24,7 +24,7 @@ class MultipartParser
      *
      * @return  string
      *
-     * @throws Exception
+     * @throws  Exception
      */
     public static function toFormData(string $boundary, array $data): string
     {
@@ -50,7 +50,7 @@ class MultipartParser
 
                 $postdata[] = $item;
             } else {
-                $postdata[] = "Content-Disposition: form-data; name=\"" . $key . "\"{$eol}{$eol}" . $val;
+                $postdata[] = 'Content-Disposition: form-data; name="' . $key . "\"{$eol}{$eol}" . $val;
             }
         }
 
@@ -87,7 +87,7 @@ class MultipartParser
     /**
      * @return  string
      *
-     * @throws Exception
+     * @throws  Exception
      */
     public static function createBoundary(): string
     {
@@ -99,7 +99,7 @@ class MultipartParser
     /**
      * @param  string  $input
      *
-     * @return array
+     * @return  array
      *
      * @link  http://stackoverflow.com/questions/5483851/manually-parse-raw-http-data-with-php/5488449#5488449
      */

@@ -12,12 +12,12 @@ use DomainException;
 class ScheduleRunner implements SchedulerInterface
 {
     /**
-     * @var SchedulerInterface[]
+     * @var  SchedulerInterface[]
      */
     protected array $schedulers = [];
 
     /**
-     * @var static
+     * @var  static
      */
     protected static $instance;
 

@@ -16,7 +16,7 @@ interface ValidatorInterface
      *
      * @param  mixed  $value
      *
-     * @param  bool   $strict
+     * @param  bool  $strict
      *
      * @return  bool
      */

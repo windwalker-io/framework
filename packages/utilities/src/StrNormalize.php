@@ -199,7 +199,7 @@ class StrNormalize
      *
      * @param  string  $class  The class name string.
      *
-     * @return  string Normalised class name.
+     * @return  string  Normalised class name.
      *
      * @since   2.0
      */

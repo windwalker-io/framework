@@ -50,7 +50,8 @@ class PostgreSQLSchemaManagerTest extends AbstractDatabaseTestCase
     public function getTableResolvesNameFromTableAttribute(): void
     {
         $table = self::$db->getSchemaManager('public', true)->getTable(
-            SchemaAttrEntityFixture::class);
+            SchemaAttrEntityFixture::class
+        );
 
         self::assertSame('ww_schema_attr_items', $table->getName());
     }

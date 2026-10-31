@@ -36,7 +36,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
     protected static ?string $dbname = '';
 
     /**
-     * @var PDO
+     * @var  PDO
      */
     protected static ?PDO $baseConn;
 
@@ -185,7 +185,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
     {
         // static::$baseConn->exec('DROP DATABASE ' . static::qn(static::$dbname));
 
-//        static::$baseConn = null;
+        //        static::$baseConn = null;
     }
 
     /**

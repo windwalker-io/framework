@@ -46,7 +46,7 @@ trait ResponseTrait
     }
 
     /**
-     * @throws JsonException
+     * @throws  JsonException
      */
     public function jsonDecode(?bool $associative = null, int $depth = 512, int $flags = 0): mixed
     {
@@ -88,7 +88,7 @@ trait ResponseTrait
      *
      * @return  never
      *
-     * @throws T
+     * @throws  T
      */
     public function throw(string $className = HttpRequestException::class): never
     {
@@ -102,7 +102,7 @@ trait ResponseTrait
      *
      * @return  void
      *
-     * @throws T
+     * @throws  T
      */
     public function throwIfError(string $className = HttpRequestException::class): void
     {

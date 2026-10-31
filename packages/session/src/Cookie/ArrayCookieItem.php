@@ -11,6 +11,5 @@ class ArrayCookieItem
         public bool $modified = false,
         public bool $deleted = false,
         public CookiesOptions $options = new CookiesOptions(),
-    ) {
-    }
+    ) {}
 }

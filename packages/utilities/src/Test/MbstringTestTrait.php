@@ -366,7 +366,7 @@ trait MbstringTestTrait
             ['   Би шил ', null, 'Би шил'],
             ["\t\n\r\x0BБи шил\t\n\r\x0B", null, 'Би шил'],
             ["\x0B\t\n\rБи шил\r\x0B\t\n", "\t\n\x0B", "\rБи шил\r"],
-            ["\x09Би шил\x0A", "\x09\x0A", "Би шил"],
+            ["\x09Би шил\x0A", "\x09\x0A", 'Би шил'],
             ['1234abc56789', '0123456789', 'abc'],
         ];
     }
@@ -455,7 +455,7 @@ trait MbstringTestTrait
             ['george Мога Ž Ψυχοφθόρα ฉันกินกระจกได้ 我能吞下玻璃而不伤身体 ', true],
             ["\xFF ABC", false],
             ["\xFa ABC", false],
-            ["0xfffd ABC", true],
+            ['0xfffd ABC', true],
             ['', true],
         ];
     }
@@ -470,8 +470,8 @@ trait MbstringTestTrait
     public static function unicodeToUtf8Provider(): array
     {
         return [
-            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
+            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", 'Тест системы'],
+            ["\u00dcberpr\u00fcfung der Systemumstellung", 'Überprüfung der Systemumstellung'],
         ];
     }
 
@@ -485,8 +485,8 @@ trait MbstringTestTrait
     public static function unicodeToUtf16Provider(): array
     {
         return [
-            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
+            ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", 'Тест системы'],
+            ["\u00dcberpr\u00fcfung der Systemumstellung", 'Überprüfung der Systemumstellung'],
         ];
     }
 

@@ -14,14 +14,14 @@ class RawWrapper implements WrapperInterface, Stringable
     /**
      * Property value.
      *
-     * @var mixed
+     * @var  mixed
      */
     protected $value;
 
     /**
      * RawWrapper constructor.
      *
-     * @param $value
+     * @param   $value
      */
     public function __construct($value)
     {

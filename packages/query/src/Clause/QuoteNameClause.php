@@ -22,11 +22,10 @@ class QuoteNameClause implements ClauseInterface
     public function __construct(
         protected mixed $value,
         protected ?Query $query = null
-    ) {
-    }
+    ) {}
 
     /**
-     * @return mixed
+     * @return  mixed
      *
      * @codeCoverageIgnore
      */
@@ -50,7 +49,7 @@ class QuoteNameClause implements ClauseInterface
     }
 
     /**
-     * @return Query|null
+     * @return  Query|null
      *
      * @codeCoverageIgnore
      */

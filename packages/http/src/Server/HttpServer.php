@@ -67,7 +67,7 @@ class HttpServer extends AdaptableServer
     }
 
     /**
-     * @return Closure
+     * @return  Closure
      * @codeCoverageIgnore
      */
     public function getHandler(): Closure

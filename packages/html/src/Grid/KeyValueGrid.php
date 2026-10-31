@@ -25,7 +25,7 @@ class KeyValueGrid extends Grid
      *
      * @param  array  $attrs
      *
-     * @return static
+     * @return  static
      */
     public static function create(array $attrs = []): static
     {
@@ -69,7 +69,7 @@ class KeyValueGrid extends Grid
      * @param  string  $value
      * @param  array   $attrs
      *
-     * @return static
+     * @return  static
      */
     public function addItem(string $key, $value = null, array $attrs = []): static
     {
@@ -90,8 +90,8 @@ class KeyValueGrid extends Grid
     /**
      * addItems
      *
-     * @param array|null $items
-     * @param  array     $attrs
+     * @param  array|null  $items
+     * @param  array       $attrs
      *
      * @return  static
      */

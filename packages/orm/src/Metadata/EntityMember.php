@@ -32,8 +32,7 @@ class EntityMember
     public function __construct(
         public readonly \ReflectionProperty|\ReflectionMethod $memberRef,
         public ?Column $column = null,
-    ) {
-    }
+    ) {}
 
     public function addAttribute(object $attr): static
     {

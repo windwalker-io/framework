@@ -11,7 +11,6 @@ use Windwalker\ORM\Attributes\Column;
 use Windwalker\ORM\Attributes\EntitySetup;
 use Windwalker\ORM\Attributes\ManyToMany;
 use Windwalker\ORM\Attributes\MapBy;
-use Windwalker\ORM\Attributes\MapMorphBy;
 use Windwalker\ORM\Attributes\Mapping;
 use Windwalker\ORM\Attributes\MorphBy;
 use Windwalker\ORM\Attributes\PK;
@@ -84,7 +83,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -104,7 +103,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getNo(): string
     {
@@ -124,7 +123,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getName(): string
     {
@@ -144,7 +143,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getEmail(): string
     {
@@ -164,7 +163,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getPassword(): string
     {
@@ -184,7 +183,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getAvatar(): string
     {
@@ -204,7 +203,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return  DateTimeImmutable|null
      */
     public function getRegistered(): ?DateTimeImmutable
     {
@@ -224,7 +223,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return StubLicense|null
+     * @return  StubLicense|null
      */
     public function getStudentLicense(): ?StubLicense
     {
@@ -244,7 +243,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return StubLicense|null
+     * @return  StubLicense|null
      */
     public function getTeacherLicense(): ?StubLicense
     {
@@ -264,7 +263,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return RelationCollection|null
+     * @return  RelationCollection|null
      */
     public function getActions(): RelationCollection
     {
@@ -284,7 +283,7 @@ class StubMemberAttrNew implements EntityInterface
     }
 
     /**
-     * @return StubMemberActionMap|null
+     * @return  StubMemberActionMap|null
      */
     public function getMap(): ?StubMemberActionMap
     {

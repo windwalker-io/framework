@@ -19,12 +19,12 @@ use Masterminds\HTML5;
 class DOMFactory
 {
     /**
-     * @var DOMDocument|null
+     * @var  DOMDocument|null
      */
     protected static ?DOMDocument $dom = null;
 
     /**
-     * @var HTML5|null
+     * @var  HTML5|null
      */
     protected static ?HTML5 $html5 = null;
 

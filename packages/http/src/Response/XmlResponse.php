@@ -82,7 +82,7 @@ class XmlResponse extends TextResponse
     /**
      * @return  DOMDocument
      *
-     * @throws DOMException
+     * @throws  DOMException
      */
     protected function createDocument(): DOMDocument
     {

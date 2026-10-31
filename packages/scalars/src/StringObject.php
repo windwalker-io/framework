@@ -6,7 +6,6 @@ namespace Windwalker\Scalars;
 
 use ArrayAccess;
 use BadMethodCallException;
-use Closure;
 use Countable;
 use IteratorAggregate;
 use ReflectionException;
@@ -29,44 +28,44 @@ use Windwalker\Utilities\Utf8String;
 /**
  * @see    Str
  *
- * @method StringObject getChar(int $pos)
- * @method StringObject between(string $start, string $end, int $offset = 0)
- * @method StringObject collapseWhitespaces()
- * @method bool         contains(string $search, bool $caseSensitive = true)
- * @method bool         endsWith(string $search, bool $caseSensitive = true)
- * @method bool         startsWith(string $target, bool $caseSensitive = true)
- * @method StringObject ensureStart(string $search)
- * @method StringObject ensureEnd(string $search)
- * @method bool         hasLowerCase()
- * @method bool         hasUpperCase()
- * @method StringObject match(string $pattern, string $option = 'msr')
- * @method StringObject insert(string $insert, int $position)
- * @method bool         isLowerCase()
- * @method bool         isUpperCase()
- * @method StringObject first(int $length = 1)
- * @method StringObject last(int $length = 1)
- * @method StringObject intersectStart(string $string2)
- * @method StringObject intersectEnd(string $string2)
- * @method StringObject intersect(string $string2)
- * @method StringObject pad(int $length = 0, string $substring = ' ')
- * @method StringObject padStart(int $length = 0, string $substring = ' ')
- * @method StringObject padEnd(int $length = 0, string $substring = ' ')
- * @method StringObject removeChar(int $offset, int $length = null)
- * @method StringObject removeStart(string $search)
- * @method StringObject removeEnd(string $search)
- * @method StringObject slice(int $start, int $end = null)
- * @method StringObject substring(int $start, int $end = null)
- * @method StringObject surrounds($substring = ['"', '"'])
- * @method StringObject toggleCase()
- * @method StringObject truncate(int $length, string $suffix = '', bool $wordBreak = true)
- * @method StringObject map(callable $callback)
- * @method StringObject filter(callable $callback)
- * @method StringObject reject(callable $callback)
- * @method StringObject toUpperCase()
- * @method StringObject toLowerCase()
- * @method int|bool     strpos(string $search)
- * @method int|bool     strrpos(string $search)
- * @method ArrayObject  split(string $delimiter, ?int $limit = null)
+ * @method  StringObject  getChar(int $pos)
+ * @method  StringObject  between(string $start, string $end, int $offset = 0)
+ * @method  StringObject  collapseWhitespaces()
+ * @method  bool          contains(string $search, bool $caseSensitive = true)
+ * @method  bool          endsWith(string $search, bool $caseSensitive = true)
+ * @method  bool          startsWith(string $target, bool $caseSensitive = true)
+ * @method  StringObject  ensureStart(string $search)
+ * @method  StringObject  ensureEnd(string $search)
+ * @method  bool          hasLowerCase()
+ * @method  bool          hasUpperCase()
+ * @method  StringObject  match(string $pattern, string $option = 'msr')
+ * @method  StringObject  insert(string $insert, int $position)
+ * @method  bool          isLowerCase()
+ * @method  bool          isUpperCase()
+ * @method  StringObject  first(int $length = 1)
+ * @method  StringObject  last(int $length = 1)
+ * @method  StringObject  intersectStart(string $string2)
+ * @method  StringObject  intersectEnd(string $string2)
+ * @method  StringObject  intersect(string $string2)
+ * @method  StringObject  pad(int $length = 0, string $substring = ' ')
+ * @method  StringObject  padStart(int $length = 0, string $substring = ' ')
+ * @method  StringObject  padEnd(int $length = 0, string $substring = ' ')
+ * @method  StringObject  removeChar(int $offset, int $length = null)
+ * @method  StringObject  removeStart(string $search)
+ * @method  StringObject  removeEnd(string $search)
+ * @method  StringObject  slice(int $start, int $end = null)
+ * @method  StringObject  substring(int $start, int $end = null)
+ * @method  StringObject  surrounds($substring = ['"', '"'])
+ * @method  StringObject  toggleCase()
+ * @method  StringObject  truncate(int $length, string $suffix = '', bool $wordBreak = true)
+ * @method  StringObject  map(callable $callback)
+ * @method  StringObject  filter(callable $callback)
+ * @method  StringObject  reject(callable $callback)
+ * @method  StringObject  toUpperCase()
+ * @method  StringObject  toLowerCase()
+ * @method  int|bool      strpos(string $search)
+ * @method  int|bool      strrpos(string $search)
+ * @method  ArrayObject   split(string $delimiter, ?int $limit = null)
  */
 class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringable, NullableInterface
 {
@@ -145,8 +144,8 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      * @param  array   $args
      *
      * @return  mixed
-     * @throws BadMethodCallException
-     * @throws ReflectionException
+     * @throws  BadMethodCallException
+     * @throws  ReflectionException
      */
     public function __call(string $name, array $args): mixed
     {
@@ -177,7 +176,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      * @param  array   $args
      *
      * @return  mixed
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     protected function callProxy(string $class, string $method, array $args): mixed
     {
@@ -222,8 +221,8 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      * Retrieve an external iterator
      *
      * @link  http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     *        <b>Traversable</b>
+     * @return  Traversable  An instance of an object implementing <b>Iterator</b> or
+     *                       <b>Traversable</b>
      */
     public function getIterator(): Traversable
     {
@@ -239,10 +238,10 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      *                         An offset to check for.
      *                         </p>
      *
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     * @return  boolean  true on success or false on failure.
+     *                   </p>
+     *                   <p>
+     *                   The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -266,7 +265,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      *
      * @param  int  $offset  The offset to retrieve.
      *
-     * @return string|static Can return all value types.
+     * @return  string|static  Can return all value types.
      */
     public function offsetGet(mixed $offset): StringObject|string|static
     {
@@ -281,7 +280,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      * @param  mixed  $offset  The offset to assign the value to.
      * @param  mixed  $string  The value to set.
      *
-     * @return void
+     * @return  void
      */
     public function offsetSet(mixed $offset, mixed $string): void
     {
@@ -295,7 +294,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      *
      * @param  mixed  $offset  The offset to unset.
      *
-     * @return void
+     * @return  void
      */
     public function offsetUnset(mixed $offset): void
     {
@@ -310,8 +309,8 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      * Count elements of an object
      *
      * @link  http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     *             The return value is cast to an integer.
+     * @return  int  The custom count as an integer.
+     *               The return value is cast to an integer.
      */
     public function count(): int
     {

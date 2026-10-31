@@ -12,7 +12,7 @@ use Windwalker\ORM\ORM;
 class EntityMetadataCollection
 {
     /**
-     * @var EntityMetadata[]
+     * @var  EntityMetadata[]
      */
     protected array $metadataList = [];
 
@@ -70,7 +70,7 @@ class EntityMetadataCollection
     }
 
     /**
-     * @return EntityMetadata[]
+     * @return  EntityMetadata[]
      * @codeCoverageIgnore
      */
     public function getMetadataList(): array
@@ -92,7 +92,7 @@ class EntityMetadataCollection
     }
 
     /**
-     * @return ORM
+     * @return  ORM
      */
     public function getORM(): ORM
     {

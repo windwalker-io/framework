@@ -125,7 +125,7 @@ class DOMFormatter
      *
      * @param  string  $input  Dom input.
      *
-     * @return string Indented Dom.
+     * @return  string  Indented Dom.
      */
     public function doIndent(string $input): string
     {
@@ -285,7 +285,7 @@ class DOMFormatter
     /**
      * Debugging utility. Get log for the last indent operation.
      *
-     * @return array
+     * @return  array
      */
     public function getLog(): array
     {

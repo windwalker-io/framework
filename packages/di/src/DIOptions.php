@@ -42,8 +42,7 @@ class DIOptions
         /**
          * The service provided in these levels.
          */
-        public int|array|null|Closure $providedIn = null,
-
+        public int|array|Closure|null $providedIn = null,
         public bool $containerMerged = false,
     ) {}
 

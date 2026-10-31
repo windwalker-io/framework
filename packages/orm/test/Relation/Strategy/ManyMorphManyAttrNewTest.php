@@ -7,7 +7,6 @@ namespace Windwalker\ORM\Test\Relation\Strategy;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\ORM\Relation\Action;
 use Windwalker\ORM\Test\AbstractORMTestCase;
-use Windwalker\ORM\Test\Entity\StubAction;
 use Windwalker\ORM\Test\Entity\StubActionAttrNew;
 use Windwalker\ORM\Test\Entity\StubMember;
 use Windwalker\ORM\Test\Entity\StubMemberActionMap;

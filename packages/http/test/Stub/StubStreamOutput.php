@@ -110,7 +110,7 @@ class StubStreamOutput extends StreamOutput
      * @param  string  $filename
      * @param  int     $linenum
      *
-     * @return bool
+     * @return  bool
      */
     public function headersSent(&$filename = null, &$linenum = null): bool
     {

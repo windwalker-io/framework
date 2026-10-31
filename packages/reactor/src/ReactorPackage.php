@@ -13,8 +13,6 @@ use Windwalker\Core\Package\AbstractPackage;
 use Windwalker\Core\Package\PackageInstaller;
 use Windwalker\DI\Attributes\Autowire;
 use Windwalker\Filesystem\Filesystem;
-use Windwalker\Filesystem\Path;
-use Windwalker\Utilities\Str;
 
 class ReactorPackage extends AbstractPackage
 {
@@ -45,7 +43,8 @@ class ReactorPackage extends AbstractPackage
                 string $dest,
                 bool $force,
                 IOInterface $io,
-                #[Autowire] CodeGenerator $codeGenerator
+                #[Autowire]
+                CodeGenerator $codeGenerator
             ) {
                 $this->addMainFileToServers(
                     'swoole',

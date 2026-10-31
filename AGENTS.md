@@ -1,94 +1,66 @@
 # Windwalker Framework – Agent Guide
 
+Short entry point for AI agents. Detailed rules live in `/.github/` (see `/.github/README.md` for how it is organized);
+follow the links below instead of duplicating content here.
+
 ## Architecture Overview
 
-**Monorepo of 26+ standalone PHP packages** under `packages/`. Each package is independently installable via Composer
-but shares a unified dev environment at the root. The root `composer.json` maps all namespace prefixes (
-`Windwalker\{PackageName}\`) and autoloads each package's `src/bootstrap.php`.
+**Monorepo of 31 standalone PHP packages** under `packages/`. Each package is independently installable via Composer
+but shares one dev environment at the root. The root `composer.json` maps every `Windwalker\{PackageName}\` namespace
+and autoloads each package's `src/bootstrap.php` / `src/functions.php`; each package's `composer.json` is also listed
+under `"replace"`, so the root acts as all packages at once.
 
-This repository ships the **components** consumed by the full Windwalker framework (`windwalker/windwalker`). It is not
-a runnable application.
+This repository ships the **components** consumed by the full framework (`windwalker/windwalker`). It is not a
+runnable application.
 
-**PHP requirement:** ≥ 8.4.6. Code uses PHP 8.4 features (asymmetric visibility `public protected(set)`, named
-arguments, first-class callables).
-
-## Code Style
-
-- PSR-12 coding style.
-- Strict types (`declare(strict_types=1);` in all source files).
-- Docblocks only for non-obvious code; no redundant `@param`/`@return` when types are clear from signatures.
-- No global state or singletons; dependencies injected via constructors or method parameters.
-- No static methods except for pure utility functions (e.g. `StrInflector`, `Arr` or `Str`).
-- No facades or service locators; use explicit class references and dependency injection.
-- No global functions except for namespaced helpers defined in `functions.php` (e.g. `\Windwalker\collect()`,
-  `\Windwalker\raw()`). These are autoloaded via Composer's `files` autoloading and are not procedural global functions.
-- No magic methods (`__call`, `__get`, etc.) – all behavior should be explicit and discoverable via class methods and
-  properties.
-- No deprecated features or legacy patterns; the codebase is modern PHP 8.4+ and should not contain any legacy PHP 5/7
-  constructs.
-- Use PHP 8.5 property hooks with asymmetric visibility (`public protected(set)`) for properties prior than legacy
-  getter/setter methods. This allows read-only public access while still allowing internal mutation when necessary.
-
-All code style instructions see: `/.github/instructions/cs.instructions.md`.
-
-All test code style instructions see: `/.github/instructions/test.instructions.md`.
-
-Full PHP-CS-Fixer ruleset explanation see: `/.github/docs/code-style.md`.
+**PHP requirement:** ≥ 8.4.6 (see root `composer.json`).
 
 ## Package Layout
-
-Every package follows this structure:
 
 ```
 packages/{name}/
   src/              # PSR-4 source (Windwalker\{Name}\)
-  src/bootstrap.php # Loaded by Composer autoload files – registers closures/helpers
-  src/functions.php # Global helper functions (e.g. \Windwalker\collect(), \Windwalker\raw())
+  src/bootstrap.php # Autoloaded via composer `files`; keep light
+  src/functions.php # Namespaced helpers (e.g. \Windwalker\collect(), \Windwalker\raw())
   test/             # PHPUnit tests (Windwalker\{Name}\Test\)
   composer.json     # Standalone package metadata
-  phpunit.xml.dist  # Per-package PHPUnit config
+  phpunit.xml.dist  # Per-package config (prefer the root config, see Testing)
 ```
 
-All source files begin with `declare(strict_types=1);`.
+Not every package has `bootstrap.php`/`functions.php`.
 
-## Developer Workflows
+## Code Style (summary)
 
-### Running Tests
+- PER-CS via PHP-CS-Fixer; `declare(strict_types=1);` in every source file.
+- Docblocks only for non-obvious code.
+- No global state/singletons, facades, service locators, or magic methods (`__call`, `__get`); use DI.
+- Static methods only for pure utilities (e.g. `StrInflector`, `Arr`, `Str`).
+- No global functions except namespaced helpers in `functions.php`.
+- Prefer property hooks / asymmetric visibility (`public protected(set)`) over getter/setter methods.
+- No deprecated or legacy PHP patterns.
 
-```bash
-# All suites enabled by the root configuration
-php vendor/bin/phpunit
+Details: `/.github/instructions/cs.instructions.md` (rules), `/.github/docs/code-style.md` (full ruleset, running the
+fixer).
 
-# Single package suite using the root configuration/autoloader
-php vendor/bin/phpunit packages/orm/test
+## Testing
 
-# Database/HTTP tests require setup first:
-php -S localhost:8000 bin/test-server.php   # HTTP test server
-# Set WINDWALKER_TEST_DB_DSN_MYSQL in phpunit.xml
-```
+Run PHPUnit from the repo root with an explicit path, e.g. `php vendor/bin/phpunit packages/orm/test`. Database tests
+need MySQL and must not run in parallel; HTTP tests need `php -S localhost:8000 bin/test-server.php`.
 
-PHPUnit loads the root `phpunit.xml`, falling back to `phpunit.xml.dist`. Create the local copy only if it does not
-already exist, and adjust test suites/service settings there. Package-level configs may expect standalone installs
-or older PHPUnit versions; prefer root configuration with an explicit test path in this monorepo.
+- `/.github/skills/test/SKILL.md` – workflow for adding/updating/running tests
+- `/.github/instructions/test.instructions.md` – test code style, preferred/deprecated APIs
+- `/.github/docs/testing.md` – execution, coverage drivers, reports, finding missing tests
+- `/.github/docs/database-testing.md` – MySQL/DSN setup and DB test conventions
 
-See [Testing and Coverage](.github/docs/testing.md) for driver setup, coverage reports, and identifying missing tests,
-and [Running the fixer](.github/docs/code-style.md#running-the-fixer) for scoped PHP-CS-Fixer commands.
-
-### Test Base Classes
-
-- DB tests extend `AbstractDatabaseTestCase` (in `packages/database/src/Test/`).
-- ORM tests extend `AbstractORMTestCase` which wires `ORM` to a live DB adapter.
-- Executed SQL is logged to `packages/database/tmp/test-sql.sql` during test runs.
+Base classes: `AbstractDatabaseTestCase` (`packages/database/src/Test/`), `AbstractORMTestCase`
+(`packages/orm/test/`).
 
 ## Project-Specific Conventions
 
-- **Global helpers** are namespaced functions, not procedural: e.g. `\Windwalker\collect([...])`,
-  `\Windwalker\raw($sql)`. Defined in `functions.php`, auto-loaded.
-- **Bootstrap files** (`src/bootstrap.php`) use autoload `files` – do not put heavy logic there; they mostly declare
-  global function aliases.
-- **Deprecated options key** for some array or int options has moved to `***Options` classes (e.g. `ORM::FOR_UPDATE` →
-  `new ORMOptions(forUpdate: true)`) – the old constants still exist but are marked deprecated.
-- **StrInflector** (`packages/utilities/src/StrInflector.php`) is used project-wide for singular/plural table alias
-  resolution (e.g. `Table` attribute alias defaults to `StrInflector::toSingular($tableName)`).
-- Each package's `composer.json` is also listed under `"replace"` in the root – this lets Composer treat the monorepo
-  root as all packages simultaneously.
+- Array/int option flags are moving to `***Options` classes (e.g. `ORM::FOR_UPDATE` →
+  `new ORMOptions(forUpdate: true)`); old constants remain but are deprecated.
+- `StrInflector` (`packages/utilities/src/StrInflector.php`) handles singular/plural, e.g. default `Table` alias.
+
+## Maintaining AI Docs
+
+Where to put new rules: `/.github/README.md` and `/.github/instructions/instruction.instructions.md`.

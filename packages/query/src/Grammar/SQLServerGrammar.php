@@ -20,17 +20,17 @@ class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
     use JsonGrammarTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $name = 'SQLServer';
 
     /**
-     * @var array
+     * @var  array
      */
     public static array $nameQuote = ['[', ']'];
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $nullDate = '1900-01-01 00:00:00';
 

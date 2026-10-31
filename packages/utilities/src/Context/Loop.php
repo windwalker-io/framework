@@ -10,12 +10,12 @@ namespace Windwalker\Utilities\Context;
 class Loop
 {
     /**
-     * @var int
+     * @var  int
      */
     public protected(set) int $index;
 
     /**
-     * @var mixed
+     * @var  mixed
      */
     public protected(set) mixed $key;
 
@@ -35,8 +35,7 @@ class Loop
         public protected(set) int $length,
         public protected(set) mixed &$target,
         public protected(set) ?Loop $parent = null
-    ) {
-    }
+    ) {}
 
     /**
      * loop

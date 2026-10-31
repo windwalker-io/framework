@@ -31,19 +31,19 @@ use const Windwalker\Stream\WRITE_ONLY_RESET;
 /**
  * The FileObject class.
  *
- * @method Promise mkdirAsync(int $mode = 0755)
- * @method Promise copyAsync(string|SplFileInfo $dest, bool $force = false)
- * @method Promise moveAsync(string|SplFileInfo $dest, bool $force = false)
- * @method Promise readAsync(bool $useIncludePath = false, $context = null, int $offset = 0, ?int $maxlen = null)
- * @method Promise readStreamAsync(string $mode = READ_ONLY_FROM_BEGIN)
- * @method Promise writeAsync(string $buffer)
- * @method Promise writeStreamAsync(string|resource|StreamInterface $stream)
- * @method Promise deleteAsync()
- * @method Promise deleteIfExistsAsync()
- * @method Promise filesAsync(bool $recursive = false)
- * @method Promise foldersAsync(bool $recursive = false)
- * @method Promise itemsAsync(bool $recursive = false)
- * @method Promise getStreamAsync(string $mode = READ_WRITE_FROM_BEGIN)
+ * @method  Promise  mkdirAsync(int $mode = 0755)
+ * @method  Promise  copyAsync(string|SplFileInfo $dest, bool $force = false)
+ * @method  Promise  moveAsync(string|SplFileInfo $dest, bool $force = false)
+ * @method  Promise  readAsync(bool $useIncludePath = false, $context = null, int $offset = 0, ?int $maxlen = null)
+ * @method  Promise  readStreamAsync(string $mode = READ_ONLY_FROM_BEGIN)
+ * @method  Promise  writeAsync(string $buffer)
+ * @method  Promise  writeStreamAsync(string|resource|StreamInterface $stream)
+ * @method  Promise  deleteAsync()
+ * @method  Promise  deleteIfExistsAsync()
+ * @method  Promise  filesAsync(bool $recursive = false)
+ * @method  Promise  foldersAsync(bool $recursive = false)
+ * @method  Promise  itemsAsync(bool $recursive = false)
+ * @method  Promise  getStreamAsync(string $mode = READ_WRITE_FROM_BEGIN)
  *
  */
 class FileObject extends SplFileInfo
@@ -105,7 +105,7 @@ class FileObject extends SplFileInfo
      *
      * @return  static|null
      */
-    public static function wrapIfNotNull(SplFileInfo|string|null $file, ?string $root = null): static|null
+    public static function wrapIfNotNull(SplFileInfo|string|null $file, ?string $root = null): ?static
     {
         if ($file === null) {
             return null;
@@ -335,8 +335,8 @@ class FileObject extends SplFileInfo
      *
      * @return  static|false  True on success
      *
-     * @throws Exception\FilesystemException
-     * @throws UnexpectedValueException
+     * @throws  Exception\FilesystemException
+     * @throws  UnexpectedValueException
      * @since   2.0
      */
     private function copyFileTo(FileObject $dest, bool $force = false): static|false
@@ -668,7 +668,7 @@ class FileObject extends SplFileInfo
      * @param  bool      $recursive
      * @param  int|null  $flags
      *
-     * @return FilesIterator
+     * @return  FilesIterator
      */
     public function items(bool $recursive = false, ?int $flags = null): FilesIterator
     {
@@ -858,8 +858,8 @@ class FileObject extends SplFileInfo
      * @param  array   $args
      *
      * @return  Promise
-     * @throws Throwable
-     * @throws \ReflectionException
+     * @throws  Throwable
+     * @throws  \ReflectionException
      */
     protected function doAsync(string $name, array $args = []): Promise
     {
@@ -869,7 +869,7 @@ class FileObject extends SplFileInfo
     /**
      * Method to get property Root
      *
-     * @return string|null
+     * @return  string|null
      *
      * @codeCoverageIgnore
      */

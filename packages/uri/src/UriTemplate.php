@@ -16,9 +16,7 @@ class UriTemplate implements \Stringable
 
     protected \Closure $extractHandler;
 
-    public function __construct(protected string $template, protected array $vars = [])
-    {
-    }
+    public function __construct(protected string $template, protected array $vars = []) {}
 
     public function expand(array $vars = []): string
     {
@@ -43,7 +41,7 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return array
+     * @return  array
      *
      * @codeCoverageIgnore
      */
@@ -67,7 +65,7 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -91,7 +89,7 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return \Closure
+     * @return  \Closure
      */
     public function getExpandHandler(): \Closure
     {
@@ -128,7 +126,7 @@ class UriTemplate implements \Stringable
     }
 
     /**
-     * @return \Closure
+     * @return  \Closure
      */
     public function getExtractHandler(): \Closure
     {

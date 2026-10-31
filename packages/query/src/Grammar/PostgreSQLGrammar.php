@@ -8,7 +8,6 @@ use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
 use function Windwalker\Query\clause;
-use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
 
 /**
@@ -17,12 +16,12 @@ use function Windwalker\Query\qn;
 class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
     /**
-     * @var string
+     * @var  string
      */
     public static string $name = 'PostgreSQL';
 
     /**
-     * @var string
+     * @var  string
      */
     public static string $nullDate = '1970-01-01 00:00:00';
 

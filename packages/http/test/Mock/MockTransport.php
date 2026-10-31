@@ -24,7 +24,7 @@ class MockTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to send.
+     * @param  RequestInterface  $request  The request object to send.
      *
      * @param  array|TransportOptions  $options
      *
@@ -44,7 +44,7 @@ class MockTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param  RequestInterface        $request  The request object to store request params.
+     * @param  RequestInterface  $request  The request object to store request params.
      *
      * @param  array|TransportOptions  $options
      *

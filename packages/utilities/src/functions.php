@@ -198,7 +198,7 @@ namespace Windwalker {
          *
          * @return  string
          *
-         * @throws Exception
+         * @throws  Exception
          */
         function uid(string $prefix = '', bool $timebase = false): string
         {
@@ -230,7 +230,7 @@ namespace Windwalker {
          *
          * @return  string
          *
-         * @throws Exception
+         * @throws  Exception
          */
         function tid(string $prefix = ''): string
         {
@@ -523,7 +523,7 @@ namespace Windwalker {
          * @param  int|null       $filter
          *
          * @return  array<\ReflectionProperty>
-         * @throws \ReflectionException
+         * @throws  \ReflectionException
          */
         function get_object_dump_props(
             object|string $object,

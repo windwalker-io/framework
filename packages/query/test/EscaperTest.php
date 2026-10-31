@@ -30,7 +30,7 @@ class EscaperTest extends TestCase
     #[Test]
     public function tryEscapeUsesObjectEscapeMethod(): void
     {
-        $escaper = new class {
+        $escaper = new class () {
             public function escape(string|int $value): string
             {
                 return strtoupper((string) $value);
@@ -105,7 +105,7 @@ class EscaperTest extends TestCase
     #[Test]
     public function instanceEscapeAndQuoteDelegateToConnection(): void
     {
-        $connection = new class {
+        $connection = new class () {
             public function escape(string|int $value): string
             {
                 return 'e' . $value;
@@ -120,7 +120,7 @@ class EscaperTest extends TestCase
     #[Test]
     public function getConnectionThrowsWhenReferenceIsDestroyed(): void
     {
-        $connection = new class {
+        $connection = new class () {
             public function escape(string|int $value): string
             {
                 return (string) $value;
@@ -138,13 +138,13 @@ class EscaperTest extends TestCase
     #[Test]
     public function setConnectionReplacesConnectionWithWeakReference(): void
     {
-        $first = new class {
+        $first = new class () {
             public function escape(string|int $value): string
             {
                 return 'a';
             }
         };
-        $second = new class {
+        $second = new class () {
             public function escape(string|int $value): string
             {
                 return 'b';

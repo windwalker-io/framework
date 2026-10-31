@@ -18,12 +18,12 @@ use Windwalker\Query\Escaper;
 class PdoDriver extends AbstractDriver implements TransactionDriverInterface
 {
     /**
-     * @var string
+     * @var  string
      */
     protected static string $name = 'pdo';
 
     /**
-     * @var string
+     * @var  string
      */
     protected string $platformName = 'odbc';
 

@@ -38,7 +38,7 @@ class PhpServer implements ServerInterface
     }
 
     /**
-     * @return Closure|null
+     * @return  Closure|null
      */
     public function getOutputBuilder(): ?Closure
     {

@@ -97,7 +97,7 @@ abstract class ResponseHelper
      *
      * @param  int  $code  Status code to get phrase.
      *
-     * @return string|null
+     * @return  string|null
      */
     public static function getPhrase(int $code): ?string
     {

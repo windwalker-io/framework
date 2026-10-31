@@ -69,7 +69,7 @@ class FileProcessMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @return MimeTypesInterface
+     * @return  MimeTypesInterface
      */
     public function getMimeTypes(): MimeTypesInterface
     {

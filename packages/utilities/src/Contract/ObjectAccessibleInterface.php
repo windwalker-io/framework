@@ -14,7 +14,7 @@ interface ObjectAccessibleInterface
      *
      * @param  string  $key
      *
-     * @return mixed
+     * @return  mixed
      */
     public function &__get(mixed $key): mixed;
 
@@ -24,7 +24,7 @@ interface ObjectAccessibleInterface
      * @param  string  $key
      * @param  mixed   $value
      *
-     * @return void
+     * @return  void
      */
     public function __set(mixed $key, mixed $value);
 
@@ -33,7 +33,7 @@ interface ObjectAccessibleInterface
      *
      * @param  string  $key
      *
-     * @return bool
+     * @return  bool
      */
     public function __isset(mixed $key): bool;
 
@@ -42,7 +42,7 @@ interface ObjectAccessibleInterface
      *
      * @param  string  $key
      *
-     * @return void
+     * @return  void
      */
     public function __unset(mixed $key);
 }

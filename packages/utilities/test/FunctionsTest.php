@@ -9,7 +9,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Arr;
-
 use Windwalker\Utilities\Attributes\Expose;
 use Windwalker\Utilities\Attributes\Invisible;
 use Windwalker\Utilities\Compare\WhereWrapper;
@@ -249,7 +248,7 @@ OUT;
         return [
             'array' => [[], false],
             'plain object' => [new \stdClass(), false],
-            'stringable object' => [new class {
+            'stringable object' => [new class () {
                 public function __toString(): string
                 {
                     return 'x';

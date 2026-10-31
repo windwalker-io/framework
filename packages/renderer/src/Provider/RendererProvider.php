@@ -54,7 +54,7 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
      * @param  Container  $container  The DI container.
      *
      * @return  void
-     * @throws \Windwalker\DI\Exception\DefinitionException
+     * @throws  \Windwalker\DI\Exception\DefinitionException
      */
     public function register(Container $container): void
     {
@@ -100,7 +100,7 @@ class RendererProvider implements ServiceProviderInterface, RequestBootableProvi
      *
      * @return  void
      *
-     * @throws \Windwalker\DI\Exception\DefinitionException
+     * @throws  \Windwalker\DI\Exception\DefinitionException
      */
     protected function registerPagination(Container $container): void
     {

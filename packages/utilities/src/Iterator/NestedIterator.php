@@ -23,7 +23,7 @@ class NestedIterator implements OuterIterator
     protected ?Iterator $compiledIterator = null;
 
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     protected array $callbacks = [];
 
@@ -454,7 +454,7 @@ class NestedIterator implements OuterIterator
 
     public function infinite(): static
     {
-        return $this->with(fn (\Iterator $items) => new \InfiniteIterator($items));
+        return $this->with(fn(\Iterator $items) => new \InfiniteIterator($items));
     }
 
     public function toCachingIterator(int $flags = \CachingIterator::CALL_TOSTRING): \CachingIterator

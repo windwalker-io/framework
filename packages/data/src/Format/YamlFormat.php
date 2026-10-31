@@ -40,7 +40,7 @@ class YamlFormat implements FormatInterface
      * @param  string  $string   YAML formatted string to convert.
      * @param  array   $options  Options used by the formatter.
      *
-     * @return mixed Data array.
+     * @return  mixed  Data array.
      *
      * @since   2.0
      */

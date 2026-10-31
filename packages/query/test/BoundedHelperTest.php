@@ -243,7 +243,7 @@ class BoundedHelperTest extends TestCase
     #[Test]
     public function toScalarCastsStringableObjectToString(): void
     {
-        $obj = new class {
+        $obj = new class () {
             public function __toString(): string
             {
                 return 'stringable';

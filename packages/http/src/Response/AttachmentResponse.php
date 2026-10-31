@@ -9,7 +9,6 @@ use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Stream\Stream;
 
-use function Windwalker\response;
 use function Windwalker\uid;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
@@ -114,7 +113,7 @@ class AttachmentResponse extends Response
      * @param  StreamInterface  $stream
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     protected function withStreamBody(StreamInterface $stream): static
     {
@@ -127,7 +126,7 @@ class AttachmentResponse extends Response
      * @param  string  $filename
      *
      * @return  static
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function withFilename(string $filename): static
     {

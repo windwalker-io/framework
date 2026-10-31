@@ -18,7 +18,7 @@ class Parameters extends Collection
     /**
      * Make sure storage is first.
      *
-     * @var array
+     * @var  array
      */
     protected mixed $storage = [];
 
@@ -174,7 +174,7 @@ class Parameters extends Collection
      *
      * @param  bool  $onlyDumpable
      *
-     * @return array
+     * @return  array
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {

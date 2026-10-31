@@ -6,7 +6,6 @@ namespace Windwalker\Edge\Cache;
 
 use RuntimeException;
 use Windwalker\Filesystem\Path;
-use Windwalker\Utilities\Cache\InstanceCacheTrait;
 use Windwalker\Utilities\Cache\RuntimeCacheTrait;
 
 /**
@@ -42,7 +41,7 @@ class EdgeFileCache implements EdgeCacheInterface
      *
      * @param  string  $path
      *
-     * @return bool
+     * @return  bool
      */
     public function isExpired(string $path): bool
     {
@@ -126,7 +125,7 @@ class EdgeFileCache implements EdgeCacheInterface
      * @param  string  $path
      * @param  string  $value
      *
-     * @return void
+     * @return  void
      */
     public function store(string $path, string $value): void
     {
@@ -159,7 +158,7 @@ class EdgeFileCache implements EdgeCacheInterface
      *
      * @param  string  $path  The path to remove.
      *
-     * @return void
+     * @return  void
      */
     public function remove(string $path): void
     {
@@ -167,7 +166,7 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
@@ -191,7 +190,7 @@ class EdgeFileCache implements EdgeCacheInterface
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isDebug(): bool
     {

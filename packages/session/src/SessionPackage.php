@@ -58,7 +58,7 @@ class SessionPackage extends AbstractPackage implements ServiceProviderInterface
      * @param  Container  $container  The DI container.
      *
      * @return  void
-     * @throws \Windwalker\DI\Exception\DefinitionException
+     * @throws  \Windwalker\DI\Exception\DefinitionException
      *
      * @codeCoverageIgnore
      */

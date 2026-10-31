@@ -33,7 +33,7 @@ class StubCategory
     protected array $params;
 
     /**
-     * @return int
+     * @return  int
      */
     public function getId(): int
     {

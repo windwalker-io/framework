@@ -29,7 +29,7 @@ class ReflectAccessorTest extends TestCase
     #[Test]
     public function setValueWithSafeTypeCastsValuesToPropertyTypes(): void
     {
-        $foo = new class implements JsonSerializable {
+        $foo = new class () implements JsonSerializable {
             protected ?int $id;
 
             protected int|string|null $price;

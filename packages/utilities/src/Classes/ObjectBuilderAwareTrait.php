@@ -12,7 +12,7 @@ trait ObjectBuilderAwareTrait
     protected ?ObjectBuilder $objectBuilder = null;
 
     /**
-     * @return ObjectBuilder
+     * @return  ObjectBuilder
      */
     public function getObjectBuilder(): ObjectBuilder
     {

@@ -15,19 +15,19 @@ use const Windwalker\Query\QN_IGNORE_DOTS;
 class AsClause implements ClauseInterface
 {
     /**
-     * @var string|Query|RawWrapper
+     * @var  string|Query|RawWrapper
      */
     protected mixed $value;
 
     /**
-     * @var string|bool|null
+     * @var  string|bool|null
      */
     protected mixed $alias;
 
     protected bool $isColumn = false;
 
     /**
-     * @var Query
+     * @var  Query
      */
     protected Query $query;
 
@@ -99,7 +99,7 @@ class AsClause implements ClauseInterface
     /**
      * Method to get property Alias
      *
-     * @return string|null
+     * @return  string|null
      */
     public function getAlias(): mixed
     {

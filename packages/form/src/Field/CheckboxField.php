@@ -9,8 +9,8 @@ use Windwalker\DOM\HTMLElement;
 /**
  * The CheckboxField class.
  *
- * @method self checkedValue(mixed $value)
- * @method string getCheckedValue()
+ * @method  self    checkedValue(mixed $value)
+ * @method  string  getCheckedValue()
  *
  * @since  2.0
  */

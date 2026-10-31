@@ -19,7 +19,7 @@ class FlashBag
      *
      * This error often occurred by Symfony/VarDumper.
      *
-     * @var ?array
+     * @var  ?array
      */
     protected mixed $storage = null;
 
@@ -81,7 +81,7 @@ class FlashBag
     }
 
     /**
-     * @return array|null
+     * @return  array|null
      *
      * @codeCoverageIgnore
      */

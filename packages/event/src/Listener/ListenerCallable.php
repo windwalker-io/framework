@@ -12,12 +12,12 @@ use Windwalker\Utilities\Proxy\TimesLimitedCallable;
 class ListenerCallable extends TimesLimitedCallable
 {
     /**
-     * @var int
+     * @var  int
      */
     protected $priority;
 
     /**
-     * @var bool
+     * @var  bool
      */
     protected $once;
 

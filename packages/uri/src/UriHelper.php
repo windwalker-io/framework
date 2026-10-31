@@ -49,7 +49,7 @@ class UriHelper
      *
      * @param  string  $url  URL to parse
      *
-     * @return array|bool Associative array or false if badly formed URL.
+     * @return  array|bool  Associative array or false if badly formed URL.
      *
      * @see     http://us3.php.net/manual/en/function.parse-url.php
      * @since   2.0
@@ -78,7 +78,7 @@ class UriHelper
             '%5B',
             '%5D',
         ];
-        $replacements = ['!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "$", ",", "/", "?", "#", "[", "]"];
+        $replacements = ['!', '*', "'", '(', ')', ';', ':', '@', '&', '=', '$', ',', '/', '?', '#', '[', ']'];
 
         // Create encoded URL with special URL characters decoded so it can be parsed
         // All other characters will be encoded
@@ -253,7 +253,7 @@ class UriHelper
      *
      * @param  array|string  $string
      *
-     * @param  bool          $raw
+     * @param  bool  $raw
      *
      * @return  array|string
      */

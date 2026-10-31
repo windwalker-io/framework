@@ -33,7 +33,7 @@ class StubLocationData implements EntityInterface
     protected string|stdClass $data = '';
 
     /**
-     * @return string
+     * @return  string
      */
     public function getData(): string
     {
@@ -53,7 +53,7 @@ class StubLocationData implements EntityInterface
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {
@@ -73,7 +73,7 @@ class StubLocationData implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getLocationNo(): string
     {

@@ -30,9 +30,9 @@ trait StringModifyTrait
     /**
      * replace
      *
-     * @param  array|string $search
-     * @param  array|string $replacement
-     * @param int|null      $count
+     * @param  array|string  $search
+     * @param  array|string  $replacement
+     * @param  int|null      $count
      *
      * @return  static
      */
@@ -102,9 +102,9 @@ trait StringModifyTrait
     /**
      * substrReplace
      *
-     * @param  string  $replace
-     * @param  int     $start
-     * @param int|null $offset
+     * @param  string    $replace
+     * @param  int       $start
+     * @param  int|null  $offset
      *
      * @return  static
      */
@@ -120,7 +120,7 @@ trait StringModifyTrait
     /**
      * ltrim
      *
-     * @param string|null $charlist
+     * @param  string|null  $charlist
      *
      * @return  static
      */
@@ -136,7 +136,7 @@ trait StringModifyTrait
     /**
      * rtrim
      *
-     * @param string|null $charlist
+     * @param  string|null  $charlist
      *
      * @return  static
      */
@@ -152,7 +152,7 @@ trait StringModifyTrait
     /**
      * trim
      *
-     * @param string|null $charlist
+     * @param  string|null  $charlist
      *
      * @return  static
      */

@@ -21,7 +21,7 @@ class DatabaseHandler extends AbstractHandler
     /**
      * The DatabaseAdapter to use when querying.
      *
-     * @var DatabaseAdapter
+     * @var  DatabaseAdapter
      */
     protected DatabaseAdapter $db;
 
@@ -73,7 +73,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return  string  The session data.
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0
      */
     protected function doRead(string $id): ?string
@@ -122,7 +122,7 @@ class DatabaseHandler extends AbstractHandler
      *
      * @return  boolean  True on success, false otherwise.
      *
-     * @throws Exception
+     * @throws  Exception
      * @since   2.0
      */
     public function destroy($id): bool

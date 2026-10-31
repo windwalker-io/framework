@@ -7,9 +7,7 @@ namespace Windwalker\Form\Test\Field;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\RadioField;
-use Windwalker\Html\Option;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
@@ -24,7 +22,7 @@ class RadioFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var RadioField
+     * @var  RadioField
      */
     protected $instance;
 

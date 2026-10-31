@@ -72,7 +72,7 @@ class DeferredScheduler implements SchedulerInterface
             ? static function () use ($loop) {
                 $loop->addPeriodicTimer(0, [TaskQueue::getInstance(), 'run']);
             }
-            : $loop;
+        : $loop;
 
         $callback();
 

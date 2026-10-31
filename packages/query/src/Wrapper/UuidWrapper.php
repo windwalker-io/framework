@@ -65,7 +65,7 @@ class UuidWrapper implements WrapperInterface, \Stringable
             }
 
             return Uuid::fromBytes($uuid);
-        } catch (InvalidArgumentException | InvalidBytesException | InvalidUuidStringException) {
+        } catch (InvalidArgumentException|InvalidBytesException|InvalidUuidStringException) {
             throw new \InvalidArgumentException(
                 'Invalid UUID string or UUID bytes.',
             );

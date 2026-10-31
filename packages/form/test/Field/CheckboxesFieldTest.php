@@ -7,9 +7,7 @@ namespace Windwalker\Form\Test\Field;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\CheckboxesField;
-use Windwalker\Html\Option;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
@@ -24,7 +22,7 @@ class CheckboxesFieldTest extends TestCase
     /**
      * Test instance.
      *
-     * @var CheckboxesField
+     * @var  CheckboxesField
      */
     protected CheckboxesField $instance;
 

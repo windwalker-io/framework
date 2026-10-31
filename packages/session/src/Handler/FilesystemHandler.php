@@ -121,7 +121,7 @@ class FilesystemHandler extends AbstractHandler
      *
      * @param  int  $maxlifetime
      *
-     * @return int|false  Returns the number of deleted sessions on success, or false on failure.
+     * @return  int|false  Returns the number of deleted sessions on success, or false on failure.
      */
     public function gc($maxlifetime): int|false
     {

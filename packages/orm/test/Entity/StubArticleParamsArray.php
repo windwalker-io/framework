@@ -79,7 +79,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getTitle(): string
     {
@@ -99,7 +99,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getImage(): string
     {
@@ -119,7 +119,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getContent(): string
     {
@@ -139,7 +139,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return  DateTimeImmutable|null
      */
     public function getCreated(): ?DateTimeImmutable
     {
@@ -159,7 +159,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getCreatedBy(): int
     {
@@ -179,7 +179,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getParams(): array
     {
@@ -199,7 +199,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getCategoryId(): int
     {
@@ -219,7 +219,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return int
+     * @return  int
      */
     public function getState(): int
     {
@@ -239,7 +239,7 @@ class StubArticleParamsArray
     }
 
     /**
-     * @return int|null
+     * @return  int|null
      */
     public function getId(): ?int
     {

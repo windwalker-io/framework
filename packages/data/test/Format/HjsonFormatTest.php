@@ -13,7 +13,7 @@ class HjsonFormatTest extends TestCase
     #[Test]
     public function itDumpsAndParsesHjson(): void
     {
-        $format = new HjsonFormat;
+        $format = new HjsonFormat();
         $data = ['flower' => 'sakura', 'count' => 3];
         $hjson = $format->dump($data);
 
@@ -23,7 +23,7 @@ class HjsonFormatTest extends TestCase
     #[Test]
     public function itParsesHjsonWithoutQuotesAroundKeys(): void
     {
-        $format = new HjsonFormat;
+        $format = new HjsonFormat();
 
         self::assertSame(['flower' => 'sakura'], $format->parse("flower: sakura\n"));
     }

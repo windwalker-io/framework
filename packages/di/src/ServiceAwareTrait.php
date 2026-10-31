@@ -36,7 +36,7 @@ trait ServiceAwareTrait
      *
      * @return  object
      *
-     * @throws Exception\DefinitionException
+     * @throws  Exception\DefinitionException
      */
     public function service(string $class, array $args = [], int $options = 0): object
     {
@@ -59,7 +59,7 @@ trait ServiceAwareTrait
      *
      * @return  mixed
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function call(callable $callable, array $args = [], ?object $context = null, int $options = 0): mixed
     {
@@ -75,7 +75,7 @@ trait ServiceAwareTrait
      *
      * @return  static
      *
-     * @throws Exception\DefinitionException
+     * @throws  Exception\DefinitionException
      */
     public function bind(string $id, mixed $value, int $options = 0): static
     {
@@ -93,7 +93,7 @@ trait ServiceAwareTrait
      *
      * @return  mixed
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function resolve(mixed $source, array $args = [], int $options = 0): mixed
     {

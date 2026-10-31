@@ -15,7 +15,5 @@ class HelloInner
      *
      * @param  mixed  $bar
      */
-    public function __construct(public $bar)
-    {
-    }
+    public function __construct(public $bar) {}
 }

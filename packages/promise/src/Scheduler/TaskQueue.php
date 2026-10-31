@@ -10,17 +10,17 @@ namespace Windwalker\Promise\Scheduler;
 class TaskQueue
 {
     /**
-     * @var bool
+     * @var  bool
      */
     protected ?bool $runAtShutdown = null;
 
     /**
-     * @var callable[]
+     * @var  callable[]
      */
     protected array $queue = [];
 
     /**
-     * @var static
+     * @var  static
      */
     protected static $instance;
 

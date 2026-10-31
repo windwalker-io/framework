@@ -20,7 +20,7 @@ class NestedIteratorTest extends TestCase
     {
         $iter = new NestedIterator(['a', 'b', 'c', 'd', 'e', 'f']);
         $iter = $iter->wrap(
-        // Map
+            // Map
             static function ($iterator) {
                 foreach ($iterator as $item) {
                     yield strtoupper($item);
@@ -28,7 +28,7 @@ class NestedIteratorTest extends TestCase
             }
         )
             ->wrap(
-            // Filter
+                // Filter
                 static function ($iterator) {
                     foreach ($iterator as $item) {
                         if ($item !== 'D') {

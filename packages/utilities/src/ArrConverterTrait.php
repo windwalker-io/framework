@@ -50,7 +50,7 @@ trait ArrConverterTrait
      *
      * @param  array  $array  An array with two level.
      *
-     * @return array An pivoted array.
+     * @return  array  An pivoted array.
      */
     public static function transpose(array $array): array
     {
@@ -100,7 +100,7 @@ trait ArrConverterTrait
      * @param  string             $prefix  A prefix text.
      * @param  array|object|null  $target  A target array to store pivoted value.
      *
-     * @return object|array Pivoted array.
+     * @return  object|array  Pivoted array.
      */
     public static function extractPrefix(
         array|object $origin,
@@ -128,8 +128,8 @@ trait ArrConverterTrait
      *                                  or arrays, the key to pivot on.
      * @param  int              $flags  The group flags.
      *
-     * @return array An array of arrays grouped either on the value of the keys,
-     *               or an individual key of an object or array.
+     * @return  array  An array of arrays grouped either on the value of the keys,
+     *                 or an individual key of an object or array.
      *
      * @since  2.0
      */

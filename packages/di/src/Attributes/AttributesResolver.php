@@ -33,7 +33,7 @@ class AttributesResolver extends BaseAttributesResolver
     }
 
     /**
-     * @return Container
+     * @return  Container
      *
      * @codeCoverageIgnore
      */
@@ -76,7 +76,7 @@ class AttributesResolver extends BaseAttributesResolver
      *
      * @return  BaseAttributeHandler
      *
-     * @throws ReflectionException
+     * @throws  ReflectionException
      */
     public function resolveClassCreate(
         string $class,

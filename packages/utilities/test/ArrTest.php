@@ -829,7 +829,7 @@ class ArrTest extends TestCase
         self::assertTrue(Arr::isAccessible([]));
         self::assertTrue(Arr::isAccessible(new ArrayObject()));
 
-        $array = new class implements ArrayAccess {
+        $array = new class () implements ArrayAccess {
             public function offsetExists($offset): bool
             {
                 return false;
@@ -840,13 +840,9 @@ class ArrTest extends TestCase
                 return null;
             }
 
-            public function offsetSet($offset, $value): void
-            {
-            }
+            public function offsetSet($offset, $value): void {}
 
-            public function offsetUnset($offset): void
-            {
-            }
+            public function offsetUnset($offset): void {}
         };
 
         self::assertTrue(Arr::isAccessible($array));
@@ -967,7 +963,7 @@ class ArrTest extends TestCase
             (object) ['baz' => 'yoo'],
             new ArrayObject(['flower' => 'sakura', 'fruit' => 'apple']),
             ['max' => ['level' => ['test' => ['no' => 'show']]]],
-            new class {
+            new class () {
                 protected $foo = 'bar';
 
                 private $baz = 'yoo';
@@ -1243,14 +1239,14 @@ SHOW;
 
         $expected = [
             'ai' => 'Jarvis',
-            'red' =>
-                [
+            'red'
+                => [
                     'right' => 'Iron Man',
                 ],
-            'human' =>
-                [
-                    'black' =>
-                        [
+            'human'
+                => [
+                    'black'
+                        => [
                             'female' => 'Black Widow',
                         ],
                 ],

@@ -11,7 +11,6 @@ use Windwalker\Data\Collection;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Cache\RuntimeCacheTrait;
 use Windwalker\Utilities\StrNormalize;
-use Windwalker\Utilities\TypeCast;
 
 use function Windwalker\collect;
 use function Windwalker\value;
@@ -26,7 +25,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
     /**
      * The raw array of attributes.
      *
-     * @var array
+     * @var  array
      */
     protected array $attributes = [];
 
@@ -44,7 +43,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  array  $attributes
      *
-     * @return void
+     * @return  void
      */
     public function __construct(array $attributes = [])
     {
@@ -56,7 +55,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  mixed  $default
      *
-     * @return mixed
+     * @return  mixed
      */
     public function first(mixed $default = null): mixed
     {
@@ -69,7 +68,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      * @param  string  $key
      * @param  mixed   $default
      *
-     * @return mixed
+     * @return  mixed
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -81,7 +80,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $key
      *
-     * @return bool
+     * @return  bool
      */
     public function has(string $key): bool
     {
@@ -93,7 +92,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  mixed  $keys
      *
-     * @return static
+     * @return  static
      */
     public function only(mixed $keys): static
     {
@@ -113,7 +112,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  mixed|array  $keys
      *
-     * @return static
+     * @return  static
      */
     public function except(mixed $keys): static
     {
@@ -133,7 +132,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  callable  $callback
      *
-     * @return static
+     * @return  static
      */
     public function filter(callable $callback): static
     {
@@ -145,7 +144,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $string
      *
-     * @return static
+     * @return  static
      */
     public function whereStartsWith(string $string): static
     {
@@ -161,7 +160,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $string
      *
-     * @return static
+     * @return  static
      */
     public function whereDoesntStartWith(string $string): static
     {
@@ -177,7 +176,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $string
      *
-     * @return static
+     * @return  static
      */
     public function thatStartWith(string $string): static
     {
@@ -189,7 +188,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  mixed|array  $keys
      *
-     * @return static
+     * @return  static
      */
     public function exceptProps(mixed $keys): static
     {
@@ -237,7 +236,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  mixed|array  $classList
      *
-     * @return static
+     * @return  static
      */
     public function class(mixed $classList): static
     {
@@ -262,7 +261,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      * @param  array  $attributeDefaults
      * @param  bool   $escape
      *
-     * @return static
+     * @return  static
      */
     public function withMerge(array $attributeDefaults = [], bool $escape = true): static
     {
@@ -296,9 +295,9 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
         [$appendableAttributes, $nonAppendableAttributes] = collect($this->attributes)
             ->partition(
                 function ($value, $key) use ($attributeDefaults) {
-                    return $key === 'class' || $key === 'style' ||
-                        (isset($attributeDefaults[$key]) &&
-                            $attributeDefaults[$key] instanceof AppendableAttributeValue);
+                    return $key === 'class' || $key === 'style'
+                        || (isset($attributeDefaults[$key])
+                            && $attributeDefaults[$key] instanceof AppendableAttributeValue);
                 },
                 true
             );
@@ -325,7 +324,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      * @param  bool   $escape
      * @param  mixed  $value
      *
-     * @return bool
+     * @return  bool
      */
     protected function shouldEscapeAttributeValue($escape, $value)
     {
@@ -333,9 +332,9 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
             return false;
         }
 
-        return !is_object($value) &&
-            !is_null($value) &&
-            !is_bool($value);
+        return !is_object($value)
+            && !is_null($value)
+            && !is_bool($value);
     }
 
     /**
@@ -343,7 +342,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  mixed  $value
      *
-     * @return AppendableAttributeValue
+     * @return  AppendableAttributeValue
      */
     public function prepends(mixed $value): AppendableAttributeValue
     {
@@ -357,7 +356,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      * @param  string  $key
      * @param  bool    $escape
      *
-     * @return mixed
+     * @return  mixed
      */
     protected function resolveAppendableAttributeDefault(array $attributeDefaults, string $key, bool $escape): mixed
     {
@@ -371,7 +370,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
     /**
      * Get all of the raw attributes.
      *
-     * @return array
+     * @return  array
      */
     public function getAttributes(): array
     {
@@ -383,13 +382,13 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  array  $attributes
      *
-     * @return void
+     * @return  void
      */
     public function setAttributes(array $attributes): void
     {
         if (
-            isset($attributes['attributes']) &&
-            (
+            isset($attributes['attributes'])
+            && (
                 $attributes['attributes'] instanceof self || is_array($attributes['attributes'])
             )
         ) {
@@ -406,7 +405,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
     /**
      * Get content as a string of HTML.
      *
-     * @return string
+     * @return  string
      */
     public function toHtml(): string
     {
@@ -418,7 +417,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  array  $attributeDefaults
      *
-     * @return string
+     * @return  string
      */
     public function __invoke(array $attributeDefaults = []): string
     {
@@ -430,7 +429,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $offset
      *
-     * @return bool
+     * @return  bool
      */
     public function offsetExists($offset): bool
     {
@@ -442,7 +441,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $offset
      *
-     * @return mixed
+     * @return  mixed
      */
     public function offsetGet($offset): mixed
     {
@@ -455,7 +454,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      * @param  string  $offset
      * @param  mixed   $value
      *
-     * @return void
+     * @return  void
      */
     public function offsetSet($offset, $value): void
     {
@@ -467,7 +466,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @param  string  $offset
      *
-     * @return void
+     * @return  void
      */
     public function offsetUnset($offset): void
     {
@@ -477,7 +476,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
     /**
      * Get an iterator for the items.
      *
-     * @return ArrayIterator
+     * @return  ArrayIterator
      */
     public function getIterator(): ArrayIterator
     {
@@ -487,7 +486,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
     /**
      * Implode the attributes into a single HTML ready string.
      *
-     * @return string
+     * @return  string
      */
     public function __toString(): string
     {

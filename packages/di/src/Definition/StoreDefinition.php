@@ -54,8 +54,8 @@ class StoreDefinition implements StoreDefinitionInterface
     }
 
     /**
-     * @throws ReflectionException
-     * @throws DefinitionException
+     * @throws  ReflectionException
+     * @throws  DefinitionException
      */
     public function resolve(?Container $container = null, array $args = [], UnitEnum|string|null $tag = null): mixed
     {
@@ -154,7 +154,7 @@ class StoreDefinition implements StoreDefinitionInterface
     }
 
     /**
-     * @return DIOptions
+     * @return  DIOptions
      *
      * @codeCoverageIgnore
      */
@@ -178,7 +178,7 @@ class StoreDefinition implements StoreDefinitionInterface
     }
 
     /**
-     * @return string
+     * @return  string
      *
      * @codeCoverageIgnore
      */
