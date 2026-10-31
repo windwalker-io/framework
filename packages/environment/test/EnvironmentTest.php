@@ -216,6 +216,23 @@ class EnvironmentTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('entryNameProvider')]
+    public function getEntryTrimsBothLeadingSeparators(string $entry): void
+    {
+        $env = new Environment(['SCRIPT_NAME' => $entry]);
+
+        self::assertSame('app.php', $env->getEntry(false));
+    }
+
+    public static function entryNameProvider(): array
+    {
+        return [
+            'forward slash' => ['./app.php'],
+            'backslash' => ['.\\app.php']
+        ];
+    }
+
+    #[Test]
     public function requestHelpersReadServerParams(): void
     {
         $env = new Environment([

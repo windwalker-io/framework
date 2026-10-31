@@ -9,10 +9,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Dumper\VarDumper;
 
 class VarDumperTest extends TestCase
 {
+    use BaseAssertionTrait;
+
     /**
      * @var  callable|null
      */
@@ -75,7 +78,7 @@ class VarDumperTest extends TestCase
             )
             TXT;
 
-        self::assertSame($expected, VarDumper::dump([1, [2]]));
+        self::assertStringSafeEquals($expected, VarDumper::dump([1, [2]]));
     }
 
     /**

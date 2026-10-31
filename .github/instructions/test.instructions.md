@@ -46,6 +46,20 @@ Tests touching a real database: see [Database Testing](../docs/database-testing.
 
 See [Testing and Coverage](../docs/testing.md) for test selectors, driver setup, report commands, and scope caveats.
 
+## Filesystem tests: cross-platform paths and virtual storage
+
+- When testing the real filesystem, use
+  [`FilesystemTestTrait`](../../packages/filesystem/test/FilesystemTestTrait.php)
+  (`Windwalker\Filesystem\Test\FilesystemTestTrait`) for path comparisons across Windows and Unix-like systems.
+  Use `assertPathEquals()` (`Path::clean()`) or `assertRealpathEquals()` (`Path::normalize()`) as appropriate;
+  do not compare raw path strings when separator differences are irrelevant to the behavior under test.
+  Despite its name, `assertRealpathEquals()` normalizes paths; it does not resolve them with PHP's `realpath()`.
+- For file storage/read/write tests that do not require real filesystem or OS-specific behavior, VFS
+  (`org\bovigo\vfs\vfsStream`, `vfs://` paths) can provide isolated virtual fixtures instead of writing to disk.
+  Reuse [`AbstractVfsTestCase`](../../packages/filesystem/test/AbstractVfsTestCase.php) when its fixture setup fits.
+  Use real temporary files when the API does not support stream wrappers or the test requires native filesystem
+  semantics, and clean them up after the test.
+
 ## Exclude logic-free getters/setters or simple proxy methods from code coverage and tests
 
 Do not write separate tests solely to exercise pure getters/setters (only return or assign a property, optionally

@@ -78,6 +78,6 @@ class FunctionsTest extends AbstractVfsTestCase
     {
         $file = fs('vfs://root/files/folder1/level2/file3', 'vfs://root/files');
 
-        self::assertSame('folder1/level2', $file->getRelativePath());
+        self::assertPathEquals('folder1/level2', $file->getRelativePath());
     }
 }

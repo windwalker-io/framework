@@ -119,7 +119,7 @@ class EdgeCompilerTest extends TestCase
             ],
             'extends' => [
                 "@extends('layout')",
-                "\n<?php echo \$__edge->render('layout', $edgeArgs); ?>",
+                PHP_EOL . "<?php echo \$__edge->render('layout', $edgeArgs); ?>",
             ],
             'section with end' => [
                 "@section('s')x @endsection",

@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use UnexpectedValueException;
 use Windwalker\Edge\Exception\LayoutNotFoundException;
+use Windwalker\Filesystem\Path;
 use Windwalker\Renderer\TwigRenderer;
 use Windwalker\Renderer\CompositeRenderer;
 use Windwalker\Test\Traits\BaseAssertionTrait;
@@ -159,7 +160,7 @@ class CompositeRendererTest extends TestCase
         $file = $this->instance->findFile('foo.sunflower');
 
         self::assertSame('sunflower.twig', $file->getFilename());
-        self::assertStringEndsWith('Tmpl/mixed/foo/sunflower.twig', $file->getPathname());
+        self::assertStringEndsWith('Tmpl/mixed/foo/sunflower.twig', Path::clean($file->getPathname(), '/'));
     }
 
     #[Test]
@@ -167,7 +168,7 @@ class CompositeRendererTest extends TestCase
     {
         $file = $this->instance->findFile('foo/sunflower.twig');
 
-        self::assertStringEndsWith('Tmpl/mixed/foo/sunflower.twig', $file->getPathname());
+        self::assertStringEndsWith('Tmpl/mixed/foo/sunflower.twig', Path::clean($file->getPathname(), '/'));
     }
 
     #[Test]
@@ -183,7 +184,7 @@ class CompositeRendererTest extends TestCase
 
         $file = $this->instance->findFile('flower');
 
-        self::assertStringEndsWith('Tmpl/mixed/foo/sunflower.twig', $file->getPathname());
+        self::assertStringEndsWith('Tmpl/mixed/foo/sunflower.twig', Path::clean($file->getPathname(), '/'));
     }
 
     #[Test]

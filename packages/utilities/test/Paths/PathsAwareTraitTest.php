@@ -7,6 +7,7 @@ namespace Windwalker\Utilities\Test\Paths;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use SplPriorityQueue;
+use Windwalker\Filesystem\Path;
 use Windwalker\Utilities\Iterator\PriorityQueue;
 use Windwalker\Utilities\Paths\PathsAwareTrait;
 
@@ -33,7 +34,7 @@ class PathsAwareTraitTest extends TestCase
         $subject = $this->createSubject();
 
         self::assertSame($subject, $subject->setPaths(['/a/b/../c', '/d', '/e']));
-        self::assertSame(['/a/c', '/d', '/e'], $subject->dumpPaths());
+        self::assertSame(['/a/c', '/d', '/e'], $this->normalizePaths($subject->dumpPaths()));
     }
 
     /**
@@ -45,7 +46,7 @@ class PathsAwareTraitTest extends TestCase
         $subject = $this->createSubject();
         $subject->setPaths('/single');
 
-        self::assertSame(['/single'], $subject->dumpPaths());
+        self::assertSame(['/single'], $this->normalizePaths($subject->dumpPaths()));
 
         $queue = new PriorityQueue(['/q']);
         $subject->setPaths($queue);
@@ -72,7 +73,7 @@ class PathsAwareTraitTest extends TestCase
         $subject->addPath(['/high1/./x', '/high2'], PriorityQueue::HIGH);
         $subject->addPath('/default');
 
-        self::assertSame(['/high1/x', '/high2', '/default', '/normal'], $subject->dumpPaths());
+        self::assertSame(['/high1/x', '/high2', '/default', '/normal'], $this->normalizePaths($subject->dumpPaths()));
     }
 
     /**
@@ -88,7 +89,7 @@ class PathsAwareTraitTest extends TestCase
         $other->insert('/b', 20);
 
         self::assertSame($subject, $subject->mergePaths($other));
-        self::assertSame(['/b', '/a'], $subject->dumpPaths());
+        self::assertSame(['/b', '/a'], $this->normalizePaths($subject->dumpPaths()));
     }
 
     /**
@@ -131,5 +132,18 @@ class PathsAwareTraitTest extends TestCase
         return new class () {
             use PathsAwareTrait;
         };
+    }
+
+    /**
+     * Normalizes directory separators to forward slashes so path assertions stay stable
+     * across Windows and Unix-like systems.
+     *
+     * @param  array<string>  $paths
+     *
+     * @return  array<string>
+     */
+    private function normalizePaths(array $paths): array
+    {
+        return array_map(static fn (string $path) => Path::clean($path, '/'), $paths);
     }
 }

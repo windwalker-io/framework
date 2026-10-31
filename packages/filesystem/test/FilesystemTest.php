@@ -336,7 +336,13 @@ class FilesystemTest extends AbstractVfsTestCase
         $path = $temp->getPathname();
 
         self::assertFileExists($path);
-        self::assertStringContainsString('ww-test-', basename($path));
+
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            // Windows tempnam() uses only the first three prefix characters.
+            self::assertStringStartsWith('ww-', basename($path));
+        } else {
+            self::assertStringStartsWith('ww-test-', basename($path));
+        }
 
         unset($temp);
 
@@ -394,10 +400,31 @@ class FilesystemTest extends AbstractVfsTestCase
         file_put_contents($dir . '/target.txt', 'x');
 
         try {
-            self::assertTrue(Filesystem::symlink($dir . '/target.txt', $dir . '/link.txt'));
-            self::assertTrue(is_link($dir . '/link.txt'));
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                // Probe privileges independently so implementation failures are not mistaken for permission limits.
+                $canCreateLink = @symlink($dir . '/target.txt', $dir . '/probe.txt');
+
+                if ($canCreateLink) {
+                    self::assertTrue(is_link($dir . '/probe.txt'));
+                    unlink($dir . '/probe.txt');
+                    self::assertTrue(Filesystem::symlink($dir . '/target.txt', $dir . '/link.txt'));
+                    self::assertTrue(is_link($dir . '/link.txt'));
+                } else {
+                    self::assertFalse(Filesystem::symlink($dir . '/target.txt', $dir . '/link.txt'));
+                    self::assertFalse(is_link($dir . '/link.txt'));
+                    self::assertFileDoesNotExist($dir . '/link.txt');
+                }
+            } else {
+                self::assertTrue(Filesystem::symlink($dir . '/target.txt', $dir . '/link.txt'));
+                self::assertTrue(is_link($dir . '/link.txt'));
+            }
         } finally {
             @unlink($dir . '/link.txt');
+
+            if (is_link($dir . '/probe.txt')) {
+                unlink($dir . '/probe.txt');
+            }
+
             unlink($dir . '/target.txt');
             rmdir($dir);
         }

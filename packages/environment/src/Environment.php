@@ -206,7 +206,7 @@ class Environment
             $file = substr($file, strlen($wdir));
         }
 
-        $file = trim($file, '.' . DIRECTORY_SEPARATOR);
+        $file = trim($file, './\\');
 
         if ($full && static::isCli()) {
             $file = $wdir . DIRECTORY_SEPARATOR . $file;

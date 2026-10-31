@@ -39,7 +39,7 @@ class TraverserTest extends TestCase
         $document->body->appendChild($document->createElement('main'));
 
         self::assertSame(
-            "<!DOCTYPE html>\n<html><head></head><body><main></main></body></html>\n",
+            '<!DOCTYPE html>' . PHP_EOL . '<html><head></head><body><main></main></body></html>' . PHP_EOL,
             self::render($document)
         );
     }

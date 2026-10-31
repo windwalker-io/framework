@@ -46,6 +46,11 @@ class PathTest extends AbstractVfsTestCase
             'Windows path.' => ['C:\\files\\\\foo//bar', '\\', 'C:\\files\\foo\\bar'],
             'Windows path empty.' => ['C:\\', '\\', 'C:\\'],
             'Windows path empty 2.' => ['C:/', '\\', 'C:\\'],
+            'Single backslash root.' => ['\\', '\\', '\\'],
+            'Single forward slash root on Windows.' => ['/', '\\', '\\'],
+            'Empty path on Windows.' => ['', '\\', ''],
+            'Whitespace-only path on Windows.' => ['   ', '\\', ''],
+            'Empty stream URL on Windows.' => ['vfs://', '\\', 'vfs://'],
         ];
     }
 
@@ -60,10 +65,18 @@ class PathTest extends AbstractVfsTestCase
         try {
             self::assertTrue(Path::setPermissions($root, '0600', '0750'));
 
-            self::assertSame('600', Path::getPermissions($root . '/a.txt'));
-            self::assertSame('600', Path::getPermissions($root . '/sub/b.txt'));
-            self::assertSame('750', Path::getPermissions($root . '/sub'));
-            self::assertSame('750', Path::getPermissions($root));
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                // Windows exposes writable/read-only flags, not POSIX owner/group modes.
+                self::assertSame('666', Path::getPermissions($root . '/a.txt'));
+                self::assertSame('666', Path::getPermissions($root . '/sub/b.txt'));
+                self::assertSame('777', Path::getPermissions($root . '/sub'));
+                self::assertSame('777', Path::getPermissions($root));
+            } else {
+                self::assertSame('600', Path::getPermissions($root . '/a.txt'));
+                self::assertSame('600', Path::getPermissions($root . '/sub/b.txt'));
+                self::assertSame('750', Path::getPermissions($root . '/sub'));
+                self::assertSame('750', Path::getPermissions($root));
+            }
         } finally {
             Path::setPermissions($root, '0644', '0755');
             fs($root)->delete();
@@ -78,7 +91,12 @@ class PathTest extends AbstractVfsTestCase
 
         try {
             self::assertTrue(Path::setPermissions($root . '/a.txt', '0640'));
-            self::assertSame('640', Path::getPermissions($root . '/a.txt'));
+
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                self::assertSame('666', Path::getPermissions($root . '/a.txt'));
+            } else {
+                self::assertSame('640', Path::getPermissions($root . '/a.txt'));
+            }
         } finally {
             fs($root)->delete();
         }
@@ -98,8 +116,13 @@ class PathTest extends AbstractVfsTestCase
         chmod($root . '/a.txt', 0640);
 
         try {
-            self::assertSame('640', Path::getPermissions($root . '/a.txt'));
-            self::assertSame('rw-r-----', Path::getPermissions($root . '/a.txt', true));
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                self::assertSame('666', Path::getPermissions($root . '/a.txt'));
+                self::assertSame('rw-rw-rw-', Path::getPermissions($root . '/a.txt', true));
+            } else {
+                self::assertSame('640', Path::getPermissions($root . '/a.txt'));
+                self::assertSame('rw-r-----', Path::getPermissions($root . '/a.txt', true));
+            }
         } finally {
             fs($root)->delete();
         }

@@ -799,13 +799,7 @@ class FileObject extends SplFileInfo
      */
     public function isLink(): bool
     {
-        $isLink = parent::isLink();
-
-        if (!$isLink && defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $isLink = @readlink($this->getPathname()) !== $this->getPathname();
-        }
-
-        return $isLink;
+        return parent::isLink() || $this->isJunction();
     }
 
     /**

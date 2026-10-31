@@ -11,7 +11,9 @@ use Symfony\Component\Mime\MimeTypes;
 use Windwalker\Filesystem\Exception\FileNotFoundException;
 use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\FileObject;
+use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Iterator\FilesIterator;
+use Windwalker\Filesystem\Path;
 use Windwalker\Promise\Exception\UncaughtException;
 use Windwalker\Stream\StringStream;
 
@@ -427,13 +429,28 @@ class FileObjectTest extends AbstractVfsTestCase
         $dir = sys_get_temp_dir() . '/windwalker-link-test-' . uniqid();
         mkdir($dir);
         file_put_contents($dir . '/target.txt', 'x');
-        symlink($dir . '/target.txt', $dir . '/link.txt');
 
         try {
-            self::assertTrue(fs($dir . '/link.txt')->isLink());
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $created = @symlink($dir . '/target.txt', $dir . '/link.txt');
+
+                if ($created) {
+                    self::assertTrue(fs($dir . '/link.txt')->isLink());
+                } else {
+                    self::assertFalse(is_link($dir . '/link.txt'));
+                    self::assertFileDoesNotExist($dir . '/link.txt');
+                }
+            } else {
+                self::assertTrue(symlink($dir . '/target.txt', $dir . '/link.txt'));
+                self::assertTrue(fs($dir . '/link.txt')->isLink());
+            }
+
             self::assertFalse(fs($dir . '/target.txt')->isLink());
         } finally {
-            unlink($dir . '/link.txt');
+            if (is_link($dir . '/link.txt')) {
+                unlink($dir . '/link.txt');
+            }
+
             unlink($dir . '/target.txt');
             rmdir($dir);
         }
@@ -450,6 +467,46 @@ class FileObjectTest extends AbstractVfsTestCase
 
         self::assertFalse($file->isJunction());
         self::assertFalse($file->removeJunction());
+    }
+
+    #[Test]
+    public function isLinkRejectsOrdinaryFilesAndMissingPaths(): void
+    {
+        self::assertFalse(fs(__FILE__)->isLink());
+        self::assertFalse(fs(Path::clean(__FILE__, '/'))->isLink());
+        self::assertFalse(fs(Path::relative(getcwd(), __FILE__))->isLink());
+        self::assertFalse(fs(__DIR__ . '/missing-link-' . uniqid('', true))->isLink());
+    }
+
+    #[Test]
+    public function isLinkRecognizesWindowsJunction(): void
+    {
+        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
+            self::markTestSkipped('Junctions are only supported on Windows.');
+        }
+
+        $dir = sys_get_temp_dir() . '/windwalker-junction-test-' . uniqid('', true);
+        mkdir($dir);
+        mkdir($dir . '/target');
+        file_put_contents($dir . '/target/file.txt', 'x');
+
+        try {
+            self::assertTrue(Filesystem::symlink($dir . '/target', $dir . '/link'));
+            self::assertTrue(fs($dir . '/link')->isLink());
+            self::assertTrue(fs($dir . '/link')->isJunction());
+            self::assertFalse(fs($dir . '/target')->isLink());
+            self::assertSame('x', file_get_contents($dir . '/link/file.txt'));
+            self::assertTrue(fs($dir . '/link')->removeJunction());
+            self::assertFileExists($dir . '/target/file.txt');
+        } finally {
+            if (fs($dir . '/link')->isJunction()) {
+                rmdir($dir . '/link');
+            }
+
+            unlink($dir . '/target/file.txt');
+            rmdir($dir . '/target');
+            rmdir($dir);
+        }
     }
 
     #[Test]

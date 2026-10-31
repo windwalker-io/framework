@@ -272,7 +272,7 @@ class Filesystem
 
             if (is_file($target)) {
                 // Files can only use symbolic link.
-                exec("mklink /D {$linkArg} {$targetArg}", $output, $returnVar);
+                exec("mklink {$linkArg} {$targetArg}", $output, $returnVar);
             } else {
                 // Try make dir link by junction.
                 exec("mklink /j {$linkArg} {$targetArg}", $output, $returnVar);

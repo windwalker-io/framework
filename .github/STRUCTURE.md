@@ -67,6 +67,7 @@ auto-loaded, and move detailed prose into `docs/` either way.
 ## Current contents
 
 - `instructions/cs.instructions.md` — PHP-CS-Fixer-backed code style rules (applies to all PHP files).
+- `instructions/dependencies.instructions.md` — package dependency checks and root Composer synchronization (PHP / Composer manifests).
 - `instructions/instruction.instructions.md` — how to place new rules across instructions / skills / docs.
 - `instructions/test.instructions.md` — PHPUnit style and missing-test coverage rules (applies to test files).
 - `prompts/complete-test-and-coverage.prompt.md` — inspect a package's coverage and add meaningful missing tests.

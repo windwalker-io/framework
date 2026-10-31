@@ -148,7 +148,7 @@ class Path
 
         $path = trim($path, ' ');
 
-        if (($ds === '\\') && ($path[0] === '\\') && ($path[1] === '\\')) {
+        if ($ds === '\\' && str_starts_with($path, '\\\\')) {
             // Remove double slashes and backslashes and convert all slashes and backslashes to DIRECTORY_SEPARATOR
             // If dealing with a UNC path don't forget to prepend the path with a backslash.
             $path = '\\' . preg_replace('#[/\\\\]+#', $ds, $path);
