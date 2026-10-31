@@ -6,6 +6,7 @@ namespace Windwalker\Query\Test\Grammar;
 
 use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\MySQLGrammar;
@@ -19,7 +20,8 @@ class IdentifierQuotingTest extends TestCase
 {
     /** @param  class-string<AbstractGrammar>  $grammar */
     #[DataProvider('grammarProvider')]
-    public function testEmbeddedDelimiters(string $grammar, string $open, string $close): void
+    #[Test]
+    public function embeddedDelimitersAreEscaped(string $grammar, string $open, string $close): void
     {
         $name = 'id' . $close . ' DESC -- ';
         $quoted = $open . 'id' . $close . $close . ' DESC -- ' . $close;
@@ -44,7 +46,8 @@ class IdentifierQuotingTest extends TestCase
         ];
     }
 
-    public function testIdentifierCannotChangeSortDirection(): void
+    #[Test]
+    public function identifierCannotChangeSortDirection(): void
     {
         if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
             self::markTestSkipped('PDO SQLite is unavailable.');

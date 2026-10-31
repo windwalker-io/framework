@@ -10,15 +10,15 @@ namespace Windwalker\Query\Test;
 interface QueryJsonTestInterface
 {
     #[DataProvider('parseJsonSelectorProvider')]
-    public function testParseJsonSelector(string $selector, string $expected): void;
+    public function parseJsonSelectorConvertsToDbJsonPath(string $selector, string $expected): void;
 
-    public function testJsonQuote(): void;
+    public function jsonQuoteWrapsJsonExpression(): void;
 
-    public function testAutoAlias(): void;
+    public function autoAliasPrefixesColumnsWithTableAlias(): void;
 
-    public function testJsonContains(): void;
+    public function jsonContainsBuildsContainsCondition(): void;
 
-    public function testJsonNotContains(): void;
+    public function jsonNotContainsBuildsNegatedCondition(): void;
 
-    public function testJsonLength(): void;
+    public function jsonLengthBuildsLengthExpression(): void;
 }

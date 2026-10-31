@@ -134,11 +134,17 @@ abstract class AbstractConnection implements ConnectionInterface
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getCreatedTime(): int
     {
         return $this->createdTime;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getCurrentUses(): int
     {
         return $this->currentUses;

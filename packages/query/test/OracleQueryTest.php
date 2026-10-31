@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\OracleGrammar;
 
@@ -17,7 +18,8 @@ class OracleQueryTest extends QueryTest
         return new OracleGrammar();
     }
 
-    public function testLimitOffset()
+    #[Test]
+    public function limitOffsetRendersLimitClause()
     {
         // Limit
         $q = self::createQuery()

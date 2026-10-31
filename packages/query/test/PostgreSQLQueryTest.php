@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\PostgreSQLGrammar;
@@ -16,11 +17,6 @@ use function Windwalker\Query\qn;
  */
 class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
      * testParseJsonSelector
      *
@@ -30,7 +26,8 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
      * @return  void
      */
     #[DataProvider('parseJsonSelectorProvider')]
-    public function testParseJsonSelector(string $selector, string $expected): void
+    #[Test]
+    public function parseJsonSelectorConvertsToDbJsonPath(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);
 
@@ -73,7 +70,8 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         ];
     }
 
-    public function testJsonQuote(): void
+    #[Test]
+    public function jsonQuoteWrapsJsonExpression(): void
     {
         $query = $this->instance->select('foo->bar ->> yoo AS yoo')
             ->selectRaw('%n AS l', 'foo->bar->loo')
@@ -94,7 +92,8 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testJsonContains(): void
+    #[Test]
+    public function jsonContainsBuildsContainsCondition(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -112,7 +111,8 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testJsonNotContains(): void
+    #[Test]
+    public function jsonNotContainsBuildsNegatedCondition(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -130,7 +130,8 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testJsonLength(): void
+    #[Test]
+    public function jsonLengthBuildsLengthExpression(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
@@ -154,7 +155,8 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         );
     }
 
-    public function testLimitOffset()
+    #[Test]
+    public function limitOffsetRendersLimitClause()
     {
         // Limit
         $q = self::createQuery()

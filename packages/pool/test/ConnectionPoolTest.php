@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Pool\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Pool\AbstractPool;
 use Windwalker\Pool\ConnectionPool;
@@ -21,7 +23,8 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function initFillsPoolToMinSize(): void
     {
         self::assertEquals(3, $this->instance->count());
     }
@@ -29,7 +32,8 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::count
      */
-    public function testCount(): void
+    #[Test]
+    public function countReflectsIdleConnectionsAfterGetAndRelease(): void
     {
         self::assertEquals(3, $this->instance->count());
 
@@ -45,7 +49,8 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::release
      */
-    public function testRelease(): void
+    #[Test]
+    public function releaseReturnsConnectionToPool(): void
     {
         $conn = $this->instance->getConnection();
 
@@ -59,7 +64,8 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::close
      */
-    public function testClose(): void
+    #[Test]
+    public function closeEmptiesPool(): void
     {
         $this->instance->close();
 
@@ -69,7 +75,8 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::totalCount
      */
-    public function testTotalCount(): void
+    #[Test]
+    public function totalCountDecreasesWhenConnectionIsDropped(): void
     {
         $conn0 = $this->instance->getConnection();
 
@@ -86,7 +93,8 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::createConnection
      */
-    public function testCreateConnection(): void
+    #[Test]
+    public function createConnectionUsesConnectionBuilder(): void
     {
         self::assertInstanceOf(
             StubConnection::class,
@@ -97,12 +105,14 @@ class ConnectionPoolTest extends TestCase
     /**
      * @see  AbstractPool::setLogger
      */
-    public function testSetLogger(): void
+    #[Test]
+    public function setLoggerAssignsLogger(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createPool(): void
     {
         $this->instance = new ConnectionPool(
             [
@@ -113,9 +123,5 @@ class ConnectionPoolTest extends TestCase
         );
         $this->instance->setConnectionBuilder(fn() => new StubConnection());
         $this->instance->init();
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

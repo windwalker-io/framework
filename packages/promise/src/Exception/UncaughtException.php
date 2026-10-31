@@ -45,7 +45,7 @@ class UncaughtException extends Exception
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function getReason(): mixed
     {

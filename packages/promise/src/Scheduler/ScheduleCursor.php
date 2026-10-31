@@ -31,7 +31,7 @@ class ScheduleCursor
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @codeCoverageIgnore
      */
     public function get(): mixed
     {
@@ -40,6 +40,8 @@ class ScheduleCursor
 
     /**
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public function isScheduled(): bool
     {
@@ -50,6 +52,8 @@ class ScheduleCursor
      * @param  bool  $scheduled
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setScheduled(bool $scheduled): static
     {

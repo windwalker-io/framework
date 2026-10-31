@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Query\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\SQLiteGrammar;
@@ -19,7 +20,8 @@ class SqliteQueryTest extends QueryTest
     protected static array $nameQuote = ['`', '`'];
 
     #[DataProvider('parseJsonSelectorProvider')]
-    public function testParseJsonSelector(string $selector, string $expected): void
+    #[Test]
+    public function parseJsonSelectorConvertsToDbJsonPath(string $selector, string $expected): void
     {
         $parsed = $this->instance->jsonSelector($selector);
 
@@ -62,7 +64,8 @@ class SqliteQueryTest extends QueryTest
         ];
     }
 
-    public function testJsonQuote(): void
+    #[Test]
+    public function jsonQuoteWrapsJsonExpression(): void
     {
         $query = $this->instance->select('foo -> bar ->> yoo AS yoo')
             ->selectRaw('%n AS l', 'foo -> bar -> loo')
@@ -83,7 +86,8 @@ class SqliteQueryTest extends QueryTest
         );
     }
 
-    public function testAutoAlias(): void
+    #[Test]
+    public function autoAliasPrefixesColumnsWithTableAlias(): void
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')

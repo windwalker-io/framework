@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test\Clause;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Grammar\BaseGrammar;
 use Windwalker\Query\Query;
@@ -11,7 +12,8 @@ use Windwalker\Query\Test\Mock\MockEscaper;
 
 class AlterClauseTest extends TestCase
 {
-    public function testRender(): void
+    #[Test]
+    public function renderBuildsAlterTableAddIndex(): void
     {
         $alter = self::createQuery()->alter('TABLE', 'foo');
         $alter->addIndex('idx_sakura', ['id', 'sakura']);

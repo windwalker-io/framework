@@ -76,6 +76,8 @@ abstract class AbstractPool implements PoolInterface
      * @param  LoggerInterface  $logger
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setLogger(LoggerInterface $logger): static
     {

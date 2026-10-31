@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Bounded\ParamType;
@@ -30,7 +31,8 @@ class BoundedHelperTest extends TestCase
      *
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('replaceParamsProvider')]
-    public function testReplaceParams(
+    #[Test]
+    public function replaceParamsReplacesPlaceholdersWithValues(
         string $sql,
         string $symbol,
         array $params,
@@ -139,7 +141,8 @@ class BoundedHelperTest extends TestCase
     /**
      * @see  BoundedHelper::emulatePrepared
      */
-    public function testEmulatePrepared(): void
+    #[Test]
+    public function emulatePreparedInlinesBoundValues(): void
     {
         $sql = 'SELECT * FROM foo WHERE foo = :foo AND bar = ? AND yoo IN(?, ?, ?) AND flower = :flower';
 

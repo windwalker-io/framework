@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Promise\Test;
 
+use PHPUnit\Framework\Attributes\BeforeClass;
+use PHPUnit\Framework\Attributes\Test;
 use Swoole\Coroutine\Channel;
 use Throwable;
 use Windwalker\Promise\ExtendedPromiseInterface;
@@ -26,25 +28,20 @@ class FunctionsTest extends AbstractPromiseTestCase
 {
     use SwooleTestTrait;
 
-    /**
-     * This method is called before the first test of this test class is run.
-     */
-    public static function setUpBeforeClass(): void
+    #[BeforeClass]
+    public static function useDeferredScheduler(): void
     {
-        parent::setUpBeforeClass();
-
         static::useScheduler(new DeferredScheduler());
     }
 
-    protected function tearDown(): void
+    protected function flushAsyncEvents(): void
     {
-        parent::tearDown();
-
         // Ensure async events ran
         $this->nextTick();
     }
 
-    public function testAsync()
+    #[Test]
+    public function asyncRunsCallbackAndWaitReturnsItsResult()
     {
         static::skipIfSwooleNotInstalled();
 
@@ -67,7 +64,8 @@ class FunctionsTest extends AbstractPromiseTestCase
         );
     }
 
-    public function testAwait()
+    #[Test]
+    public function awaitReturnsResolvedValuesInsideAsyncCallbacks()
     {
         static::skipIfSwooleNotInstalled();
 
@@ -104,14 +102,8 @@ class FunctionsTest extends AbstractPromiseTestCase
         self::assertEquals('Lilium', $this->values['v3']);
     }
 
-    /**
-     * testCoroutine
-     *
-     * @return  void
-     *
-     * @throws Throwable
-     */
-    public function testCoroutine(): void
+    #[Test]
+    public function coroutineYieldsPromisesAndReturnsCombinedResult(): void
     {
         static::useScheduler(new ImmediateScheduler());
 
@@ -128,7 +120,8 @@ class FunctionsTest extends AbstractPromiseTestCase
         self::assertEquals('Sakura Rose', $v);
     }
 
-    public function testCoroutineInSwoole(): void
+    #[Test]
+    public function coroutineYieldsPromisesInsideSwooleCoroutine(): void
     {
         static::skipIfSwooleNotInstalled();
 
@@ -150,14 +143,8 @@ class FunctionsTest extends AbstractPromiseTestCase
         );
     }
 
-    /**
-     * testCoroutineable
-     *
-     * @return  void
-     *
-     * @throws Throwable
-     */
-    public function testCoroutineable(): void
+    #[Test]
+    public function coroutineableReturnsCallableThatPassesArguments(): void
     {
         static::useScheduler(new ImmediateScheduler());
 

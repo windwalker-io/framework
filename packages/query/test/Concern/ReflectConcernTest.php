@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test\Concern;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Grammar\BaseGrammar;
@@ -18,7 +20,8 @@ class ReflectConcernTest extends TestCase
 {
     protected Query $instance;
 
-    public function testGetAllTables()
+    #[Test]
+    public function getAllTablesReturnsTablesGroupedByClause()
     {
         $this->instance->select('*')
             ->from('users', 'u')
@@ -57,7 +60,8 @@ class ReflectConcernTest extends TestCase
         return new Query(new MockEscaper(), new BaseGrammar());
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createQueryInstance(): void
     {
         $this->instance = self::createQuery();
     }

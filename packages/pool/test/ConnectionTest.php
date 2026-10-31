@@ -6,6 +6,8 @@ namespace Windwalker\Pool\Test;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Pool\AbstractConnection;
 use Windwalker\Pool\AbstractPool;
@@ -26,7 +28,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::setState
      */
-    public function testSetActive(): void
+    #[Test]
+    public function setStateSwitchesBetweenActiveAndInactive(): void
     {
         $this->instance->setState(ConnectionState::ACTIVE);
 
@@ -40,7 +43,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::getLastTime
      */
-    public function testGetLastTime(): void
+    #[Test]
+    public function updateLastTimeChangesLastTimeFromZero(): void
     {
         self::assertEquals(0, $this->instance->getLastTime());
 
@@ -52,7 +56,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::getId
      */
-    public function testGetId(): void
+    #[Test]
+    public function idIsAssignedFromPoolSerialWhenPoolIsSet(): void
     {
         self::assertEquals(0, $this->instance->getId());
 
@@ -64,7 +69,8 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::release
      */
-    public function testRelease(): void
+    #[Test]
+    public function releaseDelegatesToPool(): void
     {
         $pool = Mockery::mock(AbstractPool::class);
         $pool->shouldReceive('release')
@@ -82,20 +88,18 @@ class ConnectionTest extends TestCase
     /**
      * @see  AbstractConnection::reconnect
      */
-    public function testReconnect(): void
+    #[Test]
+    public function reconnectReturnsConnectionResult(): void
     {
         $this->instance->reconnect();
 
         self::assertEquals('Hello', $this->instance->reconnect());
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createConnection(): void
     {
         $this->instance = new StubConnection();
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     protected static function createPool(): StubConnectionPool

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Escaper;
 
@@ -13,14 +14,10 @@ use Windwalker\Query\Escaper;
 class EscaperTest extends TestCase
 {
     /**
-     * @var Escaper
-     */
-    protected $instance;
-
-    /**
      * @see  Escaper::tryQuote
      */
-    public function testQuote(): void
+    #[Test]
+    public function quoteWrapsValueWithQuotes(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -28,7 +25,8 @@ class EscaperTest extends TestCase
     /**
      * @see  Escaper::stripQuote
      */
-    public function testStripQuote(): void
+    #[Test]
+    public function stripQuoteRemovesQuotes(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -36,17 +34,9 @@ class EscaperTest extends TestCase
     /**
      * @see  Escaper::tryEscape
      */
-    public function testEscape(): void
+    #[Test]
+    public function escapeEscapesValue(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
-    }
-
-    protected function setUp(): void
-    {
-        $this->instance = null;
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

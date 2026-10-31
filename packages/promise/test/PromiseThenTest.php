@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Promise\Test;
 
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use ReflectionException;
 use Windwalker\Promise\Enum\PromiseState;
 use Windwalker\Promise\Exception\UncaughtException;
@@ -17,9 +18,7 @@ use function Windwalker\nope;
 use function Windwalker\Promise\await;
 
 /**
- * The SwoolePromiseTest class.
- *
- * @since  __DEPLOY_VERSION__
+ * The PromiseThenTest class.
  */
 class PromiseThenTest extends AbstractPromiseTestCase
 {
@@ -29,7 +28,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
      * @throws ReflectionException
      * @see  Promise::then
      */
-    public function testThenWithPending(): void
+    #[Test]
+    public function thenOnPendingPromiseRegistersChildHandlers(): void
     {
         $p = new Promise(nope());
 
@@ -55,7 +55,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertSame($children[0][2], $rej3);
     }
 
-    public function testResolvedThenWithFulfilledHandler(): void
+    #[Test]
+    public function thenOnFulfilledPromiseAppliesFulfilledHandler(): void
     {
         $p = Promise::resolve(1)
             ->then(
@@ -70,7 +71,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals(2, $v);
     }
 
-    public function testResolvedThenWithRejectedHandler(): void
+    #[Test]
+    public function thenOnFulfilledPromiseSkipsRejectedHandler(): void
     {
         $p = Promise::resolve(1)
             ->then(
@@ -86,7 +88,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals(1, $v);
     }
 
-    public function testRejectedThenWithFulfilledHandler(): void
+    #[Test]
+    public function thenOnRejectedPromiseSkipsFulfilledHandlerAndThrows(): void
     {
         $this->expectException(UncaughtException::class);
 
@@ -103,7 +106,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals(1, $v);
     }
 
-    public function testRejectedThenWithRejectedHandler(): void
+    #[Test]
+    public function thenOnRejectedPromiseRecoversWithRejectedHandler(): void
     {
         $p = Promise::reject(1)
             ->then(
@@ -119,7 +123,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals(2, $v);
     }
 
-    public function testRejectedThenWithBoth(): void
+    #[Test]
+    public function thenOnRejectedPromiseUsesOnlyRejectedHandlerWhenBothGiven(): void
     {
         $p = Promise::reject(1)
             ->then(
@@ -137,20 +142,22 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals(2, $v);
     }
 
-    public function testRejectedWithoutThen(): void
+    #[Test]
+    public function waitOnRejectedPromiseThrowsUncaughtException(): void
     {
         $this->expectException(UncaughtException::class);
-        $this->expectExceptionMessage('1');
+        $this->expectExceptionMessageIsOrContains('1');
 
         $p = Promise::reject('1');
 
         $p->wait();
     }
 
-    public function testRejectedWithCatchAndThrowAgain(): void
+    #[Test]
+    public function catchHandlerThrowingRejectsWithNewException(): void
     {
         $this->expectException(UncaughtException::class);
-        $this->expectExceptionMessage('2');
+        $this->expectExceptionMessageIsOrContains('2');
 
         $p = Promise::reject('1')
             ->catch(
@@ -174,10 +181,11 @@ class PromiseThenTest extends AbstractPromiseTestCase
         }
     }
 
-    public function testResolvereject(): void
+    #[Test]
+    public function resolvingWithRejectedPromiseRejectsPromise(): void
     {
         $this->expectException(UncaughtException::class);
-        $this->expectExceptionMessage('1');
+        $this->expectExceptionMessageIsOrContains('1');
 
         $p = Promise::resolve(Promise::reject('1'));
 
@@ -195,7 +203,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
      * @throws ReflectionException
      * @see  Promise::then
      */
-    public function testThenAlreadyFulfilled(): void
+    #[Test]
+    public function thenOnFulfilledPromiseChainsValuesAndReturnedPromise(): void
     {
         $p = Promise::resolve(1);
 
@@ -250,7 +259,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $newValue);
     }
 
-    public function testThenAndResolveDeferred(): void
+    #[Test]
+    public function thenHandlersRunInOrderWhenResolvedLater(): void
     {
         $resolve = null;
 
@@ -302,7 +312,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
      * @throws ReflectionException
      * @see  Promise::then
      */
-    public function testThenAlreadyreject(): void
+    #[Test]
+    public function thenOnRejectedPromiseRecoversAndChainsReturnedPromise(): void
     {
         $p = Promise::reject($this->values['e1'] = new Exception('Sakura'));
 
@@ -359,7 +370,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals('Hello', $newValue);
     }
 
-    public function testThenAndRejectDeferred()
+    #[Test]
+    public function thenHandlersRecoverWhenRejectedLater()
     {
         $reject = null;
 
@@ -410,7 +422,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals('Hello World', $v3);
     }
 
-    public function testThenWithNope(): void
+    #[Test]
+    public function thenWithoutHandlersPassesStateThrough(): void
     {
         [$p1, $resolve] = Promise::withResolvers();
         // Give no functions to then(), will just return same state Promise and same values.
@@ -450,7 +463,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
     /**
      * @see  PromiseThen::then
      */
-    public function testThenWithRejectedPromise(): void
+    #[Test]
+    public function thenReturningRejectedPromisePropagatesReason(): void
     {
         $p = Promise::create(
             function ($re) {
@@ -490,7 +504,8 @@ class PromiseThenTest extends AbstractPromiseTestCase
         self::assertEquals('Error', $this->values['r2']);
     }
 
-    public function testThenWithRejectedThenable(): void
+    #[Test]
+    public function thenReturningRejectedThenablePropagatesReason(): void
     {
         $p = Promise::create(
             function ($re) {
