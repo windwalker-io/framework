@@ -24,14 +24,14 @@ class MustacheRendererTest extends TestCase
     /**
      * Test instance.
      *
-     * @var MustacheRenderer
+     * @var  MustacheRenderer
      */
     protected MustacheRenderer $instance;
 
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static string $path = '';
 
@@ -48,7 +48,7 @@ class MustacheRendererTest extends TestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws  Throwable
      */
     #[Test]
     public function renderHelloTemplateWithObjectData(): void
@@ -65,40 +65,17 @@ HTML;
     }
 
     #[Test]
-    public function getEngineReturnsMustacheEngine(): void
+    public function handleLayoutAppendsExtensionAndConvertsDots(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('foo/bar.mustache', $this->instance->handleLayout('foo.bar', 'mustache'));
     }
 
     #[Test]
-    public function setEngineReplacesEngine(): void
+    public function handleLayoutKeepsLayoutAlreadyEndingWithExtension(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('foo/bar.mustache', $this->instance->handleLayout('foo/bar.mustache', 'mustache'));
     }
 
-    #[Test]
-    public function getLoaderReturnsTemplateLoader(): void
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    #[Test]
-    public function setLoaderReplacesTemplateLoader(): void
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
 }
 
 // phpcs:disable
@@ -115,7 +92,7 @@ class Chris
      *
      * @var  string
      */
-    public $name = "Chris";
+    public $name = 'Chris';
 
     /**
      * Property value.
@@ -127,7 +104,7 @@ class Chris
     /**
      * taxed_value
      *
-     * @return float|int
+     * @return  float|int
      */
     public function taxed_value(): float|int
     {

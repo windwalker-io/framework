@@ -8,7 +8,10 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Windwalker\Renderer\TwigRenderer;
+use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
@@ -23,14 +26,14 @@ class TwigRendererTest extends TestCase
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static $path;
 
     /**
      * Test instance.
      *
-     * @var TwigRenderer
+     * @var  TwigRenderer
      */
     protected $instance;
 
@@ -44,6 +47,44 @@ class TwigRendererTest extends TestCase
         }
 
         $this->instance = new TwigRenderer(['paths' => static::$path]);
+    }
+
+    #[Test]
+    public function handleLayoutAppendsExtensionAndConvertsDots(): void
+    {
+        self::assertSame('foo/bar.twig', $this->instance->handleLayout('foo.bar', 'twig'));
+    }
+
+    #[Test]
+    public function handleLayoutKeepsLayoutAlreadyEndingWithExtension(): void
+    {
+        self::assertSame('foo/bar.twig', $this->instance->handleLayout('foo/bar.twig', 'twig'));
+    }
+
+    #[Test]
+    public function debugOptionRegistersDebugExtension(): void
+    {
+        $twig = (new TwigRenderer(['paths' => static::$path, 'debug' => true]))->createEngine();
+
+        self::assertTrue($twig->hasExtension(DebugExtension::class));
+        self::assertFalse($this->instance->createEngine()->hasExtension(DebugExtension::class));
+    }
+
+    #[Test]
+    public function extendedEngineExposesStubExtensionFilterFunctionAndGlobal(): void
+    {
+        $this->instance->extend(
+            function (Environment $twig) {
+                $twig->addExtension(new StubTwigExtension());
+
+                return $twig;
+            }
+        );
+
+        $html = $this->instance->render('ext-test.twig');
+
+        self::assertStringContainsString('<li>peace</li>', $html);
+        self::assertStringContainsString('<li>sakura</li>', $html);
     }
 
     #[Test]

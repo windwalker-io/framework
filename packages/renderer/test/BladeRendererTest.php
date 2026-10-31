@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Renderer\Test;
 
 use Illuminate\Contracts\View\Factory;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,14 +27,14 @@ class BladeRendererTest extends TestCase
     /**
      * Test instance.
      *
-     * @var BladeRenderer
+     * @var  BladeRenderer
      */
     protected $instance;
 
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static $path;
 
@@ -89,6 +90,25 @@ class BladeRendererTest extends TestCase
 HTML;
 
         self::assertHtmlFormatEquals($expect, $html);
+    }
+
+    #[Test]
+    public function createCompilerThrowsWhenCachePathMissing(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('Please set cache_path to options.');
+
+        $this->instance->createCompiler();
+    }
+
+    #[Test]
+    public function createCompilerCreatesMissingCacheDirectory(): void
+    {
+        $path = __DIR__ . '/cache/nested';
+
+        $this->instance->createCompiler(null, $path);
+
+        self::assertDirectoryExists($path);
     }
 
     #[Test]

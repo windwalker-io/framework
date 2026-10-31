@@ -23,14 +23,14 @@ class PlatesRendererTest extends TestCase
     /**
      * Test instance.
      *
-     * @var PlatesRenderer
+     * @var  PlatesRenderer
      */
     protected $instance;
 
     /**
      * Property path.
      *
-     * @var string
+     * @var  string
      */
     protected static $path;
 
@@ -44,6 +44,18 @@ class PlatesRendererTest extends TestCase
         }
 
         $this->instance = new PlatesRenderer(['paths' => [static::$path]]);
+    }
+
+    #[Test]
+    public function handleLayoutAppendsExtensionAndConvertsDots(): void
+    {
+        self::assertSame('foo/bar.phtml', $this->instance->handleLayout('foo.bar', 'phtml'));
+    }
+
+    #[Test]
+    public function handleLayoutKeepsLayoutAlreadyEndingWithExtension(): void
+    {
+        self::assertSame('profile.phtml', $this->instance->handleLayout('profile.phtml', 'phtml'));
     }
 
     #[Test]
