@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Enum;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Enum\EnumTranslatableInterface;
-use Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum;
 
-/**
- * The NativeEnumTest class.
- */
 abstract class AbstractEnumTestCase extends TestCase
 {
     /**
-     * getEnumClass
-     *
-     * @return  EnumTranslatableInterface
+     * @return  class-string<EnumTranslatableInterface>
      */
     abstract protected static function getEnumClass(): string;
 
-    public function testFrom(): void
+    #[Test]
+    public function fromReturnsEnumInstanceForValue(): void
     {
         $class = static::getEnumClass();
 
@@ -29,7 +25,8 @@ abstract class AbstractEnumTestCase extends TestCase
         );
     }
 
-    public function testTryFrom()
+    #[Test]
+    public function tryFromReturnsNullForUnknownValue(): void
     {
         $class = static::getEnumClass();
 
@@ -38,7 +35,8 @@ abstract class AbstractEnumTestCase extends TestCase
         );
     }
 
-    public function testValues()
+    #[Test]
+    public function valuesReturnsInstancesKeyedByName(): void
     {
         $class = static::getEnumClass();
         $values = $class::values();
@@ -47,7 +45,8 @@ abstract class AbstractEnumTestCase extends TestCase
         self::assertTrue($class::YOO()->sameAs($values['YOO']));
     }
 
-    public function testSameAs()
+    #[Test]
+    public function sameAsComparesByValueAndInstance(): void
     {
         $class = static::getEnumClass();
 
@@ -55,7 +54,8 @@ abstract class AbstractEnumTestCase extends TestCase
         self::assertTrue($class::BAR()->sameAs($class::BAR()));
     }
 
-    public function testMeta()
+    #[Test]
+    public function metaReturnsTitleIconColorAndExtraMeta(): void
     {
         $class = static::getEnumClass();
 

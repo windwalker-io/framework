@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Compare\Test\Compare;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Compare\CompareHelper;
 
@@ -18,12 +20,7 @@ class CompareHelperTest extends TestCase
 
     public const NOT_STRICT = false;
 
-    /**
-     * getCompareData
-     *
-     * @return  array
-     */
-    public static function getCompareData(): array
+    public static function compareProvider(): array
     {
         return [
             // Equals
@@ -105,20 +102,9 @@ class CompareHelperTest extends TestCase
         ];
     }
 
-    /**
-     * Method to test compare().
-     *
-     * @param  mixed   $a
-     * @param  string  $operator
-     * @param  mixed   $b
-     * @param  bool    $strict
-     * @param  bool    $result
-     *
-     * @return void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('getCompareData')]
-    public function testCompare($a, $operator, $b, $strict, $result): void
+    #[Test]
+    #[DataProvider('compareProvider')]
+    public function compareReturnsResultForOperatorAndStrictness($a, $operator, $b, $strict, $result): void
     {
         self::assertEquals($result, CompareHelper::compare($a, $b, $operator, $strict));
     }

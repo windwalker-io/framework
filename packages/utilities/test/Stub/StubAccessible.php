@@ -7,8 +7,6 @@ use Windwalker\Utilities\Contract\AccessibleInterface;
 
 /**
  * The StubAccessible class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class StubAccessible implements AccessibleInterface
 {

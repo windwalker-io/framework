@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Uri\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Uri\UriTemplate;
 
@@ -12,7 +13,8 @@ class UriTemplateTest extends TestCase
     /**
      * @see  UriTemplate::expand
      */
-    public function testExpand(): void
+    #[Test]
+    public function expandReplacesVarsAndQueryExpression(): void
     {
         $tpl = new UriTemplate('https://example.org/foo/{foo}{?bar}', ['foo' => '123']);
 
@@ -24,7 +26,8 @@ class UriTemplateTest extends TestCase
     /**
      * @see  UriTemplate::expand
      */
-    public function testExpandWithExtraVars(): void
+    #[Test]
+    public function expandIgnoresUnusedVars(): void
     {
         $tpl = new UriTemplate('https://example.org/foo/{foo}{?bar}', ['foo' => '123', 'a' => 'b']);
 
@@ -36,7 +39,8 @@ class UriTemplateTest extends TestCase
     /**
      * @see  UriTemplate::expand
      */
-    public function testExpandAndLessVars(): void
+    #[Test]
+    public function expandLeavesMissingVarsEmpty(): void
     {
         $tpl = new UriTemplate('https://example.org/foo/{foo}{?bar}');
 
@@ -48,7 +52,8 @@ class UriTemplateTest extends TestCase
     /**
      * @see  UriTemplate::extract
      */
-    public function testExtract(): void
+    #[Test]
+    public function extractReturnsVarsFromUri(): void
     {
         $tpl = new UriTemplate('https://example.org/foo/{foo}{?bar}');
         $vars = $tpl->extract('https://example.org/foo/123?bar=yoo');
@@ -62,7 +67,8 @@ class UriTemplateTest extends TestCase
     /**
      * @see  UriTemplate::bindValue
      */
-    public function testBindValue(): void
+    #[Test]
+    public function bindValueSetsVarValues(): void
     {
         $tpl = new UriTemplate('https://example.org/foo/{foo}{?bar}');
         $tpl->bindValue('foo', 123);
@@ -74,7 +80,8 @@ class UriTemplateTest extends TestCase
     /**
      * @see  UriTemplate::bind
      */
-    public function testBind(): void
+    #[Test]
+    public function bindUsesVariableReferences(): void
     {
         $foo = 321;
         $bar = null;

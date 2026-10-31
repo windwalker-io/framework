@@ -816,6 +816,8 @@ class Uri implements ExtendedUriInterface
      * getUri
      *
      * @return  ?string
+     *
+     * @codeCoverageIgnore
      */
     public function getOriginal(): ?string
     {

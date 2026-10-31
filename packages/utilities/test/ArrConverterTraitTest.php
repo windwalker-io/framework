@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * The ArrConverterTest class.
- *
- * @since  {DEPLOY_VERSION}
  */
 class ArrConverterTraitTest extends TestCase
 {
-    public function testFlipMatrix(): void
+    #[Test]
+    public function flipMatrixMapsInnerValuesToOuterKeys(): void
     {
         $src = [
             'A' => [
@@ -47,27 +48,14 @@ class ArrConverterTraitTest extends TestCase
         self::assertEquals($expected, Arr::flipMatrix($src));
     }
 
-    /**
-     * testGroup
-     *
-     * @param $source
-     * @param $key
-     * @param $expected
-     * @param $type
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestGroup')]
-    public function testGroup($source, $key, $expected, int $type, ?string $delimiter = '')
+    #[Test]
+    #[DataProvider('groupByPathProvider')]
+    public function groupByPathGroupsItemsByKeyPath($source, $key, $expected, int $type, ?string $delimiter = ''): void
     {
         self::assertEquals($expected, Arr::groupByPath($source, $key, $type, (string) $delimiter));
     }
 
-    /**
-     * providerTestGroup
-     *
-     * @return  array
-     */
-    public static function providerTestGroup(): array
+    public static function groupByPathProvider(): array
     {
         return [
             'A scalar array' => [
@@ -240,7 +228,8 @@ class ArrConverterTraitTest extends TestCase
         ];
     }
 
-    public function testTranspose(): void
+    #[Test]
+    public function transposeSwapsRowsAndColumns(): void
     {
         $src = [
             [
@@ -273,7 +262,8 @@ class ArrConverterTraitTest extends TestCase
         self::assertEquals($expected, Arr::transpose($src));
     }
 
-    public function testGroupPrefix(): void
+    #[Test]
+    public function groupPrefixExtractsPrefixedKeysAndKeepsOthers(): void
     {
         $src = [
             'id' => 123,
@@ -300,7 +290,8 @@ class ArrConverterTraitTest extends TestCase
         );
     }
 
-    public function testExtractPrefix(): void
+    #[Test]
+    public function extractPrefixAddsPrefixToKeys(): void
     {
         $item = [
             'id' => 123,
@@ -321,6 +312,21 @@ class ArrConverterTraitTest extends TestCase
             ],
             Arr::extractPrefix($src, 'params_')
         );
+    }
+
+    #[Test]
+    public function extractPrefixMergesIntoGivenItem(): void
+    {
+        $item = [
+            'id' => 123,
+            'title' => 'Hello',
+        ];
+
+        $src = [
+            'foo' => 'Foo',
+            'bar' => 'Bar',
+            'yoo' => 'Yoo',
+        ];
 
         self::assertEquals(
             [
@@ -334,7 +340,8 @@ class ArrConverterTraitTest extends TestCase
         );
     }
 
-    public function testMapWithKey(): void
+    #[Test]
+    public function mapWithKeysBuildsKeysFromCallback(): void
     {
         $src = [
             'A' => [
@@ -418,7 +425,8 @@ class ArrConverterTraitTest extends TestCase
         );
     }
 
-    public static function testMapGenerator(): void
+    #[Test]
+    public static function mapGeneratorCollectsYieldedKeysAndValues(): void
     {
         $gen = static function () {
             yield 1 => 'A';
@@ -441,7 +449,8 @@ class ArrConverterTraitTest extends TestCase
     /**
      * @see  Arr::crossJoin()
      */
-    public function testCrossJoin(): void
+    #[Test]
+    public function crossJoinCombinesTwoArrays(): void
     {
         $a = Arr::crossJoin([1, 2], ['a', 'b']);
 
@@ -454,7 +463,11 @@ class ArrConverterTraitTest extends TestCase
             ],
             $a
         );
+    }
 
+    #[Test]
+    public function crossJoinCombinesThreeArrays(): void
+    {
         $b = Arr::crossJoin([1, 2], ['a', 'b'], ['I', 'II']);
 
         self::assertEquals(

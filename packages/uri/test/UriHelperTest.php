@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Http\Test;
+namespace Windwalker\Uri\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Uri\UriHelper;
 
@@ -14,7 +15,8 @@ use Windwalker\Uri\UriHelper;
  */
 class UriHelperTest extends TestCase
 {
-    public function testParseUrl()
+    #[Test]
+    public function parseUrlParsesQueryString(): void
     {
         // phpcs:disable
         $url = 'http://localhost/Windwalker_development/j16_trunk/administrator/index.php?option=com_contact&view=contact&layout=edit&id=5';
@@ -22,13 +24,21 @@ class UriHelperTest extends TestCase
         $expected = parse_url($url);
         $actual = UriHelper::parseUrl($url);
         self::assertEquals($expected, $actual, 'Line: ' . __LINE__ . ' Results should be equal');
+    }
 
+    #[Test]
+    public function parseUrlParsesFragmentContainingQueryLikeString(): void
+    {
         // Test all parts of query
         $url = 'https://john:doe@www.google.com:80/folder/page.html#id?var=kay&var2=key&true';
         $expected = parse_url($url);
         $actual = UriHelper::parseUrl($url);
         self::assertEquals($expected, $actual, 'Line: ' . __LINE__ . ' Results should be equal');
+    }
 
+    #[Test]
+    public function parseUrlKeepsUtf8CharactersInPath(): void
+    {
         // Test special characters in URL
         $url = 'http://Windwalker.org/mytestpath/È';
         $expected = parse_url($url);
@@ -37,19 +47,31 @@ class UriHelperTest extends TestCase
         $expected['path'] = '/mytestpath/È';
         $actual = UriHelper::parseUrl($url);
         self::assertEquals($expected, $actual, 'Line: ' . __LINE__ . ' Results should be equal');
+    }
 
+    #[Test]
+    public function parseUrlKeepsSpecialCharactersInUrl(): void
+    {
         // Test special characters in URL
         $url = 'http://mydomain.com/!*\'();:@&=+$,/?%#[]" \\';
         $expected = parse_url($url);
         $actual = UriHelper::parseUrl($url);
         self::assertEquals($expected, $actual, 'Line: ' . __LINE__ . ' Results should be equal');
+    }
 
+    #[Test]
+    public function parseUrlKeepsPercentEncodedPath(): void
+    {
         // Test url encoding in URL
         $url = 'http://mydomain.com/%21%2A%27%28%29%3B%3A%40%26%3D%24%2C%2F%3F%25%23%5B%22%20%5C';
         $expected = parse_url($url);
         $actual = UriHelper::parseUrl($url);
         self::assertEquals($expected, $actual, 'Line: ' . __LINE__ . ' Results should be equal');
+    }
 
+    #[Test]
+    public function parseUrlHandlesMixedUtf8AndPercentCharacters(): void
+    {
         // Test a mix of the above
         $url = 'http://john:doe@mydomain.com:80/%È21%25È3*%(';
         $expected = parse_url($url);
@@ -58,7 +80,11 @@ class UriHelperTest extends TestCase
         $expected['path'] = '/%È21%25È3*%(';
         $actual = UriHelper::parseUrl($url);
         self::assertEquals($expected, $actual, 'Line: ' . __LINE__ . ' Results should be equal');
+    }
 
+    #[Test]
+    public function parseUrlHandlesInvalidUrlLikeNativeParseUrl(): void
+    {
         // Test invalild URL
         $url = 'http:///mydomain.com';
         $expected = parse_url($url);

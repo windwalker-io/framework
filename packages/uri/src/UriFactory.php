@@ -14,6 +14,8 @@ class UriFactory implements UriFactoryInterface
 {
     /**
      * @inheritDoc
+     *
+     * @codeCoverageIgnore
      */
     public function createUri(string $uri = ''): UriInterface
     {

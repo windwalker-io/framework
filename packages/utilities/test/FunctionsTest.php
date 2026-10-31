@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 use Windwalker\Utilities\Arr;
@@ -16,14 +17,13 @@ use function Windwalker\fread_all;
 
 /**
  * Tests for the global PHP methods.
- *
- * @since  2.0
  */
 class FunctionsTest extends TestCase
 {
     use BaseAssertionTrait;
 
-    public function testShow(): void
+    #[Test]
+    public function showPrintsValuesAndTruncatesAtMaxDepth(): void
     {
         $data = [
             'test',
@@ -81,7 +81,11 @@ OUT;
         self::assertStringSafeEquals($expected, $c);
 
         fclose(Arr::$output);
+    }
 
+    #[Test]
+    public function showPrintsNamedArgumentsWithDepthOption(): void
+    {
         $expected = <<<OUT
 [Value 1]
 Hello
@@ -133,8 +137,9 @@ OUT;
         fclose(Arr::$output);
     }
 
+    #[Test]
     #[DataProvider('clampProvider')]
-    public function testClamp(int|float $num, int|float|null $min, int|float|null $max, int|float $expected): void
+    public function clampLimitsNumberWithinMinAndMax(int|float $num, int|float|null $min, int|float|null $max, int|float $expected): void
     {
         self::assertEquals(
             $expected,

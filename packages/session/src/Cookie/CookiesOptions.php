@@ -12,7 +12,7 @@ class CookiesOptions
 
     // phpcs:disable
     public ?\DateTimeImmutable $expires = null {
-        set(\DateTimeImmutable|string|int|null $value) {
+        set(\DateTimeInterface|string|int|null $value) {
             if ($value === null) {
                 $this->expires = null;
 

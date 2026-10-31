@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use WeakReference;
@@ -13,7 +14,8 @@ use WeakReference;
  */
 class WeakReferenceTest extends TestCase
 {
-    public function testWeakReference(): void
+    #[Test]
+    public function weakReferenceReturnsNullAfterTargetIsReleased(): void
     {
         if (PHP_VERSION_ID < 70400) {
             self::markTestSkipped('WeakReference only works after PHP7.4');

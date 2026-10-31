@@ -26,6 +26,12 @@ class CookiesOptionsTest extends TestCase
         $options->expires = new \DateTimeImmutable('@1893456000');
         self::assertSame(1893456000, $options->expires->getTimestamp());
 
+        $options->expires = new \DateTime('@1893456000');
+        self::assertInstanceOf(\DateTimeImmutable::class, $options->expires);
+        self::assertSame(1893456000, $options->expires->getTimestamp());
+
+        self::assertSame(1893456000, (new CookiesOptions(new \DateTime('@1893456000')))->expires->getTimestamp());
+
         $options->expires = null;
         self::assertNull($options->expires);
     }

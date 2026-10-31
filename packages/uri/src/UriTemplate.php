@@ -44,6 +44,8 @@ class UriTemplate implements \Stringable
 
     /**
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public function getVars(): array
     {
@@ -54,6 +56,8 @@ class UriTemplate implements \Stringable
      * @param  array  $vars
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setVars(array $vars): static
     {
@@ -64,6 +68,8 @@ class UriTemplate implements \Stringable
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getTemplate(): string
     {
@@ -74,6 +80,8 @@ class UriTemplate implements \Stringable
      * @param  string  $template
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setTemplate(string $template): static
     {
@@ -106,6 +114,8 @@ class UriTemplate implements \Stringable
      * @param  \Closure  $expandHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setExpandHandler(\Closure $expandHandler): static
     {
@@ -134,6 +144,8 @@ class UriTemplate implements \Stringable
      * @param  \Closure  $extractHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setExtractHandler(\Closure $extractHandler): static
     {

@@ -7,6 +7,7 @@ namespace Windwalker\Utilities\Test;
 use ArrayIterator;
 use ArrayObject;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Windwalker\Test\Traits\BaseAssertionTrait;
@@ -14,37 +15,18 @@ use Windwalker\Utilities\Assert\TypeAssert;
 use Windwalker\Utilities\Exception\CastingException;
 use Windwalker\Utilities\TypeCast;
 
-/**
- * The TypeCastTest class.
- */
 class TypeCastTest extends TestCase
 {
     use BaseAssertionTrait;
 
-    /**
-     * testToArray
-     *
-     * @param $input
-     * @param $recursive
-     * @param $expect
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestToArray')]
-    public function testToArray($input, $recursive, $expect)
+    #[Test]
+    #[DataProvider('toArrayProvider')]
+    public function toArrayConvertsValueToArrayWithRecursiveOption($input, $recursive, $expect)
     {
         $this->assertEquals($expect, TypeCast::toArray($input, $recursive));
     }
 
-    /**
-     * Data provider for object inputs
-     *
-     * @return  array
-     *
-     * @since   2.0
-     */
-    public static function providerTestToArray(): array
+    public static function toArrayProvider(): array
     {
         return [
             'string' => [
@@ -80,29 +62,14 @@ class TypeCastTest extends TestCase
         ];
     }
 
-    /**
-     * testToObject
-     *
-     * @param  mixed   $input
-     * @param  mixed   $expect
-     * @param  bool    $recursive
-     * @param  string  $message
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestToObject')]
-    public function testToObject($input, $expect, bool $recursive, string $message)
+    #[Test]
+    #[DataProvider('toObjectProvider')]
+    public function toObjectConvertsArrayToObjectWithRecursiveOption($input, $expect, bool $recursive, string $message)
     {
         self::assertEquals($expect, TypeCast::toObject($input, $recursive), $message);
     }
 
-    /**
-     * providerTestToObject
-     *
-     * @return  array
-     */
-    public static function providerTestToObject(): array
+    public static function toObjectProvider(): array
     {
         return [
             'single object' => [
@@ -212,7 +179,8 @@ class TypeCastTest extends TestCase
         ];
     }
 
-    public function testMapAs(): void
+    #[Test]
+    public function mapAsWrapsEachItemInGivenClass(): void
     {
         $src = [
             [
@@ -242,8 +210,9 @@ class TypeCastTest extends TestCase
      *
      * @see          TypeCast::try()
      */
+    #[Test]
     #[DataProvider('tryProvider')]
-    public function testTry($value, $expt, string $type): void
+    public function tryConvertsValueToTypeOrReturnsNullOnFailure($value, $expt, string $type): void
     {
         if ($type === 'object') {
             self::assertEquals($expt, TypeCast::try($value, $type, false));
@@ -442,7 +411,8 @@ class TypeCastTest extends TestCase
         ];
     }
 
-    public function testTryShortCut()
+    #[Test]
+    public function tryIntegerShortcutConvertsNumericStringToInt()
     {
         $r = TypeCast::tryInteger('123');
 
@@ -456,8 +426,9 @@ class TypeCastTest extends TestCase
      *
      * @see          TypeCast::safe()
      */
+    #[Test]
     #[DataProvider('safeProvider')]
-    public function testSafe(mixed $value, mixed $expt, string $type): void
+    public function safeConvertsValueToTypeWithFallbackDefault(mixed $value, mixed $expt, string $type): void
     {
         $failMsg = sprintf(
             'Safe convert %s to %s failed',
@@ -601,8 +572,9 @@ class TypeCastTest extends TestCase
         ];
     }
 
+    #[Test]
     #[DataProvider('mustProvider')]
-    public function testMust(mixed $value, mixed $expt, bool $success, string $type): void
+    public function mustConvertsValueOrThrowsCastingException(mixed $value, mixed $expt, bool $success, string $type): void
     {
         if (!$success) {
             $this->expectException(CastingException::class);

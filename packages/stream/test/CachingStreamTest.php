@@ -70,6 +70,26 @@ class CachingStreamTest extends TestCase
     }
 
     #[Test]
+    public function seekWithSeekEndCachesEntireStreamWhenRemoteSizeIsUnknown(): void
+    {
+        $remote = new class (fopen('php://temp', 'w+b')) extends Stream {
+            public function getSize(): ?int
+            {
+                return null;
+            }
+        };
+        $remote->write('FOO BAR');
+        $remote->rewind();
+
+        $stream = new CachingStream($remote);
+
+        $stream->seek(1, SEEK_END);
+
+        $this->assertEquals(5, $stream->tell());
+        $this->assertEquals('AR', $stream->getContents());
+    }
+
+    #[Test]
     public function seekWithSeekEndUsesRemoteSizeWhenKnown(): void
     {
         $stream = new CachingStream(new StringStream('FOO BAR'));

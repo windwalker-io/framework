@@ -48,7 +48,7 @@ class PdoHandlerFallbackTest extends TestCase
         $insert->execute(['other-session', 'untouched data', 200]);
 
         $pdo = $this->createMock(PDO::class);
-        $pdo->expects($this->atLeastOnce())->method('getAttribute')->with(PDO::ATTR_DRIVER_NAME)->willReturn('pgsql');
+        $pdo->expects($this->atLeastOnce())->method('getAttribute')->with(PDO::ATTR_DRIVER_NAME)->willReturn('unknown');
         $pdo->expects($this->once())->method('beginTransaction')->willReturnCallback($storage->beginTransaction(...));
         $pdo->expects($this->once())->method('commit')->willReturnCallback($storage->commit(...));
         $pdo->method('rollBack')->willReturnCallback($storage->rollBack(...));

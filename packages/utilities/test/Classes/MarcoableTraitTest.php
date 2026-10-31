@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test\Classes;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Classes\MarcoableTrait;
 
-/**
- * The MarcoableTraitTest class.
- *
- * @since  __DEPLOY_VERSION__
- */
 class MarcoableTraitTest extends TestCase
 {
     /**
@@ -20,11 +17,10 @@ class MarcoableTraitTest extends TestCase
     protected $instance;
 
     /**
-     * Test __call
-     *
      * @see  MarcoableTrait::__call
      */
-    public function testCall(): void
+    #[Test]
+    public function instanceCallInvokesRegisteredMacro(): void
     {
         $r = $this->instance->foo('Simon');
 
@@ -32,11 +28,10 @@ class MarcoableTraitTest extends TestCase
     }
 
     /**
-     * Test do
-     *
      * @see  MarcoableTrait::do
      */
-    public function testDo(): void
+    #[Test]
+    public function doInvokesRegisteredMacroByName(): void
     {
         $r = $this->instance->do('foo', 'Simon');
 
@@ -44,23 +39,21 @@ class MarcoableTraitTest extends TestCase
     }
 
     /**
-     * Test hasMacro
-     *
      * @see  MarcoableTrait::hasMacro
      */
-    public function testHasMacro(): void
+    #[Test]
+    public function hasMacroReturnsTrueForRegisteredMacro(): void
     {
-        $r = $this->instance->do('foo', 'Simon');
+        $this->instance->do('foo', 'Simon');
 
         self::assertTrue($this->instance::hasMacro('foo'));
     }
 
     /**
-     * Test __callStatic
-     *
      * @see  MarcoableTrait::__callStatic
      */
-    public function testCallStatic(): void
+    #[Test]
+    public function staticCallInvokesRegisteredMacro(): void
     {
         $r = $this->instance::foo('Simon');
 
@@ -68,18 +61,18 @@ class MarcoableTraitTest extends TestCase
     }
 
     /**
-     * Test
-     *
      * @see  MarcoableTrait::clearMarco()
      */
-    public function testClearMarco(): void
+    #[Test]
+    public function clearMarcoRemovesAllMacros(): void
     {
         $this->instance::clearMarco();
 
         self::assertFalse($this->instance::hasMacro('foo'));
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function registerFooMacro(): void
     {
         $this->instance = new class {
             use MarcoableTrait;
@@ -91,9 +84,5 @@ class MarcoableTraitTest extends TestCase
                 return 'Hello:' . $a;
             }
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

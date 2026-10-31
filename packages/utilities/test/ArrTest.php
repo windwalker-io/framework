@@ -8,6 +8,8 @@ use ArrayAccess;
 use ArrayObject;
 use EmptyIterator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Windwalker\Test\Traits\BaseAssertionTrait;
@@ -17,26 +19,14 @@ use function Windwalker\where;
 
 /**
  * The ArrTest class.
- *
- * @since  __DEPLOY_VERSION__
  */
 class ArrTest extends TestCase
 {
     use BaseAssertionTrait;
 
-    /**
-     * testDef
-     *
-     * @param  array|object  $array
-     * @param  string        $key
-     * @param  string        $value
-     * @param  mixed         $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestDef')]
-    public function testDef($array, $key, $value, $expected): void
+    #[Test]
+    #[DataProvider('defProvider')]
+    public function defSetsValueOnlyWhenKeyIsMissing($array, $key, $value, $expected): void
     {
         self::assertEquals($expected, $return = Arr::def($array, $key, $value));
 
@@ -46,12 +36,7 @@ class ArrTest extends TestCase
         }
     }
 
-    /**
-     * providerTestDef
-     *
-     * @return  array
-     */
-    public static function providerTestDef(): array
+    public static function defProvider(): array
     {
         return [
             [
@@ -81,12 +66,8 @@ class ArrTest extends TestCase
         ];
     }
 
-    /**
-     * testHas
-     *
-     * @return  void
-     */
-    public function testHas()
+    #[Test]
+    public function hasDetectsExistingKeysAndPaths(): void
     {
         self::assertTrue(Arr::has(['foo' => 'bar'], 'foo'));
         self::assertFalse(Arr::has(['foo' => 'bar'], 'yoo'));
@@ -97,12 +78,8 @@ class ArrTest extends TestCase
         self::assertTrue(Arr::has(['foo' => ['bar' => 'yoo']], 'foo'));
     }
 
-    /**
-     * testCollapse
-     *
-     * @return  void
-     */
-    public function testCollapse(): void
+    #[Test]
+    public function collapseMergesNestedArraysIntoSingleLevel(): void
     {
         $src = [
             'ai' => 'Jarvis',
@@ -151,12 +128,8 @@ class ArrTest extends TestCase
         self::assertEquals($exp, Arr::collapse($src));
     }
 
-    /**
-     * testFlatten
-     *
-     * @return  void
-     */
-    public function testFlatten(): void
+    #[Test]
+    public function flattenJoinsNestedKeysWithSeparator(): void
     {
         $array = [
             'flower' => 'sakura',
@@ -216,12 +189,8 @@ class ArrTest extends TestCase
         $this->assertEquals($expected, Arr::flatten($array, '.', 2));
     }
 
-    /**
-     * testGet
-     *
-     * @return  void
-     */
-    public function testGet()
+    #[Test]
+    public function getReadsValuesFromArrayByPath(): void
     {
         $data = [
             'flower' => 'sakura',
@@ -251,7 +220,11 @@ class ArrTest extends TestCase
         Arr::set($data, 'pos1.sunflower', 'new love');
 
         self::assertEquals('new love', $v, 'Reference not work');
+    }
 
+    #[Test]
+    public function getReadsValuesFromObject(): void
+    {
         $data = (object) [
             'flower' => 'sakura',
             'olive' => 'peace',
@@ -279,12 +252,8 @@ class ArrTest extends TestCase
         $this->assertNull(Arr::get($data, 'not.exists'));
     }
 
-    /**
-     * testSet
-     *
-     * @return  void
-     */
-    public function testSet()
+    #[Test]
+    public function setWritesValuesByPathWithSeparatorAndType(): void
     {
         $data = [];
 
@@ -315,6 +284,12 @@ class ArrTest extends TestCase
         $return = Arr::set($data, 'double..separators', 'value');
 
         $this->assertEquals('value', $return['double']['separators']);
+    }
+
+    #[Test]
+    public function setThrowsForNonExistentClassType(): void
+    {
+        $data = [];
 
         $this->assertExpectedException(
             function () use ($data) {
@@ -325,17 +300,9 @@ class ArrTest extends TestCase
         );
     }
 
-    /**
-     * testRemove
-     *
-     * @param  array|object  $array
-     * @param  array|object  $expected
-     * @param  int|string    $offset
-     * @param  string        $separator
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestRemove')]
-    public function testRemove($array, $expected, $offset, $separator)
+    #[Test]
+    #[DataProvider('removeProvider')]
+    public function removeDeletesValueByPath($array, $expected, $offset, $separator): void
     {
         $actual = Arr::remove($array, (string) $offset, $separator);
 
@@ -347,12 +314,7 @@ class ArrTest extends TestCase
         }
     }
 
-    /**
-     * providerTestRemove
-     *
-     * @return  array
-     */
-    public static function providerTestRemove(): array
+    public static function removeProvider(): array
     {
         return [
             [
@@ -412,12 +374,8 @@ class ArrTest extends TestCase
         ];
     }
 
-    /**
-     * testKeep
-     *
-     * @return  void
-     */
-    public function testOnly()
+    #[Test]
+    public function onlyKeepsSelectedKeysOfArray(): void
     {
         $array = [
             'Lycoris' => 'energetic',
@@ -435,6 +393,17 @@ class ArrTest extends TestCase
             ['Lycoris' => 'energetic'],
             Arr::only($array, ['Lycoris'])
         );
+    }
+
+    #[Test]
+    public function onlyKeepsSelectedPropertiesOfObject(): void
+    {
+        $array = [
+            'Lycoris' => 'energetic',
+            'Sunflower' => 'worship',
+            'Zinnia' => 'robust',
+            'Lily' => 'love',
+        ];
 
         self::assertEquals(
             (object) ['Lycoris' => 'energetic', 'Zinnia' => 'robust'],
@@ -447,7 +416,8 @@ class ArrTest extends TestCase
         );
     }
 
-    public function testExcept(): void
+    #[Test]
+    public function exceptRemovesSelectedKeysFromArray(): void
     {
         $array = [
             'Lycoris' => 'energetic',
@@ -469,6 +439,17 @@ class ArrTest extends TestCase
             ],
             Arr::except($array, ['Lycoris'])
         );
+    }
+
+    #[Test]
+    public function exceptRemovesSelectedPropertiesOfObject(): void
+    {
+        $array = [
+            'Lycoris' => 'energetic',
+            'Sunflower' => 'worship',
+            'Zinnia' => 'robust',
+            'Lily' => 'love',
+        ];
 
         self::assertEquals(
             (object) ['Lycoris' => 'energetic', 'Zinnia' => 'robust'],
@@ -485,12 +466,8 @@ class ArrTest extends TestCase
         );
     }
 
-    /**
-     * testFind
-     *
-     * @return  void
-     */
-    public function testFind()
+    #[Test]
+    public function findReturnsItemsMatchingCallback(): void
     {
         $data = [
             [
@@ -571,12 +548,8 @@ class ArrTest extends TestCase
         self::assertEquals(['foo' => 'bar'], Arr::find(['foo' => 'bar', 'baz' => ''], 'strlen', true));
     }
 
-    /**
-     * testFindFirst
-     *
-     * @return  void
-     */
-    public function testFindFirst()
+    #[Test]
+    public function findFirstReturnsFirstMatchingItemOrNull(): void
     {
         $data = [
             [
@@ -620,12 +593,8 @@ class ArrTest extends TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * testReject
-     *
-     * @return  void
-     */
-    public function testReject()
+    #[Test]
+    public function rejectRemovesItemsMatchingCallback(): void
     {
         $data = [
             [
@@ -660,12 +629,8 @@ class ArrTest extends TestCase
         $this->assertEquals([$data[1], $data[2]], $results);
     }
 
-    /**
-     * testTakeout
-     *
-     * @return  void
-     */
-    public function testTakeout()
+    #[Test]
+    public function takeoutRemovesAndReturnsTopLevelValue(): void
     {
         $array = [
             'one' => 1,
@@ -675,7 +640,11 @@ class ArrTest extends TestCase
 
         self::assertEquals(2, Arr::takeout($array, 'two'));
         self::assertEquals(['one' => 1, 'three' => 3], $array);
+    }
 
+    #[Test]
+    public function takeoutRemovesNestedValueByPath(): void
+    {
         $array = [
             'one' => 1,
             'two' => ['two' => 2, 'three' => 3],
@@ -683,7 +652,11 @@ class ArrTest extends TestCase
 
         self::assertEquals(2, Arr::takeout($array, 'two.two'));
         self::assertEquals(['one' => 1, 'two' => ['three' => 3]], $array);
+    }
 
+    #[Test]
+    public function takeoutReturnsDefaultWhenKeyIsMissing(): void
+    {
         $array = [
             'one' => 1,
             'two' => 2,
@@ -692,7 +665,11 @@ class ArrTest extends TestCase
 
         self::assertEquals('default', Arr::takeout($array, 'foo', 'default'));
         self::assertEquals(['one' => 1, 'two' => 2, 'three' => 3], $array);
+    }
 
+    #[Test]
+    public function takeoutReadsValueFromObject(): void
+    {
         $array = (object) [
             'one' => 1,
             'two' => 2,
@@ -702,31 +679,16 @@ class ArrTest extends TestCase
         self::assertEquals(2, Arr::takeout($array, 'two'));
     }
 
-    /**
-     * testSort
-     *
-     * @param $data
-     * @param $expected
-     * @param $condition
-     * @param $descending
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestSort')]
-    public static function testSort($data, $expected, $condition, $descending)
+    #[Test]
+    #[DataProvider('sortProvider')]
+    public static function sortOrdersItemsByCondition($data, $expected, $condition, $descending): void
     {
         $return = Arr::sort($data, $condition, $descending);
 
         self::assertEquals($expected, $return);
     }
 
-    /**
-     * providerTestSort
-     *
-     * @return  array
-     */
-    public static function providerTestSort(): array
+    public static function sortProvider(): array
     {
         return [
             'simple array' => [
@@ -792,27 +754,14 @@ class ArrTest extends TestCase
         ];
     }
 
-    /**
-     * testInvert
-     *
-     * @param $data
-     * @param $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTestInvert')]
-    public function testInvert($data, $expected)
+    #[Test]
+    #[DataProvider('invertProvider')]
+    public function invertSwapsKeysAndValues($data, $expected): void
     {
         self::assertEquals($expected, Arr::invert($data));
     }
 
-    /**
-     * providerTestInvert
-     *
-     * @return  array
-     */
-    public static function providerTestInvert(): array
+    public static function invertProvider(): array
     {
         return [
             'Case 1' => [
@@ -866,24 +815,16 @@ class ArrTest extends TestCase
         ];
     }
 
-    /**
-     * testIsAssociative
-     *
-     * @return  void
-     */
-    public function testIsAssociative()
+    #[Test]
+    public function isAssociativeDetectsNonSequentialKeys(): void
     {
         self::assertTrue(Arr::isAssociative(['foo' => 'bar', 'baz']));
         self::assertFalse(Arr::isAssociative(['bar', 'baz']));
         self::assertTrue(Arr::isAssociative([2 => 'bar', 1 => 'baz']));
     }
 
-    /**
-     * testAccessible
-     *
-     * @return  void
-     */
-    public function testAccessible()
+    #[Test]
+    public function isAccessibleAcceptsArraysAndArrayAccessObjects(): void
     {
         self::assertTrue(Arr::isAccessible([]));
         self::assertTrue(Arr::isAccessible(new ArrayObject()));
@@ -913,12 +854,8 @@ class ArrTest extends TestCase
         self::assertFalse(Arr::isAccessible(new stdClass()));
     }
 
-    /**
-     * testUnique
-     *
-     * @return  void
-     */
-    public function testUnique()
+    #[Test]
+    public function uniqueRemovesDuplicateItems(): void
     {
         $array = [
             [1, 2, 3, [4]],
@@ -937,7 +874,8 @@ class ArrTest extends TestCase
         self::assertEquals($expected, Arr::unique($array));
     }
 
-    public function testMergeRecursive(): void
+    #[Test]
+    public function mergeRecursiveMergesNestedArrays(): void
     {
         $data1 = [
             'green' => 'Hulk',
@@ -1009,18 +947,18 @@ class ArrTest extends TestCase
         $expected['ai'] = 'Ultron';
 
         $this->assertEquals($expected, Arr::mergeRecursive($data1, $data2, $data3));
+    }
 
+    #[Test]
+    public function mergeRecursiveThrowsForNonArrayArguments(): void
+    {
         $this->expectException(InvalidArgumentException::class);
 
         Arr::mergeRecursive('', 123);
     }
 
-    /**
-     * testDump
-     *
-     * @return  void
-     */
-    public function testDump()
+    #[Test]
+    public function dumpFormatsValuesLimitedByMaxDepth(): void
     {
         $data = [
             1,
@@ -1121,7 +1059,8 @@ SHOW;
         self::assertStringSafeEquals($expected, Arr::dump($data, 4));
     }
 
-    public static function testWhere(): void
+    #[Test]
+    public static function whereFiltersItemsByFieldComparison(): void
     {
         $data = [
             [
@@ -1149,7 +1088,8 @@ SHOW;
         self::assertEquals([$data[1]], Arr::where($data, 'title', '=', 'Macbeth'));
     }
 
-    public function testQuery(): void
+    #[Test]
+    public function queryFiltersItemsByConditions(): void
     {
         $data = [
             [
@@ -1228,7 +1168,8 @@ SHOW;
         );
     }
 
-    public function testQueryWithCallback(): void
+    #[Test]
+    public function queryFiltersItemsWithCallback(): void
     {
         $data = [
             [
@@ -1263,7 +1204,8 @@ SHOW;
         $this->assertEquals([$data[0], $data[3]], $results);
     }
 
-    public function testMatch(): void
+    #[Test]
+    public function matchComparesDataWithConditions(): void
     {
         $data = [
             'id' => 1,
@@ -1278,7 +1220,8 @@ SHOW;
         $this->assertFalse(Arr::match($data, ['id' => 1, 'title' => 'Hamlet']));
     }
 
-    public function testFilterRecursive(): void
+    #[Test]
+    public function filterRecursiveKeepsNestedValuesMatchingCallback(): void
     {
         $src = [
             'ai' => 'Jarvis',
@@ -1324,7 +1267,8 @@ SHOW;
         );
     }
 
-    public function testMapRecursive(): void
+    #[Test]
+    public function mapRecursiveAppliesCallbackToNestedValues(): void
     {
         $src = [
             'ai' => 'Jarvis',
@@ -1363,6 +1307,28 @@ SHOW;
         ];
 
         self::assertEquals($expected, Arr::mapRecursive($src, 'strtoupper'));
+    }
+
+    #[Test]
+    public function mapRecursivePassesKeysAndMapsIntoObjectChildren(): void
+    {
+        $src = [
+            'ai' => 'Jarvis',
+            'agent' => 'Phil Coulson',
+            'green' => 'Hulk',
+            'red' => [
+                'left' => 'Pepper',
+                'right' => 'Iron Man',
+            ],
+            'human' => [
+                'dark' => 'Nick Fury',
+                'black' => [
+                    'male' => 'Loki',
+                    'female' => 'Black Widow',
+                    'no-gender' => 'empty',
+                ],
+            ],
+        ];
 
         $src['human']['black'] = new ArrayObject($src['human']['black']);
 
@@ -1397,7 +1363,8 @@ SHOW;
         );
     }
 
-    public function testFlatMap(): void
+    #[Test]
+    public function flatMapMapsValuesAndFlattensResults(): void
     {
         $a = [
             ['name' => 'Sally'],

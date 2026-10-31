@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use Windwalker\Utilities\StrInflector;
@@ -16,7 +17,8 @@ use Windwalker\Utilities\StrInflector;
  */
 class StrInflectorTest extends TestCase
 {
-    public function testInflectorInstance()
+    #[Test]
+    public function toSingularInitializesEnglishInflector(): void
     {
         StrInflector::toSingular('words');
 

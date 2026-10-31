@@ -14,12 +14,11 @@ use Windwalker\Utilities\Reflection\ReflectAccessor;
  */
 class ReflectAccessorTest extends TestCase
 {
-    protected ?ReflectAccessor $instance;
-
     /**
      * @see  ReflectAccessor::setValue
      */
-    public function testSetValueWithSafeType(): void
+    #[Test]
+    public function setValueWithSafeTypeCastsValuesToPropertyTypes(): void
     {
         $foo = new class implements JsonSerializable {
             protected ?int $id;
@@ -53,7 +52,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::getValue
      */
-    public function testGetValue(): void
+    #[Test]
+    public function getValueReturnsPropertyValue(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -61,7 +61,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::reflect
      */
-    public function testReflect(): void
+    #[Test]
+    public function reflectReturnsReflectionObject(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -69,7 +70,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::invoke
      */
-    public function testInvoke(): void
+    #[Test]
+    public function invokeCallsInaccessibleMethod(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -77,7 +79,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::getPropertiesValues
      */
-    public function testGetProperties(): void
+    #[Test]
+    public function getPropertiesValuesReturnsAllPropertyValues(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -85,7 +88,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::getReflectProperties
      */
-    public function testGetReflectProperties(): void
+    #[Test]
+    public function getReflectPropertiesReturnsReflectionProperties(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -93,7 +97,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::getReflectMethods
      */
-    public function testGetReflectMethods(): void
+    #[Test]
+    public function getReflectMethodsReturnsReflectionMethods(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -101,7 +106,8 @@ class ReflectAccessorTest extends TestCase
     /**
      * @see  ReflectAccessor::getNoRepeatAttributes
      */
-    public function testGetNoRepeatAttributes(): void
+    #[Test]
+    public function getNoRepeatAttributesReturnsNonRepeatedAttributes(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -126,10 +132,6 @@ class ReflectAccessorTest extends TestCase
 
         self::assertTrue(ReflectAccessor::hasProperty($child, 'secret'));
         self::assertFalse(ReflectAccessor::hasProperty($child, 'missing'));
-    }
-
-    protected function tearDown(): void
-    {
     }
 }
 
