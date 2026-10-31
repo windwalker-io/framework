@@ -20,6 +20,10 @@ use Windwalker\Renderer\RendererInterface;
 
 /**
  * The EdgeProvider class.
+ *
+ * Integration glue for windwalker/core, which is not part of this package's test scope.
+ *
+ * @codeCoverageIgnore
  */
 class EdgeProvider implements ServiceProviderInterface
 {

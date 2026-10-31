@@ -7,6 +7,7 @@ namespace Windwalker\DI\Definition;
 use BadMethodCallException;
 use Closure;
 use ReflectionException;
+use UnitEnum;
 use Windwalker\DI\Container;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
@@ -47,7 +48,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
 
     protected ?object $instance = null;
 
-    public \UnitEnum|string|null $tag = null;
+    public UnitEnum|string|null $tag = null;
 
     public function fork(?array $args = null): static
     {
@@ -76,12 +77,12 @@ class ObjectBuilderDefinition implements DefinitionInterface
      *
      * @param  Container              $container
      * @param  array                  $args
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return object
      * @throws ReflectionException
      */
-    public function resolve(Container $container, array $args = [], \UnitEnum|string|null $tag = null): object
+    public function resolve(Container $container, array $args = [], UnitEnum|string|null $tag = null): object
     {
         $args = $this->resolveArguments($container, $args);
 
@@ -317,7 +318,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
         return $this->tag;
     }
 
-    public function tag(\UnitEnum|string|null $tag): static
+    public function tag(UnitEnum|string|null $tag): static
     {
         $this->tag = $tag;
 

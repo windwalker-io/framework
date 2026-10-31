@@ -7,9 +7,11 @@ namespace Windwalker\Edge\Test;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Edge\Cache\EdgeArrayCache;
 use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Edge;
 use Windwalker\Edge\Loader\EdgeFileLoader;
+use Windwalker\Edge\Loader\EdgeStringLoader;
 use Windwalker\Test\Traits\DOMTestTrait;
 
 /**
@@ -172,5 +174,14 @@ HTML,
             HTML,
             $result
         );
+    }
+
+    #[Test]
+    public function setGlobalsIsChainableAndSharedWithViews(): void
+    {
+        $edge = new Edge(new EdgeStringLoader(), new EdgeArrayCache());
+
+        self::assertSame($edge, $edge->setGlobals(['g' => 'global']));
+        self::assertSame('global', $edge->render('{{ $g }}'));
     }
 }

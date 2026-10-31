@@ -188,7 +188,7 @@ class Parameters extends Collection
                 }
 
                 return $v;
-            }
+            },
         );
 
         if ($recursive) {
@@ -198,7 +198,7 @@ class Parameters extends Collection
         if ($this->parent) {
             $data = Arr::mergeRecursive(
                 $this->parent->dump($recursive, $onlyDumpable),
-                $data
+                $data,
             );
         }
 

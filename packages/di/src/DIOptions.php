@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\DI;
 
+use Closure;
 use Windwalker\Utilities\Options\RecordOptionsTrait;
-use Windwalker\Utilities\TypeCast;
 
 class DIOptions
 {
@@ -42,11 +42,10 @@ class DIOptions
         /**
          * The service provided in these levels.
          */
-        public int|array|null|\Closure $providedIn = null,
+        public int|array|null|Closure $providedIn = null,
 
         public bool $containerMerged = false,
-    ) {
-    }
+    ) {}
 
     public static function wrap(mixed $values): static
     {

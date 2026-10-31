@@ -267,4 +267,15 @@ class EdgeCompilerTest extends TestCase
         self::assertSame('<?php echo $__edge->escape($a); ?>', $this->instance->compile('[[ $a ]]'));
         self::assertSame('<?php echo e($a); ?>', $this->instance->compile('[[[ $a ]]]'));
     }
+
+    #[Test]
+    public function contentTagGettersReturnUnescapedTags(): void
+    {
+        $compiler = new EdgeCompiler();
+        $compiler->setContentTags('[[', ']]');
+        $compiler->setEscapedContentTags('[[[', ']]]');
+
+        self::assertSame(['[[', ']]'], $compiler->getContentTags());
+        self::assertSame(['[[[', ']]]'], $compiler->getEscapedContentTags());
+    }
 }

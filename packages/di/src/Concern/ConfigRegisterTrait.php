@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Windwalker\DI\Concern;
 
 use Closure;
-use Windwalker\DI\BootableDeferredProviderInterface;
 use Windwalker\DI\BootableProviderInterface;
 use Windwalker\DI\Exception\DefinitionException;
 use Windwalker\DI\ServiceProviderInterface;
@@ -29,7 +28,7 @@ trait ConfigRegisterTrait
             TypeAssert::assert(
                 is_array($config),
                 'Config should be array, {value} given.',
-                $config
+                $config,
             );
         }
 
@@ -63,8 +62,8 @@ trait ConfigRegisterTrait
                     throw new DefinitionException(
                         sprintf(
                             'Binding classes must with a string key, %s given.',
-                            Assert::describeValue($value)
-                        )
+                            Assert::describeValue($value),
+                        ),
                     );
                 }
 

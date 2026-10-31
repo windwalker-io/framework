@@ -22,8 +22,8 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * AttributesResolver constructor.
      *
-     * @param Container $container
-     * @param array     $options
+     * @param  Container  $container
+     * @param  array      $options
      */
     public function __construct(Container $container, array $options = [])
     {
@@ -43,7 +43,7 @@ class AttributesResolver extends BaseAttributesResolver
     }
 
     /**
-     * @param Container $container
+     * @param  Container  $container
      *
      * @return  static  Return self to support chaining.
      */
@@ -57,8 +57,8 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * Create object by class and resolve attributes.
      *
-     * @param string $class
-     * @param mixed  ...$args
+     * @param  string  $class
+     * @param  mixed   ...$args
      *
      * @return  object
      */
@@ -70,9 +70,9 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * Resolve class constructor and return create function.
      *
-     * @param string        $class
-     * @param callable|null $builder
-     * @param array         $options
+     * @param  string         $class
+     * @param  callable|null  $builder
+     * @param  array          $options
      *
      * @return  BaseAttributeHandler
      *
@@ -81,7 +81,7 @@ class AttributesResolver extends BaseAttributesResolver
     public function resolveClassCreate(
         string $class,
         ?callable $builder = null,
-        array $options = []
+        array $options = [],
     ): BaseAttributeHandler {
         /*
          * Container builder use `(array $args, int $options)` signature.
@@ -95,14 +95,14 @@ class AttributesResolver extends BaseAttributesResolver
     /**
      * Decorate object by attributes.
      *
-     * @param object $object
-     * @param array  $options
+     * @param  object  $object
+     * @param  array   $options
      *
      * @return  object
      */
     public function decorateObject(object $object, array $options = []): object
     {
-        $args    = [];
+        $args = [];
         $containerOptions = 0;
 
         /*
@@ -134,7 +134,7 @@ class AttributesResolver extends BaseAttributesResolver
         callable $getter,
         Reflector $reflector,
         ?object $object = null,
-        array $options = []
+        array $options = [],
     ): BaseAttributeHandler {
         return new AttributeHandler($getter, $reflector, $object, $this, $options, $this->container);
     }
@@ -143,7 +143,7 @@ class AttributesResolver extends BaseAttributesResolver
         callable $callable,
         $args = [],
         ?object $context = null,
-        array $options = []
+        array $options = [],
     ): mixed {
         // call() for Container unable to send options into it.
         return $this->container->call($callable, $args, $context);

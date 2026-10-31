@@ -153,4 +153,129 @@ class ComponentAttributesTest extends TestCase
     {
         self::assertSame('foo-bar-baz', ComponentAttributes::toKebabCase('fooBarBaz'));
     }
+
+    #[Test]
+    public function onlyAndExceptWithNullKeepEverything(): void
+    {
+        self::assertSame($this->instance->getAttributes(), $this->instance->only(null)->getAttributes());
+        self::assertSame($this->instance->getAttributes(), $this->instance->except(null)->getAttributes());
+    }
+
+    #[Test]
+    public function propsExtractsValuesDefaultsAndRemovesThemFromBag(): void
+    {
+        $attributes = new ComponentAttributes(['type' => 'warn', 'data-x' => '1']);
+
+        $props = $attributes->props('type', 'dataX', 'size')->dump();
+
+        self::assertSame(['type' => 'warn', 'data-x' => '1', 'size' => null], $props);
+        self::assertSame([], $attributes->getAttributes());
+    }
+
+    #[Test]
+    public function propsUsesKeyedDefaults(): void
+    {
+        $attributes = new ComponentAttributes(['id' => 'a']);
+
+        self::assertSame(['a', 'md'], $attributes->propsValues('id', size: 'md'));
+    }
+
+    #[Test]
+    public function exceptPropsSupportsKeyedDefaults(): void
+    {
+        $attributes = new ComponentAttributes(['type' => 'a', 'id' => 'b', 'data-x' => 'c']);
+
+        self::assertSame(
+            ['id' => 'b'],
+            $attributes->exceptProps(['type' => 'info', 'dataX'])->getAttributes()
+        );
+    }
+
+    #[Test]
+    public function prependsAppendsDefaultValueBeforeAttributeValue(): void
+    {
+        $attributes = new ComponentAttributes(['class' => 'user']);
+
+        $merged = $attributes->withMerge(['class' => $attributes->prepends('base <b>')]);
+
+        self::assertSame('base &lt;b&gt; user', $merged->get('class'));
+        self::assertSame('base <b> user', $attributes->withMerge(['class' => $attributes->prepends('base <b>')], false)->get('class'));
+        self::assertSame('x', (string) $attributes->prepends('x'));
+    }
+
+    #[Test]
+    public function mergeAppendsClassValues(): void
+    {
+        $attributes = new ComponentAttributes(['class' => 'user']);
+
+        self::assertSame('base user', $attributes->withMerge(['class' => 'base'])->get('class'));
+    }
+
+    #[Test]
+    public function mergeUnwrapsParentAttributesBag(): void
+    {
+        $parent = new ComponentAttributes(['id' => 'p', 'title' => 't']);
+        $attributes = new ComponentAttributes(['id' => 'own']);
+
+        $merged = $attributes->withMerge(['attributes' => $parent]);
+
+        self::assertSame('own', $merged->get('id'));
+        self::assertSame('t', $merged->get('title'));
+    }
+
+    #[Test]
+    public function setAttributesMergesParentBagOrArray(): void
+    {
+        $bag = new ComponentAttributes();
+        $bag->setAttributes(['attributes' => ['id' => 'p', 'x' => '1'], 'id' => 'own']);
+
+        // The parent bag acts as the base; own attributes are merged as defaults.
+        self::assertSame('p', $bag->get('id'));
+        self::assertSame('1', $bag->get('x'));
+
+        $bag->setAttributes(['attributes' => new ComponentAttributes(['y' => '2'])]);
+
+        self::assertSame(['y' => '2'], $bag->getAttributes());
+
+        $bag->setAttributes(['attributes' => 'scalar']);
+
+        self::assertSame(['attributes' => 'scalar'], $bag->getAttributes());
+    }
+
+    #[Test]
+    public function toStringSkipsEmptyAndDescribesNonScalars(): void
+    {
+        $bag = new ComponentAttributes(
+            [
+                'off' => false,
+                'none' => null,
+                'on' => true,
+                'list' => [1],
+                'obj' => new \stdClass(),
+                'text' => ' <a> ',
+            ]
+        );
+
+        self::assertSame(
+            'on list="Array()" obj="[Object stdClass]" text="&lt;a&gt;"',
+            (string) $bag
+        );
+        self::assertSame((string) $bag, $bag->toHtml());
+    }
+
+    #[Test]
+    public function offsetSetAndUnset(): void
+    {
+        $bag = new ComponentAttributes();
+        $bag['a'] = '1';
+        $bag['b'] = '2';
+
+        self::assertSame('1', $bag['a']);
+        self::assertTrue(isset($bag['a']));
+
+        unset($bag['a']);
+
+        self::assertFalse(isset($bag['a']));
+        self::assertSame(['b' => '2'], $bag->getAttributes());
+    }
 }

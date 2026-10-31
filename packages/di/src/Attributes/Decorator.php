@@ -30,7 +30,8 @@ class Decorator implements ContainerAttributeInterface
 
     public function __invoke(AttributeHandler $handler): callable
     {
-        return fn(...$args) => $handler->container
+        return fn(...$args)
+            => $handler->container
             ->newInstance($this->class, [$handler(...$args), ...$this->args]);
     }
 }

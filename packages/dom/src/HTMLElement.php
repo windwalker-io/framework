@@ -9,9 +9,9 @@ use Dom\Document;
 use Dom\HTMLElement as NativeHTMLElement;
 use Dom\Node;
 use Dom\NodeList;
+use Dom\Text;
 use DOMException;
 use JetBrains\PhpStorm\ArrayShape;
-use Masterminds\HTML5;
 use Symfony\Component\DomCrawler\Crawler;
 use Windwalker\Utilities\Str;
 
@@ -110,7 +110,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
         return parent::appendChild($newnode);
     }
 
-    public function appendText(string $string): \DOMText
+    public function appendText(string $string): Text
     {
         return static::insertContentTo($string, $this);
     }
@@ -179,8 +179,8 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      *
      * @param  array  $attribs  All attributes.
      *
-     * @return  static  Return self to support chaining.
-     * @throws DOMException
+     * @return  static        Return self to support chaining.
+     * @throws  DOMException
      */
     public function setAttributes(array $attribs): static
     {
@@ -216,9 +216,9 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
                     $e->getCode(),
                     $e
                 );
-            } else {
-                throw $e;
             }
+
+            throw $e;
         }
     }
 
@@ -233,7 +233,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
             throw new \LogicException('Please install symfony/dom-crawler first.');
         }
 
-        return new Crawler($this);
+        return new Crawler(HTML5Factory::saveHtml($this));
     }
 
     /**
@@ -251,8 +251,8 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      *
      * @param  mixed  $offset  An offset to check for.
      *
-     * @return bool True on success or false on failure.
-     *                 The return value will be casted to boolean if non-boolean was returned.
+     * @return  bool  True on success or false on failure.
+     *                The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -264,7 +264,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      *
      * @param  mixed  $offset  The offset to retrieve.
      *
-     * @return mixed Can return all value types.
+     * @return  mixed  Can return all value types.
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -277,8 +277,8 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      * @param  mixed  $offset  The offset to assign the value to.
      * @param  mixed  $value   The value to set.
      *
-     * @return void
-     * @throws DOMException
+     * @return  void
+     * @throws  DOMException
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -290,7 +290,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      *
      * @param  mixed  $offset  The offset to unset.
      *
-     * @return void
+     * @return  void
      */
     public function offsetUnset(mixed $offset): void
     {
@@ -301,7 +301,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
      * Use another root document.
      *
      * @param  Node  $node
-     * @param  bool     $deep
+     * @param  bool  $deep
      *
      * @return  static|NativeHTMLElement
      */
@@ -346,7 +346,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
 
     public function attributesToString(?string $type = null): string
     {
-        return static::buildAttributes($this->getAttributes(), $type);
+        return static::buildAttributes($this->getAttributes(true));
     }
 
     /**
@@ -408,7 +408,7 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
         );
     }
 
-    #[ArrayShape(['name' => "mixed|string", 'id' => "null|string", 'class' => "null|string"])]
+    #[ArrayShape(['name' => 'mixed|string', 'id' => 'null|string', 'class' => 'null|string'])]
     public static function splitCSSSelector(
         string $name
     ): array {

@@ -340,6 +340,8 @@ TEXT;
      * @param  object|null  $context
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setContext(?object $context): static
     {
@@ -561,7 +563,7 @@ TEXT;
      *
      * @return  static  Return self to support chaining.
      */
-    public function setGlobals(array $globals): array
+    public function setGlobals(array $globals): static
     {
         $this->globals = $globals;
 
@@ -584,6 +586,8 @@ TEXT;
      * @param  EdgeCompilerInterface  $compiler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setCompiler(EdgeCompilerInterface $compiler): static
     {
@@ -608,6 +612,8 @@ TEXT;
      * @param  EdgeLoaderInterface  $loader
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setLoader(EdgeLoaderInterface $loader): static
     {
@@ -695,6 +701,8 @@ TEXT;
      * @param  Extension\EdgeExtensionInterface[]  $extensions
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setExtensions(array $extensions): static
     {

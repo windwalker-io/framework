@@ -101,6 +101,8 @@ class EdgeArrayCache implements EdgeCacheInterface
      * @param  array  $data
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setData(array $data): static
     {

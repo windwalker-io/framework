@@ -37,7 +37,7 @@ reference it), so future maintainers can distinguish intentional test support fr
 
 ## Keep app-level tooling out of package test scope
 
-Files such as `src/*Package.php`, `etc/*.config.php`, and `src/Command/*` are generally wiring or tools used by a
+Files such as `src/*Package.php`, `etc/*.config.php` and `src/Command/*` or some DI service providers are generally wiring or tools used by a
 Windwalker framework application, rather than package behavior that needs standalone tests. Do not add tests solely
 for these files or include them in a package's coverage target by default. Test them only when they contain
 meaningful, independently testable logic or the requested change specifically requires validating their behavior.

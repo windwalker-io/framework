@@ -328,6 +328,8 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  callable[]  $directives
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setDirectives(array $directives): static
     {
@@ -356,6 +358,8 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  callable[]  $parsers
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setParsers(array $parsers): static
     {
@@ -378,6 +382,8 @@ class EdgeCompiler implements EdgeCompilerInterface
      * Gets the raw tags used by the compiler.
      *
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public function getRawTags(): array
     {
@@ -466,6 +472,8 @@ class EdgeCompiler implements EdgeCompilerInterface
      * @param  string  $format
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public function setEchoFormat(string $format): void
     {

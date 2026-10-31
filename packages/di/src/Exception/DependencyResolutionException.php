@@ -10,6 +10,4 @@ use Psr\Container\ContainerExceptionInterface;
 /**
  * The DependencyResolutionException class.
  */
-class DependencyResolutionException extends Exception implements ContainerExceptionInterface
-{
-}
+class DependencyResolutionException extends Exception implements ContainerExceptionInterface {}

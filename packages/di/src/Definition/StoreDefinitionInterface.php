@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\DI\Definition;
 
 use Closure;
-use Windwalker\DI\Container;
+use UnitEnum;
 use Windwalker\DI\DIOptions;
 
 /**
@@ -31,7 +31,7 @@ interface StoreDefinitionInterface extends DefinitionInterface
 
     public function getOptions(): DIOptions;
 
-    public function getCache(\UnitEnum|string|null $tag = null): mixed;
+    public function getCache(UnitEnum|string|null $tag = null): mixed;
 
     public function getTag(): ?string;
 

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\DI\Attributes;
 
 use Attribute;
+use Closure;
 use ReflectionParameter;
 use ReflectionProperty;
+use UnitEnum;
 use Windwalker\Core\DI\ServiceFactoryInterface;
 use Windwalker\Core\Manager\AbstractManager;
 use Windwalker\DI\Container;
@@ -22,8 +24,8 @@ class Service extends Inject
     public function __construct(
         ?string $id = null,
         bool|string $forceNewOrService = false,
-        public int|array|null|\Closure $providedIn = null,
-        \UnitEnum|\Closure|string|null $tag = null,
+        public int|array|null|Closure $providedIn = null,
+        UnitEnum|Closure|string|null $tag = null,
     ) {
         if (is_string($forceNewOrService)) {
             $this->name = $forceNewOrService;
@@ -60,7 +62,7 @@ class Service extends Inject
     {
         $tag = $this->tag;
 
-        if ($tag instanceof \Closure) {
+        if ($tag instanceof Closure) {
             $tag = $tag($container, $id);
         }
 

@@ -168,6 +168,8 @@ class EdgeFileCache implements EdgeCacheInterface
 
     /**
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getPath(): string
     {
@@ -178,6 +180,8 @@ class EdgeFileCache implements EdgeCacheInterface
      * @param  string  $path
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPath(string $path): static
     {

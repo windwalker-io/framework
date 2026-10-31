@@ -15,8 +15,7 @@ class MergeOptions
     public function __construct(
         public bool $recursive = false,
         public bool $override = false,
-    ) {
-    }
+    ) {}
 
     public static function wrap(mixed $values): static
     {

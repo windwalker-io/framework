@@ -6,7 +6,6 @@ namespace Windwalker\DI\Attributes;
 
 use Attribute;
 use ReflectionParameter;
-use Windwalker\DI\Container;
 use Windwalker\DI\DIOptions;
 
 /**

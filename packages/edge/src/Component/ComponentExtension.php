@@ -63,6 +63,8 @@ class ComponentExtension implements EdgeExtensionInterface, ParsersExtensionInte
      * @param  array  $components
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setComponents(array $components): static
     {

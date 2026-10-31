@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Definition;
 
+use UnitEnum;
 use Windwalker\DI\Container;
 
 /**
@@ -16,11 +17,11 @@ interface DefinitionInterface
      *
      * @param  Container              $container  The Container object.
      * @param  array                  $args
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return mixed
      */
-    public function resolve(Container $container, array $args = [], \UnitEnum|string|null $tag = null): mixed;
+    public function resolve(Container $container, array $args = [], UnitEnum|string|null $tag = null): mixed;
 
     /**
      * Set new value or factory callback to this definition.

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Attributes;
 
-use Windwalker\DI\DIOptions;
+use Attribute;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PARAMETER | \Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY)]
 class Lazy implements ContainerAttributeInterface
 {
     public function __invoke(AttributeHandler $handler): callable

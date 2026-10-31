@@ -16,6 +16,7 @@ use ReflectionClass;
 use ReflectionException;
 use Traversable;
 use UnexpectedValueException;
+use UnitEnum;
 use Windwalker\DI\Attributes\AttributesResolver;
 use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Autowire;
@@ -192,7 +193,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $id
      * @param  mixed                  $value
      * @param  DIOptions|int          $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      * @throws DefinitionException
@@ -201,7 +202,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $id,
         mixed $value,
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
@@ -267,7 +268,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     public function protect(
         string $id,
         mixed $value,
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): StoreDefinitionInterface {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->protected = true;
@@ -278,14 +279,14 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     /**
      * @param  string                    $id
      * @param  StoreDefinitionInterface  $value
-     * @param  \UnitEnum|string|null     $tag
+     * @param  UnitEnum|string|null     $tag
      *
      * @return  StoreDefinitionInterface
      */
     public function setDefinition(
         string $id,
         StoreDefinitionInterface $value,
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $value->setContainer($this);
 
@@ -301,13 +302,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @param  string                 $id        Identifier of the entry to look for.
      * @param  bool                   $forceNew  True to force creation and return of a new instance.
-     * @param  \UnitEnum|string|null  $tag       The tag of service.
+     * @param  UnitEnum|string|null  $tag       The tag of service.
      *
      * @return mixed Entry.
      * @throws DefinitionNotFoundException
      * @throws DependencyResolutionException
      */
-    public function get(string $id, bool $forceNew = false, \UnitEnum|string|null $tag = null): mixed
+    public function get(string $id, bool $forceNew = false, UnitEnum|string|null $tag = null): mixed
     {
         $definition = $this->getDefinition($id, $tag);
 
@@ -343,7 +344,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string|callable|DefinitionInterface|ValueReference  $source
      * @param  array                                               $args
      * @param  DIOptions|int                                       $options
-     * @param  \UnitEnum|string|null                               $tag
+     * @param  UnitEnum|string|null                               $tag
      *
      * @return  mixed|object|string
      * @throws DefinitionNotFoundException
@@ -355,7 +356,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         mixed $source,
         array $args = [],
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null
+        UnitEnum|string|null $tag = null,
     ): mixed {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
@@ -385,7 +386,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             }
         }
 
-        if (is_callable($source) || (is_string($source) && !$this->has($source))) {
+        if (is_callable($source) || (is_string($source) && !$this->has($source, $tag))) {
             if ($tag !== null) {
                 $args['tag'] = $tag;
             }
@@ -419,16 +420,16 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
      * @param  string                 $id   Identifier of the entry to look for.
-     * @param  \UnitEnum|string|null  $tag  The tag of service.
+     * @param  UnitEnum|string|null  $tag  The tag of service.
      *
      * @return bool
      */
-    public function has(string $id, \UnitEnum|string|null $tag = null): bool
+    public function has(string $id, UnitEnum|string|null $tag = null): bool
     {
         return $this->getDefinition($id, $tag) !== null;
     }
 
-    public function hasCached(string $id, \UnitEnum|string|null $tag = null): bool
+    public function hasCached(string $id, UnitEnum|string|null $tag = null): bool
     {
         return $this->findDefinition($id, false, $tag)?->getCache() !== null;
     }
@@ -442,7 +443,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @since   2.1
      */
-    public function remove(string $id, \UnitEnum|string|null $tag = null): static
+    public function remove(string $id, UnitEnum|string|null $tag = null): static
     {
         $id = $this->resolveAlias($id);
 
@@ -453,13 +454,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return $this;
     }
 
-    public static function toTaggedId(string $id, \UnitEnum|string|null $tag = null): string
+    public static function toTaggedId(string $id, UnitEnum|string|null $tag = null): string
     {
         if ($tag === null) {
             return $id;
         }
 
-        if ($tag instanceof \UnitEnum) {
+        if ($tag instanceof UnitEnum) {
             $tag = $tag::class . '::' . $tag->name;
         }
 
@@ -483,7 +484,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @throws NotFoundExceptionInterface
      * @since  2.0.7
      */
-    public function fork(string $id, string $newId, bool $forceNew = false, \UnitEnum|string|null $tag = null): mixed
+    public function fork(string $id, string $newId, bool $forceNew = false, UnitEnum|string|null $tag = null): mixed
     {
         $raw = clone $this->findDefinition($id, true, $tag);
 
@@ -498,13 +499,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * Get the raw data assigned to a key.
      *
      * @param  string                 $id   The key for which to get the stored item.
-     * @param  \UnitEnum|string|null  $tag  The tag of service.
+     * @param  UnitEnum|string|null  $tag  The tag of service.
      *
      * @return  ?StoreDefinitionInterface
      *
      * @since   2.0
      */
-    public function getDefinition(string $id, \UnitEnum|string|null $tag = null): ?StoreDefinitionInterface
+    public function getDefinition(string $id, UnitEnum|string|null $tag = null): ?StoreDefinitionInterface
     {
         return $this->findDefinition($id, true, $tag);
     }
@@ -512,7 +513,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
     protected function findDefinition(
         string $id,
         bool $serviceAutowire = false,
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): ?StoreDefinitionInterface {
         $id = $this->resolveAlias($id);
 
@@ -578,7 +579,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         $this->share(static::class, $this);
     }
 
-    public function clearCache(?string $id = null, \UnitEnum|string|null $tag = null): void
+    public function clearCache(?string $id = null, UnitEnum|string|null $tag = null): void
     {
         if ($id !== null) {
             $this->findDefinition($id, false, $tag)?->reset();
@@ -598,7 +599,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $id
      * @param  mixed                  $value
      * @param  DIOptions|int          $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -609,15 +610,16 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $id,
         mixed $value,
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
-        if (!$value instanceof \Closure) {
-            $value = static fn(Container $container, \UnitEnum|string|null $tag = null) => $container->newInstance(
+        if (!$value instanceof Closure) {
+            $value = static fn(Container $container, UnitEnum|string|null $tag = null)
+                => $container->newInstance(
                 $value,
                 $tag !== null ? compact('tag') : [],
-                $options
+                $options,
             );
         }
 
@@ -628,7 +630,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $id
      * @param  mixed                  $value
      * @param  DIOptions|int          $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -639,7 +641,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $id,
         mixed $value,
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options->with(shared: true);
 
@@ -650,7 +652,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $class
      * @param  Closure|null           $extend
      * @param  int                    $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -661,7 +663,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $class,
         ?Closure $extend = null,
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
@@ -680,7 +682,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $class
      * @param  Closure|null           $extend
      * @param  int                    $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return StoreDefinitionInterface
      *
@@ -691,7 +693,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $class,
         ?Closure $extend = null,
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): StoreDefinitionInterface {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->shared = true;
@@ -706,13 +708,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @param  string                 $id       The unique identifier for the Closure or property.
      * @param  Closure                $closure  A Closure to wrap the original service Closure.
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return  static
      *
      * @since   2.0
      */
-    public function extend(string $id, Closure $closure, \UnitEnum|string|null $tag = null): static
+    public function extend(string $id, Closure $closure, UnitEnum|string|null $tag = null): static
     {
         $taggedId = static::toTaggedId($id, $tag);
 
@@ -731,11 +733,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @param  string                 $id
      * @param  Closure                $closure
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return  static
      */
-    public function extendForCreate(string $id, Closure $closure, \UnitEnum|string|null $tag = null): static
+    public function extendForCreate(string $id, Closure $closure, UnitEnum|string|null $tag = null): static
     {
         $this->whenCreating($id, $tag)->extend($closure);
 
@@ -746,7 +748,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $id,
         object|array $subscriber,
         ?int $priority = null,
-        \UnitEnum|string|null $tag = null
+        UnitEnum|string|null $tag = null,
     ): static {
         return $this->extend(
             $id,
@@ -770,7 +772,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
                 return $instance;
             },
-            $tag
+            $tag,
         );
     }
 
@@ -779,7 +781,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @return  array<callable>
      */
-    public function findExtends(string $id, string|\UnitEnum|null $tag = null): array
+    public function findExtends(string $id, string|UnitEnum|null $tag = null): array
     {
         $nid = static::toTaggedId($id, $tag);
 
@@ -808,7 +810,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         return array_merge(...$extends);
     }
 
-    public function modify(string $id, Closure $closure, \UnitEnum|string|null $tag = null): StoreDefinitionInterface
+    public function modify(string $id, Closure $closure, UnitEnum|string|null $tag = null): StoreDefinitionInterface
     {
         $definition = $this->getDefinition($id, $tag);
 
@@ -838,7 +840,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $class
      * @param  array                  $args
      * @param  DIOptions|int          $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return mixed
      * @throws DefinitionException
@@ -850,7 +852,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $class,
         array $args = [],
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): mixed {
         $callback = fn(Container $container) => $container->newInstance($class, $args, $options);
 
@@ -864,7 +866,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      * @param  string                 $class
      * @param  array                  $args
      * @param  DIOptions|int          $options
-     * @param  \UnitEnum|string|null  $tag
+     * @param  UnitEnum|string|null  $tag
      *
      * @return mixed
      *
@@ -877,7 +879,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         string $class,
         array $args = [],
         DIOptions|int $options = new DIOptions(),
-        \UnitEnum|string|null $tag = null,
+        UnitEnum|string|null $tag = null,
     ): mixed {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
         $options->shared = true;
@@ -905,7 +907,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
         mixed $callable,
         array $args = [],
         ?object $context = null,
-        DIOptions|int $options = new DIOptions()
+        DIOptions|int $options = new DIOptions(),
     ): mixed {
         $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
@@ -943,7 +945,7 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
      *
      * @return  ObjectBuilderDefinition
      */
-    public function whenCreating(string $class, string|\UnitEnum|null $tag = null): ObjectBuilderDefinition
+    public function whenCreating(string $class, string|UnitEnum|null $tag = null): ObjectBuilderDefinition
     {
         $id = static::toTaggedId($class, $tag);
 
@@ -978,11 +980,11 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
             if (
-                $this->dependencyResolver->canLazy($ref = new \ReflectionClass($class), $options)
+                $this->dependencyResolver->canLazy($ref = new ReflectionClass($class), $options)
                 && !$this->dependencyResolver::isInternal($ref)
             ) {
                 return $ref->newLazyProxy(
-                    fn() => $this->dependencyResolver->newInstance($class, $args, $options)
+                    fn() => $this->dependencyResolver->newInstance($class, $args, $options),
                 );
             }
         }
