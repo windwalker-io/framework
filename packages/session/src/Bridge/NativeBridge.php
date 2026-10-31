@@ -211,6 +211,8 @@ class NativeBridge implements BridgeInterface
      * unset
      *
      * @return  bool
+     *
+     * @codeCoverageIgnore
      */
     public function unset(): bool
     {

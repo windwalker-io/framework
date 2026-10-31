@@ -15,7 +15,7 @@ use Windwalker\Session\Handler\HandlerInterface;
 class ArrayHandlerTest extends AbstractHandlerTestCase
 {
     /**
-     * @var ArrayHandler
+     * @var  ArrayHandler
      */
     protected ?AbstractHandler $instance = null;
 

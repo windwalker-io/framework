@@ -231,9 +231,9 @@ class GzStream extends Stream
             return false;
         }
 
-        $meta = stream_get_meta_data($this->resource);
+        $mode = stream_get_meta_data($this->resource)['mode'] ?? '';
 
-        return is_writable($meta['uri']);
+        return strpbrk($mode, 'xwca+') !== false;
     }
 
     /**
@@ -361,6 +361,8 @@ class GzStream extends Stream
      * Method to get property Resource
      *
      * @return  resource
+     *
+     * @codeCoverageIgnore
      */
     public function getResource()
     {

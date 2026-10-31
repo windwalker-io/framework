@@ -28,7 +28,7 @@ abstract class AbstractHandlerTestCase extends TestCase
     protected ?Session $session;
 
     /**
-     * @var AbstractHandler
+     * @var  AbstractHandler
      */
     protected ?AbstractHandler $instance = null;
 

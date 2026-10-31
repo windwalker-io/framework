@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Scalars\Test\Concern;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Scalars\ArrayObject;
 use Windwalker\Scalars\StringObject;
@@ -13,15 +15,36 @@ use function Windwalker\arr;
 use function Windwalker\where;
 
 /**
- * The ArrayLoopTraitTest class.
- *
- * @since  __DEPLOY_VERSION__
+ * Tests the looping helpers of ArrayObject.
  */
 class ArrayLoopTraitTest extends TestCase
 {
-    protected $instance;
+    protected ArrayObject $instance;
 
-    public function testPartition(): void
+    #[Test]
+    public function partitionKeepsKeysWhenRequested(): void
+    {
+        [$a1, $a2] = arr(['a' => 1, 'b' => 2])->partition(fn($v) => $v > 1, true);
+
+        self::assertEquals(['b' => 2], $a1->dump());
+        self::assertEquals(['a' => 1], $a2->dump());
+    }
+
+    #[Test]
+    public function groupByPathGroupsItemsByNestedPath(): void
+    {
+        $a = arr([
+            ['user' => ['type' => 'x'], 'id' => 1],
+            ['user' => ['type' => 'y'], 'id' => 2],
+            ['user' => ['type' => 'x'], 'id' => 3],
+        ])->groupByPath('user.type');
+
+        self::assertEquals([1, 3], array_column($a['x'], 'id'));
+        self::assertEquals([2], array_column($a['y'], 'id'));
+    }
+
+    #[Test]
+    public function partitionSplitsItemsByCallbackResult(): void
     {
         [$a1, $a2] = $this->instance->partition(
             function ($v) {
@@ -33,7 +56,8 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals([1], $a2->dump());
     }
 
-    public function testFindFirst(): void
+    #[Test]
+    public function findFirstReturnsFirstMatchingValue(): void
     {
         $a = ArrayObject::range(1, 10);
 
@@ -46,7 +70,8 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals(5, $r);
     }
 
-    public function testFilter(): void
+    #[Test]
+    public function filterKeepsMatchingItemsAndPreservesKeys(): void
     {
         $a = ArrayObject::range(1, 10);
 
@@ -60,7 +85,8 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals([0, 2, 4, 6, 8], $a->keys()->dump());
     }
 
-    public function testWalkRecursive(): void
+    #[Test]
+    public function walkRecursiveAppliesCallbackToNestedValues(): void
     {
         $a = arr(
             $src = [
@@ -89,38 +115,30 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals($src, $b->dump());
     }
 
-    public function testQuery(): void
+    #[Test]
+    public function queryFiltersItemsByFieldConditions(): void
     {
-        $a = arr(
-            $data = [
-                [
-                    'id' => 1,
-                    'title' => 'Julius Caesar',
-                    'data' => (object) ['foo' => 'bar'],
-                ],
-                [
-                    'id' => 2,
-                    'title' => 'Macbeth',
-                    'data' => [],
-                ],
-                [
-                    'id' => 3,
-                    'title' => 'Othello',
-                    'data' => 123,
-                ],
-                [
-                    'id' => 4,
-                    'title' => 'Hamlet',
-                    'data' => true,
-                ],
-            ]
-        );
+        $data = $this->createPlays();
+        $a = arr($data);
 
-        // Test id equals
         $this->assertEquals([$data[1]], $a->query(['id' => 2])->dump());
+    }
 
-        // Test compare wrapper
+    #[Test]
+    public function queryAcceptsCompareWrapper(): void
+    {
+        $data = $this->createPlays();
+        $a = arr($data);
+
         $this->assertEquals([$data[1]], $a->query([where('id', '=', 2)])->dump());
+    }
+
+    #[Test]
+    public function queryAcceptsCallableCondition(): void
+    {
+        $data = $this->createPlays();
+        $a = arr($data);
+
         $this->assertEquals(
             [$data[1]],
             $a->query(
@@ -133,7 +151,8 @@ class ArrayLoopTraitTest extends TestCase
         );
     }
 
-    public function testMap(): void
+    #[Test]
+    public function mapTransformsEachValue(): void
     {
         $a = $this->instance->map(
             function ($v) {
@@ -144,7 +163,8 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals([2, 3, 4], $a->dump());
     }
 
-    public function testWalk(): void
+    #[Test]
+    public function walkModifiesEachValueByReference(): void
     {
         $a = $this->instance->walk(
             function (&$v) {
@@ -155,32 +175,10 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals([3, 4, 5], $a->dump());
     }
 
-    public function testFind(): void
+    #[Test]
+    public function findReturnsAllMatchingItems(): void
     {
-        $a = arr(
-            $data = [
-                [
-                    'id' => 1,
-                    'title' => 'Julius Caesar',
-                    'data' => (object) ['foo' => 'bar'],
-                ],
-                [
-                    'id' => 2,
-                    'title' => 'Macbeth',
-                    'data' => [],
-                ],
-                [
-                    'id' => 3,
-                    'title' => 'Othello',
-                    'data' => 123,
-                ],
-                [
-                    'id' => 4,
-                    'title' => 'Hamlet',
-                    'data' => true,
-                ],
-            ]
-        );
+        $a = arr($this->createPlays());
 
         self::assertEquals(
             $a->slice(0, 2)->dump(),
@@ -192,7 +190,8 @@ class ArrayLoopTraitTest extends TestCase
         );
     }
 
-    public function testReduce(): void
+    #[Test]
+    public function reduceFoldsItemsIntoSingleValue(): void
     {
         $a = $this->instance->reduce(
             function (int $sum, int $v) {
@@ -202,14 +201,18 @@ class ArrayLoopTraitTest extends TestCase
         )->toInteger();
 
         self::assertEquals(11, $a);
+    }
 
-        $a = arr(
-            $data = [
-                [1, 2],
-                [3, 4],
-                [5, 6],
-            ]
-        )->reduce(
+    #[Test]
+    public function reduceCanMergeArraysWithInitialValue(): void
+    {
+        $data = [
+            [1, 2],
+            [3, 4],
+            [5, 6],
+        ];
+
+        $a = arr($data)->reduce(
             function (array $sum, array $v) {
                 return array_merge($sum, $v);
             },
@@ -219,7 +222,8 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals(array_merge(['A', 'B'], ...$data), $a->dump());
     }
 
-    public function testMapWithKeys(): void
+    #[Test]
+    public function mapWithKeysBuildsNewKeyValuePairs(): void
     {
         $a = $this->getAssoc()->mapWithKeys(
             function ($v, $k) {
@@ -228,7 +232,11 @@ class ArrayLoopTraitTest extends TestCase
         );
 
         self::assertEquals(['bar' => 'foo', 'sakura' => 'flower'], $a->dump());
+    }
 
+    #[Test]
+    public function mapWithKeysGroupsDuplicateKeysInMixMode(): void
+    {
         $src = arr(
             [
                 1 => 'a',
@@ -257,7 +265,8 @@ class ArrayLoopTraitTest extends TestCase
         );
     }
 
-    public function testEach(): void
+    #[Test]
+    public function eachIteratesItemsWithKeys(): void
     {
         $r = [];
         $this->instance->each(
@@ -274,7 +283,11 @@ class ArrayLoopTraitTest extends TestCase
             ],
             $r
         );
+    }
 
+    #[Test]
+    public function eachStopsWhenLoopStopIsCalled(): void
+    {
         $r = [];
         $this->instance->each(
             static function ($v, $k, Loop $loop) use (&$r) {
@@ -292,7 +305,11 @@ class ArrayLoopTraitTest extends TestCase
             ],
             $r
         );
+    }
 
+    #[Test]
+    public function eachStopsOuterLoopWhenStopLevelIsTwo(): void
+    {
         $a = arr(
             [
                 [1, 2, 3],
@@ -326,7 +343,8 @@ class ArrayLoopTraitTest extends TestCase
         );
     }
 
-    public function testMapAs(): void
+    #[Test]
+    public function mapAsWrapsEachValueInGivenClass(): void
     {
         $a = $this->instance->mapAs(StringObject::class);
 
@@ -339,7 +357,8 @@ class ArrayLoopTraitTest extends TestCase
         }
     }
 
-    public function testReject(): void
+    #[Test]
+    public function rejectRemovesMatchingItems(): void
     {
         $a = $this->instance->reject(
             function ($v) {
@@ -350,7 +369,8 @@ class ArrayLoopTraitTest extends TestCase
         self::assertEquals([1], $a->dump());
     }
 
-    public function testMapRecursive(): void
+    #[Test]
+    public function mapRecursiveTransformsNestedValues(): void
     {
         $a = arr(
             $src = [
@@ -400,7 +420,8 @@ class ArrayLoopTraitTest extends TestCase
         );
     }
 
-    public function testFlatMap(): void
+    #[Test]
+    public function flatMapMapsAndMergesResults(): void
     {
         $a = arr(
             [
@@ -422,13 +443,36 @@ class ArrayLoopTraitTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createInstance(): void
     {
         $this->instance = arr([1, 2, 3]);
     }
 
-    protected function tearDown(): void
+    protected function createPlays(): array
     {
+        return [
+            [
+                'id' => 1,
+                'title' => 'Julius Caesar',
+                'data' => (object) ['foo' => 'bar'],
+            ],
+            [
+                'id' => 2,
+                'title' => 'Macbeth',
+                'data' => [],
+            ],
+            [
+                'id' => 3,
+                'title' => 'Othello',
+                'data' => 123,
+            ],
+            [
+                'id' => 4,
+                'title' => 'Hamlet',
+                'data' => true,
+            ],
+        ];
     }
 
     protected function getAssoc(): ArrayObject

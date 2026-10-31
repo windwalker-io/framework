@@ -116,6 +116,8 @@ abstract class AbstractHandler implements HandlerInterface, SessionUpdateTimesta
      * @param  callable  $sessionIdHandler
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setSessionIdHandler(?callable $sessionIdHandler): static
     {

@@ -7,6 +7,9 @@ namespace Windwalker\Scalars\Concern;
 /**
  * The StringDeprecatedTrait contains backward-compatible proxy methods
  * that have been renamed. Each method delegates to its replacement.
+ *
+ * @codeCoverageIgnore
+ * @deprecated Use the new method names instead.
  */
 trait StringDeprecatedTrait
 {

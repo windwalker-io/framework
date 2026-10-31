@@ -6,8 +6,14 @@ namespace Windwalker\Session\Test\Bridge;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\PhpBridge;
+use RuntimeException;
+use Windwalker\Data\Format\JsonFormat;
+use Windwalker\Session\Handler\ArrayHandler;
 use Windwalker\Session\Handler\FilesystemHandler;
 use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Test\SessionVfsTestTrait;
@@ -25,7 +31,8 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::start
      */
-    public function testStart(): void
+    #[Test]
+    public function startLoadsWritesAndClosesSessions(): void
     {
         self::assertEquals(
             PHP_SESSION_NONE,
@@ -86,7 +93,8 @@ class PhpBridgeTest extends TestCase
         );
     }
 
-    public function testStartWithNewId(): void
+    #[Test]
+    public function startWithoutIdCreatesNewSessionAndPersistsData(): void
     {
         $this->instance->start();
 
@@ -109,7 +117,8 @@ class PhpBridgeTest extends TestCase
         );
     }
 
-    public function testStartWithSuperGlobal(): void
+    #[Test]
+    public function startWithSuperGlobalExposesSessionDataInSessionArray(): void
     {
         $this->createInstance(
             [
@@ -139,7 +148,8 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::setSessionName
      */
-    public function testSetSessionName(): void
+    #[Test]
+    public function setSessionNamePassesNameToHandlerOpen(): void
     {
         $this->instance->setSessionName('WW_SESS');
 
@@ -159,7 +169,8 @@ class PhpBridgeTest extends TestCase
         $this->instance->writeClose();
     }
 
-    public function testStrictMode()
+    #[Test]
+    public function strictModeReplacesIdOfMissingSession(): void
     {
         $this->createInstance(
             [
@@ -182,15 +193,25 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::getStatus
      */
-    public function testGetStatus(): void
+    #[Test]
+    public function getStatusReturnsSessionStatus(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame(PHP_SESSION_NONE, $this->instance->getStatus());
+
+        $this->instance->start();
+
+        self::assertSame(PHP_SESSION_ACTIVE, $this->instance->getStatus());
+
+        $this->instance->close();
+
+        self::assertSame(PHP_SESSION_NONE, $this->instance->getStatus());
     }
 
     /**
      * @see  PhpBridge::gcEnabled
      */
-    public function testGcEnabled(): void
+    #[Test]
+    public function gcEnabledReflectsGcProbabilityOption(): void
     {
         $this->createInstance(
             [
@@ -209,23 +230,41 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::getId
      */
-    public function testGetId(): void
+    #[Test]
+    public function getIdReturnsCurrentSessionId(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertNull($this->instance->getId());
+
+        $this->instance->setId(static::$sess1);
+
+        self::assertSame(static::$sess1, $this->instance->getId());
     }
 
     /**
      * @see  PhpBridge::__construct
      */
-    public function testConstruct(): void
+    #[Test]
+    public function constructAppliesOptionsAndHandler(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $handler = new ArrayHandler();
+        $bridge = new PhpBridge([PhpBridge::OPTION_WITH_SUPER_GLOBAL => true], $handler);
+
+        self::assertTrue($bridge->getOption(PhpBridge::OPTION_WITH_SUPER_GLOBAL));
+        self::assertFalse($bridge->getOption(PhpBridge::OPTION_AUTO_COMMIT));
+
+        $bridge->setId('constructed');
+        $bridge->start();
+        $bridge->getStorage()['a'] = 1;
+        $bridge->writeClose();
+
+        self::assertNotSame('', $handler->read('constructed'));
     }
 
     /**
      * @see  PhpBridge::unset
      */
-    public function testUnset(): void
+    #[Test]
+    public function unsetClearsStorage(): void
     {
         $this->instance->setId(static::$sess1);
         $this->instance->start();
@@ -240,7 +279,8 @@ class PhpBridgeTest extends TestCase
         );
     }
 
-    public function testSetStorageAndUnsetWithSuperGlobal(): void
+    #[Test]
+    public function setStorageReplacesSuperGlobalData(): void
     {
         $this->createInstance(
             [
@@ -257,7 +297,21 @@ class PhpBridgeTest extends TestCase
             ['foo' => 'bar'],
             $_SESSION,
         );
+    }
 
+    #[Test]
+    public function unsetClearsSuperGlobalData(): void
+    {
+        $this->createInstance(
+            [
+                PhpBridge::OPTION_WITH_SUPER_GLOBAL => true,
+            ]
+        );
+
+        $this->instance->setId(static::$sess1);
+        $this->instance->start();
+
+        $this->instance->setStorage(['foo' => 'bar']);
         $this->instance->unset();
 
         self::assertSame([], $_SESSION);
@@ -266,39 +320,67 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::setId
      */
-    public function testSetId(): void
+    #[Test]
+    public function setIdChangesSessionId(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->setId('another-id');
+
+        self::assertSame('another-id', $this->instance->getId());
     }
 
     /**
      * @see  PhpBridge::isStarted
      */
-    public function testIsStarted(): void
+    #[Test]
+    public function isStartedReflectsSessionStatus(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertFalse($this->instance->isStarted());
+
+        $this->instance->start();
+
+        self::assertTrue($this->instance->isStarted());
+
+        $this->instance->writeClose();
+
+        self::assertFalse($this->instance->isStarted());
     }
 
     /**
      * @see  PhpBridge::getStorage
      */
-    public function testGetStorage(): void
+    #[Test]
+    public function getStorageReturnsSessionData(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->setId(static::$sess1);
+        $this->instance->start();
+
+        self::assertSame(['flower' => 'Sakura', 'animal' => 'Cat'], $this->instance->getStorage());
     }
 
     /**
      * @see  PhpBridge::writeClose
      */
-    public function testWriteClose(): void
+    #[Test]
+    public function writeCloseSavesDataAndEndsSession(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->setId(static::$sess1);
+        $this->instance->start();
+        $this->instance->getStorage()['bird'] = 'Eagle';
+
+        self::assertTrue($this->instance->writeClose(false));
+        self::assertSame(PHP_SESSION_NONE, $this->instance->getStatus());
+
+        $this->instance->setId(static::$sess1);
+        $this->instance->start();
+
+        self::assertSame('Eagle', $this->instance->getStorage()['bird']);
     }
 
     /**
      * @see  PhpBridge::regenerate
      */
-    public function testRegenerate(): void
+    #[Test]
+    public function regenerateKeepsOldSessionWhenDeleteOldIsFalse(): void
     {
         $this->instance->setId(static::$sess1);
 
@@ -341,7 +423,8 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::regenerate
      */
-    public function testRegenerateDeleteOld(): void
+    #[Test]
+    public function regenerateDeletesOldSessionWhenDeleteOldIsTrue(): void
     {
         $this->instance->setId(static::$sess1);
 
@@ -377,7 +460,8 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::destroy
      */
-    public function testDestroy(): void
+    #[Test]
+    public function destroyClearsStorageAndDeletesSessionFile(): void
     {
         $this->instance->setId(static::$sess1);
 
@@ -398,12 +482,58 @@ class PhpBridgeTest extends TestCase
     /**
      * @see  PhpBridge::getSessionName
      */
-    public function testGetSessionName(): void
+    #[Test]
+    public function getSessionNameReturnsConfiguredName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->setSessionName('MY_SESS');
+
+        self::assertSame('MY_SESS', $this->instance->getSessionName());
+        self::assertSame(session_name(), (new PhpBridge())->getSessionName());
     }
 
-    protected function setUp(): void
+    #[Test]
+    public function setSerializerEncodesAndDecodesStorageWithSerializer(): void
+    {
+        $handler = new ArrayHandler();
+        $bridge = new PhpBridge([], $handler);
+
+        self::assertSame($bridge, $bridge->setSerializer(new JsonFormat()));
+
+        $bridge->setId('json-id');
+        $bridge->start();
+        $bridge->getStorage()['flower'] = 'Sakura';
+        $bridge->writeClose();
+
+        self::assertSame('{"flower":"Sakura"}', $handler->read('json-id'));
+
+        $bridge->start();
+
+        self::assertSame(['flower' => 'Sakura'], $bridge->getStorage());
+    }
+
+    #[Test]
+    public function setSerializerThrowsWhenSessionIsActive(): void
+    {
+        $bridge = new PhpBridge([], new ArrayHandler());
+        $bridge->start();
+
+        $this->expectException(RuntimeException::class);
+
+        $bridge->setSerializer(null);
+    }
+
+    #[Test]
+    public function cloneDuplicatesHandlerAndSerializer(): void
+    {
+        $bridge = new PhpBridge([], new ArrayHandler(), new JsonFormat());
+        $clone = clone $bridge;
+
+        self::assertNotSame($bridge->getHandler(), $clone->getHandler());
+        self::assertNotSame($bridge->getSerializer(), $clone->getSerializer());
+    }
+
+    #[Before]
+    protected function prepareBridgeAndVfs(): void
     {
         $this->createInstance();
         $this->prepareVfs();
@@ -422,7 +552,8 @@ class PhpBridgeTest extends TestCase
         $this->prepareVfs();
     }
 
-    protected function tearDown(): void
+    #[After]
+    protected function closeBridge(): void
     {
         $this->instance->writeClose();
     }

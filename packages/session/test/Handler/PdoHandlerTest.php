@@ -20,7 +20,7 @@ class PdoHandlerTest extends AbstractHandlerTestCase
     protected ?PDO $db = null;
 
     /**
-     * @var PdoHandler
+     * @var  PdoHandler
      */
     protected ?AbstractHandler $instance = null;
 

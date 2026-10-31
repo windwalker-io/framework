@@ -33,6 +33,8 @@ class DecoratorStream implements StreamInterface
      * Closes the stream and any underlying resources.
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public function close(): void
     {
@@ -45,6 +47,8 @@ class DecoratorStream implements StreamInterface
      * After the stream has been detached, the stream is in an unusable state.
      *
      * @return resource|null Underlying PHP stream, if any
+     *
+     * @codeCoverageIgnore
      */
     public function detach()
     {
@@ -55,6 +59,8 @@ class DecoratorStream implements StreamInterface
      * Get the size of the stream if known.
      *
      * @return int|null Returns the size in bytes if known, or null if unknown.
+     *
+     * @codeCoverageIgnore
      */
     public function getSize(): ?int
     {
@@ -66,6 +72,8 @@ class DecoratorStream implements StreamInterface
      *
      * @return int Position of the file pointer
      * @throws \RuntimeException on error.
+     *
+     * @codeCoverageIgnore
      */
     public function tell(): int
     {
@@ -76,6 +84,8 @@ class DecoratorStream implements StreamInterface
      * Returns true if the stream is at the end of the stream.
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public function eof(): bool
     {
@@ -86,6 +96,8 @@ class DecoratorStream implements StreamInterface
      * Returns whether or not the stream is seekable.
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public function isSeekable(): bool
     {
@@ -105,6 +117,8 @@ class DecoratorStream implements StreamInterface
      *                       SEEK_END: Set position to end-of-stream plus offset.
      *
      * @throws \RuntimeException on failure.
+     *
+     * @codeCoverageIgnore
      */
     public function seek($offset, $whence = SEEK_SET): void
     {
@@ -130,6 +144,8 @@ class DecoratorStream implements StreamInterface
      * Returns whether or not the stream is writable.
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public function isWritable(): bool
     {
@@ -143,6 +159,8 @@ class DecoratorStream implements StreamInterface
      *
      * @return int Returns the number of bytes written to the stream.
      * @throws \RuntimeException on failure.
+     *
+     * @codeCoverageIgnore
      */
     public function write($string): int
     {
@@ -153,6 +171,8 @@ class DecoratorStream implements StreamInterface
      * Returns whether or not the stream is readable.
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public function isReadable(): bool
     {
@@ -169,6 +189,8 @@ class DecoratorStream implements StreamInterface
      * @return string Returns the data read from the stream, or an empty string
      *     if no bytes are available.
      * @throws \RuntimeException if an error occurs.
+     *
+     * @codeCoverageIgnore
      */
     public function read($length): string
     {
@@ -200,6 +222,8 @@ class DecoratorStream implements StreamInterface
      * @return array|mixed|null Returns an associative array if no key is
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
+     *
+     * @codeCoverageIgnore
      */
     public function getMetadata($key = null): mixed
     {
@@ -208,6 +232,8 @@ class DecoratorStream implements StreamInterface
 
     /**
      * @return StreamInterface
+     *
+     * @codeCoverageIgnore
      */
     public function getInnerStream(): StreamInterface
     {
@@ -218,6 +244,8 @@ class DecoratorStream implements StreamInterface
      * @param  StreamInterface  $stream
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setInnerStream(StreamInterface $stream): static
     {

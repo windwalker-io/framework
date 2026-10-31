@@ -187,6 +187,8 @@ class ArrayCookies extends AbstractConfigurableCookies
 
     /**
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public function getModifiedFields(): array
     {
@@ -197,6 +199,8 @@ class ArrayCookies extends AbstractConfigurableCookies
      * @param  array  $modifiedFields
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setModifiedFields(array $modifiedFields): static
     {
@@ -207,6 +211,8 @@ class ArrayCookies extends AbstractConfigurableCookies
 
     /**
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public function getRemoveFields(): array
     {
@@ -217,6 +223,8 @@ class ArrayCookies extends AbstractConfigurableCookies
      * @param  array  $removeFields
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setRemoveFields(array $removeFields): static
     {

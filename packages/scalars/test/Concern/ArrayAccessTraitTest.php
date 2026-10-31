@@ -120,6 +120,36 @@ class ArrayAccessTraitTest extends TestCase
         self::assertEquals([4, 5, 6], $a->dump());
     }
 
+    #[Test]
+    public function firstReturnsNullForEmptyArray(): void
+    {
+        self::assertNull(arr([])->first());
+    }
+
+    #[Test]
+    public function firstReturnsNullWhenNoItemMatchesCallback(): void
+    {
+        self::assertNull(arr([1, 2])->first(fn($v) => $v > 5));
+    }
+
+    #[Test]
+    public function lastReturnsNullForEmptyArray(): void
+    {
+        self::assertNull(arr([])->last());
+    }
+
+    #[Test]
+    public function lastReturnsNullWhenNoItemMatchesCallback(): void
+    {
+        self::assertNull(arr([1, 2])->last(fn($v) => $v > 5));
+    }
+
+    #[Test]
+    public function firstReturnsNullWhenFirstValueIsNull(): void
+    {
+        self::assertNull(arr([null, 1])->first());
+    }
+
     #[Before]
     protected function createInstance(): void
     {

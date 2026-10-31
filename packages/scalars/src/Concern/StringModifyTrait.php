@@ -11,11 +11,6 @@ use Windwalker\Utilities\Utf8String;
 
 use function Windwalker\tap;
 
-/**
- * The StringConcatTrait class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait StringModifyTrait
 {
     /**
@@ -230,15 +225,6 @@ trait StringModifyTrait
         );
     }
 
-    /**
-     * append
-     *
-     * @param  string|StringObject  $string
-     *
-     * @return  StringObject
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function append(StringObject|string $string): StringObject
     {
         return tap(
@@ -249,15 +235,6 @@ trait StringModifyTrait
         );
     }
 
-    /**
-     * prepend
-     *
-     * @param  string|StringObject  $string
-     *
-     * @return  StringObject
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function prepend(StringObject|string $string): StringObject
     {
         return tap(

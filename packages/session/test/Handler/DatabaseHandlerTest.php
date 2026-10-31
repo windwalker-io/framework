@@ -19,7 +19,7 @@ class DatabaseHandlerTest extends AbstractHandlerTestCase
     use DatabaseTestTrait;
 
     /**
-     * @var DatabaseHandler
+     * @var  DatabaseHandler
      */
     protected ?AbstractHandler $instance;
 

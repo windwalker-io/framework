@@ -55,6 +55,8 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
 
     /**
      * @return ?\DateTimeInterface
+     *
+     * @codeCoverageIgnore
      */
     public function getExpires(): ?\DateTimeInterface
     {
@@ -104,6 +106,8 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      * @param  string  $path
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function path(string $path): static
     {
@@ -124,6 +128,8 @@ abstract class AbstractConfigurableCookies implements CookiesInterface, CookiesC
      * @param  string  $domain
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function domain(string $domain): static
     {

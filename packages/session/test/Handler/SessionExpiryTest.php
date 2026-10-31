@@ -8,6 +8,7 @@ use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\ConnectionInterface;
@@ -24,8 +25,9 @@ class SessionExpiryTest extends TestCase
 {
     use SessionVfsTestTrait;
 
+    #[Test]
     #[DataProvider('handlerProvider')]
-    public function testExpiredSessionsCannotBeReadOrValidated(string $type, bool $useOption, bool $customColumns): void
+    public function expiredSessionsCannotBeReadOrValidated(string $type, bool $useOption, bool $customColumns): void
     {
         $previous = ini_set('session.gc_maxlifetime', $useOption ? '3600' : '60');
 
@@ -42,8 +44,9 @@ class SessionExpiryTest extends TestCase
         }
     }
 
+    #[Test]
     #[DataProvider('handlerProvider')]
-    public function testStrictModeReplacesExpiredIdWithoutGarbageCollection(
+    public function strictModeReplacesExpiredIdWithoutGarbageCollection(
         string $type,
         bool $useOption,
         bool $customColumns
@@ -129,4 +132,3 @@ class SessionExpiryTest extends TestCase
         return $type === 'database' ? new DatabaseHandler($database, $options) : new PdoHandler($storage, $options);
     }
 }
-

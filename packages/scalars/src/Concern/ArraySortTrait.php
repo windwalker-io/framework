@@ -7,11 +7,6 @@ namespace Windwalker\Scalars\Concern;
 use Closure;
 use Windwalker\Utilities\Arr;
 
-/**
- * The ArraySortConcern class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait ArraySortTrait
 {
     /**
@@ -121,14 +116,6 @@ trait ArraySortTrait
 
     /**
      * Sort by column or custom getter.
-     *
-     * @param  string|callable  $column
-     * @param  int              $flags
-     * @param  bool             $desc
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function sortBy(string|callable $column, int $flags = SORT_REGULAR, bool $desc = false): static
     {

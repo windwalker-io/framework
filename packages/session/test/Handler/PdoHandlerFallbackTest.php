@@ -7,13 +7,15 @@ namespace Windwalker\Session\Test\Handler;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Handler\PdoHandler;
 
 class PdoHandlerFallbackTest extends TestCase
 {
+    #[Test]
     #[DataProvider('sessionProvider')]
-    public function testWriteUpdatesOnlyMatchingSession(string $id, array $options): void
+    public function fallbackWriteUpdatesOnlyMatchingSession(string $id, array $options): void
     {
         if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
             self::markTestSkipped('The pdo_sqlite extension is required.');
@@ -46,7 +48,7 @@ class PdoHandlerFallbackTest extends TestCase
         $insert->execute(['other-session', 'untouched data', 200]);
 
         $pdo = $this->createMock(PDO::class);
-        $pdo->method('getAttribute')->with(PDO::ATTR_DRIVER_NAME)->willReturn('pgsql');
+        $pdo->expects($this->atLeastOnce())->method('getAttribute')->with(PDO::ATTR_DRIVER_NAME)->willReturn('pgsql');
         $pdo->expects($this->once())->method('beginTransaction')->willReturnCallback($storage->beginTransaction(...));
         $pdo->expects($this->once())->method('commit')->willReturnCallback($storage->commit(...));
         $pdo->method('rollBack')->willReturnCallback($storage->rollBack(...));

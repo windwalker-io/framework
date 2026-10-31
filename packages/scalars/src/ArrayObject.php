@@ -65,17 +65,6 @@ class ArrayObject implements AccessibleInterface
         return new static($data);
     }
 
-    /**
-     * explode
-     *
-     * @param  string    $delimiter
-     * @param  string    $string
-     * @param  int|null  $limit
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public static function explode(string $delimiter, string $string, ?int $limit = null): static
     {
         return new static(explode(...array_filter(func_get_args(), fn($v) => $v !== null)));
@@ -99,13 +88,6 @@ class ArrayObject implements AccessibleInterface
 
     /**
      * Set value and immutable.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $value
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function with(mixed $key, mixed $value): static
     {
@@ -116,16 +98,6 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
-    /**
-     * withDef
-     *
-     * @param  mixed  $key
-     * @param  mixed  $default
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function withDef(mixed $key, mixed $default): static
     {
         $new = clone $this;
@@ -135,15 +107,6 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
-    /**
-     * withRemove
-     *
-     * @param  mixed  $key
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function withRemove(mixed $key): static
     {
         $new = clone $this;
@@ -153,15 +116,6 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
-    /**
-     * withReset
-     *
-     * @param  array  $storage
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function withReset(array $storage = []): static
     {
         $new = clone $this;
@@ -248,27 +202,17 @@ class ArrayObject implements AccessibleInterface
         return new static(array_column($this->storage, $name, $key));
     }
 
-    /**
-     * setColumn
-     *
-     * @param  string|int  $name
-     * @param  mixed       $value
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function setColumn(mixed $name, mixed $value): static
     {
-        return $this->newInstance()->apply(
-            function (array $storage) use ($name, $value) {
-                foreach ($this->storage as $item) {
-                    if (Arr::isAccessible($item)) {
-                        $item[$name] = $value;
-                    } elseif (is_object($item)) {
-                        $item->$name = $value;
-                    }
+        return $this->map(
+            static function ($item) use ($name, $value) {
+                if (Arr::isAccessible($item)) {
+                    $item[$name] = $value;
+                } elseif (is_object($item)) {
+                    $item->$name = $value;
                 }
+
+                return $item;
             }
         );
     }
@@ -440,15 +384,6 @@ class ArrayObject implements AccessibleInterface
         return str(implode($glue, $this->storage));
     }
 
-    /**
-     * mapToArray
-     *
-     * @param  array  $args
-     *
-     * @return  array
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     protected static function mapUnwrap(array $args): array
     {
         return array_map(
@@ -482,15 +417,6 @@ class ArrayObject implements AccessibleInterface
         return static::wrap($value);
     }
 
-    /**
-     * unwrap
-     *
-     * @param  mixed  $value
-     *
-     * @return  mixed
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public static function unwrap(mixed $value): mixed
     {
         if ($value instanceof static) {
@@ -500,13 +426,6 @@ class ArrayObject implements AccessibleInterface
         return $value;
     }
 
-    /**
-     * wrapChildren
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function wrapAll(): static
     {
         return $this->mapAs(static::class);

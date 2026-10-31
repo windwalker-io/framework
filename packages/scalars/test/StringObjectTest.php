@@ -6,6 +6,8 @@ namespace Windwalker\Scalars\Test;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Scalars\StringObject;
 use Windwalker\Utilities\Str;
@@ -15,30 +17,14 @@ use Windwalker\Utilities\Utf8String;
 use function Windwalker\str;
 
 /**
- * The StringObjectTest class.
- *
- * @since  {DEPLOY_VERSION}
+ * Tests the string manipulation helpers of StringObject.
  */
 class StringObjectTest extends TestCase
 {
     use MbstringTestTrait;
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * testFunctionCreate
-     *
-     * @return  void
-     */
-    public function testFunctionCreate()
+    #[Test]
+    public function strHelperCreatesStringObjectWithEncoding()
     {
         $s = str('白日依山盡', StringObject::ENCODING_US_ASCII);
 
@@ -46,12 +32,8 @@ class StringObjectTest extends TestCase
         self::assertEquals(StringObject::ENCODING_US_ASCII, $s->getEncoding());
     }
 
-    /**
-     * testStaticCreate
-     *
-     * @return  void
-     */
-    public function testStaticCreate()
+    #[Test]
+    public function createBuildsStringObjectWithEncoding()
     {
         $s = StringObject::create('白日依山盡', StringObject::ENCODING_US_ASCII);
 
@@ -59,12 +41,8 @@ class StringObjectTest extends TestCase
         self::assertEquals(StringObject::ENCODING_US_ASCII, $s->getEncoding());
     }
 
-    /**
-     * testStringAccess
-     *
-     * @return  void
-     */
-    public function testStringAccess()
+    #[Test]
+    public function withStringReturnsNewInstanceWithGivenString()
     {
         $s = new StringObject('Foo');
 
@@ -77,12 +55,8 @@ class StringObjectTest extends TestCase
         self::assertEquals('白日依山盡', $s2->getString());
     }
 
-    /**
-     * testEncodingAccess
-     *
-     * @return  void
-     */
-    public function testEncodingAccess()
+    #[Test]
+    public function withEncodingReturnsNewInstanceWithGivenEncoding()
     {
         $s = new StringObject();
 
@@ -95,55 +69,50 @@ class StringObjectTest extends TestCase
         self::assertEquals(StringObject::ENCODING_DEFAULT_ISO, $s2->getEncoding());
     }
 
-    /**
-     * testCallProxy
-     *
-     * @return  void
-     */
-    public function testCallProxy()
+    #[Test]
+    public function callProxiesBooleanResultOfStrUtility()
     {
-        // Test return bool
         self::assertEquals(
             Str::endsWith('FooBar', 'bar', false, Str::ENCODING_UTF8),
             (new StringObject('FooBar', StringObject::ENCODING_UTF8))->endsWith('bar', false)
         );
+    }
 
-        // Test return string
+    #[Test]
+    public function callProxiesStringResultUsingUtf8Encoding()
+    {
         self::assertEquals(
             Str::slice('白日依山盡', 1, 3, Str::ENCODING_UTF8),
             (new StringObject('白日依山盡', StringObject::ENCODING_UTF8))->slice(1, 3)
         );
+    }
 
+    #[Test]
+    public function callProxiesStringResultUsingIsoEncoding()
+    {
         self::assertEquals(
             Str::slice('白日依山盡', 1, 3, Str::ENCODING_DEFAULT_ISO),
             (new StringObject('白日依山盡', StringObject::ENCODING_DEFAULT_ISO))->slice(1, 3)
         );
+    }
 
+    #[Test]
+    public function callThrowsOnUnknownMethod()
+    {
         $this->expectException(BadMethodCallException::class);
 
         (new StringObject('Foo'))->notexists();
     }
 
-    /**
-     * testOffsetGet
-     *
-     * @param  string  $expected
-     * @param  int     $offset
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('offsetGetProvider')]
-    public function testOffsetGet(int $offset, string $expected)
+    #[Test]
+    #[DataProvider('offsetGetProvider')]
+    public function offsetGetReturnsCharacterAtOffset(int $offset, string $expected)
     {
         $s = new StringObject('白日依山盡');
 
         self::assertEquals($expected, (string) $s[$offset]);
     }
 
-    /**
-     * offsetGetProvider
-     *
-     * @return  array
-     */
     public static function offsetGetProvider(): array
     {
         return [
@@ -156,19 +125,9 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testOffsetSet
-     *
-     * @param  string  $string
-     * @param  string  $replace
-     * @param  int     $offset
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('offsetSetProvider')]
-    public function testOffsetSet(string $string, string $replace, int $offset, string $expected)
+    #[Test]
+    #[DataProvider('offsetSetProvider')]
+    public function offsetSetReplacesCharacterAtOffset(string $string, string $replace, int $offset, string $expected)
     {
         $s = new StringObject($string);
 
@@ -177,11 +136,6 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s);
     }
 
-    /**
-     * offsetSetProvider
-     *
-     * @return  array
-     */
     public static function offsetSetProvider(): array
     {
         return [
@@ -191,18 +145,9 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testOffsetUnset
-     *
-     * @param  string  $string
-     * @param  int     $offset
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('offsetUnsetProvider')]
-    public function testOffsetUnset(string $string, int $offset, string $expected)
+    #[Test]
+    #[DataProvider('offsetUnsetProvider')]
+    public function offsetUnsetRemovesCharacterAtOffset(string $string, int $offset, string $expected)
     {
         $s = new StringObject($string);
 
@@ -211,11 +156,6 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s);
     }
 
-    /**
-     * offsetUnsetProvider
-     *
-     * @return  array
-     */
     public static function offsetUnsetProvider(): array
     {
         return [
@@ -230,12 +170,8 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testOffsetExists
-     *
-     * @return  void
-     */
-    public function testOffsetExists()
+    #[Test]
+    public function offsetExistsChecksCharacterOffsets()
     {
         $s = new StringObject('白日依山盡');
 
@@ -250,12 +186,8 @@ class StringObjectTest extends TestCase
         self::assertFalse(isset($s[-9]));
     }
 
-    /**
-     * testCount
-     *
-     * @return  void
-     */
-    public function testCount()
+    #[Test]
+    public function countReturnsNumberOfCharactersInEncoding()
     {
         self::assertCount(6, new StringObject('Foobar'));
         self::assertCount(6, new StringObject('Foobar', StringObject::ENCODING_DEFAULT_ISO));
@@ -263,29 +195,17 @@ class StringObjectTest extends TestCase
         self::assertCount(15, new StringObject('白日依山盡', StringObject::ENCODING_DEFAULT_ISO));
     }
 
-    /**
-     * testGetIterator
-     *
-     * @return  void
-     */
-    public function testGetIterator()
+    #[Test]
+    public function getIteratorIteratesCharacters()
     {
         $s = new StringObject('白日依山盡');
 
         self::assertEquals(Utf8String::strSplit((string) $s), iterator_to_array($s));
     }
 
-    /**
-     * testToLowerCase
-     *
-     * @param  string  $string
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('toLowerCaseProvider')]
-    public function testToLowerCase(string $string, string $expected)
+    #[Test]
+    #[DataProvider('toLowerCaseProvider')]
+    public function toLowerCaseReturnsNewLowercasedInstance(string $string, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->toLowerCase();
@@ -295,11 +215,6 @@ class StringObjectTest extends TestCase
         self::assertEquals((string) $s2, $expected);
     }
 
-    /**
-     * toLowerCaseProvider
-     *
-     * @return  array
-     */
     public static function toLowerCaseProvider(): array
     {
         return [
@@ -309,17 +224,9 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testToUpperCase
-     *
-     * @param  string  $string
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('toUpperCaseProvider')]
-    public function testToUpperCase(string $string, string $expected)
+    #[Test]
+    #[DataProvider('toUpperCaseProvider')]
+    public function toUpperCaseReturnsNewUppercasedInstance(string $string, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->toUpperCase();
@@ -329,11 +236,6 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * toUpperCaseProvider
-     *
-     * @return  array
-     */
     public static function toUpperCaseProvider(): array
     {
         return [
@@ -343,18 +245,9 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testLength
-     *
-     * @param  string     $string
-     * @param  int        $expected
-     * @param string|null $encoding
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('lengthProvider')]
-    public function testLength(string $string, int $expected, ?string $encoding = null)
+    #[Test]
+    #[DataProvider('lengthProvider')]
+    public function lengthReturnsCharacterCount(string $string, int $expected, ?string $encoding = null)
     {
         $s = new StringObject($string, $encoding);
         $length = $s->length();
@@ -362,11 +255,6 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, $length);
     }
 
-    /**
-     * lengthProvider
-     *
-     * @return  array
-     */
     public static function lengthProvider(): array
     {
         return [
@@ -382,20 +270,9 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testReplace
-     *
-     * @param  string  $string
-     * @param          $search
-     * @param          $replacement
-     * @param          $expected
-     * @param  int     $count
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('replaceProvider')]
-    public function testReplace(string $string, $search, $replacement, $expected, int $count)
+    #[Test]
+    #[DataProvider('replaceProvider')]
+    public function replaceSubstitutesSearchWithReplacement(string $string, $search, $replacement, $expected, int $count)
     {
         $s = new StringObject($string);
         $s2 = $s->replace($search, $replacement, $c);
@@ -406,11 +283,6 @@ class StringObjectTest extends TestCase
         self::assertEquals($count, $c);
     }
 
-    /**
-     * replaceProvider
-     *
-     * @return  array
-     */
     public static function replaceProvider(): array
     {
         return [
@@ -435,16 +307,9 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testChop
-     *
-     * @param  string  $string
-     * @param  int     $length
-     * @param  array   $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('strSplitProvider')]
-    public function testChop(string $string, int $length, $expected)
+    #[Test]
+    #[DataProvider('strSplitProvider')]
+    public function chopSplitsStringIntoChunks(string $string, int $length, $expected)
     {
         $s = new StringObject($string);
 
@@ -455,16 +320,9 @@ class StringObjectTest extends TestCase
         }
     }
 
-    /**
-     * testCompare
-     *
-     * @param  string  $str1
-     * @param  string  $str2
-     * @param  int     $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('strcmpProvider')]
-    public function testCompare(string $str1, string $str2, int $expected)
+    #[Test]
+    #[DataProvider('strcmpProvider')]
+    public function compareReturnsSignOfComparison(string $str1, string $str2, int $expected)
     {
         $s = new StringObject($str1);
 
@@ -477,16 +335,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
-    /**
-     * testCompare
-     *
-     * @param  string  $str1
-     * @param  string  $str2
-     * @param  int     $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('strcasecmpProvider')]
-    public function testCompareInsensitive(string $str1, string $str2, int $expected)
+    #[Test]
+    #[DataProvider('strcasecmpProvider')]
+    public function compareInsensitiveIgnoresLetterCase(string $str1, string $str2, int $expected)
     {
         $s = new StringObject($str1);
 
@@ -499,15 +350,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
-    /**
-     * testReverse
-     *
-     * @param  string  $string
-     * @param  string  $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('strrevProvider')]
-    public function testReverse(string $string, string $expected)
+    #[Test]
+    #[DataProvider('strrevProvider')]
+    public function reverseReturnsNewReversedInstance(string $string, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->reverse();
@@ -517,18 +362,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testSubstrReplace
-     *
-     * @param  string  $expected
-     * @param  mixed   $string
-     * @param  mixed   $replace
-     * @param  int     $start
-     * @param  int     $offset
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('substrReplaceProvider')]
-    public function testSubstrReplace(
+    #[Test]
+    #[DataProvider('substrReplaceProvider')]
+    public function substrReplaceReplacesPortionOfString(
         string $expected,
         $string,
         $replace,
@@ -549,16 +385,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testLtrim
-     *
-     * @param  string       $string
-     * @param  null|string  $charlist
-     * @param  string       $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('ltrimProvider')]
-    public function testTrimLeft(string $string, ?string $charlist, string $expected)
+    #[Test]
+    #[DataProvider('ltrimProvider')]
+    public function trimLeftRemovesLeadingCharacters(string $string, ?string $charlist, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->trimLeft($charlist);
@@ -568,18 +397,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testRtrim
-     *
-     * @param  string       $string
-     * @param  null|string  $charlist
-     * @param  string       $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('rtrimProvider')]
-    public function testTrimRight(string $string, ?string $charlist, string $expected)
+    #[Test]
+    #[DataProvider('rtrimProvider')]
+    public function trimRightRemovesTrailingCharacters(string $string, ?string $charlist, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->trimRight($charlist);
@@ -589,18 +409,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testTrim
-     *
-     * @param  string       $string
-     * @param  null|string  $charlist
-     * @param  string       $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('trimProvider')]
-    public function testTrim(string $string, ?string $charlist, string $expected)
+    #[Test]
+    #[DataProvider('trimProvider')]
+    public function trimRemovesSurroundingCharacters(string $string, ?string $charlist, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->trim($charlist);
@@ -610,15 +421,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testUcfirst
-     *
-     * @param  string  $string
-     * @param  string  $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('ucfirstProvider')]
-    public function testUpperCaseFirst(string $string, string $expected)
+    #[Test]
+    #[DataProvider('ucfirstProvider')]
+    public function upperCaseFirstCapitalizesFirstCharacter(string $string, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->upperCaseFirst();
@@ -628,15 +433,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testLcfirst
-     *
-     * @param  string  $string
-     * @param  string  $expected
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('lcfirstProvider')]
-    public function testLowerCaseFirst(string $string, string $expected)
+    #[Test]
+    #[DataProvider('lcfirstProvider')]
+    public function lowerCaseFirstLowercasesFirstCharacter(string $string, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->lowerCaseFirst();
@@ -646,17 +445,9 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testUpperCaseWords
-     *
-     * @param  string  $string
-     * @param  string  $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('ucwordsProvider')]
-    public function testUpperCaseWords(string $string, string $expected)
+    #[Test]
+    #[DataProvider('ucwordsProvider')]
+    public function upperCaseWordsCapitalizesEachWord(string $string, string $expected)
     {
         $s = new StringObject($string);
         $s2 = $s->upperCaseWords();
@@ -666,46 +457,24 @@ class StringObjectTest extends TestCase
         self::assertEquals($expected, (string) $s2);
     }
 
-    /**
-     * testSubstrCount
-     *
-     * @param  string  $string
-     * @param  string  $search
-     * @param  int     $expected
-     * @param  bool    $caseSensitive
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('substrCountProvider')]
-    public function testSubstrCount(string $string, string $search, int $expected, bool $caseSensitive)
+    #[Test]
+    #[DataProvider('substrCountProvider')]
+    public function substrCountCountsOccurrences(string $string, string $search, int $expected, bool $caseSensitive)
     {
         $s = new StringObject($string);
 
         self::assertEquals($expected, $s->substrCount($search, $caseSensitive));
     }
 
-    /**
-     * testIndexOf
-     *
-     * @param  string  $string
-     * @param  string  $search
-     * @param  int     $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('indexOfProvider')]
-    public function testIndexOf(string $string, string $search, $expected)
+    #[Test]
+    #[DataProvider('indexOfProvider')]
+    public function indexOfReturnsFirstOccurrencePosition(string $string, string $search, $expected)
     {
         $s = new StringObject($string);
 
         self::assertSame($expected, $s->indexOf($search));
     }
 
-    /**
-     * indexOfProvider
-     *
-     * @return  array
-     */
     public static function indexOfProvider(): array
     {
         return [
@@ -718,29 +487,15 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testIndexOf
-     *
-     * @param  string  $string
-     * @param  string  $search
-     * @param  int     $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('indexOfLastProvider')]
-    public function testIndexOfLast(string $string, string $search, $expected)
+    #[Test]
+    #[DataProvider('indexOfLastProvider')]
+    public function indexOfLastReturnsLastOccurrencePosition(string $string, string $search, $expected)
     {
         $s = new StringObject($string);
 
         self::assertSame($expected, $s->indexOfLast($search));
     }
 
-    /**
-     * indexOfProvider
-     *
-     * @return  array
-     */
     public static function indexOfLastProvider(): array
     {
         return [
@@ -753,29 +508,15 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testExplode
-     *
-     * @param  string  $string
-     * @param  string  $delimiter
-     * @param  array   $expected
-     *
-     * @return  void
-     *
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('explodeProvider')]
-    public function testExplode(string $string, string $delimiter, array $expected)
+    #[Test]
+    #[DataProvider('explodeProvider')]
+    public function explodeSplitsStringByDelimiter(string $string, string $delimiter, array $expected)
     {
         $s = new StringObject($string);
 
         self::assertEquals($expected, $s->explode($delimiter)->dump());
     }
 
-    /**
-     * explodeProvider
-     *
-     * @return  array
-     */
     public static function explodeProvider(): array
     {
         return [
@@ -784,12 +525,8 @@ class StringObjectTest extends TestCase
         ];
     }
 
-    /**
-     * testApply
-     *
-     * @return  void
-     */
-    public function testApply()
+    #[Test]
+    public function applyReturnsNewInstanceFromCallbackResult()
     {
         $s = new StringObject('FooBar');
 
@@ -804,7 +541,8 @@ class StringObjectTest extends TestCase
         self::assertEquals('FOOBAR', (string) $s2);
     }
 
-    public function testPipe()
+    #[Test]
+    public function pipeReturnsCallbackResult()
     {
         $s = new StringObject('FooBar');
 
@@ -818,7 +556,8 @@ class StringObjectTest extends TestCase
         self::assertEquals('FOOBAR', (string) $s2);
     }
 
-    public function testAppend(): void
+    #[Test]
+    public function appendAddsSuffixToNewInstance(): void
     {
         $str = str('foo');
         $str2 = $str->append(' bar');
@@ -827,12 +566,72 @@ class StringObjectTest extends TestCase
         self::assertNotSame($str, $str2);
     }
 
-    public function testPrepend(): void
+    #[Test]
+    public function prependAddsPrefixToNewInstance(): void
     {
         $str = str('foo');
         $str2 = $str->prepend('bar ');
 
         self::assertEquals('bar foo', (string) $str2);
         self::assertNotSame($str, $str2);
+    }
+
+    #[Test]
+    public function wrapReturnsSameInstanceWhenAlreadyStringObject(): void
+    {
+        $s = str('foo');
+
+        self::assertSame($s, StringObject::wrap($s));
+    }
+
+    #[Test]
+    public function wrapCastsScalarToStringObject(): void
+    {
+        self::assertEquals('123', (string) StringObject::wrap(123));
+    }
+
+    #[Test]
+    public function toFloatCastsStringToFloat(): void
+    {
+        self::assertSame(1.5, str('1.5')->toFloat());
+    }
+
+    #[Test]
+    public function isNullIsTrueOnlyForEmptyString(): void
+    {
+        self::assertTrue(str('')->isNull());
+        self::assertFalse(str('0')->isNull());
+    }
+
+    #[Test]
+    public function notNullIsTrueOnlyForNonEmptyString(): void
+    {
+        self::assertTrue(str('0')->notNull());
+        self::assertFalse(str('')->notNull());
+    }
+
+    #[Test]
+    public function replaceCallbackReplacesMatchesAndCountsThem(): void
+    {
+        $s = str('a1b2')->replaceCallback('/\d/', fn(array $m) => $m[0] * 2, -1, $count);
+
+        self::assertEquals('a2b4', (string) $s);
+        self::assertSame(2, $count);
+    }
+
+    #[Test]
+    public function stripHtmlTagsRemovesTagsExceptAllowed(): void
+    {
+        self::assertEquals('foo bar', (string) str('<p>foo <b>bar</b></p>')->stripHtmlTags());
+        self::assertEquals('foo <b>bar</b>', (string) str('<p>foo <b>bar</b></p>')->stripHtmlTags('<b>'));
+    }
+
+    #[Test]
+    public function inflectorMethodsDetectAndConvertNumber(): void
+    {
+        self::assertTrue(str('flowers')->isPlural());
+        self::assertTrue(str('flower')->isSingular());
+        self::assertEquals('flowers', (string) str('flower')->toPlural());
+        self::assertEquals('flower', (string) str('flowers')->toSingular());
     }
 }

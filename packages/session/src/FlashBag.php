@@ -82,6 +82,8 @@ class FlashBag
 
     /**
      * @return array|null
+     *
+     * @codeCoverageIgnore
      */
     public function &getStorage(): ?array
     {

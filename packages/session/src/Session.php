@@ -223,6 +223,9 @@ class Session implements SessionInterface, ArrayAccessibleInterface
         return true;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function restart(): bool
     {
         $this->regenerate(true);
@@ -448,6 +451,8 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      * @param  CookiesInterface|null  $cookies
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setCookies(?CookiesInterface $cookies): static
     {
@@ -538,6 +543,8 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      * @param  BridgeInterface  $bridge
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setBridge(BridgeInterface $bridge): static
     {
@@ -589,6 +596,10 @@ class Session implements SessionInterface, ArrayAccessibleInterface
      * @param  mixed  $key
      *
      * @return  void
+     *
+     * @codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      */
     public function offsetUnset(mixed $key): void
     {

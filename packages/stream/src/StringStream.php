@@ -44,7 +44,7 @@ class StringStream extends Stream
     private array $metadata = [
         'wrapper_type' => 'string',
         'stream_type' => 'STDIO',
-        'mode' => 'r+b',
+        'mode' => 'rb+',
         'unread_bytes' => 0,
         'seekable' => true,
         'uri' => '',
@@ -109,9 +109,7 @@ class StringStream extends Stream
             throw new InvalidArgumentException('StringStream only support string as resource.');
         }
 
-        if (!str_contains('+', $mode)) {
-            $this->writable = false;
-        }
+        $this->writable = strpbrk($mode, 'xwca+') !== false;
 
         $this->resource = (string) $stream;
 
@@ -355,7 +353,7 @@ class StringStream extends Stream
         $metadata['mode'] = 'rb';
 
         if ($this->isWritable()) {
-            $metadata['mode'] = 'r+b';
+            $metadata['mode'] = 'rb+';
         }
 
         if ($key === null) {

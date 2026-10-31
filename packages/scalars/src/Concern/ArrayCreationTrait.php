@@ -8,11 +8,6 @@ use Windwalker\Scalars\ArrayObject;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\TypeCast;
 
-/**
- * The ArrayModifyTrait class.
- *
- * @since  __DEPLOY_VERSION__
- */
 trait ArrayCreationTrait
 {
     /**
@@ -183,13 +178,6 @@ trait ArrayCreationTrait
         return $this->newInstance(array_merge(...$args));
     }
 
-    /**
-     * countValues
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function countValues(): static
     {
         return $this->groupBy()->map('count');
@@ -209,15 +197,6 @@ trait ArrayCreationTrait
         return $this->newInstance((array) array_rand($this->storage, $num));
     }
 
-    /**
-     * crossJoin
-     *
-     * @param  mixed  ...$args
-     *
-     * @return  static
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function crossJoin(...$args): static
     {
         return $this->newInstance(

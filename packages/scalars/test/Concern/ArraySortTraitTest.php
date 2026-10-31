@@ -123,6 +123,14 @@ class ArraySortTraitTest extends TestCase
     }
 
     #[Test]
+    public function natureSortKeysOrdersNumericKeysNaturally(): void
+    {
+        $a = arr(['img12' => 1, 'img10' => 2, 'img2' => 3])->natureSortKeys();
+
+        self::assertEquals(['img2', 'img10', 'img12'], array_keys($a->dump()));
+    }
+
+    #[Test]
     public function natureSortOrdersNumbersInStringsNaturally(): void
     {
         $a = arr(['img12.png', 'img10.png', 'img2.png', 'img1.png']);

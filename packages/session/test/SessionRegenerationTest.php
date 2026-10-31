@@ -7,6 +7,7 @@ namespace Windwalker\Session\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Session\Bridge\NativeBridge;
 use Windwalker\Session\Bridge\PhpBridge;
@@ -18,8 +19,9 @@ use Windwalker\Session\Session;
 #[PreserveGlobalState(false)]
 class SessionRegenerationTest extends TestCase
 {
+    #[Test]
     #[DataProvider('regenerationProvider')]
-    public function testRegeneration(string $bridgeClass, bool $throughSession, bool $keepOld): void
+    public function regenerateIssuesNewIdAndKeepsDataAccordingToDeleteOldFlag(string $bridgeClass, bool $throughSession, bool $keepOld): void
     {
         ini_set('session.use_cookies', '0');
         ini_set('session.gc_probability', '0');
@@ -63,7 +65,8 @@ class SessionRegenerationTest extends TestCase
         }
     }
 
-    public function testNativeRestartDeletesOldIdByDefault(): void
+    #[Test]
+    public function nativeRestartDeletesOldIdByDefault(): void
     {
         ini_set('session.use_cookies', '0');
         ini_set('session.gc_probability', '0');
@@ -82,7 +85,8 @@ class SessionRegenerationTest extends TestCase
         self::assertSame('', $handler->read('old-session'));
     }
 
-    public function testForkPreservesSourceSession(): void
+    #[Test]
+    public function forkPreservesSourceSessionAndCopiesData(): void
     {
         $handler = new ArrayHandler();
         $bridge = new PhpBridge(['gc_probability' => 0], $handler);
@@ -102,4 +106,3 @@ class SessionRegenerationTest extends TestCase
         $session->stop();
     }
 }
-

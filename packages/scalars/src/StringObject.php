@@ -27,8 +27,6 @@ use Windwalker\Utilities\Str;
 use Windwalker\Utilities\Utf8String;
 
 /**
- * The StringObject class.
- *
  * @see    Str
  *
  * @method StringObject getChar(int $pos)
@@ -69,8 +67,6 @@ use Windwalker\Utilities\Utf8String;
  * @method int|bool     strpos(string $search)
  * @method int|bool     strrpos(string $search)
  * @method ArrayObject  split(string $delimiter, ?int $limit = null)
- *
- * @since  __DEPLOY_VERSION__
  */
 class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringable, NullableInterface
 {
@@ -475,25 +471,11 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
         );
     }
 
-    /**
-     * isNull
-     *
-     * @return  bool
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function isNull(): bool
     {
         return (string) $this->string === '';
     }
 
-    /**
-     * notNull
-     *
-     * @return  bool
-     *
-     * @since  __DEPLOY_VERSION__
-     */
     public function notNull(): bool
     {
         return (string) $this->string !== '';

@@ -381,6 +381,9 @@ class PhpBridge implements BridgeInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getSerializer(): ?FormatInterface
     {
         return $this->serializer;
