@@ -1,4 +1,7 @@
-<?php // phpcs:disable
+<?php
+
+declare(strict_types=1);
+// phpcs:disable
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
@@ -20,7 +23,7 @@ class Aes
      * @param  w     key schedule as 2D byte-array (Nr+1 x Nb bytes) -
      *              generated from the cipher key by keyExpansion()
      *
-     * @return      ciphertext as byte-array (16 bytes)
+     * @return  ciphertext  as byte-array (16 bytes)
      */
     public static function cipher($input, $w): array|ciphertext
     {    // main cipher function [§5.1]
@@ -116,7 +119,7 @@ class Aes
      *
      * @param  key cipher key byte-array (16 bytes)
      *
-     * @return    key schedule as 2D byte-array (Nr+1 x Nb bytes)
+     * @return  key  schedule as 2D byte-array (Nr+1 x Nb bytes)
      */
     public static function keyExpansion($key): key|array
     {  // generate Index Schedule from Cipher Index [§5.2]
@@ -473,7 +476,7 @@ class AesCtr extends Aes
      * @param  password  the password to use to generate a key
      * @param  nBits     number of bits to be used in the key (128, 192, or 256)
      *
-     * @return          encrypted text
+     * @return  encrypted  text
      */
     public static function encrypt($plaintext, $password, $nBits): encrypted|string
     {
@@ -561,7 +564,7 @@ class AesCtr extends Aes
      * @param  password   the password to use to generate a key
      * @param  nBits      number of bits to be used in the key (128, 192, or 256)
      *
-     * @return           decrypted text
+     * @return  decrypted  text
      */
     public static function decrypt($ciphertext, $password, $nBits): decrypted|string
     {

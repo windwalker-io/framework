@@ -6,12 +6,11 @@ namespace Windwalker\Crypt\Test;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-
-use const Windwalker\Crypt\ENCODER_HEX;
-
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SecretToolkit;
+
+use const Windwalker\Crypt\ENCODER_HEX;
 
 class KeyTest extends TestCase
 {

@@ -25,7 +25,7 @@ class SodiumCipherTest extends TestCase
     /**
      * Test instance.
      *
-     * @var SodiumCipher
+     * @var  SodiumCipher
      */
     protected $instance;
 
@@ -33,7 +33,7 @@ class SodiumCipherTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
+     * @return  void
      */
     protected function setUp(): void
     {
@@ -44,18 +44,16 @@ class SodiumCipherTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      *
-     * @return void
+     * @return  void
      */
-    protected function tearDown(): void
-    {
-    }
+    protected function tearDown(): void {}
 
     /**
      * Method to test encrypt().
      *
-     * @return void
+     * @return  void
      *
-     * @throws SodiumException
+     * @throws  SodiumException
      */
     public function testEncrypt()
     {
@@ -87,7 +85,7 @@ class SodiumCipherTest extends TestCase
     public function refusesCiphertextWithInvalidAuthentication(): void
     {
         $key = new Key('test key');
-        $cipher = new SodiumCipher;
+        $cipher = new SodiumCipher();
         $encrypted = $cipher->encrypt('authenticated data', $key, ENCODER_RAW);
         $encrypted[32 + SODIUM_CRYPTO_SECRETBOX_NONCEBYTES] = chr(
             ord($encrypted[32 + SODIUM_CRYPTO_SECRETBOX_NONCEBYTES]) ^ 1

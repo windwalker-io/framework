@@ -13,7 +13,7 @@ class NullStorageTest extends TestCase
     #[Test]
     public function itAlwaysBehavesAsAnEmptyStorage(): void
     {
-        $storage = new NullStorage;
+        $storage = new NullStorage();
 
         self::assertNull($storage->get('key'));
         self::assertFalse($storage->has('key'));

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Cache\Test;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -39,7 +38,7 @@ class CacheLockTest extends TestCase
      * Create N temp files and register them as CacheLock's stripe files.
      * Returns the list of paths.
      *
-     * @return string[]
+     * @return  string[]
      */
     private static function useTempFiles(int $count = 4): array
     {

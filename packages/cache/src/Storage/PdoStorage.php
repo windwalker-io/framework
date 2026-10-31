@@ -27,8 +27,7 @@ class PdoStorage implements
         ],
         protected float $pruneProbability = 0.01,
         protected bool $autoCreateTable = true,
-    ) {
-    }
+    ) {}
 
     public function save(string $key, mixed $value, int $expiration = 0): bool
     {
@@ -484,4 +483,3 @@ class PdoStorage implements
         ];
     }
 }
-

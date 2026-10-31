@@ -13,7 +13,7 @@ use Windwalker\Utilities\Env;
 class MemcachedStorageTest extends AbstractStorageTestCase
 {
     /**
-     * @var MemcachedStorage
+     * @var  MemcachedStorage
      */
     protected $instance;
 

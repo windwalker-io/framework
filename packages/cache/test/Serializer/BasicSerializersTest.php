@@ -19,7 +19,7 @@ class BasicSerializersTest extends TestCase
     #[Test]
     public function jsonSerializerRoundTripsObjects(): void
     {
-        $serializer = new JsonSerializer;
+        $serializer = new JsonSerializer();
         $value = ['user' => ['name' => 'Ada']];
 
         self::assertSame('{"user":{"name":"Ada"}}', $serializer->serialize($value));
@@ -31,7 +31,7 @@ class BasicSerializersTest extends TestCase
     #[Test]
     public function jsonAssocSerializerRoundTripsAssociativeArrays(): void
     {
-        $serializer = new JsonAssocSerializer;
+        $serializer = new JsonAssocSerializer();
         $value = ['user' => ['name' => 'Ada']];
 
         self::assertSame($value, $serializer->unserialize($serializer->serialize($value)));
@@ -40,7 +40,7 @@ class BasicSerializersTest extends TestCase
     #[Test]
     public function phpSerializerRoundTripsValues(): void
     {
-        $serializer = new PhpSerializer;
+        $serializer = new PhpSerializer();
         $value = ['null' => null, 'number' => 42, 'nested' => ['enabled' => true]];
 
         self::assertSame(serialize($value), $serializer->serialize($value));
@@ -50,7 +50,7 @@ class BasicSerializersTest extends TestCase
     #[Test]
     public function rawSerializerPassesStringPayloadThrough(): void
     {
-        $serializer = new RawSerializer;
+        $serializer = new RawSerializer();
 
         self::assertSame('raw payload', $serializer->serialize('raw payload'));
         self::assertSame('raw payload', $serializer->unserialize('raw payload'));
@@ -59,8 +59,8 @@ class BasicSerializersTest extends TestCase
     #[Test]
     public function stringSerializerAcceptsStringsAndStringableValues(): void
     {
-        $serializer = new StringSerializer;
-        $stringable = new class implements \Stringable {
+        $serializer = new StringSerializer();
+        $stringable = new class () implements \Stringable {
             public function __toString(): string
             {
                 return 'stringable value';
@@ -78,13 +78,13 @@ class BasicSerializersTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('can not handle an array or non-stringable object.');
 
-        (new StringSerializer)->serialize(['not' => 'stringable']);
+        (new StringSerializer())->serialize(['not' => 'stringable']);
     }
 
     #[Test]
     public function phpFileSerializerCreatesReturnablePhpSource(): void
     {
-        $serializer = new PhpFileSerializer;
+        $serializer = new PhpFileSerializer();
         $payload = $serializer->serialize(['name' => 'Ada', 'enabled' => true]);
 
         self::assertSame("<?php \n\nreturn array (\n  'name' => 'Ada',\n  'enabled' => true,\n);", $payload);

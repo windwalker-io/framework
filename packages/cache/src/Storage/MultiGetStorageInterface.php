@@ -20,9 +20,8 @@ interface MultiGetStorageInterface extends StorageInterface
      *
      * @param  string[]  $keys
      *
-     * @return array<string, mixed>  Associative array of key → value for found items only.
-     *                               Missing or expired keys are absent from the result.
+     * @return  array<string, mixed>  Associative array of key → value for found items only.
+     *                                Missing or expired keys are absent from the result.
      */
     public function getMultiple(array $keys): array;
 }
-

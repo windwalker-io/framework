@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Crypt\SecretToolkit;
 
 use const Windwalker\Crypt\ENCODER_BASE32;
 use const Windwalker\Crypt\ENCODER_BASE32HEX;
@@ -17,8 +18,6 @@ use const Windwalker\Crypt\ENCODER_BASE64URLSAFE;
 use const Windwalker\Crypt\ENCODER_HEX;
 use const Windwalker\Crypt\ENCODER_RAW;
 use const Windwalker\Crypt\SECRET_128BIT;
-
-use Windwalker\Crypt\SecretToolkit;
 
 class SecretToolkitTest extends TestCase
 {

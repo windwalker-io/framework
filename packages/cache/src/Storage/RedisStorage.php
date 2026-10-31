@@ -34,9 +34,7 @@ class RedisStorage implements
      *
      * @param  Redis|null  $driver
      */
-    public function __construct(protected ?Redis $driver = null, public protected(set) string $group = '')
-    {
-    }
+    public function __construct(protected ?Redis $driver = null, public protected(set) string $group = '') {}
 
     /**
      * @inheritDoc

@@ -9,6 +9,4 @@ use RuntimeException;
 /**
  * The CryptException class.
  */
-class CryptException extends RuntimeException
-{
-}
+class CryptException extends RuntimeException {}

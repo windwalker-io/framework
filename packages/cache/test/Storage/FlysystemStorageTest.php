@@ -16,7 +16,7 @@ use Windwalker\Cache\Storage\FlysystemStorage;
 class FlysystemStorageTest extends FileStorageTest
 {
     /**
-     * @var FlysystemStorage
+     * @var  FlysystemStorage
      */
     protected $instance;
 

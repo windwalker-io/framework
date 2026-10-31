@@ -11,4 +11,3 @@ interface GroupedStorageInterface
 {
     public function withGroup(string $group): static;
 }
-

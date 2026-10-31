@@ -24,14 +24,14 @@ interface StorageInterface
     public function has(string $key): bool;
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function clear(): bool;
 
     /**
      * @param  string  $key  The key to be deleted.
      *
-     * @return bool
+     * @return  bool
      */
     public function remove(string $key): bool;
 
@@ -40,7 +40,7 @@ interface StorageInterface
      * @param  mixed   $value       The value to store.
      * @param  int     $expiration  The expiration time, should be unix timestamp. Set to 0 will never expired.
      *
-     * @return bool
+     * @return  bool
      */
     public function save(string $key, mixed $value, int $expiration = 0): bool;
 }

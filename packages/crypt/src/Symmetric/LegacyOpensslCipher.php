@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Windwalker\Crypt\Symmetric;
 
-use function sodium_memzero;
-
 use SodiumException;
 use Windwalker\Crypt\CryptHelper;
-
-use const Windwalker\Crypt\ENCODER_BASE64;
-
 use Windwalker\Crypt\Exception\CryptException;
 use Windwalker\Crypt\HiddenString;
 use Windwalker\Crypt\Key;
 use Windwalker\Crypt\SafeEncoder;
+
+use function sodium_memzero;
+
+use const Windwalker\Crypt\ENCODER_BASE64;
 
 /**
  * The Openssl Cipher class.

@@ -12,8 +12,7 @@ interface PrunableStorageInterface
     /**
      * Remove expired entries from the current storage scope.
      *
-     * @return int The number of pruned entries.
+     * @return  int  The number of pruned entries.
      */
     public function prune(): int;
 }
-

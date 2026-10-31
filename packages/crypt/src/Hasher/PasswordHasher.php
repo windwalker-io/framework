@@ -15,8 +15,7 @@ class PasswordHasher implements PasswordHasherInterface
     public function __construct(
         protected string|int|null $algo = null,
         protected array $options = []
-    ) {
-    }
+    ) {}
 
     public function hash(#[\SensitiveParameter] string $string): string
     {
@@ -55,7 +54,7 @@ class PasswordHasher implements PasswordHasherInterface
      *
      * @return  string  Random Password
      *
-     * @throws \Exception
+     * @throws  \Exception
      * @since   2.0.9
      */
     public static function genRandomPassword(int $length = 20, string $seed = self::SEED_ALNUM): string
@@ -75,7 +74,7 @@ class PasswordHasher implements PasswordHasherInterface
     }
 
     /**
-     * @return string
+     * @return  string
      */
     public function getAlgo(): string
     {
@@ -95,7 +94,7 @@ class PasswordHasher implements PasswordHasherInterface
     }
 
     /**
-     * @return array
+     * @return  array
      */
     public function getOptions(): array
     {

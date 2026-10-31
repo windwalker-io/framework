@@ -20,7 +20,7 @@ class PhpAesCipherTest extends TestCase
     /**
      * Test instance.
      *
-     * @var PhpAesCipher
+     * @var  PhpAesCipher
      */
     protected $instance;
 
@@ -28,7 +28,7 @@ class PhpAesCipherTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
+     * @return  void
      */
     protected function setUp(): void
     {
@@ -39,17 +39,15 @@ class PhpAesCipherTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      *
-     * @return void
+     * @return  void
      */
-    protected function tearDown(): void
-    {
-    }
+    protected function tearDown(): void {}
 
     /**
      * Method to test decrypt().
      *
-     * @return void
-     * @throws Exception
+     * @return  void
+     * @throws  Exception
      */
     public function testDecrypt()
     {
