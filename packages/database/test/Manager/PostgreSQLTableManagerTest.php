@@ -79,7 +79,7 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
             "catid" integer DEFAULT NULL,
             "alias" varchar(255) NOT NULL DEFAULT '',
             "title" varchar(255) NOT NULL DEFAULT 'H',
-            "price" decimal(20,6) NOT NULL DEFAULT 0,
+            "price" decimal(20,6) NOT NULL DEFAULT '0',
             "intro" text NOT NULL DEFAULT '',
             "fulltext" text NOT NULL DEFAULT '',
             "start_date" timestamp DEFAULT NULL,

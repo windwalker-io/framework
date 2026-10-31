@@ -32,7 +32,7 @@ class SQLServerPlatformTest extends AbstractPlatformTestCase
         $databases = $this->instance->listDatabases();
 
         self::assertContains(
-            self::getTestParams()['database'],
+            self::getTestParams()['dbname'],
             $databases
         );
     }

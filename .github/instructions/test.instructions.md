@@ -7,6 +7,13 @@ applyTo: "**/{test,Test,tests,Tests}/**/*.php"
 For the full workflow of adding, updating, and running tests, see the
 [test skill](../skills/test/SKILL.md).
 
+## Account for local PHPUnit scope settings
+
+The root `phpunit.xml` is the primary test configuration, but a user's local settings may disable test scopes such as
+database, service, or package suites. If the requested scope is disabled, do not treat tests that were not run as
+passing: use a temporary configuration based on `phpunit.xml.dist` and remove it when finished, or supply the needed
+settings through PHPUnit CLI options where available. Preserve any pre-existing local `phpunit.xml`.
+
 ## Prefer attributes for lifecycle hooks
 
 Prefer `#[Before]` / `#[After]`, `#[BeforeClass]` / `#[AfterClass]`, and `#[PreCondition]` / `#[PostCondition]`
