@@ -4,7 +4,7 @@
 
 See `/AGENTS.md` for general guidelines on how to use Copilot effectively.
 
-See `/.github/README.md` for how this `.github` directory is organized (instructions / prompts / skills / docs)
+See `/.github/STRUCTURE.md` for how this `.github` directory is organized (instructions / prompts / skills / docs)
 and where to place new AI-facing content.
 
 ## Others

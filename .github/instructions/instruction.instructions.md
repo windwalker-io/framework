@@ -7,7 +7,7 @@ applyTo: ".github/**,AGENTS.md"
 When the user asks to "add rules to instructions" (or skills / docs), it means **add the rules to the AI-facing
 documentation in the appropriate place**, not to stuff everything into `instructions/*.instructions.md`.
 
-Split the content by its nature, following the decision guide in `/.github/README.md`:
+Split the content by its nature, following the decision guide in `/.github/STRUCTURE.md`:
 
 - **Always-needed, repo-wide, short** → a bullet or link in `copilot-instructions.md`.
 - **Mechanical rules tied to a file type/path** → `instructions/*.instructions.md` with an `applyTo` glob. Keep it
@@ -20,4 +20,4 @@ Split the content by its nature, following the decision guide in `/.github/READM
   - Add a row to the table in `docs/README.md`.
 
 A single request may need to be split across several of these. Do not duplicate content between them; link instead.
-Update the "Current contents" list in `/.github/README.md` when adding new files.
+Update the "Current contents" list in `/.github/STRUCTURE.md` when adding new files.

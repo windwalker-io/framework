@@ -1,6 +1,6 @@
 # Windwalker Framework – Agent Guide
 
-Short entry point for AI agents. Detailed rules live in `/.github/` (see `/.github/README.md` for how it is organized);
+Short entry point for AI agents. Detailed rules live in `/.github/` (see `/.github/STRUCTURE.md` for how it is organized);
 follow the links below instead of duplicating content here.
 
 ## Architecture Overview
@@ -63,4 +63,4 @@ Base classes: `AbstractDatabaseTestCase` (`packages/database/src/Test/`), `Abstr
 
 ## Maintaining AI Docs
 
-Where to put new rules: `/.github/README.md` and `/.github/instructions/instruction.instructions.md`.
+Where to put new rules: `/.github/STRUCTURE.md` and `/.github/instructions/instruction.instructions.md`.
