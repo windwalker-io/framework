@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\SQLite;
 
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\DbPlatform;
+use Windwalker\Database\Test\Manager\AbstractUpsertTestCase;
 
 class SQLiteWriterManagerTest extends AbstractUpsertTestCase
 {

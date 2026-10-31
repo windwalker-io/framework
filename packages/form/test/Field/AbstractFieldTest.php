@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Filter\Rule\IPAddress;
 use Windwalker\Filter\Rule\Regex;
+use Windwalker\Form\Form;
 use Windwalker\Form\Test\Mock\MockFilter;
 use Windwalker\Form\Test\Stub\StubField;
 use Windwalker\Form\Test\Stub\StubFilter;
@@ -94,20 +95,6 @@ HTML;
 
         self::assertHtmlFormatEquals($expect, $this->instance->renderInput());
         // phpcs:enable
-    }
-
-    /**
-     * Method to test buildInput().
-     *
-     * @return void
-     */
-    #[Test]
-    public function buildInput(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 
     /**
@@ -258,20 +245,6 @@ HTML;
     }
 
     /**
-     * Method to test checkRule().
-     *
-     * @return void
-     */
-    #[Test]
-    public function checkRule(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Method to test filter().
      *
      * @return void
@@ -387,38 +360,29 @@ HTML;
         self::assertHtmlFormatEquals($expect, $this->instance->renderInput());
     }
 
-    /**
-     * Method to test getFieldset().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::getFieldset
-     * @TODO   Implement testGetFieldset().
-     */
     #[Test]
     public function getFieldset(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertNull($this->instance->getFieldset());
+
+        $this->instance->setFieldset('basic');
+
+        self::assertSame('basic', $this->instance->getFieldset());
     }
 
-    /**
-     * Method to test setFieldset().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::setFieldset
-     * @TODO   Implement testSetFieldset().
-     */
     #[Test]
     public function setFieldset(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $fieldset = $form->fieldset('meta');
+
+        $this->instance->setFieldset($fieldset);
+
+        self::assertSame('meta', $this->instance->getFieldset());
+
+        $this->instance->setFieldset(null);
+
+        self::assertNull($this->instance->getFieldset());
     }
 
     /**
@@ -468,37 +432,6 @@ HTML;
         $this->instance->resetFilters()->addFilter(new StubFilter());
 
         self::assertEquals('123123', $this->instance->filter('abc123cba123fgh'));
-    }
-
-    /**
-     * Method to test getControl().
-     *
-     * @return void
-     */
-    #[Test]
-    public function getControl(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test setControl().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::setControl
-     * @TODO   Implement testSetControl().
-     */
-    #[Test]
-    public function setControl(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 
     #[Test]
@@ -573,20 +506,14 @@ HTML;
         self::assertEquals('localhost', $this->instance->getAttribute('host', 'default'));
     }
 
-    /**
-     * Method to test get().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Field\AbstractField::get
-     */
     #[Test]
     public function get(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertSame('default', $this->instance->get('foo', 'default'));
+
+        $this->instance->set('foo', 'bar');
+
+        self::assertSame('bar', $this->instance->get('foo', 'default'));
     }
 
     /**

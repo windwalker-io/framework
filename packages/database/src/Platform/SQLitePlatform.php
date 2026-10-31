@@ -585,4 +585,14 @@ class SQLitePlatform extends AbstractPlatform
             )
         );
     }
+
+    public function dropIndex(string $table, string $name, ?string $schema = null): StatementInterface
+    {
+        return $this->db->execute(
+            $this->getGrammar()::build(
+                'DROP INDEX',
+                $this->db->quoteName($schema ? $schema . '.' . $name : $name),
+            )
+        );
+    }
 }

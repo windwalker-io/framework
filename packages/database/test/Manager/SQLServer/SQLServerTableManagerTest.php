@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\SQLServer;
 
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
@@ -219,7 +219,8 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasConstraint(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertTrue($this->instance->hasConstraint('pk_enterprise'));
+        self::assertFalse($this->instance->hasConstraint('not_exists_constraint'));
     }
 
     /**
@@ -228,7 +229,10 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getSchemaObject(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $schema = $this->instance->createSchemaObject();
+
+        self::assertInstanceOf(Schema::class, $schema);
+        self::assertSame('enterprise', $schema->getTable()->getName());
     }
 
     /**
@@ -237,7 +241,8 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_title'));
+        self::assertFalse($this->instance->hasIndex('idx_not_exists'));
     }
 
     /**
@@ -246,7 +251,15 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->addIndex('type');
+        $this->instance->reset();
+
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_type'));
+
+        $this->instance->dropIndex('idx_enterprise_type');
+        $this->instance->dropIndex('idx_enterprise_type');
+
+        self::assertFalse($this->instance->reset()->hasIndex('idx_enterprise_type'));
     }
 
     /**
@@ -317,7 +330,33 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function save(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('ww_ss_save', true);
+
+        self::$baseConn->exec("IF OBJECT_ID('ww_ss_save', 'U') IS NOT NULL DROP TABLE ww_ss_save");
+
+        try {
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->primary('id');
+                    $schema->varchar('title');
+                }
+            );
+
+            self::assertTrue($table->exists());
+            self::assertTrue($table->hasColumn('title'));
+
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->primary('id');
+                    $schema->varchar('title');
+                    $schema->varchar('extra')->nullable(true);
+                }
+            );
+
+            self::assertTrue($table->hasColumn('extra'));
+        } finally {
+            self::$baseConn->exec("IF OBJECT_ID('ww_ss_save', 'U') IS NOT NULL DROP TABLE ww_ss_save");
+        }
     }
 
     /**
@@ -326,7 +365,23 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function addColumn(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('ww_ss_add_col', true);
+
+        self::$baseConn->exec("IF OBJECT_ID('ww_ss_add_col', 'U') IS NOT NULL DROP TABLE ww_ss_add_col");
+
+        try {
+            self::$baseConn->exec('CREATE TABLE ww_ss_add_col (id INT)');
+
+            $table->addColumn('flag', 'int', true);
+            $table->reset();
+
+            // Existing column must be ignored
+            $table->addColumn('flag', 'int', true);
+
+            self::assertTrue($table->reset()->hasColumn('flag'));
+        } finally {
+            self::$baseConn->exec("IF OBJECT_ID('ww_ss_add_col', 'U') IS NOT NULL DROP TABLE ww_ss_add_col");
+        }
     }
 
     /**
@@ -374,7 +429,12 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function setName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $table->setName('dbo.foo');
+
+        self::assertSame('foo', $table->getName());
+        self::assertSame('dbo', $table->schemaName);
     }
 
     /**
@@ -438,7 +498,13 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function reset(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $columns = $table->getColumns();
+
+        self::assertSame($table, $table->reset());
+        self::assertNotSame($columns, $table->getColumns());
+        self::assertEquals(array_keys($columns), array_keys($table->getColumns()));
     }
 
     /**
@@ -509,7 +575,10 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getDatabase(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame(
+            self::$db->getPlatform()->getCurrentDatabase(),
+            $this->instance->getDatabase()->getName()
+        );
     }
 
     #[Test]
@@ -544,7 +613,9 @@ class SQLServerTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function renameColumn(): void
     {
-        self::markTestIncomplete();
+        $this->expectException(\LogicException::class);
+
+        $this->instance->renameColumn('title', 'title_new');
     }
 
     /**

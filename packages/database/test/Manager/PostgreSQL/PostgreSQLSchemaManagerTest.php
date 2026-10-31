@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\PostgreSQL;
 
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Platform\DbPlatform;
@@ -49,7 +49,8 @@ class PostgreSQLSchemaManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getTableResolvesNameFromTableAttribute(): void
     {
-        $table = self::$db->getSchemaManager('public', true)->getTable(SchemaAttrEntityFixture::class);
+        $table = self::$db->getSchemaManager('public', true)->getTable(
+            SchemaAttrEntityFixture::class);
 
         self::assertSame('ww_schema_attr_items', $table->getName());
     }

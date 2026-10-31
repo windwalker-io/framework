@@ -2,17 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\PostgreSQL;
 
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Manager\TableManager;
+use Windwalker\Database\Platform\DbPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
-class MariaDBTableManagerTest extends AbstractDatabaseTestCase
+class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
 {
+    protected static DbPlatform $platform = DbPlatform::PostgreSQL;
+
+    protected static string $driver = 'pdo_pgsql';
+
     protected ?TableManager $instance;
 
     /**
@@ -51,47 +56,48 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
 
         self::assertSqlFormatEquals(
             <<<SQL
-            SELECT `TABLE_NAME`,
-                   `TABLE_SCHEMA`,
-                   `TABLE_TYPE`,
-                   NULL AS VIEW_DEFINITION,
-                   NULL AS CHECK_OPTION,
-                   NULL AS IS_UPDATABLE
-            FROM `INFORMATION_SCHEMA`.`TABLES`
-            WHERE `TABLE_TYPE` = 'BASE TABLE'
-              AND `TABLE_SCHEMA` = (
-                SELECT DATABASE()
+            SELECT "table_name"    AS "TABLE_NAME",
+                   "table_catalog" AS "TABLE_CATALOG",
+                   "table_schema"  AS "TABLE_SCHEMA",
+                   "table_type"    AS "TABLE_TYPE",
+                   NULL            AS "VIEW_DEFINITION",
+                   NULL            AS "CHECK_OPTION",
+                   NULL            AS "IS_UPDATABLE"
+            FROM "information_schema"."tables"
+            WHERE "table_type" = 'BASE TABLE'
+              AND "table_schema" NOT IN ('pg_catalog', 'information_schema')
+            ORDER BY "table_name" ASC;
+            SELECT "table_name"      AS "TABLE_NAME",
+                   "table_catalog"   AS "TABLE_CATALOG",
+                   "table_schema"    AS "TABLE_SCHEMA",
+                   'VIEW'            AS "TABLE_TYPE",
+                   "view_definition" AS "VIEW_DEFINITION",
+                   "check_option"    AS "CHECK_OPTION",
+                   "is_updatable"    AS "IS_UPDATABLE"
+            FROM "information_schema"."views"
+            WHERE "table_schema" NOT IN ('pg_catalog', 'information_schema')
+            ORDER BY "table_name" ASC;
+            CREATE TABLE IF NOT EXISTS "enterprise" (
+            "id" serial NOT NULL,
+            "type" varchar(25) NOT NULL DEFAULT '',
+            "catid" integer DEFAULT NULL,
+            "alias" varchar(255) NOT NULL DEFAULT '',
+            "title" varchar(255) NOT NULL DEFAULT 'H',
+            "price" decimal(20,6) NOT NULL DEFAULT '0',
+            "intro" text NOT NULL DEFAULT '',
+            "fulltext" text NOT NULL DEFAULT '',
+            "start_date" timestamp DEFAULT NULL,
+            "created" timestamp DEFAULT NULL,
+            "updated" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "deleted" timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+            "params" json DEFAULT NULL
             );
-            SELECT `TABLE_NAME`,
-                   `TABLE_SCHEMA`,
-                   'VIEW' AS TABLE_TYPE,
-                   `VIEW_DEFINITION`,
-                   `CHECK_OPTION`,
-                   `IS_UPDATABLE`
-            FROM `INFORMATION_SCHEMA`.`VIEWS`
-            WHERE `TABLE_SCHEMA` = (
-                SELECT DATABASE()
-            );
-            CREATE TABLE IF NOT EXISTS `enterprise` (
-            `id` INT(11) NOT NULL,
-            `type` CHAR(25) NOT NULL DEFAULT '',
-            `catid` INT(11) DEFAULT NULL,
-            `alias` VARCHAR(255) NOT NULL DEFAULT '',
-            `title` VARCHAR(255) NOT NULL DEFAULT 'H',
-            `price` DECIMAL(20,6) NOT NULL DEFAULT 0,
-            `intro` text NOT NULL,
-            `fulltext` text NOT NULL,
-            `start_date` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
-            `created` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
-            `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            `deleted` TIMESTAMP NOT NULL DEFAULT '1970-01-01 12:00:01',
-            `params` json NOT NULL
-            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-            ALTER TABLE `enterprise` ADD CONSTRAINT `pk_enterprise` PRIMARY KEY (`id`);
-            ALTER TABLE `enterprise` MODIFY COLUMN `id` INT(11) NOT NULL AUTO_INCREMENT;
-            ALTER TABLE `enterprise` ADD INDEX `idx_enterprise_catid_type` (`catid`,`type`);
-            ALTER TABLE `enterprise` ADD INDEX `idx_enterprise_title` (`title`(150));
-            ALTER TABLE `enterprise` ADD CONSTRAINT `idx_enterprise_alias` UNIQUE (`alias`)
+            CREATE INDEX "idx_enterprise_catid_type" ON "enterprise" ("catid","type");
+            CREATE INDEX "idx_enterprise_title" ON "enterprise" ("title");
+            ALTER TABLE "enterprise"
+             ADD CONSTRAINT "pk_enterprise" PRIMARY KEY ("id");
+            ALTER TABLE "enterprise"
+             ADD CONSTRAINT "idx_enterprise_alias" UNIQUE ("alias")
             SQL,
             implode(";\n", $logs)
         );
@@ -109,7 +115,7 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
         $constraints = array_filter($constraints, fn(Constraint $item) => $item->constraintType !== 'CHECK');
 
         self::assertEquals(
-            ['PRIMARY', 'idx_enterprise_alias'],
+            ['pk_enterprise', 'idx_enterprise_alias'],
             array_keys($constraints)
         );
     }
@@ -125,8 +131,9 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
         self::assertEquals(
             [
                 'TABLE_NAME' => 'enterprise',
-                'TABLE_SCHEMA' => 'windwalker_test',
+                'TABLE_SCHEMA' => 'public',
                 'TABLE_TYPE' => 'BASE TABLE',
+                'TABLE_CATALOG' => 'windwalker_test',
                 'VIEW_DEFINITION' => null,
                 'CHECK_OPTION' => null,
                 'IS_UPDATABLE' => null,
@@ -141,63 +148,57 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function update(): void
     {
-        $logs = $this->logQueries(
-            fn() => $this->instance->update(
-                function (Schema $schema) {
-                    // New column
-                    $schema->varchar('captain')->length(512)->after('catid');
-                    $schema->varchar('first_officer')->length(512)->after('captain');
+        $this->instance->update(
+            function (Schema $schema) {
+                // New column
+                $schema->varchar('captain')->length(512)->after('catid');
+                $schema->varchar('first_officer')->length(512)->after('captain');
 
-                    // Update column
-                    $schema->char('alias')->length(25)
-                        ->nullable(true)
-                        ->defaultValue('');
+                // Update column
+                $schema->char('alias')->length(25)
+                    ->nullable(true)
+                    ->defaultValue('');
 
-                    // New index
-                    $schema->addIndex('captain');
-                }
-            )
+                // New index
+                $schema->addIndex('captain');
+            }
         );
 
-        self::assertSqlFormatEquals(
-            <<<SQL
-            SELECT `ORDINAL_POSITION`,
-                   `COLUMN_DEFAULT`,
-                   `IS_NULLABLE`,
-                   `DATA_TYPE`,
-                   `CHARACTER_MAXIMUM_LENGTH`,
-                   `CHARACTER_OCTET_LENGTH`,
-                   `NUMERIC_PRECISION`,
-                   `NUMERIC_SCALE`,
-                   `COLUMN_NAME`,
-                   `COLUMN_TYPE`,
-                   `COLUMN_COMMENT`,
-                   `EXTRA`
-            FROM `INFORMATION_SCHEMA`.`COLUMNS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
-            ALTER TABLE `enterprise`
-                ADD COLUMN `captain` varchar(512) NOT NULL DEFAULT '';
-            ALTER TABLE `enterprise`
-                ADD COLUMN `first_officer` varchar(512) NOT NULL DEFAULT '';
-            ALTER TABLE `enterprise`
-                MODIFY COLUMN `alias` CHAR(25) DEFAULT '';
-            SELECT `TABLE_SCHEMA`,
-                   `TABLE_NAME`,
-                   `NON_UNIQUE`,
-                   `INDEX_NAME`,
-                   `COLUMN_NAME`,
-                   `COLLATION`,
-                   `CARDINALITY`,
-                   `SUB_PART`,
-                   `INDEX_COMMENT`
-            FROM `INFORMATION_SCHEMA`.`STATISTICS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
-            ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_captain` (`captain`)
-            SQL,
-            implode("\n;", $logs)
+        $columns = $this->instance->getColumns(true);
+
+        self::assertEquals(
+            'varchar',
+            $columns['captain']->getDataType(),
+        );
+
+        self::assertEquals(
+            512,
+            $columns['captain']->getCharacterMaximumLength(),
+        );
+
+        self::assertEquals(
+            'varchar',
+            $columns['first_officer']->getDataType(),
+        );
+
+        self::assertEquals(
+            'varchar',
+            $columns['alias']->getDataType(),
+        );
+
+        self::assertEquals(
+            25,
+            $columns['alias']->getCharacterMaximumLength(),
+        );
+
+        self::assertEquals(
+            true,
+            $columns['alias']->getIsNullable(),
+        );
+
+        self::assertEquals(
+            '',
+            $columns['alias']->getColumnDefault(),
         );
     }
 
@@ -207,61 +208,20 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function addIndex(): void
     {
-        $logs = $this->logQueries(
-            function () {
-                $this->instance->addIndex('created');
-                $this->instance->addIndex(['start_date', 'params']);
-            }
-        );
-
-        self::assertSqlFormatEquals(
-            <<<SQL
-            SELECT `ORDINAL_POSITION`,
-                   `COLUMN_DEFAULT`,
-                   `IS_NULLABLE`,
-                   `DATA_TYPE`,
-                   `CHARACTER_MAXIMUM_LENGTH`,
-                   `CHARACTER_OCTET_LENGTH`,
-                   `NUMERIC_PRECISION`,
-                   `NUMERIC_SCALE`,
-                   `COLUMN_NAME`,
-                   `COLUMN_TYPE`,
-                   `COLUMN_COMMENT`,
-                   `EXTRA`
-            FROM `INFORMATION_SCHEMA`.`COLUMNS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
-            SELECT `TABLE_SCHEMA`,
-                   `TABLE_NAME`,
-                   `NON_UNIQUE`,
-                   `INDEX_NAME`,
-                   `COLUMN_NAME`,
-                   `COLLATION`,
-                   `CARDINALITY`,
-                   `SUB_PART`,
-                   `INDEX_COMMENT`
-            FROM `INFORMATION_SCHEMA`.`STATISTICS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = (SELECT DATABASE());
-            ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_created` (`created`);
-            ALTER TABLE `enterprise`
-                ADD INDEX `idx_enterprise_start_date_params` (`start_date`, `params`(150))
-            SQL,
-            implode(";\n", $logs)
-        );
+        $this->instance->addIndex('created');
+        $this->instance->addIndex(['start_date', 'first_officer']);
 
         $this->instance->reset();
 
-        self::assertEquals(
+        self::assertArraySimilar(
             [
-                'PRIMARY',
+                'pk_enterprise',
                 'idx_enterprise_alias',
                 'idx_enterprise_catid_type',
                 'idx_enterprise_title',
                 'idx_enterprise_captain',
                 'idx_enterprise_created',
-                'idx_enterprise_start_date_params',
+                'idx_enterprise_start_date_first_officer',
             ],
             array_keys($this->instance->getIndexes())
         );
@@ -273,7 +233,8 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasConstraint(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertTrue($this->instance->hasConstraint('pk_enterprise'));
+        self::assertFalse($this->instance->hasConstraint('not_exists_constraint'));
     }
 
     /**
@@ -282,7 +243,10 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getSchemaObject(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $schema = $this->instance->createSchemaObject();
+
+        self::assertInstanceOf(Schema::class, $schema);
+        self::assertSame('enterprise', $schema->getTable()->getName());
     }
 
     /**
@@ -291,7 +255,8 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_title'));
+        self::assertFalse($this->instance->hasIndex('idx_not_exists'));
     }
 
     /**
@@ -300,7 +265,15 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->addIndex('type');
+        $this->instance->reset();
+
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_type'));
+
+        $this->instance->dropIndex('idx_enterprise_type');
+        $this->instance->dropIndex('idx_enterprise_type');
+
+        self::assertFalse($this->instance->reset()->hasIndex('idx_enterprise_type'));
     }
 
     /**
@@ -309,51 +282,25 @@ class MariaDBTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function addConstraint(): void
     {
-        $logs = $this->logQueries(
-            fn() => $this->instance->addConstraint(
-                ['captain', 'first_officer'],
-                Constraint::TYPE_UNIQUE
-            )
+        $this->instance->addConstraint(
+            ['captain', 'first_officer'],
+            Constraint::TYPE_UNIQUE
         );
 
-        self::assertSqlFormatEquals(
-            <<<SQL
-SELECT `ORDINAL_POSITION`,
-       `COLUMN_DEFAULT`,
-       `IS_NULLABLE`,
-       `DATA_TYPE`,
-       `CHARACTER_MAXIMUM_LENGTH`,
-       `CHARACTER_OCTET_LENGTH`,
-       `NUMERIC_PRECISION`,
-       `NUMERIC_SCALE`,
-       `COLUMN_NAME`,
-       `COLUMN_TYPE`,
-       `COLUMN_COMMENT`,
-       `EXTRA`
-FROM `INFORMATION_SCHEMA`.`COLUMNS`
-WHERE `TABLE_NAME` = 'enterprise'
-  AND `TABLE_SCHEMA` = (SELECT DATABASE());
-SELECT `TABLE_NAME`, `CONSTRAINT_NAME`, `CONSTRAINT_TYPE`
-FROM `INFORMATION_SCHEMA`.`TABLE_CONSTRAINTS`
-WHERE `TABLE_NAME` = 'enterprise'
-  AND `TABLE_SCHEMA` = (SELECT DATABASE());
-SELECT `CONSTRAINT_NAME`,
-       `COLUMN_NAME`,
-       `REFERENCED_TABLE_SCHEMA`,
-       `REFERENCED_TABLE_NAME`,
-       `REFERENCED_COLUMN_NAME`,
-       `REFERENCED_COLUMN_NAME`
-FROM `INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE`
-WHERE `TABLE_NAME` = 'enterprise'
-  AND `TABLE_SCHEMA` = (SELECT DATABASE());
-SELECT `CONSTRAINT_NAME`, `MATCH_OPTION`, `UPDATE_RULE`, `DELETE_RULE`
-FROM `INFORMATION_SCHEMA`.`REFERENTIAL_CONSTRAINTS`
-WHERE `TABLE_NAME` = 'enterprise'
-  AND `CONSTRAINT_SCHEMA` = (SELECT DATABASE());
-ALTER TABLE `enterprise`
-    ADD CONSTRAINT `ct_enterprise_captain_first_officer` UNIQUE (`captain`(150),`first_officer`(150))
-SQL,
-            implode(";\n", $logs)
+        $this->instance->reset();
+        $constraints = array_filter(
+            $this->instance->getConstraints(),
+            fn(Constraint $item) => $item->constraintType !== 'CHECK'
+        );
+
+        self::assertArrayHasKey('ct_enterprise_captain_first_officer', $constraints);
+        self::assertEquals(
+            Constraint::TYPE_UNIQUE,
+            $constraints['ct_enterprise_captain_first_officer']->constraintType
+        );
+        self::assertEquals(
+            ['captain', 'first_officer'],
+            array_keys($constraints['ct_enterprise_captain_first_officer']->getColumns())
         );
     }
 
@@ -389,7 +336,7 @@ SQL,
         $column = $this->instance->getColumn('price');
 
         self::assertEquals('15,4', $column->getLengthExpression());
-        self::assertEquals('decimal', $column->getDataType());
+        self::assertEquals('numeric', $column->getDataType());
         self::assertEquals(100.5, $column->getColumnDefault());
     }
 
@@ -399,7 +346,33 @@ SQL,
     #[Test]
     public function save(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('ww_pg_save', true);
+
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_pg_save');
+
+        try {
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->primary('id');
+                    $schema->varchar('title');
+                }
+            );
+
+            self::assertTrue($table->exists());
+            self::assertTrue($table->hasColumn('title'));
+
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->primary('id');
+                    $schema->varchar('title');
+                    $schema->varchar('extra')->nullable(true);
+                }
+            );
+
+            self::assertTrue($table->hasColumn('extra'));
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_pg_save');
+        }
     }
 
     /**
@@ -408,7 +381,23 @@ SQL,
     #[Test]
     public function addColumn(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('ww_pg_add_col', true);
+
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_pg_add_col');
+
+        try {
+            self::$baseConn->exec('CREATE TABLE ww_pg_add_col (id INT)');
+
+            $table->addColumn('flag', 'integer', true);
+            $table->reset();
+
+            // Existing column must be ignored
+            $table->addColumn('flag', 'integer', true);
+
+            self::assertTrue($table->reset()->hasColumn('flag'));
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_pg_add_col');
+        }
     }
 
     /**
@@ -419,7 +408,7 @@ SQL,
     {
         $logs = $this->logQueries(fn() => $this->instance->truncate());
 
-        self::assertEquals('TRUNCATE TABLE `enterprise`', $logs[0]);
+        self::assertEquals('TRUNCATE TABLE "enterprise"', $logs[0]);
     }
 
     /**
@@ -456,7 +445,12 @@ SQL,
     #[Test]
     public function setName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $table->setName('public.foo');
+
+        self::assertSame('foo', $table->getName());
+        self::assertSame('public', $table->schemaName);
     }
 
     /**
@@ -501,15 +495,15 @@ SQL,
     #[Test]
     public function getIndex(): void
     {
-        $index = $this->instance->getIndex('idx_enterprise_start_date_params');
+        $index = $this->instance->getIndex('idx_enterprise_catid_type');
 
         self::assertEquals(
-            'idx_enterprise_start_date_params',
+            'idx_enterprise_catid_type',
             $index->indexName,
         );
 
         self::assertEquals(
-            ['start_date', 'params'],
+            ['catid', 'type'],
             array_keys($index->getColumns())
         );
     }
@@ -520,7 +514,13 @@ SQL,
     #[Test]
     public function reset(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $columns = $table->getColumns();
+
+        self::assertSame($table, $table->reset());
+        self::assertNotSame($columns, $table->getColumns());
+        self::assertEquals(array_keys($columns), array_keys($table->getColumns()));
     }
 
     /**
@@ -542,8 +542,7 @@ SQL,
         $column = $this->instance->reset()->getColumn('updated');
 
         self::assertEquals('updated', $column->columnName);
-        self::assertEquals('timestamp', $column->getDataType());
-        self::assertEquals('current_timestamp()', $column->getErratas()['on_update']);
+        self::assertEquals('timestamp without time zone', $column->getDataType());
     }
 
     /**
@@ -572,12 +571,11 @@ SQL,
 
         self::assertEquals(
             [
-                'PRIMARY',
-                'idx_enterprise_alias',
+                'pk_enterprise',
                 'idx_enterprise_catid_type',
                 'idx_enterprise_title',
+                'idx_enterprise_alias',
                 'idx_enterprise_created',
-                'idx_enterprise_start_date_params',
             ],
             $indexes
         );
@@ -586,33 +584,36 @@ SQL,
     #[Test]
     public function getDatabase(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame(
+            self::$db->getPlatform()->getCurrentDatabase(),
+            $this->instance->getDatabase()->getName()
+        );
     }
 
     #[Test]
     public function getSchema(): void
     {
-        $this->instance->schemaName = self::$db->getOption('database');
+        $this->instance->schemaName = $this->instance->getPlatform()::getDefaultSchema();
 
         $logs = $this->logQueries(fn() => $this->instance->getColumns());
 
         self::assertSqlFormatEquals(
             <<<SQL
-            SELECT `ORDINAL_POSITION`,
-                   `COLUMN_DEFAULT`,
-                   `IS_NULLABLE`,
-                   `DATA_TYPE`,
-                   `CHARACTER_MAXIMUM_LENGTH`,
-                   `CHARACTER_OCTET_LENGTH`,
-                   `NUMERIC_PRECISION`,
-                   `NUMERIC_SCALE`,
-                   `COLUMN_NAME`,
-                   `COLUMN_TYPE`,
-                   `COLUMN_COMMENT`,
-                   `EXTRA`
-            FROM `INFORMATION_SCHEMA`.`COLUMNS`
-            WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = 'windwalker_test'
+            SELECT
+              "ordinal_position",
+              "column_default",
+              "is_nullable",
+              "data_type",
+              "character_maximum_length",
+              "character_octet_length",
+              "numeric_precision",
+              "numeric_scale",
+              "column_name"
+            FROM
+              "information_schema"."columns"
+            WHERE
+              "table_name" = 'enterprise'
+              AND "table_schema" = 'public'
             SQL,
             $logs[0]
         );
@@ -627,8 +628,13 @@ SQL,
         $this->instance->dropConstraint('idx_enterprise_alias');
 
         self::assertEquals(
-            ['PRIMARY', 'params'],
-            array_keys($this->instance->reset()->getConstraints())
+            ['pk_enterprise'],
+            array_keys(
+                array_filter(
+                    $this->instance->reset()->getConstraints(),
+                    fn(Constraint $constraint) => $constraint->constraintType !== 'CHECK'
+                )
+            )
         );
     }
 
@@ -685,7 +691,5 @@ SQL,
     protected function initializeTableManager(): void
     {
         $this->instance = self::$db->getTableManager('enterprise');
-
-        self::markTestSkipped();
     }
 }

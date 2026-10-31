@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Form\Form;
+use Windwalker\Utilities\Symbol;
 use Windwalker\Form\Test\Mock\MockFormRenderer;
 use Windwalker\Form\Test\Stub\StubAttrDefinition;
 use Windwalker\Form\Test\Stub\StubFieldDefinition;
@@ -123,20 +124,13 @@ class FormTest extends TestCase
         self::assertEquals('sakura[yoo]', $form->getField('sakura/yoo')->getInputName());
     }
 
-    /**
-     * Method to test getIterator().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::getIterator
-     */
     #[Test]
     public function getIterator(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $form->addFields([new TextField('foo'), new TextField('bar')]);
+
+        self::assertSame(['foo', 'bar'], array_keys(iterator_to_array($form)));
     }
 
     /**
@@ -154,87 +148,6 @@ class FormTest extends TestCase
         $form->removeField('u/username');
 
         self::assertNull($form->getField('u/username'));
-    }
-
-    /**
-     * Method to test removeFields().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::removeFields
-     */
-    #[Test]
-    public function removeFields(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getFieldsets().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::getFieldsets
-     * @TODO   Implement testGetFieldsets().
-     */
-    #[Test]
-    public function getFieldsets(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getGroups().
-     *
-     * @return void
-     *
-     * @TODO   Implement testGetGroups().
-     */
-    #[Test]
-    public function getGroups(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test setAttribute().
-     *
-     * @return void
-     *
-     * @TODO   Implement testSetAttribute().
-     */
-    #[Test]
-    public function setAttribute(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Method to test getAttribute().
-     *
-     * @return void
-     *
-     * @TODO   Implement testGetAttribute().
-     */
-    #[Test]
-    public function getAttribute(): void
-    {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 
     /**
@@ -378,20 +291,17 @@ class FormTest extends TestCase
         self::assertEquals('123_ abc4456qwe:$yui', $array['Password']);
     }
 
-    /**
-     * Method to test prepareStore().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::prepareStore
-     */
     #[Test]
     public function prepareStore(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $form->addField(new TextField('foo'));
+        $form->addField(new TextField('bar'), null, 'sakura');
+
+        $data = ['foo' => 'a', 'sakura' => ['bar' => 'b'], 'other' => 'c'];
+
+        self::assertSame($data, $form->prepareStore($data));
+        self::assertSame(['other' => 'c'], $form->prepareStore(['other' => 'c']));
     }
 
     /**
@@ -422,21 +332,18 @@ class FormTest extends TestCase
         );
     }
 
-    /**
-     * Method to test renderFields().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Form\Form::renderFields
-     * @TODO   Implement testRenderFields().
-     */
     #[Test]
     public function renderFields(): void
     {
-        // Remove the following lines when you implement this test.
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $form = new Form();
+        $form->setRenderer(new MockFormRenderer());
+        $form->addField(new TextField('foo'));
+        $form->addField(new TextField('bar'), 'flower');
+
+        self::assertStringContainsString('Hello World: foo', $form->renderFields(Symbol::none()));
+        self::assertStringNotContainsString('Hello World: bar', $form->renderFields(Symbol::none()));
+        self::assertStringContainsString('Hello World: bar', $form->renderFields('flower'));
+        self::assertStringNotContainsString('Hello World: foo', $form->renderFields('flower'));
     }
 
     /**

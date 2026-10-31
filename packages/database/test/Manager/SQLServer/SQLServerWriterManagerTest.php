@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\SQLServer;
 
 use Windwalker\Database\Platform\DbPlatform;
+use Windwalker\Database\Test\Manager\AbstractUpsertTestCase;
 
 class SQLServerWriterManagerTest extends AbstractUpsertTestCase
 {

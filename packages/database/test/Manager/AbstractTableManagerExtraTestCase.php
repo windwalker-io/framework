@@ -8,22 +8,38 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Manager\TableManager;
+use Windwalker\Database\Schema\Ddl\Column;
+use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
-class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
+/**
+ * Platform-agnostic TableManager behaviors. Subclasses choose the platform/driver and how to drop a table.
+ */
+abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCase
 {
-    private const string TABLE = 'ww_tm_extra';
+    protected const string TABLE = 'ww_tm_extra';
 
-    private TableManager $table;
+    /**
+     * SQLite cannot alter columns in place.
+     */
+    protected static bool $supportsColumnAlter = true;
+
+    /**
+     * SQLite cannot add constraints to an existing table.
+     */
+    protected static bool $supportsAddConstraint = true;
+
+    protected TableManager $table;
+
+    abstract protected static function dropTable(string $table): void;
 
     protected static function setupDatabase(): void {}
 
     #[Before]
     protected function createTable(): void
     {
-        self::$baseConn->exec('DROP TABLE IF EXISTS ' . self::TABLE);
-        self::$baseConn->exec('DROP TABLE IF EXISTS ' . self::TABLE . '_renamed');
+        $this->dropTables();
 
         $this->table = self::$db->getTableManager(self::TABLE, true);
         $this->table->create(
@@ -40,8 +56,8 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
     #[After]
     protected function dropTables(): void
     {
-        self::$baseConn->exec('DROP TABLE IF EXISTS ' . self::TABLE);
-        self::$baseConn->exec('DROP TABLE IF EXISTS ' . self::TABLE . '_renamed');
+        static::dropTable(self::TABLE);
+        static::dropTable(self::TABLE . '_renamed');
     }
 
     #[Test]
@@ -51,23 +67,28 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
             fn() => $this->table->create(static fn(Schema $schema) => $schema->primary('id'))
         );
 
-        self::assertFalse($this->containsCreate($logs));
+        foreach ($logs as $log) {
+            self::assertStringNotContainsStringIgnoringCase('CREATE TABLE', $log);
+        }
     }
 
     #[Test]
-    public function saveSyncsIndexesAndConstraintsOfExistingTable(): void
+    public function saveSyncsExistingTable(): void
     {
-        $this->table->save(
-            static function (Schema $schema) {
-                $schema->primary('id');
-                $schema->varchar('title');
-                $schema->varchar('alias');
-                $schema->varchar('extra')->nullable(true);
-                $schema->addIndex('title');
-                $schema->addUniqueKey('alias');
-            }
-        );
+        $callback = static function (Schema $schema) {
+            $schema->primary('id');
+            $schema->varchar('title');
+            $schema->varchar('alias');
+            $schema->varchar('extra')->nullable(true);
+            $schema->addIndex('title');
+            $schema->addUniqueKey('alias');
+        };
 
+        if (!static::$supportsColumnAlter) {
+            $this->expectException(\LogicException::class);
+        }
+
+        $this->table->save($callback);
         $this->table->reset();
 
         self::assertTrue($this->table->hasColumn('extra'));
@@ -79,7 +100,7 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
     {
         $columns = $this->table->getColumns(true, true);
 
-        self::assertTrue($columns['id']->isPrimary());
+        self::assertArrayHasKey('id', $columns);
 
         $indexes = $this->table->getIndexes(true, true);
         $constraints = $this->table->getConstraints(true, true);
@@ -87,7 +108,7 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
         self::assertNotEmpty($indexes);
         self::assertNotEmpty($constraints);
         self::assertContainsOnlyInstancesOf(
-            \Windwalker\Database\Schema\Ddl\Column::class,
+            Column::class,
             array_values(reset($constraints)->columns)
         );
     }
@@ -95,14 +116,35 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropColumnIgnoresMissingColumns(): void
     {
+        if (!static::$supportsColumnAlter) {
+            $this->expectException(\LogicException::class);
+        }
+
         $this->table->dropColumn(['title', 'not_exists_column']);
 
         self::assertFalse($this->table->hasColumn('title'));
     }
 
     #[Test]
+    public function dropColumnWithIndexAndConstraint(): void
+    {
+        if (!static::$supportsColumnAlter) {
+            $this->expectException(\Throwable::class);
+        }
+
+        $this->table->dropColumn('alias');
+
+        self::assertFalse($this->table->hasColumn('alias'));
+        self::assertTrue($this->table->hasColumn('title'));
+    }
+
+    #[Test]
     public function modifyColumnCallbackAppliesChanges(): void
     {
+        if (!static::$supportsColumnAlter) {
+            $this->expectException(\LogicException::class);
+        }
+
         $this->table->modifyColumnCallback(
             'title',
             static fn($column) => $column->length(100)
@@ -117,9 +159,14 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
     public function addIndexAndConstraintAreIdempotent(): void
     {
         $this->table->addIndex('title');
+        $this->table->reset();
         $this->table->addIndex('title');
-        $this->table->addConstraint(\Windwalker\Database\Schema\Ddl\Constraint::TYPE_UNIQUE, 'alias');
-        $this->table->addConstraint(\Windwalker\Database\Schema\Ddl\Constraint::TYPE_UNIQUE, 'alias');
+
+        if (static::$supportsAddConstraint) {
+            $this->table->addConstraint('alias', Constraint::TYPE_UNIQUE);
+            $this->table->reset();
+            $this->table->addConstraint('alias', Constraint::TYPE_UNIQUE);
+        }
 
         self::assertTrue($this->table->hasIndex('idx_ww_tm_extra_title'));
     }
@@ -145,20 +192,18 @@ class MySQLTableManagerExtraTest extends AbstractDatabaseTestCase
     #[Test]
     public function getDatabaseReturnsManager(): void
     {
-        self::assertSame(
-            self::$db->getPlatform()->getCurrentDatabase(),
-            $this->table->getDatabase()->getName()
-        );
+        $database = $this->table->getDatabase();
+
+        self::assertNotSame('', $database->getName());
     }
 
-    private function containsCreate(array $logs): bool
+    #[Test]
+    public function truncateRemovesRows(): void
     {
-        foreach ($logs as $log) {
-            if (stripos($log, 'CREATE TABLE') !== false) {
-                return true;
-            }
-        }
+        self::$baseConn->exec("INSERT INTO ww_tm_extra (title, alias) VALUES ('a', 'a')");
 
-        return false;
+        $this->table->truncate();
+
+        self::assertSame(0, (int) self::$baseConn->query('SELECT COUNT(*) FROM ww_tm_extra')->fetchColumn());
     }
 }

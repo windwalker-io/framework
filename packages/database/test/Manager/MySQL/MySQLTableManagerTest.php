@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\MySQL;
 
 use PDO;
 use PHPUnit\Framework\Attributes\Before;

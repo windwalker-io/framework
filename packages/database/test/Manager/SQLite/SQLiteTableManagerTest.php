@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Database\Test\Manager;
+namespace Windwalker\Database\Test\Manager\SQLite;
 
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
@@ -168,7 +168,13 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function update(): void
     {
-        self::markTestIncomplete('Current SQLitePlatform not support schema change');
+        $this->expectException(\LogicException::class);
+
+        (clone $this->instance)->update(
+            static function (Schema $schema) {
+                $schema->varchar('title')->length(100);
+            }
+        );
     }
 
     /**
@@ -218,7 +224,11 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasConstraint(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $constraints = array_keys($this->instance->reset()->getConstraints());
+
+        self::assertNotEmpty($constraints);
+        self::assertTrue($this->instance->hasConstraint($constraints[0]));
+        self::assertFalse($this->instance->hasConstraint('not_exists_constraint'));
     }
 
     /**
@@ -227,7 +237,10 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getSchemaObject(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $schema = $this->instance->createSchemaObject();
+
+        self::assertInstanceOf(Schema::class, $schema);
+        self::assertSame('enterprise', $schema->getTable()->getName());
     }
 
     /**
@@ -236,7 +249,8 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_title'));
+        self::assertFalse($this->instance->hasIndex('idx_not_exists'));
     }
 
     /**
@@ -245,7 +259,15 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->addIndex('type');
+        $this->instance->reset();
+
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_type'));
+
+        $this->instance->dropIndex('idx_enterprise_type');
+        $this->instance->dropIndex('idx_enterprise_type');
+
+        self::assertFalse($this->instance->reset()->hasIndex('idx_enterprise_type'));
     }
 
     /**
@@ -254,7 +276,9 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function addConstraint(): void
     {
-        self::markTestIncomplete('Current SQLitePlatform not support schema change');
+        $this->expectException(\LogicException::class);
+
+        $this->instance->addConstraint(['captain', 'first_officer'], Constraint::TYPE_UNIQUE);
     }
 
     /**
@@ -263,7 +287,9 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropColumn(): void
     {
-        self::markTestIncomplete('Current SQLitePlatform not support schema change');
+        $this->expectException(\LogicException::class);
+
+        $this->instance->dropColumn('title');
     }
 
     /**
@@ -272,7 +298,9 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function modifyColumn(): void
     {
-        self::markTestIncomplete('Current SQLitePlatform not support schema change');
+        $this->expectException(\LogicException::class);
+
+        $this->instance->modifyColumn('title', 'varchar', false, null, ['length' => 100]);
     }
 
     /**
@@ -281,7 +309,23 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function save(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('ww_sl_save', true);
+
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_save');
+
+        try {
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->primary('id');
+                    $schema->varchar('title');
+                }
+            );
+
+            self::assertTrue($table->exists());
+            self::assertTrue($table->hasColumn('title'));
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_save');
+        }
     }
 
     /**
@@ -290,7 +334,23 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function addColumn(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('ww_sl_add_col', true);
+
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_add_col');
+
+        try {
+            self::$baseConn->exec('CREATE TABLE ww_sl_add_col (id INTEGER)');
+
+            $table->addColumn('flag', 'integer', true);
+            $table->reset();
+
+            // Existing column must be ignored
+            $table->addColumn('flag', 'integer', true);
+
+            self::assertTrue($table->reset()->hasColumn('flag'));
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_add_col');
+        }
     }
 
     /**
@@ -338,7 +398,12 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function setName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $table->setName('main.foo');
+
+        self::assertSame('foo', $table->getName());
+        self::assertSame('main', $table->schemaName);
     }
 
     /**
@@ -402,7 +467,13 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function reset(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $columns = $table->getColumns();
+
+        self::assertSame($table, $table->reset());
+        self::assertNotSame($columns, $table->getColumns());
+        self::assertEquals(array_keys($columns), array_keys($table->getColumns()));
     }
 
     /**
@@ -433,7 +504,14 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getConstraint(): void
     {
-        self::markTestIncomplete('Currently SQLitePlatform cannot get constraints'); // TODO: Complete this test
+        $names = array_keys($this->instance->reset()->getConstraints());
+
+        self::assertNotEmpty($names);
+
+        $constraint = $this->instance->getConstraint($names[0]);
+
+        self::assertSame($names[0], $constraint->constraintName);
+        self::assertNull($this->instance->getConstraint('not_exists_constraint'));
     }
 
     /**
@@ -459,7 +537,10 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getDatabase(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertInstanceOf(
+            \Windwalker\Database\Manager\DatabaseManager::class,
+            $this->instance->getDatabase()
+        );
     }
 
     #[Test]
@@ -483,13 +564,19 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropConstraint(): void
     {
-        self::markTestIncomplete('Currently SQLitePlatform not support schema change');
+        $name = array_keys($this->instance->reset()->getConstraints())[0];
+
+        $this->expectException(\Throwable::class);
+
+        $this->instance->dropConstraint($name);
     }
 
     #[Test]
     public function renameColumn(): void
     {
-        self::markTestIncomplete('Currently SQLitePlatform not support schema change');
+        $this->expectException(\LogicException::class);
+
+        $this->instance->renameColumn('title', 'title_new');
     }
 
     /**

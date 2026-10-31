@@ -111,15 +111,6 @@ class ConnectionPoolTest extends TestCase
         );
     }
 
-    /**
-     * @see  AbstractPool::setLogger
-     */
-    #[Test]
-    public function setLoggerAssignsLogger(): void
-    {
-        self::markTestIncomplete(); // TODO: Complete this test
-    }
-
     #[Test]
     public function initIsIdempotent(): void
     {

@@ -37,4 +37,50 @@ class SQLServerPlatformExtraTest extends AbstractDatabaseTestCase
             self::$baseConn->exec($drop);
         }
     }
+
+    #[Test]
+    public function dropIndexRemovesIndex(): void
+    {
+        $drop = "IF OBJECT_ID('ww_ss_extra_idx', 'U') IS NOT NULL DROP TABLE ww_ss_extra_idx";
+        self::$baseConn->exec($drop);
+
+        try {
+            self::$baseConn->exec('CREATE TABLE ww_ss_extra_idx (id INT, title NVARCHAR(50))');
+            self::$baseConn->exec('CREATE INDEX ww_ss_extra_title ON ww_ss_extra_idx (title)');
+
+            self::$db->getPlatform()->dropIndex('ww_ss_extra_idx', 'ww_ss_extra_title', 'dbo');
+
+            $count = self::$baseConn->query(
+                "SELECT COUNT(*) FROM sys.indexes WHERE name = 'ww_ss_extra_title'"
+            )->fetchColumn();
+
+            self::assertSame(0, (int) $count);
+        } finally {
+            self::$baseConn->exec($drop);
+        }
+    }
+
+    #[Test]
+    public function setColumnCommentUpdatesExistingComment(): void
+    {
+        $drop = "IF OBJECT_ID('ww_ss_extra2', 'U') IS NOT NULL DROP TABLE ww_ss_extra2";
+        self::$baseConn->exec($drop);
+
+        try {
+            self::$baseConn->exec('CREATE TABLE ww_ss_extra2 (id INT, title NVARCHAR(50))');
+
+            $platform = self::$db->getPlatform();
+            $platform->setColumnComment('ww_ss_extra2', 'title', 'First');
+            $platform->setColumnComment('ww_ss_extra2', 'title', 'Second');
+
+            $value = self::$baseConn->query(
+                "SELECT CAST(value AS NVARCHAR(100)) FROM sys.extended_properties
+                 WHERE major_id = OBJECT_ID('ww_ss_extra2') AND name = 'MS_Description'"
+            )->fetchColumn();
+
+            self::assertSame('Second', $value);
+        } finally {
+            self::$baseConn->exec($drop);
+        }
+    }
 }

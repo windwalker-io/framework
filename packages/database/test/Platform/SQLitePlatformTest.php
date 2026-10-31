@@ -545,12 +545,6 @@ class SQLitePlatformTest extends AbstractPlatformTestCase
         );
     }
 
-    #[Test]
-    public function createDropSchema(): void
-    {
-        self::markTestSkipped();
-    }
-
     /**
      * @inheritDoc
      */

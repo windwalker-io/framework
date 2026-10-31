@@ -7,11 +7,23 @@ namespace Windwalker\Database\Test\Manager;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
-class DatabaseAndSchemaManagerTest extends AbstractDatabaseTestCase
+/**
+ * Platform-agnostic DatabaseManager / SchemaManager (table listing) tests.
+ *
+ * SQLite uses this directly: its "database" is a file, so create/drop is covered by SQLitePlatformTest (ATTACH).
+ */
+abstract class AbstractDatabaseManagerTestCase extends AbstractDatabaseTestCase
 {
+    /**
+     * Should (re)create `ww_mgr_items(id INT NOT NULL)`.
+     */
+    abstract protected static function createItemsTable(): void;
+
+    abstract protected static function defaultSchemaName(): string;
+
     protected static function setupDatabase(): void
     {
-        self::$baseConn->exec('CREATE TABLE IF NOT EXISTS `ww_mgr_items` (`id` int NOT NULL)');
+        static::createItemsTable();
     }
 
     #[Test]
@@ -24,44 +36,9 @@ class DatabaseAndSchemaManagerTest extends AbstractDatabaseTestCase
     }
 
     #[Test]
-    public function databaseCreateAndDrop(): void
-    {
-        $manager = static::$db->getDatabase('ww_tmp_manager_db', true);
-
-        try {
-            $manager->create();
-            self::assertTrue($manager->exists());
-
-            // Existing DB with ifNotExists must not fail
-            $manager->create(true);
-            self::assertTrue($manager->exists());
-
-            $manager->drop();
-            self::assertFalse($manager->exists());
-        } finally {
-            static::$baseConn->exec('DROP DATABASE IF EXISTS ww_tmp_manager_db');
-        }
-    }
-
-    #[Test]
-    public function databaseDropIfExistsDropsExistingDatabase(): void
-    {
-        $manager = static::$db->getDatabase('ww_tmp_manager_db2', true);
-
-        try {
-            $manager->create();
-            $manager->drop(true);
-
-            self::assertFalse($manager->exists());
-        } finally {
-            static::$baseConn->exec('DROP DATABASE IF EXISTS ww_tmp_manager_db2');
-        }
-    }
-
-    #[Test]
     public function schemaListsTablesAndViews(): void
     {
-        $schema = static::$db->getSchema(static::$db->getPlatform()->getCurrentDatabase(), true);
+        $schema = static::$db->getSchema(static::defaultSchemaName(), true);
 
         self::assertTrue($schema->exists());
         self::assertArrayHasKey('ww_mgr_items', $schema->getTables());
@@ -72,7 +49,7 @@ class DatabaseAndSchemaManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function schemaHasTable(): void
     {
-        $schema = static::$db->getSchema(static::$db->getPlatform()->getCurrentDatabase(), true);
+        $schema = static::$db->getSchema(static::defaultSchemaName(), true);
 
         self::assertTrue($schema->hasTable('ww_mgr_items'));
         self::assertTrue($schema->hasTable('#__mgr_items'));
@@ -82,7 +59,7 @@ class DatabaseAndSchemaManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function schemaGetTableIsCachedUnlessNew(): void
     {
-        $schema = static::$db->getSchema(static::$db->getPlatform()->getCurrentDatabase(), true);
+        $schema = static::$db->getSchema(static::defaultSchemaName(), true);
 
         self::assertSame($schema->getTable('ww_mgr_items'), $schema->getTable('ww_mgr_items'));
         self::assertNotSame($schema->getTable('ww_mgr_items'), $schema->getTable('ww_mgr_items', true));

@@ -12,9 +12,19 @@ use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 use function Windwalker\raw;
 
-class WriterManagerTest extends AbstractDatabaseTestCase
+abstract class AbstractWriterManagerTestCase extends AbstractDatabaseTestCase
 {
-    private WriterManager $writer;
+    protected WriterManager $writer;
+
+    /**
+     * Should create `writer_items(id auto increment PK, title unique NOT NULL, state int NULL, params text NULL)`.
+     */
+    abstract protected static function createWriterTable(): void;
+
+    /**
+     * Should empty the table and restart the auto increment from 1.
+     */
+    abstract protected static function resetWriterTableData(): void;
 
     #[Test]
     public function insertOneSetsIncrementedKeyOnArrayAndObject(): void
@@ -288,34 +298,20 @@ class WriterManagerTest extends AbstractDatabaseTestCase
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     protected static function setupDatabase(): void
     {
-        self::$baseConn->exec(
-            <<<SQL
-            CREATE TABLE IF NOT EXISTS `writer_items` (
-                `id` int NOT NULL AUTO_INCREMENT,
-                `title` varchar(255) NOT NULL DEFAULT '',
-                `state` int NULL DEFAULT 0,
-                `params` text NULL,
-                PRIMARY KEY (`id`),
-                UNIQUE KEY `uniq_writer_items_title` (`title`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-            SQL
-        );
+        static::createWriterTable();
     }
 
     #[Before]
     protected function resetWriterTable(): void
     {
-        self::$baseConn->exec('TRUNCATE TABLE `writer_items`');
+        static::resetWriterTableData();
 
         $this->writer = self::$db->getWriter(true);
     }
 
-    private function seed(): void
+    protected function seed(): void
     {
         $this->writer->insertBulk(
             'writer_items',
@@ -326,14 +322,14 @@ class WriterManagerTest extends AbstractDatabaseTestCase
         );
     }
 
-    private function countRows(): int
+    protected function countRows(): int
     {
-        return (int) self::$baseConn->query('SELECT COUNT(*) FROM `writer_items`')->fetchColumn();
+        return (int) self::$baseConn->query('SELECT COUNT(*) FROM writer_items')->fetchColumn();
     }
 
-    private function row(int $id): array
+    protected function row(int $id): array
     {
-        return self::$baseConn->query("SELECT * FROM `writer_items` WHERE id = $id")
+        return self::$baseConn->query("SELECT * FROM writer_items WHERE id = $id")
             ->fetch(\PDO::FETCH_ASSOC);
     }
 }

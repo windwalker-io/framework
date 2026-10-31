@@ -34,12 +34,13 @@ class LanguageTest extends TestCase
     }
 
     #[Test]
-    public function loadFixtureFilesIsNotImplemented(): void
+    public function loadReadsFixtureFilesForEachLocale(): void
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertTrue($this->instance->has('WINDWALKER_LANGUAGE_TEST_FLOWER', 'en-GB'));
+        self::assertTrue($this->instance->has('WINDWALKER_LANGUAGE_TEST_FLOWER', 'zh-TW'));
+        self::assertEquals(['en-GB', 'Flower'], $this->instance->get('WINDWALKER_LANGUAGE_TEST_FLOWER', 'en-GB'));
+        self::assertEquals(['zh-TW', '花'], $this->instance->get('WINDWALKER_LANGUAGE_TEST_FLOWER', 'zh-TW'));
+        self::assertFalse($this->instance->has('A key not exists', 'en-GB', false));
     }
 
     #[Test]
