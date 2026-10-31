@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use RangeException;
 use RuntimeException;
 use Windwalker\Http\Promise\PromiseResponse as Promise;
+use Windwalker\Http\Response\HttpClientResponse;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Http\Transport\TransportInterface;
@@ -97,7 +98,9 @@ class AsyncHttpClient extends HttpClient
             curl_multi_remove_handle($this->mh, $task['handle']);
         }
 
-        curl_multi_close($this->mh);
+        if ($this->mh) {
+            curl_multi_close($this->mh);
+        }
 
         $this->mh = null;
         $this->tasks = [];
@@ -118,9 +121,14 @@ class AsyncHttpClient extends HttpClient
         /** @var CurlTransport $transport */
         $transport = $this->getTransport();
 
+        $headers = null;
+        $content = null;
+
         $this->tasks[] = [
-            'handle' => $handle = $transport->createHandle($request),
+            'handle' => $handle = $transport->createHandle($request, [], $headers, $content),
             'promise' => $promise = new Promise(),
+            'headers' => &$headers,
+            'content' => &$content,
         ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
@@ -163,19 +171,32 @@ class AsyncHttpClient extends HttpClient
         $responses = [];
         $errors = [];
         $transport = $this->getTransport();
+        $results = [];
+
+        // With multi handles, the transfer result is only reported by curl_multi_info_read()
+        while ($info = curl_multi_info_read($mh)) {
+            $results[spl_object_id($info['handle'])] = $info['result'];
+        }
 
         foreach ($this->tasks as $task) {
             /** @var Promise $promise */
             $handle = $task['handle'];
             $promise = $task['promise'];
 
-            $error = curl_error($handle);
+            $errno = $results[spl_object_id($handle)] ?? curl_errno($handle);
+            $error = $errno !== CURLE_OK ? (curl_error($handle) ?: curl_strerror($errno)) : '';
 
             if (!$error) {
-                $responses[] = $res = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+                $task['content']->rewind();
+
+                $responses[] = $res = $transport->injectHeadersToResponse(
+                    new HttpClientResponse($task['content'])->withInfo(curl_getinfo($handle)),
+                    (array) $task['headers'],
+                    (bool) $transport->getOption('allow_empty_status_code'),
+                );
                 $promise->resolve($res);
             } else {
-                $errors[] = $e = new RuntimeException($error, curl_errno($handle));
+                $errors[] = $e = new RuntimeException($error, $errno);
                 $promise->reject($e);
             }
         }

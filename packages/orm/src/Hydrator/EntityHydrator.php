@@ -152,7 +152,7 @@ class EntityHydrator implements FieldHydratorInterface
 
         return static::castFieldForExtract(
             $metadata,
-            $column->getName(),
+            $column?->getName() ?? $field,
             $data[$prop] ?? null,
             $object
         );

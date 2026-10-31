@@ -23,6 +23,9 @@ class SafeJson implements WrapperInterface
         $this->decoded = Symbol::empty();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function __invoke(mixed $src = null): mixed
     {
         return $this->get();

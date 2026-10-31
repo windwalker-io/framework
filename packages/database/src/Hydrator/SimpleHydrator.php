@@ -82,6 +82,11 @@ class SimpleHydrator implements HydratorInterface, FieldHydratorInterface
             return ReflectAccessor::getValue($object, $field);
         }
 
+        // Dynamic properties are invisible to ReflectionClass
+        if (property_exists($object, $field)) {
+            return $object->$field;
+        }
+
         if ($object instanceof Traversable) {
             return iterator_to_array($object)[$field] ?? null;
         }

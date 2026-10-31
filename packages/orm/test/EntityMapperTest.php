@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Windwalker\ORM\Test;
 
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\ORM\Attributes\Watch;
 use Windwalker\ORM\EntityMapper;
+use Windwalker\ORM\Event\WatchEvent;
 use Windwalker\ORM\Exception\OptimisticLockException;
 use Windwalker\ORM\ORMOptions;
 use Windwalker\ORM\Test\Entity\Lock\StubBookLockHash;
@@ -969,6 +972,148 @@ class EntityMapperTest extends AbstractORMTestCase
     }
 
     #[Test]
+    public function copyDuplicatesRowsWithNewValues(): void
+    {
+        $this->rollbackAfter(function () {
+            $copies = $this->instance->copy(['id' => [1, 2]], ['title' => 'Copied']);
+
+            self::assertCount(2, $copies);
+            self::assertEquals('Copied', $copies[0]->getTitle());
+            self::assertNotEquals(1, $copies[0]->getId());
+            self::assertNotEquals($copies[0]->getId(), $copies[1]->getId());
+            self::assertEquals('aspiring', $copies[0]->getMeaning());
+            self::assertEquals('dramatic', $copies[1]->getMeaning());
+        });
+    }
+
+    #[Test]
+    public function copyAcceptsCallableToModifyData(): void
+    {
+        $this->rollbackAfter(function () {
+            $copies = $this->instance->copy(
+                ['id' => 1],
+                function (array $data, array $oldData) {
+                    self::assertEquals(1, $oldData['id']);
+                    self::assertArrayNotHasKey('id', $data);
+
+                    $data['title'] = 'Callable';
+
+                    return $data;
+                }
+            );
+
+            self::assertEquals('Callable', $copies[0]->getTitle());
+        });
+    }
+
+    #[Test]
+    public function copyOneAcceptsEntityAndReturnsNullWhenNothingMatches(): void
+    {
+        $this->rollbackAfter(function () {
+            $entity = $this->instance->findOne(1);
+            $copy = $this->instance->copyOne($entity, ['title' => 'One']);
+
+            self::assertEquals('One', $copy->getTitle());
+            self::assertNotEquals(1, $copy->getId());
+
+            self::assertNull($this->instance->copyOne(['id' => 99999]));
+        });
+    }
+
+    #[Test]
+    public function deleteBulkAcceptsEntityAsConditions(): void
+    {
+        $this->rollbackAfter(function () {
+            $entity = $this->instance->findOne(1);
+
+            $this->instance->deleteBulk($entity);
+
+            self::assertNull($this->instance->findOne(1));
+            self::assertNotNull($this->instance->findOne(2));
+        });
+    }
+
+    #[Test]
+    public function deleteOneRejectsEntityWithEmptyKey(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('keys value contains NULL');
+
+        $this->instance->deleteOne(new StubFlower());
+    }
+
+    #[Test]
+    public function watchBeforeRunsHandlerOnlyWhenColumnChanges(): void
+    {
+        $this->rollbackAfter(function () {
+            $seen = [];
+            $unwatch = $this->instance->getMetadata()->watchBefore(
+                'title',
+                function (WatchEvent $event) use (&$seen) {
+                    $seen[] = [$event->value, $event->oldValue];
+                }
+            );
+
+            try {
+                $this->instance->updateOne(['id' => 1, 'title' => 'Alstroemeria'], null, new ORMOptions());
+                self::assertSame([], $seen);
+
+                $this->instance->updateOne(['id' => 1, 'title' => 'Changed']);
+                self::assertSame([['Changed', 'Alstroemeria']], $seen);
+            } finally {
+                $unwatch();
+            }
+
+            $this->instance->updateOne(['id' => 1, 'title' => 'After unwatch']);
+            self::assertCount(1, $seen);
+        });
+    }
+
+    #[Test]
+    public function watchAfterAndUpdateWhereHandlersAreInvoked(): void
+    {
+        $this->rollbackAfter(function () {
+            $afterSave = [];
+            $afterWhere = [];
+            $metadata = $this->instance->getMetadata();
+
+            $unwatchSave = $metadata->watchAfter(
+                'title',
+                function (WatchEvent $event) use (&$afterSave) {
+                    $afterSave[] = $event->value;
+                }
+            );
+            $unwatchWhere = $metadata->watchAfter(
+                'title',
+                function (WatchEvent $event) use (&$afterWhere) {
+                    $afterWhere[] = $event->value;
+                },
+                Watch::INCLUDE_UPDATE_WHERE
+            );
+            $unwatchBeforeWhere = $metadata->watchBefore(
+                'title',
+                function (WatchEvent $event) use (&$afterWhere) {
+                    $afterWhere[] = 'before:' . $event->value;
+                },
+                Watch::INCLUDE_UPDATE_WHERE
+            );
+
+            try {
+                $this->instance->updateOne(['id' => 2, 'title' => 'Saved']);
+                $this->instance->updateBulk(['title' => 'Bulk'], ['id' => 3]);
+            } finally {
+                $unwatchSave();
+                $unwatchWhere();
+                $unwatchBeforeWhere();
+            }
+
+            self::assertContains('Saved', $afterSave);
+            self::assertContains('Bulk', $afterWhere);
+            self::assertContains('before:Bulk', $afterWhere);
+        });
+    }
+
+    #[Test]
     public function tryEntityReturnsNullForNullAndEntityForArray(): void
     {
         self::assertNull($this->instance->tryEntity(null));
@@ -1022,6 +1167,18 @@ class EntityMapperTest extends AbstractORMTestCase
         self::assertStringContainsString('INSERT', (string) $this->instance->insert());
         self::assertStringContainsString('UPDATE', (string) $this->instance->update());
         self::assertStringContainsString('DELETE', (string) $this->instance->delete());
+    }
+
+    private function rollbackAfter(callable $callback): void
+    {
+        $platform = self::$db->getPlatform();
+        $platform->transactionStart();
+
+        try {
+            $callback();
+        } finally {
+            $platform->transactionRollback();
+        }
     }
 
     /**

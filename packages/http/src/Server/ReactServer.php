@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
-use React\EventLoop\Factory as ReactFactory;
+use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
-use React\Http\Server;
-use React\Socket\Server as SocketServer;
+use React\Http\HttpServer;
+use React\Socket\SocketServer;
 use React\Socket\ServerInterface as ReactServerInterface;
 use RuntimeException;
 use Throwable;
@@ -34,9 +34,9 @@ class ReactServer implements ServerInterface
      */
     public ?ReactServerInterface $socket = null;
 
-    public ?Server $server = null;
+    public ?HttpServer $server = null;
 
-    public bool $listening;
+    public bool $listening = false;
 
     /**
      * ReactServerAdapter constructor.
@@ -82,7 +82,7 @@ class ReactServer implements ServerInterface
      */
     public function getLoop(): LoopInterface
     {
-        return $this->loop ??= ReactFactory::create();
+        return $this->loop ??= Loop::get();
     }
 
     /**
@@ -109,7 +109,7 @@ class ReactServer implements ServerInterface
 
     public function createSocket(string $host, int $port): SocketServer
     {
-        return new SocketServer($host . ':' . $port, $this->getLoop());
+        return new SocketServer($host . ':' . $port, [], $this->getLoop());
     }
 
     /**
@@ -127,18 +127,18 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @return Server
+     * @return HttpServer
      */
-    public function getServer(): Server
+    public function getServer(): HttpServer
     {
         return $this->server ??= $this->createServer();
     }
 
-    protected function createServer(): Server
+    protected function createServer(): HttpServer
     {
         $output = new Output();
 
-        $server = new Server(
+        $server = new HttpServer(
             $this->getLoop(),
             function (ServerRequestInterface $req) use ($output) {
                 try {
@@ -187,13 +187,13 @@ class ReactServer implements ServerInterface
     }
 
     /**
-     * @param  Server|null  $server
+     * @param  HttpServer|null  $server
      *
      * @return  static  Return self to support chaining.
      *
      * @codeCoverageIgnore
      */
-    public function setServer(?Server $server): static
+    public function setServer(?HttpServer $server): static
     {
         $this->server = $server;
 

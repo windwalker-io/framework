@@ -77,7 +77,7 @@ class HttpFactory extends UriFactory implements
      */
     public function createRequest(string $method, $uri): RequestInterface
     {
-        return $this->requestFactory->createRequest($uri, $method);
+        return $this->requestFactory->createRequest($method, $uri);
     }
 
     /**
@@ -89,6 +89,8 @@ class HttpFactory extends UriFactory implements
      *                                the defaults as suggested in the HTTP specification.
      *
      * @return ResponseInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
@@ -110,17 +112,25 @@ class HttpFactory extends UriFactory implements
      *                                             the generated request instance.
      *
      * @return ServerRequestInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         return $this->serverRequestFactory->createServerRequest($method, $uri, $serverParams);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createServerRequestFromGlobals(): ServerRequestInterface
     {
         return ServerRequestFactory::createFromGlobals();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createServerRequestFromUri(UriInterface|string $uri): ServerRequestInterface
     {
         return ServerRequestFactory::createFromUri($uri);
@@ -134,6 +144,8 @@ class HttpFactory extends UriFactory implements
      * @param  string  $content  String content with which to populate the stream.
      *
      * @return StreamInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createStream(string $content = ''): StreamInterface
     {
@@ -154,6 +166,8 @@ class HttpFactory extends UriFactory implements
      * @return StreamInterface
      * @throws RuntimeException If the file cannot be opened.
      * @throws InvalidArgumentException If the mode is invalid.
+     *
+     * @codeCoverageIgnore
      */
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
@@ -168,6 +182,8 @@ class HttpFactory extends UriFactory implements
      * @param  resource  $resource  PHP resource to use as basis of stream.
      *
      * @return StreamInterface
+     *
+     * @codeCoverageIgnore
      */
     public function createStreamFromResource($resource): StreamInterface
     {
@@ -192,6 +208,7 @@ class HttpFactory extends UriFactory implements
      *
      * @return UploadedFileInterface
      *
+     * @codeCoverageIgnore
      */
     public function createUploadedFile(
         StreamInterface $stream,

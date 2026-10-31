@@ -1181,7 +1181,7 @@ class EntityMapper implements EventAwareInterface
                 throw new InvalidArgumentException(
                     sprintf(
                         'Unable to delete Entity: %s since the keys value contains NULL or empty string.',
-                        $conditions::class
+                        $entityObject::class
                     )
                 );
             }
@@ -1316,7 +1316,7 @@ class EntityMapper implements EventAwareInterface
 
         if (is_object($conditions)) {
             $metadata->validateSameEntity($conditions);
-            $items = [$conditions];
+            $items = [$this->toCollection($conditions)];
         } else {
             $conditions = $this->conditionsToWheres($conditions);
 

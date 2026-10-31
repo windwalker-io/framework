@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Utilities\Test\Reflection;
 
 use JsonSerializable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Utilities\Reflection\ReflectAccessor;
 
@@ -105,7 +106,34 @@ class ReflectAccessorTest extends TestCase
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
+    #[Test]
+    public function hasPropertyHandlesObjectsWithoutParentClass(): void
+    {
+        $object = new class () {
+            public int $foo = 1;
+        };
+
+        self::assertTrue(ReflectAccessor::hasProperty($object, 'foo'));
+        self::assertFalse(ReflectAccessor::hasProperty($object, 'bar'));
+        self::assertFalse(ReflectAccessor::hasProperty(new \stdClass(), 'bar'));
+    }
+
+    #[Test]
+    public function hasPropertyChecksParentClassProperties(): void
+    {
+        $child = new class () extends ReflectAccessorParentStub {
+        };
+
+        self::assertTrue(ReflectAccessor::hasProperty($child, 'secret'));
+        self::assertFalse(ReflectAccessor::hasProperty($child, 'missing'));
+    }
+
     protected function tearDown(): void
     {
     }
+}
+
+class ReflectAccessorParentStub
+{
+    private int $secret = 1;
 }

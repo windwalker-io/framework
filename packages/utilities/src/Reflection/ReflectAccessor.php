@@ -163,9 +163,7 @@ class ReflectAccessor
         $exists = $refl->hasProperty($propertyName);
 
         // Check parent private
-        if (!$exists) {
-            $parent = get_parent_class($object);
-
+        if (!$exists && $parent = get_parent_class($object)) {
             $refl = new ReflectionClass($parent);
 
             $exists = $refl->hasProperty($propertyName);
