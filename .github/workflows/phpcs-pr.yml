@@ -12,7 +12,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.4'
+                  php-version: '8.5'
                   coverage: none
                   tools: composer, cs2pr
                   extensions: mbstring, intl
@@ -22,7 +22,7 @@ jobs:
               run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
             - name: Setup cache
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
                   key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
@@ -32,7 +32,7 @@ jobs:
               run: composer update --prefer-dist --prefer-stable --no-progress
 
             - name: Cache PHP-CS-Fixer
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: .php-cs-fixer.cache
                   key: ${{ runner.os }}-php-cs-fixer-${{ github.sha }}
