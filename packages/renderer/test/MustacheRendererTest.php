@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Throwable;
@@ -33,13 +35,8 @@ class MustacheRendererTest extends TestCase
      */
     protected static string $path = '';
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRenderer(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/mustache');
 
@@ -51,24 +48,10 @@ class MustacheRendererTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test render().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::render
      * @throws Throwable
      */
-    public function testRender()
+    #[Test]
+    public function renderHelloTemplateWithObjectData(): void
     {
         $html = $this->instance->render('hello', ['chris' => new Chris()]);
 
@@ -81,15 +64,8 @@ HTML;
         self::assertStringSafeEquals($expect, $html);
     }
 
-    /**
-     * Method to test getEngine().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::getEngine
-     * @TODO   Implement testGetEngine().
-     */
-    public function testGetEngine()
+    #[Test]
+    public function getEngineReturnsMustacheEngine(): void
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -97,15 +73,8 @@ HTML;
         );
     }
 
-    /**
-     * Method to test setEngine().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::setEngine
-     * @TODO   Implement testSetEngine().
-     */
-    public function testSetEngine()
+    #[Test]
+    public function setEngineReplacesEngine(): void
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -113,15 +82,8 @@ HTML;
         );
     }
 
-    /**
-     * Method to test getLoader().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::getLoader
-     * @TODO   Implement testGetLoader().
-     */
-    public function testGetLoader()
+    #[Test]
+    public function getLoaderReturnsTemplateLoader(): void
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -129,15 +91,8 @@ HTML;
         );
     }
 
-    /**
-     * Method to test setLoader().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\MustacheRenderer::setLoader
-     * @TODO   Implement testSetLoader().
-     */
-    public function testSetLoader()
+    #[Test]
+    public function setLoaderReplacesTemplateLoader(): void
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

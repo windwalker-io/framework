@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Renderer\PlatesRenderer;
 use Windwalker\Test\Traits\DOMTestTrait;
 
@@ -33,13 +34,8 @@ class PlatesRendererTest extends TestCase
      */
     protected static $path;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRenderer(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/plates');
 
@@ -50,24 +46,8 @@ class PlatesRendererTest extends TestCase
         $this->instance = new PlatesRenderer(['paths' => [static::$path]]);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test render().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\PlatesRenderer::render
-     */
-    public function testRender()
+    #[Test]
+    public function renderProfileTemplateWithLayoutAndData(): void
     {
         $html = $this->instance->render('profile', ['name' => 'Tony Stark']);
 

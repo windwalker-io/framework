@@ -41,6 +41,16 @@ Refactoring Requirements:
 - Remove unnecessary `__DEPLOY_VERSION__` and docblock description placeholders with the same name as functions; see
   reference.
 
+Large-scope handling:
+
+- If the scope is large (many files or many subdirectories, e.g. a whole package or several packages), do not process
+  it all in one pass. Split it into multiple iterations, one subdirectory (or small batch of files) per iteration, and
+  finish each one (inspect, change, verify) before starting the next.
+- Keep a short checklist of the subdirectories/files and mark each as done, so most files are genuinely inspected
+  rather than skimmed, and context stays small enough to keep focus.
+- Read only the files for the current iteration; avoid carrying earlier iterations' file contents forward.
+- Run the targeted check/tests per iteration, then do the final overall verification and summary at the end.
+
 Upon completion, check for differences, perform PHP syntax/lint and format checks on modified files, and execute the
 minimum PHPUnit selector that covers the changes. If tests require unconfigured repositories or external services, do
 not falsely claim a pass; try appropriate temporary PHPUnit or CLI settings as instructed, otherwise clearly list the

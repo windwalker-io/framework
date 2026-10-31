@@ -16,6 +16,8 @@ use Windwalker\Queue\QueueMessage;
  */
 class SqsQueueDriver implements QueueDriverInterface
 {
+    public const string ATTEMPTS_ATTRIBUTE = 'WindwalkerAttempts';
+
     /**
      * Property client.
      *
@@ -62,13 +64,26 @@ class SqsQueueDriver implements QueueDriverInterface
             'MessageBody' => json_encode($message, JSON_THROW_ON_ERROR),
         ];
 
-        $request['DelaySeconds'] = $message->getDelay();
-
         $options = $message->getOptions();
+        $isFifo = str_ends_with($channel, '.fifo');
 
-        if (str_ends_with($channel, '.fifo')) {
-            $options['MessageGroupId'] ??= '1';
+        // FIFO queues only support a queue-level delay.
+        if (!$isFifo) {
+            $request['DelaySeconds'] = $message->getDelay();
         }
+
+        if ($isFifo) {
+            $options['MessageGroupId'] ??= '1';
+            // A re-sent (deferred) body would be dropped as a duplicate within the dedup window otherwise.
+            $options['MessageDeduplicationId'] ??= bin2hex(random_bytes(16));
+        }
+
+        // SQS counts receives on the server and cannot be reset, so attempts made before this send are stored
+        // on the message itself. See pop().
+        $options['MessageAttributes'][static::ATTEMPTS_ATTRIBUTE] ??= [
+            'DataType' => 'Number',
+            'StringValue' => (string) max(0, $message->getAttempts()),
+        ];
 
         $request = array_merge($request, $options);
 
@@ -88,10 +103,11 @@ class SqsQueueDriver implements QueueDriverInterface
             [
                 'QueueUrl' => $this->getQueueUrl($channel),
                 'AttributeNames' => ['ApproximateReceiveCount'],
+                'MessageAttributeNames' => [static::ATTEMPTS_ATTRIBUTE],
             ]
         );
 
-        if ($result['Messages'] === null) {
+        if (empty($result['Messages'])) {
             return null;
         }
 
@@ -100,7 +116,11 @@ class SqsQueueDriver implements QueueDriverInterface
         $message = new QueueMessage();
 
         $message->setId($data['MessageId']);
-        $message->setAttempts((int) $data['Attributes']['ApproximateReceiveCount']);
+        // Attempts before this (re-)send + receives since then. Matches the contract in QueueDriverInterface.
+        $message->setAttempts(
+            (int) ($data['MessageAttributes'][static::ATTEMPTS_ATTRIBUTE]['StringValue'] ?? 0)
+            + (int) $data['Attributes']['ApproximateReceiveCount']
+        );
         $message->setBody(json_decode($data['Body'], true));
         $message->setRawBody($data['Body']);
         $message->setChannel($channel ?: $this->channel);
@@ -146,11 +166,21 @@ class SqsQueueDriver implements QueueDriverInterface
         return $this;
     }
 
+    /**
+     * SQS cannot lower `ApproximateReceiveCount`, so defer re-sends the message with a delay and the attempts that
+     * were counted before this run (the increment made by pop() is undone), then removes the original.
+     * The new copy is sent first so the message is never lost if the delete fails (it may then run twice).
+     *
+     * @inheritDoc
+     */
     public function defer(QueueMessage $message): static
     {
-        // Do nothing, as SQS does not support deferring messages.
-        // Let's make the job timeout, so it will be retried later without increasing attempts.
-        return $this;
+        $copy = clone $message;
+        $copy->setAttempts(max(0, $message->getAttempts() - 1));
+
+        $this->push($copy);
+
+        return $this->delete($message);
     }
 
     /**
@@ -195,9 +225,12 @@ class SqsQueueDriver implements QueueDriverInterface
      */
     public function getSqsClient(string $key, string $secret, array $options = []): SqsClient
     {
+        // @codeCoverageIgnoreStart
+        // Optional dependency guard: unreachable while the dev dependency is installed.
         if (!class_exists(SqsClient::class)) {
             throw new DomainException('Please install aws/aws-sdk-php first.');
         }
+        // @codeCoverageIgnoreEnd
 
         $defaultOptions = [
             'region' => 'ap-northeast-1',

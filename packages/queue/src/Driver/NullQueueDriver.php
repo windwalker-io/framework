@@ -18,7 +18,7 @@ class NullQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return string
+     * @return  string
      */
     public function push(QueueMessage $message): string
     {
@@ -30,7 +30,7 @@ class NullQueueDriver implements QueueDriverInterface
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -42,7 +42,7 @@ class NullQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage  $message
      *
-     * @return static
+     * @return  static
      */
     public function delete(QueueMessage $message): static
     {
@@ -54,7 +54,7 @@ class NullQueueDriver implements QueueDriverInterface
      *
      * @param  QueueMessage|string  $message
      *
-     * @return static
+     * @return  static
      */
     public function release(QueueMessage $message): static
     {

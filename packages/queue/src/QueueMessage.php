@@ -346,7 +346,7 @@ class QueueMessage implements JsonSerializable
     /**
      * @return  array
      *
-     * @throws InvalidArgumentException
+     * @throws  InvalidArgumentException
      */
     public function jsonSerialize(): array
     {
@@ -357,7 +357,7 @@ class QueueMessage implements JsonSerializable
     }
 
     /**
-     * @return bool
+     * @return  bool
      */
     public function isDeleted(): bool
     {
@@ -397,6 +397,9 @@ class QueueMessage implements JsonSerializable
         return new JobController($this, $invoker, $logger);
     }
 
+    /**
+     * @codeCoverageIgnore  This is simple proxy method. No need to test.
+     */
     public function run(
         ?\Closure $invoker = null,
         LoggerInterface $logger = new NullLogger(),

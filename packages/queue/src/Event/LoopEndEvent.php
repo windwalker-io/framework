@@ -7,8 +7,6 @@ namespace Windwalker\Queue\Event;
 use Windwalker\Event\BaseEvent;
 use Windwalker\Queue\AbstractRunner;
 use Windwalker\Queue\Queue;
-use Windwalker\Queue\QueueMessage;
-use Windwalker\Queue\Worker;
 
 /**
  * The LoopEndEvent class.

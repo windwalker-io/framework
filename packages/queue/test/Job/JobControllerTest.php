@@ -8,9 +8,11 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Queue\Attributes\JobEntry;
 use Windwalker\Queue\Attributes\JobMiddleware;
+use Windwalker\Queue\Attributes\JobMiddlewaresProvider;
 use Windwalker\Queue\Exception\AbandonedException;
 use Windwalker\Queue\Exception\DeferredException;
 use Windwalker\Queue\Job\JobController;
+use Windwalker\Queue\Middleware\QueueMiddlewareInterface;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Queue\Test\Stub\TestJob;
 
@@ -270,5 +272,146 @@ class JobControllerTest extends TestCase
         $this->expectExceptionMessageIsOrContains('already in pending context');
 
         $controller->next();
+    }
+
+    #[Test]
+    public function runCannotBeRepeatedAfterJobThrew(): void
+    {
+        $job = new class () {
+            public function __invoke(): void
+            {
+                throw new \LogicException('boom');
+            }
+        };
+        $controller = new QueueMessage($job)->makeJobController();
+
+        try {
+            $controller->run();
+            self::fail('Job exception should bubble up.');
+        } catch (\LogicException) {
+            // The context is left in the failed state on purpose.
+        }
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageIsOrContains('already in middleware context, cannot run again');
+
+        $controller->run();
+    }
+
+    #[Test]
+    public function middlewaresFromProviderRunAroundTheJob(): void
+    {
+        $order = [];
+        $middleware = new class ($order) implements QueueMiddlewareInterface {
+            public function __construct(private array &$order) {}
+
+            public function process(JobController $controller): JobController
+            {
+                $this->order[] = 'object';
+
+                return $controller->next();
+            }
+        };
+
+        $job = new class ($middleware, $order) {
+            public function __construct(private object $middleware, private array &$order) {}
+
+            #[JobMiddlewaresProvider]
+            public function middlewares(): array
+            {
+                return [
+                    $this->middleware,
+                    function (JobController $controller) {
+                        $this->order[] = 'closure';
+
+                        return $controller->next();
+                    },
+                ];
+            }
+
+            #[JobEntry]
+            public function handle(): void
+            {
+                $this->order[] = 'handle';
+            }
+        };
+
+        new QueueMessage()->setJob($job)->makeJobController()->run();
+
+        self::assertCount(3, $order);
+        self::assertSame('handle', $order[2]);
+        self::assertEqualsCanonicalizing(['object', 'closure'], array_slice($order, 0, 2));
+    }
+
+    #[Test]
+    public function middlewareProviderMustReturnIterable(): void
+    {
+        $job = new class () {
+            #[JobMiddlewaresProvider]
+            public function middlewares(): string
+            {
+                return 'nope';
+            }
+
+            #[JobEntry]
+            public function handle(): void {}
+        };
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageIsOrContains('must return an iterable of middleware list, string given');
+
+        new QueueMessage()->setJob($job)->makeJobController()->run();
+    }
+
+    #[Test]
+    public function middlewareReturningThrowableIsThrown(): void
+    {
+        $controller = new QueueMessage(new TestJob())->makeJobController();
+        $ref = new \ReflectionMethod($controller, 'invokeMiddleware');
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageIsOrContains('from middleware');
+
+        $ref->invoke($controller, static fn() => new \DomainException('from middleware'));
+    }
+
+    #[Test]
+    public function jobMarkingControllerFailedThrowsItsException(): void
+    {
+        $job = new class () {
+            public function __invoke(JobController $controller): void
+            {
+                $controller->failed('marked failed');
+            }
+        };
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageIsOrContains('marked failed');
+
+        new QueueMessage($job)->makeJobController()->run();
+    }
+
+    #[Test]
+    public function nestedControllerMiddlewareContinuesItsOwnChain(): void
+    {
+        $controller = new QueueMessage(new TestJob())->makeJobController();
+        $inner = $this->createMock(JobController::class);
+        $inner->expects($this->once())->method('next')->willReturnSelf();
+
+        $ref = new \ReflectionMethod($controller, 'invokeMiddleware');
+
+        self::assertSame($inner, $ref->invoke($controller, $inner));
+    }
+
+    #[Test]
+    public function invalidObjectMiddlewareEntryIsRejectedWithItsType(): void
+    {
+        $controller = new QueueMessage(new TestJob())->makeJobController();
+        $ref = new \ReflectionMethod($controller, 'invokeMiddleware');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('stdClass');
+
+        $ref->invoke($controller, new \stdClass());
     }
 }

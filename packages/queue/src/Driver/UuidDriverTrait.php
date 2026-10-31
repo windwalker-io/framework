@@ -21,9 +21,12 @@ trait UuidDriverTrait
 
     public function checkDependencyAndGenerateUuid(): UuidInterface
     {
+        // @codeCoverageIgnoreStart
+        // Optional dependency guard: unreachable while the dev dependency is installed.
         if (!class_exists(Uuid::class)) {
             throw new \DomainException('Please install `ramsey/uuid` to use UUID queue driver.');
         }
+        // @codeCoverageIgnoreEnd
 
         return $this->generateUuid();
     }

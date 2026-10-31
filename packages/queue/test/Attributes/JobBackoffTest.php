@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Queue\Attributes\JobBackoff;
+use Windwalker\Queue\QueueMessage;
 
 class JobBackoffTest extends TestCase
 {
@@ -57,5 +58,16 @@ class JobBackoffTest extends TestCase
         self::assertSame(1, JobBackoff::backoff(0, 1, 1));
         self::assertSame(4, JobBackoff::backoff(3, 1, 1));
         self::assertSame(15, JobBackoff::backoff(2, 5, 1));
+    }
+
+    #[Test]
+    public function fromControllerReadsBackoffAttributeOnJobClass(): void
+    {
+        $job = new #[JobBackoff([5, 10])] class () {
+            public function __invoke(): void {}
+        };
+        $message = new QueueMessage($job)->setAttempts(2);
+
+        self::assertSame(10, JobBackoff::fromController($message->makeJobController()));
     }
 }

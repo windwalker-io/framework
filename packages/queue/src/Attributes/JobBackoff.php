@@ -10,9 +10,7 @@ use Windwalker\Utilities\Attributes\AttributesAccessor;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION)]
 class JobBackoff
 {
-    public function __construct(public array|int|null $backoff = null)
-    {
-    }
+    public function __construct(public array|int|null $backoff = null) {}
 
     /**
      * - linear = pow: 1 | (1, 2, 3, 4, 5, 6, ...)
@@ -46,7 +44,7 @@ class JobBackoff
         return min($maxSeconds, $base * $factor * $adaptive);
     }
 
-    public static function resolve(int $attempts, array|int|null|false $backoff): int|null|false
+    public static function resolve(int $attempts, array|int|false|null $backoff): int|false|null
     {
         if (is_array($backoff)) {
             return $backoff[$attempts - 1] ?? false;

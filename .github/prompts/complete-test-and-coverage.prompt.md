@@ -21,6 +21,16 @@ missing tests, then add tests to cover the gaps.
    If a getter/setter is later modified to include meaningful behavior, remove the `@codeCoverageIgnore` tag and cover the new behavior with tests.
 7. If there has some class has no test, add test class for it.
 
+Large-scope handling:
+
+- If the scope is large (many files or many subdirectories, e.g. a whole package or several packages), do not process
+  it all in one pass. Split it into multiple iterations, one subdirectory (or small batch of files) per iteration, and
+  finish each one (inspect, change, verify) before starting the next.
+- Keep a short checklist of the subdirectories/files and mark each as done, so most files are genuinely inspected
+  rather than skimmed, and context stays small enough to keep focus.
+- Read only the files for the current iteration; avoid carrying earlier iterations' file contents forward.
+- Run the targeted check/tests per iteration, then do the final overall verification and summary at the end.
+
 Success means the package test suite passes, new tests assert meaningful behavior for identified gaps, and coverage
 results are reported for the package's source. If a coverage driver or required external service is unavailable,
 state the limitation and do not claim the uncovered scope was verified. Summarize changed files, test results, and

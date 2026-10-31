@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Renderer\TwigRenderer;
 use Windwalker\Test\Traits\DOMTestTrait;
 
@@ -33,13 +34,8 @@ class TwigRendererTest extends TestCase
      */
     protected $instance;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    #[Before]
+    protected function createRenderer(): void
     {
         static::$path = realpath(__DIR__ . '/Tmpl/twig');
 
@@ -50,24 +46,8 @@ class TwigRendererTest extends TestCase
         $this->instance = new TwigRenderer(['paths' => static::$path]);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-    }
-
-    /**
-     * Method to test render().
-     *
-     * @return void
-     *
-     * @covers \Windwalker\Renderer\TwigRenderer::render
-     */
-    public function testRender()
+    #[Test]
+    public function renderTemplateWithIncludedPartials(): void
     {
         $html = $this->instance->render('default.twig');
 

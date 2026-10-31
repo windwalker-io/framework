@@ -13,6 +13,5 @@ class DebugOutputEvent extends BaseEvent
         public string $level = LogLevel::DEBUG,
         public string $message = '',
         public array $context = [],
-    ) {
-    }
+    ) {}
 }

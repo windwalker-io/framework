@@ -54,7 +54,7 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
         $data = [
             ':channel' => $message->getChannel() ?: $this->channel,
             ':body' => json_encode($message),
-            ':attempts' => 0,
+            ':attempts' => $message->getAttempts(),
             ':created' => $time->format('Y-m-d H:i:s'),
             ':visibility' => $time->modify(sprintf('+%dseconds', $message->getDelay()))->format('Y-m-d H:i:s'),
             ':reserved' => null,
@@ -131,7 +131,7 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
 
             $stat = $this->pdo->prepare($sql);
             $stat->bindValue(':reserved', $now->format('Y-m-d H:i:s'));
-            $stat->bindValue(':attempts', $data['attempts'] + 1);
+            $stat->bindValue(':attempts', $data['attempts']);
             $stat->bindValue(':id', $rawId);
 
             $stat->execute();
@@ -208,6 +208,9 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
         return $this;
     }
 
+    /**
+     * @inheritDoc Restores the attempts counted by pop(), see {@see QueueDriverInterface}.
+     */
     public function defer(QueueMessage $message): static
     {
         $this->delete($message);

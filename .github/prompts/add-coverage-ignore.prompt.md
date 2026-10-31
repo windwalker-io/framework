@@ -28,6 +28,16 @@ removed easily later.
 5. Do not change production behavior. Preserve unrelated working-tree changes.
 6. Run the relevant style check and the affected package tests, then inspect the final diff.
 
+Large-scope handling:
+
+- If the scope is large (many files or many subdirectories, e.g. a whole package or several packages), do not process
+  it all in one pass. Split it into multiple iterations, one subdirectory (or small batch of files) per iteration, and
+  finish each one (inspect, change, verify) before starting the next.
+- Keep a short checklist of the subdirectories/files and mark each as done, so most files are genuinely inspected
+  rather than skimmed, and context stays small enough to keep focus.
+- Read only the files for the current iteration; avoid carrying earlier iterations' file contents forward.
+- Run the targeted check/tests per iteration, then do the final overall verification and summary at the end.
+
 Success means every ignored item is justified by the instructions, no logic-bearing code is ignored, all
 integration/coverage-only test classes carry a clear removal-friendly docblock, and tests and style checks pass.
 Summarize the changed files and what was ignored or annotated.

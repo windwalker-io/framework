@@ -10,6 +10,7 @@ use Windwalker\Queue\Driver\InfinityQueueDriver;
 use Windwalker\Queue\Driver\NullQueueDriver;
 use Windwalker\Queue\Driver\SyncQueueDriver;
 use Windwalker\Queue\Failer\NullQueueFailer;
+use Windwalker\Queue\Job\NullJob;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Queue\Test\Stub\TestJob;
 
@@ -123,5 +124,71 @@ class NullAndSyncQueueDriverTest extends TestCase
         self::assertSame($driver, $driver->delete($message));
         self::assertSame($driver, $driver->release($message));
         self::assertSame($driver, $driver->defer($message));
+    }
+
+    #[Test]
+    public function syncDriverRunsMessageWithDefaultHandler(): void
+    {
+        $job = new TestJob(['sync']);
+        $driver = new SyncQueueDriver();
+
+        $driver->push(new QueueMessage($job));
+
+        self::assertSame(['sync'], $job->executed);
+    }
+
+    #[Test]
+    public function syncDriverDebugOptionPassesOutputToCallback(): void
+    {
+        $outputs = [];
+        $driver = new SyncQueueDriver(
+            static fn() => 'result',
+            ['debug' => function ($output, $self) use (&$outputs) {
+                $outputs[] = [$output, $self];
+            }]
+        );
+
+        $id = $driver->push(new QueueMessage(new TestJob()));
+
+        self::assertSame('result', $id);
+        self::assertSame([['result', $driver]], $outputs);
+    }
+
+    #[Test]
+    public function syncDriverDebugOptionShowsOutputWithoutCallback(): void
+    {
+        $driver = new SyncQueueDriver(static fn() => 'shown', ['debug' => true]);
+
+        $stream = fopen('php://memory', 'w+b');
+        $original = \Windwalker\Utilities\Arr::$output;
+        \Windwalker\Utilities\Arr::$output = $stream;
+
+        try {
+            $driver->push(new QueueMessage(new TestJob()));
+        } finally {
+            \Windwalker\Utilities\Arr::$output = $original;
+        }
+
+        rewind($stream);
+        $output = stream_get_contents($stream);
+
+        self::assertStringContainsString('shown', $output);
+    }
+
+    #[Test]
+    public function syncDriverHandlerCanBeReplacedAndNeverHoldsMessages(): void
+    {
+        $driver = new SyncQueueDriver();
+        $handler = static fn() => 'other';
+
+        self::assertSame($driver, $driver->setHandler($handler));
+        self::assertSame($handler, $driver->getHandler());
+        self::assertNull($driver->pop());
+    }
+
+    #[Test]
+    public function nullJobDoesNothing(): void
+    {
+        self::assertNull(new NullJob()());
     }
 }

@@ -24,7 +24,7 @@ class Queue
     /**
      * Property driver.
      *
-     * @var QueueDriverInterface
+     * @var  QueueDriverInterface
      */
     protected QueueDriverInterface $driver;
 
@@ -46,7 +46,7 @@ class Queue
      * @param  string|null  $channel
      * @param  array        $options
      *
-     * @return int|string
+     * @return  int|string
      */
     public function push(mixed $job, int $delay = 0, ?string $channel = null, array $options = []): int|string
     {
@@ -73,7 +73,7 @@ class Queue
      * @param  array         $options
      *
      * @return  int|string
-     * @throws JsonException
+     * @throws  JsonException
      */
     public function pushRaw(
         string|array $body,
@@ -100,7 +100,7 @@ class Queue
      *
      * @param  string|null  $channel
      *
-     * @return QueueMessage|null
+     * @return  QueueMessage|null
      */
     public function pop(?string $channel = null): ?QueueMessage
     {
@@ -178,8 +178,8 @@ class Queue
      * @param  mixed  $job
      * @param  array  $data
      *
-     * @return QueueMessage
-     * @throws InvalidArgumentException
+     * @return  QueueMessage
+     * @throws  InvalidArgumentException
      */
     public function getMessageByJob(mixed $job, array $data = []): QueueMessage
     {

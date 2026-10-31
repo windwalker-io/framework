@@ -8,7 +8,6 @@ use Windwalker\Event\BaseEvent;
 use Windwalker\Queue\Enqueuer;
 use Windwalker\Queue\Enqueuer\EnqueuerController;
 use Windwalker\Queue\Queue;
-use Windwalker\Queue\Worker;
 
 class AfterEnqueueEvent extends BaseEvent
 {

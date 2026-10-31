@@ -8,7 +8,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Windwalker\Queue\Driver\DatabaseQueueDriver;
+use Windwalker\Database\DatabaseAdapter;
+use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Queue\Driver\PdoQueueDriver;
+use Windwalker\Queue\Exception\UnrecoverableException;
 use Windwalker\Queue\Enum\DatabaseIdType;
 use Windwalker\Queue\Failer\DatabaseQueueFailer;
 use Windwalker\Queue\Queue;
@@ -96,6 +99,62 @@ class UuidDatabaseDriverTest extends TestCase
 
         self::assertTrue(Uuid::isValid($queue->push(new TestJob(), 0, 'reconnect')));
         self::assertContains('reconnect', iterator_to_array($queue->getChannels()));
+    }
+
+    #[Test]
+    public function databaseDriverPopRethrowsQueryErrorsAndDisablesSkipLocked(): void
+    {
+        $driver = new DatabaseQueueDriver(self::$db, 'x', 'queue_jobs_not_exists');
+
+        try {
+            $driver->pop();
+            self::fail('Querying a missing table should throw.');
+        } catch (\Exception $e) {
+            self::assertNotInstanceOf(UnrecoverableException::class, $e);
+        }
+
+        $canSkipLocked = new \ReflectionMethod($driver, 'checkCanSkipLocked');
+
+        self::assertFalse($canSkipLocked->invoke($driver));
+    }
+
+    #[Test]
+    public function databaseDriverPopConvertsLostConnectionToUnrecoverableException(): void
+    {
+        $statement = $this->createStub(StatementInterface::class);
+        $statement->method('get')->willThrowException(new \RuntimeException('MySQL server has gone away'));
+
+        $db = $this->createStub(DatabaseAdapter::class);
+        $db->method('getQuery')->willReturnCallback(fn() => self::$db->getQuery(true));
+        $db->method('createQuery')->willReturnCallback(fn() => self::$db->createQuery());
+        $db->method('getDriver')->willReturn(self::$db->getDriver());
+        $db->method('prepare')->willReturn($statement);
+        $db->method('transaction')->willReturnCallback(fn(callable $callback) => $callback());
+
+        $driver = new DatabaseQueueDriver($db, 'x', 'queue_jobs_uuid', 60, DatabaseIdType::UUID);
+
+        $this->expectException(UnrecoverableException::class);
+
+        $driver->pop();
+    }
+
+    #[Test]
+    public function pdoDriverPopRollsBackAndRethrowsWhenQueryFails(): void
+    {
+        $statement = $this->createStub(\PDOStatement::class);
+        $statement->method('execute')->willThrowException(new \PDOException('select failed'));
+
+        $pdo = $this->createMock(\PDO::class);
+        $pdo->expects($this->once())->method('beginTransaction')->willReturn(true);
+        $pdo->method('prepare')->willReturn($statement);
+        $pdo->expects($this->once())->method('rollBack')->willReturn(true);
+
+        $driver = new PdoQueueDriver($pdo, 'x', 'queue_jobs_uuid');
+
+        $this->expectException(\PDOException::class);
+        $this->expectExceptionMessage('select failed');
+
+        $driver->pop();
     }
 
     protected static function setupDatabase(): void

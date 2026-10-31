@@ -236,6 +236,31 @@ class WorkerTest extends TestCase
         self::assertSame(Worker::STATE_STOP, $this->instance->getState());
     }
 
+    #[Test]
+    public function failureCountsAttemptButDeferDoesNot(): void
+    {
+        $queue = $this->instance->getQueue();
+        $queue->push(fn() => throw new \RuntimeException('fail'), 0, 'worker-attempt');
+        $worker = new Worker($queue, new RunnerOptions(tries: 10));
+
+        $worker->next('worker-attempt');
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'worker-attempt')->get();
+        self::assertEquals(1, $row->attempts);
+
+        self::$db->delete('queue_jobs')->where('channel', 'worker-attempt')->execute();
+
+        $queue->push(
+            fn(\Windwalker\Queue\Job\JobController $c) => $c->defer(0),
+            0,
+            'worker-attempt'
+        );
+        $worker->next('worker-attempt');
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'worker-attempt')->get();
+        self::assertEquals(0, $row->attempts);
+
+        self::$db->delete('queue_jobs')->where('channel', 'worker-attempt')->execute();
+    }
+
     #[Before]
     protected function createWorkerInstance(): void
     {

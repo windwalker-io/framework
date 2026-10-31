@@ -201,6 +201,58 @@ class QueueDatabaseTest extends TestCase
         self::$db->delete('queue_jobs')->where('channel', 'defer-channel')->execute();
     }
 
+    #[Test]
+    public function popPersistsAttemptCountOncePerPop(): void
+    {
+        $this->instance->push(new TestJob(['a']), 0, 'attempt-channel');
+
+        $message = $this->instance->pop('attempt-channel');
+
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'attempt-channel')->get();
+
+        self::assertSame(1, $message->getAttempts());
+        self::assertEquals(1, $row->attempts);
+
+        self::$db->delete('queue_jobs')->where('channel', 'attempt-channel')->execute();
+    }
+
+    #[Test]
+    public function releaseKeepsAttemptsAndDeferDoesNotAddAttempt(): void
+    {
+        $this->instance->push(new TestJob(['a']), 0, 'attempt-channel');
+
+        $message = $this->instance->pop('attempt-channel');
+        $this->instance->release($message, 0);
+
+        $message = $this->instance->pop('attempt-channel');
+        self::assertSame(2, $message->getAttempts());
+
+        $this->instance->defer($message, 0);
+
+        $message = $this->instance->pop('attempt-channel');
+        self::assertSame(2, $message->getAttempts());
+
+        self::$db->delete('queue_jobs')->where('channel', 'attempt-channel')->execute();
+    }
+
+    #[Test]
+    public function deferWithDelayHidesMessageUntilDelayPasses(): void
+    {
+        $this->instance->push(new TestJob(['a']), 0, 'attempt-channel');
+
+        $message = $this->instance->pop('attempt-channel');
+        $this->instance->defer($message, 60);
+
+        self::assertNull($this->instance->pop('attempt-channel'));
+
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'attempt-channel')->get();
+
+        self::assertEquals(0, $row->attempts);
+        self::assertGreaterThan(time() + 30, strtotime((string) $row->visibility));
+
+        self::$db->delete('queue_jobs')->where('channel', 'attempt-channel')->execute();
+    }
+
     #[Before]
     protected function createQueueInstance(): void
     {

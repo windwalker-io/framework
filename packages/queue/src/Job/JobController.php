@@ -79,7 +79,7 @@ class JobController
     protected string $context = 'pending';
 
     public function __construct(
-        readonly public QueueMessage $message,
+        public readonly QueueMessage $message,
         ?\Closure $invoker = null,
         public LoggerInterface $logger = new NullLogger(),
     ) {
@@ -153,9 +153,12 @@ class JobController
      */
     protected function findMethodsAttributes(string $attrName): \Generator
     {
+        // @codeCoverageIgnoreStart
+        // Unreachable: $this->job is always an object (QueueMessage::getJob(): object). Type guard only.
         if (!is_object($this->job)) {
             return;
         }
+        // @codeCoverageIgnoreEnd
 
         foreach (new \ReflectionObject($this->job)->getMethods() as $method) {
             if ($attrs = $method->getAttributes($attrName, \ReflectionAttribute::IS_INSTANCEOF)) {
@@ -247,9 +250,12 @@ class JobController
 
     protected function compileMiddlewares(mixed $job, \Closure $last): static
     {
+        // @codeCoverageIgnoreStart
+        // Unreachable: the job is always an object (QueueMessage::getJob(): object). Type guard only.
         if (!is_object($job)) {
             return $this;
         }
+        // @codeCoverageIgnoreEnd
 
         $middlewares = function () use ($last, $job) {
             $queue = new PriorityQueue();
@@ -316,7 +322,7 @@ class JobController
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Invalid middleware queue entry: %s. Middleware must implement %s or be an instance of %s.',
-                        $middleware,
+                        get_debug_type($middleware),
                         QueueMiddlewareInterface::class,
                         self::class
                     )

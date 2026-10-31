@@ -72,6 +72,12 @@ services:
     ports:
       - "${MEMCACHED_PORT:-11211}:11211"
 
+  sqs:
+    image: softwaremill/elasticmq-native:1.6.11
+    container_name: windwalker_sqs
+    ports:
+      - "${SQS_PORT:-9324}:9324"
+
 volumes:
   mysql_data:
   postgresql_data:

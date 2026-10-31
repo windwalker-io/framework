@@ -78,6 +78,17 @@ public function createAnyInstance(array $options): static
 }
 ```
 
+## Never ignore branches with logic or thrown errors
+
+`@codeCoverageIgnore` is only for logic-free getters/setters and simple proxy methods. Any branch that contains logic
+(conditions, transformation, fallback, side effects) or throws an exception **must** be tested, even if it is only a
+few lines. Do not ignore such branches to raise coverage. Only code that truly cannot be exercised (e.g. an
+unavailable external driver or process-level `exit`/signal handling) may be ignored, with the reason stated in the tag.
+
+A branch that is purely defensive or a fallback and is proven unreachable through the public behavior (e.g. a caller
+already guarantees the condition) may also be ignored. Wrap it with `@codeCoverageIgnoreStart` / `End` (or tag the
+method) and explain in a comment why it cannot be reached. Verify the claim first; if it is reachable, test it.
+
 ## Deprecated / Preferred APIs (Quick Rules)
 
 Add new "use / don't use" rules here as bullets so they stay easy to scan.

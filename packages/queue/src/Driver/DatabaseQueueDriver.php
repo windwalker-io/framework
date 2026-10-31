@@ -203,6 +203,9 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
         return $this;
     }
 
+    /**
+     * @inheritDoc Restores the attempts counted by pop(), see {@see QueueDriverInterface}.
+     */
     public function defer(QueueMessage $message): static
     {
         $message->setAttempts($message->getAttempts() - 1);

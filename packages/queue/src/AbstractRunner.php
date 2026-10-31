@@ -181,9 +181,12 @@ abstract class AbstractRunner implements EventAwareInterface
     {
         $timeout = $this->options->timeout;
 
+        // @codeCoverageIgnoreStart
+        // Environment-dependent: only reachable when pcntl is missing, but tests require pcntl.
         if (!extension_loaded('pcntl')) {
             return;
         }
+        // @codeCoverageIgnoreEnd
 
         declare(ticks=1);
 
@@ -237,7 +240,10 @@ abstract class AbstractRunner implements EventAwareInterface
         $this->setState(static::STATE_STOP);
 
         if ($instant) {
+            // @codeCoverageIgnoreStart
+            // exit() terminates the process, so it cannot be exercised in-process (tests override stop()).
             exit($code);
+            // @codeCoverageIgnoreEnd
         }
     }
 

@@ -220,9 +220,12 @@ class Worker extends AbstractRunner
 
     protected function settleJob(JobController $controller): void
     {
+        // @codeCoverageIgnoreStart
+        // This is a safety check for JobController::run() method. It should never happen.
         if ($controller->failed) {
             throw $controller->exception;
         }
+        // @codeCoverageIgnoreEnd
 
         $message = $controller->message;
 

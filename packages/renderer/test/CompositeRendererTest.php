@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Renderer\Test;
 
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Renderer\CompositeRenderer;
 use Windwalker\Test\Traits\BaseAssertionTrait;
@@ -17,7 +19,8 @@ class CompositeRendererTest extends TestCase
 
     protected ?CompositeRenderer $instance;
 
-    public function testBlade()
+    #[Test]
+    public function makeRendersBladeTemplateFromDottedName(): void
     {
         $r = $this->instance->make('foo.olive', [])(['hello' => 'Welcome']);
 
@@ -27,7 +30,8 @@ class CompositeRendererTest extends TestCase
         );
     }
 
-    public function testTwig()
+    #[Test]
+    public function makeRendersTwigTemplateFromRootDottedName(): void
     {
         $r = $this->instance->make('sunflower', [])(['hello' => 'Welcome']);
 
@@ -35,7 +39,11 @@ class CompositeRendererTest extends TestCase
             'SUNFLOWER Welcome',
             $r
         );
+    }
 
+    #[Test]
+    public function makeRendersTwigTemplateFromSubfolderDottedName(): void
+    {
         $r = $this->instance->make('foo.sunflower', [])(['hello' => 'Welcome']);
 
         self::assertStringSafeEquals(
@@ -44,7 +52,8 @@ class CompositeRendererTest extends TestCase
         );
     }
 
-    public function testTwigWithExtension()
+    #[Test]
+    public function makeRendersTwigTemplateFromRootWithExplicitExtension(): void
     {
         $r = $this->instance->make('sunflower.twig', [])(['hello' => 'Welcome']);
 
@@ -52,7 +61,11 @@ class CompositeRendererTest extends TestCase
             'SUNFLOWER Welcome',
             $r
         );
+    }
 
+    #[Test]
+    public function makeRendersTwigTemplateFromSubfolderWithExplicitExtension(): void
+    {
         $r = $this->instance->make('foo/sunflower.twig', [])(['hello' => 'Welcome']);
 
         self::assertStringSafeEquals(
@@ -61,7 +74,8 @@ class CompositeRendererTest extends TestCase
         );
     }
 
-    public function testMustache()
+    #[Test]
+    public function makeRendersMustacheTemplateFromDottedName(): void
     {
         $r = $this->instance->make('foo.rose', [])(['hello' => 'Welcome']);
 
@@ -69,7 +83,11 @@ class CompositeRendererTest extends TestCase
             'ROSE Welcome',
             $r
         );
+    }
 
+    #[Test]
+    public function makeRendersMustacheTemplateWithExplicitExtension(): void
+    {
         $r = $this->instance->make('rose.mustache', [])(['hello' => 'Welcome']);
 
         self::assertStringSafeEquals(
@@ -81,7 +99,8 @@ class CompositeRendererTest extends TestCase
     /**
      * @see  CompositeRenderer::make
      */
-    public function testMake(): void
+    #[Test]
+    public function makeReturnsRenderableView(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -89,7 +108,8 @@ class CompositeRendererTest extends TestCase
     /**
      * @see  CompositeRenderer::render
      */
-    public function testRender(): void
+    #[Test]
+    public function renderOutputsTemplate(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
@@ -97,12 +117,14 @@ class CompositeRendererTest extends TestCase
     /**
      * @see  CompositeRenderer::findFile
      */
-    public function testFindFile(): void
+    #[Test]
+    public function findFileResolvesTemplatePath(): void
     {
         self::markTestIncomplete(); // TODO: Complete this test
     }
 
-    protected function setUp(): void
+    #[Before]
+    protected function createRenderer(): void
     {
         $this->instance = new CompositeRenderer(
             [
@@ -113,9 +135,5 @@ class CompositeRendererTest extends TestCase
                 'cache_path' => __DIR__ . '/../tmp',
             ]
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 }

@@ -19,6 +19,8 @@ use Windwalker\Renderer\RendererInterface;
 
 /**
  * The ViewProvider class.
+ *
+ * @codeCoverageIgnore Application-level DI wiring that needs a full Windwalker core app.
  */
 class RendererProvider implements ServiceProviderInterface, RequestBootableProviderInterface
 {

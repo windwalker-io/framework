@@ -75,7 +75,8 @@
         "friendsofphp/php-cs-fixer": "^3.95",
         "symfony/mime": "^6.0||^7.0||^8.0",
         "react/http": "^1.0",
-        "ramsey/uuid": "^4.0"
+        "ramsey/uuid": "^4.0",
+        "aws/aws-sdk-php": "^3.402"
     },
     "suggest": {
         "webmozart/glob": "Install ^4.0 to support Ant-like glob().",

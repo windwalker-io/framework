@@ -10,6 +10,8 @@ use Resque as PhpResque;
  * The Resque class.
  *
  * @since  3.2
+ *
+ // * @codeCoverageIgnore Requires an external queue service; legacy/unautoloaded driver.
  */
 class Resque extends PhpResque
 {
