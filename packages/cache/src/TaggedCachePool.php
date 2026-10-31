@@ -214,7 +214,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
     }
 
     /** @param  string[]  $tags
-     * @return array<string, string>
+     * @return  array<string, string>
      */
     private function getCurrentTagVersions(array $tags): array
     {
@@ -281,7 +281,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
     }
 
     /** @param  string[]  $tags
-     * @return array<string, string>
+     * @return  array<string, string>
      */
     private function getOrCreateTagVersions(array $tags): array
     {

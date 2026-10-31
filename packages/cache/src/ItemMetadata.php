@@ -12,6 +12,5 @@ class ItemMetadata
     public function __construct(
         public int $expiry,
         public int $ctime,
-    ) {
-    }
+    ) {}
 }

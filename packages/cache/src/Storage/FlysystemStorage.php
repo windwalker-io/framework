@@ -13,7 +13,7 @@ use RuntimeException;
 class FlysystemStorage extends FileStorage
 {
     /**
-     * @var Filesystem
+     * @var  Filesystem
      */
     protected Filesystem $driver;
 
@@ -184,7 +184,7 @@ class FlysystemStorage extends FileStorage
      *
      * @return  string  The full stream URI for the cache entry.
      *
-     * @throws  RuntimeException if the cache path is invalid.
+     * @throws  RuntimeException  if the cache path is invalid.
      * @since   2.0
      */
     public function fetchStreamUri(string $key): string

@@ -11,7 +11,7 @@ class JsonAssocSerializer implements SerializerInterface
      *
      * @param  mixed  $data
      *
-     * @return string|null
+     * @return  string|null
      */
     public function serialize(mixed $data): ?string
     {
@@ -23,7 +23,7 @@ class JsonAssocSerializer implements SerializerInterface
      *
      * @param  string  $data
      *
-     * @return mixed
+     * @return  mixed
      */
     public function unserialize(string $data): mixed
     {

@@ -25,8 +25,7 @@ class ArrayStorage implements
     public function __construct(
         protected float $pruneProbability = 0.01,
         public protected(set) string $group = '',
-    ) {
-    }
+    ) {}
 
     /**
      * @inheritDoc
@@ -195,7 +194,7 @@ class ArrayStorage implements
     /**
      * Set the prune probability (0.0 to 1.0)
      *
-     * @param  float  $probability
+     * @param   float   $probability
      * @return  static  Return self to support chaining.
      */
     public function setPruneProbability(float $probability): static

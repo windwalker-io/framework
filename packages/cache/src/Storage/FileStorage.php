@@ -19,12 +19,12 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
     use OptionAccessTrait;
 
     /**
-     * @var string
+     * @var  string
      */
     protected string $root;
 
     /**
-     * @var resource[]
+     * @var  resource[]
      */
     protected array $lockedResources = [];
 
@@ -40,8 +40,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
         array $options = [],
         protected float $pruneProbability = 0.01,
         public protected(set) string $group = '',
-    )
-    {
+    ) {
         $this->root = $root;
 
         $this->prepareOptions(
@@ -224,7 +223,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
      *
      * @return  bool  The method will always return true, if it returns.
      *
-     * @throws  RuntimeException if the file path is invalid.
+     * @throws  RuntimeException  if the file path is invalid.
      * @since   2.0
      */
     protected function checkFilePath(string $filePath): bool
@@ -347,7 +346,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
      *
      * @return  string  The full stream URI for the cache entry.
      *
-     * @throws  RuntimeException if the cache path is invalid.
+     * @throws  RuntimeException  if the cache path is invalid.
      * @since   2.0
      */
     public function fetchStreamUri(string $key): string
@@ -518,7 +517,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
     /**
      * Set the prune probability (0.0 to 1.0)
      *
-     * @param  float  $probability
+     * @param   float   $probability
      * @return  static  Return self to support chaining.
      */
     public function setPruneProbability(float $probability): static
