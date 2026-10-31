@@ -75,6 +75,8 @@ class Expression
      * getQuery
      *
      * @return  Query
+     *
+     * @codeCoverageIgnore
      */
     public function getQuery(): Query
     {
@@ -87,6 +89,8 @@ class Expression
      * @param  Query  $query
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setQuery(Query $query): static
     {

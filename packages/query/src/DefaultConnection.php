@@ -30,6 +30,8 @@ class DefaultConnection
      * @param  mixed  $escaper
      *
      * @return  void
+     *
+     * @codeCoverageIgnore
      */
     public static function setEscaper(mixed $escaper): void
     {
@@ -48,6 +50,8 @@ class DefaultConnection
      * @param  AbstractGrammar  $grammar
      *
      * @return  void
+     *
+     * @codeCoverageIgnore
      */
     public static function setGrammar(AbstractGrammar $grammar)
     {

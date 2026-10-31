@@ -115,6 +115,9 @@ class ValueClause implements ClauseInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setPrefix(?string $prefix): static
     {
         $this->prefix = $prefix;

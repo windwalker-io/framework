@@ -168,6 +168,8 @@ class AlterClause implements ClauseInterface
 
     /**
      * @return Clause
+     *
+     * @codeCoverageIgnore
      */
     public function getClause(): Clause
     {

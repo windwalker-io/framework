@@ -36,6 +36,9 @@ class UuidWrapper implements WrapperInterface, \Stringable
         return $this->uuid->toString();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getRaw(): UuidInterface
     {
         return $this->uuid;

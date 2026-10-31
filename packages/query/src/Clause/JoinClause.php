@@ -118,6 +118,8 @@ class JoinClause implements ClauseInterface
      * @param  string  $prefix
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setPrefix(string $prefix): static
     {

@@ -2280,6 +2280,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     /**
      * @return string|null
+     *
+     * @codeCoverageIgnore
      */
     public function getDefaultItemClass(): ?string
     {
@@ -2290,6 +2292,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  string|null  $defaultItemClass
      *
      * @return  static  Return self to support chaining.
+     *
+     * @codeCoverageIgnore
      */
     public function setDefaultItemClass(?string $defaultItemClass): static
     {

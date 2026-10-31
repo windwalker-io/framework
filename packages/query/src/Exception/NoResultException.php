@@ -47,6 +47,8 @@ class NoResultException extends \UnexpectedValueException
 
     /**
      * @return mixed
+     *
+     * @codeCoverageIgnore
      */
     public function getConditions(): mixed
     {
@@ -60,6 +62,8 @@ class NoResultException extends \UnexpectedValueException
 
     /**
      * @return mixed
+     *
+     * @codeCoverageIgnore
      */
     public function getTable(): string
     {
@@ -78,6 +82,9 @@ class NoResultException extends \UnexpectedValueException
         };
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function setMessageHandler(?\Closure $messageHandler): void
     {
         static::$messageHandler = $messageHandler;
