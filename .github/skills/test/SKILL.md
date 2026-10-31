@@ -53,5 +53,7 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
    lines/branches, and cover meaningful missing behavior, edge cases, and error paths. Rerun the same selector and
    source scope after adding tests; inspect the target files rather than relying only on an aggregate percentage.
    Follow the logic-free getter/setter exclusion rule in [Test Rules](../../instructions/test.instructions.md).
+   For DB-backed tests see [Database Testing](../../docs/database-testing.md).
+
    See [Testing and Coverage](../../docs/testing.md) for executable commands, coverage drivers, and configuration
    caveats. If the driver is unavailable or tests are skipped, state the limitation explicitly.

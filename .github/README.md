@@ -73,4 +73,5 @@ auto-loaded, and move detailed prose into `docs/` either way.
 - `prompts/refactor-test-code-style.prompt.md` — refactor PHPUnit test style, structure, and lifecycle hook naming.
 - `skills/test/SKILL.md` — end-to-end workflow for adding/running PHPUnit tests in this monorepo.
 - `docs/code-style.md` — full PHP-CS-Fixer ruleset explanation/rationale. See `docs/README.md` for the docs index.
+- `docs/database-testing.md` — Setting up MySQL/DSN for real-database tests and writing safe DB tests.
 - `docs/testing.md` — PHPUnit execution and coverage setup, scoped reports, and finding missing tests.

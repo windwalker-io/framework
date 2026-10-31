@@ -42,6 +42,8 @@ Windwalker framework application, rather than package behavior that needs standa
 for these files or include them in a package's coverage target by default. Test them only when they contain
 meaningful, independently testable logic or the requested change specifically requires validating their behavior.
 
+Tests touching a real database: see [Database Testing](../docs/database-testing.md) (never run DB suites in parallel).
+
 See [Testing and Coverage](../docs/testing.md) for test selectors, driver setup, report commands, and scope caveats.
 
 ## Exclude logic-free getters/setters or simple proxy methods from code coverage and tests

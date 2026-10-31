@@ -20,7 +20,8 @@
         "phpunit/phpunit": "^13.0",
         "jdorn/sql-formatter": "^1.2",
         "windwalker/data": "^4.0",
-        "windwalker/test": "^4.0"
+        "windwalker/test": "^4.0",
+        "ramsey/uuid": "^4.0"
     },
     "suggest": {
     },

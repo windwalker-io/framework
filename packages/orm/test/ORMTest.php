@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\ORM\EntityMapper;
+use Windwalker\ORM\Metadata\EntityMetadataCollection;
 use Windwalker\ORM\ORM;
 use Windwalker\ORM\SelectorQuery;
 use Windwalker\ORM\Test\Entity\StubArticle;
@@ -50,7 +51,11 @@ class ORMTest extends AbstractDatabaseTestCase
     #[Test]
     public function constructInitializesOrm(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $orm = new ORM(self::$db);
+
+        self::assertSame(self::$db, $orm->db);
+        self::assertInstanceOf(EntityMetadataCollection::class, $orm->getEntityMetadataCollection());
+        self::assertNotNull($orm->getAttributesResolver());
     }
 
     /**
@@ -59,7 +64,7 @@ class ORMTest extends AbstractDatabaseTestCase
     #[Test]
     public function getDbReturnsAdapter(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        self::assertSame(self::$db, $this->instance->getDb());
     }
 
     /**
@@ -68,7 +73,10 @@ class ORMTest extends AbstractDatabaseTestCase
     #[Test]
     public function fromCreatesSelectorQuery(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $query = $this->instance->from('articles', 'a');
+
+        self::assertInstanceOf(SelectorQuery::class, $query);
+        self::assertStringContainsString('FROM `articles` AS `a`', (string) $query->select('a.id'));
     }
 
     /**
@@ -77,7 +85,10 @@ class ORMTest extends AbstractDatabaseTestCase
     #[Test]
     public function setDbReplacesAdapter(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $other = clone self::$db;
+
+        self::assertSame($this->instance, $this->instance->setDb($other));
+        self::assertSame($other, $this->instance->getDb());
     }
 
     /**
@@ -86,7 +97,12 @@ class ORMTest extends AbstractDatabaseTestCase
     #[Test]
     public function conditionsToWheresBuildsWhereClauses(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $mapper = $this->instance->mapper(StubArticle::class);
+        $closure = static fn() => null;
+
+        self::assertSame($closure, $mapper->conditionsToWheres($closure));
+        self::assertSame(['id' => 1], $mapper->conditionsToWheres(1));
+        self::assertEquals(['title' => 'Foo'], $mapper->conditionsToWheres(['title' => 'Foo']));
     }
 
     /**
@@ -95,7 +111,10 @@ class ORMTest extends AbstractDatabaseTestCase
     #[Test]
     public function selectCreatesSelectorQuery(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $query = $this->instance->select('id', 'title');
+
+        self::assertInstanceOf(SelectorQuery::class, $query);
+        self::assertStringContainsString('SELECT `id`, `title`', (string) $query);
     }
 
     #[Test]

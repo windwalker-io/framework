@@ -7,6 +7,7 @@ namespace Windwalker\Database\Test\Manager;
 use PDO;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
+use Windwalker\Database\Manager\DatabaseManager;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Platform\MySQLPlatform;
 use Windwalker\Database\Schema\Ddl\Constraint;
@@ -217,7 +218,11 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasConstraint(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->reset();
+
+        self::assertTrue($this->instance->hasConstraint('idx_enterprise_alias'));
+        self::assertTrue($this->instance->hasConstraint('PRIMARY'));
+        self::assertFalse($this->instance->hasConstraint('no_such_constraint'));
     }
 
     /**
@@ -226,7 +231,10 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function getSchemaObject(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $schema = $this->instance->createSchemaObject();
+
+        self::assertInstanceOf(Schema::class, $schema);
+        self::assertSame('enterprise', $schema->getTable()->getName());
     }
 
     /**
@@ -235,7 +243,10 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function hasIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->reset();
+
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_created'));
+        self::assertFalse($this->instance->hasIndex('idx_enterprise_no_such'));
     }
 
     /**
@@ -244,7 +255,15 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function dropIndex(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $this->instance->reset();
+
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_captain'));
+
+        $this->instance->dropIndex('idx_enterprise_captain');
+        // Dropping a missing index must be a no-op (the index cache is only refreshed by reset())
+        $this->instance->reset()->dropIndex(['idx_enterprise_captain']);
+
+        self::assertFalse($this->instance->reset()->hasIndex('idx_enterprise_captain'));
     }
 
     /**
@@ -348,7 +367,32 @@ SQL,
     #[Test]
     public function save(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('enterprise_save');
+        $table->drop();
+
+        try {
+            // Not exists: creates the table
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->primary('id');
+                    $schema->varchar('title');
+                }
+            );
+
+            self::assertTrue($table->exists());
+            self::assertEquals(['id', 'title'], $table->getColumnNames(true));
+
+            // Exists: updates the table
+            $table->save(
+                static function (Schema $schema) {
+                    $schema->varchar('alias');
+                }
+            );
+
+            self::assertTrue($table->hasColumn('alias'));
+        } finally {
+            $table->drop();
+        }
     }
 
     /**
@@ -357,7 +401,23 @@ SQL,
     #[Test]
     public function addColumn(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('enterprise_add_column');
+        $table->drop();
+
+        try {
+            $table->create(static fn(Schema $schema) => $schema->primary('id'));
+            $table->addColumn('subtitle', 'varchar(100)', true, 'none');
+            $table->reset();
+
+            $column = $table->getColumn('subtitle');
+
+            self::assertEquals('varchar', $column->getDataType());
+            self::assertEquals('100', $column->getLengthExpression());
+            self::assertTrue($column->getIsNullable());
+            self::assertEquals('none', $column->getColumnDefault());
+        } finally {
+            $table->drop();
+        }
     }
 
     /**
@@ -405,7 +465,16 @@ SQL,
     #[Test]
     public function setName(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = clone $this->instance;
+
+        $table->setName('other_schema.some_table');
+
+        self::assertSame('some_table', $table->getName());
+        self::assertSame('other_schema', $table->schemaName);
+
+        $table->setName('plain_table');
+
+        self::assertSame('plain_table', $table->getName());
     }
 
     /**
@@ -469,7 +538,23 @@ SQL,
     #[Test]
     public function reset(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $table = self::$db->getTableManager('enterprise_reset');
+        $table->drop();
+
+        try {
+            $table->create(static fn(Schema $schema) => $schema->primary('id'));
+
+            self::assertEquals(['id'], $table->getColumnNames());
+
+            self::$db->execute('ALTER TABLE `enterprise_reset` ADD COLUMN `extra` int NULL');
+
+            // Cached until reset
+            self::assertEquals(['id'], $table->getColumnNames());
+            self::assertSame($table, $table->reset());
+            self::assertEquals(['id', 'extra'], $table->getColumnNames());
+        } finally {
+            $table->drop();
+        }
     }
 
     /**
@@ -535,7 +620,10 @@ SQL,
     #[Test]
     public function getDatabase(): void
     {
-        self::markTestIncomplete(); // TODO: Complete this test
+        $database = $this->instance->getDatabase();
+
+        self::assertInstanceOf(DatabaseManager::class, $database);
+        self::assertTrue($database->exists());
     }
 
     #[Test]

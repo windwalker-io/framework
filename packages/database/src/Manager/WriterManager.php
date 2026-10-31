@@ -129,7 +129,7 @@ class WriterManager
             $options
         );
 
-        $item = TypeCast::toArray($data);
+        $item = $origin = TypeCast::toArray($data);
 
         $key = (array) $key;
 
@@ -178,7 +178,7 @@ class WriterManager
 
         foreach ($key as $k) {
             // Set the primary key to the WHERE clause instead of a field to update.
-            $query->where($k, $data[$k] ?? null);
+            $query->where($k, $origin[$k] ?? null);
         }
 
         if ($options['lockCallback'] ?? null) {
