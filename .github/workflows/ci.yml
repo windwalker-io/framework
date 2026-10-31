@@ -4,76 +4,97 @@ on: [push, pull_request]
 
 jobs:
   ubuntu:
-    runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow_failure || false }}
     strategy:
       fail-fast: false
       matrix:
         php-versions: [ '8.4', '8.5', '8.6' ]
+        experimental: [ false ]
         include:
-          - php: '8.6'
+          - php-versions: '8.6'
             allow_failure: true
+    runs-on: ubuntu-latest
     services:
       memcached:
         image: memcached:1.6-alpine
-        ports: ['11211:11211']
+        ports:
+          - 11211:11211
       redis:
-        image: redis:7-alpine
-        ports: ['6379:6379']
+        image: redis
+        ports:
+          - 6379/tcp
+        options: --entrypoint redis-server
       sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           ACCEPT_EULA: 'Y'
           MSSQL_SA_PASSWORD: 'Ut1234!pass'
-        ports: ['1433:1433']
+        ports:
+          - 1433:1433
         options: >-
-          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'Ut1234!pass' -Q 'SELECT 1' || exit 1"
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $MSSQL_SA_PASSWORD -Q 'SELECT 1' || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
           --health-start-period 30s
       sqs:
         image: softwaremill/elasticmq-native:1.6.11
-        ports: ['9324:9324']
+        ports:
+          - 9324:9324
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      # Memcached
+      #      - name: Setup Memcached
+      #        uses: niden/actions-memcached@v7
+      # MySQL
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql version: '8.1'
+          mysql version: 8.1
           mysql database: windwalker_test
           mysql root password: ut1234
+      # PostgreSQL
       - name: Setup PostgreSQL
-        run: docker run -d --rm --name postgres -e POSTGRES_PASSWORD=ut1234 -e POSTGRES_DB=windwalker_test -p 5432:5432 postgres:16
+        run: docker run --rm --name=postgres -e POSTGRES_PASSWORD=ut1234 -e POSTGRES_DB=windwalker_test -p 5432:5432 -d postgres
+      # Microsoft ODBC Driver, required by sqlsrv / pdo_sqlsrv
       - name: Setup ODBC Driver for SQL Server
-        shell: bash
         run: |
           curl -sSL -O "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
           sudo dpkg -i packages-microsoft-prod.deb
           rm packages-microsoft-prod.deb
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
+      # PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlsrv, mysqli, memcached, redis, sqlite3, swoole
+          php-version: ${{ matrix.php-versions }}
+          extensions: |
+            mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlsrv, mysqli,
+            php-memcached, redis, sqlite3, swoole
           coverage: none
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
+      #          tools: php-cs-fixer, phpunit
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v6
         with:
-          path: ~/.cache/composer
-          key: ${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-php${{ matrix.php }}-composer-
+          path: ${{ steps.composercache.outputs.dir }}
+          # Use composer.json for key, if composer.lock is not committed.
+          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
       - name: Install dependencies
-        run: composer update --prefer-dist --prefer-stable --no-progress
-      - name: Start PHP server
-        shell: bash
-        run: php -S localhost:8100 bin/test-server.php > /tmp/php-server.log 2>&1 &
-      - name: Run integration tests
+        run: composer update --prefer-dist --prefer-stable  --no-progress --no-suggest #--ignore-platform-reqs
+
+      - name: Start PHP Server
+        run: php -S localhost:8100 bin/test-server.php &> /dev/null &
+
+      - name: Run test suite
         run: php vendor/bin/phpunit --configuration phpunit.ci.xml
         env:
-          REDIS_PORT: '6379'
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
 
   windows:
     runs-on: windows-latest

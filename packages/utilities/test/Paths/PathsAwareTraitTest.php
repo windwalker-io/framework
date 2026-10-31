@@ -144,6 +144,6 @@ class PathsAwareTraitTest extends TestCase
      */
     private function normalizePaths(array $paths): array
     {
-        return array_map(static fn (string $path) => Path::clean($path, '/'), $paths);
+        return array_map(static fn(string $path) => Path::clean($path, '/'), $paths);
     }
 }
