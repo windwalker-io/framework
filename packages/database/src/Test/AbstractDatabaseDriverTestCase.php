@@ -79,7 +79,11 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         $reseter = AbstractReseter::create(static::$platform);
 
         static::$dbname = $options->dbname;
-        $options->dbname = null;
+
+        // Oracle dbname is the service name, it is required to connect.
+        if (static::$platform !== DbPlatform::Oracle) {
+            $options->dbname = null;
+        }
 
         $pdo = static::createBaseConnect($options, $connClass);
 
@@ -156,7 +160,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         /** @var class-string<AbstractConnection> $connClass */
         $options = $connClass::prepareDbOptions(clone $options);
 
-        return new PDO(
+        $pdo = new PDO(
             $options->dsn,
             $options->user ?? null,
             $options->password ?? null,
@@ -164,6 +168,13 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]
         );
+
+        if ($pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'oci') {
+            // Oracle returns upper-case column names, align with PdoOciConnection.
+            $pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        }
+
+        return $pdo;
     }
 
     protected static function prepareTestOptions(DriverOptions|array $options): DriverOptions
@@ -269,6 +280,10 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
      */
     public static function getDbSuffix(): string
     {
+        if (static::$platform === DbPlatform::Oracle) {
+            return '';
+        }
+
         $suffix = (string) (getenv('WINDWALKER_TEST_DB_SUFFIX') ?: '');
 
         return preg_replace('/[^A-Za-z0-9_]/', '_', $suffix);

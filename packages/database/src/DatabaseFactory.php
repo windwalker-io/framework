@@ -14,6 +14,7 @@ use Windwalker\Database\Driver\Pgsql\PgsqlDriver;
 use Windwalker\Database\Driver\Sqlsrv\SqlsrvDriver;
 use Windwalker\Database\Platform\AbstractPlatform;
 use Windwalker\Database\Platform\MySQLPlatform;
+use Windwalker\Database\Platform\OraclePlatform;
 use Windwalker\Database\Platform\PostgreSQLPlatform;
 use Windwalker\Database\Platform\SQLitePlatform;
 use Windwalker\Database\Platform\SQLServerPlatform;
@@ -109,6 +110,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
             AbstractPlatform::MYSQL => MySQLPlatform::class,
             AbstractPlatform::POSTGRESQL => PostgreSQLPlatform::class,
             AbstractPlatform::SQLSERVER => SQLServerPlatform::class,
+            AbstractPlatform::ORACLE => OraclePlatform::class,
             AbstractPlatform::SQLITE => SQLitePlatform::class,
             default => __NAMESPACE__ . '\\' . $platformName . 'Platform',
         };
@@ -140,6 +142,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
             match (strtolower($platform)) {
                 'postgresql' => 'pgsql',
                 'sqlserver' => 'sqlsrv',
+                'oracle' => 'oci',
                 default => $platform
             }
         );
@@ -152,6 +155,7 @@ class DatabaseFactory implements DatabaseFactoryInterface
             'sqlsrv', 'sqlserver' => 'SQLServer',
             'mysql', 'mysqli' => 'MySQL',
             'sqlite' => 'SQLite',
+            'oracle', 'oci' => 'Oracle',
             default => ucfirst($platform),
         };
     }

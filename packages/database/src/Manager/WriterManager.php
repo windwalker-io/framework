@@ -292,9 +292,22 @@ class WriterManager
         $statement = $query->execute();
 
         if ($returningIdField) {
-            $id = $platformName === AbstractPlatform::MYSQL
-                ? $statement->lastInsertId()
-                : $statement->result();
+            $id = match ($platformName) {
+                AbstractPlatform::MYSQL => $statement->lastInsertId(),
+                // Oracle MERGE has no RETURNING clause, so look the row up by its keys.
+                AbstractPlatform::ORACLE => $this->db->createQuery()
+                    ->select($returningIdField)
+                    ->from($table)
+                    ->tap(
+                        static function ($q) use ($keys, $data) {
+                            foreach ($keys as $key) {
+                                $q->where($key, $data[$key]);
+                            }
+                        }
+                    )
+                    ->result(),
+                default => $statement->result(),
+            };
 
             if (is_array($originData)) {
                 $originData[$returningIdField] = $id;

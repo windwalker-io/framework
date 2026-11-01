@@ -142,6 +142,11 @@ abstract class AbstractGrammar
         return '';
     }
 
+    public function supportsTableAliasAs(): bool
+    {
+        return true;
+    }
+
     protected function supportsRecursiveKeyword(): bool
     {
         return true;

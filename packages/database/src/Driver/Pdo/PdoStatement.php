@@ -69,7 +69,18 @@ class PdoStatement extends AbstractStatement
 
         $item = $this->cursor->fetch(PDO::FETCH_ASSOC);
 
-        return $item !== false ? $item : null;
+        if ($item === false) {
+            return null;
+        }
+
+        // pdo_oci returns LOB columns as streams.
+        foreach ($item as $k => $v) {
+            if (is_resource($v)) {
+                $item[$k] = stream_get_contents($v);
+            }
+        }
+
+        return $item;
     }
 
     /**
@@ -104,6 +115,54 @@ class PdoStatement extends AbstractStatement
      */
     public function lastInsertId(?string $sequence = null): ?string
     {
+        if ($this->conn->getAttribute(PDO::ATTR_DRIVER_NAME) === 'oci') {
+            return $this->lastOracleInsertId($sequence);
+        }
+
         return $this->conn->lastInsertId($sequence);
+    }
+
+    /**
+     * PDO_OCI does not support lastInsertId(), read the identity sequence of the inserted table instead.
+     */
+    protected function lastOracleInsertId(?string $sequence = null): ?string
+    {
+        if ($sequence === null) {
+            $identifier = '(?:"[^"]+"|[\w$#]+)';
+
+            if (
+                !preg_match(
+                    '/^\s*insert\s+(?:all\s+)?into\s+(' . $identifier . ')(?:\.(' . $identifier . '))?/i',
+                    $this->query,
+                    $matches
+                )
+            ) {
+                return null;
+            }
+
+            $normalize = static fn(string $name) => str_starts_with($name, '"')
+                ? trim($name, '"')
+                : strtoupper($name);
+
+            $owner = isset($matches[2]) ? $normalize($matches[1]) : null;
+            $table = $normalize($matches[2] ?? $matches[1]);
+
+            $stmt = $this->conn->prepare(
+                'SELECT SEQUENCE_NAME, OWNER FROM ALL_TAB_IDENTITY_COLS WHERE TABLE_NAME = ? '
+                . 'AND OWNER = COALESCE(?, SYS_CONTEXT(\'USERENV\', \'CURRENT_SCHEMA\'))'
+            );
+            $stmt->execute([$table, $owner]);
+            $row = $stmt->fetch(PDO::FETCH_NUM);
+
+            if (!$row) {
+                return null;
+            }
+
+            $sequence = '"' . $row[1] . '"."' . $row[0] . '"';
+        }
+
+        $id = $this->conn->query('SELECT ' . $sequence . '.CURRVAL FROM DUAL')->fetchColumn();
+
+        return $id === false ? null : (string) $id;
     }
 }

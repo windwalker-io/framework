@@ -45,6 +45,11 @@ abstract class AbstractPlatform
     /**
      * @deprecated Use {@see DbPlatform} instead after next major release
      */
+    public const string ORACLE = DbPlatform::Oracle->name;
+
+    /**
+     * @deprecated Use {@see DbPlatform} instead after next major release
+     */
     public const string SQLITE = DbPlatform::SQLite->name;
 
     /**

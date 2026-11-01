@@ -26,6 +26,8 @@ class AsClause implements ClauseInterface
 
     protected bool $isColumn = false;
 
+    protected bool $isTable = false;
+
     /**
      * @var  Query
      */
@@ -49,6 +51,13 @@ class AsClause implements ClauseInterface
         $this->alias = $alias;
         $this->query = $query;
         $this->isColumn = $isColumn;
+    }
+
+    public function forTable(bool $isTable = true): static
+    {
+        $this->isTable = $isTable;
+
+        return $this;
     }
 
     public function __toString(): string
@@ -90,7 +99,8 @@ class AsClause implements ClauseInterface
         }
 
         if ($alias !== false && (string) $alias !== '') {
-            $column .= ' AS ' . $this->query->quoteName($alias, QN_IGNORE_DOTS);
+            $keyword = $this->isTable && !$this->query->getGrammar()->supportsTableAliasAs() ? ' ' : ' AS ';
+            $column .= $keyword . $this->query->quoteName($alias, QN_IGNORE_DOTS);
         }
 
         return (string) $column;

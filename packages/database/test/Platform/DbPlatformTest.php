@@ -44,6 +44,6 @@ class DbPlatformTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        DbPlatform::wrap('oracle');
+        DbPlatform::wrap('db2');
     }
 }

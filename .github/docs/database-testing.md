@@ -27,13 +27,20 @@ Tests read DSNs from constants in the root `phpunit.xml` (copy `phpunit.xml.dist
 <php>
     <const name="WINDWALKER_TEST_DB_DSN_MYSQL"
            value="host=127.0.0.1;dbname=windwalker_test;user=root;password=;prefix=ww_"/>
-    <!-- also: _POSTGRESQL, _SQLSERVER, _SQLITE, _MARIADB -->
+    <!-- also: _POSTGRESQL, _SQLSERVER, _ORACLE, _SQLITE, _MARIADB -->
 </php>
 ```
 
 - A missing/empty DSN makes the matching tests **skip**, not fail. Running with `--no-configuration` therefore
   skips everything — always keep the project config.
 - Table prefix `ww_` is applied to fixture tables; test tables you create yourself can be unprefixed.
+
+### Oracle
+
+Oracle uses the `oracle` docker service (`gvenzl/oracle-free`, app user `windwalker`) and requires `pdo_oci`.
+`dbname` is the **service name** (`FREEPDB1`), not a database to create. The app user has no `CREATE USER`
+privilege, so the create/drop database/schema tests are skipped. Unquoted identifiers fold to UPPERCASE; the
+Query layer quotes and upper-cases everything.
 
 ## 3. Running
 

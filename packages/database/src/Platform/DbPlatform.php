@@ -10,6 +10,7 @@ enum DbPlatform
     case PostgreSQL;
     case SQLite;
     case SQLServer;
+    case Oracle;
 
     public static function wrap(string|self $name): self
     {
@@ -22,6 +23,7 @@ enum DbPlatform
             'pgsql', 'postgresql' => self::PostgreSQL,
             'sqlite' => self::SQLite,
             'sqlsrv', 'sqlserver' => self::SQLServer,
+            'oracle', 'oci' => self::Oracle,
             default => throw new \InvalidArgumentException("Unknown database platform: $name"),
         };
     }

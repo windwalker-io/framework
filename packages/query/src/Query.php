@@ -44,6 +44,7 @@ use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\MySQLGrammar;
+use Windwalker\Query\Grammar\OracleGrammar;
 use Windwalker\Query\Wrapper\FormatRawWrapper;
 use Windwalker\Utilities\Arr;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
@@ -311,7 +312,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             return $this;
         }
 
-        $this->from->append($this->as($tables, $alias));
+        $this->from->append($this->as($tables, $alias)->forTable());
 
         return $this;
     }
@@ -356,7 +357,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->join = $this->clause('', [], ' ');
         }
 
-        $tbl = $this->as($table, $alias);
+        $tbl = $this->as($table, $alias)->forTable();
 
         $join = new JoinClause($this, $action, $tbl);
 
@@ -828,7 +829,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public function update(string $table, ?string $alias = null): static
     {
         $this->type = static::TYPE_UPDATE;
-        $this->update = $this->clause('UPDATE', $this->as($table, $alias));
+        $this->update = $this->clause('UPDATE', $this->as($table, $alias)->forTable());
 
         return $this;
     }
@@ -1276,6 +1277,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function rowLock(string $for = 'UPDATE', ?string $do = null): static
     {
+        if ($for === 'SHARE' && $this->getGrammar() instanceof OracleGrammar) {
+            throw new \LogicException('Oracle does not support FOR SHARE row locks, use forUpdate() instead.');
+        }
+
         $suffix = 'FOR ' . $for;
 
         if ($do) {

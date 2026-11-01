@@ -62,7 +62,7 @@ abstract class AbstractTableDiffTestCase extends AbstractDatabaseTestCase
 
         self::assertNotEmpty($sql);
         self::assertMatchesRegularExpression('/\\bADD\\b/', $sql[0]);
-        self::assertStringContainsString('subtitle', $sql[0]);
+        self::assertStringContainsStringIgnoringCase('subtitle', $sql[0]);
         self::assertMatchesRegularExpression('/INDEX/', implode("\n", $sql));
         self::assertFalse($table->hasColumn('subtitle'));
         self::assertFalse($table->hasIndex('idx_diff_subtitle'));
