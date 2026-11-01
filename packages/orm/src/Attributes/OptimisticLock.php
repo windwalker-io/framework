@@ -84,7 +84,7 @@ class OptimisticLock implements AttributeInterface, OptimisticLockInterface, Cas
 
     public function buildConditions(Query $query, array $fullData): void
     {
-        if (!empty($fullData[$this->member->columnName])) {
+        if (($fullData[$this->member->columnName] ?? null) !== null) {
             $query->where($this->member->columnName, $fullData[$this->member->columnName]);
         }
     }
