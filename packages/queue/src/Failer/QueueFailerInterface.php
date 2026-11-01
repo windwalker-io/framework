@@ -54,4 +54,11 @@ interface QueueFailerInterface
      * @return  bool
      */
     public function clear(): bool;
+
+    /**
+     * Count failed jobs.
+     *
+     * @return  int
+     */
+    public function size(): int;
 }

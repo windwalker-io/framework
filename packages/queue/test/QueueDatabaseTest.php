@@ -121,6 +121,23 @@ class QueueDatabaseTest extends TestCase
         self::assertCount(1, $items);
     }
 
+    #[Test]
+    public function sizeCountsJobsOfChannel(): void
+    {
+        $before = $this->instance->size();
+
+        $this->instance->push(new TestJob(['Foo']));
+        $this->instance->push(new TestJob(['Bar']), 0, 'size-channel');
+
+        self::assertEquals($before + 1, $this->instance->size());
+        self::assertEquals(1, $this->instance->size('size-channel'));
+        self::assertEquals(0, $this->instance->size('no-such-channel'));
+
+        self::$db->delete('queue_jobs')
+            ->where('channel', 'size-channel')
+            ->execute();
+    }
+
     /**
      * @see  ChannelAwareDriverInterface::getChannels
      */

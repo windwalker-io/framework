@@ -105,6 +105,12 @@ class DatabaseQueueFailerTest extends TestCase
         );
     }
 
+    #[Test]
+    public function sizeCountsFailedJobs(): void
+    {
+        self::assertEquals(2, $this->instance->size());
+    }
+
     /**
      * @see  DatabaseQueueFailer::remove
      */

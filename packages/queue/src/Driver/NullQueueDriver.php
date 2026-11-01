@@ -65,4 +65,9 @@ class NullQueueDriver implements QueueDriverInterface
     {
         return $this;
     }
+
+    public function size(?string $channel = null): int
+    {
+        return 0;
+    }
 }

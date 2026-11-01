@@ -196,4 +196,13 @@ class DatabaseQueueFailer implements QueueFailerInterface
 
         return $conditions;
     }
+
+    public function size(): int
+    {
+        $query = $this->db->createQuery()
+            ->selectRaw('COUNT(*)')
+            ->from($this->table);
+
+        return (int) $this->db->prepare($query)->result();
+    }
 }

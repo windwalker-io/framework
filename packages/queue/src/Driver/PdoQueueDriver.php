@@ -303,4 +303,13 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
 
         return $this;
     }
+
+    public function size(?string $channel = null): int
+    {
+        $stat = $this->pdo->prepare('SELECT COUNT(*) FROM ' . $this->table . ' WHERE channel = :channel');
+        $stat->bindValue(':channel', $channel ?: $this->channel, PDO::PARAM_STR);
+        $stat->execute();
+
+        return (int) $stat->fetchColumn();
+    }
 }

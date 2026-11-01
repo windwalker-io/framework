@@ -138,4 +138,9 @@ class SyncQueueDriver implements QueueDriverInterface
             return $message->run();
         };
     }
+
+    public function size(?string $channel = null): int
+    {
+        return 0;
+    }
 }

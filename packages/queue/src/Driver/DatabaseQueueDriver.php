@@ -319,4 +319,14 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
 
         return $this->canSkipLocked;
     }
+
+    public function size(?string $channel = null): int
+    {
+        $query = $this->db->createQuery()
+            ->selectRaw('COUNT(*)')
+            ->from($this->table)
+            ->where('channel', $channel ?: $this->channel);
+
+        return (int) $this->db->prepare($query)->result();
+    }
 }

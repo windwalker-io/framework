@@ -47,4 +47,9 @@ class InfinityQueueDriver implements QueueDriverInterface
         // Do nothing, as this is an infinite queue.
         return $this;
     }
+
+    public function size(?string $channel = null): int
+    {
+        return 0;
+    }
 }

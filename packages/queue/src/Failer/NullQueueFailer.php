@@ -69,4 +69,9 @@ class NullQueueFailer implements QueueFailerInterface
     {
         return true;
     }
+
+    public function size(): int
+    {
+        return 0;
+    }
 }

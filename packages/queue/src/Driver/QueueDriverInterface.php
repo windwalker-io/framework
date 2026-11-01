@@ -69,4 +69,14 @@ interface QueueDriverInterface
      * @return  static
      */
     public function defer(QueueMessage $message): static;
+
+    /**
+     * Get the number of jobs stored in the channel, including delayed and reserved ones.
+     * Drivers that do not store messages return 0.
+     *
+     * @param  string|null  $channel
+     *
+     * @return  int
+     */
+    public function size(?string $channel = null): int;
 }

@@ -183,4 +183,9 @@ class PdoQueueFailer implements QueueFailerInterface
 
         return $this;
     }
+
+    public function size(): int
+    {
+        return (int) $this->pdo->query('SELECT COUNT(*) FROM ' . $this->table)->fetchColumn();
+    }
 }

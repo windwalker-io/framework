@@ -245,4 +245,25 @@ class SqsQueueDriver implements QueueDriverInterface
 
         return new SqsClient($options);
     }
+
+    /**
+     * Approximate count of visible, delayed and in-flight messages.
+     */
+    public function size(?string $channel = null): int
+    {
+        $attrs = $this->client->getQueueAttributes(
+            [
+                'QueueUrl' => $this->getQueueUrl($channel),
+                'AttributeNames' => [
+                    'ApproximateNumberOfMessages',
+                    'ApproximateNumberOfMessagesDelayed',
+                    'ApproximateNumberOfMessagesNotVisible',
+                ],
+            ]
+        )->get('Attributes') ?? [];
+
+        return (int) ($attrs['ApproximateNumberOfMessages'] ?? 0)
+            + (int) ($attrs['ApproximateNumberOfMessagesDelayed'] ?? 0)
+            + (int) ($attrs['ApproximateNumberOfMessagesNotVisible'] ?? 0);
+    }
 }

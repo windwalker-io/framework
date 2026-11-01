@@ -160,6 +160,11 @@ class Queue
         $this->driver->defer($message);
     }
 
+    public function size(?string $channel = null): int
+    {
+        return $this->driver->size($channel);
+    }
+
     /**
      * @return  iterable<string>
      */
