@@ -42,7 +42,7 @@
 	</testsuites>
 
     <!-- Code Coverage -->
-    <source>
+    <source ignoreIndirectDeprecations="true">
         <include>
             <directory suffix=".php">packages/*/src</directory>
         </include>

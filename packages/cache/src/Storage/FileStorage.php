@@ -230,7 +230,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
     {
         if (!is_dir($filePath)) {
             try {
-                if (!mkdir($filePath, 0755, true) && !is_dir($filePath)) {
+                if (!@mkdir($filePath, 0755, true) && !is_dir($filePath)) {
                     throw new \RuntimeException(sprintf('Directory "%s" was not created', $filePath));
                 }
             } catch (Throwable $e) {
