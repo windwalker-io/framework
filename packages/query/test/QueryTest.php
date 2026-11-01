@@ -2025,6 +2025,79 @@ SQL
         );
     }
 
+    #[Test]
+    public function withBuildsCommonTableExpressions(): void
+    {
+        $q = $this->instance
+            ->with('recent', fn(Query $q) => $q->select('*')->from('articles')->where('id', '>', 5))
+            ->with('cats', 'SELECT id FROM categories', ['id'])
+            ->select('*')
+            ->from('recent')
+            ->where('state', 1);
+
+        $sql = $q->render(true);
+
+        self::assertStringStartsWith('WITH ', $sql);
+        self::assertSqlEquals(
+            'WITH ' . $q->qn('recent') . ' AS (SELECT * FROM ' . $q->qn('articles')
+            . ' WHERE ' . $q->qn('id') . ' > 5), '
+            . $q->qn('cats') . ' (' . $q->qn('id') . ') AS (SELECT id FROM categories) '
+            . 'SELECT * FROM ' . $q->qn('recent') . ' WHERE ' . $q->qn('state') . ' = 1',
+            $sql
+        );
+    }
+
+    #[Test]
+    public function withRecursiveAndBoundedValues(): void
+    {
+        $q = $this->instance
+            ->withRecursive(
+                'tree',
+                static::createQuery()
+                    ->unionAll(static::createQuery()->select('id')->from('nodes')->where('parent_id', 7))
+                    ->unionAll(
+                        static::createQuery()
+                            ->select('n.id')
+                            ->from('nodes', 'n')
+                            ->join('INNER', 'tree', 't', 'n.parent_id', '=', 't.id')
+                    ),
+                ['id']
+            )
+            ->select('*')
+            ->from('tree')
+            ->where('id', '>', 3);
+
+        $sql = $q->render(true);
+
+        self::assertMatchesRegularExpression('/^WITH (RECURSIVE )?\S+ \(\S+\) AS \(/', $sql);
+        self::assertStringContainsString('UNION ALL', $sql);
+
+        $sql = $q->forPDO($bounded);
+
+        self::assertSame(2, substr_count($sql, '?'));
+        self::assertSame([7, 3], $bounded);
+    }
+
+    #[Test]
+    public function withMaterializedHint(): void
+    {
+        $q = static::createQuery()
+            ->with('a', 'SELECT 1', null, false, true)
+            ->with('b', 'SELECT 2', null, false, false)
+            ->select('*')
+            ->from('a');
+
+        $sql = $q->render(true);
+        $supported = in_array(
+            static::class,
+            [PostgreSQLQueryTest::class, SqliteQueryTest::class],
+            true
+        );
+
+        self::assertSame($supported, str_contains($sql, ' AS MATERIALIZED ('));
+        self::assertSame($supported, str_contains($sql, ' AS NOT MATERIALIZED ('));
+    }
+
     public static function createQuery($conn = null): Query
     {
         $connection = $conn ?? (static::$escaper ??= new MockEscaper());

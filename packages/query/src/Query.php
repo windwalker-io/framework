@@ -68,6 +68,8 @@ use function Windwalker\value;
  * @method  Clause|null   getFrom()
  * @method  Clause|null   getJoin()
  * @method  Clause|null   getUnion()
+ * @method  Clause|null   getWith()
+ * @method  bool          getRecursive()
  * @method  Clause|null   getWhere()
  * @method  Clause|null   getHaving()
  * @method  Clause|null   getOrder()
@@ -150,6 +152,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected ?Clause $join = null;
 
     protected ?Clause $union = null;
+
+    protected ?Clause $with = null;
+
+    protected bool $recursive = false;
 
     protected ?Clause $order = null;
 
@@ -480,6 +486,59 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         return $column;
+    }
+
+    /**
+     * Add a common table expression: `WITH name [(columns)] AS (query)`.
+     *
+     * @param  string                $name
+     * @param  Query|Closure|string  $query
+     * @param  array|null            $columns
+     * @param  bool                  $recursive
+     * @param  bool|null             $materialized  `true` for MATERIALIZED, `false` for NOT MATERIALIZED,
+     *                                              ignored by dialects that do not support it.
+     *
+     * @return  static
+     */
+    public function with(
+        string $name,
+        mixed $query,
+        ?array $columns = null,
+        bool $recursive = false,
+        ?bool $materialized = null
+    ): static {
+        $this->with ??= $this->clause('WITH', [], ', ');
+
+        if ($query instanceof Closure) {
+            $query = $query($q = $this->createSubQuery()) ?? $q;
+        }
+
+        if ($query instanceof self) {
+            $this->injectSubQuery($query, 'cte:' . $name);
+        }
+
+        $target = $this->quoteName($name);
+
+        if ($columns) {
+            $target .= ' (' . implode(', ', array_map($this->quoteName(...), $columns)) . ')';
+        }
+
+        $hint = $this->getGrammar()->compileMaterializedHint($materialized);
+
+        $this->with->append($this->clause($target . ' AS ' . ($hint ? $hint . ' ' : '') . '()', [$query]));
+
+        $this->recursive = $this->recursive || $recursive;
+
+        return $this;
+    }
+
+    public function withRecursive(
+        string $name,
+        mixed $query,
+        ?array $columns = null,
+        ?bool $materialized = null
+    ): static {
+        return $this->with($name, $query, $columns, true, $materialized);
     }
 
     /**
@@ -1813,6 +1872,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'prefix' => [],
             'suffix' => [],
             'union' => [],
+            'with' => ['recursive'],
             'alias' => [],
             'subQueries' => [],
             'bounded' => [],

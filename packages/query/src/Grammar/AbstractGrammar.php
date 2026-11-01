@@ -109,6 +109,10 @@ abstract class AbstractGrammar
 
         $sql = $this->$method($query);
 
+        if ($with = $this->compileWith($query)) {
+            $sql = $with . ' ' . $sql;
+        }
+
         if ($prefix = $query->getPrefix()) {
             $sql = $prefix . ' ' . $sql;
         }
@@ -118,6 +122,29 @@ abstract class AbstractGrammar
         }
 
         return $sql;
+    }
+
+    public function compileWith(Query $query): string
+    {
+        $with = $query->getWith();
+
+        if (!$with || !count($with->getElements())) {
+            return '';
+        }
+
+        $keyword = $query->getRecursive() && $this->supportsRecursiveKeyword() ? 'WITH RECURSIVE' : 'WITH';
+
+        return $with->setName($keyword)->render();
+    }
+
+    public function compileMaterializedHint(?bool $materialized): string
+    {
+        return '';
+    }
+
+    protected function supportsRecursiveKeyword(): bool
+    {
+        return true;
     }
 
     public function compileSelect(Query $query): string

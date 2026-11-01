@@ -15,6 +15,15 @@ use function Windwalker\Query\qn;
  */
 class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
+    public function compileMaterializedHint(?bool $materialized): string
+    {
+        return match ($materialized) {
+            true => 'MATERIALIZED',
+            false => 'NOT MATERIALIZED',
+            null => '',
+        };
+    }
+
     /**
      * @var  string
      */

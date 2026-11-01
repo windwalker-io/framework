@@ -13,6 +13,11 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
  */
 class OracleGrammar extends BaseGrammar
 {
+    protected function supportsRecursiveKeyword(): bool
+    {
+        return false;
+    }
+
     /**
      * @var  string
      */

@@ -16,6 +16,14 @@ use function Windwalker\Query\qn;
 class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
 {
     use JsonGrammarTrait;
+    public function compileMaterializedHint(?bool $materialized): string
+    {
+        return match ($materialized) {
+            true => 'MATERIALIZED',
+            false => 'NOT MATERIALIZED',
+            null => '',
+        };
+    }
 
     /**
      * @var  string

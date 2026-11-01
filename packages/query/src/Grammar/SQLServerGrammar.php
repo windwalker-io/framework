@@ -18,6 +18,10 @@ use function Windwalker\Query\qn;
 class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
     use JsonGrammarTrait;
+    protected function supportsRecursiveKeyword(): bool
+    {
+        return false;
+    }
 
     /**
      * @var  string
