@@ -1,5 +1,4 @@
 ---
-agent: 'Plan'
 ---
 Plan or research a new feature, or a refactor, for this repository. Do not implement it; produce an analysis and a
 recommendation.
