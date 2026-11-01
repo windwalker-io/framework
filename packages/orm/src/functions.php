@@ -31,7 +31,7 @@ if (!function_exists('\Windwalker\entity_table')) {
             $entity = $entity::class;
         }
 
-        $tableAttr = Attributes\AttributesAccessor::getFirstAttributeInstance(
+        $tableAttr = Utilities\Attributes\AttributesAccessor::getFirstAttributeInstance(
             $entity,
             Table::class,
             ReflectionAttribute::IS_INSTANCEOF

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Attributes;
 
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Cache\RuntimeCacheTrait;
 
 /**

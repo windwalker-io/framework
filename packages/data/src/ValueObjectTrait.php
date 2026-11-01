@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Data;
 
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\ORM\Attributes\Cast;
 use Windwalker\ORM\Attributes\CastNullable;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\StrNormalize;
 use Windwalker\Utilities\TypeCast;
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Form;
 
-use Windwalker\Attributes\AttributesAccessor;
 use Windwalker\Form\Attributes\FormDefine;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
 use Windwalker\Utilities\Iterator\PriorityQueue;
 
 /**
