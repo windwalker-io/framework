@@ -15,6 +15,8 @@ class PostgreSQLTableManagerExtraTest extends AbstractTableManagerExtraTestCase
 
     protected static string $schema = 'public';
 
+    protected static string $collation = 'C';
+
     protected static function dropTable(string $table): void
     {
         self::$baseConn->exec("DROP TABLE IF EXISTS $table");

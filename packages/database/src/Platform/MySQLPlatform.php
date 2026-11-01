@@ -566,14 +566,14 @@ class MySQLPlatform extends AbstractPlatform
         return $this->getGrammar()::build(
             $column->getTypeExpression($this->getDataType()),
             $column->getNumericUnsigned() ? 'UNSIGNED' : '',
+            $column->getCharacterSetName() ? 'CHARACTER SET ' . $column->getCharacterSetName() : null,
+            $this->getCollateExpression($column),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->canHasDefaultValue()
                 ? 'DEFAULT ' . $this->db->quote($column->getColumnDefault())
                 : '',
             $column->isAutoIncrement() ? 'AUTO_INCREMENT' : null,
             $column->getOption('on_update') ? 'ON UPDATE CURRENT_TIMESTAMP' : null,
-            // $column->getCharacterSetName() ? 'CHARACTER SET ' . $column->getCharacterSetName() : null,
-            $column->getCollationName() ? 'COLLATE ' . $column->getCollationName() : null,
             $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : '',
             implode(' ', $pos),
             $column->getOption('suffix'),

@@ -13,6 +13,8 @@ class SQLiteTableManagerExtraTest extends AbstractTableManagerExtraTestCase
 
     protected static string $driver = 'pdo_sqlite';
 
+    protected static string $collation = 'NOCASE';
+
     protected static bool $supportsColumnAlter = false;
 
     protected static bool $supportsAddConstraint = false;

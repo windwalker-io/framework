@@ -29,6 +29,18 @@ class SQLServerReseter extends AbstractReseter
         }
     }
 
+    public function dropDatabase(PDO $pdo, string $dbname): void
+    {
+        $qn = static::qn($dbname);
+
+        if ($pdo->query('SELECT DB_ID(' . $pdo->quote($dbname) . ')')->fetchColumn() === null) {
+            return;
+        }
+
+        $pdo->exec("ALTER DATABASE $qn SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
+        $pdo->exec("DROP DATABASE $qn");
+    }
+
     public function clearAllTables(PDO $pdo, string $dbname): void
     {
         // Drop Tables

@@ -24,6 +24,12 @@ class MySQLReseter extends AbstractReseter
         $pdo->exec('CREATE DATABASE ' . static::qn($dbname));
     }
 
+    public function dropDatabase(PDO $pdo, string $dbname): void
+    {
+        $pdo->exec('DROP DATABASE IF EXISTS ' . static::qn($dbname));
+        $pdo->exec('DROP DATABASE IF EXISTS ' . static::qn($dbname . '_new'));
+    }
+
     public function clearAllTables(PDO $pdo, string $dbname): void
     {
         // Drop Tables

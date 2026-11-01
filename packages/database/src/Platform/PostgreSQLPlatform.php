@@ -655,10 +655,29 @@ class PostgreSQLPlatform extends AbstractPlatform
         );
     }
 
+    protected function getCollateExpression(Column $column): ?string
+    {
+        $collation = $column->getCollationName();
+
+        return $collation ? 'COLLATE ' . $this->db->quoteName($collation) : null;
+    }
+
     public function modifyColumn(string $table, Column $column, ?string $schema = null): StatementInterface
     {
         $alter = $this->createQuery()
             ->alter('TABLE', $schema . '.' . $table);
+
+        if ($column->getCollationName()) {
+            $alter->subClause('ALTER COLUMN')
+                ->append(
+                    [
+                        $this->db->quoteName($column->getColumnName()),
+                        'TYPE',
+                        $column->getTypeExpression($this->getDataType()),
+                        $this->getCollateExpression($column),
+                    ]
+                );
+        }
 
         $alter->subClause('ALTER COLUMN')
             ->append(

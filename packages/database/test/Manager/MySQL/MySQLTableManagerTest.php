@@ -127,7 +127,7 @@ class MySQLTableManagerTest extends AbstractDatabaseTestCase
         self::assertEquals(
             [
                 'TABLE_NAME' => 'enterprise',
-                'TABLE_SCHEMA' => 'windwalker_test',
+                'TABLE_SCHEMA' => static::$dbname,
                 'TABLE_TYPE' => 'BASE TABLE',
                 'VIEW_DEFINITION' => null,
                 'CHECK_OPTION' => null,
@@ -629,13 +629,14 @@ SQL,
     #[Test]
     public function getSchema(): void
     {
+        $dbname = static::$dbname;
         $this->instance->schemaName = self::$db->getDriver()->getOption('dbname');
 
         $logs = $this->logQueries(fn() => $this->instance->getColumns(true));
 
         self::assertSqlFormatEquals(
             <<<SQL
-            {$this->getMariaDBChecksSQL('\'windwalker_test\'')}
+            {$this->getMariaDBChecksSQL("'" . $dbname . "'")}
             SELECT `ORDINAL_POSITION`,
                    `COLUMN_DEFAULT`,
                    `IS_NULLABLE`,
@@ -652,7 +653,7 @@ SQL,
                    `EXTRA`
             FROM `INFORMATION_SCHEMA`.`COLUMNS`
             WHERE `TABLE_NAME` = 'enterprise'
-              AND `TABLE_SCHEMA` = 'windwalker_test'
+              AND `TABLE_SCHEMA` = '{$dbname}'
             ORDER BY
                 `ORDINAL_POSITION`
             SQL,

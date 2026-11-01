@@ -21,6 +21,13 @@ class SQLiteReseter extends AbstractReseter
         }
     }
 
+    public function dropDatabase(PDO $pdo, string $dbname): void
+    {
+        if ($dbname !== ':memory:' && is_file($dbname)) {
+            @unlink($dbname);
+        }
+    }
+
     public function clearAllTables(PDO $pdo, string $dbname): void
     {
         // Drop Tables

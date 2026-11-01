@@ -57,7 +57,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
             [
                 'ww_articles' => [
                     'TABLE_NAME' => 'ww_articles',
-                    'TABLE_CATALOG' => 'windwalker_test',
+                    'TABLE_CATALOG' => static::$dbname,
                     'TABLE_SCHEMA' => 'public',
                     'TABLE_TYPE' => 'BASE TABLE',
                     'VIEW_DEFINITION' => null,
@@ -66,7 +66,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
                 ],
                 'ww_categories' => [
                     'TABLE_NAME' => 'ww_categories',
-                    'TABLE_CATALOG' => 'windwalker_test',
+                    'TABLE_CATALOG' => static::$dbname,
                     'TABLE_SCHEMA' => 'public',
                     'TABLE_TYPE' => 'BASE TABLE',
                     'VIEW_DEFINITION' => null,
@@ -99,7 +99,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
             [
                 'ww_articles_view' => [
                     'TABLE_NAME' => 'ww_articles_view',
-                    'TABLE_CATALOG' => 'windwalker_test',
+                    'TABLE_CATALOG' => static::$dbname,
                     'TABLE_SCHEMA' => 'public',
                     'TABLE_TYPE' => 'VIEW',
                     // Remove prefix since it may different between PostgreSQL versions.

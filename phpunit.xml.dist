@@ -25,6 +25,7 @@
 		<!--<const name="WINDWALKER_TEST_DB_DSN_MYSQL"  value="host=127.0.0.1;dbname=windwalker_test;user=root;password=ut1234;prefix=ww_" />-->
 		<!--<const name="WINDWALKER_TEST_DB_DSN_POSTGRESQL"  value="host=127.0.0.1;dbname=windwalker_test;user=postgres;password=ut1234;prefix=ww_" />-->
 		<!--<const name="WINDWALKER_TEST_DB_DSN_SQLSERVER" value="host=127.0.0.1;port=1433;dbname=windwalker_test;user=sa;password=Ut1234!pass;prefix=ww_" />-->
+        <!--<const name="WINDWALKER_TEST_DB_DSN_SQLSERVER" value="host=127.0.0.1;port=1433;dbname=windwalker_test;user=sa;password=Ut1234!pass;prefix=ww_" />-->
 		<!--<const name="WINDWALKER_TEST_DB_DSN_SQLITE" value="dbname=tmp/test.db;prefix=ww_" />-->
 
         <!-- Enable Redis / Memcached / Swoole tests (requires running services) -->

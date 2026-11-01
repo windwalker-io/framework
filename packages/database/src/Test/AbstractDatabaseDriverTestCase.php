@@ -83,6 +83,10 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
 
         $pdo = static::createBaseConnect($options, $connClass);
 
+        if (static::getDbSuffix() !== '') {
+            static::registerDropDatabase(clone $options, $connClass, static::$dbname, static::$platform);
+        }
+
         $reseter->createDatabase($pdo, static::$dbname);
 
         // Disconnect.
@@ -95,6 +99,56 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         $reseter->clearAllTables(static::$baseConn, static::$dbname);
 
         static::setupDatabase();
+    }
+
+    /**
+     * Drop the suffixed database when the process ends, even if tests error out or die.
+     */
+    protected static function registerDropDatabase(
+        DriverOptions $options,
+        string $connClass,
+        string $dbname,
+        DbPlatform $platform
+    ): void {
+        static $registered = [];
+
+        $key = $platform->name . ':' . $dbname;
+
+        if (isset($registered[$key])) {
+            return;
+        }
+
+        $registered[$key] = true;
+
+        register_shutdown_function(static function () use ($options, $connClass, $dbname, $platform) {
+            try {
+                $options->dbname = null;
+                $pdo = static::createBaseConnect($options, $connClass);
+
+                AbstractReseter::create($platform)->dropDatabase($pdo, $dbname);
+            } catch (\Throwable) {
+                // Ignore cleanup errors.
+            }
+        });
+    }
+
+    protected static function dropSuffixedDatabase(): void
+    {
+        if (static::getDbSuffix() === '' || !static::$dbname) {
+            return;
+        }
+
+        $options = DriverOptions::wrap(static::getTestParams());
+        $options->dbname = null;
+        $platform = DatabaseFactory::getDriverShortName(static::platformName());
+        $connClass = 'Windwalker\\Database\\Driver\\Pdo\\Pdo' . ucfirst($platform) . 'Connection';
+
+        try {
+            AbstractReseter::create(static::$platform)
+                ->dropDatabase(static::createBaseConnect($options, $connClass), static::$dbname);
+        } catch (\Throwable) {
+            // Shutdown handler will retry.
+        }
     }
 
     protected static function createBaseConnect(DriverOptions $options, string $connClass): PDO
@@ -201,10 +255,43 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         if (defined($const) || getenv($const)) {
             $dsn = (defined($const) ? constant($const) : getenv($const));
 
-            return DsnHelper::extract($dsn);
+            $params = DsnHelper::extract($dsn);
+
+            return static::applyDbSuffix($params);
         }
 
         return [];
+    }
+
+    /**
+     * Append `WINDWALKER_TEST_DB_SUFFIX` env to the database name, so concurrent
+     * phpunit processes can use isolated databases.
+     */
+    public static function getDbSuffix(): string
+    {
+        $suffix = (string) (getenv('WINDWALKER_TEST_DB_SUFFIX') ?: '');
+
+        return preg_replace('/[^A-Za-z0-9_]/', '_', $suffix);
+    }
+
+    protected static function applyDbSuffix(array $params): array
+    {
+        $suffix = static::getDbSuffix();
+
+        if ($suffix === '' || empty($params['dbname'])) {
+            return $params;
+        }
+
+        if (static::$platform === DbPlatform::SQLite) {
+            $info = pathinfo($params['dbname']);
+            $ext = isset($info['extension']) ? '.' . $info['extension'] : '';
+            $dir = $info['dirname'] !== '.' ? $info['dirname'] . '/' : '';
+            $params['dbname'] = $dir . $info['filename'] . '_' . $suffix . $ext;
+        } else {
+            $params['dbname'] .= '_' . $suffix;
+        }
+
+        return $params;
     }
 
     /**
@@ -255,5 +342,7 @@ abstract class AbstractDatabaseDriverTestCase extends TestCase
         parent::tearDownAfterClass();
 
         static::$baseConn = null;
+
+        static::dropSuffixedDatabase();
     }
 }

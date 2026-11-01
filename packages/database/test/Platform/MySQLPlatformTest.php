@@ -64,7 +64,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
             [
                 'ww_articles' => [
                     'TABLE_NAME' => 'ww_articles',
-                    'TABLE_SCHEMA' => 'windwalker_test',
+                    'TABLE_SCHEMA' => static::$dbname,
                     'TABLE_TYPE' => 'BASE TABLE',
                     'VIEW_DEFINITION' => null,
                     'CHECK_OPTION' => null,
@@ -72,7 +72,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                 ],
                 'ww_categories' => [
                     'TABLE_NAME' => 'ww_categories',
-                    'TABLE_SCHEMA' => 'windwalker_test',
+                    'TABLE_SCHEMA' => static::$dbname,
                     'TABLE_TYPE' => 'BASE TABLE',
                     'VIEW_DEFINITION' => null,
                     'CHECK_OPTION' => null,
@@ -96,9 +96,9 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
             [
                 'ww_articles_view' => [
                     'TABLE_NAME' => 'ww_articles_view',
-                    'TABLE_SCHEMA' => 'windwalker_test',
+                    'TABLE_SCHEMA' => static::$dbname,
                     'TABLE_TYPE' => 'VIEW',
-                    'VIEW_DEFINITION' => 'select `windwalker_test`.`ww_articles`.`id` AS `id`,`windwalker_test`.`ww_articles`.`category_id` AS `category_id`,`windwalker_test`.`ww_articles`.`page_id` AS `page_id`,`windwalker_test`.`ww_articles`.`type` AS `type`,`windwalker_test`.`ww_articles`.`price` AS `price`,`windwalker_test`.`ww_articles`.`title` AS `title`,`windwalker_test`.`ww_articles`.`alias` AS `alias`,`windwalker_test`.`ww_articles`.`introtext` AS `introtext`,`windwalker_test`.`ww_articles`.`state` AS `state`,`windwalker_test`.`ww_articles`.`ordering` AS `ordering`,`windwalker_test`.`ww_articles`.`created` AS `created`,`windwalker_test`.`ww_articles`.`created_by` AS `created_by`,`windwalker_test`.`ww_articles`.`language` AS `language`,`windwalker_test`.`ww_articles`.`params` AS `params` from `windwalker_test`.`ww_articles`',
+                    'VIEW_DEFINITION' => str_replace('windwalker_test', static::$dbname, 'select `windwalker_test`.`ww_articles`.`id` AS `id`,`windwalker_test`.`ww_articles`.`category_id` AS `category_id`,`windwalker_test`.`ww_articles`.`page_id` AS `page_id`,`windwalker_test`.`ww_articles`.`type` AS `type`,`windwalker_test`.`ww_articles`.`price` AS `price`,`windwalker_test`.`ww_articles`.`title` AS `title`,`windwalker_test`.`ww_articles`.`alias` AS `alias`,`windwalker_test`.`ww_articles`.`introtext` AS `introtext`,`windwalker_test`.`ww_articles`.`state` AS `state`,`windwalker_test`.`ww_articles`.`ordering` AS `ordering`,`windwalker_test`.`ww_articles`.`created` AS `created`,`windwalker_test`.`ww_articles`.`created_by` AS `created_by`,`windwalker_test`.`ww_articles`.`language` AS `language`,`windwalker_test`.`ww_articles`.`params` AS `params` from `windwalker_test`.`ww_articles`'),
                     'CHECK_OPTION' => 'NONE',
                     'IS_UPDATABLE' => 'YES',
                 ],
@@ -453,7 +453,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     'columns' => [
                         'category_id',
                     ],
-                    'referenced_table_schema' => 'windwalker_test',
+                    'referenced_table_schema' => static::$dbname,
                     'referenced_table_name' => 'ww_categories',
                     'referenced_columns' => [
                         'id',
@@ -496,7 +496,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
         self::assertArraySimilar(
             [
                 'PRIMARY' => [
-                    'table_schema' => 'windwalker_test',
+                    'table_schema' => static::$dbname,
                     'table_name' => 'ww_articles',
                     'is_unique' => true,
                     'is_primary' => true,
@@ -512,7 +512,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     ],
                 ],
                 'idx_articles_alias' => [
-                    'table_schema' => 'windwalker_test',
+                    'table_schema' => static::$dbname,
                     'table_name' => 'ww_articles',
                     'is_unique' => true,
                     'is_primary' => false,
@@ -546,7 +546,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                 //     ],
                 // ],
                 'idx_articles_category_id' => [
-                    'table_schema' => 'windwalker_test',
+                    'table_schema' => static::$dbname,
                     'table_name' => 'ww_articles',
                     'is_unique' => false,
                     'is_primary' => false,
@@ -562,7 +562,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     ],
                 ],
                 'idx_articles_created_by' => [
-                    'table_schema' => 'windwalker_test',
+                    'table_schema' => static::$dbname,
                     'table_name' => 'ww_articles',
                     'is_unique' => false,
                     'is_primary' => false,
@@ -578,7 +578,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     ],
                 ],
                 'idx_articles_language' => [
-                    'table_schema' => 'windwalker_test',
+                    'table_schema' => static::$dbname,
                     'table_name' => 'ww_articles',
                     'is_unique' => false,
                     'is_primary' => false,
@@ -594,7 +594,7 @@ class MySQLPlatformTest extends AbstractPlatformTestCase
                     ],
                 ],
                 'idx_articles_page_id' => [
-                    'table_schema' => 'windwalker_test',
+                    'table_schema' => static::$dbname,
                     'table_name' => 'ww_articles',
                     'is_unique' => false,
                     'is_primary' => false,

@@ -13,6 +13,8 @@ class SQLServerTableManagerExtraTest extends AbstractTableManagerExtraTestCase
 
     protected static string $driver = 'pdo_sqlsrv';
 
+    protected static string $collation = 'Latin1_General_BIN';
+
     protected static function dropTable(string $table): void
     {
         self::$baseConn->exec("IF OBJECT_ID('$table', 'U') IS NOT NULL DROP TABLE $table");

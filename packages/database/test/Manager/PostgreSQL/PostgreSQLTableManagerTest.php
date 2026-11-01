@@ -133,7 +133,7 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
                 'TABLE_NAME' => 'enterprise',
                 'TABLE_SCHEMA' => 'public',
                 'TABLE_TYPE' => 'BASE TABLE',
-                'TABLE_CATALOG' => 'windwalker_test',
+                'TABLE_CATALOG' => static::$dbname,
                 'VIEW_DEFINITION' => null,
                 'CHECK_OPTION' => null,
                 'IS_UPDATABLE' => null,

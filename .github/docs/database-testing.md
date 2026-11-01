@@ -11,7 +11,7 @@ Option A – local MySQL (no password root is assumed):
 mysql -uroot -e "SELECT VERSION();"   # confirm it is reachable
 ```
 
-Option B – Docker:
+Option B – Docker: (Mostly we don't use this way.)
 
 ```bash
 docker run -d --name ww-mysql -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=yes mysql:8
@@ -43,8 +43,23 @@ php vendor/bin/phpunit packages/orm/test
 php vendor/bin/phpunit packages/database/test/Manager/WriterManagerTest.php
 ```
 
-**Never run two DB suites concurrently** (including parallel agents/terminals): test classes drop and recreate the
+**Never run two DB suites concurrently with the same database** (including parallel agents/terminals; use a distinct `WINDWALKER_TEST_DB_SUFFIX` per run to isolate them, see below): test classes drop and recreate the
 same database, producing bogus `Unknown database` / missing-table errors. Run them sequentially.
+
+### Parallel agents: database suffix
+
+Set `WINDWALKER_TEST_DB_SUFFIX` to isolate runs. It is appended to the DSN `dbname` (`windwalker_test` →
+`windwalker_test_agent1`; for SQLite, inserted before the file extension). Each distinct suffix gets its own
+database, so suites with different suffixes **can** run concurrently:
+
+```bash
+WINDWALKER_TEST_DB_SUFFIX=agent1 php vendor/bin/phpunit packages/database/test
+WINDWALKER_TEST_DB_SUFFIX=agent2 php vendor/bin/phpunit packages/orm/test
+```
+
+Non-alphanumeric characters become `_`. With a suffix set, the suffixed database is dropped after each test class and
+again at process shutdown (so errors/fatals don't leave it behind); the unsuffixed database is never dropped. Never share one suffix between concurrent runs. Executed SQL is still
+logged to one shared file, so don't rely on it when running in parallel.
 
 Executed SQL is logged to `packages/database/tmp/test-sql.sql` — check it when debugging.
 

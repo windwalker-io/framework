@@ -70,7 +70,31 @@ class PdoHandlerMysqlTest extends AbstractHandlerTestCase
 
         parse_str(str_replace(';', '&', $dsn), $params);
 
+        $suffix = preg_replace('/[^A-Za-z0-9_]/', '_', (string) getenv('WINDWALKER_TEST_DB_SUFFIX'));
+
+        if ($suffix !== '' && !empty($params['dbname'])) {
+            $params['dbname'] .= '_' . $suffix;
+        }
+
         try {
+            if ($suffix !== '') {
+                $admin = new PDO(
+                    sprintf('mysql:host=%s', $params['host'] ?? '127.0.0.1'),
+                    $params['user'] ?? null,
+                    $params['password'] ?? null,
+                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                );
+                $admin->exec('CREATE DATABASE IF NOT EXISTS `' . $params['dbname'] . '`');
+
+                $dbname = $params['dbname'];
+                register_shutdown_function(static function () use ($admin, $dbname) {
+                    try {
+                        $admin->exec('DROP DATABASE IF EXISTS `' . $dbname . '`');
+                    } catch (\Throwable) {
+                    }
+                });
+            }
+
             $this->db = new PDO(
                 sprintf('mysql:host=%s;dbname=%s', $params['host'] ?? '127.0.0.1', $params['dbname'] ?? ''),
                 $params['user'] ?? null,

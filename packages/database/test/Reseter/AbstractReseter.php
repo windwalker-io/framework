@@ -33,6 +33,8 @@ abstract class AbstractReseter
 
     abstract public function createDatabase(PDO $pdo, string $dbname): void;
 
+    abstract public function dropDatabase(PDO $pdo, string $dbname): void;
+
     abstract public function clearAllTables(PDO $pdo, string $dbname): void;
 
     public static function qn(string $value): string

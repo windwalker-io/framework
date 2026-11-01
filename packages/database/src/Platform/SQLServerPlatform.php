@@ -657,6 +657,7 @@ SQL;
     {
         return $this->getGrammar()::build(
             $column->getTypeExpression($this->getDataType()),
+            $this->getCollateExpression($column),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->isAutoIncrement() ? 'IDENTITY' : null,
             $column->canHasDefaultValue()
@@ -768,6 +769,7 @@ SQL;
             'ALTER COLUMN',
             $this->db->quoteName($column->getColumnName()),
             $column->getTypeExpression($this->getDataType()),
+            $this->getCollateExpression($column),
             $column->getIsNullable() ? 'NOT NULL' : null,
         );
 

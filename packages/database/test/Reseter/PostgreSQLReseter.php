@@ -32,6 +32,11 @@ class PostgreSQLReseter extends AbstractReseter
         }
     }
 
+    public function dropDatabase(PDO $pdo, string $dbname): void
+    {
+        $pdo->exec('DROP DATABASE IF EXISTS ' . static::qn($dbname) . ' WITH (FORCE)');
+    }
+
     public function clearAllTables(PDO $pdo, string $dbname): void
     {
         // Drop Tables

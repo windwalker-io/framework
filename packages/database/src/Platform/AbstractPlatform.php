@@ -337,12 +337,20 @@ abstract class AbstractPlatform
     {
         return $this->getGrammar()::build(
             $column->getTypeExpression($this->getDataType()),
+            $this->getCollateExpression($column),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->canHasDefaultValue()
                 ? 'DEFAULT ' . $this->db->quote($column->getColumnDefault())
                 : '',
             $column->getOption('suffix')
         );
+    }
+
+    protected function getCollateExpression(Column $column): ?string
+    {
+        $collation = $column->getCollationName();
+
+        return $collation ? 'COLLATE ' . $collation : null;
     }
 
     public function dropTable(string $table, ?string $schema = null, $suffix = null): StatementInterface

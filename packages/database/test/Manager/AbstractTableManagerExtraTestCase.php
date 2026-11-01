@@ -30,6 +30,11 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
      */
     protected static bool $supportsAddConstraint = true;
 
+    /**
+     * A valid collation name of the platform, used to test column level collation.
+     */
+    protected static string $collation = 'utf8mb4_bin';
+
     protected TableManager $table;
 
     abstract protected static function dropTable(string $table): void;
@@ -150,6 +155,45 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
             static fn($column) => $column->length(100)
         );
 
+        $this->table->reset();
+
+        self::assertSame(100, (int) $this->table->getColumn('title')->getCharacterMaximumLength());
+    }
+
+    #[Test]
+    public function columnExpressionContainsCollation(): void
+    {
+        $platform = self::$db->getPlatform();
+
+        $expr = (string) $platform->getColumnExpression(
+            (new Column('name', 'varchar'))->length(100)->collation(static::$collation)
+        );
+
+        self::assertStringContainsString('COLLATE', $expr);
+        self::assertStringContainsString(static::$collation, $expr);
+
+        $expr = (string) $platform->getColumnExpression((new Column('name', 'varchar'))->length(100));
+
+        self::assertStringNotContainsString('COLLATE', $expr);
+    }
+
+    #[Test]
+    public function createAndModifyColumnWithCollation(): void
+    {
+        $this->table->addColumn(
+            (new Column('name', 'varchar'))->length(100)->collation(static::$collation)
+        );
+        $this->table->reset();
+
+        self::assertTrue($this->table->hasColumn('name'));
+
+        if (!static::$supportsColumnAlter) {
+            return;
+        }
+
+        $this->table->modifyColumn(
+            (new Column('title', 'varchar'))->length(100)->collation(static::$collation)
+        );
         $this->table->reset();
 
         self::assertSame(100, (int) $this->table->getColumn('title')->getCharacterMaximumLength());
