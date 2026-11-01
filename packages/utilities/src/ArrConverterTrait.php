@@ -144,6 +144,8 @@ trait ArrConverterTrait
 
     /**
      * Re-index an array by the given key, same as group() with GROUP_TYPE_KEY_BY.
+     *
+     * @codeCoverageIgnore
      */
     public static function keyBy(array $array, string|\Closure|null $key, int $flags = 0): array
     {
