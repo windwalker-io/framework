@@ -218,6 +218,7 @@ class PdoQueueDriver implements QueueDriverInterface, ChannelAwareDriverInterfac
         $message->setDeleted(false);
         $message->setId('');
         $message->setAttempts($message->getAttempts() - 1);
+        $message->setDeferTimes($message->getDeferTimes() + 1);
 
         $this->push($message);
 

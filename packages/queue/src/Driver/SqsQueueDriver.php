@@ -177,6 +177,7 @@ class SqsQueueDriver implements QueueDriverInterface
     {
         $copy = clone $message;
         $copy->setAttempts(max(0, $message->getAttempts() - 1));
+        $copy->setDeferTimes($message->getDeferTimes() + 1);
 
         $this->push($copy);
 

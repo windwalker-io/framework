@@ -320,6 +320,21 @@ class QueueMessage implements JsonSerializable
     }
 
     /**
+     * How many times this message has been deferred (not counted as attempts). Stored in the body.
+     */
+    public function getDeferTimes(): int
+    {
+        return (int) ($this->body['deferTimes'] ?? 0);
+    }
+
+    public function setDeferTimes(int $deferTimes): static
+    {
+        $this->body['deferTimes'] = max(0, $deferTimes);
+
+        return $this;
+    }
+
+    /**
      * Method to get property Delay
      *
      * @return  int

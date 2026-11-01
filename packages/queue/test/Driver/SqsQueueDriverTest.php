@@ -110,6 +110,15 @@ class SqsQueueDriverTest extends TestCase
 
         // Same value as the run that was deferred: defer did not count as an attempt.
         self::assertSame(2, $message->getAttempts());
+        self::assertSame(1, $message->getDeferTimes());
+
+        $message->setDelay(0);
+        $this->driver->defer($message);
+
+        $message = $this->driver->pop();
+
+        self::assertSame(2, $message->getAttempts());
+        self::assertSame(2, $message->getDeferTimes());
     }
 
     #[Test]

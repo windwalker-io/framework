@@ -214,6 +214,18 @@ class QueueDatabaseTest extends TestCase
         self::assertCount(1, $rows);
         self::assertEquals(0, $rows[0]['attempts']);
         self::assertNull($rows[0]['reserved']);
+        self::assertSame(1, json_decode($rows[0]['body'], true)['deferTimes']);
+
+        $message = $this->instance->pop('defer-channel');
+
+        self::assertSame(1, $message->getDeferTimes());
+        self::assertSame(1, $message->getAttempts());
+
+        $this->instance->defer($message, 0);
+        $message = $this->instance->pop('defer-channel');
+
+        self::assertSame(2, $message->getDeferTimes());
+        self::assertSame(1, $message->getAttempts());
 
         self::$db->delete('queue_jobs')->where('channel', 'defer-channel')->execute();
     }

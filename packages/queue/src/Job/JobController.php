@@ -27,6 +27,10 @@ class JobController
         get => $this->message->getAttempts();
     }
 
+    public int $deferTimes {
+        get => $this->message->getDeferTimes();
+    }
+
     public string|int $id {
         get => $this->message->getId();
     }

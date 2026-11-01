@@ -62,7 +62,7 @@ interface QueueDriverInterface
 
     /**
      * Defer the message to the queue without counting it as an attempt: undoes the increment made by pop() while
-     * keeping previous attempts, and delays visibility by `$message->getDelay()` seconds.
+     * keeping previous attempts, increments {@see QueueMessage::getDeferTimes()}, and delays visibility by `$message->getDelay()` seconds.
      *
      * @param  QueueMessage  $message
      *

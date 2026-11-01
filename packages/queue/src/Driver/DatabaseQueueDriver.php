@@ -209,8 +209,27 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
     public function defer(QueueMessage $message): static
     {
         $message->setAttempts($message->getAttempts() - 1);
+        $message->setDeferTimes($message->getDeferTimes() + 1);
 
-        return $this->release($message);
+        $channel = $message->getChannel() ?: $this->channel;
+
+        $time = (new DateTimeImmutable('now'))->modify('+' . $message->getDelay() . 'seconds');
+
+        $this->db->getWriter()->updateWhere(
+            $this->table,
+            [
+                'body' => json_encode($message, JSON_THROW_ON_ERROR),
+                'reserved' => null,
+                'visibility' => $time,
+                'attempts' => $message->getAttempts(),
+            ],
+            [
+                'id' => $this->idType->toWritable($message->getId()),
+                'channel' => $channel,
+            ]
+        );
+
+        return $this;
     }
 
     /**
