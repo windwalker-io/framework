@@ -97,6 +97,8 @@ class SelectorQuery extends Query implements EventAwareInterface
                     $orm->getEntityMetadata($object)
                         ->getRelationManager()
                         ->load($item, $object);
+
+                    $orm->mapper($object::class)->afterHydrate($object);
                 }
 
                 $event->item = $object;

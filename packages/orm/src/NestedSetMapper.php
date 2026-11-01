@@ -6,7 +6,6 @@ namespace Windwalker\ORM;
 
 use InvalidArgumentException;
 use Windwalker\Data\Collection;
-use Windwalker\Database\Event\HydrateEvent;
 use Windwalker\Event\EventInterface;
 use Windwalker\ORM\Event\AfterDeleteEvent;
 use Windwalker\ORM\Event\BeforeDeleteEvent;
@@ -47,48 +46,31 @@ class NestedSetMapper extends EntityMapper
 
     protected int $depth = 0;
 
-    protected function init(): void
+    protected function beforeSave(BeforeSaveEvent $event): void
     {
-        parent::init();
+        $source = $event->source;
 
-        $this->on(
-            BeforeSaveEvent::class,
-            function (BeforeSaveEvent $event) {
-                $source = $event->source;
+        $isRoot = is_array($source) && ($source['is_root'] ?? null);
 
-                $isRoot = is_array($source) && ($source['is_root'] ?? null);
-
-                if (!$isRoot) {
-                    $this->preprocessSave($event, $event->isCreate);
-                }
-
-                $this->validateSave($event);
-            }
-        );
-
-        $this->on(
-            AfterDeleteEvent::class,
-            function (AfterDeleteEvent $event) {
-                $this->postProcessDelete($event);
-            }
-        );
-
-        $this->on(
-            HydrateEvent::class,
-            function (HydrateEvent $event) {
-                $this->postProcessFindHydration($event);
-            }
-        );
-    }
-
-    protected function postProcessFindHydration(HydrateEvent $event): void
-    {
-        $item = $event->item;
-
-        if ($item === null) {
-            return;
+        if (!$isRoot) {
+            $this->preprocessSave($event, $event->isCreate);
         }
 
+        $this->validateSave($event);
+    }
+
+    protected function afterDelete(AfterDeleteEvent $event): void
+    {
+        $this->postProcessDelete($event);
+    }
+
+    public function afterHydrate(object $entity): void
+    {
+        $this->postProcessFindHydration($entity);
+    }
+
+    protected function postProcessFindHydration(object $item): void
+    {
         if (!$item instanceof NestedEntityInterface) {
             return;
         }

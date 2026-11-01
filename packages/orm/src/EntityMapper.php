@@ -98,6 +98,30 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
+     * Internal hook, always runs before BeforeSaveEvent is emitted (even if events are ignored).
+     */
+    protected function beforeSave(BeforeSaveEvent $event): void
+    {
+        //
+    }
+
+    /**
+     * Internal hook, always runs before AfterDeleteEvent is emitted (even if events are ignored).
+     */
+    protected function afterDelete(AfterDeleteEvent $event): void
+    {
+        //
+    }
+
+    /**
+     * Internal hook, called after a fetched row has been hydrated to an entity object.
+     */
+    public function afterHydrate(object $entity): void
+    {
+        //
+    }
+
+    /**
      * Create Query with select from.
      *
      * @param  mixed        $tables
@@ -351,14 +375,15 @@ class EntityMapper implements EventAwareInterface
         $data = $this->extract($source);
 
         // Keep data field same as source, that developers can know what data has sent.
-        $event = $this->emits(
-            new BeforeSaveEvent(
-                type: AbstractSaveEvent::TYPE_CREATE,
-                source: $source,
-                data: $data,
-                options: $options,
-            )
+        $event = new BeforeSaveEvent(
+            type: AbstractSaveEvent::TYPE_CREATE,
+            source: $source,
+            data: $data,
+            options: $options,
         );
+        $event->metadata = $this->metadata;
+        $this->beforeSave($event);
+        $event = $this->emits($event);
 
         // Hydrate data into entity after event, to make sure all fields has default value.
         $fullData = $event->data;
@@ -550,15 +575,16 @@ class EntityMapper implements EventAwareInterface
             $data = array_merge($oldData ?? [], $data);
         }
 
-        $event = $this->emits(
-            new BeforeSaveEvent(
-                type: AbstractSaveEvent::TYPE_UPDATE,
-                source: $source,
-                data: $data,
-                oldData: $oldData,
-                options: $options
-            )
+        $event = new BeforeSaveEvent(
+            type: AbstractSaveEvent::TYPE_UPDATE,
+            source: $source,
+            data: $data,
+            oldData: $oldData,
+            options: $options
         );
+        $event->metadata = $this->metadata;
+        $this->beforeSave($event);
+        $event = $this->emits($event);
 
         // Hydrate data into entity after event, to make sure all fields has default value.
         $fullData = $event->data;
@@ -1244,15 +1270,16 @@ class EntityMapper implements EventAwareInterface
             $statement = $writer->delete($metadata->getTableName(), $conditions = $event->conditions);
 
             // Event
-            $event = $this->emits(
-                new AfterDeleteEvent(
-                    statement: $statement,
-                    conditions: $conditions,
-                    entity: $entity,
-                    data: $event->data,
-                    options: $options
-                )
+            $event = new AfterDeleteEvent(
+                statement: $statement,
+                conditions: $conditions,
+                entity: $entity,
+                data: $event->data,
+                options: $options
             );
+            $event->metadata = $this->metadata;
+            $this->afterDelete($event);
+            $event = $this->emits($event);
 
             if ($handleRelations) {
                 $metadata->getRelationManager()->delete($event->data, $entity);

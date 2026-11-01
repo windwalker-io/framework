@@ -86,7 +86,7 @@ class StubArticle
     ): void {
         static::$diff = $event->getData();
 
-        $event->setExtra(['content' => $event->getData()['content']]);
+        $event->setExtra(['content' => $event->getData()['content'] ?? null]);
     }
 
     #[EnergizeEvent]

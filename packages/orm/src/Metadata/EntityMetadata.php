@@ -259,7 +259,7 @@ class EntityMetadata implements EventAwareInterface
 
     public function getColumnByPropertyName(string $propName): ?Column
     {
-        return $this->propertyMembers[$propName]?->column;
+        return ($this->propertyMembers[$propName] ?? null)?->column;
     }
 
     public function getClassName(): string
