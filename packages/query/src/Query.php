@@ -1253,6 +1253,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * @param  array|QueryCallable  $values
      *
      * @return  $this
+     *
+     * @deprecated  Use upsert() in the future.
      */
     public function onDuplicateKeyUpdate(array|callable $values): static
     {

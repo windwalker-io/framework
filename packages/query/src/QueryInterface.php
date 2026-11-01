@@ -5,23 +5,18 @@ declare(strict_types=1);
 namespace Windwalker\Query;
 
 use Windwalker\Database\Driver\StatementInterface;
-use Windwalker\Query\Clause\AlterClause;
 use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\ClausePosition;
-use Windwalker\Query\Clause\ExprClause;
-use Windwalker\Query\Data\CursorPaginate;
-use Windwalker\Query\Expression\Expression;
-use Windwalker\Query\Grammar\AbstractGrammar;
-use Windwalker\Utilities\Iterator\PaginateIterator;
-use Windwalker\Utilities\Wrapper\RawWrapper;
-use Windwalker\Utilities\Wrapper\WrapperInterface;
 
 /**
  * The public API of Query, so it can be proxied by other objects.
+ *
+ * @psalm-type QueryCallback = \Closure(Query): mixed
+ * @psalm-type QueryCallable = callable(Query): mixed
  */
-interface QueryInterface
+interface QueryInterface extends WhereQueryInterface, JsonQueryInterface, IterateQueryInterface
 {
     /**
      * Make query object as SQL string.
@@ -29,8 +24,6 @@ interface QueryInterface
      * @return  string
      */
     public function __toString(): string;
-
-    public function getName(): string;
 
     /**
      * select('foo', 'bar AS b')
@@ -226,77 +219,9 @@ interface QueryInterface
      */
     public function values(Query|array ...$valuesSet): static;
 
-    public function set(\Traversable|array|string $column, mixed $value = null): static;
+    public function set(string|iterable $column, mixed $value = null): static;
 
     public function setRaw(Clause|string $value, mixed ...$args): static;
-
-    /**
-     * @param  string        $name
-     * @param  array|string  $elements
-     * @param  string        $glue
-     *
-     * @return  Clause
-     */
-    public function clause(string $name, mixed $elements = [], string $glue = ' '): Clause;
-
-    public function expr(string $name, mixed ...$elements): ExprClause;
-
-    public function alter(string $target, string $targetName): AlterClause;
-
-    /**
-     * escape
-     *
-     * @param  string|iterable|WrapperInterface  $value
-     *
-     * @return  string|array
-     */
-    public function escape(mixed $value): array|string;
-
-    /**
-     * quote
-     *
-     * @param  mixed|WrapperInterface  $value
-     *
-     * @return  string
-     */
-    public function quote(mixed $value): mixed;
-
-    /**
-     * Make a value as quoted string or bounded.
-     *
-     * @param  mixed  $value
-     * @param  bool   $instant
-     *
-     * @return  mixed
-     *
-     * @internal Do not use this method directly.
-     */
-    public function valueize(mixed $value, bool $instant): mixed;
-
-    /**
-     * quoteName
-     *
-     * @param  string|Stringable  $name
-     * @param  int                $flags
-     *
-     * @return  mixed
-     */
-    public function quoteName(\Stringable|string $name, int $flags = 0): Clause|string;
-
-    /**
-     * Resolve column name,
-     * - If is RawWrapper, return raw value.
-     * - If is pure name string, wrap with name quote.
-     * - If contains arrow sign, convert to json selector.
-     *
-     * @param  string|Stringable  $name
-     * @param  int                $flags
-     *
-     * @return  string
-     */
-    public function resolveColumn(\Stringable|string $name, int $flags = 0): string;
-
-    public function qnMultiple(\Traversable|Clause|WrapperInterface|array $names, int $flags = 0): mixed;
 
     /**
      * alias
@@ -340,13 +265,6 @@ interface QueryInterface
     public function forShare(?string $do = null): static;
 
     /**
-     * @param  array|QueryCallable  $values
-     *
-     * @return  $this
-     */
-    public function onDuplicateKeyUpdate(callable|array $values): static;
-
-    /**
      * sql
      *
      * @param  string  $sql
@@ -355,21 +273,6 @@ interface QueryInterface
      * @return  static
      */
     public function sql(string $sql, mixed ...$args): static;
-
-    public function nullDate(): string;
-
-    public function getDateFormat(): string;
-
-    /**
-     * castValue
-     *
-     * @param  mixed  $value
-     *
-     * @return  string
-     */
-    public function castValue(mixed $value): mixed;
-
-    public function raw(string $string, mixed ...$args): RawWrapper;
 
     /**
      * Find and replace sprintf-like tokens in a format string.
@@ -426,8 +329,6 @@ interface QueryInterface
     public function render(bool $emulatePrepared = false, ?array &$bounded = null): string;
 
     /**
-     * debug
-     *
      * @param  bool|\Closure  $pre
      * @param  bool           $format
      * @param  bool           $asString
@@ -435,55 +336,6 @@ interface QueryInterface
      * @return  mixed|static
      */
     public function debug(\Closure|bool $pre = false, bool $format = true, bool $asString = false): mixed;
-
-    public function forPDO(?array &$bounded = null): string;
-
-    public function getMergedBounded(): array;
-
-    /**
-     * getSubQuery
-     *
-     * @param  string  $alias
-     *
-     * @return  Query|null
-     */
-    public function getSubQuery(string $alias): ?Query;
-
-    /**
-     * Method to get property Connection
-     *
-     * @return  Escaper
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function getEscaper(): ?Escaper;
-
-    /**
-     * Method to set property connection
-     *
-     * @param  Escaper|PDO|WeakReference|mixed  $escaper
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function setEscaper(mixed $escaper): static;
-
-    /**
-     * Method to get property Grammar
-     *
-     * @return  AbstractGrammar
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function getGrammar(): AbstractGrammar;
-
-    /**
-     * getExpression
-     *
-     * @return  Expression
-     */
-    public function getExpression(): Expression;
 
     /**
      * @param  string|null  $class
@@ -500,11 +352,9 @@ interface QueryInterface
     public function mustGetResult(): mixed;
 
     /**
-     * createSubQuery
-     *
      * @return  static
      */
-    public function createSubQuery(): static;
+    public function createSubQuery(): QueryInterface;
 
     /**
      * Clear data from the query or a specific clause of the query.
@@ -530,66 +380,8 @@ interface QueryInterface
      * @param  string|null  $defaultItemClass
      *
      * @return  static  Return self to support chaining.
-     *
-     * @codeCoverageIgnore
      */
     public function setDefaultItemClass(?string $defaultItemClass): static;
-
-    public function do(string $name, mixed ...$args): mixed;
-
-    /**
-     * Pipe a callback and return the result.
-     *
-     * @param  callable  $callback
-     * @param  array     $args
-     *
-     * @return  static
-     */
-    public function pipe(callable $callback, mixed ...$args): static;
-
-    /**
-     * Tap a callback and return self.
-     *
-     * @param  callable  $callback
-     * @param  mixed     ...$args
-     *
-     * @return  static
-     */
-    public function tap(callable $callback, mixed ...$args): static;
-
-    /**
-     * Pipe True/False callback based on a boolean value.
-     *
-     * @param  mixed          $allow
-     * @param  callable|null  $trueCallback
-     * @param  callable|null  $falseCallback
-     * @param  mixed          ...$args
-     *
-     * @return  static
-     */
-    public function pipeIf(
-        mixed $allow,
-        ?callable $trueCallback = null,
-        ?callable $falseCallback = null,
-        mixed ...$args
-    ): static;
-
-    /**
-     * Tap True/False callback based on a boolean value.
-     *
-     * @param  mixed          $allow
-     * @param  callable|null  $trueCallback
-     * @param  callable|null  $falseCallback
-     * @param  mixed          ...$args
-     *
-     * @return  static
-     */
-    public function tapIf(
-        mixed $allow,
-        ?callable $trueCallback = null,
-        ?callable $falseCallback = null,
-        mixed ...$args
-    ): static;
 
     /**
      * Method to add a variable to an internal array that will be bound to a prepared SQL statement before query
@@ -652,8 +444,6 @@ interface QueryInterface
     public function getBounded(mixed $key = null): ?array;
 
     /**
-     * resetBounded
-     *
      * @return  static
      *
      * @codeCoverageIgnore
@@ -668,212 +458,4 @@ interface QueryInterface
      * @return  static
      */
     public function unbind(mixed $keys): static;
-
-    public function formatDateTime(\DateTimeInterface $dateTime): string;
-
-    public function stripQuote(string $str): string;
-
-    public function stripNameQuote(string $str): string;
-
-    /**
-     * getAllTables
-     *
-     * @return  AsClause[]
-     */
-    public function getAllTables(): array;
-
-    /**
-     * @param  string  $expr
-     * @param  bool    $instant
-     *
-     * @return  Clause
-     *
-     * @since  3.5.21
-     */
-    public function jsonSelector(string $expr, bool $instant = false): Clause;
-
-    /**
-     * @param  string  $expr
-     * @param  mixed   $value
-     *
-     * @return  $this
-     *
-     * @throws  \JsonException
-     */
-    public function whereJsonContains(string $expr, mixed $value): static;
-
-    public function whereJsonNotContains(string $expr, mixed $value): static;
-
-    public function havingJsonContains(string $expr, mixed $value): static;
-
-    public function havingJsonNotContains(string $expr, mixed $value): static;
-
-    public function selectJsonLength(string $expr, string $as = ''): static;
-
-    public function whereJsonLength(array|string $expr, mixed ...$args): static;
-
-    /**
-     * @param  string|array|QueryCallback|ClauseInterface  $column   Column name, array where list or callback
-     *                                                               function as sub query.
-     * @param  mixed                                       ...$args
-     *
-     * @return  static
-     */
-    public function where(mixed $column, mixed ...$args): static;
-
-    /**
-     * whereRaw
-     *
-     * @param  string|Clause  $string
-     * @param  mixed          ...$args
-     *
-     * @return  static
-     */
-    public function whereRaw(Clause|string $string, mixed ...$args): static;
-
-    /**
-     * @param  array|QueryCallback  $wheres
-     *
-     * @return  static
-     */
-    public function orWhere(\Closure|array $wheres): static;
-
-    /**
-     * @param  array|QueryCallback  $wheres
-     *
-     * @return  static
-     */
-    public function andWhere(\Closure|array $wheres): static;
-
-    /**
-     * @param  string|array|QueryCallback|ClauseInterface  $column   Column name, array where list or callback
-     *                                                               function as sub query.
-     * @param  mixed                                       ...$args
-     *
-     * @return  static
-     */
-    public function having(mixed $column, mixed ...$args): static;
-
-    /**
-     * @param  string|Clause  $string
-     * @param  array          ...$args
-     *
-     * @return  static
-     */
-    public function havingRaw(mixed $string, mixed ...$args): static;
-
-    /**
-     * @param  array|QueryCallback  $wheres
-     *
-     * @return  static
-     */
-    public function orHaving(\Closure|array $wheres): static;
-
-    /**
-     * @param  Query|QueryCallable  $conditions
-     *
-     * @return  $this
-     */
-    public function whereExists(Query|callable $conditions): static;
-
-    /**
-     * @param  Query|QueryCallable  $conditions
-     *
-     * @return  $this
-     */
-    public function whereNotExists(Query|callable $conditions): static;
-
-    /**
-     * @param  Query|QueryCallable  $conditions
-     *
-     * @return  $this
-     */
-    public function havingExists(Query|callable $conditions): static;
-
-    /**
-     * @param  Query|QueryCallable  $conditions
-     *
-     * @return  $this
-     */
-    public function havingNotExists(Query|callable $conditions): static;
-
-    /**
-     * @template T of Collection
-     *
-     * Iterate and call DB every N times, every time get full items but yield item one by one, stop when no more items.
-     * This method can ensure no long connection to DB. You only need one level foreach to get every item.
-     *
-     * @param  CursorPaginate|int    $paginate
-     * @param  class-string<T>|null  $class
-     * @param  array                 $args
-     *
-     * @return  Generator<T>
-     */
-    public function iterateBatched(CursorPaginate|int $paginate, ?string $class = null, array $args = []): \Generator;
-
-    /**
-     * @template T of Collection
-     *
-     * Iterate and return chunks of items, every chunk will one time return full items.
-     * You need 2 level foreach to get every item.
-     *
-     * @param  CursorPaginate|int    $paginate
-     * @param  class-string<T>|null  $class
-     * @param  array                 $args
-     *
-     * @return  Generator<Collection<T>>
-     */
-    public function iterateChunks(CursorPaginate|int $paginate, ?string $class = null, array $args = []): \Generator;
-
-    /**
-     * @template T of Collection
-     *
-     * Iterate and call DB N times, every time get innter iterator and yield items one by one, stop when no more items.
-     * This method will not offset or paginated, it will always start from 0.
-     * You must change the item state in the loop to avoid infinite loop.
-     *
-     * @param  int                   $length
-     * @param  class-string<T>|null  $class
-     * @param  array                 $args
-     *
-     * @return  Generator<T>
-     */
-    public function iterateWhile(int $length, ?string $class = null, array $args = []): \Generator;
-
-    /**
-     * @template T of Collection
-     *
-     * Iterate and call DB N times, every time get full items and yield items one by one to prevent long connections,
-     * stop when no more items.
-     * This method will not offset or paginated, it will always start from 0.
-     * You must change the item state in the loop to avoid infinite loop.
-     *
-     * @param  int                   $length
-     * @param  class-string<T>|null  $class
-     * @param  array                 $args
-     *
-     * @return  Generator<T>
-     */
-    public function iterateBatchWhile(int $length, ?string $class = null, array $args = []): \Generator;
-
-    /**
-     * @template  T of Collection
-     *
-     * @param  class-string<T>|null     $class
-     * @param  array                    $args
-     * @param  CursorPaginate|int|null  $paginate
-     *
-     * @return  Traversable<T>
-     */
-    public function getIterator(
-        ?string $class = null,
-        array $args = [],
-        CursorPaginate|int|null $paginate = null
-    ): \Traversable;
-
-    public function getPaginatedIterator(
-        ?string $class = null,
-        CursorPaginate|int $perPage = 500,
-        array $args = []
-    ): PaginateIterator;
 }
