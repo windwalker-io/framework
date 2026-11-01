@@ -1806,7 +1806,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'subQueries' => [],
             'bounded' => [],
             'defaultItemClass' => null,
-            'paginate' => null,
         ];
 
         if ($clauses === []) {

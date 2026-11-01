@@ -127,6 +127,8 @@ class RecordBehaviorFixture extends Record
 
     public ?self $child = null;
 
+    public mixed $extra = null;
+
     public readonly string $readonly;
 
     protected string $locked = 'locked';
