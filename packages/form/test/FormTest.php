@@ -565,6 +565,19 @@ class FormTest extends TestCase
     }
 
     #[Test]
+    public function fillDecodesTopLevelJsonString(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('title'));
+        $form->addField(new TextField('url'), null, 'a');
+
+        $form->fill('{"title":"x","a":{"url":"u"}}');
+
+        self::assertSame('x', $form->getField('title')->getValue());
+        self::assertSame('u', $form->getField('a/url')->getValue());
+    }
+
+    #[Test]
     public function fillToFillsDataUnderPath(): void
     {
         $form = new Form();
