@@ -215,7 +215,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function select(...$columns): static
+    public function select(mixed ...$columns): static
     {
         foreach (array_values(Arr::flatten($columns)) as $column) {
             $this->selectAs($column);
@@ -244,7 +244,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function selectRaw(mixed $column, ...$args): static
+    public function selectRaw(mixed $column, mixed ...$args): static
     {
         if (is_array($column)) {
             foreach ($column as $col) {
@@ -317,7 +317,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function join(string $type, mixed $table, ?string $alias = null, ...$on): static
+    public function join(string $type, mixed $table, ?string $alias = null, mixed ...$on): static
     {
         return $this->doJoin(strtoupper($type) . ' JOIN', $table, $alias, ...$on);
     }
@@ -330,7 +330,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function joinLateral(string $type, mixed $table, ?string $alias = null, ...$on): static
+    public function joinLateral(string $type, mixed $table, ?string $alias = null, mixed ...$on): static
     {
         return $this->doJoin(strtoupper($type) . ' JOIN LATERAL', $table, $alias, ...$on);
     }
@@ -343,7 +343,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    protected function doJoin(string $action, mixed $table, ?string $alias = null, ...$on): static
+    protected function doJoin(string $action, mixed $table, ?string $alias = null, mixed ...$on): static
     {
         if (!$this->join) {
             $this->join = $this->clause('', [], ' ');
@@ -664,7 +664,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function group(...$columns): static
+    public function group(mixed ...$columns): static
     {
         foreach ($columns as $column) {
             if (is_array($column)) {
@@ -793,7 +793,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function columns(...$columns): static
+    public function columns(mixed ...$columns): static
     {
         if (!$this->columns) {
             $this->columns = $this->clause('()', [], ', ');
@@ -899,7 +899,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public function setRaw(Clause|string $value, ...$args): static
+    public function setRaw(Clause|string $value, mixed ...$args): static
     {
         if (!$this->set) {
             $this->set = $this->clause('SET', [], ', ');
@@ -989,7 +989,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return clause($name, $elements, $glue);
     }
 
-    public function expr(string $name, ...$elements): ExprClause
+    public function expr(string $name, mixed ...$elements): ExprClause
     {
         return expr($name, ...$elements);
     }
@@ -1152,7 +1152,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public function prefix(array|string|ClauseInterface $prefix, ...$args): static
+    public function prefix(array|string|ClauseInterface $prefix, mixed ...$args): static
     {
         if (is_array($prefix)) {
             foreach ($prefix as $values) {
@@ -1179,7 +1179,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public function suffix(array|string|ClauseInterface $suffix, ...$args): static
+    public function suffix(array|string|ClauseInterface $suffix, mixed ...$args): static
     {
         if (is_array($suffix)) {
             foreach ($suffix as $values) {
@@ -1292,7 +1292,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static
      */
-    public function sql(string $sql, ...$args): static
+    public function sql(string $sql, mixed ...$args): static
     {
         $this->type = static::TYPE_CUSTOM;
 
@@ -1331,7 +1331,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $value;
     }
 
-    public function raw(string $string, ...$args): RawWrapper
+    public function raw(string $string, mixed ...$args): RawWrapper
     {
         if ($args === []) {
             return raw($string);
@@ -1390,7 +1390,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @since   2.0
      */
-    public function format(string $format, ...$args): string
+    public function format(string $format, mixed ...$args): string
     {
         array_unshift($args, null);
 
@@ -1478,7 +1478,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return preg_replace_callback('#%(((([\d]+)\$)?([abeEnqQryYmMdDhHiIsStzZ]))|(%))#', $func, $format);
     }
 
-    protected function handleRawFormat(string $string, ...$args): string
+    protected function handleRawFormat(string $string, mixed ...$args): string
     {
         if (array_is_list($args)) {
             $string = $this->format($string, ...$args);
@@ -1707,7 +1707,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  void
      */
-    public function __clone()
+    public function __clone(): void
     {
         foreach (get_object_vars($this) as $k => $v) {
             if (is_object($v)) {
@@ -1782,7 +1782,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @since   2.0
      */
-    public function clear(...$clauses): static
+    public function clear(mixed ...$clauses): static
     {
         $clauses = Arr::collapse($clauses);
 

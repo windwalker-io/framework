@@ -33,11 +33,11 @@ trait BindableTrait
      * @since   3.5.5
      */
     public function bindParam(
-        $key = null,
-        &$value = null,
-        $dataType = null,
+        string|int|array|null $key = null,
+        mixed &$value = null,
+        mixed $dataType = null,
         int $length = 0,
-        $driverOptions = null
+        mixed $driverOptions = null
     ): static {
         // No action if value is QuoteNameClause
         if ($value instanceof QuoteNameClause) {
@@ -105,9 +105,9 @@ trait BindableTrait
      * @since   2.0
      */
     public function bind(
-        $key = null,
-        $value = null,
-        $dataType = null
+        string|int|array|null $key = null,
+        mixed $value = null,
+        mixed $dataType = null
     ): static {
         return $this->bindParam($key, $value, $dataType);
     }
@@ -122,7 +122,7 @@ trait BindableTrait
      *
      * @since   2.0
      */
-    public function &getBounded($key = null): ?array
+    public function &getBounded(mixed $key = null): ?array
     {
         if (empty($key)) {
             return $this->bounded;

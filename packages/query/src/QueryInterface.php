@@ -39,7 +39,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function select(...$columns): static;
+    public function select(mixed ...$columns): static;
 
     /**
      * @param  mixed        $column
@@ -56,7 +56,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function selectRaw(mixed $column, ...$args): static;
+    public function selectRaw(mixed $column, mixed ...$args): static;
 
     /**
      * from
@@ -76,7 +76,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function join(string $type, mixed $table, ?string $alias = null, ...$on): static;
+    public function join(string $type, mixed $table, ?string $alias = null, mixed ...$on): static;
 
     /**
      * @param  string                                      $type
@@ -86,7 +86,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function joinLateral(string $type, mixed $table, ?string $alias = null, ...$on): static;
+    public function joinLateral(string $type, mixed $table, ?string $alias = null, mixed ...$on): static;
 
     /**
      * Handle column and sub query.
@@ -168,7 +168,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function group(...$columns): static;
+    public function group(mixed ...$columns): static;
 
     public function groupRaw(Clause|string $group, mixed ...$args): static;
 
@@ -211,7 +211,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function columns(...$columns): static;
+    public function columns(mixed ...$columns): static;
 
     /**
      * Every row must be a single array.
@@ -228,7 +228,7 @@ interface QueryInterface
 
     public function set(\Traversable|array|string $column, mixed $value = null): static;
 
-    public function setRaw(Clause|string $value, ...$args): static;
+    public function setRaw(Clause|string $value, mixed ...$args): static;
 
     /**
      * @param  string        $name
@@ -239,7 +239,7 @@ interface QueryInterface
      */
     public function clause(string $name, mixed $elements = [], string $glue = ' '): Clause;
 
-    public function expr(string $name, ...$elements): ExprClause;
+    public function expr(string $name, mixed ...$elements): ExprClause;
 
     public function alter(string $target, string $targetName): AlterClause;
 
@@ -307,9 +307,9 @@ interface QueryInterface
      */
     public function alias(string $alias): static;
 
-    public function prefix(ClauseInterface|array|string $prefix, ...$args): static;
+    public function prefix(ClauseInterface|array|string $prefix, mixed ...$args): static;
 
-    public function suffix(ClauseInterface|array|string $suffix, ...$args): static;
+    public function suffix(ClauseInterface|array|string $suffix, mixed ...$args): static;
 
     /**
      * Add FOR UPDATE after query string.
@@ -354,7 +354,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function sql(string $sql, ...$args): static;
+    public function sql(string $sql, mixed ...$args): static;
 
     public function nullDate(): string;
 
@@ -369,7 +369,7 @@ interface QueryInterface
      */
     public function castValue(mixed $value): mixed;
 
-    public function raw(string $string, ...$args): RawWrapper;
+    public function raw(string $string, mixed ...$args): RawWrapper;
 
     /**
      * Find and replace sprintf-like tokens in a format string.
@@ -421,7 +421,7 @@ interface QueryInterface
      *
      * @since   2.0
      */
-    public function format(string $format, ...$args): string;
+    public function format(string $format, mixed ...$args): string;
 
     public function render(bool $emulatePrepared = false, ?array &$bounded = null): string;
 
@@ -515,7 +515,7 @@ interface QueryInterface
      *
      * @since   2.0
      */
-    public function clear(...$clauses): static;
+    public function clear(mixed ...$clauses): static;
 
     public function prepareStatement(): StatementInterface;
 
@@ -535,7 +535,7 @@ interface QueryInterface
      */
     public function setDefaultItemClass(?string $defaultItemClass): static;
 
-    public function do(string $name, ...$args): mixed;
+    public function do(string $name, mixed ...$args): mixed;
 
     /**
      * Pipe a callback and return the result.
@@ -545,7 +545,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function pipe(callable $callback, ...$args): static;
+    public function pipe(callable $callback, mixed ...$args): static;
 
     /**
      * Tap a callback and return self.
@@ -555,7 +555,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function tap(callable $callback, ...$args): static;
+    public function tap(callable $callback, mixed ...$args): static;
 
     /**
      * Pipe True/False callback based on a boolean value.
@@ -571,7 +571,7 @@ interface QueryInterface
         mixed $allow,
         ?callable $trueCallback = null,
         ?callable $falseCallback = null,
-        ...$args
+        mixed ...$args
     ): static;
 
     /**
@@ -588,7 +588,7 @@ interface QueryInterface
         mixed $allow,
         ?callable $trueCallback = null,
         ?callable $falseCallback = null,
-        ...$args
+        mixed ...$args
     ): static;
 
     /**
@@ -610,11 +610,11 @@ interface QueryInterface
      * @since   3.5.5
      */
     public function bindParam(
-        $key = null,
-        &$value = null,
-        $dataType = null,
+        string|int|array|null $key = null,
+        mixed &$value = null,
+        mixed $dataType = null,
         int $length = 0,
-        $driverOptions = null
+        mixed $driverOptions = null
     ): static;
 
     /**
@@ -633,7 +633,11 @@ interface QueryInterface
      *
      * @since   2.0
      */
-    public function bind($key = null, $value = null, $dataType = null): static;
+    public function bind(
+        string|int|array|null $key = null,
+        mixed $value = null,
+        mixed $dataType = null
+    ): static;
 
     /**
      * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then
@@ -645,7 +649,7 @@ interface QueryInterface
      *
      * @since   2.0
      */
-    public function getBounded($key = null): ?array;
+    public function getBounded(mixed $key = null): ?array;
 
     /**
      * resetBounded
@@ -725,7 +729,7 @@ interface QueryInterface
      *
      * @return  static
      */
-    public function whereRaw(Clause|string $string, ...$args): static;
+    public function whereRaw(Clause|string $string, mixed ...$args): static;
 
     /**
      * @param  array|QueryCallback  $wheres

@@ -26,11 +26,11 @@ interface BindableInterface
      * @return  static
      */
     public function bindParam(
-        $key = null,
-        &$value = null,
-        $dataType = null,
+        string|int|array|null $key = null,
+        mixed &$value = null,
+        mixed $dataType = null,
         int $length = 0,
-        $driverOptions = null
+        mixed $driverOptions = null
     ): static;
 
     /**
@@ -48,8 +48,8 @@ interface BindableInterface
      * @return  static
      */
     public function bind(
-        $key = null,
-        $value = null,
-        $dataType = null
+        string|int|array|null $key = null,
+        mixed $value = null,
+        mixed $dataType = null
     ): static;
 }

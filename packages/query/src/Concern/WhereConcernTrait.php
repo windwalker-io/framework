@@ -235,7 +235,7 @@ trait WhereConcernTrait
      *
      * @return  static
      */
-    public function whereRaw(Clause|string $string, ...$args): static
+    public function whereRaw(Clause|string $string, mixed ...$args): static
     {
         if (!$this->where) {
             $this->where = $this->clause('WHERE', [], ' AND ');
