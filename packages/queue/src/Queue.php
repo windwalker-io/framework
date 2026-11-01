@@ -7,6 +7,7 @@ namespace Windwalker\Queue;
 use InvalidArgumentException;
 use JsonException;
 use Windwalker\DI\Definition\DefinitionInterface;
+use Windwalker\Queue\Attributes\DefaultChannel;
 use Windwalker\Queue\Driver\ChannelAwareDriverInterface;
 use Windwalker\Queue\Driver\QueueDriverInterface;
 use Windwalker\Queue\Job\ClosureJob;
@@ -55,6 +56,8 @@ class Queue
         } else {
             $message = $job;
         }
+
+        $channel ??= DefaultChannel::resolve($message->getJob());
 
         $message->setDelay($delay);
         $message->setChannel($channel);
