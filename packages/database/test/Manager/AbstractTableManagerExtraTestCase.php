@@ -225,6 +225,35 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
     }
 
     #[Test]
+    public function addAndDropCheckConstraint(): void
+    {
+        if (!static::$supportsAddConstraint) {
+            self::markTestSkipped('Platform cannot add constraints to existing table.');
+        }
+
+        $this->table->addCheck("title <> 'bad'", 'ck_ww_tm_extra_title');
+        $this->table->reset();
+
+        $constraint = $this->table->getConstraint('ck_ww_tm_extra_title');
+
+        self::assertNotNull($constraint);
+        self::assertTrue($constraint->isCheck());
+        self::assertStringContainsString('bad', (string) $constraint->checkClause);
+
+        try {
+            self::$baseConn->exec("INSERT INTO ww_tm_extra (title, alias) VALUES ('bad', 'x')");
+            self::fail('Check constraint should reject the row.');
+        } catch (\PDOException) {
+            self::assertTrue(true);
+        }
+
+        $this->table->dropConstraint('ck_ww_tm_extra_title');
+        $this->table->reset();
+
+        self::assertFalse($this->table->hasConstraint('ck_ww_tm_extra_title'));
+    }
+
+    #[Test]
     public function renameTableWithoutReturningNewInstance(): void
     {
         $result = $this->table->rename(self::TABLE . '_renamed', false);

@@ -47,6 +47,20 @@ class SchemaTest extends AbstractDatabaseTestCase
     }
 
     /**
+     * @see  Schema::addCheck()
+     */
+    #[Test]
+    public function addCheck(): void
+    {
+        $this->instance->addCheck('price >= 0', 'ck_price');
+
+        $constraints = $this->instance->getConstraints();
+
+        self::assertTrue($constraints['ck_price']->isCheck());
+        self::assertEquals('price >= 0', $constraints['ck_price']->checkClause);
+    }
+
+    /**
      * @see  Schema::__call
      */
     #[Test]

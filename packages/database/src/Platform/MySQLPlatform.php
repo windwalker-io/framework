@@ -364,6 +364,10 @@ class MySQLPlatform extends AbstractPlatform
 
         $rcItems = $this->db->prepare($query)->all()->keyBy('CONSTRAINT_NAME');
 
+        $checks = $constraintItems->filter(fn($row) => $row['CONSTRAINT_TYPE'] === 'CHECK')->count() > 0
+            ? $this->listCheckConstraints($schema, $this->db->replacePrefix($table))
+            : collect();
+
         $realName = null;
         $constraints = [];
 
@@ -386,6 +390,11 @@ class MySQLPlatform extends AbstractPlatform
                 'table_name' => $row['TABLE_NAME'],
                 'columns' => [],
             ];
+
+            if ('CHECK' === $row['CONSTRAINT_TYPE']) {
+                $constraints[$name]['check_clause'] = $checks[$realName] ?? null;
+                continue;
+            }
 
             if ($isFK) {
                 $constraints[$name]['referenced_table_schema'] = $kcuItems[0]['REFERENCED_TABLE_SCHEMA'];

@@ -110,6 +110,13 @@ class AlterClause implements ClauseInterface
         return $this->addConstraint($name, Constraint::TYPE_UNIQUE, $columns);
     }
 
+    public function addCheck(?string $name, string $expression): Clause
+    {
+        return $this->subClause('ADD CONSTRAINT')
+            ->append($name ? $this->query->quoteName($name) : '')
+            ->append('CHECK (' . $expression . ')');
+    }
+
     public function addForeignKey(
         string $name,
         array $columns,

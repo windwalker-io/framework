@@ -184,6 +184,14 @@ class Schema
             ->columns($columns);
     }
 
+    public function addCheck(string $expression, ?string $name = null): Constraint
+    {
+        $name ??= 'ck_' . $this->table->getName() . '_' . substr(md5($expression), 0, 8);
+
+        return $this->addConstraint(Constraint::TYPE_CHECK, $name)
+            ->check($expression);
+    }
+
     public function addForeignKey(
         array|string $columns,
         ?string $refTable = null,

@@ -491,6 +491,11 @@ abstract class AbstractPlatform
                 $constraint->constraintName,
                 $this->prepareKeyColumns($constraint->getColumns())
             );
+        } elseif ($constraint->constraintType === Constraint::TYPE_CHECK) {
+            $alter->addCheck(
+                $constraint->constraintName,
+                (string) $constraint->checkClause
+            );
         } elseif ($constraint->constraintType === Constraint::TYPE_FOREIGN_KEY) {
             $alter->addForeignKey(
                 $constraint->constraintName,

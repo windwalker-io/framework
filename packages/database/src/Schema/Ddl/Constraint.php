@@ -38,6 +38,8 @@ class Constraint
 
     public ?string $deleteRule = null;
 
+    public ?string $checkClause = null;
+
     /**
      * @var  Column[]
      */
@@ -92,6 +94,13 @@ class Constraint
     public function tableName(string $tableName): static
     {
         $this->tableName = $tableName;
+
+        return $this;
+    }
+
+    public function check(?string $checkClause): static
+    {
+        $this->checkClause = $checkClause;
 
         return $this;
     }

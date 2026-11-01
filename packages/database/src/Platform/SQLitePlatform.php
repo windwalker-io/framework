@@ -478,6 +478,12 @@ class SQLitePlatform extends AbstractPlatform
         }
 
         foreach ($constraints as $constraint) {
+            if ($constraint->isCheck()) {
+                $columns[] = $alter->addCheck($constraint->constraintName, (string) $constraint->checkClause)
+                    ->setName('CONSTRAINT');
+                continue;
+            }
+
             $columns[] = $alter->addConstraint(
                 $constraint->constraintName,
                 $constraint->constraintType,

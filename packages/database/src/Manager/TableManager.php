@@ -628,6 +628,15 @@ class TableManager extends AbstractMetaManager
         return $this;
     }
 
+    public function addCheck(string $expression, ?string $name = null): static
+    {
+        $name ??= 'ck_' . $this->getName() . '_' . substr(md5($expression), 0, 8);
+
+        return $this->addConstraint(
+            new Constraint(Constraint::TYPE_CHECK, $name, $this->getName())->check($expression)
+        );
+    }
+
     public function hasConstraint(string $name): bool
     {
         return isset($this->getConstraints()[$name]);
