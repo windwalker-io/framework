@@ -442,6 +442,108 @@ class CachePool implements CachePoolInterface
 
 
     /**
+     * Modify an existing cached value (hit only).
+     *
+     * Behavior of the three read-and-write helpers:
+     *
+     * | method    | on hit                           | on miss                    | returns            |
+     * |-----------|----------------------------------|----------------------------|--------------------|
+     * | fetch()   | return cached value, no handler  | handler computes & stores  | the value          |
+     * | modify()  | handler transforms & stores      | do nothing                 | bool (was changed) |
+     * | compute() | handler transforms & stores      | handler computes & stores  | the new value      |
+     *
+     * Like fetch(), the handler runs under a CacheLock so the read-modify-write cycle is atomic.
+     * Unlike fetch(), modify() and compute() never skip the handler on hit and do not use XFetch.
+     * The TTL is always renewed (like touch()) because storages cannot report the original expiration.
+     *
+     * @psalm-param callable(CacheItem): mixed $handler  Receives the current item, returns the new value
+     *                                                   (or a CacheItem, same as fetch()).
+     *
+     * @param  null|int|string|DateInterval  $ttl   New TTL, null uses the default TTL.
+     * @param  bool                          $lock  Whether to acquire a CacheLock.
+     *
+     * @return  bool  True if the item existed and was saved, false on miss or save failure.
+     */
+    public function modify(
+        string $key,
+        callable $handler,
+        DateInterval|string|int|null $ttl = null,
+        bool $lock = true,
+    ): bool {
+        return $this->mutate($key, $handler, $ttl, $lock, false, $saved);
+    }
+
+    /**
+     * Compute a new value from the current one, whether it exists or not.
+     *
+     * The handler receives the CacheItem; check `$item->isHit()` to tell hit from miss
+     * (on miss `$item->get()` is null). The result is always stored with a renewed TTL.
+     *
+     * @see     modify() for the behavior comparison with fetch() and modify().
+     *
+     * @psalm-param callable(CacheItem): mixed $handler
+     *
+     * @param  null|int|string|DateInterval  $ttl   TTL of the stored value, null uses the default TTL.
+     * @param  bool                          $lock  Whether to acquire a CacheLock.
+     *
+     * @return  mixed  The new value.
+     */
+    public function compute(
+        string $key,
+        callable $handler,
+        DateInterval|string|int|null $ttl = null,
+        bool $lock = true,
+    ): mixed {
+        $this->mutate($key, $handler, $ttl, $lock, true, $data);
+
+        return $data;
+    }
+
+    /**
+     * Shared read-modify-write cycle of modify() and compute().
+     *
+     * @param  mixed  $data  Receives the new value.
+     */
+    private function mutate(
+        string $key,
+        callable $handler,
+        DateInterval|string|int|null $ttl,
+        bool $lock,
+        bool $createIfMissing,
+        mixed &$data = null,
+    ): bool {
+        $locked = $lock && CacheLock::lock($key, $isNew);
+        $ttl = static::normalizeTtl($ttl ?? $this->defaultTtl);
+
+        try {
+            // Re-read after acquiring the lock to see writes made while waiting.
+            $item = $this->getItem($key);
+
+            if (!$item->isHit() && !$createIfMissing) {
+                return false;
+            }
+
+            $item->expiresAfter($ttl);
+
+            $data = $handler($item);
+
+            if ($data instanceof CacheItemInterface) {
+                $item = $data;
+                $data = $item->get();
+            } else {
+                $item->set($data);
+            }
+
+            return $this->save($item);
+        } finally {
+            // Only release a lock this call acquired; a re-entrant caller still owns it.
+            if ($locked && $isNew) {
+                CacheLock::release($key);
+            }
+        }
+    }
+
+    /**
      * @deprecated Use fetch() instead.
      */
     public function call(

@@ -370,6 +370,40 @@ class CachePoolTest extends TestCase
     }
 
     #[Test]
+    public function modifyOnlyChangesExistingItemAndRenewsTtl(): void
+    {
+        $storage = new ArrayStorage(0.0);
+        $pool = new CachePool($storage);
+        $pool->set('k', 1, 60);
+
+        $before = time();
+        self::assertTrue($pool->modify('k', fn(CacheItem $item) => $item->get() + 1, 300, false));
+        self::assertSame(2, $pool->get('k'));
+        self::assertGreaterThanOrEqual($before + 300, $storage->getData()['k'][0]);
+
+        $called = false;
+        self::assertFalse($pool->modify('missing', function () use (&$called) {
+            $called = true;
+
+            return 1;
+        }, 300, false));
+        self::assertFalse($called);
+        self::assertFalse($pool->has('missing'));
+    }
+
+    #[Test]
+    public function computeHandlesHitAndMiss(): void
+    {
+        $pool = new CachePool(new ArrayStorage(0.0));
+
+        $handler = fn(CacheItem $item) => $item->isHit() ? $item->get() + 1 : 10;
+
+        self::assertSame(10, $pool->compute('k', $handler, 60, false));
+        self::assertSame(11, $pool->compute('k', $handler, 60, false));
+        self::assertSame(11, $pool->get('k'));
+    }
+
+    #[Test]
     public function shouldRecomputeEarlyHandlesDisabledAndExpiredItems(): void
     {
         $pool = new CachePool(new ArrayStorage(0.0));

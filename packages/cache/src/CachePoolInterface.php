@@ -36,6 +36,30 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
         bool $lock = true,
     );
 
+    /**
+     * Transform an existing value (hit only) and renew its TTL. Returns false on miss.
+     *
+     * @psalm-param callable(CacheItem): mixed $handler
+     */
+    public function modify(
+        string $key,
+        callable $handler,
+        DateInterval|string|int|null $ttl = null,
+        bool $lock = true,
+    ): bool;
+
+    /**
+     * Transform the value whether it exists or not and renew its TTL. Returns the new value.
+     *
+     * @psalm-param callable(CacheItem): mixed $handler
+     */
+    public function compute(
+        string $key,
+        callable $handler,
+        DateInterval|string|int|null $ttl = null,
+        bool $lock = true,
+    ): mixed;
+
     public function touch(string $key, DateInterval|string|int|null $ttl = null, bool $lock = true): bool;
 
     public function withLogger(LoggerInterface $logger): static;
