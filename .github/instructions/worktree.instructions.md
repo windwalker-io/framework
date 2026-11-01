@@ -13,3 +13,6 @@ These rules apply only when the task runs in a git worktree (worktree isolation 
   commits into a single commit and write the commit message yourself from the actual changes (no need to ask).
 - **Continuing**: if the user gives further instructions after a merge, keep working in the same worktree
   (keep committing each change) and squash-merge again only when asked.
+- **Database tests**: when a task needs database tests, first check whether the working branch's environment has a
+  database running. If it does, the local or Docker database is available, so use it directly (see
+  `/.github/docs/database-testing.md`).
