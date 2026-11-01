@@ -9,6 +9,8 @@ use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The PdoPgsqlConnection class.
+ *
+ * @method  Pgsql|null  get()
  */
 class PdoPgsqlConnection extends AbstractPdoConnection
 {
@@ -38,13 +40,12 @@ class PdoPgsqlConnection extends AbstractPdoConnection
         return $options;
     }
 
-    public function get(): ?Pgsql
-    {
-        return parent::get();
-    }
-
-    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Pgsql
-    {
+    protected function pdoConnect(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null
+    ): Pgsql {
         return new Pgsql($dsn, $username, $password, $options);
     }
 }

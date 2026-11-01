@@ -38,6 +38,9 @@ return new Config()
             // 'trailing_comma_in_multiline' => [
             //     'elements' => ['arrays', 'arguments', 'parameters'],
             // ],
+            'method_argument_space' => [
+                'on_multiline' => 'ensure_fully_multiline',
+            ],
             'concat_space' => [
                 'spacing' => 'one',
             ],
@@ -62,5 +65,3 @@ return new Config()
     ->setIndent('    ')
     ->setLineEnding("\n")
     ->setFinder($finder);
-
-

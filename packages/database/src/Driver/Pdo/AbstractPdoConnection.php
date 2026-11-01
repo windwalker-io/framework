@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Pdo;
 
 use PDO;
+use Throwable;
 use Windwalker\Database\Driver\AbstractConnection;
 use Windwalker\Database\Driver\DriverOptions;
 
@@ -89,8 +90,12 @@ abstract class AbstractPdoConnection extends AbstractConnection
      * `PDO::connect()` silently falls back to a plain `PDO` instance instead of the expected
      * driver-specific subclass.
      */
-    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): PDO
-    {
+    protected function pdoConnect(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null
+    ): PDO {
         return new PDO($dsn, $username, $password, $options);
     }
 
@@ -128,7 +133,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
             $this->connection->query('SELECT 1');
 
             return true;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return false;
         }
     }

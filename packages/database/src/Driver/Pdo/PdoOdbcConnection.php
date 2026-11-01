@@ -9,6 +9,8 @@ use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The OdbcConnection class.
+ *
+ * @method  Odbc|null  get()
  */
 class PdoOdbcConnection extends AbstractPdoConnection
 {
@@ -42,13 +44,12 @@ class PdoOdbcConnection extends AbstractPdoConnection
         return $options;
     }
 
-    public function get(): ?Odbc
-    {
-        return parent::get();
-    }
-
-    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Odbc
-    {
+    protected function pdoConnect(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null
+    ): Odbc {
         return new Odbc($dsn, $username, $password, $options);
     }
 }

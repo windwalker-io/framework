@@ -89,6 +89,7 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
 
     /**
      * @param  bool  $releaseConnection  *
+     *
      * @inheritDoc
      */
     public function transactionCommit(bool $releaseConnection = true): bool
@@ -107,6 +108,7 @@ class PdoDriver extends AbstractDriver implements TransactionDriverInterface
 
     /**
      * @param  bool  $releaseConnection  *
+     *
      * @inheritDoc
      */
     public function transactionRollback(bool $releaseConnection = true): bool

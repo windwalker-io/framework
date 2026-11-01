@@ -9,6 +9,8 @@ use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The MysqlConnection class.
+ *
+ * @method  Mysql|null  get()
  */
 class PdoMysqlConnection extends AbstractPdoConnection
 {
@@ -51,13 +53,12 @@ class PdoMysqlConnection extends AbstractPdoConnection
         return $this;
     }
 
-    public function get(): ?Mysql
-    {
-        return parent::get();
-    }
-
-    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Mysql
-    {
+    protected function pdoConnect(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null,
+    ): Mysql {
         return new Mysql($dsn, $username, $password, $options);
     }
 }

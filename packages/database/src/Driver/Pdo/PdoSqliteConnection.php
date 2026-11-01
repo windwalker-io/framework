@@ -9,6 +9,8 @@ use Windwalker\Database\Driver\DriverOptions;
 
 /**
  * The PdoSqliteConnection class.
+ *
+ * @method  Sqlite|null  get()
  */
 class PdoSqliteConnection extends AbstractPdoConnection
 {
@@ -35,13 +37,12 @@ class PdoSqliteConnection extends AbstractPdoConnection
         return parent::disconnect();
     }
 
-    public function get(): ?Sqlite
-    {
-        return parent::get();
-    }
-
-    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Sqlite
-    {
+    protected function pdoConnect(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null
+    ): Sqlite {
         return new Sqlite($dsn, $username, $password, $options);
     }
 }
