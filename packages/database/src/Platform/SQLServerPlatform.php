@@ -103,6 +103,7 @@ class SQLServerPlatform extends AbstractPlatform
                     'c.IS_NULLABLE',
                     'c.DATA_TYPE',
                     'c.CHARACTER_MAXIMUM_LENGTH',
+                    'c.DATETIME_PRECISION',
                     'c.CHARACTER_OCTET_LENGTH',
                     'c.NUMERIC_PRECISION',
                     'c.NUMERIC_SCALE',
@@ -308,7 +309,8 @@ class SQLServerPlatform extends AbstractPlatform
                 'column_default' => $default,
                 'is_nullable' => ('YES' === $row['IS_NULLABLE']),
                 'data_type' => $row['DATA_TYPE'],
-                'character_maximum_length' => $row['CHARACTER_MAXIMUM_LENGTH'],
+                'character_maximum_length' => $row['CHARACTER_MAXIMUM_LENGTH']
+                    ?? (((int) ($row['DATETIME_PRECISION'] ?? 0)) > 0 ? $row['DATETIME_PRECISION'] : null),
                 'character_octet_length' => $row['CHARACTER_OCTET_LENGTH'],
                 'numeric_precision' => $row['NUMERIC_PRECISION'],
                 'numeric_scale' => $row['NUMERIC_SCALE'],

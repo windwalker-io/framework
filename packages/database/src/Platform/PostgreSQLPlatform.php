@@ -99,6 +99,7 @@ class PostgreSQLPlatform extends AbstractPlatform
                     'is_nullable',
                     'data_type',
                     'character_maximum_length',
+                    'datetime_precision',
                     'character_octet_length',
                     'numeric_precision',
                     'numeric_scale',
@@ -253,7 +254,8 @@ class PostgreSQLPlatform extends AbstractPlatform
                 'column_default' => $row['column_default'],
                 'is_nullable' => ('YES' === $row['is_nullable']),
                 'data_type' => $row['data_type'],
-                'character_maximum_length' => $row['character_maximum_length'],
+                'character_maximum_length' => $row['character_maximum_length']
+                    ?? (((int) ($row['datetime_precision'] ?? 0)) > 0 ? $row['datetime_precision'] : null),
                 'character_octet_length' => $row['character_octet_length'],
                 'numeric_precision' => $row['numeric_precision'],
                 'numeric_scale' => $row['numeric_scale'],

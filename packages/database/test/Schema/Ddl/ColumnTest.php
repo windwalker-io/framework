@@ -7,6 +7,10 @@ namespace Windwalker\Database\Test\Schema\Ddl;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Database\Platform\Type\MySQLDataType;
+use Windwalker\Database\Platform\Type\PostgreSQLDataType;
+use Windwalker\Database\Platform\Type\SQLServerDataType;
+use Windwalker\Database\Platform\Type\SQLiteDataType;
 use Windwalker\Database\Schema\Ddl\Column;
 
 use function Windwalker\raw;
@@ -65,5 +69,22 @@ class ColumnTest extends TestCase
 
         self::assertTrue($column->isGeneratedStored());
         self::assertSame('price * 3', $column->getGenerationExpression());
+    }
+
+    #[Test]
+    public function datetimeTypeKeepsFractionalSecondsLength(): void
+    {
+        $column = new Column('updated', 'datetime');
+        $column->length(6);
+
+        self::assertSame('datetime(6)', $column->getTypeExpression(new MySQLDataType()));
+        self::assertSame('datetime(6)', $column->getTypeExpression(new PostgreSQLDataType()));
+        self::assertSame('datetime(6)', $column->getTypeExpression(new SQLiteDataType()));
+        self::assertSame('datetime(6)', $column->getTypeExpression(new SQLServerDataType()));
+
+        $column = new Column('created', 'timestamp(3)');
+
+        self::assertSame('timestamp(3)', $column->getTypeExpression(new MySQLDataType()));
+        self::assertSame('date', (new Column('d', 'date'))->length(6)->getTypeExpression(new MySQLDataType()));
     }
 }

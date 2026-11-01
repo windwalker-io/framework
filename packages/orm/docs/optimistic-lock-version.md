@@ -33,7 +33,29 @@ is a valid version and is included in the `WHERE` condition. Only `null` skips t
 
 The new value carries microseconds. If the column is a plain `DATETIME` (seconds precision), the database truncates it,
 so updating the same entity again right away fails because the in-memory value no longer matches the stored one. Also,
-two writes in the same second cannot be told apart. Use `DATETIME(6)`, or prefer an integer version.
+two writes in the same second cannot be told apart.
+
+A time-based lock is only reliable with a microsecond-precision column. Choose the type yourself for your database:
+
+| Database   | Recommended column type |
+|------------|-------------------------|
+| MySQL / MariaDB | `DATETIME(6)` |
+| PostgreSQL | `timestamp(6)` |
+| SQL Server | `datetime2(6)` |
+| SQLite     | no real date type; use an integer version |
+
+`Schema` accepts any type name (unknown method names become the column type), so you can declare the type directly:
+
+```php
+$schema->datetime('updated')->length(6);    // MySQL: datetime(6)
+$schema->timestamp('updated')->length(6);   // PostgreSQL: timestamp(6)
+$schema->datetime2('updated')->length(6);   // SQL Server: datetime2(6)
+```
+
+The same works on MySQL/MariaDB: `$schema->datetime('updated')->length(6);` produces `datetime(6)`.
+
+Two writes within the same microsecond are still theoretically indistinguishable. If you need a portable or strictly
+safe lock, use an integer version.
 
 ### Custom next value
 

@@ -337,7 +337,7 @@ class PostgreSQLPlatformTest extends AbstractPlatformTestCase
                     'column_default' => '1000-01-01 00:00:00',
                     'is_nullable' => false,
                     'data_type' => 'timestamp without time zone',
-                    'character_maximum_length' => null,
+                    'character_maximum_length' => 6,
                     'character_octet_length' => null,
                     'numeric_precision' => null,
                     'numeric_scale' => null,

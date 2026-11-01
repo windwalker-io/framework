@@ -324,7 +324,7 @@ CREATE VIEW ww_articles_view AS SELECT * FROM ww_articles;'
                     'column_default' => '1000-01-01 00:00:00',
                     'is_nullable' => false,
                     'data_type' => 'datetime',
-                    'character_maximum_length' => null,
+                    'character_maximum_length' => 3,
                     'character_octet_length' => null,
                     'numeric_precision' => null,
                     'numeric_scale' => null,

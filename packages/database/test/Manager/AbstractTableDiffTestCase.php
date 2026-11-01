@@ -69,4 +69,23 @@ abstract class AbstractTableDiffTestCase extends AbstractDatabaseTestCase
 
         $table->drop();
     }
+
+    #[Test]
+    public function fractionalSecondsColumnsAreInSync(): void
+    {
+        $define = static function (Schema $schema) {
+            $schema->primary('id');
+            $schema->datetime('updated')->length(6);
+        };
+
+        $table = self::$db->getTableManager('diff_fraction_test');
+        $table->drop();
+        $table->create($define);
+
+        $diff = $table->diff($define);
+
+        self::assertTrue($diff->isEmpty(), json_encode($diff->getColumnChanges()));
+
+        $table->drop();
+    }
 }

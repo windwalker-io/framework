@@ -101,6 +101,7 @@ class MySQLPlatform extends AbstractPlatform
                 'IS_NULLABLE',
                 'DATA_TYPE',
                 'CHARACTER_MAXIMUM_LENGTH',
+                'DATETIME_PRECISION',
                 'CHARACTER_OCTET_LENGTH',
                 'CHARACTER_SET_NAME',
                 'COLLATION_NAME',
@@ -259,7 +260,8 @@ class MySQLPlatform extends AbstractPlatform
                 'column_default' => $row['COLUMN_DEFAULT'],
                 'is_nullable' => $isNullable,
                 'data_type' => $row['DATA_TYPE'],
-                'character_maximum_length' => $row['CHARACTER_MAXIMUM_LENGTH'],
+                'character_maximum_length' => $row['CHARACTER_MAXIMUM_LENGTH']
+                    ?? (((int) ($row['DATETIME_PRECISION'] ?? 0)) > 0 ? $row['DATETIME_PRECISION'] : null),
                 'character_octet_length' => $row['CHARACTER_OCTET_LENGTH'],
                 'character_set_name' => $row['CHARACTER_SET_NAME'],
                 'collation_name' => $row['COLLATION_NAME'],

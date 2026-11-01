@@ -284,7 +284,7 @@ class Column
             $this->setLengthByType(null, null);
         }
 
-        [$dataType, $precision, $scale] = DataType::extract("{$this->dataType}($value)");
+        [$dataType, $precision, $scale] = DataType::extract("t($value)");
 
         $this->setLengthByType(
             $precision,
@@ -727,6 +727,10 @@ class Column
             return $value ? '1' : '0';
         }
 
+        if (strtoupper(trim((string) $value)) === 'NULL') {
+            return null;
+        }
+
         $value = trim((string) $value, " '\"");
 
         if (is_numeric($value) && str_contains($value, '.')) {
@@ -746,6 +750,8 @@ class Column
             'bool' => 'boolean',
             'character varying' => 'varchar',
             'character' => 'char',
+            'timestamp without time zone' => 'timestamp',
+            'timestamp with time zone' => 'timestamptz',
             default => $type,
         };
     }

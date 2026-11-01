@@ -70,7 +70,5 @@ class MySQLDataType extends DataType
         self::TEXT,
         self::LONGTEXT,
         self::DATE,
-        self::DATETIME,
-        self::TIMESTAMP,
     ];
 }

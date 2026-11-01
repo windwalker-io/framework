@@ -605,6 +605,7 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
               "is_nullable",
               "data_type",
               "character_maximum_length",
+              "datetime_precision",
               "character_octet_length",
               "numeric_precision",
               "numeric_scale",
