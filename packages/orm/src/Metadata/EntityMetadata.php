@@ -153,6 +153,9 @@ class EntityMetadata implements EventAwareInterface
             return $this;
         }
 
+        // Mark early to prevent re-entrant setup.
+        $this->hasSetup = true;
+
         $resolver = $this->getORM()->getAttributesResolver();
 
         $ref = $this->getReflector();
@@ -176,8 +179,6 @@ class EntityMetadata implements EventAwareInterface
             )
         );
 
-        $this->hasSetup = true;
-
         return $this;
     }
 
@@ -194,6 +195,9 @@ class EntityMetadata implements EventAwareInterface
 
             $this->methodMembers[$ref->getName()] = new EntityMember($ref);
         }
+
+        $this->cacheRemove('columns');
+        $this->cacheRemove('pure.cols');
 
         return $this;
     }

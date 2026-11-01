@@ -36,7 +36,22 @@ class EntityMetadataCollection
 
         $class = strtolower(trim($class, '\\'));
 
-        return $this->metadataList[$class] ??= new EntityMetadata($entity, $this->getORM())->setup();
+        if (isset($this->metadataList[$class])) {
+            return $this->metadataList[$class];
+        }
+
+        // Register before setup so re-entrant requests get the same instance.
+        $metadata = $this->metadataList[$class] = new EntityMetadata($entity, $this->getORM());
+
+        try {
+            $metadata->setup();
+        } catch (\Throwable $e) {
+            unset($this->metadataList[$class]);
+
+            throw $e;
+        }
+
+        return $metadata;
     }
 
     public function set(EntityMetadata $metadata): static
