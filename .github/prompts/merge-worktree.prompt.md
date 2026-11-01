@@ -8,7 +8,7 @@ squashed commit.
 2. Identify the working branch the worktree should merge into (the branch of the main checkout). Ask the user only
    if it cannot be determined.
 3. Make sure the working branch has no uncommitted changes that would conflict with the merge.
-4. If user provide a commit message when calling this prompt, append it to the generated commit message from diff.
+4. Before merge, ask user if they want to provide a custom commit message, append it to the generated commit message from diff.
 5. Squash-merge the worktree branch into the working branch (`git merge --squash <worktree-branch>`), then create
    one commit.
 6. Write the commit message yourself from the actual diff: a concise imperative subject line, plus a short body
