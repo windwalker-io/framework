@@ -80,10 +80,17 @@ class QueueTest extends TestCase
         $queue->pushRaw('{"a":1}', 10, 'raw');
         $queue->pushRaw(['b' => 2]);
 
-        self::assertSame(['a' => 1, 'channel' => 'raw'], $bodies[0]->getBody());
+        // createdAt is stored in the body so every driver can restore the message age.
+        self::assertSame(
+            ['a' => 1, 'channel' => 'raw', 'createdAt' => $bodies[0]->createdAt->getTimestamp()],
+            $bodies[0]->getBody()
+        );
         self::assertSame(10, $bodies[0]->getDelay());
         self::assertSame('raw', $bodies[0]->getChannel());
-        self::assertSame(['b' => 2, 'channel' => null], $bodies[1]->getBody());
+        self::assertSame(
+            ['b' => 2, 'channel' => null, 'createdAt' => $bodies[1]->createdAt->getTimestamp()],
+            $bodies[1]->getBody()
+        );
     }
 
     #[Test]

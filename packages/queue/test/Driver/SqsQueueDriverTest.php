@@ -122,6 +122,24 @@ class SqsQueueDriverTest extends TestCase
     }
 
     #[Test]
+    public function createdAtIsKeptAcrossDeferAndRelease(): void
+    {
+        $message = new QueueMessage(new TestJob(['sqs']));
+        $message->setCreatedAt(new \DateTimeImmutable('-120 seconds'));
+        $this->driver->push($message);
+
+        $message = $this->driver->pop();
+        self::assertGreaterThanOrEqual(120, $message->age);
+
+        $message->setDelay(0);
+        $this->driver->defer($message);
+
+        $message = $this->driver->pop();
+        self::assertGreaterThanOrEqual(120, $message->age);
+        self::assertLessThan(130, $message->age);
+    }
+
+    #[Test]
     public function deferAppliesDelay(): void
     {
         $this->driver->push(new QueueMessage(new TestJob(['sqs'])));

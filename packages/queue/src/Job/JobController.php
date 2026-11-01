@@ -27,6 +27,14 @@ class JobController
         get => $this->message->getAttempts();
     }
 
+    public int $age {
+        get => $this->message->age;
+    }
+
+    public \Time\Duration $ageDuration {
+        get => $this->message->ageDuration;
+    }
+
     public int $deferTimes {
         get => $this->message->getDeferTimes();
     }

@@ -24,6 +24,41 @@ class QueueMessageTest extends TestCase
     }
 
     #[Test]
+    public function ageCountsSecondsSinceCreatedAndSurvivesBodyRoundTrip(): void
+    {
+        $message = new QueueMessage(new TestJob());
+
+        self::assertSame(0, $message->age);
+
+        $message->setCreatedAt(new \DateTimeImmutable('-90 seconds'));
+
+        self::assertGreaterThanOrEqual(90, $message->age);
+        self::assertLessThan(95, $message->age);
+
+        // Drivers that do not store `created` separately (SQS) restore it from the body.
+        $copy = new QueueMessage();
+        $copy->setBody(json_decode(json_encode($message), true));
+
+        self::assertSame($message->createdAt->getTimestamp(), $copy->createdAt->getTimestamp());
+        self::assertGreaterThanOrEqual(90, $copy->age);
+    }
+
+    #[Test]
+    public function ageDurationIsDurationOnPhp86OrThrows(): void
+    {
+        $message = new QueueMessage(new TestJob());
+        $message->setCreatedAt(new \DateTimeImmutable('-90 seconds'));
+
+        if (class_exists(\Time\Duration::class)) {
+            self::assertInstanceOf(\Time\Duration::class, $message->ageDuration);
+        } else {
+            $this->expectException(\LogicException::class);
+
+            $message->ageDuration;
+        }
+    }
+
+    #[Test]
     public function getAndSetReadAndWriteBodyValues(): void
     {
         $message = new QueueMessage();

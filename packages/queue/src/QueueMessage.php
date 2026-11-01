@@ -65,6 +65,24 @@ class QueueMessage implements JsonSerializable
     public protected(set) bool $deleted = false;
 
     protected object $unserializedJob;
+
+    /**
+     * Seconds since the message was first sent. Retries and defers do not reset it.
+     */
+    public int $age {
+        get => $this->createdAt === null ? 0 : max(0, time() - $this->createdAt->getTimestamp());
+    }
+
+    /**
+     * {@see $age} as `Time\Duration`.
+     *
+     * @throws  \LogicException  If `Time\Duration` is not available (requires PHP 8.6+).
+     */
+    public \Time\Duration $ageDuration {
+        get => class_exists(\Time\Duration::class)
+            ? \Time\Duration::fromSeconds($this->age)
+            : throw new \LogicException('Time\\Duration requires PHP 8.6+, use $age (seconds) instead.');
+    }
     // phpcs:disable
 
     public ?string $serializedJob {
@@ -268,6 +286,11 @@ class QueueMessage implements JsonSerializable
     {
         $this->body = $body;
 
+        // Restore the creation time for drivers that do not store it separately (e.g. SQS).
+        if (isset($body['createdAt']) && is_int($body['createdAt'])) {
+            $this->createdAt = new \DateTimeImmutable('@' . $body['createdAt']);
+        }
+
         return $this;
     }
 
@@ -426,7 +449,12 @@ class QueueMessage implements JsonSerializable
     {
         $this->serializeJob();
 
-        return get_object_vars($this);
+        $vars = get_object_vars($this);
+
+        // Virtual computed properties.
+        unset($vars['age'], $vars['ageDuration']);
+
+        return $vars;
     }
 
     public function __unserialize(array $data): void
@@ -451,6 +479,12 @@ class QueueMessage implements JsonSerializable
         }
 
         $this->createdAt = $createdAt;
+
+        if ($createdAt !== null) {
+            $this->body['createdAt'] = $createdAt->getTimestamp();
+        } else {
+            unset($this->body['createdAt']);
+        }
 
         return $this;
     }
