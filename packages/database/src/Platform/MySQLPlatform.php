@@ -110,6 +110,7 @@ class MySQLPlatform extends AbstractPlatform
                 'COLUMN_TYPE',
                 'COLUMN_COMMENT',
                 'EXTRA',
+                'GENERATION_EXPRESSION',
             ]
         )
             ->from('INFORMATION_SCHEMA.COLUMNS')
@@ -267,6 +268,8 @@ class MySQLPlatform extends AbstractPlatform
                 'numeric_unsigned' => str_contains($row['COLUMN_TYPE'], 'unsigned'),
                 'comment' => $row['COLUMN_COMMENT'],
                 'auto_increment' => $row['EXTRA'] === 'auto_increment',
+                'generation_expression' => ($row['GENERATION_EXPRESSION'] ?? '') ?: null,
+                'generated_stored' => str_contains((string) $row['EXTRA'], 'STORED GENERATED'),
                 'erratas' => $erratas,
             ];
         }
@@ -568,6 +571,7 @@ class MySQLPlatform extends AbstractPlatform
             $column->getNumericUnsigned() ? 'UNSIGNED' : '',
             $column->getCharacterSetName() ? 'CHARACTER SET ' . $column->getCharacterSetName() : null,
             $this->getCollateExpression($column),
+            $this->getGeneratedExpression($column),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->canHasDefaultValue()
                 ? 'DEFAULT ' . $this->db->quote($column->getColumnDefault())
@@ -625,6 +629,10 @@ class MySQLPlatform extends AbstractPlatform
     protected function getKeyColumnExpression(Column $column): Clause
     {
         $expr = parent::getKeyColumnExpression($column);
+
+        if ($column->getIndexExpression() !== null) {
+            return $expr;
+        }
 
         $subParts = $column->getErratas()['sub_parts'] ?? null;
         $length = $column->getCharacterMaximumLength();

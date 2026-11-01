@@ -338,11 +338,25 @@ abstract class AbstractPlatform
         return $this->getGrammar()::build(
             $column->getTypeExpression($this->getDataType()),
             $this->getCollateExpression($column),
+            $this->getGeneratedExpression($column),
             $column->getIsNullable() ? '' : 'NOT NULL',
             $column->canHasDefaultValue()
                 ? 'DEFAULT ' . $this->db->quote($column->getColumnDefault())
                 : '',
             $column->getOption('suffix')
+        );
+    }
+
+    protected function getGeneratedExpression(Column $column): ?string
+    {
+        if (!$column->isGenerated()) {
+            return null;
+        }
+
+        return sprintf(
+            'GENERATED ALWAYS AS (%s) %s',
+            $column->getGenerationExpression(),
+            $column->isGeneratedStored() ? 'STORED' : 'VIRTUAL'
         );
     }
 
@@ -497,6 +511,10 @@ abstract class AbstractPlatform
 
     protected function getKeyColumnExpression(Column $column): Clause
     {
+        if ($column->getIndexExpression() !== null) {
+            return clause('(' . $column->getIndexExpression() . ')', [], ' ');
+        }
+
         $expr = clause($this->db->quoteName($column->getColumnName()), [], ' ');
 
         if ($column->getOption('sort')) {

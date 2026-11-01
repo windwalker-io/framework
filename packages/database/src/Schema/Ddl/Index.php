@@ -107,6 +107,16 @@ class Index
     }
 
     /**
+     * Add an expression key part (functional index), e.g. `LOWER(email)`.
+     */
+    public function expression(string $expression): static
+    {
+        $this->columns[$expression] = (new Column($expression))->indexExpression($expression);
+
+        return $this;
+    }
+
+    /**
      * @return  Column[]
      */
     public function getColumns(): array

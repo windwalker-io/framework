@@ -655,6 +655,13 @@ SQL;
 
     public function getColumnExpression(Column $column): Clause
     {
+        if ($column->isGenerated()) {
+            return $this->getGrammar()::build(
+                'AS (' . $column->getGenerationExpression() . ')',
+                $column->isGeneratedStored() ? 'PERSISTED' : null,
+            );
+        }
+
         return $this->getGrammar()::build(
             $column->getTypeExpression($this->getDataType()),
             $this->getCollateExpression($column),

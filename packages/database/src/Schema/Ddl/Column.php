@@ -9,6 +9,7 @@ use Windwalker\Query\Grammar\MySQLGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 use Windwalker\Utilities\TypeCast;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\raw;
 
@@ -52,6 +53,10 @@ class Column
     protected bool $autoIncrement = false;
 
     protected array $erratas = [];
+
+    protected ?string $generationExpression = null;
+
+    protected bool $generatedStored = false;
 
     /**
      * @var  array<Constraint>
@@ -161,6 +166,10 @@ class Column
 
     public function canHasDefaultValue(): bool
     {
+        if ($this->isGenerated()) {
+            return false;
+        }
+
         return $this->getColumnDefault() !== false && !($this->getColumnDefault() === null && !$this->getIsNullable());
     }
 
@@ -494,6 +503,74 @@ class Column
         $this->characterSetName = $charset;
 
         return $this;
+    }
+
+    /**
+     * Define as generated column.
+     *
+     * @param  string|RawWrapper  $expression  SQL expression, must be trusted code.
+     * @param  bool               $stored      STORED if true, otherwise VIRTUAL.
+     */
+    public function generatedAs(string|RawWrapper $expression, bool $stored = false): static
+    {
+        $this->generationExpression = (string) ($expression instanceof RawWrapper ? $expression->get() : $expression);
+        $this->generatedStored = $stored;
+
+        return $this;
+    }
+
+    public function virtualAs(string|RawWrapper $expression): static
+    {
+        return $this->generatedAs($expression, false);
+    }
+
+    public function storedAs(string|RawWrapper $expression): static
+    {
+        return $this->generatedAs($expression, true);
+    }
+
+    public function generationExpression(?string $expression): static
+    {
+        $this->generationExpression = $expression ?: null;
+
+        return $this;
+    }
+
+    public function generatedStored(bool|string|int $stored): static
+    {
+        $this->generatedStored = (bool) $stored;
+
+        return $this;
+    }
+
+    public function isGenerated(): bool
+    {
+        return $this->generationExpression !== null && $this->generationExpression !== '';
+    }
+
+    public function getGenerationExpression(): ?string
+    {
+        return $this->generationExpression;
+    }
+
+    public function isGeneratedStored(): bool
+    {
+        return $this->generatedStored;
+    }
+
+    /**
+     * Use as an expression key part in index (functional index).
+     */
+    public function indexExpression(?string $expression): static
+    {
+        $this->erratas['expression'] = $expression;
+
+        return $this;
+    }
+
+    public function getIndexExpression(): ?string
+    {
+        return $this->erratas['expression'] ?? null;
     }
 
     /**
