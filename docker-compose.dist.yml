@@ -53,6 +53,24 @@ services:
       retries: 10
       start_period: 30s
 
+  oracle:
+    image: gvenzl/oracle-free:23-slim
+    container_name: windwalker_oracle
+    environment:
+      ORACLE_PASSWORD: ut1234
+      APP_USER: windwalker
+      APP_USER_PASSWORD: ut1234
+    ports:
+      - "${ORACLE_PORT:-1521}:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
   redis:
     image: redis:7-alpine
     container_name: windwalker_redis
@@ -83,4 +101,5 @@ volumes:
   postgresql_data:
   redis_data:
   sqlserver_data:
+  oracle_data:
 
