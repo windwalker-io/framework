@@ -158,6 +158,19 @@ abstract class AbstractDriver implements HydratorAwareInterface
             $afterConnectCallbacks = [$afterConnectCallbacks];
         }
 
+        if ($this->options->readonly && $this->options->readonlyNative) {
+            $nativeSql = match ($this->getDbType()) {
+                DbPlatform::MySQL => 'SET SESSION TRANSACTION READ ONLY',
+                DbPlatform::PostgreSQL => 'SET default_transaction_read_only = on',
+                DbPlatform::SQLite => 'PRAGMA query_only = 1',
+                default => null,
+            };
+
+            if ($nativeSql !== null) {
+                $driver->execute($nativeSql);
+            }
+        }
+
         foreach ($afterConnectCallbacks as $callback) {
             if (is_string($callback)) {
                 $driver->execute($callback);
@@ -295,6 +308,18 @@ abstract class AbstractDriver implements HydratorAwareInterface
         // Convert query to string and get merged bounded
         $sql = $this->handleQuery($query, $bounded);
 
+        if ($this->options->readonly && static::isWriteQuery($sql)) {
+            if ($this->options->readonlyThrow) {
+                throw new DatabaseQueryException(
+                    'Database is in readonly mode, write query is not allowed.'
+                )->setDebugSql($sql);
+            }
+
+            // Swap with a harmless query that returns an empty result set.
+            $sql = 'SELECT 1 WHERE 1 = 0';
+            $bounded = [];
+        }
+
         // Prepare actions by driver
         $stmt = $this->createStatement($sql, $bounded, $options);
 
@@ -372,6 +397,33 @@ abstract class AbstractDriver implements HydratorAwareInterface
         );
 
         return $stmt;
+    }
+
+    /**
+     * Heuristic check whether a SQL string modifies data or schema.
+     */
+    public static function isWriteQuery(string $sql): bool
+    {
+        // Strip leading whitespace, comments and parentheses
+        $sql = preg_replace('/^(?:\s+|--[^\n]*\n?|#[^\n]*\n?|\/\*.*?\*\/|\()+/s', '', $sql) ?? $sql;
+
+        if (preg_match(
+            '/^(?:INSERT|UPDATE|DELETE|REPLACE|TRUNCATE|DROP|ALTER|CREATE|RENAME|GRANT|REVOKE|MERGE|LOCK|CALL|EXEC|'
+            . 'EXECUTE|VACUUM|REINDEX|ANALYZE|OPTIMIZE|REPAIR|COPY|LOAD|IMPORT)\b/i',
+            $sql
+        )) {
+            return true;
+        }
+
+        // CTE with data-modifying statement, SELECT ... INTO, SELECT ... FOR UPDATE/SHARE
+        if (preg_match('/^(?:WITH|SELECT)\b/i', $sql)) {
+            return (bool) preg_match(
+                '/\b(?:INSERT\s+INTO|UPDATE\s+\S|DELETE\s+FROM|INTO\s+(?:OUTFILE|DUMPFILE)|FOR\s+(?:UPDATE|SHARE))\b/i',
+                $sql
+            );
+        }
+
+        return false;
     }
 
     /**

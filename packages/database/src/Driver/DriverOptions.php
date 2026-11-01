@@ -45,6 +45,18 @@ class DriverOptions extends RecordOptions
          * }|bool
          */
         public array|bool|null $tls = null,
+        /**
+         * Block all write queries.
+         */
+        public bool $readonly = false,
+        /**
+         * If true, a blocked write query throws an exception, otherwise it is silently ignored.
+         */
+        public bool $readonlyThrow = true,
+        /**
+         * Also enable the database native read-only mode after connect (MySQL, PostgreSQL, SQLite).
+         */
+        public bool $readonlyNative = false,
     ) {
     }
 
