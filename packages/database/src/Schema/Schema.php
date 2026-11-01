@@ -9,6 +9,7 @@ use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Ddl\Index;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * The Schema class.
@@ -138,6 +139,27 @@ class Schema
         $this->indexes[$name] = $index;
 
         return $index;
+    }
+
+    /**
+     * Add functional index. Items can be column names or SQL expressions wrapped by `raw()`.
+     *
+     * @param  array<string|RawWrapper>  $expressions
+     */
+    public function addFunctionalIndex(array|string|RawWrapper $expressions, string $name): Index
+    {
+        $index = new Index($name, $this->table->getName());
+
+        foreach ((array) $expressions as $expr) {
+            if ($expr instanceof RawWrapper) {
+                $index->expression((string) $expr->get());
+            } else {
+                $col = $this->columns[$expr] ?? new Column($expr);
+                $index->columns[$col->getColumnName()] = $col;
+            }
+        }
+
+        return $this->addIndex($index, $name);
     }
 
     public function addUniqueKey(array|string $columns, ?string $name = null): Constraint

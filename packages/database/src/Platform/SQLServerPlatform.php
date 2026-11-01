@@ -8,6 +8,7 @@ use LogicException;
 use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Schema\Ddl\Column;
+use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\Clause;
@@ -590,6 +591,20 @@ class SQLServerPlatform extends AbstractPlatform
         return $statement;
     }
 
+    public function addIndex(string $table, Index $index, ?string $schema = null): StatementInterface
+    {
+        foreach ($index->getColumns() as $column) {
+            if ($column->getIndexExpression() !== null) {
+                throw new \LogicException(
+                    'SQL Server does not support functional index, '
+                    . 'add a computed column and index it instead.'
+                );
+            }
+        }
+
+        return parent::addIndex($table, $index, $schema);
+    }
+
     public function renameTable(string $from, string $to, ?string $schema = null): StatementInterface
     {
         return $this->db->execute(
@@ -655,6 +670,13 @@ SQL;
 
     public function getColumnExpression(Column $column): Clause
     {
+        if ($column->isGenerated()) {
+            return $this->getGrammar()::build(
+                'AS (' . $column->getGenerationExpression() . ')',
+                $column->isGeneratedStored() ? 'PERSISTED' : null,
+            );
+        }
+
         return $this->getGrammar()::build(
             $column->getTypeExpression($this->getDataType()),
             $this->getCollateExpression($column),

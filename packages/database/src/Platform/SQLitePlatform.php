@@ -254,9 +254,13 @@ class SQLitePlatform extends AbstractPlatform
             );
 
             foreach ($info as $column) {
-                $index['columns'][$column['name']] = [
-                    'column_name' => $column['name'],
+                $isExpression = $column['name'] === null;
+                $colName = $column['name'] ?? '(expression ' . $column['seqno'] . ')';
+
+                $index['columns'][$colName] = [
+                    'column_name' => $colName,
                     'subpart' => null,
+                    'erratas' => $isExpression ? ['expression' => $colName] : [],
                 ];
             }
 

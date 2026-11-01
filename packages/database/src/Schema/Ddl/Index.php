@@ -85,9 +85,13 @@ class Index
                     $colName = $key;
                 }
 
-                [$colName, $subParts] = DataType::extract($colName);
+                $erratas = is_array($column) ? ($column['erratas'] ?? []) : [];
 
-                $erratas = $column['erratas'] ?? [];
+                if (($erratas['expression'] ?? null) !== null) {
+                    $subParts = null;
+                } else {
+                    [$colName, $subParts] = DataType::extract($colName);
+                }
 
                 $column = new Column($colName);
 
@@ -102,6 +106,16 @@ class Index
         }
 
         $this->columns = $cols;
+
+        return $this;
+    }
+
+    /**
+     * Add an expression key part (functional index), e.g. `LOWER(email)`.
+     */
+    public function expression(string $expression): static
+    {
+        $this->columns[$expression] = (new Column($expression))->indexExpression($expression);
 
         return $this;
     }
