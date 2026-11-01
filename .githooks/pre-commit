@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Run PHP-CS-Fixer on staged PHP files and re-stage them.
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT" || exit 1
+
+FIXER="vendor/bin/php-cs-fixer"
+
+if [ ! -x "$FIXER" ]; then
+    echo "pre-commit: $FIXER not found, run composer install. Skipping." >&2
+    exit 0
+fi
+
+FILES=()
+while IFS= read -r -d '' f; do
+    FILES+=("$f")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z -- '*.php')
+
+[ ${#FILES[@]} -eq 0 ] && exit 0
+
+# Files with unstaged changes must not be re-staged, or those changes would be committed.
+PARTIAL="$(git diff --name-only -- "${FILES[@]}")"
+
+"$FIXER" fix --config=.php-cs-fixer.dist.php --using-cache=no --quiet -- "${FILES[@]}" || exit 1
+
+for f in "${FILES[@]}"; do
+    if echo "$PARTIAL" | grep -qxF "$f"; then
+        echo "pre-commit: $f has unstaged changes, fixed but not re-staged." >&2
+    else
+        git add -- "$f"
+    fi
+done
+
+exit 0
