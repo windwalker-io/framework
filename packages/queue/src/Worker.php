@@ -241,6 +241,28 @@ class Worker extends AbstractRunner
             return;
         }
 
+        if ($controller->retryAfter !== null) {
+            $maxTries = $this->options->tries;
+
+            if ($maxTries !== 0 && $maxTries <= $message->getAttempts()) {
+                throw new MaxAttemptsExceededException('Max attempts exceed for Message: ' . $message->getId());
+            }
+
+            $message->setDeleted(false);
+            $this->queue->release($message, $controller->retryAfter);
+
+            $this->logger->info(
+                sprintf(
+                    'Job: [%s] (%s) will retry after %d seconds.',
+                    get_debug_type($controller->job),
+                    $message->getId(),
+                    $controller->retryAfter,
+                ),
+            );
+
+            return;
+        }
+
         $this->queue->delete($message);
     }
 

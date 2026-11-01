@@ -261,6 +261,31 @@ class WorkerTest extends TestCase
         self::$db->delete('queue_jobs')->where('channel', 'worker-attempt')->execute();
     }
 
+    #[Test]
+    public function retryAfterCountsAttemptDelaysAndRespectsTries(): void
+    {
+        $queue = $this->instance->getQueue();
+        $queue->push(
+            fn(\Windwalker\Queue\Job\JobController $c) => $c->retryAfter(60),
+            0,
+            'worker-retry'
+        );
+        $worker = new Worker($queue, new RunnerOptions(tries: 2));
+
+        $worker->next('worker-retry');
+        $row = self::$db->select('*')->from('queue_jobs')->where('channel', 'worker-retry')->get();
+        self::assertEquals(1, $row->attempts);
+        self::assertNull($row->reserved);
+        self::assertGreaterThan(new \DateTimeImmutable('+50 seconds'), new \DateTimeImmutable($row->visibility));
+
+        // Make it visible again, second run reaches tries and the job is dropped.
+        self::$db->update('queue_jobs')->set('visibility', new \DateTimeImmutable('-1 second'))
+            ->where('channel', 'worker-retry')->execute();
+        $worker->next('worker-retry');
+
+        self::assertCount(0, self::$db->select('*')->from('queue_jobs')->where('channel', 'worker-retry')->all());
+    }
+
     #[Before]
     protected function createWorkerInstance(): void
     {

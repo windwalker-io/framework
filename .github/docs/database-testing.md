@@ -43,18 +43,21 @@ php vendor/bin/phpunit packages/orm/test
 php vendor/bin/phpunit packages/database/test/Manager/WriterManagerTest.php
 ```
 
-**Never run two DB suites concurrently with the same database** (including parallel agents/terminals; use a distinct `WINDWALKER_TEST_DB_SUFFIX` per run to isolate them, see below): test classes drop and recreate the
+**Never run two DB suites concurrently with the same database** (including parallel agents/terminals; use a distinct random `WINDWALKER_TEST_DB_SUFFIX` per run to isolate them, see below): test classes drop and recreate the
 same database, producing bogus `Unknown database` / missing-table errors. Run them sequentially.
 
 ### Parallel agents: database suffix
 
 Set `WINDWALKER_TEST_DB_SUFFIX` to isolate runs. It is appended to the DSN `dbname` (`windwalker_test` →
-`windwalker_test_agent1`; for SQLite, inserted before the file extension). Each distinct suffix gets its own
+`windwalker_test_k3x9q`; for SQLite, inserted before the file extension). Each distinct suffix gets its own
 database, so suites with different suffixes **can** run concurrently:
 
+**Always use a random 4–6 character alphanumeric suffix** (e.g. `k3x9q`), generated fresh for every run. Fixed
+names like `agent1` collide when several agents/worktrees pick the same one.
+
 ```bash
-WINDWALKER_TEST_DB_SUFFIX=agent1 php vendor/bin/phpunit packages/database/test
-WINDWALKER_TEST_DB_SUFFIX=agent2 php vendor/bin/phpunit packages/orm/test
+WINDWALKER_TEST_DB_SUFFIX=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 5) php vendor/bin/phpunit packages/database/test
+WINDWALKER_TEST_DB_SUFFIX=k3x9q php vendor/bin/phpunit packages/orm/test   # or a literal random value
 ```
 
 Non-alphanumeric characters become `_`. With a suffix set, the suffixed database is dropped after each test class and

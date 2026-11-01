@@ -59,6 +59,12 @@ class JobController
 
     public protected(set) ?DeferredException $defer = null;
 
+    /**
+     * Seconds to wait before running again. Unlike defer(), it counts as an attempt (limited by `tries`),
+     * but it is not a failure: no JobFailed methods, failure event or error log.
+     */
+    public protected(set) ?int $retryAfter = null;
+
     public ?\Throwable $exception = null;
 
     public protected(set) ?AbandonedException $abandoned = null;
@@ -107,9 +113,17 @@ class JobController
         return $this->defer = new DeferredException($delay, $reason);
     }
 
+    public function retryAfter(int $delay): static
+    {
+        $this->retryAfter = max(0, $delay);
+
+        return $this;
+    }
+
     public function resume(): static
     {
         $this->defer = null;
+        $this->retryAfter = null;
 
         return $this;
     }

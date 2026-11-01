@@ -164,6 +164,20 @@ class JobControllerTest extends TestCase
     }
 
     #[Test]
+    public function retryAfterStoresDelayAndResumeClearsIt(): void
+    {
+        $controller = new QueueMessage(new TestJob())->makeJobController();
+
+        self::assertNull($controller->retryAfter);
+        self::assertSame($controller, $controller->retryAfter(30));
+        self::assertSame(30, $controller->retryAfter);
+        self::assertFalse($controller->failed);
+
+        $controller->resume();
+        self::assertNull($controller->retryAfter);
+    }
+
+    #[Test]
     public function logWritesEachMessageToLogger(): void
     {
         $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
