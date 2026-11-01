@@ -10,6 +10,8 @@ use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
+use function Windwalker\raw;
+
 /**
  * The SchemaTest class.
  */
@@ -227,6 +229,19 @@ class SchemaTest extends AbstractDatabaseTestCase
         self::assertTrue($pbin->isPrimary());
         self::assertTrue($json->getIsNullable());
         self::assertTrue($date->getIsNullable());
+    }
+
+    #[Test]
+    public function addFunctionalIndex(): void
+    {
+        $this->instance->varchar('title');
+
+        $index = $this->instance->addFunctionalIndex(['title', raw('LOWER(email)')], 'idx_fx');
+
+        self::assertSame($index, $this->instance->indexes['idx_fx']);
+        self::assertSame(['title', 'LOWER(email)'], array_keys($index->getColumns()));
+        self::assertSame($this->instance->columns['title'], $index->getColumns()['title']);
+        self::assertSame('LOWER(email)', $index->getColumns()['LOWER(email)']->getIndexExpression());
     }
 
     #[Before]

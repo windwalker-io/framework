@@ -14,9 +14,7 @@ use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\JoinClause;
-use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
-use Windwalker\Scalars\ArrayObject;
 
 use function Windwalker\Query\clause;
 use function Windwalker\raw;
@@ -350,7 +348,7 @@ class PostgreSQLPlatform extends AbstractPlatform
 
         foreach ($this->loadIndexesStatement($table, $schema) as $row) {
             preg_match(
-                '/CREATE (UNIQUE )?INDEX [\w]+ ON [\w.]+ USING [\w]+ \(\"?([\w, ]+)\"?\)/',
+                '/CREATE (UNIQUE )?INDEX [\w]+ ON [\w.]+ USING [\w]+ \((.*)\)(?: INCLUDE \(.*\))?(?: WHERE .*)?$/',
                 $row['indexdef'],
                 $matches
             );
@@ -364,26 +362,57 @@ class PostgreSQLPlatform extends AbstractPlatform
 
             $index['columns'] = [];
 
-            $columns = ArrayObject::explode(',', $matches[2])
-                ->map('trim')
-                ->map(
-                    static function (string $index) {
-                        return Escaper::stripQuoteIfExists($index, '"');
-                    }
-                )
-                ->dump();
-
-            foreach ($columns as $column) {
-                $index['columns'][$column] = [
-                    'column_name' => $column,
-                    'sub_part' => null,
-                ];
+            foreach ($this->splitIndexKeyParts($matches[2]) as $part) {
+                if (preg_match('/^"?(\w+)"?$/', $part, $m)) {
+                    $index['columns'][$m[1]] = [
+                        'column_name' => $m[1],
+                        'sub_part' => null,
+                    ];
+                } else {
+                    $index['columns'][$part] = [
+                        'column_name' => $part,
+                        'sub_part' => null,
+                        'erratas' => ['expression' => $part],
+                    ];
+                }
             }
 
             $indexes[$row['indexname']] = $index;
         }
 
         return $indexes;
+    }
+
+    /**
+     * Split index key parts by top-level commas, expressions may contain commas in parentheses.
+     *
+     * @return  string[]
+     */
+    protected function splitIndexKeyParts(string $keys): array
+    {
+        $parts = [];
+        $depth = 0;
+        $current = '';
+
+        foreach (str_split($keys) as $char) {
+            if ($char === '(') {
+                $depth++;
+            } elseif ($char === ')') {
+                $depth--;
+            }
+
+            if ($char === ',' && $depth === 0) {
+                $parts[] = trim($current);
+                $current = '';
+                continue;
+            }
+
+            $current .= $char;
+        }
+
+        $parts[] = trim($current);
+
+        return $parts;
     }
 
     public function lastInsertId($insertQuery, ?string $sequence = null): ?string

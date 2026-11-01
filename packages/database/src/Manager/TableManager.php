@@ -262,6 +262,11 @@ class TableManager extends AbstractMetaManager
             $returnItems[$i] = $key = clone $key;
 
             foreach ($key->columns as $column) {
+                // Expression key parts of functional index have no real column.
+                if (!isset($realColumns[$column->columnName])) {
+                    continue;
+                }
+
                 $key->columns[$column->columnName] = $realColumn = $realColumns[$column->columnName];
 
                 if ($key instanceof Constraint && $key->isPrimary()) {
@@ -270,6 +275,10 @@ class TableManager extends AbstractMetaManager
             }
 
             foreach ($key->columns as $column) {
+                if ($column->getIndexExpression() !== null) {
+                    continue;
+                }
+
                 if ($key instanceof Constraint) {
                     $column->constraints[$key->constraintName] = $key;
                 }

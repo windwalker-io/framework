@@ -6,10 +6,12 @@ namespace Windwalker\Database\Test\Manager;
 
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
+use LogicException;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
+use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
@@ -34,6 +36,13 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
      * A valid collation name of the platform, used to test column level collation.
      */
     protected static string $collation = 'utf8mb4_bin';
+
+    /**
+     * SQL Server has no functional index.
+     */
+    protected static bool $supportsFunctionalIndex = true;
+
+    protected static string $storedKeyword = 'STORED';
 
     protected TableManager $table;
 
@@ -249,5 +258,63 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
         $this->table->truncate();
 
         self::assertSame(0, (int) self::$baseConn->query('SELECT COUNT(*) FROM ww_tm_extra')->fetchColumn());
+    }
+
+    #[Test]
+    public function generatedColumnExpression(): void
+    {
+        $platform = self::$db->getPlatform();
+
+        $expr = (string) $platform->getColumnExpression(
+            (new Column('double_price', 'integer'))->storedAs('price * 2')
+        );
+
+        self::assertStringContainsString('AS (price * 2)', $expr);
+        self::assertStringContainsString(static::$storedKeyword, $expr);
+        self::assertStringNotContainsString('DEFAULT', $expr);
+    }
+
+    #[Test]
+    public function createTableWithStoredGeneratedColumn(): void
+    {
+        $name = 'ww_tm_generated';
+
+        static::dropTable($name);
+
+        try {
+            self::$db->getTableManager($name, true)->create(
+                static function (Schema $schema) {
+                    $schema->integer('price');
+                    $schema->integer('double_price')->storedAs('price * 2');
+                }
+            );
+
+            self::$baseConn->exec("INSERT INTO $name (price) VALUES (5)");
+
+            $value = self::$baseConn->query("SELECT double_price FROM $name")->fetchColumn();
+
+            self::assertSame(10, (int) $value);
+        } finally {
+            static::dropTable($name);
+        }
+    }
+
+    #[Test]
+    public function functionalIndex(): void
+    {
+        $index = (new Index('idx_ww_lower_title'))->expression('LOWER(title)');
+
+        if (!static::$supportsFunctionalIndex) {
+            $this->expectException(LogicException::class);
+
+            $this->table->addIndex($index);
+
+            return;
+        }
+
+        $this->table->addIndex($index);
+        $this->table->reset();
+
+        self::assertTrue($this->table->hasIndex('idx_ww_lower_title'));
     }
 }

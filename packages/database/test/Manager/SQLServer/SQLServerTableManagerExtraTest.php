@@ -13,6 +13,10 @@ class SQLServerTableManagerExtraTest extends AbstractTableManagerExtraTestCase
 
     protected static string $driver = 'pdo_sqlsrv';
 
+    protected static bool $supportsFunctionalIndex = false;
+
+    protected static string $storedKeyword = 'PERSISTED';
+
     protected static string $collation = 'Latin1_General_BIN';
 
     protected static function dropTable(string $table): void

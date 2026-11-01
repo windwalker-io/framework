@@ -85,9 +85,13 @@ class Index
                     $colName = $key;
                 }
 
-                [$colName, $subParts] = DataType::extract($colName);
+                $erratas = is_array($column) ? ($column['erratas'] ?? []) : [];
 
-                $erratas = $column['erratas'] ?? [];
+                if (($erratas['expression'] ?? null) !== null) {
+                    $subParts = null;
+                } else {
+                    [$colName, $subParts] = DataType::extract($colName);
+                }
 
                 $column = new Column($colName);
 

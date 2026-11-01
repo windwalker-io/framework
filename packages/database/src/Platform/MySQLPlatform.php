@@ -432,11 +432,15 @@ class MySQLPlatform extends AbstractPlatform
 
             $index['columns'] = [];
 
-            foreach ($keys as $key) {
-                $index['columns'][$key['COLUMN_NAME']] = [
-                    'column_name' => $key['COLUMN_NAME'],
+            foreach ($keys as $i => $key) {
+                $isExpression = $key['COLUMN_NAME'] === null;
+                $colName = $key['COLUMN_NAME'] ?? '(expression ' . ($i + 1) . ')';
+
+                $index['columns'][$colName] = [
+                    'column_name' => $colName,
                     'erratas' => [
                         'sub_parts' => $key['SUB_PART'],
+                        'expression' => $isExpression ? $colName : null,
                     ],
                 ];
             }
