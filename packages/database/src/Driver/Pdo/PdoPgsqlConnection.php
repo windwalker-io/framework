@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use Pdo\Pgsql;
 use Windwalker\Database\Driver\DriverOptions;
 
 /**
@@ -35,5 +36,10 @@ class PdoPgsqlConnection extends AbstractPdoConnection
         $options->dsn ??= static::getDsn($params);
 
         return $options;
+    }
+
+    public function get(): ?Pgsql
+    {
+        return parent::get();
     }
 }

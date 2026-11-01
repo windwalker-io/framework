@@ -72,7 +72,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
             $options->driverOptions ?? []
         );
 
-        return new PDO(
+        return PDO::connect(
             $options->dsn,
             $options->user ?? null,
             $options->password ?? null,
@@ -103,7 +103,7 @@ abstract class AbstractPdoConnection extends AbstractConnection
      */
     public static function getDbType(): string
     {
-        return self::$dbtype;
+        return static::$dbtype;
     }
 
     public function ping(): bool

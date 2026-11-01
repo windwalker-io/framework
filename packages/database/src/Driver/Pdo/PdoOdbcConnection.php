@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use Pdo\Odbc;
 use Windwalker\Database\Driver\DriverOptions;
 
 /**
@@ -39,5 +40,10 @@ class PdoOdbcConnection extends AbstractPdoConnection
         $options->dsn ??= static::getDsn($params);
 
         return $options;
+    }
+
+    public function get(): ?Odbc
+    {
+        return parent::get();
     }
 }

@@ -33,18 +33,10 @@ class PdoMysqlConnection extends AbstractPdoConnection
             $options->driverOptions[Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = $options->tls['verify'] ?? true;
         }
 
-        if (version_compare(PHP_VERSION, '8.4', '>=')) {
-            if (strtolower($params['charset']) === 'utf8mb4') {
-                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
-            } elseif (strtolower($params['charset']) === 'utf8') {
-                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8';
-            }
-        } else {
-            if (strtolower($params['charset']) === 'utf8mb4') {
-                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
-            } elseif (strtolower($params['charset']) === 'utf8') {
-                $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8';
-            }
+        if (strtolower($params['charset']) === 'utf8mb4') {
+            $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
+        } elseif (strtolower($params['charset']) === 'utf8') {
+            $options->driverOptions[Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8';
         }
 
         return $options;
@@ -57,5 +49,10 @@ class PdoMysqlConnection extends AbstractPdoConnection
         $pdo?->setAttribute(Mysql::ATTR_USE_BUFFERED_QUERY, !$buffered);
 
         return $this;
+    }
+
+    public function get(): ?Mysql
+    {
+        return parent::get();
     }
 }

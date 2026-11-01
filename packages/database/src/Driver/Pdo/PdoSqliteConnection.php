@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use Pdo\Sqlite;
 use Windwalker\Database\Driver\DriverOptions;
 
 /**
@@ -32,5 +33,10 @@ class PdoSqliteConnection extends AbstractPdoConnection
     public function disconnect(): mixed
     {
         return parent::disconnect();
+    }
+
+    public function get(): ?Sqlite
+    {
+        return parent::get();
     }
 }
