@@ -540,7 +540,13 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
                 return null;
             }
 
-            $definition = new StoreDefinition($id, $this->newInstance($id));
+            $definition = $service->shared
+                ? new StoreDefinition($id, $this->newInstance($id))
+                : new StoreDefinition(
+                    $id,
+                    fn(Container $container) => $container->newInstance($id),
+                    new DIOptions(shared: false),
+                );
             $definition->providedIn($service->providedIn);
 
             $this->setDefinition($id, $definition, $tag);

@@ -12,6 +12,7 @@ use UnitEnum;
 use Windwalker\Core\DI\ServiceFactoryInterface;
 use Windwalker\Core\Manager\AbstractManager;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 
 /**
  * The Service class.
@@ -26,6 +27,7 @@ class Service extends Inject
         bool|string $forceNewOrService = false,
         public int|array|Closure|null $providedIn = null,
         UnitEnum|Closure|string|null $tag = null,
+        public bool $shared = true,
     ) {
         if (is_string($forceNewOrService)) {
             $this->name = $forceNewOrService;
@@ -55,6 +57,15 @@ class Service extends Inject
             }
         }
 
+        if (!$this->shared) {
+            $id = $this->getTypeName($reflector);
+
+            // A non-shared service must not reuse the cached instance of a #[Service] class definition.
+            if (class_exists($id)) {
+                return $container->newInstance($id);
+            }
+        }
+
         return parent::resolveInjectable($container, $reflector);
     }
 
@@ -64,6 +75,10 @@ class Service extends Inject
 
         if ($tag instanceof Closure) {
             $tag = $tag($container, $id);
+        }
+
+        if (!$this->shared) {
+            return $container->createObject($id, options: new DIOptions(shared: false), tag: $tag);
         }
 
         return $container->createSharedObject($id, tag: $tag);
