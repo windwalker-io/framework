@@ -20,5 +20,6 @@ class RunnerOptions
         public bool $stopWhenEmpty = false,
         public ?string $restartSignal = null,
         public ?\Closure $controllerFactory = null,
+        public ?float $jitter = null,
     ) {}
 }

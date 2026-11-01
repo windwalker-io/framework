@@ -70,4 +70,18 @@ class JobBackoffTest extends TestCase
 
         self::assertSame(10, JobBackoff::fromController($message->makeJobController()));
     }
+
+    public function testApplyJitter(): void
+    {
+        self::assertSame(10, JobBackoff::applyJitter(10, null));
+        self::assertSame(10, JobBackoff::applyJitter(10, 0.0));
+
+        for ($i = 0; $i < 100; $i++) {
+            $v = JobBackoff::applyJitter(100, 0.2);
+            self::assertGreaterThanOrEqual(80, $v);
+            self::assertLessThanOrEqual(120, $v);
+        }
+
+        self::assertGreaterThanOrEqual(0, JobBackoff::applyJitter(1, 5.0));
+    }
 }

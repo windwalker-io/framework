@@ -185,16 +185,15 @@ class Worker extends AbstractRunner
 
             $backoff = false;
         } else {
+            $backoff = JobBackoff::applyJitter(
+                $backoff ?? $this->options->backoff,
+                JobBackoff::jitterFromController($controller) ?? $this->options->jitter,
+            );
+
             if ($message->getId()) {
-                $this->queue->release(
-                    $message,
-                    $backoff ??= $this->options->backoff
-                );
+                $this->queue->release($message, $backoff);
             } else {
-                $this->queue->push(
-                    $message,
-                    $backoff ??= $this->options->backoff
-                );
+                $this->queue->push($message, $backoff);
             }
             $this->logger->error(
                 sprintf(

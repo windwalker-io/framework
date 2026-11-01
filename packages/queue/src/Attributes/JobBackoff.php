@@ -10,7 +10,14 @@ use Windwalker\Utilities\Attributes\AttributesAccessor;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION)]
 class JobBackoff
 {
-    public function __construct(public array|int|null $backoff = null) {}
+    /**
+     * @param  array|int|null  $backoff
+     * @param  float|null      $jitter   Ratio between 0 and 1, delay is multiplied by [1 - jitter, 1 + jitter].
+     */
+    public function __construct(
+        public array|int|null $backoff = null,
+        public ?float $jitter = null,
+    ) {}
 
     /**
      * - linear = pow: 1 | (1, 2, 3, 4, 5, 6, ...)
@@ -51,6 +58,39 @@ class JobBackoff
         }
 
         return $backoff;
+    }
+
+    public static function applyJitter(int $seconds, ?float $jitter): int
+    {
+        if (!$jitter) {
+            return $seconds;
+        }
+
+        $jitter = min(1.0, abs($jitter));
+        $factor = 1 + (random_int(-1000000, 1000000) / 1000000) * $jitter;
+
+        return max(0, (int) round($seconds * $factor));
+    }
+
+    public static function jitterFromController(JobController $controller): ?float
+    {
+        $attr = AttributesAccessor::getFirstAttributeInstance(
+            $controller->job,
+            static::class,
+            \ReflectionAttribute::IS_INSTANCEOF
+        );
+
+        if ($attr) {
+            return $attr->jitter;
+        }
+
+        foreach (new \ReflectionObject($controller->job)->getMethods() as $method) {
+            if ($attrs = $method->getAttributes(static::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+                return $attrs[0]->newInstance()->jitter;
+            }
+        }
+
+        return null;
     }
 
     public static function fromController(JobController $controller): false|int|null
