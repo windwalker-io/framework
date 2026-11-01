@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Query;
+namespace Windwalker\Query\Contract;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
+use Windwalker\Query\Query;
 
 /**
  * Where / having related query methods.

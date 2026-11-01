@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Query;
+namespace Windwalker\Query\Contract;
 
 use Windwalker\Query\Clause\Clause;
+use Windwalker\Query\Query;
 
 /**
  * JSON related query methods.

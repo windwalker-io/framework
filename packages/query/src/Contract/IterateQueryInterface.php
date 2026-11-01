@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Windwalker\Query;
+namespace Windwalker\Query\Contract;
 
 use Generator;
 use Traversable;
 use Windwalker\Data\Collection;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Utilities\Iterator\PaginateIterator;
+use Windwalker\Query\Query;
 
 /**
  * Iterating and pagination related query methods.

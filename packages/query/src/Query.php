@@ -38,6 +38,7 @@ use Windwalker\Query\Concern\JsonConcernTrait;
 use Windwalker\Query\Concern\QueryConcernTrait;
 use Windwalker\Query\Concern\ReflectConcernTrait;
 use Windwalker\Query\Concern\WhereConcernTrait;
+use Windwalker\Query\Contract\QueryInterface;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
