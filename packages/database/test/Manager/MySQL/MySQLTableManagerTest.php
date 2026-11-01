@@ -295,7 +295,8 @@ SELECT `ORDINAL_POSITION`,
        `COLUMN_NAME`,
        `COLUMN_TYPE`,
        `COLUMN_COMMENT`,
-       `EXTRA`
+       `EXTRA`,
+       `GENERATION_EXPRESSION`
 FROM `INFORMATION_SCHEMA`.`COLUMNS`
 WHERE `TABLE_NAME` = 'enterprise'
   AND `TABLE_SCHEMA` = (SELECT DATABASE())
@@ -650,7 +651,8 @@ SQL,
                    `COLUMN_NAME`,
                    `COLUMN_TYPE`,
                    `COLUMN_COMMENT`,
-                   `EXTRA`
+                   `EXTRA`,
+                   `GENERATION_EXPRESSION`
             FROM `INFORMATION_SCHEMA`.`COLUMNS`
             WHERE `TABLE_NAME` = 'enterprise'
               AND `TABLE_SCHEMA` = '{$dbname}'

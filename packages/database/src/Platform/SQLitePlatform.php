@@ -260,7 +260,7 @@ class SQLitePlatform extends AbstractPlatform
                 $index['columns'][$colName] = [
                     'column_name' => $colName,
                     'subpart' => null,
-                    'erratas' => $isExpression ? ['expression' => $colName] : [],
+                    ...($isExpression ? ['erratas' => ['expression' => $colName]] : []),
                 ];
             }
 

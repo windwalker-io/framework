@@ -268,8 +268,10 @@ class MySQLPlatform extends AbstractPlatform
                 'numeric_unsigned' => str_contains($row['COLUMN_TYPE'], 'unsigned'),
                 'comment' => $row['COLUMN_COMMENT'],
                 'auto_increment' => $row['EXTRA'] === 'auto_increment',
-                'generation_expression' => ($row['GENERATION_EXPRESSION'] ?? '') ?: null,
-                'generated_stored' => str_contains((string) $row['EXTRA'], 'STORED GENERATED'),
+                ...(($row['GENERATION_EXPRESSION'] ?? '') !== '' ? [
+                    'generation_expression' => $row['GENERATION_EXPRESSION'],
+                    'generated_stored' => str_contains((string) $row['EXTRA'], 'STORED GENERATED'),
+                ] : []),
                 'erratas' => $erratas,
             ];
         }
@@ -440,7 +442,7 @@ class MySQLPlatform extends AbstractPlatform
                     'column_name' => $colName,
                     'erratas' => [
                         'sub_parts' => $key['SUB_PART'],
-                        'expression' => $isExpression ? $colName : null,
+                        ...($isExpression ? ['expression' => $colName] : []),
                     ],
                 ];
             }
