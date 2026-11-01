@@ -8,6 +8,7 @@ use LogicException;
 use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Schema\Ddl\Column;
+use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\Clause;
@@ -588,6 +589,50 @@ class SQLServerPlatform extends AbstractPlatform
         $this->postTableModify($table, $schema->getIndexes(), $constraints, $comments);
 
         return $statement;
+    }
+
+    /**
+     * SQL Server has no functional index, so expressions are bridged to persisted computed columns.
+     */
+    public function addIndex(string $table, Index $index, ?string $schema = null): StatementInterface
+    {
+        $columns = [];
+        $existing = null;
+
+        foreach ($index->getColumns() as $name => $column) {
+            $expression = $column->getIndexExpression();
+
+            if ($expression === null) {
+                $columns[$name] = $column;
+                continue;
+            }
+
+            $computedName = 'fx_' . substr(md5($expression), 0, 12);
+            $existing ??= $this->listColumns($table, $schema);
+
+            if (!isset($existing[$computedName])) {
+                $this->addColumn(
+                    $table,
+                    (new Column($computedName))->storedAs($expression),
+                    $schema
+                );
+
+                $existing[$computedName] = true;
+            }
+
+            $computed = new Column($computedName);
+
+            if ($column->getOption('sort')) {
+                $computed->setOption('sort', $column->getOption('sort'));
+            }
+
+            $columns[$computedName] = $computed;
+        }
+
+        $index = clone $index;
+        $index->columns = $columns;
+
+        return parent::addIndex($table, $index, $schema);
     }
 
     public function renameTable(string $from, string $to, ?string $schema = null): StatementInterface

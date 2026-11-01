@@ -655,6 +655,23 @@ class PostgreSQLPlatform extends AbstractPlatform
         );
     }
 
+    protected function getGeneratedExpression(Column $column): ?string
+    {
+        if (!$column->isGenerated()) {
+            return null;
+        }
+
+        // Virtual generated columns are supported since PostgreSQL 18, fallback to STORED before that.
+        $virtual = !$column->isGeneratedStored()
+            && version_compare($this->db->getDriver()->getVersion(), '18.0', '>=');
+
+        return sprintf(
+            'GENERATED ALWAYS AS (%s) %s',
+            $column->getGenerationExpression(),
+            $virtual ? 'VIRTUAL' : 'STORED'
+        );
+    }
+
     protected function getCollateExpression(Column $column): ?string
     {
         $collation = $column->getCollationName();
