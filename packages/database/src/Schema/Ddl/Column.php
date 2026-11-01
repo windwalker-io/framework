@@ -511,7 +511,7 @@ class Column
      * @param  string|RawWrapper  $expression  SQL expression, must be trusted code.
      * @param  bool               $stored      STORED if true, otherwise VIRTUAL.
      */
-    public function generatedAs(string|RawWrapper $expression, bool $stored = false): static
+    public function generated(string|RawWrapper $expression, bool $stored = false): static
     {
         $this->generationExpression = (string) ($expression instanceof RawWrapper ? $expression->get() : $expression);
         $this->generatedStored = $stored;
@@ -519,14 +519,14 @@ class Column
         return $this;
     }
 
-    public function virtualAs(string|RawWrapper $expression): static
+    public function virtual(string|RawWrapper $expression): static
     {
-        return $this->generatedAs($expression, false);
+        return $this->generated($expression, false);
     }
 
-    public function storedAs(string|RawWrapper $expression): static
+    public function stored(string|RawWrapper $expression): static
     {
-        return $this->generatedAs($expression, true);
+        return $this->generated($expression, true);
     }
 
     public function generationExpression(?string $expression): static

@@ -8,7 +8,7 @@ plain column. Combined, they let you query and index derived values without main
 
 ### Generated columns
 
-Use `virtualAs()` or `storedAs()` on any column definition in the schema builder:
+Use `virtual()` or `stored()` on any column definition in the schema builder:
 
 ```php
 use Windwalker\Database\Schema\Schema;
@@ -19,16 +19,16 @@ $db->getTableManager('products')->create(
         $schema->integer('price');
 
         // Computed on read, takes no storage
-        $schema->integer('price_with_tax')->virtualAs('price * 1.05');
+        $schema->integer('price_with_tax')->virtual('price * 1.05');
 
         // Computed on write, stored on disk
-        $schema->integer('double_price')->storedAs('price * 2');
+        $schema->integer('double_price')->stored('price * 2');
     }
 );
 ```
 
-`generatedAs(string|RawWrapper $expression, bool $stored = false)` is the underlying method; `virtualAs()` and
-`storedAs()` are shortcuts. The expression is inserted into the DDL as-is, so only pass trusted code, never user input.
+`generated(string|RawWrapper $expression, bool $stored = false)` is the underlying method; `virtual()` and
+`stored()` are shortcuts. The expression is inserted into the DDL as-is, so only pass trusted code, never user input.
 
 Generated columns can also be added to an existing table with `TableManager::addColumn()`.
 

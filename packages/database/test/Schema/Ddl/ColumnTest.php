@@ -54,14 +54,14 @@ class ColumnTest extends TestCase
         self::assertFalse($column->isGenerated());
         self::assertTrue($column->canHasDefaultValue());
 
-        $column->virtualAs('price * 2');
+        $column->virtual('price * 2');
 
         self::assertTrue($column->isGenerated());
         self::assertFalse($column->isGeneratedStored());
         self::assertSame('price * 2', $column->getGenerationExpression());
         self::assertFalse($column->canHasDefaultValue());
 
-        $column->storedAs(raw('price * 3'));
+        $column->stored(raw('price * 3'));
 
         self::assertTrue($column->isGeneratedStored());
         self::assertSame('price * 3', $column->getGenerationExpression());

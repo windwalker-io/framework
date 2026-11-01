@@ -70,8 +70,10 @@ auto-loaded, and move detailed prose into `docs/` either way.
 - `instructions/dependencies.instructions.md` — package dependency checks and root Composer synchronization (PHP / Composer manifests).
 - `instructions/instruction.instructions.md` — how to place new rules across instructions / skills / docs.
 - `instructions/test.instructions.md` — PHPUnit style and missing-test coverage rules (applies to test files).
+- `instructions/worktree.instructions.md` — worktree mode workflow: custom naming, commit every change, squash-merge.
 - `prompts/complete-test-and-coverage.prompt.md` — inspect a package's coverage and add meaningful missing tests.
 - `prompts/refactor-test-code-style.prompt.md` — refactor PHPUnit test style, structure, and lifecycle hook naming.
+- `prompts/squash-merge-worktree.prompt.md` — commit pending worktree changes and squash-merge them into the working branch.
 - `skills/test/SKILL.md` — end-to-end workflow for adding/running PHPUnit tests in this monorepo.
 - `docs/code-style.md` — full PHP-CS-Fixer ruleset explanation/rationale. See `docs/README.md` for the docs index.
 - `docs/database-testing.md` — Setting up MySQL/DSN for real-database tests and writing safe DB tests.

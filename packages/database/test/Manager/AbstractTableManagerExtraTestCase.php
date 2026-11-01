@@ -266,7 +266,7 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
         $platform = self::$db->getPlatform();
 
         $expr = (string) $platform->getColumnExpression(
-            (new Column('double_price', 'integer'))->storedAs('price * 2')
+            (new Column('double_price', 'integer'))->stored('price * 2')
         );
 
         self::assertStringContainsString('AS (price * 2)', $expr);
@@ -285,7 +285,7 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
             self::$db->getTableManager($name, true)->create(
                 static function (Schema $schema) {
                     $schema->integer('price');
-                    $schema->integer('double_price')->storedAs('price * 2');
+                    $schema->integer('double_price')->stored('price * 2');
                 }
             );
 
