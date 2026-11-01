@@ -37,7 +37,7 @@ class StringSerializer implements SerializerInterface
      *
      * @return  mixed
      */
-    public function unserialize(string $data): mixed
+    public function unserialize(mixed $data): mixed
     {
         return $data;
     }

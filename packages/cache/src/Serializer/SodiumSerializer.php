@@ -45,14 +45,22 @@ class SodiumSerializer implements SerializerInterface
             return null;
         }
 
+        if (!is_string($serialized)) {
+            throw new \LogicException(static::class . ' requires the inner serializer to return a string.');
+        }
+
         $publicKey = sodium_crypto_box_publickey($this->keys[0]);
         $ciphertext = sodium_crypto_box_seal($serialized, $publicKey);
 
         return base64_encode($ciphertext);
     }
 
-    public function unserialize(#[\SensitiveParameter] string $data): mixed
+    public function unserialize(#[\SensitiveParameter] mixed $data): mixed
     {
+        if (!is_string($data)) {
+            return $this->serializer->unserialize($data);
+        }
+
         $decoded = base64_decode($data, true);
 
         if ($decoded === false) {

@@ -30,8 +30,12 @@ class PhpSerializer implements SerializerInterface
      *
      * @return  mixed
      */
-    public function unserialize(string $data): mixed
+    public function unserialize(mixed $data): mixed
     {
+        if (!is_string($data)) {
+            return $data;
+        }
+
         return unserialize($data);
     }
 }

@@ -30,6 +30,10 @@ class DeflateSerializer implements SerializerInterface
             return null;
         }
 
+        if (!is_string($serialized)) {
+            throw new \LogicException(static::class . ' requires the inner serializer to return a string.');
+        }
+
         $compressed = \gzdeflate($serialized);
 
         if ($compressed === false) {
@@ -45,9 +49,9 @@ class DeflateSerializer implements SerializerInterface
      * Falling back to the original payload keeps backward compatibility with
      * values that were stored before compression was enabled.
      */
-    public function unserialize(string $data): mixed
+    public function unserialize(mixed $data): mixed
     {
-        if (false !== $inflated = @gzinflate($data)) {
+        if (is_string($data) && false !== $inflated = @gzinflate($data)) {
             $data = $inflated;
         }
 

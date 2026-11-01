@@ -39,11 +39,19 @@ class CipherSerializer implements SerializerInterface
             return null;
         }
 
+        if (!is_string($serialized)) {
+            throw new \LogicException(static::class . ' requires the inner serializer to return a string.');
+        }
+
         return $this->cipher->encrypt($serialized, $this->key, $this->encoder);
     }
 
-    public function unserialize(#[\SensitiveParameter] string $data): mixed
+    public function unserialize(#[\SensitiveParameter] mixed $data): mixed
     {
+        if (!is_string($data)) {
+            return $this->serializer->unserialize($data);
+        }
+
         $decrypted = $this->cipher->decrypt($data, $this->key, $this->encoder);
 
         // CipherInterface::decrypt returns HiddenString, convert back to plain string for inner serializer.

@@ -16,9 +16,9 @@ class RawSerializer implements SerializerInterface
      *
      * @param  mixed  $data
      *
-     * @return  string|null
+     * @return  mixed
      */
-    public function serialize(mixed $data): ?string
+    public function serialize(mixed $data): mixed
     {
         return $data;
     }
@@ -30,7 +30,7 @@ class RawSerializer implements SerializerInterface
      *
      * @return  mixed
      */
-    public function unserialize(string $data): mixed
+    public function unserialize(mixed $data): mixed
     {
         return $data;
     }

@@ -14,9 +14,9 @@ interface SerializerInterface
      *
      * @param  mixed  $data
      *
-     * @return  string|null
+     * @return  mixed  String for scalar-only storages, or structured data (array, etc.) for storages that support it.
      */
-    public function serialize(mixed $data): ?string;
+    public function serialize(mixed $data): mixed;
 
     /**
      * Decode data.
@@ -25,5 +25,5 @@ interface SerializerInterface
      *
      * @return  mixed
      */
-    public function unserialize(string $data): mixed;
+    public function unserialize(mixed $data): mixed;
 }
