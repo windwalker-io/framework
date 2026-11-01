@@ -614,6 +614,14 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
+    public function orderByRandom(ClausePosition $pos = ClausePosition::APPEND): static
+    {
+        return $this->orderRaw(
+            $this->clause('', [$this->getGrammar()->compileRandomOrder()]),
+            $pos
+        );
+    }
+
     public function orderRaw(string|Clause $order, mixed ...$args): static
     {
         if (!$this->order) {

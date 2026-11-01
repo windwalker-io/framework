@@ -1516,6 +1516,26 @@ SQL
     }
 
     #[Test]
+    public function orderByRandomUsesGrammarFunction(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->order('id')
+            ->orderByRandom();
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" ORDER BY "id", ' . static::randomOrderSql(),
+            $q->render()
+        );
+    }
+
+    protected static function randomOrderSql(): string
+    {
+        return 'RAND()';
+    }
+
+    #[Test]
     public function groupAppendsGroupByColumns()
     {
         $q = self::createQuery()

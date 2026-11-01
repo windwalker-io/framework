@@ -266,4 +266,9 @@ SQL
             $q->render()
         );
     }
+
+    protected static function randomOrderSql(): string
+    {
+        return 'NEWID()';
+    }
 }

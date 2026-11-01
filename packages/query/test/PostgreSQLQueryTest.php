@@ -201,4 +201,9 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
     {
         return new PostgreSQLGrammar();
     }
+
+    protected static function randomOrderSql(): string
+    {
+        return 'RANDOM()';
+    }
 }

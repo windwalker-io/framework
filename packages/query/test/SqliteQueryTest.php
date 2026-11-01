@@ -115,4 +115,9 @@ class SqliteQueryTest extends QueryTest
     {
         return new SQLiteGrammar();
     }
+
+    protected static function randomOrderSql(): string
+    {
+        return 'RANDOM()';
+    }
 }

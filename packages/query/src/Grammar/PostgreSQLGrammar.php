@@ -60,6 +60,11 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
     /**
      * @inheritDoc
      */
+    public function compileRandomOrder(): string
+    {
+        return 'RANDOM()';
+    }
+
     public function compileLimit(Query $query, array $sql): array
     {
         $limit = (int) $query->getLimit();

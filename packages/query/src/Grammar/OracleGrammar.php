@@ -70,6 +70,11 @@ class OracleGrammar extends BaseGrammar
     /**
      * @inheritDoc
      */
+    public function compileRandomOrder(): string
+    {
+        return 'DBMS_RANDOM.VALUE';
+    }
+
     public function compileLimit(Query $query, array $sql): array
     {
         $limit = (int) $query->getLimit();

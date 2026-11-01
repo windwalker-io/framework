@@ -302,6 +302,11 @@ abstract class AbstractGrammar
      *
      * @return  array
      */
+    public function compileRandomOrder(): string
+    {
+        return 'RAND()';
+    }
+
     public function compileLimit(Query $query, array $sql): array
     {
         $limit = $query->getLimit();

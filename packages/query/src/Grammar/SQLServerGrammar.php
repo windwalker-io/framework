@@ -114,6 +114,11 @@ class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
         return trim(implode(' ', $sql));
     }
 
+    public function compileRandomOrder(): string
+    {
+        return 'NEWID()';
+    }
+
     public function compileLimit(Query $query, array $sql): array
     {
         $limit = $query->getLimit();

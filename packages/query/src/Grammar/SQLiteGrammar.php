@@ -27,6 +27,11 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
      */
     public static array $nameQuote = ['`', '`'];
 
+    public function compileRandomOrder(): string
+    {
+        return 'RANDOM()';
+    }
+
     public function compileUpsert(
         Query $query,
         string $table,

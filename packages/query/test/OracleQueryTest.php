@@ -65,4 +65,9 @@ class OracleQueryTest extends QueryTest
         );
         // phpcs:enable
     }
+
+    protected static function randomOrderSql(): string
+    {
+        return 'DBMS_RANDOM.VALUE';
+    }
 }
