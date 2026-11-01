@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\DI\Test;
 
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\DI\Attributes\Lazy;
@@ -12,7 +13,16 @@ use Windwalker\DI\DIOptions;
 use Windwalker\DI\Test\Mock\Bar;
 use Windwalker\DI\Test\Mock\Foo;
 use Windwalker\DI\Test\Mock\StubStack;
+use Windwalker\DI\Exception\DefinitionResolveException;
 use Windwalker\DI\Test\Stub\StubLazy;
+use Windwalker\DI\Test\Stub\StubLazyConsumer;
+use Windwalker\DI\Test\Stub\StubLazyContract;
+use Windwalker\DI\Test\Stub\StubLazyContractImpl;
+use Windwalker\DI\Test\Stub\StubLazyCounter;
+use Windwalker\DI\Test\Stub\StubLazyCounterConsumer;
+use Windwalker\DI\Test\Stub\StubLazyCounterExtra;
+use Windwalker\DI\Test\Stub\StubLazyFinal;
+use Windwalker\DI\Test\Stub\StubLazyThrows;
 use Windwalker\DI\Test\Stub\StubLazyProperty;
 
 use function Windwalker\object_is_proxy;
@@ -130,6 +140,159 @@ class ContainerLazyTest extends TestCase
         );
         self::assertIsLazyProxy($item->lazy, 'Property should be lazy proxy no matter inited or not.');
         self::assertIsNotLazyProxy(unwrap_lazy_object($item->lazy), 'Unwrapped object should not be lazy proxy.');
+    }
+
+    #[Before]
+    public function resetCounter(): void
+    {
+        StubLazyCounter::$created = 0;
+    }
+
+    #[Test]
+    public function doesNotCreateObjectUntilAccessed(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+
+        $obj = $container->newInstance(StubLazyCounter::class);
+
+        self::assertSame(0, StubLazyCounter::$created);
+        self::assertIsUninitializedLazyProxy($obj);
+
+        self::assertSame('hello origin', $obj->hello());
+        self::assertSame('hello origin', $obj->hello());
+        self::assertSame(1, StubLazyCounter::$created);
+    }
+
+    #[Test]
+    public function sharedLazyServiceKeepsSingleIdentityAndInstance(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+        $container->share(StubLazyCounter::class, fn(Container $c) => $c->newInstance(StubLazyCounter::class));
+
+        $a = $container->get(StubLazyCounter::class);
+        $b = $container->get(StubLazyCounter::class);
+
+        self::assertSame($a, $b);
+
+        $a->hello();
+
+        self::assertSame(1, StubLazyCounter::$created);
+    }
+
+    #[Test]
+    public function appliesExtendsToLazyObjects(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+        $container->whenCreating(StubLazyCounter::class)
+            ->extend(function (StubLazyCounter $obj) {
+                $obj->name = 'extended';
+
+                return $obj;
+            });
+
+        $obj = $container->newInstance(StubLazyCounter::class);
+
+        self::assertSame('extended', $obj->name);
+    }
+
+    #[Test]
+    public function fallsBackToEagerForFinalClassUnderGlobalLazy(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+
+        $obj = $container->newInstance(StubLazyFinal::class);
+
+        self::assertSame('final', $obj->hello());
+    }
+
+    #[Test]
+    public function nonInstantiableFailsLikeEagerUnderGlobalLazy(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+
+        // Same behavior as eager creation: lazy must not hide or replace the error.
+        $this->expectException(\Error::class);
+
+        $container->newInstance(\Countable::class);
+    }
+
+    #[Test]
+    public function missingClassFailsLikeEagerUnderGlobalLazy(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+
+        $this->expectException(\ReflectionException::class);
+
+        $container->newInstance('Windwalker\\DI\\Test\\Stub\\NotExistsClass');
+    }
+
+    #[Test]
+    public function wrapsDeferredConstructorErrorsInResolveException(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+
+        $obj = $container->newInstance(StubLazyThrows::class);
+
+        $this->expectException(DefinitionResolveException::class);
+        $this->expectExceptionMessage(StubLazyThrows::class);
+
+        $obj->name;
+    }
+
+    #[Test]
+    public function initializedInstanceIsNotAnotherLazyProxy(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+
+        $obj = $container->newInstance(StubLazyCounter::class);
+        $obj->hello();
+
+        self::assertIsNotLazyProxy(unwrap_lazy_object($obj));
+    }
+
+    #[Test]
+    public function injectsInterfaceDependencyUnderGlobalLazy(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+        $container->bind(StubLazyContract::class, StubLazyContractImpl::class);
+
+        $consumer = $container->newInstance(StubLazyConsumer::class);
+
+        self::assertSame(0, StubLazyCounter::$created);
+        self::assertSame('impl', $consumer->contract->name());
+        self::assertInstanceOf(StubLazyContract::class, $consumer->contract);
+    }
+
+    #[Test]
+    public function injectsConcreteDependencyLazilyAndKeepsOptionalNull(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+        $container->bind(StubLazyContract::class, StubLazyContractImpl::class);
+
+        $consumer = $container->newInstance(StubLazyConsumer::class);
+
+        self::assertSame(0, StubLazyCounter::$created);
+        self::assertSame('hello origin', $consumer->counter->hello());
+        self::assertSame(1, StubLazyCounter::$created);
+        self::assertNull($consumer->optional);
+    }
+
+    #[Test]
+    public function throwsExplainableExceptionWhenBoundSubclassIsIncompatibleWithProxy(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+        $container->bind(StubLazyCounter::class, StubLazyCounterExtra::class);
+
+        $consumer = $container->newInstance(StubLazyCounterConsumer::class);
+
+        try {
+            $consumer->counter->name;
+            self::fail('Should throw');
+        } catch (DefinitionResolveException $e) {
+            self::assertStringContainsString('Unable to initialize lazy object', $e->getMessage());
+            self::assertStringContainsString(StubLazyCounterExtra::class, $e->getMessage());
+            self::assertStringContainsString('lazy: false', $e->getMessage());
+        }
     }
 
     protected static function assertIsUninitializedLazyProxy(object $obj, string $message = ''): void

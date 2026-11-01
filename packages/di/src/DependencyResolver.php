@@ -436,14 +436,17 @@ class DependencyResolver
             $ref = new ReflectionClass($dependencyClassName);
 
             if (
-                ($this->canLazy($ref, $options) || $this->canLazy($param, $options))
-                && !static::isInternal($ref)
+                static::isProxyable($ref)
+                && ($this->canLazy($ref, $options) || $this->canLazy($param, $options))
+                && (!$param->allowsNull() || $this->container->has($dependencyClassName))
             ) {
                 $depObject = $ref->newLazyProxy(
-                    function () use ($create) {
-                        $value = $create();
+                    function () use ($create, $ref) {
+                        $value = $this->resolveParameterValue($create());
 
-                        return $this->resolveParameterValue($value);
+                        static::assertProxyCompatible($ref, $value);
+
+                        return $value;
                     },
                 );
 
@@ -591,14 +594,109 @@ class DependencyResolver
         return DIOptions::wrap($options)->withDefaults($this->container->options);
     }
 
+    /**
+     * Whether a lazy proxy can be created. Classes that can not be proxied (interfaces, abstract classes,
+     * internal classes...) always return false so callers fall back to the normal creating flow.
+     */
     public function canLazy(
         string|ReflectionClass|ReflectionParameter|ReflectionProperty $classOrRef,
         DIOptions $options,
     ): bool {
-        $ref = is_string($classOrRef) ? new ReflectionClass($classOrRef) : $classOrRef;
+        if (is_string($classOrRef)) {
+            if (!class_exists($classOrRef)) {
+                return false;
+            }
+
+            $classOrRef = new ReflectionClass($classOrRef);
+        }
+
+        if ($classOrRef instanceof ReflectionClass && !static::isProxyable($classOrRef)) {
+            return false;
+        }
+
         $lazy = $options->lazy ?? $this->container->options->lazy;
 
-        return ($lazy || static::getAttributeFromReflection($ref, Lazy::class));
+        return $lazy || static::getAttributeFromReflection($classOrRef, Lazy::class);
+    }
+
+    /**
+     * PHP only accepts a real instance for a lazy proxy if the proxy class is the same class as the real
+     * instance, or a sub-class of it that adds no properties and overrides neither __destruct nor __clone.
+     * Check it ourselves, so we can throw an explainable exception instead of a bare TypeError.
+     *
+     * @throws  DefinitionResolveException
+     */
+    public static function assertProxyCompatible(ReflectionClass $proxyRef, mixed $real): void
+    {
+        if (!is_object($real)) {
+            throw new DefinitionResolveException(
+                sprintf(
+                    'Unable to initialize lazy object %s: the resolved value is %s, an object is required. '
+                    . 'Disable lazy for this dependency, see %s::$lazy.',
+                    $proxyRef->getName(),
+                    get_debug_type($real),
+                    DIOptions::class,
+                ),
+            );
+        }
+
+        $realClass = $real::class;
+
+        if ($realClass === $proxyRef->getName()) {
+            return;
+        }
+
+        $reason = null;
+
+        if (!$proxyRef->isSubclassOf($realClass)) {
+            $reason = 'it is not the same class nor a parent class of the declared type';
+        } else {
+            for ($ref = $proxyRef; $ref && $ref->getName() !== $realClass; $ref = $ref->getParentClass()) {
+                foreach ($ref->getProperties() as $property) {
+                    if (!$property->isStatic() && $property->getDeclaringClass()->getName() === $ref->getName()) {
+                        $reason = sprintf(
+                            '%s declares additional property $%s',
+                            $ref->getName(),
+                            $property->getName(),
+                        );
+                        break 2;
+                    }
+                }
+
+                foreach (['__destruct', '__clone'] as $method) {
+                    if (
+                        $ref->hasMethod($method)
+                        && $ref->getMethod($method)->getDeclaringClass()->getName() === $ref->getName()
+                    ) {
+                        $reason = sprintf('%s overrides %s()', $ref->getName(), $method);
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if ($reason !== null) {
+            throw new DefinitionResolveException(
+                sprintf(
+                    'Unable to initialize lazy object %s with a real instance of %s: %s. '
+                    . 'PHP lazy proxy requires the real instance to be the same class, or the proxy class to be a '
+                    . 'sub-class that adds no properties and overrides neither __destruct nor __clone. '
+                    . 'Disable lazy for this dependency (DIOptions lazy: false) or type-hint the concrete class.',
+                    $proxyRef->getName(),
+                    $realClass,
+                    $reason,
+                ),
+            );
+        }
+    }
+
+    /**
+     * Whether a lazy proxy can be created for the class. Interfaces, abstract classes and internal classes
+     * can not be proxied, they will be resolved eagerly.
+     */
+    public static function isProxyable(ReflectionClass $ref): bool
+    {
+        return $ref->isInstantiable() && !static::isInternal($ref);
     }
 
     public static function isInternal(string|Reflector $class): bool

@@ -16,6 +16,7 @@ use ReflectionClass;
 use ReflectionException;
 use Traversable;
 use UnexpectedValueException;
+use Throwable;
 use UnitEnum;
 use Windwalker\DI\Attributes\AttributesResolver;
 use Windwalker\DI\Attributes\AttributeType;
@@ -986,11 +987,31 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
             $options = is_int($options) ? DIOptions::wrap($options) : clone $options;
 
             if (
-                $this->dependencyResolver->canLazy($ref = new ReflectionClass($class), $options)
-                && !$this->dependencyResolver::isInternal($ref)
+                class_exists($class)
+                && $this->dependencyResolver->canLazy($ref = new ReflectionClass($class), $options)
             ) {
                 return $ref->newLazyProxy(
-                    fn() => $this->dependencyResolver->newInstance($class, $args, $options),
+                    function () use ($class, $args, $options, $extends, $ref) {
+                        try {
+                            $instance = $this->dependencyResolver->newInstance($class, $args, $options);
+
+                            foreach ($extends as $extend) {
+                                $instance = $extend($instance, $this);
+                            }
+
+                            DependencyResolver::assertProxyCompatible($ref, $instance);
+
+                            return $instance;
+                        } catch (DefinitionResolveException $e) {
+                            throw $e;
+                        } catch (Throwable $e) {
+                            throw new DefinitionResolveException(
+                                sprintf('Error when lazy creating object %s: %s', $class, $e->getMessage()),
+                                (int) $e->getCode(),
+                                $e,
+                            );
+                        }
+                    },
                 );
             }
         }

@@ -36,7 +36,28 @@ class DIOptions
          */
         public ?bool $ignoreAttributes = null,
         /**
-         * Use PHP 8.4 Lazy Proxy to wrap resolved instance.
+         * Use PHP 8.4 Lazy Proxy to wrap resolved instance, the real object is created on first property access
+         * (calling a method which does not touch properties will not initialize it).
+         *
+         * Lazy is skipped, and the normal eager flow is used, when the class:
+         * - does not exist, is an interface, abstract class, trait or enum (not instantiable).
+         * - is an internal class or extends one (e.g. ArrayObject, SplStack).
+         *
+         * For a nullable parameter, lazy is only used if the container has the service registered.
+         *
+         * Troubleshooting, errors thrown when the object is first accessed:
+         * - DefinitionResolveException "Unable to initialize lazy object": the real instance is not
+         *   compatible with the declared type. PHP requires the real instance to be the same class, or the proxy
+         *   class to be a sub-class that adds no properties and overrides neither __destruct nor __clone.
+         *   This happens when a service is bound to a sub-class which has extra properties or a custom
+         *   __destruct()/__clone(), or when a factory returns another class. Fix: type-hint the concrete class,
+         *   or disable lazy for it (`lazy: false`).
+         * - DefinitionResolveException "Error when lazy creating object": the constructor or dependency
+         *   resolving failed. The error is deferred until first access, see the previous exception for details.
+         * - Constructor side effects run on first access instead of injection time.
+         * - Extends registered by `whenCreating()->extend()` run on first access.
+         *
+         * @see \Windwalker\DI\Attributes\Lazy
          */
         public ?bool $lazy = null,
         /**
