@@ -547,6 +547,24 @@ class FormTest extends TestCase
     }
 
     #[Test]
+    public function fillNestedDataWithGroupAndDeepNames(): void
+    {
+        $form = new Form();
+        $form->addField(new TextField('foo/bar/yoo'));
+        $form->addField(new TextField('a'), null, 'grp');
+        $form->addField(new TextField('x/y/z'), null, 'grp/sub');
+
+        $form->fill([
+            'foo' => ['bar' => ['yoo' => '1']],
+            'grp' => ['a' => '2', 'sub' => ['x' => ['y' => ['z' => '3']]]],
+        ]);
+
+        self::assertSame('1', $form->getField('foo/bar/yoo')->getValue());
+        self::assertSame('2', $form->getField('grp/a')->getValue());
+        self::assertSame('3', $form->getField('grp/sub/x/y/z')->getValue());
+    }
+
+    #[Test]
     public function fillToFillsDataUnderPath(): void
     {
         $form = new Form();
