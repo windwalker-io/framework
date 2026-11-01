@@ -1973,7 +1973,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
-    public static function cursorPaginate(int $length, \Closure|string $cursorBy): CursorPaginate
+    public static function cursorPaginate(int $length, \Closure|string|array $cursorBy): CursorPaginate
     {
         return new CursorPaginate($length, $cursorBy);
     }
