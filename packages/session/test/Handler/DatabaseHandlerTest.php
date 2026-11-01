@@ -48,8 +48,41 @@ class DatabaseHandlerTest extends AbstractHandlerTestCase
         self::assertTrue($lastTime < $newTime);
     }
 
+    #[Test]
+    public function writeHandlerCustomizesColumns(): void
+    {
+        self::$db->execute('ALTER TABLE windwalker_sessions ADD COLUMN extra VARCHAR(50) NULL');
+
+        try {
+            $handler = new DatabaseHandler(
+                self::$db,
+                writeHandler: static fn(array $values, string $id, string $data) => $values + [
+                    'extra' => 'v:' . strlen($data),
+                ]
+            );
+
+            $handler->write('custom-id', 'abc');
+
+            self::assertSame(
+                'v:3',
+                self::$db->select('extra')->from('windwalker_sessions')->where('id', 'custom-id')->result()
+            );
+
+            $handler->write('custom-id', 'abcdef');
+
+            self::assertSame(
+                'v:6',
+                self::$db->select('extra')->from('windwalker_sessions')->where('id', 'custom-id')->result()
+            );
+        } finally {
+            self::$db->execute('ALTER TABLE windwalker_sessions DROP COLUMN extra');
+        }
+    }
+
     protected function createInstance(): HandlerInterface
     {
+        $this->prepareVfs();
+
         $this->instance = new DatabaseHandler(static::$db);
 
         self::$db->getTableManager('windwalker_sessions')->truncate();

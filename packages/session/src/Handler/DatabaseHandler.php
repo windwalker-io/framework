@@ -48,9 +48,14 @@ class DatabaseHandler extends AbstractHandler
      *     },
      *     gc_maxlifetime?: int|string|null
      * } $options
+     * @param  (\Closure(array<string, mixed> $values, string $id, string $data): array<string, mixed>)|null  $writeHandler
+     *                                                                                                                       Customize the column values before they are written to the session table.
      */
-    public function __construct(DatabaseAdapter $db, array $options = [])
-    {
+    public function __construct(
+        DatabaseAdapter $db,
+        array $options = [],
+        public ?\Closure $writeHandler = null,
+    ) {
         $this->db = $db;
 
         $this->prepareOptions(
@@ -101,15 +106,22 @@ class DatabaseHandler extends AbstractHandler
     {
         $columns = $this->getOption('columns');
 
+        $values = [
+            $columns['id'] => $id,
+            $columns['data'] => $data,
+            $columns['time'] => time(),
+        ];
+
+        if ($this->writeHandler) {
+            $values = ($this->writeHandler)($values, $id, $data);
+            $values[$columns['id']] = $id;
+        }
+
         $this->db->getWriter()->upsert(
             $this->getOption('table'),
-            [
-                $columns['id'] => $id,
-                $columns['data'] => $data,
-                $columns['time'] => time(),
-            ],
+            $values,
             $columns['id'],
-            [$columns['data'], $columns['time']]
+            array_values(array_diff(array_keys($values), [$columns['id']]))
         );
 
         return true;
