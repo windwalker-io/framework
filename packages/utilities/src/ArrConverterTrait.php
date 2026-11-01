@@ -142,6 +142,14 @@ trait ArrConverterTrait
         return static::groupByCallback($array, $key, $flags);
     }
 
+    /**
+     * Re-index an array by the given key, same as group() with GROUP_TYPE_KEY_BY.
+     */
+    public static function keyBy(array $array, string|\Closure|null $key, int $flags = 0): array
+    {
+        return static::group($array, $key, $flags | self::GROUP_TYPE_KEY_BY);
+    }
+
     public static function groupByPath(
         array $array,
         ?string $key = null,
