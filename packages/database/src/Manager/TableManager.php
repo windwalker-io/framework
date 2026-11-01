@@ -9,6 +9,8 @@ use RuntimeException;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Ddl\Index;
+use Windwalker\Database\Schema\Diff\SchemaDiffer;
+use Windwalker\Database\Schema\Diff\TableDiff;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Utilities\Cache\InstanceCacheTrait;
 
@@ -110,6 +112,105 @@ class TableManager extends AbstractMetaManager
         }
 
         return $this->reset();
+    }
+
+    /**
+     * Compare a desired Schema with the actual table without changing anything.
+     *
+     * @param  callable|Schema  $schema       Desired structure.
+     * @param  bool             $dropMissing  Also report columns / keys not in `$schema` as dropped.
+     */
+    public function diff(Schema|callable $schema, bool $dropMissing = false): TableDiff
+    {
+        $schema = $this->callSchema($schema);
+
+        $this->reset();
+
+        return new SchemaDiffer($this->getPlatform())->diff(
+            $this->getName(),
+            $schema,
+            $this->getColumns(true),
+            $this->getIndexes(true, true),
+            $this->getConstraints(true, true),
+            $dropMissing,
+        );
+    }
+
+    /**
+     * Apply a diff created by `diff()` to the table.
+     */
+    public function applyDiff(TableDiff $diff): static
+    {
+        $this->reset();
+
+        foreach ($diff->addedColumns as $column) {
+            $this->addColumn($column);
+        }
+
+        foreach ($diff->modifiedColumns as $columnDiff) {
+            $this->modifyColumn($columnDiff->desired);
+        }
+
+        $this->reset();
+
+        $this->dropConstraint($diff->droppedConstraints);
+        $this->dropIndex($diff->droppedIndexes);
+        $this->dropColumn($diff->droppedColumns);
+
+        $platform = $this->getPlatform();
+
+        foreach ($diff->modifiedIndexes as $index) {
+            $platform->dropIndex($this->getName(), $index->indexName, $this->schemaName);
+            $platform->addIndex($this->getName(), $index, $this->schemaName);
+        }
+
+        foreach ($diff->addedIndexes as $index) {
+            $this->addIndex($index);
+        }
+
+        foreach ($diff->modifiedConstraints as $constraint) {
+            $platform->dropConstraint($this->getName(), $constraint->constraintName, $this->schemaName);
+            $platform->addConstraint($this->getName(), $constraint, $this->schemaName);
+        }
+
+        foreach ($diff->addedConstraints as $constraint) {
+            $this->addConstraint($constraint);
+        }
+
+        return $this->reset();
+    }
+
+    /**
+     * Get the SQL statements `applyDiff()` would execute, without changing the table.
+     *
+     * @return  string[]
+     */
+    public function getDiffSql(TableDiff $diff): array
+    {
+        return $this->db->pretend(fn() => $this->applyDiff($diff));
+    }
+
+    /**
+     * Get the SQL statements `sync()` would execute, without changing the table.
+     *
+     * @return  string[]
+     */
+    public function syncSql(Schema|callable $schema, bool $dropMissing = false): array
+    {
+        return $this->getDiffSql($this->diff($schema, $dropMissing));
+    }
+
+    /**
+     * Make the table match the desired Schema, only executing the necessary changes.
+     */
+    public function sync(Schema|callable $schema, bool $dropMissing = false): TableDiff
+    {
+        $schema = $this->callSchema($schema);
+        $diff = $this->diff($schema, $dropMissing);
+
+        $this->applyDiff($diff);
+
+        return $diff;
     }
 
     /**

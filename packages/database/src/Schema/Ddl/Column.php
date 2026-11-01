@@ -649,6 +649,107 @@ class Column
         return $this;
     }
 
+    /**
+     * Compare this column (desired) with another column (actual).
+     *
+     * Both columns should be normalized by `AbstractPlatform::prepareColumn()` first.
+     * Optional attributes (comment, charset, collation) are only compared when this column defines them.
+     *
+     * @param  Column  $actual
+     *
+     * @return  array<string, array{from: mixed, to: mixed}>  Changed properties, `from` is the actual value
+     *                                                        and `to` is the desired value.
+     */
+    private const array INTEGER_TYPES = ['tinyint', 'smallint', 'mediumint', 'int', 'bigint'];
+
+    public function diff(Column $actual): array
+    {
+        $desired = [
+            'dataType' => static::normalizeType($this->getDataType()),
+            'length' => $this->getLengthExpression(),
+            'nullable' => $this->getIsNullable(),
+            'default' => static::normalizeDefault($this->canHasDefaultValue() ? $this->getColumnDefault() : null),
+            'unsigned' => $this->getNumericUnsigned(),
+            'autoIncrement' => $this->isAutoIncrement(),
+            'generation' => $this->getGenerationExpression(),
+            'generatedStored' => $this->isGeneratedStored(),
+            'comment' => $this->getComment(),
+            'charset' => $this->getCharacterSetName(),
+            'collation' => $this->getCollationName(),
+        ];
+
+        $current = [
+            'dataType' => static::normalizeType($actual->getDataType()),
+            'length' => $actual->getLengthExpression(),
+            'nullable' => $actual->getIsNullable(),
+            'default' => static::normalizeDefault($actual->canHasDefaultValue() ? $actual->getColumnDefault() : null),
+            'unsigned' => $actual->getNumericUnsigned(),
+            'autoIncrement' => $actual->isAutoIncrement(),
+            'generation' => $actual->getGenerationExpression(),
+            'generatedStored' => $actual->isGeneratedStored(),
+            'comment' => $actual->getComment(),
+            'charset' => $actual->getCharacterSetName(),
+            'collation' => $actual->getCollationName(),
+        ];
+
+        $optional = ['length', 'comment', 'charset', 'collation'];
+        $changes = [];
+
+        foreach ($desired as $name => $value) {
+            if (in_array($name, $optional, true) && ($value === null || $value === '')) {
+                continue;
+            }
+
+            // Integer display width is cosmetic and differs between drivers (e.g. int(10) vs int(11))
+            if ($name === 'length' && in_array($desired['dataType'], self::INTEGER_TYPES, true)) {
+                continue;
+            }
+
+            if ($value !== $current[$name]) {
+                $changes[$name] = ['from' => $current[$name], 'to' => $value];
+            }
+        }
+
+        return $changes;
+    }
+
+    private static function normalizeDefault(mixed $value): ?string
+    {
+        if ($value === null || $value === false) {
+            return null;
+        }
+
+        if ($value instanceof RawWrapper) {
+            return strtoupper(trim((string) $value));
+        }
+
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+
+        $value = trim((string) $value, " '\"");
+
+        if (is_numeric($value) && str_contains($value, '.')) {
+            $value = rtrim(rtrim($value, '0'), '.');
+        }
+
+        return $value;
+    }
+
+    private static function normalizeType(string $type): string
+    {
+        $type = strtolower($type);
+
+        return match ($type) {
+            'numeric' => 'decimal',
+            'integer' => 'int',
+            'bool' => 'boolean',
+            'character varying' => 'varchar',
+            'character' => 'char',
+            default => $type,
+        };
+    }
+
     public function getTypeExpression(?DataType $dt = null): string
     {
         $expr = $this->dataType;

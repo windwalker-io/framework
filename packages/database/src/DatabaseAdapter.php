@@ -51,6 +51,11 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      */
     protected mixed $query = null;
 
+    /**
+     * @var  string[]|null  Collected statements while in pretend mode.
+     */
+    protected ?array $pretendLog = null;
+
     protected ?ORM $orm = null;
 
     /**
@@ -102,7 +107,48 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
     {
         $this->query = $query;
 
+        if ($this->pretendLog !== null) {
+            $stmt = $this->prepare($query);
+
+            if (!static::isReadStatement($stmt->query)) {
+                $this->pretendLog[] = $stmt->query;
+
+                return $stmt;
+            }
+
+            return $stmt->execute($params);
+        }
+
         return $this->prepare($query)->execute($params);
+    }
+
+    /**
+     * Run the callback without executing any write statements (DDL / DML), and return the SQL that would be run.
+     *
+     * Read statements (SELECT, SHOW, PRAGMA...) are still executed so schema introspection keeps working.
+     *
+     * @return  string[]
+     */
+    public function pretend(callable $callback): array
+    {
+        if ($this->pretendLog !== null) {
+            throw new DomainException('Already in pretend mode.');
+        }
+
+        $this->pretendLog = [];
+
+        try {
+            $callback($this);
+
+            return $this->pretendLog;
+        } finally {
+            $this->pretendLog = null;
+        }
+    }
+
+    protected static function isReadStatement(string $sql): bool
+    {
+        return (bool) preg_match('/^\s*(SELECT|SHOW|PRAGMA|DESCRIBE|DESC|EXPLAIN|WITH)\b/i', $sql);
     }
 
     /**
