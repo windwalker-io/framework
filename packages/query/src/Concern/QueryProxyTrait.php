@@ -10,6 +10,7 @@ use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\ClausePosition;
+use Windwalker\Query\Contract\QueryInterface;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Iterator\PaginateIterator;
@@ -888,7 +889,7 @@ trait QueryProxyTrait
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
-     * @return  Generator<T>
+     * @return  \Generator<T>
      */
     public function iterateBatched(CursorPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
@@ -905,7 +906,7 @@ trait QueryProxyTrait
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
-     * @return  Generator<Collection<T>>
+     * @return  \Generator<Collection<T>>
      */
     public function iterateChunks(CursorPaginate|int $paginate, ?string $class = null, array $args = []): \Generator
     {
@@ -923,7 +924,7 @@ trait QueryProxyTrait
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
-     * @return  Generator<T>
+     * @return  \Generator<T>
      */
     public function iterateWhile(int $length, ?string $class = null, array $args = []): \Generator
     {
@@ -942,7 +943,7 @@ trait QueryProxyTrait
      * @param  class-string<T>|null  $class
      * @param  array                 $args
      *
-     * @return  Generator<T>
+     * @return  \Generator<T>
      */
     public function iterateBatchWhile(int $length, ?string $class = null, array $args = []): \Generator
     {
@@ -956,7 +957,7 @@ trait QueryProxyTrait
      * @param  array                    $args
      * @param  CursorPaginate|int|null  $paginate
      *
-     * @return  Traversable<T>
+     * @return  \Traversable<T>
      */
     public function getIterator(
         ?string $class = null,
