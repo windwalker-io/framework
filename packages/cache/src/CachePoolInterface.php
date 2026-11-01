@@ -9,7 +9,6 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
-use Windwalker\Promise\PromiseInterface;
 
 interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, LoggerAwareInterface
 {
@@ -22,14 +21,20 @@ interface CachePoolInterface extends CacheItemPoolInterface, CacheInterface, Log
         bool $lock = true,
     ): mixed;
 
-    /** @psalm-param callable(CacheItem): mixed $handler */
+    /**
+     * Requires `windwalker/promise`. Return type is not declared so the package stays optional.
+     *
+     * @psalm-param callable(CacheItem): mixed $handler
+     *
+     * @return  \Windwalker\Promise\PromiseInterface
+     */
     public function fetchAsync(
         string $key,
         callable $handler,
         DateInterval|string|int|null $ttl = null,
         float $beta = 1.0,
         bool $lock = true,
-    ): PromiseInterface;
+    );
 
     public function touch(string $key, DateInterval|string|int|null $ttl = null, bool $lock = true): bool;
 
