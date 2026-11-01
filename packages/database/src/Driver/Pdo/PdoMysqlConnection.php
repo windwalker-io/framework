@@ -55,4 +55,9 @@ class PdoMysqlConnection extends AbstractPdoConnection
     {
         return parent::get();
     }
+
+    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Mysql
+    {
+        return new Mysql($dsn, $username, $password, $options);
+    }
 }

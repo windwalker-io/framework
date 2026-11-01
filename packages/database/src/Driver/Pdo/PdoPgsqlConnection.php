@@ -42,4 +42,9 @@ class PdoPgsqlConnection extends AbstractPdoConnection
     {
         return parent::get();
     }
+
+    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Pgsql
+    {
+        return new Pgsql($dsn, $username, $password, $options);
+    }
 }

@@ -72,12 +72,26 @@ abstract class AbstractPdoConnection extends AbstractConnection
             $options->driverOptions ?? []
         );
 
-        return PDO::connect(
+        return $this->pdoConnect(
             $options->dsn,
             $options->user ?? null,
             $options->password ?? null,
             $attrs
         );
+    }
+
+    /**
+     * Instantiate the native PDO connection.
+     *
+     * Subclasses with a driver-specific PDO subclass (e.g. `Pdo\Sqlite`) should override this
+     * and `new` that subclass directly instead of using `PDO::connect()` or a dynamic
+     * class-string. This avoids a known PHP 8.4 regression in some builds where
+     * `PDO::connect()` silently falls back to a plain `PDO` instance instead of the expected
+     * driver-specific subclass.
+     */
+    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): PDO
+    {
+        return new PDO($dsn, $username, $password, $options);
     }
 
     /**

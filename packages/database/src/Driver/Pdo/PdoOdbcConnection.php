@@ -46,4 +46,9 @@ class PdoOdbcConnection extends AbstractPdoConnection
     {
         return parent::get();
     }
+
+    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Odbc
+    {
+        return new Odbc($dsn, $username, $password, $options);
+    }
 }

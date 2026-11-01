@@ -39,4 +39,9 @@ class PdoSqliteConnection extends AbstractPdoConnection
     {
         return parent::get();
     }
+
+    protected function pdoConnect(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null): Sqlite
+    {
+        return new Sqlite($dsn, $username, $password, $options);
+    }
 }
