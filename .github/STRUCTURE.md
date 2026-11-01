@@ -74,6 +74,7 @@ auto-loaded, and move detailed prose into `docs/` either way.
 - `prompts/complete-test-and-coverage.prompt.md` — inspect a package's coverage and add meaningful missing tests.
 - `prompts/refactor-test-code-style.prompt.md` — refactor PHPUnit test style, structure, and lifecycle hook naming.
 - `prompts/squash-merge-worktree.prompt.md` — commit pending worktree changes and squash-merge them into the working branch.
+- `prompts/plan-feature.prompt.md` — analyze a new feature or refactor, research alternatives, and produce a recommendation and implementation plan.
 - `skills/test/SKILL.md` — end-to-end workflow for adding/running PHPUnit tests in this monorepo.
 - `docs/code-style.md` — full PHP-CS-Fixer ruleset explanation/rationale. See `docs/README.md` for the docs index.
 - `docs/database-testing.md` — Setting up MySQL/DSN for real-database tests and writing safe DB tests.
