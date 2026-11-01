@@ -661,14 +661,17 @@ class PostgreSQLPlatform extends AbstractPlatform
             return null;
         }
 
-        // Virtual generated columns are supported since PostgreSQL 18, fallback to STORED before that.
-        $virtual = !$column->isGeneratedStored()
-            && version_compare($this->db->getDriver()->getVersion(), '18.0', '>=');
+        if (
+            !$column->isGeneratedStored()
+            && version_compare($this->db->getDriver()->getVersion(), '18.0', '<')
+        ) {
+            throw new \LogicException('VIRTUAL generated columns require PostgreSQL 18+, use STORED instead.');
+        }
 
         return sprintf(
             'GENERATED ALWAYS AS (%s) %s',
             $column->getGenerationExpression(),
-            $virtual ? 'VIRTUAL' : 'STORED'
+            $column->isGeneratedStored() ? 'STORED' : 'VIRTUAL'
         );
     }
 

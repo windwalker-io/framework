@@ -591,46 +591,16 @@ class SQLServerPlatform extends AbstractPlatform
         return $statement;
     }
 
-    /**
-     * SQL Server has no functional index, so expressions are bridged to persisted computed columns.
-     */
     public function addIndex(string $table, Index $index, ?string $schema = null): StatementInterface
     {
-        $columns = [];
-        $existing = null;
-
-        foreach ($index->getColumns() as $name => $column) {
-            $expression = $column->getIndexExpression();
-
-            if ($expression === null) {
-                $columns[$name] = $column;
-                continue;
-            }
-
-            $computedName = 'fx_' . substr(md5($expression), 0, 12);
-            $existing ??= $this->listColumns($table, $schema);
-
-            if (!isset($existing[$computedName])) {
-                $this->addColumn(
-                    $table,
-                    (new Column($computedName))->storedAs($expression),
-                    $schema
+        foreach ($index->getColumns() as $column) {
+            if ($column->getIndexExpression() !== null) {
+                throw new \LogicException(
+                    'SQL Server does not support functional index, '
+                    . 'add a computed column and index it instead.'
                 );
-
-                $existing[$computedName] = true;
             }
-
-            $computed = new Column($computedName);
-
-            if ($column->getOption('sort')) {
-                $computed->setOption('sort', $column->getOption('sort'));
-            }
-
-            $columns[$computedName] = $computed;
         }
-
-        $index = clone $index;
-        $index->columns = $columns;
 
         return parent::addIndex($table, $index, $schema);
     }
