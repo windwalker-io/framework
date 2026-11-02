@@ -59,6 +59,22 @@ class QueueMessageTest extends TestCase
     }
 
     #[Test]
+    public function totalDequeuesSumsAttemptsAndDeferTimes(): void
+    {
+        $message = new QueueMessage();
+
+        self::assertSame(0, $message->totalDequeues);
+
+        $message->setAttempts(3);
+
+        self::assertSame(3, $message->totalDequeues);
+
+        $message->setDeferTimes(2);
+
+        self::assertSame(5, $message->totalDequeues);
+    }
+
+    #[Test]
     public function getAndSetReadAndWriteBodyValues(): void
     {
         $message = new QueueMessage();

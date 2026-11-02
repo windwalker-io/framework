@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use JsonSerializable;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Time\Duration;
 use Windwalker\Queue\Job\JobController;
 use Windwalker\Utilities\Options\OptionAccessTrait;
 
@@ -78,18 +79,23 @@ class QueueMessage implements JsonSerializable
      *
      * @throws  \LogicException  If `Time\Duration` is not available (requires PHP 8.6+).
      */
-    public \Time\Duration $ageDuration {
-        get => class_exists(\Time\Duration::class)
-            ? \Time\Duration::fromSeconds($this->age)
+    public Duration $ageDuration {
+        get => class_exists(Duration::class)
+            ? Duration::fromSeconds($this->age)
             : throw new \LogicException('Time\\Duration requires PHP 8.6+, use $age (seconds) instead.');
     }
-    // phpcs:disable
+
+    /**
+     * Total number of times this message has been dequeued (popped from the queue), counting both real
+     * attempts ({@see $attempts}) and non-failure defers ({@see getDeferTimes()}).
+     */
+    public int $totalDequeues {
+        get => $this->attempts + $this->getDeferTimes();
+    }
 
     public ?string $serializedJob {
         get => $this->body['job'] ?? null;
     }
-
-    // phpcs:enable
 
     /**
      * QueueMessage constructor.
@@ -452,7 +458,7 @@ class QueueMessage implements JsonSerializable
         $vars = get_object_vars($this);
 
         // Virtual computed properties.
-        unset($vars['age'], $vars['ageDuration']);
+        unset($vars['age'], $vars['ageDuration'], $vars['totalDequeues']);
 
         return $vars;
     }
