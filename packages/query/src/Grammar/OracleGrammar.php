@@ -51,7 +51,7 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
     /**
      * @var  string
      */
-    public static string $nullDate = 'RRRR-MM-DD HH24:MI:SS';
+    public static string $nullDate = '1900-01-01 00:00:00';
 
     public function compileInsert(Query $query): string
     {

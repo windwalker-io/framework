@@ -66,6 +66,7 @@ auto-loaded, and move detailed prose into `docs/` either way.
 
 ## Current contents
 
+- `instructions/config-sync.instructions.md` — keep composer / CI / PHPUnit / docker configs and related packages in sync.
 - `instructions/cs.instructions.md` — PHP-CS-Fixer-backed code style rules (applies to all PHP files).
 - `instructions/dependencies.instructions.md` — package dependency checks and root Composer synchronization (PHP / Composer manifests).
 - `instructions/instruction.instructions.md` — how to place new rules across instructions / skills / docs.

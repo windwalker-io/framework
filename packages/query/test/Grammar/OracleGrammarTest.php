@@ -7,6 +7,7 @@ namespace Windwalker\Query\Test\Grammar;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Grammar\OracleGrammar;
+use Windwalker\Query\Query;
 
 class OracleGrammarTest extends AbstractGrammarTestCase
 {
@@ -50,5 +51,40 @@ class OracleGrammarTest extends AbstractGrammarTestCase
         $this->expectException(InvalidArgumentException::class);
 
         self::compileUpsert(['title' => 'A'], ['id'], ['title']);
+    }
+
+    #[Test]
+    public function staticHelpersReturnOracleValues(): void
+    {
+        self::assertSame('1900-01-01 00:00:00', OracleGrammar::nullDate());
+        self::assertSame('Y-m-d H:i:s', OracleGrammar::dateFormat());
+        self::assertSame('Oracle', OracleGrammar::getName());
+    }
+
+    #[Test]
+    public function multiRowInsertCompilesUnionAllFromDual(): void
+    {
+        $query = (new Query(null, new OracleGrammar()))
+            ->insert('foo')
+            ->columns('id', 'title')
+            ->values([1, 'a'], [2, 'b']);
+
+        $sql = (string) $query->render();
+
+        self::assertStringContainsString('FROM DUAL UNION ALL SELECT', $sql);
+        self::assertStringNotContainsString('VALUES', $sql);
+    }
+
+    #[Test]
+    public function limitCompilesOffsetFetch(): void
+    {
+        $query = (new Query(null, new OracleGrammar()))
+            ->select('id')
+            ->from('foo')
+            ->order('id')
+            ->limit(5)
+            ->offset(10);
+
+        self::assertStringEndsWith('OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY', (string) $query->render());
     }
 }

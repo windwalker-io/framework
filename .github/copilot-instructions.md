@@ -12,6 +12,8 @@ and where to place new AI-facing content.
 - Code Style
   - [cs.instructions.md](instructions/cs.instructions.md) - Advanced PHP code style rules.
   - [code-style.md](docs/code-style.md) - Full PHP-CS-Fixer ruleset rationale.
+- [Config Sync](instructions/config-sync.instructions.md) - When changing composer / CI / PHPUnit / docker configs,
+  update the related packages' counterparts too.
 - [Dependency Checks](instructions/dependencies.instructions.md) - Package `require` / `require-dev` declarations
   and root Composer synchronization.
 - Testing

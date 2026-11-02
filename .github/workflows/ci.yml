@@ -37,6 +37,20 @@ jobs:
           --health-timeout 5s
           --health-retries 10
           --health-start-period 30s
+      oracle:
+        image: gvenzl/oracle-free:23-slim
+        env:
+          ORACLE_PASSWORD: ut1234
+          APP_USER: windwalker
+          APP_USER_PASSWORD: ut1234
+        ports:
+          - 1521:1521
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 30
+          --health-start-period 60s
       sqs:
         image: softwaremill/elasticmq-native:1.6.11
         ports:
@@ -64,13 +78,15 @@ jobs:
           rm packages-microsoft-prod.deb
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
+      # Oracle needs no ODBC: pdo_oci links against Oracle Instant Client, which setup-php installs together
+      # with the pdo_oci extension. The ODBC driver above is only for SQL Server.
       # PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: |
-            mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlsrv, mysqli,
+            mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlsrv, pdo_oci, mysqli,
             php-memcached, redis, sqlite3, swoole
           coverage: none
       #          tools: php-cs-fixer, phpunit
@@ -127,6 +143,6 @@ jobs:
           $php = (Get-Command php).Source
           Start-Process -FilePath $php -ArgumentList @('-S', '127.0.0.1:8100', 'bin/test-server.php') -PassThru | Out-Null
       - name: Run Windows-compatible PHPUnit tests
-        # IMPORTANT: These groups must be annotated in the project tests.
+        # phpunit.windows.xml defines no MySQL/PostgreSQL/SQL Server/Oracle DSN, so those database tests skip.
         # Excluding groups has no effect on ungrouped integration tests.
-        run: php vendor/bin/phpunit --configuration phpunit.ci.xml --exclude-group integration,redis,memcached,sqlserver,sqs,mysql,pgsql
+        run: php vendor/bin/phpunit --configuration phpunit.windows.xml --exclude-group integration,redis,memcached,sqs
