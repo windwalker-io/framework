@@ -339,6 +339,29 @@ abstract class AbstractGrammar
         return 'RAND()';
     }
 
+    /**
+     * Compile an expression that maps a column to its position in the given values.
+     * Unlisted values get a position after the last listed one.
+     *
+     * @param  Query   $query
+     * @param  string  $column  Already quoted column.
+     * @param  array   $values  Non-empty list.
+     *
+     * @return  Clause
+     */
+    public function compileOrderByField(Query $query, string $column, array $values): Clause
+    {
+        $cases = [];
+
+        foreach ($values as $i => $value) {
+            $cases[] = $value === null
+                ? static::clause('', ['WHEN', $column, 'IS NULL', 'THEN', $i + 1])
+                : static::clause('', ['WHEN', $column, '=', $query->valueize($value, false), 'THEN', $i + 1]);
+        }
+
+        return static::clause('CASE', [...$cases, 'ELSE', count($values) + 1, 'END']);
+    }
+
     public function compileLimit(Query $query, array $sql): array
     {
         $limit = $query->getLimit();

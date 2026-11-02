@@ -221,6 +221,17 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function orderByField(
+        mixed $column,
+        array $values,
+        \SortDirection|string|null $dir = null,
+        ClausePosition $pos = ClausePosition::APPEND
+    ): static {
+        $this->getQueryBuilder()->orderByField($column, $values, $dir, $pos);
+
+        return $this;
+    }
+
     public function orderRaw(Clause|string $order, mixed ...$args): static
     {
         $this->getQueryBuilder()->orderRaw($order, ...$args);

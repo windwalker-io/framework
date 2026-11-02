@@ -63,6 +63,15 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         SQL;
     }
 
+    public function compileOrderByField(Query $query, string $column, array $values): Clause
+    {
+        $bound = array_map(fn($v) => $query->valueize($v, false), $values);
+        $field = static::clause('FIELD()', [$column, ...$bound], ', ');
+        $nullIf = static::clause('NULLIF()', [$field, 0], ', ');
+
+        return static::clause('COALESCE()', [$nullIf, count($values) + 1], ', ');
+    }
+
     /**
      * If no connection set, we escape it with default function.
      *

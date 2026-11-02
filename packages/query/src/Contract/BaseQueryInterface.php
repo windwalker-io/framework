@@ -155,6 +155,13 @@ interface BaseQueryInterface
 
     public function orderByRandom(ClausePosition $pos = ClausePosition::APPEND): static;
 
+    public function orderByField(
+        mixed $column,
+        array $values,
+        \SortDirection|string|null $dir = null,
+        ClausePosition $pos = ClausePosition::APPEND
+    ): static;
+
     public function orderRaw(Clause|string $order, mixed ...$args): static;
 
     /**

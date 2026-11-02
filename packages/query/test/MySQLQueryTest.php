@@ -172,4 +172,9 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
     {
         return new MySQLGrammar();
     }
+
+    protected static function orderByFieldSql(string $column): string
+    {
+        return "COALESCE(NULLIF(FIELD($column, 'b', 'a'), 0), 3)";
+    }
 }

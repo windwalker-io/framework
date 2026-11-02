@@ -687,6 +687,38 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         );
     }
 
+    /**
+     * Order by a custom list of values, e.g. `ORDER BY FIELD(col, 'a', 'b')` in MySQL.
+     * Values that are not listed are sorted after the listed ones when ascending.
+     *
+     * @param  mixed                       $column
+     * @param  array                       $values
+     * @param  \SortDirection|string|null  $dir
+     * @param  ClausePosition              $pos
+     *
+     * @return  static
+     */
+    public function orderByField(
+        mixed $column,
+        array $values,
+        \SortDirection|string|null $dir = null,
+        ClausePosition $pos = ClausePosition::APPEND
+    ): static {
+        $values = array_values($values);
+
+        if ($values === []) {
+            return $this;
+        }
+
+        $order = [$this->getGrammar()->compileOrderByField($this, $this->resolveColumn($column), $values)];
+
+        if ($dir !== null) {
+            $order[] = static::unwrapDirectionEnum($dir);
+        }
+
+        return $this->orderRaw($this->clause('', $order), $pos);
+    }
+
     public function orderRaw(string|Clause $order, mixed ...$args): static
     {
         if (!$this->order) {

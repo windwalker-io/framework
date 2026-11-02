@@ -1552,6 +1552,25 @@ SQL
     }
 
     #[Test]
+    public function orderByFieldUsesGrammarExpression(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->orderByField('state', ['b', 'a'], 'DESC');
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" ORDER BY ' . static::orderByFieldSql((string) self::createQuery()->quoteName('state')) . ' DESC',
+            $q->render(true)
+        );
+    }
+
+    protected static function orderByFieldSql(string $column): string
+    {
+        return "CASE WHEN $column = 'b' THEN 1 WHEN $column = 'a' THEN 2 ELSE 3 END";
+    }
+
+    #[Test]
     public function groupAppendsGroupByColumns()
     {
         $q = self::createQuery()
