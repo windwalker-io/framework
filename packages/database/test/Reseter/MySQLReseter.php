@@ -43,8 +43,14 @@ class MySQLReseter extends AbstractReseter
         )->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
         if ($tables) {
-            foreach ($tables as $table) {
-                $pdo->exec('DROP TABLE IF EXISTS ' . $table);
+            $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
+
+            try {
+                foreach ($tables as $table) {
+                    $pdo->exec('DROP TABLE IF EXISTS ' . static::qn($table));
+                }
+            } finally {
+                $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
             }
         }
 

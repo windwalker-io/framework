@@ -594,7 +594,10 @@ class FileObject extends SplFileInfo
                     return $this->removeJunction();
                 }
 
-                if (!$result = @unlink($path)) {
+                // Windows directory symlinks must be removed with rmdir()
+                $result = (is_dir($path) && PHP_OS_FAMILY === 'Windows') ? @rmdir($path) : @unlink($path);
+
+                if (!$result) {
                     throw new FilesystemException('Error when deleting link.');
                 }
 
