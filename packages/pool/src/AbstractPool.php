@@ -34,7 +34,7 @@ abstract class AbstractPool implements PoolInterface
     /**
      * @var  LoggerInterface
      */
-    protected LoggerInterface $logger;
+    public protected(set) LoggerInterface $logger;
 
     /**
      * @var  int
