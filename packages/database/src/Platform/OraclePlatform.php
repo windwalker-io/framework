@@ -8,7 +8,6 @@ use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
-use Windwalker\Database\Schema\Ddl\Index;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;

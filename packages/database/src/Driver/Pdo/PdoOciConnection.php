@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Pdo;
 
 use PDO;
+use Throwable;
 use Windwalker\Database\Driver\DriverOptions;
 
 /**
@@ -69,7 +70,7 @@ class PdoOciConnection extends AbstractPdoConnection
             $this->connection->query('SELECT 1 FROM DUAL');
 
             return true;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return false;
         }
     }
