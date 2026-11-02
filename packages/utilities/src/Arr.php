@@ -1074,7 +1074,13 @@ abstract class Arr
                 $ref = new ReflectionObject($data);
                 $class = $ref->isAnonymous() ? 'class@anonymous' : $ref->getName();
                 $output = $class . ' ' . ucfirst($type);
-                $properties = $ref->getProperties();
+
+                if ($ref->hasMethod('__debugInfo')) {
+                    $elements = $data->__debugInfo() ?? [];
+                    $properties = [];
+                } else {
+                    $properties = $ref->getProperties();
+                }
 
                 // Fix for ArrayObject & ArrayIterator
                 if ($data instanceof ArrayObject || $data instanceof ArrayIterator) {
