@@ -14,6 +14,7 @@ use Windwalker\Query\Contract\QueryInterface;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Iterator\PaginateIterator;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * Proxies all query building methods to the Query object returned by getQueryBuilder().
@@ -221,6 +222,17 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function orderByField(
+        mixed $column,
+        array $values,
+        \SortDirection|string|null $dir = null,
+        ClausePosition $pos = ClausePosition::APPEND
+    ): static {
+        $this->getQueryBuilder()->orderByField($column, $values, $dir, $pos);
+
+        return $this;
+    }
+
     public function orderRaw(Clause|string $order, mixed ...$args): static
     {
         $this->getQueryBuilder()->orderRaw($order, ...$args);
@@ -280,6 +292,41 @@ trait QueryProxyTrait
     public function insert(string $table, bool $incrementField = false): static
     {
         $this->getQueryBuilder()->insert($table, $incrementField);
+
+        return $this;
+    }
+
+    public function upsert(string $table, bool $incrementField = false): static
+    {
+        $this->getQueryBuilder()->upsert($table, $incrementField);
+
+        return $this;
+    }
+
+    public function onConflict(string|array ...$keys): static
+    {
+        $this->getQueryBuilder()->onConflict(...$keys);
+
+        return $this;
+    }
+
+    public function onConflictUpdateColumns(string ...$columns): static
+    {
+        $this->getQueryBuilder()->onConflictUpdateColumns(...$columns);
+
+        return $this;
+    }
+
+    public function onConflictUpdateValues(string|array $column, mixed $value = null): static
+    {
+        $this->getQueryBuilder()->onConflictUpdateValues($column, $value);
+
+        return $this;
+    }
+
+    public function returning(?string $idField): static
+    {
+        $this->getQueryBuilder()->returning($idField);
 
         return $this;
     }
@@ -836,6 +883,11 @@ trait QueryProxyTrait
      * @return  $this
      *
      * @throws  \JsonException
+     *
+     * @deprecated  Use {@see whereJsonContainsAll()} instead.
+     *               In the next major release, whereJsonContainsAll() will be renamed back to whereJsonContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
      */
     public function whereJsonContains(string $expr, mixed $value): static
     {
@@ -844,6 +896,19 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function whereJsonContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->whereJsonContainsAll($expr, $value);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated  Use {@see whereJsonNotContainsAll()} instead.
+     *               In the next major release, whereJsonNotContainsAll() will be renamed back to whereJsonNotContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function whereJsonNotContains(string $expr, mixed $value): static
     {
         $this->getQueryBuilder()->whereJsonNotContains($expr, $value);
@@ -851,6 +916,19 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function whereJsonNotContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->whereJsonNotContainsAll($expr, $value);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated  Use {@see havingJsonContainsAll()} instead.
+     *               In the next major release, havingJsonContainsAll() will be renamed back to havingJsonContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function havingJsonContains(string $expr, mixed $value): static
     {
         $this->getQueryBuilder()->havingJsonContains($expr, $value);
@@ -858,9 +936,29 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function havingJsonContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->havingJsonContainsAll($expr, $value);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated  Use {@see havingJsonNotContainsAll()} instead.
+     *               In the next major release, havingJsonNotContainsAll() will be renamed back to havingJsonNotContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function havingJsonNotContains(string $expr, mixed $value): static
     {
         $this->getQueryBuilder()->havingJsonNotContains($expr, $value);
+
+        return $this;
+    }
+
+    public function havingJsonNotContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->havingJsonNotContainsAll($expr, $value);
 
         return $this;
     }
@@ -875,6 +973,58 @@ trait QueryProxyTrait
     public function whereJsonLength(array|string $expr, mixed ...$args): static
     {
         $this->getQueryBuilder()->whereJsonLength($expr, ...$args);
+
+        return $this;
+    }
+
+    public function whereJsonExists(string $expr): static
+    {
+        $this->getQueryBuilder()->whereJsonExists($expr);
+
+        return $this;
+    }
+
+    public function whereJsonNotExists(string $expr): static
+    {
+        $this->getQueryBuilder()->whereJsonNotExists($expr);
+
+        return $this;
+    }
+
+    public function havingJsonExists(string $expr): static
+    {
+        $this->getQueryBuilder()->havingJsonExists($expr);
+
+        return $this;
+    }
+
+    public function havingJsonNotExists(string $expr): static
+    {
+        $this->getQueryBuilder()->havingJsonNotExists($expr);
+
+        return $this;
+    }
+
+    public function jsonSet(string $expr, mixed $value): RawWrapper
+    {
+        return $this->getQueryBuilder()->jsonSet($expr, $value);
+    }
+
+    public function jsonRemove(string $expr): RawWrapper
+    {
+        return $this->getQueryBuilder()->jsonRemove($expr);
+    }
+
+    public function setJson(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->setJson($expr, $value);
+
+        return $this;
+    }
+
+    public function setJsonRemove(string $expr): static
+    {
+        $this->getQueryBuilder()->setJsonRemove($expr);
 
         return $this;
     }

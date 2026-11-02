@@ -74,7 +74,7 @@ class StringObjectTest extends TestCase
     {
         self::assertEquals(
             Str::endsWith('FooBar', 'bar', false, Str::ENCODING_UTF8),
-            (new StringObject('FooBar', StringObject::ENCODING_UTF8))->endsWith('bar', false)
+            new StringObject('FooBar', StringObject::ENCODING_UTF8)->endsWith('bar', false)
         );
     }
 
@@ -83,7 +83,7 @@ class StringObjectTest extends TestCase
     {
         self::assertEquals(
             Str::slice('白日依山盡', 1, 3, Str::ENCODING_UTF8),
-            (new StringObject('白日依山盡', StringObject::ENCODING_UTF8))->slice(1, 3)
+            new StringObject('白日依山盡', StringObject::ENCODING_UTF8)->slice(1, 3)
         );
     }
 
@@ -92,7 +92,7 @@ class StringObjectTest extends TestCase
     {
         self::assertEquals(
             Str::slice('白日依山盡', 1, 3, Str::ENCODING_DEFAULT_ISO),
-            (new StringObject('白日依山盡', StringObject::ENCODING_DEFAULT_ISO))->slice(1, 3)
+            new StringObject('白日依山盡', StringObject::ENCODING_DEFAULT_ISO)->slice(1, 3)
         );
     }
 
@@ -101,7 +101,7 @@ class StringObjectTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
 
-        (new StringObject('Foo'))->notexists();
+        new StringObject('Foo')->notexists();
     }
 
     #[Test]

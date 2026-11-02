@@ -28,12 +28,26 @@ class MySQLGrammarTest extends AbstractGrammarTestCase
         );
 
         self::assertSame(
-            'INSERT INTO `foo` (`id`,`title`,`created`) VALUES (:id,:title,NOW()) '
+            'INSERT INTO `foo` (`id`,`title`,`created`) VALUES (:p1,:p2,NOW()) '
             . 'ON DUPLICATE KEY UPDATE `title` = VALUES(`title`),`created` = VALUES(`created`),'
             . '`id` = LAST_INSERT_ID(`id`)',
             $sql
         );
-        self::assertSame(['id', 'title'], array_keys($query->getBounded()));
+        self::assertCount(2, $query->getBounded());
+    }
+
+    #[Test]
+    public function upsertWithCustomValue(): void
+    {
+        $query = self::createQuery()
+            ->upsert('foo')
+            ->set(['id' => 1, 'hits' => 1])
+            ->onConflictUpdateValues('hits', raw('`hits` + 1'));
+
+        self::assertSame(
+            'INSERT INTO `foo` (`id`,`hits`) VALUES (:p1,:p2) ON DUPLICATE KEY UPDATE `hits` = `hits` + 1',
+            self::normalize($query->render())
+        );
     }
 
     #[Test]

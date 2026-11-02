@@ -111,19 +111,18 @@ class PdoHandler extends AbstractHandler
         $query = $this->createQuery();
 
         try {
-            $sql = $query->getGrammar()->compileUpsert(
-                $query,
-                $this->getOption('table'),
-                [
-                    $columns['id'] => $id,
-                    $columns['data'] => $data,
-                    $columns['time'] => time(),
-                ],
-                [$columns['id']],
-                [$columns['data'], $columns['time']]
-            );
+            $query->upsert($this->getOption('table'))
+                ->set(
+                    [
+                        $columns['id'] => $id,
+                        $columns['data'] => $data,
+                        $columns['time'] => time(),
+                    ]
+                )
+                ->onConflict($columns['id'])
+                ->onConflictUpdateColumns($columns['data'], $columns['time']);
 
-            $stmt = $this->db->prepare($query->sql($sql)->forPDO($upsertParams));
+            $stmt = $this->db->prepare($query->forPDO($upsertParams));
             $stmt->execute($upsertParams);
 
             return true;

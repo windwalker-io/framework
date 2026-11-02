@@ -209,7 +209,7 @@ class RequestBaseUri extends Uri implements JsonSerializable
      */
     public static function normalize(string $uri): string
     {
-        return (new Uri($uri))->toString();
+        return new Uri($uri)->toString();
     }
 
     public function base(bool $full = false): string

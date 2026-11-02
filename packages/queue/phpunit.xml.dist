@@ -10,6 +10,7 @@
 
         <!--<const name="WINDWALKER_TEST_DB_DSN_MYSQL"  value="host=localhost;dbname=windwalker_test;user=root;password=;prefix=ww_" />-->
         <!--<env name="SQS_ENABLED" value="1" />-->
+        <!--<env name="RABBITMQ_ENABLED" value="1" />-->
     </php>
 
 	<testsuites>

@@ -161,32 +161,32 @@ class EnvironmentTest extends TestCase
     #[Test]
     public function constructorFallsBackToGlobalServer(): void
     {
-        $this->assertSame($_SERVER, (new Environment())->getServerParams());
+        $this->assertSame($_SERVER, new Environment()->getServerParams());
     }
 
     #[Test]
     public function getUserHomeDirPrefersHomeThenDriveAndPath(): void
     {
-        $this->assertSame('/home/me', (new Environment(['HOME' => '/home/me']))->getUserHomeDir());
+        $this->assertSame('/home/me', new Environment(['HOME' => '/home/me'])->getUserHomeDir());
         $this->assertSame(
             'C:\\Users\\me',
-            (new Environment(['HOMEDRIVE' => 'C:', 'HOMEPATH' => '\\Users\\me']))->getUserHomeDir()
+            new Environment(['HOMEDRIVE' => 'C:', 'HOMEPATH' => '\\Users\\me'])->getUserHomeDir()
         );
     }
 
     #[Test]
     public function getUserNameFallsBackToUsername(): void
     {
-        $this->assertSame('simon', (new Environment(['USER' => 'simon', 'USERNAME' => 'other']))->getUserName());
-        $this->assertSame('other', (new Environment(['USERNAME' => 'other']))->getUserName());
-        $this->assertNull((new Environment([]))->getUserName());
+        $this->assertSame('simon', new Environment(['USER' => 'simon', 'USERNAME' => 'other'])->getUserName());
+        $this->assertSame('other', new Environment(['USERNAME' => 'other'])->getUserName());
+        $this->assertNull(new Environment([])->getUserName());
     }
 
     #[Test]
     public function getDeviceNameReadsUserDomain(): void
     {
-        $this->assertSame('my-pc', (new Environment(['USERDOMAIN' => 'my-pc']))->getDeviceName());
-        $this->assertNull((new Environment([]))->getDeviceName());
+        $this->assertSame('my-pc', new Environment(['USERDOMAIN' => 'my-pc'])->getDeviceName());
+        $this->assertNull(new Environment([])->getDeviceName());
     }
 
     #[Test]
@@ -251,6 +251,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('443', $env->getPort());
         $this->assertSame('https', $env->getScheme());
         $this->assertTrue($env->isSSL());
-        $this->assertFalse((new Environment(['REQUEST_SCHEME' => 'http']))->isSSL());
+        $this->assertFalse(new Environment(['REQUEST_SCHEME' => 'http'])->isSSL());
     }
 }

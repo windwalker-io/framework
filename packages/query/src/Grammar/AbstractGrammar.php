@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Stringable;
 use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
+use Windwalker\Query\Clause\ValueClause;
 use Windwalker\Query\DefaultConnection;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Query;
@@ -339,6 +340,29 @@ abstract class AbstractGrammar
         return 'RAND()';
     }
 
+    /**
+     * Compile an expression that maps a column to its position in the given values.
+     * Unlisted values get a position after the last listed one.
+     *
+     * @param  Query   $query
+     * @param  string  $column  Already quoted column.
+     * @param  array   $values  Non-empty list.
+     *
+     * @return  Clause
+     */
+    public function compileOrderByField(Query $query, string $column, array $values): Clause
+    {
+        $cases = [];
+
+        foreach ($values as $i => $value) {
+            $cases[] = $value === null
+                ? static::clause('', ['WHEN', $column, 'IS NULL', 'THEN', $i + 1])
+                : static::clause('', ['WHEN', $column, '=', $query->valueize($value, false), 'THEN', $i + 1]);
+        }
+
+        return static::clause('CASE', [...$cases, 'ELSE', count($values) + 1, 'END']);
+    }
+
     public function compileLimit(Query $query, array $sql): array
     {
         $limit = $query->getLimit();
@@ -426,32 +450,102 @@ abstract class AbstractGrammar
     }
 
     /**
-     * Compile an upsert (insert or update on conflict) SQL string and bind the values to the query.
+     * Compile an upsert (insert or update on conflict) SQL string from the query state.
      *
-     * @param  Query        $query
-     * @param  string       $table
-     * @param  array        $data              Column => value map.
-     * @param  array        $keys              Conflict key columns.
-     * @param  array        $updateFields      Columns to update on conflict.
-     * @param  string|null  $returningIdField  ID column to return.
+     * @param  Query  $query
      *
      * @return  string
      */
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
+    public function compileUpsert(Query $query): string
+    {
         throw new BadMethodCallException(
             sprintf('%s dose not support "upsert" compiled', static::class)
         );
     }
 
     /**
-     * Build the `(columns)` and `(values)` clauses of an upsert and bind the values.
+     * Resolve the upsert state of a query. All names are quoted.
+     *
+     * - `data`: quoted column => value expression.
+     * - `keys`: quoted conflict keys.
+     * - `update`: quoted column => custom value expression, `null` means use the inserted value.
+     *   Fallback to all non-key columns, and then to the keys if there is nothing to update.
+     *
+     * @param  Query  $query
+     *
+     * @return    array{
+     *           table: string,
+     *           data: array<string, mixed>,
+     *           keys: string[],
+     *           update: array<string, mixed>,
+     *           returning: string|null
+     *           }
+     */
+    protected function resolveUpsert(Query $query): array
+    {
+        $upsert = $query->getUpsert() ?? ['keys' => [], 'update' => [], 'returning' => null];
+        $data = [];
+
+        if ($set = $query->getSet()) {
+            foreach ($set->getElements() as $item) {
+                [$column, , $value] = $item->getElements();
+
+                $data[(string) $column] = $value;
+            }
+        } else {
+            $columns = $query->getColumns();
+            $values = $query->getValues();
+
+            if ($values !== null && !$values instanceof Clause) {
+                throw new InvalidArgumentException('Upsert does not support INSERT ... SELECT.');
+            }
+
+            $row = $values?->getElements()[0] ?? null;
+
+            if ($columns && $row) {
+                foreach (array_values($columns->getElements()) as $i => $column) {
+                    $data[(string) $column] = $row->getElements()[$i]
+                        ?? throw new InvalidArgumentException('Upsert columns and values count not match.');
+                }
+            }
+        }
+
+        if ($data === []) {
+            throw new InvalidArgumentException('Upsert requires data, please use set() or columns() and values().');
+        }
+
+        $keys = array_map(fn($key) => (string) $query->quoteName($key), $upsert['keys']);
+        $update = [];
+
+        foreach ($upsert['update'] as $column => $value) {
+            $update[(string) $query->quoteName($column)] = $value;
+        }
+
+        if ($update === []) {
+            foreach (array_keys($data) as $column) {
+                if (!in_array($column, $keys, true)) {
+                    $update[$column] = null;
+                }
+            }
+        }
+
+        if ($update === []) {
+            foreach ($keys as $key) {
+                $update[$key] = null;
+            }
+        }
+
+        return [
+            'table' => (string) $query->getInsert()->getElements()[0],
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+            'returning' => $upsert['returning'] !== null ? (string) $query->quoteName($upsert['returning']) : null,
+        ];
+    }
+
+    /**
+     * Build the `(columns)` and `(values)` clauses of an upsert.
      *
      * @param  Query  $query
      * @param  array  $data
@@ -460,19 +554,65 @@ abstract class AbstractGrammar
      */
     protected function compileUpsertColumnsAndValues(Query $query, array $data): array
     {
-        $columns = $query->clause('()', $query->qnMultiple(array_keys($data)), ',');
-        $values = $query->clause('()', [], ',');
+        return [
+            $query->clause('()', array_keys($data), ','),
+            $query->clause('()', array_values($data), ','),
+        ];
+    }
 
-        foreach ($data as $k => $v) {
-            if ($v instanceof RawWrapper) {
-                $values->append($v());
-            } else {
-                $query->bind($k, $v);
-                $values->append(":$k");
-            }
+    /**
+     * Get a value that is already used in the VALUES clause for another place of the same statement.
+     *
+     * Named placeholders can not be repeated when emulate prepares is disabled,
+     * so bound values will be bound again with a new placeholder.
+     *
+     * @param  Query  $query
+     * @param  mixed  $value
+     *
+     * @return  mixed
+     */
+    protected function reuseUpsertValue(Query $query, mixed $value): mixed
+    {
+        if (!$value instanceof ValueClause) {
+            return $value;
         }
 
-        return [$columns, $values];
+        $inner = $value->getValue();
+
+        if ($inner instanceof RawWrapper || $inner instanceof Query) {
+            return $value;
+        }
+
+        return $query->valueize($inner, false);
+    }
+
+    /**
+     * Build the MERGE `ON` condition from conflict keys.
+     *
+     * @param  Query  $query
+     * @param  array  $keys
+     * @param  array  $data
+     *
+     * @return  Clause
+     */
+    protected function compileUpsertMergeOn(Query $query, array $keys, array $data): Clause
+    {
+        if ($keys === []) {
+            throw new InvalidArgumentException('Upsert requires conflict keys, please use onConflict().');
+        }
+
+        $on = $query->clause('()', [], ' AND ');
+
+        foreach ($keys as $key) {
+            $on->append(
+                $key . ' = ' . $this->reuseUpsertValue(
+                    $query,
+                    $data[$key] ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
+                )
+            );
+        }
+
+        return $on;
     }
 
     /**

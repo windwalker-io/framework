@@ -576,21 +576,44 @@ class FileObject extends SplFileInfo
     /**
      * delete
      *
+     * @param  bool  $followLinks  Whether to descend into symlinked directories and delete their contents.
+     *
      * @return  bool
+     *
+     * @deprecated  The `$followLinks` argument is deprecated. It defaults to `true` for backward compatibility,
+     *              but in the next major release links will never be followed: only the link itself is removed.
+     *              Use {@see self::deleteNoFollow()} instead, which never follows links.
      */
-    public function delete(): bool
+    public function delete(bool $followLinks = true): bool
     {
         $path = $this->getPathname();
 
-        if ($this->isDir()) {
-            // Delete children files
-            foreach ($this->files(true) as $file) {
-                $file->delete();
-            }
+        if (!$followLinks && $this->isLink()) {
+            try {
+                if ($this->isJunction()) {
+                    return $this->removeJunction();
+                }
 
-            // Delete children folders
-            foreach ($this->folders(true) as $folder) {
-                $folder->delete();
+                // Windows directory symlinks must be removed with rmdir()
+                $result = (is_dir($path) && PHP_OS_FAMILY === 'Windows') ? @rmdir($path) : @unlink($path);
+
+                if (!$result) {
+                    throw new FilesystemException('Error when deleting link.');
+                }
+
+                return $result;
+            } catch (\Throwable $e) {
+                throw new FilesystemException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        if ($this->isDir()) {
+            // Only walk direct children (snapshotted first) and let each child delete itself recursively.
+            // A recursive iterator would still yield nested paths after their parent was removed.
+            $children = iterator_to_array($this->items(false), false);
+
+            foreach ($children as $child) {
+                $child->deleteIfExists($followLinks);
             }
         }
 
@@ -619,10 +642,30 @@ class FileObject extends SplFileInfo
         }
     }
 
-    public function deleteIfExists(): bool
+    /**
+     * Delete the file or directory recursively without following links.
+     * A link (symlink or junction) is removed itself, its target is left untouched.
+     *
+     * @return  bool
+     *
+     * @codeCoverageIgnore
+     */
+    public function deleteNoFollow(): bool
+    {
+        return $this->delete(false);
+    }
+
+    /**
+     * @param  bool  $followLinks
+     *
+     * @return  bool
+     *
+     * @deprecated  The `$followLinks` argument is deprecated, see {@see self::delete()}.
+     */
+    public function deleteIfExists(bool $followLinks = true): bool
     {
         if ($this->exists()) {
-            return $this->delete();
+            return $this->delete($followLinks);
         }
 
         return false;

@@ -76,7 +76,7 @@ class PackageComponentsTest extends TestCase
     public function createTraitBuildsAResolvableObjectDefinition(): void
     {
         $definition = CreateTraitFixture::di(name: 'from-builder');
-        $object = (new Container())->resolve($definition);
+        $object = new Container()->resolve($definition);
 
         self::assertInstanceOf(TraitServiceObject::class, $object);
         self::assertSame('from-builder', $object->name);
@@ -172,7 +172,7 @@ class PackageComponentsTest extends TestCase
         $this->expectException(\Windwalker\DI\Exception\DefinitionException::class);
         $this->expectExceptionMessageIsOrContains('Binding classes must with a string key');
 
-        (new Container())->registerByConfig([
+        new Container()->registerByConfig([
             'bindings' => [
                 new \stdClass()
             ]

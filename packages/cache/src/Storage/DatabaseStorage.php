@@ -140,7 +140,7 @@ class DatabaseStorage implements
         }
 
         // Upsert
-        $query = $this->upsertSql($key, $this->group, $value, $expiredAt);
+        $query = $this->upsertQuery($key, $this->group, $value, $expiredAt);
 
         if ($query) {
             $query->execute();
@@ -258,85 +258,25 @@ class DatabaseStorage implements
         return $stmt->countAffected() !== 0;
     }
 
-    private function upsertSql(string $key, string $group, string $payload, string $expiredAt): ?Query
+    private function upsertQuery(string $key, string $group, string $payload, string $expiredAt): ?Query
     {
-        $platformName = $this->db->getPlatform()->getName();
+        $platform = $this->db->getPlatform();
 
-        $query = $this->db->createQuery();
-
-        $table = $query->quoteName($this->table);
-        $keyField = $query->quoteName($this->keyField);
-        $payloadField = $query->quoteName($this->payloadField);
-        $groupField = $query->quoteName($this->groupField);
-        $expiredAtField = $query->quoteName($this->expiredAtField);
-
-        switch ($platformName) {
-            case AbstractPlatform::MYSQL:
-                $query->bind('key', $key);
-                $query->bind('group', $group);
-                $query->bind('payload', $payload);
-
-                return $query->sql(
-                    "INSERT INTO $table ($keyField, $groupField, $payloadField, $expiredAtField)
-VALUES (:key, :group, :payload, $expiredAt)
-ON DUPLICATE KEY UPDATE
-    $payloadField = VALUES($payloadField),
-    $expiredAtField = VALUES($expiredAtField)"
-                );
-
-            case AbstractPlatform::POSTGRESQL:
-                $query->bind('key', $key);
-                $query->bind('group', $group);
-                $query->bind('payload', $payload);
-
-                return $query->sql(
-                    "INSERT INTO $table ($keyField, $groupField, $payloadField, $expiredAtField)
-VALUES (:key, :group, :payload, $expiredAt) ON CONFLICT ($keyField, $groupField) DO UPDATE SET
-$payloadField = EXCLUDED.$payloadField,
-$expiredAtField = EXCLUDED.$expiredAtField
-"
-                );
-
-            case AbstractPlatform::SQLSERVER:
-                if (
-                    version_compare(
-                        $this->db->getDriver()->getVersion(),
-                        '10',
-                        '<'
-                    )
-                ) {
-                    return null;
-                }
-
-                $query->bind('key1', $key);
-                $query->bind('key2', $key);
-                $query->bind('group1', $group);
-                $query->bind('group2', $group);
-                $query->bind('payload1', $payload);
-                $query->bind('payload2', $payload);
-
-                // phpcs:disable
-                // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
-                // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-                return $query->sql(
-                    "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ($keyField = :key1 AND $groupField = :group1)
-                    WHEN NOT MATCHED THEN INSERT ($keyField, $groupField, $payloadField, $expiredAtField)
-                    VALUES (:key2, :group1, :payload1, $expiredAt)
-                    WHEN MATCHED THEN UPDATE SET $payloadField = :payload2, $expiredAtField = $expiredAt;"
-                );
-
-            case AbstractPlatform::SQLITE:
-                $query->bind('key', $key);
-                $query->bind('group', $group);
-                $query->bind('payload', $payload);
-
-                return $query->sql(
-                    "INSERT OR REPLACE INTO $table ($keyField, $groupField, $payloadField, $expiredAtField)
-                VALUES (:key, :group, :payload, $expiredAt)"
-                );
+        if (
+            $platform->getName() === AbstractPlatform::SQLSERVER
+            && version_compare($this->db->getDriver()->getVersion(), '10', '<')
+        ) {
+            return null;
         }
 
-        return null;
+        return $this->db->createQuery()
+            ->upsert($this->table)
+            ->set($this->keyField, $key)
+            ->set($this->groupField, $group)
+            ->set($this->payloadField, $payload)
+            ->set($this->expiredAtField, $expiredAt === 'NULL' ? null : (int) $expiredAt)
+            ->onConflict($this->keyField, $this->groupField)
+            ->onConflictUpdateColumns($this->payloadField, $this->expiredAtField);
     }
 
     private function runPruneStatement(?string $group = null): StatementInterface
@@ -359,7 +299,7 @@ $expiredAtField = EXCLUDED.$expiredAtField
             AbstractPlatform::POSTGRESQL => 'CAST(EXTRACT(epoch FROM NOW()) AS DOUBLE PRECISION)',
             // 'oci' => "(CAST(systimestamp AT TIME ZONE 'UTC' AS DATE) - DATE '1970-01-01') * 86400 + TO_NUMBER(TO_CHAR(systimestamp AT TIME ZONE 'UTC', 'SSSSS.FF'))",
             AbstractPlatform::SQLSERVER => "CAST(DATEDIFF_BIG(ms, '1970-01-01', SYSUTCDATETIME()) AS FLOAT) / 1000.0",
-            default => (new \DateTimeImmutable())->format('U.u'),
+            default => new \DateTimeImmutable()->format('U.u'),
         };
     }
 

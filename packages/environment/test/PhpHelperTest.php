@@ -28,7 +28,7 @@ class PhpHelperTest extends TestCase
     #[Test]
     public function getVersionReturnsPhpVersion(): void
     {
-        $this->assertSame(PHP_VERSION, (new PhpHelper())->getVersion());
+        $this->assertSame(PHP_VERSION, new PhpHelper()->getVersion());
     }
 
     #[Test]
@@ -50,7 +50,7 @@ class PhpHelperTest extends TestCase
     #[Test]
     public function extensionChecksMatchLoadedExtensions(): void
     {
-        $this->assertSame(extension_loaded('xdebug'), (new PhpHelper())->hasXdebug());
+        $this->assertSame(extension_loaded('xdebug'), new PhpHelper()->hasXdebug());
         $this->assertSame(extension_loaded('pcntl'), PhpHelper::hasPcntl());
         $this->assertSame(function_exists('curl_init'), PhpHelper::hasCurl());
         $this->assertSame(extension_loaded('mcrypt'), PhpHelper::hasMcrypt());

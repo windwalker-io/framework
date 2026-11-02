@@ -29,7 +29,7 @@ class CurlTransportUnitTest extends TestCase
     #[Test]
     public function injectHeadersToResponseSetsStatusAndHeadersFromString(): void
     {
-        $res = (new CurlTransport())->injectHeadersToResponse(
+        $res = new CurlTransport()->injectHeadersToResponse(
             new Response(),
             "HTTP/1.1 201 Created\r\nX-Foo: bar",
         );
@@ -43,13 +43,13 @@ class CurlTransportUnitTest extends TestCase
     {
         $this->expectException(HttpRequestException::class);
 
-        (new CurlTransport())->injectHeadersToResponse(new Response(), ['garbage']);
+        new CurlTransport()->injectHeadersToResponse(new Response(), ['garbage']);
     }
 
     #[Test]
     public function injectHeadersToResponseAllowsEmptyStatusCodeWhenRequested(): void
     {
-        $res = (new CurlTransport())->injectHeadersToResponse(
+        $res = new CurlTransport()->injectHeadersToResponse(
             new Response(),
             ['garbage', 'X-A: 1'],
             true,
@@ -65,7 +65,7 @@ class CurlTransportUnitTest extends TestCase
         $content = "HTTP/1.1 302 Found\r\nLocation: /b\r\n\r\n"
             . "HTTP/1.1 200 OK\r\nX-Final: yes\r\n\r\nthe body";
 
-        $res = (new CurlTransport())->contentToResponse($content, ['redirect_count' => 1]);
+        $res = new CurlTransport()->contentToResponse($content, ['redirect_count' => 1]);
 
         self::assertSame(200, $res->getStatusCode());
         self::assertSame('yes', $res->getHeaderLine('X-Final'));
@@ -75,7 +75,7 @@ class CurlTransportUnitTest extends TestCase
     #[Test]
     public function getResponseBuildsResponseFromRawContent(): void
     {
-        $res = (new CurlTransport())->getResponse("HTTP/1.1 404 Not Found\r\nX-A: b\r\n\r\nmissing", []);
+        $res = new CurlTransport()->getResponse("HTTP/1.1 404 Not Found\r\nX-A: b\r\n\r\nmissing", []);
 
         self::assertSame(404, $res->getStatusCode());
         self::assertSame('missing', (string) $res->getBody());
@@ -85,7 +85,7 @@ class CurlTransportUnitTest extends TestCase
     #[DataProvider('protocolVersionProvider')]
     public function prepareCurlOptionsMapsProtocolVersion(string $version, int $expected): void
     {
-        $opt = $this->prepare((new Request())->withProtocolVersion($version));
+        $opt = $this->prepare(new Request()->withProtocolVersion($version));
 
         self::assertSame($expected, $opt[CURLOPT_HTTP_VERSION]);
     }
@@ -139,7 +139,7 @@ class CurlTransportUnitTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new CurlTransport())->download(new Request(), '');
+        new CurlTransport()->download(new Request(), '');
     }
 
     #[Test]

@@ -786,47 +786,48 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
             $request = $requestOrMethod;
         }
 
+        $forceMultipart = false;
         $request = CurlTransport::prepareBody($request, $forceMultipart);
         $request = CurlTransport::prepareHeaders($request, $forceMultipart);
 
+        $quote = static fn(string $str): string => "'" . str_replace("'", "'\\''", $str) . "'";
+
         $curl[] = sprintf(
-            "curl --location --request %s '%s'",
+            'curl --location --request %s %s',
             $request->getMethod(),
-            $request->getRequestTarget() ?: (string) $request->getUri(),
+            $quote($request->getRequestTarget() ?: (string) $request->getUri()),
         );
 
         $contentType = $request->getHeaderLine('Content-Type');
         $isFormUrlEncode = str_contains($contentType, 'application/x-www-form-urlencoded');
 
-        if ($headers = $request->getHeaders()) {
-            foreach (HeaderHelper::toHeaderLines($headers) as $headerLine) {
-                $curl[] = sprintf("--header '%s'", addslashes($headerLine));
+        foreach (HeaderHelper::toHeaderLines($request->getHeaders()) as $headerLine) {
+            if (str_starts_with(strtolower($headerLine), 'host:')) {
+                continue;
             }
+
+            $curl[] = '--header ' . $quote($headerLine);
         }
 
-        $data = (string) $request->getBody();
+        $body = $request->getBody();
 
-        if (is_json($data)) {
-            $curl[] = sprintf(
-                "-d '%s'",
-                addcslashes($data, "'"),
-            );
-        } else {
-            $data = str_replace('&amp;', '__AND_SIGN__', $data);
-            $values = explode('&', $data);
+        if ($body->isSeekable()) {
+            $body->rewind();
+        }
 
-            foreach ($values as $value) {
-                $curl[] = sprintf(
-                    "%s '%s'",
-                    $isFormUrlEncode ? '--data-urlencode' : '--form',
-                    addslashes(
-                        str_replace(
-                            '__AND_SIGN__',
-                            '&',
-                            $value,
-                        ),
-                    ),
-                );
+        $data = (string) $body;
+
+        if ($data !== '') {
+            if (is_json($data)) {
+                $curl[] = '--data-raw ' . $quote($data);
+            } elseif ($isFormUrlEncode) {
+                foreach (explode('&', $data) as $value) {
+                    $curl[] = '--data-urlencode ' . $quote(urldecode($value));
+                }
+            } else {
+                foreach (explode('&', $data) as $value) {
+                    $curl[] = '--form ' . $quote(urldecode($value));
+                }
             }
         }
 

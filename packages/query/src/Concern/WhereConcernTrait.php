@@ -450,6 +450,55 @@ trait WhereConcernTrait
         return $this->handleWhereExists('having', $conditions, true);
     }
 
+    /**
+     * convertArrayToWheres
+     *
+     * @param  Query  $query
+     * @param  mixed  $wheres
+     *
+     * @return  Query
+     */
+    public static function convertAllToWheres(Query $query, mixed $wheres, string $method = 'where'): Query
+    {
+        if ($wheres === null) {
+            return $query;
+        }
+
+        if (is_callable($wheres)) {
+            return $query->$method($wheres);
+        }
+
+        $wheres = TypeCast::toArray($wheres);
+
+        foreach ($wheres as $key => $where) {
+            // String key:
+            // 'key' => 'value'
+            if (!is_numeric($key)) {
+                $query->$method($key, '=', $where);
+                continue;
+            }
+
+            // String element:
+            // 'key <= value'
+            if (is_string($where)) {
+                $query->{$method . 'Raw'}($where);
+                continue;
+            }
+
+            // Array element
+            // ['key', '=', 'value']
+            if (is_array($where)) {
+                $query->$method(...$where);
+                continue;
+            }
+
+            // Callback or others
+            $query->$method($where);
+        }
+
+        return $query;
+    }
+
     private function handleWhereExists(string $type, Query|callable $conditions, bool $not = false): static
     {
         if (is_callable($conditions)) {

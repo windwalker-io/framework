@@ -16,7 +16,7 @@ class ObjectBuilderTest extends TestCase
     #[Test]
     public function createObjectInstantiatesClassWithArguments(): void
     {
-        $o = (new ObjectBuilder())->createObject(\ArrayObject::class, ['a' => 1]);
+        $o = new ObjectBuilder()->createObject(\ArrayObject::class, ['a' => 1]);
 
         self::assertInstanceOf(\ArrayObject::class, $o);
         self::assertSame(['a' => 1], $o->getArrayCopy());
@@ -25,7 +25,7 @@ class ObjectBuilderTest extends TestCase
     #[Test]
     public function createObjectUsesCustomBuilder(): void
     {
-        $builder = (new ObjectBuilder())->setBuilder(fn(string $class, ...$args) => new \stdClass());
+        $builder = new ObjectBuilder()->setBuilder(fn(string $class, ...$args) => new \stdClass());
 
         self::assertInstanceOf(\stdClass::class, $builder->createObject(\ArrayObject::class));
     }

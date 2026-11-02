@@ -248,7 +248,7 @@ class ReflectAccessor
         }
 
         if (is_callable($value)) {
-            return (new ReflectionCallable($value))->getReflector();
+            return new ReflectionCallable($value)->getReflector();
         }
 
         throw new InvalidArgumentException(

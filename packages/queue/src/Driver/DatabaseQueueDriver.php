@@ -213,7 +213,7 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
 
         $channel = $message->getChannel() ?: $this->channel;
 
-        $time = (new DateTimeImmutable('now'))->modify('+' . $message->getDelay() . 'seconds');
+        $time = new DateTimeImmutable('now')->modify('+' . $message->getDelay() . 'seconds');
 
         $this->db->getWriter()->updateWhere(
             $this->table,

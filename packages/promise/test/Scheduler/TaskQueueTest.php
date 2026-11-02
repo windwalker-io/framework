@@ -53,7 +53,7 @@ class TaskQueueTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        (new TaskQueue(false))->run();
+        new TaskQueue(false)->run();
     }
 
     #[Test]

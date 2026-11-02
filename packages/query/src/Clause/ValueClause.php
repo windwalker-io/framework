@@ -28,8 +28,6 @@ class ValueClause implements ClauseInterface
      */
     public protected(set) ?string $prefix = 'wqp__';
 
-    protected bool $linked = false;
-
     public int $id {
         get => $this->id ??= $this->getId();
     }
@@ -56,8 +54,6 @@ class ValueClause implements ClauseInterface
         if ($value instanceof Query) {
             return '(' . $value . ')';
         }
-
-        $this->setLinked(true);
 
         return $this->getPlaceholder();
     }
@@ -91,26 +87,6 @@ class ValueClause implements ClauseInterface
     public function value(mixed $value): static
     {
         $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return  bool
-     */
-    public function isLinked(): bool
-    {
-        return $this->linked;
-    }
-
-    /**
-     * @param  bool  $linked
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setLinked(bool $linked): static
-    {
-        $this->linked = $linked;
 
         return $this;
     }

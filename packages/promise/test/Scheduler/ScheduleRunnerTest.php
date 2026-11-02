@@ -60,13 +60,13 @@ class ScheduleRunnerTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessageIsOrContains('No available async handlers');
 
-        (new ScheduleRunner([static::unsupportedScheduler()]))->getAvailableScheduler();
+        new ScheduleRunner([static::unsupportedScheduler()])->getAvailableScheduler();
     }
 
     #[Test]
     public function getSchedulersFallsBackToDefaultsWhenEmpty(): void
     {
-        $schedulers = (new ScheduleRunner())->getSchedulers();
+        $schedulers = new ScheduleRunner()->getSchedulers();
 
         self::assertNotEmpty($schedulers);
     }

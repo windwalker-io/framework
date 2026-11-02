@@ -33,7 +33,7 @@ class PhpFileStorageTest extends TestCase
             try {
                 self::assertTrue($pool->save($item));
 
-                $restored = (new CachePool($storage, new PhpFileSerializer()))->getItem('php-file-entry');
+                $restored = new CachePool($storage, new PhpFileSerializer())->getItem('php-file-entry');
             } finally {
                 ob_end_clean();
             }

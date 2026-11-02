@@ -28,7 +28,7 @@ class PostgreSQLTableManagerExtraTest extends AbstractTableManagerExtraTestCase
     #[Test]
     public function virtualGeneratedColumnDependsOnServerVersion(): void
     {
-        $column = (new Column('double_price', 'integer'))->virtual('price * 2');
+        $column = new Column('double_price', 'integer')->virtual('price * 2');
         $platform = self::$db->getPlatform();
 
         if (version_compare(self::$db->getDriver()->getVersion(), '18.0', '<')) {

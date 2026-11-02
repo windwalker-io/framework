@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\OracleGrammar;
-
 use Windwalker\Query\Bounded\BoundedHelper;
 
 use function Windwalker\Query\qn;
@@ -188,7 +187,7 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertStringContainsString('JSON_TABLE("A"."PARAMS"', $q->render(true));
     }
@@ -199,7 +198,7 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertSqlEquals(
             <<<SQL
@@ -216,7 +215,7 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
-            ->whereJsonNotContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonNotContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertStringContainsString('WHERE NOT EXISTS(SELECT 1 FROM JSON_TABLE(', $q->render(true));
     }
@@ -267,5 +266,70 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
             ->values($this->instance->createSubQuery()->select('id')->from('foo'));
 
         self::assertSqlEquals('INSERT INTO "bar" ("id") (SELECT "id" FROM "foo")', $i->render(true));
+    }
+
+    #[Test]
+    public function jsonCastSelector(): void
+    {
+        $query = $this->instance->select('a->n::int AS n')
+            ->from('t')
+            ->where('a->p::decimal', '>', 10)
+            ->order("a->'x::y'::date");
+
+        self::assertEquals(
+            'SELECT JSON_VALUE("A", \'$.n\' RETURNING NUMBER) AS "N" FROM "T" WHERE JSON_VALUE("A", \'$.p\' RETURNING NUMBER) > 10 ORDER BY JSON_VALUE("A", \'$."x::y"\' RETURNING DATE)',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonExists(): void
+    {
+        $query = $this->instance->select('*')
+            ->from('t')
+            ->whereJsonExists('a->b->1')
+            ->whereJsonNotExists('a->c');
+
+        self::assertEquals(
+            'SELECT * FROM "T" WHERE JSON_EXISTS("A", \'$.b[1]\') AND NOT JSON_EXISTS("A", \'$.c\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonSetAndRemove(): void
+    {
+        $query = $this->instance->update('t')
+            ->setJson('a->b->c', ['x' => 1])
+            ->setJson('a->d', 'str')
+            ->setJsonRemove('a->e');
+
+        self::assertEquals(
+            'UPDATE "T" SET "A" = JSON_TRANSFORM("A", SET \'$.b.c\' = \'{"x":1}\' FORMAT JSON), "A" = JSON_TRANSFORM("A", SET \'$.d\' = \'"str"\' FORMAT JSON), "A" = JSON_TRANSFORM("A", REMOVE \'$.e\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonCastAllTypes(): void
+    {
+        foreach (['int', 'integer', 'float', 'double', 'decimal', 'numeric', 'string', 'text', 'datetime', 'date'] as $type) {
+            $sql = (clone $this->instance)->select('a->n::' . $type . ' AS n')->from('t')->render(true);
+
+            self::assertStringNotContainsString('a->', $sql, $type);
+        }
+    }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE "T" SET "FOO" = JSON_TRANSFORM("BAR", SET \'$.a\' = JSON_TRANSFORM("BAZ", SET \'$.x\' = \'1\' FORMAT JSON) FORMAT JSON), "O" = JSON_TRANSFORM("P", REMOVE \'$.q\')',
+            $query->render(true)
+        );
     }
 }

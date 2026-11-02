@@ -488,7 +488,7 @@ class PhpBridgeTest extends TestCase
         $this->instance->setSessionName('MY_SESS');
 
         self::assertSame('MY_SESS', $this->instance->getSessionName());
-        self::assertSame(session_name(), (new PhpBridge())->getSessionName());
+        self::assertSame(session_name(), new PhpBridge()->getSessionName());
     }
 
     #[Test]

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
-use InvalidArgumentException;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
+use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
 use function Windwalker\raw;
@@ -51,7 +51,7 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
     /**
      * @var  string
      */
-    public static string $nullDate = 'RRRR-MM-DD HH24:MI:SS';
+    public static string $nullDate = '1900-01-01 00:00:00';
 
     public function compileInsert(Query $query): string
     {
@@ -86,39 +86,23 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
     /**
      * Oracle MERGE cannot return the ID, so $returningIdField is ignored.
      */
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $srcOn = $query->clause('()', [], ' AND ');
-
-        foreach ($keys as $key) {
-            $srcOn->append($query->quoteName($key) . " = :key_$key");
-            $query->bind(
-                "key_$key",
-                $data[$key]
-                ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
-            );
-        }
-
+        $srcOn = $this->compileUpsertMergeOn($query, $keys, $data);
         $updateSet = $query->clause('', [], ',');
 
         // Oracle forbids updating columns referenced in the ON clause.
-        foreach (array_diff($updateFields, $keys) as $k) {
-            $v = $data[$k];
-
-            if ($v instanceof RawWrapper) {
-                $updateSet->append($query->quoteName($k) . ' = ' . $v());
-            } else {
-                $query->bind('update_set_' . $k, $v);
-                $updateSet->append($query->quoteName($k) . " = :update_set_$k");
+        foreach ($update as $key => $value) {
+            if (!in_array($key, $keys, true)) {
+                $updateSet->append("$key = " . ($value ?? $this->reuseUpsertValue($query, $data[$key])));
             }
         }
 
@@ -165,10 +149,27 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         // Oracle requires JSON paths to be literals, so they can never be bound.
         $vc = $query->valueize(static::compileJsonPath($paths), true);
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int', 'decimal' => 'NUMBER',
+                'float' => 'BINARY_DOUBLE',
+                'string' => 'VARCHAR2(4000)',
+                'datetime' => 'TIMESTAMP',
+                'date' => 'DATE',
+            };
+
+            return clause(
+                'JSON_VALUE()',
+                [clause('', [qn($column, $query), $vc], ', '), "RETURNING $type"],
+                ' '
+            );
+        }
 
         $expr = $unQuoteLast
             ? expr('JSON_VALUE()', $vc)
@@ -177,6 +178,12 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
         return $expr->prepend(qn($column, $query));
     }
 
+    /**
+     * @deprecated  Use {@see compileJsonContainsAll()} instead.
+     *               In the next major release, compileJsonContainsAll() will be renamed back
+     *               to compileJsonContains() and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function compileJsonContains(
         Query $query,
         string $column,
@@ -200,6 +207,38 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
         );
     }
 
+    public function compileJsonContainsAll(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value,
+        bool $not = false
+    ): Clause {
+        $path = static::compileJsonPath($paths) . '[*]';
+        $elements = static::normalizeJsonContainsElements($value);
+        $single = count($elements) === 1;
+        $exists = [];
+
+        foreach ($elements as $element) {
+            $exists[] = $query->expr(
+                $single && $not ? 'NOT EXISTS()' : 'EXISTS()',
+                $query->createSubQuery()
+                    ->selectRaw(1)
+                    ->from(
+                        raw(
+                            'JSON_TABLE(' . qn($column, $query) . ', ' . $query->valueize($path, true)
+                            . " COLUMNS (\"VALUE\" VARCHAR2(4000) PATH '$'))"
+                        )
+                    )
+                    ->where('value', $element)
+            );
+        }
+
+        return $single
+            ? $exists[0]
+            : $query->clause($not ? 'NOT ()' : '()', $exists, ' AND ');
+    }
+
     public function compileJsonLength(Query $query, string $column, array $paths): Clause
     {
         $col = (string) qn($column, $query);
@@ -217,5 +256,33 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
             ],
             ' '
         );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return $query->expr(
+            $not ? 'NOT JSON_EXISTS()' : 'JSON_EXISTS()',
+            qn($column, $query),
+            $query->valueize(static::compileJsonPath($paths), true)
+        );
+    }
+
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), true);
+        $value = $value instanceof RawWrapper ? $value : $query->valueize(static::encodeJsonValue($value), false);
+
+        return clause(
+            'JSON_TRANSFORM()',
+            [qn($column, $query), clause('', ['SET', $path, '=', $value, 'FORMAT JSON'], ' ')],
+            ', '
+        );
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), true);
+
+        return clause('JSON_TRANSFORM()', [qn($column, $query), clause('', ['REMOVE', $path], ' ')], ', ');
     }
 }

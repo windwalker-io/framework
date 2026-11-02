@@ -27,7 +27,7 @@ class FlashBagTest extends TestCase
     public function linkKeepsExistingMessages(): void
     {
         $storage = ['custom' => ['error' => ['Bad']]];
-        $flash = (new FlashBag())->link($storage, 'custom');
+        $flash = new FlashBag()->link($storage, 'custom');
 
         self::assertSame(['Bad'], $flash->peek('error'));
     }

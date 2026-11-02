@@ -79,10 +79,10 @@ class HelperAndOptionsTest extends TestCase
             static fn(TraitServiceObject $object): TraitServiceObject => $object
         );
 
-        self::assertSame('created', (new Container())->resolve($definition)->name);
+        self::assertSame('created', new Container()->resolve($definition)->name);
         self::assertTrue($shared->isShared());
-        self::assertSame('shared', (new Container())->resolve($shared)->name);
-        self::assertSame('default-prepared', (new Container())->resolve($prepared)->name);
+        self::assertSame('shared', new Container()->resolve($shared)->name);
+        self::assertSame('default-prepared', new Container()->resolve($prepared)->name);
         self::assertTrue($preparedShared->isShared());
     }
 
@@ -115,7 +115,7 @@ class HelperAndOptionsTest extends TestCase
 
         self::assertTrue($created->isShared());
         self::assertSame($existing, $wrapped);
-        self::assertSame('wrapped-value', (new Container())->resolve($wrappedValue));
+        self::assertSame('wrapped-value', new Container()->resolve($wrappedValue));
         self::assertSame(TraitServiceObject::class, DefinitionFactory::getClassName($builder));
         self::assertTrue(DefinitionFactory::isSameClass('\\' . TraitServiceObject::class, TraitServiceObject::class));
         self::assertFalse(DefinitionFactory::isSameClass(TraitServiceObject::class, ClassNameStringable::class));

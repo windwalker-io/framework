@@ -132,6 +132,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public const string TYPE_INSERT = 'insert';
 
+    public const string TYPE_UPSERT = 'upsert';
+
     public const string TYPE_UPDATE = 'update';
 
     public const string TYPE_DELETE = 'delete';
@@ -182,7 +184,17 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     protected bool $incrementField = false;
 
+    /**
+     * @var  array{keys: string[], update: array<string, ValueClause|null>, returning: string|null}|null
+     */
+    protected ?array $upsert = null;
+
     protected ?array $subQueries = [];
+
+    /**
+     * @var  array<int, string>  Explicit aliases of sub queries, keyed by spl_object_id.
+     */
+    protected array $subQueryAliases = [];
 
     protected ?AbstractGrammar $grammar = null;
 
@@ -407,12 +419,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $clause->value($value);
         } elseif ($value instanceof ExprClause) {
             foreach ($value->getElements() as $v) {
-                $this->handleAsValue($v, $alias);
+                $this->handleAsValue($v, $alias, $isColumn);
             }
 
             $clause->value($value);
         } else {
-            [$value, $alias] = $this->handleAsValue($value, $alias);
+            [$value, $alias] = $this->handleAsValue($value, $alias, $isColumn);
 
             $clause->value($value);
         }
@@ -430,7 +442,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  array
      */
-    protected function handleAsValue(mixed $value, mixed $alias): array
+    protected function handleAsValue(mixed $value, mixed $alias, bool $isColumn = true): array
     {
         if ($value instanceof Closure) {
             $q = $value($q = $this->createSubQuery()) ?? $q;
@@ -443,7 +455,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->injectSubQuery($value, $alias);
         }
 
-        if (is_string($value) && str_contains($value, '->')) {
+        if ($isColumn && is_string($value) && str_contains($value, '->')) {
             // For select
             if (stripos($value, ' as ') !== false) {
                 [$value, $alias] = (array) preg_split('/ as /i', $value);
@@ -546,7 +558,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * Add a query to UNION with the current query.
      * Multiple unions each require separate statements and create an array of unions.
      *
-     * @param  mixed   $query  The Query object or string to union.
+     * @param  mixed   $query  The Query object, Closure(Query): mixed, string or array of them to union.
      * @param  string  $type   The union type, can be `DISTINCT` or `ALL`, default is empty.
      *
      * @return  static  The Query object on success or boolean false on failure.
@@ -563,6 +575,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             }
 
             return $this;
+        }
+
+        if ($query instanceof Closure) {
+            $query = $query($q = $this->createSubQuery()) ?? $q;
         }
 
         // Clear any ORDER BY clause in UNION query
@@ -681,6 +697,38 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->clause('', [$this->getGrammar()->compileRandomOrder()]),
             $pos
         );
+    }
+
+    /**
+     * Order by a custom list of values, e.g. `ORDER BY FIELD(col, 'a', 'b')` in MySQL.
+     * Values that are not listed are sorted after the listed ones when ascending.
+     *
+     * @param  mixed                       $column
+     * @param  array                       $values
+     * @param  \SortDirection|string|null  $dir
+     * @param  ClausePosition              $pos
+     *
+     * @return  static
+     */
+    public function orderByField(
+        mixed $column,
+        array $values,
+        \SortDirection|string|null $dir = null,
+        ClausePosition $pos = ClausePosition::APPEND
+    ): static {
+        $values = array_values($values);
+
+        if ($values === []) {
+            return $this;
+        }
+
+        $order = [$this->getGrammar()->compileOrderByField($this, $this->resolveColumn($column), $values)];
+
+        if ($dir !== null) {
+            $order[] = static::unwrapDirectionEnum($dir);
+        }
+
+        return $this->orderRaw($this->clause('', $order), $pos);
     }
 
     public function orderRaw(string|Clause $order, mixed ...$args): static
@@ -816,6 +864,115 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $this->type = static::TYPE_INSERT;
         $this->insert = $this->clause('INSERT INTO', $this->as($table, false));
         $this->incrementField = $incrementField;
+
+        return $this;
+    }
+
+    /**
+     * Insert a row, or update it when a conflict occurs.
+     *
+     * Use set() or columns() + values() to provide the row data, and onConflict() / onConflictUpdateColumns() / onConflictUpdateValues()
+     * to define how conflicts are handled.
+     *
+     * @param  string  $table
+     * @param  bool    $incrementField
+     *
+     * @return  static
+     */
+    public function upsert(string $table, bool $incrementField = false): static
+    {
+        $this->type = static::TYPE_UPSERT;
+        $this->insert = $this->clause('INSERT INTO', $this->as($table, false));
+        $this->incrementField = $incrementField;
+        $this->upsert = ['keys' => [], 'update' => [], 'returning' => null];
+
+        return $this;
+    }
+
+    /**
+     * Add conflict target columns. Can be called multiple times, MySQL ignores the keys.
+     *
+     * @param  string|array  ...$keys
+     *
+     * @return  static
+     */
+    public function onConflict(string|array ...$keys): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+
+        foreach (Arr::flatten($keys) as $key) {
+            if (!in_array($key, $this->upsert['keys'], true)) {
+                $this->upsert['keys'][] = $key;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update the given columns with the inserted values when a conflict occurs. Can be called multiple times.
+     *
+     * If neither this nor onConflictUpdateValues() is called, all inserted columns except the conflict keys
+     * will be updated.
+     *
+     * @param  string  ...$columns
+     *
+     * @return  static
+     */
+    public function onConflictUpdateColumns(string ...$columns): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+
+        foreach ($columns as $column) {
+            $this->upsert['update'][$column] = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update columns with custom values when a conflict occurs. Can be called multiple times.
+     *
+     * - `onConflictUpdateValues('count', raw('count + 1'))`
+     * - `onConflictUpdateValues(['count' => raw('count + 1'), 'state' => 1])`
+     *
+     * @param  string|array  $column  Column name or a `[column => value]` map.
+     * @param  mixed         $value
+     *
+     * @return  static
+     */
+    public function onConflictUpdateValues(string|array $column, mixed $value = null): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+
+        if (is_array($column)) {
+            foreach ($column as $col => $val) {
+                $this->onConflictUpdateValues((string) $col, $val);
+            }
+
+            return $this;
+        }
+
+        if ($value instanceof Closure) {
+            $value($value = $this->createSubQuery());
+        }
+
+        $this->upsert['update'][$column] = $this->castWriteValue($value);
+
+        return $this;
+    }
+
+    /**
+     * Set the ID column to return after upserting.
+     *
+     * @param  string|null  $idField
+     *
+     * @return  static
+     */
+    public function returning(?string $idField): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+        $this->upsert['returning'] = $idField;
 
         return $this;
     }
@@ -1014,9 +1171,14 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     private function injectSubQuery(Query $query, mixed $alias = null): void
     {
-        $alias = $alias ?: $query->getAlias() ?: spl_object_hash($query);
+        // Key by object identity, sub queries sharing the same alias must not overwrite each other.
+        $id = spl_object_id($query);
 
-        $this->subQueries[$alias] = $query;
+        $this->subQueries[$id] = $query;
+
+        if (is_string($alias) && $alias !== '') {
+            $this->subQueryAliases[$id] = $alias;
+        }
     }
 
     private function findAndInjectSubQueries(mixed $clause): void
@@ -1033,6 +1195,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             foreach ($clause as $element) {
                 if ($element instanceof self) {
                     $this->injectSubQuery($element);
+                } elseif ($element instanceof Clause) {
+                    $this->findAndInjectSubQueries($element);
                 }
             }
         }
@@ -1057,7 +1221,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public function alter(string $target, string $targetName): AlterClause
     {
-        return (new AlterClause($this))->target($target, $targetName);
+        return new AlterClause($this)->target($target, $targetName);
     }
 
     /**
@@ -1563,7 +1727,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function __toString(): string
     {
-        return $this->render();
+        // Stringifying (e.g. as a sub query inlined by a parent) only compiles SQL,
+        // bindings are collected and validated once by the top level render().
+        // Resolve placeholder ids in bind order first, keeping the numbering stable.
+        $this->mergeBounded();
+
+        return $this->handleVariadicParams($this->toRawSqlString());
     }
 
     public function render(bool $emulatePrepared = false, ?array &$bounded = null): string
@@ -1579,14 +1748,25 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $sql = $this->handleVariadicParams($sql);
 
         if ($topLevel) {
-            // Convert the ValueClause to scalars,
-            // ValueClause objects will set to linked when they were converted to string,
-            // we only keep linked ValueClause and convert them to pure value.
-            // so that we can keep the correct bounded values numbers if you cleared any Query clauses.
+            // Values bound while compiling (e.g. the upsert grammar) are not in the merged bounded yet.
+            foreach ($this->getBounded() as $param) {
+                if ($param['value'] instanceof ValueClause) {
+                    $bounded[$param['value']->getPlaceholder()] ??= $param;
+                }
+            }
+
+            // Only keep the ValueClause whose placeholder really appears in the final SQL (sub queries are
+            // already inlined), so that cleared clauses won't leave stale values.
+            $used = $this->findUsedPlaceholders($sql);
+
             $bounded = array_filter(
                 $bounded,
-                static fn(mixed $param) => !$param['value'] instanceof ValueClause || $param['value']->isLinked()
+                static fn(mixed $param) => !$param['value'] instanceof ValueClause
+                    || $param['value']->prefix === null
+                    || isset($used[$param['value']->getPlaceholder()])
             );
+
+            $this->assertPlaceholdersBound($used, $bounded);
             $bounded = array_map(
                 function (array $param) {
                     if ($param['value'] instanceof ValueClause) {
@@ -1642,6 +1822,28 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
+    /**
+     * @return  array<string, true>
+     */
+    private function findUsedPlaceholders(string $sql): array
+    {
+        preg_match_all('/:wqp__\d+/', $sql, $matches);
+
+        return array_fill_keys($matches[0], true);
+    }
+
+    private function assertPlaceholdersBound(array $used, array $bounded): void
+    {
+        $missing = array_diff_key($used, $bounded);
+
+        if ($missing !== []) {
+            throw new \LogicException(
+                'Query has no bound value for placeholder(s): ' . implode(', ', array_keys($missing))
+                . '. A sub query may be missing or its value was unbound.'
+            );
+        }
+    }
+
     public function forPDO(?array &$bounded = null): string
     {
         // Only top level query rendering should create sequence and get merged bounded
@@ -1671,12 +1873,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         foreach ($params as $key => $param) {
             if ($param['value'] instanceof ValueClause) {
                 $key = $param['value']->getPlaceholder();
-
-                // Pre-set every ValueClause to unlinked.
-                // They will be auto set to linked later if they are converting to string.
-                // At the top level Query object, will ignore all unlinked ValueClause,
-                // so that can keep the correct bounded values numbers if you cleared any Query clauses.
-                $param['value']->setLinked(false);
             }
             $bounded[$key] = $param;
         }
@@ -1699,7 +1895,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function getSubQuery(string $alias): ?Query
     {
-        return $this->subQueries[$alias] ?? null;
+        foreach ($this->subQueries as $id => $subQuery) {
+            if (($this->subQueryAliases[$id] ?? $subQuery->getAlias()) === $alias) {
+                return $subQuery;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -1862,6 +2064,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'delete' => ['type'],
             'update' => ['type'],
             'insert' => ['type', 'incrementField'],
+            'upsert' => ['type', 'insert', 'incrementField'],
             'sql' => ['type'],
             'from' => [],
             'join' => [],
@@ -1880,6 +2083,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'with' => ['recursive'],
             'alias' => [],
             'subQueries' => [],
+            'subQueryAliases' => [],
             'bounded' => [],
             'defaultItemClass' => null,
         ];
@@ -1896,7 +2100,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             return $this;
         }
 
-        $props = (new ReflectionClass($this))->getDefaultProperties();
+        $props = new ReflectionClass($this)->getDefaultProperties();
         $this->$clauses = $props[$clauses] ?? null;
 
         foreach ($handlers[$clauses] ?? [] as $field) {

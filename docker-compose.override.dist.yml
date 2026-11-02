@@ -35,3 +35,21 @@ services:
   #     - "11212:11211"
   #   profiles:
   #     - disabled
+
+  # rabbitmq:
+  #   ports:
+  #     - "5673:5672"
+  #   profiles:
+  #     - disabled
+
+  # oracle:
+  #   ports:
+  #     - "1522:1521"
+  #   profiles:
+  #     - disabled
+
+  # sqlserver:
+  #   ports:
+  #     - "1434:1433"
+  #   profiles:
+  #     - disabled

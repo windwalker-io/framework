@@ -120,4 +120,69 @@ class SqliteQueryTest extends QueryTest
     {
         return 'RANDOM()';
     }
+
+    #[Test]
+    public function jsonCastSelector(): void
+    {
+        $query = $this->instance->select('a->n::int AS n')
+            ->from('t')
+            ->where('a->p::decimal', '>', 10)
+            ->order("a->'x::y'::date");
+
+        self::assertEquals(
+            'SELECT CAST(JSON_EXTRACT(`a`, \'$.n\') AS INTEGER) AS `n` FROM `t` WHERE CAST(JSON_EXTRACT(`a`, \'$.p\') AS REAL) > 10 ORDER BY DATE(JSON_EXTRACT(`a`, \'$."x::y"\'))',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonExists(): void
+    {
+        $query = $this->instance->select('*')
+            ->from('t')
+            ->whereJsonExists('a->b->1')
+            ->whereJsonNotExists('a->c');
+
+        self::assertEquals(
+            'SELECT * FROM `t` WHERE JSON_TYPE(`a`, \'$.b[1]\') IS NOT NULL AND JSON_TYPE(`a`, \'$.c\') IS NULL',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonSetAndRemove(): void
+    {
+        $query = $this->instance->update('t')
+            ->setJson('a->b->c', ['x' => 1])
+            ->setJson('a->d', 'str')
+            ->setJsonRemove('a->e');
+
+        self::assertEquals(
+            'UPDATE `t` SET `a` = JSON_SET(`a`, \'$.b.c\', JSON(\'{"x":1}\')), `a` = JSON_SET(`a`, \'$.d\', JSON(\'"str"\')), `a` = JSON_REMOVE(`a`, \'$.e\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonCastAllTypes(): void
+    {
+        foreach (['int', 'integer', 'float', 'double', 'decimal', 'numeric', 'string', 'text', 'datetime', 'date'] as $type) {
+            $sql = (clone $this->instance)->select('a->n::' . $type . ' AS n')->from('t')->render(true);
+
+            self::assertStringNotContainsString('a->', $sql, $type);
+        }
+    }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE `t` SET `foo` = JSON_SET(`bar`, \'$.a\', JSON_SET(`baz`, \'$.x\', JSON(\'1\'))), `o` = JSON_REMOVE(`p`, \'$.q\')',
+            $query->render(true)
+        );
+    }
 }

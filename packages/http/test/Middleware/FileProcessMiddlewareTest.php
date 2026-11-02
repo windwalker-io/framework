@@ -119,7 +119,7 @@ class FileProcessMiddlewareTest extends TestCase
     {
         $custom = $this->createStub(MimeTypesInterface::class);
 
-        self::assertSame($custom, (new FileProcessMiddleware('x', [], $custom))->getMimeTypes());
-        self::assertInstanceOf(MimeTypes::class, (new FileProcessMiddleware('x'))->getMimeTypes());
+        self::assertSame($custom, new FileProcessMiddleware('x', [], $custom)->getMimeTypes());
+        self::assertInstanceOf(MimeTypes::class, new FileProcessMiddleware('x')->getMimeTypes());
     }
 }

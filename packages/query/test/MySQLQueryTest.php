@@ -61,6 +61,18 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
                 'foo -> 2',
                 'JSON_EXTRACT(`foo`, \'$[2]\')',
             ],
+            [
+                'foo->\'a.b\'->>\'c d\'',
+                'JSON_UNQUOTE(JSON_EXTRACT(`foo`, \'$."a.b"."c d"\'))',
+            ],
+            [
+                'foo->\'a->b\'->c',
+                'JSON_EXTRACT(`foo`, \'$."a->b".c\')',
+            ],
+            [
+                'foo->1.5',
+                'JSON_EXTRACT(`foo`, \'$."1.5"\')',
+            ],
         ];
     }
 
@@ -117,7 +129,7 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertSqlEquals(
             <<<SQL
@@ -136,7 +148,7 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonNotContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonNotContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertSqlEquals(
             <<<SQL
@@ -171,5 +183,104 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
     public static function createGrammar(): AbstractGrammar
     {
         return new MySQLGrammar();
+    }
+
+    protected static function orderByFieldSql(string $column): string
+    {
+        return "COALESCE(NULLIF(FIELD($column, 'b', 'a'), 0), 3)";
+    }
+
+    #[Test]
+    public function jsonCastSelector(): void
+    {
+        $query = $this->instance->select('a->n::int AS n')
+            ->from('t')
+            ->where('a->p::decimal', '>', 10)
+            ->order("a->'x::y'::date");
+
+        self::assertEquals(
+            'SELECT CAST(JSON_UNQUOTE(JSON_EXTRACT(`a`, \'$.n\')) AS SIGNED) AS `n` FROM `t` WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(`a`, \'$.p\')) AS DECIMAL(65, 30)) > 10 ORDER BY CAST(JSON_UNQUOTE(JSON_EXTRACT(`a`, \'$."x::y"\')) AS DATE)',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonExists(): void
+    {
+        $query = $this->instance->select('*')
+            ->from('t')
+            ->whereJsonExists('a->b->1')
+            ->whereJsonNotExists('a->c');
+
+        self::assertEquals(
+            'SELECT * FROM `t` WHERE JSON_CONTAINS_PATH(`a`, \'one\', \'$.b[1]\') AND NOT JSON_CONTAINS_PATH(`a`, \'one\', \'$.c\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonSetAndRemove(): void
+    {
+        $query = $this->instance->update('t')
+            ->setJson('a->b->c', ['x' => 1])
+            ->setJson('a->d', 'str')
+            ->setJsonRemove('a->e');
+
+        self::assertEquals(
+            'UPDATE `t` SET `a` = JSON_SET(`a`, \'$.b.c\', CAST(\'{"x":1}\' AS JSON)), `a` = JSON_SET(`a`, \'$.d\', CAST(\'"str"\' AS JSON)), `a` = JSON_REMOVE(`a`, \'$.e\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonCastRejectsUnsupportedType(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->instance->jsonSelector('a->b::money');
+    }
+
+    #[Test]
+    public function jsonCastMustBeLast(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->instance->jsonSelector('a->b::int->c');
+    }
+
+    #[Test]
+    public function jsonCastAllTypes(): void
+    {
+        foreach (['int', 'integer', 'float', 'double', 'decimal', 'numeric', 'string', 'text', 'datetime', 'date'] as $type) {
+            $sql = (clone $this->instance)->select('a->n::' . $type . ' AS n')->from('t')->render(true);
+
+            self::assertStringNotContainsString('a->', $sql, $type);
+        }
+    }
+
+    #[Test]
+    public function jsonExpressionErrors(): void
+    {
+        foreach (["a->'b", '->b', 'a->b::'] as $expr) {
+            try {
+                $this->instance->jsonSelector($expr);
+                self::fail('Expected exception for: ' . $expr);
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
+    }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE `t` SET `foo` = JSON_SET(`bar`, \'$.a\', JSON_SET(`baz`, \'$.x\', CAST(\'1\' AS JSON))), `o` = JSON_REMOVE(`p`, \'$.q\')',
+            $query->render(true)
+        );
     }
 }

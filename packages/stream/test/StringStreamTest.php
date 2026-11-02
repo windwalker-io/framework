@@ -298,9 +298,9 @@ class StringStreamTest extends TestCase
     #[Test]
     public function writableDependsOnAttachMode(): void
     {
-        $this->assertTrue((new StringStream('A', READ_WRITE_FROM_BEGIN))->isWritable());
-        $this->assertTrue((new StringStream('A', 'wb'))->isWritable());
-        $this->assertFalse((new StringStream('A', READ_ONLY_FROM_BEGIN))->isWritable());
+        $this->assertTrue(new StringStream('A', READ_WRITE_FROM_BEGIN)->isWritable());
+        $this->assertTrue(new StringStream('A', 'wb')->isWritable());
+        $this->assertFalse(new StringStream('A', READ_ONLY_FROM_BEGIN)->isWritable());
     }
 
     #[Test]

@@ -26,7 +26,7 @@ class HjsonFormat implements FormatInterface
      */
     public function dump(mixed $data, array $options = []): string
     {
-        return (new HJSONStringifier())->stringify($data, $options);
+        return new HJSONStringifier()->stringify($data, $options);
     }
 
     /**
@@ -43,6 +43,6 @@ class HjsonFormat implements FormatInterface
     {
         $options['assoc'] = true;
 
-        return (new HJSONParser())->parse($string, $options);
+        return new HJSONParser()->parse($string, $options);
     }
 }

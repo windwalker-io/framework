@@ -1575,6 +1575,73 @@ SHOW;
     }
 
     #[Test]
+    public function syncSplitsByArrayKey(): void
+    {
+        ['creating' => $creating, 'deleting' => $deleting, 'keeping' => $keeping] = Arr::sync(
+            ['a' => 1, 'b' => 2],
+            ['b' => 20, 'c' => 30]
+        );
+
+        self::assertSame(['c' => 30], $creating);
+        self::assertSame(['a' => 1], $deleting);
+        self::assertSame(['b' => 20], $keeping);
+    }
+
+    #[Test]
+    public function syncByFieldKeepsIncomingDataAndOriginalKeys(): void
+    {
+        $existing = [10 => ['id' => 1, 'name' => 'PHP'], 11 => ['id' => 2, 'name' => 'Old']];
+        $incoming = [5 => ['id' => 2, 'name' => 'New'], 6 => ['id' => 3, 'name' => 'Go']];
+
+        $r = Arr::sync($existing, $incoming, 'id');
+
+        self::assertSame([6 => ['id' => 3, 'name' => 'Go']], $r['creating']);
+        self::assertSame([10 => ['id' => 1, 'name' => 'PHP']], $r['deleting']);
+        self::assertSame([5 => ['id' => 2, 'name' => 'New']], $r['keeping']);
+    }
+
+    #[Test]
+    public function syncByCallbackWithObjectsAndEnums(): void
+    {
+        $a = new stdClass();
+        $a->id = 1;
+        $b = new stdClass();
+        $b->id = 2;
+
+        $r = Arr::sync([$a], [$b, $a], fn($item) => $item->id);
+
+        self::assertSame([0 => $b], $r['creating']);
+        self::assertSame([1 => $a], $r['keeping']);
+
+        $r = Arr::sync([$a], [$b, $a], fn($item) => $item);
+
+        self::assertSame([0 => $b], $r['creating']);
+        self::assertSame([1 => $a], $r['keeping']);
+        self::assertSame([], $r['deleting']);
+
+        $r = Arr::sync(
+            [\Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum::BAR],
+            [\Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum::BAR, \Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum::YOO],
+            fn($item) => $item
+        );
+
+        self::assertSame([1 => \Windwalker\Utilities\Test\Stub\Enum\StubBackedEnum::YOO], $r['creating']);
+        self::assertCount(1, $r['keeping']);
+    }
+
+    #[Test]
+    public function syncLatterDuplicateOverridesAndInvalidValueThrows(): void
+    {
+        $r = Arr::sync([], [['id' => 1, 'v' => 'x'], ['id' => 1, 'v' => 'y']], 'id');
+
+        self::assertSame([1 => ['id' => 1, 'v' => 'y']], $r['creating']);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        Arr::sync([], [['id' => null]], 'id');
+    }
+
+    #[Test]
     public function showWritesDumpedValuesToConfiguredOutput(): void
     {
         $out = fopen('php://memory', 'w+b');

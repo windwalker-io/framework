@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Database\Manager;
 
+use Closure;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use JsonException;
@@ -225,10 +226,13 @@ class WriterManager
     }
 
     /**
-     * @param  string        $table
-     * @param  array|object  $data
-     * @param  array|string  $keys
-     * @param  array|null    $updateFields
+     * @param  string              $table
+     * @param  array|object        $data
+     * @param  array|string        $keys
+     * @param  Closure|array|null  $updateFields  A list of columns to update with the inserted values, or a map of
+     *                                            `column => value` for custom values (mixed is allowed: int key is
+     *                                            a column, string key is a custom value). A Closure receives
+     *                                            `(array $data, array $keys)` and returns one of them.
      * @param  array{
      *     updateNulls?: bool,
      *     returningIdField?: string|null,
@@ -240,7 +244,7 @@ class WriterManager
         string $table,
         array|object $data,
         array|string $keys,
-        ?array $updateFields = null,
+        Closure|array|null $updateFields = null,
         #[ArrayShape([
             'updateNulls' => 'bool',
             'returningIdField' => 'string|null',
@@ -263,6 +267,10 @@ class WriterManager
         $data = TypeCast::toArray($originData);
         $allFields = array_keys($data);
 
+        if ($updateFields instanceof Closure) {
+            $updateFields = $updateFields($data, $keys);
+        }
+
         $updateFields ??= array_filter($allFields, fn($field) => !in_array($field, $keys, true));
 
         // Nothing to update (e.g. all non-key values are null): re-assign keys so the statement stays valid
@@ -278,16 +286,23 @@ class WriterManager
             throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
         }
 
-        $query->sql(
-            $query->getGrammar()->compileUpsert(
-                $query,
-                $table,
-                $data,
-                $keys,
-                $updateFields,
-                $returningIdField
-            )
-        );
+        $updateColumns = [];
+        $updateValues = [];
+
+        foreach ($updateFields as $k => $v) {
+            if (is_int($k)) {
+                $updateColumns[] = $v;
+            } else {
+                $updateValues[$k] = $v;
+            }
+        }
+
+        $query->upsert($table, $returningIdField !== null && in_array($returningIdField, $keys, true))
+            ->set($data)
+            ->onConflict($keys)
+            ->onConflictUpdateColumns(...$updateColumns)
+            ->onConflictUpdateValues($updateValues)
+            ->returning($returningIdField);
 
         $statement = $query->execute();
 

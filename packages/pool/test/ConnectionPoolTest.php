@@ -418,7 +418,7 @@ class ConnectionPoolTest extends TestCase
 
     protected static function leakSafe(StubConnection $connection): StubConnection
     {
-        $connection->leakProtect = false;
+        $connection->leakWarning = false;
 
         return $connection;
     }

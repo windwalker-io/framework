@@ -37,7 +37,7 @@ trait DatabaseTestTrait
         $params['driver'] = $driver;
         static::$lastQueries = [];
 
-        $db = (new DatabaseFactory())->create($driver, $params);
+        $db = new DatabaseFactory()->create($driver, $params);
 
         // $logFile = __DIR__ . '/../tmp/all-test-sql.sql';
         //

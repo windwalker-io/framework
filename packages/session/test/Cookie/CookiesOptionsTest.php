@@ -30,7 +30,7 @@ class CookiesOptionsTest extends TestCase
         self::assertInstanceOf(\DateTimeImmutable::class, $options->expires);
         self::assertSame(1893456000, $options->expires->getTimestamp());
 
-        self::assertSame(1893456000, (new CookiesOptions(new \DateTime('@1893456000')))->expires->getTimestamp());
+        self::assertSame(1893456000, new CookiesOptions(new \DateTime('@1893456000'))->expires->getTimestamp());
 
         $options->expires = null;
         self::assertNull($options->expires);
@@ -60,7 +60,7 @@ class CookiesOptionsTest extends TestCase
             ],
             $options->toCookieParams()
         );
-        self::assertSame([], (new CookiesOptions())->toCookieParams());
+        self::assertSame([], new CookiesOptions()->toCookieParams());
     }
 
     #[Test]
@@ -71,6 +71,6 @@ class CookiesOptionsTest extends TestCase
 
         self::assertEqualsWithDelta(100, $params['expires'], 2);
         self::assertSame('/', $params['path']);
-        self::assertSame([], (new CookiesOptions())->toSessionCookieParams());
+        self::assertSame([], new CookiesOptions()->toSessionCookieParams());
     }
 }

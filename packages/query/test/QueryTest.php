@@ -515,6 +515,22 @@ class QueryTest extends TestCase
     }
 
     #[Test]
+    public function unionAcceptsClosure(): void
+    {
+        $q = self::createQuery();
+
+        $q->union(fn(Query $q) => $q->select('*')->from('foo')->where('id', '>', 12));
+        $q->unionAll(function (Query $q) {
+            $q->select('*')->from('bar')->where('id', '<', 50);
+        });
+
+        self::assertSqlEquals(
+            '(SELECT * FROM "foo" WHERE "id" > 12) UNION (SELECT * FROM "bar" WHERE "id" < 50)',
+            $q
+        );
+    }
+
+    #[Test]
     public function insertBuildsInsertStatement(): void
     {
         $this->instance->insert('foo', true)
@@ -1536,6 +1552,25 @@ SQL
     }
 
     #[Test]
+    public function orderByFieldUsesGrammarExpression(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->orderByField('state', ['b', 'a'], 'DESC');
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foo" ORDER BY ' . static::orderByFieldSql((string) self::createQuery()->quoteName('state')) . ' DESC',
+            $q->render(true)
+        );
+    }
+
+    protected static function orderByFieldSql(string $column): string
+    {
+        return "CASE WHEN $column = 'b' THEN 1 WHEN $column = 'a' THEN 2 ELSE 3 END";
+    }
+
+    #[Test]
     public function groupAppendsGroupByColumns()
     {
         $q = self::createQuery()
@@ -2096,6 +2131,51 @@ SQL
 
         self::assertSame($supported, str_contains($sql, ' AS MATERIALIZED ('));
         self::assertSame($supported, str_contains($sql, ' AS NOT MATERIALIZED ('));
+    }
+
+    #[Test]
+    public function siblingSubQueriesWithSameAliasKeepTheirBindings(): void
+    {
+        $q = $this->instance
+            ->select('*')
+            ->from('a')
+            ->leftJoin(fn(Query $q) => $q->from('x')->where('x.id', 111), 'j', 'j.id', 'a.id')
+            ->leftJoin(fn(Query $q) => $q->from('y')->where('y.id', 222), 'j', 'j.id', 'a.id');
+
+        $sql = $q->render(false, $bounded);
+
+        self::assertStringNotContainsString(':wqp__', $q->render(true));
+        self::assertEqualsCanonicalizing([111, 222], array_column($bounded, 'value'));
+        self::assertSame(2, preg_match_all('/:wqp__\d+/', $sql));
+    }
+
+    #[Test]
+    public function clearedClausesDropTheirBindingsAndSharedValuesStayStable(): void
+    {
+        $q = $this->instance->select('*')->from('a')->where('a.foo', 'removed');
+        $q->clear('where');
+        $q->where('a.bar', 'kept');
+
+        $q->render(false, $bounded);
+
+        self::assertSame(['kept'], array_column($bounded, 'value'));
+
+        $clone = clone $q;
+        $clone->render(false, $bounded2);
+        $q->render(false, $bounded3);
+
+        self::assertSame(['kept'], array_column($bounded2, 'value'));
+        self::assertSame(['kept'], array_column($bounded3, 'value'));
+    }
+
+    #[Test]
+    public function renderThrowsWhenPlaceholderHasNoBinding(): void
+    {
+        $q = $this->instance->select('*')->from('a')->whereRaw(':wqp__99999 = a.id');
+
+        $this->expectException(\LogicException::class);
+
+        $q->render(false, $bounded);
     }
 
     public static function createQuery($conn = null): Query

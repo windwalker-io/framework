@@ -25,7 +25,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addHeaderRendersHeadRowWithTitles(): void
     {
-        $grid = (new KeyValueGrid())->addHeader('K', 'V', ['key' => ['width' => '5'], 'row' => ['class' => 'h']]);
+        $grid = new KeyValueGrid()->addHeader('K', 'V', ['key' => ['width' => '5'], 'row' => ['class' => 'h']]);
 
         self::assertSame(
             "<table><thead>\n\t<tr class=\"h\">\n\t\t<th width=\"5\">K</th>\n\t\t<th>V</th>\n\t</tr>\n</thead></table>",
@@ -36,7 +36,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addHeaderUsesDefaultTitles(): void
     {
-        $grid = (new KeyValueGrid())->addHeader();
+        $grid = new KeyValueGrid()->addHeader();
 
         self::assertStringContainsString('<th>Key</th>', (string) $grid);
         self::assertStringContainsString('<th>Value</th>', (string) $grid);
@@ -45,7 +45,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addItemRendersKeyAndValueWithAttributes(): void
     {
-        $grid = (new KeyValueGrid())->addItem('foo', 'bar', ['row' => ['id' => 'r'], 'value' => ['class' => 'v']]);
+        $grid = new KeyValueGrid()->addItem('foo', 'bar', ['row' => ['id' => 'r'], 'value' => ['class' => 'v']]);
 
         self::assertSame(
             "<table><tbody>\n\t<tr id=\"r\">\n\t\t<td>foo</td>\n\t\t<td class=\"v\">bar</td>\n\t</tr>\n</tbody></table>",
@@ -56,7 +56,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addItemConvertsArrayAndObjectValuesToPrintedString(): void
     {
-        $grid = (new KeyValueGrid())->addItem('arr', ['a' => 1]);
+        $grid = new KeyValueGrid()->addItem('arr', ['a' => 1]);
 
         self::assertSame(print_r(['a' => 1], true), $grid->getRow()['value']->content);
 
@@ -69,7 +69,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addItemSkipsValueCellWhenValueIsFalse(): void
     {
-        $grid = (new KeyValueGrid())->addItem('foo', false);
+        $grid = new KeyValueGrid()->addItem('foo', false);
 
         self::assertArrayNotHasKey('value', $grid->getRow());
         self::assertSame('foo', $grid->getRow()['key']->content);
@@ -78,7 +78,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addTitleSpansKeyCellAcrossTwoColumns(): void
     {
-        $grid = (new KeyValueGrid())->addTitle('Section');
+        $grid = new KeyValueGrid()->addTitle('Section');
 
         self::assertSame(['colspan' => 2], $grid->getRow()['key']->attribs);
         self::assertArrayNotHasKey('value', $grid->getRow());
@@ -87,7 +87,7 @@ class KeyValueGridTest extends TestCase
     #[Test]
     public function addItemsAddsEveryItemFromArray(): void
     {
-        $grid = (new KeyValueGrid())->addItems(['a' => '1', 'b' => '2']);
+        $grid = new KeyValueGrid()->addItems(['a' => '1', 'b' => '2']);
 
         self::assertCount(2, $grid->getRows());
         self::assertSame('b', $grid->getRow()['key']->content);

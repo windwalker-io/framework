@@ -22,7 +22,7 @@ class DeflateSerializerTest extends TestCase
             ->with(null)
             ->willReturn(null);
 
-        self::assertNull((new DeflateSerializer($inner))->serialize(null));
+        self::assertNull(new DeflateSerializer($inner)->serialize(null));
     }
 
     public function testSerializeAndUnserializeRoundTrip(): void

@@ -25,8 +25,8 @@ class EnumAttributesTest extends TestCase
     #[Test]
     public function toReadableStringReturnsPlainStringWithoutLanguage(): void
     {
-        self::assertSame('Plain', (new Title('Plain'))->toReadableString());
-        self::assertSame('Plain', (new Title('Plain', 'app.key'))->toReadableString());
+        self::assertSame('Plain', new Title('Plain')->toReadableString());
+        self::assertSame('Plain', new Title('Plain', 'app.key')->toReadableString());
     }
 
     #[Test]
@@ -35,7 +35,7 @@ class EnumAttributesTest extends TestCase
         $lang = $this->createMock(LanguageInterface::class);
         $lang->expects($this->once())->method('trans')->with('app.key', 'x')->willReturn('Translated');
 
-        self::assertSame('Translated', (new Title('Plain', 'app.key'))->toReadableString($lang, 'x'));
+        self::assertSame('Translated', new Title('Plain', 'app.key')->toReadableString($lang, 'x'));
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class EnumAttributesTest extends TestCase
     {
         $lang = $this->createStub(LanguageInterface::class);
 
-        self::assertSame('Plain', (new Title('Plain'))->toReadableString($lang));
+        self::assertSame('Plain', new Title('Plain')->toReadableString($lang));
     }
 
     #[Test]

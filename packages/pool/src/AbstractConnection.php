@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Windwalker\Pool;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Windwalker\Pool\Enum\ConnectionState;
 use Windwalker\Pool\Exception\ConnectionPoolException;
 
@@ -31,15 +33,36 @@ abstract class AbstractConnection implements ConnectionInterface
     protected ?\WeakReference $pool = null;
 
     /**
-     * Set this to TRUE, if a connection not released back to pool but destructed, will throw an exception.
+     * Whether to raise an E_USER_WARNING when a connection is destructed without being released
+     * and no logger is available. If a logger exists, the leak is always sent to it regardless of this flag.
      *
      * @var  bool
      */
-    public bool $leakProtect = true;
+    public bool $leakWarning = true;
+
+    /**
+     * Receives the leak report. Falls back to the pool's logger, then to an E_USER_WARNING
+     * (see {@see $leakWarning}).
+     */
+    public ?LoggerInterface $logger = null;
+
+    /**
+     * Set when PHP starts shutting down (including after exit), so leaked-connection warnings
+     * are not raised for connections that the process is about to discard anyway.
+     */
+    private static bool $shuttingDown = false;
+
+    private static bool $shutdownRegistered = false;
 
     public function __construct()
     {
         $this->createdTime = time();
+
+        if (!self::$shutdownRegistered) {
+            self::$shutdownRegistered = true;
+
+            register_shutdown_function(static fn() => self::$shuttingDown = true);
+        }
     }
 
     /**
@@ -122,21 +145,49 @@ abstract class AbstractConnection implements ConnectionInterface
 
     public function __destruct()
     {
-        if ($this->state === ConnectionState::ACTIVE && $this->pool && $this->leakProtect) {
-            trigger_error(
-                sprintf(
-                    'Connection ID: %s in pool: %s was not released but destruct.',
-                    $this->getId(),
-                    get_debug_type($this->pool?->get())
-                ),
-                E_USER_WARNING
+        if (
+            $this->state !== ConnectionState::ACTIVE
+            || !$this->pool
+            || self::$shuttingDown
+        ) {
+            return;
+        }
+
+        $pool = $this->pool->get();
+        $poolType = get_debug_type($pool);
+        $logger = $this->logger;
+
+        if ($logger === null && $pool instanceof AbstractPool && !$pool->logger instanceof NullLogger) {
+            $logger = $pool->logger;
+        }
+
+        $message = sprintf(
+            'Connection ID: %s in pool: %s was not released but destruct.',
+            $this->getId(),
+            $poolType
+        );
+
+        if ($logger !== null) {
+            $logger->warning(
+                $message,
+                [
+                    'connection_id' => $this->getId(),
+                    'connection' => static::class,
+                    'pool' => $poolType,
+                    'last_time' => $this->getLastTime(),
+                    'last_used_at' => date('Y-m-d H:i:s', $this->getLastTime()),
+                    'uses' => $this->getCurrentUses(),
+                ]
             );
+
+            return;
+        }
+
+        if ($this->leakWarning) {
+            trigger_error($message, E_USER_WARNING);
         }
     }
 
-    /**
-     * @codeCoverageIgnore
-     */
     public function getCreatedTime(): int
     {
         return $this->createdTime;

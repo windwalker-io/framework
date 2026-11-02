@@ -117,7 +117,7 @@ class HttpClientOptionsTest extends TestCase
             },
         );
 
-        $merged = (new TransportOptions())->withMergeHttpClientOptions($clientOptions);
+        $merged = new TransportOptions()->withMergeHttpClientOptions($clientOptions);
 
         self::assertNotNull($merged->progress);
     }
@@ -129,7 +129,7 @@ class HttpClientOptionsTest extends TestCase
             files: ['upload' => '/tmp/file.txt'],
         );
 
-        $merged = (new TransportOptions())->withMergeHttpClientOptions($clientOptions);
+        $merged = new TransportOptions()->withMergeHttpClientOptions($clientOptions);
 
         self::assertSame(['upload' => '/tmp/file.txt'], $merged->files);
     }

@@ -13,7 +13,7 @@ class CheckboxFieldTest extends TestCase
     #[Test]
     public function uncheckedByDefaultWithOnValue(): void
     {
-        $html = (new CheckboxField('agree'))->renderInput();
+        $html = new CheckboxField('agree')->renderInput();
 
         self::assertStringContainsString('type="checkbox"', $html);
         self::assertStringContainsString('value="on"', $html);

@@ -598,16 +598,16 @@ class UriTest extends TestCase
     #[Test]
     public function getAuthorityIsEmptyWithoutHost(): void
     {
-        self::assertSame('', (new Uri('/foo'))->getAuthority());
+        self::assertSame('', new Uri('/foo')->getAuthority());
     }
 
     #[Test]
     public function getAuthorityOmitsStandardPortOfScheme(): void
     {
-        self::assertSame('example.com', (new Uri('http://example.com:80'))->getAuthority());
-        self::assertSame('example.com', (new Uri('https://example.com:443'))->getAuthority());
-        self::assertSame('example.com:8080', (new Uri('http://example.com:8080'))->getAuthority());
-        self::assertSame('example.com:80', (new Uri('https://example.com:80'))->getAuthority());
+        self::assertSame('example.com', new Uri('http://example.com:80')->getAuthority());
+        self::assertSame('example.com', new Uri('https://example.com:443')->getAuthority());
+        self::assertSame('example.com:8080', new Uri('http://example.com:8080')->getAuthority());
+        self::assertSame('example.com:80', new Uri('https://example.com:80')->getAuthority());
     }
 
     #[Test]
@@ -637,7 +637,7 @@ class UriTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new Uri('http://example.com'))->withPort($port);
+        new Uri('http://example.com')->withPort($port);
     }
 
     public static function invalidPortProvider(): array
@@ -657,7 +657,7 @@ class UriTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new Uri('http://example.com'))->withPath($path);
+        new Uri('http://example.com')->withPath($path);
     }
 
     public static function invalidPathProvider(): array
@@ -671,7 +671,7 @@ class UriTest extends TestCase
     #[Test]
     public function withPathResolvesDotSegments(): void
     {
-        $uri = (new Uri('http://example.com'))->withPath('/foo/bar/../baz');
+        $uri = new Uri('http://example.com')->withPath('/foo/bar/../baz');
 
         self::assertSame('/foo/baz', $uri->getPath());
     }
@@ -688,7 +688,7 @@ class UriTest extends TestCase
     #[Test]
     public function withPathAppendAppendsSuffixToExistingPath(): void
     {
-        $uri = (new Uri('http://example.com/foo'))->withPathAppend('/bar');
+        $uri = new Uri('http://example.com/foo')->withPathAppend('/bar');
 
         self::assertSame('http://example.com/foo/bar', (string) $uri);
     }
@@ -705,8 +705,8 @@ class UriTest extends TestCase
     #[Test]
     public function toStringOmitsPortWhenNotSetAndKeepsRelativePath(): void
     {
-        self::assertSame('foo/bar?a=1#f', (new Uri('foo/bar?a=1#f'))->toString());
-        self::assertSame('http://example.com/foo', (new Uri('http://example.com/foo'))->toString());
+        self::assertSame('foo/bar?a=1#f', new Uri('foo/bar?a=1#f')->toString());
+        self::assertSame('http://example.com/foo', new Uri('http://example.com/foo')->toString());
     }
 
     #[Test]
@@ -721,7 +721,7 @@ class UriTest extends TestCase
     #[Test]
     public function getOriginalReturnsConstructedString(): void
     {
-        self::assertSame('http://example.com/a?b=1', (new Uri('http://example.com/a?b=1'))->getOriginal());
+        self::assertSame('http://example.com/a?b=1', new Uri('http://example.com/a?b=1')->getOriginal());
     }
 
     #[Test]
@@ -753,6 +753,6 @@ class UriTest extends TestCase
     #[Test]
     public function getAuthorityKeepsPortWhenSchemeIsMissing(): void
     {
-        self::assertSame('example.com:8080', (new Uri('//example.com:8080/foo'))->getAuthority());
+        self::assertSame('example.com:8080', new Uri('//example.com:8080/foo')->getAuthority());
     }
 }

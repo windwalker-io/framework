@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\ORM;
 
+use Closure;
 use Windwalker\Data\Collection;
 use Windwalker\Database\Driver\StatementInterface;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -426,7 +427,7 @@ trait ORMProxyTrait
         string $entityClass,
         array|object $item,
         array|string|null $condFields = null,
-        ?array $updateFields = null,
+        Closure|array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): object {
         return $this->mapper($entityClass)->upsert($item, $condFields, $updateFields, $options);

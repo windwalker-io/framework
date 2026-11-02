@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Query\Escaper;
 use Windwalker\Query\Grammar\AbstractGrammar;
+use Windwalker\Query\Grammar\BaseGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Query\Test\Mock\MockEscaper;
 
@@ -30,7 +31,7 @@ abstract class AbstractGrammarTestCase extends TestCase
     {
         $class = static::grammarClass();
 
-        return (new $class())->setEscaper(new Escaper(self::$conn ??= new MockEscaper()));
+        return new $class()->setEscaper(new Escaper(self::$conn ??= new MockEscaper()));
     }
 
     protected static function createQuery(): Query
@@ -56,6 +57,79 @@ abstract class AbstractGrammarTestCase extends TestCase
         self::assertSame($open . 'a.b' . $close, $grammar::quoteName('a.b', true));
     }
 
+    #[Test]
+    public function upsertSupportsCustomValuesAndAccumulatedCalls(): void
+    {
+        $this->skipIfUpsertUnsupported();
+
+        $query = static::createQuery()
+            ->upsert('foo')
+            ->columns('id', 'title')
+            ->values([1, 'A'])
+            ->onConflict('id')
+            ->onConflictUpdateColumns('title')
+            ->onConflictUpdateValues('hits', raw('hits + 1'));
+
+        $sql = static::normalize($query->render());
+
+        self::assertStringContainsString('hits + 1', $sql);
+        self::assertStringNotContainsString('`id` = ', $sql);
+        self::assertSame(['id'], $query->getUpsert()['keys']);
+        self::assertSame(['title', 'hits'], array_keys($query->getUpsert()['update']));
+    }
+
+    #[Test]
+    public function upsertDoesNotRepeatPlaceholders(): void
+    {
+        $this->skipIfUpsertUnsupported();
+
+        $sql = static::normalize(
+            static::createQuery()
+                ->upsert('foo')
+                ->set(['id' => 1, 'title' => 'A'])
+                ->onConflict('id')
+                ->render()
+        );
+
+        preg_match_all('/:p\d+/', $sql, $matches);
+
+        self::assertSame($matches[0], array_unique($matches[0]));
+    }
+
+    #[Test]
+    public function upsertWithoutDataThrows(): void
+    {
+        $this->skipIfUpsertUnsupported();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        static::createQuery()->upsert('foo')->onConflict('id')->render();
+    }
+
+    private function skipIfUpsertUnsupported(): void
+    {
+        if (static::grammarClass() === BaseGrammar::class) {
+            $this->markTestSkipped('BaseGrammar does not support upsert.');
+        }
+    }
+
+    /**
+     * Normalize whitespaces and rename random value placeholders to :p1, :p2... by first occurrence.
+     */
+    protected static function normalize(string $sql): string
+    {
+        $sql = trim(preg_replace('/\s+/', ' ', $sql));
+        $map = [];
+
+        return preg_replace_callback(
+            '/:wqp__\d+/',
+            static function (array $m) use (&$map) {
+                return $map[$m[0]] ??= ':p' . (count($map) + 1);
+            },
+            $sql
+        );
+    }
+
     /**
      * Compile an upsert with a fresh query. Returns the whitespace-normalized SQL and the query for bound checks.
      *
@@ -68,10 +142,15 @@ abstract class AbstractGrammarTestCase extends TestCase
         ?string $returningIdField = null,
         string $table = 'foo',
     ): array {
-        $query = static::createQuery();
+        $query = static::createQuery()
+            ->upsert($table)
+            ->set($data)
+            ->onConflict($keys)
+            ->onConflictUpdateColumns(...$updateFields)
+            ->returning($returningIdField);
 
-        $sql = $query->getGrammar()->compileUpsert($query, $table, $data, $keys, $updateFields, $returningIdField);
+        $sql = $query->render();
 
-        return [trim(preg_replace('/\s+/', ' ', $sql)), $query];
+        return [static::normalize($sql), $query];
     }
 }

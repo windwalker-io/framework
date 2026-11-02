@@ -576,7 +576,7 @@ abstract class AbstractDriver implements HydratorAwareInterface
     {
         $options = $this->getOptions();
 
-        $pool = (new DatabaseFactory())
+        $pool = new DatabaseFactory()
             ->createConnectionPool($options['pool'] ?? []);
 
         $this->preparePoolConnectionBuilder($pool);

@@ -22,7 +22,7 @@ return new class () {
             return $this->$path();
         }
 
-        return (new HttpFactory())->createResponse()->withStatus(404);
+        return new HttpFactory()->createResponse()->withStatus(404);
     }
 
     public function index(): ResponseInterface
@@ -68,7 +68,7 @@ return new class () {
 
     protected function response($value): ResponseInterface
     {
-        return (new HttpFactory())
+        return new HttpFactory()
             ->createResponse()
             ->withBody(Stream::fromString($value));
     }

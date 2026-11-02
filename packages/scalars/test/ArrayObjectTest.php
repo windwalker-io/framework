@@ -154,7 +154,7 @@ class ArrayObjectTest extends TestCase
     #[Test]
     public function constructStoresGivenItems(): void
     {
-        self::assertEquals([1, 2, 3], (new ArrayObject([1, 2, 3]))->dump());
+        self::assertEquals([1, 2, 3], new ArrayObject([1, 2, 3])->dump());
     }
 
     #[Test]

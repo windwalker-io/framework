@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM;
 
 use Asika\ObjectMetadata\ObjectMetadata;
+use Closure;
 use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -1021,10 +1022,12 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  array|object       $item
-     * @param  array|string|null  $condFields
-     * @param  array|null         $updateFields
-     * @param  ORMOptions         $options
+     * @param  array|object        $item
+     * @param  array|string|null   $condFields    Conflict keys. MySQL ignores them and relies on the table's
+     *                                            PRIMARY/UNIQUE indexes, so they must match a real unique index.
+     * @param  Closure|array|null  $updateFields  List of columns, `column => value` map, or a Closure
+     *                                            `(array $data, array $keys)` returning one of them.
+     * @param  ORMOptions          $options
      *
      * @return  object|T
      *
@@ -1033,7 +1036,7 @@ class EntityMapper implements EventAwareInterface
     public function upsert(
         array|object $item,
         array|string|null $condFields = null,
-        ?array $updateFields = null,
+        Closure|array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): object {
         $metadata = $this->getMetadata();
@@ -1075,14 +1078,30 @@ class EntityMapper implements EventAwareInterface
         if ($aiColumn = $metadata->getAutoIncrementColumn()) {
             $aiColumnName = $aiColumn->getName();
 
-            if (!in_array($aiColumnName, $condFields, true)) {
+            $inCond = in_array($aiColumnName, $condFields, true);
+
+            // An empty AI id can never match a row, so it must not be sent (NULL identity breaks most platforms)
+            if (!$inCond || empty($data[$aiColumnName])) {
                 unset($data[$aiColumnName]);
+                $condFields = array_values(array_diff($condFields, [$aiColumnName]));
             }
 
             $returningIdField = $aiColumnName;
         }
 
-        if ($data !== []) {
+        if ($data !== [] && $condFields === []) {
+            // No usable key left (new AI entity), it is a plain insert.
+            $result = $this->getDb()->getWriter()->insertOne(
+                $metadata->getTableName(),
+                $data,
+                $returningIdField,
+                ['incrementField' => false]
+            );
+
+            if ($returningIdField && isset($result[$returningIdField])) {
+                $entity = $this->hydrate([$returningIdField => $result[$returningIdField]], $entity);
+            }
+        } elseif ($data !== []) {
             // @event
 
             $result = $this->getDb()->getWriter()->upsert(

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
-use InvalidArgumentException;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
+use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
+use function Windwalker\raw;
 
 /**
  * The SqlsrvGrammar class.
@@ -38,54 +39,40 @@ class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
      */
     public static string $nullDate = '1900-01-01 00:00:00';
 
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+            'returning' => $returning,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $srcOn = $query->clause('()', [], ' AND ');
-
-        foreach ($keys as $key) {
-            $srcOn->append($query->quoteName($key) . " = :key_$key");
-            $query->bind(
-                "key_$key",
-                $data[$key]
-                ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
-            );
-        }
-
+        $srcOn = $this->compileUpsertMergeOn($query, $keys, $data);
         $updateSet = $query->clause('', [], ',');
 
-        foreach ($updateFields as $k) {
-            $v = $data[$k];
-
-            if ($v instanceof RawWrapper) {
-                $updateSet->append($query->quoteName($k) . '=' . $v());
-            } else {
-                $query->bind('update_set_' . $k, $v);
-                $updateSet->append($query->quoteName($k) . " = :update_set_$k");
-            }
+        foreach ($update as $key => $value) {
+            $updateSet->append("$key = " . ($value ?? $this->reuseUpsertValue($query, $data[$key])));
         }
 
-        $output = '';
-
-        if ($returningIdField) {
-            $output = 'OUTPUT INSERTED.' . $query->quoteName($returningIdField);
-        }
+        $output = $returning ? "OUTPUT INSERTED.$returning" : '';
 
         // MERGE is only available since SQL Server 2008 and must be terminated by semicolon.
         // It also requires HOLDLOCK to avoid upsert race conditions.
-        return "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
+        $merge = "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
                     WHEN NOT MATCHED THEN INSERT $columns
                     VALUES $values
                     WHEN MATCHED THEN UPDATE SET $updateSet
                     $output;";
+
+        // Explicit identity values require IDENTITY_INSERT, even if the matched branch is taken.
+        if ($query->getIncrementField()) {
+            return "SET IDENTITY_INSERT $table ON; $merge SET IDENTITY_INSERT $table OFF;";
+        }
+
+        return $merge;
     }
 
     public function compileInsert(Query $query): string
@@ -288,7 +275,8 @@ SQL;
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         $vc = $query->valueize(static::compileJsonPath($paths), $instant);
 
@@ -296,9 +284,30 @@ SQL;
             ? expr('JSON_VALUE()', $vc)
             : expr('JSON_QUERY()', $vc);
 
-        return $expr->prepend(qn($column, $query));
+        $expr->prepend(qn($column, $query));
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int' => 'BIGINT',
+                'float' => 'FLOAT',
+                'decimal' => 'DECIMAL(38, 10)',
+                'string' => 'NVARCHAR(MAX)',
+                'datetime' => 'DATETIME2',
+                'date' => 'DATE',
+            };
+
+            return clause('CAST()', [$expr, "AS $type"], ' ');
+        }
+
+        return $expr;
     }
 
+    /**
+     * @deprecated  Use {@see compileJsonContainsAll()} instead.
+     *               In the next major release, compileJsonContainsAll() will be renamed back
+     *               to compileJsonContains() and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function compileJsonContains(
         Query $query,
         string $column,
@@ -321,6 +330,39 @@ SQL;
         );
     }
 
+    public function compileJsonContainsAll(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value,
+        bool $not = false
+    ): Clause {
+        $elements = static::normalizeJsonContainsElements($value);
+        $single = count($elements) === 1;
+        $exists = [];
+
+        foreach ($elements as $element) {
+            $path = $query->valueize(static::compileJsonPath($paths), false);
+
+            $exists[] = $query->expr(
+                $single && $not ? 'NOT EXISTS()' : 'EXISTS()',
+                $query->createSubQuery()
+                    ->selectRaw(1)
+                    ->from(expr('OPENJSON()', qn($column, $query), $path))
+                    ->where('value', $element)
+            );
+        }
+
+        return $single
+            ? $exists[0]
+            : $query->clause($not ? 'NOT ()' : '()', $exists, ' AND ');
+    }
+
+    public function supportsJsonSelectLength(): bool
+    {
+        return false;
+    }
+
     public function compileJsonLength(Query $query, string $column, array $paths): Clause
     {
         $path = $query->valueize(static::compileJsonPath($paths), false);
@@ -334,6 +376,46 @@ SQL;
                     ->from(expr('OPENJSON()', qn($column, $query), $path))
             ),
             0
+        );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return clause(
+            '',
+            [
+                expr('JSON_PATH_EXISTS()', qn($column, $query), $query->valueize(static::compileJsonPath($paths), false)),
+                $not ? '= 0' : '= 1',
+            ],
+            ' '
+        );
+    }
+
+    /**
+     * Note: NULL value removes the key since JSON_MODIFY() treats NULL as delete.
+     */
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), false);
+
+        if ($value instanceof RawWrapper) {
+            $value = expr('JSON_QUERY()', $value);
+        } elseif (is_array($value) || is_object($value)) {
+            $value = expr('JSON_QUERY()', $query->valueize(static::encodeJsonValue($value), false));
+        } else {
+            $value = $query->valueize($value, false);
+        }
+
+        return $query->expr('JSON_MODIFY()', qn($column, $query), $path, $value);
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        return $query->expr(
+            'JSON_MODIFY()',
+            qn($column, $query),
+            $query->valueize(static::compileJsonPath($paths), false),
+            raw('NULL')
         );
     }
 }

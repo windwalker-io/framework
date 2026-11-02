@@ -26,7 +26,7 @@ class StreamTransportUnitTest extends TestCase
     #[Test]
     public function toResponseSetsStatusBodyAndHeaders(): void
     {
-        $res = (new StreamTransport())->toResponse(
+        $res = new StreamTransport()->toResponse(
             ['HTTP/1.1 202 Accepted', 'X-Foo: bar'],
             'payload',
         );
@@ -41,13 +41,13 @@ class StreamTransportUnitTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
 
-        (new StreamTransport())->toResponse(['not a status line'], '');
+        new StreamTransport()->toResponse(['not a status line'], '');
     }
 
     #[Test]
     public function toResponseAllowsMissingStatusWhenRequested(): void
     {
-        $res = (new StreamTransport())->toResponse([], 'x', new HttpClientResponse(), true);
+        $res = new StreamTransport()->toResponse([], 'x', new HttpClientResponse(), true);
 
         self::assertSame('x', (string) $res->getBody());
     }
@@ -102,7 +102,7 @@ class StreamTransportUnitTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new StreamTransport())->download(new Request(), '');
+        new StreamTransport()->download(new Request(), '');
     }
 
     #[Test]

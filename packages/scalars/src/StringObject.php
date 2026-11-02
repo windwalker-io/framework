@@ -187,7 +187,7 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
         if (method_exists($class, $method)) {
             $ref = new ReflectionMethod($class, $method);
         } else {
-            $ref = (new ReflectionObject($closure))->getMethod('__invoke');
+            $ref = new ReflectionObject($closure)->getMethod('__invoke');
         }
 
         $params = $ref->getParameters();

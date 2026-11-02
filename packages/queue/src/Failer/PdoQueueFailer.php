@@ -71,7 +71,7 @@ class PdoQueueFailer implements QueueFailerInterface
     public function add(string $connection, string $channel, string $body, string $exception): int|string
     {
         // For B/C
-        $created = (new DateTime('now'))->format('Y-m-d H:i:s');
+        $created = new DateTime('now')->format('Y-m-d H:i:s');
 
         $sql = 'INSERT INTO ' . $this->table
             . ' (connection, channel, body, exception, created)'

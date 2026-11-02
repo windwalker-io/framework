@@ -95,7 +95,7 @@ class UriTemplate implements \Stringable
     {
         return $this->expandHandler ??= static function (string $template, array $vars = []) {
             if (class_exists(RizeUriTemplate::class)) {
-                return (new RizeUriTemplate())->expand($template, $vars);
+                return new RizeUriTemplate()->expand($template, $vars);
             }
 
             // Fallbacks unreachable while the optional `rize/uri-template` dev dependency is installed.
@@ -132,7 +132,7 @@ class UriTemplate implements \Stringable
     {
         return $this->extractHandler ?? static function (string $template, string $uri, bool $strict = false) {
             if (class_exists(RizeUriTemplate::class)) {
-                return (new RizeUriTemplate())->extract($template, $uri, $strict);
+                return new RizeUriTemplate()->extract($template, $uri, $strict);
             }
 
             // Unreachable while the optional `rize/uri-template` dev dependency is installed.

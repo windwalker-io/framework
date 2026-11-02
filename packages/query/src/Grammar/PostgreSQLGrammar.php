@@ -6,6 +6,7 @@ namespace Windwalker\Query\Grammar;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\Query\clause;
 use function Windwalker\Query\qn;
@@ -15,6 +16,8 @@ use function Windwalker\Query\qn;
  */
 class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
+    use JsonGrammarTrait;
+
     public function compileMaterializedHint(?bool $materialized): string
     {
         return match ($materialized) {
@@ -34,29 +37,25 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
      */
     public static string $nullDate = '1970-01-01 00:00:00';
 
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+            'returning' => $returning,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $conflictKeys = $query->clause('()', $query->qnMultiple($keys), ',');
+        $conflictKeys = $query->clause('()', $keys, ',');
         $updateSet = $query->clause('', [], ',');
 
-        foreach ($query->qnMultiple($updateFields) as $key) {
-            $updateSet->append("$key = EXCLUDED.$key");
+        foreach ($update as $key => $value) {
+            $updateSet->append("$key = " . ($value ?? "EXCLUDED.$key"));
         }
 
-        $returning = '';
-
-        if ($returningIdField) {
-            $returning = 'RETURNING ' . $query->quoteName($returningIdField);
-        }
+        $returning = $returning ? "RETURNING $returning" : '';
 
         return <<<SQL
         INSERT INTO $table $columns
@@ -95,7 +94,8 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         $newPaths = [];
 
@@ -111,13 +111,34 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         $lastArrow = $unQuoteLast ? '->>' : '->';
         array_unshift($newPaths, qn($column, $query) . '::jsonb');
 
-        return clause(
+        $selector = clause(
             '',
             [clause('', $newPaths, '->'), $last],
             $lastArrow
         );
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int' => 'bigint',
+                'float' => 'double precision',
+                'decimal' => 'numeric',
+                'string' => 'text',
+                'datetime' => 'timestamp',
+                'date' => 'date',
+            };
+
+            return clause('', [clause('()', [$selector]), "::$type"], '');
+        }
+
+        return $selector;
     }
 
+    /**
+     * @deprecated  Use {@see compileJsonContainsAll()} instead.
+     *               In the next major release, compileJsonContainsAll() will be renamed back
+     *               to compileJsonContains() and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function compileJsonContains(
         Query $query,
         string $column,
@@ -125,9 +146,27 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $value,
         bool $not = false
     ): Clause {
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
+        $value = static::normalizeLegacyJsonContainsValue($value);
+
+        return clause(
+            $not ? 'NOT ()' : '()',
+            [
+                $this->compileJsonSelector($query, $column, $paths, false, false),
+                '@>',
+                $query->valueize($value, false),
+            ],
+            ' '
+        );
+    }
+
+    public function compileJsonContainsAll(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value,
+        bool $not = false
+    ): Clause {
+        $value = static::encodeJsonContainsValue($value);
 
         return clause(
             $not ? 'NOT ()' : '()',
@@ -155,5 +194,51 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
             ],
             ' '
         );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return clause(
+            '',
+            [
+                clause(
+                    '()',
+                    [
+                        qn($column, $query) . '::jsonb',
+                        '#>',
+                        $this->castJsonPathArray($query, $paths),
+                    ],
+                    ' '
+                ),
+                $not ? 'IS NULL' : 'IS NOT NULL',
+            ],
+            ' '
+        );
+    }
+
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        return $query->expr(
+            'jsonb_set()',
+            qn($column, $query) . '::jsonb',
+            $this->castJsonPathArray($query, $paths),
+            $value instanceof RawWrapper
+                ? $value
+                : clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS jsonb'], ' ')
+        );
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        return clause(
+            '',
+            [qn($column, $query) . '::jsonb', '#-', $this->castJsonPathArray($query, $paths)],
+            ' '
+        );
+    }
+
+    protected function castJsonPathArray(Query $query, array $paths): Clause
+    {
+        return clause('CAST()', [$query->valueize(static::compileJsonPathArray($paths), false), 'AS text[]'], ' ');
     }
 }

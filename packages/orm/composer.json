@@ -11,6 +11,7 @@
         "mysql",
         "postgresql",
         "sqlsrv",
+        "oracle",
         "pdo"
     ],
     "homepage": "https://github.com/windwalker-io/orm",

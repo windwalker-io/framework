@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\Database\Driver\Pdo;
 
 use PDO;
+use Throwable;
 use Windwalker\Database\Driver\DriverOptions;
 
 /**
@@ -45,5 +46,32 @@ class PdoOciConnection extends AbstractPdoConnection
         );
 
         return $options;
+    }
+
+    protected function doConnect(DriverOptions $options): PDO
+    {
+        $pdo = parent::doConnect($options);
+
+        // Make 'Y-m-d H:i:s' strings acceptable for DATE / TIMESTAMP columns.
+        $pdo->exec(
+            "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS'"
+            . " NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'"
+            . " NLS_TIMESTAMP_TZ_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF TZH:TZM'"
+        );
+
+        return $pdo;
+    }
+
+    public function ping(): bool
+    {
+        try {
+            $this->connect();
+
+            $this->connection->query('SELECT 1 FROM DUAL');
+
+            return true;
+        } catch (Throwable) {
+            return false;
+        }
     }
 }

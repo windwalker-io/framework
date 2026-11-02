@@ -76,7 +76,8 @@
         "symfony/mime": "^6.0||^7.0||^8.0",
         "react/http": "^1.0",
         "ramsey/uuid": "^4.0",
-        "aws/aws-sdk-php": "^3.402"
+        "aws/aws-sdk-php": "^3.402",
+        "php-amqplib/php-amqplib": "^3.7"
     },
     "suggest": {
         "webmozart/glob": "Install ^4.0 to support Ant-like glob().",
@@ -87,6 +88,7 @@
         "guzzlehttp/uri-template": "Install this to support URI Template expand()",
         "symfony/string": "Install to use inflector.",
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
+        "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
         "reactivex/rxphp": "Support EventEmitter::observe() pattern."
     },
     "autoload": {

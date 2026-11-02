@@ -62,7 +62,7 @@ class ContainerCoverageTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('source');
 
-        (new Container())->resolve(null);
+        new Container()->resolve(null);
     }
 
     #[Test]

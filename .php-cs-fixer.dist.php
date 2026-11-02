@@ -24,6 +24,7 @@ return new Config()
 
             // Project conventions on top of PER Coding Style
             'declare_strict_types' => true,
+            'new_expression_parentheses' => true,
             'new_with_parentheses' => [
                 'anonymous_class' => true,
                 'named_class' => true,

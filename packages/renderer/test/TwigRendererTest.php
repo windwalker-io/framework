@@ -64,7 +64,7 @@ class TwigRendererTest extends TestCase
     #[Test]
     public function debugOptionRegistersDebugExtension(): void
     {
-        $twig = (new TwigRenderer(['paths' => static::$path, 'debug' => true]))->createEngine();
+        $twig = new TwigRenderer(['paths' => static::$path, 'debug' => true])->createEngine();
 
         self::assertTrue($twig->hasExtension(DebugExtension::class));
         self::assertFalse($this->instance->createEngine()->hasExtension(DebugExtension::class));

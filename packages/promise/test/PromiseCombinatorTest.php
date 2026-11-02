@@ -172,7 +172,7 @@ class PromiseCombinatorTest extends AbstractPromiseTestCase
     {
         $this->expectException(BadMethodCallException::class);
 
-        (new Promise())->nope();
+        new Promise()->nope();
     }
 
     #[Test]

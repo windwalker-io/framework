@@ -64,7 +64,7 @@ class HtmlCleanerTest extends TestCase
     #[Test]
     public function settersChangeCleanerMethods(): void
     {
-        $cleaner = (new HtmlCleaner())
+        $cleaner = new HtmlCleaner()
             ->setTagsMethod(HtmlCleaner::USE_WHITE_LIST)
             ->setAttrMethod(HtmlCleaner::USE_WHITE_LIST)
             ->setXssMethod(0);

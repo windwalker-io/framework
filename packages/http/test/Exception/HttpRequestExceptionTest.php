@@ -43,7 +43,7 @@ class HttpRequestExceptionTest extends TestCase
         $stream = new Stream('php://memory', 'rb+');
         $stream->write('error body');
 
-        $e = (new HttpRequestException('Boom'))->withResponse(new Response($stream));
+        $e = new HttpRequestException('Boom')->withResponse(new Response($stream));
 
         self::assertSame($stream, $e->body);
         self::assertSame('error body', $e->getBodyString());
@@ -62,7 +62,7 @@ class HttpRequestExceptionTest extends TestCase
     #[Test]
     public function withResponseKeepsCurlCmdCallback(): void
     {
-        $e = (new HttpRequestException('Boom'))
+        $e = new HttpRequestException('Boom')
             ->setCurlCmdCallback(static fn() => 'curl https://example.com');
 
         $new = $e->withResponse(new Response());
