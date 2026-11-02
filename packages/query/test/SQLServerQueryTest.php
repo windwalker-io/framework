@@ -340,4 +340,17 @@ SQL
 
         $this->instance->select('*')->from('t')->whereJsonContainsAll('a->b', [['x']])->render(true);
     }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE [t] SET [foo] = JSON_MODIFY([bar], \'$.a\', JSON_QUERY(JSON_MODIFY([baz], \'$.x\', 1))), [o] = JSON_MODIFY([p], \'$.q\', NULL)',
+            $query->render(true)
+        );
+    }
 }

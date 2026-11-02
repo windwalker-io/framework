@@ -6,6 +6,7 @@ namespace Windwalker\Query\Grammar;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
@@ -214,7 +215,9 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
             'JSON_SET',
             $column,
             $paths,
-            clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS JSON'], ' ')
+            $value instanceof RawWrapper
+                ? $value
+                : clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS JSON'], ' ')
         );
     }
 

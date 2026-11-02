@@ -319,4 +319,17 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
             self::assertStringNotContainsString('a->', $sql, $type);
         }
     }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE "T" SET "FOO" = JSON_TRANSFORM("BAR", SET \'$.a\' = JSON_TRANSFORM("BAZ", SET \'$.x\' = \'1\' FORMAT JSON) FORMAT JSON), "O" = JSON_TRANSFORM("P", REMOVE \'$.q\')',
+            $query->render(true)
+        );
+    }
 }

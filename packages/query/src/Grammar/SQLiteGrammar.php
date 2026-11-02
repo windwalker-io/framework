@@ -6,6 +6,7 @@ namespace Windwalker\Query\Grammar;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
@@ -146,7 +147,9 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
             'JSON_SET',
             $column,
             $paths,
-            expr('JSON()', $query->valueize(static::encodeJsonValue($value), false))
+            $value instanceof RawWrapper
+                ? $value
+                : expr('JSON()', $query->valueize(static::encodeJsonValue($value), false))
         );
     }
 

@@ -14,6 +14,7 @@ use Windwalker\Query\Contract\QueryInterface;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Iterator\PaginateIterator;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * Proxies all query building methods to the Query object returned by getQueryBuilder().
@@ -967,6 +968,16 @@ trait QueryProxyTrait
         $this->getQueryBuilder()->havingJsonNotExists($expr);
 
         return $this;
+    }
+
+    public function jsonSet(string $expr, mixed $value): RawWrapper
+    {
+        return $this->getQueryBuilder()->jsonSet($expr, $value);
+    }
+
+    public function jsonRemove(string $expr): RawWrapper
+    {
+        return $this->getQueryBuilder()->jsonRemove($expr);
     }
 
     public function setJson(string $expr, mixed $value): static

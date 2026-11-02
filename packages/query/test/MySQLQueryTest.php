@@ -270,4 +270,17 @@ class MySQLQueryTest extends QueryTest implements QueryJsonTestInterface
             }
         }
     }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE `t` SET `foo` = JSON_SET(`bar`, \'$.a\', JSON_SET(`baz`, \'$.x\', CAST(\'1\' AS JSON))), `o` = JSON_REMOVE(`p`, \'$.q\')',
+            $query->render(true)
+        );
+    }
 }

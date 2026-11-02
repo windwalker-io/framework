@@ -6,6 +6,7 @@ namespace Windwalker\Query\Grammar;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\Query\clause;
 use function Windwalker\Query\qn;
@@ -225,7 +226,9 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
             'jsonb_set()',
             qn($column, $query) . '::jsonb',
             $this->castJsonPathArray($query, $paths),
-            clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS jsonb'], ' ')
+            $value instanceof RawWrapper
+                ? $value
+                : clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS jsonb'], ' ')
         );
     }
 

@@ -7,6 +7,9 @@ namespace Windwalker\Query\Concern;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\JsonGrammarInterface;
+use Windwalker\Utilities\Wrapper\RawWrapper;
+
+use function Windwalker\raw;
 
 /**
  * Trait JsonConcernTrait
@@ -287,41 +290,43 @@ trait JsonConcernTrait
     }
 
     /**
-     * Set a value at JSON path of a column, used in UPDATE queries.
+     * Build an expression that sets a value at JSON path, to be used as a value of {@see Query::set()}.
      * Value will be encoded to JSON, so arrays and objects are supported.
+     *
+     * `$query->set('foo', $query->jsonSet('bar->a', 1))` => `foo = JSON_SET(bar, '$.a', 1)`
      */
-    public function setJson(string $expr, mixed $value): static
+    public function jsonSet(string $expr, mixed $value): RawWrapper
     {
         [$column, $paths] = $this->splitColumnAndPaths($expr);
 
-        return $this->setRaw(
-            $this->clause(
-                '',
-                [
-                    $this->quoteName($column),
-                    '=',
-                    $this->getJsonGrammar()->compileJsonSet($this, $column, $paths, $value),
-                ]
-            )
-        );
+        return raw($this->getJsonGrammar()->compileJsonSet($this, $column, $paths, $value));
+    }
+
+    /**
+     * Build an expression that removes a JSON path, to be used as a value of {@see Query::set()}.
+     */
+    public function jsonRemove(string $expr): RawWrapper
+    {
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return raw($this->getJsonGrammar()->compileJsonRemove($this, $column, $paths));
+    }
+
+    /**
+     * Set a value at JSON path of a column, used in UPDATE queries.
+     * Shortcut of `set($column, jsonSet($expr, $value))`.
+     */
+    public function setJson(string $expr, mixed $value): static
+    {
+        return $this->set($this->splitColumnAndPaths($expr)[0], $this->jsonSet($expr, $value));
     }
 
     /**
      * Remove a JSON path from a column, used in UPDATE queries.
+     * Shortcut of `set($column, jsonRemove($expr))`.
      */
     public function setJsonRemove(string $expr): static
     {
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->setRaw(
-            $this->clause(
-                '',
-                [
-                    $this->quoteName($column),
-                    '=',
-                    $this->getJsonGrammar()->compileJsonRemove($this, $column, $paths),
-                ]
-            )
-        );
+        return $this->set($this->splitColumnAndPaths($expr)[0], $this->jsonRemove($expr));
     }
 }

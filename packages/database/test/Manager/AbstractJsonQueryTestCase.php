@@ -134,4 +134,26 @@ abstract class AbstractJsonQueryTestCase extends AbstractDatabaseTestCase
 
         self::assertSame([], $this->ids($this->select()->whereJsonExists('data->o->x')));
     }
+
+    #[Test]
+    public function jsonSetAsExpression(): void
+    {
+        $query = self::$db->createQuery()->update('ww_json_items')->where('id', 1);
+        $query->set('data', $query->jsonSet('data->n', 777));
+
+        self::$db->execute($query);
+
+        self::assertSame([1], $this->ids($this->select()->where('data->n::int', '=', 777)));
+    }
+
+    #[Test]
+    public function jsonSetNestedExpression(): void
+    {
+        $query = self::$db->createQuery()->update('ww_json_items')->where('id', 1);
+        $query->set('data', $query->jsonSet('data->copy', $query->jsonSet('data->n', 5)));
+
+        self::$db->execute($query);
+
+        self::assertSame([1], $this->ids($this->select()->where('data->copy->n::int', '=', 5)));
+    }
 }

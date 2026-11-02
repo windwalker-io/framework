@@ -258,4 +258,17 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
             self::assertStringNotContainsString('a->', $sql, $type);
         }
     }
+
+    #[Test]
+    public function jsonSetAsExpressionWithNesting(): void
+    {
+        $query = $this->instance->update('t');
+        $query->set('foo', $query->jsonSet('bar->a', $query->jsonSet('baz->x', 1)))
+            ->set('o', $query->jsonRemove('p->q'));
+
+        self::assertEquals(
+            'UPDATE "t" SET "foo" = jsonb_set("bar"::jsonb, CAST(\'{"a"}\' AS text[]), jsonb_set("baz"::jsonb, CAST(\'{"x"}\' AS text[]), CAST(\'1\' AS jsonb))), "o" = "p"::jsonb #- CAST(\'{"q"}\' AS text[])',
+            $query->render(true)
+        );
+    }
 }

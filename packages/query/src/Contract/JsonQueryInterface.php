@@ -6,6 +6,7 @@ namespace Windwalker\Query\Contract;
 
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
  * JSON related query methods.
@@ -91,6 +92,10 @@ interface JsonQueryInterface
     public function havingJsonExists(string $expr): static;
 
     public function havingJsonNotExists(string $expr): static;
+
+    public function jsonSet(string $expr, mixed $value): RawWrapper;
+
+    public function jsonRemove(string $expr): RawWrapper;
 
     public function setJson(string $expr, mixed $value): static;
 

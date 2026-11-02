@@ -287,7 +287,7 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
     public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
     {
         $path = $query->valueize(static::compileJsonPath($paths), true);
-        $value = $query->valueize(static::encodeJsonValue($value), false);
+        $value = $value instanceof RawWrapper ? $value : $query->valueize(static::encodeJsonValue($value), false);
 
         return clause(
             'JSON_TRANSFORM()',

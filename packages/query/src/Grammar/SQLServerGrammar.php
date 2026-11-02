@@ -413,7 +413,9 @@ SQL;
     {
         $path = $query->valueize(static::compileJsonPath($paths), false);
 
-        if (is_array($value) || is_object($value)) {
+        if ($value instanceof RawWrapper) {
+            $value = expr('JSON_QUERY()', $value);
+        } elseif (is_array($value) || is_object($value)) {
             $value = expr('JSON_QUERY()', $query->valueize(static::encodeJsonValue($value), false));
         } else {
             $value = $query->valueize($value, false);
